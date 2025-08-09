@@ -9,8 +9,9 @@ export function SignInForm() {
   const [submitting, setSubmitting] = useState(false);
 
   return (
-    <div className="w-full">
+    <div className="w-full" aria-live="polite">
       <form
+        aria-label={flow === "signIn" ? "Sign in form" : "Sign up form"}
         className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
@@ -27,21 +28,29 @@ export function SignInForm() {
           });
         }}
       >
+        <label className="sr-only" htmlFor="email">Email</label>
         <input
+          aria-required
+          autoComplete="email"
           className="input-field"
-          type="email"
+          id="email"
           name="email"
           placeholder="Email"
           required
+          type="email"
         />
+        <label className="sr-only" htmlFor="password">Password</label>
         <input
+          aria-required
+          autoComplete={flow === 'signIn' ? 'current-password' : 'new-password'}
           className="input-field"
-          type="password"
+          id="password"
           name="password"
           placeholder="Password"
           required
+          type="password"
         />
-        <button className="auth-button" type="submit" disabled={submitting}>
+        <button aria-busy={submitting} className="auth-button" disabled={submitting} type="submit">
           {flow === "signIn" ? "Sign in" : "Sign up"}
         </button>
         <div className="text-center text-sm text-slate-600">

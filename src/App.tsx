@@ -1,14 +1,15 @@
-import { Authenticated, Unauthenticated, useQuery, useMutation } from "convex/react";
+import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
+import { addDays, format, startOfWeek } from "date-fns";
+import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
+import { Id } from "../convex/_generated/dataModel";
+import { SettingsDialog } from "./SettingsDialog";
 import { SignInForm } from "./SignInForm";
 import { SignOutButton } from "./SignOutButton";
-import { Toaster } from "sonner";
-import { useState, useEffect } from "react";
-import Calendar from 'react-calendar';
-import { format, startOfWeek, addDays } from 'date-fns';
-import 'react-calendar/dist/Calendar.css';
-import { SettingsDialog } from "./SettingsDialog";
-import { Id } from "../convex/_generated/dataModel";
+import { Checkbox } from "./components/Checkbox";
 
 function getCatMotivation() {
   const motivations = [
@@ -22,7 +23,7 @@ function getCatMotivation() {
 
 function HabitStats({ habitId, settings }: { habitId: Id<"habits">, settings: any }) {
   const stats = useQuery(api.habits.getStats, { habitId }) ?? { streak: 0, consistency: 0 };
-  
+
   if (!settings.showStreaks && !settings.showConsistency) return null;
 
   return (
@@ -50,22 +51,22 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [view, setView] = useState<"week" | "calendar">("week");
   const [editingNotes, setEditingNotes] = useState<Id<"habits"> | null>(null);
-  
+
   const createHabit = useMutation(api.habits.create);
   const updateNotes = useMutation(api.habits.updateNotes);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const habits = useQuery(api.habits.list) ?? [];
-  
+
   // Get the start of the week
   const weekStart = startOfWeek(selectedDate);
   // Generate an array of dates for the week
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const weekDateStrings = weekDates.map(date => format(date, 'yyyy-MM-dd'));
-  
+
   const tracking = useQuery(api.habits.getTracking, {
     dates: view === "week" ? weekDateStrings : [format(selectedDate, 'yyyy-MM-dd')]
   }) ?? [];
-  
+
   const settings = useQuery(api.settings.get) ?? {
     showStreaks: true,
     showConsistency: true,
@@ -74,10 +75,10 @@ function App() {
     showCalendarView: true,
     catTheme: true,
   };
-  
+
   const articles = useQuery(api.articles.list, {}) ?? [];
   const seedArticles = useMutation(api.articles.seed);
-  
+
   useEffect(() => {
     seedArticles();
   }, []);
@@ -92,7 +93,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main aria-label="Habit tracker" className="container mx-auto px-4 py-8">
       <div className="flex flex-col gap-8">
         <div className="text-center">
           <h1 className="text-5xl font-bold accent-text mb-4 flex items-center justify-center gap-3">
@@ -120,7 +121,7 @@ function App() {
           <div className="space-y-8">
             {/* Tab Navigation */}
             <div className="border-b border-gray-200">
-              <nav className="-mb-px flex gap-4">
+              <nav aria-label="Primary" className="-mb-px flex gap-4">
                 <button
                   onClick={() => setActiveTab("habits")}
                   className={`py-2 px-4 text-sm font-medium ${
@@ -128,6 +129,8 @@ function App() {
                       ? "border-b-2 border-blue-500 text-blue-600"
                       : "text-gray-500 hover:text-gray-700"
                   }`}
+                  role="tab"
+                  aria-selected={activeTab === "habits"}
                 >
                   My Habits
                 </button>
@@ -138,6 +141,8 @@ function App() {
                       ? "border-b-2 border-blue-500 text-blue-600"
                       : "text-gray-500 hover:text-gray-700"
                   }`}
+                  role="tab"
+                  aria-selected={activeTab === "resources"}
                 >
                   Resources
                 </button>
@@ -151,7 +156,7 @@ function App() {
                   onSubmit={async (e) => {
                     e.preventDefault();
                     if (newHabit.trim()) {
-                      await createHabit({ 
+                      await createHabit({
                         name: newHabit.trim(),
                         notes: newHabitNotes.trim() || undefined
                       });
@@ -159,26 +164,31 @@ function App() {
                       setNewHabitNotes("");
                     }
                   }}
+                  aria-label="Create a new habit"
                   className="flex flex-col gap-2"
                 >
+                  <label className="sr-only" htmlFor="habit-name">Habit name</label>
                   <input
-                    type="text"
-                    value={newHabit}
+                    className="rounded-lg border border-gray-300 px-3 py-2"
+                    id="habit-name"
                     onChange={(e) => setNewHabit(e.target.value)}
                     placeholder="Enter a new habit..."
-                    className="rounded-lg border border-gray-300 px-3 py-2"
+                    type="text"
+                    value={newHabit}
                   />
+                  <label className="sr-only" htmlFor="habit-notes">Habit notes (optional)</label>
                   <textarea
-                    value={newHabitNotes}
+                    className="rounded-lg border border-gray-300 px-3 py-2"
+                    id="habit-notes"
                     onChange={(e) => setNewHabitNotes(e.target.value)}
                     placeholder="Add notes (optional)..."
-                    className="rounded-lg border border-gray-300 px-3 py-2"
                     rows={2}
+                    value={newHabitNotes}
                   />
                   <button
-                    type="submit"
                     disabled={!newHabit.trim()}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+                    className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
+                    type="submit"
                   >
                     Add Habit
                   </button>
@@ -193,6 +203,7 @@ function App() {
                           ? "bg-blue-500 text-white"
                           : "bg-gray-100 text-gray-700"
                       }`}
+                      aria-pressed={view === 'week'}
                     >
                       Week View
                     </button>
@@ -203,6 +214,7 @@ function App() {
                           ? "bg-blue-500 text-white"
                           : "bg-gray-100 text-gray-700"
                       }`}
+                      aria-pressed={view === 'calendar'}
                     >
                       Calendar View
                     </button>
@@ -225,12 +237,12 @@ function App() {
 
                 {(view === "week" || !settings.showCalendarView) ? (
                   <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full" role="grid" aria-label="Weekly habit grid">
                       <thead>
                         <tr>
-                          <th className="px-4 py-2">Habit</th>
+                          <th className="px-4 py-2" scope="col">Habit</th>
                           {weekDates.map((date) => (
-                            <th key={date.toString()} className="px-4 py-2">
+                            <th key={date.toString()} className="px-4 py-2" scope="col">
                               {format(date, 'EEE d')}
                             </th>
                           ))}
@@ -239,7 +251,7 @@ function App() {
                       <tbody>
                         {habits.map((habit) => (
                           <tr key={habit._id}>
-                            <td className="px-4 py-2">
+                            <td className="px-4 py-2" scope="row">
                               <div className="space-y-1">
                                 <div>{habit.name}</div>
                                 <HabitStats habitId={habit._id} settings={settings} />
@@ -260,7 +272,7 @@ function App() {
                                   </div>
                                 ) : (
                                   habit.notes && (
-                                    <div 
+                                    <div
                                       className="text-sm text-gray-600 cursor-pointer"
                                       onClick={() => setEditingNotes(habit._id)}
                                     >
@@ -272,6 +284,7 @@ function App() {
                                   <button
                                     onClick={() => setEditingNotes(habit._id)}
                                     className="text-sm text-blue-500"
+                                    type="button"
                                   >
                                     Add notes
                                   </button>
@@ -285,21 +298,20 @@ function App() {
                               );
                               return (
                                 <td key={dateStr} className="px-4 py-2 text-center">
-                                  <button
-                                    onClick={() =>
-                                      toggleHabit({
-                                        habitId: habit._id,
-                                        date: dateStr,
-                                      })
-                                    }
-                                    className={`w-8 h-8 rounded-full ${
-                                      isCompleted
-                                        ? "bg-green-500 text-white"
-                                        : "bg-gray-100"
-                                    }`}
-                                  >
-                                    {isCompleted && settings.showEmojis ? "✅" : ""}
-                                  </button>
+                                  <label className="inline-flex items-center justify-center">
+                                    <Checkbox
+                                      aria-label={`Mark ${habit.name} on ${format(date, 'PPP')}`}
+                                      checked={isCompleted}
+                                      onChange={() =>
+                                        toggleHabit({
+                                          habitId: habit._id,
+                                          date: dateStr,
+                                        })
+                                      }
+                                      size="md"
+                                      variant="success"
+                                    />
+                                  </label>
                                 </td>
                               );
                             })}
@@ -318,7 +330,7 @@ function App() {
                       return (
                         <div
                           key={habit._id}
-                          className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"
+                          className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm"
                         >
                           <div className="space-y-1">
                             <div className="text-lg">{habit.name}</div>
@@ -340,7 +352,7 @@ function App() {
                               </div>
                             ) : (
                               habit.notes && (
-                                <div 
+                                <div
                                   className="text-sm text-gray-600 cursor-pointer"
                                   onClick={() => setEditingNotes(habit._id)}
                                 >
@@ -352,26 +364,27 @@ function App() {
                               <button
                                 onClick={() => setEditingNotes(habit._id)}
                                 className="text-sm text-blue-500"
+                                type="button"
                               >
                                 Add notes
                               </button>
                             )}
                           </div>
-                          <button
-                            onClick={() =>
-                              toggleHabit({
-                                habitId: habit._id,
-                                date: dateStr,
-                              })
-                            }
-                            className={`px-4 py-2 rounded-lg ${
-                              isCompleted
-                                ? "bg-green-500 text-white"
-                                : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            {isCompleted ? (settings.showEmojis ? "✅" : "Done") : "Mark Done"}
-                          </button>
+                          <label className="inline-flex items-center gap-2">
+                            <Checkbox
+                              aria-label={`Mark ${habit.name} on ${format(selectedDate, 'PPP')}`}
+                              checked={isCompleted}
+                              onChange={() =>
+                                toggleHabit({
+                                  habitId: habit._id,
+                                  date: dateStr,
+                                })
+                              }
+                              size="lg"
+                              variant="success"
+                            />
+                            <span className="text-sm text-gray-700">Done</span>
+                          </label>
                         </div>
                       );
                     })}
@@ -382,18 +395,18 @@ function App() {
 
             {/* Resources Tab Content */}
             {activeTab === "resources" && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="rounded-xl bg-white p-6 shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
                   {settings.catTheme && <span role="img" aria-label="book">📚</span>}
                   Habit Building Resources
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {articles.map((article) => (
-                    <div key={article._id} className="bg-gray-50 rounded-lg p-4">
+                    <div key={article._id} className="rounded-lg bg-gray-50 p-4">
                       <h3 className="text-lg font-medium mb-2">{article.title}</h3>
                       <p className="text-gray-600 text-sm">{article.content}</p>
                       <div className="mt-2">
-                        <span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">
+                        <span className="inline-block rounded bg-indigo-100 px-2 py-1 text-xs text-indigo-800">
                           {article.category}
                         </span>
                       </div>
@@ -407,7 +420,9 @@ function App() {
           <div className="fixed bottom-4 right-4 flex gap-2">
             <button
               onClick={() => setShowSettings(true)}
-              className="bg-gray-100 p-2 rounded-full hover:bg-gray-200"
+              aria-label="Open settings"
+              className="rounded-full bg-gray-100 p-2 hover:bg-gray-200"
+              type="button"
             >
               ⚙️
             </button>
