@@ -3,8 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --color-light: #ffffff;
-  --color-dark: #171717;
+  --color-bg: #f8fafc; /* slate-50 */
+  --color-card: #ffffff;
+  --color-border: #e2e8f0; /* slate-200 */
+  --color-text: #0f172a; /* slate-900 */
+  --color-muted: #64748b; /* slate-500 */
+  --color-primary: #3b82f6; /* blue-500 */
+  --color-success: #10b981; /* emerald-500 */
+}
+
+.dark {
+  --color-bg: #0b1020;
+  --color-card: #0f172a;
+  --color-border: #1e293b;
+  --color-text: #e5e7eb;
+  --color-muted: #94a3b8;
+  --color-primary: #60a5fa;
+  --color-success: #34d399;
 }
 
 .accent-text {
@@ -32,8 +47,8 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  color: var(--color-dark);
-  background: var(--color-light);
+  color: var(--color-text);
+  background: var(--color-bg);
 }
 
 .input-field {
@@ -46,4 +61,30 @@ body {
 
 .link-text {
   @apply text-blue-500 hover:underline cursor-pointer font-medium;
+}
+
+/* React Calendar overrides */
+.react-calendar {
+  background: var(--color-card) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+}
+.react-calendar__navigation button {
+  color: var(--color-text) !important;
+  border-radius: 8px !important;
+}
+.react-calendar__tile {
+  border-radius: 8px !important;
+}
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: rgba(99, 102, 241, 0.08) !important; /* indigo tint */
+}
+.react-calendar__tile--active {
+  background: var(--color-primary) !important;
+  color: white !important;
+}
+.react-calendar__tile--now {
+  outline: 2px solid var(--color-primary) !important;
 }

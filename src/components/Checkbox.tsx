@@ -74,8 +74,8 @@ export const Checkbox = React.forwardRef(function Checkbox(
           internalRef.current = node;
           if (typeof forwardedRef === "function") {
             forwardedRef(node);
-          } else if (forwardedRef && "current" in (forwardedRef as any)) {
-            (forwardedRef as React.RefObject<HTMLInputElement>).current = node;
+          } else if (forwardedRef && typeof forwardedRef === "object") {
+            (forwardedRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
           }
         }}
         type="checkbox"

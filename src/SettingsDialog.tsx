@@ -15,6 +15,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
 
   const updateSettings = useMutation(api.settings.update);
   const [localSettings, setLocalSettings] = useState(settings);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -39,6 +40,14 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
     setLocalSettings(newSettings);
     updateSettings(newSettings);
   };
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   return (
     <div
@@ -67,6 +76,16 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
         </div>
 
         <div className="space-y-4">
+          <label className="flex w-full items-center justify-between rounded-lg py-2">
+            <span>Dark Theme</span>
+            <Checkbox
+              aria-label="Toggle dark theme"
+              checked={darkMode}
+              onChange={() => setDarkMode(!darkMode)}
+              variant="primary"
+            />
+          </label>
+
           <label className="flex w-full items-center justify-between rounded-lg py-2">
             <span>Show Streaks</span>
             <Checkbox

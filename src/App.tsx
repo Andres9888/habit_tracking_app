@@ -10,6 +10,9 @@ import { SettingsDialog } from "./SettingsDialog";
 import { SignInForm } from "./SignInForm";
 import { SignOutButton } from "./SignOutButton";
 import { Checkbox } from "./components/Checkbox";
+import { SegmentedControl } from "./components/SegmentedControl";
+import { Card, CardContent } from "./components/Card";
+import { Button } from "./components/Button";
 
 function getCatMotivation() {
   const motivations = [
@@ -120,33 +123,15 @@ function App() {
         <Authenticated>
           <div className="space-y-8">
             {/* Tab Navigation */}
-            <div className="border-b border-gray-200">
-              <nav aria-label="Primary" className="-mb-px flex gap-4">
-                <button
-                  onClick={() => setActiveTab("habits")}
-                  className={`py-2 px-4 text-sm font-medium ${
-                    activeTab === "habits"
-                      ? "border-b-2 border-blue-500 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                  role="tab"
-                  aria-selected={activeTab === "habits"}
-                >
-                  My Habits
-                </button>
-                <button
-                  onClick={() => setActiveTab("resources")}
-                  className={`py-2 px-4 text-sm font-medium ${
-                    activeTab === "resources"
-                      ? "border-b-2 border-blue-500 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                  role="tab"
-                  aria-selected={activeTab === "resources"}
-                >
-                  Resources
-                </button>
-              </nav>
+            <div className="flex justify-center">
+              <SegmentedControl
+                segments={[
+                  { value: "habits", label: "My Habits" },
+                  { value: "resources", label: "Resources" },
+                ]}
+                value={activeTab as any}
+                onChange={(v) => setActiveTab(v)}
+              />
             </div>
 
             {/* Habits Tab Content */}
@@ -185,53 +170,36 @@ function App() {
                     rows={2}
                     value={newHabitNotes}
                   />
-                  <button
-                    disabled={!newHabit.trim()}
-                    className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
-                    type="submit"
-                  >
+                  <Button disabled={!newHabit.trim()} type="submit">
                     Add Habit
-                  </button>
+                  </Button>
                 </form>
 
                 {settings.showCalendarView && (
-                  <div className="flex justify-center gap-2">
-                    <button
-                      onClick={() => setView("week")}
-                      className={`px-4 py-2 rounded-lg ${
-                        view === "week"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-100 text-gray-700"
-                      }`}
-                      aria-pressed={view === 'week'}
-                    >
-                      Week View
-                    </button>
-                    <button
-                      onClick={() => setView("calendar")}
-                      className={`px-4 py-2 rounded-lg ${
-                        view === "calendar"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-100 text-gray-700"
-                      }`}
-                      aria-pressed={view === 'calendar'}
-                    >
-                      Calendar View
-                    </button>
+                  <div className="flex justify-center">
+                    <SegmentedControl
+                      segments={[
+                        { value: "week", label: "Week View" },
+                        { value: "calendar", label: "Calendar View" },
+                      ]}
+                      value={view as any}
+                      onChange={(v) => setView(v as any)}
+                    />
                   </div>
                 )}
 
                 {view === "calendar" && settings.showCalendarView && (
                   <div className="flex justify-center">
-                    <Calendar
-                      onChange={(value) => {
-                        if (value instanceof Date) {
-                          setSelectedDate(value);
-                        }
-                      }}
-                      value={selectedDate}
-                      className="rounded-xl border shadow-lg"
-                    />
+                    <Card className="p-2">
+                      <Calendar
+                        onChange={(value) => {
+                          if (value instanceof Date) {
+                            setSelectedDate(value);
+                          }
+                        }}
+                        value={selectedDate}
+                      />
+                    </Card>
                   </div>
                 )}
 
@@ -328,11 +296,9 @@ function App() {
                         (t) => t.habitId === habit._id && t.date === dateStr && t.completed
                       );
                       return (
-                        <div
-                          key={habit._id}
-                          className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm"
-                        >
-                          <div className="space-y-1">
+                        <Card key={habit._id} className="flex items-center justify-between">
+                          <CardContent className="w-full flex items-center justify-between">
+                            <div className="space-y-1">
                             <div className="text-lg">{habit.name}</div>
                             <HabitStats habitId={habit._id} settings={settings} />
                             {editingNotes === habit._id ? (
@@ -369,23 +335,24 @@ function App() {
                                 Add notes
                               </button>
                             )}
-                          </div>
-                          <label className="inline-flex items-center gap-2">
-                            <Checkbox
-                              aria-label={`Mark ${habit.name} on ${format(selectedDate, 'PPP')}`}
-                              checked={isCompleted}
-                              onChange={() =>
-                                toggleHabit({
-                                  habitId: habit._id,
-                                  date: dateStr,
-                                })
-                              }
-                              size="lg"
-                              variant="success"
-                            />
-                            <span className="text-sm text-gray-700">Done</span>
-                          </label>
-                        </div>
+                            </div>
+                            <label className="inline-flex items-center gap-2">
+                              <Checkbox
+                                aria-label={`Mark ${habit.name} on ${format(selectedDate, 'PPP')}`}
+                                checked={isCompleted}
+                                onChange={() =>
+                                  toggleHabit({
+                                    habitId: habit._id,
+                                    date: dateStr,
+                                  })
+                                }
+                                size="lg"
+                                variant="success"
+                              />
+                              <span className="text-sm text-gray-700">Done</span>
+                            </label>
+                          </CardContent>
+                        </Card>
                       );
                     })}
                   </div>
@@ -395,25 +362,29 @@ function App() {
 
             {/* Resources Tab Content */}
             {activeTab === "resources" && (
-              <div className="rounded-xl bg-white p-6 shadow-lg">
-                <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+              <Card>
+                <CardContent>
+                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
                   {settings.catTheme && <span role="img" aria-label="book">📚</span>}
                   Habit Building Resources
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {articles.map((article) => (
-                    <div key={article._id} className="rounded-lg bg-gray-50 p-4">
-                      <h3 className="text-lg font-medium mb-2">{article.title}</h3>
-                      <p className="text-gray-600 text-sm">{article.content}</p>
-                      <div className="mt-2">
-                        <span className="inline-block rounded bg-indigo-100 px-2 py-1 text-xs text-indigo-800">
-                          {article.category}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {articles.map((article) => (
+                      <Card key={article._id} className="bg-[var(--color-card)]">
+                        <CardContent>
+                          <h3 className="text-lg font-medium mb-2">{article.title}</h3>
+                          <p className="text-gray-600 text-sm dark:text-slate-300">{article.content}</p>
+                          <div className="mt-2">
+                            <span className="inline-block rounded bg-indigo-100 px-2 py-1 text-xs text-indigo-800">
+                              {article.category}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </div>
 
