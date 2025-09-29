@@ -1,6 +1,6 @@
+import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { authTables } from "@convex-dev/auth/server";
 
 const applicationTables = {
   habits: defineTable({
@@ -10,8 +10,8 @@ const applicationTables = {
     createdAt: v.number(),
     order: v.optional(v.number()),
     tags: v.optional(v.array(v.string())),
-  }).index("by_user", ["userId"]),
-  
+  }).index("by_user", ["userId"]).index("by_user_and_name", ["userId", "name"]),
+
   tracking: defineTable({
     habitId: v.id("habits"),
     userId: v.id("users"),
@@ -28,6 +28,7 @@ const applicationTables = {
     showEmojis: v.boolean(),
     showCalendarView: v.boolean(),
     catTheme: v.boolean(),
+    darkMode: v.boolean(),
   }).index("by_user", ["userId"]),
 
   articles: defineTable({

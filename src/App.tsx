@@ -9,10 +9,10 @@ import { Id } from "../convex/_generated/dataModel";
 import { SettingsDialog } from "./SettingsDialog";
 import { SignInForm } from "./SignInForm";
 import { SignOutButton } from "./SignOutButton";
+import { Button } from "./components/Button";
+import { Card, CardContent } from "./components/Card";
 import { Checkbox } from "./components/Checkbox";
 import { SegmentedControl } from "./components/SegmentedControl";
-import { Card, CardContent } from "./components/Card";
-import { Button } from "./components/Button";
 
 function getCatMotivation() {
   const motivations = [
@@ -77,6 +77,7 @@ function App() {
     showEmojis: true,
     showCalendarView: true,
     catTheme: true,
+    darkMode: false,
   };
 
   const articles = useQuery(api.articles.list, {}) ?? [];
@@ -92,6 +93,15 @@ function App() {
       setView("week");
     }
   }, [settings.showCalendarView]);
+
+  // Apply persisted dark mode on page load and settings change
+  useEffect(() => {
+    if (settings.darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [settings.darkMode]);
 
   const [showSettings, setShowSettings] = useState(false);
 
@@ -158,6 +168,8 @@ function App() {
                     id="habit-name"
                     onChange={(e) => setNewHabit(e.target.value)}
                     placeholder="Enter a new habit..."
+                    aria-required="true"
+                    maxLength={80}
                     type="text"
                     value={newHabit}
                   />
@@ -167,6 +179,7 @@ function App() {
                     id="habit-notes"
                     onChange={(e) => setNewHabitNotes(e.target.value)}
                     placeholder="Add notes (optional)..."
+                    maxLength={300}
                     rows={2}
                     value={newHabitNotes}
                   />

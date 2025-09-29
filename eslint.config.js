@@ -1,7 +1,7 @@
 import js from "@eslint/js";
-import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -72,6 +72,15 @@ export default tseslint.config(
       // Allow async functions without await
       // for consistency (esp. Convex `handler`s)
       "@typescript-eslint/require-await": "off",
+    },
+  },
+  {
+    files: ["src/main.tsx"],
+    languageOptions: {
+      parserOptions: {
+        // Disable type-aware linting for this file to avoid TS 'import.meta' diagnostics during lint
+        project: null,
+      },
     },
   },
 );

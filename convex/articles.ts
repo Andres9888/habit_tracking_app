@@ -1,18 +1,28 @@
-import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const list = query({
   args: { category: v.optional(v.string()) },
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id("articles"),
+      category: v.string(),
+      content: v.string(),
+      createdAt: v.number(),
+      title: v.string(),
+    })
+  ),
   handler: async (ctx, args) => {
     const articlesQuery = ctx.db.query("articles");
-    
+
     if (args.category !== undefined) {
       return await articlesQuery
         .withIndex("by_category", q => q.eq("category", args.category!))
         .order("desc")
         .collect();
     }
-    
+
     return await articlesQuery.order("desc").collect();
   }
 });
@@ -20,9 +30,10 @@ export const list = query({
 // Add some initial articles
 export const seed = mutation({
   args: {},
+  returns: v.null(),
   handler: async (ctx) => {
     const articles = await ctx.db.query("articles").collect();
-    if (articles.length > 0) return;
+    if (articles.length > 0) return null;
 
     const initialArticles = [
       {
@@ -48,5 +59,6 @@ export const seed = mutation({
     for (const article of initialArticles) {
       await ctx.db.insert("articles", article);
     }
+    return null;
   }
 });

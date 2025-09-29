@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "convex": {
+      "command": "node",
+      "args": ["./convex-mcp-server.js"],
+      "env": {
+        "CONVEX_URL": "https://wandering-wolf-192.convex.cloud"
+      }
+    }
+  }
+}

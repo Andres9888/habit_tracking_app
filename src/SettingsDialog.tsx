@@ -3,21 +3,30 @@ import { useEffect, useState } from 'react';
 import { api } from '../convex/_generated/api';
 import { Checkbox } from "./components/Checkbox";
 
+interface Settings {
+  showStreaks: boolean;
+  showConsistency: boolean;
+  showMotivationalMessages: boolean;
+  showEmojis: boolean;
+  showCalendarView: boolean;
+  catTheme: boolean;
+  darkMode: boolean;
+}
+
 export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const settings = useQuery(api.settings.get) ?? {
+  const defaultSettings: Settings = {
     showStreaks: true,
     showConsistency: true,
     showMotivationalMessages: true,
     showEmojis: true,
     showCalendarView: true,
     catTheme: true,
+    darkMode: false,
   };
 
+  const settings = useQuery(api.settings.get) ?? defaultSettings;
   const updateSettings = useMutation(api.settings.update);
-  const [localSettings, setLocalSettings] = useState(settings);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-
-  if (!isOpen) return null;
+  const [localSettings, setLocalSettings] = useState<Settings>(settings);
 
   useEffect(() => {
     if (isOpen) {
@@ -35,19 +44,31 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
     return () => document.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  const toggleSetting = (key: keyof typeof settings) => {
+  const toggleSetting = (key: keyof Settings) => {
     const newSettings = { ...localSettings, [key]: !localSettings[key] };
     setLocalSettings(newSettings);
     updateSettings(newSettings);
+
+    // Handle dark mode immediately for better UX
+    if (key === 'darkMode') {
+      if (newSettings.darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
   };
 
+  // Apply dark mode on component mount/update
   useEffect(() => {
-    if (darkMode) {
+    if (localSettings.darkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [darkMode]);
+  }, [localSettings.darkMode]);
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -58,16 +79,16 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
     >
       <div
         aria-modal="true"
-        className="w-full max-w-md rounded-xl bg-white p-6"
+        className="w-full max-w-md rounded-xl bg-white dark:bg-gray-800 p-6"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         tabIndex={-1}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Settings</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Settings</h2>
           <button
             aria-label="Close settings"
-            className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+            className="rounded p-1 text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300"
             onClick={onClose}
             type="button"
           >
@@ -77,17 +98,17 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
 
         <div className="space-y-4">
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Dark Theme</span>
+            <span className="text-gray-900 dark:text-white">Dark Theme</span>
             <Checkbox
               aria-label="Toggle dark theme"
-              checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
+              checked={localSettings.darkMode}
+              onChange={() => toggleSetting('darkMode')}
               variant="primary"
             />
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Show Streaks</span>
+            <span className="text-gray-900 dark:text-white">Show Streaks</span>
             <Checkbox
               aria-label="Toggle show streaks"
               checked={localSettings.showStreaks}
@@ -97,7 +118,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Show Consistency</span>
+            <span className="text-gray-900 dark:text-white">Show Consistency</span>
             <Checkbox
               aria-label="Toggle show consistency"
               checked={localSettings.showConsistency}
@@ -107,7 +128,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Show Motivational Messages</span>
+            <span className="text-gray-900 dark:text-white">Show Motivational Messages</span>
             <Checkbox
               aria-label="Toggle motivational messages"
               checked={localSettings.showMotivationalMessages}
@@ -117,7 +138,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Show Emojis</span>
+            <span className="text-gray-900 dark:text-white">Show Emojis</span>
             <Checkbox
               aria-label="Toggle emojis"
               checked={localSettings.showEmojis}
@@ -127,7 +148,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Enable Calendar View</span>
+            <span className="text-gray-900 dark:text-white">Enable Calendar View</span>
             <Checkbox
               aria-label="Toggle calendar view"
               checked={localSettings.showCalendarView}
@@ -137,7 +158,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span>Cat Theme</span>
+            <span className="text-gray-900 dark:text-white">Cat Theme</span>
             <Checkbox
               aria-label="Toggle cat theme"
               checked={localSettings.catTheme}
