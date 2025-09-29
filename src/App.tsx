@@ -156,8 +156,35 @@ function App() {
               const completedCount = weekStatus.filter(s => s === "done").length;
               const completionRate = Math.round((completedCount / 7) * 100);
 
-              // Calculate streak (consecutive days completed)
-              const streak = 0; // TODO: Implement streak calculation
+              // Calculate streak (consecutive days completed up to today)
+              const calculateStreak = () => {
+                const completedDates = new Set(
+                  tracking
+                    .filter(t => t.habitId === habit._id && t.completed)
+                    .map(t => t.date)
+                );
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                let streak = 0;
+                let currentDate = new Date(today);
+
+                // Count consecutive days backward from today
+                while (true) {
+                  const dateString = format(currentDate, 'yyyy-MM-dd');
+                  if (completedDates.has(dateString)) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 1);
+                  } else {
+                    break;
+                  }
+                }
+
+                return streak;
+              };
+
+              const streak = calculateStreak();
 
               return (
                 <article

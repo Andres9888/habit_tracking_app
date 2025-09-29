@@ -37,16 +37,16 @@ export const Checkbox = React.forwardRef(function Checkbox(
   const internalRef = useRef<HTMLInputElement | null>(null);
 
   const variantToCheckedClasses: Record<CheckboxVariant, string> = {
-    primary: "peer-checked:border-[var(--color-primary)] peer-checked:bg-[var(--color-primary)]",
-    success: "peer-checked:border-[var(--color-success)] peer-checked:bg-[var(--color-success)]",
-    neutral: "peer-checked:border-[var(--color-text)] peer-checked:bg-[var(--color-text)]",
+    primary: "peer-checked:border-primary peer-checked:bg-primary",
+    success: "peer-checked:border-green-600 peer-checked:bg-green-600",
+    neutral: "peer-checked:border-foreground peer-checked:bg-foreground",
     danger: "peer-checked:border-red-600 peer-checked:bg-red-600",
   };
 
   const variantToFocusRing: Record<CheckboxVariant, string> = {
-    primary: "peer-focus-visible:ring-[var(--color-primary)]",
-    success: "peer-focus-visible:ring-[var(--color-success)]",
-    neutral: "peer-focus-visible:ring-[var(--color-text)]",
+    primary: "peer-focus-visible:ring-ring",
+    success: "peer-focus-visible:ring-green-500",
+    neutral: "peer-focus-visible:ring-ring",
     danger: "peer-focus-visible:ring-red-500",
   };
 
@@ -84,9 +84,9 @@ export const Checkbox = React.forwardRef(function Checkbox(
       <span
         aria-hidden="true"
         className={cn(
-          "inline-flex items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-card)] text-white shadow-sm transition-colors motion-safe:transition-transform motion-safe:active:scale-95",
-          "hover:border-[var(--color-border)]",
-          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[var(--color-bg)]",
+          "inline-flex items-center justify-center rounded border border-border bg-card text-white shadow-sm transition-colors motion-safe:transition-transform motion-safe:active:scale-95",
+          "hover:border-border",
+          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background",
           variantToFocusRing[variant],
           variantToCheckedClasses[variant],
           "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
