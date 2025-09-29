@@ -79,16 +79,16 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
     >
       <div
         aria-modal="true"
-        className="w-full max-w-md rounded-xl bg-white dark:bg-gray-800 p-6"
+        className="w-full max-w-md rounded-xl p-6 border border-[var(--color-border)] bg-[var(--color-card)]"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         tabIndex={-1}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Settings</h2>
+          <h2 className="text-xl font-semibold text-[var(--color-text)]">Settings</h2>
           <button
             aria-label="Close settings"
-            className="rounded p-1 text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300"
+            className="rounded p-1 text-[color:var(--color-muted)] transition-colors hover:brightness-95 border border-transparent hover:border-[var(--color-border)]"
             onClick={onClose}
             type="button"
           >
@@ -98,7 +98,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
 
         <div className="space-y-4">
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Dark Theme</span>
+            <span className="text-[var(--color-text)]">Dark Theme</span>
             <Checkbox
               aria-label="Toggle dark theme"
               checked={localSettings.darkMode}
@@ -108,7 +108,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Show Streaks</span>
+            <span className="text-[var(--color-text)]">Show Streaks</span>
             <Checkbox
               aria-label="Toggle show streaks"
               checked={localSettings.showStreaks}
@@ -118,7 +118,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Show Consistency</span>
+            <span className="text-[var(--color-text)]">Show Consistency</span>
             <Checkbox
               aria-label="Toggle show consistency"
               checked={localSettings.showConsistency}
@@ -128,7 +128,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Show Motivational Messages</span>
+            <span className="text-[var(--color-text)]">Show Motivational Messages</span>
             <Checkbox
               aria-label="Toggle motivational messages"
               checked={localSettings.showMotivationalMessages}
@@ -138,7 +138,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Show Emojis</span>
+            <span className="text-[var(--color-text)]">Show Emojis</span>
             <Checkbox
               aria-label="Toggle emojis"
               checked={localSettings.showEmojis}
@@ -148,7 +148,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Enable Calendar View</span>
+            <span className="text-[var(--color-text)]">Enable Calendar View</span>
             <Checkbox
               aria-label="Toggle calendar view"
               checked={localSettings.showCalendarView}
@@ -158,7 +158,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </label>
 
           <label className="flex w-full items-center justify-between rounded-lg py-2">
-            <span className="text-gray-900 dark:text-white">Cat Theme</span>
+            <span className="text-[var(--color-text)]">Cat Theme</span>
             <Checkbox
               aria-label="Toggle cat theme"
               checked={localSettings.catTheme}

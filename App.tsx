@@ -1,13 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { useState, useEffect } from 'react';
-import { Authenticated, Unauthenticated, useQuery, useMutation } from "convex/react";
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Authenticated, ConvexProvider, ConvexReactClient, Unauthenticated, useMutation, useQuery } from "convex/react";
+import { addDays, format, startOfWeek } from 'date-fns';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { api } from "./convex/_generated/api";
-import { format, startOfWeek, addDays } from 'date-fns';
 import { Id } from "./convex/_generated/dataModel";
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
@@ -24,7 +23,7 @@ function getCatMotivation() {
 
 function HabitStats({ habitId, settings }: { habitId: Id<"habits">, settings: any }) {
   const stats = useQuery(api.habits.getStats, { habitId }) ?? { streak: 0, consistency: 0 };
-  
+
   if (!settings.showStreaks && !settings.showConsistency) return null;
 
   return (
@@ -77,7 +76,7 @@ function SignInForm() {
       <Text style={styles.authTitle}>
         {isSignUp ? "Create Account" : "Sign In"}
       </Text>
-      
+
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -85,7 +84,7 @@ function SignInForm() {
         onChangeText={setUsername}
         autoCapitalize="none"
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -93,7 +92,7 @@ function SignInForm() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      
+
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
         onPress={handleSubmit}
@@ -103,7 +102,7 @@ function SignInForm() {
           {loading ? "Loading..." : (isSignUp ? "Sign Up" : "Sign In")}
         </Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
         <Text style={styles.linkText}>
           {isSignUp ? "Already have an account? Sign in" : "Need an account? Sign up"}
@@ -129,22 +128,19 @@ function SignOutButton() {
 function HabitsScreen() {
   const [newHabit, setNewHabit] = useState("");
   const [newHabitNotes, setNewHabitNotes] = useState("");
-  const [selectedDate] = useState<Date>(new Date());
-  
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const habits = useQuery(api.habits.list) ?? [];
-  
-  // Get the start of the week
+
+  // Week model
   const weekStart = startOfWeek(selectedDate);
-  // Generate an array of dates for the week
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const weekDateStrings = weekDates.map(date => format(date, 'yyyy-MM-dd'));
-  
-  const tracking = useQuery(api.habits.getTracking, {
-    dates: weekDateStrings
-  }) ?? [];
-  
+  const weekDateStrings = weekDates.map((d) => format(d, 'yyyy-MM-dd'));
+  const monthLabel = format(selectedDate, 'MMMM');
+
+  const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
   const settings = useQuery(api.settings.get) ?? {
     showStreaks: true,
     showConsistency: true,
@@ -155,29 +151,94 @@ function HabitsScreen() {
   };
 
   const handleCreateHabit = async () => {
-    if (newHabit.trim()) {
-      await createHabit({ 
-        name: newHabit.trim(),
-        notes: newHabitNotes.trim() || undefined
-      });
-      setNewHabit("");
-      setNewHabitNotes("");
-    }
+    if (!newHabit.trim()) return;
+    await createHabit({ name: newHabit.trim(), notes: newHabitNotes.trim() || undefined });
+    setNewHabit("");
+    setNewHabitNotes("");
+  };
+
+  const DayCircle = ({ filled }: { filled: boolean }) => (
+    <View style={[styles.circle, filled ? styles.circleFilled : styles.circleEmpty]} />
+  );
+
+  const HabitCard = ({ habitName, notes, habitId }: { habitName: string; notes?: string; habitId: Id<'habits'> }) => {
+    const completedCount = weekDates.reduce((acc, d) => {
+      const dateStr = format(d, 'yyyy-MM-dd');
+      return acc + (tracking.some((t) => t.habitId === habitId && t.date === dateStr && t.completed) ? 1 : 0);
+    }, 0);
+
+    return (
+      <View style={styles.habitCard}>
+        <View style={styles.habitCardTopRow}>
+          <Text accessibilityLabel="energy count" style={styles.energyText}>⚡ {completedCount}</Text>
+          <View style={styles.circlesRow}>
+            {weekDates.map((d) => {
+              const dateStr = format(d, 'yyyy-MM-dd');
+              const isCompleted = tracking.some((t) => t.habitId === habitId && t.date === dateStr && t.completed);
+              return <DayCircle key={dateStr} filled={isCompleted} />;
+            })}
+          </View>
+        </View>
+        <View style={styles.habitCardBody}>
+          <View>
+            <Text style={styles.habitTitle}>{habitName}</Text>
+            {!!notes && <Text style={styles.habitSubtitle}>{notes}</Text>}
+          </View>
+          <MaterialCommunityIcons accessibilityLabel="muted" name="bell-off-outline" size={22} color="#111827" />
+        </View>
+      </View>
+    );
   };
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          {settings.catTheme && "🐱 "}Daily Habits{settings.catTheme && " 🐱"}
-        </Text>
-        {settings.showMotivationalMessages && (
-          <Text style={styles.subtitle}>
-            {getCatMotivation()}
-          </Text>
-        )}
+      {/* Header */}
+      <View style={styles.headerRow}>
+        <Text style={styles.largeTitle}>Habits</Text>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="Add habit"
+          onPress={handleCreateHabit}
+          style={styles.addButton}
+        >
+          <Ionicons name="add" size={28} color="#111827" />
+        </TouchableOpacity>
       </View>
 
+      {/* Month + week row */}
+      <View style={styles.monthWeekContainer}>
+        <Text style={styles.monthLabel}>{monthLabel}</Text>
+        <View style={styles.weekRowCompact}>
+          {weekDates.map((d) => {
+            const isSelected = format(d, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+            return (
+              <TouchableOpacity key={d.toString()} onPress={() => setSelectedDate(d)} style={styles.weekCell}>
+                <Text style={[styles.weekCellDate, isSelected && styles.weekCellDateSelected]}>{format(d, 'd')}</Text>
+                <Text style={[styles.weekCellDow, isSelected && styles.weekCellDowSelected]}>{format(d, 'EE')}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+
+      {/* Habit cards */}
+      {habits.map((habit) => (
+        <HabitCard key={habit._id} habitId={habit._id} habitName={habit.name} notes={habit.notes ?? undefined} />
+      ))}
+
+      {/* Instruction section */}
+      <View style={styles.instructionContainer}>
+        <Ionicons accessibilityElementsHidden name="arrow-up" size={24} color="#111827" />
+        <View style={styles.dashedDivider} />
+        <Text style={styles.instructionText}>
+          Tap a circle to check off the habit for that day. Tap on the habit name to see details or change something.
+        </Text>
+        <TouchableOpacity accessibilityRole="button" accessibilityLabel="OK" style={styles.okPill}>
+          <Text style={styles.okPillText}>OK</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Quick add area */}
       <View style={styles.addHabitContainer}>
         <TextInput
           style={styles.input}
@@ -202,57 +263,6 @@ function HabitsScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.weekHeader}>
-        {weekDates.map((date) => (
-          <Text key={date.toString()} style={styles.dayHeader}>
-            {format(date, 'EEE\nd')}
-          </Text>
-        ))}
-      </View>
-
-      {habits.map((habit) => (
-        <View key={habit._id} style={styles.habitRow}>
-          <View style={styles.habitInfo}>
-            <Text style={styles.habitName}>{habit.name}</Text>
-            <HabitStats habitId={habit._id} settings={settings} />
-            {habit.notes && (
-              <Text style={styles.habitNotes}>{habit.notes}</Text>
-            )}
-          </View>
-          
-          <View style={styles.weekButtons}>
-            {weekDates.map((date) => {
-              const dateStr = format(date, 'yyyy-MM-dd');
-              const isCompleted = tracking.some(
-                (t) => t.habitId === habit._id && t.date === dateStr && t.completed
-              );
-              return (
-                <TouchableOpacity
-                  key={dateStr}
-                  onPress={() =>
-                    toggleHabit({
-                      habitId: habit._id,
-                      date: dateStr,
-                    })
-                  }
-                  style={[
-                    styles.dayButton,
-                    isCompleted ? styles.dayButtonCompleted : styles.dayButtonIncomplete
-                  ]}
-                >
-                  <Text style={[
-                    styles.dayButtonText,
-                    isCompleted && styles.dayButtonTextCompleted
-                  ]}>
-                    {isCompleted && settings.showEmojis ? "✅" : ""}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-      ))}
-
       <SignOutButton />
     </ScrollView>
   );
@@ -266,7 +276,27 @@ function MainApp() {
         <SignInForm />
       </Unauthenticated>
       <Authenticated>
-        <HabitsScreen />
+        <View style={{ flex: 1 }}>
+          <HabitsScreen />
+          <View style={styles.bottomBar}>
+            <View style={styles.tabItemActive}>
+              <MaterialCommunityIcons name="vector-circle" size={22} color="#111827" />
+              <Text style={styles.tabTextActive}>Habits</Text>
+            </View>
+            <View style={styles.tabItem}>
+              <MaterialCommunityIcons name="brightness-5" size={22} color="#9CA3AF" />
+              <Text style={styles.tabText}>Focus</Text>
+            </View>
+            <View style={styles.tabItem}>
+              <MaterialCommunityIcons name="menu" size={22} color="#9CA3AF" />
+              <Text style={styles.tabText}>Journal</Text>
+            </View>
+            <View style={styles.tabItem}>
+              <MaterialCommunityIcons name="cog" size={22} color="#9CA3AF" />
+              <Text style={styles.tabText}>Other</Text>
+            </View>
+          </View>
+        </View>
       </Authenticated>
     </SafeAreaView>
   );
@@ -297,6 +327,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  addButton: {
+    height: 36,
+    width: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F3F4F6',
+  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -304,10 +348,47 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8,
   },
+  largeTitle: {
+    fontSize: 42,
+    fontWeight: '800',
+    color: '#111827',
+  },
   subtitle: {
     fontSize: 18,
     color: '#64748b',
     textAlign: 'center',
+  },
+  monthWeekContainer: {
+    marginBottom: 16,
+  },
+  monthLabel: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  weekRowCompact: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  weekCell: {
+    alignItems: 'center',
+    width: 40,
+  },
+  weekCellDate: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  weekCellDateSelected: {
+    color: '#111827',
+  },
+  weekCellDow: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  weekCellDowSelected: {
+    color: '#111827',
   },
   authContainer: {
     flex: 1,
@@ -378,12 +459,92 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e5e7eb',
     marginBottom: 16,
   },
+  habitCard: {
+    backgroundColor: '#F8E6B8',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+  },
+  habitCardTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  energyText: {
+    fontSize: 16,
+    color: '#111827',
+    fontWeight: '700',
+  },
+  circlesRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  circle: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 2,
+  },
+  circleEmpty: {
+    borderColor: '#111827',
+    backgroundColor: 'transparent',
+  },
+  circleFilled: {
+    borderColor: '#111827',
+    backgroundColor: '#111827',
+  },
+  habitCardBody: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  habitTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#111827',
+  },
+  habitSubtitle: {
+    fontSize: 18,
+    color: '#111827',
+    opacity: 0.9,
+  },
   dayHeader: {
     fontSize: 12,
     fontWeight: '600',
     color: '#6b7280',
     textAlign: 'center',
     minWidth: 32,
+  },
+  instructionContainer: {
+    alignItems: 'center',
+    paddingVertical: 24,
+    gap: 12,
+  },
+  dashedDivider: {
+    width: 24,
+    height: 1,
+    borderBottomWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#111827',
+  },
+  instructionText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#111827',
+    paddingHorizontal: 24,
+  },
+  okPill: {
+    backgroundColor: '#F8E6B8',
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: 9999,
+    marginTop: 4,
+  },
+  okPillText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#111827',
   },
   habitRow: {
     backgroundColor: 'white',
@@ -444,5 +605,32 @@ const styles = StyleSheet.create({
   },
   dayButtonTextCompleted: {
     color: 'white',
+  },
+  bottomBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+  },
+  tabItem: {
+    alignItems: 'center',
+    opacity: 0.6,
+  },
+  tabItemActive: {
+    alignItems: 'center',
+  },
+  tabText: {
+    marginTop: 2,
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  tabTextActive: {
+    marginTop: 2,
+    fontSize: 12,
+    color: '#111827',
+    fontWeight: '700',
   },
 });

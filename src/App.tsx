@@ -1,422 +1,221 @@
 import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
 import { addDays, format, startOfWeek } from "date-fns";
-import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import { Plus } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
-import { Id } from "../convex/_generated/dataModel";
-import { SettingsDialog } from "./SettingsDialog";
 import { SignInForm } from "./SignInForm";
-import { SignOutButton } from "./SignOutButton";
-import { Button } from "./components/Button";
-import { Card, CardContent } from "./components/Card";
-import { Checkbox } from "./components/Checkbox";
-import { SegmentedControl } from "./components/SegmentedControl";
 
-function getCatMotivation() {
-  const motivations = [
-    "Purr-fect progress! 🐱",
-    "You're feline great! 😺",
-    "Meow-velous work! 😸",
-    "Keep pawing forward! 🐾",
-  ];
-  return motivations[Math.floor(Math.random() * motivations.length)];
-}
+const weeklyDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
 
-function HabitStats({ habitId, settings }: { habitId: Id<"habits">, settings: any }) {
-  const stats = useQuery(api.habits.getStats, { habitId }) ?? { streak: 0, consistency: 0 };
+type HabitStatus = "done" | "missed" | "planned";
 
-  if (!settings.showStreaks && !settings.showConsistency) return null;
+const statusStyles: Record<HabitStatus, string> = {
+  done: "bg-foreground text-background border-transparent",
+  missed: "border-dashed text-muted-foreground",
+  planned: "text-muted-foreground",
+};
 
-  return (
-    <div className="flex gap-4 text-sm text-gray-600">
-      {settings.showStreaks && (
-        <span className="flex items-center gap-1">
-          {settings.showEmojis && "🔥"}
-          <span className="font-medium">{stats.streak}</span> day streak
-        </span>
-      )}
-      {settings.showConsistency && (
-        <span className="flex items-center gap-1">
-          {settings.showEmojis && "📊"}
-          <span className="font-medium">{stats.consistency}%</span> consistency
-        </span>
-      )}
-    </div>
-  );
+function cn(...classes: (string | boolean | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
 }
 
 function App() {
-  const [newHabit, setNewHabit] = useState("");
-  const [newHabitNotes, setNewHabitNotes] = useState("");
-  const [activeTab, setActiveTab] = useState("habits");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [view, setView] = useState<"week" | "calendar">("week");
-  const [editingNotes, setEditingNotes] = useState<Id<"habits"> | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newHabitName, setNewHabitName] = useState("");
 
   const createHabit = useMutation(api.habits.create);
-  const updateNotes = useMutation(api.habits.updateNotes);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const habits = useQuery(api.habits.list) ?? [];
 
-  // Get the start of the week
-  const weekStart = startOfWeek(selectedDate);
-  // Generate an array of dates for the week
-  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const weekDateStrings = weekDates.map(date => format(date, 'yyyy-MM-dd'));
+  // Get current week starting from Monday
+  const startOfCurrentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(startOfCurrentWeek, i));
+  const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
 
-  const tracking = useQuery(api.habits.getTracking, {
-    dates: view === "week" ? weekDateStrings : [format(selectedDate, 'yyyy-MM-dd')]
-  }) ?? [];
+  const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
 
-  const settings = useQuery(api.settings.get) ?? {
-    showStreaks: true,
-    showConsistency: true,
-    showMotivationalMessages: true,
-    showEmojis: true,
-    showCalendarView: true,
-    catTheme: true,
-    darkMode: false,
+  const canSubmit = useMemo(
+    () => newHabitName.trim().length > 0,
+    [newHabitName],
+  );
+
+  const handleToggleForm = () => {
+    setIsAdding((prev) => {
+      if (prev) {
+        setNewHabitName("");
+      }
+      return !prev;
+    });
   };
 
-  const articles = useQuery(api.articles.list, {}) ?? [];
-  const seedArticles = useMutation(api.articles.seed);
-
-  useEffect(() => {
-    seedArticles();
-  }, []);
-
-  // Respect calendar view setting
-  useEffect(() => {
-    if (!settings.showCalendarView && view === "calendar") {
-      setView("week");
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    const name = newHabitName.trim();
+    if (!name) {
+      return;
     }
-  }, [settings.showCalendarView]);
 
-  // Apply persisted dark mode on page load and settings change
-  useEffect(() => {
-    if (settings.darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [settings.darkMode]);
+    await createHabit({ name, notes: "" });
+    setNewHabitName("");
+    setIsAdding(false);
+  };
 
-  const [showSettings, setShowSettings] = useState(false);
+  const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
+    const trackingEntry = tracking.find(
+      (t) => t.habitId === habitId && t.date === dateString
+    );
+
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+
+    if (trackingEntry?.completed) return "done";
+    if (date < today) return "missed";
+    return "planned";
+  };
 
   return (
-    <main aria-label="Habit tracker" className="container mx-auto px-4 py-8">
-      <div className="flex flex-col gap-8">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold accent-text mb-4 flex items-center justify-center gap-3">
-            {settings.catTheme && <span role="img" aria-label="cat" className="text-4xl">🐱</span>}
-            Daily Habits
-            {settings.catTheme && <span role="img" aria-label="cat" className="text-4xl">🐱</span>}
-          </h1>
-          <Authenticated>
-            {settings.showMotivationalMessages && (
-              <p className="text-xl text-slate-600">
-                {getCatMotivation()}
-              </p>
-            )}
-          </Authenticated>
-          <Unauthenticated>
-            <p className="text-xl text-slate-600">Sign in to track your habits</p>
-          </Unauthenticated>
-        </div>
-
+    <section className="bg-background">
+      <div className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 pb-24 pt-12">
         <Unauthenticated>
           <SignInForm />
         </Unauthenticated>
 
         <Authenticated>
-          <div className="space-y-8">
-            {/* Tab Navigation */}
-            <div className="flex justify-center">
-              <SegmentedControl
-                segments={[
-                  { value: "habits", label: "My Habits" },
-                  { value: "resources", label: "Resources" },
-                ]}
-                value={activeTab as any}
-                onChange={(v) => setActiveTab(v)}
-              />
-            </div>
+          <header className="flex items-center justify-between">
+            <h1 className="text-4xl font-black tracking-tight text-foreground">
+              Habits
+            </h1>
+            <button
+              type="button"
+              onClick={handleToggleForm}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm transition-colors hover:bg-foreground hover:text-background"
+              aria-label="Add habit"
+              aria-expanded={isAdding}
+              aria-controls="add-habit-panel"
+            >
+              <Plus size={20} strokeWidth={2.4} />
+            </button>
+          </header>
 
-            {/* Habits Tab Content */}
-            {activeTab === "habits" && (
-              <div className="space-y-6">
-                <form
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    if (newHabit.trim()) {
-                      await createHabit({
-                        name: newHabit.trim(),
-                        notes: newHabitNotes.trim() || undefined
-                      });
-                      setNewHabit("");
-                      setNewHabitNotes("");
-                    }
-                  }}
-                  aria-label="Create a new habit"
-                  className="flex flex-col gap-2"
-                >
-                  <label className="sr-only" htmlFor="habit-name">Habit name</label>
+          {isAdding && (
+            <form
+              id="add-habit-panel"
+              onSubmit={handleSubmit}
+              className="rounded-[24px] border border-border bg-background/90 p-5 shadow-sm backdrop-blur"
+            >
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="habit-name"
+                    className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground"
+                  >
+                    New Habit
+                  </label>
                   <input
-                    className="rounded-lg border border-gray-300 px-3 py-2"
                     id="habit-name"
-                    onChange={(e) => setNewHabit(e.target.value)}
-                    placeholder="Enter a new habit..."
-                    aria-required="true"
-                    maxLength={80}
+                    name="habit-name"
                     type="text"
-                    value={newHabit}
+                    value={newHabitName}
+                    onChange={(event) => setNewHabitName(event.target.value)}
+                    placeholder="Name your habit"
+                    autoFocus
+                    className="w-full rounded-full border border-border bg-background px-5 py-3 text-sm font-medium tracking-wide text-foreground outline-none transition-colors focus:border-foreground"
                   />
-                  <label className="sr-only" htmlFor="habit-notes">Habit notes (optional)</label>
-                  <textarea
-                    className="rounded-lg border border-gray-300 px-3 py-2"
-                    id="habit-notes"
-                    onChange={(e) => setNewHabitNotes(e.target.value)}
-                    placeholder="Add notes (optional)..."
-                    maxLength={300}
-                    rows={2}
-                    value={newHabitNotes}
-                  />
-                  <Button disabled={!newHabit.trim()} type="submit">
-                    Add Habit
-                  </Button>
-                </form>
+                </div>
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={handleToggleForm}
+                    className="text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className={cn(
+                      "rounded-full border border-foreground px-5 py-2 text-xs uppercase tracking-[0.3em] transition-colors",
+                      canSubmit
+                        ? "hover:bg-foreground hover:text-background"
+                        : "opacity-40",
+                    )}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
 
-                {settings.showCalendarView && (
-                  <div className="flex justify-center">
-                    <SegmentedControl
-                      segments={[
-                        { value: "week", label: "Week View" },
-                        { value: "calendar", label: "Calendar View" },
-                      ]}
-                      value={view as any}
-                      onChange={(v) => setView(v as any)}
-                    />
-                  </div>
-                )}
+          <div className="space-y-8">
+            {habits.map((habit) => {
+              const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
+              const completedCount = weekStatus.filter(s => s === "done").length;
+              const completionRate = Math.round((completedCount / 7) * 100);
 
-                {view === "calendar" && settings.showCalendarView && (
-                  <div className="flex justify-center">
-                    <Card className="p-2">
-                      <Calendar
-                        onChange={(value) => {
-                          if (value instanceof Date) {
-                            setSelectedDate(value);
-                          }
-                        }}
-                        value={selectedDate}
-                      />
-                    </Card>
-                  </div>
-                )}
+              // Calculate streak (consecutive days completed)
+              const streak = 0; // TODO: Implement streak calculation
 
-                {(view === "week" || !settings.showCalendarView) ? (
-                  <div className="overflow-x-auto">
-                    <table className="w-full" role="grid" aria-label="Weekly habit grid">
-                      <thead>
-                        <tr>
-                          <th className="px-4 py-2" scope="col">Habit</th>
-                          {weekDates.map((date) => (
-                            <th key={date.toString()} className="px-4 py-2" scope="col">
-                              {format(date, 'EEE d')}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {habits.map((habit) => (
-                          <tr key={habit._id}>
-                            <td className="px-4 py-2" scope="row">
-                              <div className="space-y-1">
-                                <div>{habit.name}</div>
-                                <HabitStats habitId={habit._id} settings={settings} />
-                                {editingNotes === habit._id ? (
-                                  <div className="mt-2">
-                                    <textarea
-                                      defaultValue={habit.notes || ""}
-                                      className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                                      rows={2}
-                                      onBlur={async (e) => {
-                                        await updateNotes({
-                                          habitId: habit._id,
-                                          notes: e.target.value
-                                        });
-                                        setEditingNotes(null);
-                                      }}
-                                    />
-                                  </div>
-                                ) : (
-                                  habit.notes && (
-                                    <div
-                                      className="text-sm text-gray-600 cursor-pointer"
-                                      onClick={() => setEditingNotes(habit._id)}
-                                    >
-                                      {habit.notes}
-                                    </div>
-                                  )
-                                )}
-                                {!habit.notes && !editingNotes && (
-                                  <button
-                                    onClick={() => setEditingNotes(habit._id)}
-                                    className="text-sm text-blue-500"
-                                    type="button"
-                                  >
-                                    Add notes
-                                  </button>
-                                )}
-                              </div>
-                            </td>
-                            {weekDates.map((date) => {
-                              const dateStr = format(date, 'yyyy-MM-dd');
-                              const isCompleted = tracking.some(
-                                (t) => t.habitId === habit._id && t.date === dateStr && t.completed
-                              );
-                              return (
-                                <td key={dateStr} className="px-4 py-2 text-center">
-                                  <label className="inline-flex items-center justify-center">
-                                    <Checkbox
-                                      aria-label={`Mark ${habit.name} on ${format(date, 'PPP')}`}
-                                      checked={isCompleted}
-                                      onChange={() =>
-                                        toggleHabit({
-                                          habitId: habit._id,
-                                          date: dateStr,
-                                        })
-                                      }
-                                      size="md"
-                                      variant="success"
-                                    />
-                                  </label>
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+              return (
+                <article
+                  key={habit._id}
+                  className="rounded-[28px] border border-border bg-background/90 p-6 shadow-sm"
+                >
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                        {habit.name}
+                      </h3>
+                    </div>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {habits.map((habit) => {
-                      const dateStr = format(selectedDate, 'yyyy-MM-dd');
-                      const isCompleted = tracking.some(
-                        (t) => t.habitId === habit._id && t.date === dateStr && t.completed
-                      );
+                  <div className="mt-6 grid grid-cols-7 justify-items-center gap-y-4 gap-x-3">
+                    {weeklyDays.map((day, index) => {
+                      const state = weekStatus[index];
+                      const dateString = weekDateStrings[index];
                       return (
-                        <Card key={habit._id} className="flex items-center justify-between">
-                          <CardContent className="w-full flex items-center justify-between">
-                            <div className="space-y-1">
-                            <div className="text-lg">{habit.name}</div>
-                            <HabitStats habitId={habit._id} settings={settings} />
-                            {editingNotes === habit._id ? (
-                              <div className="mt-2">
-                                <textarea
-                                  defaultValue={habit.notes || ""}
-                                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                                  rows={2}
-                                  onBlur={async (e) => {
-                                    await updateNotes({
-                                      habitId: habit._id,
-                                      notes: e.target.value
-                                    });
-                                    setEditingNotes(null);
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              habit.notes && (
-                                <div
-                                  className="text-sm text-gray-600 cursor-pointer"
-                                  onClick={() => setEditingNotes(habit._id)}
-                                >
-                                  {habit.notes}
-                                </div>
-                              )
+                        <div
+                          key={`${habit._id}-${day}`}
+                          className="flex flex-col items-center gap-2"
+                        >
+                          <span className="text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">
+                            {day}
+                          </span>
+                          <button
+                            onClick={() => toggleHabit({ habitId: habit._id, date: dateString })}
+                            className={cn(
+                              "flex h-11 w-11 items-center justify-center rounded-full border border-border text-sm font-semibold transition-colors",
+                              state && statusStyles[state],
                             )}
-                            {!habit.notes && !editingNotes && (
-                              <button
-                                onClick={() => setEditingNotes(habit._id)}
-                                className="text-sm text-blue-500"
-                                type="button"
-                              >
-                                Add notes
-                              </button>
-                            )}
-                            </div>
-                            <label className="inline-flex items-center gap-2">
-                              <Checkbox
-                                aria-label={`Mark ${habit.name} on ${format(selectedDate, 'PPP')}`}
-                                checked={isCompleted}
-                                onChange={() =>
-                                  toggleHabit({
-                                    habitId: habit._id,
-                                    date: dateStr,
-                                  })
-                                }
-                                size="lg"
-                                variant="success"
-                              />
-                              <span className="text-sm text-gray-700">Done</span>
-                            </label>
-                          </CardContent>
-                        </Card>
+                            aria-label={`Toggle ${habit.name} on ${day}`}
+                          >
+                            {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
+                          </button>
+                        </div>
                       );
                     })}
                   </div>
-                )}
-              </div>
-            )}
-
-            {/* Resources Tab Content */}
-            {activeTab === "resources" && (
-              <Card>
-                <CardContent>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                  {settings.catTheme && <span role="img" aria-label="book">📚</span>}
-                  Habit Building Resources
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {articles.map((article) => (
-                      <Card key={article._id} className="bg-[var(--color-card)]">
-                        <CardContent>
-                          <h3 className="text-lg font-medium mb-2">{article.title}</h3>
-                          <p className="text-gray-600 text-sm dark:text-slate-300">{article.content}</p>
-                          <div className="mt-2">
-                            <span className="inline-block rounded bg-indigo-100 px-2 py-1 text-xs text-indigo-800">
-                              {article.category}
-                            </span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                  <div className="mt-6 h-[2px] w-full bg-border">
+                    <div
+                      className="h-full bg-foreground transition-all duration-300"
+                      style={{ width: `${completionRate}%` }}
+                      aria-hidden
+                    />
                   </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          <div className="fixed bottom-4 right-4 flex gap-2">
-            <button
-              onClick={() => setShowSettings(true)}
-              aria-label="Open settings"
-              className="rounded-full bg-gray-100 p-2 hover:bg-gray-200"
-              type="button"
-            >
-              ⚙️
-            </button>
-            <SignOutButton />
+                  <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                    <span>Streak · {streak} days</span>
+                    <span>{completionRate}% this week</span>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </Authenticated>
       </div>
       <Toaster />
-      <SettingsDialog isOpen={showSettings} onClose={() => setShowSettings(false)} />
-    </main>
+    </section>
   );
 }
 

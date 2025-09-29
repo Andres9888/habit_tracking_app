@@ -1,90 +1,81 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-bg: #f8fafc; /* slate-50 */
-  --color-card: #ffffff;
-  --color-border: #e2e8f0; /* slate-200 */
-  --color-text: #0f172a; /* slate-900 */
-  --color-muted: #64748b; /* slate-500 */
-  --color-primary: #3b82f6; /* blue-500 */
-  --color-success: #10b981; /* emerald-500 */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 6% 10%;
+
+    --primary: 240 5% 8%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 240 6% 12%;
+
+    --muted: 0 0% 92%;
+    --muted-foreground: 240 5% 42%;
+
+    --accent: 0 0% 88%;
+    --accent-foreground: 240 6% 12%;
+
+    --destructive: 4 82% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 6% 90%;
+    --input: 240 5% 86%;
+    --ring: 240 6% 16%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 6% 7%;
+    --foreground: 0 0% 96%;
+
+    --card: 240 6% 9%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 240 6% 9%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 0 0% 96%;
+    --primary-foreground: 240 5% 10%;
+
+    --secondary: 240 5% 12%;
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 240 5% 18%;
+    --muted-foreground: 0 0% 72%;
+
+    --accent: 240 5% 14%;
+    --accent-foreground: 0 0% 96%;
+
+    --destructive: 4 72% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 4% 18%;
+    --input: 240 4% 18%;
+    --ring: 0 0% 80%;
+  }
 }
 
-.dark {
-  --color-bg: #0b1020;
-  --color-card: #0f172a;
-  --color-border: #1e293b;
-  --color-text: #e5e7eb;
-  --color-muted: #94a3b8;
-  --color-primary: #60a5fa;
-  --color-success: #34d399;
-}
+@layer base {
+  * {
+    @apply border-border;
+  }
 
-.accent-text {
-  @apply text-slate-600;
-}
-
-.button {
-  @apply bg-gradient-to-r bg-blue-500;
-}
-
-body {
-  font-family:
-    "Inter Variable",
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
-  color: var(--color-text);
-  background: var(--color-bg);
-}
-
-.input-field {
-  @apply w-full px-3 py-2 rounded-md bg-transparent border-2 border-slate-200 focus:outline-none focus:border-blue-500 transition-colors;
-}
-
-.auth-button {
-  @apply w-full py-2 rounded-md text-white font-medium button hover:opacity-90 transition-opacity;
-}
-
-.link-text {
-  @apply text-blue-500 hover:underline cursor-pointer font-medium;
-}
-
-/* React Calendar overrides */
-.react-calendar {
-  background: var(--color-card) !important;
-  border: 1px solid var(--color-border) !important;
-  border-radius: 12px !important;
-  padding: 8px !important;
-}
-.react-calendar__navigation button {
-  color: var(--color-text) !important;
-  border-radius: 8px !important;
-}
-.react-calendar__tile {
-  border-radius: 8px !important;
-}
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus {
-  background: rgba(99, 102, 241, 0.08) !important; /* indigo tint */
-}
-.react-calendar__tile--active {
-  background: var(--color-primary) !important;
-  color: white !important;
-}
-.react-calendar__tile--now {
-  outline: 2px solid var(--color-primary) !important;
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, sans-serif;
+  }
 }

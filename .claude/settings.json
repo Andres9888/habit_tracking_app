@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/coderabbit-handler.sh",
+            "args": ["$TOOL_INPUT_FILE_PATH"]
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/coderabbit-handler.sh",
+            "args": ["$TOOL_INPUT_FILE_PATH"]
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": ["-c", "if [ -f .claude/coderabbit-review.json ]; then echo '\n📋 Session Complete - CodeRabbit reviews saved'; rm .claude/coderabbit-review.json; fi"]
+          }
+        ]
+      }
+    ]
+  }
+}

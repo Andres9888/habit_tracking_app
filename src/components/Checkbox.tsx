@@ -37,16 +37,16 @@ export const Checkbox = React.forwardRef(function Checkbox(
   const internalRef = useRef<HTMLInputElement | null>(null);
 
   const variantToCheckedClasses: Record<CheckboxVariant, string> = {
-    primary: "peer-checked:border-blue-600 peer-checked:bg-blue-600",
-    success: "peer-checked:border-green-600 peer-checked:bg-green-600",
-    neutral: "peer-checked:border-slate-600 peer-checked:bg-slate-600",
+    primary: "peer-checked:border-[var(--color-primary)] peer-checked:bg-[var(--color-primary)]",
+    success: "peer-checked:border-[var(--color-success)] peer-checked:bg-[var(--color-success)]",
+    neutral: "peer-checked:border-[var(--color-text)] peer-checked:bg-[var(--color-text)]",
     danger: "peer-checked:border-red-600 peer-checked:bg-red-600",
   };
 
   const variantToFocusRing: Record<CheckboxVariant, string> = {
-    primary: "peer-focus-visible:ring-blue-500",
-    success: "peer-focus-visible:ring-green-500",
-    neutral: "peer-focus-visible:ring-slate-500",
+    primary: "peer-focus-visible:ring-[var(--color-primary)]",
+    success: "peer-focus-visible:ring-[var(--color-success)]",
+    neutral: "peer-focus-visible:ring-[var(--color-text)]",
     danger: "peer-focus-visible:ring-red-500",
   };
 
@@ -84,12 +84,12 @@ export const Checkbox = React.forwardRef(function Checkbox(
       <span
         aria-hidden="true"
         className={cn(
-          "inline-flex items-center justify-center rounded border border-gray-300 bg-white text-white shadow-sm transition-colors motion-safe:transition-transform motion-safe:active:scale-95",
-          "hover:border-gray-400",
-          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white",
+          "inline-flex items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-card)] text-white shadow-sm transition-colors motion-safe:transition-transform motion-safe:active:scale-95",
+          "hover:border-[var(--color-border)]",
+          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[var(--color-bg)]",
           variantToFocusRing[variant],
           variantToCheckedClasses[variant],
-          "peer-disabled:cursor-not-allowed peer-disabled:border-gray-200 peer-disabled:bg-gray-100",
+          "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
           sizeToDim[size]
         )}
         data-indeterminate={indeterminate && !checked}

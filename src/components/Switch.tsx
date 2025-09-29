@@ -44,16 +44,16 @@ export const Switch = React.forwardRef(function Switch(
       <span
         aria-hidden="true"
         className={cn(
-          "inline-flex items-center rounded-full border border-gray-300 bg-white transition-colors",
-          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white",
-          "peer-checked:border-blue-600 peer-checked:bg-blue-600",
-          "peer-disabled:cursor-not-allowed peer-disabled:border-gray-200 peer-disabled:bg-gray-100",
+          "inline-flex items-center rounded-full border border-[var(--color-border)] bg-[var(--color-card)] transition-colors",
+          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-primary)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[var(--color-bg)]",
+          "peer-checked:border-[var(--color-primary)] peer-checked:bg-[var(--color-primary)]",
+          "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
           sizeToDims[size].track
         )}
       >
         <span
           className={cn(
-            "ml-1 inline-block rounded-full bg-white shadow transition-transform",
+            "ml-1 inline-block rounded-full bg-[var(--color-card)] shadow transition-transform",
             sizeToDims[size].knob,
             checked ? sizeToDims[size].translate : "translate-x-0"
           )}
