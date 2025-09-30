@@ -1,185 +1,339 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex/react";
-import { addDays, format, startOfWeek } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { api } from "./convex/_generated/api";
-import { Id } from "./convex/_generated/dataModel";
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
 
-function getCatMotivation() {
-  const motivations = [
-    "Purr-fect progress! 🐱",
-    "You're feline great! 😺",
-    "Meow-velous work! 😸",
-    "Keep pawing forward! 🐾",
-  ];
-  return motivations[Math.floor(Math.random() * motivations.length)];
-}
-
-function HabitStats({ habitId, settings }: { habitId: Id<"habits">, settings: any }) {
-  const stats = useQuery(api.habits.getStats, { habitId }) ?? { streak: 0, consistency: 0 };
-
-  if (!settings.showStreaks && !settings.showConsistency) return null;
-
-  return (
-    <View style={styles.statsContainer}>
-      {settings.showStreaks && (
-        <Text style={styles.statText}>
-          {settings.showEmojis && "🔥"} {stats.streak} day streak
-        </Text>
-      )}
-      {settings.showConsistency && (
-        <Text style={styles.statText}>
-          {settings.showEmojis && "📊"} {stats.consistency}% consistency
-        </Text>
-      )}
-    </View>
-  );
-}
-
+type HabitStatus = "done" | "missed" | "planned";
 
 function HabitsScreen() {
-  const [newHabit, setNewHabit] = useState("");
-  const [newHabitNotes, setNewHabitNotes] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isAdding, setIsAdding] = useState(false);
+  const [newHabitName, setNewHabitName] = useState("");
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const habits = useQuery(api.habits.list) ?? [];
 
-  // Week model
-  const weekStart = startOfWeek(selectedDate);
-  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const weekDateStrings = weekDates.map((d) => format(d, 'yyyy-MM-dd'));
-  const monthLabel = format(selectedDate, 'MMMM');
+  // Get 4-day window (3 days before + selected end date)
+  const weekDates = Array.from({ length: 4 }, (_, i) => addDays(selectedEndDate, i - 3));
+  const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
+
+  // Calculate today for preventing future selections
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
-  const settings = useQuery(api.settings.get) ?? {
-    showStreaks: true,
-    showConsistency: true,
-    showMotivationalMessages: true,
-    showEmojis: true,
-    showCalendarView: true,
-    catTheme: true,
-  };
 
-  const handleCreateHabit = async () => {
-    if (!newHabit.trim()) return;
-    await createHabit({ name: newHabit.trim(), notes: newHabitNotes.trim() || undefined });
-    setNewHabit("");
-    setNewHabitNotes("");
-  };
-
-  const DayCircle = ({ filled }: { filled: boolean }) => (
-    <View style={[styles.circle, filled ? styles.circleFilled : styles.circleEmpty]} />
+  const canSubmit = useMemo(
+    () => newHabitName.trim().length > 0,
+    [newHabitName],
   );
 
-  const HabitCard = ({ habitName, notes, habitId }: { habitName: string; notes?: string; habitId: Id<'habits'> }) => {
-    const completedCount = weekDates.reduce((acc, d) => {
-      const dateStr = format(d, 'yyyy-MM-dd');
-      return acc + (tracking.some((t) => t.habitId === habitId && t.date === dateStr && t.completed) ? 1 : 0);
-    }, 0);
-
-    return (
-      <View style={styles.habitCard}>
-        <View style={styles.habitCardTopRow}>
-          <Text accessibilityLabel="energy count" style={styles.energyText}>⚡ {completedCount}</Text>
-          <View style={styles.circlesRow}>
-            {weekDates.map((d) => {
-              const dateStr = format(d, 'yyyy-MM-dd');
-              const isCompleted = tracking.some((t) => t.habitId === habitId && t.date === dateStr && t.completed);
-              return <DayCircle key={dateStr} filled={isCompleted} />;
-            })}
-          </View>
-        </View>
-        <View style={styles.habitCardBody}>
-          <View>
-            <Text style={styles.habitTitle}>{habitName}</Text>
-            {!!notes && <Text style={styles.habitSubtitle}>{notes}</Text>}
-          </View>
-          <MaterialCommunityIcons accessibilityLabel="muted" name="bell-off-outline" size={22} color="#111827" />
-        </View>
-      </View>
-    );
+  const handleToggleForm = () => {
+    setIsAdding((prev) => {
+      if (prev) {
+        setNewHabitName("");
+      }
+      return !prev;
+    });
   };
+
+  const handleSubmit = async () => {
+    const name = newHabitName.trim();
+    if (!name) {
+      return;
+    }
+
+    await createHabit({ name, notes: "" });
+    setNewHabitName("");
+    setIsAdding(false);
+  };
+
+  const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
+    const trackingEntry = tracking.find(
+      (t) => t.habitId === habitId && t.date === dateString
+    );
+
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+
+    if (trackingEntry?.completed) return "done";
+    if (date < today) return "missed";
+    return "planned";
+  };
+
+  const goToPreviousPeriod = () => {
+    setSelectedEndDate(prev => addDays(prev, -4));
+  };
+
+  const goToNextPeriod = () => {
+    const nextDate = addDays(selectedEndDate, 4);
+    const nextDateNormalized = new Date(nextDate);
+    nextDateNormalized.setHours(0, 0, 0, 0);
+
+    // Don't go beyond today
+    if (nextDateNormalized <= today) {
+      setSelectedEndDate(nextDate);
+    } else {
+      setSelectedEndDate(new Date());
+    }
+  };
+
+  const goToToday = () => {
+    setSelectedEndDate(new Date());
+  };
+
+  const handleDateSelect = (date: string) => {
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    // Don't allow future dates
+    if (selectedDate <= today) {
+      setSelectedEndDate(selectedDate);
+    }
+    setShowCalendar(false);
+  };
+
+  const isAtToday = format(selectedEndDate, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.headerRow}>
-        <Text style={styles.largeTitle}>Habits</Text>
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel="Add habit"
-          onPress={handleCreateHabit}
-          style={styles.addButton}
-        >
-          <Ionicons name="add" size={28} color="#111827" />
-        </TouchableOpacity>
-      </View>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Habits</Text>
+          <TouchableOpacity
+            onPress={handleToggleForm}
+            style={styles.addButton}
+            accessibilityLabel="Add habit"
+            accessibilityRole="button"
+          >
+            <Text style={styles.plusIcon}>+</Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* Month + week row */}
-      <View style={styles.monthWeekContainer}>
-        <Text style={styles.monthLabel}>{monthLabel}</Text>
-        <View style={styles.weekRowCompact}>
-          {weekDates.map((d) => {
-            const isSelected = format(d, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+        {/* Date Navigation */}
+        <View style={styles.dateNavigation}>
+          <TouchableOpacity
+            onPress={goToPreviousPeriod}
+            style={styles.navButton}
+            accessibilityLabel="Previous period"
+            accessibilityRole="button"
+          >
+            <Text style={styles.navButtonText}>←</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={goToToday}
+            style={[styles.todayButton, isAtToday && styles.todayButtonDisabled]}
+            disabled={isAtToday}
+            accessibilityLabel="Go to today"
+            accessibilityRole="button"
+          >
+            <Text style={[styles.todayButtonText, isAtToday && styles.todayButtonTextDisabled]}>
+              {format(weekDates[0], 'MMM d')} - {format(weekDates[3], 'MMM d')}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setShowCalendar(true)}
+            style={styles.calendarButton}
+            accessibilityLabel="Open calendar"
+            accessibilityRole="button"
+          >
+            <Text style={styles.calendarButtonText}>📅</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={goToNextPeriod}
+            style={[styles.navButton, isAtToday && styles.navButtonDisabled]}
+            disabled={isAtToday}
+            accessibilityLabel="Next period"
+            accessibilityRole="button"
+          >
+            <Text style={[styles.navButtonText, isAtToday && styles.navButtonTextDisabled]}>→</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Calendar Modal */}
+        <Modal
+          visible={showCalendar}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowCalendar(false)}
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setShowCalendar(false)}
+          >
+            <View style={styles.calendarModal}>
+              <View style={styles.calendarHeader}>
+                <Text style={styles.calendarTitle}>Select Date</Text>
+                <TouchableOpacity
+                  onPress={() => setShowCalendar(false)}
+                  style={styles.closeButton}
+                  accessibilityLabel="Close calendar"
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </TouchableOpacity>
+              </View>
+              <Calendar
+                current={format(selectedEndDate, 'yyyy-MM-dd')}
+                onDayPress={(day) => handleDateSelect(day.dateString)}
+                maxDate={format(today, 'yyyy-MM-dd')}
+                markedDates={{
+                  [format(selectedEndDate, 'yyyy-MM-dd')]: {
+                    selected: true,
+                    selectedColor: '#0f172a',
+                  },
+                }}
+                theme={{
+                  todayTextColor: '#3b82f6',
+                  selectedDayBackgroundColor: '#0f172a',
+                  selectedDayTextColor: '#ffffff',
+                  arrowColor: '#0f172a',
+                  monthTextColor: '#0f172a',
+                  textMonthFontWeight: '600',
+                  textDayFontSize: 16,
+                  textMonthFontSize: 18,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        {isAdding && (
+          <View style={styles.addForm}>
+            <View style={styles.formContent}>
+              <View style={styles.formField}>
+                <Text style={styles.formLabel}>NEW HABIT</Text>
+                <TextInput
+                  value={newHabitName}
+                  onChangeText={setNewHabitName}
+                  placeholder="Name your habit"
+                  autoFocus
+                  style={styles.input}
+                  placeholderTextColor="#999"
+                />
+              </View>
+              <View style={styles.formActions}>
+                <TouchableOpacity
+                  onPress={handleToggleForm}
+                  style={styles.cancelButton}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.cancelButtonText}>CANCEL</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  disabled={!canSubmit}
+                  style={[styles.submitButton, !canSubmit && styles.submitButtonDisabled]}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.submitButtonText}>ADD</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+
+        <View style={styles.habitsList}>
+          {habits.map((habit) => {
+            const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
+            const completedCount = weekStatus.filter(s => s === "done").length;
+            const completionRate = Math.round((completedCount / 4) * 100);
+
+            // Calculate streak (consecutive days completed up to today)
+            const calculateStreak = () => {
+              const completedDates = new Set(
+                tracking
+                  .filter(t => t.habitId === habit._id && t.completed)
+                  .map(t => t.date)
+              );
+
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+
+              let streak = 0;
+              let currentDate = new Date(today);
+
+              // Count consecutive days backward from today
+              while (true) {
+                const dateString = format(currentDate, 'yyyy-MM-dd');
+                if (completedDates.has(dateString)) {
+                  streak++;
+                  currentDate.setDate(currentDate.getDate() - 1);
+                } else {
+                  break;
+                }
+              }
+
+              return streak;
+            };
+
+            const streak = calculateStreak();
+
             return (
-              <TouchableOpacity key={d.toString()} onPress={() => setSelectedDate(d)} style={styles.weekCell}>
-                <Text style={[styles.weekCellDate, isSelected && styles.weekCellDateSelected]}>{format(d, 'd')}</Text>
-                <Text style={[styles.weekCellDow, isSelected && styles.weekCellDowSelected]}>{format(d, 'EE')}</Text>
-              </TouchableOpacity>
+              <View key={habit._id} style={styles.habitCard}>
+                <View style={styles.habitHeader}>
+                  <Text style={styles.habitName}>{habit.name}</Text>
+                </View>
+                <View style={styles.calendarGrid}>
+                  {weekDates.map((date, index) => {
+                    const state = weekStatus[index];
+                    const dateString = weekDateStrings[index];
+                    const dayLabel = format(date, 'EEE').substring(0, 3);
+
+                    return (
+                      <View
+                        key={`${habit._id}-${dateString}`}
+                        style={styles.dayColumn}
+                      >
+                        <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
+                        <TouchableOpacity
+                          onPress={() => toggleHabit({ habitId: habit._id, date: dateString })}
+                          style={[
+                            styles.dayButton,
+                            state === "done" && styles.dayButtonDone,
+                            state === "missed" && styles.dayButtonMissed,
+                          ]}
+                          accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
+                          accessibilityRole="button"
+                        >
+                          <Text style={[
+                            styles.dayButtonText,
+                            state === "done" && styles.dayButtonTextDone,
+                            state === "missed" && styles.dayButtonTextMissed
+                          ]}>
+                            {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
+                </View>
+                <View style={styles.progressBarContainer}>
+                  <View style={[styles.progressBar, { width: `${completionRate}%` }]} />
+                </View>
+                <View style={styles.habitStats}>
+                  <Text style={styles.statText}>STREAK · {streak} DAYS</Text>
+                  <Text style={styles.statText}>{completionRate}% THIS WEEK</Text>
+                </View>
+              </View>
             );
           })}
         </View>
       </View>
-
-      {/* Habit cards */}
-      {habits.map((habit) => (
-        <HabitCard key={habit._id} habitId={habit._id} habitName={habit.name} notes={habit.notes ?? undefined} />
-      ))}
-
-      {/* Instruction section */}
-      <View style={styles.instructionContainer}>
-        <Ionicons accessibilityElementsHidden name="arrow-up" size={24} color="#111827" />
-        <View style={styles.dashedDivider} />
-        <Text style={styles.instructionText}>
-          Tap a circle to check off the habit for that day. Tap on the habit name to see details or change something.
-        </Text>
-        <TouchableOpacity accessibilityRole="button" accessibilityLabel="OK" style={styles.okPill}>
-          <Text style={styles.okPillText}>OK</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Quick add area */}
-      <View style={styles.addHabitContainer}>
-        <TextInput
-          style={styles.input}
-          value={newHabit}
-          onChangeText={setNewHabit}
-          placeholder="Enter a new habit..."
-        />
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          value={newHabitNotes}
-          onChangeText={setNewHabitNotes}
-          placeholder="Add notes (optional)..."
-          multiline
-          numberOfLines={2}
-        />
-        <TouchableOpacity
-          style={[styles.button, !newHabit.trim() && styles.buttonDisabled]}
-          onPress={handleCreateHabit}
-          disabled={!newHabit.trim()}
-        >
-          <Text style={styles.buttonText}>Add Habit</Text>
-        </TouchableOpacity>
-      </View>
-
     </ScrollView>
   );
 }
@@ -188,27 +342,7 @@ function MainApp() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="auto" />
-      <View style={{ flex: 1 }}>
-        <HabitsScreen />
-        <View style={styles.bottomBar}>
-          <View style={styles.tabItemActive}>
-            <MaterialCommunityIcons name="vector-circle" size={22} color="#111827" />
-            <Text style={styles.tabTextActive}>Habits</Text>
-          </View>
-          <View style={styles.tabItem}>
-            <MaterialCommunityIcons name="brightness-5" size={22} color="#9CA3AF" />
-            <Text style={styles.tabText}>Focus</Text>
-          </View>
-          <View style={styles.tabItem}>
-            <MaterialCommunityIcons name="menu" size={22} color="#9CA3AF" />
-            <Text style={styles.tabText}>Journal</Text>
-          </View>
-          <View style={styles.tabItem}>
-            <MaterialCommunityIcons name="cog" size={22} color="#9CA3AF" />
-            <Text style={styles.tabText}>Other</Text>
-          </View>
-        </View>
-      </View>
+      <HabitsScreen />
     </SafeAreaView>
   );
 }
@@ -226,293 +360,302 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: '#fff',
+  },
+  content: {
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 96,
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  addButton: {
-    height: 36,
-    width: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F3F4F6',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#475569',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  largeTitle: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: '#111827',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#64748b',
-    textAlign: 'center',
-  },
-  monthWeekContainer: {
-    marginBottom: 16,
-  },
-  monthLabel: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 8,
-  },
-  weekRowCompact: {
+  dateNavigation: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  weekCell: {
-    alignItems: 'center',
-    width: 40,
-  },
-  weekCellDate: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#6B7280',
-  },
-  weekCellDateSelected: {
-    color: '#111827',
-  },
-  weekCellDow: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  weekCellDowSelected: {
-    color: '#111827',
-  },
-  addHabitContainer: {
     marginBottom: 24,
+    gap: 12,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: 'white',
-    fontSize: 16,
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: 'top',
-  },
-  button: {
-    backgroundColor: '#3b82f6',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonDisabled: {
-    backgroundColor: '#9ca3af',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  weekHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-    marginBottom: 16,
-  },
-  habitCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 28,
+  navButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     borderWidth: 1,
     borderColor: '#e2e8f0',
-    padding: 24,
-    marginBottom: 20,
-  },
-  habitCardTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: '#fff',
     alignItems: 'center',
-    marginBottom: 12,
+    justifyContent: 'center',
   },
-  energyText: {
-    fontSize: 16,
-    color: '#111827',
-    fontWeight: '700',
+  navButtonDisabled: {
+    opacity: 0.3,
   },
-  circlesRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  circle: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    borderWidth: 2,
-  },
-  circleEmpty: {
-    borderColor: '#111827',
-    backgroundColor: 'transparent',
-  },
-  circleFilled: {
-    borderColor: '#111827',
-    backgroundColor: '#111827',
-  },
-  habitCardBody: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  habitTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#111827',
-  },
-  habitSubtitle: {
-    fontSize: 18,
-    color: '#111827',
-    opacity: 0.9,
-  },
-  dayHeader: {
-    fontSize: 12,
+  navButtonText: {
+    fontSize: 20,
+    color: '#0f172a',
     fontWeight: '600',
-    color: '#6b7280',
-    textAlign: 'center',
-    minWidth: 32,
   },
-  instructionContainer: {
-    alignItems: 'center',
-    paddingVertical: 24,
-    gap: 12,
+  navButtonTextDisabled: {
+    color: '#94a3b8',
   },
-  dashedDivider: {
-    width: 24,
-    height: 1,
-    borderBottomWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#111827',
-  },
-  instructionText: {
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#111827',
-    paddingHorizontal: 24,
-  },
-  okPill: {
-    backgroundColor: '#FFFFFF',
+  todayButton: {
+    flex: 1,
+    height: 44,
+    borderRadius: 22,
     borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  todayButtonDisabled: {
     borderColor: '#0f172a',
-    paddingHorizontal: 28,
-    paddingVertical: 12,
-    borderRadius: 9999,
-    marginTop: 4,
+    backgroundColor: '#f8fafc',
   },
-  okPillText: {
-    fontSize: 18,
+  todayButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0f172a',
+    letterSpacing: 0.5,
+  },
+  todayButtonTextDisabled: {
+    color: '#0f172a',
     fontWeight: '700',
-    color: '#111827',
   },
-  habitRow: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
+  calendarButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  calendarButtonText: {
+    fontSize: 20,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  calendarModal: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    width: '100%',
+    maxWidth: 400,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  habitInfo: {
-    marginBottom: 12,
-  },
-  habitName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 4,
-  },
-  habitNotes: {
-    fontSize: 14,
-    color: '#6b7280',
-    marginTop: 4,
-  },
-  statsContainer: {
+  calendarHeader: {
     flexDirection: 'row',
-    gap: 16,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  statText: {
-    fontSize: 12,
-    color: '#6b7280',
+  calendarTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#0f172a',
   },
-  weekButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  dayButton: {
+  closeButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#f1f5f9',
   },
-  dayButtonCompleted: {
-    backgroundColor: '#10b981',
-  },
-  dayButtonIncomplete: {
-    backgroundColor: '#f3f4f6',
-  },
-  dayButtonText: {
-    fontSize: 12,
+  closeButtonText: {
+    fontSize: 18,
+    color: '#64748b',
     fontWeight: '600',
   },
-  dayButtonTextCompleted: {
-    color: 'white',
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+    color: '#0f172a',
   },
-  bottomBar: {
+  addButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plusIcon: {
+    fontSize: 24,
+    fontWeight: '300',
+    color: '#000',
+  },
+  addForm: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 16,
+    marginBottom: 24,
+  },
+  formContent: {
+    gap: 16,
+  },
+  formField: {
+    gap: 8,
+  },
+  formLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 3,
+    color: '#64748b',
+  },
+  input: {
+    width: '100%',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#0f172a',
+  },
+  formActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 12,
+  },
+  cancelButton: {
+    paddingVertical: 8,
+  },
+  cancelButtonText: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  submitButton: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#0f172a',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  submitButtonDisabled: {
+    opacity: 0.4,
+  },
+  submitButtonText: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: '#0f172a',
+    fontWeight: '600',
+  },
+  habitsList: {
+    gap: 16,
+  },
+  habitCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 16,
+  },
+  habitHeader: {
+    marginBottom: 16,
+  },
+  habitName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#0f172a',
+    letterSpacing: -0.3,
+  },
+  calendarGrid: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingHorizontal: 4,
+  },
+  dayColumn: {
     alignItems: 'center',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    backgroundColor: '#FFFFFF',
+    gap: 8,
+    flex: 1,
   },
-  tabItem: {
+  dayLabel: {
+    fontSize: 10,
+    letterSpacing: 2.5,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  dayButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
     alignItems: 'center',
-    opacity: 0.6,
+    justifyContent: 'center',
   },
-  tabItemActive: {
-    alignItems: 'center',
+  dayButtonDone: {
+    borderWidth: 2,
+    borderColor: '#0f172a',
   },
-  tabText: {
-    marginTop: 2,
-    fontSize: 12,
-    color: '#9CA3AF',
+  dayButtonMissed: {
+    borderStyle: 'dashed',
   },
-  tabTextActive: {
-    marginTop: 2,
-    fontSize: 12,
-    color: '#111827',
-    fontWeight: '700',
+  dayButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#64748b',
+  },
+  dayButtonTextDone: {
+    color: '#0f172a',
+    fontWeight: 'bold',
+  },
+  dayButtonTextMissed: {
+    color: '#64748b',
+  },
+  progressBarContainer: {
+    height: 2,
+    width: '100%',
+    backgroundColor: '#e2e8f0',
+    marginTop: 16,
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#0f172a',
+  },
+  habitStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  statText: {
+    fontSize: 10,
+    letterSpacing: 2,
+    color: '#64748b',
+    fontWeight: '600',
   },
 });
