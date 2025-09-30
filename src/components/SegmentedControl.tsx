@@ -26,7 +26,7 @@ export function SegmentedControl<T extends string>({ segments, value, onChange, 
             className={cn(
               "px-3 py-1.5 rounded-md text-sm transition-colors",
               active
-                ? "bg-[var(--color-card)] shadow text-slate-900 dark:text-slate-100"
+                ? "bg-card shadow text-slate-900 dark:text-slate-100"
                 : "text-slate-600 hover:text-slate-800",
             )}
             onClick={() => onChange(segment.value)}

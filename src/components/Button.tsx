@@ -17,11 +17,11 @@ const sizeToClasses: Record<ButtonSize, string> = {
 
 const variantToClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-primary)] text-white hover:brightness-105 disabled:opacity-50",
+    "bg-primary text-white hover:brightness-105 disabled:opacity-50",
   secondary:
     "bg-slate-100 text-slate-800 hover:bg-slate-200 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700",
   success:
-    "bg-[var(--color-success)] text-white hover:brightness-105 disabled:opacity-50",
+    "bg-green-600 text-white hover:brightness-105 disabled:opacity-50",
   danger:
     "bg-red-500 text-white hover:bg-red-600 disabled:opacity-50",
   ghost:
@@ -38,7 +38,7 @@ export function Button({
     <button
       className={cn(
         "rounded-md font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-        "focus:ring-[var(--color-primary)] focus:ring-offset-[var(--color-bg)]",
+        "focus:ring-ring focus:ring-offset-background",
         sizeToClasses[size],
         variantToClasses[variant],
         className,
