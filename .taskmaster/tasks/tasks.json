@@ -1,0 +1,132 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Implement Onboarding Flow with First-Run Experience",
+        "description": "Create guided onboarding experience with welcome screens, sample habit creation, and initial setup tutorial",
+        "details": "Build multi-step onboarding flow using React Navigation or modal system. Include: welcome screen with app benefits, guided sample habit creation ('Drink Water', 'Read 10 pages'), basic tutorial on tracking habits, and optional settings configuration. Use existing UI components (Card, Button) and implement with useState for step management. Store onboarding completion in Convex userSettings table with new field 'hasCompletedOnboarding'.",
+        "testStrategy": "Unit tests for onboarding state management, integration tests for navigation flow, E2E tests for complete onboarding experience including sample habit creation and first tracking action",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Enhance Authentication with SSO and Profile Management",
+        "description": "Add social sign-on options (Google, Apple) and user profile management with account settings",
+        "details": "Extend existing Convex auth by adding OAuth providers (Google, Apple Sign-In) to auth.config.ts. Create user profile screen with: username editing, password change, account deletion, data export options. Update userSettings schema to include profile fields (displayName, email, profilePicture). Implement secure profile update mutations and proper validation. Use @convex-dev/auth OAuth providers and follow Expo Auth Session for mobile SSO.",
+        "testStrategy": "Auth provider integration tests, profile CRUD operation tests, security tests for password changes, SSO flow validation on both mobile and web platforms",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Build Advanced Habit Management System",
+        "description": "Create comprehensive habit creation/editing with templates, reminders, categories, and deletion functionality",
+        "details": "Extend existing habit creation with: habit templates library (fitness, productivity, wellness), habit editing modal with validation, category/tag system using existing schema.tags field, reminder settings integration, habit deletion with confirmation dialog, habit ordering/reordering with drag-drop. Create new Convex functions: updateHabit, deleteHabit, getHabitTemplates. Use react-native-paper components for mobile and maintain design consistency with existing UI patterns.",
+        "testStrategy": "CRUD operation tests for habits, template system validation, reminder scheduling tests, category filtering tests, deletion confirmation flow tests",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Push Notifications and Local Reminders",
+        "description": "Add local and push notification system for habit reminders with customizable scheduling",
+        "details": "Integrate expo-notifications for local notifications and push notifications. Extend habit schema with reminder fields (time, frequency, enabled). Create notification scheduling service that works with existing habit data. Implement: daily reminder notifications, customizable reminder times per habit, notification permission handling, notification action handling (mark as done). Add notification settings to userSettings schema and settings UI.",
+        "testStrategy": "Notification scheduling tests, permission handling tests, notification delivery validation, timezone handling tests, notification action integration tests",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Create Calendar View and Long-term Analytics",
+        "description": "Build calendar interface for habit tracking with advanced statistics, trends analysis, and data export",
+        "details": "Build calendar view using react-calendar (already installed) for web and react-native-calendars for mobile. Extend existing getStats query to provide: monthly/yearly completion rates, streak history, habit correlation analysis, completion trends. Create export functionality for CSV/JSON format. Add calendar navigation, habit overlay on calendar dates, monthly/yearly view options. Enhance existing HabitStats component with trend visualization using progress indicators.",
+        "testStrategy": "Calendar navigation tests, statistics calculation validation, data export format tests, performance tests for large date ranges, trend analysis accuracy tests",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Offline Support with Conflict Resolution",
+        "description": "Add offline functionality with local storage, sync mechanism, and automatic conflict resolution",
+        "details": "Implement offline-first architecture using AsyncStorage for React Native and localStorage for web. Create sync service that queues offline actions and syncs when online. Extend existing Convex queries/mutations with offline caching. Implement conflict resolution for habit tracking (last-write-wins for habit edits, merge strategy for tracking data). Add offline status indicator and sync status in UI using existing design patterns.",
+        "testStrategy": "Offline functionality tests, sync mechanism validation, conflict resolution scenario tests, data integrity tests, network state transition tests",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Build Sharing and Collaboration Features",
+        "description": "Enable habit sharing, public templates, and collaborative habit tracking with friends/family",
+        "details": "Create sharing system with: public habit templates, friend/family invitation system, shared habit groups, social features (encouragement messages, shared streaks). Extend Convex schema with: publicTemplates table, userConnections table, sharedHabits table. Implement privacy controls and sharing permissions. Use deep linking for habit template sharing. Add social UI components following existing design system.",
+        "testStrategy": "Sharing permission tests, template publication tests, collaboration functionality tests, privacy control validation, deep linking tests",
+        "priority": "low",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Enhance Settings and Personalization",
+        "description": "Expand settings system with timezone support, week start preferences, theme customization, and accessibility",
+        "details": "Extend existing userSettings schema and settings.ts functions with: timezone selection, week start day preference, theme/color customization options, accessibility settings (text size, high contrast), data retention preferences. Create comprehensive settings UI using existing SettingsDialog.tsx as base. Implement timezone-aware date calculations in existing habit queries. Add theme provider for consistent styling across the app.",
+        "testStrategy": "Settings persistence tests, timezone calculation validation, accessibility compliance tests, theme switching tests, preference application tests",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Comprehensive Error Handling and Empty States",
+        "description": "Add robust error boundaries, loading states, empty state designs, and user-friendly error messages",
+        "details": "Create error boundary components for React error handling, implement loading skeletons for data fetching states, design empty state screens (no habits, no data, offline state). Add comprehensive error handling to existing Convex mutations with user-friendly error messages. Implement retry mechanisms for failed operations. Use sonner (already installed) for toast notifications. Follow existing UI patterns for consistency.",
+        "testStrategy": "Error boundary tests, loading state validation, empty state display tests, error message clarity tests, retry mechanism tests",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Add Help System and App Tutorial",
+        "description": "Create in-app help system, interactive tutorials, FAQ section, and user guidance features",
+        "details": "Build help system with: interactive app tutorial using overlay components, contextual help tooltips, FAQ section with searchable content, user guide with screenshots/animations. Create help content management system in Convex using existing articles schema. Implement tutorial state management to track user progress. Add help button to navigation and context-sensitive help throughout the app using existing icon library (Lucide React, MaterialCommunityIcons).",
+        "testStrategy": "Tutorial flow tests, help content accessibility tests, search functionality tests, contextual help accuracy tests, tutorial completion tracking tests",
+        "priority": "low",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-30T04:46:22.201Z",
+      "updated": "2025-09-30T04:46:22.201Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

@@ -1,24 +1,13 @@
 import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
-import { addDays, format, startOfWeek } from "date-fns";
+import { addDays, format } from "date-fns";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
+import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from "react-native";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
 import { SignInForm } from "./SignInForm";
 
-const weeklyDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
-
 type HabitStatus = "done" | "missed" | "planned";
-
-const statusStyles: Record<HabitStatus, string> = {
-  done: "bg-foreground text-background border-transparent",
-  missed: "border-dashed text-muted-foreground",
-  planned: "text-muted-foreground",
-};
-
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 function App() {
   const [isAdding, setIsAdding] = useState(false);
@@ -28,9 +17,9 @@ function App() {
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const habits = useQuery(api.habits.list) ?? [];
 
-  // Get current week starting from Monday
-  const startOfCurrentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
-  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(startOfCurrentWeek, i));
+  // Get 7-day window ending with today
+  const today = new Date();
+  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6));
   const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
 
   const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
@@ -49,8 +38,7 @@ function App() {
     });
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     const name = newHabitName.trim();
     if (!name) {
       return;
@@ -77,80 +65,61 @@ function App() {
   };
 
   return (
-    <section className="bg-background">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 pb-24 pt-12">
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
         <Unauthenticated>
           <SignInForm />
         </Unauthenticated>
 
         <Authenticated>
-          <header className="flex items-center justify-between">
-            <h1 className="text-4xl font-black tracking-tight text-foreground">
-              Habits
-            </h1>
-            <button
-              type="button"
-              onClick={handleToggleForm}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm transition-colors hover:bg-foreground hover:text-background"
-              aria-label="Add habit"
-              aria-expanded={isAdding}
-              aria-controls="add-habit-panel"
+          <View style={styles.header}>
+            <Text style={styles.title}>Habits</Text>
+            <Pressable
+              onPress={handleToggleForm}
+              style={styles.addButton}
+              accessibilityLabel="Add habit"
+              accessibilityRole="button"
             >
-              <Plus size={20} strokeWidth={2.4} />
-            </button>
-          </header>
+              <Plus size={20} strokeWidth={2.4} color="#000" />
+            </Pressable>
+          </View>
 
           {isAdding && (
-            <form
-              id="add-habit-panel"
-              onSubmit={handleSubmit}
-              className="rounded-[24px] border border-border bg-background/90 p-5 shadow-sm backdrop-blur"
-            >
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="habit-name"
-                    className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground"
-                  >
-                    New Habit
-                  </label>
-                  <input
-                    id="habit-name"
-                    name="habit-name"
-                    type="text"
+            <View style={styles.addForm}>
+              <View style={styles.formContent}>
+                <View style={styles.formField}>
+                  <Text style={styles.formLabel}>NEW HABIT</Text>
+                  <TextInput
                     value={newHabitName}
-                    onChange={(event) => setNewHabitName(event.target.value)}
+                    onChangeText={setNewHabitName}
                     placeholder="Name your habit"
                     autoFocus
-                    className="w-full rounded-full border border-border bg-background px-5 py-3 text-sm font-medium tracking-wide text-foreground outline-none transition-colors focus:border-foreground"
+                    style={styles.input}
+                    placeholderTextColor="#999"
                   />
-                </div>
-                <div className="flex items-center justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={handleToggleForm}
-                    className="text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+                </View>
+                <View style={styles.formActions}>
+                  <Pressable
+                    onPress={handleToggleForm}
+                    style={styles.cancelButton}
+                    accessibilityRole="button"
                   >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
+                    <Text style={styles.cancelButtonText}>CANCEL</Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={handleSubmit}
                     disabled={!canSubmit}
-                    className={cn(
-                      "rounded-full border border-foreground px-5 py-2 text-xs uppercase tracking-[0.3em] transition-colors",
-                      canSubmit
-                        ? "hover:bg-foreground hover:text-background"
-                        : "opacity-40",
-                    )}
+                    style={[styles.submitButton, !canSubmit && styles.submitButtonDisabled]}
+                    accessibilityRole="button"
                   >
-                    Add
-                  </button>
-                </div>
-              </div>
-            </form>
+                    <Text style={styles.submitButtonText}>ADD</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
           )}
 
-          <div className="space-y-8">
+          <View style={styles.habitsList}>
             {habits.map((habit) => {
               const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
               const completedCount = weekStatus.filter(s => s === "done").length;
@@ -187,63 +156,253 @@ function App() {
               const streak = calculateStreak();
 
               return (
-                <article
-                  key={habit._id}
-                  className="rounded-[28px] border border-border bg-background/90 p-6 shadow-sm"
-                >
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
-                        {habit.name}
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="mt-6 grid grid-cols-7 justify-items-center gap-y-4 gap-x-3">
-                    {weeklyDays.map((day, index) => {
+                <View key={habit._id} style={styles.habitCard}>
+                  <View style={styles.habitHeader}>
+                    <Text style={styles.habitName}>{habit.name}</Text>
+                  </View>
+                  <View style={styles.calendarGrid}>
+                    {weekDates.map((date, index) => {
                       const state = weekStatus[index];
                       const dateString = weekDateStrings[index];
+                      const checkDate = new Date(dateString);
+                      const todayCheck = new Date();
+                      todayCheck.setHours(0, 0, 0, 0);
+                      checkDate.setHours(0, 0, 0, 0);
+                      const isFuture = checkDate > todayCheck;
+                      const dayLabel = format(date, 'EEE').substring(0, 3);
+
                       return (
-                        <div
-                          key={`${habit._id}-${day}`}
-                          className="flex flex-col items-center gap-2"
+                        <View
+                          key={`${habit._id}-${dateString}`}
+                          style={styles.dayColumn}
                         >
-                          <span className="text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">
-                            {day}
-                          </span>
-                          <button
-                            onClick={() => toggleHabit({ habitId: habit._id, date: dateString })}
-                            className={cn(
-                              "flex h-11 w-11 items-center justify-center rounded-full border border-border text-sm font-semibold transition-colors",
-                              state && statusStyles[state],
-                            )}
-                            aria-label={`Toggle ${habit.name} on ${day}`}
+                          <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
+                          <Pressable
+                            onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
+                            disabled={isFuture}
+                            style={[
+                              styles.dayButton,
+                              state === "done" && styles.dayButtonDone,
+                              state === "missed" && styles.dayButtonMissed,
+                              isFuture && styles.dayButtonFuture
+                            ]}
+                            accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
+                            accessibilityRole="button"
                           >
-                            {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
-                          </button>
-                        </div>
+                            <Text style={[
+                              styles.dayButtonText,
+                              state === "done" && styles.dayButtonTextDone,
+                              state === "missed" && styles.dayButtonTextMissed
+                            ]}>
+                              {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
+                            </Text>
+                          </Pressable>
+                        </View>
                       );
                     })}
-                  </div>
-                  <div className="mt-6 h-[2px] w-full bg-border">
-                    <div
-                      className="h-full bg-foreground transition-all duration-300"
-                      style={{ width: `${completionRate}%` }}
-                      aria-hidden
-                    />
-                  </div>
-                  <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                    <span>Streak · {streak} days</span>
-                    <span>{completionRate}% this week</span>
-                  </div>
-                </article>
+                  </View>
+                  <View style={styles.progressBarContainer}>
+                    <View style={[styles.progressBar, { width: `${completionRate}%` }]} />
+                  </View>
+                  <View style={styles.habitStats}>
+                    <Text style={styles.statText}>STREAK · {streak} DAYS</Text>
+                    <Text style={styles.statText}>{completionRate}% THIS WEEK</Text>
+                  </View>
+                </View>
               );
             })}
-          </div>
+          </View>
         </Authenticated>
-      </div>
+      </View>
       <Toaster />
-    </section>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    maxWidth: 448,
+    marginHorizontal: 'auto',
+    paddingHorizontal: 24,
+    paddingTop: 48,
+    paddingBottom: 96,
+    gap: 32,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 32,
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+    color: '#0f172a',
+  },
+  addButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addForm: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 20,
+    marginBottom: 32,
+  },
+  formContent: {
+    gap: 16,
+  },
+  formField: {
+    gap: 8,
+  },
+  formLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 3,
+    color: '#64748b',
+  },
+  input: {
+    width: '100%',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#0f172a',
+  },
+  formActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 12,
+  },
+  cancelButton: {
+    paddingVertical: 8,
+  },
+  cancelButtonText: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  submitButton: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#0f172a',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  submitButtonDisabled: {
+    opacity: 0.4,
+  },
+  submitButtonText: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: '#0f172a',
+    fontWeight: '600',
+  },
+  habitsList: {
+    gap: 32,
+  },
+  habitCard: {
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 24,
+  },
+  habitHeader: {
+    marginBottom: 24,
+  },
+  habitName: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#0f172a',
+    letterSpacing: -0.3,
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    gap: 12,
+  },
+  dayColumn: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  dayLabel: {
+    fontSize: 10,
+    letterSpacing: 3,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  dayButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dayButtonDone: {
+    borderWidth: 2,
+    borderColor: '#0f172a',
+  },
+  dayButtonMissed: {
+    borderStyle: 'dashed',
+  },
+  dayButtonFuture: {
+    opacity: 0.4,
+  },
+  dayButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#64748b',
+  },
+  dayButtonTextDone: {
+    color: '#0f172a',
+    fontWeight: 'bold',
+  },
+  dayButtonTextMissed: {
+    color: '#64748b',
+  },
+  progressBarContainer: {
+    height: 2,
+    width: '100%',
+    backgroundColor: '#e2e8f0',
+    marginTop: 24,
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#0f172a',
+  },
+  habitStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  statText: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+});
 
 export default App;

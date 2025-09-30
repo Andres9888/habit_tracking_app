@@ -1,6 +1,5 @@
-import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Authenticated, ConvexProvider, ConvexReactClient, Unauthenticated, useMutation, useQuery } from "convex/react";
+import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex/react";
 import { addDays, format, startOfWeek } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
@@ -42,88 +41,6 @@ function HabitStats({ habitId, settings }: { habitId: Id<"habits">, settings: an
   );
 }
 
-function SignInForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const signIn = useMutation(api.auth.signIn);
-  const signUp = useMutation(api.auth.signUp);
-
-  const handleSubmit = async () => {
-    if (!username.trim() || !password.trim()) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      if (isSignUp) {
-        await signUp({ username: username.trim(), password });
-      } else {
-        await signIn({ username: username.trim(), password });
-      }
-    } catch (error: any) {
-      Alert.alert("Error", error.message || "Authentication failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <View style={styles.authContainer}>
-      <Text style={styles.authTitle}>
-        {isSignUp ? "Create Account" : "Sign In"}
-      </Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      <TouchableOpacity
-        style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>
-          {loading ? "Loading..." : (isSignUp ? "Sign Up" : "Sign In")}
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
-        <Text style={styles.linkText}>
-          {isSignUp ? "Already have an account? Sign in" : "Need an account? Sign up"}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function SignOutButton() {
-  const signOut = useMutation(api.auth.signOut);
-
-  return (
-    <TouchableOpacity
-      style={styles.signOutButton}
-      onPress={() => signOut()}
-    >
-      <Text style={styles.signOutText}>Sign Out</Text>
-    </TouchableOpacity>
-  );
-}
 
 function HabitsScreen() {
   const [newHabit, setNewHabit] = useState("");
@@ -263,7 +180,6 @@ function HabitsScreen() {
         </TouchableOpacity>
       </View>
 
-      <SignOutButton />
     </ScrollView>
   );
 }
@@ -272,32 +188,27 @@ function MainApp() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="auto" />
-      <Unauthenticated>
-        <SignInForm />
-      </Unauthenticated>
-      <Authenticated>
-        <View style={{ flex: 1 }}>
-          <HabitsScreen />
-          <View style={styles.bottomBar}>
-            <View style={styles.tabItemActive}>
-              <MaterialCommunityIcons name="vector-circle" size={22} color="#111827" />
-              <Text style={styles.tabTextActive}>Habits</Text>
-            </View>
-            <View style={styles.tabItem}>
-              <MaterialCommunityIcons name="brightness-5" size={22} color="#9CA3AF" />
-              <Text style={styles.tabText}>Focus</Text>
-            </View>
-            <View style={styles.tabItem}>
-              <MaterialCommunityIcons name="menu" size={22} color="#9CA3AF" />
-              <Text style={styles.tabText}>Journal</Text>
-            </View>
-            <View style={styles.tabItem}>
-              <MaterialCommunityIcons name="cog" size={22} color="#9CA3AF" />
-              <Text style={styles.tabText}>Other</Text>
-            </View>
+      <View style={{ flex: 1 }}>
+        <HabitsScreen />
+        <View style={styles.bottomBar}>
+          <View style={styles.tabItemActive}>
+            <MaterialCommunityIcons name="vector-circle" size={22} color="#111827" />
+            <Text style={styles.tabTextActive}>Habits</Text>
+          </View>
+          <View style={styles.tabItem}>
+            <MaterialCommunityIcons name="brightness-5" size={22} color="#9CA3AF" />
+            <Text style={styles.tabText}>Focus</Text>
+          </View>
+          <View style={styles.tabItem}>
+            <MaterialCommunityIcons name="menu" size={22} color="#9CA3AF" />
+            <Text style={styles.tabText}>Journal</Text>
+          </View>
+          <View style={styles.tabItem}>
+            <MaterialCommunityIcons name="cog" size={22} color="#9CA3AF" />
+            <Text style={styles.tabText}>Other</Text>
           </View>
         </View>
-      </Authenticated>
+      </View>
     </SafeAreaView>
   );
 }
@@ -305,11 +216,9 @@ function MainApp() {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <ConvexAuthProvider client={convex}>
-        <ConvexProvider client={convex}>
-          <MainApp />
-        </ConvexProvider>
-      </ConvexAuthProvider>
+      <ConvexProvider client={convex}>
+        <MainApp />
+      </ConvexProvider>
     </SafeAreaProvider>
   );
 }
@@ -317,7 +226,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#FFFFFF',
   },
   container: {
     flex: 1,
@@ -390,18 +299,6 @@ const styles = StyleSheet.create({
   weekCellDowSelected: {
     color: '#111827',
   },
-  authContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-  },
-  authTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 32,
-    color: '#1e293b',
-  },
   addHabitContainer: {
     marginBottom: 24,
   },
@@ -432,25 +329,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  linkText: {
-    color: '#3b82f6',
-    textAlign: 'center',
-    marginTop: 16,
-    fontSize: 16,
-  },
-  signOutButton: {
-    backgroundColor: '#ef4444',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 32,
-  },
-  signOutText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
   weekHeader: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -460,9 +338,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   habitCard: {
-    backgroundColor: '#F8E6B8',
-    borderRadius: 16,
-    padding: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    padding: 24,
     marginBottom: 20,
   },
   habitCardTopRow: {
@@ -535,7 +415,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   okPill: {
-    backgroundColor: '#F8E6B8',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#0f172a',
     paddingHorizontal: 28,
     paddingVertical: 12,
     borderRadius: 9999,

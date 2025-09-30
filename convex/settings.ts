@@ -1,4 +1,3 @@
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -24,13 +23,10 @@ export const get = query({
     showStreaks: v.boolean(),
   }),
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return DEFAULT_SETTINGS;
-
+    // Get first settings record (since auth was removed, just use any settings)
     const settings = await ctx.db
       .query("userSettings")
-      .withIndex("by_user", q => q.eq("userId", userId))
-      .unique();
+      .first();
 
     // Only return the whitelisted fields to satisfy the returns validator
     return {
@@ -57,21 +53,15 @@ export const update = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
+    // Get first settings record (since auth was removed, just use any settings)
     const existing = await ctx.db
       .query("userSettings")
-      .withIndex("by_user", q => q.eq("userId", userId))
-      .unique();
+      .first();
 
     if (existing) {
       await ctx.db.patch(existing._id, args);
     } else {
-      await ctx.db.insert("userSettings", {
-        userId,
-        ...args,
-      });
+      await ctx.db.insert("userSettings", args);
     }
     return null;
   }

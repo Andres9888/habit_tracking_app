@@ -1,4 +1,3 @@
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -9,11 +8,7 @@ export const create = mutation({
   },
   returns: v.id("habits"),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
     return await ctx.db.insert("habits", {
-      userId,
       name: args.name,
       notes: args.notes,
       createdAt: Date.now(),
@@ -28,9 +23,6 @@ export const updateNotes = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
     await ctx.db.patch(args.habitId, {
       notes: args.notes
     });
@@ -49,16 +41,12 @@ export const list = query({
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
-      userId: v.id("users"),
+      userId: v.optional(v.string()),
     })
   ),
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return [];
-
     return await ctx.db
       .query("habits")
-      .withIndex("by_user_and_name", (q) => q.eq("userId", userId))
       .collect();
   },
 });
@@ -67,12 +55,19 @@ export const toggleHabit = mutation({
   args: { habitId: v.id("habits"), date: v.string() },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
     // Validate date format as YYYY-MM-DD
     const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(args.date);
     if (!isValidDate) throw new Error("Invalid date format; expected YYYY-MM-DD");
+
+    // Prevent future dates - only allow today or past dates
+    const inputDate = new Date(args.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    inputDate.setHours(0, 0, 0, 0);
+
+    if (inputDate > today) {
+      throw new Error("Cannot track habits for future dates");
+    }
 
     const existing = await ctx.db
       .query("tracking")
@@ -88,7 +83,6 @@ export const toggleHabit = mutation({
     } else {
       await ctx.db.insert("tracking", {
         habitId: args.habitId,
-        userId,
         date: args.date,
         completed: true,
       });
@@ -106,12 +100,10 @@ export const getTracking = query({
       completed: v.boolean(),
       date: v.string(),
       habitId: v.id("habits"),
-      userId: v.id("users"),
+      userId: v.optional(v.string()),
     })
   ),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return [];
     if (args.dates.length === 0) return [];
 
     // Optimize by querying a single date range then filtering to requested dates
@@ -121,9 +113,7 @@ export const getTracking = query({
 
     const range = await ctx.db
       .query("tracking")
-      .withIndex("by_user_and_date", (q) =>
-        q.eq("userId", userId).gte("date", startDate).lte("date", endDate)
-      )
+      .filter((q) => q.and(q.gte(q.field("date"), startDate), q.lte(q.field("date"), endDate)))
       .collect();
 
     const dateSet = new Set(args.dates);
@@ -135,9 +125,6 @@ export const getStats = query({
   args: { habitId: v.id("habits") },
   returns: v.object({ streak: v.number(), consistency: v.number() }),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return { streak: 0, consistency: 0 };
-
     const tracking = await ctx.db
       .query("tracking")
       .withIndex("by_habit_and_date", (q) => q.eq("habitId", args.habitId))
