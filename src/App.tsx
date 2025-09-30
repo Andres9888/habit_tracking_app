@@ -1,11 +1,10 @@
-import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from "react-native";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
-import { SignInForm } from "./SignInForm";
 
 type HabitStatus = "done" | "missed" | "planned";
 
@@ -67,11 +66,6 @@ function App() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Unauthenticated>
-          <SignInForm />
-        </Unauthenticated>
-
-        <Authenticated>
           <View style={styles.header}>
             <Text style={styles.title}>Habits</Text>
             <Pressable
@@ -212,7 +206,6 @@ function App() {
               );
             })}
           </View>
-        </Authenticated>
       </View>
       <Toaster />
     </ScrollView>
