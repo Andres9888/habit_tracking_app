@@ -74,31 +74,33 @@ function HabitsScreen() {
 
   useEffect(() => {
     console.log('Animation triggered, isAdding:', isAdding);
-    Animated.parallel([
-      Animated.spring(rotateAnim, {
-        toValue: isAdding ? 1 : 0,
-        useNativeDriver: true,
-        tension: 100,
-        friction: 8,
-      }),
-      Animated.timing(formSlideAnim, {
-        toValue: isAdding ? 1 : 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(formOpacityAnim, {
-        toValue: isAdding ? 1 : 0,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      console.log('Animation completed, rotateAnim value should be:', isAdding ? 1 : 0);
+    const targetValue = isAdding ? 1 : 0;
+
+    Animated.spring(rotateAnim, {
+      toValue: targetValue,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 8,
+    }).start(() => {
+      console.log('Rotation animation completed, target was:', targetValue);
     });
+
+    Animated.timing(formSlideAnim, {
+      toValue: targetValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(formOpacityAnim, {
+      toValue: targetValue,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
   }, [isAdding]);
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '135deg'],
+    outputRange: ['0deg', '45deg'],
   });
 
   const formSlide = formSlideAnim.interpolate({
@@ -229,9 +231,11 @@ function HabitsScreen() {
               accessibilityLabel={isAdding ? "Cancel" : "Add habit"}
               accessibilityRole="button"
             >
-              <Animated.Text style={[styles.plusIcon, { transform: [{ rotate: rotation }] }]}>
-                +
-              </Animated.Text>
+              <Animated.View style={{ transform: [{ rotate: rotation }] }}>
+                <Text style={styles.plusIcon}>
+                  +
+                </Text>
+              </Animated.View>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setShowSettings(true)}
