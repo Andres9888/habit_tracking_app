@@ -90,7 +90,7 @@ function HabitsScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-  }, [isAdding]);
+  }, [isAdding, rotateAnim, formSlideAnim, formOpacityAnim]);
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
