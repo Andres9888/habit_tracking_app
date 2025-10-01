@@ -619,6 +619,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '300',
     color: '#000',
+    lineHeight: 24,
+    textAlign: 'center',
   },
   settingsButton: {
     width: 40,
