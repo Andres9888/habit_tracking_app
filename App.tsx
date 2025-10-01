@@ -2,8 +2,9 @@ import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex
 import { addDays, format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
 import { useMemo, useState } from 'react';
-import { Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { api } from "./convex/_generated/api";
 
@@ -19,6 +20,7 @@ function HabitsScreen() {
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
+  const removeHabit = useMutation(api.habits.remove);
   const habits = useQuery(api.habits.list) ?? [];
 
   // Get 4-day window (3 days before + selected end date)
@@ -101,6 +103,34 @@ function HabitsScreen() {
       setSelectedEndDate(selectedDate);
     }
     setShowCalendar(false);
+  };
+
+  const handleDeleteHabit = async (habitId: string) => {
+    await removeHabit({ habitId });
+  };
+
+  const renderRightActions = (habitId: string, habitName: string) => (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [-100, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <TouchableOpacity
+        onPress={() => handleDeleteHabit(habitId)}
+        style={styles.deleteAction}
+        accessibilityLabel={`Delete ${habitName}`}
+        accessibilityRole="button"
+      >
+        <Animated.View style={[styles.deleteActionContent, { transform: [{ scale }] }]}>
+          <Text style={styles.deleteActionText}>Delete</Text>
+        </Animated.View>
+      </TouchableOpacity>
+    );
   };
 
   const isAtToday = format(selectedEndDate, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
@@ -250,8 +280,6 @@ function HabitsScreen() {
         <View style={styles.habitsList}>
           {habits.map((habit) => {
             const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
-            const completedCount = weekStatus.filter(s => s === "done").length;
-            const completionRate = Math.round((completedCount / 4) * 100);
 
             // Calculate streak (consecutive days completed up to today)
             const calculateStreak = () => {
@@ -284,10 +312,15 @@ function HabitsScreen() {
             const streak = calculateStreak();
 
             return (
-              <View key={habit._id} style={styles.habitCard}>
-                <View style={styles.habitHeader}>
-                  <Text style={styles.habitName}>{habit.name}</Text>
-                </View>
+              <Swipeable
+                key={habit._id}
+                renderRightActions={renderRightActions(habit._id, habit.name)}
+                overshootRight={false}
+              >
+                <View style={styles.habitCard}>
+                  <View style={styles.habitHeader}>
+                    <Text style={styles.habitName}>{habit.name}</Text>
+                  </View>
                 <View style={styles.calendarGrid}>
                   {weekDates.map((date, index) => {
                     const state = weekStatus[index];
@@ -322,14 +355,11 @@ function HabitsScreen() {
                     );
                   })}
                 </View>
-                <View style={styles.progressBarContainer}>
-                  <View style={[styles.progressBar, { width: `${completionRate}%` }]} />
-                </View>
                 <View style={styles.habitStats}>
                   <Text style={styles.statText}>STREAK · {streak} DAYS</Text>
-                  <Text style={styles.statText}>{completionRate}% THIS WEEK</Text>
                 </View>
               </View>
+            </Swipeable>
             );
           })}
         </View>
@@ -340,10 +370,12 @@ function HabitsScreen() {
 
 function MainApp() {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="auto" />
-      <HabitsScreen />
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar style="auto" />
+        <HabitsScreen />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
@@ -593,6 +625,22 @@ const styles = StyleSheet.create({
     color: '#0f172a',
     letterSpacing: -0.3,
   },
+  deleteAction: {
+    backgroundColor: '#ef4444',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: 100,
+    borderRadius: 20,
+    marginBottom: 16,
+  },
+  deleteActionContent: {
+    paddingHorizontal: 20,
+  },
+  deleteActionText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
   calendarGrid: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -637,16 +685,7 @@ const styles = StyleSheet.create({
   dayButtonTextMissed: {
     color: '#64748b',
   },
-  progressBarContainer: {
-    height: 2,
-    width: '100%',
-    backgroundColor: '#e2e8f0',
-    marginTop: 16,
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#0f172a',
-  },
+
   habitStats: {
     flexDirection: 'row',
     justifyContent: 'space-between',
