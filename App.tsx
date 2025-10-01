@@ -341,6 +341,11 @@ function HabitsScreen() {
                     const dateString = weekDateStrings[index];
                     const dayLabel = format(date, 'EEE').substring(0, 3);
 
+                    // Check if this date is in the future
+                    const dateObj = new Date(dateString);
+                    dateObj.setHours(0, 0, 0, 0);
+                    const isFuture = dateObj > today;
+
                     return (
                       <View
                         key={`${habit._id}-${dateString}`}
@@ -348,11 +353,13 @@ function HabitsScreen() {
                       >
                         <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
                         <TouchableOpacity
-                          onPress={() => toggleHabit({ habitId: habit._id, date: dateString })}
+                          onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
+                          disabled={isFuture}
                           style={[
                             styles.dayButton,
                             state === "done" && styles.dayButtonDone,
                             state === "missed" && styles.dayButtonMissed,
+                            isFuture && styles.dayButtonDisabled,
                           ]}
                           accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
                           accessibilityRole="button"
@@ -686,6 +693,9 @@ const styles = StyleSheet.create({
   },
   dayButtonMissed: {
     borderStyle: 'dashed',
+  },
+  dayButtonDisabled: {
+    opacity: 0.3,
   },
   dayButtonText: {
     fontSize: 18,
