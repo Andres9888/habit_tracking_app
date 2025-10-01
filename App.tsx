@@ -3,7 +3,7 @@ import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex
 import { addDays, format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
@@ -48,6 +48,7 @@ function HabitsScreen() {
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -68,6 +69,19 @@ function HabitsScreen() {
     () => newHabitName.trim().length > 0,
     [newHabitName],
   );
+
+  useEffect(() => {
+    Animated.timing(rotateAnim, {
+      toValue: isAdding ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [isAdding]);
+
+  const rotation = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '135deg'],
+  });
 
   const handleToggleForm = () => {
     setIsAdding((prev) => {
@@ -192,7 +206,9 @@ function HabitsScreen() {
               accessibilityLabel={isAdding ? "Cancel" : "Add habit"}
               accessibilityRole="button"
             >
-              <Text style={styles.plusIcon}>{isAdding ? "×" : "+"}</Text>
+              <Animated.Text style={[styles.plusIcon, { transform: [{ rotate: rotation }] }]}>
+                +
+              </Animated.Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setShowSettings(true)}
