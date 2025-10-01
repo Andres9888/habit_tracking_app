@@ -30,6 +30,87 @@ export const updateNotes = mutation({
   },
 });
 
+export const remove = mutation({
+  args: {
+    habitId: v.id("habits")
+  },
+  returns: v.object({
+    habit: v.object({
+      name: v.string(),
+      notes: v.optional(v.string()),
+      createdAt: v.number(),
+    }),
+    tracking: v.array(v.object({
+      date: v.string(),
+      completed: v.boolean(),
+    }))
+  }),
+  handler: async (ctx, args) => {
+    // Get the habit data before deleting
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error("Habit not found");
+    }
+
+    // Get all tracking data before deleting
+    const trackingEntries = await ctx.db
+      .query("tracking")
+      .withIndex("by_habit_and_date", (q) => q.eq("habitId", args.habitId))
+      .collect();
+
+    // Delete the habit
+    await ctx.db.delete(args.habitId);
+
+    // Delete all tracking data for this habit
+    for (const entry of trackingEntries) {
+      await ctx.db.delete(entry._id);
+    }
+
+    // Return the deleted data for potential undo
+    return {
+      habit: {
+        name: habit.name,
+        notes: habit.notes,
+        createdAt: habit.createdAt,
+      },
+      tracking: trackingEntries.map(entry => ({
+        date: entry.date,
+        completed: entry.completed,
+      }))
+    };
+  },
+});
+
+export const restore = mutation({
+  args: {
+    habitData: v.object({
+      name: v.string(),
+      notes: v.optional(v.string()),
+      createdAt: v.number(),
+    }),
+    trackingData: v.array(v.object({
+      date: v.string(),
+      completed: v.boolean(),
+    }))
+  },
+  returns: v.id("habits"),
+  handler: async (ctx, args) => {
+    // Recreate the habit
+    const habitId = await ctx.db.insert("habits", args.habitData);
+
+    // Recreate all tracking data
+    for (const trackingEntry of args.trackingData) {
+      await ctx.db.insert("tracking", {
+        habitId,
+        date: trackingEntry.date,
+        completed: trackingEntry.completed,
+      });
+    }
+
+    return habitId;
+  },
+});
+
 export const list = query({
   args: {},
   returns: v.array(

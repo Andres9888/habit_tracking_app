@@ -4,7 +4,8 @@ import { addDays, format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { Calendar } from 'react-native-calendars';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -48,6 +49,9 @@ function HabitsScreen() {
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [undoData, setUndoData] = useState<{habit: any, tracking: any[]} | null>(null);
+  const [showUndo, setShowUndo] = useState(false);
+  const undoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const formSlideAnim = useRef(new Animated.Value(0)).current;
   const formOpacityAnim = useRef(new Animated.Value(0)).current;
@@ -55,6 +59,7 @@ function HabitsScreen() {
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const removeHabit = useMutation(api.habits.remove);
+  const restoreHabit = useMutation(api.habits.restore);
   const habits = useQuery(api.habits.list) ?? [];
 
   // Get 4-day window (3 days before + selected end date)
@@ -97,6 +102,15 @@ function HabitsScreen() {
       useNativeDriver: true,
     }).start();
   }, [isAdding]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (undoTimeoutRef.current) {
+        clearTimeout(undoTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
@@ -175,45 +189,144 @@ function HabitsScreen() {
     setShowCalendar(false);
   };
 
-  const handleDeleteHabit = async (habitId: string) => {
-    const habit = habits.find(h => h._id === habitId);
-    const habitName = habit?.name || 'this habit';
+  const showDeleteConfirmation = (habitId: any, habitName: string) => {
+    // Apple uses medium impact for reveal, heavy for confirmation
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
-    // Confirm before deleting
-    if (!confirm(`Are you sure you want to delete "${habitName}"? This action cannot be undone.`)) {
-      return;
-    }
+    Alert.alert(
+      `Delete "${habitName}"?`,
+      'This will permanently remove the habit and all its tracking data.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => handleDeleteHabit(habitId, habitName),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleDeleteHabit = async (habitId: any, habitName: string) => {
+    // Heavy haptic feedback on delete confirmation (Apple pattern)
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
     try {
-      await removeHabit({ habitId });
-      // Success feedback could be added here (toast notification)
+      const deletedData = await removeHabit({ habitId });
+
+      // Store the deleted data for undo
+      setUndoData(deletedData);
+      setShowUndo(true);
+
+      // Clear any existing timeout
+      if (undoTimeoutRef.current) {
+        clearTimeout(undoTimeoutRef.current);
+      }
+
+      // Apple uses 5 seconds for undo timeout
+      undoTimeoutRef.current = setTimeout(() => {
+        setShowUndo(false);
+        setUndoData(null);
+      }, 5000);
+
     } catch (error) {
       console.error('Failed to delete habit:', error);
-      alert(`Failed to delete "${habitName}". Please try again.`);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
     }
   };
 
-  const renderRightActions = (habitId: string, habitName: string) => (
+  const handleUndo = async () => {
+    if (!undoData) return;
+
+    // Light haptic feedback for undo
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    try {
+      await restoreHabit({
+        habitData: undoData.habit,
+        trackingData: undoData.tracking
+      });
+
+      // Clear undo state
+      setShowUndo(false);
+      setUndoData(null);
+      if (undoTimeoutRef.current) {
+        clearTimeout(undoTimeoutRef.current);
+      }
+
+    } catch (error) {
+      console.error('Failed to restore habit:', error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Alert.alert('Error', 'Failed to restore habit. Please try again.');
+    }
+  };
+
+  const dismissUndo = () => {
+    setShowUndo(false);
+    setUndoData(null);
+    if (undoTimeoutRef.current) {
+      clearTimeout(undoTimeoutRef.current);
+    }
+  };
+
+  const renderRightActions = (habitId: any, habitName: string) => (
     progress: Animated.AnimatedInterpolation<number>,
     dragX: Animated.AnimatedInterpolation<number>
   ) => {
-    const scale = dragX.interpolate({
+    // Apple Mail style: red area expands as you drag
+    const trans = dragX.interpolate({
       inputRange: [-100, 0],
-      outputRange: [1, 0],
+      outputRange: [0, 100],
+      extrapolate: 'clamp',
+    });
+
+    // Icon scales in quickly when appearing
+    const scale = progress.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 1.1, 1],
+      extrapolate: 'clamp',
+    });
+
+    const opacity = progress.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 1, 1],
       extrapolate: 'clamp',
     });
 
     return (
-      <TouchableOpacity
-        onPress={() => handleDeleteHabit(habitId)}
-        style={styles.deleteAction}
-        accessibilityLabel={`Delete ${habitName}`}
-        accessibilityRole="button"
-      >
-        <Animated.View style={[styles.deleteActionContent, { transform: [{ scale }] }]}>
-          <Text style={styles.deleteActionText}>Delete</Text>
+      <View style={styles.deleteAction}>
+        <Animated.View
+          style={[
+            styles.deleteButton,
+            {
+              transform: [{ translateX: trans }],
+            },
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => showDeleteConfirmation(habitId, habitName)}
+            activeOpacity={0.6}
+            style={styles.deleteButtonTouchable}
+            accessibilityRole="button"
+            accessibilityLabel={`Delete ${habitName}`}
+            accessibilityHint="Deletes this habit and all tracking data"
+          >
+            <Animated.View
+              style={{
+                opacity,
+                transform: [{ scale }],
+              }}
+            >
+              <Text style={styles.deleteActionIcon}>🗑️</Text>
+            </Animated.View>
+          </TouchableOpacity>
         </Animated.View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -424,8 +537,16 @@ function HabitsScreen() {
                 key={habit._id}
                 renderRightActions={renderRightActions(habit._id, habit.name)}
                 overshootRight={false}
+                rightThreshold={40}
+                friction={2}
+                containerStyle={styles.swipeableContainer}
               >
-                <View style={styles.habitCard}>
+                <View
+                  style={styles.habitCard}
+                  accessible={true}
+                  accessibilityLabel={`${habit.name} habit tracking`}
+                  accessibilityHint="Swipe left to delete this habit"
+                >
                   <View style={styles.habitHeader}>
                     <Text style={styles.habitName}>{habit.name}</Text>
                   </View>
@@ -479,6 +600,44 @@ function HabitsScreen() {
           })}
         </View>
       </View>
+
+      {/* Undo notification */}
+      {showUndo && undoData && (
+        <View
+          style={styles.undoContainer}
+          accessible={true}
+          accessibilityLiveRegion="polite"
+        >
+          <View style={styles.undoNotification}>
+            <Text
+              style={styles.undoText}
+              accessibilityRole="text"
+            >
+              Deleted "{undoData.habit.name}"
+            </Text>
+            <View style={styles.undoActions}>
+              <TouchableOpacity
+                onPress={handleUndo}
+                style={styles.undoButton}
+                accessibilityRole="button"
+                accessibilityLabel={`Undo deletion of ${undoData.habit.name} habit`}
+                accessibilityHint="Restores the deleted habit and all its tracking data"
+              >
+                <Text style={styles.undoButtonText}>UNDO</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={dismissUndo}
+                style={styles.dismissButton}
+                accessibilityRole="button"
+                accessibilityLabel="Dismiss undo notification"
+                accessibilityHint="Permanently removes the deleted habit"
+              >
+                <Text style={styles.dismissButtonText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -752,6 +911,9 @@ const styles = StyleSheet.create({
   habitsList: {
     gap: 16,
   },
+  swipeableContainer: {
+    overflow: 'visible',
+  },
   habitCard: {
     borderRadius: 20,
     borderWidth: 1,
@@ -769,20 +931,27 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   deleteAction: {
-    backgroundColor: '#ef4444',
     justifyContent: 'center',
     alignItems: 'flex-end',
-    width: 100,
-    borderRadius: 20,
     marginBottom: 16,
   },
-  deleteActionContent: {
-    paddingHorizontal: 20,
+  deleteButton: {
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 90,
+    height: '100%',
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
   },
-  deleteActionText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  deleteButtonTouchable: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteActionIcon: {
+    fontSize: 28,
   },
   calendarGrid: {
     flexDirection: 'row',
@@ -841,6 +1010,63 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 2,
     color: '#64748b',
+    fontWeight: '600',
+  },
+  undoContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 16,
+    paddingBottom: 48,
+    paddingTop: 16,
+    backgroundColor: 'transparent',
+    pointerEvents: 'box-none',
+  },
+  undoNotification: {
+    backgroundColor: 'rgba(28, 28, 30, 0.95)',
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.44,
+    shadowRadius: 10,
+    elevation: 16,
+  },
+  undoText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '400',
+    flex: 1,
+  },
+  undoActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  undoButton: {
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  undoButtonText: {
+    color: '#0A84FF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  dismissButton: {
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  dismissButtonText: {
+    color: '#8E8E93',
+    fontSize: 18,
     fontWeight: '600',
   },
 });
