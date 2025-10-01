@@ -189,10 +189,10 @@ function HabitsScreen() {
             <TouchableOpacity
               onPress={handleToggleForm}
               style={styles.addButton}
-              accessibilityLabel="Add habit"
+              accessibilityLabel={isAdding ? "Cancel" : "Add habit"}
               accessibilityRole="button"
             >
-              <Text style={styles.plusIcon}>+</Text>
+              <Text style={styles.plusIcon}>{isAdding ? "×" : "+"}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setShowSettings(true)}
