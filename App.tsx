@@ -73,11 +73,13 @@ function HabitsScreen() {
   );
 
   useEffect(() => {
+    console.log('Animation triggered, isAdding:', isAdding);
     Animated.parallel([
-      Animated.timing(rotateAnim, {
+      Animated.spring(rotateAnim, {
         toValue: isAdding ? 1 : 0,
-        duration: 200,
         useNativeDriver: true,
+        tension: 100,
+        friction: 8,
       }),
       Animated.timing(formSlideAnim, {
         toValue: isAdding ? 1 : 0,
@@ -89,7 +91,9 @@ function HabitsScreen() {
         duration: 250,
         useNativeDriver: true,
       }),
-    ]).start();
+    ]).start(() => {
+      console.log('Animation completed, rotateAnim value should be:', isAdding ? 1 : 0);
+    });
   }, [isAdding]);
 
   const rotation = rotateAnim.interpolate({
