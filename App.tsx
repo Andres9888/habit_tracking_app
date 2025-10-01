@@ -106,7 +106,21 @@ function HabitsScreen() {
   };
 
   const handleDeleteHabit = async (habitId: string) => {
-    await removeHabit({ habitId });
+    const habit = habits.find(h => h._id === habitId);
+    const habitName = habit?.name || 'this habit';
+
+    // Confirm before deleting
+    if (!confirm(`Are you sure you want to delete "${habitName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await removeHabit({ habitId });
+      // Success feedback could be added here (toast notification)
+    } catch (error) {
+      console.error('Failed to delete habit:', error);
+      alert(`Failed to delete "${habitName}". Please try again.`);
+    }
   };
 
   const renderRightActions = (habitId: string, habitName: string) => (
