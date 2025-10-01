@@ -49,6 +49,8 @@ function HabitsScreen() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const rotateAnim = useRef(new Animated.Value(0)).current;
+  const formSlideAnim = useRef(new Animated.Value(0)).current;
+  const formOpacityAnim = useRef(new Animated.Value(0)).current;
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -71,16 +73,33 @@ function HabitsScreen() {
   );
 
   useEffect(() => {
-    Animated.timing(rotateAnim, {
-      toValue: isAdding ? 1 : 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    Animated.parallel([
+      Animated.timing(rotateAnim, {
+        toValue: isAdding ? 1 : 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(formSlideAnim, {
+        toValue: isAdding ? 1 : 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(formOpacityAnim, {
+        toValue: isAdding ? 1 : 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, [isAdding]);
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '135deg'],
+  });
+
+  const formSlide = formSlideAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-20, 0],
   });
 
   const handleToggleForm = () => {
@@ -316,7 +335,15 @@ function HabitsScreen() {
         </Modal>
 
         {isAdding && (
-          <View style={styles.addForm}>
+          <Animated.View
+            style={[
+              styles.addForm,
+              {
+                opacity: formOpacityAnim,
+                transform: [{ translateY: formSlide }],
+              },
+            ]}
+          >
             <View style={styles.formContent}>
               <View style={styles.formField}>
                 <Text style={styles.formLabel}>NEW HABIT</Text>
@@ -347,7 +374,7 @@ function HabitsScreen() {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </Animated.View>
         )}
 
         <View style={styles.habitsList}>
