@@ -49,17 +49,13 @@ function HabitsScreen() {
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [undoData, setUndoData] = useState<{habit: any, tracking: any[]} | null>(null);
-  const [showUndo, setShowUndo] = useState(false);
-  const undoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const formSlideAnim = useRef(new Animated.Value(0)).current;
   const formOpacityAnim = useRef(new Animated.Value(0)).current;
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
-  const removeHabit = useMutation(api.habits.remove);
-  const restoreHabit = useMutation(api.habits.restore);
+  const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
 
   // Get 4-day window (3 days before + selected end date)
@@ -103,14 +99,6 @@ function HabitsScreen() {
     }).start();
   }, [isAdding]);
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (undoTimeoutRef.current) {
-        clearTimeout(undoTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
@@ -189,88 +177,41 @@ function HabitsScreen() {
     setShowCalendar(false);
   };
 
-  const showDeleteConfirmation = (habitId: any, habitName: string) => {
-    // Apple uses medium impact for reveal, heavy for confirmation
+  const showArchiveConfirmation = (habitId: any, habitName: string) => {
+    // Apple uses medium impact for reveal
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
     Alert.alert(
-      `Delete "${habitName}"?`,
-      'This will permanently remove the habit and all its tracking data.',
+      `Archive "${habitName}"?`,
+      'You can restore archived habits from Settings.',
       [
         {
           text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: 'Archive',
           style: 'destructive',
-          onPress: () => handleDeleteHabit(habitId, habitName),
+          onPress: () => handleArchiveHabit(habitId, habitName),
         },
       ],
       { cancelable: true }
     );
   };
 
-  const handleDeleteHabit = async (habitId: any, habitName: string) => {
-    // Heavy haptic feedback on delete confirmation (Apple pattern)
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  const handleArchiveHabit = async (habitId: any, habitName: string) => {
+    console.log('Archiving habit:', habitId, habitName);
 
     try {
-      const deletedData = await removeHabit({ habitId });
-
-      // Store the deleted data for undo
-      setUndoData(deletedData);
-      setShowUndo(true);
-
-      // Clear any existing timeout
-      if (undoTimeoutRef.current) {
-        clearTimeout(undoTimeoutRef.current);
-      }
-
-      // Apple uses 5 seconds for undo timeout
-      undoTimeoutRef.current = setTimeout(() => {
-        setShowUndo(false);
-        setUndoData(null);
-      }, 5000);
+      await archiveHabit({ habitId });
+      // Light haptic feedback on archive
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      console.log('Successfully archived habit:', habitName);
 
     } catch (error) {
-      console.error('Failed to delete habit:', error);
+      console.error('Failed to archive habit:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
-    }
-  };
-
-  const handleUndo = async () => {
-    if (!undoData) return;
-
-    // Light haptic feedback for undo
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    try {
-      await restoreHabit({
-        habitData: undoData.habit,
-        trackingData: undoData.tracking
-      });
-
-      // Clear undo state
-      setShowUndo(false);
-      setUndoData(null);
-      if (undoTimeoutRef.current) {
-        clearTimeout(undoTimeoutRef.current);
-      }
-
-    } catch (error) {
-      console.error('Failed to restore habit:', error);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      Alert.alert('Error', 'Failed to restore habit. Please try again.');
-    }
-  };
-
-  const dismissUndo = () => {
-    setShowUndo(false);
-    setUndoData(null);
-    if (undoTimeoutRef.current) {
-      clearTimeout(undoTimeoutRef.current);
+      Alert.alert('Error', `Failed to archive "${habitName}". Please try again.`);
     }
   };
 
@@ -309,12 +250,12 @@ function HabitsScreen() {
           ]}
         >
           <TouchableOpacity
-            onPress={() => showDeleteConfirmation(habitId, habitName)}
+            onPress={() => showArchiveConfirmation(habitId, habitName)}
             activeOpacity={0.6}
             style={styles.deleteButtonTouchable}
             accessibilityRole="button"
-            accessibilityLabel={`Delete ${habitName}`}
-            accessibilityHint="Deletes this habit and all tracking data"
+            accessibilityLabel={`Archive ${habitName}`}
+            accessibilityHint="Archives this habit, can be restored from Settings"
           >
             <Animated.View
               style={{
@@ -545,7 +486,7 @@ function HabitsScreen() {
                   style={styles.habitCard}
                   accessible={true}
                   accessibilityLabel={`${habit.name} habit tracking`}
-                  accessibilityHint="Swipe left to delete this habit"
+                  accessibilityHint="Swipe left to archive this habit"
                 >
                   <View style={styles.habitHeader}>
                     <Text style={styles.habitName}>{habit.name}</Text>
@@ -601,43 +542,6 @@ function HabitsScreen() {
         </View>
       </View>
 
-      {/* Undo notification */}
-      {showUndo && undoData && (
-        <View
-          style={styles.undoContainer}
-          accessible={true}
-          accessibilityLiveRegion="polite"
-        >
-          <View style={styles.undoNotification}>
-            <Text
-              style={styles.undoText}
-              accessibilityRole="text"
-            >
-              Deleted "{undoData.habit.name}"
-            </Text>
-            <View style={styles.undoActions}>
-              <TouchableOpacity
-                onPress={handleUndo}
-                style={styles.undoButton}
-                accessibilityRole="button"
-                accessibilityLabel={`Undo deletion of ${undoData.habit.name} habit`}
-                accessibilityHint="Restores the deleted habit and all its tracking data"
-              >
-                <Text style={styles.undoButtonText}>UNDO</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={dismissUndo}
-                style={styles.dismissButton}
-                accessibilityRole="button"
-                accessibilityLabel="Dismiss undo notification"
-                accessibilityHint="Permanently removes the deleted habit"
-              >
-                <Text style={styles.dismissButtonText}>✕</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      )}
     </ScrollView>
   );
 }
@@ -1010,63 +914,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 2,
     color: '#64748b',
-    fontWeight: '600',
-  },
-  undoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 16,
-    paddingBottom: 48,
-    paddingTop: 16,
-    backgroundColor: 'transparent',
-    pointerEvents: 'box-none',
-  },
-  undoNotification: {
-    backgroundColor: 'rgba(28, 28, 30, 0.95)',
-    borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.44,
-    shadowRadius: 10,
-    elevation: 16,
-  },
-  undoText: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '400',
-    flex: 1,
-  },
-  undoActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  undoButton: {
-    paddingHorizontal: 4,
-    paddingVertical: 4,
-  },
-  undoButtonText: {
-    color: '#0A84FF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  dismissButton: {
-    paddingHorizontal: 4,
-    paddingVertical: 4,
-  },
-  dismissButtonText: {
-    color: '#8E8E93',
-    fontSize: 18,
     fontWeight: '600',
   },
 });

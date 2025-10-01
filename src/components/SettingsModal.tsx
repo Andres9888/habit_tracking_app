@@ -1,5 +1,7 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
+import { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import ArchivedHabitsModal from "./ArchivedHabitsModal";
 
 interface SettingsModalProps {
   visible: boolean;
@@ -9,11 +11,18 @@ interface SettingsModalProps {
 export default function SettingsModal({ visible, onClose }: SettingsModalProps) {
   const { signOut } = useAuth();
   const { user } = useUser();
+  const [view, setView] = useState<'settings' | 'archived'>('settings');
+
+  // Reset to settings view when modal closes
+  const handleClose = () => {
+    onClose();
+    setTimeout(() => setView('settings'), 300); // Reset after animation
+  };
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      onClose();
+      handleClose();
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -24,41 +33,59 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
       visible={visible}
       transparent={true}
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <TouchableOpacity
         style={styles.overlay}
         activeOpacity={1}
-        onPress={onClose}
+        onPress={handleClose}
       >
-        <View style={styles.modal}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Settings</Text>
-            <TouchableOpacity
-              onPress={onClose}
-              style={styles.closeButton}
-              accessibilityLabel="Close settings"
-              accessibilityRole="button"
-            >
-              <Text style={styles.closeButtonText}>✕</Text>
-            </TouchableOpacity>
-          </View>
+        <TouchableOpacity
+          style={styles.modal}
+          activeOpacity={1}
+          onPress={(e) => e.stopPropagation()}
+        >
+          {view === 'settings' ? (
+            <>
+              <View style={styles.header}>
+                <Text style={styles.title}>Settings</Text>
+                <TouchableOpacity
+                  onPress={handleClose}
+                  style={styles.closeButton}
+                  accessibilityLabel="Close settings"
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </TouchableOpacity>
+              </View>
 
-          <View style={styles.content}>
-            <View style={styles.userInfo}>
-              <Text style={styles.label}>SIGNED IN AS</Text>
-              <Text style={styles.email}>{user?.primaryEmailAddress?.emailAddress}</Text>
-            </View>
+              <View style={styles.content}>
+                <View style={styles.userInfo}>
+                  <Text style={styles.label}>SIGNED IN AS</Text>
+                  <Text style={styles.email}>{user?.primaryEmailAddress?.emailAddress}</Text>
+                </View>
 
-            <TouchableOpacity
-              onPress={handleSignOut}
-              style={styles.signOutButton}
-              accessibilityRole="button"
-            >
-              <Text style={styles.signOutButtonText}>SIGN OUT</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+                <TouchableOpacity
+                  onPress={() => setView('archived')}
+                  style={styles.archiveButton}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.archiveButtonText}>📦 ARCHIVED HABITS</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={handleSignOut}
+                  style={styles.signOutButton}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.signOutButtonText}>SIGN OUT</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            <ArchivedHabitsModal onClose={handleClose} onBack={() => setView('settings')} />
+          )}
+        </TouchableOpacity>
       </TouchableOpacity>
     </Modal>
   );
@@ -131,6 +158,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#0f172a',
+  },
+  archiveButton: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#64748b',
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  archiveButtonText: {
+    fontSize: 13,
+    letterSpacing: 3,
+    color: '#64748b',
+    fontWeight: '700',
   },
   signOutButton: {
     borderRadius: 24,

@@ -9,6 +9,8 @@ const applicationTables = {
     order: v.optional(v.number()),
     tags: v.optional(v.array(v.string())),
     userId: v.optional(v.string()),
+    archived: v.optional(v.boolean()),
+    archivedAt: v.optional(v.number()),
   }),
 
   tracking: defineTable({

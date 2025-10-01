@@ -30,6 +30,46 @@ export const updateNotes = mutation({
   },
 });
 
+export const archive = mutation({
+  args: {
+    habitId: v.id("habits")
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error("Habit not found");
+    }
+
+    await ctx.db.patch(args.habitId, {
+      archived: true,
+      archivedAt: Date.now(),
+    });
+
+    return null;
+  },
+});
+
+export const unarchive = mutation({
+  args: {
+    habitId: v.id("habits")
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error("Habit not found");
+    }
+
+    await ctx.db.patch(args.habitId, {
+      archived: false,
+      archivedAt: undefined,
+    });
+
+    return null;
+  },
+});
+
 export const remove = mutation({
   args: {
     habitId: v.id("habits")
@@ -58,7 +98,7 @@ export const remove = mutation({
       .withIndex("by_habit_and_date", (q) => q.eq("habitId", args.habitId))
       .collect();
 
-    // Delete the habit
+    // Delete the habit permanently
     await ctx.db.delete(args.habitId);
 
     // Delete all tracking data for this habit
@@ -123,11 +163,38 @@ export const list = query({
       order: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
+      archived: v.optional(v.boolean()),
+      archivedAt: v.optional(v.number()),
     })
   ),
   handler: async (ctx) => {
     return await ctx.db
       .query("habits")
+      .filter((q) => q.neq(q.field("archived"), true))
+      .collect();
+  },
+});
+
+export const listArchived = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id("habits"),
+      createdAt: v.number(),
+      name: v.string(),
+      notes: v.optional(v.string()),
+      order: v.optional(v.number()),
+      tags: v.optional(v.array(v.string())),
+      userId: v.optional(v.string()),
+      archived: v.optional(v.boolean()),
+      archivedAt: v.optional(v.number()),
+    })
+  ),
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("habits")
+      .filter((q) => q.eq(q.field("archived"), true))
       .collect();
   },
 });
