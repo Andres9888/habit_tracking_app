@@ -1,55 +1,48 @@
 #!/bin/bash
 # CodeRabbit Review Handler for Claude Code
-# This script runs CodeRabbit on modified files and formats suggestions
+# This script runs CodeRabbit on uncommitted changes
 
 FILE_PATH="$1"
-REVIEW_OUTPUT=".claude/coderabbit-review.json"
+REVIEW_OUTPUT=".claude/coderabbit-review.txt"
 
 # Exit if no file path provided
 if [ -z "$FILE_PATH" ]; then
-  echo "Error: No file path provided"
-  exit 1
+  exit 0
 fi
 
-# Create .claude directory if it doesn't exist
-mkdir -p .claude
+# Only run on supported file types
+case "$FILE_PATH" in
+  *.ts|*.tsx|*.js|*.jsx|*.py|*.java|*.go|*.rs|*.rb)
+    # File type supported
+    ;;
+  *)
+    # Skip unsupported file types
+    exit 0
+    ;;
+esac
 
-# Run CodeRabbit review
-echo "🔍 Running CodeRabbit review on: $FILE_PATH"
-coderabbit review --file="$FILE_PATH" --format=json > "$REVIEW_OUTPUT" 2>&1
+# Check if file has uncommitted changes
+if ! git diff --quiet "$FILE_PATH" 2>/dev/null && ! git diff --cached --quiet "$FILE_PATH" 2>/dev/null; then
+  # Create .claude directory if it doesn't exist
+  mkdir -p .claude
 
-# Check if review was successful and has content
-if [ -s "$REVIEW_OUTPUT" ]; then
-  echo ""
-  echo "📊 CodeRabbit Review Results:"
-  echo "=============================="
+  # Run CodeRabbit review on uncommitted changes (plain text mode)
+  echo "🔍 Running CodeRabbit review on uncommitted changes..."
+  coderabbit review --plain --type uncommitted > "$REVIEW_OUTPUT" 2>&1
 
-  # Parse and format suggestions using jq if available
-  if command -v jq &> /dev/null; then
-    # Extract suggestions with formatting
-    SUGGESTIONS=$(jq -r '
-      if .suggestions then
-        .suggestions[] |
-        "⚠️  Line \(.line): \(.message)\n   💡 Suggestion: \(.suggestion)\n   🔧 Severity: \(.severity // "info")\n"
-      else
-        "✅ No suggestions found - code looks good!"
-      end
-    ' "$REVIEW_OUTPUT" 2>/dev/null)
-
-    if [ -z "$SUGGESTIONS" ]; then
-      echo "✅ No suggestions found - code looks good!"
-    else
-      echo "$SUGGESTIONS"
+  # Check if review was successful and has content
+  if [ -s "$REVIEW_OUTPUT" ]; then
+    # Filter output for the specific file if possible
+    if grep -q "$FILE_PATH" "$REVIEW_OUTPUT"; then
       echo ""
-      echo "💾 Full review saved to: $REVIEW_OUTPUT"
+      echo "📊 CodeRabbit Review for $FILE_PATH:"
+      echo "=============================="
+      # Show relevant section
+      grep -A 20 "$FILE_PATH" "$REVIEW_OUTPUT" | head -30
+      echo ""
+      echo "💾 Full review: $REVIEW_OUTPUT"
     fi
-  else
-    # Fallback if jq is not available
-    echo "⚠️  jq not installed - showing raw output:"
-    cat "$REVIEW_OUTPUT"
   fi
-else
-  echo "✅ CodeRabbit review completed - no issues found"
 fi
 
 exit 0
