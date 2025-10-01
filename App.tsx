@@ -1,22 +1,53 @@
+import { ClerkLoaded, ClerkProvider, SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex/react";
 import { addDays, format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
+import * as SecureStore from 'expo-secure-store';
 import { useMemo, useState } from 'react';
 import { Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import SettingsModal from './src/components/SettingsModal';
+import WelcomeScreen from './src/screens/auth/WelcomeScreen';
 import { api } from "./convex/_generated/api";
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+if (!publishableKey) {
+  throw new Error(
+    'Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env'
+  );
+}
+
+// Token cache for Clerk
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 
 type HabitStatus = "done" | "missed" | "planned";
 
 function HabitsScreen() {
+  const { user } = useUser();
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -154,15 +185,27 @@ function HabitsScreen() {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Habits</Text>
-          <TouchableOpacity
-            onPress={handleToggleForm}
-            style={styles.addButton}
-            accessibilityLabel="Add habit"
-            accessibilityRole="button"
-          >
-            <Text style={styles.plusIcon}>+</Text>
-          </TouchableOpacity>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity
+              onPress={handleToggleForm}
+              style={styles.addButton}
+              accessibilityLabel="Add habit"
+              accessibilityRole="button"
+            >
+              <Text style={styles.plusIcon}>+</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowSettings(true)}
+              style={styles.settingsButton}
+              accessibilityLabel="Settings"
+              accessibilityRole="button"
+            >
+              <Text style={styles.settingsIcon}>⚙️</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
+        <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
         {/* Date Navigation */}
         <View style={styles.dateNavigation}>
@@ -394,7 +437,14 @@ function MainApp() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.safeArea}>
         <StatusBar style="auto" />
-        <HabitsScreen />
+        <ClerkLoaded>
+          <SignedIn>
+            <HabitsScreen />
+          </SignedIn>
+          <SignedOut>
+            <WelcomeScreen />
+          </SignedOut>
+        </ClerkLoaded>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -402,11 +452,13 @@ function MainApp() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <ConvexProvider client={convex}>
-        <MainApp />
-      </ConvexProvider>
-    </SafeAreaProvider>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <SafeAreaProvider>
+        <ConvexProvider client={convex}>
+          <MainApp />
+        </ConvexProvider>
+      </SafeAreaProvider>
+    </ClerkProvider>
   );
 }
 
@@ -549,6 +601,10 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     color: '#0f172a',
   },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
   addButton: {
     width: 40,
     height: 40,
@@ -563,6 +619,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '300',
     color: '#000',
+  },
+  settingsButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  settingsIcon: {
+    fontSize: 18,
   },
   addForm: {
     borderRadius: 20,
