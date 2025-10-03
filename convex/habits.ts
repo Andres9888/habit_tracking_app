@@ -30,6 +30,23 @@ export const updateNotes = mutation({
   },
 });
 
+export const updateName = mutation({
+  args: {
+    habitId: v.id("habits"),
+    name: v.string()
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    if (!args.name.trim()) {
+      throw new Error("Habit name cannot be empty");
+    }
+    await ctx.db.patch(args.habitId, {
+      name: args.name.trim()
+    });
+    return null;
+  },
+});
+
 export const archive = mutation({
   args: {
     habitId: v.id("habits")

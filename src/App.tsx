@@ -1,19 +1,23 @@
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Plus } from "lucide-react";
+import { Plus, Pencil, Check, X } from "lucide-react";
 import { useMemo, useState } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from "react-native";
+import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 
 type HabitStatus = "done" | "missed" | "planned";
 
 function App() {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
+  const [editingHabitId, setEditingHabitId] = useState<Id<"habits"> | null>(null);
+  const [editingHabitName, setEditingHabitName] = useState("");
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
+  const updateHabitName = useMutation(api.habits.updateName);
   const habits = useQuery(api.habits.list) ?? [];
 
   // Get 7-day window ending with today
@@ -46,6 +50,33 @@ function App() {
     await createHabit({ name, notes: "" });
     setNewHabitName("");
     setIsAdding(false);
+  };
+
+  const handleStartEdit = (habitId: Id<"habits">, currentName: string) => {
+    setEditingHabitId(habitId);
+    setEditingHabitName(currentName);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingHabitId(null);
+    setEditingHabitName("");
+  };
+
+  const handleSaveEdit = async (habitId: Id<"habits">) => {
+    const newName = editingHabitName.trim();
+    if (!newName) {
+      Alert.alert('Error', 'Habit name cannot be empty');
+      return;
+    }
+
+    try {
+      await updateHabitName({ habitId, name: newName });
+      setEditingHabitId(null);
+      setEditingHabitName("");
+    } catch (error) {
+      console.error('Failed to update habit name:', error);
+      Alert.alert('Error', 'Failed to update habit name. Please try again.');
+    }
   };
 
   const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
@@ -152,7 +183,40 @@ function App() {
               return (
                 <View key={habit._id} style={styles.habitCard}>
                   <View style={styles.habitHeader}>
-                    <Text style={styles.habitName}>{habit.name}</Text>
+                    {editingHabitId === habit._id ? (
+                      <View style={styles.editNameContainer}>
+                        <TextInput
+                          value={editingHabitName}
+                          onChangeText={setEditingHabitName}
+                          style={styles.editNameInput}
+                          autoFocus
+                          placeholder="Habit name"
+                          placeholderTextColor="#999"
+                        />
+                        <TouchableOpacity
+                          onPress={() => handleSaveEdit(habit._id)}
+                          style={styles.editNameButton}
+                        >
+                          <Check size={18} color="#10B981" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={handleCancelEdit}
+                          style={styles.editNameButton}
+                        >
+                          <X size={18} color="#EF4444" />
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View style={styles.habitNameRow}>
+                        <Text style={styles.habitName}>{habit.name}</Text>
+                        <TouchableOpacity
+                          onPress={() => handleStartEdit(habit._id, habit.name)}
+                          style={styles.editButton}
+                        >
+                          <Pencil size={16} color="#64748b" />
+                        </TouchableOpacity>
+                      </View>
+                    )}
                   </View>
                   <View style={styles.calendarGrid}>
                     {weekDates.map((date, index) => {
@@ -323,11 +387,39 @@ const styles = StyleSheet.create({
   habitHeader: {
     marginBottom: 24,
   },
+  habitNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   habitName: {
     fontSize: 20,
     fontWeight: '600',
     color: '#0f172a',
     letterSpacing: -0.3,
+    flex: 1,
+  },
+  editButton: {
+    padding: 4,
+  },
+  editNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  editNameInput: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#0f172a',
+    borderBottomWidth: 2,
+    borderBottomColor: '#3B82F6',
+    paddingVertical: 4,
+  },
+  editNameButton: {
+    padding: 6,
+    borderRadius: 12,
+    backgroundColor: '#f8fafc',
   },
   calendarGrid: {
     flexDirection: 'row',
