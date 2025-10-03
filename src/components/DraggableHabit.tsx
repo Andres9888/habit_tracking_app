@@ -1,9 +1,8 @@
 import { format } from "date-fns";
-import { Pencil, Check, X, GripVertical, Calendar, Link2 } from "lucide-react";
+import { Pencil, Check, X, GripVertical, Link2 } from "lucide-react";
 import { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, TouchableOpacity, Modal, ScrollView } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
-import HabitCalendarView from "./HabitCalendarView";
 import ChainLinkVisualizer from "./ChainLinkVisualizer";
 
 type HabitStatus = "done" | "missed" | "planned";
@@ -42,6 +41,7 @@ interface DraggableHabitProps {
   tracking: Array<{ habitId: Id<"habits">; date: string; completed: boolean }>;
   addChainLink: (args: { habitId: Id<"habits">; linkedHabitId: Id<"habits"> }) => void;
   removeChainLink: (args: { habitId: Id<"habits">; linkedHabitId: Id<"habits"> }) => void;
+  onLongPress: () => void;
 }
 
 export default function DraggableHabit({
@@ -64,10 +64,10 @@ export default function DraggableHabit({
   tracking,
   addChainLink,
   removeChainLink,
+  onLongPress,
 }: DraggableHabitProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [showChainModal, setShowChainModal] = useState(false);
 
   const handleDragStart = (e: any) => {
@@ -116,7 +116,8 @@ export default function DraggableHabit({
 
   return (
     <View style={{ position: 'relative' }}>
-      <View
+      <Pressable
+        onLongPress={onLongPress}
         style={[
           styles.habitCard,
           isDragging && styles.habitCardDragging,
@@ -171,7 +172,14 @@ export default function DraggableHabit({
           </View>
         ) : (
           <View style={styles.habitNameRow}>
-            <Text style={styles.habitName}>{habit.name}</Text>
+            <TouchableOpacity
+              onLongPress={() => onStartEdit(habit._id, habit.name)}
+              delayLongPress={500}
+              style={{ flex: 1 }}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.habitName}>{habit.name}</Text>
+            </TouchableOpacity>
             <View style={styles.habitActions}>
               <TouchableOpacity
                 onPress={() => setShowChainModal(true)}
@@ -181,18 +189,6 @@ export default function DraggableHabit({
                 ]}
               >
                 <Link2 size={16} color={(habit.chainLinks || []).length > 0 ? "#3B82F6" : "#64748b"} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setShowCalendar(!showCalendar)}
-                style={[styles.actionButton, showCalendar && styles.actionButtonActive]}
-              >
-                <Calendar size={16} color={showCalendar ? "#3B82F6" : "#64748b"} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => onStartEdit(habit._id, habit.name)}
-                style={styles.actionButton}
-              >
-                <Pencil size={16} color="#64748b" />
               </TouchableOpacity>
             </View>
           </View>
@@ -297,7 +293,7 @@ export default function DraggableHabit({
           );
         })}
         </View>
-      )}
+      </View>
 
       <View style={styles.progressBarContainer}>
         <View style={[styles.progressBar, { width: `${completionRate}%` }]} />
