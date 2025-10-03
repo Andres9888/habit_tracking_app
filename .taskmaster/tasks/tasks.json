@@ -126,6 +126,8 @@
     "metadata": {
       "created": "2025-09-30T20:11:59.800Z",
       "updated": "2025-09-30T20:11:59.800Z",
+      "taskCount": 10,
+      "completedCount": 0,
       "description": "Tasks for mvp-ios context"
     }
   },
@@ -259,11 +261,192 @@
         ],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "iOS Widget Support",
+        "description": "Create iOS home screen widgets for quick habit tracking and progress viewing",
+        "details": "Implement iOS widgets using react-native-widget-extension or expo-widget. Create small, medium, and large widget sizes. Design widgets showing today's habits, current streaks, and quick completion actions. Implement deep linking from widgets to app. Add widget configuration for user customization. Ensure widget updates reflect real-time habit completion. Support iOS 14+ widget features including smart stacks and widget suggestions.",
+        "testStrategy": "Test widget installation and updates, verify deep linking functionality, validate widget performance on various iOS devices, test widget interactions",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "iCloud Sync and Multi-Device Support",
+        "description": "Implement iCloud synchronization for seamless cross-device habit tracking",
+        "details": "Configure iCloud entitlements in app configuration. Implement CloudKit integration for habit and tracking data sync. Create conflict resolution strategy for concurrent updates across devices. Add sync status indicators and manual sync option. Handle offline scenarios with queued sync operations. Ensure data privacy with encrypted iCloud storage. Test sync reliability across iPhone, iPad, and Mac devices.",
+        "testStrategy": "Test sync across multiple devices, verify conflict resolution, validate data consistency, test offline sync queuing, ensure privacy compliance",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Siri Shortcuts and Voice Integration",
+        "description": "Add Siri Shortcuts support for voice-based habit tracking and queries",
+        "details": "Implement Siri Shortcuts using expo-intent or react-native-siri-shortcut. Create shortcuts for marking habits complete, viewing streaks, and checking daily progress. Add custom intent definitions for natural language commands. Implement Shortcuts app integration with suggested shortcuts. Add voice feedback responses for completed actions. Support iOS Shortcuts automation triggers. Create shortcut donation system based on user behavior patterns.",
+        "testStrategy": "Test Siri command recognition, verify shortcut actions, validate automation triggers, test voice feedback, ensure iOS Shortcuts app integration",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Apple Watch Companion App",
+        "description": "Build Apple Watch app for quick habit tracking from wrist",
+        "details": "Create watchOS companion app using React Native or native Swift. Design watch face complications showing habit completion status. Implement glanceable habit list with tap-to-complete functionality. Add haptic feedback for completed habits. Create watch notification actions for habit reminders. Sync watch data with iPhone app in real-time. Support standalone watch usage when iPhone is not nearby. Optimize for watch battery life and performance.",
+        "testStrategy": "Test watch app functionality, verify iPhone sync, validate complications, test standalone mode, ensure battery efficiency",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Habit Streaks Gamification System",
+        "description": "Implement comprehensive gamification with badges, achievements, and milestone rewards",
+        "details": "Create achievement system with badges for various milestones (7-day streak, 30-day streak, 100 completions, etc.). Design visually appealing badge collection interface. Implement streak freeze power-ups for missed days. Add level progression system based on total completions. Create challenge modes for extra motivation. Implement achievement notifications with celebratory animations. Add social sharing for unlocked achievements. Store achievement data in Convex with new schema tables.",
+        "testStrategy": "Test achievement unlocking logic, verify badge display, validate streak calculations, test power-up mechanics, ensure progression accuracy",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "AI-Powered Habit Insights and Recommendations",
+        "description": "Implement AI-driven analytics for personalized habit insights and smart suggestions",
+        "details": "Integrate AI service (OpenAI, Anthropic Claude) for habit pattern analysis. Create intelligent insights detecting completion patterns, best performing times, and correlation between habits. Implement smart recommendations for new habits based on user behavior. Add predictive analytics for streak risk and success probability. Create personalized motivational messages based on user progress. Implement habit difficulty adjustment suggestions. Add weekly/monthly AI-generated progress summaries.",
+        "testStrategy": "Test AI insight accuracy, validate recommendations relevance, verify privacy of data sent to AI services, test prediction algorithms, ensure performance",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Apple Health Integration",
+        "description": "Integrate with Apple Health to export habit tracking data and import health metrics",
+        "details": "Implement Apple HealthKit integration using expo-health or react-native-health. Export completed habits as mindful minutes or custom activity types. Import health data (steps, sleep, workouts) to correlate with habit success. Create health-related habit templates (exercise, meditation, sleep tracking). Add Apple Health permission management. Implement bidirectional sync for health-related habits. Visualize health correlations in analytics dashboard.",
+        "testStrategy": "Test HealthKit data export and import, verify permission handling, validate data accuracy, test correlation calculations, ensure privacy compliance",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Habit Journaling and Reflection Notes",
+        "description": "Add journaling capability for habits with notes, reflections, and mood tracking",
+        "details": "Create journal entry interface for each habit completion. Add mood tracking with emoji or scale ratings. Implement rich text notes with markdown support. Add photo attachments to journal entries using expo-image-picker. Create journal history view showing past reflections. Implement search and filtering for journal entries. Add journaling prompts and reflection questions. Export journal entries to PDF or markdown files.",
+        "testStrategy": "Test journal entry creation and editing, verify photo uploads, validate search functionality, test export formats, ensure data persistence",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Custom Reminder Sounds and Notifications",
+        "description": "Add personalized notification sounds and advanced reminder customization",
+        "details": "Implement custom sound selection for habit reminders using expo-av. Create sound library with various notification tones. Add per-habit reminder customization (sound, vibration pattern, notification style). Implement smart reminder timing based on user patterns. Add location-based reminders using geofencing. Create reminder snooze and repeat options. Support iOS notification categories with custom actions. Add quiet hours and do-not-disturb integration.",
+        "testStrategy": "Test custom sound playback, verify reminder scheduling, validate location triggers, test notification actions, ensure iOS integration",
+        "priority": "low",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Habit Sharing and Social Proof Features",
+        "description": "Enable users to share habit progress and achievements on social media",
+        "details": "Create shareable progress cards with beautiful designs and statistics. Implement share functionality for Instagram Stories, Twitter, Facebook. Add customizable share templates with branding. Create achievement announcement features. Implement privacy controls for sharing. Add hashtag suggestions for social posts. Create referral system with share-to-invite functionality. Generate dynamic Open Graph images for link sharing.",
+        "testStrategy": "Test social media sharing flows, verify share card rendering, validate privacy controls, test referral tracking, ensure cross-platform compatibility",
+        "priority": "low",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Fix Habit Name Edit Alignment Issue",
+        "description": "Resolve layout shift when switching between view and edit modes for habit names in HabitCard component",
+        "details": "The habit name text and edit TextInput need to be perfectly aligned to prevent layout shift. Currently when switching from view to edit mode, there's a visible vertical alignment mismatch. Need to ensure both the Text component and TextInput have identical positioning, padding, margins, and line heights. Files to modify: src/components/HabitCard.tsx. Consider using identical styles for both elements or using a wrapper with consistent dimensions.",
+        "testStrategy": "Visual testing on iOS simulator and device, verify no layout shift occurs when entering/exiting edit mode, test with various habit name lengths, ensure alignment is pixel-perfect",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Fix Auto Theme Mode Detection",
+        "description": "Fix the automatic theme mode setting to properly detect and respond to system light/dark mode changes",
+        "details": "The auto theme mode setting is currently not working properly. Need to implement proper system theme detection using React Native's Appearance API or useColorScheme hook. Ensure the app responds in real-time when the system theme changes. Files to check: src/theme/index.tsx or theme context provider. Implement proper listeners for system theme changes and update the theme context accordingly. Verify theme persistence works correctly when auto mode is selected.",
+        "testStrategy": "Test auto mode by changing system theme settings, verify app updates in real-time, test theme persistence after app restart with auto mode enabled, validate on both iOS simulator and physical device",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Add Chain Connection to Previous Week Streak",
+        "description": "Add visual chain link connecting the first habit circle to previous week's completed habit",
+        "details": "When a habit is completed on the last day of the previous week AND the first day of the current week, add a visual chain line on the LEFT side of the first circle connecting to the habit card border. This indicates the streak continues from the previous week. Check tracking data for previous week's last day completion before rendering the chain. Use similar styling to existing streak chains between days. Files to modify: src/components/HabitCard.tsx. Add check for previous week's last day completion in App.tsx habit rendering logic.",
+        "testStrategy": "Test with habit completed on previous Sunday and current Monday, verify chain appears on left side of first circle, test with incomplete previous week, validate styling matches existing chains",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Add Undo Last Action Feature",
+        "description": "Implement undo functionality with toast notifications for habit toggle and archive actions",
+        "details": "Add toast/snackbar notification after toggling habit completion or archiving. Include 'Undo' button in toast with 3-5 second timeout. Store last action state (toggle completion, archive) to enable rollback. Use expo-toast or similar for native-looking notifications. Implement queue for multiple rapid actions. Add haptic feedback for undo actions.",
+        "testStrategy": "Test undo for habit completion toggle, test undo for archive action, verify timeout behavior, test rapid multiple actions",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Basic Habit Reminders",
+        "description": "Add simple daily reminder notifications for individual habits",
+        "details": "Add time picker when creating/editing habits for reminder time. Implement local notifications using expo-notifications. Store reminder preferences per habit in database schema. Request notification permissions on first reminder setup. Support basic actions: mark as complete from notification. Add toggle to enable/disable reminders per habit. Default reminder time suggestions (morning, afternoon, evening).",
+        "testStrategy": "Test notification scheduling, verify notifications appear at correct time, test notification actions, validate permission flow",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-09-30T20:13:31.582Z",
       "updated": "2025-09-30T20:13:31.582Z",
+      "taskCount": 25,
+      "completedCount": 0,
       "description": "Tasks for post-mvp context"
     }
   }

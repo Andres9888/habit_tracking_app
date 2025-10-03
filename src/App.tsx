@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Plus } from "lucide-react";
-import { useMemo, useState } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from "react-native";
+import { Plus, Pencil, Check, X, GripVertical } from "lucide-react";
+import { useMemo, useState, useCallback } from "react";
+import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
 
@@ -11,10 +12,14 @@ type HabitStatus = "done" | "missed" | "planned";
 function App() {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
+  const [editingHabitId, setEditingHabitId] = useState<Id<"habits"> | null>(null);
+  const [editingHabitName, setEditingHabitName] = useState("");
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
+  const updateHabitName = useMutation(api.habits.updateName);
   const habits = useQuery(api.habits.list) ?? [];
+  const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
   // Get 5-day window ending with today
   const today = new Date();
@@ -66,8 +71,33 @@ function App() {
     return "planned";
   };
 
+  // Initialize habit order when habits load
+  useMemo(() => {
+    if (habits.length > 0 && habitOrder.length === 0) {
+      setHabitOrder(habits.map(h => h._id));
+    }
+  }, [habits, habitOrder.length]);
+
+  // Reorder habits based on current order state
+  const orderedHabits = useMemo(() => {
+    if (habitOrder.length === 0) return habits;
+
+    const orderMap = new Map(habitOrder.map((id, index) => [id, index]));
+    return [...habits].sort((a, b) => {
+      const aOrder = orderMap.get(a._id) ?? Infinity;
+      const bOrder = orderMap.get(b._id) ?? Infinity;
+      return aOrder - bOrder;
+    });
+  }, [habits, habitOrder]);
+
+  const handleReorder = useCallback(async (newOrder: string[]) => {
+    setHabitOrder(newOrder);
+    await reorderHabits({ habitIds: newOrder as Id<"habits">[] });
+  }, [reorderHabits]);
+
   return (
-    <ScrollView style={styles.container}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
       <View style={styles.content}>
           <View style={styles.header}>
             <Text style={styles.title}>Habits</Text>
@@ -153,59 +183,25 @@ function App() {
               const streak = calculateStreak();
 
               return (
-                <View key={habit._id} style={styles.habitCard}>
-                  <View style={styles.habitHeader}>
-                    <Text style={styles.habitName}>{habit.name}</Text>
-                  </View>
-                  <View style={styles.calendarGrid}>
-                    {weekDates.map((date, index) => {
-                      const state = weekStatus[index];
-                      const dateString = weekDateStrings[index];
-                      const checkDate = new Date(dateString);
-                      const todayCheck = new Date();
-                      todayCheck.setHours(0, 0, 0, 0);
-                      checkDate.setHours(0, 0, 0, 0);
-                      const isFuture = checkDate > todayCheck;
-                      const dayLabel = format(date, 'EEE').substring(0, 3);
-
-                      return (
-                        <View
-                          key={`${habit._id}-${dateString}`}
-                          style={styles.dayColumn}
-                        >
-                          <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
-                          <Pressable
-                            onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
-                            disabled={isFuture}
-                            style={[
-                              styles.dayButton,
-                              state === "done" && styles.dayButtonDone,
-                              state === "missed" && styles.dayButtonMissed,
-                              isFuture && styles.dayButtonFuture
-                            ]}
-                            accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
-                            accessibilityRole="button"
-                          >
-                            <Text style={[
-                              styles.dayButtonText,
-                              state === "done" && styles.dayButtonTextDone,
-                              state === "missed" && styles.dayButtonTextMissed
-                            ]}>
-                              {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
-                            </Text>
-                          </Pressable>
-                        </View>
-                      );
-                    })}
-                  </View>
-                  <View style={styles.progressBarContainer}>
-                    <View style={[styles.progressBar, { width: `${completionRate}%` }]} />
-                  </View>
-                  <View style={styles.habitStats}>
-                    <Text style={styles.statText}>STREAK · {streak} DAYS</Text>
-                    <Text style={styles.statText}>{completionRate}% THIS WEEK</Text>
-                  </View>
-                </View>
+                <DraggableHabit
+                  key={habit._id}
+                  habit={habit}
+                  index={index}
+                  allHabits={orderedHabits}
+                  onReorder={handleReorder}
+                  editingHabitId={editingHabitId}
+                  editingHabitName={editingHabitName}
+                  onStartEdit={handleStartEdit}
+                  onCancelEdit={handleCancelEdit}
+                  onSaveEdit={handleSaveEdit}
+                  setEditingHabitName={setEditingHabitName}
+                  weekDates={weekDates}
+                  weekDateStrings={weekDateStrings}
+                  weekStatus={weekStatus}
+                  completionRate={completionRate}
+                  streak={streak}
+                  toggleHabit={toggleHabit}
+                />
               );
             })}
           </View>
