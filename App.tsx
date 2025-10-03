@@ -632,12 +632,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 24,
-    paddingHorizontal: 4,
+    paddingHorizontal: 16,
   },
   dateItem: {
     alignItems: 'center',
     gap: 4,
     flex: 1,
+    minWidth: 48,
   },
   monthLabel: {
     fontSize: 10,
