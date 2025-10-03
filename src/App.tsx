@@ -21,6 +21,9 @@ function App() {
   const weekDates = Array.from({ length: 5 }, (_, i) => addDays(today, i - 4));
   const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
 
+  console.log('Number of days:', weekDates.length);
+  console.log('Dates:', weekDateStrings);
+
   const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
 
   const canSubmit = useMemo(
