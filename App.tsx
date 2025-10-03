@@ -305,47 +305,33 @@ function HabitsScreen() {
 
         <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
-        {/* Date Navigation */}
-        <View style={styles.dateNavigation}>
-          <TouchableOpacity
-            onPress={goToPreviousPeriod}
-            style={styles.navButton}
-            accessibilityLabel="Previous period"
-            accessibilityRole="button"
-          >
-            <Text style={styles.navButtonText}>←</Text>
-          </TouchableOpacity>
+        {/* Date Timeline */}
+        <View style={styles.dateTimeline}>
+          {weekDates.map((date, index) => {
+            const dateString = weekDateStrings[index];
+            const dayNum = format(date, 'd');
+            const monthLabel = format(date, 'MMM');
+            const isSelected = format(selectedEndDate, 'yyyy-MM-dd') === dateString;
+            const isToday = format(date, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
 
-          <TouchableOpacity
-            onPress={goToToday}
-            style={[styles.todayButton, isAtToday && styles.todayButtonDisabled]}
-            disabled={isAtToday}
-            accessibilityLabel="Go to today"
-            accessibilityRole="button"
-          >
-            <Text style={[styles.todayButtonText, isAtToday && styles.todayButtonTextDisabled]}>
-              {format(weekDates[0], 'MMM d')} - {format(weekDates[3], 'MMM d')}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setShowCalendar(true)}
-            style={styles.calendarButton}
-            accessibilityLabel="Open calendar"
-            accessibilityRole="button"
-          >
-            <Text style={styles.calendarButtonText}>📅</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={goToNextPeriod}
-            style={[styles.navButton, isAtToday && styles.navButtonDisabled]}
-            disabled={isAtToday}
-            accessibilityLabel="Next period"
-            accessibilityRole="button"
-          >
-            <Text style={[styles.navButtonText, isAtToday && styles.navButtonTextDisabled]}>→</Text>
-          </TouchableOpacity>
+            return (
+              <TouchableOpacity
+                key={dateString}
+                onPress={() => handleDateSelect(dateString)}
+                style={styles.dateItem}
+                accessibilityLabel={`Select ${format(date, 'MMM d')}`}
+                accessibilityRole="button"
+              >
+                <Text style={styles.monthLabel}>{monthLabel.toUpperCase()}</Text>
+                <Text style={[
+                  styles.dateNumber,
+                  isSelected && styles.dateNumberSelected,
+                ]}>
+                  {dayNum}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Calendar Modal */}
@@ -642,71 +628,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  dateNavigation: {
+  dateTimeline: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 24,
-    gap: 12,
-  },
-  navButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navButtonDisabled: {
-    opacity: 0.3,
-  },
-  navButtonText: {
-    fontSize: 20,
-    color: '#0f172a',
-    fontWeight: '600',
-  },
-  navButtonTextDisabled: {
-    color: '#94a3b8',
-  },
-  todayButton: {
-    flex: 1,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: 16,
   },
-  todayButtonDisabled: {
-    borderColor: '#0f172a',
-    backgroundColor: '#f8fafc',
-  },
-  todayButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#0f172a',
-    letterSpacing: 0.5,
-  },
-  todayButtonTextDisabled: {
-    color: '#0f172a',
-    fontWeight: '700',
-  },
-  calendarButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
+  dateItem: {
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 4,
+    flex: 1,
+    minWidth: 48,
   },
-  calendarButtonText: {
-    fontSize: 20,
+  monthLabel: {
+    fontSize: 10,
+    letterSpacing: 2.5,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  dateNumber: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#64748b',
+  },
+  dateNumberSelected: {
+    color: '#0f172a',
+    fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
