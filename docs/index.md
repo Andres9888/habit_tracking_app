@@ -1,0 +1,21 @@
+# Documentation Index
+
+- Components
+  - [Button](./components/Button.md)
+  - [Card](./components/Card.md)
+  - [Checkbox](./components/Checkbox.md)
+  - [SegmentedControl](./components/SegmentedControl.md)
+  - [Switch](./components/Switch.md)
+  - [SettingsModal](./components/SettingsModal.md)
+  - [ArchivedHabitsModal](./components/ArchivedHabitsModal.md)
+- Screens
+  - [WelcomeScreen](./screens/WelcomeScreen.md)
+  - [SignInScreen](./screens/SignInScreen.md)
+  - [SignUpScreen](./screens/SignUpScreen.md)
+- Utilities
+  - [cn](./components/Utils.md)
+- Backend
+  - [Habits API](./backend/Habits.md)
+  - [Settings API](./backend/Settings.md)
+  - [Articles API](./backend/Articles.md)
+  - [Data Model](./backend/DataModel.md)
