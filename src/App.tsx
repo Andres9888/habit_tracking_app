@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
 import { Plus, Pencil, Check, X, GripVertical } from "lucide-react";
-import { useMemo, useState, useCallback } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { useMemo, useState, useCallback, useEffect, useRef } from "react";
+import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, TouchableOpacity, Alert, Animated } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 
 type HabitStatus = "done" | "missed" | "planned";
 

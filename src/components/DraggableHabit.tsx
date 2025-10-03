@@ -293,7 +293,7 @@ export default function DraggableHabit({
           );
         })}
         </View>
-      </View>
+      )}
 
       <View style={styles.progressBarContainer}>
         <View style={[styles.progressBar, { width: `${completionRate}%` }]} />
@@ -303,7 +303,7 @@ export default function DraggableHabit({
         <Text style={styles.statText}>STREAK · {streak} DAYS</Text>
         <Text style={styles.statText}>{completionRate}% THIS WEEK</Text>
       </View>
-      </View>
+      </Pressable>
     </View>
   );
 }
