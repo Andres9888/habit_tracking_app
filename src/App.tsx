@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Plus, Pencil, Check, X, GripVertical } from "lucide-react";
+import { Pencil, Check, X, GripVertical } from "lucide-react";
 import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, TouchableOpacity, Alert, Animated } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -236,16 +236,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: -0.5,
     color: '#0f172a',
-  },
-  addButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   addForm: {
     borderRadius: 24,
