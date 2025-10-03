@@ -16,10 +16,13 @@ function App() {
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const habits = useQuery(api.habits.list) ?? [];
 
-  // Get 7-day window ending with today
+  // Get 5-day window ending with today
   const today = new Date();
-  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6));
+  const weekDates = Array.from({ length: 5 }, (_, i) => addDays(today, i - 4));
   const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
+
+  console.log('Number of days:', weekDates.length);
+  console.log('Dates:', weekDateStrings);
 
   const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
 
@@ -117,7 +120,7 @@ function App() {
             {habits.map((habit) => {
               const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
               const completedCount = weekStatus.filter(s => s === "done").length;
-              const completionRate = Math.round((completedCount / 7) * 100);
+              const completionRate = Math.round((completedCount / 5) * 100);
 
               // Calculate streak (consecutive days completed up to today)
               const calculateStreak = () => {

@@ -11,6 +11,10 @@ const applicationTables = {
     userId: v.optional(v.string()),
     archived: v.optional(v.boolean()),
     archivedAt: v.optional(v.number()),
+    consecutiveDays: v.optional(v.number()),
+    strength: v.optional(v.number()),
+    totalCompletions: v.optional(v.number()),
+    totalMisses: v.optional(v.number()),
   }),
 
   tracking: defineTable({

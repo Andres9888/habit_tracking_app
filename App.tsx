@@ -58,8 +58,8 @@ function HabitsScreen() {
   const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
 
-  // Get 4-day window (3 days before + selected end date)
-  const weekDates = Array.from({ length: 4 }, (_, i) => addDays(selectedEndDate, i - 3));
+  // Get 5-day window (4 days before + selected end date)
+  const weekDates = Array.from({ length: 5 }, (_, i) => addDays(selectedEndDate, i - 4));
   const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
 
   // Calculate today for preventing future selections
