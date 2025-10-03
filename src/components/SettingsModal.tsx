@@ -1,7 +1,6 @@
-import { useAuth, useUser } from "@clerk/clerk-expo";
-import { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ArchivedHabitsModal from "./ArchivedHabitsModal";
+import { useComponentLogic } from "./SettingsModal.hooks";
 
 interface SettingsModalProps {
   visible: boolean;
@@ -9,24 +8,8 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ visible, onClose }: SettingsModalProps) {
-  const { signOut } = useAuth();
-  const { user } = useUser();
-  const [view, setView] = useState<'settings' | 'archived'>('settings');
-
-  // Reset to settings view when modal closes
-  const handleClose = () => {
-    onClose();
-    setTimeout(() => setView('settings'), 300); // Reset after animation
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      handleClose();
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
+  const logic = useComponentLogic({ onClose });
+  const { user, view, goToArchived, goToSettings, handleClose, handleSignOut } = logic;
 
   return (
     <Modal
@@ -66,7 +49,7 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
                 </View>
 
                 <TouchableOpacity
-                  onPress={() => setView('archived')}
+                  onPress={goToArchived}
                   style={styles.archiveButton}
                   accessibilityRole="button"
                 >
@@ -83,7 +66,7 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
               </View>
             </>
           ) : (
-            <ArchivedHabitsModal onClose={handleClose} onBack={() => setView('settings')} />
+            <ArchivedHabitsModal onClose={handleClose} onBack={goToSettings} />
           )}
         </TouchableOpacity>
       </TouchableOpacity>

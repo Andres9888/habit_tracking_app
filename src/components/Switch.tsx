@@ -1,5 +1,6 @@
-import React, { ForwardedRef, InputHTMLAttributes, useRef } from "react";
+import React, { ForwardedRef, InputHTMLAttributes } from "react";
 import { cn } from "../lib/utils";
+import { useComponentLogic } from "./Switch.hooks";
 
 type SwitchSize = "sm" | "md" | "lg";
 
@@ -18,7 +19,7 @@ export const Switch = React.forwardRef(function Switch(
   { checked, className, defaultChecked, disabled, id, name, onChange, size = "md", ...rest }: SwitchProps,
   forwardedRef: ForwardedRef<HTMLInputElement>
 ) {
-  const internalRef = useRef<HTMLInputElement | null>(null);
+  const { setRefs } = useComponentLogic({ forwardedRef });
 
   return (
     <span className={cn("relative inline-flex items-center", className)}>
@@ -30,14 +31,7 @@ export const Switch = React.forwardRef(function Switch(
         id={id}
         name={name}
         onChange={onChange}
-        ref={(node) => {
-          internalRef.current = node;
-          if (typeof forwardedRef === "function") {
-            forwardedRef(node);
-          } else if (forwardedRef && typeof forwardedRef === "object") {
-            (forwardedRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
-          }
-        }}
+        ref={setRefs}
         type="checkbox"
         {...rest}
       />

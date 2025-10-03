@@ -1,5 +1,6 @@
-import React, { ForwardedRef, InputHTMLAttributes, useEffect, useRef } from "react";
+import React, { ForwardedRef, InputHTMLAttributes } from "react";
 import { cn } from "../lib/utils";
+import { useComponentLogic } from "./Checkbox.hooks";
 
 type CheckboxSize = "sm" | "md" | "lg";
 
@@ -34,7 +35,7 @@ export const Checkbox = React.forwardRef(function Checkbox(
   }: CheckboxProps,
   forwardedRef: ForwardedRef<HTMLInputElement>
 ) {
-  const internalRef = useRef<HTMLInputElement | null>(null);
+  const { setRefs } = useComponentLogic({ forwardedRef, checked, indeterminate });
 
   const variantToCheckedClasses: Record<CheckboxVariant, string> = {
     primary: "peer-checked:border-primary peer-checked:bg-primary",
@@ -50,13 +51,6 @@ export const Checkbox = React.forwardRef(function Checkbox(
     danger: "peer-focus-visible:ring-red-500",
   };
 
-  useEffect(() => {
-    const input = internalRef.current;
-    if (input) {
-      input.indeterminate = indeterminate && !checked;
-    }
-  }, [forwardedRef, indeterminate, checked]);
-
   return (
     <span className={cn("relative inline-flex", className)}>
       <input
@@ -70,14 +64,7 @@ export const Checkbox = React.forwardRef(function Checkbox(
         id={id}
         name={name}
         onChange={onChange}
-        ref={(node) => {
-          internalRef.current = node;
-          if (typeof forwardedRef === "function") {
-            forwardedRef(node);
-          } else if (forwardedRef && typeof forwardedRef === "object") {
-            (forwardedRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
-          }
-        }}
+        ref={setRefs}
         type="checkbox"
         {...rest}
       />

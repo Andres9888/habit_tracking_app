@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "../lib/utils";
+import { useComponentLogic } from "./SegmentedControl.hooks";
 
 export interface Segment<T extends string> {
   value: T;
@@ -14,10 +15,11 @@ interface SegmentedControlProps<T extends string> {
 }
 
 export function SegmentedControl<T extends string>({ segments, value, onChange, className }: SegmentedControlProps<T>) {
+  const { isActive, handleSelect } = useComponentLogic({ segments, value, onChange });
   return (
     <div role="tablist" aria-label="View switch" className={cn("inline-flex rounded-lg bg-slate-100 p-1", className)}>
       {segments.map((segment) => {
-        const active = segment.value === value;
+        const active = isActive(segment.value);
         return (
           <button
             key={segment.value}
@@ -29,7 +31,7 @@ export function SegmentedControl<T extends string>({ segments, value, onChange, 
                 ? "bg-card shadow text-slate-900 dark:text-slate-100"
                 : "text-slate-600 hover:text-slate-800",
             )}
-            onClick={() => onChange(segment.value)}
+            onClick={() => handleSelect(segment.value)}
             type="button"
           >
             {segment.label}

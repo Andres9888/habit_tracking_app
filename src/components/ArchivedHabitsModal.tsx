@@ -1,7 +1,5 @@
-import { useMutation, useQuery } from "convex/react";
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import * as Haptics from 'expo-haptics';
-import { api } from "../../convex/_generated/api";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useComponentLogic } from "./ArchivedHabitsModal.hooks";
 
 interface ArchivedHabitsModalProps {
   onClose: () => void;
@@ -9,51 +7,7 @@ interface ArchivedHabitsModalProps {
 }
 
 export default function ArchivedHabitsModal({ onClose, onBack }: ArchivedHabitsModalProps) {
-  const archivedHabits = useQuery(api.habits.listArchived) ?? [];
-  const unarchiveHabit = useMutation(api.habits.unarchive);
-  const removeHabit = useMutation(api.habits.remove);
-
-  const handleRestore = async (habitId: any, habitName: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    try {
-      await unarchiveHabit({ habitId });
-    } catch (error) {
-      console.error('Failed to restore habit:', error);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      Alert.alert('Error', `Failed to restore "${habitName}". Please try again.`);
-    }
-  };
-
-  const handlePermanentDelete = (habitId: any, habitName: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-
-    Alert.alert(
-      `Permanently Delete "${habitName}"?`,
-      'This will permanently delete the habit and all its tracking data. This action cannot be undone.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete Forever',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await removeHabit({ habitId });
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            } catch (error) {
-              console.error('Failed to delete habit:', error);
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-              Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
-            }
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
+  const { archivedHabits, handleRestore, handlePermanentDelete } = useComponentLogic({ onClose, onBack });
 
   return (
     <>
