@@ -274,8 +274,9 @@ function HabitsScreen() {
   const isAtToday = format(selectedEndDate, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Habits</Text>
           <View style={styles.headerButtons}>
@@ -540,9 +541,24 @@ function HabitsScreen() {
             );
           })}
         </View>
-      </View>
+        </View>
+      </ScrollView>
 
-    </ScrollView>
+      {/* Floating bottom plus button */}
+      <View pointerEvents="box-none" style={styles.fabContainer}>
+        <TouchableOpacity
+          onPress={handleToggleForm}
+          style={styles.fab}
+          accessibilityLabel={isAdding ? 'Cancel' : 'Add habit'}
+          accessibilityRole="button"
+          activeOpacity={0.85}
+        >
+          <Animated.View style={{ transform: [{ rotate: rotation }] }}>
+            <Text style={styles.fabPlus}>+</Text>
+          </Animated.View>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -590,6 +606,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 20,
     paddingBottom: 96,
+  },
+  fabContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  fab: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#0f172a',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+  },
+  fabPlus: {
+    fontSize: 28,
+    fontWeight: '300',
+    color: '#fff',
+    lineHeight: 28,
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',
