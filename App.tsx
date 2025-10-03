@@ -46,6 +46,8 @@ function HabitsScreen() {
   const { user } = useUser();
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
+  const [showNotesInput, setShowNotesInput] = useState(false);
+  const [newHabitNotes, setNewHabitNotes] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -114,6 +116,8 @@ function HabitsScreen() {
     setIsAdding((prev) => {
       if (prev) {
         setNewHabitName("");
+        setNewHabitNotes("");
+        setShowNotesInput(false);
       }
       return !prev;
     });
@@ -125,8 +129,13 @@ function HabitsScreen() {
       return;
     }
 
-    await createHabit({ name, notes: "" });
+    await createHabit({
+      name,
+      notes: newHabitNotes.trim() === "" ? undefined : newHabitNotes.trim(),
+    });
     setNewHabitName("");
+    setNewHabitNotes("");
+    setShowNotesInput(false);
     setIsAdding(false);
   };
 
@@ -418,6 +427,27 @@ function HabitsScreen() {
                   placeholderTextColor="#999"
                 />
               </View>
+            <TouchableOpacity
+              onPress={() => setShowNotesInput((s) => !s)}
+              style={styles.notesToggle}
+              accessibilityRole="button"
+            >
+              <Text style={styles.notesToggleText}>
+                {showNotesInput ? "HIDE NOTES" : "ADD NOTES"}
+              </Text>
+            </TouchableOpacity>
+            {showNotesInput && (
+              <TextInput
+                value={newHabitNotes}
+                onChangeText={setNewHabitNotes}
+                placeholder="Add notes (optional)"
+                multiline
+                numberOfLines={4}
+                style={styles.notesInput}
+                placeholderTextColor="#999"
+                accessibilityLabel="Notes"
+              />
+            )}
               <View style={styles.formActions}>
                 <TouchableOpacity
                   onPress={handleToggleForm}
@@ -780,6 +810,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#0f172a',
+  },
+  notesToggle: {
+    alignSelf: 'flex-start',
+    paddingVertical: 4,
+  },
+  notesToggleText: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: '#0f172a',
+    fontWeight: '600',
+  },
+  notesInput: {
+    width: '100%',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#0f172a',
+    minHeight: 96,
+    textAlignVertical: 'top',
   },
   formActions: {
     flexDirection: 'row',
