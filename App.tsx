@@ -315,26 +315,21 @@ function HabitsScreen() {
             const isToday = format(date, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
 
             return (
-              <View key={dateString} style={styles.dateItem}>
+              <TouchableOpacity
+                key={dateString}
+                onPress={() => handleDateSelect(dateString)}
+                style={styles.dateItem}
+                accessibilityLabel={`Select ${format(date, 'MMM d')}`}
+                accessibilityRole="button"
+              >
                 <Text style={styles.monthLabel}>{monthLabel.toUpperCase()}</Text>
-                <TouchableOpacity
-                  onPress={() => handleDateSelect(dateString)}
-                  style={[
-                    styles.dateCircle,
-                    isSelected && styles.dateCircleSelected,
-                    isToday && styles.dateCircleToday,
-                  ]}
-                  accessibilityLabel={`Select ${format(date, 'MMM d')}`}
-                  accessibilityRole="button"
-                >
-                  <Text style={[
-                    styles.dateNumber,
-                    isSelected && styles.dateNumberSelected,
-                  ]}>
-                    {dayNum}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                <Text style={[
+                  styles.dateNumber,
+                  isSelected && styles.dateNumberSelected,
+                ]}>
+                  {dayNum}
+                </Text>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -641,7 +636,7 @@ const styles = StyleSheet.create({
   },
   dateItem: {
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
     flex: 1,
   },
   monthLabel: {
@@ -650,25 +645,8 @@ const styles = StyleSheet.create({
     color: '#64748b',
     fontWeight: '600',
   },
-  dateCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dateCircleSelected: {
-    borderWidth: 2,
-    borderColor: '#0f172a',
-  },
-  dateCircleToday: {
-    backgroundColor: '#f8fafc',
-  },
   dateNumber: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: '600',
     color: '#64748b',
   },
