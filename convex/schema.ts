@@ -32,6 +32,7 @@ const applicationTables = {
     showCalendarView: v.boolean(),
     catTheme: v.boolean(),
     darkMode: v.boolean(),
+    defaultView: v.optional(v.string()),
     userId: v.optional(v.string()),
   }),
 

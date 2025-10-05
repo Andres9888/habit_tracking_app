@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   showCalendarView: true,
   catTheme: true,
   darkMode: false,
+  defaultView: 'list',
 };
 
 export const get = query({
@@ -21,6 +22,7 @@ export const get = query({
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
     showStreaks: v.boolean(),
+    defaultView: v.string(),
   }),
   handler: async (ctx) => {
     // Get first settings record (since auth was removed, just use any settings)
@@ -37,6 +39,7 @@ export const get = query({
       showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
       showMotivationalMessages: settings?.showMotivationalMessages ?? DEFAULT_SETTINGS.showMotivationalMessages,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
+      defaultView: settings?.defaultView ?? DEFAULT_SETTINGS.defaultView,
     };
   }
 });
@@ -50,6 +53,7 @@ export const update = mutation({
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
     showStreaks: v.boolean(),
+    defaultView: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
