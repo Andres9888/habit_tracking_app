@@ -282,18 +282,6 @@ function HabitsScreen() {
           <Text style={styles.title}>Habits</Text>
           <View style={styles.headerButtons}>
             <TouchableOpacity
-              onPress={handleToggleForm}
-              style={styles.addButton}
-              accessibilityLabel={isAdding ? "Cancel" : "Add habit"}
-              accessibilityRole="button"
-            >
-              <Animated.View style={{ transform: [{ rotate: rotation }] }}>
-                <Text style={styles.plusIcon}>
-                  +
-                </Text>
-              </Animated.View>
-            </TouchableOpacity>
-            <TouchableOpacity
               onPress={() => setShowSettings(true)}
               style={styles.settingsButton}
               accessibilityLabel="Settings"
@@ -719,23 +707,6 @@ const styles = StyleSheet.create({
   headerButtons: {
     flexDirection: 'row',
     gap: 8,
-  },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  plusIcon: {
-    fontSize: 24,
-    fontWeight: '300',
-    color: '#000',
-    lineHeight: 24,
-    textAlign: 'center',
   },
   settingsButton: {
     width: 40,
