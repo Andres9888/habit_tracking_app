@@ -148,7 +148,7 @@ function App() {
           )}
 
           <View style={styles.habitsList}>
-            {habits.map((habit) => {
+          {habits.map((habit) => {
               const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
               const completedCount = weekStatus.filter(s => s === "done").length;
               const completionRate = Math.round((completedCount / 5) * 100);
@@ -183,7 +183,7 @@ function App() {
 
               const streak = calculateStreak();
 
-              return (
+            return (
                 <DraggableHabit
                   key={habit._id}
                   habit={habit}

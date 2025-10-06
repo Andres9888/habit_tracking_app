@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { Pencil, Check, X, GripVertical, Link2 } from "lucide-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, TouchableOpacity, Modal, ScrollView } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
 import ChainLinkVisualizer from "./ChainLinkVisualizer";
@@ -253,6 +253,21 @@ export default function DraggableHabit({
         />
       ) : (
         <View style={styles.calendarGrid}>
+        {/* Date labels row */}
+        <View style={styles.labelsRow}>
+          {weekDates.map((date, idx) => {
+            const dateString = weekDateStrings[idx];
+            const dayLabel = format(date, 'EEE').substring(0, 3);
+            return (
+              <View key={`${habit._id}-${dateString}-label`} style={styles.labelColumn}>
+                <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        {/* Chain row with circles */}
+        <View style={styles.chainRow}>
         {weekDates.map((date, idx) => {
           const state = weekStatus[idx];
           const dateString = weekDateStrings[idx];
@@ -261,37 +276,32 @@ export default function DraggableHabit({
           todayCheck.setHours(0, 0, 0, 0);
           checkDate.setHours(0, 0, 0, 0);
           const isFuture = checkDate > todayCheck;
-          const dayLabel = format(date, 'EEE').substring(0, 3);
 
           return (
-            <View
-              key={`${habit._id}-${dateString}`}
-              style={styles.dayColumn}
-            >
-              <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
-              <Pressable
-                onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
-                disabled={isFuture}
-                style={[
-                  styles.dayButton,
-                  state === "done" && styles.dayButtonDone,
-                  state === "missed" && styles.dayButtonMissed,
-                  isFuture && styles.dayButtonFuture
-                ]}
-                accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
-                accessibilityRole="button"
-              >
-                <Text style={[
-                  styles.dayButtonText,
-                  state === "done" && styles.dayButtonTextDone,
-                  state === "missed" && styles.dayButtonTextMissed
-                ]}>
-                  {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
-                </Text>
-              </Pressable>
-            </View>
+            <Fragment key={`${habit._id}-${dateString}-group`}>
+              <View style={styles.circleColumn}>
+                <Pressable
+                  onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
+                  disabled={isFuture}
+                  style={[
+                    styles.dayButton,
+                    state === "done" && styles.dayButtonDone,
+                    state === "missed" && styles.dayButtonMissed,
+                    isFuture && styles.dayButtonFuture
+                  ]}
+                  accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
+                  accessibilityRole="button"
+                >
+                  <Link2 size={16} color={state === "done" ? "#ffffff" : "#64748b"} />
+                </Pressable>
+              </View>
+              {idx < weekDates.length - 1 && (
+                <View style={[styles.flexConnector, state === "done" && styles.connectorActive]} />
+              )}
+            </Fragment>
           );
         })}
+        </View>
         </View>
       )}
 
@@ -386,9 +396,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   calendarGrid: {
+    gap: 8,
+  },
+  labelsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    gap: 12,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  labelColumn: {
+    width: 44,
+    alignItems: 'center',
+  },
+  chainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  circleColumn: {
+    width: 44,
+    alignItems: 'center',
   },
   dayColumn: {
     alignItems: 'center',
@@ -410,8 +435,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dayButtonDone: {
-    borderWidth: 2,
-    borderColor: '#0f172a',
+    backgroundColor: '#CBD5E1',
+    borderColor: '#CBD5E1',
   },
   dayButtonMissed: {
     borderStyle: 'dashed',
@@ -419,17 +444,28 @@ const styles = StyleSheet.create({
   dayButtonFuture: {
     opacity: 0.4,
   },
-  dayButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#64748b',
+  chainRowItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  dayButtonTextDone: {
-    color: '#0f172a',
-    fontWeight: 'bold',
+  connector: {
+    width: 18,
+    height: 3,
+    backgroundColor: '#E5E7EB',
+    marginLeft: 8,
+    marginRight: 8,
+    borderRadius: 2,
   },
-  dayButtonTextMissed: {
-    color: '#64748b',
+  flexConnector: {
+    height: 3,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 2,
+    marginHorizontal: 6,
+    flexBasis: 0,
+    flexGrow: 1,
+  },
+  connectorActive: {
+    backgroundColor: '#CBD5E1',
   },
   progressBarContainer: {
     height: 2,

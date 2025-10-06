@@ -3,12 +3,13 @@ import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex
 import { addDays, format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Calendar } from 'react-native-calendars';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Feather } from '@expo/vector-icons';
 import SettingsModal from './src/components/SettingsModal';
 import WelcomeScreen from './src/screens/auth/WelcomeScreen';
 import { api } from "./convex/_generated/api";
@@ -478,47 +479,55 @@ function HabitsScreen() {
                   <View style={styles.habitHeader}>
                     <Text style={styles.habitName}>{habit.name}</Text>
                   </View>
-                <View style={styles.calendarGrid}>
-                  {weekDates.map((date, index) => {
-                    const state = weekStatus[index];
-                    const dateString = weekDateStrings[index];
-                    const dayLabel = format(date, 'EEE').substring(0, 3);
+                  <View style={styles.calendarGrid}>
+                    {/* Labels row for consistent alignment */}
+                    <View style={styles.labelsRow}>
+                      {weekDates.map((date, index) => {
+                        const dateString = weekDateStrings[index];
+                        const dayLabel = format(date, 'EEE').substring(0, 3);
+                        return (
+                          <View key={`${habit._id}-${dateString}-label`} style={styles.labelItem}>
+                            <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
+                          </View>
+                        );
+                      })}
+                    </View>
 
-                    // Check if this date is in the future
-                    const dateObj = new Date(dateString);
-                    dateObj.setHours(0, 0, 0, 0);
-                    const isFuture = dateObj > today;
+                    {/* Chain row: circles and flexible connectors in one row */}
+                    <View style={styles.chainRow}>
+                      {weekDates.map((date, index) => {
+                        const state = weekStatus[index];
+                        const dateString = weekDateStrings[index];
 
-                    return (
-                      <View
-                        key={`${habit._id}-${dateString}`}
-                        style={styles.dayColumn}
-                      >
-                        <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
-                        <TouchableOpacity
-                          onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
-                          disabled={isFuture}
-                          style={[
-                            styles.dayButton,
-                            state === "done" && styles.dayButtonDone,
-                            state === "missed" && styles.dayButtonMissed,
-                            isFuture && styles.dayButtonDisabled,
-                          ]}
-                          accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
-                          accessibilityRole="button"
-                        >
-                          <Text style={[
-                            styles.dayButtonText,
-                            state === "done" && styles.dayButtonTextDone,
-                            state === "missed" && styles.dayButtonTextMissed
-                          ]}>
-                            {state === "done" ? "✓" : state === "missed" ? "–" : "·"}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })}
-                </View>
+                        // Prevent future toggles
+                        const dateObj = new Date(dateString);
+                        dateObj.setHours(0, 0, 0, 0);
+                        const isFuture = dateObj > today;
+
+                        return (
+                          <Fragment key={`${habit._id}-${dateString}-group`}>
+                            <TouchableOpacity
+                              onPress={() => !isFuture && toggleHabit({ habitId: habit._id, date: dateString })}
+                              disabled={isFuture}
+                              style={[
+                                styles.dayButton,
+                                state === "done" && styles.dayButtonDone,
+                                state === "missed" && styles.dayButtonMissed,
+                                isFuture && styles.dayButtonDisabled,
+                              ]}
+                              accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
+                              accessibilityRole="button"
+                            >
+                              <Feather name="link-2" size={18} color={state === "done" ? "#ffffff" : "#64748b"} />
+                            </TouchableOpacity>
+                            {index < weekDates.length - 1 && (
+                              <View style={[styles.flexConnector, state === "done" && styles.connectorActive]} />
+                            )}
+                          </Fragment>
+                        );
+                      })}
+                    </View>
+                  </View>
                 <View style={styles.habitStats}>
                   <Text style={styles.statText}>STREAK · {streak} DAYS</Text>
                 </View>
@@ -850,9 +859,22 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   calendarGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    gap: 8,
     paddingHorizontal: 4,
+  },
+  labelsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  labelItem: {
+    flexBasis: 0,
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  chainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   dayColumn: {
     alignItems: 'center',
@@ -875,8 +897,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dayButtonDone: {
-    borderWidth: 2,
-    borderColor: '#0f172a',
+    backgroundColor: '#CBD5E1', // slate-300
+    borderColor: '#CBD5E1',
   },
   dayButtonMissed: {
     borderStyle: 'dashed',
@@ -884,17 +906,28 @@ const styles = StyleSheet.create({
   dayButtonDisabled: {
     opacity: 0.3,
   },
-  dayButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#64748b',
+  chainRowItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  dayButtonTextDone: {
-    color: '#0f172a',
-    fontWeight: 'bold',
+  flexConnector: {
+    height: 3,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 2,
+    marginHorizontal: 6,
+    flexBasis: 0,
+    flexGrow: 1,
   },
-  dayButtonTextMissed: {
-    color: '#64748b',
+  connector: {
+    width: 18,
+    height: 3,
+    backgroundColor: '#E5E7EB',
+    marginLeft: 8,
+    marginRight: 8,
+    borderRadius: 2,
+  },
+  connectorActive: {
+    backgroundColor: '#CBD5E1',
   },
 
   habitStats: {
