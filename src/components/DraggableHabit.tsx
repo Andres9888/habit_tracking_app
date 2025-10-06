@@ -259,9 +259,14 @@ export default function DraggableHabit({
             const dateString = weekDateStrings[idx];
             const dayLabel = format(date, 'EEE').substring(0, 3);
             return (
-              <View key={`${habit._id}-${dateString}-label`} style={styles.labelColumn}>
-                <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
-              </View>
+              <Fragment key={`${habit._id}-${dateString}-label`}>
+                <View style={styles.labelColumn}>
+                  <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
+                </View>
+                {idx < weekDates.length - 1 && (
+                  <View style={styles.labelSpacer} />
+                )}
+              </Fragment>
             );
           })}
         </View>
@@ -271,11 +276,20 @@ export default function DraggableHabit({
         {weekDates.map((date, idx) => {
           const state = weekStatus[idx];
           const dateString = weekDateStrings[idx];
-          const checkDate = new Date(dateString);
+
+          // Parse date in local timezone to avoid timezone shifting
+          const [year, month, day] = dateString.split('-').map(Number);
+          const checkDate = new Date(year, month - 1, day);
           const todayCheck = new Date();
           todayCheck.setHours(0, 0, 0, 0);
           checkDate.setHours(0, 0, 0, 0);
           const isFuture = checkDate > todayCheck;
+
+          // Enhanced accessibility label with full date and state
+          const stateLabel = state === "done" ? "Completed" : state === "missed" ? "Missed" : "Not yet available";
+          const fullDateLabel = format(date, 'EEEE, MMMM do');
+          const accessibilityLabel = `${habit.name} on ${fullDateLabel} - ${stateLabel}`;
+          const accessibilityHint = isFuture ? "Future date, not yet available" : "Tap to toggle completion";
 
           return (
             <Fragment key={`${habit._id}-${dateString}-group`}>
@@ -289,7 +303,8 @@ export default function DraggableHabit({
                     state === "missed" && styles.dayButtonMissed,
                     isFuture && styles.dayButtonFuture
                   ]}
-                  accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
+                  accessibilityLabel={accessibilityLabel}
+                  accessibilityHint={accessibilityHint}
                   accessibilityRole="button"
                 >
                   <Link2 size={16} color={state === "done" ? "#ffffff" : "#64748b"} />
@@ -406,6 +421,7 @@ const styles = StyleSheet.create({
   labelColumn: {
     width: 44,
     alignItems: 'center',
+    flexShrink: 0,
   },
   chainRow: {
     flexDirection: 'row',
@@ -455,6 +471,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
     borderRadius: 2,
+  },
+  labelSpacer: {
+    height: 3,
+    backgroundColor: 'transparent',
+    marginHorizontal: 6,
+    flexBasis: 0,
+    flexGrow: 1,
   },
   flexConnector: {
     height: 3,

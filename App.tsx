@@ -136,7 +136,10 @@ function HabitsScreen() {
       (t) => t.habitId === habitId && t.date === dateString
     );
 
-    const date = new Date(dateString);
+    // Parse date in local timezone to avoid timezone shifting
+    // YYYY-MM-DD format is interpreted as UTC, which can shift dates
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     date.setHours(0, 0, 0, 0);
@@ -474,9 +477,14 @@ function HabitsScreen() {
                         const dateString = weekDateStrings[index];
                         const dayLabel = format(date, 'EEE').substring(0, 3);
                         return (
-                          <View key={`${habit._id}-${dateString}-label`} style={styles.labelItem}>
-                            <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
-                          </View>
+                          <Fragment key={`${habit._id}-${dateString}-label`}>
+                            <View style={styles.labelItem}>
+                              <Text style={styles.dayLabel}>{dayLabel.toUpperCase()}</Text>
+                            </View>
+                            {index < weekDates.length - 1 && (
+                              <View style={styles.labelSpacer} />
+                            )}
+                          </Fragment>
                         );
                       })}
                     </View>
@@ -487,8 +495,9 @@ function HabitsScreen() {
                         const state = weekStatus[index];
                         const dateString = weekDateStrings[index];
 
-                        // Prevent future toggles
-                        const dateObj = new Date(dateString);
+                        // Prevent future toggles - parse in local timezone to avoid shifting
+                        const [year, month, day] = dateString.split('-').map(Number);
+                        const dateObj = new Date(year, month - 1, day);
                         dateObj.setHours(0, 0, 0, 0);
                         const isFuture = dateObj > today;
 
@@ -503,7 +512,8 @@ function HabitsScreen() {
                                 state === "missed" && styles.dayButtonMissed,
                                 isFuture && styles.dayButtonDisabled,
                               ]}
-                              accessibilityLabel={`Toggle ${habit.name} on ${format(date, 'MMM d')}`}
+                              accessibilityLabel={`${habit.name} on ${format(date, 'EEEE, MMMM do')} - ${state === "done" ? "Completed" : state === "missed" ? "Missed" : "Not yet available"}`}
+                              accessibilityHint={isFuture ? "Future date, not yet available" : "Tap to toggle completion"}
                               accessibilityRole="button"
                             >
                               <Feather name="link-2" size={18} color={state === "done" ? "#ffffff" : "#64748b"} />
@@ -839,9 +849,15 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   labelItem: {
+    width: 48,
+    alignItems: 'center',
+  },
+  labelSpacer: {
+    height: 3,
+    backgroundColor: 'transparent',
+    marginHorizontal: 6,
     flexBasis: 0,
     flexGrow: 1,
-    alignItems: 'center',
   },
   chainRow: {
     flexDirection: 'row',
