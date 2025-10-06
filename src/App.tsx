@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Pencil, Check, X, GripVertical } from "lucide-react";
-import { useMemo, useState, useCallback, useEffect, useRef } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, TouchableOpacity, Alert, Animated } from "react-native";
+import { Plus } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
@@ -113,7 +113,7 @@ function App() {
               accessibilityLabel="Add habit"
               accessibilityRole="button"
             >
-              <Plus size={20} strokeWidth={2.4} color="#000" />
+              <Plus size={24} strokeWidth={2.5} color="#ffffff" />
             </Pressable>
           </View>
 
@@ -242,6 +242,19 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: -0.5,
     color: '#0f172a',
+  },
+  addButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#3b82f6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
   addForm: {
     borderRadius: 24,
