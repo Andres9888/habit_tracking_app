@@ -62,7 +62,11 @@ function App() {
       (t) => t.habitId === habitId && t.date === dateString
     );
 
-    const date = new Date(dateString);
+    // Parse date in local timezone to avoid timezone shifting
+    // YYYY-MM-DD format is interpreted as UTC, which can shift dates
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     date.setHours(0, 0, 0, 0);
@@ -93,8 +97,9 @@ function App() {
 
   const handleReorder = useCallback(async (newOrder: string[]) => {
     setHabitOrder(newOrder);
-    await reorderHabits({ habitIds: newOrder as Id<"habits">[] });
-  }, [reorderHabits]);
+    // TODO: Implement reorderHabits mutation in convex/habits.ts
+    // await reorderHabits({ habitIds: newOrder as Id<"habits">[] });
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -209,6 +214,7 @@ function App() {
       </View>
       <Toaster />
     </ScrollView>
+    </GestureHandlerRootView>
   );
 }
 

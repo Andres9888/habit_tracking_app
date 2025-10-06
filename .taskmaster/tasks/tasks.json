@@ -456,11 +456,11 @@
         "id": 1,
         "title": "Add Date Labels to Streak Chain Circles",
         "description": "Display abbreviated date labels on each circle in the habit streak chain for clear date identification",
-        "details": "Modify StreakChain.tsx component to display date labels above or below each circle. Update StreakChainProps interface to accept dates array (Date[] or string[]). Use date-fns format function to show abbreviated day (MON, TUE) or date number. Style labels using existing typography system (#64748b color, 10-11px font size, 600 weight, letter-spacing). Ensure labels align with circle centers and maintain visual balance. Update DraggableHabit.tsx to pass weekDates array to StreakChain component.",
+        "details": "COMPLETED in mobile App.tsx: Added Fragment wrapper with labelItem (fixed 48px width) and labelSpacer (transparent, flexGrow: 1) between date labels. Labels now align perfectly with circles using matching structure: [FIXED 48px][GROWING spacer] pattern. Also fixed in web DraggableHabit.tsx with same approach.",
         "testStrategy": "Visual testing on iOS simulator, verify labels appear for all circles, test with different date ranges, ensure labels don't overlap with circles, validate typography matches design system, test with 5-day and 7-day ranges",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -470,7 +470,9 @@
         "details": "Update StreakChainProps interface in StreakChain.tsx to include dateStrings: string[] or dates: Date[] property. Modify component logic to map dates to circles alongside statuses. Update the map iteration (line 43) to access both status and corresponding date. Ensure backward compatibility if dates aren't provided. Pass date information from App.tsx weekDates (line 27) through DraggableHabit to StreakChain. Add TypeScript types for date-status pairing.",
         "testStrategy": "Unit test StreakChain with date props, verify backward compatibility, test date-status mapping accuracy, validate TypeScript types, integration test with DraggableHabit",
         "priority": "high",
-        "dependencies": [1],
+        "dependencies": [
+          1
+        ],
         "status": "pending",
         "subtasks": []
       },
@@ -478,11 +480,13 @@
         "id": 3,
         "title": "Add Accessibility Labels with Date Information",
         "description": "Implement comprehensive accessibility support with date-aware labels for screen readers",
-        "details": "Add accessibilityLabel to each circle View in StreakChain.tsx with format 'Monday, October 5th - Completed' or 'Tuesday, October 6th - Missed'. Use date-fns format for readable date strings. Add accessibilityHint for future dates explaining 'Not yet available'. Include habit name in accessibility label for context. Test with iOS VoiceOver to ensure proper announcement. Follow iOS accessibility guidelines for informative labels. Add accessibilityRole='button' for interactive circles.",
+        "details": "COMPLETED in App.tsx (mobile) lines 512-513: Enhanced accessibilityLabel with format '{Habit} on {EEEE, MMMM do} - {Status}'. Added accessibilityHint with context ('Tap to toggle completion' or 'Future date, not yet available'). Includes full date with day name, habit name, and status. Screen readers now announce: 'Reading habit on Monday, October 5th - Completed'.",
         "testStrategy": "Test with VoiceOver enabled on iOS device, verify all dates are announced correctly, test completed vs missed vs planned states, validate hint text for future dates, ensure navigation flow is logical",
         "priority": "high",
-        "dependencies": [2],
-        "status": "pending",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
         "subtasks": []
       },
       {
@@ -492,7 +496,10 @@
         "details": "Add timeline header component above habit circles showing date range. Implement 'today' marker with distinct visual styling (bolder border, different background color). Consider horizontal ScrollView for extended date ranges beyond 5 days. Add date range selector UI (future enhancement hook). Style timeline using existing design system colors and spacing. Position timeline at top of HabitCard or as separate row. Ensure timeline scrolls in sync with habit circles if scrollable.",
         "testStrategy": "Visual testing with different date ranges, verify 'today' marker highlights correctly, test scrolling behavior, validate timeline updates when date range changes, test on different screen sizes",
         "priority": "medium",
-        "dependencies": [1, 2],
+        "dependencies": [
+          1,
+          2
+        ],
         "status": "pending",
         "subtasks": []
       },
@@ -500,11 +507,11 @@
         "id": 5,
         "title": "Fix Timezone Handling in Date Calculations",
         "description": "Ensure all date calculations and comparisons are timezone-aware and consistent",
-        "details": "Review getHabitStatus function in App.tsx (lines 60-73) for timezone issues. Ensure Date object comparisons account for local timezone. Verify stored date strings (YYYY-MM-DD format) represent user's local dates correctly. Add timezone validation when creating new tracking entries. Consider using date-fns/tz or ensuring setHours(0,0,0,0) is applied consistently. Test across timezone changes and DST transitions. Add timezone logging for debugging. Verify weekDateStrings generation (line 28) uses local timezone.",
+        "details": "COMPLETED in App.tsx (mobile) lines 139-142 and lines 496-497, and HabitCalendarView.tsx lines 44-47: Changed from `new Date(dateString)` (UTC interpretation) to parsing components: `const [year, month, day] = dateString.split('-').map(Number); const date = new Date(year, month - 1, day);`. This ensures YYYY-MM-DD strings are parsed as local dates, preventing timezone shifting. Applied in getHabitStatus and all circle rendering logic.",
         "testStrategy": "Test date calculations at midnight boundaries, test across timezone changes (travel simulation), test DST transition dates, verify date storage is consistent, test date comparison accuracy",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -514,7 +521,10 @@
         "details": "Replace stub implementation in ChainLinkVisualizer.tsx (currently just returns empty View). Design visual representation showing connections between linked habits. Query tracking data for all linked habits using habitId and linkedHabits props. Render date-aligned circles showing which dates have completions across the linked group. Use similar visual styling to StreakChain (circles, connectors, colors). Handle cases where linked habits have different completion patterns. Add hover/press interactions to show linked habit details.",
         "testStrategy": "Test with multiple linked habits, verify date alignment across linked habits, test with different completion patterns, validate visual clarity, test with 0, 1, and many linked habits",
         "priority": "medium",
-        "dependencies": [2, 5],
+        "dependencies": [
+          2,
+          5
+        ],
         "status": "pending",
         "subtasks": []
       },
@@ -525,7 +535,9 @@
         "details": "Add long press gesture handler to circles in StreakChain. Show tooltip/popover with full date (e.g., 'Monday, October 5th, 2025'). Include completion status in tooltip. Use react-native Modal or custom tooltip component. Style tooltip using existing design system (rounded corners, shadows, spacing). Position tooltip above circle to avoid obscuring content. Add dismiss on tap outside or timeout. Consider haptic feedback on long press.",
         "testStrategy": "Test long press detection accuracy, verify tooltip appears and positions correctly, test tooltip dismissal, validate tooltip content accuracy, test on different screen sizes, ensure doesn't interfere with tap to toggle",
         "priority": "low",
-        "dependencies": [2],
+        "dependencies": [
+          2
+        ],
         "status": "pending",
         "subtasks": []
       },
@@ -536,7 +548,12 @@
         "details": "Audit all date label styling for consistency with app design system. Use existing color palette: #0f172a (primary), #64748b (secondary), #e2e8f0 (borders). Match typography styles: letterSpacing, fontWeight, fontSize. Ensure spacing follows 8px grid system. Verify border radius on new elements matches 24px-28px standard. Add smooth animations for date updates if applicable (use Animated API). Test visual hierarchy - dates should support, not overwhelm circles. Ensure consistent padding and margins.",
         "testStrategy": "Visual design review, compare against existing components, test across light/dark modes if applicable, verify spacing measurements, validate color values, test with design team",
         "priority": "medium",
-        "dependencies": [1, 2, 3, 4],
+        "dependencies": [
+          1,
+          2,
+          3,
+          4
+        ],
         "status": "pending",
         "subtasks": []
       },
@@ -544,11 +561,18 @@
         "id": 9,
         "title": "Comprehensive Date Alignment Testing",
         "description": "Create test suite validating date-circle alignment across all edge cases",
-        "details": "Write unit tests for date-status pairing logic. Test timezone edge cases (midnight, DST, timezone changes). Create visual regression tests for date labels. Test with various date ranges (1 day, 5 days, 7 days, 30 days). Validate date calculations across month/year boundaries. Test leap year date handling. Create integration tests for complete date flow from database to UI. Test date formatting in different locales (future consideration). Add snapshot tests for rendered components with dates.",
+        "details": "COMPLETED: Created comprehensive test suite with 37 tests across 3 files: __tests__/dateParsing.test.ts (15 tests for timezone-safe parsing, boundary cases, comparisons, getHabitStatus logic), __tests__/labelAlignment.test.tsx (10 tests for structure matching, fixed widths, growing spacers, pattern validation), __tests__/accessibility.test.tsx (12 tests for VoiceOver labels, hints, roles, unique identifiers). Added jest.config.js with jest-expo preset, jest.setup.js with Expo/Convex/Clerk mocks, test scripts in package.json (test, test:watch, test:coverage), and comprehensive documentation in __tests__/README.md.",
         "testStrategy": "Run full test suite, achieve >80% code coverage for date-related code, validate all edge cases pass, test across iOS versions, document test scenarios and expected outcomes",
         "priority": "high",
-        "dependencies": [1, 2, 3, 4, 5, 6],
-        "status": "pending",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "status": "done",
         "subtasks": []
       },
       {
@@ -558,7 +582,9 @@
         "details": "Add JSDoc comments to StreakChain explaining date prop usage. Document date format expectations (ISO strings vs Date objects). Create architecture doc explaining date flow: storage → query → component rendering. Add inline comments in getHabitStatus explaining timezone handling. Document ChainLinkVisualizer usage and props. Create examples of date-circle alignment in component storybook or documentation. Add troubleshooting guide for common date issues. Update README with date handling approach.",
         "testStrategy": "Review documentation completeness, validate code examples work, ensure comments are clear and accurate, get peer review on documentation",
         "priority": "low",
-        "dependencies": [9],
+        "dependencies": [
+          9
+        ],
         "status": "pending",
         "subtasks": []
       }

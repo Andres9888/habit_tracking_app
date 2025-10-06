@@ -16,7 +16,10 @@
     "expo:android": "npx expo start --android",
     "lint": "tsc -p tsconfig.app.json -noEmit --pretty false && convex dev --once && vite build",
     "android": "expo run:android",
-    "ios": "expo run:ios"
+    "ios": "expo run:ios",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.15.4",
