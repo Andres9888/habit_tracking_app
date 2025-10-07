@@ -365,8 +365,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   habitName: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 24,
+    fontWeight: '700',
     color: '#0f172a',
     letterSpacing: -0.3,
     flex: 1,
