@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X } from "lucide-react-native";
 import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
 import HabitCalendarView from "./HabitCalendarView";

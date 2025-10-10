@@ -1,24 +1,25 @@
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Plus } from "lucide-react";
+import { Plus, Settings } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
+import { DateSelector } from "./components/DateSelector";
+import SettingsModal from "./components/SettingsModal";
+import DraggableHabit from "./components/DraggableHabit";
 
 type HabitStatus = "done" | "missed" | "planned";
 
 function App() {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
-  const [editingHabitId, setEditingHabitId] = useState<Id<"habits"> | null>(null);
-  const [editingHabitName, setEditingHabitName] = useState("");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
-  const updateHabitName = useMutation(api.habits.updateName);
   const habits = useQuery(api.habits.list) ?? [];
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
@@ -26,9 +27,6 @@ function App() {
   const today = new Date();
   const weekDates = Array.from({ length: 5 }, (_, i) => addDays(today, i - 4));
   const weekDateStrings = weekDates.map(d => format(d, 'yyyy-MM-dd'));
-
-  console.log('Number of days:', weekDates.length);
-  console.log('Dates:', weekDateStrings);
 
   const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
 
@@ -108,14 +106,16 @@ function App() {
           <View style={styles.header}>
             <Text style={styles.title}>Habits</Text>
             <Pressable
-              onPress={handleToggleForm}
-              style={styles.addButton}
-              accessibilityLabel="Add habit"
+              onPress={() => setIsSettingsOpen(true)}
+              style={styles.settingsButton}
+              accessibilityLabel="Settings"
               accessibilityRole="button"
             >
-              <Plus size={24} strokeWidth={2.5} color="#ffffff" />
+              <Settings size={24} color="#101727" />
             </Pressable>
           </View>
+
+          <DateSelector dates={weekDates} />
 
           {isAdding && (
             <View style={styles.addForm}>
@@ -153,10 +153,8 @@ function App() {
           )}
 
           <View style={styles.habitsList}>
-          {habits.map((habit) => {
+          {orderedHabits.map((habit) => {
               const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
-              const completedCount = weekStatus.filter(s => s === "done").length;
-              const completionRate = Math.round((completedCount / 5) * 100);
 
               // Calculate streak (consecutive days completed up to today)
               const calculateStreak = () => {
@@ -192,19 +190,8 @@ function App() {
                 <DraggableHabit
                   key={habit._id}
                   habit={habit}
-                  index={index}
-                  allHabits={orderedHabits}
-                  onReorder={handleReorder}
-                  editingHabitId={editingHabitId}
-                  editingHabitName={editingHabitName}
-                  onStartEdit={handleStartEdit}
-                  onCancelEdit={handleCancelEdit}
-                  onSaveEdit={handleSaveEdit}
-                  setEditingHabitName={setEditingHabitName}
-                  weekDates={weekDates}
                   weekDateStrings={weekDateStrings}
                   weekStatus={weekStatus}
-                  completionRate={completionRate}
                   streak={streak}
                   toggleHabit={toggleHabit}
                 />
@@ -213,6 +200,10 @@ function App() {
           </View>
       </View>
       <Toaster />
+      <SettingsModal
+        visible={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </ScrollView>
     </GestureHandlerRootView>
   );
@@ -241,20 +232,14 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: '800',
     letterSpacing: -0.5,
-    color: '#0f172a',
+    color: '#101727',
   },
-  addButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#3b82f6',
+  settingsButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
   },
   addForm: {
     borderRadius: 24,
@@ -320,7 +305,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   habitsList: {
-    gap: 32,
+    gap: 16,
   },
   habitCard: {
     borderRadius: 28,
