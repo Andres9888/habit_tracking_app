@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 export type DayStatus = "done" | "missed" | "planned";
@@ -31,43 +31,39 @@ export default function StreakChain({ label, statuses, size = 28 }: StreakChainP
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>{label}</Text>
-        <View style={styles.pill} accessibilityLabel={`${streakDays} days`}>
-          <Text style={styles.pillText}>{streakDays} days</Text>
+    <View className="pt-1 pb-3">
+      <View className="flex-row items-center justify-between mb-2">
+        <Text className="text-base font-bold text-slate-900 tracking-tight">{label}</Text>
+        <View className="px-2.5 py-1 rounded-full bg-indigo-50" accessibilityLabel={`${streakDays} days`}>
+          <Text className="text-xs text-slate-900 font-semibold">{streakDays} days</Text>
         </View>
       </View>
 
-      <View style={styles.chainRow}>
+      <View className="flex-row items-center">
         {statuses.map((status, idx) => {
           const isDone = status === "done";
           const isFuture = status === "planned"; // treat planned as future/disabled
           const connectorActive = idx < statuses.length - 1 && isDone;
 
           return (
-            <View key={idx} style={styles.chainItem}>
+            <View key={idx} className="flex-row items-center">
               <View
-                style={[
-                  styles.circle,
-                  {
-                    width: circleSize,
-                    height: circleSize,
-                    borderRadius: circleSize / 2,
-                    backgroundColor: isDone ? "#3B82F6" : "#E5E7EB",
-                    opacity: isFuture ? 0.5 : 1,
-                  },
-                ]}
+                className="items-center justify-center"
+                style={{
+                  width: circleSize,
+                  height: circleSize,
+                  borderRadius: circleSize / 2,
+                  backgroundColor: isDone ? "#3B82F6" : "#E5E7EB",
+                  opacity: isFuture ? 0.5 : 1,
+                }}
               >
                 <Feather name="link-2" size={iconSize} color={isDone ? "#FFFFFF" : "#64748B"} />
               </View>
 
               {idx < statuses.length - 1 && (
                 <View
-                  style={[
-                    styles.connector,
-                    { backgroundColor: connectorActive ? "#93C5FD" : "#E5E7EB" },
-                  ]}
+                  className="w-[18px] h-0.5 mx-1.5 rounded-sm"
+                  style={{ backgroundColor: connectorActive ? "#93C5FD" : "#E5E7EB" }}
                 />
               )}
             </View>
@@ -77,51 +73,3 @@ export default function StreakChain({ label, statuses, size = 28 }: StreakChainP
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 4,
-    paddingBottom: 12,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#0f172a",
-    letterSpacing: -0.2,
-  },
-  pill: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: "#EEF2FF",
-  },
-  pillText: {
-    fontSize: 12,
-    color: "#0f172a",
-    fontWeight: "600",
-  },
-  chainRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  chainItem: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  circle: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  connector: {
-    width: 18,
-    height: 3,
-    marginHorizontal: 6,
-    borderRadius: 2,
-  },
-});

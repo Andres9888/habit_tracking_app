@@ -1,6 +1,6 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -37,35 +37,35 @@ export default function SignInScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to continue tracking your habits</Text>
+    <View className="flex-1 bg-white">
+      <View className="flex-1 px-6 pt-[60px]">
+        <Text className="text-[32px] font-extrabold tracking-tight text-slate-900 mb-2">Welcome Back</Text>
+        <Text className="text-base text-slate-500 mb-10">Sign in to continue tracking your habits</Text>
 
-        <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>EMAIL</Text>
+        <View className="gap-6">
+          <View className="gap-2">
+            <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">EMAIL</Text>
             <TextInput
               autoCapitalize="none"
               value={emailAddress}
               placeholder="Enter your email"
               placeholderTextColor="#94a3b8"
               onChangeText={setEmailAddress}
-              style={styles.input}
+              className="rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900"
               keyboardType="email-address"
               autoComplete="email"
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>PASSWORD</Text>
+          <View className="gap-2">
+            <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">PASSWORD</Text>
             <TextInput
               value={password}
               placeholder="Enter your password"
               placeholderTextColor="#94a3b8"
               secureTextEntry
               onChangeText={setPassword}
-              style={styles.input}
+              className="rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900"
               autoComplete="password"
             />
           </View>
@@ -73,9 +73,11 @@ export default function SignInScreen() {
           <TouchableOpacity
             onPress={onSignInPress}
             disabled={isLoading || !emailAddress || !password}
-            style={[styles.button, (isLoading || !emailAddress || !password) && styles.buttonDisabled]}
+            className={`rounded-3xl border border-slate-900 bg-slate-900 py-4 items-center mt-4 ${
+              isLoading || !emailAddress || !password ? 'opacity-40' : ''
+            }`}
           >
-            <Text style={styles.buttonText}>
+            <Text className="text-[13px] tracking-[3px] text-white font-bold">
               {isLoading ? "SIGNING IN..." : "SIGN IN"}
             </Text>
           </TouchableOpacity>
@@ -84,68 +86,3 @@ export default function SignInScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 60,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-    color: '#0f172a',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#64748b',
-    marginBottom: 40,
-  },
-  form: {
-    gap: 24,
-  },
-  inputGroup: {
-    gap: 8,
-  },
-  label: {
-    fontSize: 11,
-    fontWeight: '600',
-    letterSpacing: 3,
-    color: '#64748b',
-  },
-  input: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#0f172a',
-  },
-  button: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#0f172a',
-    backgroundColor: '#0f172a',
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonDisabled: {
-    opacity: 0.4,
-  },
-  buttonText: {
-    fontSize: 13,
-    letterSpacing: 3,
-    color: '#fff',
-    fontWeight: '700',
-  },
-});

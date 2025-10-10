@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "convex/react";
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import * as Haptics from 'expo-haptics';
 import { api } from "../../convex/_generated/api";
 
@@ -57,59 +57,59 @@ export default function ArchivedHabitsModal({ onClose, onBack }: ArchivedHabitsM
 
   return (
     <>
-      <View style={styles.header}>
+      <View className="flex-row justify-between items-center mb-6">
         <TouchableOpacity
           onPress={onBack}
-          style={styles.backButton}
+          className="w-8 h-8 rounded-full items-center justify-center bg-slate-100"
           accessibilityLabel="Back to settings"
           accessibilityRole="button"
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text className="text-xl text-slate-500 font-semibold">←</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Archived Habits</Text>
+        <Text className="text-2xl font-bold text-slate-900 flex-1 text-center">Archived Habits</Text>
         <TouchableOpacity
           onPress={onClose}
-          style={styles.closeButton}
+          className="w-8 h-8 rounded-full items-center justify-center bg-slate-100"
           accessibilityLabel="Close"
           accessibilityRole="button"
         >
-          <Text style={styles.closeButtonText}>✕</Text>
+          <Text className="text-lg text-slate-500 font-semibold">✕</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView className="p-5">
         {archivedHabits.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>📦</Text>
-            <Text style={styles.emptyText}>No archived habits</Text>
-            <Text style={styles.emptySubtext}>Archived habits will appear here</Text>
+          <View className="items-center py-12 gap-3">
+            <Text className="text-5xl">📦</Text>
+            <Text className="text-lg font-semibold text-slate-900">No archived habits</Text>
+            <Text className="text-sm text-slate-500">Archived habits will appear here</Text>
           </View>
         ) : (
-          <View style={styles.habitsList}>
+          <View className="gap-3">
             {archivedHabits.map((habit) => (
-              <View key={habit._id} style={styles.habitCard}>
-                <View style={styles.habitInfo}>
-                  <Text style={styles.habitName}>{habit.name}</Text>
-                  <Text style={styles.archivedDate}>
+              <View key={habit._id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 gap-3">
+                <View className="gap-1">
+                  <Text className="text-base font-semibold text-slate-900">{habit.name}</Text>
+                  <Text className="text-xs text-slate-500">
                     Archived {new Date(habit.archivedAt || habit._creationTime).toLocaleDateString()}
                   </Text>
                 </View>
-                <View style={styles.actions}>
+                <View className="flex-row gap-2">
                   <TouchableOpacity
                     onPress={() => handleRestore(habit._id, habit.name)}
-                    style={styles.restoreButton}
+                    className="flex-1 rounded-xl border border-blue-500 py-3 items-center"
                     accessibilityRole="button"
                     accessibilityLabel={`Restore ${habit.name}`}
                   >
-                    <Text style={styles.restoreButtonText}>RESTORE</Text>
+                    <Text className="text-xs tracking-[2px] text-blue-500 font-bold">RESTORE</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => handlePermanentDelete(habit._id, habit.name)}
-                    style={styles.deleteButton}
+                    className="flex-1 rounded-xl border border-red-500 py-3 items-center"
                     accessibilityRole="button"
                     accessibilityLabel={`Permanently delete ${habit.name}`}
                   >
-                    <Text style={styles.deleteButtonText}>DELETE</Text>
+                    <Text className="text-xs tracking-[2px] text-red-500 font-bold">DELETE</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -120,120 +120,3 @@ export default function ArchivedHabitsModal({ onClose, onBack }: ArchivedHabitsM
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  backButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f1f5f9',
-  },
-  backButtonText: {
-    fontSize: 20,
-    color: '#64748b',
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#0f172a',
-    flex: 1,
-    textAlign: 'center',
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f1f5f9',
-  },
-  closeButtonText: {
-    fontSize: 18,
-    color: '#64748b',
-    fontWeight: '600',
-  },
-  content: {
-    padding: 20,
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: 48,
-    gap: 12,
-  },
-  emptyIcon: {
-    fontSize: 48,
-  },
-  emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#0f172a',
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#64748b',
-  },
-  habitsList: {
-    gap: 12,
-  },
-  habitCard: {
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#f8fafc',
-    padding: 16,
-    gap: 12,
-  },
-  habitInfo: {
-    gap: 4,
-  },
-  habitName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#0f172a',
-  },
-  archivedDate: {
-    fontSize: 12,
-    color: '#64748b',
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  restoreButton: {
-    flex: 1,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#3b82f6',
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  restoreButtonText: {
-    fontSize: 12,
-    letterSpacing: 2,
-    color: '#3b82f6',
-    fontWeight: '700',
-  },
-  deleteButton: {
-    flex: 1,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#ef4444',
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  deleteButtonText: {
-    fontSize: 12,
-    letterSpacing: 2,
-    color: '#ef4444',
-    fontWeight: '700',
-  },
-});

@@ -1,5 +1,5 @@
 import { X } from "lucide-react-native";
-import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
+import { Modal, View, Text, Pressable } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
 import HabitCalendarView from "./HabitCalendarView";
 
@@ -29,17 +29,17 @@ export default function HabitCalendarModal({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
-        <Pressable style={styles.backdrop} onPress={onClose} />
-        <View style={styles.modalContainer}>
-          <View style={styles.header}>
-            <Text style={styles.title}>{habitName}</Text>
-            <Pressable onPress={onClose} style={styles.closeButton}>
+      <View className="flex-1 justify-end bg-black/50">
+        <Pressable className="flex-1" onPress={onClose} />
+        <View className="bg-white rounded-t-[28px] pt-6 pb-10 px-6 max-h-[80%]">
+          <View className="flex-row items-center justify-between mb-6">
+            <Text className="text-2xl font-bold text-slate-900 tracking-tight">{habitName}</Text>
+            <Pressable onPress={onClose} className="p-2 rounded-xl bg-slate-50">
               <X size={24} color="#64748b" />
             </Pressable>
           </View>
 
-          <View style={styles.calendarContainer}>
+          <View className="flex-1">
             <HabitCalendarView
               habitId={habitId}
               tracking={tracking}
@@ -51,43 +51,3 @@ export default function HabitCalendarModal({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  backdrop: {
-    flex: 1,
-  },
-  modalContainer: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 24,
-    paddingBottom: 40,
-    paddingHorizontal: 24,
-    maxHeight: '80%',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#0f172a',
-    letterSpacing: -0.5,
-  },
-  closeButton: {
-    padding: 8,
-    borderRadius: 12,
-    backgroundColor: '#f8fafc',
-  },
-  calendarContainer: {
-    flex: 1,
-  },
-});

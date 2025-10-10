@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { ChainLinkIcon } from './ChainLinkIcon';
 import type { Id } from '../../convex/_generated/dataModel';
+import clsx from 'clsx';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -30,8 +31,8 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.chainContainer}>
+    <View className="gap-4">
+      <View className="flex-row items-center h-10">
         {weekStatus.map((status, index) => {
           const isCompleted = status === 'done';
           const showLine = renderConnectingLine(index);
@@ -42,74 +43,34 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           const accessibilityHint = 'Tap to toggle completion for this day';
 
           return (
-            <View key={index} style={styles.dayContainer}>
+            <View key={index} className="flex-row items-center">
               <Pressable
-                style={[
-                  styles.dayButton,
-                  isCompleted && styles.dayButtonCompleted,
-                ]}
+                className={clsx(
+                  "w-10 h-10 rounded-full items-center justify-center",
+                  isCompleted ? "bg-[#48bb78]" : "bg-[#dde3ed]"
+                )}
                 onPress={() => onToggle({ habitId, date: weekDateStrings[index] })}
                 accessibilityLabel={accessibilityLabel}
                 accessibilityHint={accessibilityHint}
                 accessibilityRole="button"
               >
                 {isCompleted && (
-                  <View style={styles.iconContainer}>
+                  <View className="items-center justify-center">
                     <ChainLinkIcon color="#ffffff" size={16} />
                   </View>
                 )}
               </Pressable>
-              {showLine && <View style={styles.connectingLine} />}
+              {showLine && <View className="w-[22px] h-0.5 bg-[#48bb78]" />}
             </View>
           );
         })}
       </View>
 
       {streak > 0 && (
-        <Text style={styles.streakLabel}>STREAK • {streak} DAYS</Text>
+        <Text className="text-xs font-semibold tracking-wider text-[#a0aec0] uppercase">
+          STREAK • {streak} DAYS
+        </Text>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-  },
-  chainContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 40,
-  },
-  dayContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dayButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#dde3ed',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayButtonCompleted: {
-    backgroundColor: '#48bb78',
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  connectingLine: {
-    width: 22,
-    height: 2,
-    backgroundColor: '#48bb78',
-  },
-  streakLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 1.2,
-    color: '#a0aec0',
-    textTransform: 'uppercase',
-  },
-});

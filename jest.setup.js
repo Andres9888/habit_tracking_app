@@ -1,6 +1,17 @@
 // Built-in matchers are included in @testing-library/react-native v12.4+
 // No need for separate extend-expect import
 
+// Mock Expo import meta registry (Expo 54 compatibility)
+global.__ExpoImportMetaRegistry = {
+  register: jest.fn(),
+  get: jest.fn(() => ({})),
+};
+
+// Polyfill structuredClone for Expo 54
+if (typeof global.structuredClone === 'undefined') {
+  global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
+}
+
 // Mock Expo modules
 jest.mock('expo-font');
 jest.mock('expo-asset');
@@ -58,3 +69,48 @@ jest.mock('expo-haptics', () => ({
 jest.mock('react-native-calendars', () => ({
   Calendar: 'Calendar',
 }));
+
+// Mock lucide-react-native
+jest.mock('lucide-react-native', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  const createMockIcon = (name) => {
+    return function MockIcon(props) {
+      return React.createElement(View, {
+        testID: `lucide-icon-${name}`,
+        ...props
+      });
+    };
+  };
+
+  return {
+    Link2: createMockIcon('Link2'),
+    Settings: createMockIcon('Settings'),
+    ChevronLeft: createMockIcon('ChevronLeft'),
+    ChevronRight: createMockIcon('ChevronRight'),
+    X: createMockIcon('X'),
+    Plus: createMockIcon('Plus'),
+  };
+});
+
+// Mock NativeWind className support in tests
+// NativeWind v4 uses className prop which needs Metro bundler
+// For tests, we pass className through so tests can verify it
+jest.mock('nativewind', () => ({
+  styled: (Component) => Component,
+}), { virtual: true });
+
+// Mock global.css import
+jest.mock('../global.css', () => ({}), { virtual: true });
+
+// Mock clsx for className combining
+jest.mock('clsx', () => {
+  return function clsx(...args) {
+    return args
+      .flat()
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+  };
+});

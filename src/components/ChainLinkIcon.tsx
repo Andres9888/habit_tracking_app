@@ -12,7 +12,7 @@ export const ChainLinkIcon: React.FC<ChainLinkIconProps> = ({
   size = 20
 }) => {
   return (
-    <View>
+    <View className="items-center justify-center">
       <Link2 color={color} size={size} strokeWidth={2.5} />
     </View>
   );

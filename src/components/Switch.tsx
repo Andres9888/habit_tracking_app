@@ -1,68 +1,70 @@
-import React, { ForwardedRef, InputHTMLAttributes, useRef } from "react";
-import { cn } from "../lib/utils";
+import React from "react";
+import { Pressable, View, ViewStyle, Animated } from "react-native";
+import { clsx } from "clsx";
 
 type SwitchSize = "sm" | "md" | "lg";
 
-type SwitchProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size"> & {
-  className?: string;
+export interface SwitchProps {
+  checked?: boolean;
+  disabled?: boolean;
   size?: SwitchSize;
+  onPress?: () => void;
+  style?: ViewStyle;
+  accessibilityLabel?: string;
+}
+
+const sizeClasses = {
+  sm: { track: "h-5 w-8", thumb: "h-4 w-4" },
+  md: { track: "h-6 w-10", thumb: "h-5 w-5" },
+  lg: { track: "h-7 w-12", thumb: "h-6 w-6" },
 };
 
-const sizeToDims: Record<SwitchSize, { track: string; knob: string; translate: string }> = {
-  sm: { track: "h-5 w-8", knob: "h-4 w-4", translate: "translate-x-3" },
-  md: { track: "h-6 w-10", knob: "h-5 w-5", translate: "translate-x-4" },
-  lg: { track: "h-7 w-12", knob: "h-6 w-6", translate: "translate-x-5" },
-};
-
-export const Switch = React.forwardRef(function Switch(
-  { checked, className, defaultChecked, disabled, id, name, onChange, size = "md", ...rest }: SwitchProps,
-  forwardedRef: ForwardedRef<HTMLInputElement>
-) {
-  const internalRef = useRef<HTMLInputElement | null>(null);
-
-  return (
-    <span className={cn("relative inline-flex items-center", className)}>
-      <input
-        checked={checked}
-        className={cn("peer absolute inset-0 cursor-pointer opacity-0", sizeToDims[size].track)}
-        defaultChecked={defaultChecked}
+export const Switch = React.forwardRef<View, SwitchProps>(
+  function Switch(
+    {
+      checked = false,
+      disabled = false,
+      size = "md",
+      onPress,
+      style,
+      accessibilityLabel,
+    },
+    ref
+  ) {
+    return (
+      <Pressable
+        ref={ref}
+        onPress={onPress}
         disabled={disabled}
-        id={id}
-        name={name}
-        onChange={onChange}
-        ref={(node) => {
-          internalRef.current = node;
-          if (typeof forwardedRef === "function") {
-            forwardedRef(node);
-          } else if (forwardedRef && typeof forwardedRef === "object") {
-            (forwardedRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
-          }
-        }}
-        type="checkbox"
-        {...rest}
-      />
-      <span
-        aria-hidden="true"
-        className={cn(
-          "inline-flex items-center rounded-full border border-border bg-card transition-colors",
-          "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background",
-          "peer-checked:border-primary peer-checked:bg-primary",
-          "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-          sizeToDims[size].track
-        )}
+        accessibilityRole="switch"
+        accessibilityState={{ checked, disabled }}
+        accessibilityLabel={accessibilityLabel}
+        className="self-start"
+        style={style}
       >
-        <span
-          className={cn(
-            "ml-1 inline-block rounded-full bg-card shadow transition-transform",
-            sizeToDims[size].knob,
-            checked ? sizeToDims[size].translate : "translate-x-0"
+        <View
+          className={clsx(
+            "rounded-full border border-slate-200 justify-center shadow-sm transition-colors",
+            sizeClasses[size].track,
+            checked ? "bg-slate-900 border-slate-900" : "bg-slate-100",
+            disabled && "opacity-50"
           )}
-        />
-      </span>
-    </span>
-  );
-});
+        >
+          <View
+            className={clsx(
+              "rounded-full bg-white shadow-sm transition-transform",
+              sizeClasses[size].thumb,
+              checked ? (
+                size === "sm" ? "translate-x-3" :
+                size === "md" ? "translate-x-4" :
+                "translate-x-5"
+              ) : "translate-x-0.5"
+            )}
+          />
+        </View>
+      </Pressable>
+    );
+  }
+);
 
 export default Switch;
-
-
