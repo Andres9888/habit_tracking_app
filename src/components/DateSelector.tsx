@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { format } from 'date-fns';
 
 interface DateSelectorProps {
@@ -17,7 +17,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-row justify-between px-11 py-0 h-20">
       {dates.map((date, index) => {
         const isCurrent = isToday(date);
         const month = format(date, 'MMM').toUpperCase();
@@ -31,17 +31,17 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
         return (
           <View
             key={index}
-            style={styles.dayColumn}
+            className="items-center gap-1 w-10"
             accessibilityLabel={accessibilityLabel}
             accessibilityRole="text"
           >
-            <Text style={[styles.monthText, isCurrent && styles.currentText]}>
+            <Text className={`text-xs font-semibold tracking-widest text-center ${isCurrent ? 'text-slate-900' : 'text-slate-400'}`}>
               {month}
             </Text>
-            <Text style={[styles.dayNumber, isCurrent && styles.currentText]}>
+            <Text className={`text-[30px] font-bold leading-9 text-center ${isCurrent ? 'text-slate-900' : 'text-slate-400'}`}>
               {day}
             </Text>
-            <Text style={[styles.weekdayText, isCurrent && styles.currentText]}>
+            <Text className={`text-xs font-bold tracking-wide text-center ${isCurrent ? 'text-slate-900' : 'text-slate-400'}`}>
               {weekday}
             </Text>
           </View>
@@ -50,42 +50,3 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 44,
-    paddingVertical: 0,
-    height: 80,
-  },
-  dayColumn: {
-    alignItems: 'center',
-    gap: 4,
-    width: 40,
-  },
-  monthText: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 1.2,
-    color: '#a0aec0',
-    textAlign: 'center',
-  },
-  dayNumber: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#a0aec0',
-    lineHeight: 36,
-    textAlign: 'center',
-  },
-  weekdayText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    letterSpacing: 0.6,
-    color: '#a0aec0',
-    textAlign: 'center',
-  },
-  currentText: {
-    color: '#101727',
-  },
-});

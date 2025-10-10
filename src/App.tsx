@@ -1,8 +1,11 @@
+// NativeWind global styles
+import "../global.css";
+
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Plus, Settings } from "lucide-react-native";
+import { Settings } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
@@ -100,14 +103,16 @@ function App() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
-      <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Habits</Text>
+    <GestureHandlerRootView className="flex-1">
+      <ScrollView className="flex-1 bg-white">
+        <View className="max-w-[448px] mx-auto px-6 pt-12 pb-24 gap-8">
+          <View className="flex-row items-center justify-between mb-8">
+            <Text className="text-4xl font-extrabold tracking-tight text-slate-900">
+              Habits
+            </Text>
             <Pressable
               onPress={() => setIsSettingsOpen(true)}
-              style={styles.settingsButton}
+              className="w-10 h-10 rounded-[10px] items-center justify-center"
               accessibilityLabel="Settings"
               accessibilityRole="button"
             >
@@ -118,42 +123,48 @@ function App() {
           <DateSelector dates={weekDates} />
 
           {isAdding && (
-            <View style={styles.addForm}>
-              <View style={styles.formContent}>
-                <View style={styles.formField}>
-                  <Text style={styles.formLabel}>NEW HABIT</Text>
+            <View className="rounded-3xl border border-slate-200 bg-white/90 p-5 mb-8">
+              <View className="gap-4">
+                <View className="gap-2">
+                  <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">
+                    NEW HABIT
+                  </Text>
                   <TextInput
                     value={newHabitName}
                     onChangeText={setNewHabitName}
                     placeholder="Name your habit"
                     autoFocus
-                    style={styles.input}
+                    className="w-full rounded-3xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900"
                     placeholderTextColor="#999"
                   />
                 </View>
-                <View style={styles.formActions}>
+                <View className="flex-row items-center justify-end gap-3">
                   <Pressable
                     onPress={handleToggleForm}
-                    style={styles.cancelButton}
+                    className="py-2"
                     accessibilityRole="button"
                   >
-                    <Text style={styles.cancelButtonText}>CANCEL</Text>
+                    <Text className="text-[11px] tracking-[3px] text-slate-500 font-semibold">
+                      CANCEL
+                    </Text>
                   </Pressable>
                   <Pressable
                     onPress={handleSubmit}
                     disabled={!canSubmit}
-                    style={[styles.submitButton, !canSubmit && styles.submitButtonDisabled]}
+                    className={`rounded-3xl border border-slate-900 px-5 py-2 ${!canSubmit ? 'opacity-40' : ''}`}
                     accessibilityRole="button"
                   >
-                    <Text style={styles.submitButtonText}>ADD</Text>
+                    <Text className="text-[11px] tracking-[3px] text-slate-900 font-semibold">
+                      ADD
+                    </Text>
                   </Pressable>
                 </View>
               </View>
             </View>
           )}
 
-          <View style={styles.habitsList}>
-          {orderedHabits.map((habit) => {
+          <View className="gap-4">
+            {orderedHabits.map((habit) => {
               const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
 
               // Calculate streak (consecutive days completed up to today)
@@ -186,7 +197,7 @@ function App() {
 
               const streak = calculateStreak();
 
-            return (
+              return (
                 <DraggableHabit
                   key={habit._id}
                   habit={habit}
@@ -198,198 +209,15 @@ function App() {
               );
             })}
           </View>
-      </View>
-      <Toaster />
-      <SettingsModal
-        visible={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
-    </ScrollView>
+        </View>
+        <Toaster />
+        <SettingsModal
+          visible={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+      </ScrollView>
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    maxWidth: 448,
-    marginHorizontal: 'auto',
-    paddingHorizontal: 24,
-    paddingTop: 48,
-    paddingBottom: 96,
-    gap: 32,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-    color: '#101727',
-  },
-  settingsButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addForm: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: 20,
-    marginBottom: 32,
-  },
-  formContent: {
-    gap: 16,
-  },
-  formField: {
-    gap: 8,
-  },
-  formLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    letterSpacing: 3,
-    color: '#64748b',
-  },
-  input: {
-    width: '100%',
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#0f172a',
-  },
-  formActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 12,
-  },
-  cancelButton: {
-    paddingVertical: 8,
-  },
-  cancelButtonText: {
-    fontSize: 11,
-    letterSpacing: 3,
-    color: '#64748b',
-    fontWeight: '600',
-  },
-  submitButton: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#0f172a',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-  },
-  submitButtonDisabled: {
-    opacity: 0.4,
-  },
-  submitButtonText: {
-    fontSize: 11,
-    letterSpacing: 3,
-    color: '#0f172a',
-    fontWeight: '600',
-  },
-  habitsList: {
-    gap: 16,
-  },
-  habitCard: {
-    borderRadius: 28,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: 24,
-  },
-  habitHeader: {
-    marginBottom: 24,
-  },
-  habitName: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#0f172a',
-    letterSpacing: -0.3,
-  },
-  calendarGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    gap: 12,
-  },
-  dayColumn: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  dayLabel: {
-    fontSize: 10,
-    letterSpacing: 3,
-    color: '#64748b',
-    fontWeight: '600',
-  },
-  dayButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayButtonDone: {
-    borderWidth: 2,
-    borderColor: '#0f172a',
-  },
-  dayButtonMissed: {
-    borderStyle: 'dashed',
-  },
-  dayButtonFuture: {
-    opacity: 0.4,
-  },
-  dayButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#64748b',
-  },
-  dayButtonTextDone: {
-    color: '#0f172a',
-    fontWeight: 'bold',
-  },
-  dayButtonTextMissed: {
-    color: '#64748b',
-  },
-  progressBarContainer: {
-    height: 2,
-    width: '100%',
-    backgroundColor: '#e2e8f0',
-    marginTop: 24,
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#0f172a',
-  },
-  habitStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  statText: {
-    fontSize: 11,
-    letterSpacing: 3,
-    color: '#64748b',
-    fontWeight: '600',
-  },
-});
 
 export default App;

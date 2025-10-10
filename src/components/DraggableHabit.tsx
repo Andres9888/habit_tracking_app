@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
 import { HabitChainVisualizer } from "./HabitChainVisualizer";
 
@@ -50,11 +50,11 @@ export default function DraggableHabit({
   const { emoji, name } = getEmojiAndName(habit.name);
 
   return (
-    <View style={styles.habitCard}>
+    <View className="bg-white rounded-2xl p-5 gap-4 shadow-sm">
       {/* Habit Header with Emoji + Name */}
-      <View style={styles.habitHeader}>
-        {emoji && <Text style={styles.emoji}>{emoji}</Text>}
-        <Text style={styles.habitName}>{name || habit.name}</Text>
+      <View className="flex-row items-center gap-3">
+        {emoji && <Text className="text-2xl leading-8">{emoji}</Text>}
+        <Text className="text-lg font-semibold text-[#101727] flex-1">{name || habit.name}</Text>
       </View>
 
       {/* Chain Visualization */}
@@ -68,32 +68,3 @@ export default function DraggableHabit({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  habitCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    gap: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  habitHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  emoji: {
-    fontSize: 24,
-    lineHeight: 32,
-  },
-  habitName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#101727',
-    flex: 1,
-  },
-});

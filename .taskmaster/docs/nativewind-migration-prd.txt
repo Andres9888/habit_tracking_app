@@ -1,0 +1,279 @@
+# NativeWind Migration - Product Requirements Document
+
+## Epic: Migrate Styling System to NativeWind
+
+Convert all components from React Native StyleSheet API to NativeWind utility classes, enabling utility-first CSS development while maintaining pixel-perfect visual parity with existing UI.
+
+### Story 1.1: Configure NativeWind Setup and Build Pipeline
+
+**Objective**: Set up NativeWind v4 configuration and integrate with build system so developers can use Tailwind utility classes in React Native components.
+
+**Requirements**:
+- Install NativeWind v4 and configure in package.json
+- Update Babel configuration with NativeWind plugin for transformation
+- Configure Metro bundler to process Tailwind classes
+- Update tailwind.config.js content paths to include React Native files
+- Create global.css with Tailwind directives
+- Add TypeScript declarations for className prop support
+- Create proof-of-concept component with NativeWind classes
+- Verify hot reload works with NativeWind changes
+- Test development and production builds succeed
+- Verify Expo build pipeline includes NativeWind transformations
+
+**Acceptance Criteria**:
+- Development server starts successfully with NativeWind
+- Proof-of-concept component renders with styled elements
+- Existing StyleSheet components continue to work unchanged
+- No TypeScript errors for className props
+- Test suite runs without NativeWind-related errors
+
+**Status**: COMPLETED ✅
+
+---
+
+### Story 1.2: Migrate Button Component to NativeWind
+
+**Objective**: Migrate Button component to NativeWind utilities to establish the pattern for variant-based component styling.
+
+**Requirements**:
+- Convert all Button variants (primary, secondary, success, danger, ghost) to NativeWind classes
+- Convert all Button sizes (sm, md, lg) to NativeWind spacing utilities
+- Implement disabled state with conditional NativeWind classes
+- Use Tailwind typography utilities for text styling
+- Convert shadow/elevation styles to Tailwind shadow utilities
+- Maintain unchanged ButtonProps interface
+- Ensure pixel-perfect visual match to current implementation
+- Verify all existing Button usage works across the app
+
+**Acceptance Criteria**:
+- All variant styles use NativeWind classes (bg-*, border-*, text-*)
+- Size variants use Tailwind spacing (px-*, py-*)
+- Disabled state uses opacity utilities
+- Component exports same TypeScript interface
+- Visual appearance identical on iOS and Android
+- Button tests pass without modification
+- No breaking changes to Button API
+
+**Files to Modify**:
+- src/components/Button.tsx
+
+---
+
+### Story 1.3: Migrate Card Component to NativeWind
+
+**Objective**: Migrate Card, CardHeader, and CardContent components to NativeWind to establish container styling patterns.
+
+**Requirements**:
+- Convert Card borders, shadows, and background to NativeWind utilities
+- Convert CardHeader spacing and borders to Tailwind utilities
+- Convert CardContent padding to Tailwind spacing utilities
+- Match border radius to Tailwind theme configuration
+- Ensure consistent shadow styles across iOS/Android
+- Maintain unchanged component prop interfaces
+- Ensure pixel-perfect visual match
+- Verify all Card usage in habit components renders correctly
+
+**Acceptance Criteria**:
+- Card uses rounded-*, border-*, bg-*, shadow-* classes
+- CardHeader uses p-*, border-b-* classes
+- CardContent uses p-* classes
+- Component exports same TypeScript interfaces
+- Habit cards render with identical styling
+- Card tests pass without modification
+- Shadow rendering works on both platforms
+
+**Files to Modify**:
+- src/components/Card.tsx
+
+---
+
+### Story 1.4: Migrate Checkbox and Switch Components to NativeWind
+
+**Objective**: Migrate Checkbox and Switch components to NativeWind to establish form control styling patterns.
+
+**Requirements**:
+- Convert Checkbox borders, colors, sizing to NativeWind
+- Convert Switch track and thumb styling to NativeWind
+- Implement checked/unchecked states with conditional classes
+- Use Tailwind opacity utilities for disabled states
+- Use Tailwind width/height for touch targets
+- Maintain unchanged component prop interfaces
+- Ensure pixel-perfect visual match
+- Verify interactive states (press, hover) work correctly
+
+**Acceptance Criteria**:
+- Checkbox uses border-*, bg-*, w-*, h-* classes
+- Switch uses flex, rounded-full, bg-* classes
+- State changes use conditional className logic
+- Components export same TypeScript interfaces
+- Settings modal controls render identically
+- SegmentedControl works with migrated Switch
+- Form states render correctly
+
+**Files to Modify**:
+- src/components/Checkbox.tsx
+- src/components/Switch.tsx
+- src/components/SegmentedControl.tsx (if needed)
+
+---
+
+### Story 1.5: Migrate Habit Feature Components to NativeWind
+
+**Objective**: Migrate DraggableHabit, DateSelector, and habit visualization components to NativeWind for core habit tracking features.
+
+**Requirements**:
+- Convert DraggableHabit card layout to NativeWind
+- Convert DateSelector calendar grid to Tailwind utilities
+- Convert ChainLinkIcon and ChainLinkVisualizer to NativeWind
+- Convert StreakChain spacing and colors to Tailwind utilities
+- Convert HabitCalendarView grid and cells to NativeWind
+- Ensure gesture handler interactions unaffected
+- Maintain unchanged component prop interfaces
+- Ensure pixel-perfect visual match
+
+**Acceptance Criteria**:
+- DraggableHabit uses flex, p-*, rounded-*, bg-* classes
+- DateSelector grid uses flex-row, gap-*, justify-* classes
+- Visualization components use appropriate color utilities
+- Gesture-based drag-and-drop works identically
+- Date selection interactions function correctly
+- Streak chains render with proper colors/spacing
+- Performance of gestures remains unchanged
+
+**Files to Modify**:
+- src/components/DraggableHabit.tsx
+- src/components/DateSelector.tsx
+- src/components/ChainLinkIcon.tsx
+- src/components/ChainLinkVisualizer.tsx
+- src/components/StreakChain.tsx
+- src/components/HabitCalendarView.tsx
+- src/components/HabitChainVisualizer.tsx
+
+---
+
+### Story 1.6: Migrate Modal Components to NativeWind
+
+**Objective**: Migrate SettingsModal, ArchivedHabitsModal, and HabitCalendarModal to NativeWind to establish overlay and modal styling patterns.
+
+**Requirements**:
+- Convert modal backdrop/overlay to NativeWind positioning/transparency
+- Convert modal content to Tailwind border, shadow, spacing utilities
+- Convert modal headers and footers to NativeWind layout utilities
+- Use migrated Button component for modal actions
+- Ensure modal animations remain smooth
+- Maintain unchanged component prop interfaces
+- Ensure pixel-perfect visual match
+- Verify modal z-index and layering correct
+
+**Acceptance Criteria**:
+- Backdrop uses absolute, inset-0, bg-black/50 classes
+- Modal content uses rounded-*, border-*, shadow-*, p-* classes
+- Headers/footers use flex, items-center, justify-* classes
+- Modals open/close with identical animations
+- Scrolling behavior works correctly
+- Touch-outside-to-close functions identically
+- All modal interactions work as before
+
+**Files to Modify**:
+- src/components/SettingsModal.tsx
+- src/components/ArchivedHabitsModal.tsx
+- src/components/HabitCalendarModal.tsx
+
+---
+
+### Story 1.7: Migrate Screen Components to NativeWind
+
+**Objective**: Migrate App.tsx and auth screen components to NativeWind so all top-level layouts use utility-first styling.
+
+**Requirements**:
+- Convert App.tsx container, header, layout to NativeWind
+- Convert form inputs to Tailwind border, padding, typography utilities
+- Convert WelcomeScreen, SignInScreen, SignUpScreen layouts to NativeWind
+- Use Tailwind utilities consistently for auth forms
+- Convert ScrollView and containers to NativeWind spacing
+- Replace all hardcoded colors with Tailwind theme tokens
+- Ensure pixel-perfect visual match
+- Verify navigation and transitions remain smooth
+
+**Acceptance Criteria**:
+- App.tsx uses flex-1, bg-*, max-w-*, mx-auto, p-* classes
+- Form inputs use rounded-*, border-*, px-*, py-*, text-* classes
+- Auth screens use flex, items-center, justify-center layouts
+- All hardcoded hex colors replaced with theme colors
+- Main screen renders with identical spacing/layout
+- Auth screens work with Clerk components
+- Keyboard avoidance still functions
+- Safe area handling unchanged
+
+**Files to Modify**:
+- src/App.tsx
+- src/screens/auth/WelcomeScreen.tsx
+- src/screens/auth/SignInScreen.tsx
+- src/screens/auth/SignUpScreen.tsx
+
+---
+
+### Story 1.8: Migrate Remaining Components and Cleanup
+
+**Objective**: Migrate all remaining components and remove StyleSheet API completely so the codebase is fully NativeWind-based.
+
+**Requirements**:
+- Convert SettingsDialog and any remaining components to NativeWind
+- Remove all StyleSheet.create() calls from codebase
+- Delete all styles constant declarations
+- Remove all "import { StyleSheet }" statements
+- Verify grep for "StyleSheet" returns no results in src/
+- Replace all remaining hardcoded hex colors with Tailwind tokens
+- Update component documentation with NativeWind examples
+- Create migration guide documenting patterns used
+
+**Acceptance Criteria**:
+- No StyleSheet imports remain in src/
+- No styles constants remain in components
+- All hardcoded colors use Tailwind theme
+- Full app navigation works identically
+- No visual regressions across all screens
+- All tests pass without style failures
+- Migration guide documents patterns
+
+**Files to Modify**:
+- src/SettingsDialog.tsx
+- Any other files with StyleSheet usage
+- Create: docs/nativewind-migration-guide.md
+
+---
+
+### Story 1.9: Testing, Documentation, and Performance Validation
+
+**Objective**: Complete comprehensive testing and performance validation so the migration is production-ready with verified quality metrics.
+
+**Requirements**:
+- Verify all Jest tests pass without modifications
+- Update snapshot tests to reflect NativeWind output
+- Complete manual QA on iOS simulator
+- Complete manual QA on Android emulator
+- Measure and verify bundle size within 5% of baseline
+- Measure and verify build time within 10% of baseline
+- Verify app performance metrics unchanged (frame rate, memory)
+- Review and finalize migration documentation
+
+**Acceptance Criteria**:
+- All unit tests pass
+- Integration tests pass
+- Component tests pass
+- Visual QA complete on both platforms
+- Bundle size: <5% increase from baseline
+- Build time: <10% increase from baseline
+- No performance regressions
+- Documentation reviewed and complete
+- Production build succeeds
+- Expo EAS build works correctly
+- Hot reload improvements validated
+- No NativeWind transformation warnings
+
+**Deliverables**:
+- Test results summary
+- Performance metrics report
+- QA sign-off
+- Migration documentation
+- Production deployment plan

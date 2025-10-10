@@ -1,26 +1,11 @@
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, isSameMonth, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
+import clsx from "clsx";
 
 type HabitStatus = "done" | "missed" | "planned" | "empty";
-
-// Color theme constants
-const COLORS = {
-  primary: '#3B82F6',
-  primaryLight: '#eff6ff',
-  success: '#10B981',
-  successLight: '#f0fdf4',
-  dark: '#0f172a',
-  neutral: '#64748b',
-  neutralLight: '#cbd5e1',
-  border: '#e2e8f0',
-  borderLight: '#f1f5f9',
-  background: '#fff',
-  backgroundGray: '#fafafa',
-  backgroundLight: '#f8fafc',
-} as const;
 
 interface HabitCalendarViewProps {
   habitId: Id<"habits">;
@@ -76,34 +61,34 @@ export default function HabitCalendarView({
   const emptyDays = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Pressable onPress={handlePreviousMonth} style={styles.navButton}>
+    <View className="gap-4">
+      <View className="flex-row items-center justify-between px-2">
+        <Pressable onPress={handlePreviousMonth} className="p-2 rounded-xl bg-slate-50">
           <ChevronLeft size={20} color="#64748b" />
         </Pressable>
 
-        <Pressable onPress={handleToday} style={styles.monthButton}>
-          <Text style={styles.monthText}>
+        <Pressable onPress={handleToday} className="py-2 px-4">
+          <Text className="text-base font-semibold text-slate-900 tracking-tight">
             {format(currentMonth, 'MMMM yyyy')}
           </Text>
         </Pressable>
 
-        <Pressable onPress={handleNextMonth} style={styles.navButton}>
+        <Pressable onPress={handleNextMonth} className="p-2 rounded-xl bg-slate-50">
           <ChevronRight size={20} color="#64748b" />
         </Pressable>
       </View>
 
-      <View style={styles.weekDays}>
+      <View className="flex-row px-1">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <View key={day} style={styles.weekDayCell}>
-            <Text style={styles.weekDayText}>{day}</Text>
+          <View key={day} className="flex-1 items-center py-2">
+            <Text className="text-[10px] font-semibold text-slate-500 tracking-widest">{day}</Text>
           </View>
         ))}
       </View>
 
-      <View style={styles.calendar}>
+      <View className="flex-row flex-wrap px-1">
         {emptyDays.map((i) => (
-          <View key={`empty-${i}`} style={styles.dayCell} />
+          <View key={`empty-${i}`} className="w-[14.28%] aspect-square items-center justify-center p-0.5" />
         ))}
 
         {daysInMonth.map((date) => {
@@ -124,198 +109,52 @@ export default function HabitCalendarView({
               key={dateString}
               onPress={() => !isFuture && toggleHabit({ habitId, date: dateString })}
               disabled={isFuture}
-              style={[
-                styles.dayCell,
-                styles.dayButton,
-                status === "done" && styles.dayButtonDone,
-                status === "missed" && styles.dayButtonMissed,
-                status === "planned" && styles.dayButtonPlanned,
-                isFuture && styles.dayButtonFuture,
-                isCurrentDay && styles.dayButtonToday,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.dayText,
-                  status === "done" && styles.dayTextDone,
-                  status === "missed" && styles.dayTextMissed,
-                  isFuture && styles.dayTextFuture,
-                  isCurrentDay && styles.dayTextToday,
-                ]}
-              >
-                {format(date, 'd')}
-              </Text>
-              {status === "done" && (
-                <View style={styles.completionDot} />
+              className={clsx(
+                "w-[14.28%] aspect-square items-center justify-center p-0.5",
               )}
+            >
+              <View className={clsx(
+                "flex-1 rounded-xl border bg-white items-center justify-center",
+                status === "done" && "border-2 border-emerald-500 bg-emerald-50",
+                status === "missed" && "border-dashed border-slate-200 bg-gray-50 opacity-70",
+                status === "planned" && "border-2 border-blue-500 bg-blue-50",
+                isFuture && "opacity-30 border-slate-100",
+                isCurrentDay && "border-2 border-slate-900"
+              )}>
+                <Text
+                  className={clsx(
+                    "text-[13px] font-medium text-slate-500",
+                    status === "done" && "text-emerald-600 font-semibold",
+                    status === "missed" && "text-slate-500",
+                    isFuture && "text-slate-300",
+                    isCurrentDay && "text-slate-900 font-bold"
+                  )}
+                >
+                  {format(date, 'd')}
+                </Text>
+                {status === "done" && (
+                  <View className="mt-0.5 w-1 h-1 rounded-full bg-emerald-600" />
+                )}
+              </View>
             </Pressable>
           );
         })}
       </View>
 
-      <View style={styles.legend}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, styles.legendDotDone]} />
-          <Text style={styles.legendText}>Completed</Text>
+      <View className="flex-row justify-center gap-6 pt-2 pb-1">
+        <View className="flex-row items-center gap-1.5">
+          <View className="w-3 h-3 rounded-md border-2 border-emerald-500 bg-emerald-50" />
+          <Text className="text-[11px] font-medium text-slate-500">Completed</Text>
         </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, styles.legendDotMissed]} />
-          <Text style={styles.legendText}>Missed</Text>
+        <View className="flex-row items-center gap-1.5">
+          <View className="w-3 h-3 rounded-md border border-dashed border-slate-200 bg-gray-50 opacity-70" />
+          <Text className="text-[11px] font-medium text-slate-500">Missed</Text>
         </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, styles.legendDotPlanned]} />
-          <Text style={styles.legendText}>Today</Text>
+        <View className="flex-row items-center gap-1.5">
+          <View className="w-3 h-3 rounded-md border-2 border-blue-500 bg-blue-50" />
+          <Text className="text-[11px] font-medium text-slate-500">Today</Text>
         </View>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 8,
-  },
-  navButton: {
-    padding: 8,
-    borderRadius: 12,
-    backgroundColor: COLORS.backgroundLight,
-  },
-  monthButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  monthText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.dark,
-    letterSpacing: -0.3,
-  },
-  weekDays: {
-    flexDirection: 'row',
-    paddingHorizontal: 4,
-  },
-  weekDayCell: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  weekDayText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: COLORS.neutral,
-    letterSpacing: 1,
-  },
-  calendar: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 4,
-  },
-  dayCell: {
-    width: '14.28%', // 100% / 7 days
-    aspectRatio: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 2,
-  },
-  dayButton: {
-    flex: 1,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.background,
-  },
-  dayButtonDone: {
-    borderWidth: 2,
-    borderColor: COLORS.success,
-    backgroundColor: COLORS.successLight,
-  },
-  dayButtonMissed: {
-    borderStyle: 'dashed',
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.backgroundGray,
-    // Fallback: increased opacity + lighter bg for platforms without dashed support
-    opacity: 0.7,
-  },
-  dayButtonPlanned: {
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.primaryLight,
-  },
-  dayButtonFuture: {
-    opacity: 0.3,
-    borderColor: COLORS.borderLight,
-  },
-  dayButtonToday: {
-    borderWidth: 2,
-    borderColor: COLORS.dark,
-  },
-  dayText: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: COLORS.neutral,
-  },
-  dayTextDone: {
-    color: COLORS.success,
-    fontWeight: '600',
-  },
-  dayTextMissed: {
-    color: COLORS.neutral,
-  },
-  dayTextFuture: {
-    color: COLORS.neutralLight,
-  },
-  dayTextToday: {
-    color: COLORS.dark,
-    fontWeight: '700',
-  },
-  completionDot: {
-    marginTop: 2,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: COLORS.success,
-  },
-  legend: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 24,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  legendDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    borderWidth: 2,
-  },
-  legendDotDone: {
-    borderColor: COLORS.success,
-    backgroundColor: COLORS.successLight,
-  },
-  legendDotMissed: {
-    borderColor: COLORS.border,
-    borderStyle: 'dashed',
-    backgroundColor: COLORS.backgroundGray,
-    opacity: 0.7,
-  },
-  legendDotPlanned: {
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.primaryLight,
-  },
-  legendText: {
-    fontSize: 11,
-    fontWeight: '500',
-    color: COLORS.neutral,
-  },
-});
