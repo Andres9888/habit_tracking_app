@@ -1,5 +1,5 @@
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, isSameMonth, isToday } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
