@@ -1,18 +1,18 @@
 import { ClerkLoaded, ClerkProvider, SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { Feather } from '@expo/vector-icons';
 import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex/react";
 import { addDays, format } from 'date-fns';
-import { StatusBar } from 'expo-status-bar';
+import * as Haptics from 'expo-haptics';
 import * as SecureStore from 'expo-secure-store';
+import { StatusBar } from 'expo-status-bar';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { Calendar } from 'react-native-calendars';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Feather } from '@expo/vector-icons';
+import { api } from "./convex/_generated/api";
 import SettingsModal from './src/components/SettingsModal';
 import WelcomeScreen from './src/screens/auth/WelcomeScreen';
-import { api } from "./convex/_generated/api";
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
@@ -282,7 +282,7 @@ function HabitsScreen() {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>Habits</Text>
+          <Text style={styles.title}>Habits tests to for live reload</Text>
           <View style={styles.headerButtons}>
             <TouchableOpacity
               onPress={() => setShowSettings(true)}

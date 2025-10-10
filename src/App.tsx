@@ -153,10 +153,8 @@ function App() {
           )}
 
           <View style={styles.habitsList}>
-          {orderedHabits.map((habit, index) => {
+          {orderedHabits.map((habit) => {
               const weekStatus = weekDateStrings.map(ds => getHabitStatus(habit._id, ds));
-              const completedCount = weekStatus.filter(s => s === "done").length;
-              const completionRate = Math.round((completedCount / 5) * 100);
 
               // Calculate streak (consecutive days completed up to today)
               const calculateStreak = () => {
@@ -192,19 +190,8 @@ function App() {
                 <DraggableHabit
                   key={habit._id}
                   habit={habit}
-                  index={index}
-                  allHabits={orderedHabits}
-                  onReorder={handleReorder}
-                  editingHabitId={null}
-                  editingHabitName=""
-                  onStartEdit={() => {}}
-                  onCancelEdit={() => {}}
-                  onSaveEdit={() => {}}
-                  setEditingHabitName={() => {}}
-                  weekDates={weekDates}
                   weekDateStrings={weekDateStrings}
                   weekStatus={weekStatus}
-                  completionRate={completionRate}
                   streak={streak}
                   toggleHabit={toggleHabit}
                 />
