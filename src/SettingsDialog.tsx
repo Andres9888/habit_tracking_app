@@ -102,7 +102,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle dark theme"
               checked={localSettings.darkMode}
-              onChange={() => toggleSetting('darkMode')}
+              onPress={() => toggleSetting('darkMode')}
               variant="primary"
             />
           </label>
@@ -112,7 +112,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle show streaks"
               checked={localSettings.showStreaks}
-              onChange={() => toggleSetting('showStreaks')}
+              onPress={() => toggleSetting('showStreaks')}
               variant="primary"
             />
           </label>
@@ -122,7 +122,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle show consistency"
               checked={localSettings.showConsistency}
-              onChange={() => toggleSetting('showConsistency')}
+              onPress={() => toggleSetting('showConsistency')}
               variant="primary"
             />
           </label>
@@ -132,7 +132,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle motivational messages"
               checked={localSettings.showMotivationalMessages}
-              onChange={() => toggleSetting('showMotivationalMessages')}
+              onPress={() => toggleSetting('showMotivationalMessages')}
               variant="primary"
             />
           </label>
@@ -142,7 +142,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle emojis"
               checked={localSettings.showEmojis}
-              onChange={() => toggleSetting('showEmojis')}
+              onPress={() => toggleSetting('showEmojis')}
               variant="primary"
             />
           </label>
@@ -152,7 +152,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle calendar view"
               checked={localSettings.showCalendarView}
-              onChange={() => toggleSetting('showCalendarView')}
+              onPress={() => toggleSetting('showCalendarView')}
               variant="primary"
             />
           </label>
@@ -162,7 +162,7 @@ export function SettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <Checkbox
               aria-label="Toggle cat theme"
               checked={localSettings.catTheme}
-              onChange={() => toggleSetting('catTheme')}
+              onPress={() => toggleSetting('catTheme')}
               variant="primary"
             />
           </label>
