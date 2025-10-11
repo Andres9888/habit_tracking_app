@@ -5,12 +5,14 @@ This directory contains Claude Code hooks configuration for automated code revie
 ## Hooks Setup
 
 ### PostToolUse Hook (Edit/Write)
+
 Automatically runs CodeRabbit review after any file edit or write operation.
 
 **Trigger:** After `Edit` or `Write` tool use
 **Action:** Reviews the modified file with CodeRabbit and displays suggestions
 
 ### SessionEnd Hook
+
 Provides a summary at the end of each Claude Code session.
 
 **Trigger:** When Claude Code session ends
@@ -51,6 +53,7 @@ Provides a summary at the end of each Claude Code session.
 ## Customization
 
 Edit `.claude/settings.json` to:
+
 - Change which file operations trigger reviews
 - Adjust output formatting
 - Add additional hooks for other tools
@@ -58,6 +61,7 @@ Edit `.claude/settings.json` to:
 ## Testing
 
 To test the hook manually:
+
 ```bash
 ./.claude/coderabbit-handler.sh src/App.tsx
 ```
@@ -65,11 +69,13 @@ To test the hook manually:
 ## Disabling
 
 To temporarily disable hooks:
+
 ```bash
 mv .claude/settings.json .claude/settings.json.disabled
 ```
 
 To re-enable:
+
 ```bash
 mv .claude/settings.json.disabled .claude/settings.json
 ```

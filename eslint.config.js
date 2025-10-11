@@ -1,8 +1,10 @@
 import js from "@eslint/js";
+import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import prettierConfig from "eslint-config-prettier";
 
 export default tseslint.config(
   {
@@ -19,8 +21,10 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
+      prettierConfig,
     ],
     files: ["**/*.{ts,tsx}"],
+    ignores: ["src/main.tsx"],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -36,6 +40,7 @@ export default tseslint.config(
       },
     },
     plugins: {
+      react: react,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
     },
@@ -44,6 +49,15 @@ export default tseslint.config(
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
+      ],
+      "react/jsx-sort-props": [
+        "warn",
+        {
+          callbacksLast: true,
+          shorthandFirst: true,
+          ignoreCase: true,
+          reservedFirst: true,
+        },
       ],
       // All of these overrides ease getting into
       // TypeScript, and can be removed for stricter
@@ -76,11 +90,33 @@ export default tseslint.config(
   },
   {
     files: ["src/main.tsx"],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended, prettierConfig],
+    plugins: {
+      react: react,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
+    },
+    rules: {
+      "react/jsx-sort-props": [
+        "warn",
+        {
+          callbacksLast: true,
+          shorthandFirst: true,
+          ignoreCase: true,
+          reservedFirst: true,
+        },
+      ],
+    },
     languageOptions: {
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
         // Disable type-aware linting for this file to avoid TS 'import.meta' diagnostics during lint
         project: null,
       },
     },
-  },
+  }
 );

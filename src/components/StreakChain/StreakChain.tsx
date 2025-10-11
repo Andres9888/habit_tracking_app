@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useStreakChainLogic } from "./StreakChain.hooks";
 
 export type DayStatus = "done" | "missed" | "planned";
 
@@ -20,22 +21,29 @@ export interface StreakChainProps {
  * - Typography and colors align with existing app styles (#0f172a titles, #64748b secondary, #e2e8f0 borders)
  * - Primary color uses #3B82F6 (blue)
  */
-export default function StreakChain({ label, statuses, size = 28 }: StreakChainProps) {
-  const circleSize = size;
-  const iconSize = Math.max(12, Math.floor(circleSize * 0.55));
-
-  // Compute current streak (consecutive "done" from end)
-  let streakDays = 0;
-  for (let i = statuses.length - 1; i >= 0; i -= 1) {
-    if (statuses[i] === "done") streakDays += 1; else break;
-  }
+export default function StreakChain({
+  label,
+  statuses,
+  size = 28,
+}: StreakChainProps) {
+  const { circleSize, iconSize, streakDays } = useStreakChainLogic(
+    statuses,
+    size
+  );
 
   return (
-    <View className="pt-1 pb-3">
-      <View className="flex-row items-center justify-between mb-2">
-        <Text className="text-base font-bold text-slate-900 tracking-tight">{label}</Text>
-        <View className="px-2.5 py-1 rounded-full bg-indigo-50" accessibilityLabel={`${streakDays} days`}>
-          <Text className="text-xs text-slate-900 font-semibold">{streakDays} days</Text>
+    <View className="pb-3 pt-1">
+      <View className="mb-2 flex-row items-center justify-between">
+        <Text className="text-base font-bold tracking-tight text-slate-900">
+          {label}
+        </Text>
+        <View
+          accessibilityLabel={`${streakDays} days`}
+          className="rounded-full bg-indigo-50 px-2.5 py-1"
+        >
+          <Text className="text-xs font-semibold text-slate-900">
+            {streakDays} days
+          </Text>
         </View>
       </View>
 
@@ -57,13 +65,19 @@ export default function StreakChain({ label, statuses, size = 28 }: StreakChainP
                   opacity: isFuture ? 0.5 : 1,
                 }}
               >
-                <Feather name="link-2" size={iconSize} color={isDone ? "#FFFFFF" : "#64748B"} />
+                <Feather
+                  color={isDone ? "#FFFFFF" : "#64748B"}
+                  name="link-2"
+                  size={iconSize}
+                />
               </View>
 
               {idx < statuses.length - 1 && (
                 <View
-                  className="w-[18px] h-0.5 mx-1.5 rounded-sm"
-                  style={{ backgroundColor: connectorActive ? "#93C5FD" : "#E5E7EB" }}
+                  className="mx-1.5 h-0.5 w-[18px] rounded-sm"
+                  style={{
+                    backgroundColor: connectorActive ? "#93C5FD" : "#E5E7EB",
+                  }}
                 />
               )}
             </View>

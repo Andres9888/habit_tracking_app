@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a cross-platform habit tracking application built with React Native (Expo), TypeScript, and Convex as the backend. The app features streak tracking, calendar views, drag-and-drop reordering, and real-time synchronization across web and mobile platforms.
 
 **Tech Stack:**
+
 - **Frontend:** React Native (Expo SDK ~54), React 19.1, TypeScript
 - **Backend:** Convex (realtime backend with database, functions, and auth)
 - **UI Libraries:** React Native Paper, Tailwind (via NativeWind for web)
@@ -16,6 +17,7 @@ This is a cross-platform habit tracking application built with React Native (Exp
 ## Development Commands
 
 ### Core Development
+
 ```bash
 # Start development (initializes Convex + runs frontend and backend in parallel)
 npm run dev
@@ -33,6 +35,7 @@ npm run expo:android  # Android emulator
 ```
 
 ### Testing & Quality
+
 ```bash
 # Run all tests
 npm test
@@ -48,6 +51,7 @@ npm run lint
 ```
 
 ### Deployment
+
 ```bash
 # Deploy Convex backend to production
 npm run deploy
@@ -61,6 +65,7 @@ npx expo run:ios
 ```
 
 ### MCP Integration
+
 ```bash
 # Start Convex MCP server (for Claude Code integration)
 npm run mcp
@@ -69,6 +74,7 @@ npm run mcp
 ## Architecture
 
 ### Project Structure
+
 ```
 habit_tracking_app/
 ├── src/                          # Frontend source code
@@ -96,22 +102,26 @@ habit_tracking_app/
 The app uses 4 main tables defined in `convex/schema.ts`:
 
 **habits**
+
 - Core habit information: name, notes, createdAt, order
 - Optional fields: tags, archived, archivedAt
 - Calculated fields (not stored): consecutiveDays, strength, totalCompletions, totalMisses
 - Used for: storing habit definitions
 
 **tracking**
+
 - Records daily completions: habitId, date (YYYY-MM-DD), completed (boolean)
 - Index: `by_habit_and_date` for efficient querying
 - Used for: tracking which habits were completed on which days
 
 **userSettings**
+
 - User preferences: showStreaks, showConsistency, showMotivationalMessages, etc.
 - catTheme, darkMode toggles
 - Used for: personalizing the user experience
 
 **articles**
+
 - Content system: title, content, category
 - Index: `by_category`
 - Used for: storing motivational/educational content
@@ -119,6 +129,7 @@ The app uses 4 main tables defined in `convex/schema.ts`:
 ### Key Convex Functions (convex/habits.ts)
 
 **Mutations:**
+
 - `create({ name, notes })` - Create new habit, returns habit ID
 - `updateNotes({ habitId, notes })` - Update habit notes
 - `archive({ habitId })` - Soft delete (mark as archived)
@@ -130,6 +141,7 @@ The app uses 4 main tables defined in `convex/schema.ts`:
   - Creates tracking entry if none exists, toggles if exists
 
 **Queries:**
+
 - `list()` - Get all non-archived habits
 - `listArchived()` - Get archived habits
 - `getTracking({ dates })` - Fetch completion data for date range
@@ -139,6 +151,7 @@ The app uses 4 main tables defined in `convex/schema.ts`:
 ### Frontend Architecture
 
 **Main App Flow (src/App.tsx):**
+
 1. Loads habits via `useQuery(api.habits.list)`
 2. Loads tracking data for 5-day window (4 days ago to today)
 3. Calculates habit status for each day: `"done"`, `"missed"`, or `"planned"`
@@ -146,11 +159,13 @@ The app uses 4 main tables defined in `convex/schema.ts`:
 5. Handles habit creation, editing, and status toggling
 
 **Drag-and-Drop (src/components/DraggableHabit.tsx):**
+
 - Uses `react-native-draggable-flatlist` for reordering
 - Maintains local order state in App.tsx
 - TODO: Implement `reorderHabits` mutation in Convex backend
 
 **Cross-Platform Rendering:**
+
 - React Native components used throughout (View, Text, Pressable, etc.)
 - `react-native-web` aliased in vite.config.ts for web platform
 - File resolution prioritizes `.web.*` extensions for web-specific code
@@ -158,6 +173,7 @@ The app uses 4 main tables defined in `convex/schema.ts`:
 ### Authentication
 
 The app uses `@convex-dev/auth` with configuration in:
+
 - `convex/auth.config.ts` - Auth provider setup
 - `convex/auth.ts` - Auth implementation
 - `src/screens/auth/` - UI screens for sign-in/sign-up
@@ -167,6 +183,7 @@ The app uses `@convex-dev/auth` with configuration in:
 ### Convex Function Development
 
 **Always use new function syntax:**
+
 ```typescript
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
@@ -182,6 +199,7 @@ export const myQuery = query({
 ```
 
 **Key rules from .cursor/rules/convex_rules.mdc:**
+
 - ALWAYS include `args` and `returns` validators
 - Use `v.null()` for functions that don't return a value
 - Use `v.id(tableName)` for ID types, not `v.string()`
@@ -191,6 +209,7 @@ export const myQuery = query({
 ### Testing
 
 The project uses Jest with React Native preset:
+
 - Test files: `**/__tests__/**/*.test.[jt]s?(x)` or `**/*.test.[jt]s?(x)`
 - Setup file: `jest.setup.js`
 - Coverage: Collects from all `.ts/.tsx` files except `node_modules` and `.d.ts`
@@ -205,6 +224,7 @@ The project uses Jest with React Native preset:
 ### Date Handling
 
 **CRITICAL:** The app uses local timezone date strings in `YYYY-MM-DD` format:
+
 - Dates are stored as strings (e.g., `"2025-10-10"`)
 - When parsing, construct `new Date(year, month - 1, day)` to avoid UTC shifting
 - See `getHabitStatus()` in App.tsx:596-77 for reference implementation
@@ -222,14 +242,16 @@ The project uses Jest with React Native preset:
 
 1. **Update Schema** (`convex/schema.ts`)
    - Add new field to habits table validator
+
    ```typescript
    defineTable({
      // existing fields...
      newField: v.optional(v.string()),
-   })
+   });
    ```
 
 2. **Create/Update Mutation** (`convex/habits.ts`)
+
    ```typescript
    export const updateNewField = mutation({
      args: { habitId: v.id("habits"), newField: v.string() },
@@ -252,10 +274,7 @@ The project uses Jest with React Native preset:
 const tracking = await ctx.db
   .query("tracking")
   .filter((q) =>
-    q.and(
-      q.gte(q.field("date"), startDate),
-      q.lte(q.field("date"), endDate)
-    )
+    q.and(q.gte(q.field("date"), startDate), q.lte(q.field("date"), endDate))
   )
   .collect();
 ```
@@ -263,6 +282,7 @@ const tracking = await ctx.db
 ### Calculating Streaks
 
 See `getStats` query in convex/habits.ts:272-315 for reference implementation of:
+
 - Current streak (consecutive days from today backward)
 - 30-day consistency percentage
 
@@ -275,25 +295,31 @@ See `getStats` query in convex/habits.ts:272-315 for reference implementation of
 ## Platform-Specific Notes
 
 ### Web (Vite)
+
 - Entry: `src/main.tsx`
 - Alias: `react-native` → `react-native-web`
 - File priority: `.web.tsx` > `.tsx`
 
 ### Mobile (Expo)
+
 - Entry: `app.json` specifies "main": "expo/AppEntry.js"
 - SDK: ~54.0.11
 - Native modules: expo-haptics, expo-linear-gradient, gesture-handler
 
 ### iOS Build Dependencies
+
 The iOS build process explicitly depends on `@convex-dev/auth` (see git log at cfeb0ce).
 
 ## External Integrations
 
 ### Convex MCP Server
+
 The project includes MCP integration for Claude Code via `npm run mcp`. This provides:
+
 - Direct access to Convex functions and data
 - Schema inspection and validation
 - Real-time backend testing from Claude Code
 
 ### Task Master
+
 The codebase includes Task Master AI for project management (see `.taskmaster/` directory and related CLAUDE.md files). This is a separate workflow tool and not part of the habit tracking app itself.

@@ -6,10 +6,12 @@
 ## ✅ Completed Configuration
 
 ### 1. Package Installation
+
 - **NativeWind v4.2.1** installed
 - **Tailwind CSS v3.4.18** installed (updated from v3.x)
 
 ### 2. Babel Configuration (`babel.config.cjs`)
+
 ```javascript
 plugins: [
   'nativewind/babel',  // NativeWind plugin for Tailwind CSS transformation
@@ -17,6 +19,7 @@ plugins: [
 ```
 
 ### 3. Tailwind Configuration (`tailwind.config.js`)
+
 - Added NativeWind v4 preset: `presets: [require('nativewind/preset')]`
 - Updated content paths to include all React Native files:
   ```javascript
@@ -25,18 +28,20 @@ plugins: [
     "./src/**/*.{js,ts,jsx,tsx}",
     "./App.{js,jsx,ts,tsx}",
     "./**/*.{js,jsx,ts,tsx}",
-  ]
+  ];
   ```
 
 ### 4. Metro Configuration (`metro.config.cjs`)
+
 - Integrated NativeWind v4 Metro transformer
 - Configured to process `global.css`:
   ```javascript
-  const { withNativeWind } = require('nativewind/metro');
-  module.exports = withNativeWind(config, { input: './global.css' });
+  const { withNativeWind } = require("nativewind/metro");
+  module.exports = withNativeWind(config, { input: "./global.css" });
   ```
 
 ### 5. Global CSS (`global.css`)
+
 - Created Tailwind directives file:
   ```css
   @tailwind base;
@@ -45,17 +50,21 @@ plugins: [
   ```
 
 ### 6. TypeScript Support (`nativewind-env.d.ts`)
+
 - Added NativeWind type declarations for `className` prop support
 
 ### 7. App Entry Point (`src/App.tsx`)
+
 - Imported global CSS: `import "../global.css";`
 
 ### 8. Proof-of-Concept Component
+
 - Created `src/components/NativeWindTest.tsx` demonstrating various NativeWind utilities
 
 ## 🧪 Testing NativeWind Setup
 
 ### Quick Test
+
 Add the NativeWindTest component to your App to verify the setup:
 
 ```tsx
@@ -66,12 +75,14 @@ return <NativeWindTest />;
 ```
 
 You should see:
+
 - ✅ Styled text with proper colors (slate-900, slate-600)
 - ✅ White background card with shadow and border
 - ✅ Colored buttons (green, blue, red) with white text
 - ✅ Proper spacing and padding utilities working
 
 ### Restart Development Server
+
 Since you already have Expo running on port 8081, restart it to apply the new configuration:
 
 ```bash
@@ -81,6 +92,7 @@ npx expo start --clear
 ```
 
 ### Verify Hot Reload
+
 After restarting, make changes to NativeWindTest component's className props and verify hot reload works with NativeWind class changes.
 
 ## ✅ Story 1.1 Acceptance Criteria Status

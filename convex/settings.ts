@@ -24,21 +24,23 @@ export const get = query({
   }),
   handler: async (ctx) => {
     // Get first settings record (since auth was removed, just use any settings)
-    const settings = await ctx.db
-      .query("userSettings")
-      .first();
+    const settings = await ctx.db.query("userSettings").first();
 
     // Only return the whitelisted fields to satisfy the returns validator
     return {
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       darkMode: settings?.darkMode ?? DEFAULT_SETTINGS.darkMode,
-      showCalendarView: settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
-      showConsistency: settings?.showConsistency ?? DEFAULT_SETTINGS.showConsistency,
+      showCalendarView:
+        settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
+      showConsistency:
+        settings?.showConsistency ?? DEFAULT_SETTINGS.showConsistency,
       showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
-      showMotivationalMessages: settings?.showMotivationalMessages ?? DEFAULT_SETTINGS.showMotivationalMessages,
+      showMotivationalMessages:
+        settings?.showMotivationalMessages ??
+        DEFAULT_SETTINGS.showMotivationalMessages,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
     };
-  }
+  },
 });
 
 export const update = mutation({
@@ -54,9 +56,7 @@ export const update = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     // Get first settings record (since auth was removed, just use any settings)
-    const existing = await ctx.db
-      .query("userSettings")
-      .first();
+    const existing = await ctx.db.query("userSettings").first();
 
     if (existing) {
       await ctx.db.patch(existing._id, args);
@@ -64,5 +64,5 @@ export const update = mutation({
       await ctx.db.insert("userSettings", args);
     }
     return null;
-  }
+  },
 });

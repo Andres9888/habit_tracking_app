@@ -15,6 +15,7 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
 ## Setup
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -24,6 +25,7 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
    - Update `.env.local` with your Convex URL
 
 3. Start the development server:
+
    ```bash
    npm start
    ```
@@ -33,11 +35,13 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
 ## Building for Production
 
 1. Install EAS CLI:
+
    ```bash
    npm install -g @expo/eas-cli
    ```
 
 2. Configure your project:
+
    ```bash
    eas build:configure
    ```
@@ -50,6 +54,7 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
 ## Deployment
 
 Deploy to app stores using EAS Submit:
+
 ```bash
 eas submit --platform all
 ```
@@ -57,5 +62,6 @@ eas submit --platform all
 ## Convex Backend
 
 This app uses the same Convex backend as the web version. Make sure to copy over:
+
 - `convex/` directory with all your functions
 - Environment variables in your Convex dashboard

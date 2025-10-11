@@ -1,20 +1,20 @@
-import React from 'react';
-import { render } from '@testing-library/react-native';
-import { Text, View } from 'react-native';
-import { Card, CardHeader, CardContent } from '../Card';
+import React from "react";
+import { render } from "@testing-library/react-native";
+import { Text, View } from "react-native";
+import { Card, CardHeader, CardContent } from "../Card";
 
-describe('Card Component', () => {
-  describe('Card', () => {
-    it('renders children correctly', () => {
+describe("Card Component", () => {
+  describe("Card", () => {
+    it("renders children correctly", () => {
       const { getByText } = render(
         <Card>
           <Text>Test Content</Text>
         </Card>
       );
-      expect(getByText('Test Content')).toBeTruthy();
+      expect(getByText("Test Content")).toBeTruthy();
     });
 
-    it('renders as a View component', () => {
+    it("renders as a View component", () => {
       const { UNSAFE_root } = render(
         <Card testID="test-card">
           <Text>Test</Text>
@@ -24,41 +24,41 @@ describe('Card Component', () => {
       expect(views.length).toBeGreaterThan(0);
     });
 
-    it('accepts custom className prop', () => {
+    it("accepts custom className prop", () => {
       const { getByTestId } = render(
-        <Card testID="custom-card" className="custom-class">
+        <Card className="custom-class" testID="custom-card">
           <Text>Test</Text>
         </Card>
       );
-      const card = getByTestId('custom-card');
+      const card = getByTestId("custom-card");
       expect(card).toBeTruthy();
       // className prop should be present even if not applied in test env
       expect(card.props.className).toBeDefined();
     });
 
-    it('accepts custom style prop', () => {
+    it("accepts custom style prop", () => {
       const customStyle = { margin: 10 };
       const { getByTestId } = render(
-        <Card testID="styled-card" style={customStyle}>
+        <Card style={customStyle} testID="styled-card">
           <Text>Test</Text>
         </Card>
       );
-      const card = getByTestId('styled-card');
+      const card = getByTestId("styled-card");
       expect(card.props.style).toEqual(customStyle);
     });
 
-    it('forwards other View props', () => {
+    it("forwards other View props", () => {
       const { getByTestId, getByLabelText } = render(
-        <Card testID="custom-card" accessibilityLabel="Test Card">
+        <Card accessibilityLabel="Test Card" testID="custom-card">
           <Text>Test</Text>
         </Card>
       );
 
-      expect(getByTestId('custom-card')).toBeTruthy();
-      expect(getByLabelText('Test Card')).toBeTruthy();
+      expect(getByTestId("custom-card")).toBeTruthy();
+      expect(getByLabelText("Test Card")).toBeTruthy();
     });
 
-    it('can be composed with multiple children', () => {
+    it("can be composed with multiple children", () => {
       const { getByText } = render(
         <Card>
           <Text>First Child</Text>
@@ -66,13 +66,13 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('First Child')).toBeTruthy();
-      expect(getByText('Second Child')).toBeTruthy();
+      expect(getByText("First Child")).toBeTruthy();
+      expect(getByText("Second Child")).toBeTruthy();
     });
   });
 
-  describe('CardHeader', () => {
-    it('renders children correctly', () => {
+  describe("CardHeader", () => {
+    it("renders children correctly", () => {
       const { getByText } = render(
         <Card>
           <CardHeader>
@@ -80,10 +80,10 @@ describe('Card Component', () => {
           </CardHeader>
         </Card>
       );
-      expect(getByText('Header Content')).toBeTruthy();
+      expect(getByText("Header Content")).toBeTruthy();
     });
 
-    it('renders as a View component', () => {
+    it("renders as a View component", () => {
       const { UNSAFE_root } = render(
         <Card>
           <CardHeader testID="test-header">
@@ -96,33 +96,33 @@ describe('Card Component', () => {
       expect(views.length).toBeGreaterThanOrEqual(2);
     });
 
-    it('accepts custom className prop', () => {
+    it("accepts custom className prop", () => {
       const { getByTestId } = render(
         <Card>
-          <CardHeader testID="custom-header" className="custom-header">
+          <CardHeader className="custom-header" testID="custom-header">
             <Text>Header</Text>
           </CardHeader>
         </Card>
       );
-      const header = getByTestId('custom-header');
+      const header = getByTestId("custom-header");
       expect(header).toBeTruthy();
       expect(header.props.className).toBeDefined();
     });
 
-    it('accepts custom style prop', () => {
+    it("accepts custom style prop", () => {
       const customStyle = { paddingVertical: 20 };
       const { getByTestId } = render(
         <Card>
-          <CardHeader testID="styled-header" style={customStyle}>
+          <CardHeader style={customStyle} testID="styled-header">
             <Text>Header</Text>
           </CardHeader>
         </Card>
       );
-      const header = getByTestId('styled-header');
+      const header = getByTestId("styled-header");
       expect(header.props.style).toEqual(customStyle);
     });
 
-    it('can contain multiple children', () => {
+    it("can contain multiple children", () => {
       const { getByText } = render(
         <Card>
           <CardHeader>
@@ -132,13 +132,13 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('Title')).toBeTruthy();
-      expect(getByText('Subtitle')).toBeTruthy();
+      expect(getByText("Title")).toBeTruthy();
+      expect(getByText("Subtitle")).toBeTruthy();
     });
   });
 
-  describe('CardContent', () => {
-    it('renders children correctly', () => {
+  describe("CardContent", () => {
+    it("renders children correctly", () => {
       const { getByText } = render(
         <Card>
           <CardContent>
@@ -146,10 +146,10 @@ describe('Card Component', () => {
           </CardContent>
         </Card>
       );
-      expect(getByText('Content Text')).toBeTruthy();
+      expect(getByText("Content Text")).toBeTruthy();
     });
 
-    it('renders as a View component', () => {
+    it("renders as a View component", () => {
       const { UNSAFE_root } = render(
         <Card>
           <CardContent testID="test-content">
@@ -162,33 +162,33 @@ describe('Card Component', () => {
       expect(views.length).toBeGreaterThanOrEqual(2);
     });
 
-    it('accepts custom className prop', () => {
+    it("accepts custom className prop", () => {
       const { getByTestId } = render(
         <Card>
-          <CardContent testID="custom-content" className="custom-content">
+          <CardContent className="custom-content" testID="custom-content">
             <Text>Content</Text>
           </CardContent>
         </Card>
       );
-      const content = getByTestId('custom-content');
+      const content = getByTestId("custom-content");
       expect(content).toBeTruthy();
       expect(content.props.className).toBeDefined();
     });
 
-    it('accepts custom style prop', () => {
+    it("accepts custom style prop", () => {
       const customStyle = { padding: 20 };
       const { getByTestId } = render(
         <Card>
-          <CardContent testID="styled-content" style={customStyle}>
+          <CardContent style={customStyle} testID="styled-content">
             <Text>Content</Text>
           </CardContent>
         </Card>
       );
-      const content = getByTestId('styled-content');
+      const content = getByTestId("styled-content");
       expect(content.props.style).toEqual(customStyle);
     });
 
-    it('can contain complex children', () => {
+    it("can contain complex children", () => {
       const { getByText } = render(
         <Card>
           <CardContent>
@@ -199,12 +199,12 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('Nested Content')).toBeTruthy();
+      expect(getByText("Nested Content")).toBeTruthy();
     });
   });
 
-  describe('Card Composition', () => {
-    it('renders complete card with header and content', () => {
+  describe("Card Composition", () => {
+    it("renders complete card with header and content", () => {
       const { getByText } = render(
         <Card>
           <CardHeader>
@@ -216,11 +216,11 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('Card Title')).toBeTruthy();
-      expect(getByText('Card Body')).toBeTruthy();
+      expect(getByText("Card Title")).toBeTruthy();
+      expect(getByText("Card Body")).toBeTruthy();
     });
 
-    it('maintains proper component hierarchy', () => {
+    it("maintains proper component hierarchy", () => {
       const { getByTestId } = render(
         <Card testID="main-card">
           <CardHeader testID="header-section">
@@ -232,12 +232,12 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByTestId('main-card')).toBeTruthy();
-      expect(getByTestId('header-section')).toBeTruthy();
-      expect(getByTestId('content-section')).toBeTruthy();
+      expect(getByTestId("main-card")).toBeTruthy();
+      expect(getByTestId("header-section")).toBeTruthy();
+      expect(getByTestId("content-section")).toBeTruthy();
     });
 
-    it('supports multiple content sections', () => {
+    it("supports multiple content sections", () => {
       const { getByText } = render(
         <Card>
           <CardContent>
@@ -249,11 +249,11 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('First Section')).toBeTruthy();
-      expect(getByText('Second Section')).toBeTruthy();
+      expect(getByText("First Section")).toBeTruthy();
+      expect(getByText("Second Section")).toBeTruthy();
     });
 
-    it('supports header-only cards', () => {
+    it("supports header-only cards", () => {
       const { getByText, queryByText } = render(
         <Card>
           <CardHeader>
@@ -262,10 +262,10 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('Header Only')).toBeTruthy();
+      expect(getByText("Header Only")).toBeTruthy();
     });
 
-    it('supports content-only cards', () => {
+    it("supports content-only cards", () => {
       const { getByText } = render(
         <Card>
           <CardContent>
@@ -274,113 +274,113 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('Content Only')).toBeTruthy();
+      expect(getByText("Content Only")).toBeTruthy();
     });
   });
 
-  describe('NativeWind Integration', () => {
-    it('Card accepts className prop for NativeWind', () => {
-      const { getByTestId } = render(
-        <Card testID="nw-card" className="rounded-xl border border-slate-200 bg-white shadow-sm">
-          <Text>Test</Text>
-        </Card>
-      );
-
-      const card = getByTestId('nw-card');
-      expect(card.props.className).toBeTruthy();
-    });
-
-    it('CardHeader accepts className prop for NativeWind', () => {
-      const { getByTestId } = render(
-        <Card>
-          <CardHeader testID="nw-header" className="p-4 border-b border-slate-200">
-            <Text>Header</Text>
-          </CardHeader>
-        </Card>
-      );
-
-      const header = getByTestId('nw-header');
-      expect(header.props.className).toBeTruthy();
-    });
-
-    it('CardContent accepts className prop for NativeWind', () => {
-      const { getByTestId } = render(
-        <Card>
-          <CardContent testID="nw-content" className="p-4">
-            <Text>Content</Text>
-          </CardContent>
-        </Card>
-      );
-
-      const content = getByTestId('nw-content');
-      expect(content.props.className).toBeTruthy();
-    });
-
-    it('merges custom className with base classes', () => {
-      const { getByTestId } = render(
-        <Card testID="merged-card" className="custom-class">
-          <Text>Test</Text>
-        </Card>
-      );
-
-      const card = getByTestId('merged-card');
-      // In NativeWind, className prop should be present
-      expect(card.props.className).toBeTruthy();
-    });
-  });
-
-  describe('Interface Compatibility', () => {
-    it('maintains ViewProps interface for Card', () => {
+  describe("NativeWind Integration", () => {
+    it("Card accepts className prop for NativeWind", () => {
       const { getByTestId } = render(
         <Card
-          testID="card-test"
-          accessible={true}
-          accessibilityLabel="Test Card"
-          accessibilityRole="button"
+          className="rounded-xl border border-slate-200 bg-white shadow-sm"
+          testID="nw-card"
         >
           <Text>Test</Text>
         </Card>
       );
 
-      const card = getByTestId('card-test');
-      expect(card.props.accessible).toBe(true);
-      expect(card.props.accessibilityLabel).toBe('Test Card');
-      expect(card.props.accessibilityRole).toBe('button');
+      const card = getByTestId("nw-card");
+      expect(card.props.className).toBeTruthy();
     });
 
-    it('maintains ViewProps interface for CardHeader', () => {
+    it("CardHeader accepts className prop for NativeWind", () => {
       const { getByTestId } = render(
         <Card>
           <CardHeader
-            testID="header-test"
-            accessibilityLabel="Test Header"
+            className="border-b border-slate-200 p-4"
+            testID="nw-header"
           >
             <Text>Header</Text>
           </CardHeader>
         </Card>
       );
 
-      const header = getByTestId('header-test');
-      expect(header.props.accessibilityLabel).toBe('Test Header');
+      const header = getByTestId("nw-header");
+      expect(header.props.className).toBeTruthy();
     });
 
-    it('maintains ViewProps interface for CardContent', () => {
+    it("CardContent accepts className prop for NativeWind", () => {
       const { getByTestId } = render(
         <Card>
-          <CardContent
-            testID="content-test"
-            accessibilityLabel="Test Content"
-          >
+          <CardContent className="p-4" testID="nw-content">
             <Text>Content</Text>
           </CardContent>
         </Card>
       );
 
-      const content = getByTestId('content-test');
-      expect(content.props.accessibilityLabel).toBe('Test Content');
+      const content = getByTestId("nw-content");
+      expect(content.props.className).toBeTruthy();
     });
 
-    it('supports all standard View event handlers', () => {
+    it("merges custom className with base classes", () => {
+      const { getByTestId } = render(
+        <Card className="custom-class" testID="merged-card">
+          <Text>Test</Text>
+        </Card>
+      );
+
+      const card = getByTestId("merged-card");
+      // In NativeWind, className prop should be present
+      expect(card.props.className).toBeTruthy();
+    });
+  });
+
+  describe("Interface Compatibility", () => {
+    it("maintains ViewProps interface for Card", () => {
+      const { getByTestId } = render(
+        <Card
+          accessibilityLabel="Test Card"
+          accessibilityRole="button"
+          accessible={true}
+          testID="card-test"
+        >
+          <Text>Test</Text>
+        </Card>
+      );
+
+      const card = getByTestId("card-test");
+      expect(card.props.accessible).toBe(true);
+      expect(card.props.accessibilityLabel).toBe("Test Card");
+      expect(card.props.accessibilityRole).toBe("button");
+    });
+
+    it("maintains ViewProps interface for CardHeader", () => {
+      const { getByTestId } = render(
+        <Card>
+          <CardHeader accessibilityLabel="Test Header" testID="header-test">
+            <Text>Header</Text>
+          </CardHeader>
+        </Card>
+      );
+
+      const header = getByTestId("header-test");
+      expect(header.props.accessibilityLabel).toBe("Test Header");
+    });
+
+    it("maintains ViewProps interface for CardContent", () => {
+      const { getByTestId } = render(
+        <Card>
+          <CardContent accessibilityLabel="Test Content" testID="content-test">
+            <Text>Content</Text>
+          </CardContent>
+        </Card>
+      );
+
+      const content = getByTestId("content-test");
+      expect(content.props.accessibilityLabel).toBe("Test Content");
+    });
+
+    it("supports all standard View event handlers", () => {
       const onPress = jest.fn();
       const { getByTestId } = render(
         <Card testID="interactive-card" onTouchEnd={onPress}>
@@ -388,13 +388,13 @@ describe('Card Component', () => {
         </Card>
       );
 
-      const card = getByTestId('interactive-card');
+      const card = getByTestId("interactive-card");
       expect(card.props.onTouchEnd).toBe(onPress);
     });
   });
 
-  describe('Real-world Usage Scenarios', () => {
-    it('works as a habit card container', () => {
+  describe("Real-world Usage Scenarios", () => {
+    it("works as a habit card container", () => {
       const { getByText } = render(
         <Card>
           <CardHeader>
@@ -406,13 +406,13 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByText('Morning Exercise')).toBeTruthy();
-      expect(getByText('Streak: 5 days')).toBeTruthy();
+      expect(getByText("Morning Exercise")).toBeTruthy();
+      expect(getByText("Streak: 5 days")).toBeTruthy();
     });
 
-    it('supports styled habit cards with custom classes', () => {
+    it("supports styled habit cards with custom classes", () => {
       const { getByTestId } = render(
-        <Card testID="habit-card" className="mb-4">
+        <Card className="mb-4" testID="habit-card">
           <CardHeader className="pb-2">
             <Text>Reading</Text>
           </CardHeader>
@@ -422,7 +422,7 @@ describe('Card Component', () => {
         </Card>
       );
 
-      expect(getByTestId('habit-card')).toBeTruthy();
+      expect(getByTestId("habit-card")).toBeTruthy();
     });
   });
 });

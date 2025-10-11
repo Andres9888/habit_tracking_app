@@ -4,7 +4,10 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: unknown }>{
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: unknown }
+> {
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -23,12 +26,14 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
       return (
         <div className="m-4 rounded-md border border-red-300 bg-red-50 p-4 text-red-800">
           <h2 className="mb-2 font-semibold">Something went wrong</h2>
-          <pre className="whitespace-pre-wrap text-sm">{String(this.state.error)}</pre>
+          <pre className="whitespace-pre-wrap text-sm">
+            {String(this.state.error)}
+          </pre>
           <button
             aria-label="Reload application"
             className="mt-3 rounded bg-slate-800 px-3 py-1 text-white"
-            onClick={() => window.location.reload()}
             type="button"
+            onClick={() => window.location.reload()}
           >
             Reload
           </button>
@@ -52,5 +57,5 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </ErrorBoundary>
     </ConvexProvider>
-  </StrictMode>,
+  </StrictMode>
 );
