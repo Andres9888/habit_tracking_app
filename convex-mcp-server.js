@@ -26,11 +26,17 @@ class ConvexMCPServer {
         inputSchema: {
           type: "object",
           properties: {
-            function: { type: "string", description: "The Convex function to call (e.g., 'habits.list')" },
-            args: { type: "object", description: "Arguments to pass to the function" }
+            function: {
+              type: "string",
+              description: "The Convex function to call (e.g., 'habits.list')",
+            },
+            args: {
+              type: "object",
+              description: "Arguments to pass to the function",
+            },
           },
-          required: ["function"]
-        }
+          required: ["function"],
+        },
       },
       {
         name: "convex_mutation",
@@ -38,19 +44,26 @@ class ConvexMCPServer {
         inputSchema: {
           type: "object",
           properties: {
-            function: { type: "string", description: "The Convex mutation to call (e.g., 'habits.create')" },
-            args: { type: "object", description: "Arguments to pass to the mutation" }
+            function: {
+              type: "string",
+              description:
+                "The Convex mutation to call (e.g., 'habits.create')",
+            },
+            args: {
+              type: "object",
+              description: "Arguments to pass to the mutation",
+            },
           },
-          required: ["function"]
-        }
+          required: ["function"],
+        },
       },
       {
         name: "convex_settings_get",
         description: "Get user settings from Convex",
         inputSchema: {
           type: "object",
-          properties: {}
-        }
+          properties: {},
+        },
       },
       {
         name: "convex_settings_update",
@@ -68,13 +81,13 @@ class ConvexMCPServer {
                 showEmojis: { type: "boolean" },
                 showCalendarView: { type: "boolean" },
                 catTheme: { type: "boolean" },
-                darkMode: { type: "boolean" }
-              }
-            }
+                darkMode: { type: "boolean" },
+              },
+            },
           },
-          required: ["settings"]
-        }
-      }
+          required: ["settings"],
+        },
+      },
     ];
   }
 
@@ -83,10 +96,16 @@ class ConvexMCPServer {
     try {
       switch (name) {
         case "convex_query":
-          return await this.client.query(api[args.function.split('.')[0]][args.function.split('.')[1]], args.args || {});
+          return await this.client.query(
+            api[args.function.split(".")[0]][args.function.split(".")[1]],
+            args.args || {}
+          );
 
         case "convex_mutation":
-          return await this.client.mutation(api[args.function.split('.')[0]][args.function.split('.')[1]], args.args || {});
+          return await this.client.mutation(
+            api[args.function.split(".")[0]][args.function.split(".")[1]],
+            args.args || {}
+          );
 
         case "convex_settings_get":
           return await this.client.query(api.settings.get);
@@ -100,7 +119,7 @@ class ConvexMCPServer {
     } catch (error) {
       return {
         error: error.message,
-        details: error.stack
+        details: error.stack,
       };
     }
   }
@@ -111,60 +130,68 @@ class ConvexMCPServer {
     const stdout = process.stdout;
 
     // Handle MCP protocol messages
-    stdin.on('data', async (data) => {
+    stdin.on("data", async (data) => {
       try {
         const message = JSON.parse(data.toString());
 
-        if (message.method === 'tools/list') {
-          stdout.write(JSON.stringify({
-            jsonrpc: "2.0",
-            id: message.id,
-            result: {
-              tools: this.getTools()
-            }
-          }) + '\n');
-        }
-
-        else if (message.method === 'tools/call') {
-          const result = await this.executeTool(message.params.name, message.params.arguments);
-          stdout.write(JSON.stringify({
-            jsonrpc: "2.0",
-            id: message.id,
-            result: {
-              content: [{
-                type: "text",
-                text: JSON.stringify(result, null, 2)
-              }]
-            }
-          }) + '\n');
-        }
-
-        else if (message.method === 'initialize') {
-          stdout.write(JSON.stringify({
-            jsonrpc: "2.0",
-            id: message.id,
-            result: {
-              protocolVersion: "2024-11-05",
-              capabilities: {
-                tools: {}
+        if (message.method === "tools/list") {
+          stdout.write(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              id: message.id,
+              result: {
+                tools: this.getTools(),
               },
-              serverInfo: {
-                name: "convex-mcp-server",
-                version: "1.0.0"
-              }
-            }
-          }) + '\n');
+            }) + "\n"
+          );
+        } else if (message.method === "tools/call") {
+          const result = await this.executeTool(
+            message.params.name,
+            message.params.arguments
+          );
+          stdout.write(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              id: message.id,
+              result: {
+                content: [
+                  {
+                    type: "text",
+                    text: JSON.stringify(result, null, 2),
+                  },
+                ],
+              },
+            }) + "\n"
+          );
+        } else if (message.method === "initialize") {
+          stdout.write(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              id: message.id,
+              result: {
+                protocolVersion: "2024-11-05",
+                capabilities: {
+                  tools: {},
+                },
+                serverInfo: {
+                  name: "convex-mcp-server",
+                  version: "1.0.0",
+                },
+              },
+            }) + "\n"
+          );
         }
-
       } catch (error) {
-        stdout.write(JSON.stringify({
-          jsonrpc: "2.0",
-          id: message?.id || null,
-          error: {
-            code: -32603,
-            message: error.message
-          }
-        }) + '\n');
+        stdout.write(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: message?.id || null,
+            error: {
+              code: -32603,
+              message: error.message,
+            },
+          }) + "\n"
+        );
       }
     });
 

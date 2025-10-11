@@ -13,10 +13,10 @@ export default function WelcomeScreen() {
       <View className="flex-1 bg-white">
         <SignInScreen />
         <TouchableOpacity
+          className="absolute left-6 top-[60px] z-10"
           onPress={() => setMode("welcome")}
-          className="absolute top-[60px] left-6 z-10"
         >
-          <Text className="text-base text-slate-900 font-semibold">← Back</Text>
+          <Text className="text-base font-semibold text-slate-900">← Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -27,10 +27,10 @@ export default function WelcomeScreen() {
       <View className="flex-1 bg-white">
         <SignUpScreen />
         <TouchableOpacity
+          className="absolute left-6 top-[60px] z-10"
           onPress={() => setMode("welcome")}
-          className="absolute top-[60px] left-6 z-10"
         >
-          <Text className="text-base text-slate-900 font-semibold">← Back</Text>
+          <Text className="text-base font-semibold text-slate-900">← Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -38,28 +38,34 @@ export default function WelcomeScreen() {
 
   return (
     <View className="flex-1 bg-white">
-      <View className="flex-1 px-6 justify-between pt-[100px] pb-[60px]">
+      <View className="flex-1 justify-between px-6 pb-[60px] pt-[100px]">
         <View className="items-center gap-4">
-          <Text className="text-[80px] mb-4">✓</Text>
-          <Text className="text-[40px] font-extrabold tracking-tight text-slate-900 text-center">Habit Tracker</Text>
-          <Text className="text-lg text-slate-500 text-center leading-7">
+          <Text className="mb-4 text-[80px]">✓</Text>
+          <Text className="text-center text-[40px] font-extrabold tracking-tight text-slate-900">
+            Habit Tracker
+          </Text>
+          <Text className="text-center text-lg leading-7 text-slate-500">
             Build better habits, one day at a time
           </Text>
         </View>
 
         <View className="gap-4">
           <TouchableOpacity
+            className="items-center rounded-3xl bg-slate-900 py-[18px]"
             onPress={() => setMode("signup")}
-            className="rounded-3xl bg-slate-900 py-[18px] items-center"
           >
-            <Text className="text-[13px] tracking-[3px] text-white font-bold">GET STARTED</Text>
+            <Text className="text-[13px] font-bold tracking-[3px] text-white">
+              GET STARTED
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
+            className="items-center rounded-3xl border border-slate-200 py-[18px]"
             onPress={() => setMode("signin")}
-            className="rounded-3xl border border-slate-200 py-[18px] items-center"
           >
-            <Text className="text-[13px] tracking-[3px] text-slate-900 font-bold">SIGN IN</Text>
+            <Text className="text-[13px] font-bold tracking-[3px] text-slate-900">
+              SIGN IN
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

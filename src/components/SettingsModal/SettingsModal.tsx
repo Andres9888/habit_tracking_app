@@ -1,0 +1,93 @@
+import { Modal, Text, TouchableOpacity, View } from "react-native";
+import ArchivedHabitsModal from "../ArchivedHabitsModal";
+import { useSettingsModalLogic } from "./SettingsModal.hooks";
+
+interface SettingsModalProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+export default function SettingsModal({
+  visible,
+  onClose,
+}: SettingsModalProps) {
+  const { user, view, setView, handleClose, handleSignOut } =
+    useSettingsModalLogic({ visible, onClose });
+
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={handleClose}
+    >
+      <TouchableOpacity
+        activeOpacity={1}
+        className="flex-1 items-center justify-center bg-black/50 p-5"
+        onPress={handleClose}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          className="android:elevation-5 w-full max-w-[400px] rounded-[20px] bg-white p-5 shadow-lg"
+          onPress={(e) => e.stopPropagation()}
+        >
+          {view === "settings" ? (
+            <>
+              <View className="mb-6 flex-row items-center justify-between">
+                <Text className="text-2xl font-bold text-slate-900">
+                  Settings
+                </Text>
+                <TouchableOpacity
+                  accessibilityLabel="Close settings"
+                  accessibilityRole="button"
+                  className="h-8 w-8 items-center justify-center rounded-full bg-slate-100"
+                  onPress={handleClose}
+                >
+                  <Text className="text-lg font-semibold text-slate-500">
+                    ✕
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View className="gap-6">
+                <View className="gap-2 rounded-2xl bg-slate-50 px-5 py-4">
+                  <Text className="text-[10px] font-semibold tracking-[2.5px] text-slate-500">
+                    SIGNED IN AS
+                  </Text>
+                  <Text className="text-base font-semibold text-slate-900">
+                    {user?.primaryEmailAddress?.emailAddress}
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  className="items-center rounded-3xl border border-slate-500 py-4"
+                  onPress={() => setView("archived")}
+                >
+                  <Text className="text-[13px] font-bold tracking-[3px] text-slate-500">
+                    📦 ARCHIVED HABITS
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  className="items-center rounded-3xl border border-red-500 py-4"
+                  onPress={handleSignOut}
+                >
+                  <Text className="text-[13px] font-bold tracking-[3px] text-red-500">
+                    SIGN OUT
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            <ArchivedHabitsModal
+              onBack={() => setView("settings")}
+              onClose={handleClose}
+            />
+          )}
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
+  );
+}

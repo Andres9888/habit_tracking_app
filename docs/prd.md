@@ -9,6 +9,7 @@
 ## 1. Intro Project Analysis and Context
 
 ### Analysis Source
+
 **IDE-based fresh analysis** - Project files available and analyzed in current session
 
 ### Current Project State
@@ -17,6 +18,7 @@
 **Platform**: React Native with Expo (cross-platform mobile application)
 
 **Current Functionality**: A habit tracking application that allows users to:
+
 - Create and manage daily habits
 - Track habit completion across a 5-day rolling window
 - View streak counts and progress visualization
@@ -24,6 +26,7 @@
 - Access settings and archived habits
 
 **Primary Technology Stack**:
+
 - **Frontend**: React Native 0.81.4 + Expo 54.0.11
 - **Backend**: Convex (real-time backend with React hooks)
 - **Authentication**: Clerk Expo (@clerk/clerk-expo)
@@ -36,6 +39,7 @@
 **Status**: No existing PRD or architecture documentation found in `docs/` folder.
 
 **Available Technical Assets**:
+
 - ✅ Tailwind CSS config (already configured but not in use for React Native)
 - ✅ Package.json with complete dependency information
 - ✅ 26 TypeScript/TSX source files
@@ -43,6 +47,7 @@
 - ✅ Component library (Button, Card, Checkbox, custom habit components)
 
 **Missing Documentation**:
+
 - ❌ Tech Stack Documentation
 - ❌ Source Tree/Architecture documentation
 - ❌ Coding Standards
@@ -59,6 +64,7 @@ Migrate the entire application from React Native's StyleSheet API to NativeWind 
 **Impact Assessment**: ✅ **Significant Impact (substantial existing code changes)**
 
 **Rationale**:
+
 - **26 source files** with StyleSheet usage need conversion
 - **All components** (Button, Card, Checkbox, screens, modals) require style migration
 - Existing Tailwind config suggests this was planned but not implemented
@@ -68,6 +74,7 @@ Migrate the entire application from React Native's StyleSheet API to NativeWind 
 ### Goals and Background Context
 
 **Goals**:
+
 - Migrate all components from StyleSheet API to NativeWind utility classes
 - Leverage existing Tailwind configuration for design system consistency
 - Improve developer experience with utility-first CSS approach
@@ -82,9 +89,9 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 
 ### Change Log
 
-| Change | Date | Version | Description | Author |
-|--------|------|---------|-------------|--------|
-| Initial PRD | 2025-10-10 | 0.1 | Created brownfield PRD for NativeWind migration | PM Agent |
+| Change      | Date       | Version | Description                                     | Author   |
+| ----------- | ---------- | ------- | ----------------------------------------------- | -------- |
+| Initial PRD | 2025-10-10 | 0.1     | Created brownfield PRD for NativeWind migration | PM Agent |
 
 ---
 
@@ -98,11 +105,11 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 
 **FR3**: All component variants (Button: primary/secondary/success/danger/ghost, sizes: sm/md/lg) shall be implemented using conditional NativeWind classes.
 
-**FR4**: All spacing, padding, margin, and layout styles shall be converted to Tailwind spacing utilities (p-*, m-*, gap-*, etc.).
+**FR4**: All spacing, padding, margin, and layout styles shall be converted to Tailwind spacing utilities (p-_, m-_, gap-\*, etc.).
 
-**FR5**: All typography styles (fontSize, fontWeight, letterSpacing) shall use Tailwind text utilities (text-*, font-*, tracking-*).
+**FR5**: All typography styles (fontSize, fontWeight, letterSpacing) shall use Tailwind text utilities (text-_, font-_, tracking-\*).
 
-**FR6**: All border and border-radius styles shall use Tailwind border utilities (border-*, rounded-*).
+**FR6**: All border and border-radius styles shall use Tailwind border utilities (border-_, rounded-_).
 
 **FR7**: Shadow and elevation styles shall be converted to Tailwind shadow utilities while maintaining platform-specific rendering.
 
@@ -153,6 +160,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 **Languages**: TypeScript 5.9.2, JavaScript (ES modules)
 
 **Frameworks**:
+
 - React 19.1.0
 - React Native 0.81.4
 - Expo 54.0.11
@@ -161,11 +169,13 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 **Database**: Convex (real-time backend with subscriptions)
 
 **Infrastructure**:
+
 - Metro bundler (React Native)
 - Expo build system (EAS)
 - Convex cloud backend
 
 **External Dependencies**:
+
 - **Styling**: Tailwind CSS 3.x (configured but unused), clsx 2.1.1, tailwind-merge 3.1.0
 - **Authentication**: @clerk/clerk-expo 2.15.4, @convex-dev/auth 0.0.90
 - **UI/Gesture**: react-native-gesture-handler 2.28.0, react-native-safe-area-context 5.6.0
@@ -178,6 +188,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 ### Integration Approach
 
 **NativeWind Setup Strategy**:
+
 - Install `nativewind` (v4 recommended for React Native 0.7+) and configure Babel plugin
 - Update `babel.config.js` to include NativeWind transformer
 - Configure Metro bundler to process Tailwind classes
@@ -185,18 +196,21 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 - Set up `global.css` or inline Tailwind directives for React Native
 
 **Component Migration Strategy**:
+
 - Phase 1: Shared UI components (Button, Card, Checkbox) - establish patterns
 - Phase 2: Feature components (habit components, modals, visualizers)
 - Phase 3: Screen components (App.tsx, auth screens, settings)
 - Phase 4: Cleanup - remove unused StyleSheet imports and objects
 
 **Testing Integration Strategy**:
+
 - Tests query components by accessibility labels/roles (unaffected by style changes)
 - Update snapshots if NativeWind changes rendered output structure
 - Add visual regression testing checkpoint after each component migration
 - Maintain existing test coverage percentage (currently has test files for key components)
 
 **Build Integration Strategy**:
+
 - NativeWind Babel plugin runs during Metro bundler transformation
 - Vite configuration needs NativeWind plugin for web platform support
 - Expo build process must include NativeWind transformations
@@ -205,18 +219,21 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 ### Code Organization and Standards
 
 **File Structure Approach**:
+
 - Maintain current component structure in `src/components/` and `src/screens/`
 - Remove StyleSheet constant blocks from component files
 - Keep component logic and JSX structure unchanged
 - Add `className` props alongside existing style props during transition
 
 **Naming Conventions**:
+
 - Use NativeWind className strings: `className="bg-slate-900 px-4 py-2 rounded-lg"`
 - Conditional classes use `clsx()` utility: `clsx("base-classes", condition && "conditional-classes")`
 - Complex dynamic styles may require `style` prop as fallback
 - Component prop names remain unchanged (variant, size, disabled, etc.)
 
 **Coding Standards**:
+
 - Tailwind utility order: layout → spacing → sizing → colors → typography → effects
 - Prefer Tailwind utilities over inline styles; use `style` prop only for truly dynamic values
 - Extract repeated class patterns into component variants or shared constants
@@ -224,6 +241,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 - Document platform-specific classes (e.g., `ios:shadow-lg android:elevation-4`)
 
 **Documentation Standards**:
+
 - Add inline comments for complex class combinations
 - Document Tailwind → Design Token mappings (e.g., `bg-slate-900` = primary brand color)
 - Update component documentation to show NativeWind usage examples
@@ -232,24 +250,28 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 ### Deployment and Operations
 
 **Build Process Integration**:
+
 - NativeWind compilation happens at build time via Babel/Metro
 - No runtime CSS processing required
 - Web builds via Vite must use NativeWind's Vite plugin
 - Expo builds automatically include Babel transformations
 
 **Deployment Strategy**:
+
 - Deploy incrementally as components are migrated (no big-bang release)
 - Use feature flags if deploying partially migrated codebase to production
 - Mobile: Use Expo EAS updates for over-the-air component updates
 - Web: Standard Vite build → deploy workflow unchanged
 
 **Monitoring and Logging**:
+
 - Monitor bundle size metrics before/after migration (target: <5% increase)
 - Track build time changes (target: <10% increase)
 - Monitor app performance metrics (frame rates, memory) - should remain stable
 - Log any NativeWind transformation warnings during builds
 
 **Configuration Management**:
+
 - `tailwind.config.js` is the single source of truth for design tokens
 - Babel/Metro configurations checked into version control
 - NativeWind version pinned in package.json to avoid breaking changes
@@ -258,6 +280,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
 ### Risk Assessment and Mitigation
 
 **Technical Risks**:
+
 - **Risk**: NativeWind class transformations fail for complex dynamic styles
   - **Mitigation**: Fallback to inline `style` prop for truly dynamic values; test edge cases early
 
@@ -271,6 +294,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
   - **Mitigation**: Research NativeWind compatibility before full migration; prototype critical interactions
 
 **Integration Risks**:
+
 - **Risk**: Breaking changes to component APIs during migration
   - **Mitigation**: Maintain existing prop interfaces; internal-only refactor approach; comprehensive testing
 
@@ -284,6 +308,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
   - **Mitigation**: Test auth screens thoroughly; Clerk components may need custom styling
 
 **Deployment Risks**:
+
 - **Risk**: Build process failures in CI/CD pipeline
   - **Mitigation**: Update CI configuration with NativeWind dependencies; test builds locally first
 
@@ -294,6 +319,7 @@ NativeWind enables Tailwind CSS utility classes in React Native by transforming 
   - **Mitigation**: Manual QA review of each migrated component; screenshot comparison testing
 
 **Mitigation Strategies**:
+
 1. **Incremental rollout**: Migrate one component at a time, test thoroughly before moving to next
 2. **Automated testing**: Leverage existing Jest tests to catch prop interface changes
 3. **Visual QA checkpoints**: Manual review of each component on iOS and Android after migration
@@ -321,6 +347,7 @@ This enhancement is structured as a **single comprehensive epic** because:
 **Epic Goal**: Convert all components from React Native StyleSheet API to NativeWind utility classes, enabling utility-first CSS development while maintaining pixel-perfect visual parity with existing UI.
 
 **Integration Requirements**:
+
 - Maintain existing component prop interfaces (no breaking changes)
 - Preserve visual appearance across iOS and Android platforms
 - Ensure all existing tests continue to pass

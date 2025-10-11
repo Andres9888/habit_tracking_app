@@ -29,57 +29,52 @@ const variantClasses = {
   danger: "bg-red-600 border-red-600",
 };
 
-export const Checkbox = React.forwardRef<View, CheckboxProps>(
-  function Checkbox(
-    {
-      checked = false,
-      disabled = false,
-      indeterminate = false,
-      variant = "primary",
-      size = "md",
-      onPress,
-      style,
-      accessibilityLabel,
-    },
-    ref
-  ) {
-    const isIndeterminate = indeterminate && !checked;
-    const isActive = checked || isIndeterminate;
+export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
+  {
+    checked = false,
+    disabled = false,
+    indeterminate = false,
+    variant = "primary",
+    size = "md",
+    onPress,
+    style,
+    accessibilityLabel,
+  },
+  ref
+) {
+  const isIndeterminate = indeterminate && !checked;
+  const isActive = checked || isIndeterminate;
 
-    return (
-      <TouchableOpacity
-        ref={ref}
-        onPress={onPress}
-        disabled={disabled}
-        activeOpacity={0.7}
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: isActive, disabled }}
-        accessibilityLabel={accessibilityLabel}
-        className="self-start"
-        style={style}
+  return (
+    <TouchableOpacity
+      ref={ref}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: isActive, disabled }}
+      activeOpacity={0.7}
+      className="self-start"
+      disabled={disabled}
+      style={style}
+      onPress={onPress}
+    >
+      <View
+        className={clsx(
+          "items-center justify-center rounded border border-slate-200 bg-white shadow-sm",
+          sizeClasses[size].box,
+          isActive && variantClasses[variant],
+          disabled && "opacity-50"
+        )}
       >
-        <View
-          className={clsx(
-            "rounded border border-slate-200 bg-white items-center justify-center shadow-sm",
-            sizeClasses[size].box,
-            isActive && variantClasses[variant],
-            disabled && "opacity-50"
-          )}
-        >
-          {isActive && (
-            <Text
-              className={clsx(
-                "text-white font-bold",
-                sizeClasses[size].text
-              )}
-            >
-              {isIndeterminate ? '−' : '✓'}
-            </Text>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }
-);
+        {isActive && (
+          <Text
+            className={clsx("font-bold text-white", sizeClasses[size].text)}
+          >
+            {isIndeterminate ? "−" : "✓"}
+          </Text>
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+});
 
 export default Checkbox;

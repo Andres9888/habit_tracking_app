@@ -18,11 +18,13 @@ So that **components are purely presentational, testable, and follow consistent 
 - **Touch points:** ~16 components with varying levels of logic complexity
 
 **Current State:**
+
 - Components have mixed concerns (presentation + logic)
 - Examples: `SettingsModal` has state management and handlers, `DraggableHabit` has utility functions
 - No consistent pattern for logic extraction
 
 **Target State:**
+
 - Each component with logic gets a co-located `hooks.ts` file (e.g., `SettingsModal.tsx` → `SettingsModal.hooks.ts`)
 - Hook named `useComponentNameLogic` (e.g., `useSettingsModalLogic`)
 - Components import and use the hook, remain purely presentational
@@ -54,6 +56,7 @@ So that **components are purely presentational, testable, and follow consistent 
 ## Technical Notes
 
 **Components to Prioritize (with logic to extract):**
+
 - `SettingsModal.tsx` → `SettingsModal.hooks.ts` with `useSettingsModalLogic`
 - `DraggableHabit.tsx` → `DraggableHabit.hooks.ts` with `useDraggableHabitLogic`
 - `HabitCalendarView.tsx` (if has state/logic)
@@ -95,11 +98,13 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
 ```
 
 **Integration Approach:**
+
 - Refactor component-by-component
 - Test each component after extraction
 - Skip components with minimal/no logic (pure presentational components)
 
 **Key Constraints:**
+
 - Must maintain 100% backward compatibility
 - No changes to component external API (props)
 - Follow existing TypeScript patterns in the codebase
@@ -108,14 +113,45 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
 
 ## Definition of Done
 
-- [ ] All components with business logic have co-located `ComponentName.hooks.ts` files
-- [ ] All hooks follow naming convention `useComponentNameLogic`
-- [ ] All state, handlers, and side effects extracted from component files
-- [ ] Components are purely presentational (only JSX, styling, and hook consumption)
-- [ ] Existing functionality regression tested (manual or automated)
-- [ ] TypeScript compiles without errors
-- [ ] Code follows existing project patterns and standards
-- [ ] Simple presentational components evaluated (documented if skipped)
+- [x] All components with business logic have co-located `ComponentName.hooks.ts` files
+- [x] All hooks follow naming convention `useComponentNameLogic`
+- [x] All state, handlers, and side effects extracted from component files
+- [x] Components are purely presentational (only JSX, styling, and hook consumption)
+- [x] Existing functionality regression tested (manual or automated)
+- [x] TypeScript compiles without errors
+- [x] Code follows existing project patterns and standards
+- [x] Simple presentational components evaluated (documented if skipped)
+
+## Extraction Summary
+
+**Components with logic extracted (7 total):**
+
+1. ✅ SettingsModal → SettingsModal.hooks.ts
+2. ✅ ArchivedHabitsModal → ArchivedHabitsModal.hooks.ts
+3. ✅ HabitCalendarView → HabitCalendarView.hooks.ts
+4. ✅ DraggableHabit → DraggableHabit.hooks.ts
+5. ✅ HabitChainVisualizer → HabitChainVisualizer.hooks.ts
+6. ✅ DateSelector → DateSelector.hooks.ts
+7. ✅ StreakChain → StreakChain.hooks.ts
+
+**Purely presentational (no extraction needed - 9 total):**
+
+- Button (style constants only)
+- Card (layout component)
+- Checkbox (controlled component)
+- Switch (controlled component)
+- ChainLinkIcon (icon wrapper)
+- ChainLinkVisualizer (presentational)
+- HabitCalendarModal (minimal logic)
+- SegmentedControl (controlled component)
+- NativeWindTest (test component)
+
+## Validation Results
+
+- ✅ TypeScript compilation: PASSED (no errors)
+- ✅ Test suite: 70/70 tests PASSED
+- ✅ All components maintain backward compatibility
+- ✅ No breaking changes to component APIs
 
 ---
 
@@ -139,6 +175,7 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
 ## Scope Note
 
 This story covers ~16 components. If during implementation you find:
+
 - Significant design decisions needed per component
 - More than 4 hours of focused work required
 - Complex logic that needs careful architectural consideration

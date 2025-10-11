@@ -18,13 +18,13 @@ export const list = query({
 
     if (args.category !== undefined) {
       return await articlesQuery
-        .withIndex("by_category", q => q.eq("category", args.category!))
+        .withIndex("by_category", (q) => q.eq("category", args.category!))
         .order("desc")
         .collect();
     }
 
     return await articlesQuery.order("desc").collect();
-  }
+  },
 });
 
 // Add some initial articles
@@ -38,19 +38,22 @@ export const seed = mutation({
     const initialArticles = [
       {
         title: "Building Lasting Habits",
-        content: "Start small, be consistent, and celebrate progress. The key to building lasting habits is to make them easy to start and hard to miss.",
+        content:
+          "Start small, be consistent, and celebrate progress. The key to building lasting habits is to make them easy to start and hard to miss.",
         category: "foundation",
         createdAt: Date.now(),
       },
       {
         title: "The Power of Morning Routines",
-        content: "A strong morning routine sets the tone for your entire day. Consider including meditation, exercise, or reading in your morning ritual.",
+        content:
+          "A strong morning routine sets the tone for your entire day. Consider including meditation, exercise, or reading in your morning ritual.",
         category: "routines",
         createdAt: Date.now(),
       },
       {
         title: "Habit Stacking",
-        content: "Connect new habits to existing ones. After [CURRENT HABIT], I will [NEW HABIT]. This makes it easier to remember and implement new behaviors.",
+        content:
+          "Connect new habits to existing ones. After [CURRENT HABIT], I will [NEW HABIT]. This makes it easier to remember and implement new behaviors.",
         category: "techniques",
         createdAt: Date.now(),
       },
@@ -60,5 +63,5 @@ export const seed = mutation({
       await ctx.db.insert("articles", article);
     }
     return null;
-  }
+  },
 });

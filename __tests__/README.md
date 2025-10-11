@@ -9,6 +9,7 @@ Comprehensive tests for the date-circle alignment feature implemented in the hab
 Tests timezone-safe date parsing to ensure dates don't shift across timezones or DST transitions.
 
 **Coverage:**
+
 - ✅ Local timezone parsing (not UTC)
 - ✅ Month boundary handling
 - ✅ Year boundary handling
@@ -19,6 +20,7 @@ Tests timezone-safe date parsing to ensure dates don't shift across timezones or
 - ✅ End of day edge cases
 
 **Key Tests:**
+
 - Ensures `YYYY-MM-DD` strings are parsed as local dates, not UTC
 - Validates date comparisons work correctly with `setHours(0,0,0,0)`
 - Tests habit status determination (done/missed/planned)
@@ -28,6 +30,7 @@ Tests timezone-safe date parsing to ensure dates don't shift across timezones or
 Tests that date labels are correctly aligned with habit circles through matching structure and spacing.
 
 **Coverage:**
+
 - ✅ Structural alignment (same number of items)
 - ✅ Spacer count (N-1 spacers for N items)
 - ✅ Fixed width elements (48px labels = 48px circles)
@@ -36,6 +39,7 @@ Tests that date labels are correctly aligned with habit circles through matching
 - ✅ Layout pattern matching
 
 **Key Tests:**
+
 - Labels row and circles row have matching structure
 - Label items have fixed 48px width (not flexGrow)
 - Label spacers are transparent and grow to fill space
@@ -46,6 +50,7 @@ Tests that date labels are correctly aligned with habit circles through matching
 Tests that components have proper accessibility labels for screen readers like VoiceOver.
 
 **Coverage:**
+
 - ✅ Habit name in accessibility label
 - ✅ Full date with day name
 - ✅ Completion status (done/missed/planned)
@@ -55,6 +60,7 @@ Tests that components have proper accessibility labels for screen readers like V
 - ✅ Unique labels for different habits
 
 **Key Tests:**
+
 - Labels follow format: "{Habit} on {Day, Month Date} - {Status}"
 - Hints provide context: "Tap to toggle" vs "Future date, not yet available"
 - Different habits on same date have unique labels
@@ -89,12 +95,14 @@ npm test accessibility
 ## 🔧 Configuration
 
 ### Jest Configuration (`jest.config.js`)
+
 - Preset: `jest-expo`
 - Transforms React Native modules
 - Mocks Expo modules (font, asset, status-bar)
 - Mocks Convex and Clerk for isolation
 
 ### Mocked Dependencies
+
 - `expo-font`, `expo-asset`, `expo-status-bar`
 - `react-native-gesture-handler`
 - `@expo/vector-icons`
@@ -106,12 +114,14 @@ npm test accessibility
 ## ✅ What's Being Tested
 
 ### Date Parsing
+
 1. **Timezone Safety**: Dates are parsed in local timezone, not UTC
 2. **Boundary Cases**: Month/year boundaries, leap years handled correctly
 3. **Comparisons**: Past/present/future detection works across timezones
 4. **Status Logic**: Habit status (done/missed/planned) determined correctly
 
 ### Alignment
+
 1. **Structure**: Labels and circles have identical container counts
 2. **Spacing**: Same number of spacers (N-1 for N items)
 3. **Widths**: Fixed 48px for both labels and circles
@@ -119,6 +129,7 @@ npm test accessibility
 5. **Visibility**: Label spacers are transparent, circle connectors visible
 
 ### Accessibility
+
 1. **Labels**: Full date with habit name and status
 2. **Hints**: Context for interaction or unavailability
 3. **Roles**: Proper button role for interactive elements
@@ -128,11 +139,14 @@ npm test accessibility
 ## 🐛 Known Issues
 
 ### Current Test Setup Issues
+
 The tests are written correctly but have configuration issues:
+
 - Jest ES module compatibility needs adjustment
 - Some import paths may need updating for test environment
 
 ### To Fix
+
 1. Update Jest configuration for ES modules
 2. Adjust transform patterns for all dependencies
 3. Ensure all mocks are properly configured
@@ -140,10 +154,11 @@ The tests are written correctly but have configuration issues:
 ## 📝 Test Examples
 
 ### Date Parsing Test
+
 ```typescript
-it('should parse YYYY-MM-DD as local date, not UTC', () => {
-  const dateString = '2025-10-05';
-  const [year, month, day] = dateString.split('-').map(Number);
+it("should parse YYYY-MM-DD as local date, not UTC", () => {
+  const dateString = "2025-10-05";
+  const [year, month, day] = dateString.split("-").map(Number);
   const date = new Date(year, month - 1, day);
 
   expect(date.getFullYear()).toBe(2025);
@@ -153,21 +168,22 @@ it('should parse YYYY-MM-DD as local date, not UTC', () => {
 ```
 
 ### Alignment Test
+
 ```typescript
-it('label items should have fixed width of 48px', () => {
+it("label items should have fixed width of 48px", () => {
   const labelItems = getAllByTestId(/label-item-\d+/);
-  labelItems.forEach(item => {
+  labelItems.forEach((item) => {
     expect(item.props.style.width).toBe(48);
   });
 });
 ```
 
 ### Accessibility Test
+
 ```typescript
-it('should include full date with day name', () => {
-  const circle = getByTestId('habit-circle');
-  expect(circle.props.accessibilityLabel)
-    .toMatch(/Monday.*October.*5th/i);
+it("should include full date with day name", () => {
+  const circle = getByTestId("habit-circle");
+  expect(circle.props.accessibilityLabel).toMatch(/Monday.*October.*5th/i);
 });
 ```
 

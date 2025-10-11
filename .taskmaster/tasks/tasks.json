@@ -19,9 +19,7 @@
         "details": "Create multi-screen onboarding flow with: welcome screen explaining app benefits, sample habit creation walkthrough using existing create habit functionality, tutorial overlay showing how to track habits using existing calendar interface, initial setup guidance for user preferences. Use react-native-paper components for consistent UI. Implement skip functionality and progress indicators. Store onboarding completion status in userSettings table.",
         "testStrategy": "Test onboarding flow completion, verify skip functionality, test tutorial interactions, validate first-time user experience",
         "priority": "high",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "pending",
         "subtasks": []
       },
@@ -76,9 +74,7 @@
         "details": "Extend existing userSettings schema and settings.ts functions with: timezone selection, week start day preference, theme/color customization options, accessibility settings (text size, high contrast), data retention preferences. Create comprehensive settings UI using existing SettingsDialog.tsx as base. Implement timezone-aware date calculations in existing habit queries. Add theme provider for consistent styling across the app.",
         "testStrategy": "Test settings persistence, verify timezone calculations, validate accessibility features, ensure theme consistency",
         "priority": "medium",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "pending",
         "subtasks": []
       },
@@ -89,9 +85,7 @@
         "details": "Create help screens explaining habit tracking concepts, app features, and best practices. Add contextual help tooltips and tutorial overlays that can be triggered from any screen. Implement FAQ section with common questions. Add feature discovery system for new functionality. Create interactive tutorials for complex features. Add help accessibility through settings menu and floating help button.",
         "testStrategy": "Test help system navigation, verify tutorial completion, validate FAQ content, ensure help accessibility",
         "priority": "low",
-        "dependencies": [
-          2
-        ],
+        "dependencies": [2],
         "status": "pending",
         "subtasks": []
       },
@@ -113,12 +107,7 @@
         "details": "Update app.json with final app metadata, bundle identifier, and version info. Create app icons for all required iOS sizes using existing design. Generate App Store screenshots for all device sizes showcasing key features. Configure EAS Build for production iOS builds. Set up App Store Connect listing with descriptions, keywords, and categories. Prepare app review notes highlighting key features. Configure push notification capabilities if needed. Test final build on physical iOS devices.",
         "testStrategy": "Validate app metadata, test production builds on multiple iOS devices, verify App Store requirements compliance, test submission process",
         "priority": "high",
-        "dependencies": [
-          1,
-          2,
-          3,
-          4
-        ],
+        "dependencies": [1, 2, 3, 4],
         "status": "pending",
         "subtasks": []
       },
@@ -162,9 +151,7 @@
         "details": "Install expo-notifications and expo-device for notification handling. Create notification service using Expo's local notification API. Implement notification scheduling per habit with custom times. Add notification permission requests and settings management. Create notification content templates with habit-specific messaging. Implement notification categories and actions (mark complete, snooze). Add timezone support for accurate scheduling. Store notification preferences in Convex userSettings table with new fields: notificationsEnabled, habitReminders array.",
         "testStrategy": "Test notification scheduling accuracy, verify notifications work in background/foreground, test permission handling, validate timezone calculations, test notification actions",
         "priority": "high",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "pending",
         "subtasks": []
       },
@@ -175,9 +162,7 @@
         "details": "Install react-calendar for calendar component integration. Create analytics queries in Convex for monthly/yearly statistics. Implement streak history tracking with new database schema. Build calendar view component showing habit completion heat map. Create trend analysis algorithms for consistency patterns. Add completion rate graphs using react-native-chart-kit or victory-native. Implement data export functionality (CSV/JSON) using expo-sharing and expo-file-system. Create statistics screen with multiple view modes (weekly, monthly, yearly).",
         "testStrategy": "Test calendar performance with large datasets, verify statistics accuracy, test export functionality across platforms, validate chart rendering, test date range selections",
         "priority": "medium",
-        "dependencies": [
-          2
-        ],
+        "dependencies": [2],
         "status": "pending",
         "subtasks": []
       },
@@ -188,9 +173,7 @@
         "details": "Implement offline queue management using AsyncStorage or expo-sqlite. Create sync conflict resolution logic for concurrent habit updates. Add optimistic updates with rollback capability. Implement network state detection using @react-native-community/netinfo. Create offline indicator UI components. Add retry mechanisms for failed sync operations. Store offline actions with timestamps for conflict resolution. Update Convex mutations to handle conflict resolution with last-write-wins or user-choice strategies.",
         "testStrategy": "Test offline functionality without network, verify sync after reconnection, test conflict resolution scenarios, validate data consistency, test edge cases with rapid online/offline switching",
         "priority": "medium",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "pending",
         "subtasks": []
       },
@@ -201,10 +184,7 @@
         "details": "Design public habit templates system with Convex schema for shared habits. Implement friend connections with user relationship management. Create shared habit groups functionality with group progress tracking. Add social encouragement features (likes, comments, progress sharing). Implement privacy controls for habit visibility. Create template marketplace with categories and ratings. Add export/import functionality for habit templates. Implement sharing capabilities using expo-sharing for progress screenshots.",
         "testStrategy": "Test template creation and sharing, verify privacy controls, test group functionality with multiple users, validate social interactions, test sharing across platforms",
         "priority": "medium",
-        "dependencies": [
-          1,
-          3
-        ],
+        "dependencies": [1, 3],
         "status": "pending",
         "subtasks": []
       },
@@ -226,9 +206,7 @@
         "details": "Create habit templates schema in Convex with categories, descriptions, and default settings. Implement drag-drop reordering using react-native-draggable-flatlist. Add advanced reminder settings with multiple daily notifications. Create habit goals and milestones tracking system. Implement habit difficulty levels with progress calculations. Add template categories (health, productivity, learning, etc.). Create habit template preview and customization interface. Add bulk habit creation from templates.",
         "testStrategy": "Test drag-drop functionality across devices, verify template creation and application, test advanced reminder scheduling, validate milestone tracking, test bulk operations",
         "priority": "medium",
-        "dependencies": [
-          5
-        ],
+        "dependencies": [5],
         "status": "pending",
         "subtasks": []
       },
@@ -239,9 +217,7 @@
         "details": "Implement profile picture upload using expo-image-picker and Convex file storage. Create profile management interface with editable user information. Implement account data export functionality (habits, tracking data, settings) in multiple formats (JSON, CSV). Add profile statistics dashboard. Create account deletion with data cleanup. Implement profile backup and restore functionality. Add profile sharing capabilities for social features.",
         "testStrategy": "Test image upload and storage, verify data export completeness and accuracy, test profile updates, validate account deletion cleanup, test backup/restore functionality",
         "priority": "medium",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "pending",
         "subtasks": []
       },
@@ -252,10 +228,7 @@
         "details": "Create community challenges schema with participant tracking. Implement leaderboard system with various ranking criteria (streaks, consistency, participation). Build challenge creation and joining interface. Add friend invitation and connection system. Create community feed for shared progress and achievements. Implement challenge categories and difficulty levels. Add community moderation tools. Create achievement badges and rewards system.",
         "testStrategy": "Test challenge participation with multiple users, verify leaderboard accuracy, test friend connection flow, validate community feed updates, test moderation features",
         "priority": "low",
-        "dependencies": [
-          5,
-          8
-        ],
+        "dependencies": [5, 8],
         "status": "pending",
         "subtasks": []
       },
@@ -266,10 +239,7 @@
         "details": "Implement data caching strategies with React Query integration. Add performance monitoring using expo-analytics or similar. Create advanced user behavior tracking for app usage patterns. Implement lazy loading for large datasets. Add database query optimizations in Convex. Create performance monitoring dashboard. Implement automated testing for performance regression. Add crash reporting and error tracking using expo-dev-client or Sentry.",
         "testStrategy": "Performance testing with large datasets, memory usage monitoring, crash testing scenarios, analytics accuracy validation, cache effectiveness testing",
         "priority": "medium",
-        "dependencies": [
-          3,
-          4
-        ],
+        "dependencies": [3, 4],
         "status": "pending",
         "subtasks": []
       },
@@ -291,9 +261,7 @@
         "details": "Configure iCloud entitlements in app configuration. Implement CloudKit integration for habit and tracking data sync. Create conflict resolution strategy for concurrent updates across devices. Add sync status indicators and manual sync option. Handle offline scenarios with queued sync operations. Ensure data privacy with encrypted iCloud storage. Test sync reliability across iPhone, iPad, and Mac devices.",
         "testStrategy": "Test sync across multiple devices, verify conflict resolution, validate data consistency, test offline sync queuing, ensure privacy compliance",
         "priority": "high",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "pending",
         "subtasks": []
       },
@@ -315,9 +283,7 @@
         "details": "Create watchOS companion app using React Native or native Swift. Design watch face complications showing habit completion status. Implement glanceable habit list with tap-to-complete functionality. Add haptic feedback for completed habits. Create watch notification actions for habit reminders. Sync watch data with iPhone app in real-time. Support standalone watch usage when iPhone is not nearby. Optimize for watch battery life and performance.",
         "testStrategy": "Test watch app functionality, verify iPhone sync, validate complications, test standalone mode, ensure battery efficiency",
         "priority": "medium",
-        "dependencies": [
-          12
-        ],
+        "dependencies": [12],
         "status": "pending",
         "subtasks": []
       },
@@ -328,9 +294,7 @@
         "details": "Create achievement system with badges for various milestones (7-day streak, 30-day streak, 100 completions, etc.). Design visually appealing badge collection interface. Implement streak freeze power-ups for missed days. Add level progression system based on total completions. Create challenge modes for extra motivation. Implement achievement notifications with celebratory animations. Add social sharing for unlocked achievements. Store achievement data in Convex with new schema tables.",
         "testStrategy": "Test achievement unlocking logic, verify badge display, validate streak calculations, test power-up mechanics, ensure progression accuracy",
         "priority": "medium",
-        "dependencies": [
-          3
-        ],
+        "dependencies": [3],
         "status": "pending",
         "subtasks": []
       },
@@ -341,9 +305,7 @@
         "details": "Integrate AI service (OpenAI, Anthropic Claude) for habit pattern analysis. Create intelligent insights detecting completion patterns, best performing times, and correlation between habits. Implement smart recommendations for new habits based on user behavior. Add predictive analytics for streak risk and success probability. Create personalized motivational messages based on user progress. Implement habit difficulty adjustment suggestions. Add weekly/monthly AI-generated progress summaries.",
         "testStrategy": "Test AI insight accuracy, validate recommendations relevance, verify privacy of data sent to AI services, test prediction algorithms, ensure performance",
         "priority": "medium",
-        "dependencies": [
-          3
-        ],
+        "dependencies": [3],
         "status": "pending",
         "subtasks": []
       },
@@ -354,9 +316,7 @@
         "details": "Implement Apple HealthKit integration using expo-health or react-native-health. Export completed habits as mindful minutes or custom activity types. Import health data (steps, sleep, workouts) to correlate with habit success. Create health-related habit templates (exercise, meditation, sleep tracking). Add Apple Health permission management. Implement bidirectional sync for health-related habits. Visualize health correlations in analytics dashboard.",
         "testStrategy": "Test HealthKit data export and import, verify permission handling, validate data accuracy, test correlation calculations, ensure privacy compliance",
         "priority": "medium",
-        "dependencies": [
-          3
-        ],
+        "dependencies": [3],
         "status": "pending",
         "subtasks": []
       },
@@ -378,9 +338,7 @@
         "details": "Implement custom sound selection for habit reminders using expo-av. Create sound library with various notification tones. Add per-habit reminder customization (sound, vibration pattern, notification style). Implement smart reminder timing based on user patterns. Add location-based reminders using geofencing. Create reminder snooze and repeat options. Support iOS notification categories with custom actions. Add quiet hours and do-not-disturb integration.",
         "testStrategy": "Test custom sound playback, verify reminder scheduling, validate location triggers, test notification actions, ensure iOS integration",
         "priority": "low",
-        "dependencies": [
-          2
-        ],
+        "dependencies": [2],
         "status": "pending",
         "subtasks": []
       },
@@ -391,9 +349,7 @@
         "details": "Create shareable progress cards with beautiful designs and statistics. Implement share functionality for Instagram Stories, Twitter, Facebook. Add customizable share templates with branding. Create achievement announcement features. Implement privacy controls for sharing. Add hashtag suggestions for social posts. Create referral system with share-to-invite functionality. Generate dynamic Open Graph images for link sharing.",
         "testStrategy": "Test social media sharing flows, verify share card rendering, validate privacy controls, test referral tracking, ensure cross-platform compatibility",
         "priority": "low",
-        "dependencies": [
-          15
-        ],
+        "dependencies": [15],
         "status": "pending",
         "subtasks": []
       },
@@ -484,5 +440,4 @@
       "description": "Tasks for mvp-ios context"
     }
   }
-
 }

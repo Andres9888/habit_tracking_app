@@ -29,7 +29,10 @@
           {
             "type": "command",
             "command": "bash",
-            "args": ["-c", "if [ -f .claude/coderabbit-review.txt ]; then echo '\n📋 Session Complete - CodeRabbit reviews saved'; rm .claude/coderabbit-review.txt; fi"]
+            "args": [
+              "-c",
+              "if [ -f .claude/coderabbit-review.txt ]; then echo '\n📋 Session Complete - CodeRabbit reviews saved'; rm .claude/coderabbit-review.txt; fi"
+            ]
           }
         ]
       }

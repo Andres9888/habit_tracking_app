@@ -6,7 +6,11 @@ export interface CardProps extends ViewProps {
   style?: any;
 }
 
-export function Card({ style, className, ...props }: CardProps & { className?: string }) {
+export function Card({
+  style,
+  className,
+  ...props
+}: CardProps & { className?: string }) {
   return (
     <View
       className={clsx(
@@ -19,30 +23,26 @@ export function Card({ style, className, ...props }: CardProps & { className?: s
   );
 }
 
-export function CardHeader({ style, className, ...props }: ViewProps & { className?: string }) {
+export function CardHeader({
+  style,
+  className,
+  ...props
+}: ViewProps & { className?: string }) {
   return (
     <View
-      className={clsx(
-        "p-4 border-b border-slate-200",
-        className
-      )}
+      className={clsx("border-b border-slate-200 p-4", className)}
       style={style}
       {...props}
     />
   );
 }
 
-export function CardContent({ style, className, ...props }: ViewProps & { className?: string }) {
-  return (
-    <View
-      className={clsx(
-        "p-4",
-        className
-      )}
-      style={style}
-      {...props}
-    />
-  );
+export function CardContent({
+  style,
+  className,
+  ...props
+}: ViewProps & { className?: string }) {
+  return <View className={clsx("p-4", className)} style={style} {...props} />;
 }
 
 export default Card;

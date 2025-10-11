@@ -4,7 +4,7 @@ import { mutation, query } from "./_generated/server";
 export const create = mutation({
   args: {
     name: v.string(),
-    notes: v.optional(v.string())
+    notes: v.optional(v.string()),
   },
   returns: v.id("habits"),
   handler: async (ctx, args) => {
@@ -19,12 +19,12 @@ export const create = mutation({
 export const updateNotes = mutation({
   args: {
     habitId: v.id("habits"),
-    notes: v.string()
+    notes: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await ctx.db.patch(args.habitId, {
-      notes: args.notes
+      notes: args.notes,
     });
     return null;
   },
@@ -32,7 +32,7 @@ export const updateNotes = mutation({
 
 export const archive = mutation({
   args: {
-    habitId: v.id("habits")
+    habitId: v.id("habits"),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -52,7 +52,7 @@ export const archive = mutation({
 
 export const unarchive = mutation({
   args: {
-    habitId: v.id("habits")
+    habitId: v.id("habits"),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -72,7 +72,7 @@ export const unarchive = mutation({
 
 export const remove = mutation({
   args: {
-    habitId: v.id("habits")
+    habitId: v.id("habits"),
   },
   returns: v.object({
     habit: v.object({
@@ -80,10 +80,12 @@ export const remove = mutation({
       notes: v.optional(v.string()),
       createdAt: v.number(),
     }),
-    tracking: v.array(v.object({
-      date: v.string(),
-      completed: v.boolean(),
-    }))
+    tracking: v.array(
+      v.object({
+        date: v.string(),
+        completed: v.boolean(),
+      })
+    ),
   }),
   handler: async (ctx, args) => {
     // Get the habit data before deleting
@@ -113,10 +115,10 @@ export const remove = mutation({
         notes: habit.notes,
         createdAt: habit.createdAt,
       },
-      tracking: trackingEntries.map(entry => ({
+      tracking: trackingEntries.map((entry) => ({
         date: entry.date,
         completed: entry.completed,
-      }))
+      })),
     };
   },
 });
@@ -128,10 +130,12 @@ export const restore = mutation({
       notes: v.optional(v.string()),
       createdAt: v.number(),
     }),
-    trackingData: v.array(v.object({
-      date: v.string(),
-      completed: v.boolean(),
-    }))
+    trackingData: v.array(
+      v.object({
+        date: v.string(),
+        completed: v.boolean(),
+      })
+    ),
   },
   returns: v.id("habits"),
   handler: async (ctx, args) => {
@@ -205,7 +209,8 @@ export const toggleHabit = mutation({
   handler: async (ctx, args) => {
     // Validate date format as YYYY-MM-DD
     const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(args.date);
-    if (!isValidDate) throw new Error("Invalid date format; expected YYYY-MM-DD");
+    if (!isValidDate)
+      throw new Error("Invalid date format; expected YYYY-MM-DD");
 
     // Prevent future dates - only allow today or past dates
     const inputDate = new Date(args.date);
@@ -261,7 +266,12 @@ export const getTracking = query({
 
     const range = await ctx.db
       .query("tracking")
-      .filter((q) => q.and(q.gte(q.field("date"), startDate), q.lte(q.field("date"), endDate)))
+      .filter((q) =>
+        q.and(
+          q.gte(q.field("date"), startDate),
+          q.lte(q.field("date"), endDate)
+        )
+      )
       .collect();
 
     const dateSet = new Set(args.dates);
@@ -308,7 +318,10 @@ export const getStats = query({
       return date >= thirtyDaysAgo && t.completed;
     });
 
-    const consistency = Math.max(0, Math.min(100, Math.round((recentTracking.length / 30) * 100)));
+    const consistency = Math.max(
+      0,
+      Math.min(100, Math.round((recentTracking.length / 30) * 100))
+    );
 
     return { streak, consistency };
   },
