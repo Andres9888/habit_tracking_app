@@ -1,16 +1,28 @@
 # Dependencies
-node_modules
+node_modules/
+.yarn/
+.pnp.*
 package-lock.json
 
 # Build outputs
-dist
-build
-.expo
-.expo-shared
+dist/
+build/
+.expo/
+.expo-shared/
+android/
+ios/
+web-build/
 
 # Generated files
-convex/_generated
+convex/_generated/
 *.generated.*
+
+# AI/Tool folders
+.taskmaster/
+.bmad-core/
+.claude/
+.claude-flow/
+.swarm/
 
 # Config files
 .env
@@ -20,15 +32,16 @@ convex/_generated
 .vscode
 .idea
 
-# OS
-.DS_Store
+# Cache
+.cache/
 *.log
+.DS_Store
 
 # Coverage
-coverage
+coverage/
+.nyc_output/
 *.lcov
 
 # Temporary files
 *.tmp
 *.cache
-.cache

@@ -1,3 +1,5 @@
+import "./global.css";
+
 import {
   ClerkLoaded,
   ClerkProvider,
@@ -287,9 +289,9 @@ function HabitsScreen() {
               onPress={() => showArchiveConfirmation(habitId, habitName)}
               activeOpacity={0.6}
               style={styles.deleteButtonTouchable}
-              accessibilityRole="button"
+              accessibilityRole='button'
               accessibilityLabel={`Archive ${habitName}`}
-              accessibilityHint="Archives this habit, can be restored from Settings"
+              accessibilityHint='Archives this habit, can be restored from Settings'
             >
               <Animated.View
                 style={{
@@ -313,13 +315,13 @@ function HabitsScreen() {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Habits</Text>
+            <Text style={styles.title}>Habits tests to for live reload</Text>
             <View style={styles.headerButtons}>
               <TouchableOpacity
                 onPress={() => setShowSettings(true)}
                 style={styles.settingsButton}
-                accessibilityLabel="Settings"
-                accessibilityRole="button"
+                accessibilityLabel='Settings'
+                accessibilityRole='button'
               >
                 <Text style={styles.settingsIcon}>⚙️</Text>
               </TouchableOpacity>
@@ -348,7 +350,7 @@ function HabitsScreen() {
                   onPress={() => handleDateSelect(dateString)}
                   style={styles.dateItem}
                   accessibilityLabel={`Select ${format(date, "MMM d")}`}
-                  accessibilityRole="button"
+                  accessibilityRole='button'
                 >
                   <Text style={styles.monthLabel}>
                     {monthLabel.toUpperCase()}
@@ -370,7 +372,7 @@ function HabitsScreen() {
           <Modal
             visible={showCalendar}
             transparent={true}
-            animationType="fade"
+            animationType='fade'
             onRequestClose={() => setShowCalendar(false)}
           >
             <TouchableOpacity
@@ -384,8 +386,8 @@ function HabitsScreen() {
                   <TouchableOpacity
                     onPress={() => setShowCalendar(false)}
                     style={styles.closeButton}
-                    accessibilityLabel="Close calendar"
-                    accessibilityRole="button"
+                    accessibilityLabel='Close calendar'
+                    accessibilityRole='button'
                   >
                     <Text style={styles.closeButtonText}>✕</Text>
                   </TouchableOpacity>
@@ -431,17 +433,17 @@ function HabitsScreen() {
                   <TextInput
                     value={newHabitName}
                     onChangeText={setNewHabitName}
-                    placeholder="Name your habit"
+                    placeholder='Name your habit'
                     autoFocus
                     style={styles.input}
-                    placeholderTextColor="#999"
+                    placeholderTextColor='#999'
                   />
                 </View>
                 <View style={styles.formActions}>
                   <TouchableOpacity
                     onPress={handleToggleForm}
                     style={styles.cancelButton}
-                    accessibilityRole="button"
+                    accessibilityRole='button'
                   >
                     <Text style={styles.cancelButtonText}>CANCEL</Text>
                   </TouchableOpacity>
@@ -452,7 +454,7 @@ function HabitsScreen() {
                       styles.submitButton,
                       !canSubmit && styles.submitButtonDisabled,
                     ]}
-                    accessibilityRole="button"
+                    accessibilityRole='button'
                   >
                     <Text style={styles.submitButtonText}>ADD</Text>
                   </TouchableOpacity>
@@ -510,7 +512,7 @@ function HabitsScreen() {
                     style={styles.habitCard}
                     accessible={true}
                     accessibilityLabel={`${habit.name} habit tracking`}
-                    accessibilityHint="Swipe left to archive this habit"
+                    accessibilityHint='Swipe left to archive this habit'
                   >
                     <View style={styles.habitHeader}>
                       <Text style={styles.habitName}>{habit.name}</Text>
@@ -573,10 +575,10 @@ function HabitsScreen() {
                                     ? "Future date, not yet available"
                                     : "Tap to toggle completion"
                                 }
-                                accessibilityRole="button"
+                                accessibilityRole='button'
                               >
                                 <Feather
-                                  name="link-2"
+                                  name='link-2'
                                   size={18}
                                   color={
                                     state === "done" ? "#ffffff" : "#64748b"
@@ -610,12 +612,12 @@ function HabitsScreen() {
       </ScrollView>
 
       {/* Floating bottom plus button */}
-      <View pointerEvents="box-none" style={styles.fabContainer}>
+      <View pointerEvents='box-none' style={styles.fabContainer}>
         <TouchableOpacity
           onPress={handleToggleForm}
           style={styles.fab}
           accessibilityLabel={isAdding ? "Cancel" : "Add habit"}
-          accessibilityRole="button"
+          accessibilityRole='button'
           activeOpacity={0.85}
         >
           <Animated.View style={{ transform: [{ rotate: rotation }] }}>
@@ -631,7 +633,7 @@ function MainApp() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar style="auto" />
+        <StatusBar style='auto' />
         <ClerkLoaded>
           <SignedIn>
             <HabitsScreen />
