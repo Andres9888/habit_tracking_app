@@ -2,26 +2,17 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 const DEFAULT_SETTINGS = {
-  showStreaks: true,
-  showConsistency: true,
-  showMotivationalMessages: true,
-  showEmojis: true,
-  showCalendarView: true,
   catTheme: true,
   darkMode: false,
+  showCalendarView: true,
+  showConsistency: true,
+  showEmojis: true,
+  showMotivationalMessages: true,
+  showStreaks: true,
 };
 
 export const get = query({
   args: {},
-  returns: v.object({
-    catTheme: v.boolean(),
-    darkMode: v.boolean(),
-    showCalendarView: v.boolean(),
-    showConsistency: v.boolean(),
-    showEmojis: v.boolean(),
-    showMotivationalMessages: v.boolean(),
-    showStreaks: v.boolean(),
-  }),
   handler: async (ctx) => {
     // Get first settings record (since auth was removed, just use any settings)
     const settings = await ctx.db.query("userSettings").first();
@@ -41,6 +32,15 @@ export const get = query({
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
     };
   },
+  returns: v.object({
+    catTheme: v.boolean(),
+    darkMode: v.boolean(),
+    showCalendarView: v.boolean(),
+    showConsistency: v.boolean(),
+    showEmojis: v.boolean(),
+    showMotivationalMessages: v.boolean(),
+    showStreaks: v.boolean(),
+  }),
 });
 
 export const update = mutation({
@@ -53,16 +53,12 @@ export const update = mutation({
     showMotivationalMessages: v.boolean(),
     showStreaks: v.boolean(),
   },
-  returns: v.null(),
   handler: async (ctx, args) => {
     // Get first settings record (since auth was removed, just use any settings)
     const existing = await ctx.db.query("userSettings").first();
 
-    if (existing) {
-      await ctx.db.patch(existing._id, args);
-    } else {
-      await ctx.db.insert("userSettings", args);
-    }
+    await (existing ? ctx.db.patch(existing._id, args) : ctx.db.insert("userSettings", args));
     return null;
   },
+  returns: v.null(),
 });

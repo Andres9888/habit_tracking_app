@@ -3,16 +3,6 @@ import { mutation, query } from "./_generated/server";
 
 export const list = query({
   args: { category: v.optional(v.string()) },
-  returns: v.array(
-    v.object({
-      _creationTime: v.number(),
-      _id: v.id("articles"),
-      category: v.string(),
-      content: v.string(),
-      createdAt: v.number(),
-      title: v.string(),
-    })
-  ),
   handler: async (ctx, args) => {
     const articlesQuery = ctx.db.query("articles");
 
@@ -25,37 +15,46 @@ export const list = query({
 
     return await articlesQuery.order("desc").collect();
   },
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id("articles"),
+      category: v.string(),
+      content: v.string(),
+      createdAt: v.number(),
+      title: v.string(),
+    })
+  ),
 });
 
 // Add some initial articles
 export const seed = mutation({
   args: {},
-  returns: v.null(),
   handler: async (ctx) => {
     const articles = await ctx.db.query("articles").collect();
     if (articles.length > 0) return null;
 
     const initialArticles = [
       {
-        title: "Building Lasting Habits",
+        category: "foundation",
         content:
           "Start small, be consistent, and celebrate progress. The key to building lasting habits is to make them easy to start and hard to miss.",
-        category: "foundation",
         createdAt: Date.now(),
+        title: "Building Lasting Habits",
       },
       {
-        title: "The Power of Morning Routines",
+        category: "routines",
         content:
           "A strong morning routine sets the tone for your entire day. Consider including meditation, exercise, or reading in your morning ritual.",
-        category: "routines",
         createdAt: Date.now(),
+        title: "The Power of Morning Routines",
       },
       {
-        title: "Habit Stacking",
+        category: "techniques",
         content:
           "Connect new habits to existing ones. After [CURRENT HABIT], I will [NEW HABIT]. This makes it easier to remember and implement new behaviors.",
-        category: "techniques",
         createdAt: Date.now(),
+        title: "Habit Stacking",
       },
     ];
 
@@ -64,4 +63,5 @@ export const seed = mutation({
     }
     return null;
   },
+  returns: v.null(),
 });

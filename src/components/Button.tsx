@@ -16,19 +16,19 @@ export interface ButtonProps
 }
 
 const sizeToClasses: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-sm",
   lg: "px-5 py-3 text-base",
+  md: "px-4 py-2 text-sm",
+  sm: "px-3 py-1.5 text-sm",
 };
 
 const variantToClasses: Record<ButtonVariant, string> = {
+  danger: "bg-red-500 text-white hover:bg-red-600 disabled:opacity-50",
+  ghost:
+    "bg-transparent hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200",
   primary: "bg-primary text-white hover:brightness-105 disabled:opacity-50",
   secondary:
     "bg-slate-100 text-slate-800 hover:bg-slate-200 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700",
   success: "bg-green-600 text-white hover:brightness-105 disabled:opacity-50",
-  danger: "bg-red-500 text-white hover:bg-red-600 disabled:opacity-50",
-  ghost:
-    "bg-transparent hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200",
 };
 
 export function Button({

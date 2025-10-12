@@ -30,10 +30,10 @@ export const useSettingsModalLogic = ({
   };
 
   return {
-    user,
-    view,
-    setView,
     handleClose,
     handleSignOut,
+    setView,
+    user,
+    view,
   };
 };

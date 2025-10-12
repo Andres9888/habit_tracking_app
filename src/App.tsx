@@ -3,7 +3,7 @@ import "../global.css";
 
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
-import { Settings } from "lucide-react-native";
+import { Plus, Settings } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -90,7 +90,7 @@ function App() {
     if (habitOrder.length === 0) return habits;
 
     const orderMap = new Map(habitOrder.map((id, index) => [id, index]));
-    return [...habits].sort((a, b) => {
+    return [...habits].sort((a: any, b: any) => {
       const aOrder = orderMap.get(a._id) ?? Infinity;
       const bOrder = orderMap.get(b._id) ?? Infinity;
       return aOrder - bOrder;
@@ -151,7 +151,7 @@ function App() {
                   </Pressable>
                   <Pressable
                     accessibilityRole="button"
-                    className={`rounded-3xl border border-slate-900 px-5 py-2 ${!canSubmit ? "opacity-40" : ""}`}
+                    className={`rounded-3xl border border-slate-900 px-5 py-2 ${canSubmit ? "" : "opacity-40"}`}
                     disabled={!canSubmit}
                     onPress={handleSubmit}
                   >
@@ -165,7 +165,7 @@ function App() {
           )}
 
           <View className="gap-4">
-            {orderedHabits.map((habit) => {
+            {orderedHabits.map((habit: any) => {
               const weekStatus = weekDateStrings.map((ds) =>
                 getHabitStatus(habit._id, ds)
               );
@@ -219,6 +219,17 @@ function App() {
           onClose={() => setIsSettingsOpen(false)}
         />
       </ScrollView>
+      <View pointerEvents="box-none" className="absolute bottom-8 right-6">
+        <Pressable
+          accessibilityHint={isAdding ? "Close add habit form" : "Open add habit form"}
+          accessibilityLabel={isAdding ? "Close" : "Add habit"}
+          accessibilityRole="button"
+          className="h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg"
+          onPress={handleToggleForm}
+        >
+          <Plus color="#ffffff" size={24} />
+        </Pressable>
+      </View>
     </GestureHandlerRootView>
   );
 }

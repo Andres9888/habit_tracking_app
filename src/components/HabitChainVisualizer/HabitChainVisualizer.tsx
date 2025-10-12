@@ -47,7 +47,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                   isCompleted ? "bg-[#48bb78]" : "bg-[#dde3ed]"
                 )}
                 onPress={() =>
-                  onToggle({ habitId, date: weekDateStrings[index] })
+                  onToggle({ date: weekDateStrings[index], habitId })
                 }
               >
                 {isCompleted && (
@@ -56,7 +56,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                   </View>
                 )}
               </Pressable>
-              {showLine && <View className="h-0.5 w-[22px] bg-[#48bb78]" />}
+              {showLine && <View className="h-[2px] w-[22px] bg-[#48bb78]" />}
             </View>
           );
         })}

@@ -18,6 +18,7 @@ export default tseslint.config(
       'tailwind.config.js',
       'vite.config.ts',
       'App.tsx',
+      'index.ts',
       '__tests__/**',
     ],
   },

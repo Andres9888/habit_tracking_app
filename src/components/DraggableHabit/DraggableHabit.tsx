@@ -37,7 +37,7 @@ export default function DraggableHabit({
   const { emoji, name } = useDraggableHabitLogic(habit);
 
   return (
-    <View className="gap-4 rounded-2xl bg-white p-5 shadow-sm">
+    <View className="gap-4 rounded-[16px] bg-white p-5 shadow-sm">
       {/* Habit Header with Emoji + Name */}
       <View className="flex-row items-center gap-3">
         {emoji && <Text className="text-2xl leading-8">{emoji}</Text>}
