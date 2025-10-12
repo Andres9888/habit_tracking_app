@@ -21,13 +21,13 @@ export function SettingsDialog({
   onClose: () => void;
 }) {
   const defaultSettings: Settings = {
-    showStreaks: true,
-    showConsistency: true,
-    showMotivationalMessages: true,
-    showEmojis: true,
-    showCalendarView: true,
     catTheme: true,
     darkMode: false,
+    showCalendarView: true,
+    showConsistency: true,
+    showEmojis: true,
+    showMotivationalMessages: true,
+    showStreaks: true,
   };
 
   const settings = useQuery(api.settings.get) ?? defaultSettings;
@@ -57,21 +57,13 @@ export function SettingsDialog({
 
     // Handle dark mode immediately for better UX
     if (key === "darkMode") {
-      if (newSettings.darkMode) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
+      document.documentElement.classList.toggle("dark", newSettings.darkMode);
     }
   };
 
   // Apply dark mode on component mount/update
   useEffect(() => {
-    if (localSettings.darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", localSettings.darkMode);
   }, [localSettings.darkMode]);
 
   if (!isOpen) return null;

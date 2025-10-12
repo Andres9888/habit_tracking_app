@@ -6,14 +6,14 @@ export const create = mutation({
     name: v.string(),
     notes: v.optional(v.string()),
   },
-  returns: v.id("habits"),
   handler: async (ctx, args) => {
     return await ctx.db.insert("habits", {
+      createdAt: Date.now(),
       name: args.name,
       notes: args.notes,
-      createdAt: Date.now(),
     });
   },
+  returns: v.id("habits"),
 });
 
 export const updateNotes = mutation({
@@ -21,20 +21,19 @@ export const updateNotes = mutation({
     habitId: v.id("habits"),
     notes: v.string(),
   },
-  returns: v.null(),
   handler: async (ctx, args) => {
     await ctx.db.patch(args.habitId, {
       notes: args.notes,
     });
     return null;
   },
+  returns: v.null(),
 });
 
 export const archive = mutation({
   args: {
     habitId: v.id("habits"),
   },
-  returns: v.null(),
   handler: async (ctx, args) => {
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
@@ -48,13 +47,13 @@ export const archive = mutation({
 
     return null;
   },
+  returns: v.null(),
 });
 
 export const unarchive = mutation({
   args: {
     habitId: v.id("habits"),
   },
-  returns: v.null(),
   handler: async (ctx, args) => {
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
@@ -68,25 +67,13 @@ export const unarchive = mutation({
 
     return null;
   },
+  returns: v.null(),
 });
 
 export const remove = mutation({
   args: {
     habitId: v.id("habits"),
   },
-  returns: v.object({
-    habit: v.object({
-      name: v.string(),
-      notes: v.optional(v.string()),
-      createdAt: v.number(),
-    }),
-    tracking: v.array(
-      v.object({
-        date: v.string(),
-        completed: v.boolean(),
-      })
-    ),
-  }),
   handler: async (ctx, args) => {
     // Get the habit data before deleting
     const habit = await ctx.db.get(args.habitId);
@@ -111,33 +98,45 @@ export const remove = mutation({
     // Return the deleted data for potential undo
     return {
       habit: {
+        createdAt: habit.createdAt,
         name: habit.name,
         notes: habit.notes,
-        createdAt: habit.createdAt,
       },
       tracking: trackingEntries.map((entry) => ({
-        date: entry.date,
         completed: entry.completed,
+        date: entry.date,
       })),
     };
   },
+  returns: v.object({
+    habit: v.object({
+      createdAt: v.number(),
+      name: v.string(),
+      notes: v.optional(v.string()),
+    }),
+    tracking: v.array(
+      v.object({
+        completed: v.boolean(),
+        date: v.string(),
+      })
+    ),
+  }),
 });
 
 export const restore = mutation({
   args: {
     habitData: v.object({
+      createdAt: v.number(),
       name: v.string(),
       notes: v.optional(v.string()),
-      createdAt: v.number(),
     }),
     trackingData: v.array(
       v.object({
-        date: v.string(),
         completed: v.boolean(),
+        date: v.string(),
       })
     ),
   },
-  returns: v.id("habits"),
   handler: async (ctx, args) => {
     // Recreate the habit
     const habitId = await ctx.db.insert("habits", args.habitData);
@@ -145,67 +144,67 @@ export const restore = mutation({
     // Recreate all tracking data
     for (const trackingEntry of args.trackingData) {
       await ctx.db.insert("tracking", {
-        habitId,
-        date: trackingEntry.date,
         completed: trackingEntry.completed,
+        date: trackingEntry.date,
+        habitId,
       });
     }
 
     return habitId;
   },
+  returns: v.id("habits"),
 });
 
 export const list = query({
   args: {},
-  returns: v.array(
-    v.object({
-      _creationTime: v.number(),
-      _id: v.id("habits"),
-      createdAt: v.number(),
-      name: v.string(),
-      notes: v.optional(v.string()),
-      order: v.optional(v.number()),
-      tags: v.optional(v.array(v.string())),
-      userId: v.optional(v.string()),
-      archived: v.optional(v.boolean()),
-      archivedAt: v.optional(v.number()),
-    })
-  ),
   handler: async (ctx) => {
     return await ctx.db
       .query("habits")
       .filter((q) => q.neq(q.field("archived"), true))
       .collect();
   },
-});
-
-export const listArchived = query({
-  args: {},
   returns: v.array(
     v.object({
       _creationTime: v.number(),
       _id: v.id("habits"),
+      archived: v.optional(v.boolean()),
+      archivedAt: v.optional(v.number()),
       createdAt: v.number(),
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
-      archived: v.optional(v.boolean()),
-      archivedAt: v.optional(v.number()),
     })
   ),
+});
+
+export const listArchived = query({
+  args: {},
   handler: async (ctx) => {
     return await ctx.db
       .query("habits")
       .filter((q) => q.eq(q.field("archived"), true))
       .collect();
   },
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id("habits"),
+      archived: v.optional(v.boolean()),
+      archivedAt: v.optional(v.number()),
+      createdAt: v.number(),
+      name: v.string(),
+      notes: v.optional(v.string()),
+      order: v.optional(v.number()),
+      tags: v.optional(v.array(v.string())),
+      userId: v.optional(v.string()),
+    })
+  ),
 });
 
 export const toggleHabit = mutation({
-  args: { habitId: v.id("habits"), date: v.string() },
-  returns: v.null(),
+  args: { date: v.string(), habitId: v.id("habits") },
   handler: async (ctx, args) => {
     // Validate date format as YYYY-MM-DD
     const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(args.date);
@@ -229,40 +228,27 @@ export const toggleHabit = mutation({
       )
       .unique();
 
-    if (existing) {
-      await ctx.db.patch(existing._id, {
+    await (existing ? ctx.db.patch(existing._id, {
         completed: !existing.completed,
-      });
-    } else {
-      await ctx.db.insert("tracking", {
-        habitId: args.habitId,
-        date: args.date,
+      }) : ctx.db.insert("tracking", {
         completed: true,
-      });
-    }
+        date: args.date,
+        habitId: args.habitId,
+      }));
     return null;
   },
+  returns: v.null(),
 });
 
 export const getTracking = query({
   args: { dates: v.array(v.string()) },
-  returns: v.array(
-    v.object({
-      _creationTime: v.number(),
-      _id: v.id("tracking"),
-      completed: v.boolean(),
-      date: v.string(),
-      habitId: v.id("habits"),
-      userId: v.optional(v.string()),
-    })
-  ),
   handler: async (ctx, args) => {
     if (args.dates.length === 0) return [];
 
     // Optimize by querying a single date range then filtering to requested dates
-    const sortedDates = [...args.dates].sort();
+    const sortedDates = [...args.dates].toSorted();
     const startDate = sortedDates[0];
-    const endDate = sortedDates[sortedDates.length - 1];
+    const endDate = sortedDates.at(-1);
 
     const range = await ctx.db
       .query("tracking")
@@ -277,11 +263,20 @@ export const getTracking = query({
     const dateSet = new Set(args.dates);
     return range.filter((t) => dateSet.has(t.date));
   },
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id("tracking"),
+      completed: v.boolean(),
+      date: v.string(),
+      habitId: v.id("habits"),
+      userId: v.optional(v.string()),
+    })
+  ),
 });
 
 export const getStats = query({
   args: { habitId: v.id("habits") },
-  returns: v.object({ streak: v.number(), consistency: v.number() }),
   handler: async (ctx, args) => {
     const tracking = await ctx.db
       .query("tracking")
@@ -291,19 +286,19 @@ export const getStats = query({
     const sortedDates = tracking
       .filter((t) => t.completed)
       .map((t) => new Date(t.date).getTime())
-      .sort((a, b) => b - a);
+      .toSorted((a, b) => b - a);
 
     let streak = 0;
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    for (let i = 0; i < sortedDates.length; i++) {
+    for (const [i, sortedDate] of sortedDates.entries()) {
       const expectedDate = new Date(now);
       expectedDate.setDate(now.getDate() - i);
       expectedDate.setHours(0, 0, 0, 0);
       const expectedTime = expectedDate.getTime();
 
-      if (sortedDates[i] === expectedTime) {
+      if (sortedDate === expectedTime) {
         streak++;
       } else {
         break;
@@ -323,6 +318,7 @@ export const getStats = query({
       Math.min(100, Math.round((recentTracking.length / 30) * 100))
     );
 
-    return { streak, consistency };
+    return { consistency, streak };
   },
+  returns: v.object({ consistency: v.number(), streak: v.number() }),
 });

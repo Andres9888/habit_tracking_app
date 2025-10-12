@@ -32,12 +32,10 @@ export const useArchivedHabitsModalLogic = () => {
       "This will permanently delete the habit and all its tracking data. This action cannot be undone.",
       [
         {
-          text: "Cancel",
           style: "cancel",
+          text: "Cancel",
         },
         {
-          text: "Delete Forever",
-          style: "destructive",
           onPress: async () => {
             try {
               await removeHabit({ habitId });
@@ -53,6 +51,8 @@ export const useArchivedHabitsModalLogic = () => {
               );
             }
           },
+          style: "destructive",
+          text: "Delete Forever",
         },
       ],
       { cancelable: true }
@@ -61,7 +61,7 @@ export const useArchivedHabitsModalLogic = () => {
 
   return {
     archivedHabits,
-    handleRestore,
     handlePermanentDelete,
+    handleRestore,
   };
 };

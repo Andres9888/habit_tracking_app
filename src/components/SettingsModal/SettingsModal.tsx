@@ -12,12 +12,12 @@ export default function SettingsModal({
   onClose,
 }: SettingsModalProps) {
   const { user, view, setView, handleClose, handleSignOut } =
-    useSettingsModalLogic({ visible, onClose });
+    useSettingsModalLogic({ onClose, visible });
 
   return (
     <Modal
+      transparent
       animationType="fade"
-      transparent={true}
       visible={visible}
       onRequestClose={handleClose}
     >

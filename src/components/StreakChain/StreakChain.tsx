@@ -58,11 +58,11 @@ export default function StreakChain({
               <View
                 className="items-center justify-center"
                 style={{
-                  width: circleSize,
-                  height: circleSize,
-                  borderRadius: circleSize / 2,
                   backgroundColor: isDone ? "#3B82F6" : "#E5E7EB",
+                  borderRadius: circleSize / 2,
+                  height: circleSize,
                   opacity: isFuture ? 0.5 : 1,
+                  width: circleSize,
                 }}
               >
                 <Feather

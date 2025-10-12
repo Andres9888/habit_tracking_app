@@ -339,9 +339,9 @@ describe("Card Component", () => {
     it("maintains ViewProps interface for Card", () => {
       const { getByTestId } = render(
         <Card
+          accessible
           accessibilityLabel="Test Card"
           accessibilityRole="button"
-          accessible={true}
           testID="card-test"
         >
           <Text>Test</Text>

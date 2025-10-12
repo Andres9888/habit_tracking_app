@@ -24,8 +24,8 @@ export default function HabitCalendarModal({
 
   return (
     <Modal
+      transparent
       animationType="slide"
-      transparent={true}
       visible={visible}
       onRequestClose={onClose}
     >

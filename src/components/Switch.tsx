@@ -14,9 +14,9 @@ export interface SwitchProps {
 }
 
 const sizeClasses = {
-  sm: { track: "h-5 w-8", thumb: "h-4 w-4" },
-  md: { track: "h-6 w-10", thumb: "h-5 w-5" },
-  lg: { track: "h-7 w-12", thumb: "h-6 w-6" },
+  lg: { thumb: "h-6 w-6", track: "h-7 w-12" },
+  md: { thumb: "h-5 w-5", track: "h-6 w-10" },
+  sm: { thumb: "h-4 w-4", track: "h-5 w-8" },
 };
 
 export const Switch = React.forwardRef<View, SwitchProps>(function Switch(

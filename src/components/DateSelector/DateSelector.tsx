@@ -11,7 +11,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
   const { isToday } = useDateSelectorLogic();
 
   return (
-    <View className="h-20 flex-row justify-between px-11 py-0">
+    <View className="h-20 flex-row justify-between px-6 py-0">
       {dates.map((date, index) => {
         const isCurrent = isToday(date);
         const month = format(date, "MMM").toUpperCase();
