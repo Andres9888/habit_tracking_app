@@ -13,6 +13,7 @@ interface HabitChainVisualizerProps {
   habitId: Id<"habits">;
   weekDateStrings: string[];
   onToggle: (args: { habitId: Id<"habits">; date: string }) => void;
+  isCompactMode?: boolean;
 }
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
@@ -21,12 +22,13 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   habitId,
   weekDateStrings,
   onToggle,
+  isCompactMode = false,
 }) => {
   const { renderConnectingLine } = useHabitChainVisualizerLogic(weekStatus);
 
   return (
     <View className="gap-4">
-      <View className="h-10 flex-row items-center">
+      <View className={isCompactMode ? "h-8 flex-row items-center" : "h-10 flex-row items-center"}>
         {weekStatus.map((status, index) => {
           const isCompleted = status === "done";
           const showLine = renderConnectingLine(index);
@@ -43,7 +45,8 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                 accessibilityLabel={accessibilityLabel}
                 accessibilityRole="button"
                 className={clsx(
-                  "h-10 w-10 items-center justify-center rounded-full",
+                  isCompactMode ? "h-8 w-8" : "h-10 w-10",
+                  "items-center justify-center rounded-full",
                   isCompleted ? "bg-[#48bb78]" : "bg-[#dde3ed]"
                 )}
                 onPress={() =>
@@ -52,18 +55,32 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               >
                 {isCompleted && (
                   <View className="items-center justify-center">
-                    <ChainLinkIcon color="#ffffff" size={16} />
+                    <ChainLinkIcon color="#ffffff" size={isCompactMode ? 14 : 16} />
                   </View>
                 )}
               </Pressable>
-              {showLine && <View className="h-[2px] w-[22px] bg-[#48bb78]" />}
+              {showLine && (
+                <View
+                  className={
+                    isCompactMode
+                      ? "h-[2px] w-[18px] bg-[#48bb78]"
+                      : "h-[2px] w-[22px] bg-[#48bb78]"
+                  }
+                />
+              )}
             </View>
           );
         })}
       </View>
 
       {streak > 0 && (
-        <Text className="text-xs font-semibold uppercase tracking-wider text-[#a0aec0]">
+        <Text
+          className={
+            isCompactMode
+              ? "text-[10px] font-semibold uppercase tracking-wider text-[#a0aec0]"
+              : "text-xs font-semibold uppercase tracking-wider text-[#a0aec0]"
+          }
+        >
           STREAK • {streak} DAYS
         </Text>
       )}

@@ -4,7 +4,7 @@ import "../global.css";
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
 import { Plus, Settings } from "lucide-react-native";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
@@ -12,6 +12,7 @@ import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { DateSelector } from "./components/DateSelector";
 import SettingsModal from "./components/SettingsModal";
+import { getCompactMode, setCompactMode } from "./lib/settingsStorage";
 import DraggableHabit from "./components/DraggableHabit";
 
 type HabitStatus = "done" | "missed" | "planned";
@@ -20,6 +21,7 @@ function App() {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCompactMode, setIsCompactMode] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -33,6 +35,18 @@ function App() {
 
   const tracking =
     useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
+  // Load compact mode on mount
+  useEffect(() => {
+    (async () => {
+      const saved = await getCompactMode();
+      setIsCompactMode(saved);
+    })();
+  }, []);
+
+  const handleCompactChange = async (next: boolean) => {
+    setIsCompactMode(next);
+    await setCompactMode(next);
+  };
 
   const canSubmit = useMemo(
     () => newHabitName.trim().length > 0,
@@ -106,7 +120,13 @@ function App() {
   return (
     <GestureHandlerRootView className="flex-1">
       <ScrollView className="flex-1 bg-white">
-        <View className="mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12">
+        <View
+          className={
+            isCompactMode
+              ? "mx-auto max-w-[448px] gap-2 px-6 pb-24 pt-12"
+              : "mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12"
+          }
+        >
           <View className="mb-8 flex-row items-center justify-between">
             <Text className="text-4xl font-extrabold tracking-tight text-slate-900">
               Habits
@@ -164,7 +184,7 @@ function App() {
             </View>
           )}
 
-          <View className="gap-4">
+          <View className={isCompactMode ? "gap-2" : "gap-4"}>
             {orderedHabits.map((habit: any) => {
               const weekStatus = weekDateStrings.map((ds) =>
                 getHabitStatus(habit._id, ds)
@@ -204,6 +224,7 @@ function App() {
                 <DraggableHabit
                   key={habit._id}
                   habit={habit}
+                  isCompactMode={isCompactMode}
                   streak={streak}
                   toggleHabit={toggleHabit}
                   weekDateStrings={weekDateStrings}
@@ -217,6 +238,8 @@ function App() {
         <SettingsModal
           visible={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
+          isCompact={isCompactMode}
+          onChangeCompact={handleCompactChange}
         />
       </ScrollView>
       <View pointerEvents="box-none" className="absolute bottom-8 right-6">
