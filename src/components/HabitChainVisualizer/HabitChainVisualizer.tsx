@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { ChainLinkIcon } from "../ChainLinkIcon";
 import type { Id } from "../../../convex/_generated/dataModel";
-import clsx from "clsx";
 import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
 
 type HabitStatus = "done" | "missed" | "planned";
@@ -42,10 +41,9 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                 accessibilityHint={accessibilityHint}
                 accessibilityLabel={accessibilityLabel}
                 accessibilityRole="button"
-                className={clsx(
-                  "h-10 w-10 items-center justify-center rounded-full",
+                className={`h-10 w-10 items-center justify-center rounded-full ${
                   isCompleted ? "bg-[#48bb78]" : "bg-[#dde3ed]"
-                )}
+                }`}
                 onPress={() =>
                   onToggle({ date: weekDateStrings[index], habitId })
                 }
@@ -56,14 +54,19 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                   </View>
                 )}
               </Pressable>
-              {showLine && <View className="h-[2px] w-[22px] bg-[#48bb78]" />}
+              {showLine && (
+                <View className="h-[2px] w-[22px] bg-[#48bb78]"
+                />
+              )}
             </View>
           );
         })}
       </View>
 
       {streak > 0 && (
-        <Text className="text-xs font-semibold uppercase tracking-wider text-[#a0aec0]">
+        <Text
+          className="text-xs font-semibold uppercase tracking-wider text-[#a0aec0]"
+        >
           STREAK • {streak} DAYS
         </Text>
       )}

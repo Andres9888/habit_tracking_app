@@ -5,7 +5,7 @@ import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo';
 import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from 'convex/react';
 import { addDays, format } from 'date-fns';
 import { Plus, Settings } from 'lucide-react-native';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { api } from './convex/_generated/api';
@@ -13,6 +13,7 @@ import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
 import SettingsModal from './src/components/SettingsModal';
 import DraggableHabit from './src/components/DraggableHabit';
+import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
@@ -52,6 +53,7 @@ function HabitsApp() {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCompactMode, setIsCompactMode] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -64,6 +66,19 @@ function HabitsApp() {
   const weekDateStrings = weekDates.map((d) => format(d, 'yyyy-MM-dd'));
 
   const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
+
+  // Load compact mode preference (native entry)
+  useEffect(() => {
+    (async () => {
+      const saved = await getCompactMode();
+      setIsCompactMode(saved);
+    })();
+  }, []);
+
+  const handleCompactChange = async (next: boolean) => {
+    setIsCompactMode(next);
+    await setCompactMode(next);
+  };
 
   const canSubmit = useMemo(() => newHabitName.trim().length > 0, [newHabitName]);
 
@@ -214,6 +229,7 @@ function HabitsApp() {
                 <DraggableHabit
                   key={habit._id}
                   habit={habit}
+                  isCompactMode={isCompactMode}
                   streak={streak}
                   toggleHabit={toggleHabit}
                   weekDateStrings={weekDateStrings}
@@ -223,7 +239,12 @@ function HabitsApp() {
             })}
           </View>
         </View>
-        <SettingsModal visible={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+        <SettingsModal
+          visible={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          isCompact={isCompactMode}
+          onChangeCompact={handleCompactChange}
+        />
       </ScrollView>
       <View pointerEvents='box-none' className='absolute bottom-8 right-6'>
         <Pressable
