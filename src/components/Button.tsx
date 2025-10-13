@@ -1,119 +1,54 @@
 import React from "react";
-import { Pressable, Text, type PressableProps } from "react-native";
 import { cn } from "../lib/utils";
 
 export type ButtonVariant =
-  | "danger"
-  | "ghost"
   | "primary"
   | "secondary"
-  | "success";
-
-export type ButtonSize = "lg" | "md" | "sm";
+  | "success"
+  | "danger"
+  | "ghost";
+export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps
-  extends Omit<PressableProps, "children" | "style"> {
-  accessibilityLabel?: string;
-  children?: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-  onClick?: (event: unknown) => void;
-  size?: ButtonSize;
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
+  size?: ButtonSize;
 }
 
-const sizeToContainerClasses: Record<ButtonSize, string> = {
-  lg: "px-5 py-3",
-  md: "px-4 py-2",
-  sm: "px-3 py-1.5",
+const sizeToClasses: Record<ButtonSize, string> = {
+  lg: "px-5 py-3 text-base",
+  md: "px-4 py-2 text-sm",
+  sm: "px-3 py-1.5 text-sm",
 };
 
-const sizeToTextClasses: Record<ButtonSize, string> = {
-  lg: "text-base",
-  md: "text-sm",
-  sm: "text-sm",
+const variantToClasses: Record<ButtonVariant, string> = {
+  danger: "bg-red-500 text-white hover:bg-red-600 disabled:opacity-50",
+  ghost:
+    "bg-transparent hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200",
+  primary: "bg-primary text-white hover:brightness-105 disabled:opacity-50",
+  secondary:
+    "bg-slate-100 text-slate-800 hover:bg-slate-200 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700",
+  success: "bg-green-600 text-white hover:brightness-105 disabled:opacity-50",
 };
 
-const variantToContainerClasses: Record<ButtonVariant, string> = {
-  danger: "bg-red-500",
-  ghost: "bg-transparent",
-  primary: "bg-primary",
-  secondary: "bg-slate-100 dark:bg-slate-800",
-  success: "bg-green-600",
-};
-
-const variantToTextClasses: Record<ButtonVariant, string> = {
-  danger: "text-white",
-  ghost: "text-slate-700 dark:text-slate-200",
-  primary: "text-white",
-  secondary: "text-slate-800 dark:text-slate-100",
-  success: "text-white",
-};
-
-const Button = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  ButtonProps
->(function Button(
-  {
-    accessibilityLabel,
-    children,
-    className,
-    disabled = false,
-    onClick,
-    onPress,
-    size = "md",
-    variant = "primary",
-    ...rest
-  },
-  ref
-) {
-  const containerClassName = cn(
-    "items-center justify-center rounded-md shadow-sm",
-    sizeToContainerClasses[size],
-    variantToContainerClasses[variant],
-    disabled && "opacity-50",
-    className
-  );
-
-  const textClassName = cn(
-    "font-medium",
-    sizeToTextClasses[size],
-    variantToTextClasses[variant]
-  );
-
-  const handlePress: PressableProps["onPress"] = (event) => {
-    if (disabled) return;
-    if (typeof onPress === "function") {
-      onPress(event);
-      return;
-    }
-    if (typeof onClick === "function") {
-      onClick(event);
-    }
-  };
-
-  const isTextChild =
-    typeof children === "string" || typeof children === "number";
-
+export function Button({
+  className,
+  variant = "primary",
+  size = "md",
+  ...props
+}: ButtonProps) {
   return (
-    <Pressable
-      ref={ref}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      className={containerClassName}
-      disabled={disabled}
-      onPress={handlePress}
-      {...rest}
-    >
-      {isTextChild ? (
-        <Text className={textClassName}>{children}</Text>
-      ) : (
-        children
+    <button
+      className={cn(
+        "rounded-md font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+        "focus:ring-ring focus:ring-offset-background",
+        sizeToClasses[size],
+        variantToClasses[variant],
+        className
       )}
-    </Pressable>
+      {...props}
+    />
   );
-});
+}
 
-export { Button };
 export default Button;
