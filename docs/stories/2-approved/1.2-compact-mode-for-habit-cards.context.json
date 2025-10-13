@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "epicId": "1",
+    "storyId": "1.2",
+    "status": "Approved",
+    "title": "Implement Compact Mode for Habit Cards",
+    "created": "2025-10-10"
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "title": "Compact Mode Toggle",
+      "checks": [
+        "Settings menu includes a \"Compact Mode\" toggle option",
+        "Toggle persists across app sessions (saved to device storage)",
+        "Toggle state loads on app startup",
+        "Toggle immediately updates UI when changed"
+      ]
+    },
+    {
+      "id": "AC2",
+      "title": "Compact Habit Card Layout",
+      "checks": [
+        "In compact mode, habit card vertical padding reduces from 20px to 12px",
+        "Gap between habit cards reduces from 16px to 8px",
+        "Habit name font size reduces from 18px to 16px",
+        "Chain visualization circles reduce from 40px to 32px diameter",
+        "Streak label font size reduces from 12px to 10px",
+        "Emoji size reduces from 24px to 20px"
+      ]
+    },
+    {
+      "id": "AC3",
+      "title": "Default Mode Preserved",
+      "checks": [
+        "When compact mode is OFF, all original spacing from Story 1.1 is maintained",
+        "20px card padding (top/bottom)",
+        "16px gap between cards",
+        "Original font sizes and component dimensions"
+      ]
+    },
+    {
+      "id": "AC4",
+      "title": "Smooth Transitions",
+      "checks": [
+        "Layout changes animate smoothly when toggling compact mode",
+        "No jarring jumps or layout shifts",
+        "Animation duration: 200-300ms"
+      ]
+    },
+    {
+      "id": "AC5",
+      "title": "Responsive Design",
+      "checks": [
+        "Compact mode works correctly on iOS, Android, and Web",
+        "Layout remains readable and usable in compact mode",
+        "Touch targets remain accessible (minimum 32px for interactive elements)"
+      ]
+    }
+  ],
+  "artifacts": {
+    "docs": [
+      "docs/stories/2-approved/1.2-compact-mode-for-habit-cards.story.md"
+    ],
+    "code": [
+      "src/components/SettingsModal/SettingsModal.tsx",
+      "src/components/DraggableHabit/DraggableHabit.tsx",
+      "src/components/HabitChainVisualizer/HabitChainVisualizer.tsx",
+      "src/App.tsx"
+    ],
+    "interfaces": [
+      {
+        "name": "SettingsStorage",
+        "methods": [
+          { "name": "getCompactMode", "args": [], "returns": "Promise<boolean>" },
+          { "name": "setCompactMode", "args": ["value: boolean"], "returns": "Promise<void>" }
+        ]
+      }
+    ]
+  },
+  "constraints": [
+    "Minimum touch target: 32px",
+    "Animation performance must remain smooth with many habits",
+    "Text must remain readable at reduced sizes"
+  ],
+  "tests": {
+    "unit": [
+      "Settings storage read/write",
+      "Style changes for compact vs default modes"
+    ],
+    "manual": [
+      "Toggle compact mode in settings and verify immediate UI update",
+      "Restart app and verify setting persistence",
+      "Verify spacing and sizes per AC2",
+      "Check accessibility and touch targets"
+    ]
+  }
+}
+
+
