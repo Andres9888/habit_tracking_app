@@ -1,15 +1,19 @@
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Switch, Text, TouchableOpacity, View } from "react-native";
 import ArchivedHabitsModal from "../ArchivedHabitsModal";
 import { useSettingsModalLogic } from "./SettingsModal.hooks";
 
 interface SettingsModalProps {
-  visible: boolean;
   onClose: () => void;
+  visible: boolean;
+  isCompact: boolean;
+  onChangeCompact: (value: boolean) => void | Promise<void>;
 }
 
 export default function SettingsModal({
   visible,
   onClose,
+  isCompact,
+  onChangeCompact,
 }: SettingsModalProps) {
   const { user, view, setView, handleClose, handleSignOut } =
     useSettingsModalLogic({ onClose, visible });
@@ -57,6 +61,28 @@ export default function SettingsModal({
                   <Text className="text-base font-semibold text-slate-900">
                     {user?.primaryEmailAddress?.emailAddress}
                   </Text>
+                </View>
+
+                <View className="flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4">
+                  <View className="flex-1 pr-4">
+                    <Text className="text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+                      Compact Mode
+                    </Text>
+                    <Text className="text-[11px] text-slate-500">
+                      Reduce card spacing to view more habits at once.
+                    </Text>
+                  </View>
+                  <Switch
+                    accessibilityLabel="Toggle compact mode"
+                    value={isCompact}
+                    onValueChange={(value) =>
+                      Promise.resolve(onChangeCompact(value)).catch((error) =>
+                        console.error("Failed to update compact mode", error)
+                      )
+                    }
+                    thumbColor={isCompact ? "#101727" : "#ffffff"}
+                    trackColor={{ false: "#cbd5f5", true: "#101727" }}
+                  />
                 </View>
 
                 <TouchableOpacity

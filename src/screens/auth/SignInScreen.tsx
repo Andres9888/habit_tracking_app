@@ -25,7 +25,6 @@ export default function SignInScreen() {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
         // Handle additional verification steps if needed
-        console.log(JSON.stringify(signInAttempt, null, 2));
         Alert.alert('Error', 'Sign in incomplete. Please check your credentials.');
       }
     } catch (error: any) {

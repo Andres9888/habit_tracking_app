@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text } from "react-native";
 import { format } from "date-fns";
 import { useDateSelectorLogic } from "./DateSelector.hooks";
@@ -7,7 +7,7 @@ interface DateSelectorProps {
   dates: Date[];
 }
 
-export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
+const DateSelectorComponent: React.FC<DateSelectorProps> = ({ dates }) => {
   const { isToday } = useDateSelectorLogic();
 
   return (
@@ -50,3 +50,5 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
     </View>
   );
 };
+
+export const DateSelector = memo(DateSelectorComponent);

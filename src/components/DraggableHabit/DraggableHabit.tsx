@@ -25,7 +25,7 @@ interface DraggableHabitProps {
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   streak: number;
-  isCompactMode: boolean;
+  isCompactMode?: boolean;
   toggleHabit: (args: { habitId: Id<"habits">; date: string }) => void;
 }
 
@@ -34,20 +34,25 @@ export default function DraggableHabit({
   weekDateStrings,
   weekStatus,
   streak,
-  isCompactMode,
+  isCompactMode = false,
   toggleHabit,
 }: DraggableHabitProps) {
   const { emoji, name } = useDraggableHabitLogic(habit);
 
   return (
     <View
+      accessibilityRole="summary"
       className={clsx(
         "gap-4 rounded-[16px] bg-white px-5 shadow-sm",
         isCompactMode ? "py-3" : "py-5"
       )}
     >
       {/* Habit Header with Emoji + Name */}
-      <View className="flex-row items-center gap-3">
+      <View
+        accessibilityLabel={`Habit ${name || habit.name}`}
+        accessibilityRole="header"
+        className="flex-row items-center gap-3"
+      >
         {emoji && (
           <Text
             className="text-2xl leading-8 text-[#101727]"

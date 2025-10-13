@@ -4,7 +4,7 @@ import "../global.css";
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format } from "date-fns";
 import { Plus, Settings } from "lucide-react-native";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
@@ -107,17 +107,18 @@ function App() {
     <GestureHandlerRootView className="flex-1">
       <ScrollView className="flex-1 bg-white">
         <View className="mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12">
+        >
           <View className="mb-8 flex-row items-center justify-between">
             <Text className="text-4xl font-extrabold tracking-tight text-slate-900">
               Habits
             </Text>
             <Pressable
-              accessibilityLabel="Settings"
+              accessibilityLabel="Open settings"
               accessibilityRole="button"
               className="h-10 w-10 items-center justify-center rounded-[10px]"
               onPress={() => setIsSettingsOpen(true)}
             >
-              <Settings color="#101727" size={24} />
+              <Settings color="#101727" size={24} strokeWidth={2.25} />
             </Pressable>
           </View>
 
@@ -165,52 +166,61 @@ function App() {
           )}
 
           <View className="gap-4">
-            {orderedHabits.map((habit: any) => {
-              const weekStatus = weekDateStrings.map((ds) =>
-                getHabitStatus(habit._id, ds)
-              );
-
-              // Calculate streak (consecutive days completed up to today)
-              const calculateStreak = () => {
-                const completedDates = new Set(
-                  tracking
-                    .filter((t) => t.habitId === habit._id && t.completed)
-                    .map((t) => t.date)
-                );
-
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                let streak = 0;
-                const currentDate = new Date(today);
-
-                // Count consecutive days backward from today
-                while (true) {
-                  const dateString = format(currentDate, "yyyy-MM-dd");
-                  if (completedDates.has(dateString)) {
-                    streak++;
-                    currentDate.setDate(currentDate.getDate() - 1);
-                  } else {
-                    break;
-                  }
+            {(() => {
+              // Memoize completed dates per habit to avoid recomputation
+              const completedDatesByHabit = useMemo(() => {
+                const map = new Map<string, Set<string>>();
+                for (const t of tracking) {
+                  if (!t.completed) continue;
+                  if (!map.has(t.habitId)) map.set(t.habitId, new Set<string>());
+                  map.get(t.habitId)!.add(t.date);
                 }
+                return map;
+              }, [tracking]);
 
-                return streak;
-              };
+              const getStreak = useCallback(
+                (habitId: string) => {
+                  const completedDates = completedDatesByHabit.get(habitId);
+                  if (!completedDates) return 0;
 
-              const streak = calculateStreak();
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  const currentDate = new Date(today);
 
-              return (
-                <DraggableHabit
-                  key={habit._id}
-                  habit={habit}
-                  streak={streak}
-                  toggleHabit={toggleHabit}
-                  weekDateStrings={weekDateStrings}
-                  weekStatus={weekStatus}
-                />
+                  let streak = 0;
+                  // Count consecutive days backward from today
+                  // eslint-disable-next-line no-constant-condition
+                  while (true) {
+                    const dateString = format(currentDate, "yyyy-MM-dd");
+                    if (completedDates.has(dateString)) {
+                      streak++;
+                      currentDate.setDate(currentDate.getDate() - 1);
+                    } else {
+                      break;
+                    }
+                  }
+                  return streak;
+                },
+                [completedDatesByHabit]
               );
-            })}
+
+              return orderedHabits.map((habit: any) => {
+                const weekStatus = weekDateStrings.map((ds) =>
+                  getHabitStatus(habit._id, ds)
+                );
+                const streak = getStreak(habit._id);
+                return (
+                  <DraggableHabit
+                    key={habit._id}
+                    habit={habit}
+                    streak={streak}
+                    toggleHabit={toggleHabit}
+                    weekDateStrings={weekDateStrings}
+                    weekStatus={weekStatus}
+                  />
+                );
+              });
+            })()}
           </View>
         </View>
         <Toaster />
@@ -227,7 +237,7 @@ function App() {
           className="h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg"
           onPress={handleToggleForm}
         >
-          <Plus color="#ffffff" size={24} />
+          <Plus color="#ffffff" size={24} strokeWidth={2.25} />
         </Pressable>
       </View>
     </GestureHandlerRootView>

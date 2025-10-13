@@ -21,19 +21,19 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   weekDateStrings,
   onToggle,
 }) => {
-  const { renderConnectingLine } = useHabitChainVisualizerLogic(weekStatus);
+  const { getConnectorColor } = useHabitChainVisualizerLogic(weekStatus);
 
   return (
     <View className="gap-4">
       <View className="h-10 flex-row items-center">
         {weekStatus.map((status, index) => {
           const isCompleted = status === "done";
-          const showLine = renderConnectingLine(index);
+          const connectorColor = getConnectorColor(index);
 
           const dayLabel = `Day ${index + 1}`;
           const statusLabel = isCompleted ? "Completed" : "Not completed";
           const accessibilityLabel = `${dayLabel}: ${statusLabel}`;
-          const accessibilityHint = "Tap to toggle completion for this day";
+          const accessibilityHint = `Tap to toggle completion for day ${index + 1}`;
 
           return (
             <View key={index} className="flex-row items-center">
@@ -50,14 +50,21 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               >
                 {isCompleted && (
                   <View className="items-center justify-center">
-                    <ChainLinkIcon color="#ffffff" size={16} />
+                    <ChainLinkIcon
+                      angleDeg={0}
+                      color="#ffffff"
+                      size={20}
+                      variant="stroke"
+                    />
                   </View>
                 )}
               </Pressable>
-              {showLine && (
-                <View className="h-[2px] w-[22px] bg-[#48bb78]"
-                />
-              )}
+              <View
+                accessibilityElementsHidden
+                importantForAccessibility="no"
+                className="h-[2px] w-[22px]"
+                style={{ backgroundColor: connectorColor }}
+              />
             </View>
           );
         })}
