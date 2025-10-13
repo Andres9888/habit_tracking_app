@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import { clsx } from "clsx";
+import clsx from "clsx";
 
 type CheckboxSize = "sm" | "md" | "lg";
 type CheckboxVariant = "primary" | "success" | "neutral" | "danger";

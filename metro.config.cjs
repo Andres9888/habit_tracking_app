@@ -11,4 +11,7 @@ const config = withNativeWind(baseConfig, { input: './global.css' });
 config.resolver.assetExts.push('ttf', 'otf', 'woff', 'woff2');
 config.resolver.sourceExts.push('jsx', 'js', 'ts', 'tsx', 'json');
 
+// Add support for react-native-worklets
+config.resolver.sourceExts.push('worklet.ts', 'worklet.js', 'worklet.tsx', 'worklet.jsx');
+
 module.exports = config;
