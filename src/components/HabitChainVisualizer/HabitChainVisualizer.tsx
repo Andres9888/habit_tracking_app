@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
-import { ChainLinkIcon } from "../ChainLinkIcon";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
 
@@ -21,14 +20,14 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   weekDateStrings,
   onToggle,
 }) => {
-  const { renderConnectingLine } = useHabitChainVisualizerLogic(weekStatus);
+  const { getCircleFill } = useHabitChainVisualizerLogic(weekStatus);
 
   return (
     <View className="gap-4">
       <View className="h-10 flex-row items-center">
         {weekStatus.map((status, index) => {
           const isCompleted = status === "done";
-          const showLine = renderConnectingLine(index);
+          const fillClass = getCircleFill(index);
 
           const dayLabel = `Day ${index + 1}`;
           const statusLabel = isCompleted ? "Completed" : "Not completed";
@@ -41,23 +40,16 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                 accessibilityHint={accessibilityHint}
                 accessibilityLabel={accessibilityLabel}
                 accessibilityRole="button"
-                className={`h-10 w-10 items-center justify-center rounded-full ${
-                  isCompleted ? "bg-[#48bb78]" : "bg-[#dde3ed]"
-                }`}
+                testID={`habit-status-${index}`}
+                className={`mx-1 h-10 w-10 items-center justify-center rounded-full ${fillClass}`}
                 onPress={() =>
                   onToggle({ date: weekDateStrings[index], habitId })
                 }
               >
                 {isCompleted && (
-                  <View className="items-center justify-center">
-                    <ChainLinkIcon color="#ffffff" size={16} />
-                  </View>
+                  <View className="h-2 w-2 rounded-full bg-white" />
                 )}
               </Pressable>
-              {showLine && (
-                <View className="h-[2px] w-[22px] bg-[#48bb78]"
-                />
-              )}
             </View>
           );
         })}
