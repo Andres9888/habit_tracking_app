@@ -1,52 +1,18 @@
 import { Modal, Text, TouchableOpacity, View } from "react-native";
-import Switch from "../Switch";
-import { useEffect, useState } from "react";
-import { getCompactMode, setCompactMode } from "../../lib/settingsStorage";
 import ArchivedHabitsModal from "../ArchivedHabitsModal";
 import { useSettingsModalLogic } from "./SettingsModal.hooks";
 
 interface SettingsModalProps {
-  onClose: () => void;
   visible: boolean;
-  // optional control from parent (App)
-  isCompact?: boolean;
-  onChangeCompact?: (next: boolean) => void;
+  onClose: () => void;
 }
 
 export default function SettingsModal({
   visible,
   onClose,
-  isCompact,
-  onChangeCompact,
 }: SettingsModalProps) {
   const { user, view, setView, handleClose, handleSignOut } =
     useSettingsModalLogic({ onClose, visible });
-  const [isCompactLocal, setIsCompactLocal] = useState(isCompact ?? false);
-
-  useEffect(() => {
-    let mounted = true;
-    // If parent controls the value, sync from prop; otherwise read storage when opening
-    if (typeof isCompact === "boolean") {
-      setIsCompactLocal(isCompact);
-    } else {
-      (async () => {
-        const saved = await getCompactMode();
-        if (mounted) setIsCompactLocal(saved);
-      })();
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [visible, isCompact]);
-
-  const handleToggleCompact = async () => {
-    const next = !isCompactLocal;
-    setIsCompactLocal(next);
-    await setCompactMode(next);
-    if (typeof onChangeCompact === "function") {
-      onChangeCompact(next);
-    }
-  };
 
   return (
     <Modal
@@ -84,25 +50,6 @@ export default function SettingsModal({
               </View>
 
               <View className="gap-6">
-                {/* Compact Mode */}
-                <View className="items-center justify-between rounded-2xl bg-slate-50 px-5 py-4">
-                  <View className="w-full flex-row items-center justify-between">
-                    <View className="flex-1 pr-4">
-                      <Text className="text-base font-semibold text-slate-900">
-                        Compact Mode
-                      </Text>
-                      <Text className="text-[11px] text-slate-500">
-                        Show more habits on screen
-                      </Text>
-                    </View>
-                    <Switch
-                      accessibilityLabel="Toggle compact mode"
-                      checked={isCompactLocal}
-                      onPress={handleToggleCompact}
-                      size="md"
-                    />
-                  </View>
-                </View>
                 <View className="gap-2 rounded-2xl bg-slate-50 px-5 py-4">
                   <Text className="text-[10px] font-semibold tracking-[2.5px] text-slate-500">
                     SIGNED IN AS

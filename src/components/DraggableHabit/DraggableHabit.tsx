@@ -21,7 +21,6 @@ interface Habit {
 
 interface DraggableHabitProps {
   habit: Habit;
-  isCompactMode?: boolean;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   streak: number;
@@ -30,7 +29,6 @@ interface DraggableHabitProps {
 
 export default function DraggableHabit({
   habit,
-  isCompactMode = false,
   weekDateStrings,
   weekStatus,
   streak,
@@ -39,27 +37,11 @@ export default function DraggableHabit({
   const { emoji, name } = useDraggableHabitLogic(habit);
 
   return (
-    <View
-      className={
-        isCompactMode
-          ? "gap-2 rounded-[16px] bg-white px-5 py-3 shadow-sm"
-          : "gap-4 rounded-[16px] bg-white p-5 shadow-sm"
-      }
-    >
+    <View className="gap-4 rounded-[16px] bg-white p-5 shadow-sm">
       {/* Habit Header with Emoji + Name */}
       <View className="flex-row items-center gap-3">
-        {emoji && (
-          <Text className={isCompactMode ? "text-xl leading-7" : "text-2xl leading-8"}>
-            {emoji}
-          </Text>
-        )}
-        <Text
-          className={
-            isCompactMode
-              ? "flex-1 text-base font-semibold text-[#101727]"
-              : "flex-1 text-lg font-semibold text-[#101727]"
-          }
-        >
+        {emoji && <Text className="text-2xl leading-8">{emoji}</Text>}
+        <Text className="flex-1 text-lg font-semibold text-[#101727]">
           {name || habit.name}
         </Text>
       </View>
@@ -67,7 +49,6 @@ export default function DraggableHabit({
       {/* Chain Visualization */}
       <HabitChainVisualizer
         habitId={habit._id}
-        isCompactMode={isCompactMode}
         streak={streak}
         weekDateStrings={weekDateStrings}
         weekStatus={weekStatus}

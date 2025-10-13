@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, View, ViewStyle, Animated } from "react-native";
-import clsx from "clsx";
+import { clsx } from "clsx";
 
 type SwitchSize = "sm" | "md" | "lg";
 
