@@ -1,15 +1,24 @@
+import { parse, startOfDay } from "date-fns";
+
 type HabitStatus = "done" | "missed" | "planned";
 
-export const useHabitChainVisualizerLogic = (weekStatus: HabitStatus[]) => {
-  const getConnectorColor = (index: number): string => {
-    // Always render connectors between static circles; only color changes
-    if (index >= weekStatus.length - 1) return "transparent";
-    const leftDone = weekStatus[index] === "done";
-    const rightDone = weekStatus[index + 1] === "done";
-    return leftDone && rightDone ? "#48bb78" : "#dde3ed";
+export const useHabitChainVisualizerLogic = (
+  weekDateStrings: string[],
+  weekStatus: HabitStatus[]
+) => {
+  const today = startOfDay(new Date());
+
+  const isFutureDate = (index: number): boolean => {
+    const parsed = parse(weekDateStrings[index], "yyyy-MM-dd", new Date());
+    const normalized = startOfDay(parsed);
+    return normalized.getTime() > today.getTime();
   };
 
+  const isCompleted = (index: number): boolean =>
+    weekStatus[index] === "done";
+
   return {
-    getConnectorColor,
+    isFutureDate,
+    isCompleted,
   };
 };

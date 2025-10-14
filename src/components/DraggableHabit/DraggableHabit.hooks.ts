@@ -19,11 +19,36 @@ interface Habit {
   [key: string]: any;
 }
 
+const ACCENT_COLORS = [
+  "#4ADE80",
+  "#60A5FA",
+  "#F59E0B",
+  "#A855F7",
+  "#F97316",
+  "#38BDF8",
+  "#F472B6",
+];
+
+const pickAccentColor = (input: string): string => {
+  if (!input) {
+    return ACCENT_COLORS[0];
+  }
+
+  const codeSum = Array.from(input).reduce(
+    (sum, char) => sum + char.charCodeAt(0),
+    0
+  );
+
+  return ACCENT_COLORS[codeSum % ACCENT_COLORS.length];
+};
+
 export const useDraggableHabitLogic = (habit: Habit) => {
   const { emoji, name } = getEmojiAndName(habit.name);
+  const accentColor = pickAccentColor(name || habit.name);
 
   return {
     emoji,
     name,
+    accentColor,
   };
 };

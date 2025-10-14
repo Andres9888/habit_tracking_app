@@ -1,82 +1,137 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
-import { ChainLinkIcon } from "../ChainLinkIcon";
+import React, { useEffect, useRef } from "react";
+import { Animated, Easing, Pressable, View } from "react-native";
+import { parse, format } from "date-fns";
+import { Check } from "lucide-react-native";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+interface HabitDayToggleProps {
+  accentColor: string;
+  accessibilityHint?: string;
+  accessibilityLabel: string;
+  disabled: boolean;
+  onPress: () => void;
+  completed: boolean;
+}
+
+const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
+  accentColor,
+  accessibilityHint,
+  accessibilityLabel,
+  disabled,
+  onPress,
+  completed,
+}) => {
+  const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(completion, {
+      toValue: completed ? 1 : 0,
+      duration: completed ? 220 : 180,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    }).start();
+  }, [completed, completion]);
+
+  const backgroundColor = completion.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["#e5e7eb", accentColor],
+  });
+
+  const scale = completion.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.94, 1],
+  });
+
+  return (
+    <AnimatedPressable
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      className="h-9 w-9 items-center justify-center rounded-full"
+      disabled={disabled}
+      onPress={onPress}
+      style={{
+        opacity: disabled ? 0.4 : 1,
+        backgroundColor,
+        transform: [{ scale }],
+      }}
+    >
+      <Animated.View
+        style={{
+          opacity: completion,
+          transform: [
+            {
+              scale: completion.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.4, 1],
+              }),
+            },
+          ],
+        }}
+      >
+        <Check color="#ffffff" size={16} strokeWidth={2.25} />
+      </Animated.View>
+    </AnimatedPressable>
+  );
+};
 
 type HabitStatus = "done" | "missed" | "planned";
 
 interface HabitChainVisualizerProps {
-  weekStatus: HabitStatus[];
-  streak: number;
+  accentColor: string;
   habitId: Id<"habits">;
-  weekDateStrings: string[];
   onToggle: (args: { habitId: Id<"habits">; date: string }) => void;
+  weekDateStrings: string[];
+  weekStatus: HabitStatus[];
 }
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
-  weekStatus,
-  streak,
+  accentColor,
   habitId,
-  weekDateStrings,
   onToggle,
+  weekDateStrings,
+  weekStatus,
 }) => {
-  const { getConnectorColor } = useHabitChainVisualizerLogic(weekStatus);
+  const { isFutureDate, isCompleted } = useHabitChainVisualizerLogic(
+    weekDateStrings,
+    weekStatus
+  );
+  const todayLabel = format(new Date(), "MMM d, EEE").toUpperCase();
 
   return (
-    <View className="gap-4">
-      <View className="h-10 flex-row items-center">
-        {weekStatus.map((status, index) => {
-          const isCompleted = status === "done";
-          const connectorColor = getConnectorColor(index);
+    <View className="flex-row items-center justify-between gap-2">
+      {weekDateStrings.map((dateString, index) => {
+        const completed = isCompleted(index);
+        const disabled = isFutureDate(index);
 
-          const dayLabel = `Day ${index + 1}`;
-          const statusLabel = isCompleted ? "Completed" : "Not completed";
-          const accessibilityLabel = `${dayLabel}: ${statusLabel}`;
-          const accessibilityHint = `Tap to toggle completion for day ${index + 1}`;
+        const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
+        const dateLabel = format(parsedDate, "MMM d, EEE").toUpperCase();
+        const statusLabel = completed ? "Completed" : "Not completed";
+        const toggleInstruction = `Tap to toggle completion for ${dateLabel}`;
+        const accessibilityLabel =
+          dateLabel === todayLabel
+            ? `Today, ${statusLabel}`
+            : `${dateLabel}: ${statusLabel}`;
+        const accessibilityHint = disabled
+          ? "Future dates are unavailable"
+          : toggleInstruction;
 
-          return (
-            <View key={index} className="flex-row items-center">
-              <Pressable
-                accessibilityHint={accessibilityHint}
-                accessibilityLabel={accessibilityLabel}
-                accessibilityRole="button"
-                className={`h-10 w-10 items-center justify-center rounded-full ${
-                  isCompleted ? "bg-[#48bb78]" : "bg-[#dde3ed]"
-                }`}
-                onPress={() =>
-                  onToggle({ date: weekDateStrings[index], habitId })
-                }
-              >
-                {isCompleted && (
-                  <View className="items-center justify-center">
-                    <ChainLinkIcon
-                      angleDeg={0}
-                      color="#ffffff"
-                      size={20}
-                      variant="stroke"
-                    />
-                  </View>
-                )}
-              </Pressable>
-              <View
-                accessibilityElementsHidden
-                importantForAccessibility="no"
-                className="h-[2px] w-[22px]"
-                style={{ backgroundColor: connectorColor }}
-              />
-            </View>
-          );
-        })}
-      </View>
-
-      {streak > 0 && (
-        <Text
-          className="text-xs font-semibold uppercase tracking-wider text-[#a0aec0]"
-        >
-          STREAK • {streak} DAYS
-        </Text>
-      )}
+        return (
+          <HabitDayToggle
+            key={dateString}
+            accessibilityHint={accessibilityHint}
+            accessibilityLabel={accessibilityLabel}
+            accentColor={accentColor}
+            completed={completed}
+            disabled={disabled}
+            onPress={() => onToggle({ date: dateString, habitId })}
+          />
+        );
+      })}
     </View>
   );
 };

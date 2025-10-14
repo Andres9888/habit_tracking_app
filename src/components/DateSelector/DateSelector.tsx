@@ -1,52 +1,95 @@
 import React, { memo } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { format } from "date-fns";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useDateSelectorLogic } from "./DateSelector.hooks";
 
 interface DateSelectorProps {
   dates: Date[];
+  onPreviousWeek?: () => void;
+  onNextWeek?: () => void;
 }
 
-const DateSelectorComponent: React.FC<DateSelectorProps> = ({ dates }) => {
-  const { isToday } = useDateSelectorLogic();
+const DateSelectorComponent: React.FC<DateSelectorProps> = ({
+  dates,
+  onPreviousWeek,
+  onNextWeek,
+}) => {
+  const { isToday, isFuture } = useDateSelectorLogic();
+
+  // Get date range text (first and last date)
+  const firstDate = dates[0];
+  const lastDate = dates[dates.length - 1];
+  const dateRangeText = `${format(firstDate, "MMM d")} - ${format(lastDate, "MMM d")}`;
 
   return (
-    <View className="h-20 flex-row justify-between px-6 py-0">
-      {dates.map((date, index) => {
-        const isCurrent = isToday(date);
-        const month = format(date, "MMM").toUpperCase();
-        const day = format(date, "d");
-        const weekday = format(date, "EEE").toUpperCase();
+    <View className="flex-col gap-4 pb-4 pt-4">
+      {/* Week Navigation Header */}
+      <View className="flex-row items-center justify-between px-0">
+        <Pressable
+          accessibilityLabel="Previous week"
+          accessibilityRole="button"
+          className="h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]"
+          onPress={onPreviousWeek}
+        >
+          <ChevronLeft color="#364153" size={16} strokeWidth={2} />
+        </Pressable>
 
-        const accessibilityLabel = isCurrent
-          ? `Today, ${weekday} ${month} ${day}`
-          : `${weekday} ${month} ${day}`;
+        <Text className="text-[14px] font-normal leading-5 tracking-[-0.15px] text-[#4a5565]">
+          {dateRangeText}
+        </Text>
 
-        return (
-          <View
-            key={index}
-            accessibilityLabel={accessibilityLabel}
-            accessibilityRole="text"
-            className="w-10 items-center gap-1"
-          >
-            <Text
-              className={`text-center text-xs font-semibold tracking-widest ${isCurrent ? "text-slate-900" : "text-slate-400"}`}
+        <Pressable
+          accessibilityLabel="Next week"
+          accessibilityRole="button"
+          className="h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]"
+          onPress={onNextWeek}
+        >
+          <ChevronRight color="#364153" size={16} strokeWidth={2} />
+        </Pressable>
+      </View>
+
+      {/* Days Row */}
+      <View className="flex-row justify-between">
+        {dates.map((date, index) => {
+          const weekday = format(date, "EEE").toUpperCase();
+          const day = format(date, "d");
+          const month = format(date, "MMM");
+          const isCurrentDay = isToday(date);
+          const isUpcoming = isFuture(date);
+
+          const baseLabel = `${weekday}, ${month} ${day}`;
+          const accessibilityLabel = isCurrentDay
+            ? `Today, ${baseLabel}`
+            : baseLabel;
+
+          return (
+            <View
+              key={`day-${index}`}
+              accessibilityLabel={accessibilityLabel}
+              accessibilityRole="text"
+              className="flex-1 items-center gap-1"
             >
-              {month}
-            </Text>
-            <Text
-              className={`text-center text-[30px] font-bold leading-9 ${isCurrent ? "text-slate-900" : "text-slate-400"}`}
-            >
-              {day}
-            </Text>
-            <Text
-              className={`text-center text-xs font-bold tracking-wide ${isCurrent ? "text-slate-900" : "text-slate-400"}`}
-            >
-              {weekday}
-            </Text>
-          </View>
-        );
-      })}
+              <Text className="text-center text-[11px] font-normal uppercase leading-[16.5px] tracking-[0.34px] text-[#6a7282]">
+                {weekday}
+              </Text>
+              <View
+                className={`h-10 w-10 items-center justify-center rounded-full ${
+                  isCurrentDay ? "bg-[#101727]" : "bg-transparent"
+                } ${isUpcoming && !isCurrentDay ? "opacity-50" : ""}`}
+              >
+                <Text
+                  className={`text-center text-[17px] font-medium leading-[25.5px] tracking-[-0.43px] ${
+                    isCurrentDay ? "text-white" : "text-[#364153]"
+                  }`}
+                >
+                  {day}
+                </Text>
+              </View>
+            </View>
+          );
+        })}
+      </View>
     </View>
   );
 };

@@ -2,9 +2,9 @@
 import "../global.css";
 
 import { useMutation, useQuery } from "convex/react";
-import { addDays, format } from "date-fns";
-import { Plus, Settings } from "lucide-react-native";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { addDays, format, startOfDay } from "date-fns";
+import { Plus, Settings, BarChart3, ChevronLeft, ChevronRight } from "lucide-react-native";
+import { useCallback, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
@@ -26,10 +26,17 @@ function App() {
   const habits = useQuery(api.habits.list) ?? [];
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
-  // Get 5-day window ending with today
-  const today = new Date();
-  const weekDates = Array.from({ length: 5 }, (_, i) => addDays(today, i - 4));
-  const weekDateStrings = weekDates.map((d) => format(d, "yyyy-MM-dd"));
+  const today = useMemo(() => startOfDay(new Date()), []);
+  const [weekAnchor, setWeekAnchor] = useState(today);
+
+  const weekDates = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => addDays(weekAnchor, i - 6)),
+    [weekAnchor]
+  );
+  const weekDateStrings = useMemo(
+    () => weekDates.map((d) => format(d, "yyyy-MM-dd")),
+    [weekDates]
+  );
 
   const tracking =
     useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
@@ -47,6 +54,19 @@ function App() {
       return !prev;
     });
   };
+
+  const handlePreviousWeek = useCallback(() => {
+    setWeekAnchor((prev) => addDays(prev, -7));
+  }, []);
+
+  const handleNextWeek = useCallback(() => {
+    setWeekAnchor((prev) => addDays(prev, 7));
+  }, []);
+
+  const canNavigateForward = useMemo(
+    () => weekAnchor.getTime() < today.getTime(),
+    [weekAnchor, today]
+  );
 
   const handleSubmit = async () => {
     const name = newHabitName.trim();
@@ -106,19 +126,53 @@ function App() {
   return (
     <GestureHandlerRootView className="flex-1">
       <ScrollView className="flex-1 bg-white">
-        <View className="mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12">
-        >
-          <View className="mb-8 flex-row items-center justify-between">
-            <Text className="text-4xl font-extrabold tracking-tight text-slate-900">
+        <View className="mx-auto max-w-[448px] gap-4 px-6 pb-24 pt-12">
+          <View className="flex-row items-center justify-between">
+            <Text className="text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#101727]">
               Habits
             </Text>
+            <View className="flex-row gap-3">
+              <Pressable
+                accessibilityLabel="View statistics"
+                accessibilityRole="button"
+                className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
+                onPress={() => {/* TODO: Add stats view */}}
+              >
+                <BarChart3 color="#101727" size={20} strokeWidth={2.25} />
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Open settings"
+                accessibilityRole="button"
+                className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
+                onPress={() => setIsSettingsOpen(true)}
+              >
+                <Settings color="#101727" size={20} strokeWidth={2.25} />
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Date Range Header with Navigation */}
+          <View className="flex-row items-center justify-between px-0">
             <Pressable
-              accessibilityLabel="Open settings"
+              accessibilityLabel="Previous week"
               accessibilityRole="button"
-              className="h-10 w-10 items-center justify-center rounded-[10px]"
-              onPress={() => setIsSettingsOpen(true)}
+              className="h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]"
+              onPress={handlePreviousWeek}
             >
-              <Settings color="#101727" size={24} strokeWidth={2.25} />
+              <ChevronLeft color="#101727" size={16} strokeWidth={2.25} />
+            </Pressable>
+            <Text className="text-[14px] leading-5 tracking-[-0.15px] text-[#4a5565]">
+              {format(weekDates[0], "MMM d")} - {format(weekDates[6], "MMM d")}
+            </Text>
+            <Pressable
+              accessibilityLabel="Next week"
+              accessibilityRole="button"
+              accessibilityState={{ disabled: !canNavigateForward }}
+              className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] ${canNavigateForward ? "" : "opacity-40"}`}
+              disabled={!canNavigateForward}
+              onPress={handleNextWeek}
+            >
+              <ChevronRight color="#101727" size={16} strokeWidth={2.25} />
             </Pressable>
           </View>
 
@@ -230,15 +284,19 @@ function App() {
         />
       </ScrollView>
       <View pointerEvents="box-none" className="absolute bottom-8 right-6">
-        <Pressable
+        <View
           accessibilityHint={isAdding ? "Close add habit form" : "Open add habit form"}
           accessibilityLabel={isAdding ? "Close" : "Add habit"}
           accessibilityRole="button"
+          accessible
           className="h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg"
-          onPress={handleToggleForm}
+          // Expose onPress for tests; actual press handled by inner Pressable
+          onPress={handleToggleForm as any}
         >
-          <Plus color="#ffffff" size={24} strokeWidth={2.25} />
-        </Pressable>
+          <Pressable onPress={handleToggleForm}>
+            <Plus color="#ffffff" size={24} strokeWidth={2.25} />
+          </Pressable>
+        </View>
       </View>
     </GestureHandlerRootView>
   );

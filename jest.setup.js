@@ -91,6 +91,9 @@ jest.mock("lucide-react-native", () => {
     ChevronRight: createMockIcon("ChevronRight"),
     X: createMockIcon("X"),
     Plus: createMockIcon("Plus"),
+    Check: createMockIcon("Check"),
+    Flame: createMockIcon("Flame"),
+    BarChart3: createMockIcon("BarChart3"),
   };
 });
 

@@ -9,6 +9,9 @@ export default {
     "**/?(*.)+(spec|test).[jt]s?(x)",
   ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/styleMock.js",
+  },
   collectCoverageFrom: [
     "**/*.{ts,tsx}",
     "!**/node_modules/**",

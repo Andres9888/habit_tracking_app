@@ -1,12 +1,12 @@
 {
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "9ad3f57e4654477eb6df7069dbabbeab.iFtCbeZTaR9me2BZ",
-    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
-    "API_TIMEOUT_MS": "3000000",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
-  },
+  // "env": {
+  //   "ANTHROPIC_AUTH_TOKEN": "9ad3f57e4654477eb6df7069dbabbeab.iFtCbeZTaR9me2BZ",
+  //   "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+  //   "API_TIMEOUT_MS": "3000000",
+  //   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
+  //   "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
+  //   "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
+  // },
   "hooks": {
     "PostToolUse": [
       {
@@ -15,7 +15,9 @@
           {
             "type": "command",
             "command": "./.claude/coderabbit-handler.sh",
-            "args": ["$TOOL_INPUT_FILE_PATH"]
+            "args": [
+              "$TOOL_INPUT_FILE_PATH"
+            ]
           }
         ]
       },
@@ -25,7 +27,9 @@
           {
             "type": "command",
             "command": "./.claude/coderabbit-handler.sh",
-            "args": ["$TOOL_INPUT_FILE_PATH"]
+            "args": [
+              "$TOOL_INPUT_FILE_PATH"
+            ]
           }
         ]
       }
@@ -50,7 +54,11 @@
     "claudeFlow": {
       "type": "stdio",
       "command": "npx",
-      "args": ["claude-flow@alpha", "mcp", "start"],
+      "args": [
+        "claude-flow@alpha",
+        "mcp",
+        "start"
+      ],
       "env": {
         "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
         "OPENAI_API_KEY": "${OPENAI_API_KEY}",
@@ -66,7 +74,11 @@
     "task-master-ai": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "args": [
+        "-y",
+        "--package=task-master-ai",
+        "task-master-ai"
+      ],
       "env": {
         "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
         "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}",
@@ -82,7 +94,9 @@
     "convex": {
       "type": "stdio",
       "command": "node",
-      "args": ["./convex-mcp-server.js"],
+      "args": [
+        "./convex-mcp-server.js"
+      ],
       "env": {
         "CONVEX_URL": "https://wandering-wolf-192.convex.cloud"
       }

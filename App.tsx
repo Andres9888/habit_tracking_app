@@ -60,12 +60,31 @@ function HabitsApp() {
   const habits = useQuery(api.habits.list) ?? [];
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
-  // Get 5-day window ending with today
-  const today = new Date();
-  const weekDates = Array.from({ length: 5 }, (_, i) => addDays(today, i - 4));
-  const weekDateStrings = weekDates.map((d) => format(d, 'yyyy-MM-dd'));
+  const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 
-  const tracking = useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
+  // Calculate dates based on week offset
+  const displayWeekDates = useMemo(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
+    const startOfWeek = addDays(today, -dayOfWeek); // Go back to Sunday
+    const baseStart = addDays(startOfWeek, currentWeekOffset * 7);
+    return Array.from({ length: 7 }, (_, i) => addDays(baseStart, i));
+  }, [currentWeekOffset]);
+
+  const displayWeekDateStrings = useMemo(
+    () => displayWeekDates.map((d) => format(d, 'yyyy-MM-dd')),
+    [displayWeekDates]
+  );
+
+  const tracking = useQuery(api.habits.getTracking, { dates: displayWeekDateStrings }) ?? [];
+
+  const handlePreviousWeek = useCallback(() => {
+    setCurrentWeekOffset((prev) => prev - 1);
+  }, []);
+
+  const handleNextWeek = useCallback(() => {
+    setCurrentWeekOffset((prev) => prev + 1);
+  }, []);
 
   // Load compact mode preference (native entry)
   useEffect(() => {
@@ -148,19 +167,38 @@ function HabitsApp() {
     <GestureHandlerRootView className='flex-1'>
       <ScrollView className='flex-1 bg-white'>
         <View className='mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12'>
-          <View className='mb-8 flex-row items-center justify-between'>
-            <Text className='text-4xl font-extrabold tracking-tight text-slate-900'>Habits</Text>
-            <Pressable
-              accessibilityLabel='Settings'
-              accessibilityRole='button'
-              className='h-10 w-10 items-center justify-center rounded-[10px]'
-              onPress={() => setIsSettingsOpen(true)}
-            >
-              <Settings color='#101727' size={24} />
-            </Pressable>
+          <View className='mb-2 flex-row items-center justify-between'>
+            <Text className='text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#0f172a]'>Habits</Text>
+            <View className='flex-row gap-3'>
+              <Pressable
+                accessibilityLabel='View statistics'
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+              >
+                <View className='h-5 w-5 items-center justify-center'>
+                  <View className='flex-col gap-[2px]'>
+                    <View className='h-[3px] w-[4px] rounded-full bg-[#364153]' />
+                    <View className='h-[6px] w-[4px] rounded-full bg-[#364153]' />
+                    <View className='h-[9px] w-[4px] rounded-full bg-[#364153]' />
+                  </View>
+                </View>
+              </Pressable>
+              <Pressable
+                accessibilityLabel='Open settings'
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+                onPress={() => setIsSettingsOpen(true)}
+              >
+                <Settings color='#364153' size={20} />
+              </Pressable>
+            </View>
           </View>
 
-          <DateSelector dates={weekDates} />
+          <DateSelector
+            dates={displayWeekDates}
+            onPreviousWeek={handlePreviousWeek}
+            onNextWeek={handleNextWeek}
+          />
 
           {isAdding && (
             <View className='mb-8 rounded-3xl border border-slate-200 bg-white/90 p-5'>
@@ -195,7 +233,7 @@ function HabitsApp() {
 
           <View className='gap-4'>
             {orderedHabits.map((habit) => {
-              const weekStatus = weekDateStrings.map((ds) => getHabitStatus(habit._id, ds));
+              const weekStatus = displayWeekDateStrings.map((ds) => getHabitStatus(habit._id, ds));
 
               // Calculate streak (consecutive days completed up to today)
               const calculateStreak = () => {
@@ -232,7 +270,7 @@ function HabitsApp() {
                   isCompactMode={isCompactMode}
                   streak={streak}
                   toggleHabit={toggleHabit}
-                  weekDateStrings={weekDateStrings}
+                  weekDateStrings={displayWeekDateStrings}
                   weekStatus={weekStatus}
                 />
               );
