@@ -18,9 +18,11 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
         const day = format(date, "d");
         const weekday = format(date, "EEE").toUpperCase();
 
+        // Accessibility label in order: Month Day, Weekday
+        const labelCore = `${month} ${day}, ${weekday}`;
         const accessibilityLabel = isCurrent
-          ? `Today, ${weekday} ${month} ${day}`
-          : `${weekday} ${month} ${day}`;
+          ? `Today, ${labelCore}`
+          : labelCore;
 
         return (
           <View
@@ -30,17 +32,23 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ dates }) => {
             className="w-10 items-center gap-1"
           >
             <Text
-              className={`text-center text-xs font-semibold tracking-widest ${isCurrent ? "text-slate-900" : "text-slate-400"}`}
+              className={`text-center text-xs font-semibold tracking-widest ${
+                isCurrent ? "text-[#101727]" : "text-[#a0aec0]"
+              }`}
             >
               {month}
             </Text>
             <Text
-              className={`text-center text-[30px] font-bold leading-9 ${isCurrent ? "text-slate-900" : "text-slate-400"}`}
+              className={`text-center text-[30px] font-bold leading-9 ${
+                isCurrent ? "text-[#101727]" : "text-[#a0aec0]"
+              }`}
             >
               {day}
             </Text>
             <Text
-              className={`text-center text-xs font-bold tracking-wide ${isCurrent ? "text-slate-900" : "text-slate-400"}`}
+              className={`text-center text-xs font-bold tracking-wide ${
+                isCurrent ? "text-[#101727]" : "text-[#a0aec0]"
+              }`}
             >
               {weekday}
             </Text>

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
+import { parse, format } from "date-fns";
 import { ChainLinkIcon } from "../ChainLinkIcon";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
@@ -7,33 +8,36 @@ import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
 type HabitStatus = "done" | "missed" | "planned";
 
 interface HabitChainVisualizerProps {
-  weekStatus: HabitStatus[];
-  streak: number;
   habitId: Id<"habits">;
-  weekDateStrings: string[];
   onToggle: (args: { habitId: Id<"habits">; date: string }) => void;
+  streak: number;
+  weekDateStrings: string[];
+  weekStatus: HabitStatus[];
 }
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
-  weekStatus,
-  streak,
   habitId,
-  weekDateStrings,
   onToggle,
+  streak,
+  weekDateStrings,
+  weekStatus,
 }) => {
-  const { renderConnectingLine } = useHabitChainVisualizerLogic(weekStatus);
+  const { getConnectorColor } = useHabitChainVisualizerLogic(weekStatus);
 
   return (
     <View className="gap-4">
       <View className="h-10 flex-row items-center">
         {weekStatus.map((status, index) => {
           const isCompleted = status === "done";
-          const showLine = renderConnectingLine(index);
+          const isLast = index === weekStatus.length - 1;
+          const connectorColor = getConnectorColor(index);
 
-          const dayLabel = `Day ${index + 1}`;
+          // Accessibility text with specific date
+          const parsedDate = parse(weekDateStrings[index], "yyyy-MM-dd", new Date());
+          const dateLabel = format(parsedDate, "MMM d, EEE").toUpperCase();
           const statusLabel = isCompleted ? "Completed" : "Not completed";
-          const accessibilityLabel = `${dayLabel}: ${statusLabel}`;
-          const accessibilityHint = "Tap to toggle completion for this day";
+          const accessibilityLabel = `${dateLabel}: ${statusLabel}`;
+          const accessibilityHint = `Tap to toggle completion for ${dateLabel}`;
 
           return (
             <View key={index} className="flex-row items-center">
@@ -54,8 +58,10 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                   </View>
                 )}
               </Pressable>
-              {showLine && (
-                <View className="h-[2px] w-[22px] bg-[#48bb78]"
+              {!isLast && (
+                <View
+                  className="h-[2px] w-[22px]"
+                  style={{ backgroundColor: connectorColor }}
                 />
               )}
             </View>
@@ -64,9 +70,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
       </View>
 
       {streak > 0 && (
-        <Text
-          className="text-xs font-semibold uppercase tracking-wider text-[#a0aec0]"
-        >
+        <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-[#a0aec0]">
           STREAK • {streak} DAYS
         </Text>
       )}

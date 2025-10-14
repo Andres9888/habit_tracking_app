@@ -1,16 +1,14 @@
 type HabitStatus = "done" | "missed" | "planned";
 
 export const useHabitChainVisualizerLogic = (weekStatus: HabitStatus[]) => {
-  const renderConnectingLine = (index: number): boolean => {
-    // Show connecting line if current day is done AND next day is done
-    return (
-      index < weekStatus.length - 1 &&
-      weekStatus[index] === "done" &&
-      weekStatus[index + 1] === "done"
-    );
+  const getConnectorColor = (index: number): string => {
+    if (index >= weekStatus.length - 1) return "#dde3ed";
+    const currentDone = weekStatus[index] === "done";
+    const nextDone = weekStatus[index + 1] === "done";
+    return currentDone && nextDone ? "#48bb78" : "#dde3ed";
   };
 
   return {
-    renderConnectingLine,
+    getConnectorColor,
   };
 };

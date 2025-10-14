@@ -22,20 +22,20 @@ interface Habit {
 
 interface DraggableHabitProps {
   habit: Habit;
+  isCompactMode?: boolean;
+  streak: number;
+  toggleHabit: (args: { habitId: Id<"habits">; date: string }) => void;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
-  streak: number;
-  isCompactMode: boolean;
-  toggleHabit: (args: { habitId: Id<"habits">; date: string }) => void;
 }
 
 export default function DraggableHabit({
   habit,
+  isCompactMode = false,
+  streak,
+  toggleHabit,
   weekDateStrings,
   weekStatus,
-  streak,
-  isCompactMode,
-  toggleHabit,
 }: DraggableHabitProps) {
   const { emoji, name } = useDraggableHabitLogic(habit);
 
@@ -65,10 +65,10 @@ export default function DraggableHabit({
       {/* Chain Visualization */}
       <HabitChainVisualizer
         habitId={habit._id}
+        onToggle={toggleHabit}
         streak={streak}
         weekDateStrings={weekDateStrings}
         weekStatus={weekStatus}
-        onToggle={toggleHabit}
       />
     </View>
   );

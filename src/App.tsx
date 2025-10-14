@@ -112,7 +112,7 @@ function App() {
               Habits
             </Text>
             <Pressable
-              accessibilityLabel="Settings"
+              accessibilityLabel="Open settings"
               accessibilityRole="button"
               className="h-10 w-10 items-center justify-center rounded-[10px]"
               onPress={() => setIsSettingsOpen(true)}
