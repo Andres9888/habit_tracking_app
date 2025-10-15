@@ -3,10 +3,10 @@ import ArchivedHabitsModal from "../ArchivedHabitsModal";
 import { useSettingsModalLogic } from "./SettingsModal.hooks";
 
 interface SettingsModalProps {
-  onClose: () => void;
-  visible: boolean;
   isCompact: boolean;
   onChangeCompact: (value: boolean) => void | Promise<void>;
+  onClose: () => void;
+  visible: boolean;
 }
 
 export default function SettingsModal({

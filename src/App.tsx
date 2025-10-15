@@ -5,21 +5,23 @@ import { useMutation, useQuery } from "convex/react";
 import { addDays, format, startOfDay } from "date-fns";
 import { Plus, Settings, BarChart3, ChevronLeft, ChevronRight } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { DateSelector } from "./components/DateSelector";
 import SettingsModal from "./components/SettingsModal";
+import AddHabitModal from "./components/AddHabitModal";
+import { getCompactMode, setCompactMode } from "./lib/settingsStorage";
 import DraggableHabit from "./components/DraggableHabit";
 
 type HabitStatus = "done" | "missed" | "planned";
 
 function App() {
-  const [isAdding, setIsAdding] = useState(false);
-  const [newHabitName, setNewHabitName] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCompactMode, setIsCompactMode] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -41,18 +43,13 @@ function App() {
   const tracking =
     useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
 
-  const canSubmit = useMemo(
-    () => newHabitName.trim().length > 0,
-    [newHabitName]
-  );
+  // Load compact mode preference once
+  useMemo(() => {
+    void getCompactMode().then((value) => setIsCompactMode(Boolean(value)));
+  }, []);
 
-  const handleToggleForm = () => {
-    setIsAdding((prev) => {
-      if (prev) {
-        setNewHabitName("");
-      }
-      return !prev;
-    });
+  const handleToggleAddModal = () => {
+    setIsAddModalOpen((prev) => !prev);
   };
 
   const handlePreviousWeek = useCallback(() => {
@@ -68,15 +65,9 @@ function App() {
     [weekAnchor, today]
   );
 
-  const handleSubmit = async () => {
-    const name = newHabitName.trim();
-    if (!name) {
-      return;
-    }
-
-    await createHabit({ name, notes: "" });
-    setNewHabitName("");
-    setIsAdding(false);
+  const handleCreateHabit = async ({ name, notes }: { name: string; notes?: string }) => {
+    if (!name.trim()) return;
+    await createHabit({ name, notes: notes ?? "" });
   };
 
   const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
@@ -178,46 +169,12 @@ function App() {
 
           <DateSelector dates={weekDates} />
 
-          {isAdding && (
-            <View className="mb-8 rounded-3xl border border-slate-200 bg-white/90 p-5">
-              <View className="gap-4">
-                <View className="gap-2">
-                  <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">
-                    NEW HABIT
-                  </Text>
-                  <TextInput
-                    autoFocus
-                    className="w-full rounded-3xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900"
-                    placeholder="Name your habit"
-                    placeholderTextColor="#999"
-                    value={newHabitName}
-                    onChangeText={setNewHabitName}
-                  />
-                </View>
-                <View className="flex-row items-center justify-end gap-3">
-                  <Pressable
-                    accessibilityRole="button"
-                    className="py-2"
-                    onPress={handleToggleForm}
-                  >
-                    <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">
-                      CANCEL
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    className={`rounded-3xl border border-slate-900 px-5 py-2 ${canSubmit ? "" : "opacity-40"}`}
-                    disabled={!canSubmit}
-                    onPress={handleSubmit}
-                  >
-                    <Text className="text-[11px] font-semibold tracking-[3px] text-slate-900">
-                      ADD
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>
-          )}
+          {/* Add Habit Modal (Figma-inspired) */}
+          <AddHabitModal
+            onClose={() => setIsAddModalOpen(false)}
+            onSubmit={handleCreateHabit}
+            visible={isAddModalOpen}
+          />
 
           <View className="gap-4">
             {(() => {
@@ -267,6 +224,7 @@ function App() {
                   <DraggableHabit
                     key={habit._id}
                     habit={habit}
+                    isCompactMode={isCompactMode}
                     streak={streak}
                     toggleHabit={toggleHabit}
                     weekDateStrings={weekDateStrings}
@@ -279,21 +237,25 @@ function App() {
         </View>
         <Toaster />
         <SettingsModal
-          visible={isSettingsOpen}
+          isCompact={isCompactMode}
+          onChangeCompact={async (value) => {
+            setIsCompactMode(value);
+            await setCompactMode(value);
+          }}
           onClose={() => setIsSettingsOpen(false)}
+          visible={isSettingsOpen}
         />
       </ScrollView>
       <View pointerEvents="box-none" className="absolute bottom-8 right-6">
         <View
-          accessibilityHint={isAdding ? "Close add habit form" : "Open add habit form"}
-          accessibilityLabel={isAdding ? "Close" : "Add habit"}
+          accessibilityHint={isAddModalOpen ? "Close add habit form" : "Open add habit form"}
+          accessibilityLabel={isAddModalOpen ? "Close" : "Add habit"}
           accessibilityRole="button"
           accessible
           className="h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg"
-          // Expose onPress for tests; actual press handled by inner Pressable
-          onPress={handleToggleForm as any}
+          onPress={handleToggleAddModal as any}
         >
-          <Pressable onPress={handleToggleForm}>
+          <Pressable onPress={handleToggleAddModal}>
             <Plus color="#ffffff" size={24} strokeWidth={2.25} />
           </Pressable>
         </View>
