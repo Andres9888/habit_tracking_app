@@ -6,8 +6,13 @@ import clsx from "clsx";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { HabitChainVisualizer } from "../HabitChainVisualizer";
 import { useDraggableHabitLogic } from "./DraggableHabit.hooks";
-import { Flame, Archive } from "lucide-react-native";
-import { HabitStrengthIndicator, type StrengthLevel } from "../HabitStrengthIndicator";
+import { Archive } from "lucide-react-native";
+import type { StrengthLevel } from "../HabitStrengthIndicator";
+
+// UI Constants
+const MAX_GRADIENT_HEIGHT = 36; // Maximum height of strength gradient in pixels
+const GRADIENT_OPACITY = 0.7; // Opacity of the strength gradient
+const GRADIENT_ANIMATION_DURATION = 600; // Duration of gradient height animation in ms
 
 type HabitStatus = "done" | "missed" | "planned";
 
@@ -99,12 +104,14 @@ export default function DraggableHabit({
   };
 
   const strengthPercentage = Math.round((habit.strength || 0) * 100);
-  const gradientHeight = useRef(new Animated.Value((habit.strength || 0) * 36)).current;
+  const gradientHeight = useRef(
+    new Animated.Value((habit.strength || 0) * MAX_GRADIENT_HEIGHT)
+  ).current;
 
   useEffect(() => {
     Animated.timing(gradientHeight, {
-      toValue: (habit.strength || 0) * 36,
-      duration: 600,
+      toValue: (habit.strength || 0) * MAX_GRADIENT_HEIGHT,
+      duration: GRADIENT_ANIMATION_DURATION,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: false,
     }).start();
@@ -118,7 +125,7 @@ export default function DraggableHabit({
         transform: [{ translateY }],
       }}
     >
-      <View className={clsx(isCompactMode ? "px-6 pt-6" : "px-6 pt-6")}>
+      <View className="px-6 pt-6">
         {/* Header with title and strength badge */}
         <View className="mb-4 flex-row items-center justify-between">
           <View className="flex-row items-center gap-2">
@@ -153,7 +160,7 @@ export default function DraggableHabit({
           style={{
             width: '100%',
             height: gradientHeight,
-            opacity: 0.7,
+            opacity: GRADIENT_OPACITY,
           }}
         >
           <LinearGradient

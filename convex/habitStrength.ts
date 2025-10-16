@@ -19,9 +19,18 @@ import { Id } from "./_generated/dataModel";
 // Habit Strength Parameters (Klein et al., 2011)
 // ADJUSTED: Reduced HDP from 0.175 to 0.02 to allow habits to reach ~88% equilibrium strength
 // Original HDP=0.175 created equilibrium at 46%, preventing habits from strengthening beyond that point
+//
+// Equilibrium calculation: At equilibrium, decay = gain
+// decay: HS × HDP
+// gain: (1 - HS) × HGP
+// Setting them equal: HS × HDP = (1 - HS) × HGP
+// Solving for HS: HS = HGP / (HDP + HGP) = 0.15 / (0.02 + 0.15) ≈ 0.88 (88%)
 const DEFAULT_HABIT_DECAY_PARAM = 0.02;  // HDP: Adjusted for higher equilibrium (~88%)
 const DEFAULT_HABIT_GAIN_PARAM = 0.15;   // HGP: Empirically validated optimal range 0.1-0.2
 const CONTEXT_CONSISTENCY = 1.0;          // Cuet: Simplified to 1.0 (same context assumed)
+
+// Calculated equilibrium point for reference
+const EQUILIBRIUM_STRENGTH = DEFAULT_HABIT_GAIN_PARAM / (DEFAULT_HABIT_DECAY_PARAM + DEFAULT_HABIT_GAIN_PARAM);
 
 // Memory Accessibility Parameters (Tobias, 2009; Zhang et al., 2021)
 const DEFAULT_ACCESSIBILITY_DECAY_PARAM = 0.3;      // ADP: Memory decay rate
