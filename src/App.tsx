@@ -3,7 +3,7 @@ import "../global.css";
 
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format, startOfDay } from "date-fns";
-import { Plus, Settings, BarChart3 } from "lucide-react-native";
+import { Plus, Settings, BarChart3, User } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
@@ -15,6 +15,7 @@ import SettingsModal from "./components/SettingsModal";
 import StatsNotesModal from "./components/StatsNotesModal";
 import CreateHabitModal from "./components/CreateHabitModal";
 import DraggableHabit from "./components/DraggableHabit";
+import CharacterScreen from "./screens/CharacterScreen";
 
 type HabitStatus = "done" | "missed" | "planned";
 
@@ -22,6 +23,7 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
+  const [showCharacterScreen, setShowCharacterScreen] = useState(false);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -111,6 +113,10 @@ function App() {
     [archiveHabit]
   );
 
+  if (showCharacterScreen) {
+    return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
+  }
+
   return (
     <GestureHandlerRootView className="flex-1">
       <ScrollView className="flex-1 bg-white">
@@ -120,6 +126,14 @@ function App() {
               Habits
             </Text>
             <View className="flex-row gap-3">
+              <Pressable
+                accessibilityLabel="View character"
+                accessibilityRole="button"
+                className="h-9 w-9 items-center justify-center rounded-full bg-purple-100"
+                onPress={() => setShowCharacterScreen(true)}
+              >
+                <User color="#9333ea" size={20} strokeWidth={2.25} />
+              </Pressable>
               <Pressable
                 accessibilityLabel="View statistics and notes"
                 accessibilityRole="button"
