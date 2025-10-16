@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { addDays, format } from 'date-fns';
-import { BarChart3, Settings, User } from 'lucide-react-native';
+import { BarChart3, Settings } from 'lucide-react-native';
 import { DateSelector } from '../../components/DateSelector';
 import CharacterScreen from '../CharacterScreen';
+import CharacterIcon from '../../components/CharacterIcon';
 import Animated, {
   FadeInDown,
   FadeOutUp,
@@ -173,10 +174,9 @@ export default function HabitHomeExample() {
             <View className='flex-row gap-3'>
               <Pressable
                 accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full bg-purple-100'
                 onPress={() => setShowCharacterScreen(true)}
               >
-                <User color={'#9333ea'} size={18} />
+                <CharacterIcon size={36} />
               </Pressable>
               <Pressable accessibilityRole='button' className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'>
                 <BarChart3 color={'#111'} size={18} />

@@ -150,8 +150,15 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
               {/* Avatar and Level */}
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center gap-3">
-                  <View className="h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
-                    <Text className="text-[30px] leading-9">🦸</Text>
+                  <View className="h-20 w-20 items-center justify-center rounded-full shadow-lg overflow-hidden">
+                    <LinearGradient
+                      colors={['#ad46ff', '#f6339a']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <Text className="text-[30px] leading-9">🦸</Text>
+                    </LinearGradient>
                   </View>
                   <View className="flex-col">
                     <View className="flex-row items-center gap-2">
@@ -165,11 +172,18 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                     </Text>
                   </View>
                 </View>
-                <View className="flex-row items-center gap-2 rounded-full bg-orange-500 px-4 py-2">
-                  <Trophy color="white" size={16} />
-                  <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-white">
-                    10
-                  </Text>
+                <View className="rounded-full overflow-hidden">
+                  <LinearGradient
+                    colors={['#ff8c00', '#ff6900']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 10 }}
+                  >
+                    <Trophy color="white" size={20} />
+                    <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-white">
+                      10
+                    </Text>
+                  </LinearGradient>
                 </View>
               </View>
 

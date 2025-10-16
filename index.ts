@@ -1,5 +1,6 @@
 import { registerRootComponent } from 'expo';
 
-import App from './App';
+// Use the newer App version from src/
+import App from './src/App';
 
 registerRootComponent(App);

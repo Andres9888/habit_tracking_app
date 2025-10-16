@@ -1,13 +1,14 @@
 // NativeWind global styles
 import "../global.css";
 
-import { useMutation, useQuery } from "convex/react";
+import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
+import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex/react";
 import { addDays, format, startOfDay } from "date-fns";
-import { Plus, Settings, BarChart3, User } from "lucide-react-native";
+import { Plus, Settings, BarChart3 } from "lucide-react-native";
+import type { ComponentType } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
-import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { DateSelector } from "./components/DateSelector";
@@ -16,10 +17,44 @@ import StatsNotesModal from "./components/StatsNotesModal";
 import CreateHabitModal from "./components/CreateHabitModal";
 import DraggableHabit from "./components/DraggableHabit";
 import CharacterScreen from "./screens/CharacterScreen";
+import CharacterIcon from "./components/CharacterIcon";
+import * as SecureStore from "expo-secure-store";
 
 type HabitStatus = "done" | "missed" | "planned";
 
-function App() {
+// Initialize Convex client for Expo
+const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
+if (!convexUrl) {
+  throw new Error("EXPO_PUBLIC_CONVEX_URL is required but was not provided");
+}
+const convex = new ConvexReactClient(convexUrl);
+
+// Initialize Clerk (optional for development)
+const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+// Token cache for Clerk
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
+
+const WebToaster: ComponentType = Platform.OS === "web"
+  ? (require("sonner").Toaster as ComponentType)
+  : () => null;
+
+function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
@@ -44,6 +79,44 @@ function App() {
 
   const tracking =
     useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
+
+  const completedDatesByHabit = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const t of tracking) {
+      if (!t.completed) continue;
+      if (!map.has(t.habitId)) {
+        map.set(t.habitId, new Set<string>());
+      }
+      map.get(t.habitId)!.add(t.date);
+    }
+    return map;
+  }, [tracking]);
+
+  const getStreak = useCallback(
+    (habitId: string) => {
+      const completedDates = completedDatesByHabit.get(habitId);
+      if (!completedDates) return 0;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const currentDate = new Date(today);
+
+      let streak = 0;
+      // Count consecutive days backward from today
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        const dateString = format(currentDate, "yyyy-MM-dd");
+        if (completedDates.has(dateString)) {
+          streak++;
+          currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      return streak;
+    },
+    [completedDatesByHabit]
+  );
 
   const handleToggleForm = () => {
     setIsCreateHabitOpen(true);
@@ -129,10 +202,9 @@ function App() {
               <Pressable
                 accessibilityLabel="View character"
                 accessibilityRole="button"
-                className="h-9 w-9 items-center justify-center rounded-full bg-purple-100"
                 onPress={() => setShowCharacterScreen(true)}
               >
-                <User color="#9333ea" size={20} strokeWidth={2.25} />
+                <CharacterIcon size={36} />
               </Pressable>
               <Pressable
                 accessibilityLabel="View statistics and notes"
@@ -161,65 +233,26 @@ function App() {
           />
 
           <View className="gap-4">
-            {(() => {
-              // Memoize completed dates per habit to avoid recomputation
-              const completedDatesByHabit = useMemo(() => {
-                const map = new Map<string, Set<string>>();
-                for (const t of tracking) {
-                  if (!t.completed) continue;
-                  if (!map.has(t.habitId)) map.set(t.habitId, new Set<string>());
-                  map.get(t.habitId)!.add(t.date);
-                }
-                return map;
-              }, [tracking]);
-
-              const getStreak = useCallback(
-                (habitId: string) => {
-                  const completedDates = completedDatesByHabit.get(habitId);
-                  if (!completedDates) return 0;
-
-                  const today = new Date();
-                  today.setHours(0, 0, 0, 0);
-                  const currentDate = new Date(today);
-
-                  let streak = 0;
-                  // Count consecutive days backward from today
-                  // eslint-disable-next-line no-constant-condition
-                  while (true) {
-                    const dateString = format(currentDate, "yyyy-MM-dd");
-                    if (completedDates.has(dateString)) {
-                      streak++;
-                      currentDate.setDate(currentDate.getDate() - 1);
-                    } else {
-                      break;
-                    }
-                  }
-                  return streak;
-                },
-                [completedDatesByHabit]
+            {orderedHabits.map((habit: any) => {
+              const weekStatus = weekDateStrings.map((ds) =>
+                getHabitStatus(habit._id, ds)
               );
-
-              return orderedHabits.map((habit: any) => {
-                const weekStatus = weekDateStrings.map((ds) =>
-                  getHabitStatus(habit._id, ds)
-                );
-                const streak = getStreak(habit._id);
-                return (
-                  <DraggableHabit
-                    key={habit._id}
-                    habit={habit}
-                    streak={streak}
-                    toggleHabit={toggleHabit}
-                    weekDateStrings={weekDateStrings}
-                    weekStatus={weekStatus}
-                    onArchive={handleArchive}
-                  />
-                );
-              });
-            })()}
+              const streak = getStreak(habit._id);
+              return (
+                <DraggableHabit
+                  key={habit._id}
+                  habit={habit}
+                  streak={streak}
+                  toggleHabit={toggleHabit}
+                  weekDateStrings={weekDateStrings}
+                  weekStatus={weekStatus}
+                  onArchive={handleArchive}
+                />
+              );
+            })}
           </View>
         </View>
-        <Toaster />
+        <WebToaster />
         <SettingsModal
           visible={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
@@ -248,4 +281,24 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  // Temporarily bypass Clerk authentication for development
+  if (!clerkPublishableKey) {
+    console.warn("Running without authentication - Clerk key not configured");
+    return (
+      <ConvexProvider client={convex}>
+        <HabitsApp />
+      </ConvexProvider>
+    );
+  }
+
+  return (
+    <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
+      <ClerkLoaded>
+        <ConvexProvider client={convex}>
+          <HabitsApp />
+        </ConvexProvider>
+      </ClerkLoaded>
+    </ClerkProvider>
+  );
+}

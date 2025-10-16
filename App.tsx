@@ -13,6 +13,8 @@ import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
 import SettingsModal from './src/components/SettingsModal';
 import DraggableHabit from './src/components/DraggableHabit';
+import CharacterScreen from './src/screens/CharacterScreen';
+import CharacterIcon from './src/components/CharacterIcon';
 import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 
@@ -26,7 +28,6 @@ if (!convexUrl) {
 const convex = new ConvexReactClient(convexUrl);
 
 // Initialize Clerk (optional for development)
-// TODO: Implement proper authentication - see docs/stories/auth-implementation.story.md
 const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 // Token cache for Clerk
@@ -51,6 +52,7 @@ function HabitsApp() {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
@@ -169,20 +171,33 @@ function HabitsApp() {
     [archiveHabit]
   );
 
+  if (showCharacterScreen) {
+    return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
+  }
+
   return (
     <GestureHandlerRootView className='flex-1'>
       <ScrollView className='flex-1 bg-white'>
         <View className='mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12'>
           <View className='mb-2 flex-row items-center justify-between'>
             <Text className='text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#0f172a]'>Habits</Text>
-            <Pressable
-              accessibilityLabel='Open settings'
-              accessibilityRole='button'
-              className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-              onPress={() => setIsSettingsOpen(true)}
-            >
-              <Settings color='#364153' size={20} />
-            </Pressable>
+            <View className='flex-row gap-3'>
+              <Pressable
+                accessibilityLabel='View character'
+                accessibilityRole='button'
+                onPress={() => setShowCharacterScreen(true)}
+              >
+                <CharacterIcon size={36} />
+              </Pressable>
+              <Pressable
+                accessibilityLabel='Open settings'
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+                onPress={() => setIsSettingsOpen(true)}
+              >
+                <Settings color='#364153' size={20} />
+              </Pressable>
+            </View>
           </View>
 
           <DateSelector
@@ -293,7 +308,6 @@ function HabitsApp() {
 
 export default function App() {
   // Temporarily bypass Clerk authentication for development
-  // TODO: Remove this bypass once Clerk is properly configured
   if (!clerkPublishableKey) {
     console.warn('Running without authentication - Clerk key not configured');
     return (
