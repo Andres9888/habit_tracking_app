@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { addDays, format } from 'date-fns';
-import { BarChart3, Settings } from 'lucide-react-native';
+import { BarChart3, Settings, User } from 'lucide-react-native';
 import { DateSelector } from '../../components/DateSelector';
+import CharacterScreen from '../CharacterScreen';
 import Animated, {
   FadeInDown,
   FadeOutUp,
@@ -133,6 +134,7 @@ const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
 
 export default function HabitHomeExample() {
   const [currentWeekDates] = useState<string[]>(generateWeekDateStrings());
+  const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [habits, setHabits] = useState<LocalHabit[]>([
     { id: '1', name: 'Meditation', emoji: '🧘', color: '#4ADE80', completedDates: [] },
     { id: '2', name: 'Reading', emoji: '📚', color: '#60A5FA', completedDates: [] },
@@ -158,6 +160,10 @@ export default function HabitHomeExample() {
     setHabits((prev) => prev.filter((h) => h.id !== habitId));
   };
 
+  if (showCharacterScreen) {
+    return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
+  }
+
   return (
     <View className='flex-1 bg-gray-50'>
       <ScrollView className='flex-1'>
@@ -165,6 +171,13 @@ export default function HabitHomeExample() {
           <View className='flex-row items-center justify-between py-4'>
             <Text className='text-[28px] font-semibold'>Habits</Text>
             <View className='flex-row gap-3'>
+              <Pressable
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full bg-purple-100'
+                onPress={() => setShowCharacterScreen(true)}
+              >
+                <User color={'#9333ea'} size={18} />
+              </Pressable>
               <Pressable accessibilityRole='button' className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'>
                 <BarChart3 color={'#111'} size={18} />
               </Pressable>
