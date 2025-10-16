@@ -1,36 +1,21 @@
 /**
  * Habit Strength Calculation System
- * Based on Klein et al. (2011) computational model of habit formation
+ * Logistic baseline (habit age) × Beta-smoothed compliance (recent execution)
  *
- * Theory: Habits are cognitive associations between behaviors and contexts,
- * strengthened through repetition and weakened through non-performance.
+ * Baseline curve calibrated to hit ~22% on day 7 and ~99% on day 90.
+ * Compliance uses a 30-day rolling window with Laplace smoothing.
  *
- * Reference: "A computational model of habit learning to enable ambient support
- * for lifestyle change" (Klein, Mogles, Treur, Van Wissen, 2011)
+ * Legacy constants/functions from the original Klein et al. (2011) model are
+ * retained for backwards compatibility with utilities and tests.
  */
 
 import { v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
+import { mutation, query } from "./_generated/server";
 
-// Default parameters based on empirical research
-// Validated by Zhang et al. (2021) with 65-77% prediction accuracy in field studies
-
-// Habit Strength Parameters (Klein et al., 2011)
-// ADJUSTED: Reduced HDP from 0.175 to 0.02 to allow habits to reach ~88% equilibrium strength
-// Original HDP=0.175 created equilibrium at 46%, preventing habits from strengthening beyond that point
-//
-// Equilibrium calculation: At equilibrium, decay = gain
-// decay: HS × HDP
-// gain: (1 - HS) × HGP
-// Setting them equal: HS × HDP = (1 - HS) × HGP
-// Solving for HS: HS = HGP / (HDP + HGP) = 0.15 / (0.02 + 0.15) ≈ 0.88 (88%)
-const DEFAULT_HABIT_DECAY_PARAM = 0.02;  // HDP: Adjusted for higher equilibrium (~88%)
-const DEFAULT_HABIT_GAIN_PARAM = 0.15;   // HGP: Empirically validated optimal range 0.1-0.2
-const CONTEXT_CONSISTENCY = 1.0;          // Cuet: Simplified to 1.0 (same context assumed)
-
-// Calculated equilibrium point for reference
-const EQUILIBRIUM_STRENGTH = DEFAULT_HABIT_GAIN_PARAM / (DEFAULT_HABIT_DECAY_PARAM + DEFAULT_HABIT_GAIN_PARAM);
+// Legacy Klein-model constants kept for compatibility with older tooling/tests.
+export const DEFAULT_HABIT_DECAY_PARAM = 0.02;  // HDP: Adjusted for higher equilibrium (~88%)
+export const DEFAULT_HABIT_GAIN_PARAM = 0.15;   // HGP: Empirically validated optimal range 0.1-0.2
+export const CONTEXT_CONSISTENCY = 1.0;          // Cuet: Simplified to 1.0 (same context assumed)
 
 // Memory Accessibility Parameters (Tobias, 2009; Zhang et al., 2021)
 const DEFAULT_ACCESSIBILITY_DECAY_PARAM = 0.3;      // ADP: Memory decay rate
@@ -46,6 +31,167 @@ const DEFAULT_ACCESSIBILITY_GAIN_REMINDER = 0.7;    // AGP_rem: Boost from remin
  * - Automatic (0.8-1.0): Fully habitual, automatic execution
  */
 export type StrengthLevel = "starting" | "building" | "developing" | "strong" | "automatic";
+
+export interface HabitTrackingRecord {
+  date: string;
+  completed: boolean;
+}
+
+export interface HabitStrengthSnapshot {
+  strength: number;
+  strengthLevel: StrengthLevel;
+  baseline: number;
+  compliance: number;
+  complianceSuccesses: number;
+  complianceDaysConsidered: number;
+  daysSinceCreation: number;
+  lastEvaluatedDate: Date;
+}
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const LOGISTIC_SLOPE = 0.07061188221043205; // Calibrated for ~22% at day 7
+const LOGISTIC_MIDPOINT = 24.924269028255548;
+const LOGISTIC_TARGET_DAY = 90;
+const COMPLIANCE_WINDOW_DAYS = 30;
+const COMPLIANCE_PRIOR_ALPHA = 1;
+const COMPLIANCE_PRIOR_BETA = 1;
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function startOfDay(date: Date): Date {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  return result;
+}
+
+function addDays(date: Date, amount: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + amount);
+  result.setHours(0, 0, 0, 0);
+  return result;
+}
+
+function formatDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function logisticRaw(daysSinceCreation: number): number {
+  return 1 / (1 + Math.exp(-LOGISTIC_SLOPE * (daysSinceCreation - LOGISTIC_MIDPOINT)));
+}
+
+const LOGISTIC_TARGET_VALUE = logisticRaw(LOGISTIC_TARGET_DAY);
+
+function logisticBaseline(daysSinceCreation: number): number {
+  if (daysSinceCreation >= LOGISTIC_TARGET_DAY) {
+    return 1;
+  }
+
+  const raw = logisticRaw(daysSinceCreation);
+  if (LOGISTIC_TARGET_VALUE === 0) {
+    return clamp(raw, 0, 1);
+  }
+
+  return clamp(raw / LOGISTIC_TARGET_VALUE, 0, 1);
+}
+
+function computeCompliance({
+  habitCreatedAt,
+  trackingMap,
+  evaluationDate,
+}: {
+  habitCreatedAt: number;
+  trackingMap: Map<string, boolean>;
+  evaluationDate: Date;
+}): { compliance: number; successes: number; daysConsidered: number } {
+  const creationDate = startOfDay(new Date(habitCreatedAt));
+  const windowStartCandidate = addDays(evaluationDate, -(COMPLIANCE_WINDOW_DAYS - 1));
+  const startDate = windowStartCandidate < creationDate ? creationDate : windowStartCandidate;
+
+  let successes = 0;
+  let daysConsidered = 0;
+
+  for (
+    let cursor = new Date(startDate);
+    cursor.getTime() <= evaluationDate.getTime();
+    cursor = addDays(cursor, 1)
+  ) {
+    daysConsidered++;
+    const key = formatDateKey(cursor);
+    const completed = trackingMap.get(key) ?? false;
+    if (completed) {
+      successes++;
+    }
+  }
+
+  if (daysConsidered === 0) {
+    return {
+      compliance: COMPLIANCE_PRIOR_ALPHA / (COMPLIANCE_PRIOR_ALPHA + COMPLIANCE_PRIOR_BETA),
+      successes: 0,
+      daysConsidered: 0,
+    };
+  }
+
+  if (successes === daysConsidered) {
+    return {
+      compliance: 1,
+      successes,
+      daysConsidered,
+    };
+  }
+
+  const compliance =
+    (successes + COMPLIANCE_PRIOR_ALPHA) /
+    (daysConsidered + COMPLIANCE_PRIOR_ALPHA + COMPLIANCE_PRIOR_BETA);
+
+  return { compliance, successes, daysConsidered };
+}
+
+export function generateHabitStrengthSnapshot({
+  habitCreatedAt,
+  tracking,
+  throughDate = startOfDay(new Date()),
+}: {
+  habitCreatedAt: number;
+  tracking: HabitTrackingRecord[];
+  throughDate?: Date;
+}): HabitStrengthSnapshot {
+  const evaluationDate = startOfDay(throughDate);
+  const creationDate = startOfDay(new Date(habitCreatedAt));
+  const daysSinceCreation = Math.max(
+    0,
+    Math.floor((evaluationDate.getTime() - creationDate.getTime()) / MS_PER_DAY)
+  );
+
+  const trackingMap = new Map<string, boolean>();
+  for (const entry of tracking) {
+    trackingMap.set(entry.date, entry.completed);
+  }
+
+  const baseline = logisticBaseline(daysSinceCreation);
+  const complianceStats = computeCompliance({
+    habitCreatedAt,
+    trackingMap,
+    evaluationDate,
+  });
+
+  const strength = clamp(baseline * complianceStats.compliance, 0, 1);
+
+  return {
+    strength,
+    strengthLevel: getStrengthLevel(strength),
+    baseline,
+    compliance: complianceStats.compliance,
+    complianceSuccesses: complianceStats.successes,
+    complianceDaysConsidered: complianceStats.daysConsidered,
+    daysSinceCreation,
+    lastEvaluatedDate: evaluationDate,
+  };
+}
 
 interface StrengthLevelInfo {
   level: StrengthLevel;
@@ -238,44 +384,77 @@ export const updateHabitStrength = mutation({
         throw new Error("Habit not found");
       }
 
-      // Get current strength (default to 0 for new habits)
-      const currentStrength = habit.strength ?? 0;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(args.date)) {
+        throw new Error("Invalid date format; expected YYYY-MM-DD");
+      }
 
-      // Get custom parameters or use defaults
-      const HDP = habit.habitDecayParam ?? DEFAULT_HABIT_DECAY_PARAM;
-      const HGP = habit.habitGainParam ?? DEFAULT_HABIT_GAIN_PARAM;
+      const previousStrength = habit.strength ?? 0;
 
-      // Calculate new strength
-      const newStrength = calculateHabitStrength(
-        currentStrength,
-        args.behaviorPerformed,
-        HDP,
-        HGP
-      );
+      const trackingForDay = await ctx.db
+        .query("tracking")
+        .withIndex("by_habit_and_date", (q) =>
+          q.eq("habitId", args.habitId).eq("date", args.date)
+        )
+        .unique();
+
+      if (trackingForDay) {
+        if (trackingForDay.completed !== args.behaviorPerformed) {
+          await ctx.db.patch(trackingForDay._id, {
+            completed: args.behaviorPerformed,
+          });
+        }
+      } else {
+        await ctx.db.insert("tracking", {
+          completed: args.behaviorPerformed,
+          date: args.date,
+          habitId: args.habitId,
+        });
+      }
+
+      const tracking = await ctx.db
+        .query("tracking")
+        .withIndex("by_habit_and_date", (q) => q.eq("habitId", args.habitId))
+        .collect();
+
+      const snapshot = generateHabitStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        tracking: tracking.map((t) => ({
+          date: t.date,
+          completed: t.completed,
+        })),
+        throughDate: startOfDay(new Date()),
+      });
 
       // Determine strength level
-      const strengthLevel = getStrengthLevel(newStrength);
+      const { strength: newStrength, strengthLevel } = snapshot;
 
-      console.log("🔧 Updating habit strength:", {
+      console.log("🔧 Updating habit strength (replay):", {
         habitName: habit.name,
         date: args.date,
         behaviorPerformed: args.behaviorPerformed,
-        currentStrength: (currentStrength * 100).toFixed(1) + "%",
+        previousStrength: (previousStrength * 100).toFixed(1) + "%",
         newStrength: (newStrength * 100).toFixed(1) + "%",
+        baseline: (snapshot.baseline * 100).toFixed(1) + "%",
+        compliance: (snapshot.compliance * 100).toFixed(1) + "%",
         strengthLevel,
+        windowDays: snapshot.complianceDaysConsidered,
+        successes: snapshot.complianceSuccesses,
       });
 
       // Update habit
       await ctx.db.patch(args.habitId, {
         strength: newStrength,
         strengthLevel,
-        strengthUpdatedAt: Date.now(),
+        strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
       });
 
       return {
-        previousStrength: currentStrength,
+        previousStrength,
         newStrength,
         strengthLevel,
+        baseline: snapshot.baseline,
+        compliance: snapshot.compliance,
+        daysSinceCreation: snapshot.daysSinceCreation,
         predictionProbability: predictCompletionProbability(newStrength),
       };
     } catch (error) {
@@ -288,6 +467,9 @@ export const updateHabitStrength = mutation({
     previousStrength: v.number(),
     newStrength: v.number(),
     strengthLevel: v.string(),
+    baseline: v.number(),
+    compliance: v.number(),
+    daysSinceCreation: v.number(),
     predictionProbability: v.number(),
   }),
 });
@@ -310,99 +492,42 @@ export const recalculateHabitStrength = mutation({
 
       console.log("🔄 Recalculating strength for:", habit.name);
 
-      // Get all tracking data for this habit, sorted by date
+      // Get all tracking data for this habit
       const tracking = await ctx.db
         .query("tracking")
         .withIndex("by_habit_and_date", (q) => q.eq("habitId", args.habitId))
         .collect();
 
-      console.log(`  Found ${tracking.length} tracking entries`);
+      console.log(`  ▸ Found ${tracking.length} tracking entries`);
 
-      // Sort by date ascending
-      const sortedTracking = tracking
-        .map(t => {
-          try {
-            return { ...t, dateObj: new Date(t.date) };
-          } catch (err) {
-            console.error("❌ Invalid date format:", t.date, err);
-            throw new Error(`Invalid date format: ${t.date}`);
-          }
-        })
-        .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+      const snapshot = generateHabitStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        tracking: tracking.map((t) => ({
+          date: t.date,
+          completed: t.completed,
+        })),
+        throughDate: startOfDay(new Date()),
+      });
 
-      // Get parameters
-      const HDP = habit.habitDecayParam ?? DEFAULT_HABIT_DECAY_PARAM;
-      const HGP = habit.habitGainParam ?? DEFAULT_HABIT_GAIN_PARAM;
-
-      console.log(`  Using HDP=${HDP}, HGP=${HGP}`);
-
-      // Calculate day-by-day strength
-      let currentStrength = 0; // Start from 0 for new habits
-      const habitCreationDate = new Date(habit.createdAt);
-      habitCreationDate.setHours(0, 0, 0, 0);
-
-      // We need to account for every day from creation to last tracking
-      if (sortedTracking.length === 0) {
-        console.log("  No tracking data, setting strength to 0");
-        // No tracking data, strength remains 0
-        await ctx.db.patch(args.habitId, {
-          strength: 0,
-          strengthLevel: "starting",
-          strengthUpdatedAt: Date.now(),
-        });
-        return { strength: 0, strengthLevel: "starting", daysProcessed: 0 };
-      }
-
-      const lastTrackingDate = sortedTracking[sortedTracking.length - 1].dateObj;
-      const currentDate = new Date(habitCreationDate);
-
-      // Sanity check: limit to 365 days to prevent infinite loops
-      const maxDays = 365;
-      const daysDiff = Math.ceil((lastTrackingDate.getTime() - habitCreationDate.getTime()) / (1000 * 60 * 60 * 24));
-
-      if (daysDiff > maxDays) {
-        console.warn(`⚠️ Date range too large (${daysDiff} days), limiting to ${maxDays} days`);
-      }
-
-      // Create a map of dates to completion status
-      const trackingMap = new Map(
-        sortedTracking.map(t => [t.date, t.completed])
+      console.log(
+        `  ✅ Calculated: strength=${(snapshot.strength * 100).toFixed(
+          1
+        )}%, baseline=${(snapshot.baseline * 100).toFixed(1)}%, compliance=${(
+          snapshot.compliance * 100
+        ).toFixed(1)}%, level=${snapshot.strengthLevel}, window=${snapshot.complianceDaysConsidered}d`
       );
-
-      // Iterate through each day
-      let iterations = 0;
-      while (currentDate <= lastTrackingDate && iterations < maxDays) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        const behaviorPerformed = trackingMap.get(dateStr) ?? false;
-
-        // Update strength
-        currentStrength = calculateHabitStrength(
-          currentStrength,
-          behaviorPerformed,
-          HDP,
-          HGP
-        );
-
-        // Move to next day
-        currentDate.setDate(currentDate.getDate() + 1);
-        iterations++;
-      }
-
-      const strengthLevel = getStrengthLevel(currentStrength);
-
-      console.log(`  ✅ Calculated: strength=${(currentStrength * 100).toFixed(1)}%, level=${strengthLevel}, iterations=${iterations}`);
 
       // Update habit with final strength
       await ctx.db.patch(args.habitId, {
-        strength: currentStrength,
-        strengthLevel,
-        strengthUpdatedAt: Date.now(),
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
+        strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
       });
 
       return {
-        strength: currentStrength,
-        strengthLevel,
-        daysProcessed: sortedTracking.length,
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
+        daysProcessed: snapshot.complianceDaysConsidered,
       };
     } catch (error) {
       console.error("❌ Error in recalculateHabitStrength:", error);
@@ -428,19 +553,40 @@ export const getHabitStrengthInfo = query({
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error("Habit not found");
 
-    const strength = habit.strength ?? 0;
-    const level = habit.strengthLevel ?? getStrengthLevel(strength);
+    const tracking = await ctx.db
+      .query("tracking")
+      .withIndex("by_habit_and_date", (q) => q.eq("habitId", args.habitId))
+      .collect();
+
+    const snapshot = generateHabitStrengthSnapshot({
+      habitCreatedAt: habit.createdAt,
+      tracking: tracking.map((t) => ({
+        date: t.date,
+        completed: t.completed,
+      })),
+      throughDate: startOfDay(new Date()),
+    });
+
+    const strength = habit.strength ?? snapshot.strength;
+    const level = habit.strengthLevel ?? snapshot.strengthLevel;
     const levelInfo = STRENGTH_LEVELS[level as StrengthLevel];
 
     return {
       strength,
       level,
       levelInfo,
+      baseline: snapshot.baseline,
+      compliance: snapshot.compliance,
+      complianceWindowDays: snapshot.complianceDaysConsidered,
+      complianceSuccesses: snapshot.complianceSuccesses,
       predictionProbability: predictCompletionProbability(strength),
-      updatedAt: habit.strengthUpdatedAt,
-      parameters: {
-        habitDecayParam: habit.habitDecayParam ?? DEFAULT_HABIT_DECAY_PARAM,
-        habitGainParam: habit.habitGainParam ?? DEFAULT_HABIT_GAIN_PARAM,
+      updatedAt: habit.strengthUpdatedAt ?? snapshot.lastEvaluatedDate.getTime(),
+      model: {
+        logisticSlope: LOGISTIC_SLOPE,
+        logisticMidpoint: LOGISTIC_MIDPOINT,
+        complianceWindowDays: COMPLIANCE_WINDOW_DAYS,
+        compliancePriorAlpha: COMPLIANCE_PRIOR_ALPHA,
+        compliancePriorBeta: COMPLIANCE_PRIOR_BETA,
       },
     };
   },
@@ -454,11 +600,18 @@ export const getHabitStrengthInfo = query({
       description: v.string(),
       color: v.string(),
     }),
+    baseline: v.number(),
+    compliance: v.number(),
+    complianceWindowDays: v.number(),
+    complianceSuccesses: v.number(),
     predictionProbability: v.number(),
     updatedAt: v.optional(v.number()),
-    parameters: v.object({
-      habitDecayParam: v.number(),
-      habitGainParam: v.number(),
+    model: v.object({
+      logisticSlope: v.number(),
+      logisticMidpoint: v.number(),
+      complianceWindowDays: v.number(),
+      compliancePriorAlpha: v.number(),
+      compliancePriorBeta: v.number(),
     }),
   }),
 });

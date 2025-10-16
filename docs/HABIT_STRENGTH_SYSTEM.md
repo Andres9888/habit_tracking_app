@@ -2,7 +2,7 @@
 
 ## Overview
 
-This habit tracking app now includes a scientifically-based habit strength calculation system that computes habit strength automatically based on user behavior. The system is based on computational psychology research published by Klein et al. (2011) and validated by Zhang et al. (2021) with 65-77% prediction accuracy.
+This habit tracking app now computes habit strength using a hybrid model: a calibrated logistic curve that represents how automaticity grows with habit age, combined with a Beta-smoothed compliance score over the last 30 days. The result is a 0–1 strength value that climbs toward 100 % around the 90‑day mark when the user is consistent, and collapses quickly when recent executions are missed.
 
 ## Theoretical Foundation
 
@@ -17,35 +17,54 @@ Habit strength represents the **cognitive association** between a behavior and i
 
 ### Key Research Papers
 
-1. **Klein et al. (2011)** - "A computational model of habit learning to enable ambient support for lifestyle change"
-   - Introduced the computational equation for habit strength
-   - Validated on dental hygiene behavior studies
+1. **Lally et al. (2010)** – "How are habits formed: Modelling habit formation in the real world"
+   - Observed that habit automaticity follows an asymptotic curve, often reaching high automaticity after ~90 days.
+   - Provides the empirical grounding for the logistic baseline used in the app.
 
-2. **Zhang et al. (2021)** - "Theory-based habit modeling for enhancing behavior prediction"
-   - Demonstrated habit strength outperforms self-reports and simple frequency counting
-   - Published in peer-reviewed computational psychology literature
+2. **Zhang et al. (2021)** – "Theory-based habit modeling for enhancing behavior prediction"
+   - Demonstrated that computed habit strength is a strong predictor of future behaviour, motivating the use of quantitative models.
+
+3. **Klein et al. (2011)** – "A computational model of habit learning to enable ambient support for lifestyle change"
+   - Earlier equation-based approach; elements of their contextual reasoning remain informative for reminders and memory accessibility features.
 
 ## The Mathematics
 
-### Core Equation
+### Core Equations
+
+1. **Baseline automaticity (logistic growth)**
 
 ```
-HSt+1 = HSt - (HSt × HDP) + ((1 - HSt) × Beht × Cuet × HGP)
+Baseline(days) = 1 / (1 + exp(-k × (days - m)))
+
+k = 0.07061188221043205
+m = 24.924269028255548
+Baseline is normalised by dividing through the value at day 90 and clamped to 1 for days ≥ 90.
 ```
 
-**Where:**
-- `HSt` = Current habit strength (0-1 scale)
-- `HDP` = Habit Decay Parameter (0.175 default, range: 0.15-0.2)
-- `HGP` = Habit Gain Parameter (0.15 default, range: 0.1-0.2)
-- `Beht` = Behavior performed (1) or not (0)
-- `Cuet` = Context consistency (1.0, simplified assumption)
+This normalised curve hits ~22 % on day 7 and reaches 100 % by day 90, reflecting popular 90-day habit guidelines while remaining grounded in Lally et al.’s empirical findings.
 
-### Key Mathematical Properties
+2. **Compliance (Beta-smoothed success rate over the last 30 days)**
 
-1. **Diminishing Returns**: The term `(1 - HSt)` means early repetitions contribute more to habit strength than later ones
-2. **Proportional Decay**: The term `HSt × HDP` means stronger habits decay slower
-3. **Asymptotic Growth**: Strength approaches but never exceeds 1.0
-4. **Never Negative**: Strength is bounded [0, 1]
+```
+Compliance = (successes + α) / (daysConsidered + α + β)
+
+α = β = 1   // Laplace smoothing to avoid 0 or 1 extremes
+daysConsidered = min(30, days since creation)
+```
+
+Every calendar day in the window counts as an opportunity. Missing data is treated as `completed = false`, so skipping days rapidly reduces compliance.
+When every day in the window is completed, compliance is explicitly set to 100 %.
+
+3. **Habit strength**
+
+```
+Strength = clamp(Baseline × Compliance, 0, 1)
+```
+
+This ensures:
+- Consistent execution drives strength toward 100 % in ~90 days.
+- A few missed days collapse the score because compliance falls.
+- Very young habits start low and must earn their way up.
 
 ## Implementation Architecture
 
@@ -57,8 +76,8 @@ habits: defineTable({
   strength: v.optional(v.number()),           // 0-1 scale
   strengthLevel: v.optional(v.string()),      // "starting" | "building" | ...
   strengthUpdatedAt: v.optional(v.number()),  // Timestamp
-  habitDecayParam: v.optional(v.number()),    // Custom HDP (advanced)
-  habitGainParam: v.optional(v.number()),     // Custom HGP (advanced)
+  habitDecayParam: v.optional(v.number()),    // Legacy: retained for migrations (not used)
+  habitGainParam: v.optional(v.number()),     // Legacy: retained for migrations (not used)
 })
 ```
 
@@ -67,32 +86,25 @@ habits: defineTable({
 #### `convex/habitStrength.ts`
 
 **Main Functions:**
-- `calculateHabitStrength()` - Core equation implementation
-- `getStrengthLevel()` - Maps 0-1 strength to categorical levels
-- `predictCompletionProbability()` - Predicts future behavior (65-77% accuracy)
+- `generateHabitStrengthSnapshot()` – Produces baseline, compliance, and total strength for a habit.
+- `getStrengthLevel()` – Maps 0–1 strength to categorical levels.
+- `predictCompletionProbability()` – Predicts future behaviour from the combined score.
 
 **Mutations:**
-- `updateHabitStrength` - Update strength for a single day
-- `recalculateHabitStrength` - Recalculate from all historical data
-- `updateHabitParameters` - Adjust HDP/HGP for individual habits
+- `updateHabitStrength` – Upsert the day’s completion state and recompute strength.
+- `recalculateHabitStrength` – Re-run the snapshot for existing historical data (useful after imports).
+- `updateHabitParameters` – Legacy mutation retained for backwards compatibility.
 
 **Queries:**
-- `getHabitStrengthInfo` - Get full strength data for a habit
-- `getAllHabitsStrengthStats` - Dashboard statistics
+- `getHabitStrengthInfo` – Returns strength plus baseline/compliance diagnostics.
+- `getAllHabitsStrengthStats` – Dashboard statistics.
 
 ### Automatic Updates
 
-Habit strength is automatically updated when you toggle a habit:
-
-```typescript
-// In convex/habits.ts toggleHabit mutation
-const newStrength = calculateHabitStrength(
-  currentStrength,
-  behaviorPerformed,
-  HDP,
-  HGP
-);
-```
+Habit strength is automatically recomputed when you toggle a habit. The mutation:
+- Saves the day’s completion state.
+- Reads the last 30 days of tracking data.
+- Runs `generateHabitStrengthSnapshot` to obtain baseline, compliance, and final strength.
 
 ## Strength Levels
 
@@ -165,8 +177,18 @@ const strengthInfo = useQuery(api.habitStrength.getHabitStrengthInfo, {
 //   strength: 0.65,
 //   level: "strong",
 //   levelInfo: { emoji, label, color, description },
-//   predictionProbability: 0.72,  // 72% likely to complete tomorrow
-//   parameters: { habitDecayParam, habitGainParam }
+//   baseline: 0.82,
+//   compliance: 0.79,
+//   complianceWindowDays: 30,
+//   complianceSuccesses: 23,
+//   predictionProbability: 0.72,
+//   model: {
+//     logisticSlope: 0.0706,
+//     logisticMidpoint: 24.92,
+//     complianceWindowDays: 30,
+//     compliancePriorAlpha: 1,
+//     compliancePriorBeta: 1,
+//   }
 // }
 ```
 
@@ -195,22 +217,14 @@ const stats = useQuery(api.habitStrength.getAllHabitsStrengthStats);
 
 ### Custom Parameters
 
-For advanced users or experimentation, you can customize parameters per habit:
+The new logistic + compliance model currently uses shared parameters for all habits:
 
-```typescript
-const updateParams = useMutation(api.habitStrength.updateHabitParameters);
+- `logisticSlope = 0.0706118822`
+- `logisticMidpoint = 24.9242690`
+- `complianceWindowDays = 30`
+- `α = β = 1`
 
-await updateParams({
-  habitId: habit._id,
-  habitDecayParam: 0.2,  // Faster decay (harder to maintain)
-  habitGainParam: 0.1    // Slower growth (takes longer to form)
-});
-```
-
-**Use cases:**
-- Different behaviors may form at different rates (e.g., morning vs evening habits)
-- Calibrate based on user's personal patterns
-- A/B testing different parameters
+The legacy `updateHabitParameters` mutation is still available but no longer affects the calculation (it only persisted the previous HDP/HGP values for migration purposes). To experiment with per-habit tuning you can extend `generateHabitStrengthSnapshot` to accept overrides for these new parameters.
 
 ### Prediction Feature
 
@@ -277,29 +291,11 @@ For existing users:
 -- This processes historical tracking data
 ```
 
-## Scientific Validation
+## Scientific Context
 
-The habit strength system has been empirically validated:
-
-### Study 1 (N=40, 3 weeks, toothbrushing)
-- Theory-based model AUC: 0.737
-- Past-behavior model AUC: 0.758
-- Self-report model AUC: 0.660
-
-### Study 2 (N=79, 3 weeks, toothbrushing)
-- Theory-based model AUC: **0.815** ⭐
-- Past-behavior model AUC: 0.792
-- Self-report model AUC: 0.676
-
-**Key Finding**: Computed habit strength outperformed self-reports in both studies and outperformed simple frequency counting in the larger study.
-
-### Parameters Validation
-
-Optimal parameter ranges from empirical research:
-- **HDP**: 0.15-0.2 (default 0.175)
-- **HGP**: 0.1-0.2 (default 0.15)
-
-These were determined through grid search and cross-validation on real behavioral data.
+- **Automaticity growth**: Lally et al. (2010) observed that habit automaticity follows an asymmetric growth curve that typically levels off between 60 and 90 days. The logistic baseline is tuned to mirror that empirical progression while still letting the score hit 100 % (with perfect compliance) from day 90 onward.
+- **Behaviour prediction**: Zhang et al. (2021) showed that computed habit strength can outperform self-reports when predicting future behaviour. Our compliance multiplier maintains that predictive quality by rewarding recent follow-through.
+- **Bayesian smoothing**: The Beta prior (α = β = 1) is the standard Laplace correction for rate estimates. It keeps the strength stable during the first few days and prevents 0/1 extremes after a single success or failure.
 
 ## References
 
@@ -323,4 +319,4 @@ For questions about the habit strength system:
 
 **Version**: 1.0.0
 **Last Updated**: 2025-01-16
-**Author**: Based on Klein et al. (2011) & Zhang et al. (2021)
+**Author**: Logistic + compliance hybrid inspired by Lally et al. (2010) & Zhang et al. (2021)

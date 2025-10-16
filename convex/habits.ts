@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { calculateHabitStrength, getStrengthLevel } from "./habitStrength";
+import { generateHabitStrengthSnapshot } from "./habitStrength";
 
 export const create = mutation({
   args: {
@@ -248,33 +248,44 @@ export const toggleHabit = mutation({
     // Update habit strength based on the new completion status
     const habit = await ctx.db.get(args.habitId);
     if (habit) {
-      const currentStrength = habit.strength ?? 0;
-      const HDP = habit.habitDecayParam ?? 0.175;
-      const HGP = habit.habitGainParam ?? 0.15;
+      const previousStrength = habit.strength ?? 0;
 
-      const newStrength = calculateHabitStrength(
-        currentStrength,
-        newCompletedStatus,
-        HDP,
-        HGP
-      );
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      const strengthLevel = getStrengthLevel(newStrength);
+      const tracking = await ctx.db
+        .query("tracking")
+        .withIndex("by_habit_and_date", (q) =>
+          q.eq("habitId", args.habitId)
+        )
+        .collect();
 
-      // Debug logging
-      console.log("🔧 Habit Strength Update:", {
+      const snapshot = generateHabitStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        tracking: tracking.map((t) => ({
+          date: t.date,
+          completed: t.completed,
+        })),
+        throughDate: today,
+      });
+
+      console.log("🔧 Habit Strength Update (replay):", {
         habitName: habit.name,
-        currentStrength: (currentStrength * 100).toFixed(1) + "%",
-        newStrength: (newStrength * 100).toFixed(1) + "%",
         behaviorPerformed: newCompletedStatus,
-        strengthLevel,
-        change: ((newStrength - currentStrength) * 100).toFixed(1) + "%",
+        previousStrength: (previousStrength * 100).toFixed(1) + "%",
+        newStrength: (snapshot.strength * 100).toFixed(1) + "%",
+        strengthLevel: snapshot.strengthLevel,
+        baseline: (snapshot.baseline * 100).toFixed(1) + "%",
+        compliance: (snapshot.compliance * 100).toFixed(1) + "%",
+        windowDays: snapshot.complianceDaysConsidered,
+        successes: snapshot.complianceSuccesses,
+        change: ((snapshot.strength - previousStrength) * 100).toFixed(1) + "%",
       });
 
       await ctx.db.patch(args.habitId, {
-        strength: newStrength,
-        strengthLevel,
-        strengthUpdatedAt: Date.now(),
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
+        strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
       });
     }
 
