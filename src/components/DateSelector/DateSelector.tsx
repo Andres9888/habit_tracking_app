@@ -50,7 +50,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
       </View>
 
       {/* Days Row */}
-      <View className="flex-row justify-between">
+      <View className="flex-row justify-between gap-1">
         {dates.map((date, index) => {
           const weekday = format(date, "EEE").toUpperCase();
           const day = format(date, "d");
@@ -68,13 +68,13 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
               key={`day-${index}`}
               accessibilityLabel={accessibilityLabel}
               accessibilityRole="text"
-              className="flex-1 items-center gap-1"
+              className="flex-1 items-center gap-2"
             >
               <Text className="text-center text-[11px] font-normal uppercase leading-[16.5px] tracking-[0.34px] text-[#6a7282]">
                 {weekday}
               </Text>
               <View
-                className={`h-10 w-10 items-center justify-center rounded-full ${
+                className={`h-12 w-12 items-center justify-center rounded-full ${
                   isCurrentDay ? "bg-[#101727]" : "bg-transparent"
                 } ${isUpcoming && !isCurrentDay ? "opacity-50" : ""}`}
               >

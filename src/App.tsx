@@ -3,26 +3,28 @@ import "../global.css";
 
 import { useMutation, useQuery } from "convex/react";
 import { addDays, format, startOfDay } from "date-fns";
-import { Plus, Settings, BarChart3, ChevronLeft, ChevronRight } from "lucide-react-native";
+import { Plus, Settings, BarChart3 } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Pressable, Text, View } from "react-native";
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import { Toaster } from "sonner";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { DateSelector } from "./components/DateSelector";
 import SettingsModal from "./components/SettingsModal";
+import StatsNotesModal from "./components/StatsNotesModal";
+import CreateHabitModal from "./components/CreateHabitModal";
 import DraggableHabit from "./components/DraggableHabit";
 
 type HabitStatus = "done" | "missed" | "planned";
 
 function App() {
-  const [isAdding, setIsAdding] = useState(false);
-  const [newHabitName, setNewHabitName] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
+  const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
 
-  const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
+  const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
@@ -41,18 +43,8 @@ function App() {
   const tracking =
     useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
 
-  const canSubmit = useMemo(
-    () => newHabitName.trim().length > 0,
-    [newHabitName]
-  );
-
   const handleToggleForm = () => {
-    setIsAdding((prev) => {
-      if (prev) {
-        setNewHabitName("");
-      }
-      return !prev;
-    });
+    setIsCreateHabitOpen(true);
   };
 
   const handlePreviousWeek = useCallback(() => {
@@ -67,17 +59,6 @@ function App() {
     () => weekAnchor.getTime() < today.getTime(),
     [weekAnchor, today]
   );
-
-  const handleSubmit = async () => {
-    const name = newHabitName.trim();
-    if (!name) {
-      return;
-    }
-
-    await createHabit({ name, notes: "" });
-    setNewHabitName("");
-    setIsAdding(false);
-  };
 
   const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
     const trackingEntry = tracking.find(
@@ -123,6 +104,13 @@ function App() {
     // await reorderHabits({ habitIds: newOrder as Id<"habits">[] });
   }, []);
 
+  const handleArchive = useCallback(
+    async (habitId: Id<"habits">) => {
+      await archiveHabit({ habitId });
+    },
+    [archiveHabit]
+  );
+
   return (
     <GestureHandlerRootView className="flex-1">
       <ScrollView className="flex-1 bg-white">
@@ -133,10 +121,10 @@ function App() {
             </Text>
             <View className="flex-row gap-3">
               <Pressable
-                accessibilityLabel="View statistics"
+                accessibilityLabel="View statistics and notes"
                 accessibilityRole="button"
                 className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
-                onPress={() => {/* TODO: Add stats view */}}
+                onPress={() => setIsStatsNotesOpen(true)}
               >
                 <BarChart3 color="#101727" size={20} strokeWidth={2.25} />
               </Pressable>
@@ -151,73 +139,12 @@ function App() {
             </View>
           </View>
 
-          {/* Date Range Header with Navigation */}
-          <View className="flex-row items-center justify-between px-0">
-            <Pressable
-              accessibilityLabel="Previous week"
-              accessibilityRole="button"
-              className="h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]"
-              onPress={handlePreviousWeek}
-            >
-              <ChevronLeft color="#101727" size={16} strokeWidth={2.25} />
-            </Pressable>
-            <Text className="text-[14px] leading-5 tracking-[-0.15px] text-[#4a5565]">
-              {format(weekDates[0], "MMM d")} - {format(weekDates[6], "MMM d")}
-            </Text>
-            <Pressable
-              accessibilityLabel="Next week"
-              accessibilityRole="button"
-              accessibilityState={{ disabled: !canNavigateForward }}
-              className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] ${canNavigateForward ? "" : "opacity-40"}`}
-              disabled={!canNavigateForward}
-              onPress={handleNextWeek}
-            >
-              <ChevronRight color="#101727" size={16} strokeWidth={2.25} />
-            </Pressable>
-          </View>
-
-          <DateSelector dates={weekDates} />
-
-          {isAdding && (
-            <View className="mb-8 rounded-3xl border border-slate-200 bg-white/90 p-5">
-              <View className="gap-4">
-                <View className="gap-2">
-                  <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">
-                    NEW HABIT
-                  </Text>
-                  <TextInput
-                    autoFocus
-                    className="w-full rounded-3xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900"
-                    placeholder="Name your habit"
-                    placeholderTextColor="#999"
-                    value={newHabitName}
-                    onChangeText={setNewHabitName}
-                  />
-                </View>
-                <View className="flex-row items-center justify-end gap-3">
-                  <Pressable
-                    accessibilityRole="button"
-                    className="py-2"
-                    onPress={handleToggleForm}
-                  >
-                    <Text className="text-[11px] font-semibold tracking-[3px] text-slate-500">
-                      CANCEL
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    className={`rounded-3xl border border-slate-900 px-5 py-2 ${canSubmit ? "" : "opacity-40"}`}
-                    disabled={!canSubmit}
-                    onPress={handleSubmit}
-                  >
-                    <Text className="text-[11px] font-semibold tracking-[3px] text-slate-900">
-                      ADD
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>
-          )}
+          <DateSelector
+            canNavigateForward={canNavigateForward}
+            dates={weekDates}
+            onNextWeek={handleNextWeek}
+            onPreviousWeek={handlePreviousWeek}
+          />
 
           <View className="gap-4">
             {(() => {
@@ -271,6 +198,7 @@ function App() {
                     toggleHabit={toggleHabit}
                     weekDateStrings={weekDateStrings}
                     weekStatus={weekStatus}
+                    onArchive={handleArchive}
                   />
                 );
               });
@@ -282,21 +210,25 @@ function App() {
           visible={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
         />
+        <StatsNotesModal
+          visible={isStatsNotesOpen}
+          onClose={() => setIsStatsNotesOpen(false)}
+        />
+        <CreateHabitModal
+          visible={isCreateHabitOpen}
+          onClose={() => setIsCreateHabitOpen(false)}
+        />
       </ScrollView>
       <View pointerEvents="box-none" className="absolute bottom-8 right-6">
-        <View
-          accessibilityHint={isAdding ? "Close add habit form" : "Open add habit form"}
-          accessibilityLabel={isAdding ? "Close" : "Add habit"}
+        <Pressable
+          accessibilityHint="Open create habit modal"
+          accessibilityLabel="Add habit"
           accessibilityRole="button"
-          accessible
           className="h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg"
-          // Expose onPress for tests; actual press handled by inner Pressable
-          onPress={handleToggleForm as any}
+          onPress={handleToggleForm}
         >
-          <Pressable onPress={handleToggleForm}>
-            <Plus color="#ffffff" size={24} strokeWidth={2.25} />
-          </Pressable>
-        </View>
+          <Plus color="#ffffff" size={24} strokeWidth={2.25} />
+        </Pressable>
       </View>
     </GestureHandlerRootView>
   );

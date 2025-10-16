@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { calculateHabitStrength, getStrengthLevel } from "./habitStrength";
 
 export const create = mutation({
   args: {
@@ -173,6 +174,9 @@ export const list = query({
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
+      strength: v.optional(v.number()),
+      strengthLevel: v.optional(v.string()),
+      strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
     })
@@ -197,6 +201,9 @@ export const listArchived = query({
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
+      strength: v.optional(v.number()),
+      strengthLevel: v.optional(v.string()),
+      strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
     })
@@ -228,13 +235,49 @@ export const toggleHabit = mutation({
       )
       .unique();
 
+    const newCompletedStatus = existing ? !existing.completed : true;
+
     await (existing ? ctx.db.patch(existing._id, {
-        completed: !existing.completed,
+        completed: newCompletedStatus,
       }) : ctx.db.insert("tracking", {
         completed: true,
         date: args.date,
         habitId: args.habitId,
       }));
+
+    // Update habit strength based on the new completion status
+    const habit = await ctx.db.get(args.habitId);
+    if (habit) {
+      const currentStrength = habit.strength ?? 0;
+      const HDP = habit.habitDecayParam ?? 0.175;
+      const HGP = habit.habitGainParam ?? 0.15;
+
+      const newStrength = calculateHabitStrength(
+        currentStrength,
+        newCompletedStatus,
+        HDP,
+        HGP
+      );
+
+      const strengthLevel = getStrengthLevel(newStrength);
+
+      // Debug logging
+      console.log("🔧 Habit Strength Update:", {
+        habitName: habit.name,
+        currentStrength: (currentStrength * 100).toFixed(1) + "%",
+        newStrength: (newStrength * 100).toFixed(1) + "%",
+        behaviorPerformed: newCompletedStatus,
+        strengthLevel,
+        change: ((newStrength - currentStrength) * 100).toFixed(1) + "%",
+      });
+
+      await ctx.db.patch(args.habitId, {
+        strength: newStrength,
+        strengthLevel,
+        strengthUpdatedAt: Date.now(),
+      });
+    }
+
     return null;
   },
   returns: v.null(),
@@ -246,9 +289,9 @@ export const getTracking = query({
     if (args.dates.length === 0) return [];
 
     // Optimize by querying a single date range then filtering to requested dates
-    const sortedDates = [...args.dates].toSorted();
+    const sortedDates = [...args.dates].sort();
     const startDate = sortedDates[0];
-    const endDate = sortedDates.at(-1);
+    const endDate = sortedDates[sortedDates.length - 1];
 
     const range = await ctx.db
       .query("tracking")
@@ -286,7 +329,7 @@ export const getStats = query({
     const sortedDates = tracking
       .filter((t) => t.completed)
       .map((t) => new Date(t.date).getTime())
-      .toSorted((a, b) => b - a);
+      .sort((a, b) => b - a);
 
     let streak = 0;
     const now = new Date();

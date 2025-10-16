@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Easing, View, Text } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import clsx from "clsx";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { HabitChainVisualizer } from "../HabitChainVisualizer";
 import { useDraggableHabitLogic } from "./DraggableHabit.hooks";
-import { Flame } from "lucide-react-native";
+import { Flame, Archive } from "lucide-react-native";
+import { HabitStrengthIndicator, type StrengthLevel } from "../HabitStrengthIndicator";
 
 type HabitStatus = "done" | "missed" | "planned";
 
@@ -19,6 +21,9 @@ interface Habit {
   userId?: string;
   archived?: boolean;
   archivedAt?: number;
+  strength?: number;
+  strengthLevel?: StrengthLevel;
+  strengthUpdatedAt?: number;
 }
 
 interface DraggableHabitProps {
@@ -28,6 +33,7 @@ interface DraggableHabitProps {
   toggleHabit: (args: { habitId: Id<"habits">; date: string }) => void;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
+  onArchive?: (habitId: Id<"habits">) => void;
 }
 
 export default function DraggableHabit({
@@ -37,16 +43,13 @@ export default function DraggableHabit({
   toggleHabit,
   weekDateStrings,
   weekStatus,
+  onArchive,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
   const completedCount = weekStatus.filter((s) => s === "done").length;
-  const completionRatio =
-    weekStatus.length === 0 ? 0 : completedCount / weekStatus.length;
-  const [trackWidth, setTrackWidth] = useState(0);
 
   const fade = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(12)).current;
-  const progressWidth = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -65,39 +68,40 @@ export default function DraggableHabit({
     ]).start();
   }, [fade, translateY]);
 
-  useEffect(() => {
-    if (trackWidth === 0) return;
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    const trans = dragX.interpolate({
+      inputRange: [-100, 0],
+      outputRange: [0, 100],
+      extrapolate: "clamp",
+    });
 
-    const minWidth = Math.min(trackWidth * 0.08, 14);
-    const hasProgress = completionRatio > 0;
-    const targetWidth = hasProgress
-      ? Math.max(minWidth, completionRatio * trackWidth)
-      : minWidth;
-
-    Animated.timing(progressWidth, {
-      toValue: targetWidth,
-      duration: 450,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: false,
-    }).start();
-  }, [completionRatio, progressWidth, trackWidth]);
-
-  useEffect(() => {
-    if (trackWidth === 0) return;
-    const minWidth = Math.min(trackWidth * 0.08, 14);
-    progressWidth.setValue(
-      completionRatio > 0
-        ? Math.max(minWidth, completionRatio * trackWidth)
-        : minWidth
+    return (
+      <Animated.View
+        className="flex-row items-center justify-end"
+        style={{ transform: [{ translateX: trans }] }}
+      >
+        <View className="h-full w-[100px] items-center justify-center rounded-r-2xl bg-red-500">
+          <Archive color="white" size={24} />
+          <Text className="mt-1 text-xs font-semibold text-white">Archive</Text>
+        </View>
+      </Animated.View>
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trackWidth]);
+  };
 
-  return (
+  const handleSwipeableOpen = () => {
+    if (onArchive) {
+      onArchive(habit._id);
+    }
+  };
+
+  const habitCard = (
     <Animated.View
       className={clsx(
         "rounded-2xl border border-[#e5e7eb] bg-white",
-        isCompactMode ? "gap-4 px-[21px] pb-[1px] pt-[21px]" : "gap-4 px-[21px] pb-[1px] pt-[21px]"
+        isCompactMode ? "gap-4 px-[21px] pb-4 pt-[21px]" : "gap-4 px-[21px] pb-4 pt-[21px]"
       )}
       style={{
         opacity: fade,
@@ -124,20 +128,33 @@ export default function DraggableHabit({
         weekStatus={weekStatus}
       />
 
-      <View
-        className="h-[6px] w-full overflow-hidden rounded-full bg-[#f3f4f6]"
-        onLayout={(event) => {
-          setTrackWidth(event.nativeEvent.layout.width);
-        }}
-      >
-        <Animated.View
-          className="h-full rounded-full"
-          style={{
-            backgroundColor: accentColor,
-            width: progressWidth,
-          }}
-        />
-      </View>
+      {/* Habit Strength Indicator */}
+      {habit.strength !== undefined && habit.strength > 0 && (
+        <View className="pt-1">
+          <HabitStrengthIndicator
+            strength={habit.strength}
+            strengthLevel={habit.strengthLevel}
+            compact={true}
+            showLabel={false}
+          />
+        </View>
+      )}
     </Animated.View>
+  );
+
+  if (!onArchive) {
+    return habitCard;
+  }
+
+  return (
+    <Swipeable
+      renderRightActions={renderRightActions}
+      onSwipeableOpen={handleSwipeableOpen}
+      overshootRight={false}
+      friction={2}
+      rightThreshold={40}
+    >
+      {habitCard}
+    </Swipeable>
   );
 }

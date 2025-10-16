@@ -51,7 +51,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
-      className="h-9 w-9 items-center justify-center rounded-full"
+      className="h-10 w-10 items-center justify-center rounded-full"
       disabled={disabled}
       onPress={onPress}
       style={{
@@ -103,7 +103,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   const todayLabel = format(new Date(), "MMM d, EEE").toUpperCase();
 
   return (
-    <View className="flex-row items-center justify-between gap-2">
+    <View className="flex-row items-center justify-between gap-3">
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
