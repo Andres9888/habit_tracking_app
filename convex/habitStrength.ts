@@ -17,7 +17,9 @@ import { Id } from "./_generated/dataModel";
 // Validated by Zhang et al. (2021) with 65-77% prediction accuracy in field studies
 
 // Habit Strength Parameters (Klein et al., 2011)
-const DEFAULT_HABIT_DECAY_PARAM = 0.175; // HDP: Empirically validated optimal range 0.15-0.2
+// ADJUSTED: Reduced HDP from 0.175 to 0.02 to allow habits to reach ~88% equilibrium strength
+// Original HDP=0.175 created equilibrium at 46%, preventing habits from strengthening beyond that point
+const DEFAULT_HABIT_DECAY_PARAM = 0.02;  // HDP: Adjusted for higher equilibrium (~88%)
 const DEFAULT_HABIT_GAIN_PARAM = 0.15;   // HGP: Empirically validated optimal range 0.1-0.2
 const CONTEXT_CONSISTENCY = 1.0;          // Cuet: Simplified to 1.0 (same context assumed)
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Easing, View, Text } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
+import { LinearGradient } from "expo-linear-gradient";
 import clsx from "clsx";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { HabitChainVisualizer } from "../HabitChainVisualizer";
@@ -97,47 +98,72 @@ export default function DraggableHabit({
     }
   };
 
+  const strengthPercentage = Math.round((habit.strength || 0) * 100);
+  const gradientHeight = useRef(new Animated.Value((habit.strength || 0) * 36)).current;
+
+  useEffect(() => {
+    Animated.timing(gradientHeight, {
+      toValue: (habit.strength || 0) * 36,
+      duration: 600,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    }).start();
+  }, [habit.strength, gradientHeight]);
+
   const habitCard = (
     <Animated.View
-      className={clsx(
-        "rounded-2xl border border-[#e5e7eb] bg-white",
-        isCompactMode ? "gap-4 px-[21px] pb-4 pt-[21px]" : "gap-4 px-[21px] pb-4 pt-[21px]"
-      )}
+      className="overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white"
       style={{
         opacity: fade,
         transform: [{ translateY }],
       }}
     >
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center gap-3">
-          <Text className="text-[30px] leading-9">{emoji}</Text>
-          <Text className="text-[17px] font-semibold leading-[25.5px] tracking-[-0.43px] text-[#0f172a]">
-            {name || habit.name}
-          </Text>
+      <View className={clsx(isCompactMode ? "px-6 pt-6" : "px-6 pt-6")}>
+        {/* Header with title and strength badge */}
+        <View className="mb-4 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+              {name || habit.name}
+            </Text>
+          </View>
+          {habit.strength !== undefined && habit.strength > 0 && (
+            <View className="rounded-full bg-[#10b981] px-3 py-1">
+              <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-white">
+                {strengthPercentage}%
+              </Text>
+            </View>
+          )}
         </View>
-        <Text className="text-[14px] font-normal leading-5 tracking-[-0.15px] text-[#6a7282]">
-          {completedCount}/{weekStatus.length}
-        </Text>
-      </View>
 
-      <HabitChainVisualizer
-        accentColor={accentColor}
-        habitId={habit._id}
-        onToggle={toggleHabit}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
-      />
-
-      {/* Habit Strength Indicator */}
-      {habit.strength !== undefined && habit.strength > 0 && (
-        <View className="pt-1">
-          <HabitStrengthIndicator
-            strength={habit.strength}
-            strengthLevel={habit.strengthLevel}
-            compact={true}
-            showLabel={false}
+        {/* Week status visualizer */}
+        <View className="mb-4">
+          <HabitChainVisualizer
+            accentColor={accentColor}
+            habitId={habit._id}
+            onToggle={toggleHabit}
+            weekDateStrings={weekDateStrings}
+            weekStatus={weekStatus}
           />
         </View>
+      </View>
+
+      {/* Gradient fill based on habit strength - full width at bottom */}
+      {habit.strength !== undefined && habit.strength > 0 && (
+        <Animated.View
+          style={{
+            width: '100%',
+            height: gradientHeight,
+            opacity: 0.7,
+          }}
+        >
+          <LinearGradient
+            colors={['#fee685', '#fef3c6', '#fff7ed']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            locations={[0, 0.5, 1]}
+            style={{ width: '100%', height: '100%' }}
+          />
+        </Animated.View>
       )}
     </Animated.View>
   );
