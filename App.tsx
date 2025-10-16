@@ -6,8 +6,8 @@ import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from 'convex
 import { addDays, format } from 'date-fns';
 import { Plus, Settings } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Pressable, Text, TextInput, View } from 'react-native';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { api } from './convex/_generated/api';
 import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
@@ -25,11 +25,9 @@ if (!convexUrl) {
 }
 const convex = new ConvexReactClient(convexUrl);
 
-// Initialize Clerk
+// Initialize Clerk (optional for development)
+// TODO: Implement proper authentication - see docs/stories/auth-implementation.story.md
 const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-if (!clerkPublishableKey) {
-  throw new Error('EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required but was not provided');
-}
 
 // Token cache for Clerk
 const tokenCache = {
@@ -57,6 +55,7 @@ function HabitsApp() {
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
+  const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
@@ -163,35 +162,27 @@ function HabitsApp() {
     // await reorderHabits({ habitIds: newOrder as Id<"habits">[] });
   }, []);
 
+  const handleArchive = useCallback(
+    async (habitId: Id<'habits'>) => {
+      await archiveHabit({ habitId });
+    },
+    [archiveHabit]
+  );
+
   return (
     <GestureHandlerRootView className='flex-1'>
       <ScrollView className='flex-1 bg-white'>
         <View className='mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12'>
           <View className='mb-2 flex-row items-center justify-between'>
             <Text className='text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#0f172a]'>Habits</Text>
-            <View className='flex-row gap-3'>
-              <Pressable
-                accessibilityLabel='View statistics'
-                accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-              >
-                <View className='h-5 w-5 items-center justify-center'>
-                  <View className='flex-col gap-[2px]'>
-                    <View className='h-[3px] w-[4px] rounded-full bg-[#364153]' />
-                    <View className='h-[6px] w-[4px] rounded-full bg-[#364153]' />
-                    <View className='h-[9px] w-[4px] rounded-full bg-[#364153]' />
-                  </View>
-                </View>
-              </Pressable>
-              <Pressable
-                accessibilityLabel='Open settings'
-                accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-                onPress={() => setIsSettingsOpen(true)}
-              >
-                <Settings color='#364153' size={20} />
-              </Pressable>
-            </View>
+            <Pressable
+              accessibilityLabel='Open settings'
+              accessibilityRole='button'
+              className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+              onPress={() => setIsSettingsOpen(true)}
+            >
+              <Settings color='#364153' size={20} />
+            </Pressable>
           </View>
 
           <DateSelector
@@ -272,6 +263,7 @@ function HabitsApp() {
                   toggleHabit={toggleHabit}
                   weekDateStrings={displayWeekDateStrings}
                   weekStatus={weekStatus}
+                  onArchive={handleArchive}
                 />
               );
             })}
@@ -300,6 +292,17 @@ function HabitsApp() {
 }
 
 export default function App() {
+  // Temporarily bypass Clerk authentication for development
+  // TODO: Remove this bypass once Clerk is properly configured
+  if (!clerkPublishableKey) {
+    console.warn('Running without authentication - Clerk key not configured');
+    return (
+      <ConvexProvider client={convex}>
+        <HabitsApp />
+      </ConvexProvider>
+    );
+  }
+
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>

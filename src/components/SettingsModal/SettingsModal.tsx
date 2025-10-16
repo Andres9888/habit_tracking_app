@@ -5,15 +5,15 @@ import { useSettingsModalLogic } from "./SettingsModal.hooks";
 interface SettingsModalProps {
   onClose: () => void;
   visible: boolean;
-  isCompact: boolean;
-  onChangeCompact: (value: boolean) => void | Promise<void>;
+  isCompact?: boolean;
+  onChangeCompact?: (value: boolean) => void | Promise<void>;
 }
 
 export default function SettingsModal({
   visible,
   onClose,
-  isCompact,
-  onChangeCompact,
+  isCompact = false,
+  onChangeCompact = () => {},
 }: SettingsModalProps) {
   const { user, view, setView, handleClose, handleSignOut } =
     useSettingsModalLogic({ onClose, visible });
@@ -56,10 +56,10 @@ export default function SettingsModal({
               <View className="gap-6">
                 <View className="gap-2 rounded-2xl bg-slate-50 px-5 py-4">
                   <Text className="text-[10px] font-semibold tracking-[2.5px] text-slate-500">
-                    SIGNED IN AS
+                    {user ? 'SIGNED IN AS' : 'AUTHENTICATION'}
                   </Text>
                   <Text className="text-base font-semibold text-slate-900">
-                    {user?.primaryEmailAddress?.emailAddress}
+                    {user?.primaryEmailAddress?.emailAddress || 'Not configured (Development mode)'}
                   </Text>
                 </View>
 
@@ -95,15 +95,23 @@ export default function SettingsModal({
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  className="items-center rounded-3xl border border-red-500 py-4"
-                  onPress={handleSignOut}
-                >
-                  <Text className="text-[13px] font-bold tracking-[3px] text-red-500">
-                    SIGN OUT
-                  </Text>
-                </TouchableOpacity>
+                {user ? (
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    className="items-center rounded-3xl border border-red-500 py-4"
+                    onPress={handleSignOut}
+                  >
+                    <Text className="text-[13px] font-bold tracking-[3px] text-red-500">
+                      SIGN OUT
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View className="items-center rounded-3xl border border-slate-300 bg-slate-50 py-4">
+                    <Text className="text-[13px] font-bold tracking-[3px] text-slate-400">
+                      SIGN OUT (UNAVAILABLE)
+                    </Text>
+                  </View>
+                )}
               </View>
             </>
           ) : (

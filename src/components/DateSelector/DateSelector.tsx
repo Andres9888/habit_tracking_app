@@ -8,12 +8,14 @@ interface DateSelectorProps {
   dates: Date[];
   onPreviousWeek?: () => void;
   onNextWeek?: () => void;
+  canNavigateForward?: boolean;
 }
 
 const DateSelectorComponent: React.FC<DateSelectorProps> = ({
   dates,
   onPreviousWeek,
   onNextWeek,
+  canNavigateForward = true,
 }) => {
   const { isToday, isFuture } = useDateSelectorLogic();
 
@@ -32,20 +34,22 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           className="h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]"
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color="#364153" size={16} strokeWidth={2} />
+          <ChevronLeft color="#101727" size={16} strokeWidth={2.25} />
         </Pressable>
 
-        <Text className="text-[14px] font-normal leading-5 tracking-[-0.15px] text-[#4a5565]">
+        <Text className="text-[14px] leading-5 tracking-[-0.15px] text-[#4a5565]">
           {dateRangeText}
         </Text>
 
         <Pressable
           accessibilityLabel="Next week"
           accessibilityRole="button"
-          className="h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]"
+          accessibilityState={{ disabled: !canNavigateForward }}
+          className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] ${canNavigateForward ? "" : "opacity-40"}`}
+          disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
-          <ChevronRight color="#364153" size={16} strokeWidth={2} />
+          <ChevronRight color="#101727" size={16} strokeWidth={2.25} />
         </Pressable>
       </View>
 

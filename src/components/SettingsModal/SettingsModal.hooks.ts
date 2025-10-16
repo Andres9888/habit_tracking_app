@@ -1,4 +1,3 @@
-import { useAuth, useUser } from "@clerk/clerk-expo";
 import { useState } from "react";
 
 interface UseSettingsModalLogicProps {
@@ -6,12 +5,25 @@ interface UseSettingsModalLogicProps {
   onClose: () => void;
 }
 
+// Mock auth hooks for development without Clerk
+// TODO: Remove when Clerk authentication is implemented (see docs/stories/6-draft/0.1-implement-clerk-authentication.story.md)
+const useMockAuth = () => ({
+  signOut: async () => {
+    console.warn('Sign out called but Clerk is not configured');
+  }
+});
+
+const useMockUser = () => ({
+  user: null
+});
+
 export const useSettingsModalLogic = ({
   visible,
   onClose,
 }: UseSettingsModalLogicProps) => {
-  const { signOut } = useAuth();
-  const { user } = useUser();
+  // Temporarily using mock auth until Clerk is configured
+  const { signOut } = useMockAuth();
+  const { user } = useMockUser();
   const [view, setView] = useState<"settings" | "archived">("settings");
 
   // Reset to settings view when modal closes

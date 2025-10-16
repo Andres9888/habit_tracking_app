@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "epicId": "2",
+    "storyId": "2.7",
+    "status": "Draft",
+    "title": "Habit Stats and Notes Screen",
+    "created": "2025-10-15",
+    "contextType": "story-context"
+  },
+  "figma": {
+    "file": "wjyOjXK6JPUWVbSF2uxqTL",
+    "nodeId": "141:584",
+    "url": "https://www.figma.com/design/wjyOjXK6JPUWVbSF2uxqTL/Untitled?node-id=141-584&m=dev"
+  },
+  "acceptanceCriteria": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+  ],
+  "artifacts": {
+    "docs": [
+      "docs/stories/6-draft/2.7-stats-and-notes-screen.story.md"
+    ],
+    "code": [
+      "src/components/StatsNotesButton/StatsNotesButton.tsx",
+      "src/screens/StatsNotesScreen/StatsNotesScreen.tsx",
+      "src/components/stats/StatsOverview.tsx",
+      "src/components/stats/HabitStats.tsx",
+      "src/components/notes/NotesList.tsx",
+      "src/components/notes/NoteEditor.tsx",
+      "convex/notes.ts"
+    ]
+  },
+  "constraints": {
+    "a11y": {
+      "minTouchTarget": 32,
+      "keyboardNavigation": true
+    },
+    "colors": {
+      "success": "#48bb78",
+      "neutral": "#dde3ed"
+    },
+    "performance": {
+      "chartsRenderBudgetMs": 300,
+      "targetFps": 60
+    }
+  }
+}
+
