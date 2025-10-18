@@ -2,15 +2,24 @@
 import './global.css';
 
 import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo';
-import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from 'convex/react';
+import {
+  ConvexProvider,
+  ConvexReactClient,
+  useMutation,
+  useQuery,
+} from 'convex/react';
 import { addDays, format } from 'date-fns';
 import { Plus, Settings } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from 'react-native-gesture-handler';
 import { api } from './convex/_generated/api';
 import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
+import { CalendarTimeline } from './src/components/CalendarTimeline';
 import SettingsModal from './src/components/SettingsModal';
 import DraggableHabit from './src/components/DraggableHabit';
 import CharacterScreen from './src/screens/CharacterScreen';
