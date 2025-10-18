@@ -380,7 +380,7 @@ describe('Habit Query Filters', () => {
     });
 
     it('should return empty array for empty dates input', () => {
-      const emptyDates: string[] = [];
+      const _emptyDates: string[] = [];
       const result: any[] = [];
 
       // Mutation: if (args.dates.length === 0) return [];
@@ -434,7 +434,7 @@ describe('Habit Query Filters', () => {
     });
 
     it('should calculate streak from consecutive days', () => {
-      const mockDates = [
+      const _mockDates = [
         new Date('2025-01-15'),
         new Date('2025-01-14'),
         new Date('2025-01-13'),
@@ -452,38 +452,32 @@ describe('Habit Query Filters', () => {
 describe('Schema Validation', () => {
   it('validates complete habit schema with all fields', () => {
     const completeHabit = {
-      // Core fields
-      _id: 'test_id',
       _creationTime: Date.now(),
-      createdAt: Date.now(),
-      name: 'Complete Habit',
-      notes: 'Some notes',
-
+      _id: 'test_id',
+      // Memory Accessibility System
+      accessibility: 0.8,
+      accessibilityDecayParam: 0.3,
+      accessibilityGainBehavior: 0.5,
+      accessibilityGainReminder: 0.7,
+      accessibilityUpdatedAt: Date.now(),
       // Archive fields
       archived: false,
       archivedAt: undefined,
-
+      createdAt: Date.now(),
+      habitDecayParam: 0.175,
+      habitGainParam: 0.15,
+      lastPredictionAt: Date.now(),
+      name: 'Complete Habit',
+      notes: 'Some notes',
+      order: 1,
+      // Prediction
+      predictedCompletionProb: 0.75,
       // Habit Strength System
       strength: 0.65,
       strengthLevel: 'strong',
       strengthUpdatedAt: Date.now(),
-      habitDecayParam: 0.175,
-      habitGainParam: 0.15,
-
-      // Memory Accessibility System
-      accessibility: 0.8,
-      accessibilityUpdatedAt: Date.now(),
-      accessibilityDecayParam: 0.3,
-      accessibilityGainBehavior: 0.5,
-      accessibilityGainReminder: 0.7,
-
-      // Prediction
-      predictedCompletionProb: 0.75,
-      lastPredictionAt: Date.now(),
-
       // Other
       tags: ['health', 'morning'],
-      order: 1,
       userId: 'user_123',
     };
 

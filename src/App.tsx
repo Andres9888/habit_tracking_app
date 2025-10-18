@@ -177,14 +177,14 @@ function HabitsApp() {
     if (habitOrder.length === 0) return habits;
 
     const orderMap = new Map(habitOrder.map((id, index) => [id, index]));
-    return [...habits].sort((a: any, b: any) => {
+    return [...habits].toSorted((a: any, b: any) => {
       const aOrder = orderMap.get(a._id) ?? Infinity;
       const bOrder = orderMap.get(b._id) ?? Infinity;
       return aOrder - bOrder;
     });
   }, [habits, habitOrder]);
 
-  const handleReorder = useCallback(async (newOrder: string[]) => {
+  const _handleReorder = useCallback(async (newOrder: string[]) => {
     setHabitOrder(newOrder);
     // TODO: Implement reorderHabits mutation in convex/habits.ts
     // await reorderHabits({ habitIds: newOrder as Id<"habits">[] });

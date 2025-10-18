@@ -300,9 +300,9 @@ export const getTracking = query({
     if (args.dates.length === 0) return [];
 
     // Optimize by querying a single date range then filtering to requested dates
-    const sortedDates = [...args.dates].sort();
+    const sortedDates = [...args.dates].toSorted();
     const startDate = sortedDates[0];
-    const endDate = sortedDates[sortedDates.length - 1];
+    const endDate = sortedDates.at(-1);
 
     const range = await ctx.db
       .query('tracking')
@@ -340,7 +340,7 @@ export const getStats = query({
     const sortedDates = tracking
       .filter((t) => t.completed)
       .map((t) => new Date(t.date).getTime())
-      .sort((a, b) => b - a);
+      .toSorted((a, b) => b - a);
 
     let streak = 0;
     const now = new Date();

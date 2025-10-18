@@ -77,7 +77,7 @@ export const fix = mutation({
       // Calculate from all history
       const sorted = tracking
         .map((t) => ({ ...t, date: t.date }))
-        .sort((a, b) => a.date.localeCompare(b.date));
+        .toSorted((a, b) => a.date.localeCompare(b.date));
 
       let strength = 0;
       for (const entry of sorted) {

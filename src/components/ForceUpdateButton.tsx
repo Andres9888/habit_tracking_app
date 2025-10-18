@@ -17,7 +17,7 @@ interface ForceUpdateButtonProps {
 
 export function ForceUpdateButton({
   habitId,
-  habitName,
+  habitName: _habitName,
   currentStrength,
 }: ForceUpdateButtonProps) {
   const [loading, setLoading] = useState(false);

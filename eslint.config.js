@@ -20,6 +20,8 @@ export default tseslint.config(
       'App.tsx',
       'index.ts',
       '__tests__/**',
+      'docs/HabitHome-FigmaCode/**',
+      'e2e/**',
     ],
   },
   {
