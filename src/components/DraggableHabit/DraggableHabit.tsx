@@ -34,6 +34,7 @@ interface Habit {
 interface DraggableHabitProps {
   habit: Habit;
   isCompactMode?: boolean;
+  showHabitStrengthPercentage?: boolean;
   streak: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   weekDateStrings: string[];
@@ -44,6 +45,7 @@ interface DraggableHabitProps {
 export default function DraggableHabit({
   habit,
   isCompactMode: _isCompactMode = false,
+  showHabitStrengthPercentage = true,
   streak,
   toggleHabit,
   weekDateStrings,
@@ -142,13 +144,15 @@ export default function DraggableHabit({
               )}
             </View>
           </View>
-          {habit.strength !== undefined && habit.strength > 0 && (
-            <View className='h-8 rounded-full bg-[#10b981] px-3 shadow-sm'>
-              <Text className='text-sm font-normal leading-8 tracking-[-0.15px] text-white'>
-                {strengthPercentage}%
-              </Text>
-            </View>
-          )}
+          {showHabitStrengthPercentage &&
+            habit.strength !== undefined &&
+            habit.strength > 0 && (
+              <View className='h-8 rounded-full bg-[#10b981] px-3 shadow-sm'>
+                <Text className='text-sm font-normal leading-8 tracking-[-0.15px] text-white'>
+                  {strengthPercentage}%
+                </Text>
+              </View>
+            )}
         </View>
 
         {/* Week status visualizer */}

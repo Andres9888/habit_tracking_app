@@ -9,6 +9,8 @@ interface SettingsModalProps {
   onChangeCompact?: (value: boolean) => void | Promise<void>;
   showCharacterScreen?: boolean;
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
+  showHabitStrengthPercentage?: boolean;
+  onChangeShowHabitStrengthPercentage?: (value: boolean) => void | Promise<void>;
   showNotesStats?: boolean;
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
 }
@@ -20,6 +22,8 @@ export default function SettingsModal({
   onChangeCompact = () => {},
   showCharacterScreen = true,
   onChangeShowCharacterScreen = () => {},
+  showHabitStrengthPercentage = true,
+  onChangeShowHabitStrengthPercentage = () => {},
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
 }: SettingsModalProps) {
@@ -141,8 +145,35 @@ export default function SettingsModal({
                           )
                       )
                     }
-                    thumbColor={showNotesStats ? '#101727' : '#ffffff'}
+                  />
+                </View>
+
+                <View className='flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4'>
+                  <View className='flex-1 pr-4'>
+                    <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+                      Habit Strength %
+                    </Text>
+                    <Text className='text-[11px] text-slate-500'>
+                      Display percentage badge showing habit strength level.
+                    </Text>
+                  </View>
+                  <Switch
+                    accessibilityLabel='Toggle habit strength percentage'
+                    thumbColor={
+                      showHabitStrengthPercentage ? '#101727' : '#ffffff'
+                    }
                     trackColor={{ false: '#cbd5f5', true: '#101727' }}
+                    value={showHabitStrengthPercentage}
+                    onValueChange={(value) =>
+                      Promise.resolve(
+                        onChangeShowHabitStrengthPercentage(value)
+                      ).catch((error) =>
+                        console.error(
+                          'Failed to update habit strength percentage setting',
+                          error
+                        )
+                      )
+                    }
                   />
                 </View>
 

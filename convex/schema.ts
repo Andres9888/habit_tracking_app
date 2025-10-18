@@ -75,23 +75,12 @@ const applicationTables = {
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
+    showHabitStrengthPercentage: v.optional(v.boolean()),
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
     userId: v.optional(v.string()),
   }),
-
-  notes: defineTable({
-    body: v.string(),
-    createdAt: v.number(),
-    date: v.string(),
-    habitId: v.optional(v.id('habits')),
-    updatedAt: v.number(),
-    userId: v.optional(v.string()),
-  })
-    .index('by_date', ['date'])
-    .index('by_habit', ['habitId'])
-    .index('by_user_and_date', ['userId', 'date']),
 };
 
 export default defineSchema({
