@@ -211,14 +211,16 @@ function HabitsApp() {
                   <CharacterIcon size={36} />
                 </Pressable>
               )}
-              <Pressable
-                accessibilityLabel="View statistics and notes"
-                accessibilityRole="button"
-                className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
-                onPress={() => setIsStatsNotesOpen(true)}
-              >
-                <BarChart3 color="#101727" size={20} strokeWidth={2.25} />
-              </Pressable>
+              {settings?.showNotesStats && (
+                <Pressable
+                  accessibilityLabel="View statistics and notes"
+                  accessibilityRole="button"
+                  className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
+                  onPress={() => setIsStatsNotesOpen(true)}
+                >
+                  <BarChart3 color="#101727" size={20} strokeWidth={2.25} />
+                </Pressable>
+              )}
               <Pressable
                 accessibilityLabel="Open settings"
                 accessibilityRole="button"
@@ -273,6 +275,23 @@ function HabitsApp() {
                 showConsistency: settings.showConsistency,
                 showEmojis: settings.showEmojis,
                 showMotivationalMessages: settings.showMotivationalMessages,
+                showNotesStats: settings.showNotesStats,
+                showStreaks: settings.showStreaks,
+              });
+            }
+          }}
+          showNotesStats={settings?.showNotesStats ?? true}
+          onChangeShowNotesStats={async (value) => {
+            if (settings) {
+              await updateSettings({
+                catTheme: settings.catTheme,
+                darkMode: settings.darkMode,
+                showCalendarView: settings.showCalendarView,
+                showCharacterScreen: settings.showCharacterScreen,
+                showConsistency: settings.showConsistency,
+                showEmojis: settings.showEmojis,
+                showMotivationalMessages: settings.showMotivationalMessages,
+                showNotesStats: value,
                 showStreaks: settings.showStreaks,
               });
             }

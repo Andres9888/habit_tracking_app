@@ -9,6 +9,8 @@ interface SettingsModalProps {
   onChangeCompact?: (value: boolean) => void | Promise<void>;
   showCharacterScreen?: boolean;
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
+  showNotesStats?: boolean;
+  onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
 }
 
 export default function SettingsModal({
@@ -18,6 +20,8 @@ export default function SettingsModal({
   onChangeCompact = () => {},
   showCharacterScreen = true,
   onChangeShowCharacterScreen = () => {},
+  showNotesStats = true,
+  onChangeShowNotesStats = () => {},
 }: SettingsModalProps) {
   const { user, view, setView, handleClose, handleSignOut } =
     useSettingsModalLogic({ onClose, visible });
@@ -107,6 +111,28 @@ export default function SettingsModal({
                       )
                     }
                     thumbColor={showCharacterScreen ? "#101727" : "#ffffff"}
+                    trackColor={{ false: "#cbd5f5", true: "#101727" }}
+                  />
+                </View>
+
+                <View className="flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4">
+                  <View className="flex-1 pr-4">
+                    <Text className="text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+                      Notes & Stats Icon
+                    </Text>
+                    <Text className="text-[11px] text-slate-500">
+                      Show notes and statistics icon in the navigation bar.
+                    </Text>
+                  </View>
+                  <Switch
+                    accessibilityLabel="Toggle notes and stats"
+                    value={showNotesStats}
+                    onValueChange={(value) =>
+                      Promise.resolve(onChangeShowNotesStats(value)).catch((error) =>
+                        console.error("Failed to update notes and stats setting", error)
+                      )
+                    }
+                    thumbColor={showNotesStats ? "#101727" : "#ffffff"}
                     trackColor={{ false: "#cbd5f5", true: "#101727" }}
                   />
                 </View>

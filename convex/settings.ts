@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   showConsistency: true,
   showEmojis: true,
   showMotivationalMessages: true,
+  showNotesStats: true,
   showStreaks: true,
 };
 
@@ -32,6 +33,8 @@ export const get = query({
       showMotivationalMessages:
         settings?.showMotivationalMessages ??
         DEFAULT_SETTINGS.showMotivationalMessages,
+      showNotesStats:
+        settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
     };
   },
@@ -43,6 +46,7 @@ export const get = query({
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
+    showNotesStats: v.boolean(),
     showStreaks: v.boolean(),
   }),
 });
@@ -56,6 +60,7 @@ export const update = mutation({
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
+    showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
   },
   handler: async (ctx, args) => {
