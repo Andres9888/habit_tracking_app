@@ -7,6 +7,41 @@ import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+interface DayConnectorProps {
+  accentColor: string;
+  visible: boolean;
+}
+
+/**
+ * DayConnector - Visual link between consecutive completed days
+ * Shows a horizontal bar when both adjacent days are completed,
+ * creating a visual "chain" effect for habit tracking.
+ */
+const DayConnector: React.FC<DayConnectorProps> = ({ accentColor, visible }) => {
+  const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: visible ? 1 : 0,
+      duration: 200,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [visible, opacity]);
+
+  return (
+    <Animated.View
+      style={{
+        width: 8,
+        height: 3,
+        backgroundColor: accentColor,
+        borderRadius: 1.5,
+        opacity,
+      }}
+    />
+  );
+};
+
 interface HabitDayToggleProps {
   accentColor: string;
   accessibilityHint?: string;
@@ -103,7 +138,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   const todayLabel = format(new Date(), "MMM d, EEE").toUpperCase();
 
   return (
-    <View className="flex-row items-center justify-between gap-3">
+    <View className="flex-row items-center justify-between">
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
@@ -120,16 +155,28 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           ? "Future dates are unavailable"
           : toggleInstruction;
 
+        // Check if this day and the next day are both completed (for connector)
+        const showConnector = index < weekDateStrings.length - 1 &&
+                              isCompleted(index) &&
+                              isCompleted(index + 1);
+
         return (
-          <HabitDayToggle
-            key={dateString}
-            accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
-            accentColor={accentColor}
-            completed={completed}
-            disabled={disabled}
-            onPress={() => onToggle({ date: dateString, habitId })}
-          />
+          <React.Fragment key={dateString}>
+            <HabitDayToggle
+              accessibilityHint={accessibilityHint}
+              accessibilityLabel={accessibilityLabel}
+              accentColor={accentColor}
+              completed={completed}
+              disabled={disabled}
+              onPress={() => onToggle({ date: dateString, habitId })}
+            />
+            {index < weekDateStrings.length - 1 && (
+              <DayConnector
+                accentColor={accentColor}
+                visible={showConnector}
+              />
+            )}
+          </React.Fragment>
         );
       })}
     </View>

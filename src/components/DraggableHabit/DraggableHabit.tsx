@@ -127,11 +127,16 @@ export default function DraggableHabit({
     >
       <View className="px-6 pt-6">
         {/* Header with title and strength badge */}
-        <View className="mb-4 flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
+        <View className="mb-3 flex-row items-center justify-between">
+          <View className="flex-1 flex-col gap-1">
             <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
               {name || habit.name}
             </Text>
+            {streak > 0 && (
+              <Text className="text-xs font-semibold uppercase leading-4 tracking-wide text-[#ff6900]">
+                🔥 {streak} Day Streak
+              </Text>
+            )}
           </View>
           {habit.strength !== undefined && habit.strength > 0 && (
             <View className="rounded-full bg-[#10b981] px-3 py-1">
@@ -143,7 +148,7 @@ export default function DraggableHabit({
         </View>
 
         {/* Week status visualizer */}
-        <View className="mb-4">
+        <View className="mb-3">
           <HabitChainVisualizer
             accentColor={accentColor}
             habitId={habit._id}
@@ -151,6 +156,22 @@ export default function DraggableHabit({
             weekDateStrings={weekDateStrings}
             weekStatus={weekStatus}
           />
+        </View>
+
+        {/* Weekly progress bar */}
+        <View className="mb-4 flex-row items-center gap-2">
+          <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
+            <View
+              className="h-full rounded-full"
+              style={{
+                width: `${(completedCount / weekDateStrings.length) * 100}%`,
+                backgroundColor: accentColor,
+              }}
+            />
+          </View>
+          <Text className="text-xs font-medium text-gray-500">
+            {completedCount}/{weekDateStrings.length}
+          </Text>
         </View>
       </View>
 
