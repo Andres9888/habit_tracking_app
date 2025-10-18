@@ -40,11 +40,7 @@ function MyScreen() {
   const today = new Date();
   const dates = Array.from({ length: 5 }, (_, i) => addDays(today, i));
 
-  return (
-    <CalendarTimeline
-      dates={dates}
-    />
-  );
+  return <CalendarTimeline dates={dates} />;
 }
 ```
 
@@ -85,32 +81,24 @@ function WeekView() {
   // Generate Mon-Fri dates
   const weekdays = Array.from({ length: 5 }, (_, i) => addDays(monday, i));
 
-  return (
-    <CalendarTimeline
-      dates={weekdays}
-      showSeparator={true}
-    />
-  );
+  return <CalendarTimeline dates={weekdays} showSeparator={true} />;
 }
 ```
 
 ### Without Separator
 
 ```tsx
-<CalendarTimeline
-  dates={dates}
-  showSeparator={false}
-/>
+<CalendarTimeline dates={dates} showSeparator={false} />
 ```
 
 ## Props
 
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `dates` | `Date[]` | Yes | - | Array of dates to display in the timeline |
-| `selectedDate` | `Date` | No | - | Currently selected date (highlights the date) |
-| `onDateSelect` | `(date: Date) => void` | No | - | Callback when a date is selected |
-| `showSeparator` | `boolean` | No | `true` | Whether to show the gradient separator line |
+| Prop            | Type                   | Required | Default | Description                                   |
+| --------------- | ---------------------- | -------- | ------- | --------------------------------------------- |
+| `dates`         | `Date[]`               | Yes      | -       | Array of dates to display in the timeline     |
+| `selectedDate`  | `Date`                 | No       | -       | Currently selected date (highlights the date) |
+| `onDateSelect`  | `(date: Date) => void` | No       | -       | Callback when a date is selected              |
+| `showSeparator` | `boolean`              | No       | `true`  | Whether to show the gradient separator line   |
 
 ## Styling
 
@@ -150,6 +138,7 @@ The component is wrapped with `React.memo` to prevent unnecessary re-renders. Da
 ## Future Enhancements
 
 Potential improvements:
+
 - Add touch feedback for date selection
 - Add animation for date transitions
 - Support for month boundaries with visual indicators

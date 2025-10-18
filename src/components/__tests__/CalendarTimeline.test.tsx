@@ -35,7 +35,7 @@ describe('CalendarTimeline', () => {
     const dates = Array.from({ length: 3 }, (_, i) => addDays(today, i));
 
     const { UNSAFE_root } = render(
-      <CalendarTimeline dates={dates} showSeparator={false} />,
+      <CalendarTimeline dates={dates} showSeparator={false} />
     );
 
     // Component should render without errors
@@ -78,7 +78,7 @@ describe('CalendarTimeline', () => {
     const selectedDate = dates[2]; // Select Wednesday
 
     const { getByText } = render(
-      <CalendarTimeline dates={dates} selectedDate={selectedDate} />,
+      <CalendarTimeline dates={dates} selectedDate={selectedDate} />
     );
 
     // Component should render with selected date

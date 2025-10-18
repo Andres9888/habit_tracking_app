@@ -23,13 +23,13 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   const { isDateSelected } = useCalendarTimelineLogic(selectedDate);
 
   return (
-    <View className="flex-col gap-4 px-6 py-0">
+    <View className='flex-col gap-4 px-6 py-0'>
       {/* Horizontal scrollable days container */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="gap-6"
-        className="overflow-visible"
+        contentContainerClassName='gap-6'
+        className='overflow-visible'
       >
         {dates.map((date, index) => {
           const weekday = format(date, 'EEE'); // Mon, Tue, Wed, etc.
@@ -39,18 +39,18 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           return (
             <View
               key={`timeline-day-${index}`}
-              className="flex-col items-center gap-2 pb-1 pt-0"
+              className='flex-col items-center gap-2 pb-1 pt-0'
               style={{ width: 60 }}
             >
               {/* Weekday label */}
-              <View className="h-4">
+              <View className='h-4'>
                 <Text className="text-center font-['Inter'] text-[12px] font-normal leading-[16px] text-[#6a7282]">
                   {weekday}
                 </Text>
               </View>
 
               {/* Date number */}
-              <View className="h-6">
+              <View className='h-6'>
                 <Text
                   className={`text-center font-['Inter'] text-[16px] font-normal leading-[24px] tracking-[-0.3125px] ${
                     isSelected ? 'text-[#101727]' : 'text-[#4a5565]'
@@ -68,7 +68,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       {/* Gradient separator line - matches Figma design exactly */}
       {showSeparator && (
         <View
-          className="h-[1px] w-full"
+          className='h-[1px] w-full'
           style={{
             backgroundColor: '#ffb86a',
             opacity: 0.5,

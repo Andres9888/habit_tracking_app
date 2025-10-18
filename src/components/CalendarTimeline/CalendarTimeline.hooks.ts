@@ -20,7 +20,7 @@ export const useCalendarTimelineLogic = (selectedDate?: Date) => {
 
       return checkDate.getTime() === selected.getTime();
     },
-    [selectedDate],
+    [selectedDate]
   );
 
   return {
