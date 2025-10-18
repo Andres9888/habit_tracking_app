@@ -184,7 +184,7 @@ function HabitsApp() {
     });
   }, [habits, habitOrder]);
 
-  const handleReorder = useCallback(async (newOrder: string[]) => {
+  const _handleReorder = useCallback(async (newOrder: string[]) => {
     setHabitOrder(newOrder);
     // TODO: Implement reorderHabits mutation in convex/habits.ts
     // await reorderHabits({ habitIds: newOrder as Id<"habits">[] });

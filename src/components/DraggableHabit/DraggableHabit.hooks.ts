@@ -34,8 +34,8 @@ const pickAccentColor = (input: string): string => {
     return ACCENT_COLORS[0];
   }
 
-  const codeSum = Array.from(input).reduce(
-    (sum, char) => sum + char.charCodeAt(0),
+  const codeSum = [...input].reduce(
+    (sum, char) => sum + (char.codePointAt(0) ?? 0),
     0
   );
 

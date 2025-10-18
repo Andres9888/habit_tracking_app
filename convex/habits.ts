@@ -302,7 +302,7 @@ export const getTracking = query({
     // Optimize by querying a single date range then filtering to requested dates
     const sortedDates = [...args.dates].sort();
     const startDate = sortedDates[0];
-    const endDate = sortedDates[sortedDates.length - 1];
+    const endDate = sortedDates.at(-1);
 
     const range = await ctx.db
       .query('tracking')

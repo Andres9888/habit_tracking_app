@@ -20,6 +20,8 @@ export default tseslint.config(
       'App.tsx',
       'index.ts',
       '__tests__/**',
+      'docs/HabitHome-FigmaCode/**',
+      'e2e/**',
     ],
   },
   {
@@ -133,6 +135,8 @@ export default tseslint.config(
       'unicorn/filename-case': 'off', // React components use PascalCase
       'unicorn/no-null': 'off', // null is valid in React/RN
       'unicorn/prefer-top-level-await': 'off', // Not always supported
+      'unicorn/no-array-sort': 'off', // toSorted() not supported in React Native (ES2023)
+      'unicorn/no-array-reverse': 'off', // toReversed() not supported in React Native (ES2023)
     },
   },
   {

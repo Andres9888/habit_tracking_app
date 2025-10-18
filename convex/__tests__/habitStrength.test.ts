@@ -9,7 +9,7 @@ import {
   calculateMemoryAccessibility,
   getStrengthLevel,
   predictCompletionProbability,
-  type StrengthLevel,
+  type StrengthLevel as _StrengthLevel,
 } from '../habitStrength';
 
 describe('Habit Strength Calculation (Klein et al., 2011)', () => {

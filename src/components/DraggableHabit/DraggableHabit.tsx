@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, View, Text } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
-import clsx from 'clsx';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
@@ -44,7 +43,7 @@ interface DraggableHabitProps {
 
 export default function DraggableHabit({
   habit,
-  isCompactMode = false,
+  isCompactMode: _isCompactMode = false,
   streak,
   toggleHabit,
   weekDateStrings,
