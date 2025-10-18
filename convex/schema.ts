@@ -53,6 +53,7 @@ const applicationTables = {
     catTheme: v.boolean(),
     darkMode: v.boolean(),
     showCalendarView: v.boolean(),
+    showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),

@@ -6,7 +6,7 @@ import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex
 import { addDays, format, startOfDay } from "date-fns";
 import { Plus, Settings, BarChart3 } from "lucide-react-native";
 import type { ComponentType } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Platform, Pressable, Text, View } from "react-native";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import { api } from "../convex/_generated/api";
@@ -62,14 +62,16 @@ function HabitsApp() {
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
+  const updateSettings = useMutation(api.settings.update);
   const habits = useQuery(api.habits.list) ?? [];
+  const settings = useQuery(api.settings.get);
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
   const today = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor] = useState(today);
 
   const weekDates = useMemo(
-    () => Array.from({ length: 7 }, (_, i) => addDays(weekAnchor, i - 6)),
+    () => Array.from({ length: 5 }, (_, i) => addDays(weekAnchor, i - 4)),
     [weekAnchor]
   );
   const weekDateStrings = useMemo(
@@ -123,11 +125,11 @@ function HabitsApp() {
   };
 
   const handlePreviousWeek = useCallback(() => {
-    setWeekAnchor((prev) => addDays(prev, -7));
+    setWeekAnchor((prev) => addDays(prev, -5));
   }, []);
 
   const handleNextWeek = useCallback(() => {
-    setWeekAnchor((prev) => addDays(prev, 7));
+    setWeekAnchor((prev) => addDays(prev, 5));
   }, []);
 
   const canNavigateForward = useMemo(
@@ -155,7 +157,7 @@ function HabitsApp() {
   };
 
   // Initialize habit order when habits load
-  useMemo(() => {
+  useEffect(() => {
     if (habits.length > 0 && habitOrder.length === 0) {
       setHabitOrder(habits.map((h) => h._id));
     }
@@ -192,20 +194,23 @@ function HabitsApp() {
 
   return (
     <GestureHandlerRootView className="flex-1">
-      <ScrollView className="flex-1 bg-white">
-        <View className="mx-auto max-w-[448px] gap-4 px-6 pb-24 pt-12">
+      <View className="flex-1 bg-white items-center">
+        <ScrollView className="w-full max-w-[448px]" showsVerticalScrollIndicator={false}>
+          <View className="gap-4 px-6 pb-24 pt-12">
           <View className="flex-row items-center justify-between">
             <Text className="text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#101727]">
               Habits
             </Text>
             <View className="flex-row gap-3">
-              <Pressable
-                accessibilityLabel="View character"
-                accessibilityRole="button"
-                onPress={() => setShowCharacterScreen(true)}
-              >
-                <CharacterIcon size={36} />
-              </Pressable>
+              {settings?.showCharacterScreen && (
+                <Pressable
+                  accessibilityLabel="View character"
+                  accessibilityRole="button"
+                  onPress={() => setShowCharacterScreen(true)}
+                >
+                  <CharacterIcon size={36} />
+                </Pressable>
+              )}
               <Pressable
                 accessibilityLabel="View statistics and notes"
                 accessibilityRole="button"
@@ -251,11 +256,27 @@ function HabitsApp() {
               );
             })}
           </View>
-        </View>
+          </View>
+        </ScrollView>
         <WebToaster />
         <SettingsModal
           visible={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
+          showCharacterScreen={settings?.showCharacterScreen ?? true}
+          onChangeShowCharacterScreen={async (value) => {
+            if (settings) {
+              await updateSettings({
+                catTheme: settings.catTheme,
+                darkMode: settings.darkMode,
+                showCalendarView: settings.showCalendarView,
+                showCharacterScreen: value,
+                showConsistency: settings.showConsistency,
+                showEmojis: settings.showEmojis,
+                showMotivationalMessages: settings.showMotivationalMessages,
+                showStreaks: settings.showStreaks,
+              });
+            }
+          }}
         />
         <StatsNotesModal
           visible={isStatsNotesOpen}
@@ -265,7 +286,7 @@ function HabitsApp() {
           visible={isCreateHabitOpen}
           onClose={() => setIsCreateHabitOpen(false)}
         />
-      </ScrollView>
+      </View>
       <View pointerEvents="box-none" className="absolute bottom-8 right-6">
         <Pressable
           accessibilityHint="Open create habit modal"

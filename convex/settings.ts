@@ -5,6 +5,7 @@ const DEFAULT_SETTINGS = {
   catTheme: true,
   darkMode: false,
   showCalendarView: true,
+  showCharacterScreen: true,
   showConsistency: true,
   showEmojis: true,
   showMotivationalMessages: true,
@@ -23,6 +24,8 @@ export const get = query({
       darkMode: settings?.darkMode ?? DEFAULT_SETTINGS.darkMode,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
+      showCharacterScreen:
+        settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen,
       showConsistency:
         settings?.showConsistency ?? DEFAULT_SETTINGS.showConsistency,
       showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
@@ -36,6 +39,7 @@ export const get = query({
     catTheme: v.boolean(),
     darkMode: v.boolean(),
     showCalendarView: v.boolean(),
+    showCharacterScreen: v.boolean(),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
@@ -48,6 +52,7 @@ export const update = mutation({
     catTheme: v.boolean(),
     darkMode: v.boolean(),
     showCalendarView: v.boolean(),
+    showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
