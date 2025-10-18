@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, View, Text } from 'react-native';
+import { Animated, Easing, View, Text, Pressable } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -40,6 +40,7 @@ interface DraggableHabitProps {
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   onArchive?: (habitId: Id<'habits'>) => void;
+  onLongPress?: (habit: Habit) => void;
 }
 
 export default function DraggableHabit({
@@ -51,6 +52,7 @@ export default function DraggableHabit({
   weekDateStrings,
   weekStatus,
   onArchive,
+  onLongPress,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
@@ -110,21 +112,22 @@ export default function DraggableHabit({
 
   useEffect(() => {
     Animated.timing(gradientHeight, {
-      toValue: (habit.strength || 0) * MAX_GRADIENT_HEIGHT,
       duration: GRADIENT_ANIMATION_DURATION,
       easing: Easing.out(Easing.cubic),
+      toValue: (habit.strength || 0) * MAX_GRADIENT_HEIGHT,
       useNativeDriver: false,
     }).start();
   }, [habit.strength, gradientHeight]);
 
   const habitCard = (
-    <Animated.View
-      className='overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white'
-      style={{
-        opacity: fade,
-        transform: [{ translateY }],
-      }}
-    >
+    <Pressable onLongPress={() => onLongPress?.(habit)}>
+      <Animated.View
+        className='overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white'
+        style={{
+          opacity: fade,
+          transform: [{ translateY }],
+        }}
+      >
       <View className='px-5 pt-5'>
         {/* Header with icon, title and strength badge */}
         <View className='mb-5 flex-row items-center justify-between'>
@@ -171,21 +174,22 @@ export default function DraggableHabit({
       {habit.strength !== undefined && habit.strength > 0 && (
         <Animated.View
           style={{
-            width: '100%',
             height: gradientHeight,
             opacity: GRADIENT_OPACITY,
+            width: '100%',
           }}
         >
           <LinearGradient
             colors={['#fee685', '#fef3c6', '#fff7ed']}
-            start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             locations={[0, 0.5, 1]}
-            style={{ width: '100%', height: '100%' }}
+            start={{ x: 0, y: 0 }}
+            style={{ height: '100%', width: '100%' }}
           />
         </Animated.View>
       )}
     </Animated.View>
+    </Pressable>
   );
 
   if (!onArchive) {

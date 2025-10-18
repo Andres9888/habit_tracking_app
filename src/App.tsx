@@ -26,6 +26,7 @@ import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
 import CharacterScreen from './screens/CharacterScreen';
 import CharacterIcon from './components/CharacterIcon';
+import HabitCalendarModal from './components/HabitCalendarModal';
 import * as SecureStore from 'expo-secure-store';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
@@ -70,6 +71,8 @@ function HabitsApp() {
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
     useState(true);
+  const [selectedHabit, setSelectedHabit] = useState<any | null>(null);
+  const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -199,6 +202,11 @@ function HabitsApp() {
     [archiveHabit]
   );
 
+  const handleHabitLongPress = useCallback((habit: any) => {
+    setSelectedHabit(habit);
+    setIsHabitCalendarOpen(true);
+  }, []);
+
   if (showCharacterScreen) {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
@@ -280,6 +288,7 @@ function HabitsApp() {
                     weekDateStrings={weekDateStrings}
                     weekStatus={weekStatus}
                     onArchive={handleArchive}
+                    onLongPress={handleHabitLongPress}
                   />
                 );
               })}
@@ -333,8 +342,16 @@ function HabitsApp() {
           visible={isCreateHabitOpen}
           onClose={() => setIsCreateHabitOpen(false)}
         />
+        <HabitCalendarModal
+          habit={selectedHabit}
+          streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
+          tracking={tracking}
+          toggleHabit={toggleHabit}
+          visible={isHabitCalendarOpen}
+          onClose={() => setIsHabitCalendarOpen(false)}
+        />
       </View>
-      <View pointerEvents='box-none' className='absolute bottom-8 right-6'>
+      <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
         <Pressable
           accessibilityHint='Open create habit modal'
           accessibilityLabel='Add habit'
