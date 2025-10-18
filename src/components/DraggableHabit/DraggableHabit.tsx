@@ -52,7 +52,6 @@ export default function DraggableHabit({
   onArchive,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
-  const completedCount = weekStatus.filter((s) => s === "done").length;
 
   const fade = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(12)).current;
@@ -162,22 +161,6 @@ export default function DraggableHabit({
             weekDateStrings={weekDateStrings}
             weekStatus={weekStatus}
           />
-        </View>
-
-        {/* Weekly progress bar */}
-        <View className="mb-5 flex-row items-center gap-2">
-          <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
-            <View
-              className="h-full rounded-full"
-              style={{
-                width: `${(completedCount / weekDateStrings.length) * 100}%`,
-                backgroundColor: accentColor,
-              }}
-            />
-          </View>
-          <Text className="text-xs font-medium text-gray-500">
-            {completedCount}/{weekDateStrings.length}
-          </Text>
         </View>
       </View>
 
