@@ -198,9 +198,18 @@ function HabitsApp() {
         <ScrollView className="w-full max-w-[448px]" showsVerticalScrollIndicator={false}>
           <View className="gap-4 px-6 pb-24 pt-12">
           <View className="flex-row items-center justify-between">
-            <Text className="text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#101727]">
-              Habits
-            </Text>
+            <Pressable
+              accessibilityHint="Open create habit modal"
+              accessibilityLabel="Add habit"
+              accessibilityRole="button"
+              className="flex-row items-center gap-2 rounded-full bg-[#101828] px-5 h-12"
+              onPress={handleToggleForm}
+            >
+              <Plus color="#ffffff" size={20} strokeWidth={2.25} />
+              <Text className="font-normal text-base text-white tracking-tight">
+                Habits
+              </Text>
+            </Pressable>
             <View className="flex-row gap-3">
               {settings?.showCharacterScreen && (
                 <Pressable
