@@ -45,12 +45,12 @@ export default function HeatmapCalendar({
   };
 
   return (
-    <View className='rounded-xl bg-slate-50 p-4'>
+    <View className='rounded-xl bg-slate-50 px-4 py-3'>
       {/* Month labels */}
-      <View className='mb-2 flex-row'>
+      <View className='mb-3 flex-row'>
         <View className='w-10' />
         {months.map((month, monthIndex) => (
-          <View key={monthIndex} className='w-12 items-center'>
+          <View key={monthIndex} className='flex-1 items-center'>
             <Text className='text-xs font-medium text-slate-500'>
               {format(month, 'MMM')}
             </Text>
@@ -59,12 +59,12 @@ export default function HeatmapCalendar({
       </View>
 
       {/* Day rows - showing Mon, Thu, Sun as in Figma */}
-      {[1, 4, 0].map((dayOfWeek) => {
+      {[1, 4, 0].map((dayOfWeek, rowIndex) => {
         const dayLabel =
           dayOfWeek === 0 ? 'Sun' : dayOfWeek === 1 ? 'Mon' : 'Thu';
 
         return (
-          <View key={dayOfWeek} className='mb-1 flex-row items-center'>
+          <View key={dayOfWeek} className='mb-2 flex-row items-center'>
             {/* Day label */}
             <View className='w-10'>
               <Text className='text-xs text-slate-400'>{dayLabel}</Text>
@@ -84,7 +84,7 @@ export default function HeatmapCalendar({
               return (
                 <View
                   key={monthIndex}
-                  className='w-12 flex-row flex-wrap gap-0.5'
+                  className='flex-1 flex-row flex-wrap gap-2'
                 >
                   {daysForThisWeekDay.map((day) => {
                     const dateString = format(day, 'yyyy-MM-dd');
