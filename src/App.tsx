@@ -177,7 +177,7 @@ function HabitsApp() {
     if (habitOrder.length === 0) return habits;
 
     const orderMap = new Map(habitOrder.map((id, index) => [id, index]));
-    return [...habits].toSorted((a: any, b: any) => {
+    return [...habits].sort((a: any, b: any) => {
       const aOrder = orderMap.get(a._id) ?? Infinity;
       const bOrder = orderMap.get(b._id) ?? Infinity;
       return aOrder - bOrder;

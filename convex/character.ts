@@ -23,7 +23,7 @@ export const getCharacterStats = query({
         const habitTracking = allTracking
           .filter((t) => t.habitId === habit._id && t.completed)
           .map((t) => new Date(t.date).getTime())
-          .toSorted((a, b) => b - a);
+          .sort((a, b) => b - a);
 
         let streak = 0;
         for (const [i, element] of habitTracking.entries()) {

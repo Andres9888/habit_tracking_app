@@ -45,7 +45,7 @@ const ExampleHabitCard = ({
   const isCompletedFor = (date: string) => habit.completedDates.includes(date);
 
   const streak = useMemo(() => {
-    const sorted = [...habit.completedDates].toSorted().toReversed();
+    const sorted = [...habit.completedDates].sort().reverse();
     let s = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -198,7 +198,7 @@ export default function HabitHomeExample() {
               ...h,
               completedDates: h.completedDates.includes(date)
                 ? h.completedDates.filter((d) => d !== date)
-                : [...h.completedDates, date].toSorted(),
+                : [...h.completedDates, date].sort(),
             }
           : h
       )

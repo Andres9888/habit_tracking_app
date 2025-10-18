@@ -40,7 +40,7 @@ export const forceInitialize = mutation({
       // Sort by date
       const sorted = tracking
         .map((t) => ({ ...t, dateObj: new Date(t.date) }))
-        .toSorted((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+        .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
 
       let strength = 0;
       const HDP = 0.175;
