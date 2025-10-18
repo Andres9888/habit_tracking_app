@@ -202,7 +202,7 @@ function HabitsApp() {
 
   return (
     <GestureHandlerRootView className='flex-1'>
-      <View className='flex-1 items-center bg-white'>
+      <View className='flex-1 items-center bg-[#F5F1ED]'>
         <ScrollView
           className='w-full max-w-[448px]'
           showsVerticalScrollIndicator={false}
@@ -252,11 +252,13 @@ function HabitsApp() {
               </View>
             </View>
 
-            <DateSelector
+            {/* CalendarTimeline from Figma Design (node 201:87) - replaces DateSelector */}
+            <CalendarTimeline
               canNavigateForward={canNavigateForward}
               dates={weekDates}
               onNextWeek={handleNextWeek}
               onPreviousWeek={handlePreviousWeek}
+              showSeparator={true}
             />
 
             <View className='gap-4'>
