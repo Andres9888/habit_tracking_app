@@ -49,6 +49,7 @@ interface HabitDayToggleProps {
   disabled: boolean;
   onPress: () => void;
   completed: boolean;
+  isToday: boolean;
 }
 
 const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
@@ -84,9 +85,12 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     <AnimatedPressable
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
+      accessibilityRole='button'
       accessibilityState={{ disabled }}
-      className="h-12 w-12 items-center justify-center rounded-2xl shadow-sm"
+      className={clsx(
+        'h-12 w-12 items-center justify-center rounded-2xl shadow-sm',
+        isToday && 'border-2 border-black'
+      )}
       disabled={disabled}
       onPress={onPress}
       style={{
@@ -131,34 +135,35 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   weekDateStrings,
   weekStatus,
 }) => {
-  const { isFutureDate, isCompleted } = useHabitChainVisualizerLogic(
+  const { isFutureDate, isCompleted, isToday } = useHabitChainVisualizerLogic(
     weekDateStrings,
     weekStatus
   );
-  const todayLabel = format(new Date(), "MMM d, EEE").toUpperCase();
+  const todayLabel = format(new Date(), 'MMM d, EEE').toUpperCase();
 
   return (
-    <View className="flex-row items-center justify-between">
+    <View className='flex-row items-center justify-between'>
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
 
-        const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-        const dateLabel = format(parsedDate, "MMM d, EEE").toUpperCase();
-        const statusLabel = completed ? "Completed" : "Not completed";
+        const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+        const dateLabel = format(parsedDate, 'MMM d, EEE').toUpperCase();
+        const statusLabel = completed ? 'Completed' : 'Not completed';
         const toggleInstruction = `Tap to toggle completion for ${dateLabel}`;
         const accessibilityLabel =
           dateLabel === todayLabel
             ? `Today, ${statusLabel}`
             : `${dateLabel}: ${statusLabel}`;
         const accessibilityHint = disabled
-          ? "Future dates are unavailable"
+          ? 'Future dates are unavailable'
           : toggleInstruction;
 
         // Check if this day and the next day are both completed (for connector)
-        const showConnector = index < weekDateStrings.length - 1 &&
-                              isCompleted(index) &&
-                              isCompleted(index + 1);
+        const showConnector =
+          index < weekDateStrings.length - 1 &&
+          isCompleted(index) &&
+          isCompleted(index + 1);
 
         return (
           <React.Fragment key={dateString}>
@@ -168,13 +173,11 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               accentColor={accentColor}
               completed={completed}
               disabled={disabled}
+              isToday={isToday(index)}
               onPress={() => onToggle({ date: dateString, habitId })}
             />
             {index < weekDateStrings.length - 1 && (
-              <DayConnector
-                accentColor={accentColor}
-                visible={showConnector}
-              />
+              <DayConnector accentColor={accentColor} visible={showConnector} />
             )}
           </React.Fragment>
         );
