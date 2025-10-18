@@ -1,29 +1,30 @@
-import { useCallback } from 'react';
-
 /**
  * Custom hook for CalendarTimeline component logic
- * @param selectedDate - Currently selected date (optional)
  */
-export const useCalendarTimelineLogic = (selectedDate?: Date) => {
+export const useCalendarTimelineLogic = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   /**
-   * Check if a given date matches the selected date
+   * Check if a given date is today
    */
-  const isDateSelected = useCallback(
-    (date: Date): boolean => {
-      if (!selectedDate) return false;
+  const isToday = (date: Date): boolean => {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate.getTime() === today.getTime();
+  };
 
-      const checkDate = new Date(date);
-      checkDate.setHours(0, 0, 0, 0);
-
-      const selected = new Date(selectedDate);
-      selected.setHours(0, 0, 0, 0);
-
-      return checkDate.getTime() === selected.getTime();
-    },
-    [selectedDate]
-  );
+  /**
+   * Check if a given date is in the future
+   */
+  const isFuture = (date: Date): boolean => {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate.getTime() > today.getTime();
+  };
 
   return {
-    isDateSelected,
+    isToday,
+    isFuture,
   };
 };

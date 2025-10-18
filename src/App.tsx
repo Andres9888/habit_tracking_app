@@ -19,7 +19,6 @@ import {
 } from 'react-native-gesture-handler';
 import { api } from '../convex/_generated/api';
 import type { Id } from '../convex/_generated/dataModel';
-import { DateSelector } from './components/DateSelector';
 import { CalendarTimeline } from './components/CalendarTimeline';
 import SettingsModal from './components/SettingsModal';
 import StatsNotesModal from './components/StatsNotesModal';

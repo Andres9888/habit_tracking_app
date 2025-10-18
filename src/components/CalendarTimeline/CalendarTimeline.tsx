@@ -1,61 +1,105 @@
 import React, { memo } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { format } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useCalendarTimelineLogic } from './CalendarTimeline.hooks';
 
 export interface CalendarTimelineProps {
   /** Array of dates to display in the timeline */
   dates: Date[];
-  /** Currently selected date (optional) */
-  selectedDate?: Date;
-  /** Callback when a date is selected (optional) */
-  onDateSelect?: (date: Date) => void;
+  /** Callback for previous week navigation */
+  onPreviousWeek?: () => void;
+  /** Callback for next week navigation */
+  onNextWeek?: () => void;
+  /** Whether forward navigation is allowed */
+  canNavigateForward?: boolean;
   /** Whether to show the gradient separator line */
   showSeparator?: boolean;
 }
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   dates,
-  selectedDate,
-  onDateSelect,
+  onPreviousWeek,
+  onNextWeek,
+  canNavigateForward = true,
   showSeparator = true,
 }) => {
-  const { isDateSelected } = useCalendarTimelineLogic(selectedDate);
+  const { isToday, isFuture } = useCalendarTimelineLogic();
+
+  // Handle empty dates array
+  if (dates.length === 0) {
+    return null;
+  }
+
+  // Get date range text (first and last date)
+  const firstDate = dates[0];
+  const lastDate = dates[dates.length - 1];
+  const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   return (
-    <View className='flex-col gap-4 px-6 py-0'>
-      {/* Horizontal scrollable days container */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerClassName='gap-6'
-        className='overflow-visible'
-      >
+    <View className='flex-col gap-4 px-6 py-4'>
+      {/* Week Navigation Header */}
+      <View className='flex-row items-center justify-between px-0'>
+        <Pressable
+          accessibilityLabel='Previous week'
+          accessibilityRole='button'
+          className='h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]'
+          onPress={onPreviousWeek}
+        >
+          <ChevronLeft color='#101727' size={16} strokeWidth={2.25} />
+        </Pressable>
+
+        <Text className='text-[14px] leading-5 tracking-[-0.15px] text-[#4a5565]'>
+          {dateRangeText}
+        </Text>
+
+        <Pressable
+          accessibilityLabel='Next week'
+          accessibilityRole='button'
+          accessibilityState={{ disabled: !canNavigateForward }}
+          className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] ${canNavigateForward ? '' : 'opacity-40'}`}
+          disabled={!canNavigateForward}
+          onPress={onNextWeek}
+        >
+          <ChevronRight color='#101727' size={16} strokeWidth={2.25} />
+        </Pressable>
+      </View>
+
+      {/* Days Row */}
+      <View className='flex-row justify-between gap-1'>
         {dates.map((date, index) => {
           const weekday = format(date, 'EEE'); // Mon, Tue, Wed, etc.
           const dayNumber = format(date, 'd'); // 13, 14, 15, etc.
-          const isSelected = isDateSelected(date);
+          const isCurrentDay = isToday(date);
+          const isUpcoming = isFuture(date);
+
+          const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
+          const accessibilityLabel = isCurrentDay
+            ? `Today, ${baseLabel}`
+            : baseLabel;
 
           return (
             <View
               key={`timeline-day-${index}`}
-              className='flex-col items-center gap-2 pb-1 pt-0'
-              style={{ width: 60 }}
+              accessibilityLabel={accessibilityLabel}
+              accessibilityRole='text'
+              className='flex-1 items-center gap-2'
             >
               {/* Weekday label */}
-              <View className='h-4'>
-                <Text className="text-center font-['Inter'] text-[12px] font-normal leading-[16px] text-[#6a7282]">
-                  {weekday}
-                </Text>
-              </View>
+              <Text className='text-center text-[12px] font-normal leading-[16px] text-[#6a7282]'>
+                {weekday}
+              </Text>
 
-              {/* Date number */}
-              <View className='h-6'>
+              {/* Date number with circular highlight for today */}
+              <View
+                className={`h-12 w-12 items-center justify-center rounded-full ${
+                  isCurrentDay ? 'bg-[#101727]' : 'bg-transparent'
+                } ${isUpcoming && !isCurrentDay ? 'opacity-50' : ''}`}
+              >
                 <Text
-                  className={`text-center font-['Inter'] text-[16px] font-normal leading-[24px] tracking-[-0.3125px] ${
-                    isSelected ? 'text-[#101727]' : 'text-[#4a5565]'
+                  className={`text-center text-[16px] font-normal leading-[24px] tracking-[-0.3125px] ${
+                    isCurrentDay ? 'text-white' : 'text-[#4a5565]'
                   }`}
-                  style={{ fontWeight: isSelected ? '600' : '400' }}
                 >
                   {dayNumber}
                 </Text>
@@ -63,7 +107,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             </View>
           );
         })}
-      </ScrollView>
+      </View>
 
       {/* Gradient separator line - matches Figma design exactly */}
       {showSeparator && (
