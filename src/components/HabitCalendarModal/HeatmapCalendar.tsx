@@ -21,6 +21,7 @@ export default function HeatmapCalendar({
   monthsToShow = 6,
 }: HeatmapCalendarProps) {
   const today = new Date();
+  const maxOccurrences = 5; // Maximum occurrences of a weekday in a month
 
   // Generate array of months to display (current month and previous months)
   const months = Array.from({ length: monthsToShow }, (_, i) =>
@@ -48,7 +49,7 @@ export default function HeatmapCalendar({
     <View className='rounded-xl bg-slate-50 px-4 py-3'>
       {/* Month labels */}
       <View className='mb-3 flex-row'>
-        <View className='w-10' />
+        <View className='w-12' />
         {months.map((month, monthIndex) => (
           <View key={monthIndex} className='flex-1 items-center'>
             <Text className='text-xs font-medium text-slate-500'>
@@ -59,14 +60,14 @@ export default function HeatmapCalendar({
       </View>
 
       {/* Day rows - showing Mon, Thu, Sun as in Figma */}
-      {[1, 4, 0].map((dayOfWeek, rowIndex) => {
+      {[1, 4, 0].map((dayOfWeek) => {
         const dayLabel =
           dayOfWeek === 0 ? 'Sun' : dayOfWeek === 1 ? 'Mon' : 'Thu';
 
         return (
-          <View key={dayOfWeek} className='mb-2 flex-row items-center'>
+          <View key={dayOfWeek} className='mb-2.5 flex-row items-center'>
             {/* Day label */}
-            <View className='w-10'>
+            <View className='w-12'>
               <Text className='text-xs text-slate-400'>{dayLabel}</Text>
             </View>
 
@@ -82,11 +83,20 @@ export default function HeatmapCalendar({
               const daysForThisWeekDay = byWeekDay[dayOfWeek] || [];
 
               return (
-                <View
-                  key={monthIndex}
-                  className='flex-1 flex-row flex-wrap gap-2'
-                >
-                  {daysForThisWeekDay.map((day) => {
+                <View key={monthIndex} className='flex-1 flex-row gap-1.5'>
+                  {Array.from({ length: maxOccurrences }).map((_, slotIndex) => {
+                    const day = daysForThisWeekDay[slotIndex];
+
+                    if (!day) {
+                      // Empty slot for alignment
+                      return (
+                        <View
+                          key={`empty-${monthIndex}-${slotIndex}`}
+                          className='h-1.5 w-1.5'
+                        />
+                      );
+                    }
+
                     const dateString = format(day, 'yyyy-MM-dd');
                     const isCompleted = completedDates.has(dateString);
                     const isFuture = day > today;
