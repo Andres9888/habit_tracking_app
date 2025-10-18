@@ -186,10 +186,12 @@ function HabitsApp() {
 
   return (
     <GestureHandlerRootView className='flex-1'>
-      <ScrollView className='flex-1 bg-[#EFEFEF]'>
+      <ScrollView className='flex-1 bg-[#F5F1ED]'>
         <View className='mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12'>
           <View className='mb-2 flex-row items-center justify-between'>
-            <Text className='text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#0f172a]'>Habits</Text>
+            <Text className='text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#0f172a]'>
+              Habits
+            </Text>
             <View className='flex-row gap-3'>
               <Pressable
                 accessibilityLabel='View character'
