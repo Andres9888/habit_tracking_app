@@ -1,31 +1,40 @@
 // NativeWind global styles
-import "../global.css";
+import '../global.css';
 
-import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
-import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex/react";
-import { addDays, format, startOfDay } from "date-fns";
-import { Plus, Settings, BarChart3 } from "lucide-react-native";
-import type { ComponentType } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Platform, Pressable, Text, View } from "react-native";
-import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
-import { api } from "../convex/_generated/api";
-import type { Id } from "../convex/_generated/dataModel";
-import { DateSelector } from "./components/DateSelector";
-import SettingsModal from "./components/SettingsModal";
-import StatsNotesModal from "./components/StatsNotesModal";
-import CreateHabitModal from "./components/CreateHabitModal";
-import DraggableHabit from "./components/DraggableHabit";
-import CharacterScreen from "./screens/CharacterScreen";
-import CharacterIcon from "./components/CharacterIcon";
-import * as SecureStore from "expo-secure-store";
+import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo';
+import {
+  ConvexProvider,
+  ConvexReactClient,
+  useMutation,
+  useQuery,
+} from 'convex/react';
+import { addDays, format, startOfDay } from 'date-fns';
+import { Plus, Settings, BarChart3 } from 'lucide-react-native';
+import type { ComponentType } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Platform, Pressable, Text, View } from 'react-native';
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from 'react-native-gesture-handler';
+import { api } from '../convex/_generated/api';
+import type { Id } from '../convex/_generated/dataModel';
+import { DateSelector } from './components/DateSelector';
+import { CalendarTimeline } from './components/CalendarTimeline';
+import SettingsModal from './components/SettingsModal';
+import StatsNotesModal from './components/StatsNotesModal';
+import CreateHabitModal from './components/CreateHabitModal';
+import DraggableHabit from './components/DraggableHabit';
+import CharacterScreen from './screens/CharacterScreen';
+import CharacterIcon from './components/CharacterIcon';
+import * as SecureStore from 'expo-secure-store';
 
-type HabitStatus = "done" | "missed" | "planned";
+type HabitStatus = 'done' | 'missed' | 'planned';
 
 // Initialize Convex client for Expo
 const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
 if (!convexUrl) {
-  throw new Error("EXPO_PUBLIC_CONVEX_URL is required but was not provided");
+  throw new Error('EXPO_PUBLIC_CONVEX_URL is required but was not provided');
 }
 const convex = new ConvexReactClient(convexUrl);
 
