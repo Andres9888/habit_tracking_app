@@ -32,10 +32,10 @@ const DayConnector: React.FC<DayConnectorProps> = ({ accentColor, visible }) => 
   return (
     <Animated.View
       style={{
-        width: 8,
-        height: 3,
+        width: 12,
+        height: 4,
         backgroundColor: accentColor,
-        borderRadius: 1.5,
+        borderRadius: 2,
         opacity,
       }}
     />
