@@ -201,80 +201,83 @@ function HabitsApp() {
   }
 
   return (
-    <GestureHandlerRootView className="flex-1">
-      <View className="flex-1 bg-white items-center">
-        <ScrollView className="w-full max-w-[448px]" showsVerticalScrollIndicator={false}>
-          <View className="gap-4 px-6 pb-24 pt-12">
-          <View className="flex-row items-center justify-between">
-            <Pressable
-              accessibilityHint="Open create habit modal"
-              accessibilityLabel="Add habit"
-              accessibilityRole="button"
-              className="flex-row items-center gap-2 rounded-full bg-[#101828] px-5 h-12"
-              onPress={handleToggleForm}
-            >
-              <Plus color="#ffffff" size={20} strokeWidth={2.25} />
-              <Text className="font-normal text-base text-white tracking-tight">
-                Habits
-              </Text>
-            </Pressable>
-            <View className="flex-row gap-3">
-              {settings?.showCharacterScreen && (
-                <Pressable
-                  accessibilityLabel="View character"
-                  accessibilityRole="button"
-                  onPress={() => setShowCharacterScreen(true)}
-                >
-                  <CharacterIcon size={36} />
-                </Pressable>
-              )}
-              {settings?.showNotesStats && (
-                <Pressable
-                  accessibilityLabel="View statistics and notes"
-                  accessibilityRole="button"
-                  className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
-                  onPress={() => setIsStatsNotesOpen(true)}
-                >
-                  <BarChart3 color="#101727" size={20} strokeWidth={2.25} />
-                </Pressable>
-              )}
+    <GestureHandlerRootView className='flex-1'>
+      <View className='flex-1 items-center bg-white'>
+        <ScrollView
+          className='w-full max-w-[448px]'
+          showsVerticalScrollIndicator={false}
+        >
+          <View className='gap-4 px-6 pb-24 pt-12'>
+            <View className='mt-3 flex-row items-center justify-between'>
               <Pressable
-                accessibilityLabel="Open settings"
-                accessibilityRole="button"
-                className="h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]"
-                onPress={() => setIsSettingsOpen(true)}
+                accessibilityHint='Open create habit modal'
+                accessibilityLabel='Add habit'
+                accessibilityRole='button'
+                className='h-12 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
+                onPress={handleToggleForm}
               >
-                <Settings color="#101727" size={20} strokeWidth={2.25} />
+                <Plus color='#ffffff' size={18} strokeWidth={2.25} />
+                <Text className='text-base font-normal tracking-tight text-white'>
+                  Habits
+                </Text>
               </Pressable>
+              <View className='flex-row gap-3'>
+                {settings?.showCharacterScreen && (
+                  <Pressable
+                    accessibilityLabel='View character'
+                    accessibilityRole='button'
+                    onPress={() => setShowCharacterScreen(true)}
+                  >
+                    <CharacterIcon size={36} />
+                  </Pressable>
+                )}
+                {settings?.showNotesStats && (
+                  <Pressable
+                    accessibilityLabel='View statistics and notes'
+                    accessibilityRole='button'
+                    className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+                    onPress={() => setIsStatsNotesOpen(true)}
+                  >
+                    <BarChart3 color='#101727' size={20} strokeWidth={2.25} />
+                  </Pressable>
+                )}
+                <Pressable
+                  accessibilityLabel='Open settings'
+                  accessibilityRole='button'
+                  className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+                  onPress={() => setIsSettingsOpen(true)}
+                >
+                  <Settings color='#101727' size={20} strokeWidth={2.25} />
+                </Pressable>
+              </View>
             </View>
-          </View>
 
-          <DateSelector
-            canNavigateForward={canNavigateForward}
-            dates={weekDates}
-            onNextWeek={handleNextWeek}
-            onPreviousWeek={handlePreviousWeek}
-          />
+            <DateSelector
+              canNavigateForward={canNavigateForward}
+              dates={weekDates}
+              onNextWeek={handleNextWeek}
+              onPreviousWeek={handlePreviousWeek}
+            />
 
-          <View className="gap-4">
-            {orderedHabits.map((habit: any) => {
-              const weekStatus = weekDateStrings.map((ds) =>
-                getHabitStatus(habit._id, ds)
-              );
-              const streak = getStreak(habit._id);
-              return (
-                <DraggableHabit
-                  key={habit._id}
-                  habit={habit}
-                  streak={streak}
-                  toggleHabit={toggleHabit}
-                  weekDateStrings={weekDateStrings}
-                  weekStatus={weekStatus}
-                  onArchive={handleArchive}
-                />
-              );
-            })}
-          </View>
+            <View className='gap-4'>
+              {orderedHabits.map((habit: any) => {
+                const weekStatus = weekDateStrings.map((ds) =>
+                  getHabitStatus(habit._id, ds)
+                );
+                const streak = getStreak(habit._id);
+                return (
+                  <DraggableHabit
+                    key={habit._id}
+                    habit={habit}
+                    streak={streak}
+                    toggleHabit={toggleHabit}
+                    weekDateStrings={weekDateStrings}
+                    weekStatus={weekStatus}
+                    onArchive={handleArchive}
+                  />
+                );
+              })}
+            </View>
           </View>
         </ScrollView>
         <WebToaster />
