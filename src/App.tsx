@@ -6,7 +6,7 @@ import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from "convex
 import { addDays, format, startOfDay } from "date-fns";
 import { Plus, Settings, BarChart3 } from "lucide-react-native";
 import type { ComponentType } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { Platform, Pressable, Text, View } from "react-native";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import { api } from "../convex/_generated/api";
@@ -16,6 +16,7 @@ import SettingsModal from "./components/SettingsModal";
 import StatsNotesModal from "./components/StatsNotesModal";
 import CreateHabitModal from "./components/CreateHabitModal";
 import DraggableHabit from "./components/DraggableHabit";
+import { ChainConnector } from "./components/ChainConnector";
 import CharacterScreen from "./screens/CharacterScreen";
 import CharacterIcon from "./components/CharacterIcon";
 import * as SecureStore from "expo-secure-store";
@@ -240,21 +241,23 @@ function HabitsApp() {
           />
 
           <View className="gap-4">
-            {orderedHabits.map((habit: any) => {
+            {orderedHabits.map((habit: any, index: number) => {
               const weekStatus = weekDateStrings.map((ds) =>
                 getHabitStatus(habit._id, ds)
               );
               const streak = getStreak(habit._id);
               return (
-                <DraggableHabit
-                  key={habit._id}
-                  habit={habit}
-                  streak={streak}
-                  toggleHabit={toggleHabit}
-                  weekDateStrings={weekDateStrings}
-                  weekStatus={weekStatus}
-                  onArchive={handleArchive}
-                />
+                <Fragment key={habit._id}>
+                  <DraggableHabit
+                    habit={habit}
+                    streak={streak}
+                    toggleHabit={toggleHabit}
+                    weekDateStrings={weekDateStrings}
+                    weekStatus={weekStatus}
+                    onArchive={handleArchive}
+                  />
+                  {index < orderedHabits.length - 1 && <ChainConnector />}
+                </Fragment>
               );
             })}
           </View>
