@@ -32,7 +32,8 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
         className={clsx(
           'flex-1 items-center justify-center rounded-xl border bg-white',
           status === 'done' && 'border-2 border-emerald-500 bg-emerald-50',
-          status === 'missed' && 'border-dashed border-slate-200 bg-gray-50 opacity-70',
+          status === 'missed' &&
+            'border-dashed border-slate-200 bg-gray-50 opacity-70',
           status === 'planned' && 'border-2 border-blue-500 bg-blue-50',
           isFuture && 'border-slate-100 opacity-30',
           isCurrentDay && 'border-2 border-slate-900'
@@ -49,7 +50,9 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
         >
           {format(date, 'd')}
         </Text>
-        {status === 'done' && <View className='mt-0.5 h-1 w-1 rounded-full bg-emerald-600' />}
+        {status === 'done' && (
+          <View className='mt-0.5 h-1 w-1 rounded-full bg-emerald-600' />
+        )}
       </View>
     </Pressable>
   );

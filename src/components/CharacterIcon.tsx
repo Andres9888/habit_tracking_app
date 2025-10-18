@@ -34,10 +34,12 @@ export default function CharacterIcon({ size = 36 }: CharacterIconProps) {
           width: '100%',
           height: '100%',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
-        <Text style={{ fontSize: emojiSize, lineHeight: emojiSize + 4 }}>🦸</Text>
+        <Text style={{ fontSize: emojiSize, lineHeight: emojiSize + 4 }}>
+          🦸
+        </Text>
       </LinearGradient>
     </View>
   );

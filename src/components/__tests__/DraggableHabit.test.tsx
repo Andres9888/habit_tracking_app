@@ -1,28 +1,34 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import DraggableHabit from "../DraggableHabit/DraggableHabit";
-import type { Id } from "../../../convex/_generated/dataModel";
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import DraggableHabit from '../DraggableHabit/DraggableHabit';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 const buildHabit = (overrides: Partial<Record<string, unknown>> = {}) =>
   ({
-    _id: "habit_1" as Id<"habits">,
-    name: "✅ Daily Reflection",
+    _id: 'habit_1' as Id<'habits'>,
+    name: '✅ Daily Reflection',
     createdAt: Date.now(),
     _creationTime: Date.now(),
     ...overrides,
   }) as const;
 
-const weekDateStrings = ["2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04", "2025-01-05"];
-const weekStatus: Array<"done" | "missed" | "planned"> = [
-  "done",
-  "planned",
-  "missed",
-  "done",
-  "planned",
+const weekDateStrings = [
+  '2025-01-01',
+  '2025-01-02',
+  '2025-01-03',
+  '2025-01-04',
+  '2025-01-05',
+];
+const weekStatus: Array<'done' | 'missed' | 'planned'> = [
+  'done',
+  'planned',
+  'missed',
+  'done',
+  'planned',
 ];
 
-describe("DraggableHabit compact mode", () => {
-  it("has consistent padding in default mode", () => {
+describe('DraggableHabit compact mode', () => {
+  it('has consistent padding in default mode', () => {
     const { toJSON } = render(
       <DraggableHabit
         habit={buildHabit()}
@@ -37,13 +43,15 @@ describe("DraggableHabit compact mode", () => {
     const tree = toJSON();
     expect(tree).toBeTruthy();
 
-    const className = Array.isArray(tree) ? tree[0]?.props?.className : tree?.props?.className;
+    const className = Array.isArray(tree)
+      ? tree[0]?.props?.className
+      : tree?.props?.className;
     // Current implementation uses specific padding values
-    expect(className).toContain("px-[21px]");
-    expect(className).toContain("pt-[21px]");
+    expect(className).toContain('px-[21px]');
+    expect(className).toContain('pt-[21px]');
   });
 
-  it("maintains consistent padding structure", () => {
+  it('maintains consistent padding structure', () => {
     const { toJSON } = render(
       <DraggableHabit
         habit={buildHabit()}
@@ -58,15 +66,17 @@ describe("DraggableHabit compact mode", () => {
     const tree = toJSON();
     expect(tree).toBeTruthy();
 
-    const className = Array.isArray(tree) ? tree[0]?.props?.className : tree?.props?.className;
+    const className = Array.isArray(tree)
+      ? tree[0]?.props?.className
+      : tree?.props?.className;
     // Current implementation uses specific padding values
-    expect(className).toContain("px-[21px]");
-    expect(className).toContain("pt-[21px]");
+    expect(className).toContain('px-[21px]');
+    expect(className).toContain('pt-[21px]');
   });
 });
 
-describe("DraggableHabit swipe to archive", () => {
-  it("renders without Swipeable when onArchive is not provided", () => {
+describe('DraggableHabit swipe to archive', () => {
+  it('renders without Swipeable when onArchive is not provided', () => {
     const { toJSON } = render(
       <DraggableHabit
         habit={buildHabit()}
@@ -83,10 +93,10 @@ describe("DraggableHabit swipe to archive", () => {
 
     // Check that the tree structure doesn't contain Swipeable
     const treeString = JSON.stringify(tree);
-    expect(treeString).not.toContain("Swipeable");
+    expect(treeString).not.toContain('Swipeable');
   });
 
-  it("renders with Swipeable when onArchive is provided", () => {
+  it('renders with Swipeable when onArchive is provided', () => {
     const mockOnArchive = jest.fn();
     const { UNSAFE_getByType } = render(
       <DraggableHabit
@@ -100,11 +110,13 @@ describe("DraggableHabit swipe to archive", () => {
     );
 
     // Should find Swipeable component when onArchive is provided
-    const swipeable = UNSAFE_getByType(require("react-native-gesture-handler").Swipeable);
+    const swipeable = UNSAFE_getByType(
+      require('react-native-gesture-handler').Swipeable
+    );
     expect(swipeable).toBeTruthy();
   });
 
-  it("passes onArchive callback to Swipeable", () => {
+  it('passes onArchive callback to Swipeable', () => {
     const mockOnArchive = jest.fn();
     const habit = buildHabit();
 
@@ -119,20 +131,22 @@ describe("DraggableHabit swipe to archive", () => {
       />
     );
 
-    const swipeable = UNSAFE_getByType(require("react-native-gesture-handler").Swipeable);
+    const swipeable = UNSAFE_getByType(
+      require('react-native-gesture-handler').Swipeable
+    );
 
     // Verify Swipeable has the onSwipeableOpen prop
     expect(swipeable.props.onSwipeableOpen).toBeDefined();
 
     // Simulate swipe open
-    swipeable.props.onSwipeableOpen("right");
+    swipeable.props.onSwipeableOpen('right');
 
     // Verify onArchive was called with the habit ID
     expect(mockOnArchive).toHaveBeenCalledWith(habit._id);
     expect(mockOnArchive).toHaveBeenCalledTimes(1);
   });
 
-  it("configures Swipeable with correct props", () => {
+  it('configures Swipeable with correct props', () => {
     const mockOnArchive = jest.fn();
 
     const { UNSAFE_getByType } = render(
@@ -146,7 +160,9 @@ describe("DraggableHabit swipe to archive", () => {
       />
     );
 
-    const swipeable = UNSAFE_getByType(require("react-native-gesture-handler").Swipeable);
+    const swipeable = UNSAFE_getByType(
+      require('react-native-gesture-handler').Swipeable
+    );
 
     // Verify Swipeable configuration
     expect(swipeable.props.overshootRight).toBe(false);
@@ -155,7 +171,7 @@ describe("DraggableHabit swipe to archive", () => {
     expect(swipeable.props.renderRightActions).toBeDefined();
   });
 
-  it("provides renderRightActions function that returns valid element", () => {
+  it('provides renderRightActions function that returns valid element', () => {
     const mockOnArchive = jest.fn();
 
     const { UNSAFE_getByType } = render(
@@ -169,12 +185,17 @@ describe("DraggableHabit swipe to archive", () => {
       />
     );
 
-    const swipeable = UNSAFE_getByType(require("react-native-gesture-handler").Swipeable);
+    const swipeable = UNSAFE_getByType(
+      require('react-native-gesture-handler').Swipeable
+    );
 
     // Verify renderRightActions returns a valid React element
     const mockProgress = { interpolate: jest.fn() };
     const mockDragX = { interpolate: jest.fn(() => 0) };
-    const rightActions = swipeable.props.renderRightActions(mockProgress, mockDragX);
+    const rightActions = swipeable.props.renderRightActions(
+      mockProgress,
+      mockDragX
+    );
 
     // Verify it returns a valid element with expected structure
     expect(rightActions).toBeTruthy();
@@ -182,7 +203,7 @@ describe("DraggableHabit swipe to archive", () => {
     expect(mockDragX.interpolate).toHaveBeenCalled();
   });
 
-  it("does not call onArchive when component renders without swipe", () => {
+  it('does not call onArchive when component renders without swipe', () => {
     const mockOnArchive = jest.fn();
 
     render(
@@ -200,11 +221,11 @@ describe("DraggableHabit swipe to archive", () => {
     expect(mockOnArchive).not.toHaveBeenCalled();
   });
 
-  it("works correctly with habit strength indicator", () => {
+  it('works correctly with habit strength indicator', () => {
     const mockOnArchive = jest.fn();
     const habitWithStrength = buildHabit({
       strength: 0.75,
-      strengthLevel: "strong",
+      strengthLevel: 'strong',
     });
 
     const { toJSON } = render(

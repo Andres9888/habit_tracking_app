@@ -1,4 +1,4 @@
-import { DayStatus } from "./StreakChain";
+import { DayStatus } from './StreakChain';
 
 export const useStreakChainLogic = (
   statuses: DayStatus[],
@@ -10,7 +10,7 @@ export const useStreakChainLogic = (
   // Compute current streak (consecutive "done" from end)
   let streakDays = 0;
   for (let i = statuses.length - 1; i >= 0; i -= 1) {
-    if (statuses[i] === "done") streakDays += 1;
+    if (statuses[i] === 'done') streakDays += 1;
     else break;
   }
 

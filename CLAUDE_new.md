@@ -185,15 +185,15 @@ The app uses `@convex-dev/auth` with configuration in:
 **Always use new function syntax:**
 
 ```typescript
-import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { query, mutation } from './_generated/server';
+import { v } from 'convex/values';
 
 export const myQuery = query({
-  args: { habitId: v.id("habits") },
+  args: { habitId: v.id('habits') },
   returns: v.object({ name: v.string() }),
   handler: async (ctx, args) => {
     const habit = await ctx.db.get(args.habitId);
-    return { name: habit?.name ?? "Unknown" };
+    return { name: habit?.name ?? 'Unknown' };
   },
 });
 ```
@@ -254,7 +254,7 @@ The project uses Jest with React Native preset:
 
    ```typescript
    export const updateNewField = mutation({
-     args: { habitId: v.id("habits"), newField: v.string() },
+     args: { habitId: v.id('habits'), newField: v.string() },
      returns: v.null(),
      handler: async (ctx, args) => {
        await ctx.db.patch(args.habitId, { newField: args.newField });
@@ -272,9 +272,9 @@ The project uses Jest with React Native preset:
 ```typescript
 // In Convex function
 const tracking = await ctx.db
-  .query("tracking")
+  .query('tracking')
   .filter((q) =>
-    q.and(q.gte(q.field("date"), startDate), q.lte(q.field("date"), endDate))
+    q.and(q.gte(q.field('date'), startDate), q.lte(q.field('date'), endDate))
   )
   .collect();
 ```

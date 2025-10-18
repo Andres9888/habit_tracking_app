@@ -3,28 +3,32 @@
  * Tests the full flow: UI interaction → Convex mutation → State update
  */
 
-import React from "react";
-import { render, waitFor } from "@testing-library/react-native";
-import { View } from "react-native";
-import DraggableHabit from "../src/components/DraggableHabit";
-import type { Id } from "../convex/_generated/dataModel";
+import React from 'react';
+import { render, waitFor } from '@testing-library/react-native';
+import { View } from 'react-native';
+import DraggableHabit from '../src/components/DraggableHabit';
+import type { Id } from '../convex/_generated/dataModel';
 
 // No mocks needed for component-level integration tests
 
-describe("Swipe to Archive Integration", () => {
+describe('Swipe to Archive Integration', () => {
   const testHabit = {
-    _id: "test_habit_1" as Id<"habits">,
+    _id: 'test_habit_1' as Id<'habits'>,
     _creationTime: Date.now(),
-    name: "Test Habit",
+    name: 'Test Habit',
     createdAt: Date.now(),
     strength: 0.5,
-    strengthLevel: "building" as const,
+    strengthLevel: 'building' as const,
   };
 
-  const weekDateStrings = ["2025-01-01", "2025-01-02", "2025-01-03"];
-  const weekStatus: Array<"done" | "missed" | "planned"> = ["done", "planned", "missed"];
+  const weekDateStrings = ['2025-01-01', '2025-01-02', '2025-01-03'];
+  const weekStatus: Array<'done' | 'missed' | 'planned'> = [
+    'done',
+    'planned',
+    'missed',
+  ];
 
-  it("successfully calls onArchive callback when swipe gesture completes", async () => {
+  it('successfully calls onArchive callback when swipe gesture completes', async () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
@@ -40,7 +44,7 @@ describe("Swipe to Archive Integration", () => {
     );
 
     // Find the Swipeable component
-    const Swipeable = require("react-native-gesture-handler").Swipeable;
+    const Swipeable = require('react-native-gesture-handler').Swipeable;
     const swipeableComponent = UNSAFE_getByType(Swipeable);
 
     // Simulate swipe open (triggers onSwipeableOpen)
@@ -55,11 +59,15 @@ describe("Swipe to Archive Integration", () => {
     });
   });
 
-  it("passes correct habitId when swiping different habits", async () => {
+  it('passes correct habitId when swiping different habits', async () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
-    const habit1 = { ...testHabit, _id: "habit_1" as Id<"habits">, name: "Habit 1" };
+    const habit1 = {
+      ...testHabit,
+      _id: 'habit_1' as Id<'habits'>,
+      name: 'Habit 1',
+    };
 
     // Test first habit
     const { UNSAFE_getByType: getSwipeable1, unmount: unmount1 } = render(
@@ -73,19 +81,23 @@ describe("Swipe to Archive Integration", () => {
       />
     );
 
-    const Swipeable = require("react-native-gesture-handler").Swipeable;
+    const Swipeable = require('react-native-gesture-handler').Swipeable;
     const swipeable1 = getSwipeable1(Swipeable);
 
     await waitFor(() => {
       swipeable1.props.onSwipeableOpen();
     });
 
-    expect(mockOnArchive).toHaveBeenCalledWith("habit_1");
+    expect(mockOnArchive).toHaveBeenCalledWith('habit_1');
     unmount1();
 
     // Test second habit
     mockOnArchive.mockClear();
-    const habit2 = { ...testHabit, _id: "habit_2" as Id<"habits">, name: "Habit 2" };
+    const habit2 = {
+      ...testHabit,
+      _id: 'habit_2' as Id<'habits'>,
+      name: 'Habit 2',
+    };
 
     const { UNSAFE_getByType: getSwipeable2 } = render(
       <DraggableHabit
@@ -104,10 +116,10 @@ describe("Swipe to Archive Integration", () => {
       swipeable2.props.onSwipeableOpen();
     });
 
-    expect(mockOnArchive).toHaveBeenCalledWith("habit_2");
+    expect(mockOnArchive).toHaveBeenCalledWith('habit_2');
   });
 
-  it("onArchive is not called on initial render", async () => {
+  it('onArchive is not called on initial render', async () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
@@ -126,14 +138,14 @@ describe("Swipe to Archive Integration", () => {
     expect(mockOnArchive).not.toHaveBeenCalled();
   });
 
-  it("swipeable renders correctly with habit strength indicator", async () => {
+  it('swipeable renders correctly with habit strength indicator', async () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
     const habitWithStrength = {
       ...testHabit,
       strength: 0.85,
-      strengthLevel: "strong" as const,
+      strengthLevel: 'strong' as const,
     };
 
     const { UNSAFE_getByType, toJSON } = render(
@@ -151,7 +163,7 @@ describe("Swipe to Archive Integration", () => {
     expect(toJSON()).toBeTruthy();
 
     // Verify Swipeable is present
-    const Swipeable = require("react-native-gesture-handler").Swipeable;
+    const Swipeable = require('react-native-gesture-handler').Swipeable;
     const swipeableComponent = UNSAFE_getByType(Swipeable);
     expect(swipeableComponent).toBeTruthy();
 
@@ -163,7 +175,7 @@ describe("Swipe to Archive Integration", () => {
     expect(mockOnArchive).toHaveBeenCalledWith(habitWithStrength._id);
   });
 
-  it("swipeable behavior works with compact mode enabled", async () => {
+  it('swipeable behavior works with compact mode enabled', async () => {
     const mockOnArchive = jest.fn();
     const mockToggleHabit = jest.fn();
 
@@ -179,7 +191,7 @@ describe("Swipe to Archive Integration", () => {
       />
     );
 
-    const Swipeable = require("react-native-gesture-handler").Swipeable;
+    const Swipeable = require('react-native-gesture-handler').Swipeable;
     const swipeableComponent = UNSAFE_getByType(Swipeable);
 
     // Simulate swipe in compact mode
@@ -192,26 +204,26 @@ describe("Swipe to Archive Integration", () => {
   });
 });
 
-describe("Archive Feature Convex Integration", () => {
-  it("verifies archive mutation updates database correctly", () => {
+describe('Archive Feature Convex Integration', () => {
+  it('verifies archive mutation updates database correctly', () => {
     // This test verifies the mutation contract
     // In a real integration test, you'd test against a test Convex deployment
 
     const expectedMutationArgs = {
-      habitId: "test_id" as Id<"habits">,
+      habitId: 'test_id' as Id<'habits'>,
     };
 
     // Verify the mutation accepts the correct arguments
-    expect(expectedMutationArgs).toHaveProperty("habitId");
-    expect(typeof expectedMutationArgs.habitId).toBe("string");
+    expect(expectedMutationArgs).toHaveProperty('habitId');
+    expect(typeof expectedMutationArgs.habitId).toBe('string');
   });
 
-  it("ensures archived habits have required fields", () => {
+  it('ensures archived habits have required fields', () => {
     // Test the archived habit schema
     const archivedHabit = {
-      _id: "test_id" as Id<"habits">,
+      _id: 'test_id' as Id<'habits'>,
       _creationTime: Date.now(),
-      name: "Test",
+      name: 'Test',
       createdAt: Date.now(),
       archived: true,
       archivedAt: Date.now(),
@@ -219,6 +231,6 @@ describe("Archive Feature Convex Integration", () => {
 
     expect(archivedHabit.archived).toBe(true);
     expect(archivedHabit.archivedAt).toBeDefined();
-    expect(typeof archivedHabit.archivedAt).toBe("number");
+    expect(typeof archivedHabit.archivedAt).toBe('number');
   });
 });

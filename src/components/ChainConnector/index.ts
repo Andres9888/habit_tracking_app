@@ -1,1 +1,1 @@
-export { ChainConnector } from "./ChainConnector";
+export { ChainConnector } from './ChainConnector';

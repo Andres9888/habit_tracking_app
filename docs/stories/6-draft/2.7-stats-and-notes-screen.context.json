@@ -23,9 +23,7 @@
     "AC8"
   ],
   "artifacts": {
-    "docs": [
-      "docs/stories/6-draft/2.7-stats-and-notes-screen.story.md"
-    ],
+    "docs": ["docs/stories/6-draft/2.7-stats-and-notes-screen.story.md"],
     "code": [
       "src/components/StatsNotesButton/StatsNotesButton.tsx",
       "src/screens/StatsNotesScreen/StatsNotesScreen.tsx",
@@ -51,4 +49,3 @@
     }
   }
 }
-

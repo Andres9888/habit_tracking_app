@@ -38,7 +38,11 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json', './convex/tsconfig.json'],
+        project: [
+          './tsconfig.node.json',
+          './tsconfig.app.json',
+          './convex/tsconfig.json',
+        ],
       },
     },
     plugins: {
@@ -49,7 +53,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
       'react/jsx-sort-props': [
         'warn',
         {
@@ -64,7 +71,10 @@ export default tseslint.config(
       // linting down the line.
 
       // Only warn on unused variables, and ignore variables starting with `_`
-      '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
+      ],
 
       // Allow escaping the compiler
       '@typescript-eslint/ban-ts-comment': 'error',
@@ -88,7 +98,10 @@ export default tseslint.config(
       'no-console': ['warn', { allow: ['warn', 'error'] }],
 
       // File size limit - encourage modular components
-      'max-lines': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
+      'max-lines': [
+        'warn',
+        { max: 100, skipBlankLines: true, skipComments: true },
+      ],
 
       // Import organization (manual guidelines)
       // Recommended order:
@@ -108,7 +121,11 @@ export default tseslint.config(
       'react/jsx-boolean-value': ['warn', 'never'],
 
       // Sort object keys alphabetically (auto-fixable)
-      'sort-keys-fix/sort-keys-fix': ['warn', 'asc', { caseSensitive: false, natural: true }],
+      'sort-keys-fix/sort-keys-fix': [
+        'warn',
+        'asc',
+        { caseSensitive: false, natural: true },
+      ],
 
       // Unicorn adjustments for React Native compatibility
       'unicorn/prefer-module': 'off', // CommonJS needed for some RN configs
@@ -120,7 +137,11 @@ export default tseslint.config(
   },
   {
     files: ['src/main.tsx'],
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, prettierConfig],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      prettierConfig,
+    ],
     plugins: {
       react: react,
       'react-hooks': reactHooks,

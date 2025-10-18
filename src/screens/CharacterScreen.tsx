@@ -1,5 +1,13 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import { ArrowLeft, Heart, Dumbbell, Brain, Zap, Flame, Trophy } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  Heart,
+  Dumbbell,
+  Brain,
+  Zap,
+  Flame,
+  Trophy,
+} from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
@@ -22,17 +30,27 @@ interface StatCardProps {
   label: string;
 }
 
-const AttributeCard = ({ icon, name, value, maxValue, gradientColors, bgGradient }: AttributeCardProps) => {
+const AttributeCard = ({
+  icon,
+  name,
+  value,
+  maxValue,
+  gradientColors,
+  bgGradient,
+}: AttributeCardProps) => {
   const percentage = (value / maxValue) * 100;
 
   return (
     <Animated.View
       entering={FadeInDown.duration(400)}
-      className="overflow-hidden rounded-3xl border border-gray-100 bg-white"
+      className='overflow-hidden rounded-3xl border border-gray-100 bg-white'
     >
-      <View className="relative h-[110px]">
+      <View className='relative h-[110px]'>
         {/* Background gradient */}
-        <View className="absolute left-0 top-0 h-full opacity-60" style={{ width: `${percentage}%` }}>
+        <View
+          className='absolute left-0 top-0 h-full opacity-60'
+          style={{ width: `${percentage}%` }}
+        >
           <LinearGradient
             colors={bgGradient}
             start={{ x: 0, y: 0 }}
@@ -42,23 +60,23 @@ const AttributeCard = ({ icon, name, value, maxValue, gradientColors, bgGradient
         </View>
 
         {/* Content */}
-        <View className="flex-col gap-3 px-6 pt-6">
-          <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center gap-3">
-              <View className="h-10 w-10 items-center justify-center rounded-full bg-white shadow-md">
+        <View className='flex-col gap-3 px-6 pt-6'>
+          <View className='flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-3'>
+              <View className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'>
                 {icon}
               </View>
-              <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
                 {name}
               </Text>
             </View>
-            <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
               {value}
             </Text>
           </View>
 
           {/* Progress bar */}
-          <View className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+          <View className='h-2 w-full overflow-hidden rounded-full bg-gray-100'>
             <View style={{ width: `${percentage}%` }}>
               <LinearGradient
                 colors={gradientColors}
@@ -77,13 +95,13 @@ const AttributeCard = ({ icon, name, value, maxValue, gradientColors, bgGradient
 const StatCard = ({ emoji, value, label }: StatCardProps) => (
   <Animated.View
     entering={FadeInDown.duration(500)}
-    className="flex-1 flex-col items-center gap-1 rounded-2xl border border-gray-100 bg-white px-4 py-4"
+    className='flex-1 flex-col items-center gap-1 rounded-2xl border border-gray-100 bg-white px-4 py-4'
   >
-    <Text className="text-2xl leading-8">{emoji}</Text>
-    <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+    <Text className='text-2xl leading-8'>{emoji}</Text>
+    <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
       {value}
     </Text>
-    <Text className="text-center text-xs font-normal leading-4 text-[#6a7282]">
+    <Text className='text-center text-xs font-normal leading-4 text-[#6a7282]'>
       {label}
     </Text>
   </Animated.View>
@@ -121,22 +139,22 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
   const xpRemaining = characterData.xpToNextLevel - characterData.xp;
 
   return (
-    <View className="flex-1 bg-white">
-      <ScrollView className="flex-1">
-        <View className="w-full px-6 pt-[60px]">
+    <View className='flex-1 bg-white'>
+      <ScrollView className='flex-1'>
+        <View className='w-full px-6 pt-[60px]'>
           {/* Header */}
-          <View className="mb-6 flex-row items-center">
+          <View className='mb-6 flex-row items-center'>
             {onBack && (
               <Pressable
                 onPress={onBack}
-                className="mr-4 h-10 w-10 items-center justify-center"
-                accessibilityRole="button"
-                accessibilityLabel="Go back"
+                className='mr-4 h-10 w-10 items-center justify-center'
+                accessibilityRole='button'
+                accessibilityLabel='Go back'
               >
-                <ArrowLeft color="#101828" size={24} />
+                <ArrowLeft color='#101828' size={24} />
               </Pressable>
             )}
-            <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
               Character
             </Text>
           </View>
@@ -144,43 +162,54 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
           {/* Character Card */}
           <Animated.View
             entering={FadeInDown.duration(300)}
-            className="mb-6 overflow-hidden rounded-3xl border border-gray-100 bg-white"
+            className='mb-6 overflow-hidden rounded-3xl border border-gray-100 bg-white'
           >
-            <View className="flex-col gap-6 px-6 py-6">
+            <View className='flex-col gap-6 px-6 py-6'>
               {/* Avatar and Level */}
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center gap-3">
-                  <View className="h-20 w-20 items-center justify-center rounded-full shadow-lg overflow-hidden">
+              <View className='flex-row items-center justify-between'>
+                <View className='flex-row items-center gap-3'>
+                  <View className='h-20 w-20 items-center justify-center overflow-hidden rounded-full shadow-lg'>
                     <LinearGradient
                       colors={['#ad46ff', '#f6339a']}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
-                      style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
                     >
-                      <Text className="text-[30px] leading-9">🦸</Text>
+                      <Text className='text-[30px] leading-9'>🦸</Text>
                     </LinearGradient>
                   </View>
-                  <View className="flex-col">
-                    <View className="flex-row items-center gap-2">
-                      <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+                  <View className='flex-col'>
+                    <View className='flex-row items-center gap-2'>
+                      <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
                         Level {characterData.level}
                       </Text>
-                      <Text className="text-lg">✨</Text>
+                      <Text className='text-lg'>✨</Text>
                     </View>
-                    <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]">
+                    <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]'>
                       {characterData.title}
                     </Text>
                   </View>
                 </View>
-                <View className="rounded-full overflow-hidden">
+                <View className='overflow-hidden rounded-full'>
                   <LinearGradient
                     colors={['#ff8c00', '#ff6900']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 10 }}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 8,
+                      paddingHorizontal: 16,
+                      paddingVertical: 10,
+                    }}
                   >
-                    <Trophy color="white" size={20} />
-                    <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-white">
+                    <Trophy color='white' size={20} />
+                    <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-white'>
                       10
                     </Text>
                   </LinearGradient>
@@ -188,26 +217,30 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
               </View>
 
               {/* XP Progress */}
-              <View className="flex-col gap-2">
-                <View className="flex-row items-center justify-between">
-                  <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-[#4a5565]">
+              <View className='flex-col gap-2'>
+                <View className='flex-row items-center justify-between'>
+                  <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#4a5565]'>
                     Experience
                   </Text>
-                  <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-[#101828]">
+                  <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#101828]'>
                     {characterData.xp}/{characterData.xpToNextLevel} XP
                   </Text>
                 </View>
-                <View className="h-3 w-full overflow-hidden rounded-full bg-gray-100">
+                <View className='h-3 w-full overflow-hidden rounded-full bg-gray-100'>
                   <View style={{ width: `${xpProgress}%` }}>
                     <LinearGradient
                       colors={['#ad46ff', '#f6339a']}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 0 }}
-                      style={{ width: '100%', height: '100%', borderRadius: 9999 }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: 9999,
+                      }}
                     />
                   </View>
                 </View>
-                <Text className="text-center text-xs font-normal leading-4 text-[#99a1af]">
+                <Text className='text-center text-xs font-normal leading-4 text-[#99a1af]'>
                   {xpRemaining} XP to Level {characterData.level + 1}
                 </Text>
               </View>
@@ -215,37 +248,37 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
           </Animated.View>
 
           {/* Attributes Section */}
-          <View className="mb-6 flex-col gap-3">
-            <Text className="px-1 text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+          <View className='mb-6 flex-col gap-3'>
+            <Text className='px-1 text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
               Attributes
             </Text>
             <AttributeCard
-              icon={<Heart color="#fb2c36" size={20} />}
-              name="Vitality"
+              icon={<Heart color='#fb2c36' size={20} />}
+              name='Vitality'
               value={characterData.attributes.vitality}
               maxValue={100}
               gradientColors={['#fb2c36', '#f6339a']}
               bgGradient={['#ffe2e2', '#fdf2f8']}
             />
             <AttributeCard
-              icon={<Dumbbell color="#ff6900" size={20} />}
-              name="Strength"
+              icon={<Dumbbell color='#ff6900' size={20} />}
+              name='Strength'
               value={characterData.attributes.strength}
               maxValue={100}
               gradientColors={['#ff6900', '#fe9a00']}
               bgGradient={['#ffedd4', '#fffbeb']}
             />
             <AttributeCard
-              icon={<Brain color="#ad46ff" size={20} />}
-              name="Wisdom"
+              icon={<Brain color='#ad46ff' size={20} />}
+              name='Wisdom'
               value={characterData.attributes.wisdom}
               maxValue={100}
               gradientColors={['#ad46ff', '#615fff']}
               bgGradient={['#f3e8ff', '#eef2ff']}
             />
             <AttributeCard
-              icon={<Zap color="#f0b100" size={20} />}
-              name="Energy"
+              icon={<Zap color='#f0b100' size={20} />}
+              name='Energy'
               value={characterData.attributes.energy}
               maxValue={100}
               gradientColors={['#f0b100', '#ff6900']}
@@ -254,35 +287,47 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
           </View>
 
           {/* Stats Cards */}
-          <View className="mb-6 flex-row gap-3">
-            <StatCard emoji="🔥" value={characterData.stats.dayStreak} label="Day Streak" />
-            <StatCard emoji="⚡" value={characterData.stats.totalPower} label="Total Power" />
-            <StatCard emoji="🎯" value={characterData.stats.activeHabits} label="Active Habits" />
+          <View className='mb-6 flex-row gap-3'>
+            <StatCard
+              emoji='🔥'
+              value={characterData.stats.dayStreak}
+              label='Day Streak'
+            />
+            <StatCard
+              emoji='⚡'
+              value={characterData.stats.totalPower}
+              label='Total Power'
+            />
+            <StatCard
+              emoji='🎯'
+              value={characterData.stats.activeHabits}
+              label='Active Habits'
+            />
           </View>
 
           {/* Recent Achievements */}
-          <View className="mb-8 flex-col gap-3">
-            <Text className="px-1 text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+          <View className='mb-8 flex-col gap-3'>
+            <Text className='px-1 text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
               Recent Achievements
             </Text>
             {characterData.recentAchievements.map((achievement) => (
               <Animated.View
                 key={achievement.id}
                 entering={FadeInDown.duration(600)}
-                className="flex-row items-center gap-4 rounded-3xl border border-gray-100 bg-white px-6 py-6"
+                className='flex-row items-center gap-4 rounded-3xl border border-gray-100 bg-white px-6 py-6'
               >
-                <View className="h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm">
-                  <Trophy color="#f59e0b" size={24} />
+                <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
+                  <Trophy color='#f59e0b' size={24} />
                 </View>
-                <View className="flex-1 flex-col">
-                  <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+                <View className='flex-1 flex-col'>
+                  <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
                     {achievement.title}
                   </Text>
-                  <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]">
+                  <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]'>
                     {achievement.description}
                   </Text>
                 </View>
-                <Text className="text-2xl">{achievement.icon}</Text>
+                <Text className='text-2xl'>{achievement.icon}</Text>
               </Animated.View>
             ))}
           </View>

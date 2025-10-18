@@ -1,1 +1,1 @@
-export { default } from "./ArchivedHabitsModal";
+export { default } from './ArchivedHabitsModal';

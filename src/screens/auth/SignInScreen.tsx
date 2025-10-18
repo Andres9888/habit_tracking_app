@@ -25,7 +25,10 @@ export default function SignInScreen() {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
         // Handle additional verification steps if needed
-        Alert.alert('Error', 'Sign in incomplete. Please check your credentials.');
+        Alert.alert(
+          'Error',
+          'Sign in incomplete. Please check your credentials.'
+        );
       }
     } catch (error: any) {
       console.error(JSON.stringify(error, null, 2));
@@ -38,12 +41,18 @@ export default function SignInScreen() {
   return (
     <View className='flex-1 bg-white'>
       <View className='flex-1 px-6 pt-[60px]'>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>Welcome Back</Text>
-        <Text className='mb-10 text-base text-slate-500'>Sign in to continue tracking your habits</Text>
+        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
+          Welcome Back
+        </Text>
+        <Text className='mb-10 text-base text-slate-500'>
+          Sign in to continue tracking your habits
+        </Text>
 
         <View className='gap-6'>
           <View className='gap-2'>
-            <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>EMAIL</Text>
+            <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+              EMAIL
+            </Text>
             <TextInput
               autoCapitalize='none'
               autoComplete='email'
@@ -57,7 +66,9 @@ export default function SignInScreen() {
           </View>
 
           <View className='gap-2'>
-            <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>PASSWORD</Text>
+            <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+              PASSWORD
+            </Text>
             <TextInput
               secureTextEntry
               autoComplete='password'

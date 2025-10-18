@@ -1,8 +1,8 @@
 /// <reference types="nativewind/types" />
 
-import "react-native";
+import 'react-native';
 
-declare module "react-native" {
+declare module 'react-native' {
   interface ViewProps {
     className?: string;
   }
@@ -26,9 +26,9 @@ declare module "react-native" {
   }
 }
 
-import "react-native-gesture-handler";
+import 'react-native-gesture-handler';
 
-declare module "react-native-gesture-handler" {
+declare module 'react-native-gesture-handler' {
   interface GestureHandlerRootViewProps {
     className?: string;
   }

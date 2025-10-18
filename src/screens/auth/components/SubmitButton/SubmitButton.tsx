@@ -8,7 +8,13 @@ interface SubmitButtonProps {
   onPress: () => void;
 }
 
-export function SubmitButton({ label, loadingLabel, isLoading, disabled = false, onPress }: SubmitButtonProps) {
+export function SubmitButton({
+  label,
+  loadingLabel,
+  isLoading,
+  disabled = false,
+  onPress,
+}: SubmitButtonProps) {
   const isDisabled = isLoading || disabled;
 
   return (
@@ -19,7 +25,9 @@ export function SubmitButton({ label, loadingLabel, isLoading, disabled = false,
       disabled={isDisabled}
       onPress={onPress}
     >
-      <Text className='text-[13px] font-bold tracking-[3px] text-white'>{isLoading ? loadingLabel : label}</Text>
+      <Text className='text-[13px] font-bold tracking-[3px] text-white'>
+        {isLoading ? loadingLabel : label}
+      </Text>
     </TouchableOpacity>
   );
 }

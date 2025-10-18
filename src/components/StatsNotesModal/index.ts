@@ -1,1 +1,1 @@
-export { default } from "./StatsNotesModal";
+export { default } from './StatsNotesModal';

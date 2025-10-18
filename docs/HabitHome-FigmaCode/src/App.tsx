@@ -7,8 +7,8 @@ export default function App() {
   const [view, setView] = useState<'tracker' | 'stats'>('tracker');
 
   return (
-    <div className="size-full flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md h-full bg-white">
+    <div className='flex size-full items-center justify-center bg-gray-50'>
+      <div className='h-full w-full max-w-md bg-white'>
         {view === 'tracker' ? (
           <HabitTracker onViewStats={() => setView('stats')} />
         ) : (

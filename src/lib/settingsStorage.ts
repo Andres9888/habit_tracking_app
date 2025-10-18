@@ -1,23 +1,23 @@
-const COMPACT_KEY = "habitTrackerSettings.compactMode";
+const COMPACT_KEY = 'habitTrackerSettings.compactMode';
 
 export const getCompactMode = async (): Promise<boolean> => {
   // Prefer web localStorage when available
   try {
-    if (typeof localStorage !== "undefined") {
+    if (typeof localStorage !== 'undefined') {
       const raw = localStorage.getItem(COMPACT_KEY);
       if (raw == null) return false;
-      return raw === "true";
+      return raw === 'true';
     }
   } catch {}
 
   // Fallback to React Native AsyncStorage
   try {
     const { default: AsyncStorage } = await import(
-      "@react-native-async-storage/async-storage"
+      '@react-native-async-storage/async-storage'
     );
     const raw = await AsyncStorage.getItem(COMPACT_KEY);
     if (raw == null) return false;
-    return raw === "true";
+    return raw === 'true';
   } catch {
     return false;
   }
@@ -26,8 +26,8 @@ export const getCompactMode = async (): Promise<boolean> => {
 export const setCompactMode = async (value: boolean): Promise<void> => {
   // Prefer web localStorage when available
   try {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem(COMPACT_KEY, value ? "true" : "false");
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(COMPACT_KEY, value ? 'true' : 'false');
       return;
     }
   } catch {}
@@ -35,12 +35,10 @@ export const setCompactMode = async (value: boolean): Promise<void> => {
   // Fallback to React Native AsyncStorage
   try {
     const { default: AsyncStorage } = await import(
-      "@react-native-async-storage/async-storage"
+      '@react-native-async-storage/async-storage'
     );
-    await AsyncStorage.setItem(COMPACT_KEY, value ? "true" : "false");
+    await AsyncStorage.setItem(COMPACT_KEY, value ? 'true' : 'false');
   } catch {
     // no-op
   }
 };
-
-

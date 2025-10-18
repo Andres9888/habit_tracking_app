@@ -1,6 +1,6 @@
-import React from "react";
-import { View, ViewProps } from "react-native";
-import clsx from "clsx";
+import React from 'react';
+import { View, ViewProps } from 'react-native';
+import clsx from 'clsx';
 
 export interface CardProps extends ViewProps {
   style?: any;
@@ -14,7 +14,7 @@ export function Card({
   return (
     <View
       className={clsx(
-        "rounded-xl border border-slate-200 bg-white shadow-sm",
+        'rounded-xl border border-slate-200 bg-white shadow-sm',
         className
       )}
       style={style}
@@ -30,7 +30,7 @@ export function CardHeader({
 }: ViewProps & { className?: string }) {
   return (
     <View
-      className={clsx("border-b border-slate-200 p-4", className)}
+      className={clsx('border-b border-slate-200 p-4', className)}
       style={style}
       {...props}
     />
@@ -42,7 +42,7 @@ export function CardContent({
   className,
   ...props
 }: ViewProps & { className?: string }) {
-  return <View className={clsx("p-4", className)} style={style} {...props} />;
+  return <View className={clsx('p-4', className)} style={style} {...props} />;
 }
 
 export default Card;

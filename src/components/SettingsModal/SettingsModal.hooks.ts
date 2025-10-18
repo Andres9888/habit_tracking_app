@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
@@ -10,11 +10,11 @@ interface UseSettingsModalLogicProps {
 const useMockAuth = () => ({
   signOut: async () => {
     console.warn('Sign out called but Clerk is not configured');
-  }
+  },
 });
 
 const useMockUser = () => ({
-  user: null
+  user: null,
 });
 
 export const useSettingsModalLogic = ({
@@ -24,12 +24,12 @@ export const useSettingsModalLogic = ({
   // Temporarily using mock auth until Clerk is configured
   const { signOut } = useMockAuth();
   const { user } = useMockUser();
-  const [view, setView] = useState<"settings" | "archived">("settings");
+  const [view, setView] = useState<'settings' | 'archived'>('settings');
 
   // Reset to settings view when modal closes
   const handleClose = () => {
     onClose();
-    setTimeout(() => setView("settings"), 300); // Reset after animation
+    setTimeout(() => setView('settings'), 300); // Reset after animation
   };
 
   const handleSignOut = async () => {
@@ -37,7 +37,7 @@ export const useSettingsModalLogic = ({
       await signOut();
       handleClose();
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error('Error signing out:', error);
     }
   };
 

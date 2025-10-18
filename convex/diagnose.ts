@@ -3,66 +3,71 @@
  * Run: npx convex run diagnose:show
  */
 
-import { query, mutation } from "./_generated/server";
-import { calculateHabitStrength } from "./habitStrength";
+import { query, mutation } from './_generated/server';
+import { calculateHabitStrength } from './habitStrength';
 
 export const show = query({
   handler: async (ctx) => {
-    const habits = await ctx.db.query("habits").collect();
+    const habits = await ctx.db.query('habits').collect();
 
     const results = [];
 
     for (const habit of habits) {
       const tracking = await ctx.db
-        .query("tracking")
-        .withIndex("by_habit_and_date", (q) => q.eq("habitId", habit._id))
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
         .collect();
 
-      const completed = tracking.filter(t => t.completed).length;
+      const completed = tracking.filter((t) => t.completed).length;
 
       results.push({
         name: habit.name,
         hasStrengthField: typeof habit.strength,
         currentStrength: habit.strength,
-        strengthPercent: habit.strength ? `${(habit.strength * 100).toFixed(1)}%` : "null",
+        strengthPercent: habit.strength
+          ? `${(habit.strength * 100).toFixed(1)}%`
+          : 'null',
         trackingEntries: tracking.length,
         completedEntries: completed,
-        strengthLevel: habit.strengthLevel || "not set",
-        lastUpdated: habit.strengthUpdatedAt || "never",
+        strengthLevel: habit.strengthLevel || 'not set',
+        lastUpdated: habit.strengthUpdatedAt || 'never',
       });
     }
 
     return {
       totalHabits: habits.length,
       habits: results,
-      diagnosis: habits.length === 0
-        ? "❌ No habits found in database"
-        : results.every(h => h.hasStrengthField === "undefined")
-        ? "❌ Schema field 'strength' doesn't exist - run 'npx convex dev'"
-        : results.every(h => h.currentStrength === null || h.currentStrength === 0)
-        ? "⚠️ Strength exists but all at 0% - needs initialization"
-        : "✅ Some habits have strength values",
+      diagnosis:
+        habits.length === 0
+          ? '❌ No habits found in database'
+          : results.every((h) => h.hasStrengthField === 'undefined')
+            ? "❌ Schema field 'strength' doesn't exist - run 'npx convex dev'"
+            : results.every(
+                  (h) => h.currentStrength === null || h.currentStrength === 0
+                )
+              ? '⚠️ Strength exists but all at 0% - needs initialization'
+              : '✅ Some habits have strength values',
     };
   },
 });
 
 export const fix = mutation({
   handler: async (ctx) => {
-    console.log("🔧 Forcing habit strength calculation...");
+    console.log('🔧 Forcing habit strength calculation...');
 
-    const habits = await ctx.db.query("habits").collect();
+    const habits = await ctx.db.query('habits').collect();
     let fixed = 0;
 
     for (const habit of habits) {
       const tracking = await ctx.db
-        .query("tracking")
-        .withIndex("by_habit_and_date", (q) => q.eq("habitId", habit._id))
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
         .collect();
 
       if (tracking.length === 0) {
         await ctx.db.patch(habit._id, {
           strength: 0,
-          strengthLevel: "starting",
+          strengthLevel: 'starting',
           strengthUpdatedAt: Date.now(),
         });
         console.log(`  ${habit.name}: Set to 0% (no tracking data)`);
@@ -71,15 +76,29 @@ export const fix = mutation({
 
       // Calculate from all history
       const sorted = tracking
-        .map(t => ({ ...t, date: t.date }))
+        .map((t) => ({ ...t, date: t.date }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
       let strength = 0;
       for (const entry of sorted) {
-        strength = calculateHabitStrength(strength, entry.completed, 0.175, 0.15);
+        strength = calculateHabitStrength(
+          strength,
+          entry.completed,
+          0.175,
+          0.15
+        );
       }
 
-      const level = strength < 0.2 ? "starting" : strength < 0.4 ? "building" : strength < 0.6 ? "developing" : strength < 0.8 ? "strong" : "automatic";
+      const level =
+        strength < 0.2
+          ? 'starting'
+          : strength < 0.4
+            ? 'building'
+            : strength < 0.6
+              ? 'developing'
+              : strength < 0.8
+                ? 'strong'
+                : 'automatic';
 
       await ctx.db.patch(habit._id, {
         strength,
@@ -87,7 +106,9 @@ export const fix = mutation({
         strengthUpdatedAt: Date.now(),
       });
 
-      console.log(`  ${habit.name}: ${(strength * 100).toFixed(1)}% (${level})`);
+      console.log(
+        `  ${habit.name}: ${(strength * 100).toFixed(1)}% (${level})`
+      );
       fixed++;
     }
 

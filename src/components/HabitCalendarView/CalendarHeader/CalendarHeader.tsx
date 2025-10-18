@@ -9,7 +9,12 @@ interface CalendarHeaderProps {
   onToday: () => void;
 }
 
-export function CalendarHeader({ currentMonth, onPrevious, onNext, onToday }: CalendarHeaderProps) {
+export function CalendarHeader({
+  currentMonth,
+  onPrevious,
+  onNext,
+  onToday,
+}: CalendarHeaderProps) {
   return (
     <View className='flex-row items-center justify-between px-2'>
       <Pressable className='rounded-xl bg-slate-50 p-2' onPress={onPrevious}>

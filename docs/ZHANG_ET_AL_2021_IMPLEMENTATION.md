@@ -30,6 +30,7 @@ These parameters remained consistent across different studies, suggesting they g
 The paper validates two computational models:
 
 #### A. Habit Strength (Klein et al., 2011)
+
 ```
 HS(t+1) = HS(t) - HS(t) × HDP + (1 - HS(t)) × Beh(t) × Cue(t) × HGP
 ```
@@ -40,6 +41,7 @@ HS(t+1) = HS(t) - HS(t) × HDP + (1 - HS(t)) × Beh(t) × Cue(t) × HGP
 - Proportional decay when behavior not performed
 
 #### B. Memory Accessibility (Tobias, 2009)
+
 ```
 Acc(t+1) = Acc(t) - Acc(t) × ADP + (1 - Acc(t)) × (Beh(t) × AGP_beh + Rem(t) × AGP_rem)
 ```
@@ -78,6 +80,7 @@ habits: {
 ### Core Functions
 
 #### 1. Habit Strength Calculation
+
 ```typescript
 calculateHabitStrength(
   currentStrength: number,
@@ -88,11 +91,13 @@ calculateHabitStrength(
 ```
 
 **Key Properties:**
+
 - Diminishing returns: `(1 - HS)` means early repetitions matter more
 - Proportional decay: `HS × HDP` means stronger habits decay slower
 - Asymptotic growth: Approaches but never exceeds 1.0
 
 #### 2. Memory Accessibility Calculation
+
 ```typescript
 calculateMemoryAccessibility(
   currentAccessibility: number,
@@ -105,11 +110,13 @@ calculateMemoryAccessibility(
 ```
 
 **Key Properties:**
+
 - Natural decay represents memory fading
 - Restored by behavior execution (AGP_beh)
 - Boosted by external reminders (AGP_rem)
 
 #### 3. Combined Behavior Prediction
+
 ```typescript
 predictCompletionProbability(
   habitStrength: number,
@@ -156,21 +163,25 @@ const stage = habit.strengthLevel; // "starting", "building", etc.
 ## Why This Matters
 
 ### 1. **No User Burden**
+
 - No need for weekly surveys (SRHI/SRBAI)
 - System computes habit strength automatically from behavior
 - Less intrusive than self-report measures
 
 ### 2. **More Accurate Than Simple Metrics**
+
 - Better than counting past behavior frequency
 - Better than self-reported automaticity
 - Accounts for temporal dynamics (decay/growth)
 
 ### 3. **Theory-Based = Generalizable**
+
 - Parameters validated across two studies
 - Based on psychological theories of habit formation
 - Likely to work for other daily behaviors
 
 ### 4. **Real-Time Adaptation**
+
 - Update after every habit toggle
 - Predict tomorrow's behavior today
 - Deliver just-in-time interventions
@@ -225,4 +236,4 @@ Gardner, B., Abraham, C., Lally, P., & de Bruijn, G. J. (2012). Towards parsimon
 
 ---
 
-*Implementation Status: ✅ Core system complete | 🔄 Advanced features in progress*
+_Implementation Status: ✅ Core system complete | 🔄 Advanced features in progress_

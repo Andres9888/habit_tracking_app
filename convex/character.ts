@@ -1,5 +1,5 @@
-import { query } from "./_generated/server";
-import { v } from "convex/values";
+import { query } from './_generated/server';
+import { v } from 'convex/values';
 
 export const getCharacterStats = query({
   args: {},
@@ -7,12 +7,12 @@ export const getCharacterStats = query({
     try {
       // Get all active habits
       const habits = await ctx.db
-        .query("habits")
-        .filter((q) => q.neq(q.field("archived"), true))
+        .query('habits')
+        .filter((q) => q.neq(q.field('archived'), true))
         .collect();
 
       // Get all tracking data
-      const allTracking = await ctx.db.query("tracking").collect();
+      const allTracking = await ctx.db.query('tracking').collect();
 
       // Calculate streaks for each habit
       const habitStreaks = new Map<string, number>();
@@ -80,14 +80,20 @@ export const getCharacterStats = query({
         return trackingDate >= thirtyDaysAgo && trackingDate <= today;
       });
       const possibleCompletions = habits.length * 30;
-      const actualCompletions = last30DaysTracking.filter((t) => t.completed).length;
-      const vitality = Math.min(100, Math.round((actualCompletions / Math.max(possibleCompletions, 1)) * 100));
+      const actualCompletions = last30DaysTracking.filter(
+        (t) => t.completed
+      ).length;
+      const vitality = Math.min(
+        100,
+        Math.round((actualCompletions / Math.max(possibleCompletions, 1)) * 100)
+      );
 
       // Strength: Average streak strength across all habits
       const streakValues = Array.from(habitStreaks.values());
-      const avgStreak = streakValues.length > 0
-        ? streakValues.reduce((a, b) => a + b, 0) / streakValues.length
-        : 0;
+      const avgStreak =
+        streakValues.length > 0
+          ? streakValues.reduce((a, b) => a + b, 0) / streakValues.length
+          : 0;
       const strength = Math.min(100, Math.round(avgStreak * 10)); // 10-day streak = 100 strength
 
       // Wisdom: Based on total unique days tracked (experience)
@@ -105,8 +111,13 @@ export const getCharacterStats = query({
         return trackingDate >= sevenDaysAgo && trackingDate <= today;
       });
       const possibleLast7Days = habits.length * 7;
-      const actualLast7Days = last7DaysTracking.filter((t) => t.completed).length;
-      const energy = Math.min(100, Math.round((actualLast7Days / Math.max(possibleLast7Days, 1)) * 100));
+      const actualLast7Days = last7DaysTracking.filter(
+        (t) => t.completed
+      ).length;
+      const energy = Math.min(
+        100,
+        Math.round((actualLast7Days / Math.max(possibleLast7Days, 1)) * 100)
+      );
 
       // Calculate stats
       const streakArray = Array.from(habitStreaks.values());
@@ -116,13 +127,13 @@ export const getCharacterStats = query({
 
       // Get title based on level
       const titles = [
-        "Novice",
-        "Habit Hero",
-        "Routine Master",
-        "Consistency Champion",
-        "Discipline Legend",
-        "Zen Master",
-        "Unstoppable Force",
+        'Novice',
+        'Habit Hero',
+        'Routine Master',
+        'Consistency Champion',
+        'Discipline Legend',
+        'Zen Master',
+        'Unstoppable Force',
       ];
       const titleIndex = Math.min(Math.floor(level / 5), titles.length - 1);
       const title = titles[titleIndex];
@@ -146,11 +157,11 @@ export const getCharacterStats = query({
         },
       };
     } catch (error) {
-      console.error("Error calculating character stats:", error);
+      console.error('Error calculating character stats:', error);
       // Return default stats on error
       return {
         level: 1,
-        title: "Novice",
+        title: 'Novice',
         xp: 0,
         xpToNextLevel: 50,
         totalXP: 0,
