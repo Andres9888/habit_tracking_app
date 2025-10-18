@@ -51,8 +51,8 @@ export default function HeatmapCalendar({
       <View className='mb-3 flex-row'>
         <View className='w-12' />
         {months.map((month, monthIndex) => (
-          <View key={monthIndex} className='flex-1 items-center'>
-            <Text className='text-xs font-medium text-slate-500'>
+          <View key={monthIndex} className='flex-1'>
+            <Text className='text-center text-xs font-medium text-slate-500'>
               {format(month, 'MMM')}
             </Text>
           </View>
@@ -65,9 +65,9 @@ export default function HeatmapCalendar({
           dayOfWeek === 0 ? 'Sun' : dayOfWeek === 1 ? 'Mon' : 'Thu';
 
         return (
-          <View key={dayOfWeek} className='mb-2.5 flex-row items-center'>
+          <View key={dayOfWeek} className='mb-2.5 flex-row'>
             {/* Day label */}
-            <View className='w-12'>
+            <View className='w-12 justify-center'>
               <Text className='text-xs text-slate-400'>{dayLabel}</Text>
             </View>
 
@@ -83,7 +83,10 @@ export default function HeatmapCalendar({
               const daysForThisWeekDay = byWeekDay[dayOfWeek] || [];
 
               return (
-                <View key={monthIndex} className='flex-1 flex-row gap-1.5'>
+                <View
+                  key={monthIndex}
+                  className='flex-1 flex-row justify-center gap-1.5'
+                >
                   {Array.from({ length: maxOccurrences }).map((_, slotIndex) => {
                     const day = daysForThisWeekDay[slotIndex];
 
