@@ -8,7 +8,7 @@ import {
   useMutation,
   useQuery,
 } from 'convex/react';
-import { addDays, format, startOfDay } from 'date-fns';
+import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-fns';
 import { Plus, Settings, BarChart3 } from 'lucide-react-native';
 import type { ComponentType } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -93,8 +93,20 @@ function HabitsApp() {
     [weekDates]
   );
 
+  // Load 12 months of tracking data for calendar modal and heatmap
+  const extendedDateRange = useMemo(() => {
+    const endDate = today;
+    const startDate = subMonths(endDate, 12);
+    return eachDayOfInterval({ start: startDate, end: endDate });
+  }, [today]);
+
+  const extendedDateStrings = useMemo(
+    () => extendedDateRange.map((d) => format(d, 'yyyy-MM-dd')),
+    [extendedDateRange]
+  );
+
   const tracking =
-    useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
+    useQuery(api.habits.getTracking, { dates: extendedDateStrings }) ?? [];
 
   const completedDatesByHabit = useMemo(() => {
     const map = new Map<string, Set<string>>();

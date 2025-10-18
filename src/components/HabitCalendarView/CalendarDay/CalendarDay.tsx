@@ -24,11 +24,11 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
 
   return (
     <Pressable
-      className='aspect-square w-[14.28%] items-center justify-center py-1.5'
+      className='aspect-square w-[14.28%] items-center justify-center p-1'
       disabled={isFuture}
       onPress={() => !isFuture && onPress()}
     >
-      <View className='items-center justify-center gap-1'>
+      <View className='flex-1 w-full items-center justify-center gap-1 border border-slate-200 rounded-lg'>
         <Text
           className={clsx(
             'text-base font-normal text-slate-700',
