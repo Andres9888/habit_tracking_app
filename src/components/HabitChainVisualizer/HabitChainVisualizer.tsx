@@ -51,7 +51,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
-      className="h-10 w-10 items-center justify-center rounded-full"
+      className="h-12 w-12 items-center justify-center rounded-2xl shadow-sm"
       disabled={disabled}
       onPress={onPress}
       style={{
@@ -73,7 +73,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <Check color="#ffffff" size={16} strokeWidth={2.25} />
+        <Check color="#ffffff" size={20} strokeWidth={2.25} />
       </Animated.View>
     </AnimatedPressable>
   );
