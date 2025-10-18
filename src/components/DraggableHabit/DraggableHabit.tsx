@@ -125,17 +125,28 @@ export default function DraggableHabit({
         transform: [{ translateY }],
       }}
     >
-      <View className="px-6 pt-6">
-        {/* Header with title and strength badge */}
-        <View className="mb-4 flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
-            <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
-              {name || habit.name}
-            </Text>
+      <View className="px-5 pt-5">
+        {/* Header with icon, title and strength badge */}
+        <View className="mb-5 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-4">
+            {/* Icon container with shadow */}
+            <View className="h-16 w-16 items-center justify-center rounded-[20px] bg-white shadow-sm">
+              <Text className="text-[32px]">{emoji}</Text>
+            </View>
+            <View className="flex-col">
+              <Text className="text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]">
+                {name || habit.name}
+              </Text>
+              {streak > 0 && (
+                <Text className="mt-1 text-xs font-semibold uppercase leading-4 tracking-wide text-[#ff6900]">
+                  🔥 {streak} Day Streak
+                </Text>
+              )}
+            </View>
           </View>
           {habit.strength !== undefined && habit.strength > 0 && (
-            <View className="rounded-full bg-[#10b981] px-3 py-1">
-              <Text className="text-sm font-normal leading-5 tracking-[-0.15px] text-white">
+            <View className="h-8 rounded-full bg-[#10b981] px-3 shadow-sm">
+              <Text className="text-sm font-normal leading-8 tracking-[-0.15px] text-white">
                 {strengthPercentage}%
               </Text>
             </View>
@@ -143,7 +154,7 @@ export default function DraggableHabit({
         </View>
 
         {/* Week status visualizer */}
-        <View className="mb-4">
+        <View className="mb-5">
           <HabitChainVisualizer
             accentColor={accentColor}
             habitId={habit._id}
@@ -151,6 +162,22 @@ export default function DraggableHabit({
             weekDateStrings={weekDateStrings}
             weekStatus={weekStatus}
           />
+        </View>
+
+        {/* Weekly progress bar */}
+        <View className="mb-5 flex-row items-center gap-2">
+          <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
+            <View
+              className="h-full rounded-full"
+              style={{
+                width: `${(completedCount / weekDateStrings.length) * 100}%`,
+                backgroundColor: accentColor,
+              }}
+            />
+          </View>
+          <Text className="text-xs font-medium text-gray-500">
+            {completedCount}/{weekDateStrings.length}
+          </Text>
         </View>
       </View>
 
