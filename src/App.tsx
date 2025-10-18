@@ -202,7 +202,7 @@ function HabitsApp() {
               accessibilityHint="Open create habit modal"
               accessibilityLabel="Add habit"
               accessibilityRole="button"
-              className="flex-row items-center gap-2 rounded-full bg-[#101828] px-5 py-0 h-[36px]"
+              className="flex-row items-center gap-2 rounded-full bg-[#101828] px-5 h-12"
               onPress={handleToggleForm}
             >
               <Plus color="#ffffff" size={20} strokeWidth={2.25} />
