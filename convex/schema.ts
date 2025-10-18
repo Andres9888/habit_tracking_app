@@ -57,6 +57,7 @@ const applicationTables = {
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
+    showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
     userId: v.optional(v.string()),
   }),
