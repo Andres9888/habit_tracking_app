@@ -68,6 +68,8 @@ function HabitsApp() {
   const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
+  const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
+    useState(true);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -272,9 +274,7 @@ function HabitsApp() {
                   <DraggableHabit
                     key={habit._id}
                     habit={habit}
-                    showHabitStrengthPercentage={
-                      settings?.showHabitStrengthPercentage ?? true
-                    }
+                    showHabitStrengthPercentage={showHabitStrengthPercentage}
                     streak={streak}
                     toggleHabit={toggleHabit}
                     weekDateStrings={weekDateStrings}
@@ -289,9 +289,7 @@ function HabitsApp() {
         <WebToaster />
         <SettingsModal
           showCharacterScreen={settings?.showCharacterScreen ?? true}
-          showHabitStrengthPercentage={
-            settings?.showHabitStrengthPercentage ?? true
-          }
+          showHabitStrengthPercentage={showHabitStrengthPercentage}
           showNotesStats={settings?.showNotesStats ?? true}
           visible={isSettingsOpen}
           onChangeShowCharacterScreen={async (value) => {
@@ -303,29 +301,13 @@ function HabitsApp() {
                 showCharacterScreen: value,
                 showConsistency: settings.showConsistency,
                 showEmojis: settings.showEmojis,
-                showHabitStrengthPercentage: settings.showHabitStrengthPercentage,
                 showMotivationalMessages: settings.showMotivationalMessages,
                 showNotesStats: settings.showNotesStats,
                 showStreaks: settings.showStreaks,
               });
             }
           }}
-          onChangeShowHabitStrengthPercentage={async (value) => {
-            if (settings) {
-              await updateSettings({
-                catTheme: settings.catTheme,
-                darkMode: settings.darkMode,
-                showCalendarView: settings.showCalendarView,
-                showCharacterScreen: settings.showCharacterScreen,
-                showConsistency: settings.showConsistency,
-                showEmojis: settings.showEmojis,
-                showHabitStrengthPercentage: value,
-                showMotivationalMessages: settings.showMotivationalMessages,
-                showNotesStats: settings.showNotesStats,
-                showStreaks: settings.showStreaks,
-              });
-            }
-          }}
+          onChangeShowHabitStrengthPercentage={setShowHabitStrengthPercentage}
           onChangeShowNotesStats={async (value) => {
             if (settings) {
               await updateSettings({
@@ -335,7 +317,6 @@ function HabitsApp() {
                 showCharacterScreen: settings.showCharacterScreen,
                 showConsistency: settings.showConsistency,
                 showEmojis: settings.showEmojis,
-                showHabitStrengthPercentage: settings.showHabitStrengthPercentage,
                 showMotivationalMessages: settings.showMotivationalMessages,
                 showNotesStats: value,
                 showStreaks: settings.showStreaks,

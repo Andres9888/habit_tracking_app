@@ -75,7 +75,6 @@ const applicationTables = {
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
-    showHabitStrengthPercentage: v.optional(v.boolean()),
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),

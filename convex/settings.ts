@@ -8,7 +8,6 @@ const DEFAULT_SETTINGS = {
   showCharacterScreen: true,
   showConsistency: true,
   showEmojis: true,
-  showHabitStrengthPercentage: true,
   showMotivationalMessages: true,
   showNotesStats: true,
   showStreaks: true,
@@ -31,9 +30,6 @@ export const get = query({
       showConsistency:
         settings?.showConsistency ?? DEFAULT_SETTINGS.showConsistency,
       showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
-      showHabitStrengthPercentage:
-        settings?.showHabitStrengthPercentage ??
-        DEFAULT_SETTINGS.showHabitStrengthPercentage,
       showMotivationalMessages:
         settings?.showMotivationalMessages ??
         DEFAULT_SETTINGS.showMotivationalMessages,
@@ -49,7 +45,6 @@ export const get = query({
     showCharacterScreen: v.boolean(),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
-    showHabitStrengthPercentage: v.boolean(),
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.boolean(),
     showStreaks: v.boolean(),
@@ -64,7 +59,6 @@ export const update = mutation({
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
-    showHabitStrengthPercentage: v.optional(v.boolean()),
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
