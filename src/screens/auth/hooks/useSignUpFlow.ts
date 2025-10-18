@@ -40,7 +40,10 @@ export function useSignUpFlow() {
       }
     } catch (error: any) {
       console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', error.errors?.[0]?.message || 'Failed to verify email');
+      Alert.alert(
+        'Error',
+        error.errors?.[0]?.message || 'Failed to verify email'
+      );
     } finally {
       setIsLoading(false);
     }

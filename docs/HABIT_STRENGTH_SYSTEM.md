@@ -62,6 +62,7 @@ Strength = clamp(Baseline × Compliance, 0, 1)
 ```
 
 This ensures:
+
 - Consistent execution drives strength toward 100 % in ~90 days.
 - A few missed days collapse the score because compliance falls.
 - Very young habits start low and must earn their way up.
@@ -73,12 +74,12 @@ This ensures:
 ```typescript
 habits: defineTable({
   // ... existing fields
-  strength: v.optional(v.number()),           // 0-1 scale
-  strengthLevel: v.optional(v.string()),      // "starting" | "building" | ...
-  strengthUpdatedAt: v.optional(v.number()),  // Timestamp
-  habitDecayParam: v.optional(v.number()),    // Legacy: retained for migrations (not used)
-  habitGainParam: v.optional(v.number()),     // Legacy: retained for migrations (not used)
-})
+  strength: v.optional(v.number()), // 0-1 scale
+  strengthLevel: v.optional(v.string()), // "starting" | "building" | ...
+  strengthUpdatedAt: v.optional(v.number()), // Timestamp
+  habitDecayParam: v.optional(v.number()), // Legacy: retained for migrations (not used)
+  habitGainParam: v.optional(v.number()), // Legacy: retained for migrations (not used)
+});
 ```
 
 ### Core Functions
@@ -86,22 +87,26 @@ habits: defineTable({
 #### `convex/habitStrength.ts`
 
 **Main Functions:**
+
 - `generateHabitStrengthSnapshot()` – Produces baseline, compliance, and total strength for a habit.
 - `getStrengthLevel()` – Maps 0–1 strength to categorical levels.
 - `predictCompletionProbability()` – Predicts future behaviour from the combined score.
 
 **Mutations:**
+
 - `updateHabitStrength` – Upsert the day’s completion state and recompute strength.
 - `recalculateHabitStrength` – Re-run the snapshot for existing historical data (useful after imports).
 - `updateHabitParameters` – Legacy mutation retained for backwards compatibility.
 
 **Queries:**
+
 - `getHabitStrengthInfo` – Returns strength plus baseline/compliance diagnostics.
 - `getAllHabitsStrengthStats` – Dashboard statistics.
 
 ### Automatic Updates
 
 Habit strength is automatically recomputed when you toggle a habit. The mutation:
+
 - Saves the day’s completion state.
 - Reads the last 30 days of tracking data.
 - Runs `generateHabitStrengthSnapshot` to obtain baseline, compliance, and final strength.
@@ -110,13 +115,13 @@ Habit strength is automatically recomputed when you toggle a habit. The mutation
 
 Habit strength is categorized into 5 levels:
 
-| Level | Range | Emoji | Description | Color |
-|-------|-------|-------|-------------|-------|
-| **Starting** | 0.0-0.2 | 🌱 | Just beginning - stay focused! | Light Green |
-| **Building** | 0.2-0.4 | 🌿 | Making progress - keep it up! | Green |
-| **Developing** | 0.4-0.6 | 🌳 | Getting stronger each day! | Medium Green |
-| **Strong** | 0.6-0.8 | 💪 | Habit is well-established! | Dark Green |
-| **Automatic** | 0.8-1.0 | ⚡ | Fully automatic - amazing! | Deep Green |
+| Level          | Range   | Emoji | Description                    | Color        |
+| -------------- | ------- | ----- | ------------------------------ | ------------ |
+| **Starting**   | 0.0-0.2 | 🌱    | Just beginning - stay focused! | Light Green  |
+| **Building**   | 0.2-0.4 | 🌿    | Making progress - keep it up!  | Green        |
+| **Developing** | 0.4-0.6 | 🌳    | Getting stronger each day!     | Medium Green |
+| **Strong**     | 0.6-0.8 | 💪    | Habit is well-established!     | Dark Green   |
+| **Automatic**  | 0.8-1.0 | ⚡    | Fully automatic - amazing!     | Deep Green   |
 
 ## UI Components
 
@@ -126,14 +131,15 @@ A reusable React Native component that visualizes habit strength:
 
 ```tsx
 <HabitStrengthIndicator
-  strength={0.75}                    // 0-1 scale
-  strengthLevel="strong"             // Optional override
-  compact={false}                    // Compact vs full view
-  showLabel={true}                   // Show level name
+  strength={0.75} // 0-1 scale
+  strengthLevel='strong' // Optional override
+  compact={false} // Compact vs full view
+  showLabel={true} // Show level name
 />
 ```
 
 **Views:**
+
 - **Full View**: Progress bar, emoji, level name, percentage, description
 - **Compact View**: Small emoji, mini progress bar, percentage only
 
@@ -142,13 +148,15 @@ A reusable React Native component that visualizes habit strength:
 Habit strength appears below the weekly progress bar:
 
 ```tsx
-{habit.strength !== undefined && habit.strength > 0 && (
-  <HabitStrengthIndicator
-    strength={habit.strength}
-    strengthLevel={habit.strengthLevel}
-    compact={true}
-  />
-)}
+{
+  habit.strength !== undefined && habit.strength > 0 && (
+    <HabitStrengthIndicator
+      strength={habit.strength}
+      strengthLevel={habit.strengthLevel}
+      compact={true}
+    />
+  );
+}
 ```
 
 ## Usage Examples
@@ -156,8 +164,8 @@ Habit strength appears below the weekly progress bar:
 ### Initialize Strength for Existing Habits
 
 ```typescript
-import { api } from "@/convex/_generated/api";
-import { useMutation } from "convex/react";
+import { api } from '@/convex/_generated/api';
+import { useMutation } from 'convex/react';
 
 const recalculate = useMutation(api.habitStrength.recalculateHabitStrength);
 
@@ -169,7 +177,7 @@ await recalculate({ habitId: habit._id });
 
 ```typescript
 const strengthInfo = useQuery(api.habitStrength.getHabitStrengthInfo, {
-  habitId: habit._id
+  habitId: habit._id,
 });
 
 // Returns:
@@ -231,13 +239,14 @@ The legacy `updateHabitParameters` mutation is still available but no longer aff
 Use habit strength to predict future completions:
 
 ```typescript
-import { predictCompletionProbability } from "@/convex/habitStrength";
+import { predictCompletionProbability } from '@/convex/habitStrength';
 
 const probability = predictCompletionProbability(habit.strength);
 // If strength = 0.7, probability ≈ 0.72 (72% chance of completion)
 ```
 
 This can be used for:
+
 - Adaptive reminders (send when probability is low)
 - Progress forecasting
 - Intervention timing
@@ -285,6 +294,7 @@ This can be used for:
 ### Data Migration
 
 For existing users:
+
 ```sql
 -- All habits start with strength = 0
 -- Run recalculateHabitStrength for each habit
@@ -310,6 +320,7 @@ For existing users:
 ## Support & Questions
 
 For questions about the habit strength system:
+
 - Review this documentation
 - Check the inline code comments in `convex/habitStrength.ts`
 - Reference the original research papers

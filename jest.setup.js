@@ -8,20 +8,20 @@ global.__ExpoImportMetaRegistry = {
 };
 
 // Polyfill structuredClone for Expo 54
-if (typeof global.structuredClone === "undefined") {
+if (typeof global.structuredClone === 'undefined') {
   global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
 }
 
 // Mock Expo modules
-jest.mock("expo-font");
-jest.mock("expo-asset");
-jest.mock("expo-status-bar", () => ({
-  StatusBar: "StatusBar",
+jest.mock('expo-font');
+jest.mock('expo-asset');
+jest.mock('expo-status-bar', () => ({
+  StatusBar: 'StatusBar',
 }));
 
 // Mock react-native-gesture-handler
-jest.mock("react-native-gesture-handler", () => {
-  const View = require("react-native").View;
+jest.mock('react-native-gesture-handler', () => {
+  const View = require('react-native').View;
   return {
     Swipeable: View,
     GestureHandlerRootView: View,
@@ -31,12 +31,12 @@ jest.mock("react-native-gesture-handler", () => {
 });
 
 // Mock @expo/vector-icons
-jest.mock("@expo/vector-icons", () => ({
-  Feather: "Feather",
+jest.mock('@expo/vector-icons', () => ({
+  Feather: 'Feather',
 }));
 
 // Mock Convex
-jest.mock("convex/react", () => ({
+jest.mock('convex/react', () => ({
   useQuery: jest.fn(() => []),
   useMutation: jest.fn(() => jest.fn()),
   ConvexProvider: ({ children }) => children,
@@ -44,36 +44,36 @@ jest.mock("convex/react", () => ({
 }));
 
 // Mock Clerk
-jest.mock("@clerk/clerk-expo", () => ({
+jest.mock('@clerk/clerk-expo', () => ({
   ClerkProvider: ({ children }) => children,
   ClerkLoaded: ({ children }) => children,
   SignedIn: ({ children }) => children,
   SignedOut: () => null,
-  useUser: () => ({ user: { id: "test-user" } }),
+  useUser: () => ({ user: { id: 'test-user' } }),
 }));
 
 // Mock expo-secure-store
-jest.mock("expo-secure-store", () => ({
+jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
   setItemAsync: jest.fn(),
 }));
 
 // Mock expo-haptics
-jest.mock("expo-haptics", () => ({
+jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
   selectionAsync: jest.fn(),
 }));
 
 // Mock react-native-calendars
-jest.mock("react-native-calendars", () => ({
-  Calendar: "Calendar",
+jest.mock('react-native-calendars', () => ({
+  Calendar: 'Calendar',
 }));
 
 // Mock lucide-react-native
-jest.mock("lucide-react-native", () => {
-  const React = require("react");
-  const { View } = require("react-native");
+jest.mock('lucide-react-native', () => {
+  const React = require('react');
+  const { View } = require('react-native');
 
   const createMockIcon = (name) => {
     return function MockIcon(props) {
@@ -85,15 +85,15 @@ jest.mock("lucide-react-native", () => {
   };
 
   return {
-    Link2: createMockIcon("Link2"),
-    Settings: createMockIcon("Settings"),
-    ChevronLeft: createMockIcon("ChevronLeft"),
-    ChevronRight: createMockIcon("ChevronRight"),
-    X: createMockIcon("X"),
-    Plus: createMockIcon("Plus"),
-    Check: createMockIcon("Check"),
-    Flame: createMockIcon("Flame"),
-    BarChart3: createMockIcon("BarChart3"),
+    Link2: createMockIcon('Link2'),
+    Settings: createMockIcon('Settings'),
+    ChevronLeft: createMockIcon('ChevronLeft'),
+    ChevronRight: createMockIcon('ChevronRight'),
+    X: createMockIcon('X'),
+    Plus: createMockIcon('Plus'),
+    Check: createMockIcon('Check'),
+    Flame: createMockIcon('Flame'),
+    BarChart3: createMockIcon('BarChart3'),
   };
 });
 
@@ -101,7 +101,7 @@ jest.mock("lucide-react-native", () => {
 // NativeWind v4 uses className prop which needs Metro bundler
 // For tests, we pass className through so tests can verify it
 jest.mock(
-  "nativewind",
+  'nativewind',
   () => ({
     styled: (Component) => Component,
   }),
@@ -109,11 +109,11 @@ jest.mock(
 );
 
 // Mock global.css import
-jest.mock("../global.css", () => ({}), { virtual: true });
+jest.mock('../global.css', () => ({}), { virtual: true });
 
 // Mock clsx for className combining
-jest.mock("clsx", () => {
+jest.mock('clsx', () => {
   return function clsx(...args) {
-    return args.flat().filter(Boolean).join(" ").trim();
+    return args.flat().filter(Boolean).join(' ').trim();
   };
 });

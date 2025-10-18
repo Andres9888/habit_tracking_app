@@ -25,11 +25,18 @@ type LocalHabit = {
 
 const generateWeekDateStrings = () => {
   const today = new Date();
-  const weekDates = Array.from({ length: 7 }, (_, i) => addDays(today, i - today.getDay()));
+  const weekDates = Array.from({ length: 7 }, (_, i) =>
+    addDays(today, i - today.getDay())
+  );
   return weekDates.map((d) => format(d, 'yyyy-MM-dd'));
 };
 
-const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
+const ExampleHabitCard = ({
+  habit,
+  onDelete,
+  onToggle,
+  weekDates,
+}: {
   habit: LocalHabit;
   weekDates: string[];
   onDelete: (habitId: string) => void;
@@ -47,7 +54,8 @@ const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
       check.setHours(0, 0, 0, 0);
       const expected = new Date(today);
       expected.setDate(today.getDate() - s);
-      if (check.getTime() === expected.getTime()) s += 1; else break;
+      if (check.getTime() === expected.getTime()) s += 1;
+      else break;
     }
     return s;
   }, [habit.completedDates]);
@@ -61,7 +69,9 @@ const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
     const target = containerWidth.value * (completionCount / 7);
     progressWidth.value = withTiming(target, { duration: 500 });
   }, [completionCount, containerWidth, progressWidth]);
-  const progressStyle = useAnimatedStyle(() => ({ width: progressWidth.value }));
+  const progressStyle = useAnimatedStyle(() => ({
+    width: progressWidth.value,
+  }));
 
   // Card appear/disappear animation
   const cardLayout = Layout.springify();
@@ -77,10 +87,14 @@ const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
         <View className='flex-row items-center gap-3'>
           <Text className='text-3xl'>{habit.emoji}</Text>
           <View>
-            <Text className='text-[17px] font-semibold text-gray-900'>{habit.name}</Text>
+            <Text className='text-[17px] font-semibold text-gray-900'>
+              {habit.name}
+            </Text>
             {streak > 0 && (
               <View className='mt-1 flex-row items-center gap-1'>
-                <Text className='text-[11px] font-semibold uppercase tracking-wide text-orange-500'>{streak} Day Streak</Text>
+                <Text className='text-[11px] font-semibold uppercase tracking-wide text-orange-500'>
+                  {streak} Day Streak
+                </Text>
               </View>
             )}
           </View>
@@ -93,7 +107,9 @@ const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
           const isFuture = new Date(date) > new Date();
           const isDone = isCompletedFor(date);
           const scale = useSharedValue(1);
-          const scaleStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+          const scaleStyle = useAnimatedStyle(() => ({
+            transform: [{ scale: scale.value }],
+          }));
           return (
             <Pressable
               key={date}
@@ -116,16 +132,30 @@ const ExampleHabitCard = ({ habit, onDelete, onToggle, weekDates }: {
         })}
       </View>
 
-      <View className='mt-4 h-1.5 w-full overflow-hidden rounded-full bg-gray-100' onLayout={(e) => {
-        const w = e.nativeEvent.layout.width;
-        containerWidth.value = w;
-        progressWidth.value = withTiming(w * (completionCount / 7), { duration: 500 });
-      }}>
-        <Animated.View style={[{ backgroundColor: habit.color, height: '100%' }, progressStyle]} className='rounded-full' />
+      <View
+        className='mt-4 h-1.5 w-full overflow-hidden rounded-full bg-gray-100'
+        onLayout={(e) => {
+          const w = e.nativeEvent.layout.width;
+          containerWidth.value = w;
+          progressWidth.value = withTiming(w * (completionCount / 7), {
+            duration: 500,
+          });
+        }}
+      >
+        <Animated.View
+          style={[
+            { backgroundColor: habit.color, height: '100%' },
+            progressStyle,
+          ]}
+          className='rounded-full'
+        />
       </View>
 
       <View className='mt-3 flex-row justify-end'>
-        <Pressable accessibilityRole='button' onPress={() => onDelete(habit.id)}>
+        <Pressable
+          accessibilityRole='button'
+          onPress={() => onDelete(habit.id)}
+        >
           <Text className='text-red-600'>Delete</Text>
         </Pressable>
       </View>
@@ -137,9 +167,27 @@ export default function HabitHomeExample() {
   const [currentWeekDates] = useState<string[]>(generateWeekDateStrings());
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [habits, setHabits] = useState<LocalHabit[]>([
-    { id: '1', name: 'Meditation', emoji: '🧘', color: '#4ADE80', completedDates: [] },
-    { id: '2', name: 'Reading', emoji: '📚', color: '#60A5FA', completedDates: [] },
-    { id: '3', name: 'Exercise', emoji: '💪', color: '#F59E0B', completedDates: [] },
+    {
+      id: '1',
+      name: 'Meditation',
+      emoji: '🧘',
+      color: '#4ADE80',
+      completedDates: [],
+    },
+    {
+      id: '2',
+      name: 'Reading',
+      emoji: '📚',
+      color: '#60A5FA',
+      completedDates: [],
+    },
+    {
+      id: '3',
+      name: 'Exercise',
+      emoji: '💪',
+      color: '#F59E0B',
+      completedDates: [],
+    },
   ]);
 
   const handleToggle = (habitId: string, date: string) => {
@@ -152,8 +200,8 @@ export default function HabitHomeExample() {
                 ? h.completedDates.filter((d) => d !== date)
                 : [...h.completedDates, date].sort(),
             }
-          : h,
-      ),
+          : h
+      )
     );
   };
 
@@ -178,10 +226,16 @@ export default function HabitHomeExample() {
               >
                 <CharacterIcon size={36} />
               </Pressable>
-              <Pressable accessibilityRole='button' className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'>
+              <Pressable
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'
+              >
                 <BarChart3 color={'#111'} size={18} />
               </Pressable>
-              <Pressable accessibilityRole='button' className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'>
+              <Pressable
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'
+              >
                 <Settings color={'#111'} size={18} />
               </Pressable>
             </View>
@@ -196,7 +250,13 @@ export default function HabitHomeExample() {
 
           <View className='gap-4 py-4'>
             {habits.map((h) => (
-              <ExampleHabitCard key={h.id} habit={h} onDelete={handleDelete} onToggle={handleToggle} weekDates={currentWeekDates} />
+              <ExampleHabitCard
+                key={h.id}
+                habit={h}
+                onDelete={handleDelete}
+                onToggle={handleToggle}
+                weekDates={currentWeekDates}
+              />
             ))}
           </View>
         </View>
@@ -204,5 +264,3 @@ export default function HabitHomeExample() {
     </View>
   );
 }
-
-

@@ -1,9 +1,9 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { useStreakChainLogic } from "./StreakChain.hooks";
+import React from 'react';
+import { View, Text } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { useStreakChainLogic } from './StreakChain.hooks';
 
-export type DayStatus = "done" | "missed" | "planned";
+export type DayStatus = 'done' | 'missed' | 'planned';
 
 export interface StreakChainProps {
   label: string;
@@ -32,33 +32,33 @@ export default function StreakChain({
   );
 
   return (
-    <View className="pb-3 pt-1">
-      <View className="mb-2 flex-row items-center justify-between">
-        <Text className="text-base font-bold tracking-tight text-slate-900">
+    <View className='pb-3 pt-1'>
+      <View className='mb-2 flex-row items-center justify-between'>
+        <Text className='text-base font-bold tracking-tight text-slate-900'>
           {label}
         </Text>
         <View
           accessibilityLabel={`${streakDays} days`}
-          className="rounded-full bg-indigo-50 px-2.5 py-1"
+          className='rounded-full bg-indigo-50 px-2.5 py-1'
         >
-          <Text className="text-xs font-semibold text-slate-900">
+          <Text className='text-xs font-semibold text-slate-900'>
             {streakDays} days
           </Text>
         </View>
       </View>
 
-      <View className="flex-row items-center">
+      <View className='flex-row items-center'>
         {statuses.map((status, idx) => {
-          const isDone = status === "done";
-          const isFuture = status === "planned"; // treat planned as future/disabled
+          const isDone = status === 'done';
+          const isFuture = status === 'planned'; // treat planned as future/disabled
           const connectorActive = idx < statuses.length - 1 && isDone;
 
           return (
-            <View key={idx} className="flex-row items-center">
+            <View key={idx} className='flex-row items-center'>
               <View
-                className="items-center justify-center"
+                className='items-center justify-center'
                 style={{
-                  backgroundColor: isDone ? "#3B82F6" : "#E5E7EB",
+                  backgroundColor: isDone ? '#3B82F6' : '#E5E7EB',
                   borderRadius: circleSize / 2,
                   height: circleSize,
                   opacity: isFuture ? 0.5 : 1,
@@ -66,17 +66,17 @@ export default function StreakChain({
                 }}
               >
                 <Feather
-                  color={isDone ? "#FFFFFF" : "#64748B"}
-                  name="link-2"
+                  color={isDone ? '#FFFFFF' : '#64748B'}
+                  name='link-2'
                   size={iconSize}
                 />
               </View>
 
               {idx < statuses.length - 1 && (
                 <View
-                  className="mx-1.5 h-0.5 w-[18px] rounded-sm"
+                  className='mx-1.5 h-0.5 w-[18px] rounded-sm'
                   style={{
-                    backgroundColor: connectorActive ? "#93C5FD" : "#E5E7EB",
+                    backgroundColor: connectorActive ? '#93C5FD' : '#E5E7EB',
                   }}
                 />
               )}

@@ -156,9 +156,9 @@ The tests are written correctly but have configuration issues:
 ### Date Parsing Test
 
 ```typescript
-it("should parse YYYY-MM-DD as local date, not UTC", () => {
-  const dateString = "2025-10-05";
-  const [year, month, day] = dateString.split("-").map(Number);
+it('should parse YYYY-MM-DD as local date, not UTC', () => {
+  const dateString = '2025-10-05';
+  const [year, month, day] = dateString.split('-').map(Number);
   const date = new Date(year, month - 1, day);
 
   expect(date.getFullYear()).toBe(2025);
@@ -170,7 +170,7 @@ it("should parse YYYY-MM-DD as local date, not UTC", () => {
 ### Alignment Test
 
 ```typescript
-it("label items should have fixed width of 48px", () => {
+it('label items should have fixed width of 48px', () => {
   const labelItems = getAllByTestId(/label-item-\d+/);
   labelItems.forEach((item) => {
     expect(item.props.style.width).toBe(48);
@@ -181,8 +181,8 @@ it("label items should have fixed width of 48px", () => {
 ### Accessibility Test
 
 ```typescript
-it("should include full date with day name", () => {
-  const circle = getByTestId("habit-circle");
+it('should include full date with day name', () => {
+  const circle = getByTestId('habit-circle');
   expect(circle.props.accessibilityLabel).toMatch(/Monday.*October.*5th/i);
 });
 ```

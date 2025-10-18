@@ -1,16 +1,16 @@
-import { format } from "date-fns";
-import { View } from "react-native";
-import type { Id } from "../../../convex/_generated/dataModel";
-import { useHabitCalendarViewLogic } from "./HabitCalendarView.hooks";
-import { CalendarHeader } from "./CalendarHeader";
-import { DayNamesRow } from "./DayNamesRow";
-import { CalendarDay } from "./CalendarDay";
-import { CalendarLegend } from "./CalendarLegend";
+import { format } from 'date-fns';
+import { View } from 'react-native';
+import type { Id } from '../../../convex/_generated/dataModel';
+import { useHabitCalendarViewLogic } from './HabitCalendarView.hooks';
+import { CalendarHeader } from './CalendarHeader';
+import { DayNamesRow } from './DayNamesRow';
+import { CalendarDay } from './CalendarDay';
+import { CalendarLegend } from './CalendarLegend';
 
 interface HabitCalendarViewProps {
-  habitId: Id<"habits">;
-  tracking: Array<{ habitId: Id<"habits">; date: string; completed: boolean }>;
-  toggleHabit: (args: { habitId: Id<"habits">; date: string }) => void;
+  habitId: Id<'habits'>;
+  tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
+  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
 }
 
 export default function HabitCalendarView({
@@ -48,7 +48,7 @@ export default function HabitCalendarView({
         ))}
 
         {daysInMonth.map((date) => {
-          const dateString = format(date, "yyyy-MM-dd");
+          const dateString = format(date, 'yyyy-MM-dd');
           const status = getHabitStatus(dateString);
 
           return (

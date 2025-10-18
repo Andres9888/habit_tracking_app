@@ -29,11 +29,13 @@ Run this command in the Convex dashboard to calculate strength for all existing 
 Add this to your app temporarily:
 
 ```typescript
-import { useAction } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { useAction } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 // In your component
-const initializeStrengths = useAction(api.initializeHabitStrength.initializeAllHabitStrengths);
+const initializeStrengths = useAction(
+  api.initializeHabitStrength.initializeAllHabitStrengths
+);
 
 // Call once
 await initializeStrengths();
@@ -67,14 +69,14 @@ To see habit strength in action immediately:
 
 Here's how strength typically grows with consistent daily completion:
 
-| Days Completed | Approximate Strength | Level | Emoji |
-|----------------|---------------------|-------|-------|
-| 1 day | 0.15 | Starting | 🌱 |
-| 3 days | 0.35 | Building | 🌿 |
-| 7 days | 0.60 | Developing | 🌳 |
-| 14 days | 0.78 | Strong | 💪 |
-| 21 days | 0.87 | Automatic | ⚡ |
-| 30 days | 0.92 | Automatic | ⚡ |
+| Days Completed | Approximate Strength | Level      | Emoji |
+| -------------- | -------------------- | ---------- | ----- |
+| 1 day          | 0.15                 | Starting   | 🌱    |
+| 3 days         | 0.35                 | Building   | 🌿    |
+| 7 days         | 0.60                 | Developing | 🌳    |
+| 14 days        | 0.78                 | Strong     | 💪    |
+| 21 days        | 0.87                 | Automatic  | ⚡    |
+| 30 days        | 0.92                 | Automatic  | ⚡    |
 
 Note: These are approximations. Actual strength depends on consistency and the decay/gain parameters.
 
@@ -83,6 +85,7 @@ Note: These are approximations. Actual strength depends on consistency and the d
 ### "I don't see the strength indicator"
 
 Check:
+
 1. ✅ Schema deployed? (`npx convex dev` running)
 2. ✅ Initialization run? (logs show "Initialization Complete")
 3. ✅ Habit has tracking data? (at least one day checked off)
@@ -91,6 +94,7 @@ Check:
 ### "Strength is always 0"
 
 This means:
+
 - Habit has no tracking history, OR
 - Initialization hasn't been run yet
 
@@ -101,14 +105,14 @@ Run the initialization script (Step 2 above).
 You can adjust the parameters per habit:
 
 ```typescript
-import { api } from "@/convex/_generated/api";
+import { api } from '@/convex/_generated/api';
 
 const updateParams = useMutation(api.habitStrength.updateHabitParameters);
 
 await updateParams({
   habitId: habit._id,
-  habitDecayParam: 0.2,  // Higher = faster decay (harder to maintain)
-  habitGainParam: 0.1    // Lower = slower growth (takes longer to form)
+  habitDecayParam: 0.2, // Higher = faster decay (harder to maintain)
+  habitGainParam: 0.1, // Lower = slower growth (takes longer to form)
 });
 
 // Then recalculate
@@ -148,6 +152,7 @@ for (const habit of habits) {
 ---
 
 **Need Help?**
+
 - Check the main documentation: `/docs/HABIT_STRENGTH_SYSTEM.md`
 - Review the code: `/convex/habitStrength.ts`
 - Test with a new habit: Create one and check it off daily!

@@ -137,7 +137,12 @@ class BulletPool {
     }
   }
 
-  spawn(x: number, y: number, velocityX: number, velocityY: number): Bullet | null {
+  spawn(
+    x: number,
+    y: number,
+    velocityX: number,
+    velocityY: number
+  ): Bullet | null {
     const bullet = this.pool.find((b) => !b.active);
     if (bullet) {
       bullet.spawn(x, y, velocityX, velocityY);
@@ -463,7 +468,12 @@ app.ticker.add((delta) => {
 
 ```typescript
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 const renderer = new THREE.WebGLRenderer();
 
 renderer.setSize(window.innerWidth, window.innerHeight);

@@ -20,7 +20,13 @@ export function HabitTracker({ onViewStats }: HabitTrackerProps) {
       name: 'Meditation',
       emoji: '🧘',
       color: '#4ADE80',
-      completedDates: ['2024-10-01', '2024-10-02', '2024-10-03', '2024-10-04', '2024-10-05'],
+      completedDates: [
+        '2024-10-01',
+        '2024-10-02',
+        '2024-10-03',
+        '2024-10-04',
+        '2024-10-05',
+      ],
       createdAt: '2024-09-30',
     },
     {
@@ -42,14 +48,14 @@ export function HabitTracker({ onViewStats }: HabitTrackerProps) {
   ]);
 
   const toggleHabitCompletion = (habitId: string, date: string) => {
-    setHabits(prevHabits =>
-      prevHabits.map(habit => {
+    setHabits((prevHabits) =>
+      prevHabits.map((habit) => {
         if (habit.id === habitId) {
           const isCompleted = habit.completedDates.includes(date);
           return {
             ...habit,
             completedDates: isCompleted
-              ? habit.completedDates.filter(d => d !== date)
+              ? habit.completedDates.filter((d) => d !== date)
               : [...habit.completedDates, date].sort(),
           };
         }
@@ -71,24 +77,24 @@ export function HabitTracker({ onViewStats }: HabitTrackerProps) {
   };
 
   const deleteHabit = (habitId: string) => {
-    setHabits(habits.filter(h => h.id !== habitId));
+    setHabits(habits.filter((h) => h.id !== habitId));
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className='flex h-full flex-col'>
       <StatusBar />
-      
-      <div className="flex items-center justify-between px-6 py-4">
-        <h1 className="text-[28px] font-semibold">Habits</h1>
-        <div className="flex gap-3">
+
+      <div className='flex items-center justify-between px-6 py-4'>
+        <h1 className='text-[28px] font-semibold'>Habits</h1>
+        <div className='flex gap-3'>
           <button
             onClick={onViewStats}
-            className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+            className='flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200'
           >
-            <BarChart3 className="w-5 h-5" />
+            <BarChart3 className='h-5 w-5' />
           </button>
-          <button className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <Settings className="w-5 h-5" />
+          <button className='flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200'>
+            <Settings className='h-5 w-5' />
           </button>
         </div>
       </div>
@@ -98,8 +104,8 @@ export function HabitTracker({ onViewStats }: HabitTrackerProps) {
         onWeekChange={setCurrentWeekOffset}
       />
 
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-        {habits.map(habit => (
+      <div className='flex-1 space-y-4 overflow-y-auto px-6 py-4'>
+        {habits.map((habit) => (
           <HabitCard
             key={habit.id}
             habit={habit}
@@ -111,7 +117,7 @@ export function HabitTracker({ onViewStats }: HabitTrackerProps) {
       </div>
 
       <AddHabitButton onClick={() => setShowAddDialog(true)} />
-      
+
       <AddHabitDialog
         open={showAddDialog}
         onOpenChange={setShowAddDialog}

@@ -86,7 +86,8 @@ function HabitsApp() {
     [displayWeekDates]
   );
 
-  const tracking = useQuery(api.habits.getTracking, { dates: displayWeekDateStrings }) ?? [];
+  const tracking =
+    useQuery(api.habits.getTracking, { dates: displayWeekDateStrings }) ?? [];
 
   const handlePreviousWeek = useCallback(() => {
     setCurrentWeekOffset((prev) => prev - 1);
@@ -109,7 +110,10 @@ function HabitsApp() {
     await setCompactMode(next);
   };
 
-  const canSubmit = useMemo(() => newHabitName.trim().length > 0, [newHabitName]);
+  const canSubmit = useMemo(
+    () => newHabitName.trim().length > 0,
+    [newHabitName]
+  );
 
   const handleToggleForm = () => {
     setIsAdding((prev) => {
@@ -132,7 +136,9 @@ function HabitsApp() {
   };
 
   const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
-    const trackingEntry = tracking.find((t) => t.habitId === habitId && t.date === dateString);
+    const trackingEntry = tracking.find(
+      (t) => t.habitId === habitId && t.date === dateString
+    );
 
     // Parse date in local timezone to avoid timezone shifting
     // YYYY-MM-DD format is interpreted as UTC, which can shift dates
@@ -217,11 +223,16 @@ function HabitsApp() {
             onNextWeek={handleNextWeek}
           />
 
+          {/* New CalendarTimeline Component from Figma Design (node 201:87) */}
+          <CalendarTimeline dates={displayWeekDates} showSeparator={true} />
+
           {isAdding && (
             <View className='mb-8 rounded-3xl border border-slate-200 bg-white/90 p-5'>
               <View className='gap-4'>
                 <View className='gap-2'>
-                  <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>NEW HABIT</Text>
+                  <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+                    NEW HABIT
+                  </Text>
                   <TextInput
                     autoFocus
                     className='w-full rounded-3xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900'
@@ -232,8 +243,14 @@ function HabitsApp() {
                   />
                 </View>
                 <View className='flex-row items-center justify-end gap-3'>
-                  <Pressable accessibilityRole='button' className='py-2' onPress={handleToggleForm}>
-                    <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>CANCEL</Text>
+                  <Pressable
+                    accessibilityRole='button'
+                    className='py-2'
+                    onPress={handleToggleForm}
+                  >
+                    <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+                      CANCEL
+                    </Text>
                   </Pressable>
                   <Pressable
                     accessibilityRole='button'
@@ -241,7 +258,9 @@ function HabitsApp() {
                     disabled={!canSubmit}
                     onPress={handleSubmit}
                   >
-                    <Text className='text-[11px] font-semibold tracking-[3px] text-slate-900'>ADD</Text>
+                    <Text className='text-[11px] font-semibold tracking-[3px] text-slate-900'>
+                      ADD
+                    </Text>
                   </Pressable>
                 </View>
               </View>
@@ -250,12 +269,16 @@ function HabitsApp() {
 
           <View className='gap-4'>
             {orderedHabits.map((habit) => {
-              const weekStatus = displayWeekDateStrings.map((ds) => getHabitStatus(habit._id, ds));
+              const weekStatus = displayWeekDateStrings.map((ds) =>
+                getHabitStatus(habit._id, ds)
+              );
 
               // Calculate streak (consecutive days completed up to today)
               const calculateStreak = () => {
                 const completedDates = new Set(
-                  tracking.filter((t) => t.habitId === habit._id && t.completed).map((t) => t.date)
+                  tracking
+                    .filter((t) => t.habitId === habit._id && t.completed)
+                    .map((t) => t.date)
                 );
 
                 const today = new Date();
@@ -304,7 +327,9 @@ function HabitsApp() {
       </ScrollView>
       <View pointerEvents='box-none' className='absolute bottom-8 right-6'>
         <Pressable
-          accessibilityHint={isAdding ? 'Close add habit form' : 'Open add habit form'}
+          accessibilityHint={
+            isAdding ? 'Close add habit form' : 'Open add habit form'
+          }
           accessibilityLabel={isAdding ? 'Close' : 'Add habit'}
           accessibilityRole='button'
           className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'

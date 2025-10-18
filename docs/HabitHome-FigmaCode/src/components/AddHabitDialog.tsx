@@ -17,10 +17,23 @@ interface AddHabitDialogProps {
   onAdd: (name: string, emoji: string, color: string) => void;
 }
 
-const EMOJI_OPTIONS = ['🧘', '📚', '💪', '🏃', '🎨', '✍️', '🎵', '💧', '🌱', '🧠', '❤️', '🎯'];
+const EMOJI_OPTIONS = [
+  '🧘',
+  '📚',
+  '💪',
+  '🏃',
+  '🎨',
+  '✍️',
+  '🎵',
+  '💧',
+  '🌱',
+  '🧠',
+  '❤️',
+  '🎯',
+];
 const COLOR_OPTIONS = [
   '#4ADE80',
-  '#60A5FA', 
+  '#60A5FA',
   '#F59E0B',
   '#EC4899',
   '#8B5CF6',
@@ -29,7 +42,11 @@ const COLOR_OPTIONS = [
   '#06B6D4',
 ];
 
-export function AddHabitDialog({ open, onOpenChange, onAdd }: AddHabitDialogProps) {
+export function AddHabitDialog({
+  open,
+  onOpenChange,
+  onAdd,
+}: AddHabitDialogProps) {
   const [name, setName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState(EMOJI_OPTIONS[0]);
   const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0]);
@@ -46,37 +63,32 @@ export function AddHabitDialog({ open, onOpenChange, onAdd }: AddHabitDialogProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
         <DialogHeader>
           <DialogTitle>Create New Habit</DialogTitle>
-          <DialogDescription>
-            Add a new habit to track daily
-          </DialogDescription>
+          <DialogDescription>Add a new habit to track daily</DialogDescription>
         </DialogHeader>
-        
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Habit Name</Label>
+
+        <div className='space-y-4 py-4'>
+          <div className='space-y-2'>
+            <Label htmlFor='name'>Habit Name</Label>
             <Input
-              id="name"
-              placeholder="e.g., Morning Jog"
+              id='name'
+              placeholder='e.g., Morning Jog'
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
 
-          <div className="space-y-2">
+          <div className='space-y-2'>
             <Label>Choose Icon</Label>
-            <div className="grid grid-cols-6 gap-2">
+            <div className='grid grid-cols-6 gap-2'>
               {EMOJI_OPTIONS.map((emoji) => (
                 <button
                   key={emoji}
                   onClick={() => setSelectedEmoji(emoji)}
-                  className={`
-                    text-2xl p-2 rounded-lg border-2 transition-all
-                    ${selectedEmoji === emoji ? 'border-black bg-gray-100' : 'border-gray-200 hover:border-gray-300'}
-                  `}
+                  className={`rounded-lg border-2 p-2 text-2xl transition-all ${selectedEmoji === emoji ? 'border-black bg-gray-100' : 'border-gray-200 hover:border-gray-300'} `}
                 >
                   {emoji}
                 </button>
@@ -84,17 +96,14 @@ export function AddHabitDialog({ open, onOpenChange, onAdd }: AddHabitDialogProp
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className='space-y-2'>
             <Label>Choose Color</Label>
-            <div className="grid grid-cols-8 gap-2">
+            <div className='grid grid-cols-8 gap-2'>
               {COLOR_OPTIONS.map((color) => (
                 <button
                   key={color}
                   onClick={() => setSelectedColor(color)}
-                  className={`
-                    w-8 h-8 rounded-full border-2 transition-all
-                    ${selectedColor === color ? 'border-black scale-110' : 'border-gray-200'}
-                  `}
+                  className={`h-8 w-8 rounded-full border-2 transition-all ${selectedColor === color ? 'scale-110 border-black' : 'border-gray-200'} `}
                   style={{ backgroundColor: color }}
                 />
               ))}
@@ -103,7 +112,7 @@ export function AddHabitDialog({ open, onOpenChange, onAdd }: AddHabitDialogProp
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant='outline' onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={!name.trim()}>

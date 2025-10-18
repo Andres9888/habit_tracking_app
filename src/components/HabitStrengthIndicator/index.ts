@@ -1,2 +1,2 @@
-export { default as HabitStrengthIndicator } from "./HabitStrengthIndicator";
-export type { StrengthLevel } from "./HabitStrengthIndicator";
+export { default as HabitStrengthIndicator } from './HabitStrengthIndicator';
+export type { StrengthLevel } from './HabitStrengthIndicator';

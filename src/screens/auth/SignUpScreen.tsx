@@ -17,14 +17,24 @@ export default function SignUpScreen() {
   } = useSignUpFlow();
 
   if (pendingVerification) {
-    return <VerificationView emailAddress={emailAddress} isLoading={isLoading} onVerify={handleVerification} />;
+    return (
+      <VerificationView
+        emailAddress={emailAddress}
+        isLoading={isLoading}
+        onVerify={handleVerification}
+      />
+    );
   }
 
   return (
     <View className='flex-1 bg-white'>
       <View className='pt-15 flex-1 px-6'>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>Create Account</Text>
-        <Text className='mb-10 text-base text-slate-500'>Start tracking your habits today</Text>
+        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
+          Create Account
+        </Text>
+        <Text className='mb-10 text-base text-slate-500'>
+          Start tracking your habits today
+        </Text>
 
         <View className='gap-6'>
           <FormInput

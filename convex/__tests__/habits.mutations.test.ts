@@ -3,18 +3,18 @@
  * Tests database operations for habits and tracking
  */
 
-describe("Habit Archive Mutations", () => {
-  describe("archive mutation contract", () => {
-    it("requires habitId parameter", () => {
+describe('Habit Archive Mutations', () => {
+  describe('archive mutation contract', () => {
+    it('requires habitId parameter', () => {
       const validArgs = {
-        habitId: "test_id",
+        habitId: 'test_id',
       };
 
-      expect(validArgs).toHaveProperty("habitId");
-      expect(typeof validArgs.habitId).toBe("string");
+      expect(validArgs).toHaveProperty('habitId');
+      expect(typeof validArgs.habitId).toBe('string');
     });
 
-    it("should set archived flag to true", () => {
+    it('should set archived flag to true', () => {
       // Test the expected mutation behavior
       const expectedUpdate = {
         archived: true,
@@ -22,10 +22,10 @@ describe("Habit Archive Mutations", () => {
       };
 
       expect(expectedUpdate.archived).toBe(true);
-      expect(typeof expectedUpdate.archivedAt).toBe("number");
+      expect(typeof expectedUpdate.archivedAt).toBe('number');
     });
 
-    it("should include timestamp when archiving", () => {
+    it('should include timestamp when archiving', () => {
       const now = Date.now();
       const archivedAt = now;
 
@@ -33,22 +33,22 @@ describe("Habit Archive Mutations", () => {
       expect(archivedAt).toBeLessThanOrEqual(Date.now());
     });
 
-    it("validates archived habit schema fields", () => {
+    it('validates archived habit schema fields', () => {
       const archivedHabit = {
-        _id: "test_id",
+        _id: 'test_id',
         _creationTime: Date.now(),
-        name: "Test Habit",
+        name: 'Test Habit',
         createdAt: Date.now(),
         archived: true,
         archivedAt: Date.now(),
         strength: 0.5,
-        strengthLevel: "building",
+        strengthLevel: 'building',
       };
 
       // Verify required fields
       expect(archivedHabit.archived).toBe(true);
       expect(archivedHabit.archivedAt).toBeDefined();
-      expect(typeof archivedHabit.archivedAt).toBe("number");
+      expect(typeof archivedHabit.archivedAt).toBe('number');
 
       // Verify optional strength fields persist
       expect(archivedHabit.strength).toBeDefined();
@@ -56,17 +56,17 @@ describe("Habit Archive Mutations", () => {
     });
   });
 
-  describe("unarchive mutation contract", () => {
-    it("requires habitId parameter", () => {
+  describe('unarchive mutation contract', () => {
+    it('requires habitId parameter', () => {
       const validArgs = {
-        habitId: "test_id",
+        habitId: 'test_id',
       };
 
-      expect(validArgs).toHaveProperty("habitId");
-      expect(typeof validArgs.habitId).toBe("string");
+      expect(validArgs).toHaveProperty('habitId');
+      expect(typeof validArgs.habitId).toBe('string');
     });
 
-    it("should set archived flag to false", () => {
+    it('should set archived flag to false', () => {
       const expectedUpdate = {
         archived: false,
         archivedAt: undefined,
@@ -76,7 +76,7 @@ describe("Habit Archive Mutations", () => {
       expect(expectedUpdate.archivedAt).toBeUndefined();
     });
 
-    it("should remove archivedAt timestamp", () => {
+    it('should remove archivedAt timestamp', () => {
       // When unarchiving, archivedAt should be cleared
       const unarchivedHabit = {
         archived: false,
@@ -87,59 +87,59 @@ describe("Habit Archive Mutations", () => {
     });
   });
 
-  describe("remove (permanent delete) mutation contract", () => {
-    it("requires habitId parameter", () => {
+  describe('remove (permanent delete) mutation contract', () => {
+    it('requires habitId parameter', () => {
       const validArgs = {
-        habitId: "test_id",
+        habitId: 'test_id',
       };
 
-      expect(validArgs).toHaveProperty("habitId");
+      expect(validArgs).toHaveProperty('habitId');
     });
 
-    it("should return deleted habit data for undo functionality", () => {
+    it('should return deleted habit data for undo functionality', () => {
       const mockDeletedData = {
         habit: {
           createdAt: Date.now(),
-          name: "Deleted Habit",
-          notes: "Some notes",
+          name: 'Deleted Habit',
+          notes: 'Some notes',
         },
         tracking: [
-          { completed: true, date: "2025-01-01" },
-          { completed: false, date: "2025-01-02" },
+          { completed: true, date: '2025-01-01' },
+          { completed: false, date: '2025-01-02' },
         ],
       };
 
       // Verify structure for undo/restore
-      expect(mockDeletedData).toHaveProperty("habit");
-      expect(mockDeletedData).toHaveProperty("tracking");
+      expect(mockDeletedData).toHaveProperty('habit');
+      expect(mockDeletedData).toHaveProperty('tracking');
       expect(Array.isArray(mockDeletedData.tracking)).toBe(true);
     });
   });
 });
 
-describe("Habit Tracking Mutations", () => {
-  describe("toggleHabit mutation contract", () => {
-    it("requires habitId and date parameters", () => {
+describe('Habit Tracking Mutations', () => {
+  describe('toggleHabit mutation contract', () => {
+    it('requires habitId and date parameters', () => {
       const validArgs = {
-        habitId: "test_id",
-        date: "2025-01-15",
+        habitId: 'test_id',
+        date: '2025-01-15',
       };
 
-      expect(validArgs).toHaveProperty("habitId");
-      expect(validArgs).toHaveProperty("date");
-      expect(typeof validArgs.date).toBe("string");
+      expect(validArgs).toHaveProperty('habitId');
+      expect(validArgs).toHaveProperty('date');
+      expect(typeof validArgs.date).toBe('string');
     });
 
-    it("validates date format as YYYY-MM-DD", () => {
-      const validDate = "2025-01-15";
+    it('validates date format as YYYY-MM-DD', () => {
+      const validDate = '2025-01-15';
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
       expect(dateRegex.test(validDate)).toBe(true);
-      expect(dateRegex.test("2025/01/15")).toBe(false);
-      expect(dateRegex.test("15-01-2025")).toBe(false);
+      expect(dateRegex.test('2025/01/15')).toBe(false);
+      expect(dateRegex.test('15-01-2025')).toBe(false);
     });
 
-    it("should prevent future dates", () => {
+    it('should prevent future dates', () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
@@ -153,20 +153,20 @@ describe("Habit Tracking Mutations", () => {
       // Mutation should throw error if inputDate > today
     });
 
-    it("should create tracking entry if none exists", () => {
+    it('should create tracking entry if none exists', () => {
       const newEntry = {
-        habitId: "test_id",
-        date: "2025-01-15",
+        habitId: 'test_id',
+        date: '2025-01-15',
         completed: true,
       };
 
-      expect(newEntry).toHaveProperty("habitId");
-      expect(newEntry).toHaveProperty("date");
-      expect(newEntry).toHaveProperty("completed");
+      expect(newEntry).toHaveProperty('habitId');
+      expect(newEntry).toHaveProperty('date');
+      expect(newEntry).toHaveProperty('completed');
       expect(newEntry.completed).toBe(true);
     });
 
-    it("should toggle existing tracking entry", () => {
+    it('should toggle existing tracking entry', () => {
       // Simulate toggle behavior
       const existingCompleted = true;
       const newCompleted = !existingCompleted;
@@ -175,18 +175,18 @@ describe("Habit Tracking Mutations", () => {
     });
   });
 
-  describe("toggleHabit with strength update integration", () => {
-    it("should update habit strength after toggle", () => {
+  describe('toggleHabit with strength update integration', () => {
+    it('should update habit strength after toggle', () => {
       // Mock the expected behavior
       const habitBefore = {
         strength: 0.5,
-        strengthLevel: "developing",
+        strengthLevel: 'developing',
       };
 
       // After marking as completed
       const habitAfter = {
         strength: 0.58, // Increased
-        strengthLevel: "developing",
+        strengthLevel: 'developing',
         strengthUpdatedAt: Date.now(),
       };
 
@@ -194,24 +194,24 @@ describe("Habit Tracking Mutations", () => {
       expect(habitAfter.strengthUpdatedAt).toBeDefined();
     });
 
-    it("should recalculate strength level if threshold crossed", () => {
+    it('should recalculate strength level if threshold crossed', () => {
       const habitBefore = {
         strength: 0.59,
-        strengthLevel: "developing",
+        strengthLevel: 'developing',
       };
 
       // After completion pushes over 0.6 threshold
       const habitAfter = {
         strength: 0.62,
-        strengthLevel: "strong",
+        strengthLevel: 'strong',
         strengthUpdatedAt: Date.now(),
       };
 
       expect(habitAfter.strengthLevel).not.toBe(habitBefore.strengthLevel);
-      expect(habitAfter.strengthLevel).toBe("strong");
+      expect(habitAfter.strengthLevel).toBe('strong');
     });
 
-    it("should use habit-specific decay and gain parameters if set", () => {
+    it('should use habit-specific decay and gain parameters if set', () => {
       const habitWithCustomParams = {
         strength: 0.5,
         habitDecayParam: 0.2, // Custom HDP
@@ -223,7 +223,7 @@ describe("Habit Tracking Mutations", () => {
       // Mutation should use these instead of defaults
     });
 
-    it("should use default parameters if not set", () => {
+    it('should use default parameters if not set', () => {
       const habitWithoutParams = {
         strength: 0.5,
         // No custom parameters
@@ -236,36 +236,36 @@ describe("Habit Tracking Mutations", () => {
   });
 });
 
-describe("Habit Creation Mutations", () => {
-  describe("create mutation contract", () => {
-    it("requires name parameter", () => {
+describe('Habit Creation Mutations', () => {
+  describe('create mutation contract', () => {
+    it('requires name parameter', () => {
       const validArgs = {
-        name: "New Habit",
-        notes: "Optional notes",
+        name: 'New Habit',
+        notes: 'Optional notes',
       };
 
-      expect(validArgs).toHaveProperty("name");
-      expect(typeof validArgs.name).toBe("string");
+      expect(validArgs).toHaveProperty('name');
+      expect(typeof validArgs.name).toBe('string');
       expect(validArgs.name.length).toBeGreaterThan(0);
     });
 
-    it("allows optional notes parameter", () => {
+    it('allows optional notes parameter', () => {
       const withNotes = {
-        name: "Habit",
-        notes: "Some notes",
+        name: 'Habit',
+        notes: 'Some notes',
       };
 
       const withoutNotes = {
-        name: "Habit",
+        name: 'Habit',
       };
 
       expect(withNotes.notes).toBeDefined();
       expect(withoutNotes.notes).toBeUndefined();
     });
 
-    it("should initialize with default strength values", () => {
+    it('should initialize with default strength values', () => {
       const newHabit = {
-        name: "New Habit",
+        name: 'New Habit',
         createdAt: Date.now(),
         // Strength fields should be undefined initially (calculated on first toggle)
         strength: undefined,
@@ -276,62 +276,62 @@ describe("Habit Creation Mutations", () => {
       expect(newHabit.strengthLevel).toBeUndefined();
     });
 
-    it("should return the new habit ID", () => {
-      const mockReturnedId = "new_habit_id_123";
+    it('should return the new habit ID', () => {
+      const mockReturnedId = 'new_habit_id_123';
 
-      expect(typeof mockReturnedId).toBe("string");
+      expect(typeof mockReturnedId).toBe('string');
       expect(mockReturnedId.length).toBeGreaterThan(0);
     });
   });
 
-  describe("updateNotes mutation contract", () => {
-    it("requires habitId and notes parameters", () => {
+  describe('updateNotes mutation contract', () => {
+    it('requires habitId and notes parameters', () => {
       const validArgs = {
-        habitId: "test_id",
-        notes: "Updated notes",
+        habitId: 'test_id',
+        notes: 'Updated notes',
       };
 
-      expect(validArgs).toHaveProperty("habitId");
-      expect(validArgs).toHaveProperty("notes");
-      expect(typeof validArgs.notes).toBe("string");
+      expect(validArgs).toHaveProperty('habitId');
+      expect(validArgs).toHaveProperty('notes');
+      expect(typeof validArgs.notes).toBe('string');
     });
 
-    it("allows empty notes string", () => {
+    it('allows empty notes string', () => {
       const validArgs = {
-        habitId: "test_id",
-        notes: "",
+        habitId: 'test_id',
+        notes: '',
       };
 
-      expect(validArgs.notes).toBe("");
-      expect(typeof validArgs.notes).toBe("string");
+      expect(validArgs.notes).toBe('');
+      expect(typeof validArgs.notes).toBe('string');
     });
   });
 });
 
-describe("Habit Query Filters", () => {
-  describe("list query contract", () => {
-    it("should exclude archived habits", () => {
+describe('Habit Query Filters', () => {
+  describe('list query contract', () => {
+    it('should exclude archived habits', () => {
       const mockHabits = [
-        { _id: "1", name: "Active", archived: false },
-        { _id: "2", name: "Archived", archived: true },
-        { _id: "3", name: "Also Active", archived: undefined },
+        { _id: '1', name: 'Active', archived: false },
+        { _id: '2', name: 'Archived', archived: true },
+        { _id: '3', name: 'Also Active', archived: undefined },
       ];
 
       // Filter logic: filter((q) => q.neq(q.field("archived"), true))
       const filteredHabits = mockHabits.filter((h) => h.archived !== true);
 
       expect(filteredHabits).toHaveLength(2);
-      expect(filteredHabits.find((h) => h._id === "2")).toBeUndefined();
+      expect(filteredHabits.find((h) => h._id === '2')).toBeUndefined();
     });
 
-    it("should return habits with all strength fields", () => {
+    it('should return habits with all strength fields', () => {
       const mockHabit = {
-        _id: "test_id",
+        _id: 'test_id',
         _creationTime: Date.now(),
         createdAt: Date.now(),
-        name: "Test",
+        name: 'Test',
         strength: 0.7,
-        strengthLevel: "strong",
+        strengthLevel: 'strong',
         strengthUpdatedAt: Date.now(),
       };
 
@@ -341,12 +341,12 @@ describe("Habit Query Filters", () => {
     });
   });
 
-  describe("listArchived query contract", () => {
-    it("should only include archived habits", () => {
+  describe('listArchived query contract', () => {
+    it('should only include archived habits', () => {
       const mockHabits = [
-        { _id: "1", name: "Active", archived: false },
-        { _id: "2", name: "Archived", archived: true },
-        { _id: "3", name: "Also Archived", archived: true },
+        { _id: '1', name: 'Active', archived: false },
+        { _id: '2', name: 'Archived', archived: true },
+        { _id: '3', name: 'Also Archived', archived: true },
       ];
 
       // Filter logic: filter((q) => q.eq(q.field("archived"), true))
@@ -356,30 +356,30 @@ describe("Habit Query Filters", () => {
       expect(filteredHabits.every((h) => h.archived === true)).toBe(true);
     });
 
-    it("should include archivedAt timestamp", () => {
+    it('should include archivedAt timestamp', () => {
       const archivedHabit = {
-        _id: "test_id",
-        name: "Archived",
+        _id: 'test_id',
+        name: 'Archived',
         archived: true,
         archivedAt: Date.now(),
       };
 
       expect(archivedHabit.archivedAt).toBeDefined();
-      expect(typeof archivedHabit.archivedAt).toBe("number");
+      expect(typeof archivedHabit.archivedAt).toBe('number');
     });
   });
 
-  describe("getTracking query contract", () => {
-    it("requires dates array parameter", () => {
+  describe('getTracking query contract', () => {
+    it('requires dates array parameter', () => {
       const validArgs = {
-        dates: ["2025-01-01", "2025-01-02", "2025-01-03"],
+        dates: ['2025-01-01', '2025-01-02', '2025-01-03'],
       };
 
-      expect(validArgs).toHaveProperty("dates");
+      expect(validArgs).toHaveProperty('dates');
       expect(Array.isArray(validArgs.dates)).toBe(true);
     });
 
-    it("should return empty array for empty dates input", () => {
+    it('should return empty array for empty dates input', () => {
       const emptyDates: string[] = [];
       const result: any[] = [];
 
@@ -387,57 +387,59 @@ describe("Habit Query Filters", () => {
       expect(result).toEqual([]);
     });
 
-    it("should filter tracking by date range", () => {
-      const requestedDates = ["2025-01-01", "2025-01-02", "2025-01-03"];
+    it('should filter tracking by date range', () => {
+      const requestedDates = ['2025-01-01', '2025-01-02', '2025-01-03'];
       const mockTracking = [
-        { date: "2025-01-01", habitId: "1", completed: true },
-        { date: "2025-01-02", habitId: "1", completed: false },
-        { date: "2025-01-04", habitId: "1", completed: true }, // Outside range
+        { date: '2025-01-01', habitId: '1', completed: true },
+        { date: '2025-01-02', habitId: '1', completed: false },
+        { date: '2025-01-04', habitId: '1', completed: true }, // Outside range
       ];
 
       const dateSet = new Set(requestedDates);
       const filteredTracking = mockTracking.filter((t) => dateSet.has(t.date));
 
       expect(filteredTracking).toHaveLength(2);
-      expect(filteredTracking.find((t) => t.date === "2025-01-04")).toBeUndefined();
+      expect(
+        filteredTracking.find((t) => t.date === '2025-01-04')
+      ).toBeUndefined();
     });
   });
 
-  describe("getStats query contract", () => {
-    it("requires habitId parameter", () => {
+  describe('getStats query contract', () => {
+    it('requires habitId parameter', () => {
       const validArgs = {
-        habitId: "test_id",
+        habitId: 'test_id',
       };
 
-      expect(validArgs).toHaveProperty("habitId");
+      expect(validArgs).toHaveProperty('habitId');
     });
 
-    it("should return streak and consistency", () => {
+    it('should return streak and consistency', () => {
       const mockStats = {
         streak: 7,
         consistency: 85,
       };
 
-      expect(mockStats).toHaveProperty("streak");
-      expect(mockStats).toHaveProperty("consistency");
-      expect(typeof mockStats.streak).toBe("number");
-      expect(typeof mockStats.consistency).toBe("number");
+      expect(mockStats).toHaveProperty('streak');
+      expect(mockStats).toHaveProperty('consistency');
+      expect(typeof mockStats.streak).toBe('number');
+      expect(typeof mockStats.consistency).toBe('number');
     });
 
-    it("should calculate consistency as percentage (0-100)", () => {
+    it('should calculate consistency as percentage (0-100)', () => {
       const consistency = 85;
 
       expect(consistency).toBeGreaterThanOrEqual(0);
       expect(consistency).toBeLessThanOrEqual(100);
     });
 
-    it("should calculate streak from consecutive days", () => {
+    it('should calculate streak from consecutive days', () => {
       const mockDates = [
-        new Date("2025-01-15"),
-        new Date("2025-01-14"),
-        new Date("2025-01-13"),
+        new Date('2025-01-15'),
+        new Date('2025-01-14'),
+        new Date('2025-01-13'),
         // Gap here
-        new Date("2025-01-11"),
+        new Date('2025-01-11'),
       ];
 
       // Streak should be 3 (stops at gap)
@@ -447,15 +449,15 @@ describe("Habit Query Filters", () => {
   });
 });
 
-describe("Schema Validation", () => {
-  it("validates complete habit schema with all fields", () => {
+describe('Schema Validation', () => {
+  it('validates complete habit schema with all fields', () => {
     const completeHabit = {
       // Core fields
-      _id: "test_id",
+      _id: 'test_id',
       _creationTime: Date.now(),
       createdAt: Date.now(),
-      name: "Complete Habit",
-      notes: "Some notes",
+      name: 'Complete Habit',
+      notes: 'Some notes',
 
       // Archive fields
       archived: false,
@@ -463,7 +465,7 @@ describe("Schema Validation", () => {
 
       // Habit Strength System
       strength: 0.65,
-      strengthLevel: "strong",
+      strengthLevel: 'strong',
       strengthUpdatedAt: Date.now(),
       habitDecayParam: 0.175,
       habitGainParam: 0.15,
@@ -480,9 +482,9 @@ describe("Schema Validation", () => {
       lastPredictionAt: Date.now(),
 
       // Other
-      tags: ["health", "morning"],
+      tags: ['health', 'morning'],
       order: 1,
-      userId: "user_123",
+      userId: 'user_123',
     };
 
     // Verify all required fields
@@ -496,19 +498,19 @@ describe("Schema Validation", () => {
     expect(completeHabit.predictedCompletionProb).toBeDefined();
   });
 
-  it("validates tracking entry schema", () => {
+  it('validates tracking entry schema', () => {
     const trackingEntry = {
-      _id: "tracking_id",
+      _id: 'tracking_id',
       _creationTime: Date.now(),
-      habitId: "habit_id",
-      date: "2025-01-15",
+      habitId: 'habit_id',
+      date: '2025-01-15',
       completed: true,
-      userId: "user_123",
+      userId: 'user_123',
     };
 
-    expect(trackingEntry).toHaveProperty("habitId");
-    expect(trackingEntry).toHaveProperty("date");
-    expect(trackingEntry).toHaveProperty("completed");
-    expect(typeof trackingEntry.completed).toBe("boolean");
+    expect(trackingEntry).toHaveProperty('habitId');
+    expect(trackingEntry).toHaveProperty('date');
+    expect(trackingEntry).toHaveProperty('completed');
+    expect(typeof trackingEntry.completed).toBe('boolean');
   });
 });

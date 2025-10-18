@@ -1,14 +1,14 @@
-import { useQuery } from "convex/react";
-import { format, startOfDay, subDays } from "date-fns";
-import { useMemo, useState } from "react";
-import { Text, TouchableOpacity, View, ScrollView } from "react-native";
-import Svg, { Line, Circle, Rect, Text as SvgText } from "react-native-svg";
-import { api } from "../../../convex/_generated/api";
-import type { Id } from "../../../convex/_generated/dataModel";
+import { useQuery } from 'convex/react';
+import { format, startOfDay, subDays } from 'date-fns';
+import { useMemo, useState } from 'react';
+import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import Svg, { Line, Circle, Rect, Text as SvgText } from 'react-native-svg';
+import { api } from '../../../convex/_generated/api';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 export default function HabitStats() {
   const habits = useQuery(api.habits.list) ?? [];
-  const [selectedHabitId, setSelectedHabitId] = useState<Id<"habits"> | null>(
+  const [selectedHabitId, setSelectedHabitId] = useState<Id<'habits'> | null>(
     habits[0]?._id ?? null
   );
 
@@ -18,7 +18,7 @@ export default function HabitStats() {
   const last30Days = useMemo(
     () =>
       Array.from({ length: 30 }, (_, i) =>
-        format(subDays(today, 29 - i), "yyyy-MM-dd")
+        format(subDays(today, 29 - i), 'yyyy-MM-dd')
       ),
     [today]
   );
@@ -27,7 +27,7 @@ export default function HabitStats() {
   const last7Days = useMemo(
     () =>
       Array.from({ length: 7 }, (_, i) =>
-        format(subDays(today, 6 - i), "yyyy-MM-dd")
+        format(subDays(today, 6 - i), 'yyyy-MM-dd')
       ),
     [today]
   );
@@ -58,7 +58,7 @@ export default function HabitStats() {
     const currentDate = new Date(today);
 
     while (true) {
-      const dateString = format(currentDate, "yyyy-MM-dd");
+      const dateString = format(currentDate, 'yyyy-MM-dd');
       if (completedDates.has(dateString)) {
         currentStreak++;
         currentDate.setDate(currentDate.getDate() - 1);
@@ -102,8 +102,8 @@ export default function HabitStats() {
 
   if (habits.length === 0) {
     return (
-      <View className="items-center py-8">
-        <Text className="text-center text-sm text-slate-500">
+      <View className='items-center py-8'>
+        <Text className='text-center text-sm text-slate-500'>
           No habits yet. Create your first habit to see stats!
         </Text>
       </View>
@@ -111,34 +111,36 @@ export default function HabitStats() {
   }
 
   return (
-    <View className="gap-4">
-      <Text className="text-lg font-semibold text-slate-900">
+    <View className='gap-4'>
+      <Text className='text-lg font-semibold text-slate-900'>
         Per-Habit Stats
       </Text>
 
       {/* Habit selector */}
-      <View className="gap-2">
-        <Text className="text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+      <View className='gap-2'>
+        <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
           SELECT HABIT
         </Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="flex-row gap-2"
+          className='flex-row gap-2'
         >
           {habits.map((habit) => (
             <TouchableOpacity
               key={habit._id}
               accessibilityLabel={`View stats for ${habit.name}`}
-              accessibilityRole="button"
+              accessibilityRole='button'
               className={`rounded-xl px-4 py-2 ${
-                selectedHabitId === habit._id ? "bg-slate-900" : "bg-slate-100"
+                selectedHabitId === habit._id ? 'bg-slate-900' : 'bg-slate-100'
               }`}
               onPress={() => setSelectedHabitId(habit._id)}
             >
               <Text
                 className={`text-sm font-medium ${
-                  selectedHabitId === habit._id ? "text-white" : "text-slate-700"
+                  selectedHabitId === habit._id
+                    ? 'text-white'
+                    : 'text-slate-700'
                 }`}
               >
                 {habit.name}
@@ -149,48 +151,48 @@ export default function HabitStats() {
       </View>
 
       {selectedHabit && habitStats && (
-        <View className="gap-4">
+        <View className='gap-4'>
           {/* Streaks */}
-          <View className="flex-row gap-3">
-            <View className="flex-1 rounded-2xl bg-slate-50 p-4">
-              <Text className="text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+          <View className='flex-row gap-3'>
+            <View className='flex-1 rounded-2xl bg-slate-50 p-4'>
+              <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
                 CURRENT STREAK
               </Text>
-              <View className="mt-2 flex-row items-baseline gap-2">
-                <Text className="text-3xl font-bold text-[#48bb78]">
+              <View className='mt-2 flex-row items-baseline gap-2'>
+                <Text className='text-3xl font-bold text-[#48bb78]'>
                   {habitStats.currentStreak}
                 </Text>
-                <Text className="text-xl font-semibold text-slate-400">
-                  {habitStats.currentStreak === 1 ? "day" : "days"}
+                <Text className='text-xl font-semibold text-slate-400'>
+                  {habitStats.currentStreak === 1 ? 'day' : 'days'}
                 </Text>
               </View>
             </View>
-            <View className="flex-1 rounded-2xl bg-slate-50 p-4">
-              <Text className="text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+            <View className='flex-1 rounded-2xl bg-slate-50 p-4'>
+              <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
                 LONGEST STREAK
               </Text>
-              <View className="mt-2 flex-row items-baseline gap-2">
-                <Text className="text-3xl font-bold text-[#48bb78]">
+              <View className='mt-2 flex-row items-baseline gap-2'>
+                <Text className='text-3xl font-bold text-[#48bb78]'>
                   {habitStats.longestStreak}
                 </Text>
-                <Text className="text-xl font-semibold text-slate-400">
-                  {habitStats.longestStreak === 1 ? "day" : "days"}
+                <Text className='text-xl font-semibold text-slate-400'>
+                  {habitStats.longestStreak === 1 ? 'day' : 'days'}
                 </Text>
               </View>
             </View>
           </View>
 
           {/* Weekly bar chart */}
-          <View className="rounded-2xl bg-slate-50 p-4">
-            <Text className="mb-3 text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+          <View className='rounded-2xl bg-slate-50 p-4'>
+            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
               LAST 7 DAYS
             </Text>
             <WeeklyBarChart data={habitStats.weeklyData} />
           </View>
 
           {/* 30-day trend line chart */}
-          <View className="rounded-2xl bg-slate-50 p-4">
-            <Text className="mb-3 text-xs font-semibold uppercase tracking-[2px] text-slate-500">
+          <View className='rounded-2xl bg-slate-50 p-4'>
+            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
               30-DAY TREND
             </Text>
             <TrendLineChart data={habitStats.completionData} />
@@ -213,7 +215,7 @@ function WeeklyBarChart({
   const maxHeight = chartHeight - 30;
 
   return (
-    <View className="items-center">
+    <View className='items-center'>
       <Svg height={chartHeight} width={chartWidth}>
         {data.map((item, index) => {
           const x = index * (chartWidth / data.length) + 4;
@@ -227,25 +229,25 @@ function WeeklyBarChart({
                 y={y}
                 width={barWidth}
                 height={barHeight}
-                fill={item.completed ? "#48bb78" : "#dde3ed"}
+                fill={item.completed ? '#48bb78' : '#dde3ed'}
                 rx={4}
               />
               <SvgText
                 x={x + barWidth / 2}
                 y={chartHeight - 5}
-                fontSize="10"
-                fill="#64748b"
-                textAnchor="middle"
+                fontSize='10'
+                fill='#64748b'
+                textAnchor='middle'
               >
-                {format(new Date(item.date), "EEE")[0]}
+                {format(new Date(item.date), 'EEE')[0]}
               </SvgText>
             </View>
           );
         })}
       </Svg>
-      <Text className="mt-2 text-xs text-slate-500">
-        {format(new Date(data[0].date), "MMM d")} -{" "}
-        {format(new Date(data[data.length - 1].date), "MMM d")}
+      <Text className='mt-2 text-xs text-slate-500'>
+        {format(new Date(data[0].date), 'MMM d')} -{' '}
+        {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>
     </View>
   );
@@ -274,20 +276,20 @@ function TrendLineChart({
       if (index === 0) return `M ${point.x} ${point.y}`;
       return `L ${point.x} ${point.y}`;
     })
-    .join(" ");
+    .join(' ');
 
   return (
-    <View className="items-center">
+    <View className='items-center'>
       <Svg height={chartHeight} width={chartWidth}>
         {/* Grid lines */}
         <Line
-          x1="0"
+          x1='0'
           y1={chartHeight / 2}
           x2={chartWidth}
           y2={chartHeight / 2}
-          stroke="#e2e8f0"
-          strokeWidth="1"
-          strokeDasharray="4,4"
+          stroke='#e2e8f0'
+          strokeWidth='1'
+          strokeDasharray='4,4'
         />
 
         {/* Line path */}
@@ -296,8 +298,8 @@ function TrendLineChart({
           y1={points[0]?.y ?? 0}
           x2={points[points.length - 1]?.x ?? 0}
           y2={points[points.length - 1]?.y ?? 0}
-          stroke="#cbd5e1"
-          strokeWidth="1"
+          stroke='#cbd5e1'
+          strokeWidth='1'
         />
 
         {/* Points */}
@@ -307,35 +309,29 @@ function TrendLineChart({
             cx={point.x}
             cy={point.y}
             r={pointRadius}
-            fill={point.completed ? "#48bb78" : "#dde3ed"}
-            stroke={point.completed ? "#48bb78" : "#94a3b8"}
-            strokeWidth="1.5"
+            fill={point.completed ? '#48bb78' : '#dde3ed'}
+            stroke={point.completed ? '#48bb78' : '#94a3b8'}
+            strokeWidth='1.5'
           />
         ))}
 
         {/* Labels */}
-        <SvgText
-          x="0"
-          y="15"
-          fontSize="10"
-          fill="#64748b"
-          textAnchor="start"
-        >
+        <SvgText x='0' y='15' fontSize='10' fill='#64748b' textAnchor='start'>
           ✓
         </SvgText>
         <SvgText
-          x="0"
+          x='0'
           y={chartHeight - 10}
-          fontSize="10"
-          fill="#64748b"
-          textAnchor="start"
+          fontSize='10'
+          fill='#64748b'
+          textAnchor='start'
         >
           ✗
         </SvgText>
       </Svg>
-      <Text className="mt-2 text-xs text-slate-500">
-        {format(new Date(data[0].date), "MMM d")} -{" "}
-        {format(new Date(data[data.length - 1].date), "MMM d")}
+      <Text className='mt-2 text-xs text-slate-500'>
+        {format(new Date(data[0].date), 'MMM d')} -{' '}
+        {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>
     </View>
   );

@@ -34,7 +34,12 @@ This brief distills Murat Ozcan's testing philosophy used by the Test Architect 
     },
   });
   // 3. Compose via mergeTests
-  export const test = mergeTests(base, apiRequestFixture, authFixture, networkFixture);
+  export const test = mergeTests(
+    base,
+    apiRequestFixture,
+    authFixture,
+    networkFixture
+  );
   ```
 - **Data factories pattern**:
   ```typescript

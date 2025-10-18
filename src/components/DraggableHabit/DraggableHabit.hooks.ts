@@ -11,7 +11,7 @@ export const getEmojiAndName = (
     return { emoji, name };
   }
 
-  return { emoji: "", name: fullName };
+  return { emoji: '', name: fullName };
 };
 
 interface Habit {
@@ -20,13 +20,13 @@ interface Habit {
 }
 
 const ACCENT_COLORS = [
-  "#4ADE80",
-  "#60A5FA",
-  "#F59E0B",
-  "#A855F7",
-  "#F97316",
-  "#38BDF8",
-  "#F472B6",
+  '#4ADE80',
+  '#60A5FA',
+  '#F59E0B',
+  '#A855F7',
+  '#F97316',
+  '#38BDF8',
+  '#F472B6',
 ];
 
 const pickAccentColor = (input: string): string => {

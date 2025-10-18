@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server';
+import { v } from 'convex/values';
 
 const applicationTables = {
   articles: defineTable({
@@ -7,7 +7,7 @@ const applicationTables = {
     content: v.string(),
     createdAt: v.number(),
     title: v.string(),
-  }).index("by_category", ["category"]),
+  }).index('by_category', ['category']),
 
   habits: defineTable({
     archived: v.optional(v.boolean()),
@@ -45,9 +45,9 @@ const applicationTables = {
   tracking: defineTable({
     completed: v.boolean(),
     date: v.string(),
-    habitId: v.id("habits"),
+    habitId: v.id('habits'),
     userId: v.optional(v.string()),
-  }).index("by_habit_and_date", ["habitId", "date"]),
+  }).index('by_habit_and_date', ['habitId', 'date']),
 
   userSettings: defineTable({
     catTheme: v.boolean(),
@@ -66,13 +66,13 @@ const applicationTables = {
     body: v.string(),
     createdAt: v.number(),
     date: v.string(),
-    habitId: v.optional(v.id("habits")),
+    habitId: v.optional(v.id('habits')),
     updatedAt: v.number(),
     userId: v.optional(v.string()),
   })
-    .index("by_date", ["date"])
-    .index("by_habit", ["habitId"])
-    .index("by_user_and_date", ["userId", "date"]),
+    .index('by_date', ['date'])
+    .index('by_habit', ['habitId'])
+    .index('by_user_and_date', ['userId', 'date']),
 };
 
 export default defineSchema({

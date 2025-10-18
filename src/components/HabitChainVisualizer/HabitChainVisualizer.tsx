@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, Easing, Pressable, View } from "react-native";
-import { parse, format } from "date-fns";
-import { Check } from "lucide-react-native";
-import type { Id } from "../../../convex/_generated/dataModel";
-import { useHabitChainVisualizerLogic } from "./HabitChainVisualizer.hooks";
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, Pressable, View } from 'react-native';
+import { parse, format } from 'date-fns';
+import { Check } from 'lucide-react-native';
+import clsx from 'clsx';
+import type { Id } from '../../../convex/_generated/dataModel';
+import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -17,7 +18,10 @@ interface DayConnectorProps {
  * Shows a horizontal bar when both adjacent days are completed,
  * creating a visual "chain" effect for habit tracking.
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ accentColor, visible }) => {
+const DayConnector: React.FC<DayConnectorProps> = ({
+  accentColor,
+  visible,
+}) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
   useEffect(() => {
@@ -59,6 +63,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   disabled,
   onPress,
   completed,
+  isToday,
 }) => {
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
 
@@ -73,7 +78,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
 
   const backgroundColor = completion.interpolate({
     inputRange: [0, 1],
-    outputRange: ["#e5e7eb", accentColor],
+    outputRange: ['#e5e7eb', accentColor],
   });
 
   const scale = completion.interpolate({
@@ -112,18 +117,18 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <Check color="#ffffff" size={20} strokeWidth={2.25} />
+        <Check color='#ffffff' size={20} strokeWidth={2.25} />
       </Animated.View>
     </AnimatedPressable>
   );
 };
 
-type HabitStatus = "done" | "missed" | "planned";
+type HabitStatus = 'done' | 'missed' | 'planned';
 
 interface HabitChainVisualizerProps {
   accentColor: string;
-  habitId: Id<"habits">;
-  onToggle: (args: { habitId: Id<"habits">; date: string }) => void;
+  habitId: Id<'habits'>;
+  onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
 }

@@ -58,9 +58,10 @@ const tokenCache = {
   },
 };
 
-const WebToaster: ComponentType = Platform.OS === "web"
-  ? (require("sonner").Toaster as ComponentType)
-  : () => null;
+const WebToaster: ComponentType =
+  Platform.OS === 'web'
+    ? (require('sonner').Toaster as ComponentType)
+    : () => null;
 
 function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -83,7 +84,7 @@ function HabitsApp() {
     [weekAnchor]
   );
   const weekDateStrings = useMemo(
-    () => weekDates.map((d) => format(d, "yyyy-MM-dd")),
+    () => weekDates.map((d) => format(d, 'yyyy-MM-dd')),
     [weekDates]
   );
 
@@ -115,7 +116,7 @@ function HabitsApp() {
       // Count consecutive days backward from today
       // eslint-disable-next-line no-constant-condition
       while (true) {
-        const dateString = format(currentDate, "yyyy-MM-dd");
+        const dateString = format(currentDate, 'yyyy-MM-dd');
         if (completedDates.has(dateString)) {
           streak++;
           currentDate.setDate(currentDate.getDate() - 1);
@@ -152,16 +153,16 @@ function HabitsApp() {
 
     // Parse date in local timezone to avoid timezone shifting
     // YYYY-MM-DD format is interpreted as UTC, which can shift dates
-    const [year, month, day] = dateString.split("-").map(Number);
+    const [year, month, day] = dateString.split('-').map(Number);
     const date = new Date(year, month - 1, day); // month is 0-indexed
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     date.setHours(0, 0, 0, 0);
 
-    if (trackingEntry?.completed) return "done";
-    if (date < today) return "missed";
-    return "planned";
+    if (trackingEntry?.completed) return 'done';
+    if (date < today) return 'missed';
+    return 'planned';
   };
 
   // Initialize habit order when habits load
@@ -190,7 +191,7 @@ function HabitsApp() {
   }, []);
 
   const handleArchive = useCallback(
-    async (habitId: Id<"habits">) => {
+    async (habitId: Id<'habits'>) => {
       await archiveHabit({ habitId });
     },
     [archiveHabit]
@@ -326,15 +327,15 @@ function HabitsApp() {
           onClose={() => setIsCreateHabitOpen(false)}
         />
       </View>
-      <View pointerEvents="box-none" className="absolute bottom-8 right-6">
+      <View pointerEvents='box-none' className='absolute bottom-8 right-6'>
         <Pressable
-          accessibilityHint="Open create habit modal"
-          accessibilityLabel="Add habit"
-          accessibilityRole="button"
-          className="h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg"
+          accessibilityHint='Open create habit modal'
+          accessibilityLabel='Add habit'
+          accessibilityRole='button'
+          className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
           onPress={handleToggleForm}
         >
-          <Plus color="#ffffff" size={24} strokeWidth={2.25} />
+          <Plus color='#ffffff' size={24} strokeWidth={2.25} />
         </Pressable>
       </View>
     </GestureHandlerRootView>
@@ -344,7 +345,7 @@ function HabitsApp() {
 export default function App() {
   // Temporarily bypass Clerk authentication for development
   if (!clerkPublishableKey) {
-    console.warn("Running without authentication - Clerk key not configured");
+    console.warn('Running without authentication - Clerk key not configured');
     return (
       <ConvexProvider client={convex}>
         <HabitsApp />

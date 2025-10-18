@@ -1,4 +1,10 @@
-import { startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
+import {
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  addMonths,
+  subMonths,
+} from 'date-fns';
 import { useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 
@@ -9,11 +15,16 @@ interface UseHabitCalendarViewLogicProps {
   tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
 }
 
-export const useHabitCalendarViewLogic = ({ habitId, tracking }: UseHabitCalendarViewLogicProps) => {
+export const useHabitCalendarViewLogic = ({
+  habitId,
+  tracking,
+}: UseHabitCalendarViewLogicProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const getHabitStatus = (dateString: string): HabitStatus => {
-    const trackingEntry = tracking.find((t) => t.habitId === habitId && t.date === dateString);
+    const trackingEntry = tracking.find(
+      (t) => t.habitId === habitId && t.date === dateString
+    );
 
     // Parse date in local timezone to avoid timezone shifting
     const [year, month, day] = dateString.split('-').map(Number);

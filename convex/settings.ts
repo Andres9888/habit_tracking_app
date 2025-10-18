@@ -1,5 +1,5 @@
-import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { v } from 'convex/values';
+import { mutation, query } from './_generated/server';
 
 const DEFAULT_SETTINGS = {
   catTheme: true,
@@ -17,7 +17,7 @@ export const get = query({
   args: {},
   handler: async (ctx) => {
     // Get first settings record (since auth was removed, just use any settings)
-    const settings = await ctx.db.query("userSettings").first();
+    const settings = await ctx.db.query('userSettings').first();
 
     // Only return the whitelisted fields to satisfy the returns validator
     return {
@@ -65,9 +65,11 @@ export const update = mutation({
   },
   handler: async (ctx, args) => {
     // Get first settings record (since auth was removed, just use any settings)
-    const existing = await ctx.db.query("userSettings").first();
+    const existing = await ctx.db.query('userSettings').first();
 
-    await (existing ? ctx.db.patch(existing._id, args) : ctx.db.insert("userSettings", args));
+    await (existing
+      ? ctx.db.patch(existing._id, args)
+      : ctx.db.insert('userSettings', args));
     return null;
   },
   returns: v.null(),

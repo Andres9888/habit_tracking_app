@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "../lib/utils";
+import React from 'react';
+import { cn } from '../lib/utils';
 
 export interface Segment<T extends string> {
   value: T;
@@ -21,9 +21,9 @@ export function SegmentedControl<T extends string>({
 }: SegmentedControlProps<T>) {
   return (
     <div
-      aria-label="View switch"
-      className={cn("inline-flex rounded-lg bg-slate-100 p-1", className)}
-      role="tablist"
+      aria-label='View switch'
+      className={cn('inline-flex rounded-lg bg-slate-100 p-1', className)}
+      role='tablist'
     >
       {segments.map((segment) => {
         const active = segment.value === value;
@@ -32,13 +32,13 @@ export function SegmentedControl<T extends string>({
             key={segment.value}
             aria-selected={active}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm transition-colors",
+              'rounded-md px-3 py-1.5 text-sm transition-colors',
               active
-                ? "bg-card text-slate-900 shadow dark:text-slate-100"
-                : "text-slate-600 hover:text-slate-800"
+                ? 'bg-card text-slate-900 shadow dark:text-slate-100'
+                : 'text-slate-600 hover:text-slate-800'
             )}
-            role="tab"
-            type="button"
+            role='tab'
+            type='button'
             onClick={() => onChange(segment.value)}
           >
             {segment.label}

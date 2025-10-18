@@ -1,6 +1,6 @@
-import { parse, startOfDay } from "date-fns";
+import { parse, startOfDay } from 'date-fns';
 
-type HabitStatus = "done" | "missed" | "planned";
+type HabitStatus = 'done' | 'missed' | 'planned';
 
 export const useHabitChainVisualizerLogic = (
   weekDateStrings: string[],
@@ -9,16 +9,22 @@ export const useHabitChainVisualizerLogic = (
   const today = startOfDay(new Date());
 
   const isFutureDate = (index: number): boolean => {
-    const parsed = parse(weekDateStrings[index], "yyyy-MM-dd", new Date());
+    const parsed = parse(weekDateStrings[index], 'yyyy-MM-dd', new Date());
     const normalized = startOfDay(parsed);
     return normalized.getTime() > today.getTime();
   };
 
-  const isCompleted = (index: number): boolean =>
-    weekStatus[index] === "done";
+  const isCompleted = (index: number): boolean => weekStatus[index] === 'done';
+
+  const isToday = (index: number): boolean => {
+    const parsed = parse(weekDateStrings[index], 'yyyy-MM-dd', new Date());
+    const normalized = startOfDay(parsed);
+    return normalized.getTime() === today.getTime();
+  };
 
   return {
     isFutureDate,
     isCompleted,
+    isToday,
   };
 };
