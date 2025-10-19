@@ -79,6 +79,11 @@ const applicationTables = {
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
     userId: v.optional(v.string()),
+    // New settings from Figma design
+    appIcon: v.optional(v.string()),
+    textSize: v.optional(v.string()),
+    highContrastMode: v.optional(v.boolean()),
+    reduceMotion: v.optional(v.boolean()),
   }),
 };
 

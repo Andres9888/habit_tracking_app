@@ -1,30 +1,35 @@
-import { useState } from 'react';
+import { useMutation, useQuery } from 'convex/react';
+import { useEffect, useState } from 'react';
+import { api } from '../../../convex/_generated/api';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
   onClose: () => void;
 }
 
-// Mock auth hooks for development without Clerk
-// TODO: Remove when Clerk authentication is implemented (see docs/stories/6-draft/0.1-implement-clerk-authentication.story.md)
-const useMockAuth = () => ({
-  signOut: async () => {
-    console.warn('Sign out called but Clerk is not configured');
-  },
-});
-
-const useMockUser = () => ({
-  user: null,
-});
-
 export const useSettingsModalLogic = ({
   visible,
   onClose,
 }: UseSettingsModalLogicProps) => {
-  // Temporarily using mock auth until Clerk is configured
-  const { signOut } = useMockAuth();
-  const { user } = useMockUser();
   const [view, setView] = useState<'settings' | 'archived'>('settings');
+
+  // Get settings from Convex
+  const settings = useQuery(api.settings.get);
+  const updateSettings = useMutation(api.settings.update);
+
+  // Local state for settings
+  const [darkMode, setDarkModeState] = useState(false);
+  const [reduceMotion, setReduceMotionState] = useState(false);
+  const [highContrastMode, setHighContrastModeState] = useState(false);
+
+  // Sync local state with Convex settings
+  useEffect(() => {
+    if (settings) {
+      setDarkModeState(settings.darkMode);
+      setReduceMotionState(settings.reduceMotion);
+      setHighContrastModeState(settings.highContrastMode);
+    }
+  }, [settings]);
 
   // Reset to settings view when modal closes
   const handleClose = () => {
@@ -32,20 +37,46 @@ export const useSettingsModalLogic = ({
     setTimeout(() => setView('settings'), 300); // Reset after animation
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      handleClose();
-    } catch (error) {
-      console.error('Error signing out:', error);
+  // Setting updaters
+  const setDarkMode = async (value: boolean) => {
+    setDarkModeState(value);
+    if (settings) {
+      await updateSettings({
+        ...settings,
+        darkMode: value,
+      });
+    }
+  };
+
+  const setReduceMotion = async (value: boolean) => {
+    setReduceMotionState(value);
+    if (settings) {
+      await updateSettings({
+        ...settings,
+        reduceMotion: value,
+      });
+    }
+  };
+
+  const setHighContrastMode = async (value: boolean) => {
+    setHighContrastModeState(value);
+    if (settings) {
+      await updateSettings({
+        ...settings,
+        highContrastMode: value,
+      });
     }
   };
 
   return {
     handleClose,
-    handleSignOut,
     setView,
-    user,
     view,
+    darkMode,
+    setDarkMode,
+    reduceMotion,
+    setReduceMotion,
+    highContrastMode,
+    setHighContrastMode,
   };
 };

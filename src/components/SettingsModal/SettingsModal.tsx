@@ -1,5 +1,19 @@
-import { Modal, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { format } from 'date-fns';
+import {
+  Moon,
+  Smartphone,
+  Type,
+  Contrast,
+  Zap,
+  Bell,
+  HelpCircle,
+  Send,
+  ChevronLeft,
+} from 'lucide-react-native';
+import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { SettingsRow } from './SettingsRow';
+import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 
 interface SettingsModalProps {
@@ -27,195 +41,162 @@ export default function SettingsModal({
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
 }: SettingsModalProps) {
-  const { user, view, setView, handleClose, handleSignOut } =
+  const { view, setView, handleClose, darkMode, setDarkMode, reduceMotion, setReduceMotion, highContrastMode, setHighContrastMode } =
     useSettingsModalLogic({ onClose, visible });
 
+  if (!visible) return null;
+
+  if (view === 'archived') {
+    return (
+      <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
+        <ArchivedHabitsModal onBack={() => setView('settings')} onClose={handleClose} />
+      </Modal>
+    );
+  }
+
   return (
-    <Modal
-      transparent
-      animationType='fade'
-      visible={visible}
-      onRequestClose={handleClose}
-    >
-      <TouchableOpacity
-        activeOpacity={1}
-        className='flex-1 items-center justify-center bg-black/50 p-5'
-        onPress={handleClose}
-      >
-        <TouchableOpacity
-          activeOpacity={1}
-          className='android:elevation-5 w-full max-w-[400px] rounded-[20px] bg-white p-5 shadow-lg'
-          onPress={(e) => e.stopPropagation()}
-        >
-          {view === 'settings' ? (
-            <>
-              <View className='mb-6 flex-row items-center justify-between'>
-                <Text className='text-2xl font-bold text-slate-900'>
-                  Settings
-                </Text>
-                <TouchableOpacity
-                  accessibilityLabel='Close settings'
-                  accessibilityRole='button'
-                  className='h-8 w-8 items-center justify-center rounded-full bg-slate-100'
-                  onPress={handleClose}
-                >
-                  <Text className='text-lg font-semibold text-slate-500'>
-                    ✕
-                  </Text>
-                </TouchableOpacity>
-              </View>
+    <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
+      <View className="flex-1 bg-[#f8f5f1]">
+        {/* Header with status bar simulation */}
+        <View className="bg-[#f8f5f1] px-4 pb-4 pt-12">
+          <View className="mb-4 flex-row items-center justify-between">
+            <Text className="text-[20px] font-bold leading-[28px] text-[#1a1a1a]">
+              {format(new Date(), 'H:mm')}
+            </Text>
+            <View className="flex-row items-center gap-4">
+              {/* Status icons placeholder */}
+              <Text className="text-[#1a1a1a]">📶</Text>
+              <Text className="text-[#1a1a1a]">📱</Text>
+            </View>
+          </View>
 
-              <View className='gap-6'>
-                <View className='gap-2 rounded-2xl bg-slate-50 px-5 py-4'>
-                  <Text className='text-[10px] font-semibold tracking-[2.5px] text-slate-500'>
-                    {user ? 'SIGNED IN AS' : 'AUTHENTICATION'}
-                  </Text>
-                  <Text className='text-base font-semibold text-slate-900'>
-                    {user?.primaryEmailAddress?.emailAddress ||
-                      'Not configured (Development mode)'}
-                  </Text>
-                </View>
+          {/* Settings Title */}
+          <View className="flex-row items-center justify-between">
+            <TouchableOpacity
+              onPress={handleClose}
+              className="size-10 items-center justify-center rounded-full"
+              accessibilityRole="button"
+              accessibilityLabel="Back"
+            >
+              <ChevronLeft size={28} color="#1a1a1a" />
+            </TouchableOpacity>
+            <Text className="text-[24px] font-bold leading-[32px] text-[#1a1a1a]">
+              Settings
+            </Text>
+            <View className="size-10" />
+          </View>
+        </View>
 
-                <View className='flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4'>
-                  <View className='flex-1 pr-4'>
-                    <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
-                      Compact Mode
-                    </Text>
-                    <Text className='text-[11px] text-slate-500'>
-                      Reduce card spacing to view more habits at once.
-                    </Text>
-                  </View>
-                  <Switch
-                    accessibilityLabel='Toggle compact mode'
-                    thumbColor={isCompact ? '#101727' : '#ffffff'}
-                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
-                    value={isCompact}
-                    onValueChange={(value) =>
-                      Promise.resolve(onChangeCompact(value)).catch((error) =>
-                        console.error('Failed to update compact mode', error)
-                      )
-                    }
-                  />
-                </View>
+        <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
+          <View className="gap-6 pb-8">
+            {/* Visual Preferences */}
+            <SettingsSection title="Visual Preferences">
+              <SettingsRow
+                icon={<Moon size={16} color="#f97316" />}
+                iconBackgroundColor="#fed7aa"
+                label="Dark Mode"
+                type="toggle"
+                value={darkMode}
+                onToggle={setDarkMode}
+                showBorder={true}
+              />
+              <SettingsRow
+                icon={<Smartphone size={16} color="#3b82f6" />}
+                iconBackgroundColor="#bfdbfe"
+                label="App Icon"
+                type="selection"
+                value="Default"
+                onPress={() => {
+                  // TODO: Navigate to app icon selector
+                  console.log('Navigate to app icon selector');
+                }}
+                showBorder={false}
+              />
+            </SettingsSection>
 
-                <View className='flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4'>
-                  <View className='flex-1 pr-4'>
-                    <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
-                      Character Screen
-                    </Text>
-                    <Text className='text-[11px] text-slate-500'>
-                      Show character screen icon in the navigation bar.
-                    </Text>
-                  </View>
-                  <Switch
-                    accessibilityLabel='Toggle character screen'
-                    thumbColor={showCharacterScreen ? '#101727' : '#ffffff'}
-                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
-                    value={showCharacterScreen}
-                    onValueChange={(value) =>
-                      Promise.resolve(onChangeShowCharacterScreen(value)).catch(
-                        (error) =>
-                          console.error(
-                            'Failed to update character screen setting',
-                            error
-                          )
-                      )
-                    }
-                  />
-                </View>
+            {/* Accessibility */}
+            <SettingsSection title="Accessibility">
+              <SettingsRow
+                icon={<Type size={16} color="#10b981" />}
+                iconBackgroundColor="#a7f3d0"
+                label="Text Size"
+                type="navigation"
+                onPress={() => {
+                  // TODO: Navigate to text size selector
+                  console.log('Navigate to text size selector');
+                }}
+                showBorder={true}
+              />
+              <SettingsRow
+                icon={<Contrast size={16} color="#a855f7" />}
+                iconBackgroundColor="#e9d5ff"
+                label="High Contrast Mode"
+                type="toggle"
+                value={highContrastMode}
+                onToggle={setHighContrastMode}
+                showBorder={true}
+              />
+              <SettingsRow
+                icon={<Zap size={16} color="#ef4444" />}
+                iconBackgroundColor="#fecaca"
+                label="Reduce Motion"
+                type="toggle"
+                value={reduceMotion}
+                onToggle={setReduceMotion}
+                showBorder={false}
+              />
+            </SettingsSection>
 
-                <View className='flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4'>
-                  <View className='flex-1 pr-4'>
-                    <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
-                      Notes & Stats Icon
-                    </Text>
-                    <Text className='text-[11px] text-slate-500'>
-                      Show notes and statistics icon in the navigation bar.
-                    </Text>
-                  </View>
-                  <Switch
-                    accessibilityLabel='Toggle notes and stats'
-                    thumbColor={showNotesStats ? '#101727' : '#ffffff'}
-                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
-                    value={showNotesStats}
-                    onValueChange={(value) =>
-                      Promise.resolve(onChangeShowNotesStats(value)).catch(
-                        (error) =>
-                          console.error(
-                            'Failed to update notes and stats setting',
-                            error
-                          )
-                      )
-                    }
-                  />
-                </View>
+            {/* Notifications */}
+            <SettingsSection title="Notifications">
+              <SettingsRow
+                icon={<Bell size={16} color="#eab308" />}
+                iconBackgroundColor="#fef08a"
+                label="Manage Reminders"
+                type="navigation"
+                onPress={() => {
+                  // TODO: Navigate to reminders management
+                  console.log('Navigate to reminders management');
+                }}
+                showBorder={false}
+              />
+            </SettingsSection>
 
-                <View className='flex-row items-center justify-between rounded-2xl bg-slate-50 px-5 py-4'>
-                  <View className='flex-1 pr-4'>
-                    <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
-                      Habit Strength %
-                    </Text>
-                    <Text className='text-[11px] text-slate-500'>
-                      Display percentage badge showing habit strength level.
-                    </Text>
-                  </View>
-                  <Switch
-                    accessibilityLabel='Toggle habit strength percentage'
-                    thumbColor={
-                      showHabitStrengthPercentage ? '#101727' : '#ffffff'
-                    }
-                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
-                    value={showHabitStrengthPercentage}
-                    onValueChange={(value) =>
-                      Promise.resolve(
-                        onChangeShowHabitStrengthPercentage(value)
-                      ).catch((error) =>
-                        console.error(
-                          'Failed to update habit strength percentage setting',
-                          error
-                        )
-                      )
-                    }
-                  />
-                </View>
+            {/* Support */}
+            <SettingsSection title="Support">
+              <SettingsRow
+                icon={<HelpCircle size={16} color="#6b7280" />}
+                iconBackgroundColor="#e5e7eb"
+                label="Help & FAQ"
+                type="navigation"
+                onPress={() => {
+                  // TODO: Navigate to help & FAQ
+                  console.log('Navigate to help & FAQ');
+                }}
+                showBorder={true}
+              />
+              <SettingsRow
+                icon={<Send size={16} color="#6b7280" />}
+                iconBackgroundColor="#e5e7eb"
+                label="Contact Us"
+                type="navigation"
+                onPress={() => {
+                  // TODO: Navigate to contact form
+                  console.log('Navigate to contact form');
+                }}
+                showBorder={false}
+              />
+            </SettingsSection>
+          </View>
 
-                <TouchableOpacity
-                  accessibilityRole='button'
-                  className='items-center rounded-3xl border border-slate-500 py-4'
-                  onPress={() => setView('archived')}
-                >
-                  <Text className='text-[13px] font-bold tracking-[3px] text-slate-500'>
-                    📦 ARCHIVED HABITS
-                  </Text>
-                </TouchableOpacity>
-
-                {user ? (
-                  <TouchableOpacity
-                    accessibilityRole='button'
-                    className='items-center rounded-3xl border border-red-500 py-4'
-                    onPress={handleSignOut}
-                  >
-                    <Text className='text-[13px] font-bold tracking-[3px] text-red-500'>
-                      SIGN OUT
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View className='items-center rounded-3xl border border-slate-300 bg-slate-50 py-4'>
-                    <Text className='text-[13px] font-bold tracking-[3px] text-slate-400'>
-                      SIGN OUT (UNAVAILABLE)
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </>
-          ) : (
-            <ArchivedHabitsModal
-              onBack={() => setView('settings')}
-              onClose={handleClose}
-            />
-          )}
-        </TouchableOpacity>
-      </TouchableOpacity>
+          {/* Footer */}
+          <View className="items-center pb-8 pt-4">
+            <Text className="text-center text-[14px] leading-[20px] text-[#8a8a8a]">
+              Habit Tracker v1.0.0
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
     </Modal>
   );
 }
