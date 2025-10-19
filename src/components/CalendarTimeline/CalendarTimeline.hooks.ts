@@ -24,7 +24,7 @@ export const useCalendarTimelineLogic = () => {
   };
 
   return {
-    isToday,
     isFuture,
+    isToday,
   };
 };

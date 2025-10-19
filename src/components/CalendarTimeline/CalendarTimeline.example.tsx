@@ -23,7 +23,7 @@ export function BasicTimelineExample() {
 
   return (
     <View className='bg-white'>
-      <CalendarTimeline dates={weekdays} showSeparator={true} />
+      <CalendarTimeline showSeparator dates={weekdays} />
     </View>
   );
 }
@@ -41,13 +41,13 @@ export function InteractiveTimelineExample() {
   return (
     <View className='bg-white'>
       <CalendarTimeline
+        showSeparator
         dates={dates}
         selectedDate={selectedDate}
         onDateSelect={(date) => {
           setSelectedDate(date);
           console.log('Selected date:', format(date, 'MMM d, yyyy'));
         }}
-        showSeparator={true}
       />
 
       {/* Display selected date */}
@@ -70,7 +70,7 @@ export function ExtendedWeekExample() {
 
   return (
     <View className='bg-white'>
-      <CalendarTimeline dates={fullWeek} showSeparator={true} />
+      <CalendarTimeline showSeparator dates={fullWeek} />
     </View>
   );
 }
@@ -90,7 +90,7 @@ export function ScrollingTimelineExample() {
           Next 2 Weeks
         </Text>
       </View>
-      <CalendarTimeline dates={twoWeeks} showSeparator={true} />
+      <CalendarTimeline showSeparator dates={twoWeeks} />
     </View>
   );
 }
@@ -130,16 +130,16 @@ export function TimelineInCardExample() {
           </Text>
           <Text className='mt-1 text-[13px] text-[#6a7282]'>
             {format(weekdays[0], 'MMM d')} -{' '}
-            {format(weekdays[weekdays.length - 1], 'MMM d, yyyy')}
+            {format(weekdays.at(-1), 'MMM d, yyyy')}
           </Text>
         </View>
 
         {/* Timeline */}
         <CalendarTimeline
+          showSeparator
           dates={weekdays}
           selectedDate={selectedDate}
           onDateSelect={setSelectedDate}
-          showSeparator={true}
         />
 
         {/* Content area */}

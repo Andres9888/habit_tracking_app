@@ -15,7 +15,7 @@ export const useDateSelectorLogic = () => {
   };
 
   return {
-    isToday,
     isFuture,
+    isToday,
   };
 };

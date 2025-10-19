@@ -82,20 +82,20 @@ export default function HabitStats() {
 
     // 30-day completion data for line chart
     const completionData = last30Days.map((date) => ({
-      date,
       completed: habitTracking30.some((t) => t.date === date && t.completed),
+      date,
     }));
 
     // 7-day completion data for bar chart
     const weeklyData = last7Days.map((date) => ({
-      date,
       completed: habitTracking7.some((t) => t.date === date && t.completed),
+      date,
     }));
 
     return {
+      completionData,
       currentStreak,
       longestStreak,
-      completionData,
       weeklyData,
     };
   }, [selectedHabitId, tracking30, tracking7, last30Days, last7Days, today]);
@@ -123,8 +123,8 @@ export default function HabitStats() {
         </Text>
         <ScrollView
           horizontal
-          showsHorizontalScrollIndicator={false}
           className='flex-row gap-2'
+          showsHorizontalScrollIndicator={false}
         >
           {habits.map((habit) => (
             <TouchableOpacity
@@ -225,19 +225,19 @@ function WeeklyBarChart({
           return (
             <View key={item.date}>
               <Rect
+                fill={item.completed ? '#48bb78' : '#dde3ed'}
+                height={barHeight}
+                rx={4}
+                width={barWidth}
                 x={x}
                 y={y}
-                width={barWidth}
-                height={barHeight}
-                fill={item.completed ? '#48bb78' : '#dde3ed'}
-                rx={4}
               />
               <SvgText
+                fill='#64748b'
+                fontSize='10'
+                textAnchor='middle'
                 x={x + barWidth / 2}
                 y={chartHeight - 5}
-                fontSize='10'
-                fill='#64748b'
-                textAnchor='middle'
               >
                 {format(new Date(item.date), 'EEE')[0]}
               </SvgText>
@@ -247,7 +247,7 @@ function WeeklyBarChart({
       </Svg>
       <Text className='mt-2 text-xs text-slate-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data[data.length - 1].date), 'MMM d')}
+        {format(new Date(data.at(-1).date), 'MMM d')}
       </Text>
     </View>
   );
@@ -265,9 +265,9 @@ function TrendLineChart({
 
   // Calculate points
   const points = data.map((item, index) => ({
+    completed: item.completed,
     x: (index / (data.length - 1)) * chartWidth,
     y: item.completed ? 20 : chartHeight - 20,
-    completed: item.completed,
   }));
 
   // Create path for line
@@ -283,23 +283,23 @@ function TrendLineChart({
       <Svg height={chartHeight} width={chartWidth}>
         {/* Grid lines */}
         <Line
-          x1='0'
-          y1={chartHeight / 2}
-          x2={chartWidth}
-          y2={chartHeight / 2}
           stroke='#e2e8f0'
-          strokeWidth='1'
           strokeDasharray='4,4'
+          strokeWidth='1'
+          x1='0'
+          x2={chartWidth}
+          y1={chartHeight / 2}
+          y2={chartHeight / 2}
         />
 
         {/* Line path */}
         <Line
-          x1={points[0]?.x ?? 0}
-          y1={points[0]?.y ?? 0}
-          x2={points[points.length - 1]?.x ?? 0}
-          y2={points[points.length - 1]?.y ?? 0}
           stroke='#cbd5e1'
           strokeWidth='1'
+          x1={points[0]?.x ?? 0}
+          x2={points.at(-1)?.x ?? 0}
+          y1={points[0]?.y ?? 0}
+          y2={points.at(-1)?.y ?? 0}
         />
 
         {/* Points */}
@@ -308,30 +308,30 @@ function TrendLineChart({
             key={index}
             cx={point.x}
             cy={point.y}
-            r={pointRadius}
             fill={point.completed ? '#48bb78' : '#dde3ed'}
+            r={pointRadius}
             stroke={point.completed ? '#48bb78' : '#94a3b8'}
             strokeWidth='1.5'
           />
         ))}
 
         {/* Labels */}
-        <SvgText x='0' y='15' fontSize='10' fill='#64748b' textAnchor='start'>
+        <SvgText fill='#64748b' fontSize='10' textAnchor='start' x='0' y='15'>
           ✓
         </SvgText>
         <SvgText
+          fill='#64748b'
+          fontSize='10'
+          textAnchor='start'
           x='0'
           y={chartHeight - 10}
-          fontSize='10'
-          fill='#64748b'
-          textAnchor='start'
         >
           ✗
         </SvgText>
       </Svg>
       <Text className='mt-2 text-xs text-slate-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data[data.length - 1].date), 'MMM d')}
+        {format(new Date(data.at(-1).date), 'MMM d')}
       </Text>
     </View>
   );

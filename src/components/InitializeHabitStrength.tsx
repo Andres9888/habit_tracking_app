@@ -38,20 +38,20 @@ export function InitializeHabitStrength() {
           await recalculate({ habitId: habit._id });
           updated++;
           console.log(`✓ Initialized: ${habit.name}`);
-        } catch (err) {
-          console.error(`✗ Failed: ${habit.name}`, err);
+        } catch (error_) {
+          console.error(`✗ Failed: ${habit.name}`, error_);
           failed++;
         }
       }
 
       setResult({
+        failed,
+        processed: habits.length,
         total: habits.length,
         updated,
-        processed: habits.length,
-        failed,
       });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : 'Unknown error');
     } finally {
       setIsInitializing(false);
     }
@@ -73,17 +73,17 @@ export function InitializeHabitStrength() {
       </Text>
 
       <Text className='mb-3 text-sm text-blue-800'>
-        Found {habits.length} habit{habits.length !== 1 ? 's' : ''}. This will
+        Found {habits.length} habit{habits.length === 1 ? '' : 's'}. This will
         calculate habit strength from your tracking history.
       </Text>
 
       {!result && !error && (
         <Pressable
-          onPress={handleInitialize}
-          disabled={isInitializing}
           className={`rounded-lg px-4 py-3 ${
             isInitializing ? 'bg-blue-300' : 'bg-blue-500'
           }`}
+          disabled={isInitializing}
+          onPress={handleInitialize}
         >
           {isInitializing ? (
             <View className='flex-row items-center justify-center gap-2'>

@@ -262,24 +262,24 @@ export const toggleHabit = mutation({
 
       const snapshot = generateHabitStrengthSnapshot({
         habitCreatedAt: habit.createdAt,
-        tracking: tracking.map((t) => ({
-          date: t.date,
-          completed: t.completed,
-        })),
         throughDate: today,
+        tracking: tracking.map((t) => ({
+          completed: t.completed,
+          date: t.date,
+        })),
       });
 
       console.log('🔧 Habit Strength Update (replay):', {
-        habitName: habit.name,
-        behaviorPerformed: newCompletedStatus,
-        previousStrength: (previousStrength * 100).toFixed(1) + '%',
-        newStrength: (snapshot.strength * 100).toFixed(1) + '%',
-        strengthLevel: snapshot.strengthLevel,
         baseline: (snapshot.baseline * 100).toFixed(1) + '%',
-        compliance: (snapshot.compliance * 100).toFixed(1) + '%',
-        windowDays: snapshot.complianceDaysConsidered,
-        successes: snapshot.complianceSuccesses,
+        behaviorPerformed: newCompletedStatus,
         change: ((snapshot.strength - previousStrength) * 100).toFixed(1) + '%',
+        compliance: (snapshot.compliance * 100).toFixed(1) + '%',
+        habitName: habit.name,
+        newStrength: (snapshot.strength * 100).toFixed(1) + '%',
+        previousStrength: (previousStrength * 100).toFixed(1) + '%',
+        strengthLevel: snapshot.strengthLevel,
+        successes: snapshot.complianceSuccesses,
+        windowDays: snapshot.complianceDaysConsidered,
       });
 
       await ctx.db.patch(args.habitId, {

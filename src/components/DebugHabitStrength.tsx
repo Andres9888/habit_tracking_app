@@ -40,7 +40,11 @@ export function DebugHabitStrength() {
           <View className='mt-2 space-y-1'>
             <Text className='text-sm'>
               <Text className='font-medium'>Strength: </Text>
-              {habit.strength !== undefined ? (
+              {habit.strength === undefined ? (
+                <Text className='text-red-600'>
+                  undefined ⚠️ Schema not deployed
+                </Text>
+              ) : (
                 <Text
                   className={
                     habit.strength === 0 ? 'text-red-600' : 'text-green-600'
@@ -48,10 +52,6 @@ export function DebugHabitStrength() {
                 >
                   {(habit.strength * 100).toFixed(1)}%
                   {habit.strength === 0 && ' ⚠️ Not initialized'}
-                </Text>
-              ) : (
-                <Text className='text-red-600'>
-                  undefined ⚠️ Schema not deployed
                 </Text>
               )}
             </Text>

@@ -15,26 +15,26 @@ export default function CharacterIcon({ size = 36 }: CharacterIconProps) {
   return (
     <View
       style={{
-        width: size,
-        height: size,
         borderRadius: size / 2,
+        elevation: 3,
+        height: size,
         overflow: 'hidden',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3,
+        width: size,
       }}
     >
       <LinearGradient
         colors={['#ad46ff', '#f6339a']}
-        start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
         style={{
-          width: '100%',
-          height: '100%',
           alignItems: 'center',
+          height: '100%',
           justifyContent: 'center',
+          width: '100%',
         }}
       >
         <Text style={{ fontSize: emojiSize, lineHeight: emojiSize + 4 }}>

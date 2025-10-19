@@ -31,18 +31,18 @@ export function ForceUpdateButton({
     try {
       const today = new Date().toISOString().split('T')[0];
       const response = await updateStrength({
-        habitId,
-        date: today,
         behaviorPerformed: true,
+        date: today,
+        habitId,
       });
 
       setResult(
         `✅ ${response.previousStrength.toFixed(3)} → ${response.newStrength.toFixed(3)}`
       );
       console.log('Force update result:', response);
-    } catch (err) {
-      setResult(`❌ Error: ${err}`);
-      console.error('Force update error:', err);
+    } catch (error) {
+      setResult(`❌ Error: ${error}`);
+      console.error('Force update error:', error);
     } finally {
       setLoading(false);
     }
@@ -51,11 +51,11 @@ export function ForceUpdateButton({
   return (
     <View className='mt-2 gap-2'>
       <Pressable
-        onPress={handleClick}
-        disabled={loading}
         className={`rounded-lg px-4 py-2 ${
           loading ? 'bg-gray-400' : 'bg-green-600'
         }`}
+        disabled={loading}
+        onPress={handleClick}
       >
         {loading ? (
           <View className='flex-row items-center justify-center gap-2'>

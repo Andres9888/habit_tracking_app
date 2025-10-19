@@ -47,8 +47,8 @@ export const useDraggableHabitLogic = (habit: Habit) => {
   const accentColor = pickAccentColor(name || habit.name);
 
   return {
+    accentColor,
     emoji,
     name,
-    accentColor,
   };
 };

@@ -19,18 +19,18 @@ interface CreateHabitModalProps {
 
 const QUICK_TEMPLATES = [
   {
+    description: 'Start your day with mindfulness',
     emoji: '🧘',
     name: 'Morning Meditation',
-    description: 'Start your day with mindfulness',
   },
-  { emoji: '📚', name: 'Daily Reading', description: 'Read for 30 minutes' },
-  { emoji: '💪', name: 'Exercise', description: 'Work out regularly' },
-  { emoji: '💧', name: 'Drink Water', description: 'Stay hydrated' },
-  { emoji: '✍️', name: 'Journaling', description: 'Reflect on your day' },
+  { description: 'Read for 30 minutes', emoji: '📚', name: 'Daily Reading' },
+  { description: 'Work out regularly', emoji: '💪', name: 'Exercise' },
+  { description: 'Stay hydrated', emoji: '💧', name: 'Drink Water' },
+  { description: 'Reflect on your day', emoji: '✍️', name: 'Journaling' },
   {
+    description: 'Continuous learning',
     emoji: '🧠',
     name: 'Learn Something New',
-    description: 'Continuous learning',
   },
 ];
 
@@ -119,10 +119,10 @@ export default function CreateHabitModal({
         <View className='mt-12 flex-1 overflow-hidden rounded-t-3xl bg-white shadow-2xl'>
           {/* Header with gradient */}
           <LinearGradient
-            colors={['#f472b6', '#a855f7']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='px-6 pb-4 pt-12'
+            colors={['#f472b6', '#a855f7']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           >
             <View className='flex-row items-center justify-between'>
               <View className='flex-row items-center gap-3'>
@@ -234,10 +234,10 @@ export default function CreateHabitModal({
               </View>
               <TextInput
                 className='rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-normal text-slate-900'
+                maxLength={maxChars}
                 placeholder='e.g., Morning meditation'
                 placeholderTextColor='#71717a'
                 value={habitName}
-                maxLength={maxChars}
                 onChangeText={setHabitName}
               />
               <Text className='mt-2 text-xs text-slate-500'>

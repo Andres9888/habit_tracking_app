@@ -35,12 +35,12 @@ describe('Habit Archive Mutations', () => {
 
     it('validates archived habit schema fields', () => {
       const archivedHabit = {
-        _id: 'test_id',
         _creationTime: Date.now(),
-        name: 'Test Habit',
-        createdAt: Date.now(),
+        _id: 'test_id',
         archived: true,
         archivedAt: Date.now(),
+        createdAt: Date.now(),
+        name: 'Test Habit',
         strength: 0.5,
         strengthLevel: 'building',
       };
@@ -121,8 +121,8 @@ describe('Habit Tracking Mutations', () => {
   describe('toggleHabit mutation contract', () => {
     it('requires habitId and date parameters', () => {
       const validArgs = {
-        habitId: 'test_id',
         date: '2025-01-15',
+        habitId: 'test_id',
       };
 
       expect(validArgs).toHaveProperty('habitId');
@@ -155,9 +155,9 @@ describe('Habit Tracking Mutations', () => {
 
     it('should create tracking entry if none exists', () => {
       const newEntry = {
-        habitId: 'test_id',
-        date: '2025-01-15',
         completed: true,
+        date: '2025-01-15',
+        habitId: 'test_id',
       };
 
       expect(newEntry).toHaveProperty('habitId');
@@ -213,9 +213,10 @@ describe('Habit Tracking Mutations', () => {
 
     it('should use habit-specific decay and gain parameters if set', () => {
       const habitWithCustomParams = {
-        strength: 0.5,
-        habitDecayParam: 0.2, // Custom HDP
-        habitGainParam: 0.18, // Custom HGP
+        habitDecayParam: 0.2,
+        // Custom HDP
+habitGainParam: 0.18, 
+        strength: 0.5, // Custom HGP
       };
 
       expect(habitWithCustomParams.habitDecayParam).toBeDefined();
@@ -265,8 +266,8 @@ describe('Habit Creation Mutations', () => {
 
     it('should initialize with default strength values', () => {
       const newHabit = {
-        name: 'New Habit',
         createdAt: Date.now(),
+        name: 'New Habit',
         // Strength fields should be undefined initially (calculated on first toggle)
         strength: undefined,
         strengthLevel: undefined,
@@ -312,9 +313,9 @@ describe('Habit Query Filters', () => {
   describe('list query contract', () => {
     it('should exclude archived habits', () => {
       const mockHabits = [
-        { _id: '1', name: 'Active', archived: false },
-        { _id: '2', name: 'Archived', archived: true },
-        { _id: '3', name: 'Also Active', archived: undefined },
+        { _id: '1', archived: false, name: 'Active' },
+        { _id: '2', archived: true, name: 'Archived' },
+        { _id: '3', archived: undefined, name: 'Also Active' },
       ];
 
       // Filter logic: filter((q) => q.neq(q.field("archived"), true))
@@ -326,8 +327,8 @@ describe('Habit Query Filters', () => {
 
     it('should return habits with all strength fields', () => {
       const mockHabit = {
-        _id: 'test_id',
         _creationTime: Date.now(),
+        _id: 'test_id',
         createdAt: Date.now(),
         name: 'Test',
         strength: 0.7,
@@ -344,9 +345,9 @@ describe('Habit Query Filters', () => {
   describe('listArchived query contract', () => {
     it('should only include archived habits', () => {
       const mockHabits = [
-        { _id: '1', name: 'Active', archived: false },
-        { _id: '2', name: 'Archived', archived: true },
-        { _id: '3', name: 'Also Archived', archived: true },
+        { _id: '1', archived: false, name: 'Active' },
+        { _id: '2', archived: true, name: 'Archived' },
+        { _id: '3', archived: true, name: 'Also Archived' },
       ];
 
       // Filter logic: filter((q) => q.eq(q.field("archived"), true))
@@ -359,9 +360,9 @@ describe('Habit Query Filters', () => {
     it('should include archivedAt timestamp', () => {
       const archivedHabit = {
         _id: 'test_id',
-        name: 'Archived',
         archived: true,
         archivedAt: Date.now(),
+        name: 'Archived',
       };
 
       expect(archivedHabit.archivedAt).toBeDefined();
@@ -390,9 +391,9 @@ describe('Habit Query Filters', () => {
     it('should filter tracking by date range', () => {
       const requestedDates = ['2025-01-01', '2025-01-02', '2025-01-03'];
       const mockTracking = [
-        { date: '2025-01-01', habitId: '1', completed: true },
-        { date: '2025-01-02', habitId: '1', completed: false },
-        { date: '2025-01-04', habitId: '1', completed: true }, // Outside range
+        { completed: true, date: '2025-01-01', habitId: '1' },
+        { completed: false, date: '2025-01-02', habitId: '1' },
+        { completed: true, date: '2025-01-04', habitId: '1' }, // Outside range
       ];
 
       const dateSet = new Set(requestedDates);
@@ -416,8 +417,8 @@ describe('Habit Query Filters', () => {
 
     it('should return streak and consistency', () => {
       const mockStats = {
-        streak: 7,
         consistency: 85,
+        streak: 7,
       };
 
       expect(mockStats).toHaveProperty('streak');
@@ -494,11 +495,11 @@ describe('Schema Validation', () => {
 
   it('validates tracking entry schema', () => {
     const trackingEntry = {
-      _id: 'tracking_id',
       _creationTime: Date.now(),
-      habitId: 'habit_id',
-      date: '2025-01-15',
+      _id: 'tracking_id',
       completed: true,
+      date: '2025-01-15',
+      habitId: 'habit_id',
       userId: 'user_123',
     };
 

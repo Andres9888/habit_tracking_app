@@ -23,8 +23,8 @@ export const useHabitChainVisualizerLogic = (
   };
 
   return {
-    isFutureDate,
     isCompleted,
+    isFutureDate,
     isToday,
   };
 };

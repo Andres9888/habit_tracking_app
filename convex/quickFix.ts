@@ -27,9 +27,9 @@ export const testDisplay = mutation({
     console.log('✅ Done! Check your app - the first habit should show 50%');
 
     return {
-      success: true,
       habitName: habit.name,
       message: 'Refresh your app - first habit should show 50%',
+      success: true,
     };
   },
 });
@@ -45,14 +45,14 @@ export const checkToggle = query({
 
     return {
       habitName: habit.name,
-      strength: habit.strength,
-      strengthPercent: habit.strength
-        ? `${(habit.strength * 100).toFixed(1)}%`
-        : 'not set',
-      strengthLevel: habit.strengthLevel || 'not set',
       lastUpdated: habit.strengthUpdatedAt
         ? new Date(habit.strengthUpdatedAt).toLocaleString()
         : 'never',
+      strength: habit.strength,
+      strengthLevel: habit.strengthLevel || 'not set',
+      strengthPercent: habit.strength
+        ? `${(habit.strength * 100).toFixed(1)}%`
+        : 'not set',
     };
   },
 });

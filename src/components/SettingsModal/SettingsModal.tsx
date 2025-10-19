@@ -87,14 +87,14 @@ export default function SettingsModal({
                   </View>
                   <Switch
                     accessibilityLabel='Toggle compact mode'
+                    thumbColor={isCompact ? '#101727' : '#ffffff'}
+                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
                     value={isCompact}
                     onValueChange={(value) =>
                       Promise.resolve(onChangeCompact(value)).catch((error) =>
                         console.error('Failed to update compact mode', error)
                       )
                     }
-                    thumbColor={isCompact ? '#101727' : '#ffffff'}
-                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
                   />
                 </View>
 
@@ -109,6 +109,8 @@ export default function SettingsModal({
                   </View>
                   <Switch
                     accessibilityLabel='Toggle character screen'
+                    thumbColor={showCharacterScreen ? '#101727' : '#ffffff'}
+                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
                     value={showCharacterScreen}
                     onValueChange={(value) =>
                       Promise.resolve(onChangeShowCharacterScreen(value)).catch(
@@ -119,8 +121,6 @@ export default function SettingsModal({
                           )
                       )
                     }
-                    thumbColor={showCharacterScreen ? '#101727' : '#ffffff'}
-                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
                   />
                 </View>
 
@@ -135,6 +135,8 @@ export default function SettingsModal({
                   </View>
                   <Switch
                     accessibilityLabel='Toggle notes and stats'
+                    thumbColor={showNotesStats ? '#101727' : '#ffffff'}
+                    trackColor={{ false: '#cbd5f5', true: '#101727' }}
                     value={showNotesStats}
                     onValueChange={(value) =>
                       Promise.resolve(onChangeShowNotesStats(value)).catch(

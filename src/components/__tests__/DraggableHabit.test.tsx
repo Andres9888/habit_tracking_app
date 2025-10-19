@@ -5,10 +5,10 @@ import type { Id } from '../../../convex/_generated/dataModel';
 
 const buildHabit = (overrides: Partial<Record<string, unknown>> = {}) =>
   ({
-    _id: 'habit_1' as Id<'habits'>,
-    name: '✅ Daily Reflection',
-    createdAt: Date.now(),
     _creationTime: Date.now(),
+    _id: 'habit_1' as Id<'habits'>,
+    createdAt: Date.now(),
+    name: '✅ Daily Reflection',
     ...overrides,
   }) as const;
 
@@ -32,11 +32,11 @@ describe('DraggableHabit compact mode', () => {
     const { toJSON } = render(
       <DraggableHabit
         habit={buildHabit()}
+        isCompactMode={false}
+        streak={0}
+        toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
         weekStatus={weekStatus}
-        streak={0}
-        isCompactMode={false}
-        toggleHabit={jest.fn()}
       />
     );
 
@@ -54,12 +54,12 @@ describe('DraggableHabit compact mode', () => {
   it('maintains consistent padding structure', () => {
     const { toJSON } = render(
       <DraggableHabit
+        isCompactMode
         habit={buildHabit()}
+        streak={0}
+        toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
         weekStatus={weekStatus}
-        streak={0}
-        isCompactMode
-        toggleHabit={jest.fn()}
       />
     );
 
@@ -80,10 +80,10 @@ describe('DraggableHabit swipe to archive', () => {
     const { toJSON } = render(
       <DraggableHabit
         habit={buildHabit()}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={0}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
       />
     );
 
@@ -101,10 +101,10 @@ describe('DraggableHabit swipe to archive', () => {
     const { UNSAFE_getByType } = render(
       <DraggableHabit
         habit={buildHabit()}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={0}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
         onArchive={mockOnArchive}
       />
     );
@@ -123,10 +123,10 @@ describe('DraggableHabit swipe to archive', () => {
     const { UNSAFE_getByType } = render(
       <DraggableHabit
         habit={habit}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={0}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
         onArchive={mockOnArchive}
       />
     );
@@ -152,10 +152,10 @@ describe('DraggableHabit swipe to archive', () => {
     const { UNSAFE_getByType } = render(
       <DraggableHabit
         habit={buildHabit()}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={0}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
         onArchive={mockOnArchive}
       />
     );
@@ -177,10 +177,10 @@ describe('DraggableHabit swipe to archive', () => {
     const { UNSAFE_getByType } = render(
       <DraggableHabit
         habit={buildHabit()}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={0}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
         onArchive={mockOnArchive}
       />
     );
@@ -209,10 +209,10 @@ describe('DraggableHabit swipe to archive', () => {
     render(
       <DraggableHabit
         habit={buildHabit()}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={0}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
         onArchive={mockOnArchive}
       />
     );
@@ -231,10 +231,10 @@ describe('DraggableHabit swipe to archive', () => {
     const { toJSON } = render(
       <DraggableHabit
         habit={habitWithStrength}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
         streak={5}
         toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
         onArchive={mockOnArchive}
       />
     );
