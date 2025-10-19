@@ -9,7 +9,7 @@ import {
   useQuery,
 } from 'convex/react';
 import { addDays, format } from 'date-fns';
-import { Plus, Settings } from 'lucide-react-native';
+import { Plus, Settings, Search, Bell, Wifi } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import {

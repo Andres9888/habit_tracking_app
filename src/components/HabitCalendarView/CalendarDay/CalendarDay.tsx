@@ -28,19 +28,33 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
       disabled={isFuture}
       onPress={() => !isFuture && onPress()}
     >
-      <View className='flex-1 w-full items-center justify-center gap-1 border border-slate-200 rounded-lg'>
-        <Text
+      <View className='flex-1 w-full items-center justify-center gap-0.5'>
+        {/* Date Number with Current Day Indicator */}
+        <View
           className={clsx(
-            'text-base font-normal text-slate-700',
-            status === 'done' && 'font-bold text-emerald-600',
-            status === 'missed' && 'text-slate-400',
-            isFuture && 'text-slate-300'
+            'items-center justify-center rounded-full',
+            isCurrentDay && 'h-8 w-8 bg-slate-900'
           )}
         >
-          {format(date, 'd')}
-        </Text>
+          <Text
+            className={clsx(
+              'text-base font-semibold',
+              isCurrentDay
+                ? 'text-white'
+                : status === 'done'
+                  ? 'text-slate-900'
+                  : isFuture
+                    ? 'text-slate-300'
+                    : 'text-slate-900'
+            )}
+          >
+            {format(date, 'd')}
+          </Text>
+        </View>
+
+        {/* Completion Dot */}
         {status === 'done' && (
-          <View className='h-1.5 w-1.5 rounded-full bg-emerald-600' />
+          <View className='mt-0.5 h-1 w-1 rounded-full bg-blue-500' />
         )}
       </View>
     </Pressable>

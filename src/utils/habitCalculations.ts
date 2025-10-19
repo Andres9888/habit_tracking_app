@@ -1,0 +1,88 @@
+import { format, parseISO, differenceInDays } from 'date-fns';
+
+interface TrackingEntry {
+  date: string;
+  completed: boolean;
+}
+
+/**
+ * Calculate the all-time best streak for a habit
+ * Returns the longest consecutive sequence of completed days in the entire history
+ */
+export function calculateBestStreak(tracking: TrackingEntry[]): number {
+  if (tracking.length === 0) return 0;
+
+  const completedDates = tracking
+    .filter((t) => t.completed)
+    .map((t) => parseISO(t.date).getTime())
+    .sort((a, b) => a - b); // Sort ascending
+
+  if (completedDates.length === 0) return 0;
+
+  let maxStreak = 1;
+  let currentStreak = 1;
+
+  for (let i = 1; i < completedDates.length; i++) {
+    const prevDate = new Date(completedDates[i - 1]);
+    const currDate = new Date(completedDates[i]);
+
+    prevDate.setHours(0, 0, 0, 0);
+    currDate.setHours(0, 0, 0, 0);
+
+    const daysDiff = differenceInDays(currDate, prevDate);
+
+    if (daysDiff === 1) {
+      // Consecutive day
+      currentStreak++;
+      maxStreak = Math.max(maxStreak, currentStreak);
+    } else if (daysDiff > 1) {
+      // Gap in tracking, reset streak
+      currentStreak = 1;
+    }
+    // If daysDiff === 0 (same day), keep current streak (shouldn't happen with unique dates)
+  }
+
+  return maxStreak;
+}
+
+/**
+ * Calculate completion percentage for a habit
+ * Percentage of days completed since habit creation until today
+ */
+export function calculateCompletionPercentage(
+  habitCreatedAt: number,
+  tracking: TrackingEntry[]
+): number {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const createdDate = new Date(habitCreatedAt);
+  createdDate.setHours(0, 0, 0, 0);
+
+  // Calculate total days from creation to today (inclusive)
+  const totalDays = differenceInDays(today, createdDate) + 1;
+
+  if (totalDays <= 0) return 0;
+
+  // Count completed days
+  const completedDays = tracking.filter((t) => t.completed).length;
+
+  // Calculate percentage
+  const percentage = (completedDays / totalDays) * 100;
+
+  return Math.round(percentage);
+}
+
+/**
+ * Format activity log date in "Sunday, October 19" format
+ */
+export function formatActivityDate(date: string): string {
+  return format(parseISO(date), 'EEEE, MMMM d');
+}
+
+/**
+ * Format activity log time in "7:03 AM" format
+ */
+export function formatActivityTime(timestamp: number): string {
+  return format(new Date(timestamp), 'h:mm a');
+}

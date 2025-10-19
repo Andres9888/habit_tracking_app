@@ -1,9 +1,14 @@
-import { X, Flame, Edit2, Settings } from 'lucide-react-native';
-import { Modal, View, Text, Pressable, ScrollView } from 'react-native';
+import { X } from 'lucide-react-native';
+import { Modal, View, Pressable, ScrollView } from 'react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import HabitCalendarView from './HabitCalendarView';
 import { getEmojiAndName } from './DraggableHabit/DraggableHabit.hooks';
-import HeatmapCalendar from './HabitCalendarModal/HeatmapCalendar';
+import { StatsCard } from './HabitCalendarModal/StatsCard';
+import { ActivityLog } from './HabitCalendarModal/ActivityLog';
+import {
+  calculateBestStreak,
+  calculateCompletionPercentage,
+} from '../utils/habitCalculations';
 
 interface Habit {
   _id: Id<'habits'>;
@@ -18,7 +23,12 @@ interface HabitCalendarModalProps {
   onClose: () => void;
   habit: Habit | null;
   streak: number;
-  tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
+  tracking: Array<{
+    _creationTime: number;
+    habitId: Id<'habits'>;
+    date: string;
+    completed: boolean;
+  }>;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
 }
 
@@ -33,6 +43,20 @@ export default function HabitCalendarModal({
   if (!habit) return null;
 
   const { emoji, name } = getEmojiAndName(habit.name);
+
+  // Calculate stats
+  const habitTracking = tracking
+    .filter((t) => t.habitId === habit._id)
+    .map((t) => ({ date: t.date, completed: t.completed }));
+
+  const bestStreak = calculateBestStreak(habitTracking);
+  const completionPercentage = calculateCompletionPercentage(
+    habit.createdAt || Date.now(),
+    habitTracking
+  );
+
+  // Filter tracking for activity log
+  const activityTracking = tracking.filter((t) => t.habitId === habit._id);
 
   return (
     <Modal
@@ -50,68 +74,45 @@ export default function HabitCalendarModal({
           </View>
 
           {/* Header */}
-          <View className='border-b border-slate-100 px-6 pb-4'>
+          <View className='border-b border-slate-100 px-4 pb-4'>
             <View className='flex-row items-start justify-between'>
-              <View className='flex-1 flex-row items-start gap-3'>
-                {emoji && (
-                  <View className='h-14 w-14 items-center justify-center rounded-2xl bg-orange-100'>
-                    <Text className='text-3xl'>{emoji}</Text>
-                  </View>
-                )}
-                <View className='flex-1'>
-                  <Text className='text-lg font-bold text-slate-900'>
-                    {name}
-                  </Text>
-                  {habit.notes && (
-                    <Text className='mt-0.5 text-sm text-slate-500'>
-                      {habit.notes}
-                    </Text>
-                  )}
-                </View>
+              <View className='flex-1'>
+                <View />
               </View>
               <Pressable
-                className='ml-2 h-8 w-8 items-center justify-center'
+                className='h-10 w-10 items-center justify-center'
                 onPress={onClose}
               >
-                <X color='#64748b' size={20} />
+                <X color='#64748b' size={24} />
               </Pressable>
             </View>
           </View>
 
-          <ScrollView className='px-6' showsVerticalScrollIndicator={false}>
-            {/* Heatmap Calendar */}
-            <View className='mb-5 mt-5'>
-              <HeatmapCalendar habitId={habit._id} tracking={tracking} />
-            </View>
-
-            {/* Streak Goal Section */}
-            <View className='mb-5 flex-row items-center justify-between'>
-              <Text className='text-base font-semibold text-slate-700'>
-                Streak Goal
-              </Text>
-              <View className='flex-row items-center gap-3'>
-                <View className='flex-row items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5'>
-                  <Flame color='#f97316' size={16} fill='#f97316' />
-                  <Text className='text-base font-bold text-slate-900'>
-                    {streak}
-                  </Text>
-                </View>
-                <Pressable className='h-8 w-8 items-center justify-center'>
-                  <Edit2 color='#64748b' size={18} />
-                </Pressable>
-                <Pressable className='h-8 w-8 items-center justify-center'>
-                  <Settings color='#64748b' size={18} />
-                </Pressable>
-              </View>
+          <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
+            {/* Stats Card */}
+            <View className='mt-5'>
+              <StatsCard
+                habitName={habit.name}
+                habitNotes={habit.notes}
+                emoji={emoji}
+                currentStreak={streak}
+                bestStreak={bestStreak}
+                completionPercentage={completionPercentage}
+              />
             </View>
 
             {/* Monthly Calendar */}
-            <View className='pb-6'>
+            <View className='mt-6'>
               <HabitCalendarView
                 habitId={habit._id}
                 toggleHabit={toggleHabit}
                 tracking={tracking}
               />
+            </View>
+
+            {/* Activity Log */}
+            <View className='pb-6'>
+              <ActivityLog tracking={activityTracking} />
             </View>
           </ScrollView>
         </View>
