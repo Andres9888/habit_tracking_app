@@ -41,6 +41,7 @@ interface DraggableHabitProps {
   weekStatus: HabitStatus[];
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: (habit: Habit) => void;
+  onPress?: (habit: Habit) => void;
 }
 
 export default function DraggableHabit({
@@ -53,6 +54,7 @@ export default function DraggableHabit({
   weekStatus,
   onArchive,
   onLongPress,
+  onPress,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
@@ -120,7 +122,10 @@ export default function DraggableHabit({
   }, [habit.strength, gradientHeight]);
 
   const habitCard = (
-    <Pressable onLongPress={() => onLongPress?.(habit)}>
+    <Pressable
+      onPress={() => onPress?.(habit)}
+      onLongPress={() => onLongPress?.(habit)}
+    >
       <Animated.View
         className='overflow-hidden rounded-2xl bg-white'
         style={{

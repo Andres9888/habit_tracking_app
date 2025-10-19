@@ -219,6 +219,11 @@ function HabitsApp() {
     setIsHabitCalendarOpen(true);
   }, []);
 
+  const handleHabitPress = useCallback((habit: any) => {
+    setSelectedHabit(habit);
+    setIsHabitCalendarOpen(true);
+  }, []);
+
   if (showCharacterScreen) {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
@@ -301,6 +306,7 @@ function HabitsApp() {
                     weekStatus={weekStatus}
                     onArchive={handleArchive}
                     onLongPress={handleHabitLongPress}
+                    onPress={handleHabitPress}
                   />
                 );
               })}
