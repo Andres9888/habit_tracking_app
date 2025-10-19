@@ -208,11 +208,56 @@ function HabitsApp() {
     setIsHabitCalendarOpen(true);
   }, []);
 
+  // Memoize content container style to prevent re-renders on iOS
+  const contentContainerStyle = useMemo(
+    () => ({
+      paddingHorizontal: 24,
+      paddingTop: 48,
+      paddingBottom: 96,
+    }),
+    []
+  );
+
+  // Memoize render item for better iOS performance
+  const renderItem = useCallback(
+    ({ item, drag, isActive }: RenderItemParams<any>) => {
+      const weekStatus = weekDateStrings.map((ds) =>
+        getHabitStatus(item._id, ds)
+      );
+      const streak = getStreak(item._id);
+      return (
+        <ScaleDecorator>
+          <View className='mb-4' style={{ opacity: isActive ? 0.7 : 1 }}>
+            <DraggableHabit
+              habit={item}
+              showHabitStrengthPercentage={showHabitStrengthPercentage}
+              streak={streak}
+              toggleHabit={toggleHabit}
+              weekDateStrings={weekDateStrings}
+              weekStatus={weekStatus}
+              onArchive={handleArchive}
+              onLongPress={drag}
+              onPress={handleHabitPress}
+            />
+          </View>
+        </ScaleDecorator>
+      );
+    },
+    [
+      getStreak,
+      handleArchive,
+      handleHabitPress,
+      showHabitStrengthPercentage,
+      toggleHabit,
+      weekDateStrings,
+    ]
+  );
+
   if (showCharacterScreen) {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
 
-  const renderHeader = () => (
+  const renderHeader = useCallback(() => (
     <View className='gap-4'>
       <View className='mt-3 flex-row items-center justify-between'>
         <Pressable
@@ -267,7 +312,15 @@ function HabitsApp() {
         onPreviousWeek={handlePreviousWeek}
       />
     </View>
-  );
+  ), [
+    canNavigateForward,
+    handleNextWeek,
+    handlePreviousWeek,
+    handleToggleForm,
+    settings?.showCharacterScreen,
+    settings?.showNotesStats,
+    weekDates,
+  ]);
 
   return (
     <GestureHandlerRootView className='flex-1'>
@@ -276,40 +329,12 @@ function HabitsApp() {
           <DraggableFlatList
             data={habits}
             keyExtractor={(item: any) => item._id}
-            renderItem={({ item, drag, isActive }: RenderItemParams<any>) => {
-              const weekStatus = weekDateStrings.map((ds) =>
-                getHabitStatus(item._id, ds)
-              );
-              const streak = getStreak(item._id);
-              return (
-                <ScaleDecorator>
-                  <View
-                    className='mb-4'
-                    style={{ opacity: isActive ? 0.7 : 1 }}
-                  >
-                    <DraggableHabit
-                      habit={item}
-                      showHabitStrengthPercentage={showHabitStrengthPercentage}
-                      streak={streak}
-                      toggleHabit={toggleHabit}
-                      weekDateStrings={weekDateStrings}
-                      weekStatus={weekStatus}
-                      onArchive={handleArchive}
-                      onLongPress={drag}
-                      onPress={handleHabitPress}
-                    />
-                  </View>
-                </ScaleDecorator>
-              );
-            }}
+            renderItem={renderItem}
             onDragEnd={handleDragEnd}
             ListHeaderComponent={renderHeader}
-            contentContainerStyle={{
-              paddingHorizontal: 24,
-              paddingTop: 48,
-              paddingBottom: 96,
-            }}
+            contentContainerStyle={contentContainerStyle}
             showsVerticalScrollIndicator={false}
+            activationDistance={10}
           />
         </View>
         <WebToaster />
