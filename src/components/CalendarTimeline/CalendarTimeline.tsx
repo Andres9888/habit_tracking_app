@@ -37,7 +37,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   return (
-    <View className='flex-col gap-6 px-6 py-4'>
+    <View className='flex-col gap-6 px-5 py-4'>
       {/* Week Navigation Header */}
       <View className='flex-row items-center justify-between px-0'>
         <Pressable
@@ -66,7 +66,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       </View>
 
       {/* Days Row */}
-      <View className='flex-row justify-between gap-1'>
+      <View className='flex-row items-center justify-between'>
         {dates.map((date, index) => {
           const weekday = format(date, 'EEE'); // Mon, Tue, Wed, etc.
           const dayNumber = format(date, 'd'); // 13, 14, 15, etc.
@@ -83,7 +83,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               key={`timeline-day-${index}`}
               accessibilityLabel={accessibilityLabel}
               accessibilityRole='text'
-              className='flex-1 items-center gap-2'
+              className='w-12 items-center gap-2'
             >
               {/* Weekday label */}
               <Text className='text-center text-[12px] font-normal leading-[16px] text-[#6a7282]'>
