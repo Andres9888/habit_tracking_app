@@ -46,7 +46,7 @@ interface DraggableHabitProps {
 export default function DraggableHabit({
   habit,
   isCompactMode: _isCompactMode = false,
-  showHabitStrengthPercentage = true,
+  showHabitStrengthPercentage = false,
   streak,
   toggleHabit,
   weekDateStrings,
