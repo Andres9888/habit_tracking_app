@@ -46,7 +46,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           className='h-10 w-7 items-center justify-center rounded-full'
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color='#1a1a1a' size={12} strokeWidth={2} />
+          <ChevronLeft color='#1a1a1a' size={20} strokeWidth={2} />
         </Pressable>
 
         <Text className='text-[18px] font-semibold leading-[28px] text-[#1a1a1a]'>
@@ -61,7 +61,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
-          <ChevronRight color='#1a1a1a' size={12} strokeWidth={2} />
+          <ChevronRight color='#1a1a1a' size={20} strokeWidth={2} />
         </Pressable>
       </View>
 
