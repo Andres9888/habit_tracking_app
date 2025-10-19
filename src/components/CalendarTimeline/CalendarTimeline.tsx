@@ -37,19 +37,19 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   return (
-    <View className='flex-col gap-4 px-6 py-4'>
+    <View className='flex-col gap-6 px-6 py-4'>
       {/* Week Navigation Header */}
       <View className='flex-row items-center justify-between px-0'>
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]'
+          className='h-10 w-10 items-center justify-center'
           onPress={onPreviousWeek}
         >
           <ChevronLeft color='#101727' size={16} strokeWidth={2.25} />
         </Pressable>
 
-        <Text className='text-[14px] leading-5 tracking-[-0.15px] text-[#4a5565]'>
+        <Text className='text-[16px] leading-6 tracking-[-0.3125px] text-[#4a5565]'>
           {dateRangeText}
         </Text>
 
@@ -57,7 +57,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] ${canNavigateForward ? '' : 'opacity-40'}`}
+          className={`h-10 w-10 items-center justify-center ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
@@ -90,15 +90,32 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                 {weekday}
               </Text>
 
-              {/* Date number with circular highlight for today */}
+              {/* Date number with rounded box and shadow */}
               <View
-                className={`h-12 w-12 items-center justify-center rounded-full ${
-                  isCurrentDay ? 'bg-[#101727]' : 'bg-transparent'
+                className={`h-12 w-12 items-center justify-center rounded-2xl ${
+                  isCurrentDay ? 'bg-[#101828]' : 'bg-white'
                 } ${isUpcoming && !isCurrentDay ? 'opacity-50' : ''}`}
+                style={
+                  isCurrentDay
+                    ? {
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 10 },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 15,
+                        elevation: 8,
+                      }
+                    : {
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 1 },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 3,
+                        elevation: 2,
+                      }
+                }
               >
                 <Text
                   className={`text-center text-[16px] font-normal leading-[24px] tracking-[-0.3125px] ${
-                    isCurrentDay ? 'text-white' : 'text-[#4a5565]'
+                    isCurrentDay ? 'text-white' : 'text-[#101828]'
                   }`}
                 >
                   {dayNumber}
