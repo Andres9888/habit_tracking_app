@@ -9,19 +9,15 @@ import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
-  accentColor: string;
   visible: boolean;
 }
 
 /**
  * DayConnector - Visual link between consecutive completed days
- * Shows a horizontal bar when both adjacent days are completed,
+ * Shows a horizontal gray line when both adjacent days are completed,
  * creating a visual "chain" effect for habit tracking.
  */
-const DayConnector: React.FC<DayConnectorProps> = ({
-  accentColor,
-  visible,
-}) => {
+const DayConnector: React.FC<DayConnectorProps> = ({ visible }) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
   useEffect(() => {
@@ -36,11 +32,10 @@ const DayConnector: React.FC<DayConnectorProps> = ({
   return (
     <Animated.View
       style={{
-        backgroundColor: accentColor,
-        borderRadius: 2,
-        height: 4,
+        backgroundColor: '#e0e0e0',
+        height: 1,
         opacity,
-        width: 12,
+        width: 10,
       }}
     />
   );
