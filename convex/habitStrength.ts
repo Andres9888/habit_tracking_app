@@ -15,7 +15,7 @@ import { mutation, query } from './_generated/server';
 // Legacy Klein-model constants kept for compatibility with older tooling/tests.
 export const DEFAULT_HABIT_DECAY_PARAM = 0.02; // HDP: Adjusted for higher equilibrium (~88%)
 export const DEFAULT_HABIT_GAIN_PARAM = 0.15; // HGP: Empirically validated optimal range 0.1-0.2
-export const CONTEXT_CONSISTENCY = 1.0; // Cuet: Simplified to 1.0 (same context assumed)
+export const CONTEXT_CONSISTENCY = 1; // Cuet: Simplified to 1.0 (same context assumed)
 
 // Memory Accessibility Parameters (Tobias, 2009; Zhang et al., 2021)
 const DEFAULT_ACCESSIBILITY_DECAY_PARAM = 0.3; // ADP: Memory decay rate
@@ -54,8 +54,8 @@ export interface HabitStrengthSnapshot {
 }
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
-const LOGISTIC_SLOPE = 0.07061188221043205; // Calibrated for ~22% at day 7
-const LOGISTIC_MIDPOINT = 24.924269028255548;
+const LOGISTIC_SLOPE = 0.070_611_882_210_432_05; // Calibrated for ~22% at day 7
+const LOGISTIC_MIDPOINT = 24.924_269_028_255_548;
 const LOGISTIC_TARGET_DAY = 90;
 const COMPLIANCE_WINDOW_DAYS = 30;
 const COMPLIANCE_PRIOR_ALPHA = 1;
@@ -122,7 +122,7 @@ function computeCompliance({
     -(COMPLIANCE_WINDOW_DAYS - 1)
   );
   const startDate =
-    windowStartCandidate < creationDate ? creationDate : windowStartCandidate;
+    Math.max(windowStartCandidate, creationDate);
 
   let successes = 0;
   let daysConsidered = 0;
@@ -145,16 +145,16 @@ function computeCompliance({
       compliance:
         COMPLIANCE_PRIOR_ALPHA /
         (COMPLIANCE_PRIOR_ALPHA + COMPLIANCE_PRIOR_BETA),
-      successes: 0,
       daysConsidered: 0,
+      successes: 0,
     };
   }
 
   if (successes === daysConsidered) {
     return {
       compliance: 1,
-      successes,
       daysConsidered,
+      successes,
     };
   }
 
@@ -162,7 +162,7 @@ function computeCompliance({
     (successes + COMPLIANCE_PRIOR_ALPHA) /
     (daysConsidered + COMPLIANCE_PRIOR_ALPHA + COMPLIANCE_PRIOR_BETA);
 
-  return { compliance, successes, daysConsidered };
+  return { compliance, daysConsidered, successes };
 }
 
 export function generateHabitStrengthSnapshot({
@@ -188,22 +188,22 @@ export function generateHabitStrengthSnapshot({
 
   const baseline = logisticBaseline(daysSinceCreation);
   const complianceStats = computeCompliance({
+    evaluationDate,
     habitCreatedAt,
     trackingMap,
-    evaluationDate,
   });
 
   const strength = clamp(baseline * complianceStats.compliance, 0, 1);
 
   return {
-    strength,
-    strengthLevel: getStrengthLevel(strength),
     baseline,
     compliance: complianceStats.compliance,
-    complianceSuccesses: complianceStats.successes,
     complianceDaysConsidered: complianceStats.daysConsidered,
+    complianceSuccesses: complianceStats.successes,
     daysSinceCreation,
     lastEvaluatedDate: evaluationDate,
+    strength,
+    strengthLevel: getStrengthLevel(strength),
   };
 }
 
@@ -216,40 +216,40 @@ interface StrengthLevelInfo {
 }
 
 export const STRENGTH_LEVELS: Record<StrengthLevel, StrengthLevelInfo> = {
-  starting: {
-    level: 'starting',
-    emoji: '🌱',
-    label: 'Starting Out',
-    description: 'Just beginning - stay focused!',
-    color: '#86efac', // green-300
-  },
-  building: {
-    level: 'building',
-    emoji: '🌿',
-    label: 'Building',
-    description: 'Making progress - keep it up!',
-    color: '#4ade80', // green-400
-  },
-  developing: {
-    level: 'developing',
-    emoji: '🌳',
-    label: 'Developing',
-    description: 'Getting stronger each day!',
-    color: '#22c55e', // green-500
-  },
-  strong: {
-    level: 'strong',
-    emoji: '💪',
-    label: 'Strong',
-    description: 'Habit is well-established!',
-    color: '#16a34a', // green-600
-  },
   automatic: {
-    level: 'automatic',
+    color: '#15803d',
+    description: 'Fully automatic - amazing!',
     emoji: '⚡',
     label: 'Automatic',
-    description: 'Fully automatic - amazing!',
-    color: '#15803d', // green-700
+    level: 'automatic', // green-700
+  },
+  building: {
+    color: '#4ade80',
+    description: 'Making progress - keep it up!',
+    emoji: '🌿',
+    label: 'Building',
+    level: 'building', // green-400
+  },
+  developing: {
+    color: '#22c55e',
+    description: 'Getting stronger each day!',
+    emoji: '🌳',
+    label: 'Developing',
+    level: 'developing', // green-500
+  },
+  starting: {
+    color: '#86efac',
+    description: 'Just beginning - stay focused!',
+    emoji: '🌱',
+    label: 'Starting Out',
+    level: 'starting', // green-300
+  },
+  strong: {
+    color: '#16a34a',
+    description: 'Habit is well-established!',
+    emoji: '💪',
+    label: 'Strong',
+    level: 'strong', // green-600
   },
 };
 
@@ -364,7 +364,7 @@ export function calculateMemoryAccessibility(
  */
 export function predictCompletionProbability(
   habitStrength: number,
-  accessibility: number = 1.0
+  accessibility: number = 1
 ): number {
   // Zhang et al. (2021) found that habit strength was the primary predictor
   // but accessibility contributes to behavior recall in daily environments
@@ -389,9 +389,9 @@ export function predictCompletionProbability(
  */
 export const updateHabitStrength = mutation({
   args: {
-    habitId: v.id('habits'),
-    date: v.string(),
     behaviorPerformed: v.boolean(),
+    date: v.string(),
+    habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
     try {
@@ -435,27 +435,27 @@ export const updateHabitStrength = mutation({
 
       const snapshot = generateHabitStrengthSnapshot({
         habitCreatedAt: habit.createdAt,
-        tracking: tracking.map((t) => ({
-          date: t.date,
-          completed: t.completed,
-        })),
         throughDate: startOfDay(new Date()),
+        tracking: tracking.map((t) => ({
+          completed: t.completed,
+          date: t.date,
+        })),
       });
 
       // Determine strength level
       const { strength: newStrength, strengthLevel } = snapshot;
 
       console.log('🔧 Updating habit strength (replay):', {
-        habitName: habit.name,
-        date: args.date,
-        behaviorPerformed: args.behaviorPerformed,
-        previousStrength: (previousStrength * 100).toFixed(1) + '%',
-        newStrength: (newStrength * 100).toFixed(1) + '%',
         baseline: (snapshot.baseline * 100).toFixed(1) + '%',
+        behaviorPerformed: args.behaviorPerformed,
         compliance: (snapshot.compliance * 100).toFixed(1) + '%',
+        date: args.date,
+        habitName: habit.name,
+        newStrength: (newStrength * 100).toFixed(1) + '%',
+        previousStrength: (previousStrength * 100).toFixed(1) + '%',
         strengthLevel,
-        windowDays: snapshot.complianceDaysConsidered,
         successes: snapshot.complianceSuccesses,
+        windowDays: snapshot.complianceDaysConsidered,
       });
 
       // Update habit
@@ -466,13 +466,13 @@ export const updateHabitStrength = mutation({
       });
 
       return {
-        previousStrength,
-        newStrength,
-        strengthLevel,
         baseline: snapshot.baseline,
         compliance: snapshot.compliance,
         daysSinceCreation: snapshot.daysSinceCreation,
+        newStrength,
         predictionProbability: predictCompletionProbability(newStrength),
+        previousStrength,
+        strengthLevel,
       };
     } catch (error) {
       console.error('❌ Error in updateHabitStrength:', error);
@@ -484,13 +484,13 @@ export const updateHabitStrength = mutation({
     }
   },
   returns: v.object({
-    previousStrength: v.number(),
-    newStrength: v.number(),
-    strengthLevel: v.string(),
     baseline: v.number(),
     compliance: v.number(),
     daysSinceCreation: v.number(),
+    newStrength: v.number(),
     predictionProbability: v.number(),
+    previousStrength: v.number(),
+    strengthLevel: v.string(),
   }),
 });
 
@@ -522,11 +522,11 @@ export const recalculateHabitStrength = mutation({
 
       const snapshot = generateHabitStrengthSnapshot({
         habitCreatedAt: habit.createdAt,
-        tracking: tracking.map((t) => ({
-          date: t.date,
-          completed: t.completed,
-        })),
         throughDate: startOfDay(new Date()),
+        tracking: tracking.map((t) => ({
+          completed: t.completed,
+          date: t.date,
+        })),
       });
 
       console.log(
@@ -547,9 +547,9 @@ export const recalculateHabitStrength = mutation({
       });
 
       return {
+        daysProcessed: snapshot.complianceDaysConsidered,
         strength: snapshot.strength,
         strengthLevel: snapshot.strengthLevel,
-        daysProcessed: snapshot.complianceDaysConsidered,
       };
     } catch (error) {
       console.error('❌ Error in recalculateHabitStrength:', error);
@@ -561,9 +561,9 @@ export const recalculateHabitStrength = mutation({
     }
   },
   returns: v.object({
+    daysProcessed: v.number(),
     strength: v.number(),
     strengthLevel: v.string(),
-    daysProcessed: v.number(),
   }),
 });
 
@@ -585,11 +585,11 @@ export const getHabitStrengthInfo = query({
 
     const snapshot = generateHabitStrengthSnapshot({
       habitCreatedAt: habit.createdAt,
-      tracking: tracking.map((t) => ({
-        date: t.date,
-        completed: t.completed,
-      })),
       throughDate: startOfDay(new Date()),
+      tracking: tracking.map((t) => ({
+        completed: t.completed,
+        date: t.date,
+      })),
     });
 
     const strength = habit.strength ?? snapshot.strength;
@@ -597,48 +597,48 @@ export const getHabitStrengthInfo = query({
     const levelInfo = STRENGTH_LEVELS[level as StrengthLevel];
 
     return {
-      strength,
-      level,
-      levelInfo,
       baseline: snapshot.baseline,
       compliance: snapshot.compliance,
-      complianceWindowDays: snapshot.complianceDaysConsidered,
       complianceSuccesses: snapshot.complianceSuccesses,
-      predictionProbability: predictCompletionProbability(strength),
-      updatedAt:
-        habit.strengthUpdatedAt ?? snapshot.lastEvaluatedDate.getTime(),
+      complianceWindowDays: snapshot.complianceDaysConsidered,
+      level,
+      levelInfo,
       model: {
-        logisticSlope: LOGISTIC_SLOPE,
-        logisticMidpoint: LOGISTIC_MIDPOINT,
-        complianceWindowDays: COMPLIANCE_WINDOW_DAYS,
         compliancePriorAlpha: COMPLIANCE_PRIOR_ALPHA,
         compliancePriorBeta: COMPLIANCE_PRIOR_BETA,
+        complianceWindowDays: COMPLIANCE_WINDOW_DAYS,
+        logisticMidpoint: LOGISTIC_MIDPOINT,
+        logisticSlope: LOGISTIC_SLOPE,
       },
+      predictionProbability: predictCompletionProbability(strength),
+      strength,
+      updatedAt:
+        habit.strengthUpdatedAt ?? snapshot.lastEvaluatedDate.getTime(),
     };
   },
   returns: v.object({
-    strength: v.number(),
-    level: v.string(),
-    levelInfo: v.object({
-      level: v.string(),
-      emoji: v.string(),
-      label: v.string(),
-      description: v.string(),
-      color: v.string(),
-    }),
     baseline: v.number(),
     compliance: v.number(),
-    complianceWindowDays: v.number(),
     complianceSuccesses: v.number(),
-    predictionProbability: v.number(),
-    updatedAt: v.optional(v.number()),
+    complianceWindowDays: v.number(),
+    level: v.string(),
+    levelInfo: v.object({
+      color: v.string(),
+      description: v.string(),
+      emoji: v.string(),
+      label: v.string(),
+      level: v.string(),
+    }),
     model: v.object({
-      logisticSlope: v.number(),
-      logisticMidpoint: v.number(),
-      complianceWindowDays: v.number(),
       compliancePriorAlpha: v.number(),
       compliancePriorBeta: v.number(),
+      complianceWindowDays: v.number(),
+      logisticMidpoint: v.number(),
+      logisticSlope: v.number(),
     }),
+    predictionProbability: v.number(),
+    strength: v.number(),
+    updatedAt: v.optional(v.number()),
   }),
 });
 
@@ -647,26 +647,22 @@ export const getHabitStrengthInfo = query({
  */
 export const updateHabitParameters = mutation({
   args: {
-    habitId: v.id('habits'),
     habitDecayParam: v.optional(v.number()),
     habitGainParam: v.optional(v.number()),
+    habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
 
     // Validate parameters are in reasonable range
-    if (args.habitDecayParam !== undefined) {
-      if (args.habitDecayParam < 0 || args.habitDecayParam > 1) {
+    if (args.habitDecayParam !== undefined && (args.habitDecayParam < 0 || args.habitDecayParam > 1)) {
         throw new Error('Habit decay parameter must be between 0 and 1');
       }
-    }
 
-    if (args.habitGainParam !== undefined) {
-      if (args.habitGainParam < 0 || args.habitGainParam > 1) {
+    if (args.habitGainParam !== undefined && (args.habitGainParam < 0 || args.habitGainParam > 1)) {
         throw new Error('Habit gain parameter must be between 0 and 1');
       }
-    }
 
     await ctx.db.patch(args.habitId, {
       habitDecayParam: args.habitDecayParam,
@@ -690,17 +686,17 @@ export const getAllHabitsStrengthStats = query({
       .collect();
 
     const stats = {
-      totalHabits: habits.length,
       averageStrength: 0,
-      strongestHabit: null as { name: string; strength: number } | null,
-      weakestHabit: null as { name: string; strength: number } | null,
       levelDistribution: {
-        starting: 0,
+        automatic: 0,
         building: 0,
         developing: 0,
+        starting: 0,
         strong: 0,
-        automatic: 0,
       },
+      strongestHabit: null as { name: string; strength: number } | null,
+      totalHabits: habits.length,
+      weakestHabit: null as { name: string; strength: number } | null,
     };
 
     if (habits.length === 0) return stats;
@@ -732,8 +728,14 @@ export const getAllHabitsStrengthStats = query({
     return stats;
   },
   returns: v.object({
-    totalHabits: v.number(),
     averageStrength: v.number(),
+    levelDistribution: v.object({
+      automatic: v.number(),
+      building: v.number(),
+      developing: v.number(),
+      starting: v.number(),
+      strong: v.number(),
+    }),
     strongestHabit: v.union(
       v.null(),
       v.object({
@@ -741,6 +743,7 @@ export const getAllHabitsStrengthStats = query({
         strength: v.number(),
       })
     ),
+    totalHabits: v.number(),
     weakestHabit: v.union(
       v.null(),
       v.object({
@@ -748,12 +751,5 @@ export const getAllHabitsStrengthStats = query({
         strength: v.number(),
       })
     ),
-    levelDistribution: v.object({
-      starting: v.number(),
-      building: v.number(),
-      developing: v.number(),
-      strong: v.number(),
-      automatic: v.number(),
-    }),
   }),
 });

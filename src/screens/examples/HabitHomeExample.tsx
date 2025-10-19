@@ -143,11 +143,11 @@ const ExampleHabitCard = ({
         }}
       >
         <Animated.View
+          className='rounded-full'
           style={[
             { backgroundColor: habit.color, height: '100%' },
             progressStyle,
           ]}
-          className='rounded-full'
         />
       </View>
 
@@ -168,25 +168,25 @@ export default function HabitHomeExample() {
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [habits, setHabits] = useState<LocalHabit[]>([
     {
-      id: '1',
-      name: 'Meditation',
-      emoji: '🧘',
       color: '#4ADE80',
       completedDates: [],
+      emoji: '🧘',
+      id: '1',
+      name: 'Meditation',
     },
     {
-      id: '2',
-      name: 'Reading',
-      emoji: '📚',
       color: '#60A5FA',
       completedDates: [],
+      emoji: '📚',
+      id: '2',
+      name: 'Reading',
     },
     {
-      id: '3',
-      name: 'Exercise',
-      emoji: '💪',
       color: '#F59E0B',
       completedDates: [],
+      emoji: '💪',
+      id: '3',
+      name: 'Exercise',
     },
   ]);
 
@@ -253,9 +253,9 @@ export default function HabitHomeExample() {
               <ExampleHabitCard
                 key={h.id}
                 habit={h}
+                weekDates={currentWeekDates}
                 onDelete={handleDelete}
                 onToggle={handleToggle}
-                weekDates={currentWeekDates}
               />
             ))}
           </View>

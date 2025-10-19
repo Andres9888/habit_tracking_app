@@ -89,7 +89,7 @@ export const getCharacterStats = query({
       );
 
       // Strength: Average streak strength across all habits
-      const streakValues = Array.from(habitStreaks.values());
+      const streakValues = [...habitStreaks.values()];
       const avgStreak =
         streakValues.length > 0
           ? streakValues.reduce((a, b) => a + b, 0) / streakValues.length
@@ -120,7 +120,7 @@ export const getCharacterStats = query({
       );
 
       // Calculate stats
-      const streakArray = Array.from(habitStreaks.values());
+      const streakArray = [...habitStreaks.values()];
       const maxStreak = streakArray.length > 0 ? Math.max(...streakArray) : 0;
       const totalPower = vitality + strength + wisdom + energy;
       const activeHabits = habits.length;
@@ -139,62 +139,62 @@ export const getCharacterStats = query({
       const title = titles[titleIndex];
 
       return {
-        level,
-        title,
-        xp: xpInCurrentLevel,
-        xpToNextLevel: xpNeededForNextLevel,
-        totalXP,
         attributes: {
-          vitality,
-          strength,
-          wisdom,
           energy,
+          strength,
+          vitality,
+          wisdom,
         },
+        level,
         stats: {
+          activeHabits,
           dayStreak: maxStreak,
           totalPower,
-          activeHabits,
         },
+        title,
+        totalXP,
+        xp: xpInCurrentLevel,
+        xpToNextLevel: xpNeededForNextLevel,
       };
     } catch (error) {
       console.error('Error calculating character stats:', error);
       // Return default stats on error
       return {
-        level: 1,
-        title: 'Novice',
-        xp: 0,
-        xpToNextLevel: 50,
-        totalXP: 0,
         attributes: {
-          vitality: 0,
-          strength: 0,
-          wisdom: 0,
           energy: 0,
+          strength: 0,
+          vitality: 0,
+          wisdom: 0,
         },
+        level: 1,
         stats: {
+          activeHabits: 0,
           dayStreak: 0,
           totalPower: 0,
-          activeHabits: 0,
         },
+        title: 'Novice',
+        totalXP: 0,
+        xp: 0,
+        xpToNextLevel: 50,
       };
     }
   },
   returns: v.object({
-    level: v.number(),
-    title: v.string(),
-    xp: v.number(),
-    xpToNextLevel: v.number(),
-    totalXP: v.number(),
     attributes: v.object({
-      vitality: v.number(),
-      strength: v.number(),
-      wisdom: v.number(),
       energy: v.number(),
+      strength: v.number(),
+      vitality: v.number(),
+      wisdom: v.number(),
     }),
+    level: v.number(),
     stats: v.object({
+      activeHabits: v.number(),
       dayStreak: v.number(),
       totalPower: v.number(),
-      activeHabits: v.number(),
     }),
+    title: v.string(),
+    totalXP: v.number(),
+    xp: v.number(),
+    xpToNextLevel: v.number(),
   }),
 });

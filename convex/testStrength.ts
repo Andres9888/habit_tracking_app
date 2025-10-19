@@ -49,11 +49,11 @@ export const forceInitialize = mutation({
       // Simulate day by day from creation
       const habitCreation = new Date(habit.createdAt);
       habitCreation.setHours(0, 0, 0, 0);
-      const lastTracking = sorted[sorted.length - 1].dateObj;
+      const lastTracking = sorted.at(-1).dateObj;
 
       const trackingMap = new Map(sorted.map((t) => [t.date, t.completed]));
 
-      let currentDate = new Date(habitCreation);
+      const currentDate = new Date(habitCreation);
       let daysProcessed = 0;
 
       while (currentDate <= lastTracking) {
@@ -85,7 +85,7 @@ export const forceInitialize = mutation({
     }
 
     console.log('\n✅ Initialization complete!');
-    return { success: true, habitsProcessed: habits.length };
+    return { habitsProcessed: habits.length, success: true };
   },
 });
 
@@ -97,11 +97,11 @@ export const checkStatus = query({
       .collect();
 
     return habits.map((h) => ({
+      hasStrengthField: h.strength !== undefined,
       name: h.name,
       strength: h.strength,
       strengthLevel: h.strengthLevel,
       strengthUpdatedAt: h.strengthUpdatedAt,
-      hasStrengthField: h.strength !== undefined,
     }));
   },
 });

@@ -46,14 +46,14 @@ const tokenCache = {
   async getToken(key: string) {
     try {
       return SecureStore.getItemAsync(key);
-    } catch (err) {
+    } catch {
       return null;
     }
   },
   async saveToken(key: string, value: string) {
     try {
       return SecureStore.setItemAsync(key, value);
-    } catch (err) {
+    } catch {
       return;
     }
   },
@@ -131,7 +131,7 @@ function HabitsApp() {
 
       let streak = 0;
       // Count consecutive days backward from today
-      // eslint-disable-next-line no-constant-condition
+       
       while (true) {
         const dateString = format(currentDate, 'yyyy-MM-dd');
         if (completedDates.has(dateString)) {
@@ -277,11 +277,11 @@ function HabitsApp() {
 
             {/* CalendarTimeline from Figma Design (node 201:87) - replaces DateSelector */}
             <CalendarTimeline
+              showSeparator
               canNavigateForward={canNavigateForward}
               dates={weekDates}
               onNextWeek={handleNextWeek}
               onPreviousWeek={handlePreviousWeek}
-              showSeparator={true}
             />
 
             <View className='gap-4'>

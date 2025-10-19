@@ -18,8 +18,8 @@ export const ChainConnector: React.FC = () => {
   return (
     <View
       style={{
-        height: 24,
         alignItems: 'center',
+        height: 24,
         justifyContent: 'center',
         marginVertical: -4, // Negative margin to maintain original gap-4 spacing
       }}
@@ -27,28 +27,31 @@ export const ChainConnector: React.FC = () => {
       {/* Vertical connecting line */}
       <View
         style={{
-          position: 'absolute',
-          width: 3,
+          backgroundColor: '#94a3b8',
           height: '100%',
-          backgroundColor: '#94a3b8', // slate-400
+          position: 'absolute',
+          width: 3, // slate-400
         }}
       />
 
       {/* Chain link icon with white circular background */}
       <View
         style={{
-          width: 24,
-          height: 24,
-          borderRadius: 12,
-          backgroundColor: 'white',
           alignItems: 'center',
+          backgroundColor: 'white',
+          borderRadius: 12,
+          elevation: 2,
+          height: 24,
           justifyContent: 'center',
-          zIndex: 1, // Ensure icon appears above the line
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
+          
+// Ensure icon appears above the line
+shadowColor: '#000', 
+          
+shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.1,
           shadowRadius: 2,
-          elevation: 2, // Android shadow
+          width: 24,
+          zIndex: 1, // Android shadow
         }}
       >
         <ChainLinkIcon color='#475569' size={16} variant='stroke' />

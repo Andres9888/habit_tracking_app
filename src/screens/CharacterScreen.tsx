@@ -42,8 +42,8 @@ const AttributeCard = ({
 
   return (
     <Animated.View
-      entering={FadeInDown.duration(400)}
       className='overflow-hidden rounded-3xl border border-gray-100 bg-white'
+      entering={FadeInDown.duration(400)}
     >
       <View className='relative h-[110px]'>
         {/* Background gradient */}
@@ -53,9 +53,9 @@ const AttributeCard = ({
         >
           <LinearGradient
             colors={bgGradient}
-            start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={{ width: '100%', height: '100%' }}
+            start={{ x: 0, y: 0 }}
+            style={{ height: '100%', width: '100%' }}
           />
         </View>
 
@@ -80,9 +80,9 @@ const AttributeCard = ({
             <View style={{ width: `${percentage}%` }}>
               <LinearGradient
                 colors={gradientColors}
-                start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={{ width: '100%', height: '100%', borderRadius: 9999 }}
+                start={{ x: 0, y: 0 }}
+                style={{ borderRadius: 9999, height: '100%', width: '100%' }}
               />
             </View>
           </View>
@@ -94,8 +94,8 @@ const AttributeCard = ({
 
 const StatCard = ({ emoji, value, label }: StatCardProps) => (
   <Animated.View
-    entering={FadeInDown.duration(500)}
     className='flex-1 flex-col items-center gap-1 rounded-2xl border border-gray-100 bg-white px-4 py-4'
+    entering={FadeInDown.duration(500)}
   >
     <Text className='text-2xl leading-8'>{emoji}</Text>
     <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
@@ -110,29 +110,29 @@ const StatCard = ({ emoji, value, label }: StatCardProps) => (
 export default function CharacterScreen({ onBack }: CharacterScreenProps) {
   // Mock data - TODO: Connect to actual habit data
   const characterData = {
+    attributes: {
+      energy: 41,
+      strength: 34,
+      vitality: 27,
+      wisdom: 20,
+    },
     level: 1,
+    recentAchievements: [
+      {
+        description: 'Complete all habits for 7 days',
+        icon: '🏆',
+        id: '1',
+        title: 'Week Warrior',
+      },
+    ],
+    stats: {
+      activeHabits: 3,
+      dayStreak: 7,
+      totalPower: 69,
+    },
     title: 'Habit Hero',
     xp: 69,
     xpToNextLevel: 100,
-    attributes: {
-      vitality: 27,
-      strength: 34,
-      wisdom: 20,
-      energy: 41,
-    },
-    stats: {
-      dayStreak: 7,
-      totalPower: 69,
-      activeHabits: 3,
-    },
-    recentAchievements: [
-      {
-        id: '1',
-        title: 'Week Warrior',
-        description: 'Complete all habits for 7 days',
-        icon: '🏆',
-      },
-    ],
   };
 
   const xpProgress = (characterData.xp / characterData.xpToNextLevel) * 100;
@@ -146,10 +146,10 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
           <View className='mb-6 flex-row items-center'>
             {onBack && (
               <Pressable
-                onPress={onBack}
-                className='mr-4 h-10 w-10 items-center justify-center'
-                accessibilityRole='button'
                 accessibilityLabel='Go back'
+                accessibilityRole='button'
+                className='mr-4 h-10 w-10 items-center justify-center'
+                onPress={onBack}
               >
                 <ArrowLeft color='#101828' size={24} />
               </Pressable>
@@ -161,8 +161,8 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
 
           {/* Character Card */}
           <Animated.View
-            entering={FadeInDown.duration(300)}
             className='mb-6 overflow-hidden rounded-3xl border border-gray-100 bg-white'
+            entering={FadeInDown.duration(300)}
           >
             <View className='flex-col gap-6 px-6 py-6'>
               {/* Avatar and Level */}
@@ -171,13 +171,13 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                   <View className='h-20 w-20 items-center justify-center overflow-hidden rounded-full shadow-lg'>
                     <LinearGradient
                       colors={['#ad46ff', '#f6339a']}
-                      start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
+                      start={{ x: 0, y: 0 }}
                       style={{
-                        width: '100%',
-                        height: '100%',
                         alignItems: 'center',
+                        height: '100%',
                         justifyContent: 'center',
+                        width: '100%',
                       }}
                     >
                       <Text className='text-[30px] leading-9'>🦸</Text>
@@ -198,11 +198,11 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                 <View className='overflow-hidden rounded-full'>
                   <LinearGradient
                     colors={['#ff8c00', '#ff6900']}
-                    start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
+                    start={{ x: 0, y: 0 }}
                     style={{
-                      flexDirection: 'row',
                       alignItems: 'center',
+                      flexDirection: 'row',
                       gap: 8,
                       paddingHorizontal: 16,
                       paddingVertical: 10,
@@ -230,12 +230,12 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                   <View style={{ width: `${xpProgress}%` }}>
                     <LinearGradient
                       colors={['#ad46ff', '#f6339a']}
-                      start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 0 }}
+                      start={{ x: 0, y: 0 }}
                       style={{
-                        width: '100%',
-                        height: '100%',
                         borderRadius: 9999,
+                        height: '100%',
+                        width: '100%',
                       }}
                     />
                   </View>
@@ -253,36 +253,36 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
               Attributes
             </Text>
             <AttributeCard
+              bgGradient={['#ffe2e2', '#fdf2f8']}
+              gradientColors={['#fb2c36', '#f6339a']}
               icon={<Heart color='#fb2c36' size={20} />}
+              maxValue={100}
               name='Vitality'
               value={characterData.attributes.vitality}
-              maxValue={100}
-              gradientColors={['#fb2c36', '#f6339a']}
-              bgGradient={['#ffe2e2', '#fdf2f8']}
             />
             <AttributeCard
+              bgGradient={['#ffedd4', '#fffbeb']}
+              gradientColors={['#ff6900', '#fe9a00']}
               icon={<Dumbbell color='#ff6900' size={20} />}
+              maxValue={100}
               name='Strength'
               value={characterData.attributes.strength}
-              maxValue={100}
-              gradientColors={['#ff6900', '#fe9a00']}
-              bgGradient={['#ffedd4', '#fffbeb']}
             />
             <AttributeCard
+              bgGradient={['#f3e8ff', '#eef2ff']}
+              gradientColors={['#ad46ff', '#615fff']}
               icon={<Brain color='#ad46ff' size={20} />}
+              maxValue={100}
               name='Wisdom'
               value={characterData.attributes.wisdom}
-              maxValue={100}
-              gradientColors={['#ad46ff', '#615fff']}
-              bgGradient={['#f3e8ff', '#eef2ff']}
             />
             <AttributeCard
+              bgGradient={['#fef9c2', '#fff7ed']}
+              gradientColors={['#f0b100', '#ff6900']}
               icon={<Zap color='#f0b100' size={20} />}
+              maxValue={100}
               name='Energy'
               value={characterData.attributes.energy}
-              maxValue={100}
-              gradientColors={['#f0b100', '#ff6900']}
-              bgGradient={['#fef9c2', '#fff7ed']}
             />
           </View>
 
@@ -290,18 +290,18 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
           <View className='mb-6 flex-row gap-3'>
             <StatCard
               emoji='🔥'
-              value={characterData.stats.dayStreak}
               label='Day Streak'
+              value={characterData.stats.dayStreak}
             />
             <StatCard
               emoji='⚡'
-              value={characterData.stats.totalPower}
               label='Total Power'
+              value={characterData.stats.totalPower}
             />
             <StatCard
               emoji='🎯'
-              value={characterData.stats.activeHabits}
               label='Active Habits'
+              value={characterData.stats.activeHabits}
             />
           </View>
 
@@ -313,8 +313,8 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
             {characterData.recentAchievements.map((achievement) => (
               <Animated.View
                 key={achievement.id}
-                entering={FadeInDown.duration(600)}
                 className='flex-row items-center gap-4 rounded-3xl border border-gray-100 bg-white px-6 py-6'
+                entering={FadeInDown.duration(600)}
               >
                 <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
                   <Trophy color='#f59e0b' size={24} />

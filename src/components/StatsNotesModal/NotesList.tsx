@@ -47,7 +47,7 @@ export default function NotesList({ onAddNote }: NotesListProps) {
     }
 
     // Sort by date descending
-    return Array.from(groups.entries())
+    return [...groups.entries()]
       .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
       .map(([date, notes]) => ({
         date,
@@ -212,9 +212,9 @@ export default function NotesList({ onAddNote }: NotesListProps) {
                     </Text>
                     <View className='flex-row items-center justify-between'>
                       <Text className='text-xs text-slate-400'>
-                        {note.updatedAt !== note.createdAt
-                          ? `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`
-                          : `Created ${format(note.createdAt, 'MMM d, h:mm a')}`}
+                        {note.updatedAt === note.createdAt
+                          ? `Created ${format(note.createdAt, 'MMM d, h:mm a')}`
+                          : `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`}
                       </Text>
                       <View className='flex-row gap-2'>
                         <TouchableOpacity

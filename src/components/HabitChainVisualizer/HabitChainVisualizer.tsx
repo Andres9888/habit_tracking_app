@@ -26,9 +26,9 @@ const DayConnector: React.FC<DayConnectorProps> = ({
 
   useEffect(() => {
     Animated.timing(opacity, {
-      toValue: visible ? 1 : 0,
       duration: 200,
       easing: Easing.inOut(Easing.ease),
+      toValue: visible ? 1 : 0,
       useNativeDriver: true,
     }).start();
   }, [visible, opacity]);
@@ -36,11 +36,11 @@ const DayConnector: React.FC<DayConnectorProps> = ({
   return (
     <Animated.View
       style={{
-        width: 12,
-        height: 4,
         backgroundColor: accentColor,
         borderRadius: 2,
+        height: 4,
         opacity,
+        width: 12,
       }}
     />
   );
@@ -69,9 +69,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
 
   useEffect(() => {
     Animated.timing(completion, {
-      toValue: completed ? 1 : 0,
       duration: completed ? 220 : 180,
       easing: Easing.out(Easing.cubic),
+      toValue: completed ? 1 : 0,
       useNativeDriver: false,
     }).start();
   }, [completed, completion]);
@@ -97,12 +97,12 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
         isToday && 'border-2 border-black'
       )}
       disabled={disabled}
-      onPress={onPress}
       style={{
-        opacity: disabled ? 0.4 : 1,
         backgroundColor,
+        opacity: disabled ? 0.4 : 1,
         transform: [{ scale }],
       }}
+      onPress={onPress}
     >
       <Animated.View
         style={{
@@ -173,9 +173,9 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         return (
           <React.Fragment key={dateString}>
             <HabitDayToggle
+              accentColor={accentColor}
               accessibilityHint={accessibilityHint}
               accessibilityLabel={accessibilityLabel}
-              accentColor={accentColor}
               completed={completed}
               disabled={disabled}
               isToday={isToday(index)}

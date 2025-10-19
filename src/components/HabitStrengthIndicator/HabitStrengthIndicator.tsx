@@ -25,40 +25,40 @@ const STRENGTH_LEVEL_CONFIG: Record<
     description: string;
   }
 > = {
-  starting: {
-    emoji: '🌱',
-    label: 'Starting Out',
-    color: '#22c55e',
-    bgColor: '#f0fdf4',
-    description: 'Just beginning',
-  },
-  building: {
-    emoji: '🌿',
-    label: 'Building',
-    color: '#16a34a',
-    bgColor: '#dcfce7',
-    description: 'Making progress',
-  },
-  developing: {
-    emoji: '🌳',
-    label: 'Developing',
-    color: '#15803d',
-    bgColor: '#bbf7d0',
-    description: 'Getting stronger',
-  },
-  strong: {
-    emoji: '💪',
-    label: 'Strong',
-    color: '#166534',
-    bgColor: '#86efac',
-    description: 'Well-established',
-  },
   automatic: {
+    bgColor: '#4ade80',
+    color: '#14532d',
+    description: 'Fully automatic',
     emoji: '⚡',
     label: 'Automatic',
-    color: '#14532d',
-    bgColor: '#4ade80',
-    description: 'Fully automatic',
+  },
+  building: {
+    bgColor: '#dcfce7',
+    color: '#16a34a',
+    description: 'Making progress',
+    emoji: '🌿',
+    label: 'Building',
+  },
+  developing: {
+    bgColor: '#bbf7d0',
+    color: '#15803d',
+    description: 'Getting stronger',
+    emoji: '🌳',
+    label: 'Developing',
+  },
+  starting: {
+    bgColor: '#f0fdf4',
+    color: '#22c55e',
+    description: 'Just beginning',
+    emoji: '🌱',
+    label: 'Starting Out',
+  },
+  strong: {
+    bgColor: '#86efac',
+    color: '#166534',
+    description: 'Well-established',
+    emoji: '💪',
+    label: 'Strong',
   },
 };
 
@@ -84,8 +84,8 @@ export default function HabitStrengthIndicator({
 
   useEffect(() => {
     Animated.timing(progressAnim, {
-      toValue: strength,
       duration: 600,
+      toValue: strength,
       useNativeDriver: false,
     }).start();
   }, [strength, progressAnim]);

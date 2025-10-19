@@ -62,15 +62,15 @@ export default function DraggableHabit({
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fade, {
-        toValue: 1,
         duration: 320,
         easing: Easing.out(Easing.cubic),
+        toValue: 1,
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
-        toValue: 0,
         duration: 320,
         easing: Easing.out(Easing.cubic),
+        toValue: 0,
         useNativeDriver: true,
       }),
     ]).start();
@@ -81,9 +81,9 @@ export default function DraggableHabit({
     dragX: Animated.AnimatedInterpolation<number>
   ) => {
     const trans = dragX.interpolate({
+      extrapolate: 'clamp',
       inputRange: [-100, 0],
       outputRange: [0, 100],
-      extrapolate: 'clamp',
     });
 
     return (
@@ -163,9 +163,9 @@ export default function DraggableHabit({
           <HabitChainVisualizer
             accentColor={accentColor}
             habitId={habit._id}
-            onToggle={toggleHabit}
             weekDateStrings={weekDateStrings}
             weekStatus={weekStatus}
+            onToggle={toggleHabit}
           />
         </View>
       </View>
@@ -198,11 +198,11 @@ export default function DraggableHabit({
 
   return (
     <Swipeable
-      renderRightActions={renderRightActions}
-      onSwipeableOpen={handleSwipeableOpen}
-      overshootRight={false}
       friction={2}
+      overshootRight={false}
+      renderRightActions={renderRightActions}
       rightThreshold={40}
+      onSwipeableOpen={handleSwipeableOpen}
     >
       {habitCard}
     </Swipeable>

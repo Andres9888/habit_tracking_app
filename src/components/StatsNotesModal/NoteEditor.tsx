@@ -53,18 +53,14 @@ export default function NoteEditor({
     setError('');
 
     try {
-      if (noteId) {
-        await updateNote({ noteId, body: body.trim() });
-      } else {
-        await createNote({
+      await (noteId ? updateNote({ body: body.trim(), noteId }) : createNote({
           body: body.trim(),
           date,
           habitId: selectedHabitId,
-        });
-      }
+        }));
       onSave();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save note');
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : 'Failed to save note');
     } finally {
       setIsSaving(false);
     }
@@ -97,13 +93,13 @@ export default function NoteEditor({
                   accessibilityLabel='No habit selected'
                   accessibilityRole='button'
                   className={`rounded-xl px-3 py-2 ${
-                    !selectedHabitId ? 'bg-slate-900' : 'bg-slate-100'
+                    selectedHabitId ? 'bg-slate-100' : 'bg-slate-900'
                   }`}
                   onPress={() => setSelectedHabitId(undefined)}
                 >
                   <Text
                     className={`text-sm font-medium ${
-                      !selectedHabitId ? 'text-white' : 'text-slate-700'
+                      selectedHabitId ? 'text-slate-700' : 'text-white'
                     }`}
                   >
                     None
@@ -138,9 +134,9 @@ export default function NoteEditor({
         )}
 
         <TextInput
+          multiline
           accessibilityLabel='Note body'
           className='min-h-[120px] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900'
-          multiline
           placeholder='Write your note here...'
           placeholderTextColor='#999'
           textAlignVertical='top'

@@ -21,22 +21,20 @@ export const show = query({
       const completed = tracking.filter((t) => t.completed).length;
 
       results.push({
-        name: habit.name,
-        hasStrengthField: typeof habit.strength,
+        completedEntries: completed,
         currentStrength: habit.strength,
+        hasStrengthField: typeof habit.strength,
+        lastUpdated: habit.strengthUpdatedAt || 'never',
+        name: habit.name,
+        strengthLevel: habit.strengthLevel || 'not set',
         strengthPercent: habit.strength
           ? `${(habit.strength * 100).toFixed(1)}%`
           : 'null',
         trackingEntries: tracking.length,
-        completedEntries: completed,
-        strengthLevel: habit.strengthLevel || 'not set',
-        lastUpdated: habit.strengthUpdatedAt || 'never',
       });
     }
 
     return {
-      totalHabits: habits.length,
-      habits: results,
       diagnosis:
         habits.length === 0
           ? '❌ No habits found in database'
@@ -47,6 +45,8 @@ export const show = query({
                 )
               ? '⚠️ Strength exists but all at 0% - needs initialization'
               : '✅ Some habits have strength values',
+      habits: results,
+      totalHabits: habits.length,
     };
   },
 });

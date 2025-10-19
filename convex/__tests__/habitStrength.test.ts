@@ -29,7 +29,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
       // Net change is negative! The decay is stronger than the gain at this level
       // At 0.5 strength, we need to verify the calculation is correct
       expect(newStrength).toBeCloseTo(0.4875, 4);
-      expect(newStrength).toBeLessThanOrEqual(1.0);
+      expect(newStrength).toBeLessThanOrEqual(1);
     });
 
     it('decreases strength when behavior is not performed', () => {
@@ -43,7 +43,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
 
       // Strength should decrease due to decay
       expect(newStrength).toBeLessThan(initialStrength);
-      expect(newStrength).toBeGreaterThanOrEqual(0.0);
+      expect(newStrength).toBeGreaterThanOrEqual(0);
     });
 
     it('shows diminishing returns as strength approaches 1.0', () => {
@@ -69,7 +69,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
           0.175,
           0.15
         );
-        expect(result).toBeLessThanOrEqual(1.0);
+        expect(result).toBeLessThanOrEqual(1);
       }
 
       // Test lower bound
@@ -81,7 +81,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
           0.175,
           0.15
         );
-        expect(result).toBeGreaterThanOrEqual(0.0);
+        expect(result).toBeGreaterThanOrEqual(0);
       }
     });
 
@@ -98,7 +98,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
 
       // Should gain strength even from 0
       expect(newStrength).toBeGreaterThan(0);
-      expect(newStrength).toBeLessThanOrEqual(1.0);
+      expect(newStrength).toBeLessThanOrEqual(1);
     });
 
     it('applies proportional decay (stronger habits decay slower)', () => {
@@ -122,7 +122,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
 
   describe('getStrengthLevel', () => {
     it('returns correct level for each threshold', () => {
-      expect(getStrengthLevel(0.0)).toBe('starting');
+      expect(getStrengthLevel(0)).toBe('starting');
       expect(getStrengthLevel(0.1)).toBe('starting');
       expect(getStrengthLevel(0.19)).toBe('starting');
 
@@ -140,7 +140,7 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
 
       expect(getStrengthLevel(0.8)).toBe('automatic');
       expect(getStrengthLevel(0.9)).toBe('automatic');
-      expect(getStrengthLevel(1.0)).toBe('automatic');
+      expect(getStrengthLevel(1)).toBe('automatic');
     });
 
     it('handles boundary values correctly', () => {
@@ -166,7 +166,7 @@ describe('Memory Accessibility System (Tobias, 2009)', () => {
       );
 
       expect(newAccessibility).toBeGreaterThan(initialAccessibility);
-      expect(newAccessibility).toBeLessThanOrEqual(1.0);
+      expect(newAccessibility).toBeLessThanOrEqual(1);
     });
 
     it('increases accessibility when reminder is received', () => {
@@ -181,7 +181,7 @@ describe('Memory Accessibility System (Tobias, 2009)', () => {
       );
 
       expect(newAccessibility).toBeGreaterThan(initialAccessibility);
-      expect(newAccessibility).toBeLessThanOrEqual(1.0);
+      expect(newAccessibility).toBeLessThanOrEqual(1);
     });
 
     it('decreases accessibility when no behavior and no reminder', () => {
@@ -197,7 +197,7 @@ describe('Memory Accessibility System (Tobias, 2009)', () => {
 
       // Should decay due to natural forgetting
       expect(newAccessibility).toBeLessThan(initialAccessibility);
-      expect(newAccessibility).toBeGreaterThanOrEqual(0.0);
+      expect(newAccessibility).toBeGreaterThanOrEqual(0);
     });
 
     it('combines behavior and reminder effects additively', () => {
@@ -272,7 +272,7 @@ describe('Memory Accessibility System (Tobias, 2009)', () => {
           0.5,
           0.7
         );
-        expect(result).toBeLessThanOrEqual(1.0);
+        expect(result).toBeLessThanOrEqual(1);
       }
 
       // Test lower bound
@@ -286,7 +286,7 @@ describe('Memory Accessibility System (Tobias, 2009)', () => {
           0.5,
           0.7
         );
-        expect(result).toBeGreaterThanOrEqual(0.0);
+        expect(result).toBeGreaterThanOrEqual(0);
       }
     });
 
@@ -385,18 +385,18 @@ describe('Behavior Prediction (Zhang et al., 2021)', () => {
 
     it('defaults to full accessibility when not provided', () => {
       const withDefault = predictCompletionProbability(0.7);
-      const withExplicit = predictCompletionProbability(0.7, 1.0);
+      const withExplicit = predictCompletionProbability(0.7, 1);
 
       expect(withDefault).toBe(withExplicit);
     });
 
     it('is capped between 5% and 95%', () => {
       // Test lower bound
-      const veryLow = predictCompletionProbability(0.0, 0.0);
+      const veryLow = predictCompletionProbability(0, 0);
       expect(veryLow).toBeGreaterThanOrEqual(0.05);
 
       // Test upper bound
-      const veryHigh = predictCompletionProbability(1.0, 1.0);
+      const veryHigh = predictCompletionProbability(1, 1);
       expect(veryHigh).toBeLessThanOrEqual(0.95);
     });
 
@@ -418,7 +418,7 @@ describe('Behavior Prediction (Zhang et al., 2021)', () => {
     });
 
     it('increases probability as both factors increase', () => {
-      const levels = [0.0, 0.25, 0.5, 0.75, 1.0];
+      const levels = [0, 0.25, 0.5, 0.75, 1];
       const predictions: number[] = [];
 
       for (const level of levels) {
@@ -436,9 +436,9 @@ describe('Behavior Prediction (Zhang et al., 2021)', () => {
       // This means predictions should be reasonable and varied
 
       const samples = [
-        { strength: 0.2, accessibility: 0.5 },
-        { strength: 0.5, accessibility: 0.7 },
-        { strength: 0.8, accessibility: 0.6 },
+        { accessibility: 0.5, strength: 0.2 },
+        { accessibility: 0.7, strength: 0.5 },
+        { accessibility: 0.6, strength: 0.8 },
       ];
 
       for (const sample of samples) {
@@ -457,8 +457,8 @@ describe('Behavior Prediction (Zhang et al., 2021)', () => {
 
 describe('Integration: Full Habit Formation Cycle', () => {
   it('simulates habit formation over 30 days with consistent behavior', () => {
-    let strength = 0.0;
-    let accessibility = 1.0; // Starts at full memory
+    let strength = 0;
+    let accessibility = 1; // Starts at full memory
 
     // Simulate 30 days of consistent behavior
     for (let day = 1; day <= 30; day++) {
@@ -547,7 +547,7 @@ describe('Integration: Full Habit Formation Cycle', () => {
 
   it('validates that prediction aligns with behavioral state', () => {
     // New habit
-    const newHabit = predictCompletionProbability(0.1, 1.0);
+    const newHabit = predictCompletionProbability(0.1, 1);
 
     // Established habit
     const establishedHabit = predictCompletionProbability(0.7, 0.8);
