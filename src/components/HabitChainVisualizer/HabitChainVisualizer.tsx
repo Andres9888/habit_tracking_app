@@ -76,14 +76,14 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     }).start();
   }, [completed, completion]);
 
-  const backgroundColor = completion.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['#e5e7eb', accentColor],
-  });
+  // For Figma design: future/uncompleted boxes have white bg with border
+  const backgroundColor = completed
+    ? accentColor
+    : '#ffffff';
 
   const scale = completion.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.94, 1],
+    outputRange: [0.96, 1],
   });
 
   return (
@@ -93,13 +93,13 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       accessibilityRole='button'
       accessibilityState={{ disabled }}
       className={clsx(
-        'h-12 w-12 items-center justify-center rounded-2xl shadow-sm',
-        isToday && 'border-2 border-black'
+        'h-12 w-12 items-center justify-center rounded-[12px]',
+        !completed && 'border-2 border-[#1a1a1a]'
       )}
       disabled={disabled}
       style={{
         backgroundColor,
-        opacity: disabled ? 0.4 : 1,
+        opacity: disabled ? 0.5 : 1,
         transform: [{ scale }],
       }}
       onPress={onPress}
@@ -117,7 +117,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <Check color='#ffffff' size={20} strokeWidth={2.25} />
+        <Check color='#ffffff' size={18} strokeWidth={2.5} />
       </Animated.View>
     </AnimatedPressable>
   );
@@ -164,27 +164,17 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           ? 'Future dates are unavailable'
           : toggleInstruction;
 
-        // Check if this day and the next day are both completed (for connector)
-        const showConnector =
-          index < weekDateStrings.length - 1 &&
-          isCompleted(index) &&
-          isCompleted(index + 1);
-
         return (
-          <React.Fragment key={dateString}>
-            <HabitDayToggle
-              accentColor={accentColor}
-              accessibilityHint={accessibilityHint}
-              accessibilityLabel={accessibilityLabel}
-              completed={completed}
-              disabled={disabled}
-              isToday={isToday(index)}
-              onPress={() => onToggle({ date: dateString, habitId })}
-            />
-            {index < weekDateStrings.length - 1 && (
-              <DayConnector accentColor={accentColor} visible={showConnector} />
-            )}
-          </React.Fragment>
+          <HabitDayToggle
+            key={dateString}
+            accentColor={accentColor}
+            accessibilityHint={accessibilityHint}
+            accessibilityLabel={accessibilityLabel}
+            completed={completed}
+            disabled={disabled}
+            isToday={isToday(index)}
+            onPress={() => onToggle({ date: dateString, habitId })}
+          />
         );
       })}
     </View>

@@ -122,73 +122,72 @@ export default function DraggableHabit({
   const habitCard = (
     <Pressable onLongPress={() => onLongPress?.(habit)}>
       <Animated.View
-        className='overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white'
+        className='overflow-hidden rounded-2xl bg-white'
         style={{
           opacity: fade,
           transform: [{ translateY }],
         }}
       >
-      <View className='px-5 pt-5'>
-        {/* Header with icon, title and strength badge */}
-        <View className='mb-5 flex-row items-center justify-between'>
-          <View className='flex-row items-center gap-4'>
-            {/* Icon container with shadow */}
-            <View className='h-16 w-16 items-center justify-center rounded-[20px] bg-white shadow-sm'>
-              <Text className='text-[32px]'>{emoji}</Text>
-            </View>
-            <View className='flex-col'>
-              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
-                {name || habit.name}
-              </Text>
-              {streak > 0 && (
-                <Text className='mt-1 text-xs font-semibold uppercase leading-4 tracking-wide text-[#ff6900]'>
-                  🔥 {streak} Day Streak
-                </Text>
-              )}
-            </View>
-          </View>
-          {showHabitStrengthPercentage &&
-            habit.strength !== undefined &&
-            habit.strength > 0 && (
-              <View className='h-8 rounded-full bg-[#10b981] px-3 shadow-sm'>
-                <Text className='text-sm font-normal leading-8 tracking-[-0.15px] text-white'>
-                  {strengthPercentage}%
-                </Text>
+        <View className='p-4'>
+          {/* Header with icon, title and strength badge */}
+          <View className='mb-5 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-4'>
+              {/* Icon container - colored background based on habit */}
+              <View
+                className='h-12 w-12 items-center justify-center rounded-[12px]'
+                style={{
+                  backgroundColor:
+                    accentColor === '#3b82f6'
+                      ? '#dbeafe' // blue-100
+                      : accentColor === '#f97316'
+                        ? '#ffedd5' // orange-100
+                        : accentColor === '#10b981'
+                          ? '#d1fae5' // emerald-100
+                          : accentColor === '#8b5cf6'
+                            ? '#ede9fe' // violet-100
+                            : accentColor === '#06b6d4'
+                              ? '#cffafe' // cyan-100
+                              : accentColor === '#ec4899'
+                                ? '#fce7f3' // pink-100
+                                : '#fef9c3', // yellow-100
+                }}
+              >
+                <Text className='text-[24px] leading-[32px]'>{emoji}</Text>
               </View>
-            )}
-        </View>
+              <View className='flex-col'>
+                <Text className='text-[18px] font-semibold leading-[28px] text-[#1a1a1a]'>
+                  {name || habit.name}
+                </Text>
+                {streak > 0 && (
+                  <Text className='mt-1 flex-row items-center text-[14px] font-bold uppercase leading-[20px] text-[#ff6500]'>
+                    🔥 {streak} DAY STREAK
+                  </Text>
+                )}
+              </View>
+            </View>
+            {showHabitStrengthPercentage &&
+              habit.strength !== undefined &&
+              habit.strength > 0 && (
+                <View className='h-7 rounded-full bg-[#10b981] px-3'>
+                  <Text className='text-[14px] font-semibold leading-7 text-white'>
+                    {strengthPercentage}%
+                  </Text>
+                </View>
+              )}
+          </View>
 
-        {/* Week status visualizer */}
-        <View className='mb-5'>
-          <HabitChainVisualizer
-            accentColor={accentColor}
-            habitId={habit._id}
-            weekDateStrings={weekDateStrings}
-            weekStatus={weekStatus}
-            onToggle={toggleHabit}
-          />
+          {/* Week status visualizer */}
+          <View>
+            <HabitChainVisualizer
+              accentColor={accentColor}
+              habitId={habit._id}
+              weekDateStrings={weekDateStrings}
+              weekStatus={weekStatus}
+              onToggle={toggleHabit}
+            />
+          </View>
         </View>
-      </View>
-
-      {/* Gradient fill based on habit strength - full width at bottom */}
-      {habit.strength !== undefined && habit.strength > 0 && (
-        <Animated.View
-          style={{
-            height: gradientHeight,
-            opacity: GRADIENT_OPACITY,
-            width: '100%',
-          }}
-        >
-          <LinearGradient
-            colors={['#fee685', '#fef3c6', '#fff7ed']}
-            end={{ x: 0, y: 1 }}
-            locations={[0, 0.5, 1]}
-            start={{ x: 0, y: 0 }}
-            style={{ height: '100%', width: '100%' }}
-          />
-        </Animated.View>
-      )}
-    </Animated.View>
+      </Animated.View>
     </Pressable>
   );
 

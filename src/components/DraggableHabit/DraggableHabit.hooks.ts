@@ -19,14 +19,15 @@ interface Habit {
   [key: string]: any;
 }
 
+// Figma design accent colors - blue and orange primary
 const ACCENT_COLORS = [
-  '#4ADE80',
-  '#60A5FA',
-  '#F59E0B',
-  '#A855F7',
-  '#F97316',
-  '#38BDF8',
-  '#F472B6',
+  '#3b82f6', // blue-500 (Exercise in Figma)
+  '#f97316', // orange-500 (Japanese in Figma)
+  '#10b981', // emerald-500
+  '#8b5cf6', // violet-500
+  '#06b6d4', // cyan-500
+  '#ec4899', // pink-500
+  '#eab308', // yellow-500
 ];
 
 const pickAccentColor = (input: string): string => {

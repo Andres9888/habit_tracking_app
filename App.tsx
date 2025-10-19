@@ -191,40 +191,46 @@ function HabitsApp() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#F5F1ED' }}>
-      <ScrollView style={{ flex: 1, backgroundColor: '#F5F1ED' }} contentContainerStyle={{ backgroundColor: '#F5F1ED' }}>
-        <View className='mx-auto max-w-[448px] gap-8 px-6 pb-24 pt-12'>
-          <View className='mb-2 flex-row items-center justify-between'>
-            <Text className='text-[28px] font-semibold leading-[42px] tracking-[0.38px] text-[#0f172a]'>
-              Habits
-            </Text>
-            <View className='flex-row gap-3'>
-              <Pressable
-                accessibilityLabel='View character'
-                accessibilityRole='button'
-                onPress={() => setShowCharacterScreen(true)}
-              >
-                <CharacterIcon size={36} />
-              </Pressable>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#f8f5f1' }}>
+      <ScrollView style={{ flex: 1, backgroundColor: '#f8f5f1' }} contentContainerStyle={{ backgroundColor: '#f8f5f1' }}>
+        <View className='mx-auto w-full max-w-[375px] px-4 pb-24 pt-4'>
+          {/* Header Section */}
+          <View className='mb-4 flex-row items-center justify-between'>
+            {/* Time and Habits Button */}
+            <View className='flex-row items-center gap-4'>
+              <Text className='text-[20px] font-bold leading-[28px] text-[#1a1a1a]'>
+                {format(new Date(), 'H:mm')}
+              </Text>
+              <View className='flex-row items-center gap-2 rounded-full bg-[#1a1a1a] px-4 py-2'>
+                <Plus color='#ffffff' size={12} strokeWidth={2} />
+                <Text className='text-[14px] font-semibold text-white'>
+                  Habits
+                </Text>
+              </View>
+            </View>
+
+            {/* Right Icons */}
+            <View className='flex-row items-center gap-4'>
+              <Search color='#1a1a1a' size={14} strokeWidth={2} />
+              <Bell color='#1a1a1a' size={20} strokeWidth={2} />
+              <Wifi color='#1a1a1a' size={18} strokeWidth={2} />
               <Pressable
                 accessibilityLabel='Open settings'
                 accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+                className='h-8 w-8 items-center justify-center rounded-full'
                 onPress={() => setIsSettingsOpen(true)}
               >
-                <Settings color='#364153' size={20} />
+                <Settings color='#1a1a1a' size={20} />
               </Pressable>
             </View>
           </View>
 
-          <DateSelector
+          {/* Date Navigation */}
+          <CalendarTimeline
             dates={displayWeekDates}
             onPreviousWeek={handlePreviousWeek}
             onNextWeek={handleNextWeek}
           />
-
-          {/* New CalendarTimeline Component from Figma Design (node 201:87) */}
-          <CalendarTimeline dates={displayWeekDates} showSeparator={true} />
 
           {isAdding && (
             <View className='mb-8 rounded-3xl border border-slate-200 bg-white/90 p-5'>
@@ -325,17 +331,25 @@ function HabitsApp() {
           onChangeCompact={handleCompactChange}
         />
       </ScrollView>
-      <View pointerEvents='box-none' className='absolute bottom-8 right-6'>
+      {/* Centered Floating Action Button */}
+      <View pointerEvents='box-none' className='absolute bottom-8 left-0 right-0 items-center'>
         <Pressable
           accessibilityHint={
             isAdding ? 'Close add habit form' : 'Open add habit form'
           }
           accessibilityLabel={isAdding ? 'Close' : 'Add habit'}
           accessibilityRole='button'
-          className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
+          className='h-16 w-16 items-center justify-center rounded-full bg-[#1a1a1a]'
+          style={{
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
+            elevation: 8,
+          }}
           onPress={handleToggleForm}
         >
-          <Plus color='#ffffff' size={24} />
+          <Plus color='#ffffff' size={28} strokeWidth={2.5} />
         </Pressable>
       </View>
     </GestureHandlerRootView>

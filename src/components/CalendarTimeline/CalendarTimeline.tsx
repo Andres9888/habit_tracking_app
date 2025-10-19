@@ -31,25 +31,25 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
     return null;
   }
 
-  // Get date range text (first and last date)
+  // Get date range text (first and last date) - safe array access
   const firstDate = dates[0];
-  const lastDate = dates.at(-1);
+  const lastDate = dates[dates.length - 1];
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   return (
-    <View className='flex-col gap-6 px-5 py-4'>
+    <View className='mb-6'>
       {/* Week Navigation Header */}
-      <View className='flex-row items-center justify-between px-0'>
+      <View className='mb-6 flex-row items-center justify-between'>
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center'
+          className='h-10 w-7 items-center justify-center rounded-full'
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color='#101727' size={16} strokeWidth={2.25} />
+          <ChevronLeft color='#1a1a1a' size={12} strokeWidth={2} />
         </Pressable>
 
-        <Text className='text-[16px] leading-6 tracking-[-0.3125px] text-[#4a5565]'>
+        <Text className='text-[18px] font-semibold leading-[28px] text-[#1a1a1a]'>
           {dateRangeText}
         </Text>
 
@@ -57,19 +57,19 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className={`h-10 w-10 items-center justify-center ${canNavigateForward ? '' : 'opacity-40'}`}
+          className={`h-10 w-7 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
-          <ChevronRight color='#101727' size={16} strokeWidth={2.25} />
+          <ChevronRight color='#1a1a1a' size={12} strokeWidth={2} />
         </Pressable>
       </View>
 
-      {/* Days Row */}
-      <View className='flex-row items-center justify-between'>
+      {/* Days Row - Show all 7 days */}
+      <View className='flex-row items-start justify-between'>
         {dates.map((date, index) => {
-          const weekday = format(date, 'EEE'); // Mon, Tue, Wed, etc.
-          const dayNumber = format(date, 'd'); // 13, 14, 15, etc.
+          const weekday = format(date, 'EEE'); // Sun, Mon, Tue, etc.
+          const dayNumber = format(date, 'd'); // 15, 16, 17, etc.
           const isCurrentDay = isToday(date);
           const isUpcoming = isFuture(date);
 
@@ -78,44 +78,34 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             ? `Today, ${baseLabel}`
             : baseLabel;
 
+          // Check if it's Sunday (last day of the week)
+          const isSunday = format(date, 'EEE') === 'Sun';
+
           return (
             <View
               key={`timeline-day-${index}`}
               accessibilityLabel={accessibilityLabel}
               accessibilityRole='text'
-              className='w-12 items-center gap-2'
+              className='flex-1 items-center gap-2'
             >
               {/* Weekday label */}
-              <Text className='text-center text-[12px] font-normal leading-[16px] text-[#6a7282]'>
+              <Text
+                className={`text-center text-[14px] leading-[20px] ${
+                  isSunday ? 'font-bold text-[#1a1a1a]' : 'font-normal text-[#8a8a8a]'
+                }`}
+              >
                 {weekday}
               </Text>
 
-              {/* Date number with rounded box and shadow */}
+              {/* Date number with rounded box */}
               <View
-                className={`h-12 w-12 items-center justify-center rounded-2xl ${
-                  isCurrentDay ? 'bg-[#101828]' : 'bg-white'
-                } ${isUpcoming && !isCurrentDay ? 'opacity-50' : ''}`}
-                style={
-                  isCurrentDay
-                    ? {
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 10 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 15,
-                        elevation: 8,
-                      }
-                    : {
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 3,
-                        elevation: 2,
-                      }
-                }
+                className={`h-10 w-10 items-center justify-center rounded-[12px] ${
+                  isCurrentDay ? 'bg-[#1a1a1a]' : 'bg-white'
+                }`}
               >
                 <Text
-                  className={`text-center text-[16px] font-normal leading-[24px] tracking-[-0.3125px] ${
-                    isCurrentDay ? 'text-white' : 'text-[#101828]'
+                  className={`text-center text-[16px] font-semibold leading-[24px] ${
+                    isCurrentDay ? 'font-bold text-white' : 'text-[#1a1a1a]'
                   }`}
                 >
                   {dayNumber}
@@ -125,17 +115,6 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           );
         })}
       </View>
-
-      {/* Gradient separator line - matches Figma design exactly */}
-      {showSeparator && (
-        <View
-          className='h-[1px] w-full'
-          style={{
-            backgroundColor: '#ffb86a',
-            opacity: 0.5,
-          }}
-        />
-      )}
     </View>
   );
 };
