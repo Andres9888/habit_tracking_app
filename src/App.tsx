@@ -363,15 +363,15 @@ function HabitsApp() {
           onClose={() => setIsHabitCalendarOpen(false)}
         />
       </View>
-      <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
+      <View className='absolute bottom-8 left-0 right-0 items-center' pointerEvents='box-none'>
         <Pressable
           accessibilityHint='Open create habit modal'
           accessibilityLabel='Add habit'
           accessibilityRole='button'
-          className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
+          className='h-16 w-16 items-center justify-center rounded-full bg-[#1a1a1a] shadow-lg'
           onPress={handleToggleForm}
         >
-          <Plus color='#ffffff' size={24} strokeWidth={2.25} />
+          <Plus color='#ffffff' size={28} strokeWidth={2.5} />
         </Pressable>
       </View>
     </GestureHandlerRootView>
