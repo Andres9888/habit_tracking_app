@@ -95,19 +95,35 @@ export const reorderHabits = mutation({
     habitIds: v.array(v.id('habits')),
   },
   handler: async (ctx, args) => {
-    // Update each habit with its new order index
-    for (let i = 0; i < args.habitIds.length; i++) {
-      const habitId = args.habitIds[i];
-      const habit = await ctx.db.get(habitId);
+    console.log('reorderHabits called with:', args.habitIds.length, 'habits');
 
-      if (habit) {
-        await ctx.db.patch(habitId, {
-          order: i,
-        });
-      }
+    // Validate input
+    if (!args.habitIds || args.habitIds.length === 0) {
+      console.error('No habit IDs provided');
+      return null;
     }
 
-    return null;
+    try {
+      // Update each habit with its new order index
+      for (let i = 0; i < args.habitIds.length; i++) {
+        const habitId = args.habitIds[i];
+        const habit = await ctx.db.get(habitId);
+
+        if (habit) {
+          await ctx.db.patch(habitId, {
+            order: i,
+          });
+        } else {
+          console.warn(`Habit ${habitId} not found`);
+        }
+      }
+
+      console.log('Successfully reordered', args.habitIds.length, 'habits');
+      return null;
+    } catch (error) {
+      console.error('Error in reorderHabits:', error);
+      throw error;
+    }
   },
   returns: v.null(),
 });

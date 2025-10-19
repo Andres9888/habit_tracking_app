@@ -185,8 +185,14 @@ function HabitsApp() {
 
   const handleDragEnd = useCallback(
     async ({ data }: { data: any[] }) => {
-      const habitIds = data.map((h) => h._id) as Id<'habits'>[];
-      await reorderHabits({ habitIds });
+      try {
+        const habitIds = data.map((h) => h._id) as Id<'habits'>[];
+        console.log('Reordering habits:', habitIds);
+        await reorderHabits({ habitIds });
+        console.log('Reorder successful');
+      } catch (error) {
+        console.error('Failed to reorder habits:', error);
+      }
     },
     [reorderHabits]
   );
