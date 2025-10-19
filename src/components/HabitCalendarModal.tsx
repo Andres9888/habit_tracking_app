@@ -71,9 +71,9 @@ export default function HabitCalendarModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <SafeAreaView className='flex-1 bg-white'>
+      <SafeAreaView className='flex-1 bg-stone-50'>
         {/* Navigation Header */}
-        <View className='flex-row items-center justify-between border-b border-slate-100 px-4 pb-4 pt-2'>
+        <View className='flex-row items-center justify-between border-b border-slate-100 bg-stone-50 px-4 pb-4 pt-2'>
           <Pressable
             className='h-10 w-10 items-center justify-center rounded-full'
             onPress={onClose}
