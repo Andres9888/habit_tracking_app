@@ -159,17 +159,23 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           ? 'Future dates are unavailable'
           : toggleInstruction;
 
+        const isLastItem = index === weekDateStrings.length - 1;
+        // Show connector line only when both current and next day are completed
+        const showConnector = !isLastItem && completed && isCompleted(index + 1);
+
         return (
-          <HabitDayToggle
-            key={dateString}
-            accentColor={accentColor}
-            accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
-            completed={completed}
-            disabled={disabled}
-            isToday={isToday(index)}
-            onPress={() => onToggle({ date: dateString, habitId })}
-          />
+          <React.Fragment key={dateString}>
+            <HabitDayToggle
+              accentColor={accentColor}
+              accessibilityHint={accessibilityHint}
+              accessibilityLabel={accessibilityLabel}
+              completed={completed}
+              disabled={disabled}
+              isToday={isToday(index)}
+              onPress={() => onToggle({ date: dateString, habitId })}
+            />
+            {!isLastItem && <DayConnector visible={showConnector} />}
+          </React.Fragment>
         );
       })}
     </View>
