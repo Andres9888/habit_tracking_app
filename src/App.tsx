@@ -17,6 +17,10 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from 'react-native-gesture-handler';
+import DraggableFlatList, {
+  ScaleDecorator,
+  RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import { api } from '../convex/_generated/api';
 import type { Id } from '../convex/_generated/dataModel';
 import { CalendarTimeline } from './components/CalendarTimeline';
@@ -76,10 +80,10 @@ function HabitsApp() {
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
+  const reorderHabits = useMutation(api.habits.reorderHabits);
   const updateSettings = useMutation(api.settings.update);
   const habits = useQuery(api.habits.list) ?? [];
   const settings = useQuery(api.settings.get);
-  const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
   const today = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor] = useState(today);
@@ -182,30 +186,13 @@ function HabitsApp() {
     return 'planned';
   };
 
-  // Initialize habit order when habits load
-  useEffect(() => {
-    if (habits.length > 0 && habitOrder.length === 0) {
-      setHabitOrder(habits.map((h) => h._id));
-    }
-  }, [habits, habitOrder.length]);
-
-  // Reorder habits based on current order state
-  const orderedHabits = useMemo(() => {
-    if (habitOrder.length === 0) return habits;
-
-    const orderMap = new Map(habitOrder.map((id, index) => [id, index]));
-    return [...habits].sort((a: any, b: any) => {
-      const aOrder = orderMap.get(a._id) ?? Infinity;
-      const bOrder = orderMap.get(b._id) ?? Infinity;
-      return aOrder - bOrder;
-    });
-  }, [habits, habitOrder]);
-
-  const _handleReorder = useCallback(async (newOrder: string[]) => {
-    setHabitOrder(newOrder);
-    // TODO: Implement reorderHabits mutation in convex/habits.ts
-    // await reorderHabits({ habitIds: newOrder as Id<"habits">[] });
-  }, []);
+  const handleDragEnd = useCallback(
+    async ({ data }: { data: any[] }) => {
+      const habitIds = data.map((h) => h._id) as Id<'habits'>[];
+      await reorderHabits({ habitIds });
+    },
+    [reorderHabits]
+  );
 
   const handleArchive = useCallback(
     async (habitId: Id<'habits'>) => {

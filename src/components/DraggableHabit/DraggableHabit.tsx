@@ -40,7 +40,7 @@ interface DraggableHabitProps {
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   onArchive?: (habitId: Id<'habits'>) => void;
-  onLongPress?: (habit: Habit) => void;
+  onLongPress?: ((habit?: Habit) => void) | (() => void);
   onPress?: (habit: Habit) => void;
 }
 
