@@ -1,0 +1,75 @@
+import { View, Text } from 'react-native';
+import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
+
+interface StatsCardProps {
+  habitName: string;
+  habitNotes?: string;
+  emoji?: string;
+  currentStreak: number;
+  bestStreak: number;
+  completionPercentage: number;
+}
+
+export function StatsCard({
+  habitName,
+  habitNotes,
+  emoji,
+  currentStreak,
+  bestStreak,
+  completionPercentage,
+}: StatsCardProps) {
+  const { emoji: extractedEmoji, name } = getEmojiAndName(habitName);
+  const displayEmoji = emoji || extractedEmoji;
+
+  return (
+    <View className='rounded-2xl bg-white p-5'>
+      {/* Habit Header */}
+      <View className='mb-6 flex-row items-start gap-3'>
+        {displayEmoji && (
+          <View className='h-14 w-14 items-center justify-center rounded-xl bg-blue-100'>
+            <Text className='text-[30px]'>{displayEmoji}</Text>
+          </View>
+        )}
+        <View className='flex-1'>
+          <Text className='text-2xl font-semibold text-slate-900'>{name}</Text>
+          {habitNotes && (
+            <Text className='mt-1 text-base text-slate-500'>{habitNotes}</Text>
+          )}
+        </View>
+      </View>
+
+      {/* Stats Row */}
+      <View className='flex-row items-center justify-between'>
+        {/* Current Streak */}
+        <View className='items-center'>
+          <Text className='text-[30px] font-extrabold text-orange-500'>
+            {currentStreak}
+          </Text>
+          <Text className='mt-1 text-center text-sm font-medium leading-5 text-slate-500'>
+            Current{'\n'}Streak
+          </Text>
+        </View>
+
+        {/* Best Streak */}
+        <View className='items-center'>
+          <Text className='text-[30px] font-extrabold text-slate-900'>
+            {bestStreak}
+          </Text>
+          <Text className='mt-1 text-center text-sm font-medium leading-5 text-slate-500'>
+            Best Streak
+          </Text>
+        </View>
+
+        {/* Completion Percentage */}
+        <View className='items-center'>
+          <Text className='text-[30px] font-extrabold text-emerald-500'>
+            {completionPercentage}%
+          </Text>
+          <Text className='mt-1 text-center text-sm font-medium leading-5 text-slate-500'>
+            Completion
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
