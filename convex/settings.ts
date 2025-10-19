@@ -11,6 +11,11 @@ const DEFAULT_SETTINGS = {
   showMotivationalMessages: true,
   showNotesStats: true,
   showStreaks: true,
+  // New settings from Figma design
+  appIcon: 'default' as const,
+  textSize: 'medium' as const,
+  highContrastMode: false,
+  reduceMotion: false,
 };
 
 export const get = query({
@@ -36,6 +41,12 @@ export const get = query({
       showNotesStats:
         settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
+      appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
+      textSize: settings?.textSize ?? DEFAULT_SETTINGS.textSize,
+      highContrastMode:
+        settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
+      reduceMotion:
+        settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
     };
   },
   returns: v.object({
@@ -48,6 +59,10 @@ export const get = query({
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.boolean(),
     showStreaks: v.boolean(),
+    appIcon: v.string(),
+    textSize: v.string(),
+    highContrastMode: v.boolean(),
+    reduceMotion: v.boolean(),
   }),
 });
 
@@ -62,6 +77,10 @@ export const update = mutation({
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
+    appIcon: v.optional(v.string()),
+    textSize: v.optional(v.string()),
+    highContrastMode: v.optional(v.boolean()),
+    reduceMotion: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     // Get first settings record (since auth was removed, just use any settings)
