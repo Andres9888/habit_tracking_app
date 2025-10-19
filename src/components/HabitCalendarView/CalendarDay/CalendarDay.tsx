@@ -24,34 +24,23 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
 
   return (
     <Pressable
-      className='aspect-square w-[14.28%] items-center justify-center p-0.5'
+      className='aspect-square w-[14.28%] items-center justify-center p-1'
       disabled={isFuture}
       onPress={() => !isFuture && onPress()}
     >
-      <View
-        className={clsx(
-          'flex-1 items-center justify-center rounded-xl border bg-white',
-          status === 'done' && 'border-2 border-emerald-500 bg-emerald-50',
-          status === 'missed' &&
-            'border-dashed border-slate-200 bg-gray-50 opacity-70',
-          status === 'planned' && 'border-2 border-blue-500 bg-blue-50',
-          isFuture && 'border-slate-100 opacity-30',
-          isCurrentDay && 'border-2 border-slate-900'
-        )}
-      >
+      <View className='flex-1 w-full items-center justify-center gap-1 border border-slate-200 rounded-lg'>
         <Text
           className={clsx(
-            'text-[13px] font-medium text-slate-500',
-            status === 'done' && 'font-semibold text-emerald-600',
-            status === 'missed' && 'text-slate-500',
-            isFuture && 'text-slate-300',
-            isCurrentDay && 'font-bold text-slate-900'
+            'text-base font-normal text-slate-700',
+            status === 'done' && 'font-bold text-emerald-600',
+            status === 'missed' && 'text-slate-400',
+            isFuture && 'text-slate-300'
           )}
         >
           {format(date, 'd')}
         </Text>
         {status === 'done' && (
-          <View className='mt-0.5 h-1 w-1 rounded-full bg-emerald-600' />
+          <View className='h-1.5 w-1.5 rounded-full bg-emerald-600' />
         )}
       </View>
     </Pressable>

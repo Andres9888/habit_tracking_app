@@ -8,7 +8,7 @@ import {
   useMutation,
   useQuery,
 } from 'convex/react';
-import { addDays, format, startOfDay } from 'date-fns';
+import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-fns';
 import { Plus, Settings, BarChart3 } from 'lucide-react-native';
 import type { ComponentType } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -26,6 +26,7 @@ import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
 import CharacterScreen from './screens/CharacterScreen';
 import CharacterIcon from './components/CharacterIcon';
+import HabitCalendarModal from './components/HabitCalendarModal';
 import * as SecureStore from 'expo-secure-store';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
@@ -68,6 +69,10 @@ function HabitsApp() {
   const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
+  const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
+    useState(true);
+  const [selectedHabit, setSelectedHabit] = useState<any | null>(null);
+  const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -88,8 +93,20 @@ function HabitsApp() {
     [weekDates]
   );
 
+  // Load 12 months of tracking data for calendar modal and heatmap
+  const extendedDateRange = useMemo(() => {
+    const endDate = today;
+    const startDate = subMonths(endDate, 12);
+    return eachDayOfInterval({ start: startDate, end: endDate });
+  }, [today]);
+
+  const extendedDateStrings = useMemo(
+    () => extendedDateRange.map((d) => format(d, 'yyyy-MM-dd')),
+    [extendedDateRange]
+  );
+
   const tracking =
-    useQuery(api.habits.getTracking, { dates: weekDateStrings }) ?? [];
+    useQuery(api.habits.getTracking, { dates: extendedDateStrings }) ?? [];
 
   const completedDatesByHabit = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -197,6 +214,11 @@ function HabitsApp() {
     [archiveHabit]
   );
 
+  const handleHabitLongPress = useCallback((habit: any) => {
+    setSelectedHabit(habit);
+    setIsHabitCalendarOpen(true);
+  }, []);
+
   if (showCharacterScreen) {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
@@ -272,11 +294,13 @@ function HabitsApp() {
                   <DraggableHabit
                     key={habit._id}
                     habit={habit}
+                    showHabitStrengthPercentage={showHabitStrengthPercentage}
                     streak={streak}
                     toggleHabit={toggleHabit}
                     weekDateStrings={weekDateStrings}
                     weekStatus={weekStatus}
                     onArchive={handleArchive}
+                    onLongPress={handleHabitLongPress}
                   />
                 );
               })}
@@ -285,9 +309,10 @@ function HabitsApp() {
         </ScrollView>
         <WebToaster />
         <SettingsModal
-          visible={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
           showCharacterScreen={settings?.showCharacterScreen ?? true}
+          showHabitStrengthPercentage={showHabitStrengthPercentage}
+          showNotesStats={settings?.showNotesStats ?? true}
+          visible={isSettingsOpen}
           onChangeShowCharacterScreen={async (value) => {
             if (settings) {
               await updateSettings({
@@ -303,7 +328,7 @@ function HabitsApp() {
               });
             }
           }}
-          showNotesStats={settings?.showNotesStats ?? true}
+          onChangeShowHabitStrengthPercentage={setShowHabitStrengthPercentage}
           onChangeShowNotesStats={async (value) => {
             if (settings) {
               await updateSettings({
@@ -319,6 +344,7 @@ function HabitsApp() {
               });
             }
           }}
+          onClose={() => setIsSettingsOpen(false)}
         />
         <StatsNotesModal
           visible={isStatsNotesOpen}
@@ -328,8 +354,16 @@ function HabitsApp() {
           visible={isCreateHabitOpen}
           onClose={() => setIsCreateHabitOpen(false)}
         />
+        <HabitCalendarModal
+          habit={selectedHabit}
+          streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
+          tracking={tracking}
+          toggleHabit={toggleHabit}
+          visible={isHabitCalendarOpen}
+          onClose={() => setIsHabitCalendarOpen(false)}
+        />
       </View>
-      <View pointerEvents='box-none' className='absolute bottom-8 right-6'>
+      <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
         <Pressable
           accessibilityHint='Open create habit modal'
           accessibilityLabel='Add habit'
