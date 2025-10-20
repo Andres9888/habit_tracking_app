@@ -258,6 +258,46 @@ export const get = query({
   handler: async (ctx, args) => {
     return await ctx.db.get(args.habitId);
   },
+  returns: v.union(
+    v.null(),
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id('habits'),
+      createdAt: v.number(),
+      name: v.string(),
+      notes: v.optional(v.string()),
+      order: v.optional(v.number()),
+      archived: v.optional(v.boolean()),
+      archivedAt: v.optional(v.number()),
+      strength: v.optional(v.number()),
+      strengthLevel: v.optional(v.string()),
+      strengthUpdatedAt: v.optional(v.number()),
+      tags: v.optional(v.array(v.string())),
+      userId: v.optional(v.string()),
+      consecutiveDays: v.optional(v.number()),
+      totalCompletions: v.optional(v.number()),
+      totalMisses: v.optional(v.number()),
+      accessibility: v.optional(v.number()),
+      accessibilityDecayParam: v.optional(v.number()),
+      accessibilityGainBehavior: v.optional(v.number()),
+      accessibilityGainReminder: v.optional(v.number()),
+      accessibilityUpdatedAt: v.optional(v.number()),
+      habitDecayParam: v.optional(v.number()),
+      habitGainParam: v.optional(v.number()),
+      lastPredictionAt: v.optional(v.number()),
+      predictedCompletionProb: v.optional(v.number()),
+      icon: v.optional(v.string()),
+      iconColor: v.optional(v.string()),
+      frequency: v.optional(v.string()),
+      daysOfWeek: v.optional(v.array(v.number())),
+      preferredTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
+      reminderTime: v.optional(v.string()),
+      reminderSound: v.optional(v.string()),
+      goalDuration: v.optional(v.number()),
+      goalUnit: v.optional(v.string()),
+    })
+  ),
 });
 
 export const list = query({
