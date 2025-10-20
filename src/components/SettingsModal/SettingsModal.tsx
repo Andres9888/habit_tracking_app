@@ -63,11 +63,6 @@ export default function SettingsModal({
             <Text className="text-[20px] font-bold leading-[28px] text-[#1a1a1a]">
               {format(new Date(), 'H:mm')}
             </Text>
-            <View className="flex-row items-center gap-4">
-              {/* Status icons placeholder */}
-              <Text className="text-[#1a1a1a]">📶</Text>
-              <Text className="text-[#1a1a1a]">📱</Text>
-            </View>
           </View>
 
           {/* Settings Title */}
