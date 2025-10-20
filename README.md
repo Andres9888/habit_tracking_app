@@ -24,11 +24,21 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
    - Copy your existing Convex backend files to this project
    - Update `.env.local` with your Convex URL
 
-3. Start the development server:
+3. Start the development server (loads variables from `.env` automatically):
 
    ```bash
-   npm start
+   npm run expo:start
    ```
+
+   To use a different env file, prefix the command with `ENV_FILE=...`, e.g.:
+
+   ```bash
+   ENV_FILE=.env.local npm run expo:start
+   ```
+
+   Companion scripts are available for native targets, e.g. `npm run expo:ios`.
+   The helper script is POSIX shell compatible; on Windows, run the command
+   from Git Bash or WSL.
 
 4. Use the Expo Go app to scan the QR code and run on your device
 
