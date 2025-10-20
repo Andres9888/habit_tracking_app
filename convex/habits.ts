@@ -8,10 +8,18 @@ export const create = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Get all existing habits to determine next order value
+    const allHabits = await ctx.db.query('habits').collect();
+    const maxOrder = allHabits.reduce(
+      (max, habit) => Math.max(max, habit.order ?? -1),
+      -1
+    );
+
     return await ctx.db.insert('habits', {
       createdAt: Date.now(),
       name: args.name,
       notes: args.notes,
+      order: maxOrder + 1,
     });
   },
   returns: v.id('habits'),
@@ -61,12 +69,61 @@ export const unarchive = mutation({
       throw new Error('Habit not found');
     }
 
+    // Get all non-archived habits to determine next order value
+    const activeHabits = await ctx.db
+      .query('habits')
+      .filter((q) => q.neq(q.field('archived'), true))
+      .collect();
+    const maxOrder = activeHabits.reduce(
+      (max, h) => Math.max(max, h.order ?? -1),
+      -1
+    );
+
     await ctx.db.patch(args.habitId, {
       archived: false,
       archivedAt: undefined,
+      order: maxOrder + 1,
     });
 
     return null;
+  },
+  returns: v.null(),
+});
+
+export const reorderHabits = mutation({
+  args: {
+    habitIds: v.array(v.id('habits')),
+  },
+  handler: async (ctx, args) => {
+    console.log('reorderHabits called with:', args.habitIds.length, 'habits');
+
+    // Validate input
+    if (!args.habitIds || args.habitIds.length === 0) {
+      console.error('No habit IDs provided');
+      return null;
+    }
+
+    try {
+      // Update each habit with its new order index
+      for (let i = 0; i < args.habitIds.length; i++) {
+        const habitId = args.habitIds[i];
+        const habit = await ctx.db.get(habitId);
+
+        if (habit) {
+          await ctx.db.patch(habitId, {
+            order: i,
+          });
+        } else {
+          console.warn(`Habit ${habitId} not found`);
+        }
+      }
+
+      console.log('Successfully reordered', args.habitIds.length, 'habits');
+      return null;
+    } catch (error) {
+      console.error('Error in reorderHabits:', error);
+      throw error;
+    }
   },
   returns: v.null(),
 });
@@ -139,8 +196,18 @@ export const restore = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    // Recreate the habit
-    const habitId = await ctx.db.insert('habits', args.habitData);
+    // Get all existing habits to determine next order value
+    const allHabits = await ctx.db.query('habits').collect();
+    const maxOrder = allHabits.reduce(
+      (max, habit) => Math.max(max, habit.order ?? -1),
+      -1
+    );
+
+    // Recreate the habit with proper order
+    const habitId = await ctx.db.insert('habits', {
+      ...args.habitData,
+      order: maxOrder + 1,
+    });
 
     // Recreate all tracking data
     for (const trackingEntry of args.trackingData) {
@@ -159,10 +226,21 @@ export const restore = mutation({
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
+    const habits = await ctx.db
       .query('habits')
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
+
+    // Sort by order field (ascending), use _creationTime as fallback
+    return habits.sort((a, b) => {
+      const aOrder = a.order ?? Infinity;
+      const bOrder = b.order ?? Infinity;
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+      // If orders are equal (or both undefined), sort by creation time
+      return a._creationTime - b._creationTime;
+    });
   },
   returns: v.array(
     v.object({
