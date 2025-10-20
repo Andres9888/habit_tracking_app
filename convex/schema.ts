@@ -47,6 +47,17 @@ const applicationTables = {
     totalCompletions: v.optional(v.number()),
     totalMisses: v.optional(v.number()),
     userId: v.optional(v.string()),
+    // Habit Edit Screen fields
+    icon: v.optional(v.string()), // Emoji icon
+    iconColor: v.optional(v.string()), // Background color for icon
+    frequency: v.optional(v.string()), // "daily", "weekly", "custom"
+    daysOfWeek: v.optional(v.array(v.number())), // 0-6 for Sunday-Saturday
+    preferredTime: v.optional(v.string()), // "morning", "afternoon", "evening"
+    remindersEnabled: v.optional(v.boolean()),
+    reminderTime: v.optional(v.string()), // "2:00 PM" format
+    reminderSound: v.optional(v.string()), // "default", etc.
+    goalDuration: v.optional(v.number()), // Goal value
+    goalUnit: v.optional(v.string()), // "minutes", "hours", "times", etc.
   }),
 
   notes: defineTable({

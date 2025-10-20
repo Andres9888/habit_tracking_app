@@ -39,6 +39,36 @@ export const updateNotes = mutation({
   returns: v.null(),
 });
 
+export const update = mutation({
+  args: {
+    habitId: v.id('habits'),
+    name: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    icon: v.optional(v.string()),
+    iconColor: v.optional(v.string()),
+    frequency: v.optional(v.string()),
+    daysOfWeek: v.optional(v.array(v.number())),
+    preferredTime: v.optional(v.string()),
+    remindersEnabled: v.optional(v.boolean()),
+    reminderTime: v.optional(v.string()),
+    reminderSound: v.optional(v.string()),
+    goalDuration: v.optional(v.number()),
+    goalUnit: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { habitId, ...updates } = args;
+
+    // Remove undefined fields
+    const cleanedUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, value]) => value !== undefined)
+    );
+
+    await ctx.db.patch(habitId, cleanedUpdates);
+    return null;
+  },
+  returns: v.null(),
+});
+
 export const archive = mutation({
   args: {
     habitId: v.id('habits'),
@@ -221,6 +251,13 @@ export const restore = mutation({
     return habitId;
   },
   returns: v.id('habits'),
+});
+
+export const get = query({
+  args: { habitId: v.id('habits') },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.habitId);
+  },
 });
 
 export const list = query({
