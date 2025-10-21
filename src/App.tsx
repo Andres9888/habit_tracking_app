@@ -12,7 +12,13 @@ import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-
 import { Plus, Settings, BarChart3 } from 'lucide-react-native';
 import type { ComponentType } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DraggableFlatList, {
   ScaleDecorator,
@@ -76,7 +82,9 @@ function HabitsApp() {
   const archiveHabit = useMutation(api.habits.archive);
   const reorderHabits = useMutation(api.habits.reorderHabits);
   const updateSettings = useMutation(api.settings.update);
-  const habits = useQuery(api.habits.list) ?? [];
+  const habitsQuery = useQuery(api.habits.list);
+  const habits = habitsQuery ?? [];
+  const isHabitsLoading = habitsQuery === undefined;
   const settings = useQuery(api.settings.get);
 
   const today = useMemo(() => startOfDay(new Date()), []);
@@ -256,6 +264,42 @@ function HabitsApp() {
     ]
   );
 
+  const renderEmptyState = useCallback(() => {
+    if (isHabitsLoading) {
+      return (
+        <View className='items-center justify-center gap-3 py-20'>
+          <ActivityIndicator color='#101727' size='small' />
+          <Text className='text-sm font-medium text-[#475467]'>
+            Loading your habits…
+          </Text>
+        </View>
+      );
+    }
+
+    return (
+      <View className='items-center justify-center gap-4 px-8 py-24'>
+        <Text className='text-center text-lg font-semibold text-[#101727]'>
+          Create your first habit
+        </Text>
+        <Text className='text-center text-sm text-[#475467]'>
+          Add a habit to start tracking your progress and building streaks.
+        </Text>
+        <Pressable
+          accessibilityHint='Open create habit modal'
+          accessibilityLabel='Add habit'
+          accessibilityRole='button'
+          className='h-11 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
+          onPress={handleToggleForm}
+        >
+          <Plus color='#ffffff' size={18} strokeWidth={2.25} />
+          <Text className='text-base font-medium tracking-tight text-white'>
+            New Habit
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }, [handleToggleForm, isHabitsLoading]);
+
   const renderHeader = useCallback(() => (
     <View className='gap-4'>
       <View className='mt-3 flex-row items-center justify-between'>
@@ -321,6 +365,7 @@ function HabitsApp() {
             renderItem={renderItem}
             onDragEnd={handleDragEnd}
             ListHeaderComponent={renderHeader}
+            ListEmptyComponent={renderEmptyState}
             contentContainerStyle={contentContainerStyle}
             showsVerticalScrollIndicator={false}
             activationDistance={10}
