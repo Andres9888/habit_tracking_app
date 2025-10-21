@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
+  Alert,
   Modal,
-  Platform,
   ScrollView,
   Switch,
   Text,
@@ -13,6 +13,12 @@ import { X } from 'lucide-react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  ensureNotificationPermissions,
+  formatReminderTime,
+  getDefaultReminderTime,
+  scheduleHabitReminder,
+} from '../../utils/notifications';
 
 interface CreateHabitModalProps {
   visible: boolean;
@@ -38,44 +44,55 @@ export default function CreateHabitModal({
   const [selectedEmoji, setSelectedEmoji] = useState('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
-  const [reminderTime, setReminderTime] = useState(() => {
-    const defaultTime = new Date();
-    defaultTime.setHours(14, 0, 0, 0); // 2:00 PM
-    return defaultTime;
-  });
+  const [reminderTime, setReminderTime] = useState(() => getDefaultReminderTime());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminderSound, setReminderSound] = useState('Default');
 
   const createHabit = useMutation(api.habits.create);
 
-  const formatTime = (date: Date) => {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours % 12 || 12;
-    const displayMinutes = minutes.toString().padStart(2, '0');
-    return `${displayHours}:${displayMinutes} ${ampm}`;
-  };
-
   const handleCreate = async () => {
     if (!habitName.trim()) return;
 
-    await createHabit({
-      name: `${selectedEmoji} ${habitName}`,
+    const fullName = `${selectedEmoji} ${habitName.trim()}`;
+    const reminderTimeString = formatReminderTime(reminderTime);
+
+    let enableReminders = remindersEnabled;
+    if (remindersEnabled) {
+      const hasPermission = await ensureNotificationPermissions();
+      enableReminders = hasPermission;
+
+      if (!hasPermission) {
+        Alert.alert(
+          'Notifications Disabled',
+          'Enable notifications in your device settings to receive habit reminders.'
+        );
+      }
+    }
+
+    const habitId = await createHabit({
+      name: fullName,
       notes: '',
-      remindersEnabled,
-      reminderTime: remindersEnabled ? formatTime(reminderTime) : undefined,
-      reminderSound: remindersEnabled ? reminderSound : undefined,
+      remindersEnabled: enableReminders,
+      reminderTime: enableReminders ? reminderTimeString : undefined,
+      reminderSound: enableReminders ? reminderSound : undefined,
     });
+
+    if (enableReminders && habitId) {
+      await scheduleHabitReminder({
+        habitId,
+        title: fullName,
+        body: 'Time to check in on your habit progress!',
+        reminderTime,
+        skipPermissionCheck: true,
+      });
+    }
 
     // Reset and close
     setHabitName('');
     setSelectedEmoji('💪');
     setSelectedColor('#DBEAFE');
     setRemindersEnabled(false);
-    const defaultTime = new Date();
-    defaultTime.setHours(14, 0, 0, 0);
-    setReminderTime(defaultTime);
+    setReminderTime(getDefaultReminderTime());
     setReminderSound('Default');
     onClose();
   };
@@ -212,7 +229,7 @@ export default function CreateHabitModal({
                       Reminder Time
                     </Text>
                     <Text className='text-base font-semibold text-[#3B82F6]'>
-                      {formatTime(reminderTime)}
+                      {formatReminderTime(reminderTime)}
                     </Text>
                   </TouchableOpacity>
 
