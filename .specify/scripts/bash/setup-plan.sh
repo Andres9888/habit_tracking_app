@@ -25,7 +25,10 @@ done
 
 # Get script directory and load common functions
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/common.sh"
+source "$SCRIPT_DIR/common.sh" || {
+    echo "Error: Failed to source common.sh from $SCRIPT_DIR" >&2
+    exit 1
+}
 
 # Get all paths and variables from common functions
 eval $(get_feature_paths)
@@ -49,12 +52,18 @@ fi
 
 # Output results
 if $JSON_MODE; then
-    printf '{"FEATURE_SPEC":"%s","IMPL_PLAN":"%s","SPECS_DIR":"%s","BRANCH":"%s","HAS_GIT":"%s"}\n' \
-        "$FEATURE_SPEC" "$IMPL_PLAN" "$FEATURE_DIR" "$CURRENT_BRANCH" "$HAS_GIT"
+    # Use jq to safely construct JSON with proper escaping
+    jq -n \
+        --arg spec "$FEATURE_SPEC" \
+        --arg plan "$IMPL_PLAN" \
+        --arg dir "$FEATURE_DIR" \
+        --arg branch "$CURRENT_BRANCH" \
+        --arg git "$HAS_GIT" \
+        '{FEATURE_SPEC: $spec, IMPL_PLAN: $plan, FEATURE_DIR: $dir, BRANCH: $branch, HAS_GIT: $git}'
 else
     echo "FEATURE_SPEC: $FEATURE_SPEC"
-    echo "IMPL_PLAN: $IMPL_PLAN" 
-    echo "SPECS_DIR: $FEATURE_DIR"
+    echo "IMPL_PLAN: $IMPL_PLAN"
+    echo "FEATURE_DIR: $FEATURE_DIR"
     echo "BRANCH: $CURRENT_BRANCH"
     echo "HAS_GIT: $HAS_GIT"
 fi
