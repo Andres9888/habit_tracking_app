@@ -56,11 +56,11 @@ export default function SettingsModal({
 
   return (
     <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
-      <View className="flex-1 bg-[#f8f5f1]">
+      <View className="flex-1 bg-background">
         {/* Header with status bar simulation */}
-        <View className="bg-[#f8f5f1] px-4 pb-4 pt-12">
+        <View className="bg-background px-4 pb-4 pt-12">
           <View className="mb-4 flex-row items-center justify-between">
-            <Text className="text-[20px] font-bold leading-[28px] text-[#1a1a1a]">
+            <Text className="text-[20px] font-bold leading-[28px] text-foreground">
               {format(new Date(), 'H:mm')}
             </Text>
           </View>
@@ -75,7 +75,7 @@ export default function SettingsModal({
             >
               <ChevronLeft size={28} color="#1a1a1a" />
             </TouchableOpacity>
-            <Text className="text-[24px] font-bold leading-[32px] text-[#1a1a1a]">
+            <Text className="text-[24px] font-bold leading-[32px] text-foreground">
               Settings
             </Text>
             <View className="size-10" />
@@ -186,7 +186,7 @@ export default function SettingsModal({
 
           {/* Footer */}
           <View className="items-center pb-8 pt-4">
-            <Text className="text-center text-[14px] leading-[20px] text-[#8a8a8a]">
+            <Text className="text-center text-[14px] leading-[20px] text-muted-foreground">
               Habit Tracker v1.0.0
             </Text>
           </View>

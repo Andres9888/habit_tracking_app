@@ -313,7 +313,7 @@ function HabitsApp() {
 
   return (
     <GestureHandlerRootView className='flex-1'>
-      <View className='flex-1 items-center bg-[#F5F1ED]'>
+      <View className='flex-1 items-center bg-background'>
         <View className='w-full max-w-[448px] flex-1'>
           <DraggableFlatList
             data={habits}
