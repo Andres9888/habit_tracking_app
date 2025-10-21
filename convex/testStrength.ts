@@ -49,7 +49,7 @@ export const forceInitialize = mutation({
       // Simulate day by day from creation
       const habitCreation = new Date(habit.createdAt);
       habitCreation.setHours(0, 0, 0, 0);
-      const lastTracking = sorted.at(-1).dateObj;
+      const lastTracking = sorted[sorted.length - 1].dateObj;
 
       const trackingMap = new Map(sorted.map((t) => [t.date, t.completed]));
 

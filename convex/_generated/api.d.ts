@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as articles from "../articles.js";
 import type * as auth from "../auth.js";
+import type * as character from "../character.js";
 import type * as debugHabitStrength from "../debugHabitStrength.js";
 import type * as diagnose from "../diagnose.js";
 import type * as habitStrength from "../habitStrength.js";
@@ -38,6 +39,7 @@ import type * as testStrength from "../testStrength.js";
 declare const fullApi: ApiFromModules<{
   articles: typeof articles;
   auth: typeof auth;
+  character: typeof character;
   debugHabitStrength: typeof debugHabitStrength;
   diagnose: typeof diagnose;
   habitStrength: typeof habitStrength;

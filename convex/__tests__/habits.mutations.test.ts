@@ -225,7 +225,11 @@ habitGainParam: 0.18,
     });
 
     it('should use default parameters if not set', () => {
-      const habitWithoutParams = {
+      const habitWithoutParams: {
+        strength: number;
+        habitDecayParam?: number;
+        habitGainParam?: number;
+      } = {
         strength: 0.5,
         // No custom parameters
       };
@@ -256,7 +260,7 @@ describe('Habit Creation Mutations', () => {
         notes: 'Some notes',
       };
 
-      const withoutNotes = {
+      const withoutNotes: { name: string; notes?: string } = {
         name: 'Habit',
       };
 
