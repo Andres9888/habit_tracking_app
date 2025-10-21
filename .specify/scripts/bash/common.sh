@@ -152,5 +152,16 @@ EOF
 }
 
 check_file() { [[ -f "$1" ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
-check_dir() { [[ -d "$1" && -n $(ls -A "$1" 2>/dev/null) ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
+check_dir() {
+    local dir_path="$1"
+    local desc="$2"
+    shopt -s nullglob
+    local files=("$dir_path"/*)
+    shopt -u nullglob
+    if [[ -d "$dir_path" && ${#files[@]} -gt 0 ]]; then
+        echo "  ✓ $desc"
+    else
+        echo "  ✗ $desc"
+    fi
+}
 
