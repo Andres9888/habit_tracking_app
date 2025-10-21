@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import {
+  Check,
   Moon,
   Smartphone,
   Contrast,
@@ -41,8 +43,41 @@ export default function SettingsModal({
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
 }: SettingsModalProps) {
-  const { view, setView, handleClose, darkMode, setDarkMode, reduceMotion, setReduceMotion, highContrastMode, setHighContrastMode, useDyslexicFont, setUseDyslexicFont } =
+  const {
+    view,
+    setView,
+    handleClose,
+    darkModePreference,
+    setDarkModePreference,
+    reduceMotion,
+    setReduceMotion,
+    highContrastMode,
+    setHighContrastMode,
+    useDyslexicFont,
+    setUseDyslexicFont,
+  } =
     useSettingsModalLogic({ onClose, visible });
+
+  const [isDarkModeOptionsOpen, setIsDarkModeOptionsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!visible) {
+      setIsDarkModeOptionsOpen(false);
+    }
+  }, [visible]);
+
+  const darkModeLabels: Record<typeof darkModePreference, string> = {
+    system: 'Match System',
+    light: 'Light Mode',
+    dark: 'Dark Mode',
+  };
+
+  const handleSelectDarkMode = async (
+    value: typeof darkModePreference,
+  ) => {
+    await setDarkModePreference(value);
+    setIsDarkModeOptionsOpen(false);
+  };
 
   if (!visible) return null;
 
@@ -90,11 +125,46 @@ export default function SettingsModal({
                 icon={<Moon size={16} color="#f97316" />}
                 iconBackgroundColor="#fed7aa"
                 label="Dark Mode"
-                type="toggle"
-                value={darkMode}
-                onToggle={setDarkMode}
-                showBorder={true}
+                type="selection"
+                value={darkModeLabels[darkModePreference]}
+                onPress={() =>
+                  setIsDarkModeOptionsOpen((prev) => !prev)
+                }
+                showBorder={!isDarkModeOptionsOpen}
               />
+              {isDarkModeOptionsOpen && (
+                <View className="px-4 pt-3">
+                  <View className="rounded-2xl border border-gray-100 bg-white shadow-sm">
+                    {(
+                      [
+                        { value: 'system', label: 'Match System' },
+                        { value: 'light', label: 'Light Mode' },
+                        { value: 'dark', label: 'Dark Mode' },
+                      ] as const
+                    ).map(({ value, label }, index, array) => (
+                      <TouchableOpacity
+                        key={value}
+                        activeOpacity={0.7}
+                        className={`flex-row items-center justify-between px-4 py-3 ${
+                          index < array.length - 1
+                            ? 'border-b border-gray-100'
+                            : ''
+                        }`}
+                        onPress={() => handleSelectDarkMode(value)}
+                      >
+                        <Text className="text-[15px] font-medium text-[#1a1a1a]">
+                          {label}
+                        </Text>
+                        {darkModePreference === value && (
+                          <View className="rounded-full bg-[#1a1a1a] p-1">
+                            <Check size={14} color="#fff" />
+                          </View>
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
               <SettingsRow
                 icon={<Smartphone size={16} color="#3b82f6" />}
                 iconBackgroundColor="#bfdbfe"
