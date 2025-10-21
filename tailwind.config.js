@@ -19,6 +19,7 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         heading: ['Inter', 'system-ui', 'sans-serif'],
+        dyslexic: ['OpenDyslexic', 'Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

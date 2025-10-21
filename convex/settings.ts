@@ -16,6 +16,7 @@ const DEFAULT_SETTINGS = {
   textSize: 'medium' as const,
   highContrastMode: false,
   reduceMotion: false,
+  useDyslexicFont: false,
 };
 
 export const get = query({
@@ -47,6 +48,8 @@ export const get = query({
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
       reduceMotion:
         settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
+      useDyslexicFont:
+        settings?.useDyslexicFont ?? DEFAULT_SETTINGS.useDyslexicFont,
     };
   },
   returns: v.object({
@@ -63,6 +66,7 @@ export const get = query({
     textSize: v.string(),
     highContrastMode: v.boolean(),
     reduceMotion: v.boolean(),
+    useDyslexicFont: v.boolean(),
   }),
 });
 
@@ -81,6 +85,7 @@ export const update = mutation({
     textSize: v.optional(v.string()),
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
+    useDyslexicFont: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     // Get first settings record (since auth was removed, just use any settings)
