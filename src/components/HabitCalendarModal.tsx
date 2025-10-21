@@ -1,4 +1,5 @@
-import { ChevronLeft, MoreVertical } from 'lucide-react-native';
+import { useState } from 'react';
+import { ChevronLeft } from 'lucide-react-native';
 import {
   Modal,
   View,
@@ -6,6 +7,7 @@ import {
   ScrollView,
   Text,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import HabitCalendarView from './HabitCalendarView';
@@ -16,6 +18,7 @@ import {
   calculateBestStreak,
   calculateCompletionPercentage,
 } from '../utils/habitCalculations';
+import HabitEditScreen from '../screens/HabitEditScreen';
 
 interface Habit {
   _id: Id<'habits'>;
@@ -47,9 +50,19 @@ export default function HabitCalendarModal({
   tracking,
   toggleHabit,
 }: HabitCalendarModalProps) {
+  const [showEditScreen, setShowEditScreen] = useState(false);
+
   if (!habit) return null;
 
   const { emoji, name } = getEmojiAndName(habit.name);
+
+  const handleEditPress = () => {
+    setShowEditScreen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setShowEditScreen(false);
+  };
 
   // Calculate stats
   const habitTracking = tracking
@@ -81,9 +94,12 @@ export default function HabitCalendarModal({
             <ChevronLeft color='#1a1a1a' size={24} />
           </Pressable>
           <Text className='text-xl font-bold text-slate-900'>{name}</Text>
-          <Pressable className='h-10 w-10 items-center justify-center rounded-full'>
-            <MoreVertical color='#1a1a1a' size={24} />
-          </Pressable>
+          <TouchableOpacity
+            className='rounded-lg bg-blue-500 px-4 py-2'
+            onPress={handleEditPress}
+          >
+            <Text className='text-sm font-semibold text-white'>Edit</Text>
+          </TouchableOpacity>
         </View>
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
@@ -114,6 +130,13 @@ export default function HabitCalendarModal({
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      {/* Habit Edit Screen */}
+      <HabitEditScreen
+        visible={showEditScreen}
+        habitId={habit._id}
+        onClose={handleCloseEdit}
+      />
     </Modal>
   );
 }
