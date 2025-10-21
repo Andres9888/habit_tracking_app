@@ -21,6 +21,7 @@ export const useSettingsModalLogic = ({
   const [darkMode, setDarkModeState] = useState(false);
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [highContrastMode, setHighContrastModeState] = useState(false);
+  const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
 
   // Sync local state with Convex settings
   useEffect(() => {
@@ -28,6 +29,7 @@ export const useSettingsModalLogic = ({
       setDarkModeState(settings.darkMode);
       setReduceMotionState(settings.reduceMotion);
       setHighContrastModeState(settings.highContrastMode);
+      setUseDyslexicFontState(settings.useDyslexicFont);
     }
   }, [settings]);
 
@@ -68,6 +70,16 @@ export const useSettingsModalLogic = ({
     }
   };
 
+  const setUseDyslexicFont = async (value: boolean) => {
+    setUseDyslexicFontState(value);
+    if (settings) {
+      await updateSettings({
+        ...settings,
+        useDyslexicFont: value,
+      });
+    }
+  };
+
   return {
     handleClose,
     setView,
@@ -78,5 +90,7 @@ export const useSettingsModalLogic = ({
     setReduceMotion,
     highContrastMode,
     setHighContrastMode,
+    useDyslexicFont,
+    setUseDyslexicFont,
   };
 };

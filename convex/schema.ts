@@ -95,6 +95,7 @@ const applicationTables = {
     textSize: v.optional(v.string()),
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
+    useDyslexicFont: v.optional(v.boolean()),
   }),
 };
 

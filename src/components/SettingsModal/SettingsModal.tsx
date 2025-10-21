@@ -9,6 +9,7 @@ import {
   HelpCircle,
   Send,
   ChevronLeft,
+  BookOpen,
 } from 'lucide-react-native';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
@@ -41,7 +42,7 @@ export default function SettingsModal({
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
 }: SettingsModalProps) {
-  const { view, setView, handleClose, darkMode, setDarkMode, reduceMotion, setReduceMotion, highContrastMode, setHighContrastMode } =
+  const { view, setView, handleClose, darkMode, setDarkMode, reduceMotion, setReduceMotion, highContrastMode, setHighContrastMode, useDyslexicFont, setUseDyslexicFont } =
     useSettingsModalLogic({ onClose, visible });
 
   if (!visible) return null;
@@ -129,6 +130,15 @@ export default function SettingsModal({
                 type="toggle"
                 value={highContrastMode}
                 onToggle={setHighContrastMode}
+                showBorder={true}
+              />
+              <SettingsRow
+                icon={<BookOpen size={16} color="#14b8a6" />}
+                iconBackgroundColor="#99f6e4"
+                label="OpenDyslexic Font"
+                type="toggle"
+                value={useDyslexicFont}
+                onToggle={setUseDyslexicFont}
                 showBorder={true}
               />
               <SettingsRow
