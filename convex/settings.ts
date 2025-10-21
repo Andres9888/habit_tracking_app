@@ -1,9 +1,12 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
+const DARK_MODE_OPTIONS = ['system', 'light', 'dark'] as const;
+type DarkModePreference = (typeof DARK_MODE_OPTIONS)[number];
+
 const DEFAULT_SETTINGS = {
   catTheme: true,
-  darkMode: false,
+  darkMode: 'system' as DarkModePreference,
   showCalendarView: true,
   showCharacterScreen: true,
   showConsistency: true,
@@ -18,6 +21,22 @@ const DEFAULT_SETTINGS = {
   useDyslexicFont: false,
 };
 
+const normalizeDarkMode = (value: unknown): DarkModePreference => {
+  if (value === 'dark' || value === 'light' || value === 'system') {
+    return value;
+  }
+
+  if (value === true) {
+    return 'dark';
+  }
+
+  if (value === false) {
+    return 'light';
+  }
+
+  return DEFAULT_SETTINGS.darkMode;
+};
+
 export const get = query({
   args: {},
   handler: async (ctx) => {
@@ -27,7 +46,7 @@ export const get = query({
     // Only return the whitelisted fields to satisfy the returns validator
     return {
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
-      darkMode: settings?.darkMode ?? DEFAULT_SETTINGS.darkMode,
+      darkMode: normalizeDarkMode(settings?.darkMode),
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
       showCharacterScreen:
@@ -52,7 +71,11 @@ export const get = query({
   },
   returns: v.object({
     catTheme: v.boolean(),
-    darkMode: v.boolean(),
+    darkMode: v.union(
+      v.literal('system'),
+      v.literal('light'),
+      v.literal('dark'),
+    ),
     showCalendarView: v.boolean(),
     showCharacterScreen: v.boolean(),
     showConsistency: v.boolean(),
@@ -70,7 +93,11 @@ export const get = query({
 export const update = mutation({
   args: {
     catTheme: v.boolean(),
-    darkMode: v.boolean(),
+    darkMode: v.union(
+      v.literal('system'),
+      v.literal('light'),
+      v.literal('dark'),
+    ),
     showCalendarView: v.boolean(),
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),

@@ -1,8 +1,11 @@
-import type { Settings, SettingConfig } from './SettingsDialog.types';
+import type {
+  Settings,
+  SettingConfig,
+} from './SettingsDialog.types';
 
 export const DEFAULT_SETTINGS: Settings = {
   catTheme: true,
-  darkMode: false,
+  darkMode: 'system',
   showCalendarView: true,
   showConsistency: true,
   showEmojis: true,
@@ -11,7 +14,6 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export const SETTINGS_CONFIG: SettingConfig[] = [
-  { ariaLabel: 'Toggle dark theme', key: 'darkMode', label: 'Dark Theme' },
   {
     ariaLabel: 'Toggle show streaks',
     key: 'showStreaks',

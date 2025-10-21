@@ -7,6 +7,24 @@ interface UseSettingsModalLogicProps {
   onClose: () => void;
 }
 
+type DarkModePreference = 'system' | 'light' | 'dark';
+
+const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
+  if (value === 'dark' || value === 'light' || value === 'system') {
+    return value;
+  }
+
+  if (value === true) {
+    return 'dark';
+  }
+
+  if (value === false) {
+    return 'light';
+  }
+
+  return 'system';
+};
+
 export const useSettingsModalLogic = ({
   visible,
   onClose,
@@ -18,7 +36,7 @@ export const useSettingsModalLogic = ({
   const updateSettings = useMutation(api.settings.update);
 
   // Local state for settings
-  const [darkMode, setDarkModeState] = useState(false);
+  const [darkModePreference, setDarkModeState] = useState<DarkModePreference>('system');
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [highContrastMode, setHighContrastModeState] = useState(false);
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
@@ -26,7 +44,7 @@ export const useSettingsModalLogic = ({
   // Sync local state with Convex settings
   useEffect(() => {
     if (settings) {
-      setDarkModeState(settings.darkMode);
+      setDarkModeState(normalizeDarkModePreference(settings.darkMode));
       setReduceMotionState(settings.reduceMotion);
       setHighContrastModeState(settings.highContrastMode);
       setUseDyslexicFontState(settings.useDyslexicFont);
@@ -40,7 +58,7 @@ export const useSettingsModalLogic = ({
   };
 
   // Setting updaters
-  const setDarkMode = async (value: boolean) => {
+  const setDarkModePreference = async (value: DarkModePreference) => {
     setDarkModeState(value);
     if (settings) {
       await updateSettings({
@@ -84,8 +102,8 @@ export const useSettingsModalLogic = ({
     handleClose,
     setView,
     view,
-    darkMode,
-    setDarkMode,
+    darkModePreference,
+    setDarkModePreference,
     reduceMotion,
     setReduceMotion,
     highContrastMode,

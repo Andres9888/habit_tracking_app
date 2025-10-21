@@ -8,7 +8,14 @@ export const migrateDarkModeSettings = internalMutation({
     for (const setting of allSettings) {
       if (setting.darkMode === undefined) {
         await ctx.db.patch(setting._id, {
-          darkMode: false, // Default value
+          darkMode: 'system',
+        });
+        continue;
+      }
+
+      if (typeof setting.darkMode === 'boolean') {
+        await ctx.db.patch(setting._id, {
+          darkMode: setting.darkMode ? 'dark' : 'light',
         });
       }
     }

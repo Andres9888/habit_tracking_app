@@ -4,7 +4,7 @@ import { useEscapeKey, useSettingsDialog } from './SettingsDialog.hooks';
 import type { SettingsDialogProps } from './SettingsDialog.types';
 
 export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
-  const { localSettings, toggleSetting } = useSettingsDialog(isOpen);
+  const { localSettings, toggleSetting, updateTheme } = useSettingsDialog(isOpen);
   useEscapeKey(onClose);
 
   if (!isOpen) return null;
@@ -36,6 +36,23 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         </div>
 
         <div className='space-y-4'>
+          <div className='rounded-lg border border-border p-4'>
+            <label className='flex flex-col gap-2 text-sm font-medium text-muted-foreground'>
+              <span className='text-sm font-semibold text-foreground'>Theme</span>
+              <select
+                aria-label='Select theme preference'
+                className='w-full rounded-md border border-border bg-background px-3 py-2 text-base text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'
+                value={localSettings.darkMode}
+                onChange={(event) =>
+                  updateTheme(event.target.value as typeof localSettings.darkMode)
+                }
+              >
+                <option value='system'>Match system</option>
+                <option value='light'>Light mode</option>
+                <option value='dark'>Dark mode</option>
+              </select>
+            </label>
+          </div>
           {SETTINGS_CONFIG.map((setting) => (
             <SettingItem
               key={setting.key}

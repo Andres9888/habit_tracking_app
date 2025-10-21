@@ -1,3 +1,5 @@
+export type DarkModePreference = 'system' | 'light' | 'dark';
+
 export interface Settings {
   showStreaks: boolean;
   showConsistency: boolean;
@@ -5,7 +7,7 @@ export interface Settings {
   showEmojis: boolean;
   showCalendarView: boolean;
   catTheme: boolean;
-  darkMode: boolean;
+  darkMode: DarkModePreference;
 }
 
 export interface SettingsDialogProps {
@@ -13,8 +15,10 @@ export interface SettingsDialogProps {
   onClose: () => void;
 }
 
+export type ToggleableSettingKey = Exclude<keyof Settings, 'darkMode'>;
+
 export interface SettingConfig {
-  key: keyof Settings;
+  key: ToggleableSettingKey;
   label: string;
   ariaLabel: string;
 }

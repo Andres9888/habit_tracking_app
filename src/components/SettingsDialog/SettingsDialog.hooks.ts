@@ -2,10 +2,49 @@ import { useMutation, useQuery } from 'convex/react';
 import { useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { DEFAULT_SETTINGS } from './SettingsDialog.config';
-import type { Settings } from './SettingsDialog.types';
+import type {
+  DarkModePreference,
+  Settings,
+  ToggleableSettingKey,
+} from './SettingsDialog.types';
+
+const normalizeDarkModePreference = (
+  value: unknown,
+): DarkModePreference => {
+  if (value === 'dark' || value === 'light' || value === 'system') {
+    return value;
+  }
+
+  if (value === true) {
+    return 'dark';
+  }
+
+  if (value === false) {
+    return 'light';
+  }
+
+  return DEFAULT_SETTINGS.darkMode;
+};
+
+const resolveShouldUseDark = (preference: DarkModePreference) => {
+  if (preference === 'dark') return true;
+  if (preference === 'light') return false;
+
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  return false;
+};
 
 export function useSettingsDialog(isOpen: boolean) {
-  const settings = useQuery(api.settings.get) ?? DEFAULT_SETTINGS;
+  const serverSettings = useQuery(api.settings.get);
+  const settings: Settings = serverSettings
+    ? {
+        ...serverSettings,
+        darkMode: normalizeDarkModePreference(serverSettings.darkMode),
+      }
+    : { ...DEFAULT_SETTINGS };
   const updateSettings = useMutation(api.settings.update);
   const [localSettings, setLocalSettings] = useState<Settings>(settings);
 
@@ -18,16 +57,45 @@ export function useSettingsDialog(isOpen: boolean) {
 
   // Apply dark mode class
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', localSettings.darkMode);
+    document.documentElement.classList.toggle(
+      'dark',
+      resolveShouldUseDark(localSettings.darkMode),
+    );
   }, [localSettings.darkMode]);
 
-  const toggleSetting = (key: keyof Settings) => {
+  useEffect(() => {
+    if (localSettings.darkMode !== 'system') return;
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      document.documentElement.classList.toggle('dark', event.matches);
+    };
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, [localSettings.darkMode]);
+
+  const toggleSetting = (key: ToggleableSettingKey) => {
     const newSettings = { ...localSettings, [key]: !localSettings[key] };
     setLocalSettings(newSettings);
     updateSettings(newSettings);
   };
 
-  return { localSettings, toggleSetting };
+  const updateTheme = (value: DarkModePreference) => {
+    setLocalSettings((prev) => {
+      const updatedSettings = { ...prev, darkMode: value };
+      updateSettings(updatedSettings);
+      return updatedSettings;
+    });
+  };
+
+  return { localSettings, toggleSetting, updateTheme };
 }
 
 export function useEscapeKey(onEscape: () => void) {

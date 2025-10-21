@@ -81,7 +81,13 @@ const applicationTables = {
 
   userSettings: defineTable({
     catTheme: v.boolean(),
-    darkMode: v.boolean(),
+    darkMode: v.optional(
+      v.union(
+        v.literal('system'),
+        v.literal('light'),
+        v.literal('dark'),
+      ),
+    ),
     showCalendarView: v.boolean(),
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),

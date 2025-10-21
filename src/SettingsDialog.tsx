@@ -3,6 +3,16 @@ import { useEffect, useState } from 'react';
 import { api } from '../convex/_generated/api';
 import { Checkbox } from './components/Checkbox';
 
+type DarkModePreference = 'system' | 'light' | 'dark';
+
+type ToggleableSettingKey =
+  | 'showStreaks'
+  | 'showConsistency'
+  | 'showMotivationalMessages'
+  | 'showEmojis'
+  | 'showCalendarView'
+  | 'catTheme';
+
 interface Settings {
   showStreaks: boolean;
   showConsistency: boolean;
@@ -10,8 +20,37 @@ interface Settings {
   showEmojis: boolean;
   showCalendarView: boolean;
   catTheme: boolean;
-  darkMode: boolean;
+  darkMode: DarkModePreference;
 }
+
+const normalizeDarkModePreference = (
+  value: unknown,
+): DarkModePreference => {
+  if (value === 'dark' || value === 'light' || value === 'system') {
+    return value;
+  }
+
+  if (value === true) {
+    return 'dark';
+  }
+
+  if (value === false) {
+    return 'light';
+  }
+
+  return 'system';
+};
+
+const resolveShouldUseDark = (preference: DarkModePreference) => {
+  if (preference === 'dark') return true;
+  if (preference === 'light') return false;
+
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  return false;
+};
 
 export function SettingsDialog({
   isOpen,
@@ -22,7 +61,7 @@ export function SettingsDialog({
 }) {
   const defaultSettings: Settings = {
     catTheme: true,
-    darkMode: false,
+    darkMode: 'system',
     showCalendarView: true,
     showConsistency: true,
     showEmojis: true,
@@ -30,7 +69,13 @@ export function SettingsDialog({
     showStreaks: true,
   };
 
-  const settings = useQuery(api.settings.get) ?? defaultSettings;
+  const serverSettings = useQuery(api.settings.get);
+  const settings = serverSettings
+    ? {
+        ...serverSettings,
+        darkMode: normalizeDarkModePreference(serverSettings.darkMode),
+      }
+    : defaultSettings;
   const updateSettings = useMutation(api.settings.update);
   const [localSettings, setLocalSettings] = useState<Settings>(settings);
 
@@ -50,20 +95,42 @@ export function SettingsDialog({
     return () => document.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  const toggleSetting = (key: keyof Settings) => {
+  const toggleSetting = (key: ToggleableSettingKey) => {
     const newSettings = { ...localSettings, [key]: !localSettings[key] };
     setLocalSettings(newSettings);
     updateSettings(newSettings);
+  };
 
-    // Handle dark mode immediately for better UX
-    if (key === 'darkMode') {
-      document.documentElement.classList.toggle('dark', newSettings.darkMode);
-    }
+  const updateTheme = (value: DarkModePreference) => {
+    const newSettings = { ...localSettings, darkMode: value };
+    setLocalSettings(newSettings);
+    updateSettings(newSettings);
   };
 
   // Apply dark mode on component mount/update
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', localSettings.darkMode);
+    document.documentElement.classList.toggle(
+      'dark',
+      resolveShouldUseDark(localSettings.darkMode),
+    );
+  }, [localSettings.darkMode]);
+
+  useEffect(() => {
+    if (localSettings.darkMode !== 'system') return;
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      document.documentElement.classList.toggle('dark', event.matches);
+    };
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
   }, [localSettings.darkMode]);
 
   if (!isOpen) return null;
@@ -95,15 +162,23 @@ export function SettingsDialog({
         </div>
 
         <div className='space-y-4'>
-          <label className='flex w-full items-center justify-between rounded-lg py-2'>
-            <span className='text-foreground'>Dark Theme</span>
-            <Checkbox
-              aria-label='Toggle dark theme'
-              checked={localSettings.darkMode}
-              variant='primary'
-              onPress={() => toggleSetting('darkMode')}
-            />
-          </label>
+          <div className='rounded-lg border border-border p-4'>
+            <label className='flex flex-col gap-2 text-sm font-medium text-muted-foreground'>
+              <span className='text-sm font-semibold text-foreground'>Theme</span>
+              <select
+                aria-label='Select theme preference'
+                className='w-full rounded-md border border-border bg-background px-3 py-2 text-base text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'
+                value={localSettings.darkMode}
+                onChange={(event) =>
+                  updateTheme(event.target.value as DarkModePreference)
+                }
+              >
+                <option value='system'>Match system</option>
+                <option value='light'>Light mode</option>
+                <option value='dark'>Dark mode</option>
+              </select>
+            </label>
+          </div>
 
           <label className='flex w-full items-center justify-between rounded-lg py-2'>
             <span className='text-foreground'>Show Streaks</span>
