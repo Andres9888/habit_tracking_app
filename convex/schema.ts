@@ -92,7 +92,6 @@ const applicationTables = {
     userId: v.optional(v.string()),
     // New settings from Figma design
     appIcon: v.optional(v.string()),
-    textSize: v.optional(v.string()),
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
     useDyslexicFont: v.optional(v.boolean()),

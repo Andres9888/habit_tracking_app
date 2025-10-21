@@ -13,7 +13,6 @@ const DEFAULT_SETTINGS = {
   showStreaks: true,
   // New settings from Figma design
   appIcon: 'default' as const,
-  textSize: 'medium' as const,
   highContrastMode: false,
   reduceMotion: false,
   useDyslexicFont: false,
@@ -43,7 +42,6 @@ export const get = query({
         settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
-      textSize: settings?.textSize ?? DEFAULT_SETTINGS.textSize,
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
       reduceMotion:
@@ -63,7 +61,6 @@ export const get = query({
     showNotesStats: v.boolean(),
     showStreaks: v.boolean(),
     appIcon: v.string(),
-    textSize: v.string(),
     highContrastMode: v.boolean(),
     reduceMotion: v.boolean(),
     useDyslexicFont: v.boolean(),
@@ -82,7 +79,6 @@ export const update = mutation({
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
     appIcon: v.optional(v.string()),
-    textSize: v.optional(v.string()),
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
     useDyslexicFont: v.optional(v.boolean()),

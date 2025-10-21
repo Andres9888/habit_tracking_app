@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import {
   Moon,
   Smartphone,
-  Type,
   Contrast,
   Zap,
   Bell,
@@ -112,17 +111,6 @@ export default function SettingsModal({
 
             {/* Accessibility */}
             <SettingsSection title="Accessibility">
-              <SettingsRow
-                icon={<Type size={16} color="#10b981" />}
-                iconBackgroundColor="#a7f3d0"
-                label="Text Size"
-                type="navigation"
-                onPress={() => {
-                  // TODO: Navigate to text size selector
-                  console.log('Navigate to text size selector');
-                }}
-                showBorder={true}
-              />
               <SettingsRow
                 icon={<Contrast size={16} color="#a855f7" />}
                 iconBackgroundColor="#e9d5ff"
