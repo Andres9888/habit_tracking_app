@@ -25,8 +25,6 @@ import SettingsModal from './components/SettingsModal';
 import StatsNotesModal from './components/StatsNotesModal';
 import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
-import CharacterScreen from './screens/CharacterScreen';
-import CharacterIcon from './components/CharacterIcon';
 import HabitCalendarModal from './components/HabitCalendarModal';
 import * as SecureStore from 'expo-secure-store';
 
@@ -69,7 +67,6 @@ function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
-  const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
     useState(true);
   const [selectedHabit, setSelectedHabit] = useState<any | null>(null);
@@ -259,10 +256,6 @@ function HabitsApp() {
     ]
   );
 
-  if (showCharacterScreen) {
-    return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
-  }
-
   const renderHeader = useCallback(() => (
     <View className='gap-4'>
       <View className='mt-3 flex-row items-center justify-between'>
@@ -279,15 +272,6 @@ function HabitsApp() {
           </Text>
         </Pressable>
         <View className='flex-row gap-3'>
-          {settings?.showCharacterScreen && (
-            <Pressable
-              accessibilityLabel='View character'
-              accessibilityRole='button'
-              onPress={() => setShowCharacterScreen(true)}
-            >
-              <CharacterIcon size={36} />
-            </Pressable>
-          )}
           {settings?.showNotesStats && (
             <Pressable
               accessibilityLabel='View statistics and notes'
@@ -323,7 +307,6 @@ function HabitsApp() {
     handleNextWeek,
     handlePreviousWeek,
     handleToggleForm,
-    settings?.showCharacterScreen,
     settings?.showNotesStats,
     weekDates,
   ]);
