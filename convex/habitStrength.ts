@@ -121,8 +121,9 @@ function computeCompliance({
     evaluationDate,
     -(COMPLIANCE_WINDOW_DAYS - 1)
   );
-  const startDate =
-    Math.max(windowStartCandidate, creationDate);
+  const startDate = new Date(
+    Math.max(windowStartCandidate.getTime(), creationDate.getTime())
+  );
 
   let successes = 0;
   let daysConsidered = 0;

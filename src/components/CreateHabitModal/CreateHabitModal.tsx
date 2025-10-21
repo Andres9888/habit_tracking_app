@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import {
   Modal,
+  Platform,
   ScrollView,
+  Switch,
   Text,
   TextInput,
   TouchableOpacity,
@@ -10,6 +12,7 @@ import {
 import { X } from 'lucide-react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface CreateHabitModalProps {
   visible: boolean;
@@ -34,8 +37,25 @@ export default function CreateHabitModal({
   const [habitName, setHabitName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
+  const [remindersEnabled, setRemindersEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState(() => {
+    const defaultTime = new Date();
+    defaultTime.setHours(14, 0, 0, 0); // 2:00 PM
+    return defaultTime;
+  });
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [reminderSound, setReminderSound] = useState('Default');
 
   const createHabit = useMutation(api.habits.create);
+
+  const formatTime = (date: Date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    return `${displayHours}:${displayMinutes} ${ampm}`;
+  };
 
   const handleCreate = async () => {
     if (!habitName.trim()) return;
@@ -43,12 +63,20 @@ export default function CreateHabitModal({
     await createHabit({
       name: `${selectedEmoji} ${habitName}`,
       notes: '',
+      remindersEnabled,
+      reminderTime: remindersEnabled ? formatTime(reminderTime) : undefined,
+      reminderSound: remindersEnabled ? reminderSound : undefined,
     });
 
     // Reset and close
     setHabitName('');
     setSelectedEmoji('💪');
     setSelectedColor('#DBEAFE');
+    setRemindersEnabled(false);
+    const defaultTime = new Date();
+    defaultTime.setHours(14, 0, 0, 0);
+    setReminderTime(defaultTime);
+    setReminderSound('Default');
     onClose();
   };
 
@@ -156,7 +184,68 @@ export default function CreateHabitModal({
               </View>
             </View>
 
+            {/* Reminders Section */}
+            <View className='mb-6 rounded-2xl bg-white p-4'>
+              {/* Reminders Toggle */}
+              <View className='mb-4 flex-row items-center justify-between'>
+                <Text className='text-base font-semibold text-[#1a1a1a]'>
+                  Reminders
+                </Text>
+                <Switch
+                  value={remindersEnabled}
+                  onValueChange={setRemindersEnabled}
+                  trackColor={{ false: '#E5E5E5', true: '#3B82F6' }}
+                  thumbColor='#FFFFFF'
+                  ios_backgroundColor='#E5E5E5'
+                />
+              </View>
+
+              {/* Reminder Settings (shown when enabled) */}
+              {remindersEnabled && (
+                <>
+                  {/* Reminder Time */}
+                  <TouchableOpacity
+                    className='mb-3 flex-row items-center justify-between rounded-xl bg-[#F5F5F5] px-3 py-3'
+                    onPress={() => setShowTimePicker(true)}
+                  >
+                    <Text className='text-base font-medium text-[#1a1a1a]'>
+                      Reminder Time
+                    </Text>
+                    <Text className='text-base font-semibold text-[#3B82F6]'>
+                      {formatTime(reminderTime)}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Sound */}
+                  <View className='flex-row items-center justify-between rounded-xl bg-[#F5F5F5] px-3 py-3'>
+                    <Text className='text-base font-medium text-[#1a1a1a]'>
+                      Sound
+                    </Text>
+                    <Text className='text-base font-semibold text-[#3B82F6]'>
+                      {reminderSound}
+                    </Text>
+                  </View>
+                </>
+              )}
+            </View>
+
           </ScrollView>
+
+          {/* Time Picker Modal */}
+          {showTimePicker && (
+            <DateTimePicker
+              value={reminderTime}
+              mode='time'
+              is24Hour={false}
+              display='spinner'
+              onChange={(event, selectedTime) => {
+                setShowTimePicker(false);
+                if (selectedTime) {
+                  setReminderTime(selectedTime);
+                }
+              }}
+            />
+          )}
         </View>
       </View>
     </Modal>

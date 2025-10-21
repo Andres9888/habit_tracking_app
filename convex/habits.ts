@@ -6,6 +6,9 @@ export const create = mutation({
   args: {
     name: v.string(),
     notes: v.optional(v.string()),
+    remindersEnabled: v.optional(v.boolean()),
+    reminderTime: v.optional(v.string()),
+    reminderSound: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Get all existing habits to determine next order value
@@ -20,6 +23,9 @@ export const create = mutation({
       name: args.name,
       notes: args.notes,
       order: maxOrder + 1,
+      remindersEnabled: args.remindersEnabled,
+      reminderTime: args.reminderTime,
+      reminderSound: args.reminderSound,
     });
   },
   returns: v.id('habits'),
@@ -334,6 +340,9 @@ export const list = query({
       strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
+      reminderTime: v.optional(v.string()),
+      reminderSound: v.optional(v.string()),
     })
   ),
 });
@@ -361,6 +370,9 @@ export const listArchived = query({
       strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
+      reminderTime: v.optional(v.string()),
+      reminderSound: v.optional(v.string()),
     })
   ),
 });
@@ -457,7 +469,7 @@ export const getTracking = query({
     // Optimize by querying a single date range then filtering to requested dates
     const sortedDates = [...args.dates].sort();
     const startDate = sortedDates[0];
-    const endDate = sortedDates.at(-1);
+    const endDate = sortedDates[sortedDates.length - 1];
 
     const range = await ctx.db
       .query('tracking')
