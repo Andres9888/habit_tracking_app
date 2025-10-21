@@ -27,6 +27,7 @@ import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
 import HabitCalendarModal from './components/HabitCalendarModal';
 import * as SecureStore from 'expo-secure-store';
+import { applyDyslexicFont } from './utils/accessibility';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -78,6 +79,10 @@ function HabitsApp() {
   const updateSettings = useMutation(api.settings.update);
   const habits = useQuery(api.habits.list) ?? [];
   const settings = useQuery(api.settings.get);
+
+  useEffect(() => {
+    applyDyslexicFont(Boolean(settings?.useDyslexicFont));
+  }, [settings?.useDyslexicFont]);
 
   const today = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor] = useState(today);

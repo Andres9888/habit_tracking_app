@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'convex/react';
 import { useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
+import { applyDyslexicFont } from '../../utils/accessibility';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
@@ -30,6 +31,7 @@ export const useSettingsModalLogic = ({
       setReduceMotionState(settings.reduceMotion);
       setHighContrastModeState(settings.highContrastMode);
       setUseDyslexicFontState(settings.useDyslexicFont);
+      applyDyslexicFont(settings.useDyslexicFont);
     }
   }, [settings]);
 
@@ -72,6 +74,7 @@ export const useSettingsModalLogic = ({
 
   const setUseDyslexicFont = async (value: boolean) => {
     setUseDyslexicFontState(value);
+    applyDyslexicFont(value);
     if (settings) {
       await updateSettings({
         ...settings,

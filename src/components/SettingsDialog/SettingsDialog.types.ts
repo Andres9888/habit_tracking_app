@@ -6,6 +6,7 @@ export interface Settings {
   showCalendarView: boolean;
   catTheme: boolean;
   darkMode: boolean;
+  useDyslexicFont: boolean;
 }
 
 export interface SettingsDialogProps {

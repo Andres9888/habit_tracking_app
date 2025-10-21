@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { DEFAULT_SETTINGS } from './SettingsDialog.config';
 import type { Settings } from './SettingsDialog.types';
+import { applyDyslexicFont } from '../../utils/accessibility';
 
 export function useSettingsDialog(isOpen: boolean) {
   const settings = useQuery(api.settings.get) ?? DEFAULT_SETTINGS;
@@ -21,10 +22,22 @@ export function useSettingsDialog(isOpen: boolean) {
     document.documentElement.classList.toggle('dark', localSettings.darkMode);
   }, [localSettings.darkMode]);
 
+  useEffect(() => {
+    applyDyslexicFont(localSettings.useDyslexicFont);
+  }, [localSettings.useDyslexicFont]);
+
   const toggleSetting = (key: keyof Settings) => {
     const newSettings = { ...localSettings, [key]: !localSettings[key] };
     setLocalSettings(newSettings);
     updateSettings(newSettings);
+
+    if (key === 'darkMode') {
+      document.documentElement.classList.toggle('dark', newSettings.darkMode);
+    }
+
+    if (key === 'useDyslexicFont') {
+      applyDyslexicFont(newSettings.useDyslexicFont);
+    }
   };
 
   return { localSettings, toggleSetting };

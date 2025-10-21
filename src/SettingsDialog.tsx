@@ -2,6 +2,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { useEffect, useState } from 'react';
 import { api } from '../convex/_generated/api';
 import { Checkbox } from './components/Checkbox';
+import { applyDyslexicFont } from './utils/accessibility';
 
 interface Settings {
   showStreaks: boolean;
@@ -11,6 +12,7 @@ interface Settings {
   showCalendarView: boolean;
   catTheme: boolean;
   darkMode: boolean;
+  useDyslexicFont: boolean;
 }
 
 export function SettingsDialog({
@@ -28,6 +30,7 @@ export function SettingsDialog({
     showEmojis: true,
     showMotivationalMessages: true,
     showStreaks: true,
+    useDyslexicFont: false,
   };
 
   const settings = useQuery(api.settings.get) ?? defaultSettings;
@@ -59,12 +62,20 @@ export function SettingsDialog({
     if (key === 'darkMode') {
       document.documentElement.classList.toggle('dark', newSettings.darkMode);
     }
+
+    if (key === 'useDyslexicFont') {
+      applyDyslexicFont(newSettings.useDyslexicFont);
+    }
   };
 
   // Apply dark mode on component mount/update
   useEffect(() => {
     document.documentElement.classList.toggle('dark', localSettings.darkMode);
   }, [localSettings.darkMode]);
+
+  useEffect(() => {
+    applyDyslexicFont(localSettings.useDyslexicFont);
+  }, [localSettings.useDyslexicFont]);
 
   if (!isOpen) return null;
 
@@ -152,6 +163,16 @@ export function SettingsDialog({
               checked={localSettings.showCalendarView}
               variant='primary'
               onPress={() => toggleSetting('showCalendarView')}
+            />
+          </label>
+
+          <label className='flex w-full items-center justify-between rounded-lg py-2'>
+            <span className='text-foreground'>OpenDyslexic Font</span>
+            <Checkbox
+              aria-label='Toggle OpenDyslexic font'
+              checked={localSettings.useDyslexicFont}
+              variant='primary'
+              onPress={() => toggleSetting('useDyslexicFont')}
             />
           </label>
 
