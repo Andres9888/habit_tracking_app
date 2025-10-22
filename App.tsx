@@ -68,9 +68,44 @@ function HabitsApp() {
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
+  const settings = useQuery(api.settings.get);
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
+
+  const highContrastMode = settings?.highContrastMode ?? false;
+
+  const theme = useMemo(
+    () =>
+      highContrastMode
+        ? {
+            accent: '#facc15',
+            accentText: '#000000',
+            background: '#000000',
+            border: '#facc15',
+            icon: '#facc15',
+            inputBackground: '#0f0f0f',
+            inputPlaceholder: '#facc15',
+            primaryText: '#ffffff',
+            secondaryText: '#facc15',
+            surface: '#111111',
+            surfaceMuted: '#161616',
+          }
+        : {
+            accent: '#1a1a1a',
+            accentText: '#ffffff',
+            background: '#f8f5f1',
+            border: '#e2e8f0',
+            icon: '#1a1a1a',
+            inputBackground: '#ffffff',
+            inputPlaceholder: '#999999',
+            primaryText: '#1a1a1a',
+            secondaryText: '#8a8a8a',
+            surface: '#ffffff',
+            surfaceMuted: 'rgba(255, 255, 255, 0.9)',
+          },
+    [highContrastMode]
+  );
 
   // Calculate dates based on week offset
   const displayWeekDates = useMemo(() => {
@@ -191,19 +226,33 @@ function HabitsApp() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#f8f5f1' }}>
-      <ScrollView style={{ flex: 1, backgroundColor: '#f8f5f1' }} contentContainerStyle={{ backgroundColor: '#f8f5f1' }}>
+    <GestureHandlerRootView
+      style={{ flex: 1, backgroundColor: theme.background }}
+    >
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.background }}
+        contentContainerStyle={{ backgroundColor: theme.background }}
+      >
         <View className='mx-auto w-full max-w-[375px] px-4 pb-24 pt-4'>
           {/* Header Section */}
           <View className='mb-4 flex-row items-center justify-between'>
             {/* Time and Habits Button */}
             <View className='flex-row items-center gap-4'>
-              <Text className='text-[20px] font-bold leading-[28px] text-[#1a1a1a]'>
+              <Text
+                className='text-[20px] font-bold leading-[28px]'
+                style={{ color: theme.primaryText }}
+              >
                 {format(new Date(), 'H:mm')}
               </Text>
-              <View className='flex-row items-center gap-2 rounded-full bg-[#1a1a1a] px-4 py-2'>
-                <Plus color='#ffffff' size={12} strokeWidth={2} />
-                <Text className='text-[14px] font-semibold text-white'>
+              <View
+                className='flex-row items-center gap-2 rounded-full px-4 py-2'
+                style={{ backgroundColor: theme.accent }}
+              >
+                <Plus color={theme.accentText} size={12} strokeWidth={2} />
+                <Text
+                  className='text-[14px] font-semibold'
+                  style={{ color: theme.accentText }}
+                >
                   Habits
                 </Text>
               </View>
@@ -211,16 +260,16 @@ function HabitsApp() {
 
             {/* Right Icons */}
             <View className='flex-row items-center gap-4'>
-              <Search color='#1a1a1a' size={14} strokeWidth={2} />
-              <Bell color='#1a1a1a' size={20} strokeWidth={2} />
-              <Wifi color='#1a1a1a' size={18} strokeWidth={2} />
+              <Search color={theme.icon} size={14} strokeWidth={2} />
+              <Bell color={theme.icon} size={20} strokeWidth={2} />
+              <Wifi color={theme.icon} size={18} strokeWidth={2} />
               <Pressable
                 accessibilityLabel='Open settings'
                 accessibilityRole='button'
                 className='h-8 w-8 items-center justify-center rounded-full'
                 onPress={() => setIsSettingsOpen(true)}
               >
-                <Settings color='#1a1a1a' size={20} />
+                <Settings color={theme.icon} size={20} />
               </Pressable>
             </View>
           </View>
@@ -230,22 +279,37 @@ function HabitsApp() {
             dates={displayWeekDates}
             onPreviousWeek={handlePreviousWeek}
             onNextWeek={handleNextWeek}
+            highContrastMode={highContrastMode}
           />
 
           {isAdding && (
-            <View className='mb-8 rounded-3xl border border-slate-200 bg-white/90 p-5'>
+            <View
+              className='mb-8 rounded-3xl border p-5'
+              style={{
+                backgroundColor: theme.surfaceMuted,
+                borderColor: theme.border,
+              }}
+            >
               <View className='gap-4'>
                 <View className='gap-2'>
-                  <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+                  <Text
+                    className='text-[11px] font-semibold tracking-[3px]'
+                    style={{ color: theme.secondaryText }}
+                  >
                     NEW HABIT
                   </Text>
                   <TextInput
                     autoFocus
-                    className='w-full rounded-3xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900'
+                    className='w-full rounded-3xl border px-5 py-3 text-sm font-medium'
                     placeholder='Name your habit'
-                    placeholderTextColor='#999'
+                    placeholderTextColor={theme.inputPlaceholder}
                     value={newHabitName}
                     onChangeText={setNewHabitName}
+                    style={{
+                      backgroundColor: theme.inputBackground,
+                      borderColor: theme.border,
+                      color: theme.primaryText,
+                    }}
                   />
                 </View>
                 <View className='flex-row items-center justify-end gap-3'>
@@ -254,17 +318,28 @@ function HabitsApp() {
                     className='py-2'
                     onPress={handleToggleForm}
                   >
-                    <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+                    <Text
+                      className='text-[11px] font-semibold tracking-[3px]'
+                      style={{ color: theme.secondaryText }}
+                    >
                       CANCEL
                     </Text>
                   </Pressable>
                   <Pressable
                     accessibilityRole='button'
-                    className={`rounded-3xl border border-slate-900 px-5 py-2 ${!canSubmit ? 'opacity-40' : ''}`}
+                    className={`rounded-3xl px-5 py-2 ${!canSubmit ? 'opacity-40' : ''}`}
                     disabled={!canSubmit}
                     onPress={handleSubmit}
+                    style={{
+                      backgroundColor: theme.accent,
+                      borderColor: theme.accent,
+                      borderWidth: 1,
+                    }}
                   >
-                    <Text className='text-[11px] font-semibold tracking-[3px] text-slate-900'>
+                    <Text
+                      className='text-[11px] font-semibold tracking-[3px]'
+                      style={{ color: theme.accentText }}
+                    >
                       ADD
                     </Text>
                   </Pressable>
@@ -314,6 +389,7 @@ function HabitsApp() {
                   key={habit._id}
                   habit={habit}
                   isCompactMode={isCompactMode}
+                  highContrastMode={highContrastMode}
                   streak={streak}
                   toggleHabit={toggleHabit}
                   weekDateStrings={displayWeekDateStrings}
@@ -329,6 +405,7 @@ function HabitsApp() {
           onClose={() => setIsSettingsOpen(false)}
           isCompact={isCompactMode}
           onChangeCompact={handleCompactChange}
+          isHighContrastActive={highContrastMode}
         />
       </ScrollView>
       {/* Centered Floating Action Button */}
@@ -339,8 +416,9 @@ function HabitsApp() {
           }
           accessibilityLabel={isAdding ? 'Close' : 'Add habit'}
           accessibilityRole='button'
-          className='h-16 w-16 items-center justify-center rounded-full bg-[#1a1a1a]'
+          className='h-16 w-16 items-center justify-center rounded-full'
           style={{
+            backgroundColor: theme.accent,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -349,7 +427,7 @@ function HabitsApp() {
           }}
           onPress={handleToggleForm}
         >
-          <Plus color='#ffffff' size={28} strokeWidth={2.5} />
+          <Plus color={theme.accentText} size={28} strokeWidth={2.5} />
         </Pressable>
       </View>
     </GestureHandlerRootView>

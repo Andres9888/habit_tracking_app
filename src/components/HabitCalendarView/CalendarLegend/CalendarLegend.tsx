@@ -1,22 +1,37 @@
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
+
+const LEGEND_ITEMS = [
+  {
+    indicatorClassName: 'bg-emerald-500',
+    label: 'Completed',
+    textClassName: 'text-emerald-700',
+  },
+  {
+    indicatorClassName: 'bg-rose-400',
+    label: 'Missed',
+    textClassName: 'text-rose-500',
+  },
+  {
+    indicatorClassName: 'bg-blue-500',
+    label: 'Today',
+    textClassName: 'text-blue-600',
+  },
+  {
+    indicatorClassName: 'bg-slate-300',
+    label: 'Upcoming',
+    textClassName: 'text-slate-400',
+  },
+];
 
 export function CalendarLegend() {
   return (
-    <View className='flex-row justify-center gap-6 pb-1 pt-2'>
-      <View className='flex-row items-center gap-1.5'>
-        <View className='h-3 w-3 rounded-md border-2 border-emerald-500 bg-emerald-50' />
-        <Text className='text-[11px] font-medium text-slate-500'>
-          Completed
-        </Text>
-      </View>
-      <View className='flex-row items-center gap-1.5'>
-        <View className='h-3 w-3 rounded-md border border-dashed border-slate-200 bg-gray-50 opacity-70' />
-        <Text className='text-[11px] font-medium text-slate-500'>Missed</Text>
-      </View>
-      <View className='flex-row items-center gap-1.5'>
-        <View className='h-3 w-3 rounded-md border-2 border-blue-500 bg-blue-50' />
-        <Text className='text-[11px] font-medium text-slate-500'>Today</Text>
-      </View>
+    <View className='flex-row flex-wrap items-center justify-center gap-4 pb-1 pt-2'>
+      {LEGEND_ITEMS.map(({ indicatorClassName, label, textClassName }) => (
+        <View key={label} className='flex-row items-center gap-1.5'>
+          <View className={`h-2.5 w-2.5 rounded-full ${indicatorClassName}`} />
+          <Text className={`text-[11px] font-medium ${textClassName}`}>{label}</Text>
+        </View>
+      ))}
     </View>
   );
 }

@@ -9,6 +9,7 @@ import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
+  color: string;
   visible: boolean;
 }
 
@@ -17,7 +18,7 @@ interface DayConnectorProps {
  * Shows a horizontal gray line when both adjacent days are completed,
  * creating a visual "chain" effect for habit tracking.
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ visible }) => {
+const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const DayConnector: React.FC<DayConnectorProps> = ({ visible }) => {
   return (
     <Animated.View
       style={{
-        backgroundColor: '#e0e0e0',
+        backgroundColor: color,
         height: 1,
         opacity,
         width: 10,
@@ -49,6 +50,7 @@ interface HabitDayToggleProps {
   onPress: () => void;
   completed: boolean;
   isToday: boolean;
+  highContrastMode: boolean;
 }
 
 const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
@@ -59,6 +61,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   onPress,
   completed,
   isToday,
+  highContrastMode,
 }) => {
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
 
@@ -74,12 +77,16 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   // For Figma design: future/uncompleted boxes have white bg with border
   const backgroundColor = completed
     ? accentColor
-    : '#ffffff';
+    : highContrastMode
+      ? '#000000'
+      : '#ffffff';
 
   const scale = completion.interpolate({
     inputRange: [0, 1],
     outputRange: [0.96, 1],
   });
+
+  const borderColor = highContrastMode ? '#facc15' : '#1a1a1a';
 
   return (
     <AnimatedPressable
@@ -95,6 +102,8 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       style={{
         backgroundColor,
         opacity: disabled ? 0.5 : 1,
+        borderColor: !completed ? borderColor : accentColor,
+        borderWidth: !completed ? 2 : 0,
         transform: [{ scale }],
       }}
       onPress={onPress}
@@ -122,6 +131,7 @@ type HabitStatus = 'done' | 'missed' | 'planned';
 
 interface HabitChainVisualizerProps {
   accentColor: string;
+  highContrastMode?: boolean;
   habitId: Id<'habits'>;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   weekDateStrings: string[];
@@ -130,6 +140,7 @@ interface HabitChainVisualizerProps {
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   accentColor,
+  highContrastMode = false,
   habitId,
   onToggle,
   weekDateStrings,
@@ -140,6 +151,8 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
     weekStatus
   );
   const todayLabel = format(new Date(), 'MMM d, EEE').toUpperCase();
+
+  const connectorColor = highContrastMode ? '#facc15' : '#e0e0e0';
 
   return (
     <View className='flex-row items-center justify-between'>
@@ -172,9 +185,12 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               completed={completed}
               disabled={disabled}
               isToday={isToday(index)}
+              highContrastMode={highContrastMode}
               onPress={() => onToggle({ date: dateString, habitId })}
             />
-            {!isLastItem && <DayConnector visible={showConnector} />}
+            {!isLastItem && (
+              <DayConnector color={connectorColor} visible={showConnector} />
+            )}
           </React.Fragment>
         );
       })}

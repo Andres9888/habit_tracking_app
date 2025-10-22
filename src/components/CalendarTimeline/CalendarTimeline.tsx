@@ -15,6 +15,12 @@ export interface CalendarTimelineProps {
   canNavigateForward?: boolean;
   /** Whether to show the gradient separator line */
   showSeparator?: boolean;
+  /** Enables the high contrast theme */
+  highContrastMode?: boolean;
+  /** Currently selected date (reserved for future interactive states) */
+  selectedDate?: Date;
+  /** Callback when a date is selected (reserved for future interactive states) */
+  onDateSelect?: (date: Date) => void;
 }
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
@@ -23,6 +29,9 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onNextWeek,
   canNavigateForward = true,
   showSeparator = true,
+  highContrastMode = false,
+  selectedDate: _selectedDate,
+  onDateSelect: _onDateSelect,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
 
@@ -36,6 +45,28 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   const lastDate = dates[dates.length - 1];
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
+  const colors = highContrastMode
+    ? {
+        icon: '#facc15',
+        primaryText: '#ffffff',
+        secondaryText: '#facc15',
+        currentDayBackground: '#facc15',
+        currentDayText: '#000000',
+        dayBackground: '#000000',
+        dayBorder: '#facc15',
+        dayText: '#ffffff',
+      }
+    : {
+        icon: '#1a1a1a',
+        primaryText: '#1a1a1a',
+        secondaryText: '#8a8a8a',
+        currentDayBackground: '#1a1a1a',
+        currentDayText: '#ffffff',
+        dayBackground: '#ffffff',
+        dayBorder: 'transparent',
+        dayText: '#1a1a1a',
+      };
+
   return (
     <View className='mb-6'>
       {/* Week Navigation Header */}
@@ -46,10 +77,13 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           className='h-10 w-7 items-center justify-center rounded-full'
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color='#1a1a1a' size={20} strokeWidth={2} />
+          <ChevronLeft color={colors.icon} size={20} strokeWidth={2} />
         </Pressable>
 
-        <Text className='text-[18px] font-semibold leading-[28px] text-[#1a1a1a]'>
+        <Text
+          className='text-[18px] font-semibold leading-[28px]'
+          style={{ color: colors.primaryText }}
+        >
           {dateRangeText}
         </Text>
 
@@ -61,7 +95,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
-          <ChevronRight color='#1a1a1a' size={20} strokeWidth={2} />
+          <ChevronRight color={colors.icon} size={20} strokeWidth={2} />
         </Pressable>
       </View>
 
@@ -87,21 +121,29 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             >
               {/* Weekday label */}
               <Text
-                className='text-center text-[14px] font-normal leading-[20px] text-[#8a8a8a]'
+                className='text-center text-[14px] font-normal leading-[20px]'
+                style={{ color: colors.secondaryText }}
               >
                 {weekday}
               </Text>
 
               {/* Date number with rounded box */}
               <View
-                className={`h-10 w-10 items-center justify-center rounded-[12px] ${
-                  isCurrentDay ? 'bg-[#1a1a1a]' : 'bg-white'
-                }`}
+                className='h-10 w-10 items-center justify-center rounded-[12px]'
+                style={{
+                  backgroundColor: isCurrentDay
+                    ? colors.currentDayBackground
+                    : colors.dayBackground,
+                  borderColor: colors.dayBorder,
+                  borderWidth: highContrastMode && !isCurrentDay ? 2 : 0,
+                }}
               >
                 <Text
-                  className={`text-center text-[16px] font-semibold leading-[24px] ${
-                    isCurrentDay ? 'font-bold text-white' : 'text-[#1a1a1a]'
-                  }`}
+                  className='text-center text-[16px] font-semibold leading-[24px]'
+                  style={{
+                    color: isCurrentDay ? colors.currentDayText : colors.dayText,
+                    fontWeight: isCurrentDay ? '700' : '600',
+                  }}
                 >
                   {dayNumber}
                 </Text>

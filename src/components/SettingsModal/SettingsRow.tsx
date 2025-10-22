@@ -11,6 +11,7 @@ interface SettingsRowProps {
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
+  highContrastMode?: boolean;
 }
 
 export function SettingsRow({
@@ -22,21 +23,55 @@ export function SettingsRow({
   onPress,
   onToggle,
   showBorder = true,
+  highContrastMode = false,
 }: SettingsRowProps) {
+  const colors = highContrastMode
+    ? {
+        background: '#111111',
+        border: '#2f2f2f',
+        chevron: '#facc15',
+        label: '#ffffff',
+        switchTrackFalse: '#525252',
+        switchTrackTrue: '#facc15',
+        switchThumb: '#000000',
+        value: '#facc15',
+      }
+    : {
+        background: '#ffffff',
+        border: '#f1f5f9',
+        chevron: '#8a8a8a',
+        label: '#1a1a1a',
+        switchTrackFalse: '#d1d5db',
+        switchTrackTrue: '#1a1a1a',
+        switchThumb: '#ffffff',
+        value: '#8a8a8a',
+      };
+
   const content = (
     <View
       className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b border-gray-100' : ''}`}
+      style={{
+        backgroundColor: colors.background,
+        borderColor: showBorder ? colors.border : undefined,
+      }}
     >
       {/* Icon */}
       <View
         className="mr-4 size-10 items-center justify-center rounded-lg"
-        style={{ backgroundColor: iconBackgroundColor }}
+        style={{
+          backgroundColor: iconBackgroundColor,
+          borderColor: highContrastMode ? '#facc15' : 'transparent',
+          borderWidth: highContrastMode ? 2 : 0,
+        }}
       >
         {icon}
       </View>
 
       {/* Label */}
-      <Text className="flex-1 text-[16px] font-semibold text-[#1a1a1a]">
+      <Text
+        className="flex-1 text-[16px] font-semibold"
+        style={{ color: colors.label }}
+      >
         {label}
       </Text>
 
@@ -45,22 +80,30 @@ export function SettingsRow({
         <Switch
           value={value as boolean}
           onValueChange={onToggle}
-          trackColor={{ false: '#d1d5db', true: '#1a1a1a' }}
-          thumbColor="#ffffff"
-          ios_backgroundColor="#d1d5db"
+          trackColor={{
+            false: colors.switchTrackFalse,
+            true: colors.switchTrackTrue,
+          }}
+          thumbColor={colors.switchThumb}
+          ios_backgroundColor={colors.switchTrackFalse}
         />
       )}
 
       {type === 'selection' && (
         <View className="flex-row items-center gap-1">
-          <Text className="text-[16px] font-medium text-[#8a8a8a]">
+          <Text
+            className="text-[16px] font-medium"
+            style={{ color: colors.value }}
+          >
             {value as string}
           </Text>
-          <ChevronRight size={16} color="#8a8a8a" />
+          <ChevronRight size={16} color={colors.chevron} />
         </View>
       )}
 
-      {type === 'navigation' && <ChevronRight size={16} color="#8a8a8a" />}
+      {type === 'navigation' && (
+        <ChevronRight size={16} color={colors.chevron} />
+      )}
     </View>
   );
 

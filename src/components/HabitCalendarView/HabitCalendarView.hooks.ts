@@ -4,11 +4,16 @@ import {
   eachDayOfInterval,
   addMonths,
   subMonths,
+  parse,
+  startOfDay,
+  startOfToday,
+  isBefore,
+  isSameDay,
 } from 'date-fns';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 
-type HabitStatus = 'done' | 'missed' | 'planned' | 'empty';
+export type HabitStatus = 'done' | 'missed' | 'planned' | 'upcoming';
 
 interface UseHabitCalendarViewLogicProps {
   habitId: Id<'habits'>;
@@ -21,23 +26,38 @@ export const useHabitCalendarViewLogic = ({
 }: UseHabitCalendarViewLogicProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const getHabitStatus = (dateString: string): HabitStatus => {
-    const trackingEntry = tracking.find(
-      (t) => t.habitId === habitId && t.date === dateString
-    );
+  const trackingMap = useMemo(() => {
+    const map = new Map<string, boolean>();
+    tracking.forEach(({ habitId: entryHabitId, date, completed }) => {
+      if (entryHabitId === habitId) {
+        map.set(date, completed);
+      }
+    });
+    return map;
+  }, [habitId, tracking]);
 
-    // Parse date in local timezone to avoid timezone shifting
-    const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    date.setHours(0, 0, 0, 0);
+  const getHabitStatus = useCallback(
+    (dateString: string): HabitStatus => {
+      const parsedDate = startOfDay(parse(dateString, 'yyyy-MM-dd', new Date()));
+      const today = startOfToday();
+      const completion = trackingMap.get(dateString);
 
-    if (trackingEntry?.completed) return 'done';
-    if (date < today) return 'missed';
-    if (date.getTime() === today.getTime()) return 'planned';
-    return 'empty';
-  };
+      if (completion) {
+        return 'done';
+      }
+
+      if (isSameDay(parsedDate, today)) {
+        return 'planned';
+      }
+
+      if (isBefore(parsedDate, today)) {
+        return 'missed';
+      }
+
+      return 'upcoming';
+    },
+    [trackingMap]
+  );
 
   const handlePreviousMonth = () => {
     setCurrentMonth((prev) => subMonths(prev, 1));
@@ -51,15 +71,17 @@ export const useHabitCalendarViewLogic = ({
     setCurrentMonth(new Date());
   };
 
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
-  const daysInMonth = eachDayOfInterval({ end: monthEnd, start: monthStart });
+  const { daysInMonth, emptyDays } = useMemo(() => {
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ end: monthEnd, start: monthStart });
+    const firstDayOfWeek = monthStart.getDay();
 
-  // Get the day of week for the first day (0 = Sunday)
-  const firstDayOfWeek = monthStart.getDay();
-
-  // Create array of empty slots for days before the month starts
-  const emptyDays = Array.from({ length: firstDayOfWeek }, (_, i) => i);
+    return {
+      daysInMonth: days,
+      emptyDays: Array.from({ length: firstDayOfWeek }, (_, i) => i),
+    };
+  }, [currentMonth]);
 
   return {
     currentMonth,
