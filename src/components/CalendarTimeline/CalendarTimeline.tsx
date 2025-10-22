@@ -94,7 +94,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                   isSunday ? 'font-bold text-[#1a1a1a]' : 'font-normal text-[#8a8a8a]'
                 }`}
               >
-                {weekday}
+                {isSunday ? '' : weekday}
               </Text>
 
               {/* Date number with rounded box */}
