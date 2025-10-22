@@ -41,8 +41,9 @@ export default function CreateHabitModal({
   onClose,
 }: CreateHabitModalProps) {
   const [habitName, setHabitName] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState('💪');
+  const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
+  const [isColorPickerVisible, setIsColorPickerVisible] = useState(false);
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState(() => getDefaultReminderTime());
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -53,7 +54,9 @@ export default function CreateHabitModal({
   const handleCreate = async () => {
     if (!habitName.trim()) return;
 
-    const fullName = `${selectedEmoji} ${habitName.trim()}`;
+    const fullName = selectedEmoji
+      ? `${selectedEmoji} ${habitName.trim()}`
+      : habitName.trim();
     const reminderTimeString = formatReminderTime(reminderTime);
 
     let enableReminders = remindersEnabled;
@@ -135,12 +138,20 @@ export default function CreateHabitModal({
             {/* Preview Card */}
             <View className='mb-6 mt-4 rounded-2xl bg-white p-4'>
               <View className='flex-row items-center gap-4'>
-                <View
-                  className='h-16 w-16 items-center justify-center rounded-2xl'
-                  style={{ backgroundColor: selectedColor }}
-                >
-                  <Text className='text-[30px]'>{selectedEmoji}</Text>
-                </View>
+                {selectedEmoji ? (
+                  <View
+                    className='h-16 w-16 items-center justify-center rounded-2xl'
+                    style={{ backgroundColor: selectedColor }}
+                  >
+                    <Text className='text-[30px]'>{selectedEmoji}</Text>
+                  </View>
+                ) : (
+                  <View className='h-16 w-16 items-center justify-center rounded-2xl bg-gray-200'>
+                    <Text className='text-xs font-medium text-gray-400'>
+                      No{'\n'}icon
+                    </Text>
+                  </View>
+                )}
                 <View className='flex-1'>
                   <Text className='text-[20px] font-semibold text-[#1a1a1a]'>
                     {habitName || 'Exercise'}
@@ -171,11 +182,34 @@ export default function CreateHabitModal({
               <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
                 Icon
               </Text>
-              <View className='flex-row gap-3'>
+              <View className='flex-row flex-wrap gap-3'>
+                {/* No Icon Option */}
+                <TouchableOpacity
+                  accessibilityLabel='No icon'
+                  accessibilityRole='button'
+                  className='h-12 items-center justify-center rounded-xl bg-white px-3'
+                  style={{
+                    borderColor: '#1a1a1a',
+                    borderWidth: selectedEmoji === null ? 2 : 0,
+                  }}
+                  onPress={() => setSelectedEmoji(null)}
+                >
+                  <Text className='text-xs font-medium text-[#8a8a8a]'>
+                    None
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Emoji Options */}
                 {EMOJIS.map((emoji, index) => (
                   <TouchableOpacity
                     key={index}
+                    accessibilityLabel={`Select ${emoji} icon`}
+                    accessibilityRole='button'
                     className='h-12 w-12 items-center justify-center rounded-xl bg-white'
+                    style={{
+                      borderColor: '#1a1a1a',
+                      borderWidth: selectedEmoji === emoji ? 2 : 0,
+                    }}
                     onPress={() => setSelectedEmoji(emoji)}
                   >
                     <Text className='text-2xl'>{emoji}</Text>
