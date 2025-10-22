@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { X } from 'lucide-react-native';
+import { Palette, X } from 'lucide-react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -19,6 +19,7 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../../utils/notifications';
+import { ColorPickerSheet } from './ColorPickerSheet';
 
 interface CreateHabitModalProps {
   visible: boolean;
@@ -217,16 +218,34 @@ export default function CreateHabitModal({
               <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
                 Color
               </Text>
-              <View className='flex-row gap-3'>
+              <View className='flex-row flex-wrap gap-3'>
                 {COLORS.map((color, index) => (
                   <TouchableOpacity
                     key={index}
-                    className='h-10 w-10 rounded-full'
-                    style={{ backgroundColor: color }}
+                    accessibilityLabel={`Select ${color} color`}
+                    accessibilityRole='button'
+                    className='h-10 w-10 items-center justify-center rounded-full'
+                    style={{
+                      backgroundColor: color,
+                      borderColor: '#1a1a1a',
+                      borderWidth: selectedColor === color ? 2 : 0,
+                    }}
                     onPress={() => setSelectedColor(color)}
                   />
                 ))}
               </View>
+              <TouchableOpacity
+                accessibilityRole='button'
+                className='mt-4 flex-row items-center gap-2 self-start rounded-full bg-white px-3 py-2'
+                onPress={() => setIsColorPickerVisible(true)}
+              >
+                <Palette color='#1a1a1a' size={16} />
+                <Text className='text-sm font-medium text-[#1a1a1a]'>Custom color</Text>
+                <View
+                  className='h-4 w-4 rounded-full border border-[#1a1a1a]'
+                  style={{ backgroundColor: selectedColor }}
+                />
+              </TouchableOpacity>
             </View>
 
             {/* Reminders Section */}
@@ -293,6 +312,13 @@ export default function CreateHabitModal({
           )}
         </View>
       </View>
+      <ColorPickerSheet
+        presetColors={COLORS}
+        value={selectedColor}
+        visible={isColorPickerVisible}
+        onSelect={setSelectedColor}
+        onClose={() => setIsColorPickerVisible(false)}
+      />
     </Modal>
   );
 }
