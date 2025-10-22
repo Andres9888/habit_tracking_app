@@ -108,7 +108,7 @@ export default function CreateHabitModal({
       onRequestClose={onClose}
     >
       <View className='flex-1 bg-black/50'>
-        <View className='mt-12 flex-1 overflow-hidden rounded-t-3xl bg-[#f5f5f0] shadow-2xl'>
+        <View className='mt-12 flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'>
           {/* Header */}
           <View className='flex-row items-center justify-between px-4 pb-4 pt-4'>
             <TouchableOpacity
