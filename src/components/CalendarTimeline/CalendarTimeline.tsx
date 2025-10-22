@@ -78,9 +78,6 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             ? `Today, ${baseLabel}`
             : baseLabel;
 
-          // Check if it's Sunday (last day of the week)
-          const isSunday = format(date, 'EEE') === 'Sun';
-
           return (
             <View
               key={`timeline-day-${index}`}
@@ -90,9 +87,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             >
               {/* Weekday label */}
               <Text
-                className={`text-center text-[14px] leading-[20px] ${
-                  isSunday ? 'font-bold text-[#1a1a1a]' : 'font-normal text-[#8a8a8a]'
-                }`}
+                className='text-center text-[14px] font-normal leading-[20px] text-[#8a8a8a]'
               >
                 {weekday}
               </Text>
