@@ -138,18 +138,12 @@ export default function CreateHabitModal({
             {/* Preview Card */}
             <View className='mb-6 mt-4 rounded-2xl bg-white p-4'>
               <View className='flex-row items-center gap-4'>
-                {selectedEmoji ? (
+                {selectedEmoji && (
                   <View
                     className='h-16 w-16 items-center justify-center rounded-2xl'
                     style={{ backgroundColor: selectedColor }}
                   >
                     <Text className='text-[30px]'>{selectedEmoji}</Text>
-                  </View>
-                ) : (
-                  <View className='h-16 w-16 items-center justify-center rounded-2xl bg-gray-200'>
-                    <Text className='text-xs font-medium text-gray-400'>
-                      No{'\n'}icon
-                    </Text>
                   </View>
                 )}
                 <View className='flex-1'>
