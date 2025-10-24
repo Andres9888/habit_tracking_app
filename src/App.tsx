@@ -11,15 +11,17 @@ import {
 import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-fns';
 import { Plus, Settings } from 'lucide-react-native';
 import type { ComponentType } from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Platform,
   Pressable,
   Text,
   View,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PaperProvider } from 'react-native-paper';
 import DraggableFlatList, {
   ScaleDecorator,
   RenderItemParams,
@@ -28,11 +30,27 @@ import { api } from '../convex/_generated/api';
 import type { Id } from '../convex/_generated/dataModel';
 import { CalendarTimeline } from './components/CalendarTimeline';
 import SettingsModal from './components/SettingsModal';
-import StatsNotesModal from './components/StatsNotesModal';
 import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
 import HabitCalendarModal from './components/HabitCalendarModal';
+import HabitDetailScreen from './screens/HabitDetailScreen';
+import AppNavigator from './components/AppNavigator';
+import MilestoneCelebration from './components/MilestoneCelebration';
+// Lazy-load ShareCardGenerator to avoid loading native modules (e.g., view-shot) in Expo Go
+// Define the type locally to avoid importing the module at startup
+type ShareCardData = {
+  habitName: string;
+  milestoneLevel: 'starting' | 'building' | 'developing' | 'strong' | 'automatic';
+  strengthPercentage: number;
+  userName?: string;
+};
+import { useMilestoneDetection } from './hooks/useMilestoneDetection';
+import PauseHabitModal from './components/PauseHabitModal';
+import HabitsAtRiskWidget from './components/HabitsAtRiskWidget';
 import * as SecureStore from 'expo-secure-store';
+
+// Import custom theme
+import theme from './theme';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -71,15 +89,22 @@ const WebToaster: ComponentType =
 
 function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isStatsNotesOpen, setIsStatsNotesOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
     useState(true);
-  const [selectedHabit, setSelectedHabit] = useState<any | null>(null);
+  const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
   const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
+  const [isHabitDetailOpen, setIsHabitDetailOpen] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const [shareCardData, setShareCardData] = useState<ShareCardData | null>(null);
+  const [showPauseModal, setShowPauseModal] = useState(false);
+  const [habitToPause, setHabitToPause] = useState<Habit | null>(null);
+  const [habitToEdit, setHabitToEdit] = useState<any>(null);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
+  const pauseHabit = useMutation(api.habits.pause);
+  const removeHabit = useMutation(api.habits.remove);
   const reorderHabits = useMutation(api.habits.reorderHabits);
   const updateSettings = useMutation(api.settings.update);
   const habitsQuery = useQuery(api.habits.list);
@@ -88,6 +113,64 @@ function HabitsApp() {
   const settings = useQuery(api.settings.get);
 
   type Habit = typeof habits[number];
+
+  // Track last updated habit for milestone detection
+  const [lastUpdatedHabit, setLastUpdatedHabit] = useState<{
+    id: string;
+    name: string;
+    strength: number;
+  } | null>(null);
+
+  // Milestone detection for celebrations
+  // Convert strength from 0-1 scale to 0-100 percentage for milestone detection
+  const { milestone, clearMilestone } = useMilestoneDetection(
+    lastUpdatedHabit?.id,
+    lastUpdatedHabit?.name,
+    lastUpdatedHabit?.strength ? lastUpdatedHabit.strength * 100 : undefined
+  );
+
+  // Debug: Log when milestone is detected
+  useEffect(() => {
+    if (milestone) {
+      console.log('🎉 MILESTONE DETECTED!', {
+        level: milestone.level,
+        strength: milestone.strength + '%',
+        habitName: milestone.habitName,
+      });
+    }
+  }, [milestone]);
+
+  // Track previous strengths to detect changes
+  const prevStrengthsRef = useRef<Map<string, number>>(new Map());
+
+  // Detect strength changes and trigger milestone detection
+  useEffect(() => {
+    // Skip if habits are still loading
+    if (isHabitsLoading) return;
+
+    // Check if any habit's strength has changed
+    habits.forEach((habit) => {
+      const prevStrength = prevStrengthsRef.current.get(habit._id) || 0;
+      const currentStrength = habit.strength || 0;
+
+      // If strength increased, this might be a milestone crossing
+      if (currentStrength > prevStrength) {
+        console.log('🎯 Strength increased!', {
+          habitName: habit.name,
+          prevStrength: (prevStrength * 100).toFixed(1) + '%',
+          currentStrength: (currentStrength * 100).toFixed(1) + '%',
+        });
+        setLastUpdatedHabit({
+          id: habit._id,
+          name: habit.name,
+          strength: currentStrength,
+        });
+      }
+
+      // Update previous strength
+      prevStrengthsRef.current.set(habit._id, currentStrength);
+    });
+  }, [habits, isHabitsLoading]);
 
   const today = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor] = useState(today);
@@ -216,6 +299,37 @@ function HabitsApp() {
     [archiveHabit]
   );
 
+  const handleDeleteHabit = useCallback(
+    async (habitId: Id<'habits'>) => {
+      if (Platform.OS === 'web') {
+        if (!confirm('Are you sure you want to delete this habit? This cannot be undone.')) {
+          return;
+        }
+        await removeHabit({ habitId });
+        setIsHabitDetailOpen(false);
+        setSelectedHabit(null);
+      } else {
+        Alert.alert(
+          'Delete Habit',
+          'Are you sure you want to delete this habit? This cannot be undone.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Delete',
+              style: 'destructive',
+              onPress: async () => {
+                await removeHabit({ habitId });
+                setIsHabitDetailOpen(false);
+                setSelectedHabit(null);
+              },
+            },
+          ]
+        );
+      }
+    },
+    [removeHabit]
+  );
+
   const handleHabitLongPress = useCallback((habit: Habit) => {
     setSelectedHabit(habit);
     setIsHabitCalendarOpen(true);
@@ -223,7 +337,7 @@ function HabitsApp() {
 
   const handleHabitPress = useCallback((habit: Habit) => {
     setSelectedHabit(habit);
-    setIsHabitCalendarOpen(true);
+    setIsHabitDetailOpen(true);
   }, []);
 
   // Memoize content container style to prevent re-renders on iOS
@@ -238,7 +352,7 @@ function HabitsApp() {
 
   // Memoize render item for better iOS performance
   const renderItem = useCallback(
-    ({ item, drag, isActive }: RenderItemParams<any>) => {
+    ({ item, drag, isActive }: RenderItemParams<Habit>) => {
       const weekStatus = weekDateStrings.map((ds) =>
         getHabitStatus(item._id, ds)
       );
@@ -323,16 +437,6 @@ function HabitsApp() {
           </Text>
         </Pressable>
         <View className='flex-row gap-3'>
-          {settings?.showNotesStats && (
-            <Pressable
-              accessibilityLabel='View statistics and notes'
-              accessibilityRole='button'
-              className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-              onPress={() => setIsStatsNotesOpen(true)}
-            >
-              <BarChart3 color='#101727' size={20} strokeWidth={2.25} />
-            </Pressable>
-          )}
           <Pressable
             accessibilityLabel='Open settings'
             accessibilityRole='button'
@@ -352,99 +456,198 @@ function HabitsApp() {
         onNextWeek={handleNextWeek}
         onPreviousWeek={handlePreviousWeek}
       />
+
+      {/* Habits at Risk Widget - Phase 4: Retention Engine */}
+      <HabitsAtRiskWidget
+        onHabitPress={(habitId) => {
+          const habit = habits.find(h => h._id === habitId);
+          if (habit) {
+            handleHabitPress(habit);
+          }
+        }}
+      />
     </View>
   ), [
     canNavigateForward,
     handleNextWeek,
     handlePreviousWeek,
     handleToggleForm,
-    settings?.showNotesStats,
+    handleHabitPress,
+    habits,
     weekDates,
   ]);
 
   return (
     <GestureHandlerRootView className='flex-1'>
-      <View className='flex-1 items-center bg-background'>
-        <View className='w-full max-w-[448px] flex-1'>
-          <DraggableFlatList
-            data={habits}
-            keyExtractor={(item: any) => item._id}
-            renderItem={renderItem}
-            onDragEnd={handleDragEnd}
-            ListHeaderComponent={renderHeader}
-            ListEmptyComponent={renderEmptyState}
-            contentContainerStyle={contentContainerStyle}
-            showsVerticalScrollIndicator={false}
-            activationDistance={10}
-          />
+      <AppNavigator
+        settingsOpen={isSettingsOpen}
+        onSettingsPress={() => setIsSettingsOpen(true)}
+      >
+        <View className='flex-1 items-center bg-background'>
+          <View className='w-full max-w-[448px] flex-1'>
+            <DraggableFlatList
+              data={habits}
+              keyExtractor={(item: Habit) => item._id}
+              renderItem={renderItem}
+              onDragEnd={handleDragEnd}
+              ListHeaderComponent={renderHeader}
+              ListEmptyComponent={renderEmptyState}
+              contentContainerStyle={contentContainerStyle}
+              showsVerticalScrollIndicator={false}
+              activationDistance={10}
+            />
+          </View>
+          <WebToaster />
+          <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
+            <Pressable
+              accessibilityHint='Open create habit modal'
+              accessibilityLabel='Add habit'
+              accessibilityRole='button'
+              className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
+              onPress={handleToggleForm}
+            >
+              <Plus color='#ffffff' size={24} strokeWidth={2.25} />
+            </Pressable>
+          </View>
         </View>
-        <WebToaster />
-        <SettingsModal
-          showCharacterScreen={settings?.showCharacterScreen ?? true}
-          showHabitStrengthPercentage={showHabitStrengthPercentage}
-          showNotesStats={settings?.showNotesStats ?? true}
-          visible={isSettingsOpen}
-          onChangeShowCharacterScreen={async (value) => {
-            if (settings) {
-              await updateSettings({
-                catTheme: settings.catTheme,
-                darkMode: settings.darkMode,
-                showCalendarView: settings.showCalendarView,
-                showCharacterScreen: value,
-                showConsistency: settings.showConsistency,
-                showEmojis: settings.showEmojis,
-                showMotivationalMessages: settings.showMotivationalMessages,
-                showNotesStats: settings.showNotesStats,
-                showStreaks: settings.showStreaks,
-              });
-            }
+      </AppNavigator>
+
+      {/* Modals rendered outside navigator */}
+      <SettingsModal
+        showCharacterScreen={settings?.showCharacterScreen ?? true}
+        showHabitStrengthPercentage={showHabitStrengthPercentage}
+        showNotesStats={settings?.showNotesStats ?? true}
+        visible={isSettingsOpen}
+        onChangeShowCharacterScreen={async (value) => {
+          if (settings) {
+            await updateSettings({
+              catTheme: settings.catTheme,
+              darkMode: settings.darkMode,
+              showCalendarView: settings.showCalendarView,
+              showCharacterScreen: value,
+              showConsistency: settings.showConsistency,
+              showEmojis: settings.showEmojis,
+              showMotivationalMessages: settings.showMotivationalMessages,
+              showNotesStats: settings.showNotesStats,
+              showStreaks: settings.showStreaks,
+            });
+          }
+        }}
+        onChangeShowHabitStrengthPercentage={setShowHabitStrengthPercentage}
+        onChangeShowNotesStats={async (value) => {
+          if (settings) {
+            await updateSettings({
+              catTheme: settings.catTheme,
+              darkMode: settings.darkMode,
+              showCalendarView: settings.showCalendarView,
+              showCharacterScreen: settings.showCharacterScreen,
+              showConsistency: settings.showConsistency,
+              showEmojis: settings.showEmojis,
+              showMotivationalMessages: settings.showMotivationalMessages,
+              showNotesStats: value,
+              showStreaks: settings.showStreaks,
+            });
+          }
+        }}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+      <CreateHabitModal
+        visible={isCreateHabitOpen || habitToEdit !== null}
+        onClose={() => {
+          setIsCreateHabitOpen(false);
+          setHabitToEdit(null);
+        }}
+        habitToEdit={habitToEdit || undefined}
+      />
+      <HabitCalendarModal
+        habit={selectedHabit}
+        streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
+        tracking={tracking}
+        toggleHabit={toggleHabit}
+        visible={isHabitCalendarOpen}
+        onClose={() => setIsHabitCalendarOpen(false)}
+      />
+      <HabitDetailScreen
+        visible={isHabitDetailOpen}
+        onClose={() => setIsHabitDetailOpen(false)}
+        habit={selectedHabit}
+        isPremium={process.env.EXPO_PUBLIC_ENABLE_PREMIUM === 'true' || true} // Set to true for testing, false to test paywall
+        onEdit={(habit) => {
+          setIsHabitDetailOpen(false);
+          setHabitToEdit(habit);
+        }}
+        onPause={(habitId) => {
+          const habit = habits.find(h => h._id === habitId);
+          if (habit) {
+            setHabitToPause(habit);
+            setShowPauseModal(true);
+          }
+        }}
+        onArchive={handleArchive}
+        onDelete={handleDeleteHabit}
+        onUpgrade={() => {
+          // TODO: Navigate to subscription screen
+          console.log('Upgrade to premium');
+        }}
+      />
+
+      {/* Milestone Celebration Modal */}
+      {milestone && (
+        <MilestoneCelebration
+          visible={true}
+          level={milestone.level}
+          strength={milestone.strength}
+          habitName={milestone.habitName}
+          onClose={() => {
+            clearMilestone();
+            setLastUpdatedHabit(null);
           }}
-          onChangeShowHabitStrengthPercentage={setShowHabitStrengthPercentage}
-          onChangeShowNotesStats={async (value) => {
-            if (settings) {
-              await updateSettings({
-                catTheme: settings.catTheme,
-                darkMode: settings.darkMode,
-                showCalendarView: settings.showCalendarView,
-                showCharacterScreen: settings.showCharacterScreen,
-                showConsistency: settings.showConsistency,
-                showEmojis: settings.showEmojis,
-                showMotivationalMessages: settings.showMotivationalMessages,
-                showNotesStats: value,
-                showStreaks: settings.showStreaks,
-              });
-            }
+          onShare={() => {
+            // Prepare share card data
+            setShareCardData({
+              habitName: milestone.habitName,
+              milestoneLevel: milestone.level,
+              strengthPercentage: milestone.strength,
+            });
+            setShowShareCard(true);
           }}
-          onClose={() => setIsSettingsOpen(false)}
         />
-        <StatsNotesModal
-          visible={isStatsNotesOpen}
-          onClose={() => setIsStatsNotesOpen(false)}
-        />
-        <CreateHabitModal
-          visible={isCreateHabitOpen}
-          onClose={() => setIsCreateHabitOpen(false)}
-        />
-        <HabitCalendarModal
-          habit={selectedHabit}
-          streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
-          tracking={tracking}
-          toggleHabit={toggleHabit}
-          visible={isHabitCalendarOpen}
-          onClose={() => setIsHabitCalendarOpen(false)}
-        />
-      </View>
-      <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
-        <Pressable
-          accessibilityHint='Open create habit modal'
-          accessibilityLabel='Add habit'
-          accessibilityRole='button'
-          className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
-          onPress={handleToggleForm}
-        >
-          <Plus color='#ffffff' size={24} strokeWidth={2.25} />
-        </Pressable>
-      </View>
+      )}
+
+      {/* Share Card Generator Modal */}
+      {showShareCard && shareCardData && (() => {
+        const { ShareCardGenerator } = require('./components/ShareCardGenerator');
+        return (
+          <ShareCardGenerator
+            visible={showShareCard}
+            data={shareCardData}
+            onClose={() => {
+              setShowShareCard(false);
+              setShareCardData(null);
+              clearMilestone();
+              setLastUpdatedHabit(null);
+            }}
+          />
+        );
+      })()}
+
+      {/* Pause Habit Confirmation Modal */}
+      <PauseHabitModal
+        visible={showPauseModal}
+        habitName={habitToPause?.name || ''}
+        onConfirm={async () => {
+          if (habitToPause) {
+            await pauseHabit({ habitId: habitToPause._id });
+            setShowPauseModal(false);
+            setHabitToPause(null);
+            setIsHabitDetailOpen(false);
+          }
+        }}
+        onCancel={() => {
+          setShowPauseModal(false);
+          setHabitToPause(null);
+        }}
+      />
     </GestureHandlerRootView>
   );
 }
@@ -454,19 +657,23 @@ export default function App() {
   if (!clerkPublishableKey) {
     console.warn('Running without authentication - Clerk key not configured');
     return (
-      <ConvexProvider client={convex}>
-        <HabitsApp />
-      </ConvexProvider>
+      <PaperProvider theme={theme}>
+        <ConvexProvider client={convex}>
+          <HabitsApp />
+        </ConvexProvider>
+      </PaperProvider>
     );
   }
 
   return (
-    <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
-      <ClerkLoaded>
-        <ConvexProvider client={convex}>
-          <HabitsApp />
-        </ConvexProvider>
-      </ClerkLoaded>
-    </ClerkProvider>
+    <PaperProvider theme={theme}>
+      <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
+        <ClerkLoaded>
+          <ConvexProvider client={convex}>
+            <HabitsApp />
+          </ConvexProvider>
+        </ClerkLoaded>
+      </ClerkProvider>
+    </PaperProvider>
   );
 }
