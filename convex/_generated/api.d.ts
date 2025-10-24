@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as analytics from "../analytics.js";
 import type * as articles from "../articles.js";
 import type * as auth from "../auth.js";
 import type * as character from "../character.js";
@@ -23,9 +24,11 @@ import type * as habits from "../habits.js";
 import type * as http from "../http.js";
 import type * as migration from "../migration.js";
 import type * as notes from "../notes.js";
+import type * as predictions from "../predictions.js";
 import type * as quickFix from "../quickFix.js";
 import type * as router from "../router.js";
 import type * as settings from "../settings.js";
+import type * as templates from "../templates.js";
 import type * as testStrength from "../testStrength.js";
 
 /**
@@ -37,6 +40,7 @@ import type * as testStrength from "../testStrength.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  analytics: typeof analytics;
   articles: typeof articles;
   auth: typeof auth;
   character: typeof character;
@@ -47,9 +51,11 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   migration: typeof migration;
   notes: typeof notes;
+  predictions: typeof predictions;
   quickFix: typeof quickFix;
   router: typeof router;
   settings: typeof settings;
+  templates: typeof templates;
   testStrength: typeof testStrength;
 }>;
 export declare const api: FilterApi<

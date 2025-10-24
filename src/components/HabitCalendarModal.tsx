@@ -6,9 +6,9 @@ import {
   Pressable,
   ScrollView,
   Text,
-  SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Id } from '../../convex/_generated/dataModel';
 import HabitCalendarView from './HabitCalendarView';
 import { getEmojiAndName } from './DraggableHabit/DraggableHabit.hooks';

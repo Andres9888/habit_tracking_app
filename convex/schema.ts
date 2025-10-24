@@ -58,6 +58,12 @@ const applicationTables = {
     reminderSound: v.optional(v.string()), // "default", etc.
     goalDuration: v.optional(v.number()), // Goal value
     goalUnit: v.optional(v.string()), // "minutes", "hours", "times", etc.
+    // Pause/Resume functionality
+    paused: v.optional(v.boolean()),
+    pausedAt: v.optional(v.number()),
+    resumedAt: v.optional(v.number()),
+    strengthAtPause: v.optional(v.number()),
+    accessibilityAtPause: v.optional(v.number()),
   }),
 
   notes: defineTable({
@@ -83,6 +89,7 @@ const applicationTables = {
     catTheme: v.boolean(),
     darkMode: v.optional(
       v.union(
+        v.boolean(), // Backwards compatibility
         v.literal('system'),
         v.literal('light'),
         v.literal('dark'),
@@ -100,8 +107,36 @@ const applicationTables = {
     appIcon: v.optional(v.string()),
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
+    textSize: v.optional(v.string()), // Backwards compatibility
     useDyslexicFont: v.optional(v.boolean()),
   }),
+
+  // Template Library (Phase 3 Feature)
+  templates: defineTable({
+    name: v.string(),
+    description: v.string(),
+    category: v.union(
+      v.literal('morning_routine'),
+      v.literal('health_fitness'),
+      v.literal('productivity'),
+      v.literal('mindfulness'),
+    ),
+    icon: v.string(), // Emoji icon
+    iconColor: v.string(), // Background color for icon
+    frequency: v.string(), // "daily", "weekly", "custom"
+    scientificReference: v.string(), // Research citation
+    scientificLink: v.optional(v.string()), // Optional link to research
+    popularityScore: v.optional(v.number()), // For sorting popular templates
+    createdAt: v.number(),
+  }).index('by_category', ['category']),
+
+  // Track template usage analytics
+  templateUsage: defineTable({
+    templateId: v.id('templates'),
+    userId: v.optional(v.string()),
+    importedAt: v.number(),
+    habitId: v.optional(v.id('habits')), // Reference to created habit
+  }).index('by_template', ['templateId']),
 };
 
 export default defineSchema({
