@@ -39,7 +39,11 @@ interface CategoryFilter {
   icon: string;
 }
 
-const EMOJIS = ['💪', '🧘', '📖', '💧', '🎨', '🏃'];
+const EMOJIS = [
+  '💪', '🧘', '📖', '💧', '🎨', '🏃', '🍎', '🥗', '☕', '💤',
+  '🎯', '✍️', '🚴', '🧠', '🎵', '🌞', '🌙', '⚡', '🔥', '🌱',
+  '🏋️', '🚶', '🧘‍♀️', '🎨', '📝', '💼', '📚', '🎓', '💡', '🏆',
+];
 
 const COLORS = [
   '#DBEAFE', // blue-100
@@ -417,6 +421,9 @@ export default function CreateHabitModal({
                 placeholderTextColor='#adaebc'
                 value={habitName}
                 onChangeText={setHabitName}
+                autoFocus={visible && !isEditMode}
+                returnKeyType='done'
+                blurOnSubmit={true}
               />
             </View>
 
@@ -425,7 +432,12 @@ export default function CreateHabitModal({
               <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
                 Icon
               </Text>
-              <View className='flex-row flex-wrap gap-3'>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className='flex-row'
+                contentContainerClassName='gap-3'
+              >
                 {/* No Icon Option */}
                 <TouchableOpacity
                   accessibilityLabel='No icon'
@@ -458,7 +470,7 @@ export default function CreateHabitModal({
                     <Text className='text-2xl'>{emoji}</Text>
                   </TouchableOpacity>
                 ))}
-              </View>
+              </ScrollView>
             </View>
 
             {/* Color Picker */}
