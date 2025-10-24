@@ -97,6 +97,7 @@ export const update = mutation({
       v.literal('system'),
       v.literal('light'),
       v.literal('dark'),
+      v.boolean(),
     ),
     showCalendarView: v.boolean(),
     showCharacterScreen: v.optional(v.boolean()),
@@ -114,9 +115,14 @@ export const update = mutation({
     // Get first settings record (since auth was removed, just use any settings)
     const existing = await ctx.db.query('userSettings').first();
 
+    const normalizedArgs = {
+      ...args,
+      darkMode: normalizeDarkMode(args.darkMode),
+    } satisfies typeof args;
+
     await (existing
-      ? ctx.db.patch(existing._id, args)
-      : ctx.db.insert('userSettings', args));
+      ? ctx.db.patch(existing._id, normalizedArgs)
+      : ctx.db.insert('userSettings', normalizedArgs));
     return null;
   },
   returns: v.null(),

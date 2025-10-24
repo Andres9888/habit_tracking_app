@@ -1,0 +1,415 @@
+/**
+ * HabitCard Component
+ * Based on UX Specification Section 4.2
+ *
+ * Purpose: Display individual habit with all tracking info
+ * Variants: Default (not completed), Completed (checkmark, muted), At Risk (warning, <40% prediction)
+ * States: Default, Pressed, Swiping, Long-press, Disabled
+ * Includes: Habit name + icon, color accent bar, strength indicator (compact), today's status, swipe handlers
+ * Usage: Main list item on Home screen
+ */
+
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  type ViewStyle,
+} from 'react-native';
+import {
+  GestureDetector,
+  Gesture,
+  type GestureStateChangeEvent,
+  type PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  runOnJS,
+  interpolate,
+  Extrapolate,
+} from 'react-native-reanimated';
+import { useAppTheme } from '../theme';
+import HabitStrengthIndicator from './HabitStrengthIndicator/HabitStrengthIndicator';
+import * as Haptics from 'expo-haptics';
+
+export interface HabitCardProps {
+  /** Habit ID */
+  id: string;
+
+  /** Habit name */
+  name: string;
+
+  /** Habit icon/emoji */
+  icon?: string;
+
+  /** Habit color (hex) */
+  color?: string;
+
+  /** Habit strength (0-100) */
+  strength: number;
+
+  /** Is completed today */
+  completed?: boolean;
+
+  /** Is at risk (prediction <40%) */
+  atRisk?: boolean;
+
+  /** Disabled state */
+  disabled?: boolean;
+
+  /** On tap handler (complete habit) */
+  onPress?: () => void;
+
+  /** On long press handler (quick actions menu) */
+  onLongPress?: () => void;
+
+  /** On edit handler (swipe action) */
+  onEdit?: () => void;
+
+  /** On delete handler (swipe action) */
+  onDelete?: () => void;
+
+  /** Custom style */
+  style?: ViewStyle;
+}
+
+const SWIPE_THRESHOLD = -100; // Distance to reveal actions
+const ACTION_WIDTH = 80; // Width of each action button
+
+export function HabitCard({
+  id,
+  name,
+  icon = '📝',
+  color,
+  strength,
+  completed = false,
+  atRisk = false,
+  disabled = false,
+  onPress,
+  onLongPress,
+  onEdit,
+  onDelete,
+  style,
+}: HabitCardProps) {
+  const theme = useAppTheme();
+  const translateX = useSharedValue(0);
+  const cardScale = useSharedValue(1);
+
+  // Swipe gesture handler
+  const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10])
+    .onUpdate((event) => {
+      // Only allow left swipe (negative translateX)
+      if (event.translationX < 0) {
+        translateX.value = event.translationX;
+      }
+    })
+    .onEnd((event) => {
+      // If swiped past threshold, snap to open position
+      if (event.translationX < SWIPE_THRESHOLD) {
+        translateX.value = withSpring(ACTION_WIDTH * -2, {
+          damping: 15,
+          stiffness: 150,
+        });
+        // Haptic feedback when actions revealed
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+      } else {
+        // Otherwise spring back to closed
+        translateX.value = withSpring(0, {
+          damping: 15,
+          stiffness: 150,
+        });
+      }
+    });
+
+  // Tap gesture handler
+  const tapGesture = Gesture.Tap()
+    .onBegin(() => {
+      cardScale.value = withSpring(0.98, {
+        damping: 15,
+        stiffness: 150,
+      });
+    })
+    .onFinalize(() => {
+      cardScale.value = withSpring(1, {
+        damping: 15,
+        stiffness: 150,
+      });
+    })
+    .onEnd(() => {
+      if (onPress && !disabled) {
+        runOnJS(onPress)();
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+      }
+    });
+
+  // Long press gesture handler
+  const longPressGesture = Gesture.LongPress()
+    .minDuration(500)
+    .onStart(() => {
+      if (onLongPress && !disabled) {
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Heavy);
+        runOnJS(onLongPress)();
+      }
+    });
+
+  // Combine gestures (tap, long press, pan)
+  const composedGesture = Gesture.Race(
+    longPressGesture,
+    Gesture.Simultaneous(tapGesture, panGesture)
+  );
+
+  // Animated styles
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value },
+      { scale: cardScale.value },
+    ],
+  }));
+
+  const actionsAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      translateX.value,
+      [0, SWIPE_THRESHOLD],
+      [0, 1],
+      Extrapolate.CLAMP
+    );
+
+    return {
+      opacity,
+    };
+  });
+
+  // Get card background based on state
+  const getBackgroundColor = () => {
+    if (completed) {
+      return theme.custom.colors.primary[400] + '20'; // 20% opacity muted green
+    }
+    if (atRisk) {
+      return theme.custom.colors.warning[500] + '10'; // 10% opacity warning
+    }
+    return theme.custom.colors.light.card;
+  };
+
+  // Get accent color
+  const accentColor = color || theme.custom.colors.primary[500];
+
+  return (
+    <View style={[styles.container, style]}>
+      {/* Swipe Actions (Edit, Delete) */}
+      <Animated.View style={[styles.actionsContainer, actionsAnimatedStyle]}>
+        <Pressable
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.custom.colors.secondary[500] },
+          ]}
+          onPress={() => {
+            translateX.value = withSpring(0);
+            onEdit?.();
+          }}
+          accessibilityLabel={`Edit ${name}`}
+          accessibilityRole="button"
+        >
+          <Text style={styles.actionText}>Edit</Text>
+        </Pressable>
+
+        <Pressable
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.custom.colors.error },
+          ]}
+          onPress={() => {
+            translateX.value = withSpring(0);
+            onDelete?.();
+          }}
+          accessibilityLabel={`Delete ${name}`}
+          accessibilityRole="button"
+        >
+          <Text style={styles.actionText}>Delete</Text>
+        </Pressable>
+      </Animated.View>
+
+      {/* Main Card */}
+      <GestureDetector gesture={composedGesture}>
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              backgroundColor: getBackgroundColor(),
+              borderRadius: theme.custom.borderRadius.medium,
+              ...theme.custom.shadows.card,
+            },
+            disabled && styles.disabled,
+            cardAnimatedStyle,
+          ]}
+          accessible={true}
+          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength, ${completed ? 'completed today' : 'not completed'}`}
+          accessibilityRole="button"
+          accessibilityState={{
+            disabled,
+            checked: completed,
+          }}
+          accessibilityHint="Tap to complete, swipe left for edit and delete options, long press for quick actions"
+        >
+          {/* Color Accent Bar (Left edge) */}
+          <View
+            style={[
+              styles.accentBar,
+              {
+                backgroundColor: accentColor,
+                borderTopLeftRadius: theme.custom.borderRadius.medium,
+                borderBottomLeftRadius: theme.custom.borderRadius.medium,
+              },
+            ]}
+          />
+
+          {/* Card Content */}
+          <View style={styles.content}>
+            {/* Top Row: Icon, Name, Status */}
+            <View style={styles.topRow}>
+              <View style={styles.habitInfo}>
+                <Text style={styles.icon}>{icon}</Text>
+                <Text
+                  style={[
+                    theme.custom.typography.heading3,
+                    { color: theme.custom.colors.gray[900] },
+                    completed && styles.completedText,
+                  ]}
+                  numberOfLines={1}
+                >
+                  {name}
+                </Text>
+              </View>
+
+              {/* Status Indicator */}
+              <View style={styles.statusContainer}>
+                {completed ? (
+                  <View
+                    style={[
+                      styles.checkmark,
+                      { backgroundColor: theme.custom.colors.primary[500] },
+                    ]}
+                  >
+                    <Text style={styles.checkmarkText}>✓</Text>
+                  </View>
+                ) : atRisk ? (
+                  <View
+                    style={[
+                      styles.warningBadge,
+                      { backgroundColor: theme.custom.colors.warning[500] },
+                    ]}
+                  >
+                    <Text style={styles.warningText}>⚠️</Text>
+                  </View>
+                ) : null}
+              </View>
+            </View>
+
+            {/* Bottom Row: Strength Indicator */}
+            <View style={styles.bottomRow}>
+              <HabitStrengthIndicator
+                strength={strength}
+                variant="compact"
+                showPercentage={true}
+                habitName={name}
+              />
+            </View>
+          </View>
+        </Animated.View>
+      </GestureDetector>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'relative',
+    height: 72, // As per UX spec
+    marginVertical: 4,
+  },
+  actionsContainer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButton: {
+    width: ACTION_WIDTH,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  card: {
+    flex: 1,
+    flexDirection: 'row',
+    overflow: 'hidden',
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  accentBar: {
+    width: 4,
+  },
+  content: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'space-between',
+  },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  habitInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  icon: {
+    fontSize: 24,
+  },
+  completedText: {
+    opacity: 0.6,
+  },
+  statusContainer: {
+    marginLeft: 8,
+  },
+  checkmark: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkmarkText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  warningBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  warningText: {
+    fontSize: 12,
+  },
+  bottomRow: {
+    marginTop: 4,
+  },
+});
+
+export default HabitCard;

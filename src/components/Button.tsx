@@ -1,54 +1,289 @@
+/**
+ * Button Component - React Native
+ * Based on UX Specification Section 4.2
+ *
+ * Variants: Primary (filled), Secondary (outlined), Ghost (text only), Icon (circular)
+ * States: Default, Pressed (scale 0.95), Disabled (50% opacity), Loading (spinner)
+ * Sizes: Small (32pt), Medium (44pt), Large (56pt)
+ */
+
 import React from 'react';
-import { cn } from '../lib/utils';
+import {
+  Pressable,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  type ViewStyle,
+  type TextStyle,
+  type PressableProps,
+} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { useAppTheme } from '../theme';
 
-export type ButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'danger'
-  | 'ghost';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'icon';
+export type ButtonSize = 'small' | 'medium' | 'large';
+
+export interface ButtonProps extends Omit<PressableProps, 'children'> {
+  /** Button content (text or icon) */
+  children: React.ReactNode;
+
+  /** Button variant */
   variant?: ButtonVariant;
+
+  /** Button size */
   size?: ButtonSize;
+
+  /** Loading state - shows spinner */
+  loading?: boolean;
+
+  /** Icon to display (for icon variant or alongside text) */
+  icon?: React.ReactNode;
+
+  /** Icon position (left or right of text) */
+  iconPosition?: 'left' | 'right';
+
+  /** Full width button */
+  fullWidth?: boolean;
+
+  /** Custom styles */
+  style?: ViewStyle;
+
+  /** Custom text styles */
+  textStyle?: TextStyle;
 }
-
-const sizeToClasses: Record<ButtonSize, string> = {
-  lg: 'px-5 py-3 text-base',
-  md: 'px-4 py-2 text-sm',
-  sm: 'px-3 py-1.5 text-sm',
-};
-
-const variantToClasses: Record<ButtonVariant, string> = {
-  danger: 'bg-red-500 text-white hover:bg-red-600 disabled:opacity-50',
-  ghost:
-    'bg-transparent hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200',
-  primary: 'bg-primary text-white hover:brightness-105 disabled:opacity-50',
-  secondary:
-    'bg-slate-100 text-slate-800 hover:bg-slate-200 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
-  success: 'bg-green-600 text-white hover:brightness-105 disabled:opacity-50',
-};
 
 export function Button({
-  className,
+  children,
   variant = 'primary',
-  size = 'md',
-  ...props
+  size = 'medium',
+  loading = false,
+  disabled = false,
+  icon,
+  iconPosition = 'left',
+  fullWidth = false,
+  style,
+  textStyle,
+  onPress,
+  ...pressableProps
 }: ButtonProps) {
+  const theme = useAppTheme();
+  const scale = useSharedValue(1);
+
+  // Animation: Scale down to 0.95 on press (UX spec Section 8.2)
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95, {
+      damping: 15,
+      stiffness: 150,
+    });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, {
+      damping: 15,
+      stiffness: 150,
+    });
+  };
+
+  // Size configurations
+  const sizeConfig = {
+    small: {
+      height: 32,
+      paddingHorizontal: theme.custom.spacing.base,
+      fontSize: 15,
+      iconSize: 16,
+    },
+    medium: {
+      height: theme.custom.componentSpacing.button.height, // 44pt (Apple HIG)
+      paddingHorizontal: theme.custom.spacing.lg,
+      fontSize: 17,
+      iconSize: 20,
+    },
+    large: {
+      height: 56,
+      paddingHorizontal: theme.custom.spacing.xl,
+      fontSize: 17,
+      iconSize: 24,
+    },
+  };
+
+  const config = sizeConfig[size];
+
+  // Variant styles
+  const getVariantStyles = (): {
+    container: ViewStyle;
+    text: TextStyle;
+  } => {
+    switch (variant) {
+      case 'primary':
+        return {
+          container: {
+            backgroundColor: theme.custom.colors.primary[500],
+            borderWidth: 0,
+          },
+          text: {
+            color: '#FFFFFF',
+          },
+        };
+
+      case 'secondary':
+        return {
+          container: {
+            backgroundColor: 'transparent',
+            borderWidth: 1.5,
+            borderColor: theme.custom.colors.primary[500],
+          },
+          text: {
+            color: theme.custom.colors.primary[500],
+          },
+        };
+
+      case 'ghost':
+        return {
+          container: {
+            backgroundColor: 'transparent',
+            borderWidth: 0,
+          },
+          text: {
+            color: theme.custom.colors.primary[500],
+          },
+        };
+
+      case 'icon':
+        return {
+          container: {
+            backgroundColor: theme.custom.colors.gray[100],
+            borderWidth: 0,
+            width: config.height,
+            height: config.height,
+            borderRadius: config.height / 2, // Circular
+            paddingHorizontal: 0,
+          },
+          text: {
+            color: theme.custom.colors.gray[700],
+          },
+        };
+
+      default:
+        return {
+          container: {},
+          text: {},
+        };
+    }
+  };
+
+  const variantStyles = getVariantStyles();
+
+  // Disabled styles (50% opacity as per UX spec)
+  const disabledStyles: ViewStyle = disabled || loading
+    ? {
+        opacity: 0.5,
+      }
+    : {};
+
+  // Render loading spinner or content
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <ActivityIndicator
+          color={variant === 'primary' ? '#FFFFFF' : theme.custom.colors.primary[500]}
+          size="small"
+        />
+      );
+    }
+
+    if (variant === 'icon') {
+      return icon || children;
+    }
+
+    // Text button with optional icon
+    return (
+      <View style={styles.content}>
+        {icon && iconPosition === 'left' && (
+          <View style={{ marginRight: theme.custom.spacing.sm }}>
+            {icon}
+          </View>
+        )}
+
+        {typeof children === 'string' ? (
+          <Text
+            style={[
+              theme.custom.typography.button,
+              variantStyles.text,
+              textStyle,
+            ]}
+          >
+            {children}
+          </Text>
+        ) : (
+          children
+        )}
+
+        {icon && iconPosition === 'right' && (
+          <View style={{ marginLeft: theme.custom.spacing.sm }}>
+            {icon}
+          </View>
+        )}
+      </View>
+    );
+  };
+
   return (
-    <button
-      className={cn(
-        'rounded-md font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
-        'focus:ring-ring focus:ring-offset-background',
-        sizeToClasses[size],
-        variantToClasses[variant],
-        className
-      )}
-      {...props}
-    />
+    <AnimatedPressable
+      onPress={disabled || loading ? undefined : onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={disabled || loading}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: disabled || loading }}
+      style={[
+        animatedStyle,
+        styles.base,
+        {
+          height: config.height,
+          paddingHorizontal: variant === 'icon' ? 0 : config.paddingHorizontal,
+          borderRadius: variant === 'icon'
+            ? config.height / 2
+            : theme.custom.borderRadius.small,
+        },
+        variantStyles.container,
+        disabledStyles,
+        fullWidth && styles.fullWidth,
+        variant !== 'icon' && theme.custom.shadows.card,
+        style,
+      ]}
+      {...pressableProps}
+    >
+      {renderContent()}
+    </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  base: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fullWidth: {
+    width: '100%',
+  },
+});
 
 export default Button;

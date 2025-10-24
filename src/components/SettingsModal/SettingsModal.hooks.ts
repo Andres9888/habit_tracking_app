@@ -29,7 +29,7 @@ export const useSettingsModalLogic = ({
   visible,
   onClose,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived'>('settings');
+  const [view, setView] = useState<'settings' | 'archived' | 'paused'>('settings');
 
   // Get settings from Convex
   const settings = useQuery(api.settings.get);

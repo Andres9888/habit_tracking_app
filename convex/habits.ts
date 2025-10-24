@@ -126,6 +126,57 @@ export const unarchive = mutation({
   returns: v.null(),
 });
 
+export const pause = mutation({
+  args: {
+    habitId: v.id('habits'),
+  },
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    // Store pause metadata
+    await ctx.db.patch(args.habitId, {
+      paused: true,
+      pausedAt: Date.now(),
+      // Preserve strength values
+      strengthAtPause: habit.strength,
+      accessibilityAtPause: habit.accessibility,
+    });
+
+    return { success: true, habitId: args.habitId };
+  },
+  returns: v.object({
+    success: v.boolean(),
+    habitId: v.id('habits'),
+  }),
+});
+
+export const resume = mutation({
+  args: {
+    habitId: v.id('habits'),
+  },
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    await ctx.db.patch(args.habitId, {
+      paused: false,
+      resumedAt: Date.now(),
+      // Strength values are preserved, just unpause
+    });
+
+    return { success: true, habitId: args.habitId };
+  },
+  returns: v.object({
+    success: v.boolean(),
+    habitId: v.id('habits'),
+  }),
+});
+
 export const reorderHabits = mutation({
   args: {
     habitIds: v.array(v.id('habits')),
@@ -311,7 +362,15 @@ export const list = query({
   handler: async (ctx) => {
     const habits = await ctx.db
       .query('habits')
-      .filter((q) => q.neq(q.field('archived'), true))
+      .filter((q) =>
+        q.and(
+          q.neq(q.field('archived'), true),
+          q.or(
+            q.eq(q.field('paused'), undefined),
+            q.eq(q.field('paused'), false)
+          )
+        )
+      )
       .collect();
 
     // Sort by order field (ascending), use _creationTime as fallback
@@ -329,20 +388,39 @@ export const list = query({
     v.object({
       _creationTime: v.number(),
       _id: v.id('habits'),
+      accessibility: v.optional(v.number()),
+      accessibilityDecayParam: v.optional(v.number()),
+      accessibilityGainBehavior: v.optional(v.number()),
+      accessibilityGainReminder: v.optional(v.number()),
+      accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
+      consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
+      daysOfWeek: v.optional(v.array(v.number())),
+      frequency: v.optional(v.string()),
+      goalDuration: v.optional(v.number()),
+      goalUnit: v.optional(v.string()),
+      habitDecayParam: v.optional(v.number()),
+      habitGainParam: v.optional(v.number()),
+      icon: v.optional(v.string()),
+      iconColor: v.optional(v.string()),
+      lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
+      predictedCompletionProb: v.optional(v.number()),
+      preferredTime: v.optional(v.string()),
+      reminderSound: v.optional(v.string()),
+      reminderTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
       strength: v.optional(v.number()),
       strengthLevel: v.optional(v.string()),
       strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
+      totalCompletions: v.optional(v.number()),
+      totalMisses: v.optional(v.number()),
       userId: v.optional(v.string()),
-      remindersEnabled: v.optional(v.boolean()),
-      reminderTime: v.optional(v.string()),
-      reminderSound: v.optional(v.string()),
     })
   ),
 });
@@ -359,20 +437,94 @@ export const listArchived = query({
     v.object({
       _creationTime: v.number(),
       _id: v.id('habits'),
+      accessibility: v.optional(v.number()),
+      accessibilityDecayParam: v.optional(v.number()),
+      accessibilityGainBehavior: v.optional(v.number()),
+      accessibilityGainReminder: v.optional(v.number()),
+      accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
+      consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
+      daysOfWeek: v.optional(v.array(v.number())),
+      frequency: v.optional(v.string()),
+      goalDuration: v.optional(v.number()),
+      goalUnit: v.optional(v.string()),
+      habitDecayParam: v.optional(v.number()),
+      habitGainParam: v.optional(v.number()),
+      icon: v.optional(v.string()),
+      iconColor: v.optional(v.string()),
+      lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
+      predictedCompletionProb: v.optional(v.number()),
+      preferredTime: v.optional(v.string()),
+      reminderSound: v.optional(v.string()),
+      reminderTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
       strength: v.optional(v.number()),
       strengthLevel: v.optional(v.string()),
       strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
+      totalCompletions: v.optional(v.number()),
+      totalMisses: v.optional(v.number()),
       userId: v.optional(v.string()),
-      remindersEnabled: v.optional(v.boolean()),
-      reminderTime: v.optional(v.string()),
+    })
+  ),
+});
+
+export const listPaused = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('paused'), true))
+      .order('desc')
+      .collect();
+  },
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id('habits'),
+      accessibility: v.optional(v.number()),
+      accessibilityDecayParam: v.optional(v.number()),
+      accessibilityGainBehavior: v.optional(v.number()),
+      accessibilityGainReminder: v.optional(v.number()),
+      accessibilityUpdatedAt: v.optional(v.number()),
+      archived: v.optional(v.boolean()),
+      archivedAt: v.optional(v.number()),
+      consecutiveDays: v.optional(v.number()),
+      createdAt: v.number(),
+      daysOfWeek: v.optional(v.array(v.number())),
+      frequency: v.optional(v.string()),
+      goalDuration: v.optional(v.number()),
+      goalUnit: v.optional(v.string()),
+      habitDecayParam: v.optional(v.number()),
+      habitGainParam: v.optional(v.number()),
+      icon: v.optional(v.string()),
+      iconColor: v.optional(v.string()),
+      lastPredictionAt: v.optional(v.number()),
+      name: v.string(),
+      notes: v.optional(v.string()),
+      order: v.optional(v.number()),
+      paused: v.optional(v.boolean()),
+      pausedAt: v.optional(v.number()),
+      resumedAt: v.optional(v.number()),
+      strengthAtPause: v.optional(v.number()),
+      accessibilityAtPause: v.optional(v.number()),
+      predictedCompletionProb: v.optional(v.number()),
+      preferredTime: v.optional(v.string()),
       reminderSound: v.optional(v.string()),
+      reminderTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
+      strength: v.optional(v.number()),
+      strengthLevel: v.optional(v.string()),
+      strengthUpdatedAt: v.optional(v.number()),
+      tags: v.optional(v.array(v.string())),
+      totalCompletions: v.optional(v.number()),
+      totalMisses: v.optional(v.number()),
+      userId: v.optional(v.string()),
     })
   ),
 });
