@@ -14,6 +14,7 @@ import {
 } from 'lucide-react-native';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import PausedHabitsModal from '../PausedHabitsModal';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
@@ -113,6 +114,14 @@ export default function SettingsModal({
     return (
       <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
         <ArchivedHabitsModal onBack={() => setView('settings')} onClose={handleClose} />
+      </Modal>
+    );
+  }
+
+  if (view === 'paused') {
+    return (
+      <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
+        <PausedHabitsModal onBack={() => setView('settings')} onClose={handleClose} />
       </Modal>
     );
   }
@@ -245,6 +254,31 @@ export default function SettingsModal({
                 highContrastMode={isHighContrastActive}
               />
             </SettingsSection>
+            {/* Habit Management */}
+            <SettingsSection
+              title="Habit Management"
+              highContrastMode={isHighContrastActive}
+            >
+              <SettingsRow
+                icon={<BookOpen size={16} color="#8b5cf6" />}
+                iconBackgroundColor="#ddd6fe"
+                label="Paused Habits"
+                type="navigation"
+                onPress={() => setView('paused')}
+                showBorder={true}
+                highContrastMode={isHighContrastActive}
+              />
+              <SettingsRow
+                icon={<BookOpen size={16} color="#64748b" />}
+                iconBackgroundColor="#e2e8f0"
+                label="Archived Habits"
+                type="navigation"
+                onPress={() => setView('archived')}
+                showBorder={false}
+                highContrastMode={isHighContrastActive}
+              />
+            </SettingsSection>
+
             {/* Notifications */}
             <SettingsSection
               title="Notifications"
