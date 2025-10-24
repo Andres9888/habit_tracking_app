@@ -9,9 +9,9 @@ import {
   useQuery,
 } from 'convex/react';
 import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-fns';
-import { Plus, Settings, BarChart3 } from 'lucide-react-native';
+import { Plus, Settings } from 'lucide-react-native';
 import type { ComponentType } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -87,6 +87,8 @@ function HabitsApp() {
   const isHabitsLoading = habitsQuery === undefined;
   const settings = useQuery(api.settings.get);
 
+  type Habit = typeof habits[number];
+
   const today = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor] = useState(today);
 
@@ -133,11 +135,15 @@ function HabitsApp() {
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const currentDate = new Date(today);
+
+      // Start from today if completed, otherwise start from yesterday
+      const todayString = format(today, 'yyyy-MM-dd');
+      const currentDate = completedDates.has(todayString)
+        ? new Date(today)
+        : new Date(today.getTime() - 24 * 60 * 60 * 1000);
 
       let streak = 0;
-      // Count consecutive days backward from today
-       
+      // Count consecutive days backward
       while (true) {
         const dateString = format(currentDate, 'yyyy-MM-dd');
         if (completedDates.has(dateString)) {
@@ -169,29 +175,30 @@ function HabitsApp() {
     [weekAnchor, today]
   );
 
-  const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
-    const trackingEntry = tracking.find(
-      (t) => t.habitId === habitId && t.date === dateString
-    );
+  const getHabitStatus = useCallback(
+    (habitId: string, dateString: string): HabitStatus => {
+      const trackingEntry = tracking.find(
+        (t) => t.habitId === habitId && t.date === dateString
+      );
 
-    // Parse date in local timezone to avoid timezone shifting
-    // YYYY-MM-DD format is interpreted as UTC, which can shift dates
-    const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day); // month is 0-indexed
+      if (trackingEntry?.completed) return 'done';
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    date.setHours(0, 0, 0, 0);
+      // Parse date in local timezone to avoid timezone shifting
+      // YYYY-MM-DD format is interpreted as UTC, which can shift dates
+      const [year, month, day] = dateString.split('-').map(Number);
+      const date = new Date(year, month - 1, day); // month is 0-indexed
+      date.setHours(0, 0, 0, 0);
 
-    if (trackingEntry?.completed) return 'done';
-    if (date < today) return 'missed';
-    return 'planned';
-  };
+      if (date < today) return 'missed';
+      return 'planned';
+    },
+    [tracking, today]
+  );
 
   const handleDragEnd = useCallback(
-    async ({ data }: { data: any[] }) => {
+    async ({ data }: { data: Habit[] }) => {
       try {
-        const habitIds = data.map((h) => h._id) as Id<'habits'>[];
+        const habitIds = data.map((h) => h._id);
         console.log('Reordering habits:', habitIds);
         await reorderHabits({ habitIds });
         console.log('Reorder successful');
@@ -209,12 +216,12 @@ function HabitsApp() {
     [archiveHabit]
   );
 
-  const handleHabitLongPress = useCallback((habit: any) => {
+  const handleHabitLongPress = useCallback((habit: Habit) => {
     setSelectedHabit(habit);
     setIsHabitCalendarOpen(true);
   }, []);
 
-  const handleHabitPress = useCallback((habit: any) => {
+  const handleHabitPress = useCallback((habit: Habit) => {
     setSelectedHabit(habit);
     setIsHabitCalendarOpen(true);
   }, []);
