@@ -1,61 +1,77 @@
 import { format, isToday } from 'date-fns';
-import { View, Text, Pressable } from 'react-native';
 import clsx from 'clsx';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { Pressable, Text, View } from 'react-native';
+import type { HabitStatus } from '../HabitCalendarView.hooks';
 
 interface CalendarDayProps {
   date: Date;
-  habitId: Id<'habits'>;
-  status: 'done' | 'missed' | 'planned' | 'none';
+  status: HabitStatus;
   onPress: () => void;
 }
 
-export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
-  const dateString = format(date, 'yyyy-MM-dd');
-  const isCurrentDay = isToday(date);
+const STATUS_STYLES: Record<
+  HabitStatus,
+  { container: string; indicator: string; text: string }
+> = {
+  done: {
+    container: 'border-transparent bg-emerald-100',
+    indicator: 'bg-emerald-500',
+    text: 'text-emerald-700',
+  },
+  missed: {
+    container: 'border-transparent bg-rose-50',
+    indicator: 'bg-rose-400',
+    text: 'text-rose-500',
+  },
+  planned: {
+    container: 'border-blue-200 bg-blue-50',
+    indicator: 'bg-blue-500',
+    text: 'text-blue-600',
+  },
+  upcoming: {
+    container: 'border-slate-200 bg-white',
+    indicator: 'bg-slate-300 opacity-60',
+    text: 'text-slate-400',
+  },
+};
 
-  // Parse date in local timezone
-  const [year, month, day] = dateString.split('-').map(Number);
-  const checkDate = new Date(year, month - 1, day);
-  const todayCheck = new Date();
-  todayCheck.setHours(0, 0, 0, 0);
-  checkDate.setHours(0, 0, 0, 0);
-  const isFuture = checkDate > todayCheck;
+const STATUS_LABELS: Record<HabitStatus, string> = {
+  done: 'Completed day',
+  missed: 'Missed day',
+  planned: 'Today',
+  upcoming: 'Upcoming day',
+};
+
+export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
+  const isCurrentDay = isToday(date);
+  const { container, indicator, text } = STATUS_STYLES[status];
+  const isDisabled = status === 'upcoming';
 
   return (
     <Pressable
-      className='aspect-square w-[14.28%] items-center justify-center p-1'
-      disabled={isFuture}
-      onPress={() => !isFuture && onPress()}
+      accessibilityHint={
+        isDisabled ? undefined : 'Toggle completion for this habit on the selected day'
+      }
+      accessibilityLabel={`${format(date, 'EEEE, MMMM d')}. ${STATUS_LABELS[status]}.`}
+      accessibilityRole='button'
+      accessibilityState={{ disabled: isDisabled, selected: status === 'done' }}
+      className='aspect-square w-[14.28%] p-1'
+      disabled={isDisabled}
+      onPress={() => {
+        if (!isDisabled) {
+          onPress();
+        }
+      }}
     >
-      <View className='flex-1 w-full items-center justify-center gap-0.5'>
-        {/* Date Number with Current Day Indicator */}
-        <View
-          className={clsx(
-            'items-center justify-center rounded-full',
-            isCurrentDay && 'h-8 w-8 bg-slate-900'
-          )}
-        >
-          <Text
-            className={clsx(
-              'text-base font-semibold',
-              isCurrentDay
-                ? 'text-white'
-                : status === 'done'
-                  ? 'text-slate-900'
-                  : isFuture
-                    ? 'text-slate-300'
-                    : 'text-slate-900'
-            )}
-          >
-            {format(date, 'd')}
-          </Text>
-        </View>
-
-        {/* Completion Dot */}
-        {status === 'done' && (
-          <View className='mt-0.5 h-1 w-1 rounded-full bg-blue-500' />
+      <View
+        className={clsx(
+          'flex-1 w-full items-center justify-center rounded-lg border bg-white px-0.5 py-1',
+          container,
+          isCurrentDay && 'border-blue-400'
         )}
+      >
+        <Text className={clsx('text-sm font-semibold', text)}>{format(date, 'd')}</Text>
+        <View className={clsx('mt-1 h-1.5 w-1.5 rounded-full', indicator)} />
       </View>
     </Pressable>
   );

@@ -55,7 +55,6 @@ export default function HabitCalendarView({
             <CalendarDay
               key={dateString}
               date={date}
-              habitId={habitId}
               status={status}
               onPress={() => toggleHabit({ date: dateString, habitId })}
             />

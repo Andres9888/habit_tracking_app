@@ -34,6 +34,7 @@ interface Habit {
 interface DraggableHabitProps {
   habit: Habit;
   isCompactMode?: boolean;
+  highContrastMode?: boolean;
   showHabitStrengthPercentage?: boolean;
   streak: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
@@ -47,6 +48,7 @@ interface DraggableHabitProps {
 export default function DraggableHabit({
   habit,
   isCompactMode: _isCompactMode = false,
+  highContrastMode = false,
   showHabitStrengthPercentage = false,
   streak,
   toggleHabit,
@@ -121,14 +123,35 @@ export default function DraggableHabit({
     }).start();
   }, [habit.strength, gradientHeight]);
 
+  const colors = highContrastMode
+    ? {
+        border: '#facc15',
+        cardBackground: '#111111',
+        iconContainer: '#facc15',
+        primaryText: '#ffffff',
+        streakText: '#facc15',
+        strengthBackground: '#10b981',
+      }
+    : {
+        border: '#ffffff',
+        cardBackground: '#ffffff',
+        iconContainer: undefined as string | undefined,
+        primaryText: '#1a1a1a',
+        streakText: '#ff6500',
+        strengthBackground: '#10b981',
+      };
+
   const habitCard = (
     <Pressable
       onPress={() => onPress?.(habit)}
       onLongPress={() => onLongPress?.(habit)}
     >
       <Animated.View
-        className='overflow-hidden rounded-2xl bg-white'
+        className='overflow-hidden rounded-2xl'
         style={{
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.border,
+          borderWidth: highContrastMode ? 2 : 0,
           opacity: fade,
           transform: [{ translateY }],
         }}
@@ -141,30 +164,39 @@ export default function DraggableHabit({
               <View
                 className='h-12 w-12 items-center justify-center rounded-[12px]'
                 style={{
-                  backgroundColor:
-                    accentColor === '#3b82f6'
-                      ? '#dbeafe' // blue-100
-                      : accentColor === '#f97316'
-                        ? '#ffedd5' // orange-100
-                        : accentColor === '#10b981'
-                          ? '#d1fae5' // emerald-100
-                          : accentColor === '#8b5cf6'
-                            ? '#ede9fe' // violet-100
-                            : accentColor === '#06b6d4'
-                              ? '#cffafe' // cyan-100
-                              : accentColor === '#ec4899'
-                                ? '#fce7f3' // pink-100
-                                : '#fef9c3', // yellow-100
+                  backgroundColor: highContrastMode
+                    ? colors.iconContainer
+                    : accentColor === '#3b82f6'
+                        ? '#dbeafe' // blue-100
+                        : accentColor === '#f97316'
+                          ? '#ffedd5' // orange-100
+                          : accentColor === '#10b981'
+                            ? '#d1fae5' // emerald-100
+                            : accentColor === '#8b5cf6'
+                              ? '#ede9fe' // violet-100
+                              : accentColor === '#06b6d4'
+                                ? '#cffafe' // cyan-100
+                                : accentColor === '#ec4899'
+                                  ? '#fce7f3' // pink-100
+                                  : '#fef9c3', // yellow-100
+                  borderColor: highContrastMode ? '#111111' : undefined,
+                  borderWidth: highContrastMode ? 2 : 0,
                 }}
               >
                 <Text className='text-[24px] leading-[32px]'>{emoji}</Text>
               </View>
               <View className='flex-col'>
-                <Text className='text-[18px] font-semibold leading-[28px] text-[#1a1a1a]'>
+                <Text
+                  className='text-[18px] font-semibold leading-[28px]'
+                  style={{ color: colors.primaryText }}
+                >
                   {name || habit.name}
                 </Text>
                 {streak > 0 && (
-                  <Text className='mt-1 flex-row items-center text-[14px] font-bold uppercase leading-[20px] text-[#ff6500]'>
+                  <Text
+                    className='mt-1 flex-row items-center text-[14px] font-bold uppercase leading-[20px]'
+                    style={{ color: colors.streakText }}
+                  >
                     🔥 {streak} DAY STREAK
                   </Text>
                 )}
@@ -173,7 +205,10 @@ export default function DraggableHabit({
             {showHabitStrengthPercentage &&
               habit.strength !== undefined &&
               habit.strength > 0 && (
-                <View className='h-7 rounded-full bg-[#10b981] px-3'>
+                <View
+                  className='h-7 rounded-full px-3'
+                  style={{ backgroundColor: colors.strengthBackground }}
+                >
                   <Text className='text-[14px] font-semibold leading-7 text-white'>
                     {strengthPercentage}%
                   </Text>
@@ -185,6 +220,7 @@ export default function DraggableHabit({
           <View>
             <HabitChainVisualizer
               accentColor={accentColor}
+              highContrastMode={highContrastMode}
               habitId={habit._id}
               weekDateStrings={weekDateStrings}
               weekStatus={weekStatus}
