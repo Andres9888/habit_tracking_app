@@ -31,7 +31,7 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
 import { useAppTheme } from '../theme';
@@ -101,11 +101,18 @@ export function HabitCard({
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
 
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+
   // Convex mutation for toggling completion
   const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
 
-  // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split('T')[0];
+  // Query current completion status for conditional haptic feedback
+  // Returns true if completed, false if not completed, undefined while loading
+  const isCompleted = useQuery(api.tracking.getCompletionStatus, {
+    habitId: id,
+    date: today,
+  });
 
   // Swipe gesture handler
   const panGesture = Gesture.Pan()
@@ -150,10 +157,21 @@ export function HabitCard({
     })
     .onEnd(() => {
       if (!disabled) {
+        // Haptic feedback BEFORE mutation for best UX
+        // Different intensity based on current completion state:
+        // - If currently completed (true) → unchecking → Light haptic (softer)
+        // - If not completed (false) → checking → Medium haptic (stronger)
+        // - If loading (undefined) → default to Medium
+        const hapticStyle =
+          isCompleted === true
+            ? Haptics.ImpactFeedbackStyle.Light // Unchecking
+            : Haptics.ImpactFeedbackStyle.Medium; // Checking (or loading)
+
+        runOnJS(Haptics.impactAsync)(hapticStyle);
+
         // Call Convex mutation with optimistic update
         runOnJS(toggleCompletionMutation)({ habitId: id, date: today });
-        // Haptic feedback
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+
         // Keep backward compatibility with onPress prop if provided
         if (onPress) {
           runOnJS(onPress)();

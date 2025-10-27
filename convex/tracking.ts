@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { mutation } from './_generated/server';
+import { mutation, query } from './_generated/server';
 
 /**
  * Toggle completion status for a habit on a specific date.
@@ -65,6 +65,46 @@ export const toggleCompletion = mutation({
       });
       return true;
     }
+  },
+  returns: v.boolean(),
+});
+
+/**
+ * Get completion status for a habit on a specific date.
+ *
+ * Returns true if a tracking record exists (habit is completed),
+ * false if no record exists (habit is not completed).
+ *
+ * This is used for determining haptic feedback intensity:
+ * - If completed (true) → unchecking → Light haptic
+ * - If not completed (false) → checking → Medium haptic
+ *
+ * @param habitId - The ID of the habit to check
+ * @param date - The date in YYYY-MM-DD format
+ * @returns boolean - true if habit is completed, false if not
+ */
+export const getCompletionStatus = query({
+  args: {
+    habitId: v.id('habits'),
+    date: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // Validate date format (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(args.date)) {
+      throw new Error('Invalid date format. Expected YYYY-MM-DD');
+    }
+
+    // Query for existing tracking record using the indexed lookup
+    const existingRecord = await ctx.db
+      .query('tracking')
+      .withIndex('by_habit_and_date', (q) =>
+        q.eq('habitId', args.habitId).eq('date', args.date)
+      )
+      .unique();
+
+    // Return true if record exists (completed), false otherwise
+    return existingRecord !== null;
   },
   returns: v.boolean(),
 });
