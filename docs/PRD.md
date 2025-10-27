@@ -267,7 +267,7 @@ No gimmicky badges, fake achievements, or dopamine-manipulation tactics. Use ref
 Every screen teaches users about habit formation while they track. Primary information: today's habits and quick actions. Secondary: habit strength with visual indicators. Tertiary: deep insights and trends. Progressive disclosure reveals complexity only when users are ready, creating "aha moments" throughout the journey.
 
 ### 4. **Effortless Daily Rituals**
-Core habit tracking requires zero cognitive load: swipe to check-off, tap to undo, drag to reorder. Muscle memory develops within 3 days. Morning check-in takes <30 seconds. Design for one-handed use, thumb-friendly tap targets, and accessibility (VoiceOver, Dynamic Type).
+Core habit tracking requires zero cognitive load: swipe to check-off, tap to toggle (check/uncheck), drag to reorder. Muscle memory develops within 3 days. Morning check-in takes <30 seconds. Design for one-handed use, thumb-friendly tap targets, and accessibility (VoiceOver, Dynamic Type).
 
 ### 5. **Data Transparency Builds Trust**
 Always show the "why" behind calculations. When displaying habit strength, reveal the formula: baseline (time-based) × compliance (recent performance). When predicting behavior, show confidence levels. Give users control to recalculate, view history, and export data. Demystify the science rather than treating it as a black box.

@@ -1,0 +1,50 @@
+{
+  "epicId": 4,
+  "name": "Viral Growth",
+  "screenTitle": "Social Proof & Referrals",
+  "shortTitle": "Growth",
+  "timeline": "Months 4-5 (Weeks 25-32)",
+  "status": "not_started",
+  "progress": 0,
+  "storiesTotal": 5,
+  "storiesCompleted": 0,
+  "priority": "medium",
+  "owner": "Jane",
+  "goal": "Achieve 1.3+ viral coefficient for organic user acquisition",
+  "successMetrics": [
+    "1.3+ viral coefficient (each user brings 1.3+ new users)",
+    "Share feature used by >20% of premium subscribers",
+    "Referral program drives >15% of new signups",
+    "App Store rating >4.5 stars with 100+ reviews",
+    "Social media mentions increase 3x"
+  ],
+  "stories": [
+    {
+      "id": "4.1",
+      "title": "Beautiful Achievement Share Cards",
+      "status": "not_started"
+    },
+    {
+      "id": "4.2",
+      "title": "Social Media Integration",
+      "status": "not_started"
+    },
+    {
+      "id": "4.3",
+      "title": "Referral Program (Premium Feature)",
+      "status": "not_started"
+    },
+    {
+      "id": "4.4",
+      "title": "Evidence-Based Habit Templates Library",
+      "status": "not_started"
+    },
+    {
+      "id": "4.5",
+      "title": "App Store Rating Prompts",
+      "status": "not_started"
+    }
+  ],
+  "createdAt": "2025-10-27",
+  "updatedAt": "2025-10-27"
+}

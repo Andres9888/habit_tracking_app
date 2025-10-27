@@ -1,0 +1,23 @@
+{
+  "epicId": "1.3",
+  "name": "Onboarding Screens",
+  "screenTitle": "First-Time User Experience",
+  "shortTitle": "Onboarding",
+  "timeline": "Week 2",
+  "status": "not_started",
+  "progress": 0,
+  "storiesTotal": 1,
+  "storiesCompleted": 0,
+  "priority": "high",
+  "owner": "Jane",
+  "goal": "Create a 3-screen onboarding flow that educates users on the science-backed approach and guides first habit creation",
+  "stories": [
+    {
+      "id": "1.5",
+      "title": "Basic Onboarding Flow",
+      "status": "todo"
+    }
+  ],
+  "createdAt": "2025-10-27",
+  "updatedAt": "2025-10-27"
+}

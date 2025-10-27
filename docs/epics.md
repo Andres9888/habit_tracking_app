@@ -1,23 +1,50 @@
 # My Project - Epic Breakdown
 
 **Author:** Jane
-**Date:** 2025-10-22
+**Date:** 2025-10-22 (Updated: 2025-10-27)
 **Project Level:** Level 3 (Full Product)
-**Target Scale:** 32 stories across 5 epics, 6-month timeline
+**Target Scale:** 40 stories across 6 epics, 7-month timeline (includes App Store launch)
+
+---
+
+## Quick Links to Epic Folders
+
+### MVP Epics (Organized by Screen)
+
+**Epic 1** is split into 4 sub-epics based on the screens they touch:
+
+1.1. [Habit Home Screen →](./stories/epic-1-home-screen/README.md) _(Daily Tracking & Progress Display)_
+1.2. [Habit Creation Modal →](./stories/epic-1-habit-modal/README.md) _(Create & Edit Habit Form)_
+1.3. [Foundation & Infrastructure →](./stories/epic-1-foundation/README.md) _(Backend Systems & Design System)_
+
+**Note:** Onboarding moved to Epic 5 (Post-MVP) to accelerate initial launch
+
+### Post-MVP Epics
+
+2. [Epic 2: Premium Monetization →](./stories/post-mvp/epic-2-analytics-premium/README.md) _(Analytics & Premium Subscription)_
+3. [Epic 3: Retention Engine →](./stories/post-mvp/epic-3-predictions-reminders/README.md) _(Predictions & Smart Reminders)_
+4. [Epic 4: Viral Growth →](./stories/post-mvp/epic-4-social-sharing/README.md) _(Social Sharing & Referrals)_
+5. [Epic 5: Polish & Scale →](./stories/post-mvp/epic-5-performance-polish/README.md) _(Performance & UX Polish + Onboarding)_
+6. [Epic 6: App Store Launch →](./stories/epic-6-app-store/README.md) _(Submission, Distribution & Launch)_
 
 ---
 
 ## Epic Overview
 
-This epic breakdown translates the PRD into actionable development work organized for solo developer efficiency and revenue-first prioritization. The 5 epics are sequenced to:
+This epic breakdown translates the PRD into actionable development work organized for solo developer efficiency and revenue-first prioritization. The 6 epics are sequenced to:
 
-1. **Launch fast** (MVP in 2 months)
+1. **Launch fast** (MVP in 2 months - onboarding deferred to post-MVP)
 2. **Generate revenue** (Subscriptions by month 3)
 3. **Retain users** (Churn reduction by month 4)
 4. **Drive growth** (Viral features by month 5)
-5. **Polish product** (Premium quality by month 6)
+5. **Polish product** (Premium quality + onboarding by month 6)
+6. **App Store launch** (Submission and public distribution by month 7)
 
 Each epic is sized for 3-4 week sprints with clear success metrics tied to the $2k → $10k MRR goal. Stories are written to maximize code reuse and minimize technical debt for long-term solo maintainability.
+
+**Strategic Decisions:**
+- Onboarding moved to Epic 5 to remove barriers and ship core functionality faster
+- App Store submission isolated in Epic 6 to ensure all compliance/launch requirements met after product polish
 
 **Key Principles:**
 - **Science-first**: Every story leverages existing Zhang et al./Lally et al. algorithms
@@ -31,14 +58,14 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ### Epic 1: MVP Foundation - Core Tracking & Science Engine
 **Timeline:** Months 1-2 (Weeks 1-8)
-**Stories:** 8 stories
+**Stories:** 7 stories
 **Goal:** Ship App Store-ready MVP with core science-backed tracking
 
 **Extended Goals:**
 - Validate product-market fit with early adopters
 - Establish technical foundation for future epics
 - Prove habit strength algorithms work in production
-- Achieve >60% onboarding completion rate
+- Enable immediate habit tracking without barriers
 
 **Success Metrics:**
 - App Store approval achieved
@@ -89,12 +116,12 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 **Acceptance Criteria:**
 1. Home screen displays today's habits in list format
 2. Swipe right on habit card to mark complete (animated checkmark)
-3. Tap on habit card toggles completion state
+3. Tap on habit card toggles completion state (check/uncheck)
 4. Completed habits show visual distinction (checkmark icon, muted color)
-5. Completion triggers immediate strength recalculation in background
-6. Undo action available for 5 seconds after check-off (toast notification)
+5. Unchecking a habit reverses completion state and recalculates strength
+6. Completion triggers immediate strength recalculation in background
 7. Works offline with local-first architecture
-8. Haptic feedback on completion (iOS native vibration)
+8. Haptic feedback on both completion and uncheck (iOS native vibration)
 
 **Technical Notes:**
 - Gesture handlers: React Native Gesture Handler library
@@ -158,35 +185,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 1.5: Basic Onboarding Flow
-**As a** first-time user
-**I want to** understand the science-backed approach quickly
-**So that** I'm motivated to start tracking habits
-
-**Prerequisites:**
-- Story 1.1 complete (can create habits)
-- Onboarding screen designs finalized
-
-**Acceptance Criteria:**
-1. Three-screen onboarding flow on first app launch
-2. Screen 1: "Real Habit Science, Not Just Streaks" - Shows Lally automaticity curve visualization, explains 90-day formation
-3. Screen 2: "Live Demo" - Interactive: create example "Morning Run" habit, tap to complete, see strength calculate to 3%, delete example
-4. Screen 3: "Get Started" - Permission requests (notifications) with clear value prop, "Create Your First Habit" CTA
-5. Swipe or tap "Next" to advance screens
-6. "Skip" option available (top-right) but tracks skip rate in analytics
-7. Never shows again after completion (AsyncStorage flag)
-8. Completion rate >60% target
-
-**Technical Notes:**
-- Library: react-native-onboarding-swiper or custom implementation
-- Visualizations: Use Victory Native charts for automaticity curve
-- Persistence: AsyncStorage for onboarding_completed flag
-- Analytics: Track screen views, completion rate, skip points
-- Design: Match premium aesthetic (calm, science-forward, no gimmicks)
-
----
-
-#### Story 1.6: Local Data Persistence
+#### Story 1.5: Local Data Persistence
 **As a** user
 **I want to** access my habit data instantly even offline
 **So that** the app feels responsive and I never lose progress
@@ -214,7 +213,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 1.7: Habit Editing & Management
+#### Story 1.6: Habit Editing & Management
 **As a** user with existing habits
 **I want to** edit, archive, and delete habits
 **So that** I can maintain a clean, relevant habit list
@@ -241,7 +240,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 1.8: Core Design System Foundation
+#### Story 1.7: Core Design System Foundation
 **As a** developer
 **I want to** establish reusable design components
 **So that** future features maintain visual consistency
@@ -818,7 +817,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ### Epic 5: Polish & Scale - Premium UX & Performance
 **Timeline:** Months 5-6 (Weeks 33-40)
-**Stories:** 6 stories
+**Stories:** 7 stories (includes onboarding moved from MVP)
 **Goal:** Deliver Productive-level design quality and scale to 10,000+ users
 
 **Extended Goals:**
@@ -862,13 +861,41 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 5.2: Advanced Onboarding with Interactive Demo
+#### Story 5.2: Basic Onboarding Flow
+**As a** first-time user
+**I want to** understand the science-backed approach quickly
+**So that** I'm motivated to start tracking habits
+
+**Prerequisites:**
+- Core habit features complete (Epic 1)
+- Onboarding screen designs finalized
+
+**Acceptance Criteria:**
+1. Three-screen onboarding flow on first app launch
+2. Screen 1: "Real Habit Science, Not Just Streaks" - Shows Lally automaticity curve visualization, explains 90-day formation
+3. Screen 2: "Live Demo" - Interactive: create example "Morning Run" habit, tap to complete, see strength calculate to 3%, delete example
+4. Screen 3: "Get Started" - Permission requests (notifications) with clear value prop, "Create Your First Habit" CTA
+5. Swipe or tap "Next" to advance screens
+6. "Skip" option available (top-right) but tracks skip rate in analytics
+7. Never shows again after completion (AsyncStorage flag)
+8. Completion rate >60% target
+
+**Technical Notes:**
+- Library: react-native-onboarding-swiper or custom implementation
+- Visualizations: Use Victory Native charts for automaticity curve
+- Persistence: AsyncStorage for onboarding_completed flag
+- Analytics: Track screen views, completion rate, skip points
+- Design: Match premium aesthetic (calm, science-forward, no gimmicks)
+
+---
+
+#### Story 5.3: Advanced Onboarding with Interactive Demo
 **As a** new user
 **I want to** experience the habit science interactively
 **So that** I'm convinced to commit before creating real habits
 
 **Prerequisites:**
-- Story 1.5 complete (basic onboarding)
+- Story 5.2 complete (basic onboarding)
 
 **Acceptance Criteria:**
 1. Enhanced Screen 2 (replaces basic demo): Interactive automaticity curve: User drags slider from Day 1 → Day 90, curve animates growth, strength percentage updates in real-time, "With perfect compliance, you reach 100% automaticity by day 90" education
@@ -887,7 +914,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 5.3: Cross-Device Sync (Convex Backend)
+#### Story 5.4: Cross-Device Sync (Convex Backend)
 **As a** user with multiple iOS devices
 **I want to** access my habits seamlessly across iPhone and iPad
 **So that** I can track anywhere without manual syncing
@@ -914,7 +941,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 5.4: Performance Optimization
+#### Story 5.5: Performance Optimization
 **As a** user
 **I want to** experience instant app responsiveness
 **So that** daily tracking feels effortless and premium
@@ -940,7 +967,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 5.5: Accessibility Improvements
+#### Story 5.6: Accessibility Improvements
 **As a** user with accessibility needs
 **I want to** use the app with assistive technologies
 **So that** I can build habits regardless of ability
@@ -965,7 +992,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ---
 
-#### Story 5.6: Data Export & Privacy Compliance
+#### Story 5.7: Data Export & Privacy Compliance
 **As a** user
 **I want to** export my data and have control over privacy
 **So that** I own my information and trust the app
@@ -987,6 +1014,356 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 - Privacy policy: Use Termly or similar generator, host on website
 - Compliance: Legal review recommended before launch
 - Analytics opt-in: Use consent management platform or custom implementation
+
+---
+
+### Epic 6: App Store Launch - Submission & Distribution
+**Timeline:** Month 6-7 (Weeks 41-48)
+**Stories:** 8 stories
+**Goal:** Successfully submit and launch app on Apple App Store
+
+**Extended Goals:**
+- Pass App Store review on first submission
+- Achieve strong App Store presence with optimized metadata
+- Ensure all compliance and legal requirements met
+- Set up analytics and monitoring for post-launch
+- Prepare beta testing infrastructure
+
+**Success Metrics:**
+- App Store approval achieved within 2 submission attempts
+- App Store page optimized with 4.5+ star potential
+- TestFlight beta with 50+ external testers before submission
+- All privacy/legal compliance requirements met
+- Launch day downloads >100 from initial audience
+
+---
+
+#### Story 6.1: App Store Connect Configuration
+**As a** developer preparing for launch
+**I want to** set up App Store Connect properly
+**So that** I can manage the app lifecycle and submissions
+
+**Prerequisites:**
+- Apple Developer account active ($99/year)
+- Bundle ID registered
+- Development and distribution certificates configured
+
+**Acceptance Criteria:**
+1. App record created in App Store Connect with correct bundle ID
+2. App name reserved (must be unique across App Store)
+3. Primary language set to English (US)
+4. Bundle ID configured: com.yourcompany.habittracker (or similar)
+5. SKU defined for internal tracking
+6. App category: Health & Fitness (primary), Productivity (secondary)
+7. Age rating completed via questionnaire (likely 4+)
+8. Content rights: Confirm you own or have rights to all content
+9. Export compliance: Determine if CCATS required (encryption declaration)
+
+**Technical Notes:**
+- Use Xcode to manage certificates and provisioning profiles
+- App name limit: 30 characters
+- Bundle ID cannot be changed after first submission
+- Age rating affects discoverability and available features
+- Export compliance: Most apps use standard encryption (HTTPS) which is exempt
+
+---
+
+#### Story 6.2: App Metadata & ASO (App Store Optimization)
+**As a** potential user browsing the App Store
+**I want to** understand what the app does and why it's valuable
+**So that** I can decide whether to download
+
+**Prerequisites:**
+- App branding finalized (name, tagline)
+- Unique value proposition defined
+- Competitive research completed
+
+**Acceptance Criteria:**
+1. **App Name** (30 chars): "HabitStrength: Science Tracker" or similar - includes keyword
+2. **Subtitle** (30 chars): "Build automatic habits faster" - clear value prop
+3. **Description** (4000 chars):
+   - Hook paragraph: The problem and unique solution
+   - Bullet points: 5-7 key features with science backing
+   - Social proof: Research citations (Lally et al., Zhang et al.)
+   - Premium features: Clear free vs paid distinction
+   - Call to action: "Start building automatic habits today"
+4. **Keywords** (100 chars): Comma-separated, researched via App Store search
+   - Example: "habit,tracker,science,atomic,strength,automaticity,productivity,routine"
+5. **Promotional text** (170 chars): Editable without new version - use for updates/sales
+6. **What's New** (4000 chars): For updates - initial launch can be brief
+
+**Technical Notes:**
+- Keywords research: Use App Store search suggestions, competitor analysis
+- Avoid keyword stuffing in name/subtitle (rejection risk)
+- Description doesn't affect search ranking (keywords do)
+- Competitive keywords: "atomic habits", "productive", "streaks"
+- Update promotional text for sales, new features, press mentions
+
+---
+
+#### Story 6.3: App Screenshots & Preview Video
+**As a** potential user
+**I want to** see the app in action before downloading
+**So that** I know if it fits my needs
+
+**Prerequisites:**
+- App UI finalized and polished
+- Key features implemented and working
+- Device for screenshots (iPhone 14 Pro Max recommended for largest size)
+
+**Acceptance Criteria:**
+1. **Screenshots** (2-10 images, min 3 required):
+   - iPhone 6.7" (1290 x 2796): Required, scales to smaller devices
+   - Include text overlays highlighting features
+   - Screenshot 1: Home screen with habits and strength indicators (hero shot)
+   - Screenshot 2: Habit strength visualization with science explanation
+   - Screenshot 3: Analytics dashboard (premium features)
+   - Screenshot 4: Predictions and insights
+   - Screenshot 5: Clean, beautiful design showcase
+2. **Design guidelines**:
+   - High contrast, readable text on overlays
+   - Show real data (not Lorem Ipsum)
+   - Consistent color scheme matching app
+   - Text describes benefit, not just feature ("See exactly when habits become automatic")
+3. **App Preview video** (optional, recommended):
+   - 15-30 seconds showing core flow
+   - Check off habit → strength updates → insight revealed
+   - No audio required (use captions)
+   - Export as .mov or .mp4, max 500MB
+
+**Technical Notes:**
+- Tools: Figma/Sketch for mockups, or real screenshots + overlay tool
+- Screenshot services: App Store Screenshot Builder, Previewed.app
+- Video capture: QuickTime screen recording on simulator, edit in iMovie/Final Cut
+- Localization: Can provide screenshots per language later
+- First 3 screenshots most important (visible without scrolling)
+
+---
+
+#### Story 6.4: App Icon & Visual Assets
+**As a** user
+**I want to** recognize the app by its icon
+**So that** I can find it easily on my home screen
+
+**Prerequisites:**
+- Brand identity established (colors, style)
+- Design system finalized
+
+**Acceptance Criteria:**
+1. **App Icon** (1024x1024px):
+   - Simple, recognizable design (works at small sizes)
+   - No transparency (solid background required)
+   - No text (iOS design guidelines)
+   - Reflects brand: Growth/strength theme (e.g., upward arrow, plant, strength symbol)
+   - Export all required sizes via Xcode asset catalog
+2. **Icon alternatives** for iOS 18+ (optional):
+   - Light/dark mode variants
+   - Tinted icon option
+3. **Launch screen**:
+   - Simple splash (app icon + background)
+   - No loading indicators (Apple guideline)
+   - Displays while app loads
+4. **Design review**:
+   - Test icon at various sizes (home screen, notifications, settings)
+   - Ensure stands out among similar apps
+   - Get feedback from beta testers
+
+**Technical Notes:**
+- Icon generator: appicon.co or use Xcode asset catalog
+- Avoid gradients that don't scale well
+- Competitive analysis: Check top habit tracker icons
+- Consistency: Icon colors should match app color scheme
+- Rejection risk: Icons with screenshots, Android-style, or misleading imagery
+
+---
+
+#### Story 6.5: Privacy Policy & Terms of Service
+**As a** user concerned about privacy
+**I want to** understand how my data is used
+**So that** I can trust the app
+
+**Prerequisites:**
+- Data collection practices documented
+- Legal entity established (or personal name)
+
+**Acceptance Criteria:**
+1. **Privacy Policy** (hosted on web):
+   - What data collected: Habit names, completion timestamps, device ID, email (if auth)
+   - How data used: App functionality only, no third-party sharing
+   - Data storage: Convex backend, encrypted at rest
+   - User rights: Access, export, delete (GDPR/CCPA compliance)
+   - Contact information: Email for privacy inquiries
+   - Effective date and update policy
+2. **Terms of Service**:
+   - License grant: Users can use app, not reverse engineer
+   - Subscription terms: Pricing, renewal, cancellation policy
+   - Disclaimer: No medical advice, informational purposes only
+   - Limitation of liability: Standard legal protections
+   - Governing law: Your jurisdiction
+3. **Hosting**:
+   - Privacy policy URL: https://yourwebsite.com/privacy
+   - Terms URL: https://yourwebsite.com/terms
+   - Both accessible without login
+   - Both linked in app (Settings screen)
+4. **App Store Privacy Labels** (configured in App Store Connect):
+   - Data Used to Track You: None (no third-party tracking)
+   - Data Linked to You: User ID, health data (habits)
+   - Data Not Linked to You: Crash data, diagnostics
+
+**Technical Notes:**
+- Generator tools: Termly, iubenda, or custom template
+- Host on: GitHub Pages (free), your domain, or Carrd
+- Review: Have lawyer review if budget allows
+- Update requirement: Notify users of material changes
+- Rejection risk: Missing privacy policy or incorrect labels
+
+---
+
+#### Story 6.6: TestFlight Beta Testing
+**As a** developer
+**I want to** test the app with real users before public launch
+**So that** I can catch bugs and gather feedback
+
+**Prerequisites:**
+- App Store Connect configured (Story 6.1)
+- App builds successfully in release mode
+- Crash reporting configured (Sentry or similar)
+
+**Acceptance Criteria:**
+1. **Internal testing** (up to 100 testers):
+   - Upload first build to TestFlight via Xcode or Fastlane
+   - Add internal testers (teammates, if any)
+   - Verify app installs and runs on real devices
+   - Test all critical flows (create habit, check off, view strength)
+2. **External testing** (up to 10,000 testers):
+   - Submit build for Beta App Review (Apple reviews TestFlight builds)
+   - Add external testers by email or public link
+   - Target: 50+ beta testers from r/productivity, Product Hunt "upcoming"
+   - Collect feedback via TestFlight feedback or Google Form
+3. **Testing focus areas**:
+   - Onboarding flow (when added in Epic 5)
+   - Habit creation and tracking
+   - Strength calculation accuracy
+   - Subscription purchase flow
+   - Crash-free rate >99%
+4. **Iteration**:
+   - Fix critical bugs found in beta
+   - Upload new builds (version increments)
+   - Re-test on fixes before final submission
+
+**Technical Notes:**
+- Xcode: Archive → Distribute → TestFlight
+- Fastlane: Automate builds with fastlane deliver
+- Beta review time: 24-48 hours typically
+- Version numbering: 1.0 (build 1), 1.0 (build 2), etc.
+- Crash reporting: Sentry, Crashlytics, or TestFlight built-in
+- Feedback: TestFlight feedback mechanism + custom survey
+
+---
+
+#### Story 6.7: App Review Preparation & Submission
+**As a** developer
+**I want to** pass App Review on first try
+**So that** I can launch without delays
+
+**Prerequisites:**
+- All Epic 1-5 features complete and polished
+- TestFlight beta completed with feedback addressed
+- All metadata and assets finalized
+
+**Acceptance Criteria:**
+1. **Pre-submission checklist**:
+   - ✅ App builds without warnings in release mode
+   - ✅ No crashes in critical flows (tested via TestFlight)
+   - ✅ Subscription flow works end-to-end (sandbox tested)
+   - ✅ All placeholder text removed
+   - ✅ Privacy policy and terms linked in app
+   - ✅ App Store Connect metadata complete
+   - ✅ Screenshots show actual app (not mockups)
+   - ✅ Age rating accurate
+2. **Demo account** (for reviewers):
+   - Email: reviewer@habitstrengthapp.com (or similar)
+   - Password: Provided in "App Review Information"
+   - Account has sample data (3-5 habits with history)
+   - Premium subscription active (sandbox environment)
+3. **Review notes** (App Review Information section):
+   - Explain science-backed features ("Uses Lally et al. habit formation model")
+   - Subscription testing: "Use sandbox test account to test premium features"
+   - Special instructions: "Create habit → check off to see strength calculation"
+   - Backend: "Uses Convex backend for real-time sync"
+4. **Common rejection reasons avoided**:
+   - ❌ Crashes or major bugs
+   - ❌ Incomplete functionality ("coming soon" features)
+   - ❌ Misleading metadata (screenshots don't match app)
+   - ❌ Subscription issues (unclear pricing, can't cancel)
+   - ❌ Privacy violations (data collection not disclosed)
+   - ❌ Guideline 4.2: Minimum functionality (app does too little)
+5. **Submission**:
+   - Build selected in App Store Connect
+   - "Manually release" selected (control launch timing)
+   - Export compliance completed
+   - Submit for Review button pressed
+   - Monitor review status daily
+
+**Technical Notes:**
+- Review time: 24-48 hours typical, can be 7+ days
+- Rejection: Address issues, resubmit with notes explaining fixes
+- Expedited review: Available in emergencies (use sparingly)
+- Release: "Manually release" lets you control launch timing (press releases, social posts)
+- Binary rejection: Requires new build upload
+- Metadata rejection: Can fix without new build
+
+---
+
+#### Story 6.8: Launch Day Preparation & Monitoring
+**As a** developer launching publicly
+**I want to** ensure smooth launch and catch issues immediately
+**So that** first impressions are positive
+
+**Prerequisites:**
+- App approved by Apple (Story 6.7)
+- Monitoring and analytics configured
+- Support infrastructure ready
+
+**Acceptance Criteria:**
+1. **Pre-launch**:
+   - Press release drafted (if applicable)
+   - Product Hunt submission prepared
+   - Reddit posts scheduled (r/productivity, r/getdisciplined)
+   - Twitter/X announcement ready
+   - Friends/family mobilized to download and review
+   - Support email monitored: support@habitstrengthapp.com
+2. **Launch timing**:
+   - Release early morning Tuesday-Thursday (best engagement)
+   - Avoid Fridays (support burden over weekend)
+   - "Manually release this version" → click "Release" button in App Store Connect
+   - App appears in App Store within 2-4 hours
+3. **Launch day monitoring**:
+   - Watch crash reports (Sentry/Crashlytics)
+   - Monitor App Store reviews (respond within 24 hours)
+   - Check server health (Convex dashboard)
+   - Track downloads (App Store Connect analytics)
+   - Subscription conversions (RevenueCat or App Store Connect)
+4. **First 24-hour goals**:
+   - >100 downloads
+   - <1% crash rate
+   - At least 5 positive reviews (from beta testers/early supporters)
+   - No critical bugs reported
+   - First paying subscriber
+5. **Post-launch**:
+   - Thank beta testers publicly
+   - Share launch results on social media
+   - Begin collecting user feedback for v1.1
+   - Monitor support emails and respond promptly
+   - Iterate on App Store metadata based on conversion rates
+
+**Technical Notes:**
+- Analytics: App Store Connect Analytics + internal (Mixpanel, Amplitude)
+- Monitoring: Set up alerts for crash rate >1%, server errors
+- Support: Use Intercom, Help Scout, or plain email
+- Reviews: Respond professionally, never argue, take feedback seriously
+- Hotfix: If critical bug found, prepare 1.0.1 emergency update
+- Promotion: Use free channels first (Reddit, Product Hunt, Twitter)
 
 ---
 
