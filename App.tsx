@@ -28,6 +28,7 @@ import CharacterIcon from './src/components/CharacterIcon';
 import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
+import { HapticTest } from './src/components/HapticTest';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -65,6 +66,7 @@ function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
+  const [showHapticTest, setShowHapticTest] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -231,6 +233,22 @@ function HabitsApp() {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
 
+  // TEMPORARY: Haptic Test Screen for debugging
+  if (showHapticTest) {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ padding: 16, backgroundColor: theme.accent }}>
+          <Pressable onPress={() => setShowHapticTest(false)}>
+            <Text style={{ color: theme.accentText, fontSize: 16, fontWeight: 'bold' }}>
+              ← Back to App
+            </Text>
+          </Pressable>
+        </View>
+        <HapticTest />
+      </View>
+    );
+  }
+
   return (
     <GestureHandlerRootView
       style={{ flex: 1, backgroundColor: theme.background }}
@@ -269,6 +287,20 @@ function HabitsApp() {
               <Search color={theme.icon} size={14} strokeWidth={2} />
               <Bell color={theme.icon} size={20} strokeWidth={2} />
               <Wifi color={theme.icon} size={18} strokeWidth={2} />
+
+              {/* TEMPORARY: Haptic Test Button (DEV ONLY) */}
+              {__DEV__ && (
+                <Pressable
+                  accessibilityLabel='Open haptic test'
+                  accessibilityRole='button'
+                  className='h-8 w-8 items-center justify-center rounded-full'
+                  onPress={() => setShowHapticTest(true)}
+                  style={{ backgroundColor: '#ff6b6b' }}
+                >
+                  <Text style={{ color: '#fff', fontSize: 12, fontWeight: 'bold' }}>H</Text>
+                </Pressable>
+              )}
+
               <Pressable
                 accessibilityLabel='Open settings'
                 accessibilityRole='button'

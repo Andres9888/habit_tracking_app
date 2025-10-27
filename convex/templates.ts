@@ -102,6 +102,20 @@ export const seedTemplates = mutation({
       createdAt: now,
     });
 
+    await ctx.db.insert('templates', {
+      name: 'Delay Caffeine 90 Minutes',
+      description:
+        'Wait 90 minutes after waking before having caffeine. Supports adenosine clearance and sustained alertness.',
+      category: 'morning_routine',
+      icon: '☕',
+      iconColor: '#B45309',
+      frequency: 'daily',
+      scientificReference: 'Huberman Lab (2023) - Caffeine timing for optimal alertness',
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      popularityScore: 82,
+      createdAt: now,
+    });
+
     // Health & Fitness Templates
     await ctx.db.insert('templates', {
       name: '7-Minute Workout',
@@ -161,6 +175,32 @@ export const seedTemplates = mutation({
       frequency: 'daily',
       scientificReference: 'Yang et al. (2014) - Added sugar intake and cardiovascular disease',
       popularityScore: 89,
+      createdAt: now,
+    });
+
+    await ctx.db.insert('templates', {
+      name: 'Zone 2 Cardio',
+      description: 'Perform 45 minutes of steady Zone 2 cardio 3x weekly. Builds mitochondrial efficiency and endurance.',
+      category: 'health_fitness',
+      icon: '🚴',
+      iconColor: '#2563EB',
+      frequency: 'weekly',
+      scientificReference: 'Huberman Lab (2022) - Zone 2 training for longevity',
+      scientificLink: 'https://hubermanlab.com/zone-2-training-for-endurance-and-longevity/',
+      popularityScore: 90,
+      createdAt: now,
+    });
+
+    await ctx.db.insert('templates', {
+      name: 'Deliberate Cold Exposure',
+      description: 'Accumulate 11 minutes of cold exposure per week to boost mood, metabolism, and stress resilience.',
+      category: 'health_fitness',
+      icon: '🧊',
+      iconColor: '#38BDF8',
+      frequency: 'weekly',
+      scientificReference: 'Huberman Lab (2023) - Optimal deliberate cold exposure protocols',
+      scientificLink: 'https://hubermanlab.com/optimal-deliberate-cold-exposure-protocols/',
+      popularityScore: 88,
       createdAt: now,
     });
 
@@ -287,7 +327,33 @@ export const seedTemplates = mutation({
       createdAt: now,
     });
 
-    return { success: true, message: '20 templates seeded successfully' };
+    await ctx.db.insert('templates', {
+      name: 'NSDR Reset',
+      description: 'Practice a 10-20 minute Non-Sleep Deep Rest session to restore focus and accelerate learning.',
+      category: 'mindfulness',
+      icon: '🛌',
+      iconColor: '#7DD3FC',
+      frequency: 'daily',
+      scientificReference: 'Huberman Lab (2021) - Using NSDR to improve learning and sleep',
+      scientificLink: 'https://hubermanlab.com/using-nsdr-to-improve-learning-skill-memory/',
+      popularityScore: 89,
+      createdAt: now,
+    });
+
+    await ctx.db.insert('templates', {
+      name: 'Physiological Sigh Break',
+      description: 'Take 1-3 physiological sighs when stressed. Rapidly lowers autonomic arousal and steadies mood.',
+      category: 'mindfulness',
+      icon: '😮‍💨',
+      iconColor: '#34D399',
+      frequency: 'daily',
+      scientificReference: 'Huberman Lab (2023) - Physiological sigh for stress regulation',
+      scientificLink: 'https://hubermanlab.com/science-supported-tools-to-reduce-stress/',
+      popularityScore: 87,
+      createdAt: now,
+    });
+
+    return { success: true, message: '24 templates seeded successfully' };
   },
 });
 
@@ -377,5 +443,19 @@ export const getUsageStats = query({
       totalImports: usage.length,
       recentImports: usage.filter((u) => u.importedAt > Date.now() - 7 * 24 * 60 * 60 * 1000).length,
     };
+  },
+});
+
+/**
+ * Mutation: Clear all templates (for cleanup/reset)
+ */
+export const clearTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const templates = await ctx.db.query('templates').collect();
+    for (const template of templates) {
+      await ctx.db.delete(template._id);
+    }
+    return { success: true, message: `Deleted ${templates.length} templates` };
   },
 });

@@ -129,13 +129,20 @@ export function HabitCard({
     .onEnd((event) => {
       // If swiped past threshold, snap to open position
       if (event.translationX < SWIPE_THRESHOLD) {
+        console.log('🟢 SWIPE: Actions revealed - triggering haptic');
         translateX.value = withSpring(ACTION_WIDTH * -2, {
           damping: 15,
           stiffness: 150,
         });
         // Haptic feedback when actions revealed
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+        runOnJS(() => {
+          console.log('🟢 SWIPE: Inside runOnJS - calling Light haptic');
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+            .then(() => console.log('✅ SWIPE haptic SUCCESS'))
+            .catch((error) => console.error('❌ SWIPE haptic FAILED:', error));
+        })();
       } else {
+        console.log('🟢 SWIPE: Below threshold - no haptic');
         // Otherwise spring back to closed
         translateX.value = withSpring(0, {
           damping: 15,
@@ -147,19 +154,31 @@ export function HabitCard({
   // Tap gesture handler
   const tapGesture = Gesture.Tap()
     .onBegin(() => {
+      console.log('🔴 TAP GESTURE BEGIN');
       cardScale.value = withSpring(0.98, {
         damping: 15,
         stiffness: 150,
       });
     })
     .onFinalize(() => {
+      console.log('🔴 TAP GESTURE FINALIZE');
       cardScale.value = withSpring(1, {
         damping: 15,
         stiffness: 150,
       });
     })
     .onEnd(() => {
+      console.log('🔴 ========================================');
+      console.log('🔴 TAP GESTURE FIRED!!!');
+      console.log('🔴 Habit:', name);
+      console.log('🔴 isCompleted:', isCompleted);
+      console.log('🔴 disabled:', disabled);
+      console.log('🔴 isToggling:', isToggling);
+      console.log('🔴 Timestamp:', new Date().toISOString());
+
       if (!disabled && !isToggling) {
+        console.log('🔴 ✓ Passed disabled/toggling check');
+
         // Haptic feedback BEFORE mutation for best UX
         // Different intensity based on current completion state:
         // - If currently completed (true) → unchecking → Light haptic (softer)
@@ -170,39 +189,80 @@ export function HabitCard({
             ? Haptics.ImpactFeedbackStyle.Light // Unchecking
             : Haptics.ImpactFeedbackStyle.Medium; // Checking (or loading)
 
-        runOnJS(Haptics.impactAsync)(hapticStyle);
+        console.log('🔴 Haptic style selected:', hapticStyle);
+        console.log('🔴 About to call runOnJS for haptic...');
+
+        runOnJS(() => {
+          console.log('🔴🔴🔴 INSIDE runOnJS - CALLING HAPTIC NOW');
+          const startTime = Date.now();
+
+          Haptics.impactAsync(hapticStyle)
+            .then(() => {
+              const duration = Date.now() - startTime;
+              console.log(`✅ Haptic SUCCESS! Duration: ${duration}ms`);
+            })
+            .catch((error) => {
+              const duration = Date.now() - startTime;
+              console.error(`❌ Haptic FAILED after ${duration}ms:`, error);
+              console.error('❌ Error type:', typeof error);
+              console.error('❌ Error message:', error?.message);
+              console.error('❌ Error stack:', error?.stack);
+            });
+        })();
 
         // Set debounce flag to prevent rapid toggles
         runOnJS(setIsToggling)(true);
+        console.log('🔴 Toggling flag set to true');
 
         // Call Convex mutation with error handling
         runOnJS(async () => {
+          console.log('🔴 Starting mutation...');
           try {
             await toggleCompletionMutation({ habitId: id, date: today });
+            console.log('🔴 Mutation SUCCESS');
           } catch (error) {
-            console.error('Toggle completion failed:', error);
+            console.error('🔴 Toggle completion failed:', error);
             // TODO: Show toast notification when toast system is available
             // Toast.show({ message: "Connection issue, please try again", type: "error" })
           } finally {
             // Reset debounce flag after 300ms cooldown
-            setTimeout(() => setIsToggling(false), 300);
+            setTimeout(() => {
+              setIsToggling(false);
+              console.log('🔴 Toggling flag reset to false');
+            }, 300);
           }
         })();
 
         // Keep backward compatibility with onPress prop if provided
         if (onPress) {
+          console.log('🔴 Calling onPress callback');
           runOnJS(onPress)();
         }
+      } else {
+        console.log('🔴 ✗ BLOCKED - disabled:', disabled, 'isToggling:', isToggling);
       }
+      console.log('🔴 ========================================');
     });
 
   // Long press gesture handler
   const longPressGesture = Gesture.LongPress()
     .minDuration(500)
     .onStart(() => {
+      console.log('🟡 LONG PRESS triggered');
+      console.log('🟡 onLongPress exists:', !!onLongPress);
+      console.log('🟡 disabled:', disabled);
+
       if (onLongPress && !disabled) {
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Heavy);
+        console.log('🟡 Calling Heavy haptic for long press');
+        runOnJS(() => {
+          console.log('🟡 LONG PRESS: Inside runOnJS - calling Heavy haptic');
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            .then(() => console.log('✅ LONG PRESS haptic SUCCESS'))
+            .catch((error) => console.error('❌ LONG PRESS haptic FAILED:', error));
+        })();
         runOnJS(onLongPress)();
+      } else {
+        console.log('🟡 LONG PRESS blocked - no handler or disabled');
       }
     });
 
