@@ -48,7 +48,11 @@ describe('toggleCompletion mutation', () => {
       // This would be caught by Date parsing in the mutation
     });
 
-    it('should prevent future dates', () => {
+    it('trusts client-provided dates (no server-side date range validation)', () => {
+      // Note: We removed server-side future date validation to fix timezone bug.
+      // Client is responsible for providing correct date in user's local timezone.
+      // Server only validates format (YYYY-MM-DD) not date range.
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
@@ -59,7 +63,7 @@ describe('toggleCompletion mutation', () => {
       const tomorrowTime = tomorrow.getTime();
 
       expect(tomorrowTime).toBeGreaterThan(todayTime);
-      // Mutation should throw error: "Cannot track habits for future dates"
+      // Server no longer rejects future dates (trusts client's timezone context)
     });
 
     it('should allow today and past dates', () => {
@@ -244,7 +248,11 @@ describe('toggleCompletion mutation', () => {
       // Mutation should throw: "Habit not found"
     });
 
-    it('should throw error for future date', () => {
+    it('accepts client-provided dates without range validation', () => {
+      // Note: Future date validation removed to prevent timezone-related false rejections.
+      // Example: PST user at 11:59pm would be rejected by UTC server thinking it's "tomorrow".
+      // We now trust client's date calculation (already in user's local timezone).
+
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       const futureDate = tomorrow.toISOString().split('T')[0];
@@ -253,7 +261,7 @@ describe('toggleCompletion mutation', () => {
       const todayDate = today.toISOString().split('T')[0];
 
       expect(futureDate > todayDate).toBe(true);
-      // Mutation should throw: "Cannot track habits for future dates"
+      // Server no longer throws error for future dates (trusts client timezone)
     });
   });
 });

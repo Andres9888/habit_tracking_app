@@ -101,6 +101,9 @@ export function HabitCard({
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
 
+  // Prevent rapid-fire toggles with debounce flag
+  const [isToggling, setIsToggling] = React.useState(false);
+
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
 
@@ -156,7 +159,7 @@ export function HabitCard({
       });
     })
     .onEnd(() => {
-      if (!disabled) {
+      if (!disabled && !isToggling) {
         // Haptic feedback BEFORE mutation for best UX
         // Different intensity based on current completion state:
         // - If currently completed (true) → unchecking → Light haptic (softer)
@@ -169,8 +172,22 @@ export function HabitCard({
 
         runOnJS(Haptics.impactAsync)(hapticStyle);
 
-        // Call Convex mutation with optimistic update
-        runOnJS(toggleCompletionMutation)({ habitId: id, date: today });
+        // Set debounce flag to prevent rapid toggles
+        runOnJS(setIsToggling)(true);
+
+        // Call Convex mutation with error handling
+        runOnJS(async () => {
+          try {
+            await toggleCompletionMutation({ habitId: id, date: today });
+          } catch (error) {
+            console.error('Toggle completion failed:', error);
+            // TODO: Show toast notification when toast system is available
+            // Toast.show({ message: "Connection issue, please try again", type: "error" })
+          } finally {
+            // Reset debounce flag after 300ms cooldown
+            setTimeout(() => setIsToggling(false), 300);
+          }
+        })();
 
         // Keep backward compatibility with onPress prop if provided
         if (onPress) {

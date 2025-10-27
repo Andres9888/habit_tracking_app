@@ -34,15 +34,12 @@ export const toggleCompletion = mutation({
       throw new Error('Habit not found');
     }
 
-    // Prevent future dates - only allow today or past dates
-    const inputDate = new Date(args.date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    inputDate.setHours(0, 0, 0, 0);
-
-    if (inputDate > today) {
-      throw new Error('Cannot track habits for future dates');
-    }
+    // Note: Date is provided by client in user's local timezone (YYYY-MM-DD).
+    // We trust the client's date calculation to respect user's timezone context.
+    // Format validation (YYYY-MM-DD regex above) is sufficient protection.
+    // Server-side date range validation would cause false rejections for users
+    // in timezones behind UTC (e.g., PST user at 11:59pm would be rejected because
+    // server in UTC calculates "tomorrow" as today).
 
     // Query for existing tracking record using the indexed lookup
     const existingRecord = await ctx.db
