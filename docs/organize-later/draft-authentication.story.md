@@ -1,0 +1,340 @@
+# Story 0.1: Implement Clerk Authentication
+
+**Status:** Draft
+**Epic:** 0 - Infrastructure & Setup
+**Story ID:** 0.1
+**Created:** 2025-10-15
+**Priority:** P0-Critical
+
+---
+
+## User Story
+
+**As a** user,
+**I want** secure authentication using Clerk,
+**so that** my habit data is protected and I can access my habits from any device.
+
+---
+
+## Context
+
+Currently, the app has authentication **temporarily disabled** for development purposes. The `App.tsx` file bypasses Clerk authentication if no `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` is provided. This is a **temporary workaround** and must be removed before production deployment.
+
+**Current Implementation (App.tsx:303-310):**
+
+```typescript
+if (!clerkPublishableKey) {
+  console.warn('Running without authentication - Clerk key not configured');
+  return (
+    <ConvexProvider client={convex}>
+      <HabitsApp />
+    </ConvexProvider>
+  );
+}
+```
+
+**TODO Comments in Code:**
+
+- `App.tsx:29`: "TODO: Implement proper authentication - see docs/stories/auth-implementation.story.md"
+- `App.tsx:302`: "TODO: Remove this bypass once Clerk is properly configured"
+
+---
+
+## Acceptance Criteria
+
+### AC1: Clerk Setup and Configuration
+
+- [ ] Create Clerk account and application
+- [ ] Obtain Clerk publishable key (pk*test*_ or pk*live*_)
+- [ ] Configure Clerk authentication providers (Email, Google, etc.)
+- [ ] Add `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` to `.env` file
+- [ ] Configure Clerk auth settings in Clerk dashboard
+
+### AC2: Remove Authentication Bypass
+
+- [ ] Remove temporary authentication bypass code from `App.tsx`
+- [ ] Remove warning console.log about running without auth
+- [ ] Restore error throw for missing Clerk key
+- [ ] Remove all TODO comments related to auth bypass
+- [ ] Verify app fails gracefully if Clerk key is missing
+
+### AC3: Implement Authentication Flow
+
+- [ ] Users must authenticate before accessing habit data
+- [ ] Clerk sign-in UI displays correctly on mobile
+- [ ] Users can sign up with email or OAuth providers
+- [ ] Secure token storage using `expo-secure-store`
+- [ ] Session persistence across app restarts
+
+### AC4: Convex-Clerk Integration
+
+- [ ] Configure Convex Auth with Clerk integration
+- [ ] Update Convex functions to use authenticated user context
+- [ ] Ensure habit data is scoped to authenticated user
+- [ ] Test data isolation between users
+- [ ] Verify JWT token validation in Convex
+
+### AC5: User Experience
+
+- [ ] Smooth sign-in/sign-up flow
+- [ ] Loading states during authentication
+- [ ] Error handling for auth failures
+- [ ] Sign-out functionality
+- [ ] Account management UI
+
+---
+
+## Dev Notes
+
+### Technical Context
+
+**Current State:**
+
+- Clerk SDK installed: `@clerk/clerk-expo@2.15.4`
+- Token cache implemented using `expo-secure-store`
+- Convex client configured: `https://wandering-wolf-192.convex.cloud`
+- Authentication completely bypassed for development
+
+**Files Modified for Bypass:**
+
+- `App.tsx` (lines 28-30, 300-310)
+
+### Required Environment Variables
+
+```bash
+# .env file
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+EXPO_PUBLIC_CONVEX_URL=https://wandering-wolf-192.convex.cloud
+```
+
+### Clerk Setup Steps
+
+1. **Create Clerk Application:**
+   - Visit https://clerk.com
+   - Create new application
+   - Select "React Native" as framework
+   - Enable desired authentication methods
+
+2. **Configure OAuth Providers (Optional):**
+   - Google OAuth
+   - Apple Sign In
+   - GitHub OAuth
+
+3. **Get Publishable Key:**
+   - Copy from Clerk dashboard
+   - Add to `.env` file as `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+
+4. **Configure Convex Auth:**
+   - Update `convex/auth.config.ts` with Clerk provider
+   - Configure JWT validation in Convex
+
+### Code Changes Required
+
+**1. Remove Auth Bypass (App.tsx:300-310):**
+
+```typescript
+// REMOVE THIS:
+if (!clerkPublishableKey) {
+  console.warn('Running without authentication - Clerk key not configured');
+  return (
+    <ConvexProvider client={convex}>
+      <HabitsApp />
+    </ConvexProvider>
+  );
+}
+```
+
+**2. Restore Error Check (App.tsx:28-30):**
+
+```typescript
+// RESTORE THIS:
+const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+if (!clerkPublishableKey) {
+  throw new Error(
+    'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required but was not provided'
+  );
+}
+```
+
+**3. Update Convex Auth Config (convex/auth.config.ts):**
+
+```typescript
+import { convexAuth } from '@convex-dev/auth/server';
+import Clerk from '@auth/core/providers/clerk';
+
+export const { auth, signIn, signOut, store } = convexAuth({
+  providers: [
+    Clerk({
+      domain: process.env.CLERK_DOMAIN,
+    }),
+  ],
+});
+```
+
+### Testing Requirements
+
+**Manual Testing:**
+
+- [ ] Sign up with email
+- [ ] Sign in with email
+- [ ] Sign in with OAuth (if configured)
+- [ ] Sign out and verify session cleared
+- [ ] App restart with valid session
+- [ ] Expired token handling
+- [ ] Network error handling
+
+**Automated Testing:**
+
+- [ ] Auth flow unit tests
+- [ ] Token storage tests
+- [ ] Session persistence tests
+- [ ] Data isolation tests
+
+### Security Considerations
+
+- ✅ Tokens stored in secure storage (`expo-secure-store`)
+- ⚠️ Ensure HTTPS only for production
+- ⚠️ Implement rate limiting on auth endpoints
+- ⚠️ Add session timeout configuration
+- ⚠️ Implement secure token refresh flow
+
+### Migration Notes
+
+**Current Development Users:**
+
+- No user data exists (temporary bypass meant no auth)
+- First authenticated users will create fresh habit data
+- No migration needed
+
+---
+
+## Tasks / Subtasks
+
+### Task 1: Clerk Account Setup (AC: 1)
+
+**Assigned Agent:** @dev
+
+1.1. Create Clerk account and application
+1.2. Configure authentication providers (email minimum)
+1.3. Obtain publishable key
+1.4. Add key to `.env` file
+1.5. Document Clerk setup in README
+
+### Task 2: Remove Authentication Bypass (AC: 2)
+
+**Assigned Agent:** @dev
+
+2.1. Remove conditional auth bypass in `App.tsx`
+2.2. Restore error throw for missing Clerk key
+2.3. Remove warning console.log
+2.4. Delete all TODO comments related to auth
+2.5. Test app fails properly without Clerk key
+
+### Task 3: Convex-Clerk Integration (AC: 4)
+
+**Assigned Agent:** @backend-dev
+
+3.1. Update `convex/auth.config.ts` with Clerk provider
+3.2. Configure JWT validation in Convex functions
+3.3. Update habit queries to use authenticated user context
+3.4. Test data isolation between users
+3.5. Verify token refresh flow
+
+### Task 4: Authentication UI/UX (AC: 3, 5)
+
+**Assigned Agent:** @ux-expert
+
+4.1. Verify Clerk sign-in UI displays correctly
+4.2. Add loading states during authentication
+4.3. Implement error handling UI
+4.4. Add sign-out button in settings
+4.5. Test authentication flow on iOS and Android
+
+### Task 5: Testing and Validation (All ACs)
+
+**Assigned Agent:** @tester
+
+5.1. Write unit tests for auth flow
+5.2. Test session persistence
+5.3. Verify secure token storage
+5.4. Test data isolation between users
+5.5. Perform security audit of auth implementation
+
+---
+
+## Definition of Done
+
+- [ ] Clerk account created and configured
+- [ ] `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` added to `.env`
+- [ ] Authentication bypass code completely removed
+- [ ] All TODO comments removed
+- [ ] Convex-Clerk integration tested and working
+- [ ] Users can sign up, sign in, and sign out
+- [ ] Habit data properly scoped to authenticated users
+- [ ] Data isolation verified between users
+- [ ] Security review completed
+- [ ] Documentation updated
+
+---
+
+## Rollout Plan
+
+**Phase 1: Setup (Day 1)**
+
+- Create Clerk account
+- Configure authentication
+- Add environment variables
+
+**Phase 2: Development (Day 1-2)**
+
+- Remove auth bypass
+- Update Convex integration
+- Implement UI improvements
+
+**Phase 3: Testing (Day 2)**
+
+- Manual testing on devices
+- Security audit
+- Performance testing
+
+**Phase 4: Deployment (Day 3)**
+
+- Deploy to production
+- Monitor authentication metrics
+- User support for auth issues
+
+---
+
+## Success Metrics
+
+- **Authentication success rate**: Target >99% sign-in success
+- **Session stability**: No unexpected logouts
+- **Performance**: Auth flow completes in <2 seconds
+- **Security**: Zero auth-related vulnerabilities
+- **User experience**: Smooth, intuitive auth flow
+
+---
+
+## Related Files
+
+- `App.tsx` - Main authentication integration
+- `convex/auth.config.ts` - Convex auth configuration
+- `convex/auth.ts` - Auth helper functions
+- `.env` - Environment variables
+- `.env.example` - Example environment configuration
+
+---
+
+## References
+
+- [Clerk React Native Documentation](https://clerk.com/docs/quickstarts/react-native-expo)
+- [Convex Auth Documentation](https://docs.convex.dev/auth/clerk)
+- [Expo SecureStore Documentation](https://docs.expo.dev/versions/latest/sdk/securestore/)
+
+---
+
+**Story Created By:** AI Development Assistant
+**Date:** 2025-10-15
+**Reason:** Temporary auth bypass implemented during initial setup
+
+---
