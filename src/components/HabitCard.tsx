@@ -31,13 +31,16 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import type { Id } from '../../convex/_generated/dataModel';
 import { useAppTheme } from '../theme';
 import HabitStrengthIndicator from './HabitStrengthIndicator/HabitStrengthIndicator';
 import * as Haptics from 'expo-haptics';
 
 export interface HabitCardProps {
   /** Habit ID */
-  id: string;
+  id: Id<'habits'>;
 
   /** Habit name */
   name: string;
@@ -60,7 +63,7 @@ export interface HabitCardProps {
   /** Disabled state */
   disabled?: boolean;
 
-  /** On tap handler (complete habit) */
+  /** On tap handler (complete habit) - DEPRECATED: Component now calls toggleCompletion mutation directly */
   onPress?: () => void;
 
   /** On long press handler (quick actions menu) */
@@ -97,6 +100,12 @@ export function HabitCard({
   const theme = useAppTheme();
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
+
+  // Convex mutation for toggling completion
+  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
+
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
 
   // Swipe gesture handler
   const panGesture = Gesture.Pan()
@@ -140,9 +149,15 @@ export function HabitCard({
       });
     })
     .onEnd(() => {
-      if (onPress && !disabled) {
-        runOnJS(onPress)();
+      if (!disabled) {
+        // Call Convex mutation with optimistic update
+        runOnJS(toggleCompletionMutation)({ habitId: id, date: today });
+        // Haptic feedback
         runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+        // Keep backward compatibility with onPress prop if provided
+        if (onPress) {
+          runOnJS(onPress)();
+        }
       }
     });
 
