@@ -36,6 +36,7 @@ import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
 import { useAppTheme } from '../theme';
 import HabitStrengthIndicator from './HabitStrengthIndicator/HabitStrengthIndicator';
+import StreakIndicator from './StreakIndicator';
 import * as Haptics from 'expo-haptics';
 
 export interface HabitCardProps {
@@ -53,6 +54,12 @@ export interface HabitCardProps {
 
   /** Habit strength (0-100) */
   strength: number;
+
+  /** Current streak (Story 1.4) */
+  currentStreak?: number;
+
+  /** Best streak (Story 1.4) */
+  bestStreak?: number;
 
   /** Is completed today */
   completed?: boolean;
@@ -88,6 +95,8 @@ export function HabitCard({
   icon = '📝',
   color,
   strength,
+  currentStreak = 0,
+  bestStreak = 0,
   completed = false,
   atRisk = false,
   disabled = false,
@@ -418,13 +427,19 @@ export function HabitCard({
               </View>
             </View>
 
-            {/* Bottom Row: Strength Indicator */}
+            {/* Bottom Row: Strength Indicator + Streak */}
             <View style={styles.bottomRow}>
               <HabitStrengthIndicator
                 strength={strength}
                 variant="compact"
                 showPercentage={true}
                 habitName={name}
+              />
+              {/* Streak Indicator (Story 1.4) */}
+              <StreakIndicator
+                currentStreak={currentStreak}
+                bestStreak={bestStreak}
+                compact={true}
               />
             </View>
           </View>
@@ -518,6 +533,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 4,
   },
 });

@@ -2,7 +2,7 @@
 
 **Display Title:** Habit Home Screen
 **Screen Title:** Daily Tracking & Progress Display
-**Timeline:** Week 1 & Week 3 (Months 1-2)
+**Timeline:** Weeks 1–3 (Month 1)
 **Stories:** 3 stories
 **Status:** In Progress (0% Complete - 0/3 stories done)
 **Priority:** Critical
