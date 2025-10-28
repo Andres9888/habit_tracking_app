@@ -31,6 +31,7 @@ interface SettingsModalProps {
   showNotesStats?: boolean;
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
+  onOpenHapticTest?: () => void;
 }
 
 export default function SettingsModal({
@@ -45,6 +46,7 @@ export default function SettingsModal({
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
   isHighContrastActive = false,
+  onOpenHapticTest,
 }: SettingsModalProps) {
   const {
     view,
@@ -292,6 +294,24 @@ export default function SettingsModal({
                 onPress={() => {
                   // TODO: Navigate to reminders management
                   console.log('Navigate to reminders management');
+                }}
+                showBorder={false}
+                highContrastMode={isHighContrastActive}
+              />
+            </SettingsSection>
+
+            {/* Diagnostics */}
+            <SettingsSection
+              title="Diagnostics"
+              highContrastMode={isHighContrastActive}
+            >
+              <SettingsRow
+                icon={<Zap size={16} color="#22c55e" />}
+                iconBackgroundColor="#bbf7d0"
+                label="Haptic Test"
+                type="navigation"
+                onPress={() => {
+                  onOpenHapticTest?.();
                 }}
                 showBorder={false}
                 highContrastMode={isHighContrastActive}

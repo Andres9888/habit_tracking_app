@@ -15,6 +15,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Modal,
   Platform,
   Pressable,
   Text,
@@ -30,6 +31,7 @@ import { api } from '../convex/_generated/api';
 import type { Id } from '../convex/_generated/dataModel';
 import { CalendarTimeline } from './components/CalendarTimeline';
 import SettingsModal from './components/SettingsModal';
+import { HapticTest } from './components/HapticTest';
 import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
 import HabitCalendarModal from './components/HabitCalendarModal';
@@ -100,6 +102,7 @@ function HabitsApp() {
   const [showPauseModal, setShowPauseModal] = useState(false);
   const [habitToPause, setHabitToPause] = useState<Habit | null>(null);
   const [habitToEdit, setHabitToEdit] = useState<any>(null);
+  const [showHapticTest, setShowHapticTest] = useState(false);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -337,7 +340,7 @@ function HabitsApp() {
 
   const handleHabitPress = useCallback((habit: Habit) => {
     setSelectedHabit(habit);
-    setIsHabitDetailOpen(true);
+    setIsHabitCalendarOpen(true);
   }, []);
 
   // Memoize content container style to prevent re-renders on iOS
@@ -550,6 +553,10 @@ function HabitsApp() {
           }
         }}
         onClose={() => setIsSettingsOpen(false)}
+        onOpenHapticTest={() => {
+          setIsSettingsOpen(false);
+          setShowHapticTest(true);
+        }}
       />
       <CreateHabitModal
         visible={isCreateHabitOpen || habitToEdit !== null}
@@ -559,6 +566,24 @@ function HabitsApp() {
         }}
         habitToEdit={habitToEdit || undefined}
       />
+
+      {/* Haptic Test Modal (diagnostics) */}
+      <Modal
+        animationType='slide'
+        visible={showHapticTest}
+        onRequestClose={() => setShowHapticTest(false)}
+      >
+        <View className='flex-1'>
+          <View className='px-4 py-4' style={{ backgroundColor: '#111827' }}>
+            <Pressable onPress={() => setShowHapticTest(false)}>
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+                ← Back to App
+              </Text>
+            </Pressable>
+          </View>
+          <HapticTest />
+        </View>
+      </Modal>
       <HabitCalendarModal
         habit={selectedHabit}
         streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
@@ -588,6 +613,10 @@ function HabitsApp() {
         onUpgrade={() => {
           // TODO: Navigate to subscription screen
           console.log('Upgrade to premium');
+        }}
+        onOpenCalendar={(habit) => {
+          setSelectedHabit(habit);
+          setIsHabitCalendarOpen(true);
         }}
       />
 

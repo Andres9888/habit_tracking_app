@@ -35,6 +35,7 @@ import {
   TrendingUp,
   AlertTriangle,
   Lock,
+  Calendar,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { StrengthLevel } from '../components/HabitStrengthIndicator/HabitStrengthIndicator';
@@ -92,6 +93,7 @@ interface HabitDetailScreenProps {
   onArchive?: (habitId: Id<'habits'>) => void;
   onDelete?: (habitId: Id<'habits'>) => void;
   onUpgrade?: () => void;
+  onOpenCalendar?: (habit: Habit) => void;
 }
 
 /**
@@ -298,6 +300,7 @@ export default function HabitDetailScreen({
   onArchive,
   onDelete,
   onUpgrade,
+  onOpenCalendar,
 }: HabitDetailScreenProps) {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
@@ -377,6 +380,11 @@ export default function HabitDetailScreen({
 
   const handleUpgrade = () => {
     onUpgrade?.();
+  };
+
+  const handleOpenCalendar = () => {
+    onOpenCalendar?.(habit);
+    onClose(); // Close detail screen when opening calendar
   };
 
   return (
@@ -590,6 +598,12 @@ export default function HabitDetailScreen({
             Manage Habit
           </Text>
           <View style={styles.actionsGrid}>
+            <ActionButton
+              icon={Calendar}
+              label="View Calendar"
+              onPress={handleOpenCalendar}
+              theme={theme}
+            />
             <ActionButton
               icon={Edit3}
               label="Edit"

@@ -10,15 +10,19 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Id } from '../../convex/_generated/dataModel';
-import HabitCalendarView from './HabitCalendarView';
 import { getEmojiAndName } from './DraggableHabit/DraggableHabit.hooks';
 import { StatsCard } from './HabitCalendarModal/StatsCard';
 import { ActivityLog } from './HabitCalendarModal/ActivityLog';
+import { CalendarTabs } from './HabitCalendarModal/CalendarTabs';
+import HeatmapCalendar from './HabitCalendarModal/HeatmapCalendar';
+import HabitCalendarView from './HabitCalendarView';
 import {
   calculateBestStreak,
   calculateCompletionPercentage,
 } from '../utils/habitCalculations';
 import HabitEditScreen from '../screens/HabitEditScreen';
+
+type CalendarView = 'month' | 'year';
 
 interface Habit {
   _id: Id<'habits'>;
@@ -51,6 +55,7 @@ export default function HabitCalendarModal({
   toggleHabit,
 }: HabitCalendarModalProps) {
   const [showEditScreen, setShowEditScreen] = useState(false);
+  const [calendarView, setCalendarView] = useState<CalendarView>('month');
 
   if (!habit) return null;
 
@@ -85,10 +90,10 @@ export default function HabitCalendarModal({
       onRequestClose={onClose}
     >
       <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
-        {/* Navigation Header */}
-        <View className='flex-row items-center justify-between border-b border-slate-100 bg-[#F8F5F1] px-4 pb-4 pt-2'>
+        {/* Navigation Header - Matches Figma */}
+        <View className='flex-row items-center justify-between px-4 pb-4 pt-2'>
           <Pressable
-            className='h-10 w-10 items-center justify-center rounded-full'
+            className='h-10 w-10 items-center justify-center rounded-full active:bg-slate-200'
             onPress={onClose}
           >
             <ChevronLeft color='#1a1a1a' size={24} />
@@ -103,8 +108,8 @@ export default function HabitCalendarModal({
         </View>
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
-          {/* Stats Card */}
-          <View className='mt-5'>
+          {/* Stats Card - Already matches Figma design */}
+          <View className='mt-4'>
             <StatsCard
               habitName={habit.name}
               habitNotes={habit.notes}
@@ -115,17 +120,31 @@ export default function HabitCalendarModal({
             />
           </View>
 
-          {/* Monthly Calendar */}
+          {/* Calendar Tabs - Switch between Month and Year view */}
           <View className='mt-8'>
-            <HabitCalendarView
-              habitId={habit._id}
-              toggleHabit={toggleHabit}
-              tracking={tracking}
+            <CalendarTabs
+              activeView={calendarView}
+              onViewChange={setCalendarView}
             />
+
+            {/* Conditional Calendar Rendering */}
+            {calendarView === 'month' ? (
+              <HabitCalendarView
+                habitId={habit._id}
+                toggleHabit={toggleHabit}
+                tracking={tracking}
+              />
+            ) : (
+              <HeatmapCalendar
+                habitId={habit._id}
+                tracking={tracking}
+                monthsToShow={6}
+              />
+            )}
           </View>
 
-          {/* Activity Log */}
-          <View className='pb-6'>
+          {/* Activity Log - Matches Figma styling */}
+          <View className='mt-8 pb-6'>
             <ActivityLog tracking={activityTracking} />
           </View>
         </ScrollView>
