@@ -2,7 +2,7 @@
 
 **Display Title:** Onboarding Screens
 **Screen Title:** First-Time User Experience
-**Timeline:** Week 2 (Months 1-2)
+**Timeline:** Week 2 (Month 1)
 **Stories:** 1 story
 **Status:** Not Started
 **Priority:** High

@@ -40,8 +40,15 @@
 **Current State:**
 - ✅ Convex provides built-in optimistic updates and sync
 - ✅ Convex client handles caching automatically
-- ? Offline queue behavior needs verification
-- ? Conflict resolution strategy needs verification
+
+**Verification Tasks:**
+- **Task:** Verify offline queue behavior
+  **Owner:** Developer (Jane)
+  **Acceptance:** Create test scenario with offline mutations, verify they sync when connection restored
+
+- **Task:** Verify conflict resolution strategy
+  **Owner:** Developer (Jane)
+  **Acceptance:** Create test with concurrent edits from 2 devices, verify last-write-wins behavior matches expectations
 
 **Implementation Tasks:**
 - Verify Convex offline sync works as expected
@@ -54,6 +61,33 @@
 - `convex/_generated/react.ts` - Convex client setup
 - `src/utils/sync.ts` - Sync status helpers (create if needed)
 - `src/components/SyncIndicator.tsx` - Offline indicator (create if needed)
+
+**Conflict Resolution Strategy:**
+
+We use **last-write-wins (LWW)** for habit tracking data:
+
+**Trade-offs:**
+- ✅ Simple to implement and understand
+- ✅ Works well for single-user habit tracking scenarios
+- ✅ Performant - no complex merge logic
+- ⚠️ Can silently discard edits if concurrent writes occur across devices
+- ⚠️ Relies on accurate device timestamps (clock skew risk)
+- ⚠️ No conflict detection or user notification
+
+**Why LWW is acceptable for habit tracking:**
+- Habit completions are timestamped events (rarely conflicting)
+- Most users track on single device at a time
+- Habit metadata (name, color) changes are infrequent
+- Clock skew impact is minimal for daily tracking granularity
+
+**Alternative considered:**
+Convex supports CRDTs which provide conflict-free merges, but adds complexity.
+For MVP, LWW is sufficient. Consider CRDTs in post-MVP if multi-device conflicts become an issue.
+
+**Mitigations:**
+- Client-side timestamps normalized to UTC
+- Sync indicator shows users when changes are pending
+- Optimistic updates provide immediate feedback
 
 ---
 
