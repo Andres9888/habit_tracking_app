@@ -496,11 +496,11 @@ export default function CreateHabitModal({
               </View>
               <TouchableOpacity
                 accessibilityRole='button'
-                className='mt-4 flex-row items-center gap-2 self-start rounded-full bg-white px-3 py-2'
+                className='mt-4 w-full flex-row items-center gap-2 rounded-full bg-white px-3 py-2'
                 onPress={() => setIsColorPickerVisible(true)}
               >
                 <Palette color='#1a1a1a' size={16} />
-                <Text className='text-sm font-medium text-[#1a1a1a]'>Custom color</Text>
+                <Text className='flex-1 text-sm font-medium text-[#1a1a1a]'>Custom color</Text>
                 <View
                   className='h-4 w-4 rounded-full border border-[#1a1a1a]'
                   style={{ backgroundColor: selectedColor }}
