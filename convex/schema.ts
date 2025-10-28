@@ -23,6 +23,10 @@ const applicationTables = {
     accessibilityUpdatedAt: v.optional(v.number()),
     archived: v.optional(v.boolean()),
     archivedAt: v.optional(v.number()),
+    // Streak Tracking System (Story 1.3)
+    currentStreak: v.optional(v.number()),
+    bestStreak: v.optional(v.number()),
+    lastCompletedDate: v.optional(v.string()), // ISO date string (YYYY-MM-DD)
     consecutiveDays: v.optional(v.number()),
     createdAt: v.number(),
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)

@@ -28,6 +28,7 @@ import type * as predictions from "../predictions.js";
 import type * as quickFix from "../quickFix.js";
 import type * as router from "../router.js";
 import type * as settings from "../settings.js";
+import type * as streakUtils from "../streakUtils.js";
 import type * as templates from "../templates.js";
 import type * as testStrength from "../testStrength.js";
 import type * as tracking from "../tracking.js";
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   quickFix: typeof quickFix;
   router: typeof router;
   settings: typeof settings;
+  streakUtils: typeof streakUtils;
   templates: typeof templates;
   testStrength: typeof testStrength;
   tracking: typeof tracking;

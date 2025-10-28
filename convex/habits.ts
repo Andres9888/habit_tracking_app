@@ -1,6 +1,7 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { generateHabitStrengthSnapshot } from './habitStrength';
+import { updateStreak } from './streakUtils';
 
 export const create = mutation({
   args: {
@@ -26,6 +27,10 @@ export const create = mutation({
       remindersEnabled: args.remindersEnabled,
       reminderTime: args.reminderTime,
       reminderSound: args.reminderSound,
+      // Initialize streak tracking fields (Story 1.3)
+      currentStreak: 0,
+      bestStreak: 0,
+      lastCompletedDate: undefined,
     });
   },
   returns: v.id('habits'),
@@ -331,6 +336,9 @@ export const get = query({
       strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
       userId: v.optional(v.string()),
+      currentStreak: v.optional(v.number()),
+      bestStreak: v.optional(v.number()),
+      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       totalCompletions: v.optional(v.number()),
       totalMisses: v.optional(v.number()),
@@ -395,6 +403,9 @@ export const list = query({
       accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
+      currentStreak: v.optional(v.number()),
+      bestStreak: v.optional(v.number()),
+      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
       daysOfWeek: v.optional(v.array(v.number())),
@@ -444,6 +455,9 @@ export const listArchived = query({
       accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
+      currentStreak: v.optional(v.number()),
+      bestStreak: v.optional(v.number()),
+      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
       daysOfWeek: v.optional(v.array(v.number())),
@@ -494,6 +508,9 @@ export const listPaused = query({
       accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
+      currentStreak: v.optional(v.number()),
+      bestStreak: v.optional(v.number()),
+      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
       daysOfWeek: v.optional(v.array(v.number())),
@@ -566,7 +583,7 @@ export const toggleHabit = mutation({
           habitId: args.habitId,
         }));
 
-    // Update habit strength based on the new completion status
+    // Update habit strength and streak based on the new completion status
     const habit = await ctx.db.get(args.habitId);
     if (habit) {
       const previousStrength = habit.strength ?? 0;
@@ -588,6 +605,17 @@ export const toggleHabit = mutation({
         })),
       });
 
+      // Calculate updated streak (Story 1.3)
+      const streakData = updateStreak(
+        {
+          currentStreak: habit.currentStreak,
+          bestStreak: habit.bestStreak,
+          lastCompletedDate: habit.lastCompletedDate,
+        },
+        args.date,
+        newCompletedStatus
+      );
+
       console.log('🔧 Habit Strength Update (replay):', {
         baseline: (snapshot.baseline * 100).toFixed(1) + '%',
         behaviorPerformed: newCompletedStatus,
@@ -599,12 +627,17 @@ export const toggleHabit = mutation({
         strengthLevel: snapshot.strengthLevel,
         successes: snapshot.complianceSuccesses,
         windowDays: snapshot.complianceDaysConsidered,
+        currentStreak: streakData.currentStreak,
+        bestStreak: streakData.bestStreak,
       });
 
       await ctx.db.patch(args.habitId, {
         strength: snapshot.strength,
         strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
+        currentStreak: streakData.currentStreak,
+        bestStreak: streakData.bestStreak,
+        lastCompletedDate: streakData.lastCompletedDate,
       });
     }
 

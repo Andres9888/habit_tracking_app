@@ -1,0 +1,23 @@
+{
+  "epicId": "1.2",
+  "name": "Habit Creation Modal",
+  "screenTitle": "Create & Edit Habit Form",
+  "shortTitle": "Habit Modal",
+  "timeline": "Week 1",
+  "status": "completed",
+  "progress": 1.0,
+  "storiesTotal": 1,
+  "storiesCompleted": 1,
+  "priority": "high",
+  "owner": "Jane",
+  "goal": "Provide an intuitive modal interface for creating and editing habits with customization options",
+  "stories": [
+    {
+      "id": "1.1",
+      "title": "Habit Creation Flow",
+      "status": "completed"
+    }
+  ],
+  "createdAt": "2025-10-27",
+  "updatedAt": "2025-10-27"
+}
