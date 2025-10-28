@@ -1,0 +1,263 @@
+{
+  "metadata": {
+    "storyId": "1.2",
+    "storyTitle": "Daily Habit Check-Off",
+    "epic": "Epic 1 - MVP Foundation",
+    "generatedAt": "2025-10-27",
+    "codebaseVersion": "current"
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC3",
+      "description": "Tap on habit card toggles completion state (check/uncheck)",
+      "status": "todo",
+      "notes": "Tap gesture exists but calls onPress prop. Need to implement toggle logic",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": "AC7",
+      "description": "Haptic feedback on both completion and uncheck (iOS native vibration)",
+      "status": "todo",
+      "notes": "Haptics.impactAsync exists. Need different patterns: Medium (success) for check, Light for uncheck",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": "AC4",
+      "description": "Completed habits show visual distinction (checkmark icon, muted color)",
+      "status": "done",
+      "notes": "Already implemented in HabitCard lines 289-308"
+    }
+  ],
+  "deferredCriteria": [
+    {
+      "id": "AC1",
+      "description": "Home screen displays today's habits in list format",
+      "reason": "Out of scope for this focused implementation"
+    },
+    {
+      "id": "AC2",
+      "description": "Swipe right on habit card to mark complete",
+      "reason": "Tap-only implementation for simplicity"
+    },
+    {
+      "id": "AC5",
+      "description": "Unchecking reverses completion state and recalculates strength",
+      "reason": "Strength recalculation deferred to separate story"
+    },
+    {
+      "id": "AC6",
+      "description": "Completion triggers immediate strength recalculation in background",
+      "reason": "Deferred - focus on toggle and haptics first"
+    }
+  ],
+  "existingArtifacts": {
+    "components": [
+      {
+        "path": "src/components/HabitCard.tsx",
+        "type": "component",
+        "description": "Main habit card component with gesture handlers",
+        "interfaces": {
+          "props": {
+            "id": "string",
+            "name": "string",
+            "icon": "string (optional)",
+            "color": "string (optional)",
+            "strength": "number (0-100)",
+            "completed": "boolean (optional)",
+            "atRisk": "boolean (optional)",
+            "disabled": "boolean (optional)",
+            "onPress": "() => void (optional)",
+            "onLongPress": "() => void (optional)",
+            "onEdit": "() => void (optional)",
+            "onDelete": "() => void (optional)"
+          }
+        },
+        "existingFeatures": [
+          "Swipe LEFT gesture for edit/delete (lines 102-126)",
+          "Tap gesture with scale animation (lines 129-147)",
+          "Long press gesture (lines 150-157)",
+          "Haptic feedback on tap (line 145)",
+          "Completed visual state (lines 187-195, 289-297)",
+          "Strength indicator display (lines 313-318)"
+        ],
+        "notes": "Need to ADD swipe RIGHT gesture and connect to completion mutation"
+      },
+      {
+        "path": "src/components/HabitStrengthIndicator/HabitStrengthIndicator.tsx",
+        "type": "component",
+        "description": "Displays habit strength with visual indicators",
+        "status": "exists",
+        "notes": "Already used in HabitCard line 313"
+      }
+    ],
+    "backend": [
+      {
+        "path": "convex/habits.ts",
+        "type": "mutations",
+        "description": "Habit CRUD mutations",
+        "exports": {
+          "create": "mutation - Create new habit",
+          "update": "mutation - Update habit fields",
+          "updateNotes": "mutation - Update habit notes",
+          "archive": "mutation - Archive habit",
+          "unarchive": "mutation - Unarchive habit"
+        },
+        "notes": "MISSING: markComplete/toggleCompletion mutation for tracking"
+      },
+      {
+        "path": "convex/habitStrength.ts",
+        "type": "functions",
+        "description": "Habit strength calculation system",
+        "exports": {
+          "generateHabitStrengthSnapshot": "function - Calculate strength from tracking data",
+          "HabitStrengthSnapshot": "interface - Strength data structure",
+          "StrengthLevel": "type - 'starting' | 'building' | 'developing' | 'strong' | 'automatic'"
+        },
+        "notes": "Exists but not called from completion flow yet"
+      },
+      {
+        "path": "convex/schema.ts",
+        "type": "schema",
+        "description": "Database schema definitions",
+        "tables": {
+          "habits": {
+            "fields": {
+              "name": "string",
+              "strength": "number (optional, 0-1)",
+              "strengthLevel": "string (optional)",
+              "strengthUpdatedAt": "number (optional)",
+              "icon": "string (optional)",
+              "iconColor": "string (optional)",
+              "archived": "boolean (optional)",
+              "order": "number (optional)",
+              "createdAt": "number"
+            }
+          },
+          "tracking": {
+            "fields": {
+              "habitId": "Id<'habits'>",
+              "date": "string (YYYY-MM-DD)",
+              "completed": "boolean",
+              "userId": "string (optional)"
+            },
+            "indexes": ["by_habit_and_date"]
+          }
+        },
+        "notes": "tracking table stores daily completions"
+      }
+    ],
+    "dependencies": {
+      "installed": [
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "expo-haptics"
+      ],
+      "versions": "Already in package.json"
+    }
+  },
+  "requiredChanges": {
+    "newFiles": [
+      {
+        "path": "convex/tracking.ts",
+        "purpose": "Simple mutation for toggling completion state",
+        "exports": [
+          "toggleCompletion(habitId: Id<'habits'>, date: string) => mutation - Toggle completion for a specific date"
+        ],
+        "implementation": "Check if tracking record exists for date, if yes delete it (uncheck), if no create it (check)"
+      }
+    ],
+    "modifications": [
+      {
+        "path": "src/components/HabitCard.tsx",
+        "changes": [
+          "MODIFY tap gesture onEnd handler (lines 142-146) to call toggleCompletion mutation",
+          "ADD different haptic patterns: Haptics.ImpactFeedbackStyle.Medium for check, Light for uncheck",
+          "ADD logic to determine if checking or unchecking based on current completion state",
+          "REMOVE generic onPress prop - handle completion directly in component"
+        ],
+        "lineNumbers": {
+          "modifyTapHandler": "Lines 142-146",
+          "addHapticLogic": "Line 145"
+        },
+        "specificChanges": {
+          "before": "runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);",
+          "after": "runOnJS(Haptics.impactAsync)(isCompleted ? Haptics.ImpactFeedbackStyle.Light : Haptics.ImpactFeedbackStyle.Medium);"
+        }
+      }
+    ]
+  },
+  "technicalConstraints": {
+    "hapticFeedback": [
+      "Use Haptics.ImpactFeedbackStyle.Medium (stronger) for COMPLETION",
+      "Use Haptics.ImpactFeedbackStyle.Light (softer) for UNCHECK",
+      "Haptic must fire BEFORE visual state changes for best UX"
+    ],
+    "performance": [
+      "Tap gesture should feel instant (<100ms total)",
+      "Optimistic UI updates required - don't wait for backend confirmation"
+    ],
+    "dataIntegrity": [
+      "Use tracking table for completion state (NOT habit.completed field)",
+      "Store date in YYYY-MM-DD format",
+      "Toggle logic: If tracking record exists for date, delete it; else create it"
+    ]
+  },
+  "testingContext": {
+    "existingTests": [
+      {
+        "path": "src/components/__tests__/HabitCard.test.tsx",
+        "coverage": "Component rendering and props"
+      }
+    ],
+    "newTestsNeeded": [
+      "Tap toggles completed state (false -> true)",
+      "Tap toggles uncompleted state (true -> false)",
+      "Haptic feedback fires with Medium intensity on completion",
+      "Haptic feedback fires with Light intensity on uncheck",
+      "Optimistic UI updates immediately (don't wait for mutation)",
+      "Visual state shows checkmark when completed"
+    ]
+  },
+  "architecturalDecisions": {
+    "stateManagement": "Convex real-time queries for tracking data (optimistic updates via useMutation)",
+    "gestureLibrary": "react-native-gesture-handler (already used)",
+    "animation": "react-native-reanimated with native driver",
+    "haptics": "expo-haptics (already installed)",
+    "dataFlow": "Component -> Hook (useHabitCompletion) -> Mutation (tracking.ts) -> Query update -> Re-render"
+  },
+  "integrationPoints": {
+    "homeScreen": {
+      "status": "todo",
+      "notes": "Need to create HomeScreen that renders list of HabitCard components with real data"
+    },
+    "strengthCalculation": {
+      "function": "generateHabitStrengthSnapshot from convex/habitStrength.ts",
+      "trigger": "After marking complete/incomplete",
+      "async": true
+    },
+    "convexQueries": {
+      "required": [
+        "listTodaysHabits() - Get all habits for today",
+        "getTrackingForDate(habitId, date) - Check if habit completed today"
+      ]
+    }
+  },
+  "implementationNotes": {
+    "priority": "Critical - Core MVP functionality (SIMPLIFIED SCOPE)",
+    "complexity": "Low - Simple toggle mutation + haptic pattern change",
+    "scope": "ONLY tap to toggle + haptic feedback. NO swipe, NO home screen, NO strength calc",
+    "estimatedEffort": "4-6 hours (reduced from 24-28 hours)",
+    "tasks": [
+      "1. Create convex/tracking.ts with toggleCompletion mutation (1-2 hours)",
+      "2. Modify HabitCard tap handler to call mutation (1 hour)",
+      "3. Add conditional haptic patterns based on completion state (30 min)",
+      "4. Test toggle and haptic feedback (1-2 hours)",
+      "5. Update tests (1 hour)"
+    ],
+    "risks": [
+      "Race conditions with rapid toggles (MITIGATION: Use Convex optimistic updates)",
+      "Timezone handling for 'today' date (MITIGATION: Use consistent date format utility)"
+    ],
+    "dependencies": "Story 1.1 (Habit Creation) - DONE ✅"
+  }
+}

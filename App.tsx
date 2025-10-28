@@ -16,6 +16,7 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from 'react-native-gesture-handler';
+import { PaperProvider } from 'react-native-paper';
 import { api } from './convex/_generated/api';
 import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
@@ -26,6 +27,8 @@ import CharacterScreen from './src/screens/CharacterScreen';
 import CharacterIcon from './src/components/CharacterIcon';
 import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
+import { extendedTheme, useAppTheme } from './src/theme';
+import { HapticTest } from './src/components/HapticTest';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -63,6 +66,7 @@ function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
+  const [showHapticTest, setShowHapticTest] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -74,37 +78,41 @@ function HabitsApp() {
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 
   const highContrastMode = settings?.highContrastMode ?? false;
+  const appTheme = useAppTheme();
 
+  // Custom theme colors that extend the design system
+  // Maps high contrast mode to design system colors
   const theme = useMemo(
     () =>
       highContrastMode
         ? {
-            accent: '#facc15',
-            accentText: '#000000',
-            background: '#000000',
+            accent: '#facc15', // Yellow for high contrast
+            accentText: appTheme.custom.colors.text.primary,
+            background: appTheme.custom.colors.dark.background,
             border: '#facc15',
             icon: '#facc15',
             inputBackground: '#0f0f0f',
             inputPlaceholder: '#facc15',
-            primaryText: '#ffffff',
+            primaryText: appTheme.custom.colors.text.inverse,
             secondaryText: '#facc15',
-            surface: '#111111',
-            surfaceMuted: '#161616',
+            surface: appTheme.custom.colors.dark.surface,
+            surfaceMuted: appTheme.custom.colors.dark.card,
           }
         : {
-            accent: '#1a1a1a',
-            accentText: '#ffffff',
-            background: '#f8f5f1',
-            border: '#e2e8f0',
-            icon: '#1a1a1a',
-            inputBackground: '#ffffff',
-            inputPlaceholder: '#999999',
-            primaryText: '#1a1a1a',
-            secondaryText: '#8a8a8a',
-            surface: '#ffffff',
-            surfaceMuted: 'rgba(255, 255, 255, 0.9)',
+            // Default light mode using design system
+            accent: appTheme.custom.colors.primary[500], // Brand green
+            accentText: appTheme.custom.colors.text.inverse,
+            background: appTheme.custom.colors.light.background,
+            border: appTheme.custom.colors.border,
+            icon: appTheme.custom.colors.text.primary,
+            inputBackground: appTheme.custom.colors.light.card,
+            inputPlaceholder: appTheme.custom.colors.text.tertiary,
+            primaryText: appTheme.custom.colors.text.primary,
+            secondaryText: appTheme.custom.colors.text.secondary,
+            surface: appTheme.custom.colors.light.surface,
+            surfaceMuted: appTheme.custom.colors.light.surface,
           },
-    [highContrastMode]
+    [highContrastMode, appTheme]
   );
 
   // Calculate dates based on week offset
@@ -225,6 +233,22 @@ function HabitsApp() {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
 
+  // TEMPORARY: Haptic Test Screen for debugging
+  if (showHapticTest) {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ padding: 16, backgroundColor: theme.accent }}>
+          <Pressable onPress={() => setShowHapticTest(false)}>
+            <Text style={{ color: theme.accentText, fontSize: 16, fontWeight: 'bold' }}>
+              ← Back to App
+            </Text>
+          </Pressable>
+        </View>
+        <HapticTest />
+      </View>
+    );
+  }
+
   return (
     <GestureHandlerRootView
       style={{ flex: 1, backgroundColor: theme.background }}
@@ -263,6 +287,20 @@ function HabitsApp() {
               <Search color={theme.icon} size={14} strokeWidth={2} />
               <Bell color={theme.icon} size={20} strokeWidth={2} />
               <Wifi color={theme.icon} size={18} strokeWidth={2} />
+
+              {/* TEMPORARY: Haptic Test Button (DEV ONLY) */}
+              {__DEV__ && (
+                <Pressable
+                  accessibilityLabel='Open haptic test'
+                  accessibilityRole='button'
+                  className='h-8 w-8 items-center justify-center rounded-full'
+                  onPress={() => setShowHapticTest(true)}
+                  style={{ backgroundColor: '#ff6b6b' }}
+                >
+                  <Text style={{ color: '#fff', fontSize: 12, fontWeight: 'bold' }}>H</Text>
+                </Pressable>
+              )}
+
               <Pressable
                 accessibilityLabel='Open settings'
                 accessibilityRole='button'
@@ -437,20 +475,28 @@ function HabitsApp() {
 export default function App() {
   // Temporarily bypass Clerk authentication for development
   if (!clerkPublishableKey) {
-    console.warn('Running without authentication - Clerk key not configured');
+    // Note: Authentication is optional for development
+    // Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY to .env to enable
+    if (__DEV__) {
+      console.log('ℹ️ Running in development mode without authentication');
+    }
     return (
-      <ConvexProvider client={convex}>
-        <HabitsApp />
-      </ConvexProvider>
+      <PaperProvider theme={extendedTheme}>
+        <ConvexProvider client={convex}>
+          <HabitsApp />
+        </ConvexProvider>
+      </PaperProvider>
     );
   }
 
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>
-        <ConvexProvider client={convex}>
-          <HabitsApp />
-        </ConvexProvider>
+        <PaperProvider theme={extendedTheme}>
+          <ConvexProvider client={convex}>
+            <HabitsApp />
+          </ConvexProvider>
+        </PaperProvider>
       </ClerkLoaded>
     </ClerkProvider>
   );
