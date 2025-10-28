@@ -7,7 +7,7 @@
  * Categories: Morning Routine, Health & Fitness, Productivity, Mindfulness
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,8 @@ import Modal from '../components/Modal';
 import Button from '../components/Button';
 import EmptyState from '../components/EmptyState';
 import Toast from '../components/Toast';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ChevronDown } from 'lucide-react-native';
 
 type Category = 'all' | 'morning_routine' | 'health_fitness' | 'productivity' | 'mindfulness';
 
@@ -50,6 +52,10 @@ export default function TemplatesScreen() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [showTopScrollShadow, setShowTopScrollShadow] = useState(false);
+  const [showBottomScrollShadow, setShowBottomScrollShadow] = useState(false);
+  const listScrollOffset = useRef(0);
+  const listScrollMetrics = useRef({ layoutHeight: 0, contentHeight: 0 });
 
   // Fetch templates
   const allTemplates = useQuery(api.templates.list, {});
@@ -98,6 +104,62 @@ export default function TemplatesScreen() {
     },
     [importTemplate]
   );
+
+  const updateListScrollShadows = useCallback(() => {
+    const { layoutHeight, contentHeight } = listScrollMetrics.current;
+    const offsetY = listScrollOffset.current;
+    const hasScrollableContent = contentHeight > layoutHeight + 1;
+
+    setShowTopScrollShadow(hasScrollableContent && offsetY > 4);
+    setShowBottomScrollShadow(
+      hasScrollableContent && contentHeight - (offsetY + layoutHeight) > 4
+    );
+  }, []);
+
+  const handleListScroll = useCallback(
+    (event: any) => {
+      const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+      listScrollOffset.current = contentOffset.y;
+      listScrollMetrics.current = {
+        layoutHeight: layoutMeasurement.height,
+        contentHeight: contentSize.height,
+      };
+      updateListScrollShadows();
+    },
+    [updateListScrollShadows]
+  );
+
+  const handleListContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      listScrollMetrics.current = {
+        ...listScrollMetrics.current,
+        contentHeight: height,
+      };
+      updateListScrollShadows();
+    },
+    [updateListScrollShadows]
+  );
+
+  const handleListLayout = useCallback(
+    (event: any) => {
+      listScrollMetrics.current = {
+        ...listScrollMetrics.current,
+        layoutHeight: event.nativeEvent.layout.height,
+      };
+      updateListScrollShadows();
+    },
+    [updateListScrollShadows]
+  );
+
+  useEffect(() => {
+    listScrollOffset.current = 0;
+    listScrollMetrics.current = {
+      ...listScrollMetrics.current,
+      contentHeight: 0,
+    };
+    setShowTopScrollShadow(false);
+    setShowBottomScrollShadow(false);
+  }, [selectedCategory, filteredTemplates.length]);
 
   // Render category filter chip
   const renderCategoryChip = useCallback(
@@ -227,21 +289,61 @@ export default function TemplatesScreen() {
       </ScrollView>
 
       {/* Templates List */}
-      <FlatList
-        data={filteredTemplates}
-        renderItem={renderTemplateCard}
-        keyExtractor={(item) => item._id}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <EmptyState
-            icon="🔍"
-            headline="No templates in this category"
-            description="Try selecting a different category above."
-            hideCTA
+      <View style={styles.listWrapper}>
+        <FlatList
+          data={filteredTemplates}
+          renderItem={renderTemplateCard}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <EmptyState
+              icon="🔍"
+              headline="No templates in this category"
+              description="Try selecting a different category above."
+              hideCTA
+            />
+          }
+          onScroll={handleListScroll}
+          scrollEventThrottle={16}
+          onContentSizeChange={handleListContentSizeChange}
+          onLayout={handleListLayout}
+        />
+        {showTopScrollShadow && (
+          <LinearGradient
+            pointerEvents="none"
+            colors={['rgba(255,255,255,0.96)', 'rgba(255,255,255,0)']}
+            style={styles.scrollFadeTop}
           />
-        }
-      />
+        )}
+        {showBottomScrollShadow && (
+          <LinearGradient
+            pointerEvents="none"
+            colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)']}
+            style={styles.scrollFadeBottom}
+          >
+            <View
+              style={[
+                styles.scrollHintChip,
+                { backgroundColor: `${theme.custom.colors.gray[100]}CC` },
+              ]}
+            >
+              <ChevronDown
+                color={theme.custom.colors.gray[700]}
+                size={16}
+              />
+              <Text
+                style={[
+                  styles.scrollHintText,
+                  { color: theme.custom.colors.gray[700] },
+                ]}
+              >
+                Scroll for more templates
+              </Text>
+            </View>
+          </LinearGradient>
+        )}
+      </View>
 
       {/* Preview Modal */}
       {previewTemplate && (
@@ -399,8 +501,41 @@ const styles = StyleSheet.create({
   categoryIcon: {
     fontSize: 16,
   },
+  listWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
   listContent: {
     paddingBottom: 24,
+  },
+  scrollFadeTop: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 32,
+  },
+  scrollFadeBottom: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 8,
+  },
+  scrollHintChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+  },
+  scrollHintText: {
+    marginLeft: 8,
+    fontSize: 12,
+    fontWeight: '600',
   },
   previewModal: {
     paddingBottom: 24,

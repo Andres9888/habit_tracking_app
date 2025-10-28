@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   Alert,
   Modal,
@@ -11,8 +11,9 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
+  StyleSheet,
 } from 'react-native';
-import { Palette, X, BookOpen, Microscope } from 'lucide-react-native';
+import { Palette, X, BookOpen, Microscope, ChevronDown } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -24,6 +25,7 @@ import {
 } from '../../utils/notifications';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface CreateHabitModalProps {
   visible: boolean;
@@ -104,6 +106,10 @@ export default function CreateHabitModal({
   // Template browsing state
   const [showTemplateBrowser, setShowTemplateBrowser] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [showTemplateTopShadow, setShowTemplateTopShadow] = useState(false);
+  const [showTemplateBottomShadow, setShowTemplateBottomShadow] = useState(false);
+  const templateScrollOffset = useRef(0);
+  const templateScrollMetrics = useRef({ layoutHeight: 0, contentHeight: 0 });
 
   // Science modal state
   const [scienceModalVisible, setScienceModalVisible] = useState(false);
@@ -161,6 +167,62 @@ export default function CreateHabitModal({
       setScienceModalVisible(false);
     }
   }, [selectedTemplateForScience, handleTemplateSelect]);
+
+  const updateTemplateScrollIndicators = useCallback(() => {
+    const { layoutHeight, contentHeight } = templateScrollMetrics.current;
+    const offsetY = templateScrollOffset.current;
+    const hasScrollableContent = contentHeight > layoutHeight + 1;
+
+    setShowTemplateTopShadow(hasScrollableContent && offsetY > 4);
+    setShowTemplateBottomShadow(
+      hasScrollableContent && contentHeight - (offsetY + layoutHeight) > 4
+    );
+  }, []);
+
+  const handleTemplateListScroll = useCallback(
+    (event: any) => {
+      const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+      templateScrollOffset.current = contentOffset.y;
+      templateScrollMetrics.current = {
+        layoutHeight: layoutMeasurement.height,
+        contentHeight: contentSize.height,
+      };
+      updateTemplateScrollIndicators();
+    },
+    [updateTemplateScrollIndicators]
+  );
+
+  const handleTemplateListContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      templateScrollMetrics.current = {
+        ...templateScrollMetrics.current,
+        contentHeight: height,
+      };
+      updateTemplateScrollIndicators();
+    },
+    [updateTemplateScrollIndicators]
+  );
+
+  const handleTemplateListLayout = useCallback(
+    (event: any) => {
+      templateScrollMetrics.current = {
+        ...templateScrollMetrics.current,
+        layoutHeight: event.nativeEvent.layout.height,
+      };
+      updateTemplateScrollIndicators();
+    },
+    [updateTemplateScrollIndicators]
+  );
+
+  useEffect(() => {
+    templateScrollOffset.current = 0;
+    templateScrollMetrics.current = {
+      ...templateScrollMetrics.current,
+      contentHeight: 0,
+    };
+    setShowTemplateTopShadow(false);
+    setShowTemplateBottomShadow(false);
+  }, [filteredTemplates.length, showTemplateBrowser]);
 
   const handleCreate = async () => {
     if (!habitName.trim()) return;
@@ -323,7 +385,7 @@ export default function CreateHabitModal({
                 </ScrollView>
 
                 {/* Templates List */}
-                <View style={{ maxHeight: 300 }}>
+                <View style={templateScrollStyles.listWrapper}>
                   {isLoadingTemplates ? (
                     <View className='items-center justify-center py-12'>
                       <ActivityIndicator color='#1a1a1a' size='small' />
@@ -382,7 +444,32 @@ export default function CreateHabitModal({
                         </View>
                       )}
                       showsVerticalScrollIndicator={true}
+                      onScroll={handleTemplateListScroll}
+                      scrollEventThrottle={16}
+                      onContentSizeChange={handleTemplateListContentSizeChange}
+                      onLayout={handleTemplateListLayout}
                     />
+                  )}
+                  {showTemplateTopShadow && (
+                    <LinearGradient
+                      pointerEvents='none'
+                      colors={['rgba(255,255,255,0.96)', 'rgba(255,255,255,0)']}
+                      style={templateScrollStyles.scrollFadeTop}
+                    />
+                  )}
+                  {showTemplateBottomShadow && (
+                    <LinearGradient
+                      pointerEvents='none'
+                      colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)']}
+                      style={templateScrollStyles.scrollFadeBottom}
+                    >
+                      <View style={templateScrollStyles.scrollHintChip}>
+                        <ChevronDown color='#1a1a1a' size={16} />
+                        <Text style={templateScrollStyles.scrollHintText}>
+                          Scroll for more templates
+                        </Text>
+                      </View>
+                    </LinearGradient>
                   )}
                 </View>
               </View>
@@ -589,3 +676,41 @@ export default function CreateHabitModal({
     </Modal>
   );
 }
+
+const templateScrollStyles = StyleSheet.create({
+  listWrapper: {
+    maxHeight: 300,
+    position: 'relative',
+  },
+  scrollFadeTop: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 32,
+  },
+  scrollFadeBottom: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 4,
+  },
+  scrollHintChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999,
+    backgroundColor: 'rgba(26,26,26,0.08)',
+  },
+  scrollHintText: {
+    marginLeft: 6,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#1a1a1a',
+  },
+});
