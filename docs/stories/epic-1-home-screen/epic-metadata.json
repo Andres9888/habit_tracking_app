@@ -1,0 +1,33 @@
+{
+  "epicId": "1.1",
+  "name": "Habit Home Screen",
+  "screenTitle": "Daily Tracking & Progress Display",
+  "shortTitle": "Home Screen",
+  "timeline": "Week 1 & Week 3",
+  "status": "in_progress",
+  "progress": 0,
+  "storiesTotal": 3,
+  "storiesCompleted": 0,
+  "priority": "critical",
+  "owner": "Jane",
+  "goal": "Build the main habit tracking interface where users view, complete, and manage their daily habits",
+  "stories": [
+    {
+      "id": "1.2",
+      "title": "Daily Habit Check-Off",
+      "status": "todo"
+    },
+    {
+      "id": "1.4",
+      "title": "Streak Visual Indicators",
+      "status": "todo"
+    },
+    {
+      "id": "1.7",
+      "title": "Habit Editing & Management",
+      "status": "partial"
+    }
+  ],
+  "createdAt": "2025-10-27",
+  "updatedAt": "2025-10-27"
+}
