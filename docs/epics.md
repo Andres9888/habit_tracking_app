@@ -58,7 +58,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 
 ### Epic 1: MVP Foundation - Core Tracking & Science Engine
 **Timeline:** Months 1-2 (Weeks 1-8)
-**Stories:** 7 stories
+**Stories:** 8 stories (includes Story 1.2.1 for edge cases & error handling)
 **Goal:** Ship App Store-ready MVP with core science-backed tracking
 
 **Extended Goals:**
@@ -129,6 +129,55 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 - Animation: Reanimated for 60fps performance
 - Optimistic updates: Update UI immediately, sync to backend async
 - Background calculation: Use Web Worker or async queue to avoid UI blocking
+
+---
+
+#### Story 1.2.1: Check-Off Edge Cases & Error Handling
+**As a** user checking off habits in various edge case scenarios
+**I want to** have the app handle errors, conflicts, and unusual situations gracefully
+**So that** I never lose data or experience confusing behavior
+
+**Prerequisites:**
+- Story 1.2 complete (tap toggle with haptic feedback)
+- toggleCompletion mutation implemented
+- Convex backend configured
+
+**Acceptance Criteria:**
+1. Rapid successive taps debounced with 300ms cooldown (no duplicate mutations)
+2. Network failures handled with retry queue and exponential backoff (1s, 2s, 4s delays)
+3. Toast notifications for all error states ("Connection issue", "Habit deleted", etc.)
+4. Multi-device conflict resolution using last-write-wins strategy (timestamp-based)
+5. Offline mutations queued and synced automatically when reconnecting
+6. Sync status indicator shows pending operations count during sync
+7. Animation interruptions handled gracefully (tap during animation cancels and toggles)
+8. Date boundary validation prevents timezone-related errors
+9. Corrupted habit data detected with restore/repair functionality
+10. Mutations persist across app kills (AsyncStorage queue + auto-sync on relaunch)
+11. Strength calculation failures don't block completion (async, non-blocking)
+12. Comprehensive test suite covering all edge cases (20+ unit tests, integration tests)
+
+**Technical Notes:**
+- Debounce: `isToggling` state flag with 300ms cooldown in HabitCard
+- Retry queue: `src/utils/retryQueue.ts` with exponential backoff manager
+- Error handling: Try/catch wrapper around all mutations + Sentry logging
+- Conflict resolution: Timestamp comparison in `convex/tracking.ts`
+- Offline support: NetInfo detection + AsyncStorage persistence
+- Sync indicator: `src/components/SyncStatusIndicator.tsx` component
+- Date validation: Client-side YYYY-MM-DD calculation, server format validation only
+- Data repair: Zod schema validation + repair mutation
+- App kill recovery: `src/hooks/useAppState.ts` + launch sync in App.tsx
+- Testing: `src/components/__tests__/HabitCard.edgeCases.test.tsx` + manual checklist
+
+**Success Metrics:**
+- Zero data loss incidents in production
+- <0.1% completion tracking failures
+- 99.9% sync success rate within 5 minutes
+- No user reports of "lost progress"
+- Debounce prevents >95% of duplicate mutations
+
+**Documentation:**
+- Full specifications: `docs/stories/epic-1-home-screen/habit-card/bugs/story-1.2.1-edge-cases.md`
+- Task Master task: Task 2 with 12 subtasks in `.taskmaster/tasks/`
 
 ---
 

@@ -430,12 +430,108 @@
         "dependencies": [],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Story 1.2.1: Edge Cases & Error Handling for Check-Off",
+        "description": "Implement comprehensive edge case handling and error recovery for habit check-off feature including debounce, retry queue, conflict resolution, and offline support",
+        "details": "Add robust error handling to prevent data loss and provide graceful degradation under adverse conditions. Implement: debounce (300ms cooldown) for rapid taps, retry queue with exponential backoff for network failures, multi-device conflict resolution using last-write-wins, offline-to-online sync with progress indicators, animation interruption handling, date boundary validation, corrupted data detection and repair, background app kill recovery. Full specifications in docs/stories/epic-1-home-screen/habit-card/bugs/story-1.2.1-edge-cases.md",
+        "testStrategy": "Unit tests for debounce logic, error handling, and retry queue. Integration tests for multi-device conflicts and offline sync. Manual testing on physical device for rapid taps, airplane mode, app kills, and timezone changes. Verify 99.9% sync success rate and zero data loss.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "2.1",
+            "title": "Implement Debounce and Race Condition Prevention",
+            "description": "Add 300ms cooldown to prevent duplicate mutations from rapid taps",
+            "details": "Add isToggling state flag to HabitCard, implement 300ms cooldown period, ignore taps within window, ensure haptic feedback fires only once per window. Modify src/components/HabitCard.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.2",
+            "title": "Add Error Handling with Try-Catch",
+            "description": "Handle network failures and mutation errors gracefully with toast notifications",
+            "details": "Wrap toggleCompletionMutation in try/catch, add error state management, display toast notifications for errors, log to Sentry, ensure UI consistency on errors. Create src/utils/toastMessages.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.3",
+            "title": "Implement Retry Queue with Exponential Backoff",
+            "description": "Automatically retry failed mutations with 1s, 2s, 4s delays",
+            "details": "Create retry queue manager, implement exponential backoff, persist queue to AsyncStorage, show sync status indicator during retries, maximum 3 attempts. Create src/utils/retryQueue.ts and src/hooks/useRetryQueue.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.4",
+            "title": "Add Sync Status Indicator",
+            "description": "Visual feedback for pending sync operations",
+            "details": "Create SyncStatusIndicator component showing spinning icon during sync, display count of pending operations, auto-hide when complete, integrate with retry queue. Create src/components/SyncStatusIndicator.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.5",
+            "title": "Implement Multi-Device Conflict Resolution",
+            "description": "Handle concurrent updates from multiple devices using last-write-wins",
+            "details": "Add timestamp comparison logic in toggleCompletion mutation, detect concurrent updates via Convex reactivity, show toast for changes from other devices, handle deleted habits. Modify convex/tracking.ts and src/components/HabitCard.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.6",
+            "title": "Handle Animation Interruptions",
+            "description": "Allow tap during animation without visual artifacts",
+            "details": "Cancel in-progress animation on new tap using Reanimated cancelAnimation(), ensure atomic state transitions, respect debounce during cancellation. Modify src/components/HabitCard.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.7",
+            "title": "Offline-to-Online Sync Flow",
+            "description": "Batch sync queued completions when network reconnects",
+            "details": "Detect online/offline events with NetInfo, queue mutations to AsyncStorage when offline, batch sync on reconnection, show progress indicator. Create src/hooks/useNetworkStatus.ts and src/utils/offlineQueue.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.8",
+            "title": "Strength Calculation Failure Handling",
+            "description": "Persist completion even if strength calculation fails",
+            "details": "Separate completion tracking from strength calculation, make calculation async and non-blocking, add fallback UI state, implement background retry. Modify convex/tracking.ts and src/components/HabitStrengthIndicator.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.9",
+            "title": "Date Boundary Validation",
+            "description": "Prevent timezone-related date errors",
+            "details": "Calculate date on client in local timezone, send YYYY-MM-DD string to server, server validates format only, handle DST transitions. Create src/utils/dateHelpers.ts and modify convex/tracking.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.10",
+            "title": "Corrupted Data Detection and Repair",
+            "description": "Handle missing or invalid habit data gracefully",
+            "details": "Add Zod validation schema for habit documents, detect schema violations on query, show error state UI with restore option, provide repair mutation. Create convex/schemas/habitSchema.ts and convex/mutations/repairHabit.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.11",
+            "title": "Background App Kill Recovery",
+            "description": "Persist mutations across app kills",
+            "details": "Persist mutation queue to AsyncStorage before kill, check for queued mutations on app launch, auto-sync on relaunch, show sync progress. Modify src/utils/retryQueue.ts, create src/hooks/useAppState.ts, modify App.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.12",
+            "title": "Comprehensive Testing Suite",
+            "description": "Ensure all edge cases covered by tests",
+            "details": "Write 20+ unit tests for debounce, error handling, and retry logic. Integration tests for conflicts and offline sync. Manual testing checklist for physical device. Create test files and manual checklist.",
+            "status": "pending"
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-10-10T00:00:00.000Z",
-      "updated": "2025-10-10T00:00:00.000Z",
-      "taskCount": 1,
+      "updated": "2025-10-28T00:00:00.000Z",
+      "taskCount": 2,
       "completedCount": 0,
       "description": "Tasks for mvp-ios context"
     }
