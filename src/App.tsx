@@ -36,7 +36,6 @@ import CreateHabitModal from './components/CreateHabitModal';
 import DraggableHabit from './components/DraggableHabit';
 import HabitCalendarModal from './components/HabitCalendarModal';
 import HabitDetailScreen from './screens/HabitDetailScreen';
-import AppNavigator from './components/AppNavigator';
 import MilestoneCelebration from './components/MilestoneCelebration';
 // Lazy-load ShareCardGenerator to avoid loading native modules (e.g., view-shot) in Expo Go
 // Define the type locally to avoid importing the module at startup
@@ -482,38 +481,33 @@ function HabitsApp() {
 
   return (
     <GestureHandlerRootView className='flex-1'>
-      <AppNavigator
-        settingsOpen={isSettingsOpen}
-        onSettingsPress={() => setIsSettingsOpen(true)}
-      >
-        <View className='flex-1 items-center bg-background'>
-          <View className='w-full max-w-[448px] flex-1'>
-            <DraggableFlatList
-              data={habits}
-              keyExtractor={(item: Habit) => item._id}
-              renderItem={renderItem}
-              onDragEnd={handleDragEnd}
-              ListHeaderComponent={renderHeader}
-              ListEmptyComponent={renderEmptyState}
-              contentContainerStyle={contentContainerStyle}
-              showsVerticalScrollIndicator={false}
-              activationDistance={10}
-            />
-          </View>
-          <WebToaster />
-          <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
-            <Pressable
-              accessibilityHint='Open create habit modal'
-              accessibilityLabel='Add habit'
-              accessibilityRole='button'
-              className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
-              onPress={handleToggleForm}
-            >
-              <Plus color='#ffffff' size={24} strokeWidth={2.25} />
-            </Pressable>
-          </View>
+      <View className='flex-1 items-center bg-background'>
+        <View className='w-full max-w-[448px] flex-1'>
+          <DraggableFlatList
+            data={habits}
+            keyExtractor={(item: Habit) => item._id}
+            renderItem={renderItem}
+            onDragEnd={handleDragEnd}
+            ListHeaderComponent={renderHeader}
+            ListEmptyComponent={renderEmptyState}
+            contentContainerStyle={contentContainerStyle}
+            showsVerticalScrollIndicator={false}
+            activationDistance={10}
+          />
         </View>
-      </AppNavigator>
+        <WebToaster />
+        <View className='absolute bottom-8 right-6' pointerEvents='box-none'>
+          <Pressable
+            accessibilityHint='Open create habit modal'
+            accessibilityLabel='Add habit'
+            accessibilityRole='button'
+            className='h-14 w-14 items-center justify-center rounded-full bg-[#101727] shadow-lg'
+            onPress={handleToggleForm}
+          >
+            <Plus color='#ffffff' size={24} strokeWidth={2.25} />
+          </Pressable>
+        </View>
+      </View>
 
       {/* Modals rendered outside navigator */}
       <SettingsModal
