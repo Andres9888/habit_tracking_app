@@ -78,7 +78,6 @@ export default function HabitEditScreen({
   const [reminderSound, setReminderSound] = useState('default');
   const [goalValue, setGoalValue] = useState('30');
   const [goalUnit, setGoalUnit] = useState('minutes');
-
   const updateHabit = useMutation(api.habits.update);
   const removeHabit = useMutation(api.habits.remove);
 
