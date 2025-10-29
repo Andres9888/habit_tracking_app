@@ -9,12 +9,7 @@
  */
 
 import React, { useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  type ViewStyle,
-} from 'react-native';
+import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -24,7 +19,11 @@ import Animated, {
 import { useAppTheme } from '../theme';
 import Button from './Button';
 
-export type EmptyStateVariant = 'noHabits' | 'noData' | 'noResults' | 'premiumLocked';
+export type EmptyStateVariant =
+  | 'noHabits'
+  | 'noData'
+  | 'noResults'
+  | 'premiumLocked';
 
 export interface EmptyStateProps {
   /** Variant type */
@@ -64,29 +63,32 @@ const VARIANT_CONFIG: Record<
     ctaLabel: string;
   }
 > = {
-  noHabits: {
-    icon: '🌱',
-    headline: 'Create your first habit',
-    description: 'Add a habit to start tracking your progress and building streaks.',
-    ctaLabel: 'New Habit',
-  },
   noData: {
-    icon: '📊',
-    headline: 'Keep tracking',
-    description: 'You need at least 7 days of data to see meaningful analytics.',
     ctaLabel: 'Go to Habits',
+    description:
+      'You need at least 7 days of data to see meaningful analytics.',
+    headline: 'Keep tracking',
+    icon: '📊',
+  },
+  noHabits: {
+    ctaLabel: 'New Habit',
+    description:
+      'Add a habit to start tracking your progress and building streaks.',
+    headline: 'Create your first habit',
+    icon: '🌱',
   },
   noResults: {
-    icon: '🔍',
-    headline: 'No results found',
-    description: 'Try adjusting your search or filters to find what you\'re looking for.',
     ctaLabel: 'Clear Filters',
+    description:
+      "Try adjusting your search or filters to find what you're looking for.",
+    headline: 'No results found',
+    icon: '🔍',
   },
   premiumLocked: {
-    icon: '🔒',
-    headline: 'Premium Feature',
-    description: 'Unlock advanced analytics and insights with Premium.',
     ctaLabel: 'Start Free Trial',
+    description: 'Unlock advanced analytics and insights with Premium.',
+    headline: 'Premium Feature',
+    icon: '🔒',
   },
 };
 
@@ -121,7 +123,7 @@ export function EmptyState({
   useEffect(() => {
     // Icon: fade in and scale up
     iconOpacity.value = withSpring(1, { damping: 15, stiffness: 150 });
-    iconScale.value = withSpring(1.0, { damping: 15, stiffness: 150 });
+    iconScale.value = withSpring(1, { damping: 15, stiffness: 150 });
 
     // Headline: fade in with delay
     headlineOpacity.value = withDelay(
@@ -167,10 +169,10 @@ export function EmptyState({
 
   return (
     <View
-      style={[styles.container, style]}
-      accessible={true}
+      accessible
       accessibilityLabel={`${displayHeadline}. ${displayDescription}`}
-      accessibilityRole="text"
+      accessibilityRole='text'
+      style={[styles.container, style]}
     >
       {/* Icon/Illustration */}
       <Animated.Text style={[styles.icon, iconStyle]}>
@@ -205,11 +207,11 @@ export function EmptyState({
       {!hideCTA && onCTA && (
         <Animated.View style={ctaStyle}>
           <Button
-            variant="primary"
-            size="medium"
-            onPress={onCTA}
-            accessibilityLabel={displayCTALabel}
             accessibilityHint={`Tap to ${displayCTALabel.toLowerCase()}`}
+            accessibilityLabel={displayCTALabel}
+            size='medium'
+            variant='primary'
+            onPress={onCTA}
           >
             {displayCTALabel}
           </Button>
@@ -226,18 +228,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 64,
   },
+  description: {
+    marginBottom: 24,
+    maxWidth: 320,
+    textAlign: 'center',
+  },
+  headline: {
+    marginBottom: 8,
+    textAlign: 'center',
+  },
   icon: {
     fontSize: 64,
     marginBottom: 16,
-  },
-  headline: {
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  description: {
-    textAlign: 'center',
-    marginBottom: 24,
-    maxWidth: 320,
   },
 });
 

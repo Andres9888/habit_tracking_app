@@ -12,16 +12,34 @@
  * All values are multiples of 4pt
  */
 export const spacing = {
-  xs: 4,     // Tight spacing, icon padding
-  xxs: 4,    // Alias for xs
-  sm: 8,     // Compact spacing within components
-  md: 12,    // Component internal spacing
-  base: 16,  // Standard spacing (most common)
-  lg: 24,    // Section spacing
-  xl: 32,    // Screen margins, major sections
-  xxl: 48,   // Large vertical spacing (alias for 2xl)
-  '2xl': 48, // Large vertical spacing
-  '3xl': 64, // Page sections
+  // Large vertical spacing (alias for 2xl)
+  '2xl': 48,
+
+  // Large vertical spacing
+  '3xl': 64,
+
+  // Component internal spacing
+  base: 16,
+
+  // Standard spacing (most common)
+  lg: 24,
+
+  // Compact spacing within components
+  md: 12,
+
+  // Alias for xs
+  sm: 8,
+
+  // Section spacing
+  xl: 32,
+
+  xs: 4,
+
+  // Screen margins, major sections
+  xxl: 48,
+
+  // Tight spacing, icon padding
+  xxs: 4, // Page sections
 } as const;
 
 /**
@@ -29,9 +47,11 @@ export const spacing = {
  * Consistent padding for all screens
  */
 export const screenMargins = {
-  horizontal: spacing.base, // 16pt on iPhone
-  verticalTop: spacing.sm,  // 8pt top (avoiding safe areas)
-  verticalBottom: spacing.base, // 16pt bottom
+  horizontal: spacing.base,
+  // 8pt top (avoiding safe areas)
+  verticalBottom: spacing.base,
+  // 16pt on iPhone
+  verticalTop: spacing.sm, // 16pt bottom
 } as const;
 
 /**
@@ -52,28 +72,31 @@ export const screenMargins = {
  * Predefined spacing for common components
  */
 export const componentSpacing = {
-  card: {
-    padding: spacing.base,           // 16pt all sides
-    marginVertical: spacing.sm,      // 8pt vertical
-    marginHorizontal: spacing.base,  // 16pt horizontal
-  },
-  listItem: {
-    height: 72,                      // Minimum height for thumb tap
-    paddingHorizontal: spacing.base, // 16pt sides
-  },
   button: {
-    height: 44,                      // Apple HIG minimum tap target
-    paddingHorizontal: spacing.lg,   // 24pt sides for text padding
+    height: 44, // Apple HIG minimum tap target
+    paddingHorizontal: spacing.lg, // 24pt sides for text padding
+  },
+  card: {
+    // 8pt vertical
+    marginHorizontal: spacing.base,
+
+    // 16pt all sides
+    marginVertical: spacing.sm,
+    padding: spacing.base, // 16pt horizontal
   },
   input: {
-    height: 44,                      // Consistent with buttons
+    height: 44, // Consistent with buttons
+    paddingHorizontal: spacing.base, // 16pt sides
+  },
+  listItem: {
+    height: 72, // Minimum height for thumb tap
     paddingHorizontal: spacing.base, // 16pt sides
   },
   modal: {
-    padding: spacing.lg,             // 24pt all sides
+    padding: spacing.lg, // 24pt all sides
   },
   tabBar: {
-    height: 49,                      // iOS standard + safe area bottom
+    height: 49, // iOS standard + safe area bottom
   },
 } as const;
 
@@ -82,11 +105,18 @@ export const componentSpacing = {
  * Consistent rounding for all components
  */
 export const borderRadius = {
-  small: 8,     // Buttons, tags
-  medium: 12,   // Cards, inputs
-  large: 16,    // Modals, sheets
-  xl: 20,       // Full screen modals (top corners only)
-  full: 9999,   // Circular (avatar, icon buttons) - use 50% in percentage
+  // Full screen modals (top corners only)
+  full: 9999,
+
+  // Cards, inputs
+  large: 16,
+
+  // Buttons, tags
+  medium: 12,
+
+  small: 8,
+  // Modals, sheets
+  xl: 20, // Circular (avatar, icon buttons) - use 50% in percentage
 } as const;
 
 /**
@@ -95,25 +125,25 @@ export const borderRadius = {
  */
 export const shadows = {
   card: {
+    elevation: 2,
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2, // Android fallback
-  },
-  modal: {
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 4, // Android fallback
+    shadowRadius: 8, // Android fallback
   },
   floatingActionButton: {
+    elevation: 6,
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 6, // Android fallback
+    shadowRadius: 12, // Android fallback
+  },
+  modal: {
+    elevation: 4,
+    shadowColor: '#000000',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16, // Android fallback
   },
 } as const;
 
@@ -134,21 +164,15 @@ export const getSpacing = (key: Spacing): number => spacing[key];
  * Helper function to create margin/padding shorthand
  * Usage: createSpacing(16, 8) returns { marginVertical: 16, marginHorizontal: 8 }
  */
-export const createSpacing = (
-  vertical: number,
-  horizontal: number
-) => ({
-  marginVertical: vertical,
+export const createSpacing = (vertical: number, horizontal: number) => ({
   marginHorizontal: horizontal,
+  marginVertical: vertical,
 });
 
 /**
  * Helper function to create padding shorthand
  */
-export const createPadding = (
-  vertical: number,
-  horizontal: number
-) => ({
-  paddingVertical: vertical,
+export const createPadding = (vertical: number, horizontal: number) => ({
   paddingHorizontal: horizontal,
+  paddingVertical: vertical,
 });

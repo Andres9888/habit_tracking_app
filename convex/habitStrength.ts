@@ -657,13 +657,19 @@ export const updateHabitParameters = mutation({
     if (!habit) throw new Error('Habit not found');
 
     // Validate parameters are in reasonable range
-    if (args.habitDecayParam !== undefined && (args.habitDecayParam < 0 || args.habitDecayParam > 1)) {
-        throw new Error('Habit decay parameter must be between 0 and 1');
-      }
+    if (
+      args.habitDecayParam !== undefined &&
+      (args.habitDecayParam < 0 || args.habitDecayParam > 1)
+    ) {
+      throw new Error('Habit decay parameter must be between 0 and 1');
+    }
 
-    if (args.habitGainParam !== undefined && (args.habitGainParam < 0 || args.habitGainParam > 1)) {
-        throw new Error('Habit gain parameter must be between 0 and 1');
-      }
+    if (
+      args.habitGainParam !== undefined &&
+      (args.habitGainParam < 0 || args.habitGainParam > 1)
+    ) {
+      throw new Error('Habit gain parameter must be between 0 and 1');
+    }
 
     await ctx.db.patch(args.habitId, {
       habitDecayParam: args.habitDecayParam,

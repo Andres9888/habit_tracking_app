@@ -32,7 +32,10 @@ import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '../theme';
 import { Modal } from './Modal';
 import { Button } from './Button';
-import { STRENGTH_LEVEL_CONFIG, type StrengthLevel } from './HabitStrengthIndicator/HabitStrengthIndicator';
+import {
+  STRENGTH_LEVEL_CONFIG,
+  type StrengthLevel,
+} from './HabitStrengthIndicator/HabitStrengthIndicator';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -138,19 +141,19 @@ export function MilestoneCelebration({
 
       if (reduceMotion) {
         // Reduce Motion: Instant appearance, no animations
-        badgeScale.value = 1.0;
+        badgeScale.value = 1;
         glowOpacity.value = 0.5;
-        labelOpacity.value = 1.0;
+        labelOpacity.value = 1;
         percentageValue.value = strength;
         shareButtonTranslateY.value = 0;
-        shareButtonOpacity.value = 1.0;
-        continueButtonOpacity.value = 1.0;
+        shareButtonOpacity.value = 1;
+        continueButtonOpacity.value = 1;
       } else {
         // Full animation sequence
         // 1. Badge animation (300-800ms) - bounce effect
         badgeScale.value = withSequence(
           withSpring(1.3, { damping: 10, stiffness: 100 }),
-          withSpring(1.0, { damping: 15, stiffness: 150 }, () => {
+          withSpring(1, { damping: 15, stiffness: 150 }, () => {
             // Haptic: Heavy impact on badge full scale
             runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Heavy);
           })
@@ -166,13 +169,16 @@ export function MilestoneCelebration({
         // 3. Label fade in
         labelOpacity.value = withDelay(
           300,
-          withTiming(1.0, { duration: 300, easing: Easing.out(Easing.ease) })
+          withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) })
         );
 
         // 4. Percentage counter animation
         percentageValue.value = withDelay(
           300,
-          withTiming(strength, { duration: 500, easing: Easing.out(Easing.ease) })
+          withTiming(strength, {
+            duration: 500,
+            easing: Easing.out(Easing.ease),
+          })
         );
 
         // 5. Share button slide up (800-1200ms)
@@ -182,13 +188,13 @@ export function MilestoneCelebration({
         );
         shareButtonOpacity.value = withDelay(
           800,
-          withTiming(1.0, { duration: 200 })
+          withTiming(1, { duration: 200 })
         );
 
         // 6. Continue button fade in
         continueButtonOpacity.value = withDelay(
           1000,
-          withTiming(1.0, { duration: 300 })
+          withTiming(1, { duration: 300 })
         );
       }
 
@@ -225,8 +231,8 @@ export function MilestoneCelebration({
   }));
 
   const shareButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: shareButtonTranslateY.value }],
     opacity: shareButtonOpacity.value,
+    transform: [{ translateY: shareButtonTranslateY.value }],
   }));
 
   const continueButtonStyle = useAnimatedStyle(() => ({
@@ -250,11 +256,11 @@ export function MilestoneCelebration({
   return (
     <>
       <Modal
-        visible={visible}
-        onClose={handleContinue}
-        variant="fullScreen"
         backdropOpacity={0.6}
         style={styles.modalContent}
+        variant='fullScreen'
+        visible={visible}
+        onClose={handleContinue}
       >
         <View style={styles.container}>
           {/* Celebration Content */}
@@ -275,9 +281,9 @@ export function MilestoneCelebration({
               {/* Milestone Emoji */}
               <Animated.View style={badgeContainerStyle}>
                 <Text
-                  style={styles.emoji}
-                  accessible={true}
+                  accessible
                   accessibilityLabel={`${config.label} milestone emoji`}
+                  style={styles.emoji}
                 >
                   {config.emoji}
                 </Text>
@@ -286,14 +292,14 @@ export function MilestoneCelebration({
 
             {/* Level Name */}
             <Animated.Text
+              accessible
+              accessibilityRole='header'
               style={[
                 theme.custom.typography.heading1,
                 styles.levelName,
                 { color: theme.custom.colors.gray[900] },
                 labelStyle,
               ]}
-              accessible={true}
-              accessibilityRole="header"
             >
               {config.label}
             </Animated.Text>
@@ -311,8 +317,12 @@ export function MilestoneCelebration({
             </Animated.Text>
 
             {/* Strength Percentage */}
-            <Animated.View style={[styles.percentageContainer, percentageStyle]}>
+            <Animated.View
+              style={[styles.percentageContainer, percentageStyle]}
+            >
               <Text
+                accessible
+                accessibilityLabel={`${Math.round(strength)} percent strength`}
                 style={[
                   theme.custom.typography.heading1,
                   styles.percentage,
@@ -321,8 +331,6 @@ export function MilestoneCelebration({
                     fontFamily: theme.custom.fontFamilies.monospace,
                   },
                 ]}
-                accessible={true}
-                accessibilityLabel={`${Math.round(strength)} percent strength`}
               >
                 {Math.round(strength)}%
               </Text>
@@ -355,12 +363,12 @@ export function MilestoneCelebration({
             {onShare && (
               <Animated.View style={[styles.shareButton, shareButtonStyle]}>
                 <Button
-                  variant="primary"
-                  size="large"
+                  accessible
+                  accessibilityHint='Opens share card preview'
+                  accessibilityLabel='Share your achievement'
+                  size='large'
+                  variant='primary'
                   onPress={handleShare}
-                  accessible={true}
-                  accessibilityLabel="Share your achievement"
-                  accessibilityHint="Opens share card preview"
                 >
                   Share Your Achievement
                 </Button>
@@ -370,12 +378,12 @@ export function MilestoneCelebration({
             {/* Continue Button */}
             <Animated.View style={continueButtonStyle}>
               <Button
-                variant="ghost"
-                size="large"
+                accessible
+                accessibilityHint='Dismiss celebration and return to app'
+                accessibilityLabel='Continue'
+                size='large'
+                variant='ghost'
                 onPress={handleContinue}
-                accessible={true}
-                accessibilityLabel="Continue"
-                accessibilityHint="Dismiss celebration and return to app"
               >
                 Continue
               </Button>
@@ -388,13 +396,13 @@ export function MilestoneCelebration({
       {!reduceMotion && visible && (
         <ConfettiCannon
           ref={confettiRef}
-          count={100}
-          origin={{ x: SCREEN_WIDTH / 2, y: 0 }}
+          fadeOut
           autoStart={false}
-          fadeOut={true}
-          fallSpeed={2500}
           colors={CONFETTI_COLORS}
+          count={100}
           explosionSpeed={350}
+          fallSpeed={2500}
+          origin={{ x: SCREEN_WIDTH / 2, y: 0 }}
         />
       )}
     </>
@@ -402,64 +410,64 @@ export function MilestoneCelebration({
 }
 
 const styles = StyleSheet.create({
-  modalContent: {
-    paddingHorizontal: 24,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingTop: 80,
-    paddingBottom: 40,
-  },
-  content: {
-    alignItems: 'center',
-    gap: 16,
-  },
   badgeContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
   },
-  glow: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    shadowColor: '#F59E0B',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 40,
-    elevation: 20,
+  actions: {
+    gap: 12,
+    width: '100%',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 40,
+    paddingTop: 80,
+  },
+  content: {
+    alignItems: 'center',
+    gap: 16,
+  },
+  description: {
+    marginTop: 4,
+    textAlign: 'center',
   },
   emoji: {
     fontSize: 80,
     textAlign: 'center',
   },
-  levelName: {
-    textAlign: 'center',
+  glow: {
+    borderRadius: 80,
+    height: 160,
+    elevation: 20,
+    position: 'absolute',
+    shadowColor: '#F59E0B',
+    shadowOffset: { height: 0, width: 0 },
+    shadowOpacity: 0.8,
+    width: 160,
+    shadowRadius: 40,
+  },
+  habitName: {
+    fontStyle: 'italic',
     marginTop: 8,
-  },
-  description: {
     textAlign: 'center',
-    marginTop: 4,
   },
-  percentageContainer: {
-    alignItems: 'center',
-    marginTop: 24,
-    gap: 4,
+  levelName: {
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  modalContent: {
+    paddingHorizontal: 24,
   },
   percentage: {
     fontSize: 48,
     lineHeight: 56,
   },
-  habitName: {
-    textAlign: 'center',
-    marginTop: 8,
-    fontStyle: 'italic',
-  },
-  actions: {
-    gap: 12,
-    width: '100%',
+  percentageContainer: {
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 24,
   },
   shareButton: {
     width: '100%',

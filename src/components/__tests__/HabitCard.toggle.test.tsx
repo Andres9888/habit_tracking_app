@@ -5,6 +5,8 @@
 
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { View } from 'react-native';
+import ReanimatedMock from 'react-native-reanimated/mock';
 import { HabitCard } from '../HabitCard';
 import { useQuery, useMutation } from 'convex/react';
 import * as Haptics from 'expo-haptics';
@@ -15,53 +17,50 @@ jest.mock('convex/react');
 // Mock expo-haptics with proper ImpactFeedbackStyle enum
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
-  notificationAsync: jest.fn(),
-  selectionAsync: jest.fn(),
   ImpactFeedbackStyle: {
+    Heavy: 'heavy',
     Light: 'light',
     Medium: 'medium',
-    Heavy: 'heavy',
   },
+  notificationAsync: jest.fn(),
+  selectionAsync: jest.fn(),
 }));
 
 // Mock react-native-gesture-handler
-jest.mock('react-native-gesture-handler', () => {
-  const View = require('react-native').View;
-  return {
-    GestureDetector: ({ children }: any) => children,
-    Gesture: {
-      Pan: () => ({
-        activeOffsetX: jest.fn().mockReturnThis(),
-        onUpdate: jest.fn().mockReturnThis(),
-        onEnd: jest.fn().mockReturnThis(),
-      }),
-      Tap: () => ({
-        onBegin: jest.fn().mockReturnThis(),
-        onFinalize: jest.fn().mockReturnThis(),
-        onEnd: jest.fn().mockReturnThis(),
-      }),
-      LongPress: () => ({
-        minDuration: jest.fn().mockReturnThis(),
-        onStart: jest.fn().mockReturnThis(),
-      }),
-      Race: jest.fn((...args) => args),
-      Simultaneous: jest.fn((...args) => args),
-    },
-    PanGestureHandler: View,
-    State: {},
-  };
-});
+jest.mock('react-native-gesture-handler', () => ({
+  Gesture: {
+    LongPress: () => ({
+      minDuration: jest.fn().mockReturnThis(),
+      onStart: jest.fn().mockReturnThis(),
+    }),
+    Pan: () => ({
+      activeOffsetX: jest.fn().mockReturnThis(),
+      onEnd: jest.fn().mockReturnThis(),
+      onUpdate: jest.fn().mockReturnThis(),
+    }),
+    Race: jest.fn((...args) => args),
+    Simultaneous: jest.fn((...args) => args),
+    Tap: () => ({
+      onBegin: jest.fn().mockReturnThis(),
+      onEnd: jest.fn().mockReturnThis(),
+      onFinalize: jest.fn().mockReturnThis(),
+    }),
+  },
+  GestureDetector: ({ children }: { children: React.ReactNode }) => children,
+  PanGestureHandler: View,
+  State: {},
+}));
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
+  const Reanimated = ReanimatedMock;
   Reanimated.default.call = () => {};
   return {
     ...Reanimated,
-    useSharedValue: jest.fn(() => ({ value: 0 })),
-    useAnimatedStyle: jest.fn(() => ({})),
-    withSpring: jest.fn((toValue) => toValue),
     runOnJS: jest.fn((fn) => fn),
+    useAnimatedStyle: jest.fn(() => ({})),
+    useSharedValue: jest.fn(() => ({ value: 0 })),
+    withSpring: jest.fn((toValue) => toValue),
   };
 });
 
@@ -69,24 +68,24 @@ jest.mock('react-native-reanimated', () => {
 jest.mock('../../theme', () => ({
   useAppTheme: () => ({
     custom: {
-      colors: {
-        primary: { 400: '#4ade80', 500: '#22c55e' },
-        secondary: { 500: '#3b82f6' },
-        warning: { 500: '#f59e0b' },
-        error: '#ef4444',
-        gray: { 900: '#111827' },
-        light: { card: '#ffffff' },
-      },
       borderRadius: {
         medium: 12,
       },
+      colors: {
+        error: '#ef4444',
+        gray: { 900: '#111827' },
+        light: { card: '#ffffff' },
+        primary: { 400: '#4ade80', 500: '#22c55e' },
+        secondary: { 500: '#3b82f6' },
+        warning: { 500: '#f59e0b' },
+      },
       shadows: {
         card: {
+          elevation: 3,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
+          shadowOffset: { height: 2, width: 0 },
           shadowOpacity: 0.1,
           shadowRadius: 4,
-          elevation: 3,
         },
       },
       typography: {
@@ -107,7 +106,9 @@ jest.mock('../HabitStrengthIndicator/HabitStrengthIndicator', () => ({
 
 const mockUseQuery = useQuery as jest.MockedFunction<typeof useQuery>;
 const mockUseMutation = useMutation as jest.MockedFunction<typeof useMutation>;
-const mockHapticsImpact = Haptics.impactAsync as jest.MockedFunction<typeof Haptics.impactAsync>;
+const mockHapticsImpact = Haptics.impactAsync as jest.MockedFunction<
+  typeof Haptics.impactAsync
+>;
 
 describe('HabitCard Toggle and Haptic Integration', () => {
   const mockHabitId = 'test_habit_123' as any;
@@ -125,20 +126,17 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
-      expect(mockUseQuery).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          habitId: mockHabitId,
-          date: today,
-        }
-      );
+      expect(mockUseQuery).toHaveBeenCalledWith(expect.anything(), {
+        date: today,
+        habitId: mockHabitId,
+      });
     });
 
     it('should use query result for haptic intensity decision', () => {
@@ -149,12 +147,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(true);
 
       const { rerender } = render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-          completed={true}
-        />
+        <HabitCard completed id={mockHabitId} name='Test Habit' strength={50} />
       );
 
       expect(mockUseQuery).toHaveBeenCalled();
@@ -164,10 +157,10 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       rerender(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
@@ -177,14 +170,14 @@ describe('HabitCard Toggle and Haptic Integration', () => {
     it('should handle loading state (undefined query result)', () => {
       const mockMutation = jest.fn();
       mockUseMutation.mockReturnValue(mockMutation);
-      mockUseQuery.mockReturnValue(undefined); // Loading state
+      mockUseQuery.mockReturnValue(); // Loading state
 
       const { getByAccessibilityLabel } = render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
@@ -202,16 +195,14 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
-      expect(mockUseMutation).toHaveBeenCalledWith(
-        expect.anything()
-      );
+      expect(mockUseMutation).toHaveBeenCalledWith(expect.anything());
     });
 
     it('should setup mutation before rendering', () => {
@@ -219,13 +210,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseMutation.mockReturnValue(mockMutation);
       mockUseQuery.mockReturnValue(false);
 
-      render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
-      );
+      render(<HabitCard id={mockHabitId} name='Test Habit' strength={50} />);
 
       expect(mockUseMutation).toHaveBeenCalled();
     });
@@ -239,10 +224,10 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
@@ -257,14 +242,14 @@ describe('HabitCard Toggle and Haptic Integration', () => {
     it('should use Medium haptic when loading (isCompleted = undefined)', () => {
       const mockMutation = jest.fn();
       mockUseMutation.mockReturnValue(mockMutation);
-      mockUseQuery.mockReturnValue(undefined); // Loading
+      mockUseQuery.mockReturnValue(); // Loading
 
       render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
@@ -281,12 +266,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(true); // Completed
 
       render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-          completed={true}
-        />
+        <HabitCard completed id={mockHabitId} name='Test Habit' strength={50} />
       );
 
       // Verify query indicates completed
@@ -304,13 +284,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseMutation.mockReturnValue(mockMutation);
       mockUseQuery.mockReturnValue(false);
 
-      render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
-      );
+      render(<HabitCard id={mockHabitId} name='Test Habit' strength={50} />);
 
       // Query should be called during render
       expect(mockUseQuery).toHaveBeenCalledTimes(1);
@@ -334,8 +308,8 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       // Step 4: Call mutation to toggle
       const expectedMutationArgs = {
-        habitId: mockHabitId,
         date: today,
+        habitId: mockHabitId,
       };
 
       expect(expectedMutationArgs).toHaveProperty('habitId');
@@ -349,13 +323,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseMutation.mockReturnValue(mockMutation);
       mockUseQuery.mockReturnValue(false);
 
-      render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
-      );
+      render(<HabitCard id={mockHabitId} name='Test Habit' strength={50} />);
 
       // Mutation setup should be immediate
       expect(mockUseMutation).toHaveBeenCalled();
@@ -370,15 +338,13 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(false);
 
       const { UNSAFE_getByProps } = render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-          disabled={true}
-        />
+        <HabitCard disabled id={mockHabitId} name='Test Habit' strength={50} />
       );
 
-      const card = UNSAFE_getByProps({ accessible: true, accessibilityRole: 'button' });
+      const card = UNSAFE_getByProps({
+        accessibilityRole: 'button',
+        accessible: true,
+      });
       expect(card.props.accessibilityState).toMatchObject({
         disabled: true,
       });
@@ -390,12 +356,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(false);
 
       render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-          disabled={true}
-        />
+        <HabitCard disabled id={mockHabitId} name='Test Habit' strength={50} />
       );
 
       // Query should still run to show current state
@@ -413,7 +374,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       render(
         <HabitCard
           id={mockHabitId}
-          name="Test Habit"
+          name='Test Habit'
           strength={50}
           onPress={mockOnPress}
         />
@@ -429,11 +390,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(false);
 
       const { getByAccessibilityLabel } = render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
+        <HabitCard id={mockHabitId} name='Test Habit' strength={50} />
       );
 
       const card = getByAccessibilityLabel(/Test Habit/);
@@ -449,14 +406,17 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       const { UNSAFE_getByProps } = render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
-      const card = UNSAFE_getByProps({ accessible: true, accessibilityRole: 'button' });
+      const card = UNSAFE_getByProps({
+        accessibilityRole: 'button',
+        accessible: true,
+      });
       expect(card.props.accessibilityLabel).toMatch(/Test Habit/);
       expect(card.props.accessibilityLabel).toMatch(/50%/);
       expect(card.props.accessibilityLabel).toMatch(/not completed/);
@@ -468,15 +428,13 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(true);
 
       const { UNSAFE_getByProps } = render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-          completed={true}
-        />
+        <HabitCard completed id={mockHabitId} name='Test Habit' strength={50} />
       );
 
-      const card = UNSAFE_getByProps({ accessible: true, accessibilityRole: 'button' });
+      const card = UNSAFE_getByProps({
+        accessibilityRole: 'button',
+        accessible: true,
+      });
       expect(card.props.accessibilityState).toMatchObject({
         checked: true,
       });
@@ -488,11 +446,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(false);
 
       const { UNSAFE_getByProps } = render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
+        <HabitCard id={mockHabitId} name='Test Habit' strength={50} />
       );
 
       const card = UNSAFE_getByProps({ accessible: true });
@@ -507,11 +461,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseQuery.mockReturnValue(false);
 
       const { getByText } = render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
+        <HabitCard id={mockHabitId} name='Test Habit' strength={50} />
       );
 
       expect(getByText('Test Habit')).toBeTruthy();
@@ -524,29 +474,30 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       const { rerender, UNSAFE_getByProps } = render(
         <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
           completed={false}
+          id={mockHabitId}
+          name='Test Habit'
+          strength={50}
         />
       );
 
-      let card = UNSAFE_getByProps({ accessible: true, accessibilityRole: 'button' });
+      let card = UNSAFE_getByProps({
+        accessibilityRole: 'button',
+        accessible: true,
+      });
       expect(card.props.accessibilityLabel).toMatch(/not completed/);
 
       // Simulate completion status change
       mockUseQuery.mockReturnValue(true);
 
       rerender(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-          completed={true}
-        />
+        <HabitCard completed id={mockHabitId} name='Test Habit' strength={50} />
       );
 
-      card = UNSAFE_getByProps({ accessible: true, accessibilityRole: 'button' });
+      card = UNSAFE_getByProps({
+        accessibilityRole: 'button',
+        accessible: true,
+      });
       expect(card.props.accessibilityLabel).toMatch(/completed/);
     });
   });
@@ -557,13 +508,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseMutation.mockReturnValue(mockMutation);
       mockUseQuery.mockReturnValue(false);
 
-      render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
-      );
+      render(<HabitCard id={mockHabitId} name='Test Habit' strength={50} />);
 
       const todayDate = new Date().toISOString().split('T')[0];
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -588,10 +533,10 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       const { getByText: getByText1 } = render(
         <HabitCard
+          completed
           id={'habit_1' as any}
-          name="Habit 1"
+          name='Habit 1'
           strength={60}
-          completed={true}
         />
       );
 
@@ -602,10 +547,10 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       const { getByText: getByText2 } = render(
         <HabitCard
-          id={'habit_2' as any}
-          name="Habit 2"
-          strength={40}
           completed={false}
+          id={'habit_2' as any}
+          name='Habit 2'
+          strength={40}
         />
       );
 
@@ -622,13 +567,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       mockUseMutation.mockReturnValue(mockMutation);
       mockUseQuery.mockReturnValue(false);
 
-      render(
-        <HabitCard
-          id={mockHabitId}
-          name="Test Habit"
-          strength={50}
-        />
-      );
+      render(<HabitCard id={mockHabitId} name='Test Habit' strength={50} />);
 
       // Mutation should be reusable
       expect(typeof mockMutation).toBe('function');
@@ -641,20 +580,20 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
       // Simulate toggle sequence
       const toggleStates = [
-        { before: false, after: true }, // First check
-        { before: true, after: false }, // Uncheck
-        { before: false, after: true }, // Check again
+        { after: true, before: false }, // First check
+        { after: false, before: true }, // Uncheck
+        { after: true, before: false }, // Check again
       ];
 
-      toggleStates.forEach(state => {
+      for (const state of toggleStates) {
         mockUseQuery.mockReturnValue(state.before);
 
         const { rerender } = render(
           <HabitCard
-            id={mockHabitId}
-            name="Test Habit"
-            strength={50}
             completed={state.before}
+            id={mockHabitId}
+            name='Test Habit'
+            strength={50}
           />
         );
 
@@ -663,13 +602,13 @@ describe('HabitCard Toggle and Haptic Integration', () => {
 
         rerender(
           <HabitCard
-            id={mockHabitId}
-            name="Test Habit"
-            strength={50}
             completed={state.after}
+            id={mockHabitId}
+            name='Test Habit'
+            strength={50}
           />
         );
-      });
+      }
     });
   });
 });
@@ -704,18 +643,22 @@ describe('HabitCard Haptic Feedback Specifications', () => {
   describe('ternary operator logic', () => {
     it('should use correct ternary: isCompleted ? Light : Medium', () => {
       const testCases = [
-        { isCompleted: true, expected: Haptics.ImpactFeedbackStyle.Light },
-        { isCompleted: false, expected: Haptics.ImpactFeedbackStyle.Medium },
-        { isCompleted: undefined, expected: Haptics.ImpactFeedbackStyle.Medium },
+        { expected: Haptics.ImpactFeedbackStyle.Light, isCompleted: true },
+        { expected: Haptics.ImpactFeedbackStyle.Medium, isCompleted: false },
+        {
+          expected: Haptics.ImpactFeedbackStyle.Medium,
+          isCompleted: undefined,
+        },
       ];
 
-      testCases.forEach(({ isCompleted, expected }) => {
-        const result = isCompleted === true
-          ? Haptics.ImpactFeedbackStyle.Light
-          : Haptics.ImpactFeedbackStyle.Medium;
+      for (const { isCompleted, expected } of testCases) {
+        const result =
+          isCompleted === true
+            ? Haptics.ImpactFeedbackStyle.Light
+            : Haptics.ImpactFeedbackStyle.Medium;
 
         expect(result).toBe(expected);
-      });
+      }
     });
   });
 });

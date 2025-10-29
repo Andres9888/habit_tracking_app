@@ -1,7 +1,4 @@
-import type {
-  Settings,
-  SettingConfig,
-} from './SettingsDialog.types';
+import type { Settings, SettingConfig } from './SettingsDialog.types';
 
 export const DEFAULT_SETTINGS: Settings = {
   catTheme: true,

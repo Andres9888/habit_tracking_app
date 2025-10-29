@@ -38,8 +38,14 @@ interface Props {
   onArchivePress?: () => void;
 }
 
-export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePress }: Props) {
-  const [expandedSection, setExpandedSection] = useState<string | null>('summary');
+export default function WeeklyInsightsCard({
+  insights,
+  onHabitPress,
+  onArchivePress,
+}: Props) {
+  const [expandedSection, setExpandedSection] = useState<string | null>(
+    'summary'
+  );
 
   if (!insights) {
     return (
@@ -53,11 +59,16 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  const renderHabitItem = (habit: HabitChange, type: 'gained' | 'lost' | 'risk') => {
+  const renderHabitItem = (
+    habit: HabitChange,
+    type: 'gained' | 'lost' | 'risk'
+  ) => {
     const getChangeIcon = () => {
-      if (type === 'gained') return { name: 'trending-up', color: colors.success };
-      if (type === 'lost') return { name: 'trending-down', color: colors.error };
-      return { name: 'warning', color: colors.warning };
+      if (type === 'gained')
+        return { color: colors.success, name: 'trending-up' };
+      if (type === 'lost')
+        return { color: colors.error, name: 'trending-down' };
+      return { color: colors.warning, name: 'warning' };
     };
 
     const icon = getChangeIcon();
@@ -65,27 +76,26 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
     return (
       <TouchableOpacity
         key={habit.habitId}
+        activeOpacity={0.7}
         style={styles.habitItem}
         onPress={() => onHabitPress?.(habit.habitId)}
-        activeOpacity={0.7}
       >
         <View style={styles.habitItemLeft}>
           <Text style={styles.habitEmoji}>{habit.emoji}</Text>
           <View style={styles.habitInfo}>
-            <Text style={styles.habitName} numberOfLines={1}>
+            <Text numberOfLines={1} style={styles.habitName}>
               {habit.name}
             </Text>
             <Text style={styles.habitStats}>
               {type === 'risk'
                 ? `Only ${habit.thisWeek} completions • ${habit.currentStreak} day streak`
-                : `${habit.thisWeek} vs ${habit.lastWeek} last week`
-              }
+                : `${habit.thisWeek} vs ${habit.lastWeek} last week`}
             </Text>
           </View>
         </View>
 
         <View style={styles.habitItemRight}>
-          <Ionicons name={icon.name as any} size={20} color={icon.color} />
+          <Ionicons color={icon.color} name={icon.name as any} size={20} />
           {type !== 'risk' && (
             <Text
               style={[
@@ -93,7 +103,8 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
                 { color: type === 'gained' ? colors.success : colors.error },
               ]}
             >
-              {habit.percentageChange > 0 ? '+' : ''}{Math.round(habit.percentageChange)}%
+              {habit.percentageChange > 0 ? '+' : ''}
+              {Math.round(habit.percentageChange)}%
             </Text>
           )}
         </View>
@@ -102,22 +113,22 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       {/* Week Overview Section */}
       <TouchableOpacity
+        activeOpacity={0.7}
         style={styles.section}
         onPress={() => toggleSection('summary')}
-        activeOpacity={0.7}
       >
         <View style={styles.sectionHeader}>
           <View style={styles.sectionHeaderLeft}>
-            <Ionicons name="calendar" size={20} color={colors.primary} />
+            <Ionicons color={colors.primary} name='calendar' size={20} />
             <Text style={styles.sectionTitle}>This Week's Summary</Text>
           </View>
           <Ionicons
+            color={colors.text.tertiary}
             name={expandedSection === 'summary' ? 'chevron-up' : 'chevron-down'}
             size={20}
-            color={colors.text.tertiary}
           />
         </View>
 
@@ -128,15 +139,26 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
                 <Text style={styles.summaryLabel}>Overall Change</Text>
                 <View style={styles.summaryValueContainer}>
                   <Ionicons
-                    name={insights.weekOverWeekChange >= 0 ? 'trending-up' : 'trending-down'}
+                    color={
+                      insights.weekOverWeekChange >= 0
+                        ? colors.success
+                        : colors.error
+                    }
+                    name={
+                      insights.weekOverWeekChange >= 0
+                        ? 'trending-up'
+                        : 'trending-down'
+                    }
                     size={16}
-                    color={insights.weekOverWeekChange >= 0 ? colors.success : colors.error}
                   />
                   <Text
                     style={[
                       styles.summaryValue,
                       {
-                        color: insights.weekOverWeekChange >= 0 ? colors.success : colors.error,
+                        color:
+                          insights.weekOverWeekChange >= 0
+                            ? colors.success
+                            : colors.error,
                       },
                     ]}
                   >
@@ -149,7 +171,8 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Total Completions</Text>
                 <Text style={styles.summaryCompletions}>
-                  {insights.totalCompletionsThisWeek} this week • {insights.totalCompletionsLastWeek} last week
+                  {insights.totalCompletionsThisWeek} this week •{' '}
+                  {insights.totalCompletionsLastWeek} last week
                 </Text>
               </View>
             </View>
@@ -160,28 +183,38 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
       {/* Gained Strength Section */}
       {insights.gainedStrength.length > 0 && (
         <TouchableOpacity
+          activeOpacity={0.7}
           style={styles.section}
           onPress={() => toggleSection('gained')}
-          activeOpacity={0.7}
         >
           <View style={styles.sectionHeader}>
             <View style={styles.sectionHeaderLeft}>
-              <Ionicons name="arrow-up-circle" size={20} color={colors.success} />
+              <Ionicons
+                color={colors.success}
+                name='arrow-up-circle'
+                size={20}
+              />
               <Text style={styles.sectionTitle}>Habits Gained Strength</Text>
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>{insights.gainedStrength.length}</Text>
+                <Text style={styles.badgeText}>
+                  {insights.gainedStrength.length}
+                </Text>
               </View>
             </View>
             <Ionicons
-              name={expandedSection === 'gained' ? 'chevron-up' : 'chevron-down'}
-              size={20}
               color={colors.text.tertiary}
+              name={
+                expandedSection === 'gained' ? 'chevron-up' : 'chevron-down'
+              }
+              size={20}
             />
           </View>
 
           {expandedSection === 'gained' && (
             <View style={styles.sectionContent}>
-              {insights.gainedStrength.map(habit => renderHabitItem(habit, 'gained'))}
+              {insights.gainedStrength.map((habit) =>
+                renderHabitItem(habit, 'gained')
+              )}
             </View>
           )}
         </TouchableOpacity>
@@ -190,13 +223,17 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
       {/* Lost Strength Section */}
       {insights.lostStrength.length > 0 && (
         <TouchableOpacity
+          activeOpacity={0.7}
           style={styles.section}
           onPress={() => toggleSection('lost')}
-          activeOpacity={0.7}
         >
           <View style={styles.sectionHeader}>
             <View style={styles.sectionHeaderLeft}>
-              <Ionicons name="arrow-down-circle" size={20} color={colors.error} />
+              <Ionicons
+                color={colors.error}
+                name='arrow-down-circle'
+                size={20}
+              />
               <Text style={styles.sectionTitle}>Habits Lost Strength</Text>
               <View style={[styles.badge, { backgroundColor: '#FEE2E2' }]}>
                 <Text style={[styles.badgeText, { color: colors.error }]}>
@@ -205,15 +242,17 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
               </View>
             </View>
             <Ionicons
+              color={colors.text.tertiary}
               name={expandedSection === 'lost' ? 'chevron-up' : 'chevron-down'}
               size={20}
-              color={colors.text.tertiary}
             />
           </View>
 
           {expandedSection === 'lost' && (
             <View style={styles.sectionContent}>
-              {insights.lostStrength.map(habit => renderHabitItem(habit, 'lost'))}
+              {insights.lostStrength.map((habit) =>
+                renderHabitItem(habit, 'lost')
+              )}
             </View>
           )}
         </TouchableOpacity>
@@ -222,13 +261,13 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
       {/* At Risk Section */}
       {insights.atRisk.length > 0 && (
         <TouchableOpacity
+          activeOpacity={0.7}
           style={styles.section}
           onPress={() => toggleSection('risk')}
-          activeOpacity={0.7}
         >
           <View style={styles.sectionHeader}>
             <View style={styles.sectionHeaderLeft}>
-              <Ionicons name="warning" size={20} color={colors.warning} />
+              <Ionicons color={colors.warning} name='warning' size={20} />
               <Text style={styles.sectionTitle}>Habits at Risk</Text>
               <View style={[styles.badge, { backgroundColor: '#FEF3C7' }]}>
                 <Text style={[styles.badgeText, { color: colors.warning }]}>
@@ -237,26 +276,42 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
               </View>
             </View>
             <Ionicons
+              color={colors.text.tertiary}
               name={expandedSection === 'risk' ? 'chevron-up' : 'chevron-down'}
               size={20}
-              color={colors.text.tertiary}
             />
           </View>
 
           {expandedSection === 'risk' && (
             <View style={styles.sectionContent}>
-              {insights.atRisk.map(habit => renderHabitItem(habit, 'risk'))}
+              {insights.atRisk.map((habit) => renderHabitItem(habit, 'risk'))}
 
               {/* Suggested Actions */}
               <View style={styles.suggestedActions}>
-                <Text style={styles.suggestedActionsTitle}>Suggested Focus</Text>
-                <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
-                  <Ionicons name="notifications" size={16} color={colors.primary} />
-                  <Text style={styles.actionButtonText}>Set reminders for at-risk habits</Text>
+                <Text style={styles.suggestedActionsTitle}>
+                  Suggested Focus
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.actionButton}
+                >
+                  <Ionicons
+                    color={colors.primary}
+                    name='notifications'
+                    size={16}
+                  />
+                  <Text style={styles.actionButtonText}>
+                    Set reminders for at-risk habits
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
-                  <Ionicons name="bulb" size={16} color={colors.primary} />
-                  <Text style={styles.actionButtonText}>Review habit difficulty</Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.actionButton}
+                >
+                  <Ionicons color={colors.primary} name='bulb' size={16} />
+                  <Text style={styles.actionButtonText}>
+                    Review habit difficulty
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -266,11 +321,11 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
 
       {/* Archive Button */}
       <TouchableOpacity
+        activeOpacity={0.7}
         style={styles.archiveButton}
         onPress={onArchivePress}
-        activeOpacity={0.7}
       >
-        <Ionicons name="archive" size={20} color={colors.text.secondary} />
+        <Ionicons color={colors.text.secondary} name='archive' size={20} />
         <Text style={styles.archiveButtonText}>View Past Reports</Text>
       </TouchableOpacity>
 
@@ -283,15 +338,28 @@ export default function WeeklyInsightsCard({ insights, onHabitPress, onArchivePr
 }
 
 const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: '#D1FAE5',
+    borderRadius: 8,
+    marginLeft: spacing.xs,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+  },
+  badgeText: {
+    ...typography.caption,
+    color: colors.success,
+    fontSize: 10,
+    fontWeight: '600',
+  },
   container: {
     flex: 1,
   },
   loadingContainer: {
-    padding: spacing.xl,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.surface,
     borderRadius: 12,
+    justifyContent: 'center',
+    padding: spacing.xl,
   },
   loadingText: {
     ...typography.body,
@@ -303,89 +371,115 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     overflow: 'hidden',
   },
+  sectionContent: {
+    paddingBottom: spacing.md,
+    paddingHorizontal: spacing.md,
+  },
   sectionHeader: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     padding: spacing.md,
   },
-  sectionHeaderLeft: {
+  habitItem: {
+    alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    paddingVertical: spacing.sm,
+    borderBottomColor: colors.border,
+  },
+  sectionHeaderLeft: {
     alignItems: 'center',
     flex: 1,
+    flexDirection: 'row',
+  },
+  habitEmoji: {
+    fontSize: 24,
+    marginRight: spacing.sm,
   },
   sectionTitle: {
     ...typography.bodyBold,
     color: colors.text.primary,
     marginLeft: spacing.sm,
   },
-  badge: {
-    backgroundColor: '#D1FAE5',
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 2,
-    borderRadius: 8,
-    marginLeft: spacing.xs,
-  },
-  badgeText: {
-    ...typography.caption,
-    color: colors.success,
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  sectionContent: {
-    paddingHorizontal: spacing.md,
-    paddingBottom: spacing.md,
+  habitInfo: {
+    flex: 1,
   },
   summaryCard: {
     backgroundColor: colors.background,
     borderRadius: 8,
     padding: spacing.md,
   },
-  summaryRow: {
-    flexDirection: 'row',
+  habitItemLeft: {
     alignItems: 'center',
-    justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'row',
+  },
+  summaryCompletions: {
+    ...typography.caption,
+    color: colors.text.tertiary,
+  },
+  changePercentage: {
+    ...typography.bodyBold,
+    fontSize: 14,
+    marginLeft: spacing.xs,
   },
   summaryLabel: {
     ...typography.body,
     color: colors.text.secondary,
   },
-  summaryValueContainer: {
-    flexDirection: 'row',
+  actionButton: {
     alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: spacing.sm,
+  },
+  summaryRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  actionButtonText: {
+    ...typography.body,
+    color: colors.primary,
+    marginLeft: spacing.sm,
   },
   summaryValue: {
     ...typography.h3,
     marginLeft: spacing.xs,
   },
-  summaryCompletions: {
+  archiveButton: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    flexDirection: 'row',
+    borderRadius: 12,
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+    padding: spacing.md,
+  },
+  summaryValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  archiveButtonText: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginLeft: spacing.sm,
+  },
+  generatedDate: {
     ...typography.caption,
     color: colors.text.tertiary,
+    marginBottom: spacing.lg,
+    textAlign: 'center',
   },
   summaryDivider: {
     height: 1,
     backgroundColor: colors.border,
     marginVertical: spacing.sm,
   },
-  habitItem: {
-    flexDirection: 'row',
+  habitItemRight: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  habitItemLeft: {
     flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  habitEmoji: {
-    fontSize: 24,
-    marginRight: spacing.sm,
-  },
-  habitInfo: {
-    flex: 1,
   },
   habitName: {
     ...typography.body,
@@ -396,55 +490,16 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.text.tertiary,
   },
-  habitItemRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  changePercentage: {
-    ...typography.bodyBold,
-    marginLeft: spacing.xs,
-    fontSize: 14,
-  },
   suggestedActions: {
-    marginTop: spacing.md,
-    padding: spacing.sm,
     backgroundColor: colors.background,
     borderRadius: 8,
+    marginTop: spacing.md,
+    padding: spacing.sm,
   },
   suggestedActionsTitle: {
     ...typography.caption,
     color: colors.text.secondary,
     marginBottom: spacing.sm,
     textTransform: 'uppercase',
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  actionButtonText: {
-    ...typography.body,
-    color: colors.primary,
-    marginLeft: spacing.sm,
-  },
-  archiveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.md,
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    marginBottom: spacing.md,
-  },
-  archiveButtonText: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginLeft: spacing.sm,
-  },
-  generatedDate: {
-    ...typography.caption,
-    color: colors.text.tertiary,
-    textAlign: 'center',
-    marginBottom: spacing.lg,
   },
 });

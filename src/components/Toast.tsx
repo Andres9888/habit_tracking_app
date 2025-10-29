@@ -16,10 +16,7 @@ import {
   Pressable,
   type ViewStyle,
 } from 'react-native';
-import {
-  GestureDetector,
-  Gesture,
-} from 'react-native-gesture-handler';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -70,29 +67,29 @@ const VARIANT_CONFIG: Record<
     textColor: string;
   }
 > = {
-  success: {
-    icon: '✓',
-    backgroundColor: '#10B981', // theme.custom.colors.success
-    textColor: '#FFFFFF',
-  },
   error: {
-    icon: '✕',
-    backgroundColor: '#EF4444', // theme.custom.colors.error
+    backgroundColor: '#EF4444',
+    icon: '✕', // theme.custom.colors.error
     textColor: '#FFFFFF',
   },
   info: {
-    icon: 'ℹ',
-    backgroundColor: '#3B82F6', // theme.custom.colors.info
+    backgroundColor: '#3B82F6',
+    icon: 'ℹ', // theme.custom.colors.info
     textColor: '#FFFFFF',
   },
-  warning: {
-    icon: '!',
-    backgroundColor: '#F59E0B', // theme.custom.colors.warning[500]
+  success: {
+    backgroundColor: '#10B981',
+    icon: '✓', // theme.custom.colors.success
     textColor: '#FFFFFF',
   },
   undo: {
-    icon: '↶',
-    backgroundColor: '#374151', // theme.custom.colors.gray[700]
+    backgroundColor: '#374151',
+    icon: '↶', // theme.custom.colors.gray[700]
+    textColor: '#FFFFFF',
+  },
+  warning: {
+    backgroundColor: '#F59E0B',
+    icon: '!', // theme.custom.colors.warning[500]
     textColor: '#FFFFFF',
   },
 };
@@ -168,7 +165,7 @@ export function Toast({
       // Only allow downward swipe
       if (event.translationY > 0) {
         translateY.value = event.translationY;
-        opacity.value = 1 - (event.translationY / 100);
+        opacity.value = 1 - event.translationY / 100;
       }
     })
     .onEnd((event) => {
@@ -187,22 +184,23 @@ export function Toast({
 
   // Animated styles
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
     opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
   }));
 
   if (!visible) return null;
 
   return (
     <View
-      style={[
-        styles.container,
-        { bottom: insets.bottom + 16 },
-      ]}
-      pointerEvents="box-none"
+      pointerEvents='box-none'
+      style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
         <Animated.View
+          accessible
+          accessibilityLabel={`${variant} message: ${message}`}
+          accessibilityLiveRegion='polite'
+          accessibilityRole='alert'
           style={[
             styles.toast,
             {
@@ -213,10 +211,6 @@ export function Toast({
             animatedStyle,
             style,
           ]}
-          accessible={true}
-          accessibilityLabel={`${variant} message: ${message}`}
-          accessibilityRole="alert"
-          accessibilityLiveRegion="polite"
         >
           {/* Icon */}
           <View style={styles.iconContainer}>
@@ -225,12 +219,12 @@ export function Toast({
 
           {/* Message */}
           <Text
+            numberOfLines={2}
             style={[
               theme.custom.typography.body,
               styles.message,
               { color: config.textColor },
             ]}
-            numberOfLines={2}
           >
             {message}
           </Text>
@@ -238,13 +232,13 @@ export function Toast({
           {/* Action Button (for undo variant) */}
           {variant === 'undo' && onAction && (
             <Pressable
+              accessibilityLabel={actionLabel}
+              accessibilityRole='button'
               style={styles.actionButton}
               onPress={() => {
                 onAction();
                 handleDismiss();
               }}
-              accessibilityLabel={actionLabel}
-              accessibilityRole="button"
             >
               <Text
                 style={[
@@ -260,11 +254,11 @@ export function Toast({
           {/* Dismiss Button (X) - for variants other than undo */}
           {variant !== 'undo' && (
             <Pressable
+              accessibilityLabel='Dismiss'
+              accessibilityRole='button'
+              hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
               style={styles.dismissButton}
               onPress={handleDismiss}
-              accessibilityLabel="Dismiss"
-              accessibilityRole="button"
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text style={[styles.dismissIcon, { color: config.textColor }]}>
                 ✕
@@ -278,53 +272,53 @@ export function Toast({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    alignItems: 'center',
-    zIndex: 9999,
-  },
-  toast: {
-    width: '100%',
-    maxWidth: 400,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-  iconContainer: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  icon: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  message: {
-    flex: 1,
-  },
   actionButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  container: {
+    alignItems: 'center',
+    left: 16,
+    position: 'absolute',
+    right: 16,
+    zIndex: 9999,
   },
   dismissButton: {
-    width: 24,
+    alignItems: 'center',
     height: 24,
     justifyContent: 'center',
-    alignItems: 'center',
+    width: 24,
   },
   dismissIcon: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  icon: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 12,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
+  },
+  message: {
+    flex: 1,
+  },
+  toast: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    maxWidth: 400,
+    gap: 12,
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
 });
 

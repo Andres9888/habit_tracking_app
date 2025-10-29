@@ -79,10 +79,10 @@ export function TemplateCard({
 
   // Category display names
   const categoryLabels: Record<string, string> = {
-    morning_routine: 'Morning Routine',
     health_fitness: 'Health & Fitness',
-    productivity: 'Productivity',
     mindfulness: 'Mindfulness',
+    morning_routine: 'Morning Routine',
+    productivity: 'Productivity',
   };
 
   // Animation: Scale on press
@@ -120,9 +120,10 @@ export function TemplateCard({
 
   return (
     <AnimatedPressable
-      onPress={handleCardPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      accessible
+      accessibilityHint='Tap to preview, or tap import to add to your habits'
+      accessibilityLabel={`${name} template. ${description}`}
+      accessibilityRole='button'
       style={[
         styles.card,
         {
@@ -133,10 +134,9 @@ export function TemplateCard({
         animatedStyle,
         style,
       ]}
-      accessible={true}
-      accessibilityLabel={`${name} template. ${description}`}
-      accessibilityRole="button"
-      accessibilityHint="Tap to preview, or tap import to add to your habits"
+      onPress={handleCardPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
       {/* Card Content */}
       <View style={styles.content}>
@@ -187,22 +187,22 @@ export function TemplateCard({
 
         {/* Template Name */}
         <Text
+          numberOfLines={1}
           style={[
             theme.custom.typography.heading3,
             { color: theme.custom.colors.gray[900], marginTop: 12 },
           ]}
-          numberOfLines={1}
         >
           {name}
         </Text>
 
         {/* Description */}
         <Text
+          numberOfLines={3}
           style={[
             theme.custom.typography.bodySmall,
             { color: theme.custom.colors.gray[600], marginTop: 8 },
           ]}
-          numberOfLines={3}
         >
           {description}
         </Text>
@@ -220,6 +220,7 @@ export function TemplateCard({
         >
           <Text style={styles.scienceIcon}>🔬</Text>
           <Text
+            numberOfLines={2}
             style={[
               theme.custom.typography.caption,
               {
@@ -227,7 +228,6 @@ export function TemplateCard({
                 flex: 1,
               },
             ]}
-            numberOfLines={2}
           >
             Research: {scientificReference}
           </Text>
@@ -236,11 +236,11 @@ export function TemplateCard({
         {/* Import Button */}
         <View style={styles.footer}>
           <Button
-            variant="primary"
-            size="medium"
-            onPress={handleImportPress}
-            style={styles.importButton}
             accessibilityLabel={`Import ${name} template`}
+            size='medium'
+            style={styles.importButton}
+            variant='primary'
+            onPress={handleImportPress}
           >
             Import Template
           </Button>
@@ -252,31 +252,37 @@ export function TemplateCard({
 
 const styles = StyleSheet.create({
   card: {
-    marginVertical: 8,
     marginHorizontal: 16,
+    marginVertical: 8,
     overflow: 'hidden',
+  },
+  categoryBadge: {
+    flex: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   content: {
     padding: 16,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  footer: {
+    marginTop: 16,
   },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    justifyContent: 'center',
+  header: {
     alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
   icon: {
     fontSize: 28,
   },
-  categoryBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    flex: 1,
+  iconContainer: {
+    alignItems: 'center',
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
+  },
+  importButton: {
+    width: '100%',
   },
   popularBadge: {
     marginLeft: 'auto',
@@ -285,19 +291,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   scienceBox: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    padding: 12,
+    flexDirection: 'row',
     gap: 8,
+    padding: 12,
   },
   scienceIcon: {
     fontSize: 16,
-  },
-  footer: {
-    marginTop: 16,
-  },
-  importButton: {
-    width: '100%',
   },
 });
 

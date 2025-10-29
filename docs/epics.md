@@ -43,10 +43,12 @@ This epic breakdown translates the PRD into actionable development work organize
 Each epic is sized for 3-4 week sprints with clear success metrics tied to the $2k → $10k MRR goal. Stories are written to maximize code reuse and minimize technical debt for long-term solo maintainability.
 
 **Strategic Decisions:**
+
 - Onboarding moved to Epic 5 to remove barriers and ship core functionality faster
 - App Store submission isolated in Epic 6 to ensure all compliance/launch requirements met after product polish
 
 **Key Principles:**
+
 - **Science-first**: Every story leverages existing Zhang et al./Lally et al. algorithms
 - **Revenue-driven**: Premium features prioritized over nice-to-haves
 - **Mobile-native**: iOS-first with React Native, premium UX quality
@@ -57,17 +59,20 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ## Epic Details
 
 ### Epic 1: MVP Foundation - Core Tracking & Science Engine
+
 **Timeline:** Months 1-2 (Weeks 1-8)
 **Stories:** 8 stories (includes Story 1.2.1 for edge cases & error handling)
 **Goal:** Ship App Store-ready MVP with core science-backed tracking
 
 **Extended Goals:**
+
 - Validate product-market fit with early adopters
 - Establish technical foundation for future epics
 - Prove habit strength algorithms work in production
 - Enable immediate habit tracking without barriers
 
 **Success Metrics:**
+
 - App Store approval achieved
 - 100+ beta testers acquired
 - Average session time >2 minutes
@@ -77,16 +82,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.1: Habit Creation Flow
+
 **As a** new user
 **I want to** create my first habit with customization options
 **So that** I can start tracking behavior I want to build
 
 **Prerequisites:**
+
 - Design system foundations (colors, typography, spacing)
 - Database schema for habits table
 - React Native navigation configured
 
 **Acceptance Criteria:**
+
 1. User can tap "Add Habit" button from home screen
 2. Form includes fields: name (required, max 50 chars), description (optional, max 200 chars), color picker (8 preset options), icon selector (20+ icons), frequency (daily/custom days)
 3. "Create" button disabled until name provided
@@ -96,6 +104,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Accessibility: All inputs labeled for VoiceOver, Dynamic Type supported
 
 **Technical Notes:**
+
 - Use Convex mutation `createHabit` from existing backend
 - Color picker: ColorPickerSheet component (already implemented)
 - Icon library: React Native Vector Icons or similar
@@ -105,15 +114,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.2: Daily Habit Check-Off
+
 **As a** user with active habits
 **I want to** quickly check off completed habits with gestures
 **So that** my daily tracking ritual takes <30 seconds
 
 **Prerequisites:**
+
 - Story 1.1 complete (habits exist)
 - Habit strength calculation function available
 
 **Acceptance Criteria:**
+
 1. Home screen displays today's habits in list format
 2. Swipe right on habit card to mark complete (animated checkmark)
 3. Tap on habit card toggles completion state (check/uncheck)
@@ -124,6 +136,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Haptic feedback on both completion and uncheck (iOS native vibration)
 
 **Technical Notes:**
+
 - Gesture handlers: React Native Gesture Handler library
 - Mutation: `updateHabitStrength` from convex/habitStrength.ts
 - Animation: Reanimated for 60fps performance
@@ -133,16 +146,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.2.1: Check-Off Edge Cases & Error Handling
+
 **As a** user checking off habits in various edge case scenarios
 **I want to** have the app handle errors, conflicts, and unusual situations gracefully
 **So that** I never lose data or experience confusing behavior
 
 **Prerequisites:**
+
 - Story 1.2 complete (tap toggle with haptic feedback)
 - toggleCompletion mutation implemented
 - Convex backend configured
 
 **Acceptance Criteria:**
+
 1. Rapid successive taps debounced with 300ms cooldown (no duplicate mutations)
 2. Network failures handled with retry queue and exponential backoff (1s, 2s, 4s delays)
 3. Toast notifications for all error states ("Connection issue", "Habit deleted", etc.)
@@ -157,6 +173,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 12. Comprehensive test suite covering all edge cases (20+ unit tests, integration tests)
 
 **Technical Notes:**
+
 - Debounce: `isToggling` state flag with 300ms cooldown in HabitCard
 - Retry queue: `src/utils/retryQueue.ts` with exponential backoff manager
 - Error handling: Try/catch wrapper around all mutations + Sentry logging
@@ -169,6 +186,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 - Testing: `src/components/__tests__/HabitCard.edgeCases.test.tsx` + manual checklist
 
 **Success Metrics:**
+
 - Zero data loss incidents in production
 - <0.1% completion tracking failures
 - 99.9% sync success rate within 5 minutes
@@ -176,21 +194,25 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 - Debounce prevents >95% of duplicate mutations
 
 **Documentation:**
+
 - Full specifications: `docs/stories/epic-1-home-screen/habit-card/bugs/story-1.2.1-edge-cases.md`
 - Task Master task: Task 2 with 12 subtasks in `.taskmaster/tasks/`
 
 ---
 
 #### Story 1.3: Habit Strength Calculation Engine
+
 **As a** user checking off habits
 **I want to** see my habit strength increase automatically
 **So that** I understand my progress toward automaticity
 
 **Prerequisites:**
+
 - Zhang et al. algorithm implemented (already done in convex/habitStrength.ts)
 - Story 1.2 complete (tracking data exists)
 
 **Acceptance Criteria:**
+
 1. On habit completion, system calculates strength using: Baseline(days) × Compliance(30-day window)
 2. Baseline follows logistic curve: 1 / (1 + exp(-k × (days - m))) normalized to 100% at day 90
 3. Compliance uses Beta-smoothed success rate with α=β=1 (Laplace smoothing)
@@ -201,6 +223,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Algorithm matches research benchmarks: ~22% at day 7, 100% at day 90 with perfect compliance
 
 **Technical Notes:**
+
 - Reuse existing generateHabitStrengthSnapshot() from convex/habitStrength.ts
 - Validation: Unit tests comparing output to Lally et al. curve expectations
 - Performance: Cache calculations, only recompute on new tracking data
@@ -209,15 +232,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.4: Habit Strength Visual Indicators
+
 **As a** user viewing my habits
 **I want to** see strength displayed with intuitive visuals
 **So that** I grasp my progress at a glance without reading numbers
 
 **Prerequisites:**
+
 - Story 1.3 complete (strength values calculated)
 - HabitStrengthIndicator component (already exists)
 
 **Acceptance Criteria:**
+
 1. Each habit card displays strength as: emoji icon, progress bar, percentage text, level label
 2. Emoji mapping: 🌱 Starting, 🌿 Building, 🌳 Developing, 💪 Strong, ⚡ Automatic
 3. Progress bar fills left-to-right, color-coded by level (green gradient)
@@ -227,6 +253,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Accessibility: Screen reader announces "Meditation habit, 45% strength, Building level"
 
 **Technical Notes:**
+
 - Use existing HabitStrengthIndicator component from src/components
 - Animation library: Reanimated for native performance
 - Color palette: Match existing design system (greens for growth theme)
@@ -235,15 +262,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.5: Local Data Persistence
+
 **As a** user
 **I want to** access my habit data instantly even offline
 **So that** the app feels responsive and I never lose progress
 
 **Prerequisites:**
+
 - Convex backend configured
 - React Native AsyncStorage or similar available
 
 **Acceptance Criteria:**
+
 1. All habit data cached locally on device
 2. App launches and displays habits in <2 seconds (cold start)
 3. Habit check-offs work offline, queue for sync when online
@@ -254,6 +284,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. No data loss: local persistence backed by redundant storage
 
 **Technical Notes:**
+
 - Convex provides built-in optimistic updates and sync
 - Offline queue: Implement retry logic with exponential backoff
 - Conflict resolution: Use strengthUpdatedAt timestamp for winner
@@ -263,15 +294,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.6: Habit Editing & Management
+
 **As a** user with existing habits
 **I want to** edit, archive, and delete habits
 **So that** I can maintain a clean, relevant habit list
 
 **Prerequisites:**
+
 - Story 1.1 complete (habits created)
 - Edit UI designed
 
 **Acceptance Criteria:**
+
 1. Long-press habit card reveals context menu: Edit, Archive, Delete
 2. Edit: Opens same form as creation, pre-filled with current values, "Save Changes" CTA
 3. Archive: Removes from active list, preserves data, recoverable from "Archived" section
@@ -281,6 +315,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Filter view: All (active), Archived, By Category (if categories implemented)
 
 **Technical Notes:**
+
 - Mutations: updateHabit, archiveHabit, deleteHabit
 - Soft delete: archived flag instead of hard delete for data recovery
 - Reordering: Use sortOrder field, update on drag-and-drop
@@ -290,15 +325,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 1.7: Core Design System Foundation
+
 **As a** developer
 **I want to** establish reusable design components
 **So that** future features maintain visual consistency
 
 **Prerequisites:**
+
 - Design specifications (colors, typography, spacing)
 - React Native project initialized
 
 **Acceptance Criteria:**
+
 1. Design tokens file: colors (primary, secondary, success, error, background), typography (fontFamily, sizes, weights), spacing (4px grid: 4, 8, 12, 16, 24, 32, 48)
 2. Reusable components: Button (primary, secondary, ghost variants), Card, Input, Typography (H1-H4, Body, Caption)
 3. Theme system: Light mode implemented, dark mode prepared (theme context)
@@ -308,6 +346,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Performance: Components optimized with React.memo where appropriate
 
 **Technical Notes:**
+
 - Styling: Styled-components or StyleSheet with theme provider
 - Typography: SF Pro (iOS native) with fallbacks
 - Color palette: Greens (growth theme), blues (trust), neutral grays
@@ -317,17 +356,20 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 ### Epic 2: Premium Monetization - Analytics & Subscription
+
 **Timeline:** Months 2-3 (Weeks 9-16)
 **Stories:** 7 stories
 **Goal:** Convert 5-10% of free users to $7-10/month subscribers
 
 **Extended Goals:**
+
 - Unlock revenue stream toward $2k MRR
 - Validate subscription pricing and feature value
 - Build analytics infrastructure for retention insights
 - Establish premium feature paywall strategy
 
 **Success Metrics:**
+
 - 5-10% free-to-paid conversion within 30 days
 - 40% trial-to-paid conversion (7-day free trial)
 - MRR growth trajectory toward $2k by month 6
@@ -337,16 +379,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.1: In-App Purchase Integration (iOS StoreKit)
+
 **As a** developer
 **I want to** integrate App Store subscriptions
 **So that** users can purchase premium features
 
 **Prerequisites:**
+
 - Apple Developer account configured
 - App Store Connect subscriptions created (monthly, annual)
 - Backend subscription validation endpoint ready
 
 **Acceptance Criteria:**
+
 1. StoreKit 2 integration with async/await APIs
 2. Product fetching: Retrieve subscription offerings from App Store on app launch
 3. Purchase flow: Present system payment sheet, handle authentication (Face ID/Touch ID)
@@ -357,6 +402,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Sandbox testing: Works in TestFlight and Xcode sandbox environment
 
 **Technical Notes:**
+
 - Library: react-native-iap or expo-in-app-purchases
 - Backend: Convex function validateAppleReceipt(receiptData)
 - Security: Never trust client-side subscription status, always validate server-side
@@ -366,15 +412,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.2: Subscription Tiers & Free Trial
+
 **As a** potential customer
 **I want to** try premium features risk-free
 **So that** I can decide if subscription is worth the cost
 
 **Prerequisites:**
+
 - Story 2.1 complete (IAP integration)
 - Paywall UI designed
 
 **Acceptance Criteria:**
+
 1. Two subscription tiers: Monthly ($9.99), Annual ($79.99 - 33% discount)
 2. 7-day free trial for both tiers, cancel anytime before charge
 3. Trial eligibility: First-time subscribers only (tracked by Apple ID)
@@ -385,6 +434,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Cancellation: Direct link to iOS Settings > Subscriptions for easy cancellation
 
 **Technical Notes:**
+
 - App Store Connect: Configure introductory offer (7-day trial, $0)
 - Pricing: Tier 1 - $9.99/month, Tier 2 - $79.99/year (display as $6.66/month)
 - Notifications: Local notification scheduled 1 day before trial expiration
@@ -394,15 +444,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.3: Strategic Paywall Implementation
+
 **As a** free user
 **I want to** understand premium value before hitting limits
 **So that** I'm motivated to upgrade rather than frustrated
 
 **Prerequisites:**
+
 - Story 2.2 complete (subscription system)
 - Paywall screen designed
 
 **Acceptance Criteria:**
+
 1. Free tier limits: 3 habits maximum, basic strength display only
 2. Paywall triggers: Creating 4th habit, day 7 of usage, tapping locked premium features
 3. Paywall screen content: "Unlock Your Full Potential" headline, feature comparison (free vs premium with checkmarks/locks), testimonial quote, "Start 7-Day Free Trial" CTA, "Restore Purchases" link, "Maybe Later" dismissal
@@ -412,6 +465,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Timing optimization: No paywall in first 24 hours (let users experience value first)
 
 **Technical Notes:**
+
 - Paywall library: RevenueCat or custom implementation
 - Trigger logic: useSubscriptionStatus hook checking limits
 - Analytics: Track paywall impressions, conversions, dismissals by trigger type
@@ -421,15 +475,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.4: Premium Analytics Dashboard
+
 **As a** premium subscriber
 **I want to** see advanced analytics about my habits
 **So that** I understand what's working and what needs attention
 
 **Prerequisites:**
+
 - Story 2.1 complete (subscription access checks)
 - Habit strength history data available
 
 **Acceptance Criteria:**
+
 1. Dashboard accessed via "Analytics" tab (premium badge shown to free users)
 2. Overview cards: Total habits, average strength, strongest habit, weakest habit
 3. Strength distribution chart: Pie/donut chart showing habits by level (Starting, Building, etc.)
@@ -440,6 +497,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Data export: "Export CSV" button downloads all habit tracking data
 
 **Technical Notes:**
+
 - Charts: Victory Native or Recharts for React Native
 - Data queries: Convex aggregation functions for efficiency
 - Caching: Pre-compute analytics overnight for performance
@@ -449,15 +507,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.5: Habit Strength History Graphs
+
 **As a** premium subscriber
 **I want to** view historical strength progression for each habit
 **So that** I can see when automaticity kicked in or when I regressed
 
 **Prerequisites:**
+
 - Story 2.4 complete (analytics infrastructure)
 - Strength snapshots saved over time
 
 **Acceptance Criteria:**
+
 1. Accessed from habit detail screen (tap habit card → "View History")
 2. Line graph showing strength percentage (0-100%) over time since creation
 3. Inflection points marked: When habit crossed 20% (Building), 60% (Strong), 80% (Automatic)
@@ -468,6 +529,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Export: Share graph as image to social media or save to photos
 
 **Technical Notes:**
+
 - Store snapshots: Save strength value with timestamp on each calculation
 - Graph library: Victory Native Line Chart with custom markers
 - Data efficiency: Aggregate daily snapshots, don't query every calculation
@@ -477,15 +539,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.6: Weekly Insight Reports
+
 **As a** premium subscriber
 **I want to** receive weekly summaries of my progress
 **So that** I stay motivated and know where to focus effort
 
 **Prerequisites:**
+
 - Story 2.4 complete (analytics data)
 - Notification permissions granted
 
 **Acceptance Criteria:**
+
 1. Delivered every Sunday at 6:00 PM (configurable time in settings)
 2. Report content: "Your Week in Habits" headline, habits gained strength (list with % increase), habits lost strength (list with % decrease), habit at risk (prediction <40%), suggested focus ("Work on 'Exercise' - 12% compliance drop"), celebration (if any habit reached new level)
 3. In-app notification: Opens to full report screen with detailed breakdown
@@ -495,6 +560,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Opt-out: Settings toggle to disable weekly reports
 
 **Technical Notes:**
+
 - Scheduled job: Convex cron job runs Sunday 6PM user's timezone
 - Report generation: Analyze week's tracking data, compute trends
 - Notification: Push notification (if permitted) + in-app storage
@@ -504,14 +570,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 2.7: Subscription Management & Restore Purchases
+
 **As a** subscriber
 **I want to** manage my subscription and restore on new devices
 **So that** I have control and can access premium across devices
 
 **Prerequisites:**
+
 - Story 2.1 complete (IAP foundation)
 
 **Acceptance Criteria:**
+
 1. Settings screen shows current subscription status: "Premium (Annual)" or "Free Tier"
 2. If subscribed: Display expiration date, renewal date, "Manage Subscription" button (deep link to iOS Settings)
 3. If free: "Upgrade to Premium" button launches paywall
@@ -521,6 +590,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Subscription changes: If user downgrades, premium access continues until end of billing period
 
 **Technical Notes:**
+
 - Deep linking: Use Linking API to open App Store subscription management
 - Restore: Call StoreKit restoreCompletedTransactions(), validate receipts
 - Backend: Store subscription status in user document, validate on each app launch
@@ -530,17 +600,20 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 ### Epic 3: Retention Engine - Predictive Intelligence & Interventions
+
 **Timeline:** Months 3-4 (Weeks 17-24)
 **Stories:** 6 stories
 **Goal:** Reduce churn to <5% monthly through predictive interventions
 
 **Extended Goals:**
+
 - Implement Zhang et al. behavior prediction system
 - Deploy adaptive reminder infrastructure
 - Create automated intervention campaigns
 - Protect revenue by keeping subscribers engaged long-term
 
 **Success Metrics:**
+
 - <5% monthly churn rate among subscribers
 - Predictive reminders demonstrably improve completion rates by >10%
 - Premium feature engagement >70%
@@ -550,15 +623,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 3.1: Behavior Prediction Engine
+
 **As a** user (backend system)
 **I want to** predict tomorrow's completion probability for each habit
 **So that** interventions can be triggered proactively
 
 **Prerequisites:**
+
 - Habit strength calculation (Story 1.3) complete
 - Memory accessibility model implemented
 
 **Acceptance Criteria:**
+
 1. Prediction function: predictCompletionProbability(habitStrength, accessibility)
 2. Model achieves 65-77% accuracy (Zhang et al. benchmark)
 3. Calculated nightly for all active habits
@@ -568,7 +644,8 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Fallback: If insufficient data (<7 days tracking), use baseline estimate (50% probability)
 
 **Technical Notes:**
-- Algorithm: predictedProb = habitStrength * accessibility (simplified) or logistic regression
+
+- Algorithm: predictedProb = habitStrength \* accessibility (simplified) or logistic regression
 - Research: Zhang et al. (2021) validated model parameters
 - Scheduled job: Convex cron runs at midnight user timezone
 - Validation: A/B test predictions against random baseline to confirm lift
@@ -577,15 +654,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 3.2: Adaptive Reminder System (Premium)
+
 **As a** premium subscriber
 **I want to** receive reminders only when I'm likely to forget
 **So that** I'm not annoyed by unnecessary notifications
 
 **Prerequisites:**
+
 - Story 3.1 complete (predictions available)
 - Push notification permissions granted
 
 **Acceptance Criteria:**
+
 1. Reminder triggers: Only when predictedCompletionProb < 40% (high failure risk)
 2. Timing: Sent at user-configured time (e.g., 8:00 AM for morning habits)
 3. Personalization: "You have a 35% chance of completing Exercise today - let's beat the odds! 💪"
@@ -596,6 +676,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Effectiveness tracking: Measure completion rate lift from reminders vs no reminders
 
 **Technical Notes:**
+
 - Notification service: Expo Notifications or Firebase Cloud Messaging
 - Scheduling: Convex function schedules notifications based on predictions
 - Personalization: Template system with habit name, probability, encouragement
@@ -605,14 +686,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 3.3: Automated Intervention Campaigns
+
 **As a** user whose habit is declining
 **I want to** receive supportive interventions automatically
 **So that** I can recover before the habit fully breaks
 
 **Prerequisites:**
+
 - Story 3.1 complete (predictions and trend detection)
 
 **Acceptance Criteria:**
+
 1. Intervention tiers based on strength:
    - **Gentle nudge** (strength 40-60%): "Your 'Meditation' habit is slipping - get back on track today"
    - **Intensive support** (strength <40%): "3-day recovery challenge: Complete 'Exercise' 3 days in a row to rebuild momentum"
@@ -624,6 +708,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. Respectful timing: No campaigns during user-set "pause" periods or vacations
 
 **Technical Notes:**
+
 - Campaign engine: Convex scheduled functions check conditions daily
 - State machine: Track campaign progress (sent, opened, completed, abandoned)
 - Content library: Pre-written intervention messages based on behavioral science
@@ -633,14 +718,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 3.4: Progress Milestone Celebrations
+
 **As a** user building habits
 **I want to** be recognized when I reach meaningful milestones
 **So that** I feel accomplishment and stay motivated
 
 **Prerequisites:**
+
 - Habit strength calculation (Story 1.3) complete
 
 **Acceptance Criteria:**
+
 1. Milestone definitions:
    - **First completion** (Day 1): "Great start! Your first step toward automaticity 🎉"
    - **Building achieved** (20% strength): "Your habit is Building! You're on the path to automaticity 🌿"
@@ -654,6 +742,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. Opt-out: Settings toggle to disable milestone celebrations
 
 **Technical Notes:**
+
 - Detection: Monitor strength changes, trigger on threshold crossings
 - Animation: Lottie confetti or react-native-confetti
 - Share cards: Generate image with react-native-view-shot (habit name, milestone, science badge)
@@ -663,14 +752,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 3.5: Habit Pause/Resume with Strength Preservation
+
 **As a** user going on vacation or taking a break
 **I want to** pause habits without losing progress
 **So that** I can resume later without starting from zero
 
 **Prerequisites:**
+
 - Habit management (Story 1.7) complete
 
 **Acceptance Criteria:**
+
 1. Pause action: Long-press habit → "Pause Habit" option
 2. Pause dialog: "Taking a break? Pause to freeze your strength and resume anytime" with date picker for resume date
 3. While paused: Habit hidden from active list (moved to "Paused" section), strength frozen (no decay calculations), no reminders or interventions sent
@@ -680,6 +772,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Analytics tracking: Pause frequency, duration, resume rate
 
 **Technical Notes:**
+
 - Schema: Add pausedAt, resumeAt, strengthAtPause fields to habits table
 - Calculation exclusion: Skip paused habits in strength decay logic
 - Scheduled job: Convex cron checks resumeAt dates, reactivates automatically
@@ -689,14 +782,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 3.6: Predictive Insights in UI
+
 **As a** premium subscriber
 **I want to** see predictions and insights directly in the app
 **So that** I can proactively prevent habit failures
 
 **Prerequisites:**
+
 - Story 3.1 complete (predictions calculated)
 
 **Acceptance Criteria:**
+
 1. Home screen widget: "Habits at Risk Today" card showing habits with <40% completion probability
 2. Habit detail screen: "Prediction" section displaying: "Tomorrow's completion probability: 38%" with visual meter, "Factors: Recent compliance down 15%" breakdown, "Recommended action: Schedule morning reminder"
 3. Analytics dashboard: "Weekly Forecast" graph showing predicted completion rate next 7 days
@@ -706,6 +802,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Premium-only: Free users see "Unlock Predictions" teaser
 
 **Technical Notes:**
+
 - Data: Query predictions from habit document
 - Visualization: Progress meter or probability gauge
 - Factor breakdown: Display strength, accessibility, compliance contributions
@@ -715,17 +812,20 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 ### Epic 4: Viral Growth - Social Proof & Referrals
+
 **Timeline:** Months 4-5 (Weeks 25-32)
 **Stories:** 5 stories
 **Goal:** Achieve 1.3+ viral coefficient for organic user acquisition
 
 **Extended Goals:**
+
 - Reduce customer acquisition cost through viral mechanics
 - Accelerate MRR growth toward $10k goal
 - Build social proof and credibility
 - Create network effects through referrals
 
 **Success Metrics:**
+
 - 1.3+ viral coefficient (each user brings 1.3+ new users)
 - Share feature used by >20% of premium subscribers
 - Referral program drives >15% of new signups
@@ -735,14 +835,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 4.1: Beautiful Achievement Share Cards
+
 **As a** user hitting a milestone
 **I want to** share my achievement on social media
 **So that** I celebrate publicly and inspire others (driving app downloads)
 
 **Prerequisites:**
+
 - Story 3.4 complete (milestones defined)
 
 **Acceptance Criteria:**
+
 1. Triggered when: User reaches milestone (Building, Strong, Automatic, 90-day)
 2. Share card design: Gradient background (growth theme), habit name and milestone ("90 Days of Morning Meditation"), strength percentage with visual meter, science badge ("Backed by Lally et al. research"), subtle app name and icon (bottom), "Track your habits scientifically" tagline, user's name (optional, toggle in settings)
 3. Customization: Choose background color/gradient, add personal message overlay, select which elements to include
@@ -751,6 +854,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. Analytics: Track share button taps, successful shares, platform distribution
 
 **Technical Notes:**
+
 - Image generation: react-native-view-shot to convert React component to image
 - Design: Use brand colors, premium typography, clean layout
 - Templates: Pre-designed card templates for each milestone type
@@ -760,14 +864,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 4.2: Social Media Integration
+
 **As a** user
 **I want to** seamlessly share to my preferred platform
 **So that** the sharing process is frictionless
 
 **Prerequisites:**
+
 - Story 4.1 complete (share cards generated)
 
 **Acceptance Criteria:**
+
 1. Native share sheet: Uses iOS native share dialog with app-specific options
 2. Platform-specific optimization: Instagram Story (1080x1920px), Instagram Feed (1080x1080px), Twitter (1200x675px), Facebook (1200x630px)
 3. Pre-filled captions: Auto-generated with hashtags #habittracking #behaviorscience #90daychallenge and App Store link
@@ -777,6 +884,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Privacy: User controls whether to include habit details or just generic achievement
 
 **Technical Notes:**
+
 - Library: react-native-share for cross-platform sharing
 - Platform detection: Check installed apps, show relevant options
 - Image sizing: Generate multiple resolutions for different platforms
@@ -786,15 +894,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 4.3: Referral Program (Premium Feature)
+
 **As a** premium subscriber
 **I want to** refer friends and get rewarded
 **So that** I save money and help friends discover the app
 
 **Prerequisites:**
+
 - Story 2.1 complete (subscription system)
 - Referral tracking backend ready
 
 **Acceptance Criteria:**
+
 1. Referral dashboard: Accessed in Settings, displays unique referral link, referral code (6-character), total referrals (pending, converted), rewards earned (months of free premium)
 2. Reward structure: Referrer gets 1 month free premium when friend subscribes, friend (referee) gets 1 month free premium on signup
 3. Sharing: "Share Your Referral Link" button opens share sheet with pre-filled message: "Try the science-backed habit tracker I use - [link]"
@@ -804,6 +915,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Terms: Clear T&Cs displayed, no gaming/fraud detection
 
 **Technical Notes:**
+
 - Attribution: Use Branch.io or Firebase Dynamic Links for referral tracking
 - Backend: Store referral relationships (referrerId, refereeId, status, createdAt)
 - Subscription extension: Update subscription expiration date on successful conversion
@@ -813,14 +925,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 4.4: Evidence-Based Habit Templates Library
+
 **As a** new user
 **I want to** browse pre-built habit templates
 **So that** I can quickly start tracking proven behaviors
 
 **Prerequisites:**
+
 - Habit creation (Story 1.1) complete
 
 **Acceptance Criteria:**
+
 1. Template library: Accessed via "Browse Templates" button on habit creation screen
 2. Categories: Morning Routine (meditation, exercise, journaling), Health & Fitness (hydration, steps, sleep), Productivity (deep work, reading, learning), Mindfulness (gratitude, breathing, mindfulness)
 3. Template cards: Habit name, description, recommended frequency, difficulty level (beginner, intermediate, advanced), science reference (e.g., "Proven effective in Lally et al. 2010 study")
@@ -830,6 +945,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Free access: Template browsing free, import limited to 3 for free users (unlimited for premium)
 
 **Technical Notes:**
+
 - Data source: JSON file or Convex table with curated templates
 - Schema: name, description, frequency, category, difficulty, scienceReference, icon, color
 - UI: Scrollable grid or list, search/filter by category
@@ -839,14 +955,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 4.5: App Store Rating Prompts
+
 **As a** satisfied user
 **I want to** be prompted to rate the app at the right moment
 **So that** I can support the app's growth (and others discover it)
 
 **Prerequisites:**
+
 - App published on App Store
 
 **Acceptance Criteria:**
+
 1. Trigger timing: After 7 days of usage AND after completing 10 total habit check-offs AND after reaching first "Building" milestone (20% strength)
 2. Native prompt: Uses iOS StoreKit SKStoreReviewController (native rating dialog)
 3. Frequency: Max once per app version, never more than 3 times total
@@ -856,6 +975,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Analytics: Track prompt shown, user rated, rating value (if available)
 
 **Technical Notes:**
+
 - API: StoreKit SKStoreReviewController (iOS 14+)
 - Tracking: AsyncStorage to track prompt history (shown count, last shown date)
 - Trigger logic: Check conditions on milestone events, wait 24 hours after major updates
@@ -865,17 +985,20 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 ### Epic 5: Polish & Scale - Premium UX & Performance
+
 **Timeline:** Months 5-6 (Weeks 33-40)
 **Stories:** 7 stories (includes onboarding moved from MVP)
 **Goal:** Deliver Productive-level design quality and scale to 10,000+ users
 
 **Extended Goals:**
+
 - Justify premium pricing through superior UX
 - Prepare infrastructure for growth to $10k MRR
 - Complete accessibility and compliance requirements
 - Establish app as category leader
 
 **Success Metrics:**
+
 - App feels "premium" vs competitors (user feedback)
 - Performance benchmarks met (60fps, <2s launch)
 - Supports 10,000+ users without degradation
@@ -885,14 +1008,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.1: Refined Design System & Animations
+
 **As a** user
 **I want to** enjoy smooth, delightful animations throughout the app
 **So that** the premium experience justifies the subscription cost
 
 **Prerequisites:**
+
 - Story 1.8 complete (design system foundation)
 
 **Acceptance Criteria:**
+
 1. Microinteractions: Habit check-off (bouncy checkmark animation), strength level up (confetti + level badge growth), swipe gestures (rubber-band spring physics), button taps (subtle scale feedback)
 2. Page transitions: Smooth slide/fade between screens (iOS-native feel), modal presentations (spring animation from bottom)
 3. Loading states: Skeleton screens for data loading (no spinners), shimmer effect on placeholder cards
@@ -902,6 +1028,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Consistency: All animations share spring physics parameters (tension, friction)
 
 **Technical Notes:**
+
 - Animation library: React Native Reanimated (useSharedValue, withSpring, withTiming)
 - Haptics: react-native-haptic-feedback for iOS native vibrations
 - Skeletons: react-native-skeleton-placeholder or custom implementation
@@ -911,15 +1038,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.2: Basic Onboarding Flow
+
 **As a** first-time user
 **I want to** understand the science-backed approach quickly
 **So that** I'm motivated to start tracking habits
 
 **Prerequisites:**
+
 - Core habit features complete (Epic 1)
 - Onboarding screen designs finalized
 
 **Acceptance Criteria:**
+
 1. Three-screen onboarding flow on first app launch
 2. Screen 1: "Real Habit Science, Not Just Streaks" - Shows Lally automaticity curve visualization, explains 90-day formation
 3. Screen 2: "Live Demo" - Interactive: create example "Morning Run" habit, tap to complete, see strength calculate to 3%, delete example
@@ -930,6 +1060,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 8. Completion rate >60% target
 
 **Technical Notes:**
+
 - Library: react-native-onboarding-swiper or custom implementation
 - Visualizations: Use Victory Native charts for automaticity curve
 - Persistence: AsyncStorage for onboarding_completed flag
@@ -939,14 +1070,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.3: Advanced Onboarding with Interactive Demo
+
 **As a** new user
 **I want to** experience the habit science interactively
 **So that** I'm convinced to commit before creating real habits
 
 **Prerequisites:**
+
 - Story 5.2 complete (basic onboarding)
 
 **Acceptance Criteria:**
+
 1. Enhanced Screen 2 (replaces basic demo): Interactive automaticity curve: User drags slider from Day 1 → Day 90, curve animates growth, strength percentage updates in real-time, "With perfect compliance, you reach 100% automaticity by day 90" education
 2. Live prediction demo: Create sample "Morning Run" habit with 14 days of mock data (70% compliance), show prediction calculation: "Based on 14 days of data, you have a 68% chance of completing tomorrow", reveal breakdown: Baseline (32%), Compliance (70%) = 68% prediction
 3. Before/after comparison: "Without our science" (shows simple streak counter) vs "With our predictions" (shows adaptive reminders preventing failure)
@@ -955,6 +1089,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. A/B test: Basic onboarding vs advanced interactive to measure impact on retention
 
 **Technical Notes:**
+
 - Interactions: Pan responder for slider, animated charts updating on drag
 - Sample data: Pre-populated 14-day habit with realistic compliance pattern
 - Visualizations: Victory Native charts for automaticity curve
@@ -964,15 +1099,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.4: Cross-Device Sync (Convex Backend)
+
 **As a** user with multiple iOS devices
 **I want to** access my habits seamlessly across iPhone and iPad
 **So that** I can track anywhere without manual syncing
 
 **Prerequisites:**
+
 - Convex backend configured (already in place)
 - Authentication system ready
 
 **Acceptance Criteria:**
+
 1. Real-time sync: Habit check-offs sync across devices within 30 seconds when online
 2. Conflict resolution: Last-write-wins based on strengthUpdatedAt timestamp
 3. Offline resilience: Devices queue changes offline, sync when reconnected
@@ -982,6 +1120,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Bandwidth efficiency: Only sync changed data, not entire dataset
 
 **Technical Notes:**
+
 - Backend: Convex provides real-time subscriptions and optimistic updates
 - Auth: Use Clerk or Auth0 for secure user authentication
 - Sync strategy: Convex client automatically handles sync, configure retry logic
@@ -991,14 +1130,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.5: Performance Optimization
+
 **As a** user
 **I want to** experience instant app responsiveness
 **So that** daily tracking feels effortless and premium
 
 **Prerequisites:**
+
 - All core features implemented (Epics 1-3)
 
 **Acceptance Criteria:**
+
 1. Cold start: App launches in <2 seconds from tap to interactive home screen
 2. Hot start: Resume from background in <500ms
 3. UI rendering: Maintain 60fps during scrolling, animations, gestures
@@ -1008,6 +1150,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 7. Battery impact: Minimal background drain (<1% per hour with location off)
 
 **Technical Notes:**
+
 - Profiling: Use React Native Performance Monitor, Xcode Instruments
 - Optimizations: Memoize components with React.memo, use FlatList for long lists, lazy load heavy screens, optimize images (WebP, appropriate resolutions), debounce expensive calculations
 - Bundle size: Code split routes, tree-shake unused dependencies
@@ -1017,14 +1160,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.6: Accessibility Improvements
+
 **As a** user with accessibility needs
 **I want to** use the app with assistive technologies
 **So that** I can build habits regardless of ability
 
 **Prerequisites:**
+
 - All UI components implemented
 
 **Acceptance Criteria:**
+
 1. VoiceOver support: All interactive elements labeled ("Tap to complete Morning Meditation habit"), screen reader announces habit strength ("Exercise habit, 65% strength, Strong level"), navigation makes sense in linear order
 2. Dynamic Type: All text respects iOS text size settings (up to XXXL), layouts adapt without breaking or clipping
 3. Contrast ratios: Minimum 4.5:1 for normal text, 3:1 for large text (WCAG AA), color not sole indicator (use icons + color for states)
@@ -1033,6 +1179,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. Keyboard navigation: Support for external keyboard (iPad), logical tab order
 
 **Technical Notes:**
+
 - Testing: Enable VoiceOver, test all flows, use Xcode Accessibility Inspector
 - Semantic HTML: Use proper heading hierarchy (Text with accessibilityRole="header")
 - ARIA equivalents: accessibilityLabel, accessibilityHint, accessibilityRole props
@@ -1042,14 +1189,17 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 5.7: Data Export & Privacy Compliance
+
 **As a** user
 **I want to** export my data and have control over privacy
 **So that** I own my information and trust the app
 
 **Prerequisites:**
+
 - All data models finalized
 
 **Acceptance Criteria:**
+
 1. Data export: "Export My Data" button in Settings → generates CSV or JSON file → includes all habits, tracking history, strength calculations, timestamps → email or download to Files app
 2. Data deletion: "Delete My Account" option → confirmation dialog with warning → deletes all user data permanently (GDPR right to erasure) → confirmation email sent
 3. Privacy policy: Clear, readable policy linked in app → explains data collection (minimal: device ID, habit names, completion timestamps, subscription status) → third-party sharing disclosure (none beyond payment processing) → user rights (access, deletion, portability)
@@ -1058,6 +1208,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. Terms of Service: Clear terms linked in app, acceptance required on signup
 
 **Technical Notes:**
+
 - Export format: CSV for broad compatibility, JSON for developer users
 - Deletion: Hard delete from Convex database, not soft delete (compliance requirement)
 - Privacy policy: Use Termly or similar generator, host on website
@@ -1067,11 +1218,13 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 ### Epic 6: App Store Launch - Submission & Distribution
+
 **Timeline:** Month 6-7 (Weeks 41-48)
 **Stories:** 8 stories
 **Goal:** Successfully submit and launch app on Apple App Store
 
 **Extended Goals:**
+
 - Pass App Store review on first submission
 - Achieve strong App Store presence with optimized metadata
 - Ensure all compliance and legal requirements met
@@ -1079,6 +1232,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 - Prepare beta testing infrastructure
 
 **Success Metrics:**
+
 - App Store approval achieved within 2 submission attempts
 - App Store page optimized with 4.5+ star potential
 - TestFlight beta with 50+ external testers before submission
@@ -1088,16 +1242,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.1: App Store Connect Configuration
+
 **As a** developer preparing for launch
 **I want to** set up App Store Connect properly
 **So that** I can manage the app lifecycle and submissions
 
 **Prerequisites:**
+
 - Apple Developer account active ($99/year)
 - Bundle ID registered
 - Development and distribution certificates configured
 
 **Acceptance Criteria:**
+
 1. App record created in App Store Connect with correct bundle ID
 2. App name reserved (must be unique across App Store)
 3. Primary language set to English (US)
@@ -1109,6 +1266,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 9. Export compliance: Determine if CCATS required (encryption declaration)
 
 **Technical Notes:**
+
 - Use Xcode to manage certificates and provisioning profiles
 - App name limit: 30 characters
 - Bundle ID cannot be changed after first submission
@@ -1118,16 +1276,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.2: App Metadata & ASO (App Store Optimization)
+
 **As a** potential user browsing the App Store
 **I want to** understand what the app does and why it's valuable
 **So that** I can decide whether to download
 
 **Prerequisites:**
+
 - App branding finalized (name, tagline)
 - Unique value proposition defined
 - Competitive research completed
 
 **Acceptance Criteria:**
+
 1. **App Name** (30 chars): "HabitStrength: Science Tracker" or similar - includes keyword
 2. **Subtitle** (30 chars): "Build automatic habits faster" - clear value prop
 3. **Description** (4000 chars):
@@ -1142,6 +1303,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 6. **What's New** (4000 chars): For updates - initial launch can be brief
 
 **Technical Notes:**
+
 - Keywords research: Use App Store search suggestions, competitor analysis
 - Avoid keyword stuffing in name/subtitle (rejection risk)
 - Description doesn't affect search ranking (keywords do)
@@ -1151,16 +1313,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.3: App Screenshots & Preview Video
+
 **As a** potential user
 **I want to** see the app in action before downloading
 **So that** I know if it fits my needs
 
 **Prerequisites:**
+
 - App UI finalized and polished
 - Key features implemented and working
 - Device for screenshots (iPhone 14 Pro Max recommended for largest size)
 
 **Acceptance Criteria:**
+
 1. **Screenshots** (2-10 images, min 3 required):
    - iPhone 6.7" (1290 x 2796): Required, scales to smaller devices
    - Include text overlays highlighting features
@@ -1181,6 +1346,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Export as .mov or .mp4, max 500MB
 
 **Technical Notes:**
+
 - Tools: Figma/Sketch for mockups, or real screenshots + overlay tool
 - Screenshot services: App Store Screenshot Builder, Previewed.app
 - Video capture: QuickTime screen recording on simulator, edit in iMovie/Final Cut
@@ -1190,15 +1356,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.4: App Icon & Visual Assets
+
 **As a** user
 **I want to** recognize the app by its icon
 **So that** I can find it easily on my home screen
 
 **Prerequisites:**
+
 - Brand identity established (colors, style)
 - Design system finalized
 
 **Acceptance Criteria:**
+
 1. **App Icon** (1024x1024px):
    - Simple, recognizable design (works at small sizes)
    - No transparency (solid background required)
@@ -1218,6 +1387,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Get feedback from beta testers
 
 **Technical Notes:**
+
 - Icon generator: appicon.co or use Xcode asset catalog
 - Avoid gradients that don't scale well
 - Competitive analysis: Check top habit tracker icons
@@ -1227,15 +1397,18 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.5: Privacy Policy & Terms of Service
+
 **As a** user concerned about privacy
 **I want to** understand how my data is used
 **So that** I can trust the app
 
 **Prerequisites:**
+
 - Data collection practices documented
 - Legal entity established (or personal name)
 
 **Acceptance Criteria:**
+
 1. **Privacy Policy** (hosted on web):
    - What data collected: Habit names, completion timestamps, device ID, email (if auth)
    - How data used: App functionality only, no third-party sharing
@@ -1260,6 +1433,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Data Not Linked to You: Crash data, diagnostics
 
 **Technical Notes:**
+
 - Generator tools: Termly, iubenda, or custom template
 - Host on: GitHub Pages (free), your domain, or Carrd
 - Review: Have lawyer review if budget allows
@@ -1269,16 +1443,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.6: TestFlight Beta Testing
+
 **As a** developer
 **I want to** test the app with real users before public launch
 **So that** I can catch bugs and gather feedback
 
 **Prerequisites:**
+
 - App Store Connect configured (Story 6.1)
 - App builds successfully in release mode
 - Crash reporting configured (Sentry or similar)
 
 **Acceptance Criteria:**
+
 1. **Internal testing** (up to 100 testers):
    - Upload first build to TestFlight via Xcode or Fastlane
    - Add internal testers (teammates, if any)
@@ -1301,6 +1478,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Re-test on fixes before final submission
 
 **Technical Notes:**
+
 - Xcode: Archive → Distribute → TestFlight
 - Fastlane: Automate builds with fastlane deliver
 - Beta review time: 24-48 hours typically
@@ -1311,16 +1489,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.7: App Review Preparation & Submission
+
 **As a** developer
 **I want to** pass App Review on first try
 **So that** I can launch without delays
 
 **Prerequisites:**
+
 - All Epic 1-5 features complete and polished
 - TestFlight beta completed with feedback addressed
 - All metadata and assets finalized
 
 **Acceptance Criteria:**
+
 1. **Pre-submission checklist**:
    - ✅ App builds without warnings in release mode
    - ✅ No crashes in critical flows (tested via TestFlight)
@@ -1355,6 +1536,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Monitor review status daily
 
 **Technical Notes:**
+
 - Review time: 24-48 hours typical, can be 7+ days
 - Rejection: Address issues, resubmit with notes explaining fixes
 - Expedited review: Available in emergencies (use sparingly)
@@ -1365,16 +1547,19 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ---
 
 #### Story 6.8: Launch Day Preparation & Monitoring
+
 **As a** developer launching publicly
 **I want to** ensure smooth launch and catch issues immediately
 **So that** first impressions are positive
 
 **Prerequisites:**
+
 - App approved by Apple (Story 6.7)
 - Monitoring and analytics configured
 - Support infrastructure ready
 
 **Acceptance Criteria:**
+
 1. **Pre-launch**:
    - Press release drafted (if applicable)
    - Product Hunt submission prepared
@@ -1394,7 +1579,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Track downloads (App Store Connect analytics)
    - Subscription conversions (RevenueCat or App Store Connect)
 4. **First 24-hour goals**:
-   - >100 downloads
+   - > 100 downloads
    - <1% crash rate
    - At least 5 positive reviews (from beta testers/early supporters)
    - No critical bugs reported
@@ -1407,6 +1592,7 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
    - Iterate on App Store metadata based on conversion rates
 
 **Technical Notes:**
+
 - Analytics: App Store Connect Analytics + internal (Mixpanel, Amplitude)
 - Monitoring: Set up alerts for crash rate >1%, server errors
 - Support: Use Intercom, Help Scout, or plain email
@@ -1419,4 +1605,3 @@ Each epic is sized for 3-4 week sprints with clear success metrics tied to the $
 ## Out of Scope (Future Phases)
 
 Features intentionally excluded from v1.0 to maintain solo dev velocity and revenue focus:
-

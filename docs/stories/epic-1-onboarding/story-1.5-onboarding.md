@@ -38,11 +38,13 @@
 ## Technical Notes
 
 **Libraries to Consider:**
+
 - `react-native-onboarding-swiper` or custom implementation
 - `victory-native` for automaticity curve visualization
 - `@react-native-async-storage/async-storage` for persistence
 
 **Implementation:**
+
 - Library: react-native-onboarding-swiper or custom implementation
 - Visualizations: Use Victory Native charts for automaticity curve
 - Persistence: AsyncStorage for onboarding_completed flag
@@ -50,6 +52,7 @@
 - Design: Match premium aesthetic (calm, science-forward, no gimmicks)
 
 **Key Files to Create:**
+
 - `src/screens/OnboardingScreen.tsx` - Main onboarding flow
 - `src/components/Onboarding/WelcomeScreen.tsx` - Screen 1
 - `src/components/Onboarding/ScienceExplainerScreen.tsx` - Screen 2
@@ -61,22 +64,26 @@
 ## Testing Strategy
 
 **Unit Tests:**
+
 - Onboarding completion flag persistence
 - Skip button functionality
 - Screen navigation flow
 
 **Integration Tests:**
+
 - Full onboarding flow → first habit creation
 - Analytics events firing correctly
 - Onboarding never shows again after completion
 
 **User Testing:**
+
 - Test with 10 first-time users
 - Measure completion rate
 - Measure time to first habit created
 - Gather feedback on clarity
 
 **Analytics to Track:**
+
 - Onboarding start rate
 - Screen-by-screen drop-off
 - Skip vs. complete rate
@@ -88,30 +95,35 @@
 ## Implementation Plan (Week 2)
 
 ### Day 6: Onboarding Architecture
+
 - Create OnboardingScreen component (3 pages)
 - Implement swipeable navigation
 - Add page indicator dots
 - Design completion detection logic
 
 ### Day 7: Screen 1 - Welcome
+
 - Design welcome layout
 - Add hero illustration/animation
 - Implement "Get Started" CTA
 - Add skip button
 
 ### Day 8: Screen 2 - Science Explainer
+
 - Create visual explanation of strength algorithm
 - Show example progression (0% → 100%)
 - Add animated demo
 - Write copy citing research
 
 ### Day 9: Screen 3 - Guided First Habit
+
 - Embed simplified CreateHabitModal
 - Pre-select popular template
 - Guide through customization
 - Add celebration animation
 
 ### Day 10: Polish & Persistence
+
 - Implement completion flag
 - Skip onboarding on subsequent opens
 - Add analytics tracking

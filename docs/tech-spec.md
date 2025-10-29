@@ -70,32 +70,38 @@ habit_tracking_app/
 ### Key File Changes Required
 
 **New Files (Epic 1 - MVP):**
+
 - `src/screens/OnboardingScreen.tsx` - 3-screen onboarding flow (moved to Epic 5)
 - `src/components/HabitList.tsx` - Optimized FlatList for habit display
 - `src/hooks/useHabitStrength.ts` - Hook for strength calculations
 
 **New Files (Epic 2 - Premium):**
+
 - `src/utils/subscriptionManager.ts` - StoreKit integration
 - `src/screens/PaywallScreen.tsx` - Strategic subscription paywall
 - `src/components/Premium/*` - All premium UI components
 - `convex/subscriptions.ts` - Receipt validation backend
 
 **New Files (Epic 3 - Retention):**
+
 - `convex/predictions.ts` - Prediction engine (Zhang et al.)
 - `src/utils/notificationScheduler.ts` - Adaptive reminders
 - `convex/insights.ts` - Weekly report generation
 
 **New Files (Epic 4 - Viral):**
+
 - `src/screens/ShareScreen.tsx` - Share card generator
 - `src/components/ReferralCard.tsx` - Referral program UI
 - `convex/referrals.ts` - Referral tracking backend
 
 **New Files (Epic 5 - Polish):**
+
 - `src/components/AnimatedComponents.tsx` - Reanimated animations
 - `src/screens/OnboardingScreen.tsx` - Advanced interactive onboarding
 - `src/utils/accessibility.ts` - Accessibility helpers
 
 **Files to Modify:**
+
 - `convex/schema.ts` - Add subscription, prediction, referral tables
 - `src/App.tsx` - Add navigation, subscription provider
 - `src/components/HabitCard.tsx` - Add swipe gestures, animations
@@ -113,29 +119,34 @@ Local-first architecture where all UI state lives on device, syncs to Convex bac
 ### Key Technical Decisions
 
 #### 1. **React Native + Expo (Managed Workflow)**
+
 - **Why:** Solo dev velocity, no need for native modules beyond standard Expo SDK
 - **Version:** React Native 0.74+, Expo SDK 51+
 - **Benefits:** Hot reload, OTA updates, easier TestFlight deployment
 - **Trade-offs:** Limited native customization (acceptable for this scope)
 
 #### 2. **Convex Backend (BaaS)**
+
 - **Why:** Real-time sync, optimistic updates, serverless scaling
 - **Current State:** Already configured, habit strength algorithms implemented
 - **Responsibilities:** Data persistence, business logic, scheduled jobs (predictions, insights)
 - **Scaling:** Handles 10,000+ users without architecture changes
 
 #### 3. **TypeScript Strict Mode**
+
 - **Why:** Solo dev maintainability, catch errors at compile time
 - **Coverage:** 100% of new code, gradually type existing untyped code
 - **Benefit:** Self-documenting code, refactoring confidence
 
 #### 4. **State Management: React Context + Convex Hooks**
+
 - **Why:** Convex provides optimistic updates and real-time subscriptions
 - **Pattern:** `useQuery()` for reads, `useMutation()` for writes
 - **Local State:** React Context for UI state (theme, navigation)
 - **No Redux:** Unnecessary complexity for this scope
 
 #### 5. **Navigation: React Navigation (Stack + Bottom Tabs)**
+
 - **Why:** Industry standard, TypeScript support, deep linking
 - **Structure:**
   ```
@@ -146,29 +157,34 @@ Local-first architecture where all UI state lives on device, syncs to Convex bac
   ```
 
 #### 6. **Subscription Infrastructure: StoreKit 2 (Native iOS)**
+
 - **Why:** Apple requirement, lowest fees (15-30% vs 3rd party)
 - **Library:** `react-native-iap` (community-maintained, 10k+ stars)
 - **Server Validation:** Convex function validates receipts with Apple API
 - **Security:** Never trust client-side subscription status
 
 #### 7. **Notification Strategy: Local + Push (Expo Notifications)**
+
 - **Why:** Adaptive reminders require server-triggered push
 - **Local:** Milestone celebrations (instant feedback)
 - **Push:** Predictive reminders (triggered by Convex scheduled functions)
 - **Permission:** Request after user creates 2nd habit (proven value)
 
 #### 8. **Analytics: Mixpanel (Privacy-Focused)**
+
 - **Why:** Conversion funnel tracking, cohort analysis
 - **Events:** Onboarding steps, paywall views, subscription conversions, feature usage
 - **Privacy:** Aggregated, anonymized, GDPR-compliant
 - **Alternative:** PostHog (open-source, self-hosted option)
 
 #### 9. **Error Tracking: Sentry**
+
 - **Why:** Stack traces, release tracking, performance monitoring
 - **Configuration:** Source maps uploaded on release builds
 - **Alerts:** Critical errors (crash rate >1%) notify developer
 
 #### 10. **Testing Strategy:**
+
 - **Unit Tests:** Jest for habit strength calculations (80%+ coverage)
 - **Integration Tests:** React Native Testing Library for UI flows
 - **E2E Tests:** Detox for critical flows (subscription, onboarding) - optional
@@ -181,6 +197,7 @@ Local-first architecture where all UI state lives on device, syncs to Convex bac
 ### Frontend (React Native)
 
 **Core Dependencies:**
+
 - `react-native`: 0.74.1 - Core framework
 - `expo`: ^51.0.0 - Managed workflow tooling
 - `typescript`: ^5.3.0 - Type safety
@@ -190,6 +207,7 @@ Local-first architecture where all UI state lives on device, syncs to Convex bac
   - `@react-navigation/bottom-tabs`: ^6.5.0
 
 **UI & Animations:**
+
 - `react-native-reanimated`: ^3.8.0 - 60fps animations
 - `react-native-gesture-handler`: ^2.16.0 - Swipe gestures
 - `react-native-vector-icons`: ^10.0.0 - Icon library
@@ -198,22 +216,27 @@ Local-first architecture where all UI state lives on device, syncs to Convex bac
 - `lottie-react-native`: ^6.7.0 - Confetti animations
 
 **State & Data:**
+
 - `convex`: ^1.10.0 - Backend client SDK
 - `@react-native-async-storage/async-storage`: ^1.23.0 - Local persistence
 
 **Subscription & Monetization:**
+
 - `react-native-iap`: ^12.13.0 - StoreKit integration
 - `react-native-purchases`: Alternative - RevenueCat wrapper (evaluate)
 
 **Notifications:**
+
 - `expo-notifications`: ^0.27.0 - Push notifications
 - `expo-device`: ^6.0.0 - Device info for scheduling
 
 **Analytics & Monitoring:**
+
 - `@sentry/react-native`: ^5.20.0 - Error tracking
 - `mixpanel-react-native`: ^3.0.0 - Analytics
 
 **Utilities:**
+
 - `date-fns`: ^3.3.0 - Date manipulation (lightweight vs moment)
 - `zod`: ^3.22.0 - Runtime validation
 - `react-native-share`: ^10.0.0 - Social sharing
@@ -222,11 +245,13 @@ Local-first architecture where all UI state lives on device, syncs to Convex bac
 ### Backend (Convex)
 
 **Current Setup:**
+
 - Convex account configured
 - Database tables: `habits`, `trackingHistory`
 - Functions: `generateHabitStrengthSnapshot()` in `habitStrength.ts`
 
 **New Tables (Epic 2-4):**
+
 ```typescript
 // convex/schema.ts
 export default defineSchema({
@@ -251,13 +276,14 @@ export default defineSchema({
   }),
 
   trackingHistory: defineTable({
-    habitId: v.id("habits"),
+    habitId: v.id('habits'),
     userId: v.string(),
     completedAt: v.number(),
     date: v.string(), // YYYY-MM-DD
   }),
 
-  subscriptions: defineTable({ // Epic 2
+  subscriptions: defineTable({
+    // Epic 2
     userId: v.string(),
     platform: v.string(), // "ios" | "android"
     productId: v.string(), // "monthly" | "annual"
@@ -267,8 +293,9 @@ export default defineSchema({
     receiptData: v.optional(v.string()),
   }),
 
-  predictions: defineTable({ // Epic 3
-    habitId: v.id("habits"),
+  predictions: defineTable({
+    // Epic 3
+    habitId: v.id('habits'),
     userId: v.string(),
     date: v.string(), // YYYY-MM-DD
     completionProb: v.number(),
@@ -276,20 +303,26 @@ export default defineSchema({
     calculatedAt: v.number(),
   }),
 
-  insights: defineTable({ // Epic 3
+  insights: defineTable({
+    // Epic 3
     userId: v.string(),
     weekOf: v.string(), // YYYY-MM-DD (Monday)
     content: v.object({
-      habitsGained: v.array(v.object({ name: v.string(), increase: v.number() })),
+      habitsGained: v.array(
+        v.object({ name: v.string(), increase: v.number() })
+      ),
       habitsLost: v.array(v.object({ name: v.string(), decrease: v.number() })),
-      habitsAtRisk: v.array(v.object({ name: v.string(), probability: v.number() })),
+      habitsAtRisk: v.array(
+        v.object({ name: v.string(), probability: v.number() })
+      ),
       recommendations: v.array(v.string()),
     }),
     createdAt: v.number(),
     readAt: v.optional(v.number()),
   }),
 
-  referrals: defineTable({ // Epic 4
+  referrals: defineTable({
+    // Epic 4
     referrerId: v.string(), // User who referred
     refereeId: v.optional(v.string()), // User who signed up
     referralCode: v.string(), // 6-char code
@@ -302,21 +335,26 @@ export default defineSchema({
 ```
 
 **Scheduled Functions (Convex Cron):**
+
 ```typescript
 // Epic 3: Nightly predictions
-crons.daily("calculate-predictions", { hourUTC: 0 }, async (ctx) => {
+crons.daily('calculate-predictions', { hourUTC: 0 }, async (ctx) => {
   // Calculate tomorrow's completion probability for all active habits
   // Trigger adaptive reminders for predictions <40%
 });
 
 // Epic 3: Weekly insights
-crons.weekly("generate-insights", { dayOfWeek: "sunday", hourUTC: 18 }, async (ctx) => {
-  // Analyze week's data, generate personalized insights
-  // Send push notification + store in-app
-});
+crons.weekly(
+  'generate-insights',
+  { dayOfWeek: 'sunday', hourUTC: 18 },
+  async (ctx) => {
+    // Analyze week's data, generate personalized insights
+    // Send push notification + store in-app
+  }
+);
 
 // Epic 3: Auto-resume paused habits
-crons.hourly("resume-habits", { minuteUTC: 0 }, async (ctx) => {
+crons.hourly('resume-habits', { minuteUTC: 0 }, async (ctx) => {
   // Check for habits with resumeAt < now, reactivate
 });
 ```
@@ -324,16 +362,19 @@ crons.hourly("resume-habits", { minuteUTC: 0 }, async (ctx) => {
 ### Development Tools
 
 **Code Quality:**
+
 - ESLint + Prettier - Consistent formatting
 - Husky - Pre-commit hooks
 - TypeScript strict mode - Type safety
 
 **CI/CD:**
+
 - GitHub Actions (or similar) - Automated builds
 - Fastlane - iOS build automation
 - EAS Build (Expo) - Cloud builds for TestFlight
 
 **Design:**
+
 - Figma - UI mockups and design system
 - SF Symbols - iOS-native icons
 
@@ -344,6 +385,7 @@ crons.hourly("resume-habits", { minuteUTC: 0 }, async (ctx) => {
 ### Habit Strength Calculation (Already Implemented)
 
 **Algorithm:** Zhang et al. (2021) + Lally et al. (2010)
+
 - **Location:** `convex/habitStrength.ts` (existing)
 - **Formula:** `strength = baseline(days) × compliance(30-day window)`
 - **Baseline:** Logistic curve: `1 / (1 + exp(-k × (days - m)))` normalized to 100% at day 90
@@ -351,6 +393,7 @@ crons.hourly("resume-habits", { minuteUTC: 0 }, async (ctx) => {
 - **Performance:** O(1) calculation, cached until new tracking data
 
 **Categories:**
+
 - Starting: 0-20%
 - Building: 20-40%
 - Developing: 40-60%
@@ -358,6 +401,7 @@ crons.hourly("resume-habits", { minuteUTC: 0 }, async (ctx) => {
 - Automatic: 80-100%
 
 **Integration Points:**
+
 - Called on every habit completion (Story 1.2)
 - Results displayed via `HabitStrengthIndicator` (Story 1.4)
 - Historical snapshots stored for analytics (Epic 2)
@@ -365,22 +409,24 @@ crons.hourly("resume-habits", { minuteUTC: 0 }, async (ctx) => {
 ### Behavior Prediction System (Epic 3)
 
 **Algorithm:** Zhang et al. (2021) Validated Model
+
 - **Input:** Habit strength (0-1), memory accessibility (recent activity)
 - **Formula:** `P(completion) = habitStrength × accessibility`
 - **Accuracy:** 65-77% (research-validated benchmark)
 - **Fallback:** <7 days data → use 50% baseline
 
 **Implementation:**
+
 ```typescript
 // convex/predictions.ts
 export const calculatePrediction = mutation({
-  args: { habitId: v.id("habits") },
+  args: { habitId: v.id('habits') },
   handler: async (ctx, { habitId }) => {
     const habit = await ctx.db.get(habitId);
     const recentCompletions = await ctx.db
-      .query("trackingHistory")
-      .withIndex("by_habit", q => q.eq("habitId", habitId))
-      .order("desc")
+      .query('trackingHistory')
+      .withIndex('by_habit', (q) => q.eq('habitId', habitId))
+      .order('desc')
       .take(7);
 
     // Calculate memory accessibility (recency factor)
@@ -390,7 +436,7 @@ export const calculatePrediction = mutation({
     const prediction = habit.strength * accessibility;
 
     // Store prediction for validation
-    await ctx.db.insert("predictions", {
+    await ctx.db.insert('predictions', {
       habitId,
       userId: habit.userId,
       date: tomorrow(),
@@ -417,6 +463,7 @@ export const calculatePrediction = mutation({
 ### Subscription Infrastructure (Epic 2)
 
 **StoreKit 2 Integration:**
+
 ```typescript
 // src/utils/subscriptionManager.ts
 import * as IAP from 'react-native-iap';
@@ -429,7 +476,7 @@ export class SubscriptionManager {
 
   async loadProducts() {
     const products = await IAP.getSubscriptions({
-      skus: ['monthly_premium', 'annual_premium']
+      skus: ['monthly_premium', 'annual_premium'],
     });
     return products;
   }
@@ -438,7 +485,7 @@ export class SubscriptionManager {
     try {
       const purchase = await IAP.requestSubscription({
         sku: productId,
-        andDangerouslyFinishTransactionAutomaticallyIOS: false
+        andDangerouslyFinishTransactionAutomaticallyIOS: false,
       });
 
       // Validate receipt with backend
@@ -464,6 +511,7 @@ export class SubscriptionManager {
 ```
 
 **Receipt Validation (Convex):**
+
 ```typescript
 // convex/subscriptions.ts
 export const validateAppleReceipt = mutation({
@@ -474,8 +522,8 @@ export const validateAppleReceipt = mutation({
       method: 'POST',
       body: JSON.stringify({
         'receipt-data': receiptData,
-        'password': process.env.APPLE_SHARED_SECRET
-      })
+        password: process.env.APPLE_SHARED_SECRET,
+      }),
     });
 
     const data = await response.json();
@@ -485,42 +533,44 @@ export const validateAppleReceipt = mutation({
       const latestReceipt = data.latest_receipt_info[0];
 
       // Update or insert subscription
-      await ctx.db.insert("subscriptions", {
+      await ctx.db.insert('subscriptions', {
         userId: ctx.auth.getUserIdentity().tokenIdentifier,
-        platform: "ios",
+        platform: 'ios',
         productId: latestReceipt.product_id,
         originalTransactionId: latestReceipt.original_transaction_id,
         expiresAt: parseInt(latestReceipt.expires_date_ms),
-        status: "active",
-        receiptData
+        status: 'active',
+        receiptData,
       });
 
       return { valid: true, expiresAt: latestReceipt.expires_date_ms };
     } else {
       return { valid: false, error: data.status };
     }
-  }
+  },
 });
 ```
 
 ### Adaptive Notification System (Epic 3)
 
 **Architecture:**
+
 - **Trigger:** Convex scheduled function runs nightly
 - **Logic:** If `predictedCompletionProb < 0.4`, schedule push notification
 - **Timing:** User-configured time (default 8:00 AM)
 - **Personalization:** Template with habit name, probability, encouragement
 
 **Implementation:**
+
 ```typescript
 // convex/predictions.ts
 export const scheduleAdaptiveReminder = mutation({
-  args: { habitId: v.id("habits") },
+  args: { habitId: v.id('habits') },
   handler: async (ctx, { habitId }) => {
     const habit = await ctx.db.get(habitId);
     const user = await ctx.db
-      .query("users")
-      .filter(q => q.eq(q.field("id"), habit.userId))
+      .query('users')
+      .filter((q) => q.eq(q.field('id'), habit.userId))
       .first();
 
     // Only send if prediction <40% and user opted in
@@ -537,10 +587,10 @@ export const scheduleAdaptiveReminder = mutation({
           body: `You have a ${Math.round(habit.predictedCompletionProb * 100)}% chance of completing "${habit.name}" today - let's beat the odds! 💪`,
           data: { habitId, type: 'adaptive_reminder' },
           sound: 'default',
-        })
+        }),
       });
     }
-  }
+  },
 });
 ```
 
@@ -620,6 +670,7 @@ yarn e2e:test
 ### Phase 1: Epic 1 - MVP Foundation (Weeks 1-8)
 
 **Sprint 1 (Weeks 1-2): Core Infrastructure**
+
 1. Set up design system (Story 1.7)
    - Create `src/theme/` folder
    - Define colors, typography, spacing tokens
@@ -633,6 +684,7 @@ yarn e2e:test
    - Modal stack for habit creation/editing
 
 **Sprint 2 (Weeks 3-4): Tracking & Calculations**
+
 1. Daily check-off gestures (Story 1.2)
    - Swipe handlers with `react-native-gesture-handler`
    - Optimistic UI updates
@@ -647,6 +699,7 @@ yarn e2e:test
    - Animations on strength updates
 
 **Sprint 3 (Weeks 5-6): Data & Management**
+
 1. Local data persistence (Story 1.5)
    - Convex client configuration
    - Offline queue with retry logic
@@ -658,6 +711,7 @@ yarn e2e:test
    - Reordering with drag-and-drop
 
 **Sprint 4 (Weeks 7-8): Testing & Polish**
+
 1. Unit tests for strength calculations (80% coverage)
 2. Integration tests for critical flows
 3. TestFlight beta setup
@@ -666,6 +720,7 @@ yarn e2e:test
 ### Phase 2: Epic 2 - Premium Monetization (Weeks 9-16)
 
 **Sprint 5 (Weeks 9-10): Subscription Infrastructure**
+
 1. StoreKit integration (Story 2.1)
    - `react-native-iap` setup
    - Product fetching
@@ -679,6 +734,7 @@ yarn e2e:test
    - Trial reminder notifications
 
 **Sprint 6 (Weeks 11-12): Paywall & Free Limits**
+
 1. Strategic paywall (Story 2.3)
    - Paywall screen design
    - Trigger logic (3-habit limit, day 7)
@@ -688,6 +744,7 @@ yarn e2e:test
    - Feature gating throughout app
 
 **Sprint 7 (Weeks 13-14): Analytics Dashboard**
+
 1. Premium analytics (Story 2.4)
    - Analytics tab with charts
    - Strength distribution
@@ -699,6 +756,7 @@ yarn e2e:test
    - Comparison with research benchmark
 
 **Sprint 8 (Weeks 15-16): Insights & Management**
+
 1. Weekly insights (Story 2.6)
    - Convex scheduled job
    - Insight generation algorithm
@@ -712,6 +770,7 @@ yarn e2e:test
 ### Phase 3: Epic 3 - Retention Engine (Weeks 17-24)
 
 **Sprint 9 (Weeks 17-18): Prediction Engine**
+
 1. Behavior prediction (Story 3.1)
    - Implement Zhang et al. algorithm
    - Nightly Convex cron job
@@ -719,6 +778,7 @@ yarn e2e:test
 2. Prediction storage & indexing
 
 **Sprint 10 (Weeks 19-20): Adaptive Reminders**
+
 1. Reminder system (Story 3.2)
    - Expo Notifications setup
    - Permission request flow
@@ -729,6 +789,7 @@ yarn e2e:test
    - Effectiveness tracking
 
 **Sprint 11 (Weeks 21-22): Interventions**
+
 1. Automated campaigns (Story 3.3)
    - Intervention tier logic
    - Campaign state machine
@@ -739,6 +800,7 @@ yarn e2e:test
    - Share card generation
 
 **Sprint 12 (Weeks 23-24): Advanced Features**
+
 1. Pause/resume (Story 3.5)
    - Pause UI and logic
    - Strength preservation
@@ -751,6 +813,7 @@ yarn e2e:test
 ### Phase 4: Epic 4 - Viral Growth (Weeks 25-32)
 
 **Sprint 13-14 (Weeks 25-28): Social Sharing**
+
 1. Share cards (Story 4.1)
    - Template designs
    - `react-native-view-shot` integration
@@ -761,6 +824,7 @@ yarn e2e:test
    - UTM tracking
 
 **Sprint 15-16 (Weeks 29-32): Referrals & Templates**
+
 1. Referral program (Story 4.3)
    - Referral tracking backend
    - Referral dashboard UI
@@ -777,6 +841,7 @@ yarn e2e:test
 ### Phase 5: Epic 5 - Polish & Scale (Weeks 33-40)
 
 **Sprint 17 (Weeks 33-34): Animations & Onboarding**
+
 1. Refined animations (Story 5.1)
    - Microinteractions throughout app
    - Haptic feedback
@@ -787,6 +852,7 @@ yarn e2e:test
    - Permission requests
 
 **Sprint 18 (Weeks 35-36): Advanced Features**
+
 1. Interactive onboarding (Story 5.3)
    - Enhanced demo with slider
    - Live prediction showcase
@@ -796,6 +862,7 @@ yarn e2e:test
    - Multi-device testing
 
 **Sprint 19 (Weeks 37-38): Performance & Accessibility**
+
 1. Performance optimization (Story 5.5)
    - Profiling with Xcode Instruments
    - Bundle size reduction
@@ -806,6 +873,7 @@ yarn e2e:test
    - Contrast ratio fixes
 
 **Sprint 20 (Weeks 39-40): Compliance & Data**
+
 1. Data export & privacy (Story 5.7)
    - Export to CSV/JSON
    - Account deletion
@@ -815,6 +883,7 @@ yarn e2e:test
 ### Phase 6: Epic 6 - App Store Launch (Weeks 41-48)
 
 **Sprint 21-22 (Weeks 41-44): Pre-Launch Preparation**
+
 1. App Store Connect setup (Story 6.1)
    - App record creation
    - Age rating, categories
@@ -832,6 +901,7 @@ yarn e2e:test
    - Icon alternatives
 
 **Sprint 23 (Weeks 45-46): Legal & Testing**
+
 1. Privacy & terms (Story 6.5)
    - Privacy policy drafted and hosted
    - Terms of service
@@ -842,6 +912,7 @@ yarn e2e:test
    - Bug fixes from feedback
 
 **Sprint 24 (Weeks 47-48): Submission & Launch**
+
 1. App Review preparation (Story 6.7)
    - Pre-submission checklist
    - Demo account for reviewers
@@ -862,6 +933,7 @@ yarn e2e:test
 **Coverage Target:** 80%+ for business logic
 
 **Key Test Suites:**
+
 1. **Habit Strength Calculations** (`convex/habitStrength.test.ts`)
    - Test baseline curve matches Lally et al. expectations
    - Test compliance calculation with various scenarios
@@ -890,6 +962,7 @@ yarn e2e:test
 ### Integration Testing
 
 **Critical Flows:**
+
 1. **Habit Creation → Check-off → Strength Update**
    - Create habit via modal
    - Check off habit
@@ -910,6 +983,7 @@ yarn e2e:test
 ### Manual QA (TestFlight Beta)
 
 **Beta Test Plan (50+ users, 2 weeks):**
+
 - **Focus Areas:**
   - Onboarding completion rate
   - First habit creation success rate
@@ -930,6 +1004,7 @@ yarn e2e:test
 ### Performance Testing
 
 **Benchmarks (Xcode Instruments):**
+
 - Cold start: <2 seconds
 - Hot start: <500ms
 - UI rendering: 60fps maintained during scrolling, animations
@@ -937,6 +1012,7 @@ yarn e2e:test
 - Network: API response times <500ms p95
 
 **Load Testing (Backend):**
+
 - Convex can handle 10,000+ concurrent users
 - Test with synthetic load (k6 or Artillery)
 - Monitor query latency, mutation success rates
@@ -948,12 +1024,14 @@ yarn e2e:test
 ### Development Workflow
 
 **Branching Strategy:**
+
 - `main` - Production-ready code (App Store builds)
 - `develop` - Integration branch for features
 - `feature/*` - Individual story branches
 - `hotfix/*` - Emergency production fixes
 
 **CI/CD Pipeline (GitHub Actions):**
+
 ```yaml
 # .github/workflows/ci.yml
 on: [push, pull_request]
@@ -981,6 +1059,7 @@ jobs:
 ### TestFlight Distribution
 
 **Build Process:**
+
 1. Bump version in `package.json` and `ios/Info.plist`
 2. Archive in Xcode (Product → Archive)
 3. Upload to App Store Connect (Distribute → App Store Connect)
@@ -989,6 +1068,7 @@ jobs:
 6. Distribute to beta testers
 
 **Automated with Fastlane:**
+
 ```ruby
 # fastlane/Fastfile
 lane :beta do
@@ -1006,6 +1086,7 @@ end
 ### App Store Submission
 
 **Pre-Submission Checklist:**
+
 - [ ] All tests passing (unit, integration)
 - [ ] No compiler warnings
 - [ ] Privacy policy and terms hosted
@@ -1019,6 +1100,7 @@ end
 - [ ] Sentry and Mixpanel production keys configured
 
 **Submission Process:**
+
 1. Build release version (Archive)
 2. Upload to App Store Connect
 3. Select build in App Store Connect
@@ -1028,6 +1110,7 @@ end
 7. Monitor review status (typically 24-48 hours)
 
 **Post-Approval:**
+
 1. Announce launch on social media (Twitter, Reddit)
 2. Submit to Product Hunt
 3. Monitor crash reports (Sentry)
@@ -1037,6 +1120,7 @@ end
 ### Release Cadence
 
 **Version Strategy:**
+
 - **1.0.0** - MVP launch (Epic 1)
 - **1.1.0** - Premium monetization (Epic 2)
 - **1.2.0** - Retention engine (Epic 3)
@@ -1045,6 +1129,7 @@ end
 - **1.x.y** - Hotfixes (critical bugs)
 
 **OTA Updates (Expo):**
+
 - For non-native changes (JS/UI updates)
 - Pushes to users without App Store review
 - Use for bug fixes, A/B tests, copy changes
@@ -1053,18 +1138,21 @@ end
 ### Monitoring & Rollback
 
 **Production Monitoring:**
+
 - **Sentry:** Crash tracking, error alerts
 - **Mixpanel:** User analytics, conversion funnels
 - **App Store Connect:** Downloads, reviews, crashes
 - **Convex Dashboard:** Backend health, query performance
 
 **Rollback Strategy:**
+
 - If critical bug discovered post-launch:
   1. Revert to previous version in App Store Connect (if <24 hours)
   2. Or expedite hotfix build (use expedited review if severe)
 - For OTA updates: Push previous JS bundle via Expo
 
 **Alerts:**
+
 - Sentry: Crash rate >1% → Email alert
 - Convex: Query latency >1s p95 → Slack alert
 - App Store: Rating drops below 4.0 → Manual review
@@ -1102,6 +1190,7 @@ Now that the technical specification is complete, you should:
 ### Optional: Generate UX Specification
 
 Since this is a Level 3 project with a premium UX focus, you may want to create a detailed UX specification document. This would include:
+
 - Screen-by-screen user flows
 - Component library specifications
 - Interaction patterns and gestures

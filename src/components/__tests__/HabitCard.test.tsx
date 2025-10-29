@@ -17,35 +17,39 @@ import { HabitCard } from '../HabitCard';
 const renderWithProviders = (component: React.ReactElement) => {
   return render(
     <GestureHandlerRootView>
-      <PaperProvider theme={extendedTheme}>
-        {component}
-      </PaperProvider>
+      <PaperProvider theme={extendedTheme}>{component}</PaperProvider>
     </GestureHandlerRootView>
   );
 };
 
 describe('HabitCard - Phase 2', () => {
   const defaultProps = {
+    color: '#10B981',
+    icon: '🧘',
     id: 'test-habit-1',
     name: 'Morning Meditation',
-    icon: '🧘',
-    color: '#10B981',
     strength: 65,
   };
 
   describe('Component Rendering', () => {
     it('should render without crashing', () => {
-      const { getByText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       expect(getByText('Morning Meditation')).toBeDefined();
     });
 
     it('should display habit name', () => {
-      const { getByText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       expect(getByText('Morning Meditation')).toBeDefined();
     });
 
     it('should display habit icon', () => {
-      const { getByText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       expect(getByText('🧘')).toBeDefined();
     });
 
@@ -65,14 +69,14 @@ describe('HabitCard - Phase 2', () => {
   describe('Completion States', () => {
     it('should show checkmark when completed', () => {
       const { getByText } = renderWithProviders(
-        <HabitCard {...defaultProps} completed={true} />
+        <HabitCard {...defaultProps} completed />
       );
       expect(getByText('✓')).toBeDefined();
     });
 
     it('should apply completed styling', () => {
       const { root } = renderWithProviders(
-        <HabitCard {...defaultProps} completed={true} />
+        <HabitCard {...defaultProps} completed />
       );
       // Should have muted/opacity styling
       expect(root).toBeTruthy();
@@ -89,14 +93,14 @@ describe('HabitCard - Phase 2', () => {
   describe('At Risk State', () => {
     it('should show warning badge when at risk', () => {
       const { getByText } = renderWithProviders(
-        <HabitCard {...defaultProps} atRisk={true} />
+        <HabitCard {...defaultProps} atRisk />
       );
       expect(getByText('⚠️')).toBeDefined();
     });
 
     it('should apply warning background color', () => {
       const { root } = renderWithProviders(
-        <HabitCard {...defaultProps} atRisk={true} />
+        <HabitCard {...defaultProps} atRisk />
       );
       // Should have warning background tint
       expect(root).toBeTruthy();
@@ -126,7 +130,7 @@ describe('HabitCard - Phase 2', () => {
     it('should not call onPress when disabled', () => {
       const onPress = jest.fn();
       const { getByRole } = renderWithProviders(
-        <HabitCard {...defaultProps} onPress={onPress} disabled={true} />
+        <HabitCard {...defaultProps} disabled onPress={onPress} />
       );
 
       const card = getByRole('button');
@@ -152,7 +156,7 @@ describe('HabitCard - Phase 2', () => {
     it('should not call onLongPress when disabled', () => {
       const onLongPress = jest.fn();
       const { getByRole } = renderWithProviders(
-        <HabitCard {...defaultProps} onLongPress={onLongPress} disabled={true} />
+        <HabitCard {...defaultProps} disabled onLongPress={onLongPress} />
       );
 
       const card = getByRole('button');
@@ -164,13 +168,17 @@ describe('HabitCard - Phase 2', () => {
 
   describe('Swipe Actions', () => {
     it('should render Edit button', () => {
-      const { getByText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       // Edit button might be hidden initially, but should exist
       expect(getByText).toBeDefined();
     });
 
     it('should render Delete button', () => {
-      const { getByText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       // Delete button might be hidden initially, but should exist
       expect(getByText).toBeDefined();
     });
@@ -203,7 +211,7 @@ describe('HabitCard - Phase 2', () => {
   describe('Disabled State', () => {
     it('should apply disabled styling', () => {
       const { root } = renderWithProviders(
-        <HabitCard {...defaultProps} disabled={true} />
+        <HabitCard {...defaultProps} disabled />
       );
       // Should have 50% opacity
       expect(root).toBeTruthy();
@@ -217,10 +225,10 @@ describe('HabitCard - Phase 2', () => {
       const { getByRole } = renderWithProviders(
         <HabitCard
           {...defaultProps}
-          disabled={true}
-          onPress={onPress}
-          onEdit={onEdit}
+          disabled
           onDelete={onDelete}
+          onEdit={onEdit}
+          onPress={onPress}
         />
       );
 
@@ -233,19 +241,23 @@ describe('HabitCard - Phase 2', () => {
 
   describe('Accessibility - VoiceOver Support', () => {
     it('should have accessible role as button', () => {
-      const { getByRole } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByRole } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       expect(getByRole('button')).toBeDefined();
     });
 
     it('should provide descriptive accessibility label', () => {
-      const { getByLabelText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByLabelText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       const card = getByLabelText(/Morning Meditation habit.*65% strength/);
       expect(card).toBeDefined();
     });
 
     it('should announce completion state', () => {
       const { getByLabelText } = renderWithProviders(
-        <HabitCard {...defaultProps} completed={true} />
+        <HabitCard {...defaultProps} completed />
       );
       const card = getByLabelText(/completed today/);
       expect(card).toBeDefined();
@@ -253,29 +265,35 @@ describe('HabitCard - Phase 2', () => {
 
     it('should have proper accessibility state', () => {
       const { getByRole } = renderWithProviders(
-        <HabitCard {...defaultProps} disabled={true} completed={true} />
+        <HabitCard {...defaultProps} completed disabled />
       );
       const card = getByRole('button');
       expect(card.props.accessibilityState).toMatchObject({
-        disabled: true,
         checked: true,
+        disabled: true,
       });
     });
 
     it('should provide accessibility hint', () => {
-      const { getByRole } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByRole } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       const card = getByRole('button');
       expect(card.props.accessibilityHint).toContain('Tap to complete');
     });
 
     it('should have accessible Edit button', () => {
-      const { getByLabelText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByLabelText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       const editButton = getByLabelText('Edit Morning Meditation');
       expect(editButton.props.accessibilityRole).toBe('button');
     });
 
     it('should have accessible Delete button', () => {
-      const { getByLabelText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByLabelText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       const deleteButton = getByLabelText('Delete Morning Meditation');
       expect(deleteButton.props.accessibilityRole).toBe('button');
     });
@@ -317,7 +335,9 @@ describe('HabitCard - Phase 2', () => {
     });
 
     it('should have adequate button sizes for Edit/Delete', () => {
-      const { getByLabelText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByLabelText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       const editButton = getByLabelText('Edit Morning Meditation');
       const deleteButton = getByLabelText('Delete Morning Meditation');
 
@@ -339,7 +359,9 @@ describe('HabitCard - Phase 2', () => {
     });
 
     it('✅ Swipe left reveals actions', () => {
-      const { getByLabelText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByLabelText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
 
       // Edit and Delete buttons should exist
       expect(getByLabelText('Edit Morning Meditation')).toBeDefined();
@@ -357,7 +379,9 @@ describe('HabitCard - Phase 2', () => {
     });
 
     it('✅ VoiceOver support with descriptive labels', () => {
-      const { getByLabelText } = renderWithProviders(<HabitCard {...defaultProps} />);
+      const { getByLabelText } = renderWithProviders(
+        <HabitCard {...defaultProps} />
+      );
       const card = getByLabelText(/Morning Meditation.*65% strength/);
       expect(card).toBeDefined();
     });

@@ -8,7 +8,10 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { type StrengthLevel, getStrengthLevel } from '../components/HabitStrengthIndicator/HabitStrengthIndicator';
+import {
+  type StrengthLevel,
+  getStrengthLevel,
+} from '../components/HabitStrengthIndicator/HabitStrengthIndicator';
 
 export interface MilestoneAchievement {
   /** The new level achieved */
@@ -123,11 +126,11 @@ export function useMilestoneDetection(
 
         // Set milestone for display
         setMilestone({
-          level: newLevel,
-          strength: currentStrength,
-          previousStrength,
           habitId,
           habitName,
+          level: newLevel,
+          previousStrength,
+          strength: currentStrength,
         });
       }
     }
@@ -141,7 +144,7 @@ export function useMilestoneDetection(
     setMilestone(null);
   };
 
-  return { milestone, clearMilestone };
+  return { clearMilestone, milestone };
 }
 
 /**
@@ -170,13 +173,13 @@ export function useMultiMilestoneDetection(
   useEffect(() => {
     const newMilestones: MilestoneAchievement[] = [];
 
-    habits.forEach((habit) => {
+    for (const habit of habits) {
       const previousStrength = previousStrengthsRef.current.get(habit.id);
 
       // Initialize if first time seeing this habit
       if (previousStrength === undefined) {
         previousStrengthsRef.current.set(habit.id, habit.strength);
-        return;
+        continue;
       }
 
       // Check for milestone
@@ -193,18 +196,18 @@ export function useMultiMilestoneDetection(
           shownMilestonesRef.current.add(milestoneKey);
 
           newMilestones.push({
-            level: newLevel,
-            strength: habit.strength,
-            previousStrength,
             habitId: habit.id,
             habitName: habit.name,
+            level: newLevel,
+            previousStrength,
+            strength: habit.strength,
           });
         }
       }
 
       // Update previous strength
       previousStrengthsRef.current.set(habit.id, habit.strength);
-    });
+    }
 
     // Add new milestones to queue
     if (newMilestones.length > 0) {
@@ -217,7 +220,7 @@ export function useMultiMilestoneDetection(
     setMilestones((prev) => prev.filter((m) => m.habitId !== habitId));
   };
 
-  return { milestones, clearMilestone };
+  return { clearMilestone, milestones };
 }
 
 export default useMilestoneDetection;

@@ -38,12 +38,14 @@
 ## Technical Notes
 
 **Implementation:**
+
 - Create new `StreakIndicator` component
 - Animation library: Reanimated for milestone celebrations
 - Color scheme: Fire gradient (orange/red) for active streaks, gray for 0 streaks
 - Component props: `currentStreak`, `bestStreak`, `compact` (boolean)
 
 **Milestone Badges:**
+
 ```typescript
 const MILESTONE_BADGES = {
   7: { emoji: '⭐', label: '7-Day Streak' },
@@ -53,16 +55,18 @@ const MILESTONE_BADGES = {
 ```
 
 **Component API:**
+
 ```typescript
 interface StreakIndicatorProps {
-  currentStreak: number;  // Current consecutive days
-  bestStreak: number;     // All-time best
-  compact?: boolean;      // Compact vs. full view
+  currentStreak: number; // Current consecutive days
+  bestStreak: number; // All-time best
+  compact?: boolean; // Compact vs. full view
   onMilestone?: (streak: number) => void; // Celebration callback
 }
 ```
 
 **Visual Design:**
+
 - **0 streak:** Gray fire emoji + "Start your streak!"
 - **1-6 days:** 🔥 + number (orange)
 - **7-29 days:** 🔥⭐ + number (orange with star badge)
@@ -74,17 +78,20 @@ interface StreakIndicatorProps {
 ## Testing Strategy
 
 **Unit Tests:**
+
 - [ ] Correct emoji shown for streak count
 - [ ] Milestone badges appear at right thresholds
 - [ ] Best streak displayed correctly
 - [ ] Compact vs. full view rendering
 
 **Visual Tests:**
+
 - [ ] Screenshot tests for streak levels (0, 1, 7, 30, 100)
 - [ ] Milestone animation smoothness
 - [ ] Color gradients
 
 **Accessibility Tests:**
+
 - [ ] VoiceOver announces streak count and milestone
 - [ ] Contrast ratios (WCAG AA)
 - [ ] Touch target sizes

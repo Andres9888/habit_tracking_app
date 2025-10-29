@@ -21,6 +21,7 @@
 This is a **Phase 2: Monetization** feature that justifies the $9.99/month subscription. Analytics must feel premium, scientific, and indispensable to drive 5-10% free-to-paid conversion.
 
 **Revenue Impact:**
+
 - Primary premium feature (alongside predictions)
 - Drives trial-to-paid conversion
 - Reduces churn through ongoing value demonstration
@@ -125,6 +126,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 ### Context Reference
 
 **Primary Context:**
+
 - UX Specification: `/Users/andres/Desktop/Code/Me/habit_tracking_app/docs/ux-specification.md`
   - Section 2.1: Analytics Tab Structure
   - Section 3 (Flow 4): Viewing Premium Analytics
@@ -134,6 +136,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
   - Section 9.2: Analytics Dashboard wireframe
 
 **Technology Stack:**
+
 - **Charts:** Victory Native (data visualization)
 - **Animations:** React Native Reanimated (60fps native animations)
 - **Backend:** Convex queries for analytics data aggregation
@@ -142,12 +145,14 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 ### Existing Codebase Context
 
 **Related Files:**
+
 - `src/App.tsx` - Main app structure, tab navigation
 - `src/components/HabitStrengthIndicator.tsx` - Reusable strength visualization
 - `convex/habits.ts` - Habit data queries
 - `convex/schema.ts` - Data schema
 
 **Existing Components to Reuse:**
+
 - HabitStrengthIndicator (compact variant for rankings)
 - Card component from design system
 - Modal component for detail views
@@ -157,6 +162,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 ## Technical Tasks (Parallelizable)
 
 ### Task Group 1: Overview & Layout (Agent 1)
+
 **Dependencies:** None
 **Estimated Time:** 3-4 hours
 
@@ -168,6 +174,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 1.6. Add skeleton loading states for cards
 
 ### Task Group 2: Charts Implementation (Agent 2)
+
 **Dependencies:** None (can work in parallel)
 **Estimated Time:** 5-6 hours
 
@@ -180,6 +187,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 2.7. Test chart performance on iPhone SE (60fps requirement)
 
 ### Task Group 3: Insights & Rankings (Agent 3)
+
 **Dependencies:** None (can work in parallel)
 **Estimated Time:** 4-5 hours
 
@@ -191,6 +199,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 3.6. Implement "suggested focus" action buttons
 
 ### Task Group 4: Backend Data Aggregation (Agent 4)
+
 **Dependencies:** None (can work in parallel)
 **Estimated Time:** 3-4 hours
 
@@ -203,6 +212,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 4.7. Add proper indexes for query performance
 
 ### Task Group 5: Export & Premium Integration (Agent 5)
+
 **Dependencies:** Task 1 (layout)
 **Estimated Time:** 2-3 hours
 
@@ -214,6 +224,7 @@ This is a **Phase 2: Monetization** feature that justifies the $9.99/month subsc
 5.6. Add success/error toasts for export
 
 ### Task Group 6: Accessibility & Polish (Agent 6)
+
 **Dependencies:** Tasks 1-5 (runs after core implementation)
 **Estimated Time:** 2-3 hours
 

@@ -6,7 +6,15 @@
 
 import { View, Text, Pressable } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, startOfToday } from 'date-fns';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  getDay,
+  isSameDay,
+  startOfToday,
+} from 'date-fns';
 import { useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 
@@ -16,14 +24,18 @@ interface MonthlyCalendarProps {
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
 }
 
-export function MonthlyCalendar({ habitId, tracking, toggleHabit }: MonthlyCalendarProps) {
+export function MonthlyCalendar({
+  habitId,
+  tracking,
+  toggleHabit,
+}: MonthlyCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const today = startOfToday();
 
   // Get all days in the current month
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
-  const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  const daysInMonth = eachDayOfInterval({ end: monthEnd, start: monthStart });
 
   // Calculate empty cells before first day (0 = Sunday, 6 = Saturday)
   const firstDayOfWeek = getDay(monthStart);
@@ -60,17 +72,17 @@ export function MonthlyCalendar({ habitId, tracking, toggleHabit }: MonthlyCalen
 
         <View className='flex-row gap-2'>
           <Pressable
-            onPress={goToPreviousMonth}
             className='h-8 w-8 items-center justify-center rounded-full active:bg-slate-100'
+            onPress={goToPreviousMonth}
           >
-            <ChevronLeft size={20} color='#1a1a1a' />
+            <ChevronLeft color='#1a1a1a' size={20} />
           </Pressable>
 
           <Pressable
-            onPress={goToNextMonth}
             className='h-8 w-8 items-center justify-center rounded-full active:bg-slate-100'
+            onPress={goToNextMonth}
           >
-            <ChevronRight size={20} color='#1a1a1a' />
+            <ChevronRight color='#1a1a1a' size={20} />
           </Pressable>
         </View>
       </View>
@@ -100,8 +112,8 @@ export function MonthlyCalendar({ habitId, tracking, toggleHabit }: MonthlyCalen
           return (
             <Pressable
               key={dateString}
-              onPress={() => toggleHabit({ habitId, date: dateString })}
               className='mb-2 w-[14.28%] items-center'
+              onPress={() => toggleHabit({ date: dateString, habitId })}
             >
               <View className='relative items-center'>
                 {/* Day number with optional black circle for today */}

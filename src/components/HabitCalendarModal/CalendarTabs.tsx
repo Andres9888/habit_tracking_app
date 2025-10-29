@@ -17,10 +17,10 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
     <View className='mb-4 flex-row rounded-lg bg-slate-100 p-1'>
       {/* Month Tab */}
       <Pressable
-        onPress={() => onViewChange('month')}
         className={`flex-1 rounded-md py-2 ${
           activeView === 'month' ? 'bg-white' : 'bg-transparent'
         }`}
+        onPress={() => onViewChange('month')}
       >
         <Text
           className={`text-center text-sm font-semibold ${
@@ -33,10 +33,10 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
 
       {/* Year Tab */}
       <Pressable
-        onPress={() => onViewChange('year')}
         className={`flex-1 rounded-md py-2 ${
           activeView === 'year' ? 'bg-white' : 'bg-transparent'
         }`}
+        onPress={() => onViewChange('year')}
       >
         <Text
           className={`text-center text-sm font-semibold ${

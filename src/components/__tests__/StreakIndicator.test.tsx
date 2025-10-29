@@ -11,7 +11,7 @@ describe('StreakIndicator', () => {
   describe('Compact View', () => {
     it('should render fire emoji and streak number for active streak', () => {
       const { getByText, getByA11yLabel } = render(
-        <StreakIndicator currentStreak={5} bestStreak={10} compact={true} />
+        <StreakIndicator compact bestStreak={10} currentStreak={5} />
       );
 
       expect(getByText('🔥')).toBeTruthy();
@@ -21,7 +21,7 @@ describe('StreakIndicator', () => {
 
     it('should show "Start your streak!" message for zero streak', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={0} bestStreak={0} compact={true} />
+        <StreakIndicator compact bestStreak={0} currentStreak={0} />
       );
 
       expect(getByText('Start your streak!')).toBeTruthy();
@@ -30,7 +30,7 @@ describe('StreakIndicator', () => {
 
     it('should display star badge for 7-day milestone', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={7} bestStreak={7} compact={true} />
+        <StreakIndicator compact bestStreak={7} currentStreak={7} />
       );
 
       expect(getByText('⭐')).toBeTruthy();
@@ -39,7 +39,7 @@ describe('StreakIndicator', () => {
 
     it('should display trophy badge for 30-day milestone', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={30} bestStreak={30} compact={true} />
+        <StreakIndicator compact bestStreak={30} currentStreak={30} />
       );
 
       expect(getByText('🏆')).toBeTruthy();
@@ -48,7 +48,7 @@ describe('StreakIndicator', () => {
 
     it('should display diamond badge for 100-day milestone', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={100} bestStreak={100} compact={true} />
+        <StreakIndicator compact bestStreak={100} currentStreak={100} />
       );
 
       expect(getByText('💎')).toBeTruthy();
@@ -57,7 +57,7 @@ describe('StreakIndicator', () => {
 
     it('should show highest milestone badge only', () => {
       const { getByText, queryByText } = render(
-        <StreakIndicator currentStreak={35} bestStreak={50} compact={true} />
+        <StreakIndicator compact bestStreak={50} currentStreak={35} />
       );
 
       // Should show trophy (30-day) but not star (7-day)
@@ -68,7 +68,7 @@ describe('StreakIndicator', () => {
 
     it('should show no badge below 7 days', () => {
       const { getByText, queryByText } = render(
-        <StreakIndicator currentStreak={6} bestStreak={6} compact={true} />
+        <StreakIndicator compact bestStreak={6} currentStreak={6} />
       );
 
       expect(getByText('🔥')).toBeTruthy();
@@ -82,7 +82,7 @@ describe('StreakIndicator', () => {
   describe('Full View', () => {
     it('should render current streak label and number', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={15} bestStreak={20} compact={false} />
+        <StreakIndicator bestStreak={20} compact={false} currentStreak={15} />
       );
 
       expect(getByText('15')).toBeTruthy();
@@ -91,7 +91,7 @@ describe('StreakIndicator', () => {
 
     it('should display best streak in compact format', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={10} bestStreak={45} compact={false} />
+        <StreakIndicator bestStreak={45} compact={false} currentStreak={10} />
       );
 
       expect(getByText('Best: 45 days')).toBeTruthy();
@@ -99,7 +99,7 @@ describe('StreakIndicator', () => {
 
     it('should show singular "day" for best streak of 1', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={1} bestStreak={1} compact={false} />
+        <StreakIndicator bestStreak={1} compact={false} currentStreak={1} />
       );
 
       expect(getByText('Best: 1 day')).toBeTruthy();
@@ -107,7 +107,7 @@ describe('StreakIndicator', () => {
 
     it('should hide best streak if zero', () => {
       const { queryByText } = render(
-        <StreakIndicator currentStreak={0} bestStreak={0} compact={false} />
+        <StreakIndicator bestStreak={0} compact={false} currentStreak={0} />
       );
 
       expect(queryByText(/Best:/)).toBeNull();
@@ -115,7 +115,7 @@ describe('StreakIndicator', () => {
 
     it('should display milestone badges legend', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={15} bestStreak={20} compact={false} />
+        <StreakIndicator bestStreak={20} compact={false} currentStreak={15} />
       );
 
       // Should show all milestone badges in legend
@@ -129,7 +129,7 @@ describe('StreakIndicator', () => {
 
     it('should highlight achieved milestones in legend', () => {
       const { getAllByText } = render(
-        <StreakIndicator currentStreak={35} bestStreak={50} compact={false} />
+        <StreakIndicator bestStreak={50} compact={false} currentStreak={35} />
       );
 
       // All three milestone badges should be present in legend
@@ -141,7 +141,7 @@ describe('StreakIndicator', () => {
 
     it('should hide milestone legend when streak is zero', () => {
       const { queryByText } = render(
-        <StreakIndicator currentStreak={0} bestStreak={0} compact={false} />
+        <StreakIndicator bestStreak={0} compact={false} currentStreak={0} />
       );
 
       // Milestone badges should not appear
@@ -157,9 +157,9 @@ describe('StreakIndicator', () => {
 
       render(
         <StreakIndicator
-          currentStreak={7}
+          compact
           bestStreak={7}
-          compact={true}
+          currentStreak={7}
           onMilestone={onMilestone}
         />
       );
@@ -172,9 +172,9 @@ describe('StreakIndicator', () => {
 
       render(
         <StreakIndicator
-          currentStreak={30}
+          compact
           bestStreak={30}
-          compact={true}
+          currentStreak={30}
           onMilestone={onMilestone}
         />
       );
@@ -187,9 +187,9 @@ describe('StreakIndicator', () => {
 
       render(
         <StreakIndicator
-          currentStreak={100}
+          compact
           bestStreak={100}
-          compact={true}
+          currentStreak={100}
           onMilestone={onMilestone}
         />
       );
@@ -202,9 +202,9 @@ describe('StreakIndicator', () => {
 
       render(
         <StreakIndicator
-          currentStreak={6}
+          compact
           bestStreak={6}
-          compact={true}
+          currentStreak={6}
           onMilestone={onMilestone}
         />
       );
@@ -217,9 +217,9 @@ describe('StreakIndicator', () => {
 
       render(
         <StreakIndicator
-          currentStreak={35}
+          compact
           bestStreak={50}
-          compact={true}
+          currentStreak={35}
           onMilestone={onMilestone}
         />
       );
@@ -233,7 +233,7 @@ describe('StreakIndicator', () => {
   describe('Accessibility', () => {
     it('should have proper accessibility label for compact view', () => {
       const { getByA11yLabel } = render(
-        <StreakIndicator currentStreak={12} bestStreak={45} compact={true} />
+        <StreakIndicator compact bestStreak={45} currentStreak={12} />
       );
 
       expect(getByA11yLabel('12-day streak, best 45 days')).toBeTruthy();
@@ -241,7 +241,7 @@ describe('StreakIndicator', () => {
 
     it('should include milestone in accessibility label', () => {
       const { getByA11yLabel } = render(
-        <StreakIndicator currentStreak={30} bestStreak={30} compact={true} />
+        <StreakIndicator compact bestStreak={30} currentStreak={30} />
       );
 
       expect(
@@ -252,10 +252,10 @@ describe('StreakIndicator', () => {
     it('should support custom accessibility label', () => {
       const { getByA11yLabel } = render(
         <StreakIndicator
-          currentStreak={5}
+          compact
+          accessibilityLabel='Custom label for meditation'
           bestStreak={10}
-          compact={true}
-          accessibilityLabel="Custom label for meditation"
+          currentStreak={5}
         />
       );
 
@@ -264,7 +264,7 @@ describe('StreakIndicator', () => {
 
     it('should have text accessibility role in compact view', () => {
       const { getByA11yRole } = render(
-        <StreakIndicator currentStreak={5} bestStreak={10} compact={true} />
+        <StreakIndicator compact bestStreak={10} currentStreak={5} />
       );
 
       expect(getByA11yRole('text')).toBeTruthy();
@@ -272,7 +272,7 @@ describe('StreakIndicator', () => {
 
     it('should have text accessibility role in full view', () => {
       const { getByA11yRole } = render(
-        <StreakIndicator currentStreak={5} bestStreak={10} compact={false} />
+        <StreakIndicator bestStreak={10} compact={false} currentStreak={5} />
       );
 
       expect(getByA11yRole('text')).toBeTruthy();
@@ -282,7 +282,7 @@ describe('StreakIndicator', () => {
   describe('Edge Cases', () => {
     it('should handle zero streak gracefully', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={0} bestStreak={0} compact={true} />
+        <StreakIndicator compact bestStreak={0} currentStreak={0} />
       );
 
       expect(getByText('Start your streak!')).toBeTruthy();
@@ -290,7 +290,7 @@ describe('StreakIndicator', () => {
 
     it('should handle very large streaks (999+)', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={999} bestStreak={999} compact={true} />
+        <StreakIndicator compact bestStreak={999} currentStreak={999} />
       );
 
       expect(getByText('999')).toBeTruthy();
@@ -299,7 +299,7 @@ describe('StreakIndicator', () => {
 
     it('should handle current streak less than best streak', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={10} bestStreak={50} compact={false} />
+        <StreakIndicator bestStreak={50} compact={false} currentStreak={10} />
       );
 
       expect(getByText('10')).toBeTruthy();
@@ -308,7 +308,7 @@ describe('StreakIndicator', () => {
 
     it('should show star badge when current exceeds 7 but not best', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={10} bestStreak={2} compact={true} />
+        <StreakIndicator compact bestStreak={2} currentStreak={10} />
       );
 
       expect(getByText('⭐')).toBeTruthy();
@@ -317,7 +317,7 @@ describe('StreakIndicator', () => {
 
     it('should handle milestone exactly at boundary', () => {
       const { getByText } = render(
-        <StreakIndicator currentStreak={7} bestStreak={7} compact={true} />
+        <StreakIndicator compact bestStreak={7} currentStreak={7} />
       );
 
       expect(getByText('⭐')).toBeTruthy();
@@ -326,7 +326,7 @@ describe('StreakIndicator', () => {
 
     it('should handle streak just below milestone', () => {
       const { getByText, queryByText } = render(
-        <StreakIndicator currentStreak={29} bestStreak={29} compact={true} />
+        <StreakIndicator compact bestStreak={29} currentStreak={29} />
       );
 
       expect(getByText('⭐')).toBeTruthy();
@@ -335,7 +335,7 @@ describe('StreakIndicator', () => {
 
     it('should handle streak between milestones', () => {
       const { getByText, queryByText } = render(
-        <StreakIndicator currentStreak={50} bestStreak={50} compact={true} />
+        <StreakIndicator compact bestStreak={50} currentStreak={50} />
       );
 
       expect(getByText('🏆')).toBeTruthy(); // Has 30
@@ -347,7 +347,7 @@ describe('StreakIndicator', () => {
   describe('Visual States', () => {
     it('should render without errors in compact mode', () => {
       const { container } = render(
-        <StreakIndicator currentStreak={5} bestStreak={10} compact={true} />
+        <StreakIndicator compact bestStreak={10} currentStreak={5} />
       );
 
       expect(container).toBeTruthy();
@@ -355,7 +355,7 @@ describe('StreakIndicator', () => {
 
     it('should render without errors in full mode', () => {
       const { container } = render(
-        <StreakIndicator currentStreak={5} bestStreak={10} compact={false} />
+        <StreakIndicator bestStreak={10} compact={false} currentStreak={5} />
       );
 
       expect(container).toBeTruthy();
@@ -363,20 +363,16 @@ describe('StreakIndicator', () => {
 
     it('should handle rapid prop updates', () => {
       const { rerender, getByText } = render(
-        <StreakIndicator currentStreak={5} bestStreak={10} compact={true} />
+        <StreakIndicator compact bestStreak={10} currentStreak={5} />
       );
 
       expect(getByText('5')).toBeTruthy();
 
-      rerender(
-        <StreakIndicator currentStreak={10} bestStreak={15} compact={true} />
-      );
+      rerender(<StreakIndicator compact bestStreak={15} currentStreak={10} />);
 
       expect(getByText('10')).toBeTruthy();
 
-      rerender(
-        <StreakIndicator currentStreak={15} bestStreak={20} compact={true} />
-      );
+      rerender(<StreakIndicator compact bestStreak={20} currentStreak={15} />);
 
       expect(getByText('15')).toBeTruthy();
     });

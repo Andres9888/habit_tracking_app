@@ -28,11 +28,7 @@ import {
 function TestComponent() {
   const appTheme = useAppTheme();
 
-  return (
-    <Text testID="theme-test">
-      {appTheme.custom.colors.primary[500]}
-    </Text>
-  );
+  return <Text testID='theme-test'>{appTheme.custom.colors.primary[500]}</Text>;
 }
 
 describe('Theme Integration - Phase 1', () => {

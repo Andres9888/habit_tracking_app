@@ -7,6 +7,7 @@ _Generated on 2025-10-22 by Jane_
 This UX specification defines the user experience for a premium, science-backed habit tracking mobile app targeting $2,000-$10,000 MRR through subscription revenue. The app differentiates from competitors (Habitica, Productive, Streaks) by combining cutting-edge behavioral science (Zhang et al. 2021, Lally et al. 2010) with elegant, intuitive design - positioning as "Productive meets Atomic Habits."
 
 **Key UX Challenges:**
+
 - Make complex behavioral science (habit strength algorithms, prediction models) accessible and beautiful
 - Create premium UX quality that justifies $7-10/month subscription
 - Design for solo developer velocity while maintaining design excellence
@@ -18,6 +19,7 @@ This UX specification defines the user experience for a premium, science-backed 
 **Platform:** iOS mobile app (React Native), designed for one-handed use, thumb-friendly interactions, and premium aesthetic matching Apple's Human Interface Guidelines.
 
 **UX Goals:**
+
 - Onboarding completion >60%
 - Daily habit check-in <30 seconds
 - Free-to-paid conversion 5-10%
@@ -31,15 +33,17 @@ This UX specification defines the user experience for a premium, science-backed 
 ### 1.1 Target User Personas
 
 **Primary Persona: Alex - The Science-Seeker**
+
 - **Age:** 32, Product Manager
 - **Background:** Read "Atomic Habits", frustrated with gamified trackers
 - **Goals:** Build sustainable habits using evidence-based methods, see real progress not arbitrary streaks
-- **Pain Points:** Existing apps feel gimmicky, lack scientific rigor, don't explain *why* habits succeed/fail
+- **Pain Points:** Existing apps feel gimmicky, lack scientific rigor, don't explain _why_ habits succeed/fail
 - **Tech Comfort:** High - early adopter, values premium apps
 - **Motivation:** Intrinsic self-improvement, data-driven decision making
 - **Key Behavior:** Researches before downloading, willing to pay for quality, shares achievements on social
 
 **Secondary Persona: Morgan - The Pragmatist**
+
 - **Age:** 28, Software Engineer
 - **Background:** Tracks 3 habits for 2 weeks, curious about analytics
 - **Goals:** Understand habit patterns, prevent failures before they happen
@@ -49,6 +53,7 @@ This UX specification defines the user experience for a premium, science-backed 
 - **Key Behavior:** Skeptical of subscriptions, needs proof of value during trial
 
 **Tertiary Persona: Jamie - The Committed Builder**
+
 - **Age:** 35, Entrepreneur
 - **Background:** 8 habits tracked for 3 months, paying subscriber
 - **Goals:** Maintain multiple habits while building new ones
@@ -60,30 +65,35 @@ This UX specification defines the user experience for a premium, science-backed 
 ### 1.2 Usability Goals
 
 **1. Effortless Daily Use (Efficiency)**
+
 - Habit check-in completes in <30 seconds
 - One-handed operation for all core tasks
 - Muscle memory develops within 3 days of use
 - Zero cognitive load for routine tracking
 
 **2. Immediate Value Recognition (Learnability)**
+
 - New users grasp habit strength concept within onboarding
 - First strength increase creates "aha moment" (day 2)
 - 60%+ onboarding completion rate achieved
 - Users understand premium value proposition by day 7
 
 **3. Science Transparency (Trust)**
+
 - All calculations explained, not black-boxed
 - Research citations visible and accessible
 - Users can export and verify their data
 - Predictions show confidence levels and factors
 
 **4. Premium Quality Feel (Desirability)**
+
 - Visual design rivals Productive and Apple's first-party apps
 - Animations smooth (60fps), meaningful (not decorative)
 - Every interaction delights without overwhelming
 - Users proud to show app to friends
 
 **5. Inclusive Accessibility (Universal)**
+
 - WCAG AA compliance for all user-facing features
 - VoiceOver fully supported with rich descriptions
 - Dynamic Type supported up to XXXL
@@ -206,6 +216,7 @@ Habit Tracker App
 ### 2.2 Navigation Structure
 
 **Primary Navigation (iOS Tab Bar)**
+
 ```
 ┌─────────────────────────────────────┐
 │  🏠 Home  │  📊 Analytics  │  📚 Templates  │  ⚙️ Settings  │
@@ -213,6 +224,7 @@ Habit Tracker App
 ```
 
 **Tab Descriptions:**
+
 1. **Home** - Daily habit tracking, primary use case
 2. **Analytics** 🔒 - Premium feature (shows lock badge for free users, tappable to paywall)
 3. **Templates** - Browse and import evidence-based habits
@@ -221,23 +233,27 @@ Habit Tracker App
 **Secondary Navigation Patterns:**
 
 **Modals (Overlay Screens)**
+
 - Create/Edit Habit - Slides up from bottom, dismissible
 - Habit Detail - Full screen modal with close button
 - Paywall - Full screen modal, dismissible (soft gate)
 - Share Card Preview - Full screen with share actions
 
 **Contextual Menus**
+
 - Long-press Habit Card → Edit, Archive, Delete
 - Swipe Right on Habit → Complete (quick action)
 - Swipe Left on Habit → Undo completion (if recently completed)
 
 **Deep Links & Notifications**
+
 - Reminder notification → Opens Habit Detail
 - Weekly insight notification → Opens Analytics tab
 - Milestone celebration → Opens Habit Detail with confetti
 - Premium feature tap → Opens Paywall
 
 **Navigation Hierarchy:**
+
 ```
 Level 1: Tab Bar (Always visible)
 Level 2: Screen Content (Scrollable)
@@ -246,12 +262,14 @@ Level 4: Alerts/Confirmations (System dialogs)
 ```
 
 **Gesture Navigation:**
+
 - Swipe back from left edge → Dismiss modal (iOS standard)
 - Pull down from top → Dismiss modal (iOS standard)
 - Swipe up from bottom → Dismiss keyboard
 - Long press → Context menu
 
 **Free vs Premium Navigation Differences:**
+
 - Free users see 🔒 badge on Analytics tab
 - Tapping locked features shows paywall instead of content
 - Premium users have seamless access to all navigation
@@ -309,11 +327,13 @@ graph TD
 ```
 
 **Error States:**
+
 - Network failure during onboarding → Graceful degradation, continue with local data
 - Create habit fails → Show error toast, retry button
 - Duplicate habit name → Warning dialog, allow anyway or rename
 
 **Edge Cases:**
+
 - User force-quits during onboarding → Resume from last completed screen
 - User skips onboarding → Can access "How It Works" from settings later
 - Notifications denied → Can re-enable in Settings, app functions normally
@@ -378,11 +398,13 @@ graph TD
 ```
 
 **Error States:**
+
 - Strength calculation fails → Retry automatically, show cached strength
 - Offline mode → Queue completion, sync when online
 - Rapid tap/swipe → Debounce, prevent duplicate actions
 
 **Edge Cases:**
+
 - Completing already-completed habit → Toggle back to incomplete
 - Completing habit after midnight but before sleep → Smart date detection (last 4 hours count as previous day)
 - Multiple devices completing same habit → Last-write-wins conflict resolution
@@ -458,12 +480,14 @@ graph TD
 ```
 
 **Error States:**
+
 - Network failure during purchase → Retry automatically, show progress
 - Payment declined → Clear error message, suggest checking payment method
 - Receipt validation fails → Retry with exponential backoff
 - App crashes during purchase → Restore on next launch
 
 **Edge Cases:**
+
 - User already subscribed on different device → Restore purchases flow
 - Trial already used (Apple ID check) → Show full price, no trial
 - Subscription canceled but not expired → Continue access until expiration
@@ -543,12 +567,14 @@ graph TD
 ```
 
 **Error States:**
+
 - Data loading fails → Show error state, retry button
 - Chart rendering fails → Fallback to text summary
 - Export fails → Show error toast, retry option
 - No data available → Empty state with encouragement
 
 **Edge Cases:**
+
 - New user with <7 days data → Show "collecting data" message, partial analytics
 - User with paused habits → Filter from analytics or show separately
 - Deleted habits → Exclude from current stats, show in archive if requested
@@ -648,12 +674,14 @@ graph TD
 ```
 
 **Error States:**
+
 - Share card generation fails → Retry, fallback to text share
 - Platform app not installed → Offer "Save Image" or "Copy Link"
 - Share fails → Show error, suggest trying different platform
 - Network error → Allow offline share (save image locally)
 
 **Edge Cases:**
+
 - User shares multiple times → Track all shares, no rate limiting
 - Platform API changes → Graceful degradation to native share
 - Image generation timeout → Show loading state, retry once
@@ -668,12 +696,14 @@ graph TD
 **Strategy: Custom Component Library with React Native Paper Foundation**
 
 **Rationale:**
+
 - Existing custom components (ColorPickerSheet, HabitStrengthIndicator) already built
 - Premium "Productive-level" UX requires custom design, not off-the-shelf
 - React Native Paper provides solid primitives (Button, Card, TextInput) to build upon
 - Full control over animations and interactions for 60fps performance
 
 **Hybrid Approach:**
+
 ```
 Foundation: React Native Paper (basic primitives)
 ↓
@@ -685,6 +715,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 ```
 
 **Libraries & Tools:**
+
 - **Base:** React Native Paper (Material Design primitives, customizable theming)
 - **Animations:** React Native Reanimated (60fps native animations)
 - **Gestures:** React Native Gesture Handler (swipe, long-press)
@@ -696,6 +727,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 ### 4.2 Core Components
 
 **1. HabitCard (Primary Component)**
+
 - **Purpose:** Display individual habit with all tracking info
 - **Variants:** Default (not completed), Completed (checkmark, muted), At Risk (warning, <40% prediction)
 - **States:** Default, Pressed, Swiping, Long-press, Disabled
@@ -703,6 +735,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Main list item on Home screen
 
 **2. HabitStrengthIndicator (Existing, Enhance)**
+
 - **Purpose:** Visualize habit strength with science-backed metrics
 - **Variants:** Compact (list: emoji + bar + %), Full (detail: large emoji, full bar, label), Graph (trend line - premium)
 - **States:** Starting 🌱 (0-20%), Building 🌿 (20-40%), Developing 🌳 (40-60%), Strong 💪 (60-80%), Automatic ⚡ (80-100%)
@@ -711,6 +744,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Habit cards, habit detail, analytics
 
 **3. Button (Custom styled from RN Paper)**
+
 - **Purpose:** Primary interaction element
 - **Variants:** Primary (filled), Secondary (outlined), Ghost (text only), Icon Button (circular)
 - **States:** Default, Pressed (scale 0.95), Disabled (50% opacity), Loading (spinner)
@@ -718,6 +752,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** CTAs, form submissions, navigation
 
 **4. Modal (Custom implementation)**
+
 - **Purpose:** Overlay screens for focused tasks
 - **Variants:** Full Screen (habit detail), Bottom Sheet (create/edit), Center Alert (confirmations, celebrations)
 - **States:** Entering (slide up with spring), Open (visible, backdrop dimmed), Exiting (slide down, fade)
@@ -725,6 +760,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Create/edit habit, paywall, celebrations
 
 **5. TabBar (iOS native style)**
+
 - **Purpose:** Primary navigation
 - **States:** Active tab (brand color, bold), Inactive (gray, regular), With badge (lock icon on Analytics)
 - **Icons:** Home, Analytics, Templates, Settings
@@ -732,6 +768,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Main app navigation
 
 **6. Card (Data container)**
+
 - **Purpose:** Group related information
 - **Variants:** Default (white, shadow), Highlighted (colored border), Stat Card (analytics overview)
 - **States:** Default, Pressed (if tappable, scale 0.98), Disabled (50% opacity)
@@ -739,6 +776,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Analytics stats, template cards, weekly insights
 
 **7. Input Fields (Forms)**
+
 - **Purpose:** User data entry
 - **Variants:** Text Input (single line), Text Area (multi-line), Picker (color, icon), Toggle (settings)
 - **States:** Default, Focused (border color, label animation), Error (red border, message), Disabled, Valid (checkmark)
@@ -746,6 +784,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Create habit, settings, search
 
 **8. Chart Components (Analytics - Premium)**
+
 - **Purpose:** Data visualization
 - **Variants:** Line Chart (strength trends), Donut Chart (distribution), Heatmap (compliance calendar), Bar Chart (rankings)
 - **Interactions:** Tap data point to see value, pinch to zoom, scroll to pan
@@ -753,12 +792,14 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 - **Usage:** Analytics dashboard
 
 **9. EmptyState (Guidance)**
+
 - **Purpose:** Guide users when no data exists
 - **Variants:** No Habits (first-time), No Data Yet (<7 days), No Results (search/filter), Premium Locked
 - **Elements:** Illustration/icon, headline, description, CTA button
 - **Usage:** Home screen (no habits), Analytics (no data), Search results
 
 **10. Toast/Snackbar (Feedback)**
+
 - **Purpose:** Brief, non-blocking messages
 - **Variants:** Success (green, checkmark), Error (red, X), Info (blue, i), Warning (orange, !), Undo (with button)
 - **Behavior:** Slides up from bottom, auto-dismisses (3-5s), swipe to dismiss, max 1 visible
@@ -771,6 +812,7 @@ Page/Screen Components (HomeScreen, AnalyticsScreen, etc.)
 ### 5.1 Color Palette
 
 **Primary Colors (Growth & Progress)**
+
 ```
 Brand Green (Primary)
 - Primary-500: #10B981 (Emerald green - main brand color)
@@ -782,6 +824,7 @@ Usage: Primary buttons, active tabs, completed habits, strength indicators
 ```
 
 **Secondary Colors (Trust & Calm)**
+
 ```
 Science Blue (Secondary)
 - Secondary-500: #3B82F6 (Bright blue - science/analytics theme)
@@ -792,6 +835,7 @@ Usage: Analytics charts, info messages, science badges
 ```
 
 **Semantic Colors**
+
 ```
 Success: #10B981 (matches primary green)
 Warning: #F59E0B (Amber - habits at risk)
@@ -800,6 +844,7 @@ Info: #3B82F6 (matches secondary blue)
 ```
 
 **Neutral Grays (iOS-inspired)**
+
 ```
 Gray-50: #F9FAFB (Background, cards in dark mode)
 Gray-100: #F3F4F6 (Card backgrounds)
@@ -814,6 +859,7 @@ Gray-900: #111827 (Pure black alternative)
 ```
 
 **Strength Level Colors (Gradient)**
+
 ```
 Starting (0-20%):   #86EFAC (Light green) 🌱
 Building (20-40%):  #10B981 (Brand green) 🌿
@@ -823,6 +869,7 @@ Automatic (80-100%): #065F46 (Deep forest green) ⚡
 ```
 
 **Background & Surfaces**
+
 ```
 Light Mode:
 - Background: #FFFFFF (Pure white)
@@ -838,6 +885,7 @@ Dark Mode (Future):
 ### 5.2 Typography
 
 **Font Families:**
+
 ```
 Primary: SF Pro (iOS native)
 - SF Pro Display (headings, large text)
@@ -853,6 +901,7 @@ Monospace (data, numbers):
 ```
 
 **Type Scale:**
+
 ```
 Display Large (Onboarding headlines)
 - Size: 34pt | Weight: Bold (700) | Line Height: 41pt | Letter Spacing: 0.37pt
@@ -883,6 +932,7 @@ Tab Bar Labels
 ```
 
 **Dynamic Type Support:**
+
 - All text respects iOS Dynamic Type settings
 - Scales up to XXXL (accessibility)
 - Layouts adjust gracefully, no text clipping
@@ -891,6 +941,7 @@ Tab Bar Labels
 ### 5.3 Spacing & Layout
 
 **8pt Grid System**
+
 ```
 All spacing uses multiples of 4pt (iOS uses 4, we use 8 for consistency):
 
@@ -905,6 +956,7 @@ All spacing uses multiples of 4pt (iOS uses 4, we use 8 for consistency):
 ```
 
 **Screen Margins:**
+
 ```
 Horizontal: 16pt (base) on iPhone
 Vertical: 8pt top, 16pt bottom (avoiding safe areas)
@@ -916,6 +968,7 @@ Safe Area Insets:
 ```
 
 **Component Spacing:**
+
 ```
 Card Padding: 16pt all sides
 Card Margin: 8pt vertical, 16pt horizontal
@@ -926,6 +979,7 @@ Tab Bar Height: 49pt + safe area bottom
 ```
 
 **Border Radius:**
+
 ```
 Small (buttons, tags): 8pt
 Medium (cards, inputs): 12pt
@@ -935,6 +989,7 @@ Circular (avatar, icon buttons): 50% (full circle)
 ```
 
 **Elevation / Shadows (iOS-style, subtle)**
+
 ```
 Card Shadow:
 - Offset: (0, 2) | Blur: 8pt | Color: rgba(0, 0, 0, 0.1)
@@ -978,6 +1033,7 @@ iPad (Future consideration)
 ### 6.2 Adaptation Patterns
 
 **Layout Adaptation:**
+
 ```
 Small Devices (375pt width):
 - Single column everywhere
@@ -1000,12 +1056,14 @@ Large Devices (428pt width):
 ```
 
 **Typography Scaling:**
+
 - Base font sizes remain constant across devices
 - Dynamic Type scales text for accessibility (not device size)
 - Minimum text size: 13pt (Caption)
 - Maximum auto-scale: +50% for accessibility
 
 **Component Adaptation:**
+
 ```
 HabitCard:
 - Small: Height 68pt, compact strength indicator
@@ -1024,6 +1082,7 @@ Paywall Modal:
 ```
 
 **Orientation Support:**
+
 ```
 Portrait (Primary):
 - All features fully supported
@@ -1046,6 +1105,7 @@ Landscape (Limited):
 **WCAG 2.1 Level AA** - Full compliance for all user-facing features
 
 This ensures the app is usable by people with:
+
 - Visual impairments (low vision, color blindness)
 - Motor disabilities (difficulty with precise gestures)
 - Hearing impairments (no audio-only content)
@@ -1054,6 +1114,7 @@ This ensures the app is usable by people with:
 ### 7.2 Key Requirements
 
 **1. Screen Reader Support (VoiceOver)**
+
 ```
 All Interactive Elements:
 - Descriptive labels: "Complete Morning Meditation habit"
@@ -1073,6 +1134,7 @@ Navigation:
 ```
 
 **2. Color Contrast**
+
 ```
 Text Contrast (WCAG AA):
 - Normal text (17pt): Minimum 4.5:1
@@ -1091,6 +1153,7 @@ Icon Contrast:
 ```
 
 **3. Touch Targets**
+
 ```
 Minimum Size: 44 x 44 pt (Apple HIG)
 Preferred: 48 x 48 pt (extra comfort)
@@ -1107,6 +1170,7 @@ Spacing:
 ```
 
 **4. Dynamic Type**
+
 ```
 Support Levels:
 - XS to XXXL (7 sizes above default)
@@ -1121,6 +1185,7 @@ Implementation:
 ```
 
 **5. Reduce Motion**
+
 ```
 When Enabled:
 - Disable confetti animations
@@ -1136,6 +1201,7 @@ Implementation:
 ```
 
 **6. VoiceOver Gestures**
+
 ```
 Supported:
 - Swipe right/left: Navigate elements
@@ -1149,6 +1215,7 @@ Custom Actions:
 ```
 
 **7. Color Independence**
+
 ```
 Never use color alone to convey information:
 - Strength levels: Color + emoji + text label
@@ -1164,36 +1231,42 @@ Never use color alone to convey information:
 ### 8.1 Motion Principles
 
 **1. Native Performance**
+
 - **60fps always:** All animations use Reanimated native driver (runs on UI thread)
 - **No jank:** Frame drops are unacceptable in premium app
 - **Smooth degradation:** If device struggles, reduce complexity (not framerate)
 - **Testing:** Profile all animations on iPhone SE (minimum viable device)
 
 **2. Spring Physics**
+
 - **iOS-native feel:** Use spring animations, not linear/ease curves
 - **Consistent tension:** damping = 15, stiffness = 150 (matches iOS system animations)
 - **Overdamping:** Slightly overdamped (damping ratio ~0.8) for polished feel
 - **No bounce by default:** Reserve bounce (underdamped) for celebratory moments only
 
 **3. Purposeful Motion**
+
 - **Functional first:** Animations guide attention, provide feedback, show relationships
 - **Never decorative:** Every animation must serve a UX purpose
 - **Respect Reduce Motion:** Instant alternatives when accessibility setting enabled
 - **Subtle by default:** Reserve exuberant animations for achievements
 
 **4. Consistent Timing**
+
 - **Quick interactions:** <200ms for button presses, taps, toggles
 - **Standard transitions:** 300-400ms for modals, navigation, state changes
 - **Long animations:** 500-800ms for celebrations, milestones (can be skipped)
 - **Natural cadence:** Animations feel connected, not random
 
 **5. Responsive to Input**
+
 - **Gesture-driven:** Animations follow finger during swipe/drag (interpolate position)
 - **Interruptible:** User can cancel mid-animation (tap elsewhere, swipe back)
 - **Haptic feedback:** Pair key animations with haptics (light/medium/heavy impact)
 - **Direct manipulation:** Objects move with user's finger, not lag behind
 
 **6. Layered Motion**
+
 - **Stagger animations:** Fade in list items sequentially (50ms offset), not all at once
 - **Depth through motion:** Background elements move slower (parallax, subtle)
 - **Entrance choreography:** Complex screens animate in layers (header → content → actions)
@@ -1207,6 +1280,7 @@ Never use color alone to convey information:
 **Purpose:** Provide satisfying feedback, reinforce positive behavior
 
 **Animation Sequence:**
+
 ```
 1. Button Press (0-100ms):
    - Scale down to 0.95 (spring physics)
@@ -1232,12 +1306,14 @@ Never use color alone to convey information:
 ```
 
 **Reduce Motion Alternative:**
+
 - Instant checkmark appearance
 - Instant color change
 - Skip all scaling/bouncing
 - Keep haptic feedback
 
 **Code Reference:**
+
 - Reanimated 2: useAnimatedStyle, withSpring
 - Haptics: react-native-haptic-feedback
 
@@ -1249,6 +1325,7 @@ Never use color alone to convey information:
 **Purpose:** Celebrate achievement, encourage continued use, drive sharing
 
 **Animation Sequence:**
+
 ```
 1. Trigger (Strength calculation detects level-up):
    - Modal backdrop fades in (opacity 0 → 0.6, 200ms)
@@ -1281,12 +1358,14 @@ Never use color alone to convey information:
 ```
 
 **Reduce Motion Alternative:**
+
 - Instant modal appearance (fade only, 200ms)
 - No confetti
 - No bounces, glow, or scale animations
 - Instant button visibility
 
 **Code Reference:**
+
 - Confetti: react-native-confetti-cannon (conditional render)
 - Modal: react-native-reanimated-bottom-sheet
 
@@ -1298,6 +1377,7 @@ Never use color alone to convey information:
 **Purpose:** Focus attention, provide escape route, maintain context
 
 **Bottom Sheet Modal (Create/Edit Habit):**
+
 ```
 Enter:
 1. Backdrop fades in (opacity 0 → 0.6, 200ms)
@@ -1318,6 +1398,7 @@ Exit:
 ```
 
 **Full Screen Modal (Habit Detail, Premium Analytics):**
+
 ```
 Enter:
 1. Current screen scales down to 0.95, moves back (z-depth)
@@ -1336,6 +1417,7 @@ Exit:
 ```
 
 **Reduce Motion Alternative:**
+
 - Cross-fade only (300ms)
 - No scaling, sliding, or z-depth
 - Gesture dismiss still works (functional)
@@ -1348,6 +1430,7 @@ Exit:
 **Purpose:** Show progress, reinforce achievement, visualize science
 
 **Animation:**
+
 ```
 1. Bar Preparation (0-50ms):
    - Determine old value and new value
@@ -1372,11 +1455,13 @@ Exit:
 ```
 
 **Reduce Motion Alternative:**
+
 - Instant bar width change
 - Instant percentage change
 - Instant emoji swap (no scale)
 
 **Code Reference:**
+
 - Reanimated: useSharedValue, withSpring
 - Number animation: Custom hook with requestAnimationFrame
 
@@ -1388,6 +1473,7 @@ Exit:
 **Purpose:** Maintain perceived performance, reduce anxiety, set expectations
 
 **Skeleton Screen (Preferred over spinner):**
+
 ```
 1. Initial State (Loading):
    - Show content structure with gray placeholders
@@ -1407,6 +1493,7 @@ Exit:
 ```
 
 **Pull-to-Refresh:**
+
 ```
 1. User Pulls Down (Gesture):
    - Spinner appears at top (scales in as user pulls)
@@ -1431,6 +1518,7 @@ Exit:
 **Purpose:** Guide next action, avoid dead-end feeling
 
 **Animation:**
+
 ```
 1. Empty State Appears:
    - Illustration/icon fades in (opacity 0 → 1, 300ms)
@@ -1455,6 +1543,7 @@ Exit:
 **Purpose:** Provide quick access without long-press (better discoverability)
 
 **Animation:**
+
 ```
 1. Swipe Begins:
    - Card follows finger (translateX matches gesture)
@@ -1480,6 +1569,7 @@ Exit:
 ```
 
 **Code Reference:**
+
 - React Native Gesture Handler: PanGestureHandler
 - Reanimated: useAnimatedGestureHandler, withSpring
 
@@ -1491,6 +1581,7 @@ Exit:
 **Purpose:** Guide smoothly, build anticipation, avoid overwhelming
 
 **Animation:**
+
 ```
 Slide Transition (Swipe or tap "Next"):
 1. Current slide:
@@ -1521,6 +1612,7 @@ Slide Transition (Swipe or tap "Next"):
 **Purpose:** Provide feedback, show active state clearly
 
 **Animation:**
+
 ```
 Tab Selection:
 1. Previous Tab Icon:
@@ -1547,11 +1639,13 @@ Tab Selection:
 ### 8.3 Animation Performance Budgets
 
 **Frame Budget (60fps = 16.67ms per frame):**
+
 - JavaScript work: <5ms per frame
 - Layout/render: <8ms per frame
 - Headroom: 3-4ms (for system overhead)
 
 **Animation Complexity Limits:**
+
 ```
 Low-end Device (iPhone SE):
 - Max simultaneous animations: 3-4
@@ -1570,6 +1664,7 @@ Test Strategy:
 ```
 
 **Memory Considerations:**
+
 - Dispose animations when component unmounts
 - Remove confetti particles after 3 seconds
 - Clear gesture handlers on cleanup
@@ -1586,6 +1681,7 @@ Test Strategy:
 Given your context as a solo developer with existing React Native components, creating separate design files in Figma/Sketch is **optional and may slow you down**. Instead:
 
 **Option A: Code-First Approach (Recommended)**
+
 ```
 Pros:
 ✅ Already have working components (ColorPickerSheet, HabitStrengthIndicator)
@@ -1605,6 +1701,7 @@ Best for:
 ```
 
 **Option B: Hybrid Approach**
+
 ```
 Create Figma files ONLY for:
 1. Marketing assets (App Store screenshots, website hero)
@@ -1618,6 +1715,7 @@ Skip Figma for:
 ```
 
 **If You Choose Figma Later:**
+
 - Use Auto Layout extensively (matches React Native Flexbox)
 - Create components that mirror code structure (HabitCard, Button, etc.)
 - Use variables for colors, spacing (import from this spec)
@@ -1668,6 +1766,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 ```
 
 **Layout Specs:**
+
 - Screen padding: 16pt horizontal, 8pt vertical
 - Card spacing: 8pt vertical gap
 - Card height: 72pt (expandable if habit name wraps)
@@ -1675,6 +1774,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 - Safe area bottom: 34pt (home indicator)
 
 **Interactions:**
+
 - Tap card → Complete habit (checkmark animation)
 - Swipe left → Reveal Edit/Delete buttons
 - Long press → Quick actions menu (alternative to swipe)
@@ -1717,6 +1817,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 ```
 
 **Layout Specs:**
+
 - Modal padding: 24pt all sides
 - Input height: 44pt
 - Button height: 44pt
@@ -1724,6 +1825,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 - Modal corner radius: 16pt (top corners only)
 
 **Gestures:**
+
 - Pan down to dismiss (>100pt or fast velocity)
 - Tap backdrop to dismiss
 - Tap Cancel to dismiss
@@ -1778,11 +1880,13 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 ```
 
 **Free User Variant:**
+
 - Blurred chart previews
 - "Unlock Analytics" paywall overlay
 - "Start 7-Day Trial" CTA button
 
 **Layout Specs:**
+
 - Screen padding: 16pt horizontal
 - Card margin: 8pt vertical
 - Chart height: 240pt (standard), 200pt (small devices)
@@ -1826,6 +1930,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 ```
 
 **Layout Specs:**
+
 - Screen padding: 24pt horizontal, 32pt vertical
 - Feature list item height: 44pt
 - Pricing card padding: 16pt
@@ -1833,6 +1938,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 - Spacing between options: 12pt
 
 **Variants:**
+
 - First launch: Show during onboarding (optional)
 - Premium tap: Show when tapping locked feature
 - Settings: Show from "Upgrade" menu item
@@ -1869,12 +1975,14 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 ```
 
 **Animation Timing:**
+
 - Confetti: Spawns over 2 seconds, falls for 3 seconds
 - Emoji: Scales in 0 → 1.3 → 1.0 (300ms)
 - Glow: Pulses 0.3 → 0.8 → 0.3 opacity (infinite, 2s loop)
 - Progress bar: Fills from previous % to 60% (400ms spring)
 
 **User Actions:**
+
 - Tap Share → Transition to share card generator
 - Tap Continue → Dismiss modal, return to app
 - Tap backdrop → Same as Continue
@@ -1884,21 +1992,15 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 ### 9.3 Screen Priority for Implementation
 
 **Phase 1: MVP (Must Have)**
+
 1. Home Screen (habit list)
 2. Create Habit Modal
 3. Habit Detail (view history, edit)
 4. Settings (basic: account, notifications, about)
 
-**Phase 2: Monetization (Must Have)**
-5. Paywall Modal
-6. Analytics Dashboard (premium)
-7. Onboarding Flow (3-4 slides)
+**Phase 2: Monetization (Must Have)** 5. Paywall Modal 6. Analytics Dashboard (premium) 7. Onboarding Flow (3-4 slides)
 
-**Phase 3: Growth (Nice to Have)**
-8. Milestone Celebration
-9. Share Card Generator
-10. Templates Library
-11. Habit Detail with Advanced Stats
+**Phase 3: Growth (Nice to Have)** 8. Milestone Celebration 9. Share Card Generator 10. Templates Library 11. Habit Detail with Advanced Stats
 
 ---
 
@@ -1972,6 +2074,7 @@ Since you're going code-first, here are ASCII wireframes for critical screens to
 Since you're doing code-first development, this checklist ensures UX spec → implementation fidelity:
 
 **Visual Design**
+
 - [ ] Colors match exact hex values from Section 5.1
 - [ ] Typography uses SF Pro with correct sizes/weights (Section 5.2)
 - [ ] Spacing follows 8pt grid system (Section 5.3)
@@ -1980,6 +2083,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Dark mode considerations documented (even if not implemented yet)
 
 **Component Library**
+
 - [ ] All 10 core components from Section 4.2 implemented
 - [ ] Each component has all specified variants (default, pressed, disabled, etc.)
 - [ ] Components are reusable and accept theme props
@@ -1987,6 +2091,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Component prop interfaces documented with TypeScript
 
 **User Flows**
+
 - [ ] All 5 user flows from Section 3 are implementable
 - [ ] Error states handled for each flow
 - [ ] Edge cases addressed (network errors, empty states, etc.)
@@ -1994,6 +2099,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Navigation matches information architecture (Section 2)
 
 **Responsive Design**
+
 - [ ] Layouts tested on iPhone SE (375pt), iPhone 13 (390pt), iPhone 15 Pro Max (428pt)
 - [ ] Safe area insets respected (top notch, bottom home indicator)
 - [ ] Content reflows gracefully on smaller screens
@@ -2001,6 +2107,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Landscape orientation locked for onboarding, allowed for details/analytics
 
 **Accessibility**
+
 - [ ] WCAG 2.1 Level AA compliance verified
 - [ ] VoiceOver labels on all interactive elements
 - [ ] Color contrast ratios meet minimums (4.5:1 normal text, 3:1 large text)
@@ -2010,6 +2117,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Color is never the only way to convey information (icons + text + color)
 
 **Interaction & Motion**
+
 - [ ] All animations run at 60fps on iPhone SE
 - [ ] Reanimated native driver used (no JS bridge for animations)
 - [ ] Spring physics match iOS feel (damping=15, stiffness=150)
@@ -2019,6 +2127,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Performance budgets met (<5ms JS, <8ms layout per frame)
 
 **Integration**
+
 - [ ] Convex backend schema supports all data requirements
 - [ ] Habit strength calculation algorithm matches science (Zhang 2021, Lally 2010)
 - [ ] Push notifications configured for adaptive reminders
@@ -2027,6 +2136,7 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 - [ ] Deep linking works for notifications and share cards
 
 **Testing**
+
 - [ ] Unit tests for business logic (habit strength, compliance scoring)
 - [ ] Integration tests for critical flows (onboarding, habit creation, completion, subscription)
 - [ ] Accessibility audit with VoiceOver
@@ -2039,12 +2149,14 @@ Since you're doing code-first development, this checklist ensures UX spec → im
 ### 10.3 Optional: AI Frontend Prompt Generation
 
 Would you like me to generate an **AI Frontend Prompt** based on this UX specification? This prompt can be used with:
+
 - **v0.dev** (Vercel's AI UI generator)
 - **Lovable** (formerly GPT Engineer)
 - **Cursor** (AI-powered IDE)
 - **Claude Code** (for component generation)
 
 The prompt would include:
+
 - Complete design system tokens (colors, typography, spacing)
 - Component specifications with variants and states
 - Key screen layouts with exact measurements
@@ -2052,6 +2164,7 @@ The prompt would include:
 - Accessibility requirements
 
 **Example usage:**
+
 ```
 Paste the AI Frontend Prompt into v0.dev or Lovable →
 Generate initial component scaffolding →
@@ -2066,17 +2179,20 @@ Save 30-50% of manual implementation time
 ### 10.4 Workflow Completion Summary
 
 **Documents Created:**
+
 1. ✅ Project Workflow Analysis (`docs/project-workflow-analysis.md`)
 2. ✅ Product Requirements Document (`docs/PRD.md`)
 3. ✅ Epic Breakdown (`docs/epics.md` - 32 user stories)
 4. ✅ UX Specification (`docs/ux-specification.md` - **this document**)
 
 **Next Recommended Workflow:**
+
 - **Architecture & Tech Spec** (if needed for complex integrations)
 - **Story Generation** (convert epics → detailed stories with UX details)
 - **Implementation** (start with Phase 1: MVP core components)
 
 **Key Deliverables Ready for Development:**
+
 - Complete design system (colors, typography, spacing, components)
 - 5 detailed user flows with error states and edge cases
 - 10 core components with specifications
@@ -2100,6 +2216,6 @@ Save 30-50% of manual implementation time
 
 ### Version History
 
-| Date | Version | Changes | Author |
-| -------- | ------- | --------------------- | ------------- |
-| 2025-10-22 | 1.0 | Initial specification | Jane |
+| Date       | Version | Changes               | Author |
+| ---------- | ------- | --------------------- | ------ |
+| 2025-10-22 | 1.0     | Initial specification | Jane   |

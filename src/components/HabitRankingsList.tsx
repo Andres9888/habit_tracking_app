@@ -28,6 +28,13 @@ interface Props {
   onHabitPress?: (habitId: string) => void;
 }
 
+const getRankBadge = (rank: number) => {
+  if (rank === 1) return { color: '#FFD700', icon: '🥇' };
+  if (rank === 2) return { color: '#C0C0C0', icon: '🥈' };
+  if (rank === 3) return { color: '#CD7F32', icon: '🥉' };
+  return null;
+};
+
 export default function HabitRankingsList({ habits, onHabitPress }: Props) {
   // const navigation = useNavigation();
 
@@ -40,21 +47,20 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
     }
   };
 
-  const renderHabitItem = ({ item, index }: { item: HabitRanking; index: number }) => {
-    const getRankBadge = (rank: number) => {
-      if (rank === 1) return { icon: '🥇', color: '#FFD700' };
-      if (rank === 2) return { icon: '🥈', color: '#C0C0C0' };
-      if (rank === 3) return { icon: '🥉', color: '#CD7F32' };
-      return null;
-    };
-
+  const renderHabitItem = ({
+    item,
+    index,
+  }: {
+    item: HabitRanking;
+    index: number;
+  }) => {
     const rankBadge = getRankBadge(index + 1);
 
     return (
       <TouchableOpacity
+        activeOpacity={0.7}
         style={styles.habitItem}
         onPress={() => handleHabitPress(item.id)}
-        activeOpacity={0.7}
       >
         <View style={styles.habitItemLeft}>
           {/* Rank number or badge */}
@@ -70,12 +76,12 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
           <View style={styles.habitInfo}>
             <View style={styles.habitHeader}>
               <Text style={styles.habitEmoji}>{item.emoji}</Text>
-              <Text style={styles.habitName} numberOfLines={1}>
+              <Text numberOfLines={1} style={styles.habitName}>
                 {item.name}
               </Text>
               {item.isAtRisk && (
                 <View style={styles.riskBadge}>
-                  <Ionicons name="warning" size={12} color={colors.error} />
+                  <Ionicons color={colors.error} name='warning' size={12} />
                   <Text style={styles.riskText}>At Risk</Text>
                 </View>
               )}
@@ -83,11 +89,15 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
 
             <View style={styles.habitStats}>
               <View style={styles.statItem}>
-                <Ionicons name="flame" size={14} color={colors.text.tertiary} />
+                <Ionicons color={colors.text.tertiary} name='flame' size={14} />
                 <Text style={styles.statText}>{item.currentStreak} days</Text>
               </View>
               <View style={styles.statItem}>
-                <Ionicons name="trophy" size={14} color={colors.text.tertiary} />
+                <Ionicons
+                  color={colors.text.tertiary}
+                  name='trophy'
+                  size={14}
+                />
                 <Text style={styles.statText}>Best: {item.longestStreak}</Text>
               </View>
             </View>
@@ -96,11 +106,13 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
 
         {/* Strength indicator */}
         <View style={styles.habitItemRight}>
-          <Text style={styles.strengthPercentage}>{Math.round(item.strength)}%</Text>
+          <Text style={styles.strengthPercentage}>
+            {Math.round(item.strength)}%
+          </Text>
           <HabitStrengthIndicator
-            strength={item.strength}
-            variant="compact"
             showLabel={false}
+            strength={item.strength}
+            variant='compact'
           />
         </View>
       </TouchableOpacity>
@@ -110,7 +122,7 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
   if (habits.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons name="list-outline" size={48} color={colors.text.tertiary} />
+        <Ionicons color={colors.text.tertiary} name='list-outline' size={48} />
         <Text style={styles.emptyText}>No habits to rank yet</Text>
         <Text style={styles.emptySubtext}>
           Complete some habits to see your rankings
@@ -121,87 +133,112 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
 
   return (
     <FlatList
+      contentContainerStyle={styles.listContainer}
       data={habits}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
       keyExtractor={(item) => item.id}
       renderItem={renderHabitItem}
-      contentContainerStyle={styles.listContainer}
       showsVerticalScrollIndicator={false}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  listContainer: {
-    paddingVertical: spacing.sm,
+  habitEmoji: {
+    fontSize: 20,
+    marginRight: spacing.xs,
   },
-  habitItem: {
-    flexDirection: 'row',
+  habitHeader: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    backgroundColor: colors.surface,
-    borderRadius: 12,
+    flexDirection: 'row',
     marginBottom: spacing.xs,
-  },
-  habitItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  rankContainer: {
-    width: 32,
-    alignItems: 'center',
-    marginRight: spacing.md,
-  },
-  rankNumber: {
-    ...typography.bodyBold,
-    color: colors.text.tertiary,
-    fontSize: 14,
-  },
-  rankBadge: {
-    fontSize: 24,
   },
   habitInfo: {
     flex: 1,
   },
-  habitHeader: {
-    flexDirection: 'row',
+  habitItem: {
     alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
-  habitEmoji: {
-    fontSize: 20,
-    marginRight: spacing.xs,
+  habitItemLeft: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+  },
+  habitItemRight: {
+    alignItems: 'flex-end',
+    marginLeft: spacing.md,
   },
   habitName: {
     ...typography.bodyBold,
     color: colors.text.primary,
     flex: 1,
   },
-  riskBadge: {
+  habitStats: {
+    alignItems: 'center',
     flexDirection: 'row',
+  },
+  listContainer: {
+    paddingVertical: spacing.sm,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    padding: spacing.xl,
+    justifyContent: 'center',
+  },
+  rankBadge: {
+    fontSize: 24,
+  },
+  emptySubtext: {
+    ...typography.body,
+    color: colors.text.tertiary,
+    textAlign: 'center',
+  },
+  rankContainer: {
+    alignItems: 'center',
+    width: 32,
+    marginRight: spacing.md,
+  },
+  emptyText: {
+    ...typography.h3,
+    color: colors.text.secondary,
+    marginBottom: spacing.xs,
+    marginTop: spacing.md,
+  },
+  rankNumber: {
+    ...typography.bodyBold,
+    color: colors.text.tertiary,
+    fontSize: 14,
+  },
+  riskBadge: {
     alignItems: 'center',
     backgroundColor: '#FEE2E2',
+    borderRadius: 4,
+    flexDirection: 'row',
+    marginLeft: spacing.xs,
     paddingHorizontal: spacing.xs,
     paddingVertical: 2,
-    borderRadius: 4,
-    marginLeft: spacing.xs,
   },
   riskText: {
     ...typography.caption,
     color: colors.error,
-    marginLeft: 2,
     fontSize: 10,
+    marginLeft: 2,
   },
-  habitStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  separator: {
+    backgroundColor: colors.border,
+    height: 1,
+    marginVertical: spacing.xs,
   },
   statItem: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     marginRight: spacing.md,
   },
   statText: {
@@ -209,34 +246,9 @@ const styles = StyleSheet.create({
     color: colors.text.tertiary,
     marginLeft: spacing.xxs,
   },
-  habitItemRight: {
-    alignItems: 'flex-end',
-    marginLeft: spacing.md,
-  },
   strengthPercentage: {
     ...typography.h3,
     color: colors.primary,
     marginBottom: spacing.xs,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: colors.border,
-    marginVertical: spacing.xs,
-  },
-  emptyContainer: {
-    padding: spacing.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    ...typography.h3,
-    color: colors.text.secondary,
-    marginTop: spacing.md,
-    marginBottom: spacing.xs,
-  },
-  emptySubtext: {
-    ...typography.body,
-    color: colors.text.tertiary,
-    textAlign: 'center',
   },
 });

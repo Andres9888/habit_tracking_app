@@ -53,15 +53,15 @@ export function updateStreak(
     // So we just clear the lastCompletedDate if it matches
     if (lastCompletedDate === completionDate) {
       return {
-        currentStreak: 0,
         bestStreak,
+        currentStreak: 0,
         lastCompletedDate: '',
       };
     }
     // If it's not the last completed date, just return current values
     return {
-      currentStreak,
       bestStreak,
+      currentStreak,
       lastCompletedDate: lastCompletedDate ?? '',
     };
   }
@@ -72,8 +72,8 @@ export function updateStreak(
   // First completion ever
   if (!lastCompletedDate) {
     return {
-      currentStreak: 1,
       bestStreak: Math.max(1, bestStreak),
+      currentStreak: 1,
       lastCompletedDate: completionDate,
     };
   }
@@ -96,8 +96,8 @@ export function updateStreak(
     // daysDiff < 0 means completing a past date before lastCompletedDate
     // This is a backfill scenario - don't update streak
     return {
-      currentStreak,
       bestStreak,
+      currentStreak,
       lastCompletedDate,
     };
   }
@@ -106,8 +106,8 @@ export function updateStreak(
   const newBestStreak = Math.max(newCurrentStreak, bestStreak);
 
   return {
-    currentStreak: newCurrentStreak,
     bestStreak: newBestStreak,
+    currentStreak: newCurrentStreak,
     lastCompletedDate: completionDate,
   };
 }

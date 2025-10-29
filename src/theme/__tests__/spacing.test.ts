@@ -56,10 +56,10 @@ describe('Theme Spacing - Phase 1', () => {
     });
 
     it('should use multiples of 4pt (8pt grid compliance)', () => {
-      Object.values(spacing).forEach((value) => {
+      for (const value of Object.values(spacing)) {
         // All spacing values should be multiples of 4
         expect(value % 4).toBe(0);
-      });
+      }
     });
   });
 
@@ -165,7 +165,7 @@ describe('Theme Spacing - Phase 1', () => {
     describe('Card Shadow', () => {
       it('should have subtle card shadow', () => {
         expect(shadows.card.shadowColor).toBe('#000000');
-        expect(shadows.card.shadowOffset).toEqual({ width: 0, height: 2 });
+        expect(shadows.card.shadowOffset).toEqual({ height: 2, width: 0 });
         expect(shadows.card.shadowOpacity).toBe(0.1);
         expect(shadows.card.shadowRadius).toBe(8);
         expect(shadows.card.elevation).toBe(2);
@@ -175,7 +175,7 @@ describe('Theme Spacing - Phase 1', () => {
     describe('Modal Shadow', () => {
       it('should have medium modal shadow', () => {
         expect(shadows.modal.shadowColor).toBe('#000000');
-        expect(shadows.modal.shadowOffset).toEqual({ width: 0, height: 4 });
+        expect(shadows.modal.shadowOffset).toEqual({ height: 4, width: 0 });
         expect(shadows.modal.shadowOpacity).toBe(0.12);
         expect(shadows.modal.shadowRadius).toBe(16);
         expect(shadows.modal.elevation).toBe(4);
@@ -185,7 +185,10 @@ describe('Theme Spacing - Phase 1', () => {
     describe('Floating Action Button Shadow', () => {
       it('should have prominent FAB shadow', () => {
         expect(shadows.floatingActionButton.shadowColor).toBe('#000000');
-        expect(shadows.floatingActionButton.shadowOffset).toEqual({ width: 0, height: 6 });
+        expect(shadows.floatingActionButton.shadowOffset).toEqual({
+          height: 6,
+          width: 0,
+        });
         expect(shadows.floatingActionButton.shadowOpacity).toBe(0.15);
         expect(shadows.floatingActionButton.shadowRadius).toBe(12);
         expect(shadows.floatingActionButton.elevation).toBe(6);
@@ -193,10 +196,10 @@ describe('Theme Spacing - Phase 1', () => {
     });
 
     it('should have Android elevation fallbacks', () => {
-      Object.values(shadows).forEach((shadow) => {
+      for (const shadow of Object.values(shadows)) {
         expect(shadow).toHaveProperty('elevation');
         expect(typeof shadow.elevation).toBe('number');
-      });
+      }
     });
   });
 
@@ -213,8 +216,8 @@ describe('Theme Spacing - Phase 1', () => {
       it('should create margin spacing object', () => {
         const result = createSpacing(16, 8);
         expect(result).toEqual({
-          marginVertical: 16,
           marginHorizontal: 8,
+          marginVertical: 16,
         });
       });
     });
@@ -223,8 +226,8 @@ describe('Theme Spacing - Phase 1', () => {
       it('should create padding spacing object', () => {
         const result = createPadding(12, 16);
         expect(result).toEqual({
-          paddingVertical: 12,
           paddingHorizontal: 16,
+          paddingVertical: 12,
         });
       });
     });
@@ -264,7 +267,9 @@ describe('Theme Spacing - Phase 1', () => {
 
   describe('Consistency Checks', () => {
     it('should have button and input heights consistent', () => {
-      expect(componentSpacing.button.height).toBe(componentSpacing.input.height);
+      expect(componentSpacing.button.height).toBe(
+        componentSpacing.input.height
+      );
     });
 
     it('should use spacing.base for standard horizontal margins', () => {

@@ -20,53 +20,58 @@ interface Props {
   onClose?: () => void;
 }
 
-export default function PremiumAnalyticsPaywall({ onStartTrial, onClose }: Props) {
+export default function PremiumAnalyticsPaywall({
+  onStartTrial,
+  onClose,
+}: Props) {
   const features = [
     {
+      description:
+        'Visualize your habits across 5 strength levels with interactive charts',
       icon: 'stats-chart',
       title: 'Strength Distribution',
-      description: 'Visualize your habits across 5 strength levels with interactive charts',
     },
     {
+      description: 'Track your progress over time with detailed trend analysis',
       icon: 'trending-up',
       title: '30-Day Trends',
-      description: 'Track your progress over time with detailed trend analysis',
     },
     {
+      description:
+        'GitHub-style calendar showing 90 days of habit completion patterns',
       icon: 'calendar',
       title: 'Compliance Heatmap',
-      description: 'GitHub-style calendar showing 90 days of habit completion patterns',
     },
     {
+      description: 'AI-powered insights on habits gaining or losing strength',
       icon: 'bulb',
       title: 'Weekly Insights',
-      description: 'AI-powered insights on habits gaining or losing strength',
     },
     {
+      description: 'See your habits ranked by strength with current streaks',
       icon: 'trophy',
       title: 'Rankings & Streaks',
-      description: 'See your habits ranked by strength with current streaks',
     },
     {
+      description: 'Export your complete habit data as CSV or JSON',
       icon: 'download',
       title: 'Data Export',
-      description: 'Export your complete habit data as CSV or JSON',
     },
   ];
 
   return (
     <View style={styles.container}>
       {/* Blurred background preview */}
-      <BlurView intensity={80} tint="dark" style={styles.blurView}>
+      <BlurView intensity={80} style={styles.blurView} tint='dark'>
         {/* Header */}
         <View style={styles.header}>
           {onClose && (
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.closeButton}
               onPress={onClose}
-              activeOpacity={0.7}
             >
-              <Ionicons name="close" size={24} color={colors.text.primary} />
+              <Ionicons color={colors.text.primary} name='close' size={24} />
             </TouchableOpacity>
           )}
         </View>
@@ -79,7 +84,7 @@ export default function PremiumAnalyticsPaywall({ onStartTrial, onClose }: Props
           {/* Premium Badge */}
           <View style={styles.badgeContainer}>
             <View style={styles.badge}>
-              <Ionicons name="star" size={20} color={colors.surface} />
+              <Ionicons color={colors.surface} name='star' size={20} />
               <Text style={styles.badgeText}>PREMIUM</Text>
             </View>
           </View>
@@ -95,13 +100,23 @@ export default function PremiumAnalyticsPaywall({ onStartTrial, onClose }: Props
             {features.map((feature, index) => (
               <View key={index} style={styles.featureItem}>
                 <View style={styles.featureIcon}>
-                  <Ionicons name={feature.icon as any} size={24} color={colors.primary} />
+                  <Ionicons
+                    color={colors.primary}
+                    name={feature.icon as any}
+                    size={24}
+                  />
                 </View>
                 <View style={styles.featureContent}>
                   <Text style={styles.featureTitle}>{feature.title}</Text>
-                  <Text style={styles.featureDescription}>{feature.description}</Text>
+                  <Text style={styles.featureDescription}>
+                    {feature.description}
+                  </Text>
                 </View>
-                <Ionicons name="checkmark-circle" size={20} color={colors.success} />
+                <Ionicons
+                  color={colors.success}
+                  name='checkmark-circle'
+                  size={20}
+                />
               </View>
             ))}
           </View>
@@ -120,22 +135,23 @@ export default function PremiumAnalyticsPaywall({ onStartTrial, onClose }: Props
 
           {/* CTA Button */}
           <TouchableOpacity
+            activeOpacity={0.8}
             style={styles.ctaButton}
             onPress={onStartTrial}
-            activeOpacity={0.8}
           >
             <Text style={styles.ctaButtonText}>Start 7-Day Free Trial</Text>
-            <Ionicons name="arrow-forward" size={20} color={colors.surface} />
+            <Ionicons color={colors.surface} name='arrow-forward' size={20} />
           </TouchableOpacity>
 
           {/* Fine Print */}
           <Text style={styles.finePrint}>
-            By starting your trial, you agree to our Terms of Service and Privacy Policy.
-            You won't be charged until after your 7-day trial ends.
+            By starting your trial, you agree to our Terms of Service and
+            Privacy Policy. You won't be charged until after your 7-day trial
+            ends.
           </Text>
 
           {/* Already Premium Link */}
-          <TouchableOpacity style={styles.restoreButton} activeOpacity={0.7}>
+          <TouchableOpacity activeOpacity={0.7} style={styles.restoreButton}>
             <Text style={styles.restoreButtonText}>
               Already premium? Restore purchases
             </Text>
@@ -147,45 +163,18 @@ export default function PremiumAnalyticsPaywall({ onStartTrial, onClose }: Props
 }
 
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
+  badge: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  blurView: {
-    width: screenWidth,
-    height: screenHeight,
-  },
-  header: {
-    paddingTop: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    alignItems: 'flex-end',
-  },
-  closeButton: {
-    width: 40,
-    height: 40,
+    backgroundColor: colors.primary,
     borderRadius: 20,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xxl,
+    flexDirection: 'row',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
   badgeContainer: {
     alignItems: 'center',
-    marginTop: spacing.lg,
     marginBottom: spacing.md,
-  },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: 20,
+    marginTop: spacing.lg,
   },
   badgeText: {
     ...typography.caption,
@@ -193,109 +182,136 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginLeft: spacing.xs,
   },
-  title: {
-    ...typography.h1,
-    color: colors.text.primary,
-    textAlign: 'center',
-    marginBottom: spacing.xs,
+  blurView: {
+    height: screenHeight,
+    width: screenWidth,
   },
-  subtitle: {
-    ...typography.body,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: spacing.xl,
-  },
-  featuresList: {
-    marginBottom: spacing.xl,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  featureIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
+  closeButton: {
     alignItems: 'center',
-    marginRight: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+  },
+  content: {
+    paddingBottom: spacing.xxl,
+    paddingHorizontal: spacing.lg,
   },
   featureContent: {
     flex: 1,
     marginRight: spacing.sm,
-  },
-  featureTitle: {
-    ...typography.bodyBold,
-    color: colors.text.primary,
-    marginBottom: spacing.xxs,
   },
   featureDescription: {
     ...typography.caption,
     color: colors.text.secondary,
     lineHeight: 16,
   },
+  featureIcon: {
+    backgroundColor: colors.background,
+    height: 40,
+    alignItems: 'center',
+    width: 40,
+    borderRadius: 8,
+    justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+  featureItem: {
+    alignItems: 'flex-start',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    flexDirection: 'row',
+    marginBottom: spacing.sm,
+    padding: spacing.md,
+  },
+  featuresList: {
+    marginBottom: spacing.xl,
+  },
+  header: {
+    paddingTop: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    alignItems: 'flex-end',
+  },
+  ctaButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    borderRadius: 12,
+    paddingVertical: spacing.lg,
+    marginBottom: spacing.md,
+  },
+  featureTitle: {
+    ...typography.bodyBold,
+    color: colors.text.primary,
+    marginBottom: spacing.xxs,
+  },
+  ctaButtonText: {
+    ...typography.button,
+    color: colors.surface,
+    fontSize: 18,
+    marginRight: spacing.sm,
+  },
+  subtitle: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginBottom: spacing.xl,
+    textAlign: 'center',
+  },
+  finePrint: {
+    ...typography.caption,
+    color: colors.text.tertiary,
+    lineHeight: 16,
+    marginBottom: spacing.lg,
+    textAlign: 'center',
+  },
+  title: {
+    ...typography.h1,
+    color: colors.text.primary,
+    textAlign: 'center',
+    marginBottom: spacing.xs,
+  },
+  pricingAmount: {
+    color: colors.primary,
+    fontSize: 40,
+    fontWeight: '700',
+  },
   pricingCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
-    borderWidth: 2,
     borderColor: colors.primary,
+    borderRadius: 16,
+    borderWidth: 2,
+    marginBottom: spacing.lg,
+    padding: spacing.lg,
   },
   pricingLabel: {
     ...typography.caption,
     color: colors.text.secondary,
+    marginBottom: spacing.xs,
     textAlign: 'center',
-    marginBottom: spacing.xs,
     textTransform: 'uppercase',
-  },
-  pricingRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    marginBottom: spacing.xs,
-  },
-  pricingAmount: {
-    fontSize: 40,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  pricingPeriod: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginLeft: spacing.xs,
   },
   pricingNote: {
     ...typography.caption,
     color: colors.text.tertiary,
     textAlign: 'center',
   },
-  ctaButton: {
+  pricingPeriod: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginLeft: spacing.xs,
+  },
+  pricingRow: {
+    alignItems: 'baseline',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.lg,
-    borderRadius: 12,
-    marginBottom: spacing.md,
-  },
-  ctaButtonText: {
-    ...typography.button,
-    color: colors.surface,
-    marginRight: spacing.sm,
-    fontSize: 18,
-  },
-  finePrint: {
-    ...typography.caption,
-    color: colors.text.tertiary,
-    textAlign: 'center',
-    lineHeight: 16,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xs,
   },
   restoreButton: {
     paddingVertical: spacing.sm,

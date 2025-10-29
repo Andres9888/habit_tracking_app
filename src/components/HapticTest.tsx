@@ -13,13 +13,12 @@ import { useAppTheme } from '../theme';
 
 export function HapticTest() {
   const theme = useAppTheme();
-  const [lastResult, setLastResult] = useState<string>('Tap any button to test');
+  const [lastResult, setLastResult] = useState<string>(
+    'Tap any button to test'
+  );
   const [testCount, setTestCount] = useState(0);
 
-  const testHaptic = async (
-    name: string,
-    hapticFn: () => Promise<void>
-  ) => {
+  const testHaptic = async (name: string, hapticFn: () => Promise<void>) => {
     const timestamp = new Date().toLocaleTimeString();
     console.log(`🔵 [${timestamp}] Testing: ${name}`);
     console.log('🔵 Platform:', Platform.OS);
@@ -30,9 +29,11 @@ export function HapticTest() {
       const successMsg = `✅ ${name} - Success at ${timestamp}`;
       console.log(successMsg);
       setLastResult(successMsg);
-      setTestCount(prev => prev + 1);
+      setTestCount((prev) => prev + 1);
     } catch (error) {
-      const errorMsg = `❌ ${name} - FAILED: ${error}`;
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const errorMsg = `❌ ${name} - FAILED: ${errorMessage}`;
       console.error(errorMsg);
       setLastResult(errorMsg);
     }
@@ -40,149 +41,160 @@ export function HapticTest() {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.custom.colors.light.background }]}
       contentContainerStyle={styles.contentContainer}
+      style={[
+        styles.container,
+        { backgroundColor: theme.custom.colors.light.background },
+      ]}
     >
-      <Surface style={styles.surface} elevation={1}>
-        <Text variant="headlineMedium" style={styles.title}>
+      <Surface elevation={1} style={styles.surface}>
+        <Text style={styles.title} variant='headlineMedium'>
           Haptic Feedback Test
         </Text>
 
-        <Text variant="bodyMedium" style={styles.subtitle}>
+        <Text style={styles.subtitle} variant='bodyMedium'>
           🚨 Physical Device Only - Simulators don't support haptics
         </Text>
 
         <View style={styles.statusBox}>
-          <Text variant="labelLarge" style={styles.statusLabel}>
+          <Text style={styles.statusLabel} variant='labelLarge'>
             Last Result:
           </Text>
-          <Text variant="bodyMedium" style={styles.statusText}>
+          <Text style={styles.statusText} variant='bodyMedium'>
             {lastResult}
           </Text>
-          <Text variant="bodySmall" style={styles.counter}>
+          <Text style={styles.counter} variant='bodySmall'>
             Tests run: {testCount}
           </Text>
         </View>
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>
+        <Text style={styles.sectionTitle} variant='titleMedium'>
           Impact Feedback
         </Text>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Light Impact',
-            () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Light Impact', () =>
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+            )
+          }
         >
           Test Light Impact
         </Button>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Medium Impact',
-            () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Medium Impact', () =>
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+            )
+          }
         >
           Test Medium Impact
         </Button>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Heavy Impact',
-            () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Heavy Impact', () =>
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            )
+          }
         >
           Test Heavy Impact
         </Button>
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>
+        <Text style={styles.sectionTitle} variant='titleMedium'>
           Selection Feedback
         </Text>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Selection',
-            () => Haptics.selectionAsync()
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Selection', () => Haptics.selectionAsync())
+          }
         >
           Test Selection
         </Button>
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>
+        <Text style={styles.sectionTitle} variant='titleMedium'>
           Notification Feedback
         </Text>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Success Notification',
-            () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Success Notification', () =>
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success
+              )
+            )
+          }
         >
           Test Success Notification
         </Button>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Warning Notification',
-            () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Warning Notification', () =>
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Warning
+              )
+            )
+          }
         >
           Test Warning Notification
         </Button>
 
         <Button
-          mode="contained"
-          onPress={() => testHaptic(
-            'Error Notification',
-            () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-          )}
+          mode='contained'
           style={styles.button}
+          onPress={() =>
+            testHaptic('Error Notification', () =>
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+            )
+          }
         >
           Test Error Notification
         </Button>
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>
+        <Text style={styles.sectionTitle} variant='titleMedium'>
           Rapid Fire Test
         </Text>
 
         <Button
-          mode="outlined"
+          mode='outlined'
+          style={styles.button}
           onPress={async () => {
             console.log('🔥 Starting rapid fire test...');
             for (let i = 0; i < 5; i++) {
-              await testHaptic(
-                `Rapid ${i + 1}`,
-                () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+              await testHaptic(`Rapid ${i + 1}`, () =>
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
               );
-              await new Promise(resolve => setTimeout(resolve, 200));
+              await new Promise((resolve) => setTimeout(resolve, 200));
             }
             console.log('🔥 Rapid fire test complete');
           }}
-          style={styles.button}
         >
           Rapid Fire (5x Light)
         </Button>
 
         <View style={styles.infoBox}>
-          <Text variant="bodySmall" style={styles.infoText}>
+          <Text style={styles.infoText} variant='bodySmall'>
             ℹ️ Check console logs for detailed output
           </Text>
-          <Text variant="bodySmall" style={styles.infoText}>
+          <Text style={styles.infoText} variant='bodySmall'>
             ℹ️ Platform: {Platform.OS} {Platform.Version}
           </Text>
-          <Text variant="bodySmall" style={styles.infoText}>
+          <Text style={styles.infoText} variant='bodySmall'>
             ℹ️ expo-haptics version: 15.0.7
           </Text>
         </View>
@@ -192,58 +204,58 @@ export function HapticTest() {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    marginVertical: 6,
+  },
   container: {
     flex: 1,
   },
   contentContainer: {
     padding: 16,
   },
-  surface: {
-    padding: 20,
-    borderRadius: 12,
+  counter: {
+    opacity: 0.6,
   },
-  title: {
-    marginBottom: 8,
-    textAlign: 'center',
+  infoBox: {
+    backgroundColor: '#e3f2fd',
+    borderRadius: 8,
+    marginTop: 24,
+    padding: 12,
   },
-  subtitle: {
-    marginBottom: 20,
-    textAlign: 'center',
-    opacity: 0.7,
+  infoText: {
+    marginVertical: 2,
+    opacity: 0.8,
   },
   sectionTitle: {
-    marginTop: 24,
-    marginBottom: 12,
     fontWeight: 'bold',
-  },
-  button: {
-    marginVertical: 6,
+    marginBottom: 12,
+    marginTop: 24,
   },
   statusBox: {
-    padding: 16,
     backgroundColor: '#f5f5f5',
     borderRadius: 8,
     marginBottom: 16,
+    padding: 16,
   },
   statusLabel: {
     fontWeight: 'bold',
     marginBottom: 4,
   },
+  subtitle: {
+    marginBottom: 20,
+    opacity: 0.7,
+    textAlign: 'center',
+  },
   statusText: {
     marginBottom: 8,
   },
-  counter: {
-    opacity: 0.6,
+  surface: {
+    borderRadius: 12,
+    padding: 20,
   },
-  infoBox: {
-    marginTop: 24,
-    padding: 12,
-    backgroundColor: '#e3f2fd',
-    borderRadius: 8,
-  },
-  infoText: {
-    marginVertical: 2,
-    opacity: 0.8,
+  title: {
+    marginBottom: 8,
+    textAlign: 'center',
   },
 });
 

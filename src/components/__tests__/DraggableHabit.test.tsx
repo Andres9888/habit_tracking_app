@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 import DraggableHabit from '../DraggableHabit/DraggableHabit';
 import type { Id } from '../../../convex/_generated/dataModel';
 
@@ -110,9 +111,7 @@ describe('DraggableHabit swipe to archive', () => {
     );
 
     // Should find Swipeable component when onArchive is provided
-    const swipeable = UNSAFE_getByType(
-      require('react-native-gesture-handler').Swipeable
-    );
+    const swipeable = UNSAFE_getByType(Swipeable);
     expect(swipeable).toBeTruthy();
   });
 
@@ -131,9 +130,7 @@ describe('DraggableHabit swipe to archive', () => {
       />
     );
 
-    const swipeable = UNSAFE_getByType(
-      require('react-native-gesture-handler').Swipeable
-    );
+    const swipeable = UNSAFE_getByType(Swipeable);
 
     // Verify Swipeable has the onSwipeableOpen prop
     expect(swipeable.props.onSwipeableOpen).toBeDefined();
@@ -160,9 +157,7 @@ describe('DraggableHabit swipe to archive', () => {
       />
     );
 
-    const swipeable = UNSAFE_getByType(
-      require('react-native-gesture-handler').Swipeable
-    );
+    const swipeable = UNSAFE_getByType(Swipeable);
 
     // Verify Swipeable configuration
     expect(swipeable.props.overshootRight).toBe(false);
@@ -185,9 +180,7 @@ describe('DraggableHabit swipe to archive', () => {
       />
     );
 
-    const swipeable = UNSAFE_getByType(
-      require('react-native-gesture-handler').Swipeable
-    );
+    const swipeable = UNSAFE_getByType(Swipeable);
 
     // Verify renderRightActions returns a valid React element
     const mockProgress = { interpolate: jest.fn() };

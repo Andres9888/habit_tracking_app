@@ -23,51 +23,86 @@ const applicationTables = {
     accessibilityUpdatedAt: v.optional(v.number()),
     archived: v.optional(v.boolean()),
     archivedAt: v.optional(v.number()),
+
+    bestStreak: v.optional(v.number()),
+
+    // ISO date string (YYYY-MM-DD)
+    consecutiveDays: v.optional(v.number()),
+
+    createdAt: v.number(),
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
-    bestStreak: v.optional(v.number()),
-    lastCompletedDate: v.optional(v.string()), // ISO date string (YYYY-MM-DD)
-    consecutiveDays: v.optional(v.number()),
-    createdAt: v.number(),
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)
     habitDecayParam: v.optional(v.number()),
+
     // HGP - validated optimal: 0.1-0.2 (default: 0.15)
     habitGainParam: v.optional(v.number()),
+
+    lastCompletedDate: v.optional(v.string()),
     // Last time prediction was calculated
     lastPredictionAt: v.optional(v.number()),
     name: v.string(),
+    // Habit Edit Screen fields
+    icon: v.optional(v.string()),
+
     notes: v.optional(v.string()),
+
+    // Background color for icon
+    frequency: v.optional(v.string()),
+
     order: v.optional(v.number()),
+
+    // "daily", "weekly", "custom"
+    daysOfWeek: v.optional(v.array(v.number())),
+
     // Behavior Prediction - Predicted probability of next completion
     predictedCompletionProb: v.optional(v.number()),
+
+    // Emoji icon
+    iconColor: v.optional(v.string()),
+
     // Habit Strength System (Klein et al., 2011; Zhang et al., 2021)
     // Computed habit strength (0-1)
     strength: v.optional(v.number()),
+
+    // 0-6 for Sunday-Saturday
+    preferredTime: v.optional(v.string()),
+
     // "starting", "building", "developing", "strong", "automatic"
     strengthLevel: v.optional(v.string()),
+
+    // "default", etc.
+    goalDuration: v.optional(v.number()),
+
     // Last time strength was calculated
     strengthUpdatedAt: v.optional(v.number()),
+
+    // Goal value
+    goalUnit: v.optional(v.string()),
+
     tags: v.optional(v.array(v.string())),
-    totalCompletions: v.optional(v.number()),
-    totalMisses: v.optional(v.number()),
-    userId: v.optional(v.string()),
-    // Habit Edit Screen fields
-    icon: v.optional(v.string()), // Emoji icon
-    iconColor: v.optional(v.string()), // Background color for icon
-    frequency: v.optional(v.string()), // "daily", "weekly", "custom"
-    daysOfWeek: v.optional(v.array(v.number())), // 0-6 for Sunday-Saturday
-    preferredTime: v.optional(v.string()), // "morning", "afternoon", "evening"
-    remindersEnabled: v.optional(v.boolean()),
-    reminderTime: v.optional(v.string()), // "2:00 PM" format
-    reminderSound: v.optional(v.string()), // "default", etc.
-    goalDuration: v.optional(v.number()), // Goal value
-    goalUnit: v.optional(v.string()), // "minutes", "hours", "times", etc.
+
+    // "minutes", "hours", "times", etc.
     // Pause/Resume functionality
     paused: v.optional(v.boolean()),
+
+    totalCompletions: v.optional(v.number()),
+
+    accessibilityAtPause: v.optional(v.number()),
+
+    totalMisses: v.optional(v.number()),
+
     pausedAt: v.optional(v.number()),
+
+    userId: v.optional(v.string()),
+
+    // "morning", "afternoon", "evening"
+    remindersEnabled: v.optional(v.boolean()),
+    // "2:00 PM" format
+    reminderSound: v.optional(v.string()),
+    reminderTime: v.optional(v.string()),
     resumedAt: v.optional(v.number()),
     strengthAtPause: v.optional(v.number()),
-    accessibilityAtPause: v.optional(v.number()),
   }),
 
   notes: defineTable({
@@ -81,6 +116,47 @@ const applicationTables = {
     .index('by_date', ['date'])
     .index('by_habit', ['habitId'])
     .index('by_user_and_date', ['userId', 'date']),
+
+  // Template Library (Phase 3 Feature)
+  templates: defineTable({
+    category: v.union(
+      v.literal('morning_routine'),
+      v.literal('health_fitness'),
+      v.literal('productivity'),
+      v.literal('mindfulness')
+    ),
+    // For sorting popular templates
+    createdAt: v.number(),
+
+    description: v.string(),
+
+    // Background color for icon
+    frequency: v.string(),
+
+    icon: v.string(),
+
+    // Emoji icon
+    iconColor: v.string(),
+
+    name: v.string(),
+
+    // Optional link to research
+    popularityScore: v.optional(v.number()),
+
+    // Research citation
+    scientificLink: v.optional(v.string()),
+
+    // "daily", "weekly", "custom"
+    scientificReference: v.string(),
+  }).index('by_category', ['category']),
+
+  // Track template usage analytics
+  templateUsage: defineTable({
+    habitId: v.optional(v.id('habits')),
+    importedAt: v.number(),
+    templateId: v.id('templates'),
+    userId: v.optional(v.string()), // Reference to created habit
+  }).index('by_template', ['templateId']),
 
   tracking: defineTable({
     completed: v.boolean(),
@@ -96,51 +172,33 @@ const applicationTables = {
         v.boolean(), // Backwards compatibility
         v.literal('system'),
         v.literal('light'),
-        v.literal('dark'),
-      ),
+        v.literal('dark')
+      )
     ),
-    showCalendarView: v.boolean(),
-    showCharacterScreen: v.optional(v.boolean()),
-    showConsistency: v.boolean(),
-    showEmojis: v.boolean(),
-    showMotivationalMessages: v.boolean(),
-    showNotesStats: v.optional(v.boolean()),
-    showStreaks: v.boolean(),
-    userId: v.optional(v.string()),
     // New settings from Figma design
     appIcon: v.optional(v.string()),
+
+    showCalendarView: v.boolean(),
+
     highContrastMode: v.optional(v.boolean()),
+
+    showCharacterScreen: v.optional(v.boolean()),
+
     reduceMotion: v.optional(v.boolean()),
-    textSize: v.optional(v.string()), // Backwards compatibility
+
+    showConsistency: v.boolean(),
+
+    showEmojis: v.boolean(),
+
+    showMotivationalMessages: v.boolean(),
+
+    showNotesStats: v.optional(v.boolean()),
+    showStreaks: v.boolean(),
+    textSize: v.optional(v.string()),
+    // Backwards compatibility
     useDyslexicFont: v.optional(v.boolean()),
-  }),
-
-  // Template Library (Phase 3 Feature)
-  templates: defineTable({
-    name: v.string(),
-    description: v.string(),
-    category: v.union(
-      v.literal('morning_routine'),
-      v.literal('health_fitness'),
-      v.literal('productivity'),
-      v.literal('mindfulness'),
-    ),
-    icon: v.string(), // Emoji icon
-    iconColor: v.string(), // Background color for icon
-    frequency: v.string(), // "daily", "weekly", "custom"
-    scientificReference: v.string(), // Research citation
-    scientificLink: v.optional(v.string()), // Optional link to research
-    popularityScore: v.optional(v.number()), // For sorting popular templates
-    createdAt: v.number(),
-  }).index('by_category', ['category']),
-
-  // Track template usage analytics
-  templateUsage: defineTable({
-    templateId: v.id('templates'),
     userId: v.optional(v.string()),
-    importedAt: v.number(),
-    habitId: v.optional(v.id('habits')), // Reference to created habit
-  }).index('by_template', ['templateId']),
+  }),
 };
 
 export default defineSchema({

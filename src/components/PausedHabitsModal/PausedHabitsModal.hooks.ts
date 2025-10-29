@@ -14,7 +14,9 @@ export function usePausedHabitsModalLogic() {
 
   const handleResume = async (habitId: Id<'habits'>, habitName: string) => {
     if (Platform.OS === 'web') {
-      const confirmed = confirm(`Resume "${habitName}"? It will return to your daily habit list.`);
+      const confirmed = confirm(
+        `Resume "${habitName}"? It will return to your daily habit list.`
+      );
       if (!confirmed) return;
     }
 
@@ -29,7 +31,7 @@ export function usePausedHabitsModalLogic() {
   };
 
   return {
-    pausedHabits,
     handleResume,
+    pausedHabits,
   };
 }

@@ -23,11 +23,11 @@ import { TextStyle } from 'react-native';
  * Monospace (data, numbers): SF Mono
  */
 export const fontFamilies = {
+  monospace: 'SF Mono',
   primary: {
     display: 'SF Pro Display', // iOS native
-    text: 'SF Pro Text',       // iOS native
+    text: 'SF Pro Text', // iOS native
   },
-  monospace: 'SF Mono',
   system: '-apple-system', // Fallback to system font
 } as const;
 
@@ -36,10 +36,10 @@ export const fontFamilies = {
  * Using iOS standard weight names and numeric values
  */
 export const fontWeights = {
-  regular: '400' as const,
-  medium: '500' as const,
-  semibold: '600' as const,
   bold: '700' as const,
+  medium: '500' as const,
+  regular: '400' as const,
+  semibold: '600' as const,
 };
 
 /**
@@ -47,49 +47,13 @@ export const fontWeights = {
  * All measurements in points (pt) for iOS
  */
 export const typography: Record<string, TextStyle> = {
-  // Display Large (Onboarding headlines)
-  displayLarge: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 34,
-    fontWeight: fontWeights.bold,
-    lineHeight: 41,
-    letterSpacing: 0.37,
-  },
-
-  // Heading 1 (Screen titles)
-  heading1: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 28,
-    fontWeight: fontWeights.bold,
-    lineHeight: 34,
-    letterSpacing: 0.36,
-  },
-
-  // Heading 2 (Section titles)
-  heading2: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 22,
-    fontWeight: fontWeights.semibold,
-    lineHeight: 28,
-    letterSpacing: 0.35,
-  },
-
-  // Heading 3 (Card titles, habit names)
-  heading3: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: fontWeights.semibold,
-    lineHeight: 22,
-    letterSpacing: -0.41,
-  },
-
   // Body (Primary text)
   body: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.regular,
-    lineHeight: 22,
     letterSpacing: -0.41,
+    lineHeight: 22,
   },
 
   // Body Small (Secondary info)
@@ -97,17 +61,8 @@ export const typography: Record<string, TextStyle> = {
     fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontWeight: fontWeights.regular,
-    lineHeight: 20,
     letterSpacing: -0.24,
-  },
-
-  // Caption (Meta info, timestamps)
-  caption: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: fontWeights.regular,
-    lineHeight: 18,
-    letterSpacing: -0.08,
+    lineHeight: 20,
   },
 
   // Button Text
@@ -115,17 +70,53 @@ export const typography: Record<string, TextStyle> = {
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.semibold,
-    lineHeight: 22,
     letterSpacing: -0.41,
+    lineHeight: 22,
   },
 
-  // Tab Bar Labels
-  tabBar: {
+  // Caption (Meta info, timestamps)
+  caption: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
-    fontWeight: fontWeights.medium,
-    lineHeight: 12,
-    letterSpacing: 0.12,
+    fontSize: 13,
+    fontWeight: fontWeights.regular,
+    letterSpacing: -0.08,
+    lineHeight: 18,
+  },
+
+  // Display Large (Onboarding headlines)
+  displayLarge: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 34,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 0.37,
+    lineHeight: 41,
+  },
+
+  // Heading 1 (Screen titles)
+  heading1: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 28,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 0.36,
+    lineHeight: 34,
+  },
+
+  // Heading 2 (Section titles)
+  heading2: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 22,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0.35,
+    lineHeight: 28,
+  },
+
+  // Heading 3 (Card titles, habit names)
+  heading3: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.41,
+    lineHeight: 22,
   },
 
   // Monospace (Numbers, percentages, data)
@@ -133,8 +124,17 @@ export const typography: Record<string, TextStyle> = {
     fontFamily: fontFamilies.monospace,
     fontSize: 17,
     fontWeight: fontWeights.regular,
-    lineHeight: 22,
     letterSpacing: 0,
+    lineHeight: 22,
+  },
+
+  // Tab Bar Labels
+  tabBar: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 10,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 0.12,
+    lineHeight: 12,
   },
 } as const;
 

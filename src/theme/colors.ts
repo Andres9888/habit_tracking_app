@@ -7,6 +7,49 @@
  */
 
 export const colors = {
+  // Dark Mode (Future)
+  dark: {
+    background: '#111827',
+    // Gray-800
+    card: '#374151',
+    // Gray-900
+    surface: '#1F2937', // Gray-700 with glow
+  },
+
+  error: '#EF4444',
+
+  // Convenience aliases for common usage (defaults to light mode)
+  background: '#FFFFFF',
+
+  // Matches secondary blue
+  // Neutral Grays (iOS-inspired)
+  gray: {
+    50: '#F9FAFB', // Background, cards in dark mode
+    100: '#F3F4F6', // Card backgrounds
+    200: '#E5E7EB', // Borders, dividers
+    300: '#D1D5DB', // Disabled elements
+    400: '#9CA3AF', // Placeholder text
+    500: '#6B7280', // Secondary text
+    600: '#4B5563', // Body text
+    700: '#374151', // Headings
+    800: '#1F2937', // Very dark text
+    900: '#111827', // Pure black alternative
+  },
+
+  border: '#E5E7EB',
+
+  // Red - errors, delete confirmations
+  info: '#3B82F6',
+
+  // Background & Surfaces
+  light: {
+    background: '#FFFFFF',
+    // Gray-50, subtle off-white
+    card: '#FFFFFF',
+    // Pure white
+    surface: '#F9FAFB', // Card with shadow
+  },
+
   // Primary Colors (Growth & Progress)
   primary: {
     400: '#34D399', // Lighter, hover states
@@ -22,64 +65,45 @@ export const colors = {
     600: '#2563EB', // Darker, pressed
   },
 
-  // Semantic Colors
-  success: '#10B981', // Matches primary green
-  warning: {
-    500: '#F59E0B', // Amber - habits at risk
-    700: '#D97706', // Darker for text (better contrast)
-  },
-  error: '#EF4444', // Red - errors, delete confirmations
-  info: '#3B82F6', // Matches secondary blue
-
-  // Neutral Grays (iOS-inspired)
-  gray: {
-    50: '#F9FAFB',   // Background, cards in dark mode
-    100: '#F3F4F6',  // Card backgrounds
-    200: '#E5E7EB',  // Borders, dividers
-    300: '#D1D5DB',  // Disabled elements
-    400: '#9CA3AF',  // Placeholder text
-    500: '#6B7280',  // Secondary text
-    600: '#4B5563',  // Body text
-    700: '#374151',  // Headings
-    800: '#1F2937',  // Very dark text
-    900: '#111827',  // Pure black alternative
-  },
-
   // Habit Strength Level Colors (Gradient)
   strength: {
-    starting: '#86EFAC',   // 0-20% - Light green 🌱
-    building: '#10B981',   // 20-40% - Brand green 🌿
-    developing: '#059669', // 40-60% - Medium green 🌳
-    strong: '#047857',     // 60-80% - Dark green 💪
-    automatic: '#065F46',  // 80-100% - Deep forest green ⚡
+    // 0-20% - Light green 🌱
+    building: '#10B981',
+
+    // 60-80% - Dark green 💪
+    automatic: '#065F46',
+
+    // 20-40% - Brand green 🌿
+    developing: '#059669',
+
+    starting: '#86EFAC',
+    // 40-60% - Medium green 🌳
+    strong: '#047857', // 80-100% - Deep forest green ⚡
   },
 
-  // Background & Surfaces
-  light: {
-    background: '#FFFFFF',   // Pure white
-    surface: '#F9FAFB',      // Gray-50, subtle off-white
-    card: '#FFFFFF',         // Card with shadow
-  },
+  // Semantic Colors
+  success: '#10B981',
 
-  // Dark Mode (Future)
-  dark: {
-    background: '#111827',   // Gray-900
-    surface: '#1F2937',      // Gray-800
-    card: '#374151',         // Gray-700 with glow
-  },
+  surface: '#F9FAFB',
 
   // Text Colors
   text: {
-    primary: '#1F2937',     // Gray-800 - Headings and important text
-    secondary: '#6B7280',   // Gray-500 - Secondary text, labels
-    tertiary: '#9CA3AF',    // Gray-400 - Placeholder, disabled text
-    inverse: '#FFFFFF',     // White text on dark backgrounds
+    // Gray-400 - Placeholder, disabled text
+    inverse: '#FFFFFF',
+
+    primary: '#1F2937',
+
+    // Gray-800 - Headings and important text
+    secondary: '#6B7280',
+    // Gray-500 - Secondary text, labels
+    tertiary: '#9CA3AF', // White text on dark backgrounds
   },
 
-  // Convenience aliases for common usage (defaults to light mode)
-  background: '#FFFFFF',
-  surface: '#F9FAFB',
-  border: '#E5E7EB', // Gray-200
+  // Matches primary green
+  warning: {
+    500: '#F59E0B', // Amber - habits at risk
+    700: '#D97706', // Darker for text (better contrast)
+  }, // Gray-200
 } as const;
 
 /**

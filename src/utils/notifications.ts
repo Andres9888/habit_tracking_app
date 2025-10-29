@@ -13,9 +13,9 @@ import { Platform } from 'react-native';
  */
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
+    shouldShowAlert: true,
   }),
 });
 
@@ -27,11 +27,11 @@ async function configureAndroidChannel() {
   }
 
   await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL_ID, {
-    name: 'Habit Reminders',
     importance: Notifications.AndroidImportance.HIGH,
+    lightColor: '#3B82F6',
+    name: 'Habit Reminders',
     sound: 'default',
     vibrationPattern: [0, 250, 250, 250],
-    lightColor: '#3B82F6',
   });
 }
 
@@ -50,7 +50,8 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
 
   if (
     requestedPermissions.granted ||
-    requestedPermissions.ios?.status === Notifications.AuthorizationStatus.GRANTED
+    requestedPermissions.ios?.status ===
+      Notifications.AuthorizationStatus.GRANTED
   ) {
     await configureAndroidChannel();
     return true;
@@ -60,7 +61,8 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
 }
 
 export async function cancelHabitReminder(habitId: string): Promise<void> {
-  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+  const scheduledNotifications =
+    await Notifications.getAllScheduledNotificationsAsync();
 
   const toCancel = scheduledNotifications.filter(
     (notification) => notification.content?.data?.habitId === habitId
@@ -117,7 +119,7 @@ function defaultReminderTime() {
 }
 
 export function getDefaultReminderTime(): Date {
-  return new Date(defaultReminderTime().getTime());
+  return new Date(defaultReminderTime());
 }
 
 interface ScheduleHabitReminderParams {
@@ -135,33 +137,32 @@ export async function scheduleHabitReminder({
   reminderTime,
   skipPermissionCheck = false,
 }: ScheduleHabitReminderParams): Promise<boolean> {
-  if (!skipPermissionCheck) {
+  if (skipPermissionCheck) {
+    await configureAndroidChannel();
+  } else {
     const hasPermission = await ensureNotificationPermissions();
 
     if (!hasPermission) {
       return false;
     }
-  } else {
-    await configureAndroidChannel();
   }
 
   await cancelHabitReminder(habitId);
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title,
       body,
-      sound: 'default',
       data: { habitId },
+      sound: 'default',
+      title,
     },
     trigger: {
+      channelId: Platform.OS === 'android' ? ANDROID_CHANNEL_ID : undefined,
       hour: reminderTime.getHours(),
       minute: reminderTime.getMinutes(),
       repeats: true,
-      channelId: Platform.OS === 'android' ? ANDROID_CHANNEL_ID : undefined,
     },
   });
 
   return true;
 }
-

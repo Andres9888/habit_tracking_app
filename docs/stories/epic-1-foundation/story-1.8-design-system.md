@@ -37,6 +37,7 @@
 ## Technical Notes
 
 **Current State:**
+
 - ✅ Basic color palette exists (6 colors in CreateHabitModal)
 - ✅ Some components exist (CreateHabitModal, HabitStrengthIndicator)
 - ? Typography scale not standardized
@@ -45,6 +46,7 @@
 - ? No component documentation
 
 **Implementation:**
+
 - Styling: NativeWind (Tailwind for React Native) - already in use ✅
 - Typography: SF Pro (iOS native) with fallbacks
 - Color palette: Expand to 12-16 colors (greens for growth, blues for trust, neutrals)
@@ -52,6 +54,7 @@
 - Testing: Visual regression tests with jest-image-snapshot
 
 **Key Files to Create/Modify:**
+
 - `src/theme/colors.ts` - Color tokens
 - `src/theme/typography.ts` - Typography scale
 - `src/theme/spacing.ts` - Spacing constants
@@ -67,16 +70,19 @@
 ## Testing Strategy
 
 **Unit Tests:**
+
 - Component prop variants render correctly
 - Theme context provides correct values
 - Typography components use correct styles
 
 **Visual Tests:**
+
 - Screenshot tests for all component variants
 - Dark mode rendering
 - Accessibility contrast ratios
 
 **Manual Testing:**
+
 - Component playground/Storybook
 - Test on various screen sizes
 - VoiceOver/TalkBack navigation
@@ -86,24 +92,28 @@
 ## Implementation Plan (Week 4)
 
 ### Day 16: Design System Documentation
+
 - Document color palette (12-16 colors)
 - Define typography scale
 - Create spacing system (4px base)
 - Document component API
 
 ### Day 17: Component Library
+
 - Create Button component (variants)
 - Create Card component
 - Create Input component
 - Extract common patterns
 
 ### Day 18: Dark Mode Foundation (Stretch)
+
 - Define dark mode colors
 - Implement theme provider
 - Add theme toggle
 - Update all components
 
 ### Day 19 & 20: QA & Polish
+
 - Visual regression tests
 - Accessibility audit
 - Performance optimization
@@ -197,12 +207,14 @@ export const spacing = {
 ## Notes
 
 **Stretch Goals:**
+
 - Dark mode implementation
 - Storybook setup
 - Animation library standardization
 - Icon library expansion
 
 **Must-Haves for MVP:**
+
 - Consistent color palette
 - Typography scale
 - Basic component library

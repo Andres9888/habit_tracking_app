@@ -8,7 +8,13 @@ import {
   useMutation,
   useQuery,
 } from 'convex/react';
-import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-fns';
+import {
+  addDays,
+  format,
+  startOfDay,
+  subMonths,
+  eachDayOfInterval,
+} from 'date-fns';
 import { Plus, Settings } from 'lucide-react-native';
 import type { ComponentType } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -41,9 +47,19 @@ import MilestoneCelebration from './components/MilestoneCelebration';
 // Define the type locally to avoid importing the module at startup
 type ShareCardData = {
   habitName: string;
-  milestoneLevel: 'starting' | 'building' | 'developing' | 'strong' | 'automatic';
+  milestoneLevel:
+    | 'starting'
+    | 'building'
+    | 'developing'
+    | 'strong'
+    | 'automatic';
   strengthPercentage: number;
   userName?: string;
+};
+type ShareCardGeneratorProps = {
+  data: ShareCardData;
+  visible: boolean;
+  onClose: () => void;
 };
 import { useMilestoneDetection } from './hooks/useMilestoneDetection';
 import PauseHabitModal from './components/PauseHabitModal';
@@ -83,10 +99,27 @@ const tokenCache = {
   },
 };
 
-const WebToaster: ComponentType =
-  Platform.OS === 'web'
-    ? (require('sonner').Toaster as ComponentType)
-    : () => null;
+const WebToaster = () => {
+  const [ToasterComponent, setToasterComponent] =
+    useState<ComponentType | null>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+
+    void import('sonner').then((module) => {
+      setToasterComponent(() => module.Toaster as ComponentType);
+    });
+  }, []);
+
+  if (Platform.OS !== 'web' || !ToasterComponent) {
+    return null;
+  }
+
+  const Toaster = ToasterComponent;
+  return <Toaster />;
+};
 
 function HabitsApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -97,11 +130,15 @@ function HabitsApp() {
   const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
   const [isHabitDetailOpen, setIsHabitDetailOpen] = useState(false);
   const [showShareCard, setShowShareCard] = useState(false);
-  const [shareCardData, setShareCardData] = useState<ShareCardData | null>(null);
+  const [shareCardData, setShareCardData] = useState<ShareCardData | null>(
+    null
+  );
   const [showPauseModal, setShowPauseModal] = useState(false);
   const [habitToPause, setHabitToPause] = useState<Habit | null>(null);
   const [habitToEdit, setHabitToEdit] = useState<any>(null);
   const [showHapticTest, setShowHapticTest] = useState(false);
+  const [ShareCardGeneratorComponent, setShareCardGeneratorComponent] =
+    useState<ComponentType<ShareCardGeneratorProps> | null>(null);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -114,7 +151,7 @@ function HabitsApp() {
   const isHabitsLoading = habitsQuery === undefined;
   const settings = useQuery(api.settings.get);
 
-  type Habit = typeof habits[number];
+  type Habit = (typeof habits)[number];
 
   // Track last updated habit for milestone detection
   const [lastUpdatedHabit, setLastUpdatedHabit] = useState<{
@@ -122,6 +159,16 @@ function HabitsApp() {
     name: string;
     strength: number;
   } | null>(null);
+
+  useEffect(() => {
+    if (!showShareCard || ShareCardGeneratorComponent) {
+      return;
+    }
+
+    void import('./components/ShareCardGenerator').then((module) => {
+      setShareCardGeneratorComponent(() => module.ShareCardGenerator);
+    });
+  }, [ShareCardGeneratorComponent, showShareCard]);
 
   // Milestone detection for celebrations
   // Convert strength from 0-1 scale to 0-100 percentage for milestone detection
@@ -135,9 +182,9 @@ function HabitsApp() {
   useEffect(() => {
     if (milestone) {
       console.log('🎉 MILESTONE DETECTED!', {
+        habitName: milestone.habitName,
         level: milestone.level,
         strength: milestone.strength + '%',
-        habitName: milestone.habitName,
       });
     }
   }, [milestone]);
@@ -151,16 +198,16 @@ function HabitsApp() {
     if (isHabitsLoading) return;
 
     // Check if any habit's strength has changed
-    habits.forEach((habit) => {
+    for (const habit of habits) {
       const prevStrength = prevStrengthsRef.current.get(habit._id) || 0;
       const currentStrength = habit.strength || 0;
 
       // If strength increased, this might be a milestone crossing
       if (currentStrength > prevStrength) {
         console.log('🎯 Strength increased!', {
+          currentStrength: (currentStrength * 100).toFixed(1) + '%',
           habitName: habit.name,
           prevStrength: (prevStrength * 100).toFixed(1) + '%',
-          currentStrength: (currentStrength * 100).toFixed(1) + '%',
         });
         setLastUpdatedHabit({
           id: habit._id,
@@ -171,7 +218,7 @@ function HabitsApp() {
 
       // Update previous strength
       prevStrengthsRef.current.set(habit._id, currentStrength);
-    });
+    }
   }, [habits, isHabitsLoading]);
 
   const today = useMemo(() => startOfDay(new Date()), []);
@@ -190,7 +237,7 @@ function HabitsApp() {
   const extendedDateRange = useMemo(() => {
     const endDate = today;
     const startDate = subMonths(endDate, 12);
-    return eachDayOfInterval({ start: startDate, end: endDate });
+    return eachDayOfInterval({ end: endDate, start: startDate });
   }, [today]);
 
   const extendedDateStrings = useMemo(
@@ -304,7 +351,11 @@ function HabitsApp() {
   const handleDeleteHabit = useCallback(
     async (habitId: Id<'habits'>) => {
       if (Platform.OS === 'web') {
-        if (!confirm('Are you sure you want to delete this habit? This cannot be undone.')) {
+        if (
+          !confirm(
+            'Are you sure you want to delete this habit? This cannot be undone.'
+          )
+        ) {
           return;
         }
         await removeHabit({ habitId });
@@ -315,15 +366,15 @@ function HabitsApp() {
           'Delete Habit',
           'Are you sure you want to delete this habit? This cannot be undone.',
           [
-            { text: 'Cancel', style: 'cancel' },
+            { style: 'cancel', text: 'Cancel' },
             {
-              text: 'Delete',
-              style: 'destructive',
               onPress: async () => {
                 await removeHabit({ habitId });
                 setIsHabitDetailOpen(false);
                 setSelectedHabit(null);
               },
+              style: 'destructive',
+              text: 'Delete',
             },
           ]
         );
@@ -345,9 +396,9 @@ function HabitsApp() {
   // Memoize content container style to prevent re-renders on iOS
   const contentContainerStyle = useMemo(
     () => ({
+      paddingBottom: 96,
       paddingHorizontal: 24,
       paddingTop: 48,
-      paddingBottom: 96,
     }),
     []
   );
@@ -423,76 +474,79 @@ function HabitsApp() {
     );
   }, [handleToggleForm, isHabitsLoading]);
 
-  const renderHeader = useCallback(() => (
-    <View className='gap-4'>
-      <View className='mt-3 flex-row items-center justify-between'>
-        <Pressable
-          accessibilityHint='Open create habit modal'
-          accessibilityLabel='Add habit'
-          accessibilityRole='button'
-          className='h-12 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
-          onPress={handleToggleForm}
-        >
-          <Plus color='#ffffff' size={18} strokeWidth={2.25} />
-          <Text className='text-base font-normal tracking-tight text-white'>
-            Habits
-          </Text>
-        </Pressable>
-        <View className='flex-row gap-3'>
+  const renderHeader = useCallback(
+    () => (
+      <View className='gap-4'>
+        <View className='mt-3 flex-row items-center justify-between'>
           <Pressable
-            accessibilityLabel='Open settings'
+            accessibilityHint='Open create habit modal'
+            accessibilityLabel='Add habit'
             accessibilityRole='button'
-            className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-            onPress={() => setIsSettingsOpen(true)}
+            className='h-12 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
+            onPress={handleToggleForm}
           >
-            <Settings color='#101727' size={20} strokeWidth={2.25} />
+            <Plus color='#ffffff' size={18} strokeWidth={2.25} />
+            <Text className='text-base font-normal tracking-tight text-white'>
+              Habits
+            </Text>
           </Pressable>
+          <View className='flex-row gap-3'>
+            <Pressable
+              accessibilityLabel='Open settings'
+              accessibilityRole='button'
+              className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+              onPress={() => setIsSettingsOpen(true)}
+            >
+              <Settings color='#101727' size={20} strokeWidth={2.25} />
+            </Pressable>
+          </View>
         </View>
+
+        {/* CalendarTimeline from Figma Design (node 201:87) - replaces DateSelector */}
+        <CalendarTimeline
+          showSeparator
+          canNavigateForward={canNavigateForward}
+          dates={weekDates}
+          onNextWeek={handleNextWeek}
+          onPreviousWeek={handlePreviousWeek}
+        />
+
+        {/* Habits at Risk Widget - Phase 4: Retention Engine */}
+        <HabitsAtRiskWidget
+          onHabitPress={(habitId) => {
+            const habit = habits.find((h) => h._id === habitId);
+            if (habit) {
+              handleHabitPress(habit);
+            }
+          }}
+        />
       </View>
-
-      {/* CalendarTimeline from Figma Design (node 201:87) - replaces DateSelector */}
-      <CalendarTimeline
-        showSeparator
-        canNavigateForward={canNavigateForward}
-        dates={weekDates}
-        onNextWeek={handleNextWeek}
-        onPreviousWeek={handlePreviousWeek}
-      />
-
-      {/* Habits at Risk Widget - Phase 4: Retention Engine */}
-      <HabitsAtRiskWidget
-        onHabitPress={(habitId) => {
-          const habit = habits.find(h => h._id === habitId);
-          if (habit) {
-            handleHabitPress(habit);
-          }
-        }}
-      />
-    </View>
-  ), [
-    canNavigateForward,
-    handleNextWeek,
-    handlePreviousWeek,
-    handleToggleForm,
-    handleHabitPress,
-    habits,
-    weekDates,
-  ]);
+    ),
+    [
+      canNavigateForward,
+      handleNextWeek,
+      handlePreviousWeek,
+      handleToggleForm,
+      handleHabitPress,
+      habits,
+      weekDates,
+    ]
+  );
 
   return (
     <GestureHandlerRootView className='flex-1'>
       <View className='flex-1 items-center bg-background'>
         <View className='w-full max-w-[448px] flex-1'>
           <DraggableFlatList
+            activationDistance={10}
+            contentContainerStyle={contentContainerStyle}
             data={habits}
             keyExtractor={(item: Habit) => item._id}
-            renderItem={renderItem}
-            onDragEnd={handleDragEnd}
-            ListHeaderComponent={renderHeader}
             ListEmptyComponent={renderEmptyState}
-            contentContainerStyle={contentContainerStyle}
+            ListHeaderComponent={renderHeader}
+            renderItem={renderItem}
             showsVerticalScrollIndicator={false}
-            activationDistance={10}
+            onDragEnd={handleDragEnd}
           />
         </View>
         <WebToaster />
@@ -553,12 +607,12 @@ function HabitsApp() {
         }}
       />
       <CreateHabitModal
+        habitToEdit={habitToEdit || undefined}
         visible={isCreateHabitOpen || habitToEdit !== null}
         onClose={() => {
           setIsCreateHabitOpen(false);
           setHabitToEdit(null);
         }}
-        habitToEdit={habitToEdit || undefined}
       />
 
       {/* Haptic Test Modal (diagnostics) */}
@@ -581,46 +635,46 @@ function HabitsApp() {
       <HabitCalendarModal
         habit={selectedHabit}
         streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
-        tracking={tracking}
         toggleHabit={toggleHabit}
+        tracking={tracking}
         visible={isHabitCalendarOpen}
         onClose={() => setIsHabitCalendarOpen(false)}
       />
       <HabitDetailScreen
-        visible={isHabitDetailOpen}
-        onClose={() => setIsHabitDetailOpen(false)}
         habit={selectedHabit}
         isPremium={process.env.EXPO_PUBLIC_ENABLE_PREMIUM === 'true' || true} // Set to true for testing, false to test paywall
+        visible={isHabitDetailOpen}
+        onArchive={handleArchive}
+        onClose={() => setIsHabitDetailOpen(false)}
+        onDelete={handleDeleteHabit}
         onEdit={(habit) => {
           setIsHabitDetailOpen(false);
           setHabitToEdit(habit);
         }}
+        onOpenCalendar={(habit) => {
+          setSelectedHabit(habit);
+          setIsHabitCalendarOpen(true);
+        }}
         onPause={(habitId) => {
-          const habit = habits.find(h => h._id === habitId);
+          const habit = habits.find((h) => h._id === habitId);
           if (habit) {
             setHabitToPause(habit);
             setShowPauseModal(true);
           }
         }}
-        onArchive={handleArchive}
-        onDelete={handleDeleteHabit}
         onUpgrade={() => {
           // TODO: Navigate to subscription screen
           console.log('Upgrade to premium');
-        }}
-        onOpenCalendar={(habit) => {
-          setSelectedHabit(habit);
-          setIsHabitCalendarOpen(true);
         }}
       />
 
       {/* Milestone Celebration Modal */}
       {milestone && (
         <MilestoneCelebration
-          visible={true}
+          visible
+          habitName={milestone.habitName}
           level={milestone.level}
           strength={milestone.strength}
-          habitName={milestone.habitName}
           onClose={() => {
             clearMilestone();
             setLastUpdatedHabit(null);
@@ -638,26 +692,27 @@ function HabitsApp() {
       )}
 
       {/* Share Card Generator Modal */}
-      {showShareCard && shareCardData && (() => {
-        const { ShareCardGenerator } = require('./components/ShareCardGenerator');
-        return (
-          <ShareCardGenerator
-            visible={showShareCard}
-            data={shareCardData}
-            onClose={() => {
-              setShowShareCard(false);
-              setShareCardData(null);
-              clearMilestone();
-              setLastUpdatedHabit(null);
-            }}
-          />
-        );
-      })()}
+      {showShareCard && shareCardData && ShareCardGeneratorComponent && (
+        <ShareCardGeneratorComponent
+          data={shareCardData}
+          visible={showShareCard}
+          onClose={() => {
+            setShowShareCard(false);
+            setShareCardData(null);
+            clearMilestone();
+            setLastUpdatedHabit(null);
+          }}
+        />
+      )}
 
       {/* Pause Habit Confirmation Modal */}
       <PauseHabitModal
-        visible={showPauseModal}
         habitName={habitToPause?.name || ''}
+        visible={showPauseModal}
+        onCancel={() => {
+          setShowPauseModal(false);
+          setHabitToPause(null);
+        }}
         onConfirm={async () => {
           if (habitToPause) {
             await pauseHabit({ habitId: habitToPause._id });
@@ -665,10 +720,6 @@ function HabitsApp() {
             setHabitToPause(null);
             setIsHabitDetailOpen(false);
           }
-        }}
-        onCancel={() => {
-          setShowPauseModal(false);
-          setHabitToPause(null);
         }}
       />
     </GestureHandlerRootView>
@@ -690,7 +741,10 @@ export default function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
+      <ClerkProvider
+        publishableKey={clerkPublishableKey}
+        tokenCache={tokenCache}
+      >
         <ClerkLoaded>
           <ConvexProvider client={convex}>
             <HabitsApp />

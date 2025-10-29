@@ -101,9 +101,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       disabled={disabled}
       style={{
         backgroundColor,
+        borderColor: completed ? accentColor : borderColor,
+        borderWidth: completed ? 0 : 2,
         opacity: disabled ? 0.5 : 1,
-        borderColor: !completed ? borderColor : accentColor,
-        borderWidth: !completed ? 2 : 0,
         transform: [{ scale }],
       }}
       onPress={onPress}
@@ -174,7 +174,8 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
         const isLastItem = index === weekDateStrings.length - 1;
         // Show connector line only when both current and next day are completed
-        const showConnector = !isLastItem && completed && isCompleted(index + 1);
+        const showConnector =
+          !isLastItem && completed && isCompleted(index + 1);
 
         return (
           <React.Fragment key={dateString}>
@@ -184,8 +185,8 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               accessibilityLabel={accessibilityLabel}
               completed={completed}
               disabled={disabled}
-              isToday={isToday(index)}
               highContrastMode={highContrastMode}
+              isToday={isToday(index)}
               onPress={() => onToggle({ date: dateString, habitId })}
             />
             {!isLastItem && (

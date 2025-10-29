@@ -42,29 +42,29 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
 
   // Get date range text (first and last date) - safe array access
   const firstDate = dates[0];
-  const lastDate = dates[dates.length - 1];
+  const lastDate = dates.at(-1);
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   const colors = highContrastMode
     ? {
-        icon: '#facc15',
-        primaryText: '#ffffff',
-        secondaryText: '#facc15',
         currentDayBackground: '#facc15',
         currentDayText: '#000000',
         dayBackground: '#000000',
         dayBorder: '#facc15',
         dayText: '#ffffff',
+        icon: '#facc15',
+        primaryText: '#ffffff',
+        secondaryText: '#facc15',
       }
     : {
-        icon: '#1a1a1a',
-        primaryText: '#1a1a1a',
-        secondaryText: '#8a8a8a',
         currentDayBackground: '#1a1a1a',
         currentDayText: '#ffffff',
         dayBackground: '#ffffff',
         dayBorder: 'transparent',
         dayText: '#1a1a1a',
+        icon: '#1a1a1a',
+        primaryText: '#1a1a1a',
+        secondaryText: '#8a8a8a',
       };
 
   return (
@@ -141,7 +141,9 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                 <Text
                   className='text-center text-[16px] font-semibold leading-[24px]'
                   style={{
-                    color: isCurrentDay ? colors.currentDayText : colors.dayText,
+                    color: isCurrentDay
+                      ? colors.currentDayText
+                      : colors.dayText,
                     fontWeight: isCurrentDay ? '700' : '600',
                   }}
                 >

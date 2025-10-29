@@ -40,8 +40,10 @@ export function convertToCSV(data: ExportData): string {
     'Total Completions',
   ];
 
-  const rows = data.habits.map(habit => {
-    const totalCompletions = habit.completions.filter(c => c.completed).length;
+  const rows = data.habits.map((habit) => {
+    const totalCompletions = habit.completions.filter(
+      (c) => c.completed
+    ).length;
     return [
       habit.name,
       habit.icon || '',
@@ -56,7 +58,7 @@ export function convertToCSV(data: ExportData): string {
   // Build CSV string
   const csvContent = [
     headers.join(','),
-    ...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
+    ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
   ].join('\n');
 
   // Add metadata as comments
@@ -111,15 +113,18 @@ export async function exportData(
     if (isAvailable) {
       // Use expo-sharing for better cross-platform support
       await Sharing.shareAsync(fileUri, {
-        mimeType,
         dialogTitle: 'Export Habit Data',
-        UTI: format === 'csv' ? 'public.comma-separated-values-text' : 'public.json',
+        mimeType,
+        UTI:
+          format === 'csv'
+            ? 'public.comma-separated-values-text'
+            : 'public.json',
       });
     } else if (Platform.OS === 'ios') {
       // Fallback to React Native Share for iOS
       await Share.share({
-        url: fileUri,
         title: 'Export Habit Data',
+        url: fileUri,
       });
     } else {
       // Android fallback
@@ -135,11 +140,13 @@ export async function exportData(
         // Ignore cleanup errors
       });
     }, 5000);
-
   } catch (error) {
     if (error instanceof Error) {
       // User cancelled sharing
-      if (error.message.includes('User canceled') || error.message.includes('cancelled')) {
+      if (
+        error.message.includes('User canceled') ||
+        error.message.includes('cancelled')
+      ) {
         return;
       }
       throw error;
@@ -155,28 +162,37 @@ export async function prepareExportData(
   trackings: any[],
   overviewStats: any
 ): Promise<ExportData> {
-  const habitData: HabitData[] = habits.map(habit => {
-    const habitTrackings = trackings.filter(t => t.habitId === habit._id);
+  const habitData: HabitData[] = habits.map((habit) => {
+    const habitTrackings = trackings.filter((t) => t.habitId === habit._id);
 
     return {
-      id: habit._id,
-      name: habit.name,
-      icon: habit.icon,
-      strength: habit.strength ? habit.strength * 100 : 0,
-      currentStreak: 0, // Will be calculated from trackings
-      longestStreak: 0, // Will be calculated from trackings
-      createdAt: new Date(habit.createdAt).toISOString(),
-      completions: habitTrackings.map(t => ({
-        date: t.date,
+      completions: habitTrackings.map((t) => ({
         completed: t.completed,
+        date: t.date,
       })),
+
+      // Will be calculated from trackings
+      createdAt: new Date(habit.createdAt).toISOString(),
+
+      currentStreak: 0,
+
+      icon: habit.icon,
+
+      id: habit._id,
+
+      // Will be calculated from trackings
+      longestStreak: 0,
+
+      name: habit.name,
+
+      strength: habit.strength ? habit.strength * 100 : 0,
     };
   });
 
   // Calculate streaks for each habit
-  habitData.forEach(habit => {
+  for (const habit of habitData) {
     const sortedCompletions = habit.completions
-      .filter(c => c.completed)
+      .filter((c) => c.completed)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     let currentStreak = 0;
@@ -184,14 +200,15 @@ export async function prepareExportData(
     let tempStreak = 0;
     let lastDate: Date | null = null;
 
-    sortedCompletions.forEach(completion => {
+    for (const completion of sortedCompletions) {
       const completionDate = new Date(completion.date);
 
       if (lastDate === null) {
         tempStreak = 1;
       } else {
         const daysDiff = Math.floor(
-          (completionDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+          (completionDate.getTime() - lastDate.getTime()) /
+            (1000 * 60 * 60 * 24)
         );
         if (daysDiff === 1) {
           tempStreak++;
@@ -202,7 +219,7 @@ export async function prepareExportData(
 
       longestStreak = Math.max(longestStreak, tempStreak);
       lastDate = completionDate;
-    });
+    }
 
     // Check if streak is current
     const today = new Date();
@@ -215,16 +232,16 @@ export async function prepareExportData(
 
     habit.currentStreak = currentStreak;
     habit.longestStreak = longestStreak;
-  });
+  }
 
   return {
     exportDate: new Date().toISOString(),
-    version: '1.0.0',
-    user: {
-      totalHabits: overviewStats?.totalHabits || 0,
-      averageStrength: overviewStats?.averageStrength || 0,
-    },
     habits: habitData,
+    user: {
+      averageStrength: overviewStats?.averageStrength || 0,
+      totalHabits: overviewStats?.totalHabits || 0,
+    },
+    version: '1.0.0',
   };
 }
 
@@ -234,9 +251,9 @@ export async function prepareExportData(
 export function showExportSuccess(format: 'csv' | 'json') {
   // This will be handled by the Toast component in the UI
   return {
-    type: 'success',
-    message: `Data exported successfully as ${format.toUpperCase()}`,
     duration: 3000,
+    message: `Data exported successfully as ${format.toUpperCase()}`,
+    type: 'success',
   };
 }
 
@@ -245,8 +262,8 @@ export function showExportSuccess(format: 'csv' | 'json') {
  */
 export function showExportError(error: Error) {
   return {
-    type: 'error',
-    message: `Export failed: ${error.message}`,
     duration: 4000,
+    message: `Export failed: ${error.message}`,
+    type: 'error',
   };
 }

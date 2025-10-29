@@ -25,15 +25,15 @@ export function SettingsSection({
       };
 
   return (
-    <View className="gap-2">
+    <View className='gap-2'>
       <Text
-        className="px-2 text-[14px] font-semibold uppercase tracking-[0.7px]"
+        className='px-2 text-[14px] font-semibold uppercase tracking-[0.7px]'
         style={{ color: colors.title }}
       >
         {title}
       </Text>
       <View
-        className="overflow-hidden rounded-[16px]"
+        className='overflow-hidden rounded-[16px]'
         style={{
           backgroundColor: colors.background,
           borderColor: highContrastMode ? colors.border : undefined,

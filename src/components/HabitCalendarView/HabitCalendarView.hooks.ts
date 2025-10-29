@@ -28,17 +28,19 @@ export const useHabitCalendarViewLogic = ({
 
   const trackingMap = useMemo(() => {
     const map = new Map<string, boolean>();
-    tracking.forEach(({ habitId: entryHabitId, date, completed }) => {
+    for (const { habitId: entryHabitId, date, completed } of tracking) {
       if (entryHabitId === habitId) {
         map.set(date, completed);
       }
-    });
+    }
     return map;
   }, [habitId, tracking]);
 
   const getHabitStatus = useCallback(
     (dateString: string): HabitStatus => {
-      const parsedDate = startOfDay(parse(dateString, 'yyyy-MM-dd', new Date()));
+      const parsedDate = startOfDay(
+        parse(dateString, 'yyyy-MM-dd', new Date())
+      );
       const today = startOfToday();
       const completion = trackingMap.get(dateString);
 

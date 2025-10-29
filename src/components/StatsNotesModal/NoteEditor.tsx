@@ -53,14 +53,18 @@ export default function NoteEditor({
     setError('');
 
     try {
-      await (noteId ? updateNote({ body: body.trim(), noteId }) : createNote({
-          body: body.trim(),
-          date,
-          habitId: selectedHabitId,
-        }));
+      await (noteId
+        ? updateNote({ body: body.trim(), noteId })
+        : createNote({
+            body: body.trim(),
+            date,
+            habitId: selectedHabitId,
+          }));
       onSave();
     } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : 'Failed to save note');
+      setError(
+        error_ instanceof Error ? error_.message : 'Failed to save note'
+      );
     } finally {
       setIsSaving(false);
     }

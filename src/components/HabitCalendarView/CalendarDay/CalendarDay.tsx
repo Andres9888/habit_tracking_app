@@ -50,7 +50,9 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
   return (
     <Pressable
       accessibilityHint={
-        isDisabled ? undefined : 'Toggle completion for this habit on the selected day'
+        isDisabled
+          ? undefined
+          : 'Toggle completion for this habit on the selected day'
       }
       accessibilityLabel={`${format(date, 'EEEE, MMMM d')}. ${STATUS_LABELS[status]}.`}
       accessibilityRole='button'
@@ -65,12 +67,14 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
     >
       <View
         className={clsx(
-          'flex-1 w-full items-center justify-center rounded-lg border bg-white px-0.5 py-1',
+          'w-full flex-1 items-center justify-center rounded-lg border bg-white px-0.5 py-1',
           container,
           isCurrentDay && 'border-blue-400'
         )}
       >
-        <Text className={clsx('text-sm font-semibold', text)}>{format(date, 'd')}</Text>
+        <Text className={clsx('text-sm font-semibold', text)}>
+          {format(date, 'd')}
+        </Text>
         <View className={clsx('mt-1 h-1.5 w-1.5 rounded-full', indicator)} />
       </View>
     </Pressable>

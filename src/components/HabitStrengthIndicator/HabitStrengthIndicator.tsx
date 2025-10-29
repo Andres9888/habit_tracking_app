@@ -66,40 +66,40 @@ const STRENGTH_LEVEL_CONFIG: Record<
     maxThreshold: number;
   }
 > = {
-  starting: {
-    emoji: '🌱',
-    label: 'Starting Out',
-    description: 'Just beginning',
-    minThreshold: 0,
-    maxThreshold: 20,
-  },
-  building: {
-    emoji: '🌿',
-    label: 'Building',
-    description: 'Making progress',
-    minThreshold: 20,
-    maxThreshold: 40,
-  },
-  developing: {
-    emoji: '🌳',
-    label: 'Developing',
-    description: 'Getting stronger',
-    minThreshold: 40,
-    maxThreshold: 60,
-  },
-  strong: {
-    emoji: '💪',
-    label: 'Strong',
-    description: 'Well-established',
-    minThreshold: 60,
-    maxThreshold: 80,
-  },
   automatic: {
+    description: 'Fully automatic',
     emoji: '⚡',
     label: 'Automatic',
-    description: 'Fully automatic',
-    minThreshold: 80,
     maxThreshold: 100,
+    minThreshold: 80,
+  },
+  building: {
+    description: 'Making progress',
+    emoji: '🌿',
+    label: 'Building',
+    maxThreshold: 40,
+    minThreshold: 20,
+  },
+  developing: {
+    description: 'Getting stronger',
+    emoji: '🌳',
+    label: 'Developing',
+    maxThreshold: 60,
+    minThreshold: 40,
+  },
+  starting: {
+    description: 'Just beginning',
+    emoji: '🌱',
+    label: 'Starting Out',
+    maxThreshold: 20,
+    minThreshold: 0,
+  },
+  strong: {
+    description: 'Well-established',
+    emoji: '💪',
+    label: 'Strong',
+    maxThreshold: 80,
+    minThreshold: 60,
   },
 };
 
@@ -130,16 +130,21 @@ export default function HabitStrengthIndicator({
   // Get color from theme based on strength level
   const getStrengthColor = (): string => {
     switch (level) {
-      case 'starting':
+      case 'starting': {
         return theme.custom.colors.strength.starting;
-      case 'building':
+      }
+      case 'building': {
         return theme.custom.colors.strength.building;
-      case 'developing':
+      }
+      case 'developing': {
         return theme.custom.colors.strength.developing;
-      case 'strong':
+      }
+      case 'strong': {
         return theme.custom.colors.strength.strong;
-      case 'automatic':
+      }
+      case 'automatic': {
         return theme.custom.colors.strength.automatic;
+      }
     }
   };
 
@@ -157,7 +162,7 @@ export default function HabitStrengthIndicator({
     // Emoji bounce animation when level changes (scale up then down)
     emojiScale.value = withSequence(
       withSpring(1.2, { damping: 10, stiffness: 100 }),
-      withSpring(1.0, { damping: 15, stiffness: 150 })
+      withSpring(1, { damping: 15, stiffness: 150 })
     );
   }, [strength, level]);
 
@@ -183,16 +188,21 @@ export default function HabitStrengthIndicator({
   if (variant === 'compact') {
     return (
       <View
-        style={styles.compactContainer}
-        accessible={true}
+        accessible
         accessibilityLabel={`${Math.round(strength)}% strength, ${config.label}`}
-        accessibilityRole="progressbar"
+        accessibilityRole='progressbar'
+        style={styles.compactContainer}
       >
         <Animated.Text style={[styles.compactEmoji, emojiStyle]}>
           {config.emoji}
         </Animated.Text>
 
-        <View style={[styles.compactBarContainer, { backgroundColor: theme.custom.colors.gray[200] }]}>
+        <View
+          style={[
+            styles.compactBarContainer,
+            { backgroundColor: theme.custom.colors.gray[200] },
+          ]}
+        >
           <Animated.View
             style={[
               styles.compactBar,
@@ -221,10 +231,10 @@ export default function HabitStrengthIndicator({
   if (variant === 'full') {
     return (
       <View
-        style={styles.fullContainer}
-        accessible={true}
+        accessible
         accessibilityLabel={`${Math.round(strength)}% strength, ${config.label} level. ${config.description}`}
-        accessibilityRole="progressbar"
+        accessibilityRole='progressbar'
+        style={styles.fullContainer}
       >
         {showLabel && (
           <View style={styles.fullHeader}>
@@ -246,7 +256,10 @@ export default function HabitStrengthIndicator({
               <Text
                 style={[
                   theme.custom.typography.heading2,
-                  { color: getStrengthColor(), fontFamily: theme.custom.fontFamilies.monospace },
+                  {
+                    color: getStrengthColor(),
+                    fontFamily: theme.custom.fontFamilies.monospace,
+                  },
                 ]}
               >
                 {Math.round(strength)}%
@@ -255,7 +268,12 @@ export default function HabitStrengthIndicator({
           </View>
         )}
 
-        <View style={[styles.fullBarContainer, { backgroundColor: theme.custom.colors.gray[200] }]}>
+        <View
+          style={[
+            styles.fullBarContainer,
+            { backgroundColor: theme.custom.colors.gray[200] },
+          ]}
+        >
           <Animated.View
             style={[
               styles.fullBar,
@@ -302,63 +320,65 @@ export default function HabitStrengthIndicator({
 }
 
 const styles = StyleSheet.create({
+  compactBar: {
+    borderRadius: 2,
+    height: '100%',
+  },
+
+  compactBarContainer: {
+    borderRadius: 2,
+    flex: 1,
+    height: 4,
+    overflow: 'hidden',
+  },
   // Compact variant (list view)
   compactContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 6,
   },
   compactEmoji: {
     fontSize: 16,
   },
-  compactBarContainer: {
-    flex: 1,
-    height: 4,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  compactBar: {
+
+  fullBar: {
+    borderRadius: 4,
     height: '100%',
-    borderRadius: 2,
-  },
-  percentage: {
-    minWidth: 40,
-    textAlign: 'right',
   },
 
+  fullBarContainer: {
+    borderRadius: 4,
+    height: 8,
+    overflow: 'hidden',
+    width: '100%',
+  },
   // Full variant (detail view)
   fullContainer: {
-    gap: 8,
-  },
-  fullHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  fullLabelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 8,
   },
   fullEmoji: {
     fontSize: 32,
   },
-  fullBarContainer: {
-    width: '100%',
-    height: 8,
-    borderRadius: 4,
-    overflow: 'hidden',
+  fullHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  fullBar: {
-    height: '100%',
-    borderRadius: 4,
+  fullLabelContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
-
   // Graph variant (premium)
   graphContainer: {
+    alignItems: 'center',
     height: 120,
     justifyContent: 'center',
-    alignItems: 'center',
+  },
+
+  percentage: {
+    minWidth: 40,
+    textAlign: 'right',
   },
 });
 

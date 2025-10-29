@@ -8,7 +8,9 @@ export const getCompactMode = async (): Promise<boolean> => {
       if (raw == null) return false;
       return raw === 'true';
     }
-  } catch {}
+  } catch (error) {
+    console.warn('Failed to read compact mode from localStorage', error);
+  }
 
   // Fallback to React Native AsyncStorage
   try {
@@ -30,7 +32,9 @@ export const setCompactMode = async (value: boolean): Promise<void> => {
       localStorage.setItem(COMPACT_KEY, value ? 'true' : 'false');
       return;
     }
-  } catch {}
+  } catch (error) {
+    console.warn('Failed to write compact mode to localStorage', error);
+  }
 
   // Fallback to React Native AsyncStorage
   try {

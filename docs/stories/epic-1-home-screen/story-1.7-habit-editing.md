@@ -37,6 +37,7 @@
 ## Technical Notes
 
 **Current State:**
+
 - ✅ `update` mutation exists in convex/habits.ts
 - ✅ `archive` and `unarchive` mutations exist
 - ✅ `delete` mutation exists
@@ -45,6 +46,7 @@
 - ? Bulk operations need implementation
 
 **Implementation:**
+
 - Mutations: updateHabit ✅, archiveHabit ✅, deleteHabit ✅
 - Soft delete: archived flag instead of hard delete for data recovery
 - Reordering: Use sortOrder field, update on drag-and-drop
@@ -52,6 +54,7 @@
 - Confirmation dialogs: React Native Alert API
 
 **Key Files to Create/Modify:**
+
 - `src/components/HabitCard/HabitCard.tsx` - Add long-press handler
 - `src/components/ContextMenu/HabitContextMenu.tsx` - Context menu (create)
 - `src/components/CreateHabitModal/CreateHabitModal.tsx` - Support edit mode ✅
@@ -63,6 +66,7 @@
 ## Testing Strategy
 
 **Unit Tests:**
+
 - Edit mutation
 - Archive/unarchive mutation
 - Delete with confirmation
@@ -70,6 +74,7 @@
 - Reordering logic
 
 **Integration Tests:**
+
 - Edit habit → save → verify update
 - Archive habit → verify removed from active list
 - Unarchive → verify restored
@@ -77,6 +82,7 @@
 - Bulk delete multiple habits
 
 **Manual Testing:**
+
 - Long-press gesture on various devices
 - Context menu usability
 - Drag-and-drop reordering smoothness
@@ -87,24 +93,28 @@
 ## Implementation Plan (Week 3)
 
 ### Day 12: Edit Habit Modal
+
 - Refactor CreateHabitModal for edit mode
 - Pass `habitToEdit` prop to pre-fill
 - Change "Create" to "Save" button
 - Integrate update mutation
 
 ### Day 13: Delete & Archive
+
 - Add "Delete" button in edit modal
 - Implement delete confirmation dialog
 - Create archive/unarchive functionality
 - Add "Archived Habits" section in settings
 
 ### Day 14: Habit Management UI
+
 - Add long-press context menu
 - Context menu: Edit, Archive, Delete
 - Implement drag-to-reorder (optional)
 - Add bulk selection mode
 
 ### Day 15: Testing & Bug Fixes
+
 - Write integration tests
 - Test edge cases
 - Fix bugs
@@ -137,12 +147,14 @@
 ## Notes
 
 **UX Considerations:**
+
 - Edit should feel familiar (same form as create)
 - Delete should require explicit confirmation
 - Archive should be reversible (not destructive)
 - Bulk operations should have clear visual feedback
 
 **Performance:**
+
 - Reordering should be instant (optimistic update)
 - Deleting 10+ habits should complete in <1 second
 - No jank during list animations

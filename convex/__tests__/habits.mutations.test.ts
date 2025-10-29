@@ -215,7 +215,7 @@ describe('Habit Tracking Mutations', () => {
       const habitWithCustomParams = {
         habitDecayParam: 0.2,
         // Custom HDP
-habitGainParam: 0.18, 
+        habitGainParam: 0.18,
         strength: 0.5, // Custom HGP
       };
 

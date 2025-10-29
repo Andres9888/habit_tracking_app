@@ -1,9 +1,12 @@
-import { v } from "convex/values";
-import { query, internalMutation } from "./_generated/server";
-import { Doc, Id } from "./_generated/dataModel";
+import { v } from 'convex/values';
+import { query, internalMutation } from './_generated/server';
+import { Doc, Id } from './_generated/dataModel';
 
 // Helper function to calculate habit strength (matching existing logic)
-function calculateHabitStrength(habit: Doc<"habits">, completionRate: number = 0): number {
+function calculateHabitStrength(
+  habit: Doc<'habits'>,
+  completionRate: number = 0
+): number {
   // Use the habit's stored strength if available
   if (habit.strength !== undefined) {
     return habit.strength * 100;
@@ -16,7 +19,7 @@ function calculateHabitStrength(habit: Doc<"habits">, completionRate: number = 0
 // Helper to get streak from completions
 async function getStreaksForHabit(
   ctx: any,
-  habitId: Id<"habits">,
+  habitId: Id<'habits'>,
   userId: string
 ): Promise<{ currentStreak: number; longestStreak: number }> {
   // Get last 90 days of completions
@@ -24,10 +27,8 @@ async function getStreaksForHabit(
   ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
   const trackings = await ctx.db
-    .query("tracking")
-    .withIndex("by_habit_and_date", (q: any) =>
-      q.eq("habitId", habitId)
-    )
+    .query('tracking')
+    .withIndex('by_habit_and_date', (q: any) => q.eq('habitId', habitId))
     .collect();
 
   // Calculate streaks
@@ -38,7 +39,10 @@ async function getStreaksForHabit(
 
   const sortedTrackings = trackings
     .filter((t: any) => t.completed)
-    .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort(
+      (a: any, b: any) =>
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
 
   for (const tracking of sortedTrackings) {
     const trackingDate = new Date(tracking.date);
@@ -46,7 +50,9 @@ async function getStreaksForHabit(
     if (lastDate === null) {
       tempStreak = 1;
     } else {
-      const daysDiff = Math.floor((trackingDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+      const daysDiff = Math.floor(
+        (trackingDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
       if (daysDiff === 1) {
         tempStreak++;
       } else if (daysDiff > 1) {
@@ -61,7 +67,9 @@ async function getStreaksForHabit(
   // Check if streak is current (within last 2 days)
   const today = new Date();
   if (lastDate) {
-    const daysSinceLastCompletion = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+    const daysSinceLastCompletion = Math.floor(
+      (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
     currentStreak = daysSinceLastCompletion <= 1 ? tempStreak : 0;
   }
 
@@ -74,33 +82,34 @@ export const getOverviewStats = query({
   handler: async (ctx) => {
     // For development without auth, query all habits
     // TODO: Add userId filter when authentication is enabled
-    const habits = await ctx.db
-      .query("habits")
-      .collect();
+    const habits = await ctx.db.query('habits').collect();
 
     // Filter active habits (not archived or paused)
-    const activeHabits = habits.filter(h => !h.archived && !h.paused);
+    const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     if (activeHabits.length === 0) {
       return {
-        totalHabits: 0,
         averageStrength: 0,
-        strongestHabit: null,
-        weakestHabit: null,
         rankedHabits: [],
+        strongestHabit: null,
+        totalHabits: 0,
+        weakestHabit: null,
       };
     }
 
     // Calculate strengths with streaks
     const habitsWithStrength = await Promise.all(
       activeHabits.map(async (habit) => {
-        const streaks = await getStreaksForHabit(ctx, habit._id, "anonymous"); // Use placeholder for development
-        const strength = calculateHabitStrength(habit, streaks.currentStreak / 66);
+        const streaks = await getStreaksForHabit(ctx, habit._id, 'anonymous'); // Use placeholder for development
+        const strength = calculateHabitStrength(
+          habit,
+          streaks.currentStreak / 66
+        );
         return {
           ...habit,
-          strength,
           currentStreak: streaks.currentStreak,
           longestStreak: streaks.longestStreak,
+          strength,
         };
       })
     );
@@ -108,36 +117,43 @@ export const getOverviewStats = query({
     // Sort by strength
     habitsWithStrength.sort((a, b) => b.strength - a.strength);
 
-    const totalStrength = habitsWithStrength.reduce((sum, h) => sum + h.strength, 0);
+    const totalStrength = habitsWithStrength.reduce(
+      (sum, h) => sum + h.strength,
+      0
+    );
     const averageStrength = totalStrength / habitsWithStrength.length;
 
     // Prepare ranked habits for the rankings list
-    const rankedHabits = habitsWithStrength.map(habit => ({
-      id: habit._id,
-      name: habit.name,
-      emoji: habit.icon || "🎯",
-      strength: habit.strength,
+    const rankedHabits = habitsWithStrength.map((habit) => ({
       currentStreak: habit.currentStreak,
-      longestStreak: habit.longestStreak,
+      emoji: habit.icon || '🎯',
+      id: habit._id,
       isAtRisk: habit.currentStreak < 3,
+      longestStreak: habit.longestStreak,
+      name: habit.name,
+      strength: habit.strength,
     }));
 
     return {
-      totalHabits: activeHabits.length,
       averageStrength,
-      strongestHabit: habitsWithStrength[0] ? {
-        id: habitsWithStrength[0]._id,
-        name: habitsWithStrength[0].name,
-        emoji: habitsWithStrength[0].icon || "🎯",
-        strength: habitsWithStrength[0].strength,
-      } : null,
-      weakestHabit: habitsWithStrength[habitsWithStrength.length - 1] ? {
-        id: habitsWithStrength[habitsWithStrength.length - 1]._id,
-        name: habitsWithStrength[habitsWithStrength.length - 1].name,
-        emoji: habitsWithStrength[habitsWithStrength.length - 1].icon || "🎯",
-        strength: habitsWithStrength[habitsWithStrength.length - 1].strength,
-      } : null,
       rankedHabits,
+      strongestHabit: habitsWithStrength[0]
+        ? {
+            emoji: habitsWithStrength[0].icon || '🎯',
+            id: habitsWithStrength[0]._id,
+            name: habitsWithStrength[0].name,
+            strength: habitsWithStrength[0].strength,
+          }
+        : null,
+      totalHabits: activeHabits.length,
+      weakestHabit: habitsWithStrength.at(-1)
+        ? {
+            emoji: habitsWithStrength.at(-1).icon || '🎯',
+            id: habitsWithStrength.at(-1)._id,
+            name: habitsWithStrength.at(-1).name,
+            strength: habitsWithStrength.at(-1).strength,
+          }
+        : null,
     };
   },
 });
@@ -147,19 +163,24 @@ export const getStrengthDistribution = query({
   args: {},
   handler: async (ctx) => {
     // For development without auth, query all habits
-    const habits = await ctx.db
-      .query("habits")
-      .collect();
+    const habits = await ctx.db.query('habits').collect();
 
-    const activeHabits = habits.filter(h => !h.archived && !h.paused);
+    const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     // Categorize by strength level
     const distribution = {
-      starting: 0,    // 🌱 0-20%
-      building: 0,    // 🌿 20-40%
-      developing: 0,  // 🌳 40-60%
-      strong: 0,      // 💪 60-80%
-      automatic: 0,   // ⚡ 80-100%
+      // 💪 60-80%
+      automatic: 0,
+
+      // 🌱 0-20%
+      building: 0,
+
+      // 🌿 20-40%
+      developing: 0,
+
+      starting: 0,
+      // 🌳 40-60%
+      strong: 0, // ⚡ 80-100%
     };
 
     for (const habit of activeHabits) {
@@ -174,11 +195,31 @@ export const getStrengthDistribution = query({
     // Convert to percentages
     const total = activeHabits.length || 1;
     return {
-      starting: { count: distribution.starting, percentage: (distribution.starting / total) * 100, emoji: "🌱" },
-      building: { count: distribution.building, percentage: (distribution.building / total) * 100, emoji: "🌿" },
-      developing: { count: distribution.developing, percentage: (distribution.developing / total) * 100, emoji: "🌳" },
-      strong: { count: distribution.strong, percentage: (distribution.strong / total) * 100, emoji: "💪" },
-      automatic: { count: distribution.automatic, percentage: (distribution.automatic / total) * 100, emoji: "⚡" },
+      automatic: {
+        count: distribution.automatic,
+        emoji: '⚡',
+        percentage: (distribution.automatic / total) * 100,
+      },
+      building: {
+        count: distribution.building,
+        emoji: '🌿',
+        percentage: (distribution.building / total) * 100,
+      },
+      developing: {
+        count: distribution.developing,
+        emoji: '🌳',
+        percentage: (distribution.developing / total) * 100,
+      },
+      starting: {
+        count: distribution.starting,
+        emoji: '🌱',
+        percentage: (distribution.starting / total) * 100,
+      },
+      strong: {
+        count: distribution.strong,
+        emoji: '💪',
+        percentage: (distribution.strong / total) * 100,
+      },
       total: total,
     };
   },
@@ -189,24 +230,22 @@ export const get30DayTrend = query({
   args: {},
   handler: async (ctx) => {
     // For development without auth, query all habits
-    const habits = await ctx.db
-      .query("habits")
-      .collect();
+    const habits = await ctx.db.query('habits').collect();
 
-    const activeHabits = habits.filter(h => !h.archived && !h.paused);
+    const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     // Get completions for last 30 days
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const habitIds = activeHabits.map(h => h._id);
+    const habitIds = activeHabits.map((h) => h._id);
 
     // Get all trackings for these habits
     const trackings: any[] = [];
     for (const habitId of habitIds) {
       const habitTrackings = await ctx.db
-        .query("tracking")
-        .withIndex("by_habit_and_date", (q) => q.eq("habitId", habitId))
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
         .collect();
       trackings.push(...habitTrackings); // No userId filter for development
     }
@@ -221,17 +260,18 @@ export const get30DayTrend = query({
       const dateStr = date.toISOString().split('T')[0];
 
       // Calculate completion rate for this day
-      const dayCompletions = trackings.filter(t =>
-        t.date === dateStr && t.completed && habitIds.includes(t.habitId)
+      const dayCompletions = trackings.filter(
+        (t) => t.date === dateStr && t.completed && habitIds.includes(t.habitId)
       );
 
-      const completionRate = activeHabits.length > 0
-        ? (dayCompletions.length / activeHabits.length) * 100
-        : 0;
+      const completionRate =
+        activeHabits.length > 0
+          ? (dayCompletions.length / activeHabits.length) * 100
+          : 0;
 
       trendData.push({
-        date: dateStr,
         averageStrength: completionRate,
+        date: dateStr,
       });
     }
 
@@ -244,21 +284,19 @@ export const getComplianceData = query({
   args: {},
   handler: async (ctx) => {
     // For development without auth, query all habits
-    const habits = await ctx.db
-      .query("habits")
-      .collect();
+    const habits = await ctx.db.query('habits').collect();
 
-    const activeHabits = habits.filter(h => !h.archived && !h.paused);
+    const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     // Get completions for last 90 days
-    const habitIds = activeHabits.map(h => h._id);
+    const habitIds = activeHabits.map((h) => h._id);
 
     // Get all trackings for these habits
     const trackings: any[] = [];
     for (const habitId of habitIds) {
       const habitTrackings = await ctx.db
-        .query("tracking")
-        .withIndex("by_habit_and_date", (q) => q.eq("habitId", habitId))
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
         .collect();
       trackings.push(...habitTrackings); // No userId filter for development
     }
@@ -279,13 +317,14 @@ export const getComplianceData = query({
       const dateStr = date.toISOString().split('T')[0];
 
       // Count completions for this day
-      const dayCompletions = trackings.filter(t =>
-        t.date === dateStr && t.completed && habitIds.includes(t.habitId)
+      const dayCompletions = trackings.filter(
+        (t) => t.date === dateStr && t.completed && habitIds.includes(t.habitId)
       );
 
-      const completionRate = activeHabits.length > 0
-        ? (dayCompletions.length / activeHabits.length) * 100
-        : 0;
+      const completionRate =
+        activeHabits.length > 0
+          ? (dayCompletions.length / activeHabits.length) * 100
+          : 0;
 
       // Determine level for heatmap coloring
       let level: 'none' | 'low' | 'medium' | 'high' = 'none';
@@ -294,10 +333,10 @@ export const getComplianceData = query({
       else if (completionRate > 0) level = 'low';
 
       heatmapData.push({
-        date: dateStr,
-        completionRate,
-        level,
         completedHabits: dayCompletions.length,
+        completionRate,
+        date: dateStr,
+        level,
         totalHabits: activeHabits.length,
       });
     }
@@ -311,11 +350,9 @@ export const getWeeklyInsights = query({
   args: {},
   handler: async (ctx) => {
     // For development without auth, query all habits
-    const habits = await ctx.db
-      .query("habits")
-      .collect();
+    const habits = await ctx.db.query('habits').collect();
 
-    const activeHabits = habits.filter(h => !h.archived && !h.paused);
+    const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     // Get completions for this week and last week
     const oneWeekAgo = new Date();
@@ -327,8 +364,8 @@ export const getWeeklyInsights = query({
     const trackings: any[] = [];
     for (const habit of activeHabits) {
       const habitTrackings = await ctx.db
-        .query("tracking")
-        .withIndex("by_habit_and_date", (q) => q.eq("habitId", habit._id))
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
         .collect();
       trackings.push(...habitTrackings); // No userId filter for development
     }
@@ -336,72 +373,84 @@ export const getWeeklyInsights = query({
     // Calculate strength changes for each habit
     const habitChanges = await Promise.all(
       activeHabits.map(async (habit) => {
-        const thisWeekCompletions = trackings.filter(t => {
+        const thisWeekCompletions = trackings.filter((t) => {
           const date = new Date(t.date);
-          return t.habitId === habit._id &&
-                 t.completed &&
-                 date >= oneWeekAgo;
+          return t.habitId === habit._id && t.completed && date >= oneWeekAgo;
         }).length;
 
-        const lastWeekCompletions = trackings.filter(t => {
+        const lastWeekCompletions = trackings.filter((t) => {
           const date = new Date(t.date);
-          return t.habitId === habit._id &&
-                 t.completed &&
-                 date < oneWeekAgo &&
-                 date >= twoWeeksAgo;
+          return (
+            t.habitId === habit._id &&
+            t.completed &&
+            date < oneWeekAgo &&
+            date >= twoWeeksAgo
+          );
         }).length;
 
         const change = thisWeekCompletions - lastWeekCompletions;
-        const percentageChange = lastWeekCompletions > 0
-          ? ((change / lastWeekCompletions) * 100)
-          : thisWeekCompletions > 0 ? 100 : 0;
+        const percentageChange =
+          lastWeekCompletions > 0
+            ? (change / lastWeekCompletions) * 100
+            : thisWeekCompletions > 0
+              ? 100
+              : 0;
 
-        const streaks = await getStreaksForHabit(ctx, habit._id, "anonymous");
+        const streaks = await getStreaksForHabit(ctx, habit._id, 'anonymous');
 
         return {
-          habitId: habit._id,
-          name: habit.name,
-          emoji: habit.icon || "🎯",
-          thisWeek: thisWeekCompletions,
-          lastWeek: lastWeekCompletions,
           change,
-          percentageChange,
           currentStreak: streaks.currentStreak,
+          emoji: habit.icon || '🎯',
+          habitId: habit._id,
+          lastWeek: lastWeekCompletions,
+          name: habit.name,
+          percentageChange,
+          thisWeek: thisWeekCompletions,
         };
       })
     );
 
     // Sort and categorize
     const gainedStrength = habitChanges
-      .filter(h => h.change > 0)
+      .filter((h) => h.change > 0)
       .sort((a, b) => b.percentageChange - a.percentageChange)
       .slice(0, 3);
 
     const lostStrength = habitChanges
-      .filter(h => h.change < 0)
+      .filter((h) => h.change < 0)
       .sort((a, b) => a.percentageChange - b.percentageChange)
       .slice(0, 3);
 
     // Habits at risk (low completion this week or declining streak)
     const atRisk = habitChanges
-      .filter(h => h.thisWeek < 3 || (h.change < 0 && h.currentStreak < 7))
+      .filter((h) => h.thisWeek < 3 || (h.change < 0 && h.currentStreak < 7))
       .slice(0, 3);
 
     // Calculate overall stats
-    const totalCompletionsThisWeek = habitChanges.reduce((sum, h) => sum + h.thisWeek, 0);
-    const totalCompletionsLastWeek = habitChanges.reduce((sum, h) => sum + h.lastWeek, 0);
-    const weekOverWeekChange = totalCompletionsLastWeek > 0
-      ? ((totalCompletionsThisWeek - totalCompletionsLastWeek) / totalCompletionsLastWeek) * 100
-      : 0;
+    const totalCompletionsThisWeek = habitChanges.reduce(
+      (sum, h) => sum + h.thisWeek,
+      0
+    );
+    const totalCompletionsLastWeek = habitChanges.reduce(
+      (sum, h) => sum + h.lastWeek,
+      0
+    );
+    const weekOverWeekChange =
+      totalCompletionsLastWeek > 0
+        ? ((totalCompletionsThisWeek - totalCompletionsLastWeek) /
+            totalCompletionsLastWeek) *
+          100
+        : 0;
 
     return {
-      weekOverWeekChange,
-      totalCompletionsThisWeek,
-      totalCompletionsLastWeek,
-      gainedStrength,
-      lostStrength,
       atRisk,
+      gainedStrength,
       generatedAt: new Date().toISOString(),
+      lostStrength,
+      totalCompletionsLastWeek,
+      totalCompletionsThisWeek,
+      weekOverWeekChange,
     };
   },
 });
@@ -415,8 +464,8 @@ export const generateWeeklyInsights = internalMutation({
     // This mutation could be used to store historical insights for the archive feature
 
     const insightData = {
-      userId,
       generatedAt: new Date().toISOString(),
+      userId,
       // ... calculate and store insights
     };
 

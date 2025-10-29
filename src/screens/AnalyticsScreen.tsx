@@ -17,7 +17,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { spacing } from '../theme/spacing';
-import { exportData, prepareExportData, showExportSuccess, showExportError } from '../utils/exportData';
+import {
+  exportData,
+  prepareExportData,
+  showExportSuccess,
+  showExportError,
+} from '../utils/exportData';
 
 // Import chart components
 import StrengthDistributionChart from '../components/StrengthDistributionChart';
@@ -44,7 +49,7 @@ const StatCard: React.FC<StatCardProps> = ({
   subtitle,
   emoji,
   onPress,
-  loading = false
+  loading = false,
 }) => {
   // Create accessibility label
   const accessibilityLabel = loading
@@ -53,14 +58,16 @@ const StatCard: React.FC<StatCardProps> = ({
 
   const content = (
     <View
-      style={styles.statCard}
-      accessible={true}
-      accessibilityRole={onPress ? "button" : "text"}
+      accessible
+      accessibilityHint={
+        onPress ? 'Double tap to view habit details' : undefined
+      }
       accessibilityLabel={accessibilityLabel}
-      accessibilityHint={onPress ? "Double tap to view habit details" : undefined}
+      accessibilityRole={onPress ? 'button' : 'text'}
+      style={styles.statCard}
     >
       {loading ? (
-        <View style={styles.statCardLoading} accessibilityLabel="Loading">
+        <View accessibilityLabel='Loading' style={styles.statCardLoading}>
           <View style={styles.skeletonTitle} />
           <View style={styles.skeletonValue} />
           {subtitle && <View style={styles.skeletonSubtitle} />}
@@ -69,7 +76,11 @@ const StatCard: React.FC<StatCardProps> = ({
         <>
           <Text style={styles.statCardTitle}>{title}</Text>
           <View style={styles.statCardValueRow}>
-            {emoji && <Text style={styles.statCardEmoji} accessibilityElementsHidden>{emoji}</Text>}
+            {emoji && (
+              <Text accessibilityElementsHidden style={styles.statCardEmoji}>
+                {emoji}
+              </Text>
+            )}
             <Text style={styles.statCardValue}>{value}</Text>
           </View>
           {subtitle && <Text style={styles.statCardSubtitle}>{subtitle}</Text>}
@@ -81,12 +92,12 @@ const StatCard: React.FC<StatCardProps> = ({
   if (onPress && !loading) {
     return (
       <TouchableOpacity
-        onPress={onPress}
-        activeOpacity={0.7}
-        accessible={true}
-        accessibilityRole="button"
+        accessible
+        accessibilityHint='Double tap to view habit details'
         accessibilityLabel={accessibilityLabel}
-        accessibilityHint="Double tap to view habit details"
+        accessibilityRole='button'
+        activeOpacity={0.7}
+        onPress={onPress}
       >
         {content}
       </TouchableOpacity>
@@ -95,6 +106,9 @@ const StatCard: React.FC<StatCardProps> = ({
 
   return content;
 };
+
+const formatStrengthPercentage = (strength: number) =>
+  `${Math.round(strength)}%`;
 
 export default function AnalyticsScreen() {
   // const navigation = useNavigation();
@@ -116,12 +130,12 @@ export default function AnalyticsScreen() {
 
   // Debug logging
   console.log('📊 Analytics Data:', {
+    complianceData,
+    isLoading,
     overviewStats,
     strengthDistribution,
     trendData,
-    complianceData,
     weeklyInsights,
-    isLoading
   });
 
   const onRefresh = useCallback(async () => {
@@ -134,10 +148,6 @@ export default function AnalyticsScreen() {
     // navigation.navigate('HabitDetail', { habitId });
     console.log('Navigate to habit detail:', habitId);
   }, []);
-
-  const formatStrengthPercentage = (strength: number) => {
-    return `${Math.round(strength)}%`;
-  };
 
   const handleExportPress = () => {
     if (!isPremiumUser) {
@@ -190,10 +200,14 @@ export default function AnalyticsScreen() {
   // Show paywall if not premium user
   if (!isPremiumUser && showPaywall) {
     return (
-      <Modal visible={showPaywall} animationType="slide" presentationStyle="fullScreen">
+      <Modal
+        animationType='slide'
+        presentationStyle='fullScreen'
+        visible={showPaywall}
+      >
         <PremiumAnalyticsPaywall
-          onStartTrial={handleStartTrial}
           onClose={() => setShowPaywall(false)}
+          onStartTrial={handleStartTrial}
         />
       </Modal>
     );
@@ -201,35 +215,35 @@ export default function AnalyticsScreen() {
 
   return (
     <ScrollView
-      style={styles.container}
       contentContainerStyle={styles.contentContainer}
       refreshControl={
         <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor={colors.primary[500]}
           colors={[colors.primary[500]]}
+          refreshing={refreshing}
+          tintColor={colors.primary[500]}
+          onRefresh={onRefresh}
         />
       }
+      style={styles.container}
     >
       {/* Header */}
       <View
+        accessible
+        accessibilityLabel='Analytics Screen'
+        accessibilityRole='header'
         style={styles.header}
-        accessible={true}
-        accessibilityRole="header"
-        accessibilityLabel="Analytics Screen"
       >
         <Text
+          accessibilityLabel='Analytics'
+          accessibilityRole='text'
           style={styles.headerTitle}
-          accessibilityRole="text"
-          accessibilityLabel="Analytics"
         >
           Analytics
         </Text>
         <Text
+          accessibilityLabel='Track your habit journey'
+          accessibilityRole='text'
           style={styles.headerSubtitle}
-          accessibilityRole="text"
-          accessibilityLabel="Track your habit journey"
         >
           Track your habit journey
         </Text>
@@ -241,13 +255,18 @@ export default function AnalyticsScreen() {
           <Text style={styles.emptyStateEmoji}>📊</Text>
           <Text style={styles.emptyStateTitle}>No Analytics Yet</Text>
           <Text style={styles.emptyStateMessage}>
-            Create habits and track them for a few days to see your analytics dashboard come to life!
+            Create habits and track them for a few days to see your analytics
+            dashboard come to life!
           </Text>
           <View style={styles.emptyStateSteps}>
             <Text style={styles.emptyStateStep}>1️⃣ Go to Home tab</Text>
-            <Text style={styles.emptyStateStep}>2️⃣ Create your first habit</Text>
+            <Text style={styles.emptyStateStep}>
+              2️⃣ Create your first habit
+            </Text>
             <Text style={styles.emptyStateStep}>3️⃣ Track it daily</Text>
-            <Text style={styles.emptyStateStep}>4️⃣ Come back here to see insights!</Text>
+            <Text style={styles.emptyStateStep}>
+              4️⃣ Come back here to see insights!
+            </Text>
           </View>
         </View>
       )}
@@ -255,49 +274,73 @@ export default function AnalyticsScreen() {
       {/* Overview Stats Cards */}
       <View style={styles.statsGrid}>
         <StatCard
-          title="Total Habits"
+          loading={isLoading}
+          title='Total Habits'
           value={overviewStats?.totalHabits ?? '-'}
-          loading={isLoading}
         />
         <StatCard
-          title="Average Strength"
-          value={overviewStats ? formatStrengthPercentage(overviewStats.averageStrength) : '-'}
           loading={isLoading}
+          title='Average Strength'
+          value={
+            overviewStats
+              ? formatStrengthPercentage(overviewStats.averageStrength)
+              : '-'
+          }
         />
         <StatCard
-          title="Strongest Habit"
-          value={overviewStats?.strongestHabit?.name ?? '-'}
           emoji={overviewStats?.strongestHabit?.emoji}
-          subtitle={overviewStats ? formatStrengthPercentage(overviewStats.strongestHabit?.strength ?? 0) : undefined}
-          onPress={overviewStats?.strongestHabit ? () => handleHabitPress(overviewStats.strongestHabit!.id) : undefined}
           loading={isLoading}
+          subtitle={
+            overviewStats
+              ? formatStrengthPercentage(
+                  overviewStats.strongestHabit?.strength ?? 0
+                )
+              : undefined
+          }
+          title='Strongest Habit'
+          value={overviewStats?.strongestHabit?.name ?? '-'}
+          onPress={
+            overviewStats?.strongestHabit
+              ? () => handleHabitPress(overviewStats.strongestHabit!.id)
+              : undefined
+          }
         />
         <StatCard
-          title="Weakest Habit"
-          value={overviewStats?.weakestHabit?.name ?? '-'}
           emoji={overviewStats?.weakestHabit?.emoji}
-          subtitle={overviewStats ? formatStrengthPercentage(overviewStats.weakestHabit?.strength ?? 0) : undefined}
-          onPress={overviewStats?.weakestHabit ? () => handleHabitPress(overviewStats.weakestHabit!.id) : undefined}
           loading={isLoading}
+          subtitle={
+            overviewStats
+              ? formatStrengthPercentage(
+                  overviewStats.weakestHabit?.strength ?? 0
+                )
+              : undefined
+          }
+          title='Weakest Habit'
+          value={overviewStats?.weakestHabit?.name ?? '-'}
+          onPress={
+            overviewStats?.weakestHabit
+              ? () => handleHabitPress(overviewStats.weakestHabit!.id)
+              : undefined
+          }
         />
       </View>
 
       {/* Charts Section */}
-      <View
-        style={styles.section}
-        accessible={true}
-        accessibilityRole="none"
-      >
+      <View accessible accessibilityRole='none' style={styles.section}>
         <Text
+          accessibilityLabel='Strength Distribution Chart'
+          accessibilityRole='header'
           style={styles.sectionTitle}
-          accessibilityRole="header"
-          accessibilityLabel="Strength Distribution Chart"
         >
           Strength Distribution
         </Text>
         <View
-          accessible={true}
-          accessibilityLabel={strengthDistribution ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits` : "Loading chart"}
+          accessible
+          accessibilityLabel={
+            strengthDistribution
+              ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
+              : 'Loading chart'
+          }
         >
           <StrengthDistributionChart
             data={strengthDistribution ?? null}
@@ -327,8 +370,8 @@ export default function AnalyticsScreen() {
         <Text style={styles.sectionTitle}>Weekly Insights</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
-          onHabitPress={handleHabitPress}
           onArchivePress={() => console.log('Open archive')}
+          onHabitPress={handleHabitPress}
         />
       </View>
 
@@ -342,38 +385,42 @@ export default function AnalyticsScreen() {
 
       {/* Export Button */}
       <TouchableOpacity
+        accessible
+        accessibilityHint='Double tap to export your habit data as CSV or JSON'
+        accessibilityLabel='Export Data'
+        accessibilityRole='button'
+        activeOpacity={0.8}
         style={styles.exportButton}
         onPress={handleExportPress}
-        activeOpacity={0.8}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Export Data"
-        accessibilityHint="Double tap to export your habit data as CSV or JSON"
       >
-        <Ionicons name="download-outline" size={20} color={colors.surface} />
+        <Ionicons color={colors.surface} name='download-outline' size={20} />
         <Text style={styles.exportButtonText}>Export Data</Text>
       </TouchableOpacity>
 
       {/* Export Format Modal */}
       <Modal
-        visible={showExportMenu}
         transparent
-        animationType="fade"
+        animationType='fade'
+        visible={showExportMenu}
         onRequestClose={() => setShowExportMenu(false)}
       >
         <TouchableOpacity
-          style={styles.modalOverlay}
           activeOpacity={1}
+          style={styles.modalOverlay}
           onPress={() => setShowExportMenu(false)}
         >
           <View style={styles.exportMenu}>
             <Text style={styles.exportMenuTitle}>Choose Export Format</Text>
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.exportMenuItem}
               onPress={() => handleExport('csv')}
-              activeOpacity={0.7}
             >
-              <Ionicons name="document-text-outline" size={24} color={colors.primary[500]} />
+              <Ionicons
+                color={colors.primary[500]}
+                name='document-text-outline'
+                size={24}
+              />
               <View style={styles.exportMenuItemContent}>
                 <Text style={styles.exportMenuItemTitle}>CSV</Text>
                 <Text style={styles.exportMenuItemDescription}>
@@ -382,11 +429,15 @@ export default function AnalyticsScreen() {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.exportMenuItem}
               onPress={() => handleExport('json')}
-              activeOpacity={0.7}
             >
-              <Ionicons name="code-outline" size={24} color={colors.primary[500]} />
+              <Ionicons
+                color={colors.primary[500]}
+                name='code-outline'
+                size={24}
+              />
               <View style={styles.exportMenuItemContent}>
                 <Text style={styles.exportMenuItemTitle}>JSON</Text>
                 <Text style={styles.exportMenuItemDescription}>
@@ -395,9 +446,9 @@ export default function AnalyticsScreen() {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
+              activeOpacity={0.7}
               style={styles.exportMenuCancel}
               onPress={() => setShowExportMenu(false)}
-              activeOpacity={0.7}
             >
               <Text style={styles.exportMenuCancelText}>Cancel</Text>
             </TouchableOpacity>
@@ -410,25 +461,92 @@ export default function AnalyticsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.background,
+    flex: 1,
   },
   contentContainer: {
     paddingBottom: spacing.xxl,
   },
   header: {
+    paddingBottom: spacing.md,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.xl,
-    paddingBottom: spacing.md,
-  },
-  headerTitle: {
-    ...typography.h1,
-    color: colors.text.primary,
   },
   headerSubtitle: {
     ...typography.body,
     color: colors.text.secondary,
     marginTop: spacing.xs,
+  },
+  headerTitle: {
+    ...typography.h1,
+    color: colors.text.primary,
+  },
+  skeletonTitle: {
+    height: 12,
+    backgroundColor: colors.border,
+    width: 80,
+    borderRadius: 4,
+    marginBottom: spacing.xs,
+  },
+  skeletonSubtitle: {
+    height: 10,
+    width: 60,
+    backgroundColor: colors.border,
+    borderRadius: 4,
+  },
+  statCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    flex: 1,
+    elevation: 3,
+    margin: spacing.sm,
+    minWidth: '45%',
+    padding: spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  section: {
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.lg,
+  },
+  statCardEmoji: {
+    fontSize: 24,
+    marginRight: spacing.xs,
+  },
+  chartPlaceholder: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    height: 200,
+    alignItems: 'center',
+    borderColor: colors.border,
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+    borderWidth: 1,
+  },
+  statCardLoading: {
+    height: 80,
+  },
+  exportButton: {
+    flexDirection: 'row',
+    backgroundColor: colors.primary[500],
+    marginHorizontal: spacing.lg,
+    borderRadius: 12,
+    marginTop: spacing.md,
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    justifyContent: 'center',
+  },
+  statCardSubtitle: {
+    ...typography.bodySmall,
+    color: colors.text.tertiary,
+    marginTop: spacing.xs,
+  },
+  exportButtonText: {
+    ...typography.button,
+    color: colors.surface,
+    marginLeft: spacing.sm,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -436,133 +554,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     marginBottom: spacing.lg,
   },
-  statCard: {
-    flex: 1,
-    minWidth: '45%',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: spacing.lg,
-    margin: spacing.sm,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  statCardLoading: {
-    height: 80,
-  },
-  statCardTitle: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    marginBottom: spacing.xs,
-  },
-  statCardValueRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  statCardEmoji: {
-    fontSize: 24,
-    marginRight: spacing.xs,
-  },
-  statCardValue: {
-    ...typography.h2,
-    color: colors.text.primary,
-  },
-  statCardSubtitle: {
-    ...typography.bodySmall,
-    color: colors.text.tertiary,
-    marginTop: spacing.xs,
-  },
-  skeletonTitle: {
-    width: 80,
-    height: 12,
-    backgroundColor: colors.border,
-    borderRadius: 4,
-    marginBottom: spacing.xs,
-  },
-  skeletonValue: {
-    width: 100,
-    height: 28,
-    backgroundColor: colors.border,
-    borderRadius: 4,
-    marginBottom: spacing.xs,
-  },
-  skeletonSubtitle: {
-    width: 60,
-    height: 10,
-    backgroundColor: colors.border,
-    borderRadius: 4,
-  },
-  section: {
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.xl,
-  },
-  sectionTitle: {
-    ...typography.h3,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-  },
-  chartPlaceholder: {
-    height: 200,
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderStyle: 'dashed',
-  },
-  placeholderText: {
-    ...typography.body,
-    color: colors.text.tertiary,
-  },
-  exportButton: {
-    flexDirection: 'row',
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
-    backgroundColor: colors.primary[500],
-    paddingVertical: spacing.md,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  exportButtonText: {
-    ...typography.button,
-    color: colors.surface,
-    marginLeft: spacing.sm,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
   exportMenu: {
     backgroundColor: colors.surface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: spacing.lg,
   },
-  exportMenuTitle: {
-    ...typography.h3,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-    textAlign: 'center',
+  statCardTitle: {
+    ...typography.caption,
+    color: colors.text.secondary,
+    marginBottom: spacing.xs,
   },
   exportMenuItem: {
-    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.background,
-    padding: spacing.md,
     borderRadius: 12,
+    flexDirection: 'row',
     marginBottom: spacing.sm,
+    padding: spacing.md,
+  },
+  statCardValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   exportMenuItemContent: {
     flex: 1,
     marginLeft: spacing.md,
   },
-  exportMenuItemTitle: {
-    ...typography.bodyBold,
+  statCardValue: {
+    ...typography.h2,
     color: colors.text.primary,
   },
   exportMenuItemDescription: {
@@ -571,23 +591,59 @@ const styles = StyleSheet.create({
     marginTop: spacing.xxs,
   },
   exportMenuCancel: {
-    paddingVertical: spacing.md,
     alignItems: 'center',
     marginTop: spacing.sm,
+    paddingVertical: spacing.md,
   },
-  exportMenuCancelText: {
-    ...typography.body,
-    color: colors.error,
+  skeletonValue: {
+    width: 100,
+    height: 28,
+    backgroundColor: colors.border,
+    borderRadius: 4,
+    marginBottom: spacing.xs,
   },
   emptyState: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xxl,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xxl,
   },
   emptyStateEmoji: {
     fontSize: 64,
     marginBottom: spacing.lg,
+  },
+  sectionTitle: {
+    ...typography.h3,
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  emptyStateMessage: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.md,
+    textAlign: 'center',
+  },
+  placeholderText: {
+    ...typography.body,
+    color: colors.text.tertiary,
+  },
+  emptyStateStep: {
+    ...typography.body,
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  emptyStateSteps: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    padding: spacing.lg,
+    width: '100%',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
   },
   emptyStateTitle: {
     ...typography.h2,
@@ -595,23 +651,18 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     textAlign: 'center',
   },
-  emptyStateMessage: {
-    ...typography.body,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: spacing.xl,
-    paddingHorizontal: spacing.md,
-  },
-  emptyStateSteps: {
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-    borderRadius: 12,
-    width: '100%',
-  },
-  emptyStateStep: {
-    ...typography.body,
+  exportMenuTitle: {
+    ...typography.h3,
     color: colors.text.primary,
-    marginBottom: spacing.sm,
-    paddingVertical: spacing.xs,
+    marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  exportMenuCancelText: {
+    ...typography.body,
+    color: colors.error,
+  },
+  exportMenuItemTitle: {
+    ...typography.bodyBold,
+    color: colors.text.primary,
   },
 });

@@ -19,13 +19,7 @@
   "containerEnv": {
     "FORCE_COLOR": "1"
   },
-  "forwardPorts": [
-    5173,
-    8081,
-    19000,
-    19001,
-    19002
-  ],
+  "forwardPorts": [5173, 8081, 19000, 19001, 19002],
   "portsAttributes": {
     "5173": { "label": "Vite (Web)" },
     "8081": { "label": "Metro" },
@@ -34,4 +28,3 @@
     "19002": { "label": "Expo (web UI)" }
   }
 }
-

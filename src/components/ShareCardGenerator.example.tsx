@@ -7,7 +7,11 @@
 
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { ShareCardGenerator, type ShareCardData, type MilestoneLevel } from './ShareCardGenerator';
+import {
+  ShareCardGenerator,
+  type ShareCardData,
+  type MilestoneLevel,
+} from './ShareCardGenerator';
 import { Button } from './Button';
 
 /**
@@ -36,9 +40,9 @@ export function MilestoneCelebrationExample() {
 
       {/* Share Card Generator Modal */}
       <ShareCardGenerator
+        data={habitData}
         visible={showShareCard}
         onClose={() => setShowShareCard(false)}
-        data={habitData}
       />
     </View>
   );
@@ -51,10 +55,10 @@ export function MilestoneCelebrationExample() {
  */
 export function getMilestoneLevel(strengthPercentage: number): MilestoneLevel {
   if (strengthPercentage >= 80) return 'automatic'; // ⚡ 80-100%
-  if (strengthPercentage >= 60) return 'strong';    // 💪 60-80%
+  if (strengthPercentage >= 60) return 'strong'; // 💪 60-80%
   if (strengthPercentage >= 40) return 'developing'; // 🌳 40-60%
-  if (strengthPercentage >= 20) return 'building';   // 🌿 20-40%
-  return 'starting';                                 // 🌱 0-20%
+  if (strengthPercentage >= 20) return 'building'; // 🌿 20-40%
+  return 'starting'; // 🌱 0-20%
 }
 
 /**
@@ -80,14 +84,12 @@ export function AnalyticsShareExample() {
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => setShowShareCard(true)}>
-        Share Progress
-      </Button>
+      <Button onPress={() => setShowShareCard(true)}>Share Progress</Button>
 
       <ShareCardGenerator
+        data={shareData}
         visible={showShareCard}
         onClose={() => setShowShareCard(false)}
-        data={shareData}
       />
     </View>
   );
@@ -98,14 +100,15 @@ export function AnalyticsShareExample() {
  *
  * Detect when a user crosses a milestone threshold and trigger celebration.
  */
-export function useMilestoneDetection(
+export function detectMilestoneChange(
   previousStrength: number,
   currentStrength: number
 ): { crossedMilestone: boolean; newLevel: MilestoneLevel | null } {
   const previousLevel = getMilestoneLevel(previousStrength);
   const currentLevel = getMilestoneLevel(currentStrength);
 
-  const crossedMilestone = previousLevel !== currentLevel && currentStrength > previousStrength;
+  const crossedMilestone =
+    previousLevel !== currentLevel && currentStrength > previousStrength;
 
   return {
     crossedMilestone,
@@ -128,7 +131,10 @@ export function HabitCompletionFlowExample() {
     const newStrength = 62; // Crossed into "Strong" level!
 
     // 3. Check for milestone crossing
-    const { crossedMilestone, newLevel } = useMilestoneDetection(previousStrength, newStrength);
+    const { crossedMilestone, newLevel } = detectMilestoneChange(
+      previousStrength,
+      newStrength
+    );
 
     if (crossedMilestone) {
       // 4. Show celebration modal
@@ -149,10 +155,12 @@ export function HabitCompletionFlowExample() {
       {showCelebration && (
         <View style={styles.celebrationModal}>
           {/* Confetti animation, milestone badge, etc. */}
-          <Button onPress={() => {
-            setShowCelebration(false);
-            setShowShareCard(true);
-          }}>
+          <Button
+            onPress={() => {
+              setShowCelebration(false);
+              setShowShareCard(true);
+            }}
+          >
             Share Your Achievement
           </Button>
         </View>
@@ -160,25 +168,25 @@ export function HabitCompletionFlowExample() {
 
       {/* Share Card Generator */}
       <ShareCardGenerator
+        data={habitData}
         visible={showShareCard}
         onClose={() => setShowShareCard(false)}
-        data={habitData}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
   celebrationModal: {
-    padding: 24,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
+    padding: 24,
+  },
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
   },
 });
 

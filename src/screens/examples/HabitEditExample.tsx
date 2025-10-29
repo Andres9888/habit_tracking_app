@@ -18,7 +18,9 @@ import HabitEditScreen from '../HabitEditScreen';
  */
 export default function HabitEditExample() {
   const habits = useQuery(api.habits.list);
-  const [editingHabitId, setEditingHabitId] = useState<Id<'habits'> | null>(null);
+  const [editingHabitId, setEditingHabitId] = useState<Id<'habits'> | null>(
+    null
+  );
   const [showEditScreen, setShowEditScreen] = useState(false);
 
   const handleEditHabit = (habitId: Id<'habits'>) => {
@@ -43,6 +45,13 @@ export default function HabitEditExample() {
       <FlatList
         data={habits}
         keyExtractor={(item) => item._id}
+        ListEmptyComponent={
+          <View className='items-center justify-center px-4 py-12'>
+            <Text className='text-center text-base text-[#8a8a8a]'>
+              No habits found. Create a habit first to test the edit screen.
+            </Text>
+          </View>
+        }
         renderItem={({ item }) => (
           <TouchableOpacity
             className='mx-4 mb-3 flex-row items-center rounded-2xl bg-white p-4'
@@ -65,19 +74,12 @@ export default function HabitEditExample() {
             </View>
           </TouchableOpacity>
         )}
-        ListEmptyComponent={
-          <View className='items-center justify-center px-4 py-12'>
-            <Text className='text-center text-base text-[#8a8a8a]'>
-              No habits found. Create a habit first to test the edit screen.
-            </Text>
-          </View>
-        }
       />
 
       {/* Habit Edit Screen */}
       <HabitEditScreen
-        visible={showEditScreen}
         habitId={editingHabitId}
+        visible={showEditScreen}
         onClose={handleCloseEditScreen}
       />
     </View>

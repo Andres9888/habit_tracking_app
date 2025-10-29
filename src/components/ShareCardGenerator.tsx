@@ -34,7 +34,11 @@ import { Modal } from './Modal';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Platform-specific dimensions (UX spec lines 597-603)
-export type SharePlatform = 'instagram-story' | 'instagram-feed' | 'twitter' | 'facebook';
+export type SharePlatform =
+  | 'instagram-story'
+  | 'instagram-feed'
+  | 'twitter'
+  | 'facebook';
 
 export interface ShareFormat {
   width: number;
@@ -43,30 +47,51 @@ export interface ShareFormat {
 }
 
 const SHARE_FORMATS: Record<SharePlatform, ShareFormat> = {
-  'instagram-story': { width: 1080, height: 1920, aspectRatio: 9 / 16 },
-  'instagram-feed': { width: 1080, height: 1080, aspectRatio: 1 },
-  'twitter': { width: 1200, height: 675, aspectRatio: 16 / 9 },
-  'facebook': { width: 1200, height: 630, aspectRatio: 1.91 },
+  facebook: { aspectRatio: 1.91, height: 630, width: 1200 },
+  'instagram-feed': { aspectRatio: 1, height: 1080, width: 1080 },
+  'instagram-story': { aspectRatio: 9 / 16, height: 1920, width: 1080 },
+  twitter: { aspectRatio: 16 / 9, height: 675, width: 1200 },
+};
+
+const detectInstalledPlatforms = async (): Promise<Record<string, boolean>> => {
+  // Note: Actual platform detection requires native code
+  // This is a placeholder for the detection logic
+  // In production, you'd use Linking.canOpenURL() with platform-specific URLs
+  return {
+    // await Linking.canOpenURL('twitter://'),
+    facebook: true,
+    // await Linking.canOpenURL('instagram://'),
+    instagram: true,
+    twitter: true, // await Linking.canOpenURL('fb://'),
+  };
 };
 
 // Milestone level emojis and labels (UX spec line 570, 708)
-export type MilestoneLevel = 'starting' | 'building' | 'developing' | 'strong' | 'automatic';
+export type MilestoneLevel =
+  | 'starting'
+  | 'building'
+  | 'developing'
+  | 'strong'
+  | 'automatic';
 
-const MILESTONE_CONFIG: Record<MilestoneLevel, { emoji: string; label: string; range: string }> = {
-  starting: { emoji: '🌱', label: 'Starting', range: '0-20%' },
+const MILESTONE_CONFIG: Record<
+  MilestoneLevel,
+  { emoji: string; label: string; range: string }
+> = {
+  automatic: { emoji: '⚡', label: 'Automatic', range: '80-100%' },
   building: { emoji: '🌿', label: 'Building', range: '20-40%' },
   developing: { emoji: '🌳', label: 'Developing', range: '40-60%' },
+  starting: { emoji: '🌱', label: 'Starting', range: '0-20%' },
   strong: { emoji: '💪', label: 'Strong', range: '60-80%' },
-  automatic: { emoji: '⚡', label: 'Automatic', range: '80-100%' },
 };
 
 // Gradient presets using brand colors (UX spec Section 5.1)
 const GRADIENT_PRESETS = [
-  { name: 'Growth', colors: ['#10B981', '#059669', '#047857'] },
-  { name: 'Achievement', colors: ['#34D399', '#10B981', '#059669'] },
-  { name: 'Excellence', colors: ['#047857', '#065F46', '#064E3B'] },
-  { name: 'Sky', colors: ['#3B82F6', '#2563EB', '#1D4ED8'] },
-  { name: 'Sunset', colors: ['#F59E0B', '#D97706', '#B45309'] },
+  { colors: ['#10B981', '#059669', '#047857'], name: 'Growth' },
+  { colors: ['#34D399', '#10B981', '#059669'], name: 'Achievement' },
+  { colors: ['#047857', '#065F46', '#064E3B'], name: 'Excellence' },
+  { colors: ['#3B82F6', '#2563EB', '#1D4ED8'], name: 'Sky' },
+  { colors: ['#F59E0B', '#D97706', '#B45309'], name: 'Sunset' },
 ];
 
 export interface ShareCardData {
@@ -82,7 +107,11 @@ export interface ShareCardGeneratorProps {
   data: ShareCardData;
 }
 
-export function ShareCardGenerator({ visible, onClose, data }: ShareCardGeneratorProps) {
+export function ShareCardGenerator({
+  visible,
+  onClose,
+  data,
+}: ShareCardGeneratorProps) {
   const theme = useAppTheme();
   const viewShotRef = useRef<ViewShot>(null);
 
@@ -90,7 +119,8 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
   const [selectedGradient, setSelectedGradient] = useState(0);
   const [personalMessage, setPersonalMessage] = useState('');
   const [showUserName, setShowUserName] = useState(true);
-  const [selectedPlatform, setSelectedPlatform] = useState<SharePlatform>('instagram-story');
+  const [selectedPlatform, setSelectedPlatform] =
+    useState<SharePlatform>('instagram-story');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const milestoneConfig = MILESTONE_CONFIG[data.milestoneLevel];
@@ -103,31 +133,23 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
 
     switch (platform) {
       case 'instagram-story':
-      case 'instagram-feed':
+      case 'instagram-feed': {
         return `${baseMessage}\n\nBuilding better habits with science-backed tracking 📊\n\n#HabitTracking #AtomicHabits #BehaviorChange #SelfImprovement #Productivity\n\n${appStoreLink}`;
+      }
 
-      case 'twitter':
+      case 'twitter': {
         // Twitter has 280 character limit
         return `${baseMessage}\n\nTracking habits with science 📊 ${appStoreLink}\n\n#HabitTracking #Productivity`;
+      }
 
-      case 'facebook':
+      case 'facebook': {
         return `${baseMessage}\n\nI've been using this amazing habit tracking app that uses real behavioral science to help build lasting habits. Check it out!\n\n${appStoreLink}`;
+      }
 
-      default:
+      default: {
         return baseMessage;
+      }
     }
-  };
-
-  // Platform detection helper
-  const detectInstalledPlatforms = async (): Promise<Record<string, boolean>> => {
-    // Note: Actual platform detection requires native code
-    // This is a placeholder for the detection logic
-    // In production, you'd use Linking.canOpenURL() with platform-specific URLs
-    return {
-      instagram: true, // await Linking.canOpenURL('instagram://'),
-      twitter: true, // await Linking.canOpenURL('twitter://'),
-      facebook: true, // await Linking.canOpenURL('fb://'),
-    };
   };
 
   // Generate and share card image
@@ -148,8 +170,8 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
         const caption = getPlatformCaption(selectedPlatform);
 
         await Sharing.shareAsync(uri, {
-          mimeType: 'image/png',
           dialogTitle: `Share your ${milestoneConfig.label} achievement!`,
+          mimeType: 'image/png',
           UTI: 'public.png',
         });
 
@@ -172,30 +194,31 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
 
   // Render the shareable card
   const renderCard = () => {
-    const gradientColors = GRADIENT_PRESETS[selectedGradient].colors as unknown as readonly [string, string, ...string[]];
+    const gradientColors = GRADIENT_PRESETS[selectedGradient]
+      .colors as unknown as readonly [string, string, ...string[]];
 
     return (
       <ViewShot
         ref={viewShotRef}
         options={{
           format: 'png',
-          quality: 1.0,
-          width: format.width,
           height: format.height,
+          quality: 1,
+          width: format.width,
         }}
         style={[
           styles.cardContainer,
           {
-            width: format.width,
-            height: format.height,
             aspectRatio: format.aspectRatio,
+            height: format.height,
+            width: format.width,
           },
         ]}
       >
         <LinearGradient
           colors={gradientColors}
-          start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
+          start={{ x: 0, y: 0 }}
           style={StyleSheet.absoluteFill}
         >
           {/* Card Content */}
@@ -210,8 +233,12 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
               <Text style={styles.habitName}>{data.habitName}</Text>
 
               <View style={styles.milestoneRow}>
-                <Text style={styles.milestoneLabel}>{milestoneConfig.label} Level</Text>
-                <Text style={styles.strengthPercentage}>{data.strengthPercentage}%</Text>
+                <Text style={styles.milestoneLabel}>
+                  {milestoneConfig.label} Level
+                </Text>
+                <Text style={styles.strengthPercentage}>
+                  {data.strengthPercentage}%
+                </Text>
               </View>
 
               {/* Visual Progress Bar */}
@@ -263,8 +290,8 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
         style={[
           styles.previewContainer,
           {
-            width: previewWidth,
             height: previewHeight,
+            width: previewWidth,
           },
         ]}
       >
@@ -281,80 +308,103 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
   };
 
   return (
-    <Modal
-      visible={visible}
-      onClose={onClose}
-      variant="fullScreen"
-    >
+    <Modal variant='fullScreen' visible={visible} onClose={onClose}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.custom.colors.gray[900] }]}>
+          <Text
+            style={[styles.title, { color: theme.custom.colors.gray[900] }]}
+          >
             Share Your Achievement
           </Text>
           <Pressable onPress={onClose}>
-            <Text style={[styles.closeButton, { color: theme.custom.colors.primary[500] }]}>
+            <Text
+              style={[
+                styles.closeButton,
+                { color: theme.custom.colors.primary[500] },
+              ]}
+            >
               Done
             </Text>
           </Pressable>
         </View>
 
         {/* Preview */}
-        <View style={styles.previewSection}>
-          {renderPreview()}
-        </View>
+        <View style={styles.previewSection}>{renderPreview()}</View>
 
         {/* Customization Options */}
-        <ScrollView style={styles.customizationSection} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.customizationSection}
+        >
           {/* Platform Selection */}
           <View style={styles.optionGroup}>
-            <Text style={[styles.optionLabel, { color: theme.custom.colors.gray[700] }]}>
+            <Text
+              style={[
+                styles.optionLabel,
+                { color: theme.custom.colors.gray[700] },
+              ]}
+            >
               Platform
             </Text>
             <View style={styles.platformButtons}>
-              {(Object.keys(SHARE_FORMATS) as SharePlatform[]).map((platform) => (
-                <Pressable
-                  key={platform}
-                  onPress={() => setSelectedPlatform(platform)}
-                  style={[
-                    styles.platformButton,
-                    selectedPlatform === platform && {
-                      backgroundColor: theme.custom.colors.primary[500],
-                    },
-                  ]}
-                >
-                  <Text
+              {(Object.keys(SHARE_FORMATS) as SharePlatform[]).map(
+                (platform) => (
+                  <Pressable
+                    key={platform}
                     style={[
-                      styles.platformButtonText,
-                      selectedPlatform === platform && styles.platformButtonTextActive,
+                      styles.platformButton,
+                      selectedPlatform === platform && {
+                        backgroundColor: theme.custom.colors.primary[500],
+                      },
                     ]}
+                    onPress={() => setSelectedPlatform(platform)}
                   >
-                    {platform.replace('-', ' ')}
-                  </Text>
-                </Pressable>
-              ))}
+                    <Text
+                      style={[
+                        styles.platformButtonText,
+                        selectedPlatform === platform &&
+                          styles.platformButtonTextActive,
+                      ]}
+                    >
+                      {platform.replace('-', ' ')}
+                    </Text>
+                  </Pressable>
+                )
+              )}
             </View>
           </View>
 
           {/* Gradient Selection */}
           <View style={styles.optionGroup}>
-            <Text style={[styles.optionLabel, { color: theme.custom.colors.gray[700] }]}>
+            <Text
+              style={[
+                styles.optionLabel,
+                { color: theme.custom.colors.gray[700] },
+              ]}
+            >
               Background
             </Text>
             <View style={styles.gradientButtons}>
               {GRADIENT_PRESETS.map((gradient, index) => (
                 <Pressable
                   key={gradient.name}
-                  onPress={() => setSelectedGradient(index)}
                   style={[
                     styles.gradientButton,
                     selectedGradient === index && styles.gradientButtonSelected,
                   ]}
+                  onPress={() => setSelectedGradient(index)}
                 >
                   <LinearGradient
-                    colors={gradient.colors as unknown as readonly [string, string, ...string[]]}
-                    start={{ x: 0, y: 0 }}
+                    colors={
+                      gradient.colors as unknown as readonly [
+                        string,
+                        string,
+                        ...string[],
+                      ]
+                    }
                     end={{ x: 1, y: 1 }}
+                    start={{ x: 0, y: 0 }}
                     style={styles.gradientButtonInner}
                   />
                 </Pressable>
@@ -364,13 +414,18 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
 
           {/* Personal Message Input */}
           <View style={styles.optionGroup}>
-            <Text style={[styles.optionLabel, { color: theme.custom.colors.gray[700] }]}>
+            <Text
+              style={[
+                styles.optionLabel,
+                { color: theme.custom.colors.gray[700] },
+              ]}
+            >
               Personal Message (Optional)
             </Text>
             <TextInput
-              value={personalMessage}
-              onChangeText={setPersonalMessage}
-              placeholder="Add a personal touch..."
+              multiline
+              maxLength={100}
+              placeholder='Add a personal touch...'
               placeholderTextColor={theme.custom.colors.gray[400]}
               style={[
                 styles.messageInput,
@@ -380,10 +435,15 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
                   color: theme.custom.colors.gray[900],
                 },
               ]}
-              multiline
-              maxLength={100}
+              value={personalMessage}
+              onChangeText={setPersonalMessage}
             />
-            <Text style={[styles.characterCount, { color: theme.custom.colors.gray[500] }]}>
+            <Text
+              style={[
+                styles.characterCount,
+                { color: theme.custom.colors.gray[500] },
+              ]}
+            >
               {personalMessage.length}/100
             </Text>
           </View>
@@ -392,33 +452,43 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
           <View style={styles.optionGroup}>
             <View style={styles.toggleRow}>
               <View style={styles.toggleLabelContainer}>
-                <Text style={[styles.optionLabel, { color: theme.custom.colors.gray[700], marginBottom: 0 }]}>
+                <Text
+                  style={[
+                    styles.optionLabel,
+                    { color: theme.custom.colors.gray[700], marginBottom: 0 },
+                  ]}
+                >
                   Show User Name
                 </Text>
                 {data.userName && (
-                  <Text style={[styles.toggleSubtext, { color: theme.custom.colors.gray[500] }]}>
+                  <Text
+                    style={[
+                      styles.toggleSubtext,
+                      { color: theme.custom.colors.gray[500] },
+                    ]}
+                  >
                     {data.userName}
                   </Text>
                 )}
               </View>
               <Switch
-                value={showUserName}
-                onValueChange={setShowUserName}
+                thumbColor='#FFFFFF'
                 trackColor={{
                   false: theme.custom.colors.gray[300],
                   true: theme.custom.colors.primary[500],
                 }}
-                thumbColor="#FFFFFF"
+                value={showUserName}
+                onValueChange={setShowUserName}
               />
             </View>
           </View>
 
           {/* Share Button */}
           <Button
-            onPress={handleShare}
-            loading={isGenerating}
             fullWidth
+            loading={isGenerating}
             style={styles.shareButton}
+            onPress={handleShare}
           >
             Share to {selectedPlatform.replace('-', ' ')}
           </Button>
@@ -429,26 +499,77 @@ export function ShareCardGenerator({ visible, onClose, data }: ShareCardGenerato
 }
 
 const styles = StyleSheet.create({
-  container: {
+  cardContainer: {
+    position: 'relative',
+  },
+  cardContent: {
     flex: 1,
+    justifyContent: 'space-between',
+    padding: 48,
+  },
+  closeButton: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  container: {
     backgroundColor: '#FFFFFF',
+    flex: 1,
+  },
+  emoji: {
+    fontSize: 120,
+  },
+  emojiContainer: {
+    alignItems: 'center',
+    marginTop: 48,
+  },
+  habitName: {
+    color: '#FFFFFF',
+    fontSize: 36,
+    fontWeight: '700',
+    marginBottom: 24,
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { height: 2, width: 0 },
+    textShadowRadius: 4,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    borderBottomColor: '#E5E7EB',
+    justifyContent: 'space-between',
     paddingHorizontal: 24,
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+  },
+  infoContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  milestoneLabel: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { height: 1, width: 0 },
+    textShadowRadius: 2,
+  },
+  previewContainer: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#F3F4F6',
+  },
+  footerContainer: {
+    alignItems: 'center',
+    gap: 16,
   },
   title: {
     fontSize: 20,
     fontWeight: '600',
   },
-  closeButton: {
-    fontSize: 17,
-    fontWeight: '600',
+  appInfo: {
+    alignItems: 'center',
+    gap: 4,
   },
   previewSection: {
     alignItems: 'center',
@@ -456,54 +577,61 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     flex: 1,
   },
-  previewContainer: {
-    overflow: 'hidden',
-    borderRadius: 12,
-    backgroundColor: '#F3F4F6',
-  },
-  cardContainer: {
-    position: 'relative',
-  },
-  cardContent: {
-    flex: 1,
-    padding: 48,
-    justifyContent: 'space-between',
-  },
-  emojiContainer: {
-    alignItems: 'center',
-    marginTop: 48,
-  },
-  emoji: {
-    fontSize: 120,
-  },
-  infoContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  habitName: {
-    fontSize: 36,
-    fontWeight: '700',
+  appName: {
     color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 24,
+    fontSize: 18,
+    fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
+    textShadowOffset: { height: 1, width: 0 },
+    textShadowRadius: 2,
   },
   milestoneRow: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 16,
     marginBottom: 16,
   },
-  milestoneLabel: {
-    fontSize: 28,
-    fontWeight: '600',
+  customizationSection: {
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    padding: 24,
+  },
+  personalMessage: {
     color: '#FFFFFF',
+    fontSize: 20,
+    fontStyle: 'italic',
+    marginTop: 32,
+    paddingHorizontal: 24,
+    textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
+    textShadowOffset: { height: 1, width: 0 },
     textShadowRadius: 2,
+  },
+  optionGroup: {
+    marginBottom: 24,
+  },
+  progressBarBackground: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 6,
+    height: 12,
+    overflow: 'hidden',
+  },
+  optionLabel: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  progressBarContainer: {
+    marginTop: 24,
+    width: '100%',
+  },
+  platformButton: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 8,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    paddingVertical: 8,
   },
   strengthPercentage: {
     fontSize: 48,
@@ -513,14 +641,16 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
-  progressBarContainer: {
-    width: '100%',
-    marginTop: 24,
+  gradientButtons: {
+    flexDirection: 'row',
+    gap: 12,
   },
-  progressBarBackground: {
-    height: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 6,
+  gradientButton: {
+    borderRadius: 12,
+    height: 56,
+    borderWidth: 2,
+    width: 56,
+    borderColor: 'transparent',
     overflow: 'hidden',
   },
   progressBarFill: {
@@ -528,139 +658,75 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 6,
   },
-  personalMessage: {
-    fontSize: 20,
-    fontStyle: 'italic',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginTop: 32,
-    paddingHorizontal: 24,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  footerContainer: {
-    alignItems: 'center',
-    gap: 16,
+  gradientButtonInner: {
+    flex: 1,
   },
   scienceBadge: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 20,
-    paddingVertical: 10,
     borderRadius: 20,
-    borderWidth: 1,
+    paddingVertical: 10,
     borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 1,
+  },
+  characterCount: {
+    fontSize: 12,
+    marginTop: 4,
+    textAlign: 'right',
   },
   scienceBadgeText: {
     fontSize: 14,
     fontWeight: '500',
     color: '#FFFFFF',
   },
-  appInfo: {
-    alignItems: 'center',
-    gap: 4,
+  gradientButtonSelected: {
+    borderColor: '#10B981',
   },
-  appName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+  messageInput: {
+    borderRadius: 8,
+    borderWidth: 1,
+    fontSize: 15,
+    minHeight: 80,
+    padding: 12,
+    textAlignVertical: 'top',
   },
   userName: {
     fontSize: 14,
     fontWeight: '400',
     color: 'rgba(255, 255, 255, 0.9)',
   },
-  customizationSection: {
-    padding: 24,
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-  },
-  optionGroup: {
-    marginBottom: 24,
-  },
-  optionLabel: {
-    fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
   platformButtons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
-  platformButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: '#F3F4F6',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
   platformButtonText: {
+    color: '#4B5563',
     fontSize: 14,
     fontWeight: '500',
-    color: '#4B5563',
     textTransform: 'capitalize',
   },
   platformButtonTextActive: {
     color: '#FFFFFF',
   },
-  gradientButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  gradientButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  gradientButtonSelected: {
-    borderColor: '#10B981',
-  },
-  gradientButtonInner: {
-    flex: 1,
-  },
-  messageInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 15,
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  characterCount: {
-    fontSize: 12,
-    textAlign: 'right',
-    marginTop: 4,
-  },
-  toggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  shareButton: {
+    marginTop: 8,
   },
   toggleLabelContainer: {
     flex: 1,
+  },
+  toggleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   toggleSubtext: {
     fontSize: 13,
     marginTop: 4,
   },
-  shareButton: {
-    marginTop: 8,
-  },
 });
 
 // Named exports for convenience
-export {
-  MILESTONE_CONFIG,
-  GRADIENT_PRESETS,
-  SHARE_FORMATS,
-};
+export { MILESTONE_CONFIG, GRADIENT_PRESETS, SHARE_FORMATS };
 
 export default ShareCardGenerator;

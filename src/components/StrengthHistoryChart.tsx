@@ -60,7 +60,9 @@ function generateLinePath(
   const points = data.map((point, index) => {
     const x = padding + index * stepX;
     const y =
-      chartHeight - padding - ((point.strength - minValue) / range) * (chartHeight - padding * 2);
+      chartHeight -
+      padding -
+      ((point.strength - minValue) / range) * (chartHeight - padding * 2);
     return { x, y };
   });
 
@@ -91,9 +93,9 @@ export default function StrengthHistoryChart({
         style={[
           styles.emptyContainer,
           {
-            height,
             backgroundColor: theme.custom.colors.gray[50],
             borderRadius: theme.custom.borderRadius.medium,
+            height,
           },
         ]}
       >
@@ -118,10 +120,11 @@ export default function StrengthHistoryChart({
   }
 
   // Calculate stats
-  const latestStrength = data[data.length - 1]?.strength ?? 0;
+  const latestStrength = data.at(-1)?.strength ?? 0;
   const earliestStrength = data[0]?.strength ?? 0;
   const strengthChange = latestStrength - earliestStrength;
-  const trend = strengthChange > 0 ? 'up' : strengthChange < 0 ? 'down' : 'stable';
+  const trend =
+    strengthChange > 0 ? 'up' : strengthChange < 0 ? 'down' : 'stable';
 
   // Chart dimensions
   const chartWidth = CHART_WIDTH - 40;
@@ -140,8 +143,10 @@ export default function StrengthHistoryChart({
   const points = data.map((point, index) => {
     const x = padding + index * stepX;
     const y =
-      chartHeight - padding - ((point.strength - minValue) / range) * (chartHeight - padding * 2);
-    return { x, y, data: point };
+      chartHeight -
+      padding -
+      ((point.strength - minValue) / range) * (chartHeight - padding * 2);
+    return { data: point, x, y };
   });
 
   return (
@@ -199,48 +204,48 @@ export default function StrengthHistoryChart({
         style={[
           styles.chartContainer,
           {
-            height,
             backgroundColor: theme.custom.colors.gray[50],
             borderRadius: theme.custom.borderRadius.medium,
+            height,
           },
         ]}
       >
-        <Svg width={chartWidth} height={chartHeight}>
+        <Svg height={chartHeight} width={chartWidth}>
           {/* Grid lines */}
           <Line
+            stroke={theme.custom.colors.gray[300]}
+            strokeWidth='1'
             x1={padding}
+            x2={chartWidth - padding}
             y1={chartHeight - padding}
-            x2={chartWidth - padding}
             y2={chartHeight - padding}
-            stroke={theme.custom.colors.gray[300]}
-            strokeWidth="1"
           />
           <Line
-            x1={padding}
-            y1={chartHeight / 2}
-            x2={chartWidth - padding}
-            y2={chartHeight / 2}
             stroke={theme.custom.colors.gray[200]}
-            strokeWidth="1"
-            strokeDasharray="4,4"
+            strokeDasharray='4,4'
+            strokeWidth='1'
+            x1={padding}
+            x2={chartWidth - padding}
+            y1={chartHeight / 2}
+            y2={chartHeight / 2}
           />
           <Line
-            x1={padding}
-            y1={padding}
-            x2={chartWidth - padding}
-            y2={padding}
             stroke={theme.custom.colors.gray[300]}
-            strokeWidth="1"
+            strokeWidth='1'
+            x1={padding}
+            x2={chartWidth - padding}
+            y1={padding}
+            y2={padding}
           />
 
           {/* Main line path */}
           <Path
             d={linePath}
+            fill='none'
             stroke={theme.custom.colors.primary[500]}
-            strokeWidth="2.5"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='2.5'
           />
 
           {/* Data point circles */}
@@ -249,10 +254,10 @@ export default function StrengthHistoryChart({
               key={index}
               cx={point.x}
               cy={point.y}
-              r={4}
               fill={theme.custom.colors.primary[500]}
+              r={4}
               stroke={theme.custom.colors.light.background}
-              strokeWidth="2"
+              strokeWidth='2'
             />
           ))}
         </Svg>
@@ -336,61 +341,61 @@ export default function StrengthHistoryChart({
 }
 
 const styles = StyleSheet.create({
+  chartArea: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  chartContainer: {
+    flexDirection: 'row',
+    padding: 12,
+  },
   container: {
     gap: 12,
+  },
+  legend: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'center',
+    paddingTop: 8,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  legendColor: {
+    borderRadius: 6,
+    height: 12,
+    width: 12,
+  },
+  legendItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+  },
+  placeholder: {
+    alignItems: 'center',
   },
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 8,
   },
-  chartContainer: {
-    flexDirection: 'row',
-    padding: 12,
-  },
-  yAxis: {
-    width: 40,
-    justifyContent: 'space-between',
-    paddingRight: 8,
-  },
-  chartArea: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholder: {
-    alignItems: 'center',
+  tooltip: {
+    alignSelf: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    position: 'absolute',
+    top: 80,
   },
   xAxis: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 48,
   },
-  tooltip: {
-    position: 'absolute',
-    top: 80,
-    alignSelf: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  legend: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 16,
-    paddingTop: 8,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  legendColor: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  emptyContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  yAxis: {
+    justifyContent: 'space-between',
+    paddingRight: 8,
+    width: 40,
   },
 });

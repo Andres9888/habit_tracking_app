@@ -28,30 +28,24 @@ export function PauseHabitModal({
   const theme = useAppTheme();
 
   return (
-    <Modal visible={visible} onClose={onCancel} variant="centerAlert">
+    <Modal variant='centerAlert' visible={visible} onClose={onCancel}>
       <View style={styles.container}>
         <Text style={[styles.title, { color: theme.custom.colors.gray[900] }]}>
           Pause "{habitName}"?
         </Text>
 
-        <Text style={[styles.message, { color: theme.custom.colors.gray[600] }]}>
-          This habit will be hidden from your daily list, but your progress and strength will be preserved.
-          You can resume it anytime from Settings.
+        <Text
+          style={[styles.message, { color: theme.custom.colors.gray[600] }]}
+        >
+          This habit will be hidden from your daily list, but your progress and
+          strength will be preserved. You can resume it anytime from Settings.
         </Text>
 
         <View style={styles.buttonContainer}>
-          <Button
-            variant="secondary"
-            onPress={onCancel}
-            style={styles.button}
-          >
+          <Button style={styles.button} variant='secondary' onPress={onCancel}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onPress={onConfirm}
-            style={styles.button}
-          >
+          <Button style={styles.button} variant='primary' onPress={onConfirm}>
             Pause Habit
           </Button>
         </View>
@@ -61,14 +55,15 @@ export function PauseHabitModal({
 }
 
 const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
   container: {
     // Modal already has padding, but we can add vertical spacing
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'center',
   },
   message: {
     fontSize: 16,
@@ -76,12 +71,11 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  button: {
-    flex: 1,
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
   },
 });
 

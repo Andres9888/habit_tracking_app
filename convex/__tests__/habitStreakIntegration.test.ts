@@ -9,11 +9,11 @@ describe('Habit Streak Integration', () => {
   describe('habit creation contract', () => {
     it('should initialize streak fields to 0', () => {
       const newHabit = {
-        createdAt: Date.now(),
-        name: 'Test Habit',
-        currentStreak: 0,
         bestStreak: 0,
+        createdAt: Date.now(),
+        currentStreak: 0,
         lastCompletedDate: undefined,
+        name: 'Test Habit',
       };
 
       expect(newHabit.currentStreak).toBe(0);
@@ -23,13 +23,13 @@ describe('Habit Streak Integration', () => {
 
     it('validates habit schema includes streak fields', () => {
       const habit = {
-        _id: 'test_id',
         _creationTime: Date.now(),
-        createdAt: Date.now(),
-        name: 'Test',
-        currentStreak: 0,
+        _id: 'test_id',
         bestStreak: 0,
+        createdAt: Date.now(),
+        currentStreak: 0,
         lastCompletedDate: undefined,
+        name: 'Test',
       };
 
       expect(habit).toHaveProperty('currentStreak');
@@ -41,8 +41,8 @@ describe('Habit Streak Integration', () => {
   describe('toggleHabit mutation streak update contract', () => {
     it('should update streak on first completion', () => {
       const habitBefore = {
-        currentStreak: 0,
         bestStreak: 0,
+        currentStreak: 0,
         lastCompletedDate: undefined,
       };
 
@@ -55,8 +55,8 @@ describe('Habit Streak Integration', () => {
 
     it('should increment streak on consecutive day', () => {
       const habitBefore = {
-        currentStreak: 1,
         bestStreak: 1,
+        currentStreak: 1,
         lastCompletedDate: '2025-01-10',
       };
 
@@ -69,8 +69,8 @@ describe('Habit Streak Integration', () => {
 
     it('should reset streak when day is missed', () => {
       const habitBefore = {
-        currentStreak: 5,
         bestStreak: 5,
+        currentStreak: 5,
         lastCompletedDate: '2025-01-10',
       };
 
@@ -83,8 +83,8 @@ describe('Habit Streak Integration', () => {
 
     it('should preserve best streak after reset', () => {
       const habitBefore = {
-        currentStreak: 10,
         bestStreak: 10,
+        currentStreak: 10,
         lastCompletedDate: '2025-01-10',
       };
 
@@ -96,8 +96,8 @@ describe('Habit Streak Integration', () => {
 
     it('should handle uncompleting', () => {
       const habitBefore = {
-        currentStreak: 5,
         bestStreak: 10,
+        currentStreak: 5,
         lastCompletedDate: '2025-01-10',
       };
 
@@ -112,8 +112,8 @@ describe('Habit Streak Integration', () => {
   describe('patch operation contract', () => {
     it('should include streak fields in habit patch', () => {
       const patchData = {
-        currentStreak: 5,
         bestStreak: 10,
+        currentStreak: 5,
         lastCompletedDate: '2025-01-10',
         strength: 0.7,
         strengthLevel: 'strong',
@@ -130,14 +130,17 @@ describe('Habit Streak Integration', () => {
 
     it('validates patch includes both strength and streak updates', () => {
       const completionPatch = {
+        bestStreak: 5,
+
+        // Streak fields (Story 1.3)
+        currentStreak: 3,
+
+        lastCompletedDate: '2025-01-10',
+
         // Strength fields
         strength: 0.65,
         strengthLevel: 'developing',
         strengthUpdatedAt: Date.now(),
-        // Streak fields (Story 1.3)
-        currentStreak: 3,
-        bestStreak: 5,
-        lastCompletedDate: '2025-01-10',
       };
 
       // Verify all required fields present
@@ -152,13 +155,13 @@ describe('Habit Streak Integration', () => {
   describe('query return type contract', () => {
     it('habit query should return streak fields', () => {
       const habitQueryResult = {
-        _id: 'test_id',
         _creationTime: Date.now(),
-        createdAt: Date.now(),
-        name: 'Test Habit',
-        currentStreak: 5,
+        _id: 'test_id',
         bestStreak: 10,
+        createdAt: Date.now(),
+        currentStreak: 5,
         lastCompletedDate: '2025-01-10',
+        name: 'Test Habit',
         strength: 0.7,
         strengthLevel: 'strong',
       };
@@ -171,30 +174,30 @@ describe('Habit Streak Integration', () => {
     it('list query should include streak fields for all habits', () => {
       const habits = [
         {
-          _id: 'id1',
           _creationTime: Date.now(),
-          createdAt: Date.now(),
-          name: 'Habit 1',
-          currentStreak: 3,
+          _id: 'id1',
           bestStreak: 5,
+          createdAt: Date.now(),
+          currentStreak: 3,
           lastCompletedDate: '2025-01-10',
+          name: 'Habit 1',
         },
         {
-          _id: 'id2',
           _creationTime: Date.now(),
-          createdAt: Date.now(),
-          name: 'Habit 2',
-          currentStreak: 7,
+          _id: 'id2',
           bestStreak: 10,
+          createdAt: Date.now(),
+          currentStreak: 7,
           lastCompletedDate: '2025-01-11',
+          name: 'Habit 2',
         },
       ];
 
-      habits.forEach((habit) => {
+      for (const habit of habits) {
         expect(habit).toHaveProperty('currentStreak');
         expect(habit).toHaveProperty('bestStreak');
         expect(habit).toHaveProperty('lastCompletedDate');
-      });
+      }
     });
   });
 
@@ -203,7 +206,7 @@ describe('Habit Streak Integration', () => {
       const startTime = performance.now();
 
       const streakData = updateStreak(
-        { currentStreak: 50, bestStreak: 100, lastCompletedDate: '2025-01-10' },
+        { bestStreak: 100, currentStreak: 50, lastCompletedDate: '2025-01-10' },
         '2025-01-11',
         true
       );
@@ -221,7 +224,7 @@ describe('Habit Streak Integration', () => {
       // Simulate 100 streak calculations
       for (let i = 0; i < 100; i++) {
         updateStreak(
-          { currentStreak: i, bestStreak: i, lastCompletedDate: '2025-01-10' },
+          { bestStreak: i, currentStreak: i, lastCompletedDate: '2025-01-10' },
           '2025-01-11',
           true
         );
@@ -237,12 +240,12 @@ describe('Habit Streak Integration', () => {
   describe('data persistence contract', () => {
     it('validates streak fields are persisted in habit document', () => {
       const persistedHabit = {
-        _id: 'test_id',
         _creationTime: Date.now(),
-        name: 'Test',
-        currentStreak: 5,
+        _id: 'test_id',
         bestStreak: 10,
+        currentStreak: 5,
         lastCompletedDate: '2025-01-10',
+        name: 'Test',
       };
 
       // AC: Streak data persists in habit document

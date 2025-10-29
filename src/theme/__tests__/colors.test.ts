@@ -78,11 +78,11 @@ describe('Theme Colors - Phase 1', () => {
       900: '#111827',
     };
 
-    Object.entries(grayValues).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(grayValues)) {
       it(`should match UX spec Gray-${key} (${value})`, () => {
         expect(colors.gray[key as keyof typeof colors.gray]).toBe(value);
       });
-    });
+    }
   });
 
   describe('Habit Strength Level Colors', () => {

@@ -23,9 +23,7 @@ interface Settings {
   darkMode: DarkModePreference;
 }
 
-const normalizeDarkModePreference = (
-  value: unknown,
-): DarkModePreference => {
+const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
   if (value === 'dark' || value === 'light' || value === 'system') {
     return value;
   }
@@ -45,8 +43,8 @@ const resolveShouldUseDark = (preference: DarkModePreference) => {
   if (preference === 'dark') return true;
   if (preference === 'light') return false;
 
-  if (typeof window !== 'undefined' && window.matchMedia) {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (globalThis.window !== undefined && globalThis.matchMedia) {
+    return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
   return false;
@@ -111,15 +109,15 @@ export function SettingsDialog({
   useEffect(() => {
     document.documentElement.classList.toggle(
       'dark',
-      resolveShouldUseDark(localSettings.darkMode),
+      resolveShouldUseDark(localSettings.darkMode)
     );
   }, [localSettings.darkMode]);
 
   useEffect(() => {
     if (localSettings.darkMode !== 'system') return;
-    if (typeof window === 'undefined' || !window.matchMedia) return;
+    if (globalThis.window === undefined || !globalThis.matchMedia) return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = globalThis.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (event: MediaQueryListEvent) => {
       document.documentElement.classList.toggle('dark', event.matches);
     };
@@ -164,7 +162,9 @@ export function SettingsDialog({
         <div className='space-y-4'>
           <div className='rounded-lg border border-border p-4'>
             <label className='flex flex-col gap-2 text-sm font-medium text-muted-foreground'>
-              <span className='text-sm font-semibold text-foreground'>Theme</span>
+              <span className='text-sm font-semibold text-foreground'>
+                Theme
+              </span>
               <select
                 aria-label='Select theme preference'
                 className='w-full rounded-md border border-border bg-background px-3 py-2 text-base text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'

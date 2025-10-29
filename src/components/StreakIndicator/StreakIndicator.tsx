@@ -57,12 +57,12 @@ export function StreakIndicator({
   const scale = useSharedValue(1);
 
   // Get the highest milestone reached
-  const currentMilestone = MILESTONES.reduce<number | null>((acc, milestone) => {
+  let currentMilestone: number | null = null;
+  for (const milestone of MILESTONES) {
     if (currentStreak >= milestone) {
-      return milestone;
+      currentMilestone = milestone;
     }
-    return acc;
-  }, null);
+  }
 
   // Trigger animation and callback when milestone changes
   useEffect(() => {
@@ -105,17 +105,27 @@ export function StreakIndicator({
   if (compact) {
     return (
       <Animated.View
-        style={[styles.compactContainer, animatedStyle]}
-        accessible={true}
+        accessible
         accessibilityLabel={getAccessibilityLabel()}
-        accessibilityRole="text"
+        accessibilityRole='text'
+        style={[styles.compactContainer, animatedStyle]}
       >
         {currentStreak === 0 ? (
           <View style={styles.zeroStreakContainer}>
-            <Text style={[styles.fireEmoji, { color: theme.custom.colors.gray[400] }]}>
+            <Text
+              style={[
+                styles.fireEmoji,
+                { color: theme.custom.colors.gray[400] },
+              ]}
+            >
               🔥
             </Text>
-            <Text style={[styles.zeroStreakText, { color: theme.custom.colors.gray[500] }]}>
+            <Text
+              style={[
+                styles.zeroStreakText,
+                { color: theme.custom.colors.gray[500] },
+              ]}
+            >
               Start your streak!
             </Text>
           </View>
@@ -129,7 +139,12 @@ export function StreakIndicator({
                 {MILESTONE_BADGES[currentMilestone].emoji}
               </Text>
             )}
-            <Text style={[styles.streakNumber, { color: theme.custom.colors.gray[900] }]}>
+            <Text
+              style={[
+                styles.streakNumber,
+                { color: theme.custom.colors.gray[900] },
+              ]}
+            >
               {currentStreak}
             </Text>
           </View>
@@ -141,27 +156,35 @@ export function StreakIndicator({
   // Full view for detail screens
   return (
     <Animated.View
-      style={[styles.fullContainer, animatedStyle]}
-      accessible={true}
+      accessible
       accessibilityLabel={getAccessibilityLabel()}
-      accessibilityRole="text"
+      accessibilityRole='text'
+      style={[styles.fullContainer, animatedStyle]}
     >
       {/* Current Streak */}
       <View style={styles.fullRow}>
         <View style={styles.fullStreakInfo}>
-          <Text style={[styles.fireEmoji, { color: getFireColor() }]}>
-            🔥
-          </Text>
+          <Text style={[styles.fireEmoji, { color: getFireColor() }]}>🔥</Text>
           {currentMilestone && (
             <Text style={styles.milestoneBadgeLarge}>
               {MILESTONE_BADGES[currentMilestone].emoji}
             </Text>
           )}
           <View style={styles.fullTextContainer}>
-            <Text style={[styles.streakNumberLarge, { color: theme.custom.colors.gray[900] }]}>
+            <Text
+              style={[
+                styles.streakNumberLarge,
+                { color: theme.custom.colors.gray[900] },
+              ]}
+            >
               {currentStreak}
             </Text>
-            <Text style={[styles.streakLabel, { color: theme.custom.colors.gray[600] }]}>
+            <Text
+              style={[
+                styles.streakLabel,
+                { color: theme.custom.colors.gray[600] },
+              ]}
+            >
               Current Streak
             </Text>
           </View>
@@ -170,8 +193,18 @@ export function StreakIndicator({
 
       {/* Best Streak */}
       {bestStreak > 0 && (
-        <View style={[styles.bestStreakContainer, { backgroundColor: theme.custom.colors.gray[100] }]}>
-          <Text style={[styles.bestStreakText, { color: theme.custom.colors.gray[700] }]}>
+        <View
+          style={[
+            styles.bestStreakContainer,
+            { backgroundColor: theme.custom.colors.gray[100] },
+          ]}
+        >
+          <Text
+            style={[
+              styles.bestStreakText,
+              { color: theme.custom.colors.gray[700] },
+            ]}
+          >
             Best: {bestStreak} {bestStreak === 1 ? 'day' : 'days'}
           </Text>
         </View>
@@ -221,92 +254,95 @@ export function StreakIndicator({
 const styles = StyleSheet.create({
   // Compact View Styles
   compactContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   compactContent: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 4,
+  },
+  fireEmoji: {
+    fontSize: 16,
+  },
+  // Full View Styles
+  fullContainer: {
+    padding: 16,
+  },
+
+  fullRow: {
+    marginBottom: 12,
+  },
+
+  bestStreakContainer: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+
+  fullStreakInfo: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+
+  bestStreakText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  fullTextContainer: {
+    flex: 1,
+  },
+  milestoneBadge: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    paddingVertical: 6,
+  },
+  milestoneEmoji: {
+    fontSize: 14,
+    marginLeft: -2,
+  },
+  milestoneBadgeEmoji: {
+    fontSize: 16,
   },
   zeroStreakContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
-  fireEmoji: {
-    fontSize: 16,
-  },
-  milestoneEmoji: {
-    fontSize: 14,
-    marginLeft: -2,
+  milestoneBadgeLabel: {
+    fontSize: 12,
+    fontWeight: '600',
   },
   streakNumber: {
     fontSize: 15,
     fontWeight: '600',
   },
-  zeroStreakText: {
-    fontSize: 13,
-    fontStyle: 'italic',
-  },
-
-  // Full View Styles
-  fullContainer: {
-    padding: 16,
-  },
-  fullRow: {
-    marginBottom: 12,
-  },
-  fullStreakInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   milestoneBadgeLarge: {
     fontSize: 24,
     marginLeft: -4,
   },
-  fullTextContainer: {
-    flex: 1,
-  },
-  streakNumberLarge: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 36,
-  },
-  streakLabel: {
-    fontSize: 14,
-    marginTop: 2,
-  },
-  bestStreakContainer: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  bestStreakText: {
-    fontSize: 14,
-    fontWeight: '600',
+  zeroStreakText: {
+    fontSize: 13,
+    fontStyle: 'italic',
   },
   milestonesLegend: {
     flexDirection: 'row',
     gap: 8,
     marginTop: 4,
   },
-  milestoneBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 12,
+  streakLabel: {
+    fontSize: 14,
+    marginTop: 2,
   },
-  milestoneBadgeEmoji: {
-    fontSize: 16,
-  },
-  milestoneBadgeLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+  streakNumberLarge: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    lineHeight: 36,
   },
 });
 

@@ -122,8 +122,8 @@ export function HabitCard({
   // Query current completion status for conditional haptic feedback
   // Returns true if completed, false if not completed, undefined while loading
   const isCompleted = useQuery(api.tracking.getCompletionStatus, {
-    habitId: id,
     date: today,
+    habitId: id,
   });
 
   // Swipe gesture handler
@@ -227,7 +227,7 @@ export function HabitCard({
         runOnJS(async () => {
           console.log('🔴 Starting mutation...');
           try {
-            await toggleCompletionMutation({ habitId: id, date: today });
+            await toggleCompletionMutation({ date: today, habitId: id });
             console.log('🔴 Mutation SUCCESS');
           } catch (error) {
             console.error('🔴 Toggle completion failed:', error);
@@ -248,7 +248,12 @@ export function HabitCard({
           runOnJS(onPress)();
         }
       } else {
-        console.log('🔴 ✗ BLOCKED - disabled:', disabled, 'isToggling:', isToggling);
+        console.log(
+          '🔴 ✗ BLOCKED - disabled:',
+          disabled,
+          'isToggling:',
+          isToggling
+        );
       }
       console.log('🔴 ========================================');
     });
@@ -267,7 +272,9 @@ export function HabitCard({
           console.log('🟡 LONG PRESS: Inside runOnJS - calling Heavy haptic');
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
             .then(() => console.log('✅ LONG PRESS haptic SUCCESS'))
-            .catch((error) => console.error('❌ LONG PRESS haptic FAILED:', error));
+            .catch((error) =>
+              console.error('❌ LONG PRESS haptic FAILED:', error)
+            );
         })();
         runOnJS(onLongPress)();
       } else {
@@ -283,10 +290,7 @@ export function HabitCard({
 
   // Animated styles
   const cardAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { scale: cardScale.value },
-    ],
+    transform: [{ translateX: translateX.value }, { scale: cardScale.value }],
   }));
 
   const actionsAnimatedStyle = useAnimatedStyle(() => {
@@ -321,6 +325,8 @@ export function HabitCard({
       {/* Swipe Actions (Edit, Delete) */}
       <Animated.View style={[styles.actionsContainer, actionsAnimatedStyle]}>
         <Pressable
+          accessibilityLabel={`Edit ${name}`}
+          accessibilityRole='button'
           style={[
             styles.actionButton,
             { backgroundColor: theme.custom.colors.secondary[500] },
@@ -329,13 +335,13 @@ export function HabitCard({
             translateX.value = withSpring(0);
             onEdit?.();
           }}
-          accessibilityLabel={`Edit ${name}`}
-          accessibilityRole="button"
         >
           <Text style={styles.actionText}>Edit</Text>
         </Pressable>
 
         <Pressable
+          accessibilityLabel={`Delete ${name}`}
+          accessibilityRole='button'
           style={[
             styles.actionButton,
             { backgroundColor: theme.custom.colors.error },
@@ -344,8 +350,6 @@ export function HabitCard({
             translateX.value = withSpring(0);
             onDelete?.();
           }}
-          accessibilityLabel={`Delete ${name}`}
-          accessibilityRole="button"
         >
           <Text style={styles.actionText}>Delete</Text>
         </Pressable>
@@ -354,6 +358,14 @@ export function HabitCard({
       {/* Main Card */}
       <GestureDetector gesture={composedGesture}>
         <Animated.View
+          accessible
+          accessibilityHint='Tap to complete, swipe left for edit and delete options, long press for quick actions'
+          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength, ${completed ? 'completed today' : 'not completed'}`}
+          accessibilityRole='button'
+          accessibilityState={{
+            checked: completed,
+            disabled,
+          }}
           style={[
             styles.card,
             {
@@ -364,14 +376,6 @@ export function HabitCard({
             disabled && styles.disabled,
             cardAnimatedStyle,
           ]}
-          accessible={true}
-          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength, ${completed ? 'completed today' : 'not completed'}`}
-          accessibilityRole="button"
-          accessibilityState={{
-            disabled,
-            checked: completed,
-          }}
-          accessibilityHint="Tap to complete, swipe left for edit and delete options, long press for quick actions"
         >
           {/* Color Accent Bar (Left edge) */}
           <View
@@ -379,8 +383,8 @@ export function HabitCard({
               styles.accentBar,
               {
                 backgroundColor: accentColor,
-                borderTopLeftRadius: theme.custom.borderRadius.medium,
                 borderBottomLeftRadius: theme.custom.borderRadius.medium,
+                borderTopLeftRadius: theme.custom.borderRadius.medium,
               },
             ]}
           />
@@ -392,12 +396,12 @@ export function HabitCard({
               <View style={styles.habitInfo}>
                 <Text style={styles.icon}>{icon}</Text>
                 <Text
+                  numberOfLines={1}
                   style={[
                     theme.custom.typography.heading3,
                     { color: theme.custom.colors.gray[900] },
                     completed && styles.completedText,
                   ]}
-                  numberOfLines={1}
                 >
                   {name}
                 </Text>
@@ -430,16 +434,16 @@ export function HabitCard({
             {/* Bottom Row: Strength Indicator + Streak */}
             <View style={styles.bottomRow}>
               <HabitStrengthIndicator
-                strength={strength}
-                variant="compact"
-                showPercentage={true}
+                showPercentage
                 habitName={name}
+                strength={strength}
+                variant='compact'
               />
               {/* Streak Indicator (Story 1.4) */}
               <StreakIndicator
-                currentStreak={currentStreak}
+                compact
                 bestStreak={bestStreak}
-                compact={true}
+                currentStreak={currentStreak}
               />
             </View>
           </View>
@@ -450,24 +454,22 @@ export function HabitCard({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    height: 72, // As per UX spec
-    marginVertical: 4,
+  accentBar: {
+    width: 4,
+  },
+  actionButton: {
+    alignItems: 'center',
+    height: '100%',
+    justifyContent: 'center',
+    width: ACTION_WIDTH,
   },
   actionsContainer: {
+    alignItems: 'center',
+    bottom: 0,
+    flexDirection: 'row',
     position: 'absolute',
     right: 0,
     top: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionButton: {
-    width: ACTION_WIDTH,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   actionText: {
     color: '#FFFFFF',
@@ -479,64 +481,66 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     overflow: 'hidden',
   },
-  disabled: {
-    opacity: 0.5,
-  },
-  accentBar: {
-    width: 4,
-  },
-  content: {
-    flex: 1,
-    padding: 12,
-    justifyContent: 'space-between',
-  },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  habitInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  icon: {
-    fontSize: 24,
-  },
-  completedText: {
-    opacity: 0.6,
-  },
-  statusContainer: {
-    marginLeft: 8,
-  },
   checkmark: {
-    width: 24,
     height: 24,
     borderRadius: 12,
-    justifyContent: 'center',
+    width: 24,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   checkmarkText: {
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
   },
-  warningBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  warningText: {
-    fontSize: 12,
-  },
   bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 4,
+  },
+  completedText: {
+    opacity: 0.6,
+  },
+  container: {
+    height: 72,
+    position: 'relative', // As per UX spec
+    marginVertical: 4,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 12,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  habitInfo: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  icon: {
+    fontSize: 24,
+  },
+  statusContainer: {
+    marginLeft: 8,
+  },
+  topRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  warningBadge: {
+    alignItems: 'center',
+    borderRadius: 12,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
+  },
+  warningText: {
+    fontSize: 12,
   },
 });
 

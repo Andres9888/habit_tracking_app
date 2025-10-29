@@ -5,19 +5,28 @@ const DARK_MODE_OPTIONS = ['system', 'light', 'dark'] as const;
 type DarkModePreference = (typeof DARK_MODE_OPTIONS)[number];
 
 const DEFAULT_SETTINGS = {
+  // New settings from Figma design
+  appIcon: 'default' as const,
+
   catTheme: true,
+
   darkMode: 'system' as DarkModePreference,
+
+  highContrastMode: false,
+
+  reduceMotion: false,
+
   showCalendarView: true,
+
   showCharacterScreen: true,
+
   showConsistency: true,
+
   showEmojis: true,
+
   showMotivationalMessages: true,
   showNotesStats: true,
   showStreaks: true,
-  // New settings from Figma design
-  appIcon: 'default' as const,
-  highContrastMode: false,
-  reduceMotion: false,
   useDyslexicFont: false,
 };
 
@@ -45,8 +54,12 @@ export const get = query({
 
     // Only return the whitelisted fields to satisfy the returns validator
     return {
+      appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       darkMode: normalizeDarkMode(settings?.darkMode),
+      highContrastMode:
+        settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
+      reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
       showCharacterScreen:
@@ -60,22 +73,20 @@ export const get = query({
       showNotesStats:
         settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
-      appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
-      highContrastMode:
-        settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
-      reduceMotion:
-        settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       useDyslexicFont:
         settings?.useDyslexicFont ?? DEFAULT_SETTINGS.useDyslexicFont,
     };
   },
   returns: v.object({
+    appIcon: v.string(),
     catTheme: v.boolean(),
     darkMode: v.union(
       v.literal('system'),
       v.literal('light'),
-      v.literal('dark'),
+      v.literal('dark')
     ),
+    highContrastMode: v.boolean(),
+    reduceMotion: v.boolean(),
     showCalendarView: v.boolean(),
     showCharacterScreen: v.boolean(),
     showConsistency: v.boolean(),
@@ -83,22 +94,22 @@ export const get = query({
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.boolean(),
     showStreaks: v.boolean(),
-    appIcon: v.string(),
-    highContrastMode: v.boolean(),
-    reduceMotion: v.boolean(),
     useDyslexicFont: v.boolean(),
   }),
 });
 
 export const update = mutation({
   args: {
+    appIcon: v.optional(v.string()),
     catTheme: v.boolean(),
     darkMode: v.union(
       v.literal('system'),
       v.literal('light'),
       v.literal('dark'),
-      v.boolean(),
+      v.boolean()
     ),
+    highContrastMode: v.optional(v.boolean()),
+    reduceMotion: v.optional(v.boolean()),
     showCalendarView: v.boolean(),
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
@@ -106,9 +117,6 @@ export const update = mutation({
     showMotivationalMessages: v.boolean(),
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
-    appIcon: v.optional(v.string()),
-    highContrastMode: v.optional(v.boolean()),
-    reduceMotion: v.optional(v.boolean()),
     useDyslexicFont: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {

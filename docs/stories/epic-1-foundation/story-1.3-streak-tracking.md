@@ -37,6 +37,7 @@
 ## Technical Notes
 
 **Implementation:**
+
 - Simple date-based calculation (no complex algorithms)
 - Compare `lastCompletedDate` with today's date
 - If consecutive (yesterday or today), increment `currentStreak`
@@ -44,15 +45,17 @@
 - Update `bestStreak` if `currentStreak` exceeds it
 
 **Data Schema:**
+
 ```typescript
 interface Habit {
-  currentStreak: number;      // Current consecutive days
-  bestStreak: number;         // All-time best streak
-  lastCompletedDate: string;  // ISO date of last completion
+  currentStreak: number; // Current consecutive days
+  bestStreak: number; // All-time best streak
+  lastCompletedDate: string; // ISO date of last completion
 }
 ```
 
 **Calculation Logic:**
+
 ```typescript
 function updateStreak(habit: Habit, completionDate: Date) {
   const lastDate = new Date(habit.lastCompletedDate);
@@ -83,6 +86,7 @@ function updateStreak(habit: Habit, completionDate: Date) {
 ## Testing
 
 **Unit Tests:**
+
 - ✅ Test consecutive days increment streak
 - ✅ Test missed day resets streak
 - ✅ Test same-day completion doesn't change streak
@@ -90,6 +94,7 @@ function updateStreak(habit: Habit, completionDate: Date) {
 - ✅ Test timezone edge cases
 
 **Performance:**
+
 - ✅ Calculation completes in <50ms
 - ✅ Works with 100+ habits
 
@@ -98,10 +103,12 @@ function updateStreak(habit: Habit, completionDate: Date) {
 ## Dependencies
 
 **Required by:**
+
 - Story 1.4: Habit Strength Visual Indicators (will show streak badges)
 - Story 1.2: Daily Habit Check-Off (triggers streak calculation)
 
 **Depends on:**
+
 - Database schema with habit fields
 
 ---
@@ -118,6 +125,7 @@ function updateStreak(habit: Habit, completionDate: Date) {
 ## Dev Agent Record
 
 ### Debug Log
+
 - Created streak calculation utility (`streakUtils.ts`) with `updateStreak` and `differenceInDays` functions
 - Updated schema to add `currentStreak`, `bestStreak`, `lastCompletedDate` fields to habits table
 - Integrated streak calculation into `toggleHabit` mutation
@@ -127,7 +135,9 @@ function updateStreak(habit: Habit, completionDate: Date) {
 - Edge cases handled: same-day completions, timezone normalization, month/year boundaries, backfills
 
 ### Completion Notes
+
 Successfully implemented streak tracking system with comprehensive test coverage (42 tests total):
+
 - Unit tests (27): Cover all edge cases including consecutive days, missed days, same-day completions, best streak updates, timezone handling, and performance
 - Integration tests (15): Contract tests validating schema updates, mutation behavior, query return types, and persistence
 
@@ -140,11 +150,13 @@ All acceptance criteria met and validated through automated tests.
 ## File List
 
 ### Created
+
 - `convex/streakUtils.ts` - Streak calculation utility functions
 - `convex/__tests__/streakTracking.test.ts` - Unit tests for streak logic (27 tests)
 - `convex/__tests__/habitStreakIntegration.test.ts` - Integration tests (15 tests)
 
 ### Modified
+
 - `convex/schema.ts` - Added currentStreak, bestStreak, lastCompletedDate fields
 - `convex/habits.ts` - Updated toggleHabit mutation, create mutation, and query return types
 

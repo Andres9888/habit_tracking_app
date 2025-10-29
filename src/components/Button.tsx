@@ -97,23 +97,25 @@ export function Button({
 
   // Size configurations
   const sizeConfig = {
-    small: {
-      height: 32,
-      paddingHorizontal: theme.custom.spacing.base,
-      fontSize: 15,
-      iconSize: 16,
+    large: {
+      fontSize: 17,
+      height: 56,
+      iconSize: 24,
+      paddingHorizontal: theme.custom.spacing.xl,
     },
     medium: {
-      height: theme.custom.componentSpacing.button.height, // 44pt (Apple HIG)
-      paddingHorizontal: theme.custom.spacing.lg,
       fontSize: 17,
+      height: theme.custom.componentSpacing.button.height,
+
       iconSize: 20,
+      // 44pt (Apple HIG)
+      paddingHorizontal: theme.custom.spacing.lg,
     },
-    large: {
-      height: 56,
-      paddingHorizontal: theme.custom.spacing.xl,
-      fontSize: 17,
-      iconSize: 24,
+    small: {
+      fontSize: 15,
+      height: 32,
+      iconSize: 16,
+      paddingHorizontal: theme.custom.spacing.base,
     },
   };
 
@@ -125,7 +127,7 @@ export function Button({
     text: TextStyle;
   } => {
     switch (variant) {
-      case 'primary':
+      case 'primary': {
         return {
           container: {
             backgroundColor: theme.custom.colors.primary[500],
@@ -135,20 +137,22 @@ export function Button({
             color: '#FFFFFF',
           },
         };
+      }
 
-      case 'secondary':
+      case 'secondary': {
         return {
           container: {
             backgroundColor: 'transparent',
-            borderWidth: 1.5,
             borderColor: theme.custom.colors.primary[500],
+            borderWidth: 1.5,
           },
           text: {
             color: theme.custom.colors.primary[500],
           },
         };
+      }
 
-      case 'ghost':
+      case 'ghost': {
         return {
           container: {
             backgroundColor: 'transparent',
@@ -158,46 +162,53 @@ export function Button({
             color: theme.custom.colors.primary[500],
           },
         };
+      }
 
-      case 'icon':
+      case 'icon': {
         return {
           container: {
             backgroundColor: theme.custom.colors.gray[100],
+            borderRadius: config.height / 2,
             borderWidth: 0,
-            width: config.height,
             height: config.height,
-            borderRadius: config.height / 2, // Circular
+            // Circular
             paddingHorizontal: 0,
+            width: config.height,
           },
           text: {
             color: theme.custom.colors.gray[700],
           },
         };
+      }
 
-      default:
+      default: {
         return {
           container: {},
           text: {},
         };
+      }
     }
   };
 
   const variantStyles = getVariantStyles();
 
   // Disabled styles (50% opacity as per UX spec)
-  const disabledStyles: ViewStyle = disabled || loading
-    ? {
-        opacity: 0.5,
-      }
-    : {};
+  const disabledStyles: ViewStyle =
+    disabled || loading
+      ? {
+          opacity: 0.5,
+        }
+      : {};
 
   // Render loading spinner or content
   const renderContent = () => {
     if (loading) {
       return (
         <ActivityIndicator
-          color={variant === 'primary' ? '#FFFFFF' : theme.custom.colors.primary[500]}
-          size="small"
+          color={
+            variant === 'primary' ? '#FFFFFF' : theme.custom.colors.primary[500]
+          }
+          size='small'
         />
       );
     }
@@ -210,9 +221,7 @@ export function Button({
     return (
       <View style={styles.content}>
         {icon && iconPosition === 'left' && (
-          <View style={{ marginRight: theme.custom.spacing.sm }}>
-            {icon}
-          </View>
+          <View style={{ marginRight: theme.custom.spacing.sm }}>{icon}</View>
         )}
 
         {typeof children === 'string' ? (
@@ -230,9 +239,7 @@ export function Button({
         )}
 
         {icon && iconPosition === 'right' && (
-          <View style={{ marginLeft: theme.custom.spacing.sm }}>
-            {icon}
-          </View>
+          <View style={{ marginLeft: theme.custom.spacing.sm }}>{icon}</View>
         )}
       </View>
     );
@@ -240,22 +247,20 @@ export function Button({
 
   return (
     <AnimatedPressable
-      onPress={disabled || loading ? undefined : onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      disabled={disabled || loading}
-      accessible={true}
-      accessibilityRole="button"
+      accessible
+      accessibilityRole='button'
       accessibilityState={{ disabled: disabled || loading }}
+      disabled={disabled || loading}
       style={[
         animatedStyle,
         styles.base,
         {
+          borderRadius:
+            variant === 'icon'
+              ? config.height / 2
+              : theme.custom.borderRadius.small,
           height: config.height,
           paddingHorizontal: variant === 'icon' ? 0 : config.paddingHorizontal,
-          borderRadius: variant === 'icon'
-            ? config.height / 2
-            : theme.custom.borderRadius.small,
         },
         variantStyles.container,
         disabledStyles,
@@ -263,6 +268,9 @@ export function Button({
         variant !== 'icon' && theme.custom.shadows.card,
         style,
       ]}
+      onPress={disabled || loading ? undefined : onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       {...pressableProps}
     >
       {renderContent()}
@@ -277,8 +285,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   content: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   fullWidth: {

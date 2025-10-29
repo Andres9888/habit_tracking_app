@@ -15,6 +15,32 @@ interface ForceUpdateButtonProps {
   currentStrength: number;
 }
 
+type UpdateStrengthResponse = {
+  baseline: number;
+  compliance: number;
+  daysSinceCreation: number;
+  newStrength: number;
+  predictionProbability: number;
+  previousStrength: number;
+  strengthLevel: string;
+};
+
+const assertUpdateStrengthResponse = (
+  response: unknown
+): asserts response is UpdateStrengthResponse => {
+  if (!response || typeof response !== 'object') {
+    throw new Error('Unexpected empty response from updateHabitStrength');
+  }
+
+  const candidate = response as Partial<UpdateStrengthResponse>;
+  if (
+    typeof candidate.previousStrength !== 'number' ||
+    typeof candidate.newStrength !== 'number'
+  ) {
+    throw new TypeError('updateHabitStrength returned unexpected payload');
+  }
+};
+
 export function ForceUpdateButton({
   habitId,
   habitName: _habitName,
@@ -36,12 +62,15 @@ export function ForceUpdateButton({
         habitId,
       });
 
+      assertUpdateStrengthResponse(response);
       setResult(
         `✅ ${response.previousStrength.toFixed(3)} → ${response.newStrength.toFixed(3)}`
       );
       console.log('Force update result:', response);
     } catch (error) {
-      setResult(`❌ Error: ${error}`);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      setResult(`❌ Error: ${errorMessage}`);
       console.error('Force update error:', error);
     } finally {
       setLoading(false);

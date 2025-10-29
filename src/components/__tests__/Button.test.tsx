@@ -15,9 +15,7 @@ import { Button } from '../Button';
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(
-    <PaperProvider theme={extendedTheme}>
-      {component}
-    </PaperProvider>
+    <PaperProvider theme={extendedTheme}>{component}</PaperProvider>
   );
 };
 
@@ -42,28 +40,28 @@ describe('Button - Phase 2', () => {
   describe('Button Variants', () => {
     it('should render primary variant', () => {
       const { getByText } = renderWithTheme(
-        <Button variant="primary">Primary Button</Button>
+        <Button variant='primary'>Primary Button</Button>
       );
       expect(getByText('Primary Button')).toBeDefined();
     });
 
     it('should render secondary variant', () => {
       const { getByText } = renderWithTheme(
-        <Button variant="secondary">Secondary Button</Button>
+        <Button variant='secondary'>Secondary Button</Button>
       );
       expect(getByText('Secondary Button')).toBeDefined();
     });
 
     it('should render ghost variant', () => {
       const { getByText } = renderWithTheme(
-        <Button variant="ghost">Ghost Button</Button>
+        <Button variant='ghost'>Ghost Button</Button>
       );
       expect(getByText('Ghost Button')).toBeDefined();
     });
 
     it('should render icon variant', () => {
       const { root } = renderWithTheme(
-        <Button variant="icon">
+        <Button variant='icon'>
           <Text>🔔</Text>
         </Button>
       );
@@ -74,21 +72,21 @@ describe('Button - Phase 2', () => {
   describe('Button Sizes', () => {
     it('should render small size', () => {
       const { getByText } = renderWithTheme(
-        <Button size="small">Small</Button>
+        <Button size='small'>Small</Button>
       );
       expect(getByText('Small')).toBeDefined();
     });
 
     it('should render medium size (default)', () => {
       const { getByText } = renderWithTheme(
-        <Button size="medium">Medium</Button>
+        <Button size='medium'>Medium</Button>
       );
       expect(getByText('Medium')).toBeDefined();
     });
 
     it('should render large size', () => {
       const { getByText } = renderWithTheme(
-        <Button size="large">Large</Button>
+        <Button size='large'>Large</Button>
       );
       expect(getByText('Large')).toBeDefined();
     });
@@ -130,7 +128,7 @@ describe('Button - Phase 2', () => {
     describe('Disabled State (50% Opacity)', () => {
       it('should apply disabled styling', () => {
         const { getByText } = renderWithTheme(
-          <Button disabled={true}>Disabled</Button>
+          <Button disabled>Disabled</Button>
         );
         const button = getByText('Disabled').parent;
 
@@ -141,7 +139,9 @@ describe('Button - Phase 2', () => {
       it('should not call onPress when disabled', () => {
         const onPress = jest.fn();
         const { getByText } = renderWithTheme(
-          <Button disabled={true} onPress={onPress}>Disabled</Button>
+          <Button disabled onPress={onPress}>
+            Disabled
+          </Button>
         );
 
         fireEvent.press(getByText('Disabled'));
@@ -150,7 +150,7 @@ describe('Button - Phase 2', () => {
 
       it('should not animate when disabled', () => {
         const { getByText } = renderWithTheme(
-          <Button disabled={true}>Disabled</Button>
+          <Button disabled>Disabled</Button>
         );
         const button = getByText('Disabled').parent;
 
@@ -162,16 +162,14 @@ describe('Button - Phase 2', () => {
 
     describe('Loading State (Spinner)', () => {
       it('should show ActivityIndicator when loading', () => {
-        const { root } = renderWithTheme(
-          <Button loading={true}>Loading</Button>
-        );
+        const { root } = renderWithTheme(<Button loading>Loading</Button>);
         // ActivityIndicator should be rendered
         expect(root).toBeTruthy();
       });
 
       it('should hide text when loading', () => {
         const { queryByText } = renderWithTheme(
-          <Button loading={true}>Loading</Button>
+          <Button loading>Loading</Button>
         );
         // Text might be hidden or replaced by spinner
         expect(queryByText).toBeDefined();
@@ -180,7 +178,9 @@ describe('Button - Phase 2', () => {
       it('should not call onPress when loading', () => {
         const onPress = jest.fn();
         const { getByText } = renderWithTheme(
-          <Button loading={true} onPress={onPress}>Loading</Button>
+          <Button loading onPress={onPress}>
+            Loading
+          </Button>
         );
 
         fireEvent.press(getByText('Loading'));
@@ -200,7 +200,9 @@ describe('Button - Phase 2', () => {
 
     it('should render icon on right', () => {
       const { getByText } = renderWithTheme(
-        <Button icon={<Text>→</Text>} iconPosition="right">Next</Button>
+        <Button icon={<Text>→</Text>} iconPosition='right'>
+          Next
+        </Button>
       );
       expect(getByText('Next')).toBeDefined();
       expect(getByText('→')).toBeDefined();
@@ -208,7 +210,7 @@ describe('Button - Phase 2', () => {
 
     it('should render icon-only button', () => {
       const { getByText } = renderWithTheme(
-        <Button variant="icon">
+        <Button variant='icon'>
           <Text>⚙️</Text>
         </Button>
       );
@@ -218,9 +220,7 @@ describe('Button - Phase 2', () => {
 
   describe('Full Width', () => {
     it('should render full width when specified', () => {
-      const { root } = renderWithTheme(
-        <Button fullWidth={true}>Full Width</Button>
-      );
+      const { root } = renderWithTheme(<Button fullWidth>Full Width</Button>);
       // Should have width: '100%' style
       expect(root).toBeTruthy();
     });
@@ -240,22 +240,20 @@ describe('Button - Phase 2', () => {
 
     it('should have accessible label', () => {
       const { getByLabelText } = renderWithTheme(
-        <Button accessibilityLabel="Save changes">Save</Button>
+        <Button accessibilityLabel='Save changes'>Save</Button>
       );
       expect(getByLabelText('Save changes')).toBeDefined();
     });
 
     it('should announce disabled state', () => {
-      const { getByRole } = renderWithTheme(
-        <Button disabled={true}>Disabled</Button>
-      );
+      const { getByRole } = renderWithTheme(<Button disabled>Disabled</Button>);
       const button = getByRole('button');
       expect(button.props.accessibilityState?.disabled).toBe(true);
     });
 
     it('should have accessible hint', () => {
       const { getByRole } = renderWithTheme(
-        <Button accessibilityHint="Saves your progress">Save</Button>
+        <Button accessibilityHint='Saves your progress'>Save</Button>
       );
       const button = getByRole('button');
       expect(button.props.accessibilityHint).toBe('Saves your progress');
@@ -265,7 +263,7 @@ describe('Button - Phase 2', () => {
   describe('Theme Integration', () => {
     it('should use theme primary color for primary variant', () => {
       const { root } = renderWithTheme(
-        <Button variant="primary">Primary</Button>
+        <Button variant='primary'>Primary</Button>
       );
       // Should use theme.custom.colors.primary[500]
       expect(root).toBeTruthy();
@@ -273,7 +271,7 @@ describe('Button - Phase 2', () => {
 
     it('should use theme secondary color for secondary variant', () => {
       const { root } = renderWithTheme(
-        <Button variant="secondary">Secondary</Button>
+        <Button variant='secondary'>Secondary</Button>
       );
       // Should use theme.custom.colors.secondary[500]
       expect(root).toBeTruthy();
@@ -312,25 +310,19 @@ describe('Button - Phase 2', () => {
 
   describe('Touch Targets', () => {
     it('should meet 44pt minimum for medium size', () => {
-      const { root } = renderWithTheme(
-        <Button size="medium">Medium</Button>
-      );
+      const { root } = renderWithTheme(<Button size='medium'>Medium</Button>);
       // Medium size should be 44pt height
       expect(root).toBeTruthy();
     });
 
     it('should meet 44pt minimum for small size', () => {
-      const { root } = renderWithTheme(
-        <Button size="small">Small</Button>
-      );
+      const { root } = renderWithTheme(<Button size='small'>Small</Button>);
       // Small size should be at least 32pt (may be below 44pt for secondary uses)
       expect(root).toBeTruthy();
     });
 
     it('should exceed 44pt for large size', () => {
-      const { root } = renderWithTheme(
-        <Button size="large">Large</Button>
-      );
+      const { root } = renderWithTheme(<Button size='large'>Large</Button>);
       // Large size should be 56pt height
       expect(root).toBeTruthy();
     });
@@ -374,12 +366,12 @@ describe('Button - Phase 2', () => {
         'icon',
       ];
 
-      variants.forEach((variant) => {
+      for (const variant of variants) {
         const { root } = renderWithTheme(
           <Button variant={variant}>{variant}</Button>
         );
         expect(root).toBeTruthy();
-      });
+      }
     });
 
     it('✅ Pressed state scales to 0.95', () => {
@@ -392,17 +384,13 @@ describe('Button - Phase 2', () => {
     });
 
     it('✅ Disabled state has 50% opacity', () => {
-      const { root } = renderWithTheme(
-        <Button disabled={true}>Disabled</Button>
-      );
+      const { root } = renderWithTheme(<Button disabled>Disabled</Button>);
       // Opacity should be 0.5 when disabled
       expect(root).toBeTruthy();
     });
 
     it('✅ Loading state shows spinner', () => {
-      const { root } = renderWithTheme(
-        <Button loading={true}>Loading</Button>
-      );
+      const { root } = renderWithTheme(<Button loading>Loading</Button>);
       // ActivityIndicator should be rendered
       expect(root).toBeTruthy();
     });

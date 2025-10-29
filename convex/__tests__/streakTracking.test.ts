@@ -35,7 +35,7 @@ describe('Streak Tracking System', () => {
   describe('updateStreak - First Completion', () => {
     it('should set streak to 1 on first completion', () => {
       const result = updateStreak(
-        { currentStreak: 0, bestStreak: 0 },
+        { bestStreak: 0, currentStreak: 0 },
         '2025-01-10',
         true
       );
@@ -58,8 +58,8 @@ describe('Streak Tracking System', () => {
     it('should increment streak on consecutive day completion', () => {
       const result = updateStreak(
         {
-          currentStreak: 1,
           bestStreak: 1,
+          currentStreak: 1,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-11',
@@ -73,8 +73,8 @@ describe('Streak Tracking System', () => {
 
     it('should continue incrementing for multiple consecutive days', () => {
       let streakData = {
-        currentStreak: 1,
         bestStreak: 1,
+        currentStreak: 1,
         lastCompletedDate: '2025-01-10',
       };
 
@@ -99,8 +99,8 @@ describe('Streak Tracking System', () => {
     it('should not change streak when completing same day', () => {
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 10,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-10',
@@ -117,8 +117,8 @@ describe('Streak Tracking System', () => {
     it('should reset streak to 1 when a day is missed', () => {
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 5,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-12', // Skipped Jan 11
@@ -133,8 +133,8 @@ describe('Streak Tracking System', () => {
     it('should reset streak to 1 after multiple missed days', () => {
       const result = updateStreak(
         {
-          currentStreak: 10,
           bestStreak: 15,
+          currentStreak: 10,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-20', // Skipped 9 days
@@ -151,8 +151,8 @@ describe('Streak Tracking System', () => {
     it('should update best streak when current exceeds it', () => {
       const result = updateStreak(
         {
-          currentStreak: 9,
           bestStreak: 8,
+          currentStreak: 9,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-11',
@@ -167,8 +167,8 @@ describe('Streak Tracking System', () => {
     it('should not update best streak when current is lower', () => {
       const result = updateStreak(
         {
-          currentStreak: 3,
           bestStreak: 20,
+          currentStreak: 3,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-11',
@@ -182,8 +182,8 @@ describe('Streak Tracking System', () => {
 
     it('should maintain best streak after reset', () => {
       let streakData = {
-        currentStreak: 10,
         bestStreak: 10,
+        currentStreak: 10,
         lastCompletedDate: '2025-01-10',
       };
 
@@ -207,8 +207,8 @@ describe('Streak Tracking System', () => {
     it('should clear lastCompletedDate when uncompleting the last completion', () => {
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 10,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-10',
@@ -223,8 +223,8 @@ describe('Streak Tracking System', () => {
     it('should not change streak when uncompleting non-last date', () => {
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 10,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-15',
         },
         '2025-01-10', // Different date
@@ -241,8 +241,8 @@ describe('Streak Tracking System', () => {
     it('should not update streak when completing past date before lastCompletedDate', () => {
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 10,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-15',
         },
         '2025-01-10', // Earlier date
@@ -333,8 +333,8 @@ describe('Streak Tracking System', () => {
 
       const result = updateStreak(
         {
-          currentStreak: 999,
           bestStreak: 1000,
+          currentStreak: 999,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-11',
@@ -354,8 +354,8 @@ describe('Streak Tracking System', () => {
       // Dates with different times should be treated as same day
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 5,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-10',
         },
         '2025-01-10', // Same date, different time
@@ -368,8 +368,8 @@ describe('Streak Tracking System', () => {
     it('should handle month boundaries correctly', () => {
       const result = updateStreak(
         {
-          currentStreak: 5,
           bestStreak: 5,
+          currentStreak: 5,
           lastCompletedDate: '2025-01-31',
         },
         '2025-02-01', // Next day across month boundary
@@ -383,8 +383,8 @@ describe('Streak Tracking System', () => {
     it('should handle year boundaries correctly', () => {
       const result = updateStreak(
         {
-          currentStreak: 10,
           bestStreak: 10,
+          currentStreak: 10,
           lastCompletedDate: '2024-12-31',
         },
         '2025-01-01', // Next day across year boundary
@@ -398,8 +398,8 @@ describe('Streak Tracking System', () => {
     it('should handle leap year correctly', () => {
       const result = updateStreak(
         {
-          currentStreak: 2,
           bestStreak: 2,
+          currentStreak: 2,
           lastCompletedDate: '2024-02-28',
         },
         '2024-02-29', // Leap day

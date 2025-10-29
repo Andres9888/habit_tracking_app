@@ -25,7 +25,7 @@ Provide an intuitive modal interface for creating and editing habits with custom
 ## Success Metrics
 
 - Habit creation takes <60 seconds
-- >90% of users customize color/emoji
+- > 90% of users customize color/emoji
 - 0 form validation errors in production
 - Edit mode preserves all habit data
 

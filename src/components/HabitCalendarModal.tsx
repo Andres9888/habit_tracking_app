@@ -72,7 +72,7 @@ export default function HabitCalendarModal({
   // Calculate stats
   const habitTracking = tracking
     .filter((t) => t.habitId === habit._id)
-    .map((t) => ({ date: t.date, completed: t.completed }));
+    .map((t) => ({ completed: t.completed, date: t.date }));
 
   const bestStreak = calculateBestStreak(habitTracking);
   const completionPercentage = calculateCompletionPercentage(
@@ -84,11 +84,7 @@ export default function HabitCalendarModal({
   const activityTracking = tracking.filter((t) => t.habitId === habit._id);
 
   return (
-    <Modal
-      animationType='slide'
-      visible={visible}
-      onRequestClose={onClose}
-    >
+    <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
       <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
         {/* Navigation Header - Matches Figma */}
         <View className='flex-row items-center justify-between px-4 pb-4 pt-2'>
@@ -111,12 +107,12 @@ export default function HabitCalendarModal({
           {/* Stats Card - Already matches Figma design */}
           <View className='mt-4'>
             <StatsCard
-              habitName={habit.name}
-              habitNotes={habit.notes}
-              emoji={emoji}
-              currentStreak={streak}
               bestStreak={bestStreak}
               completionPercentage={completionPercentage}
+              currentStreak={streak}
+              emoji={emoji}
+              habitName={habit.name}
+              habitNotes={habit.notes}
             />
           </View>
 
@@ -137,8 +133,8 @@ export default function HabitCalendarModal({
             ) : (
               <HeatmapCalendar
                 habitId={habit._id}
-                tracking={tracking}
                 monthsToShow={6}
+                tracking={tracking}
               />
             )}
           </View>
@@ -152,8 +148,8 @@ export default function HabitCalendarModal({
 
       {/* Habit Edit Screen */}
       <HabitEditScreen
-        visible={showEditScreen}
         habitId={habit._id}
+        visible={showEditScreen}
         onClose={handleCloseEdit}
       />
     </Modal>

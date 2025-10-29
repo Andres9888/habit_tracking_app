@@ -5,6 +5,7 @@ Complete design system implementation for the Habit Tracking app based on UX Spe
 ## Overview
 
 This theme system provides a consistent, accessible design foundation using:
+
 - **React Native Paper** for component theming
 - **Custom color palette** (Emerald green primary, Science blue secondary)
 - **iOS-native typography** (SF Pro font family)
@@ -75,10 +76,10 @@ const styles = StyleSheet.create({
 ### Primary (Brand Green)
 
 ```typescript
-colors.primary[400] // #34D399 - Lighter
-colors.primary[500] // #10B981 - Main brand color
-colors.primary[600] // #059669 - Pressed states
-colors.primary[700] // #047857 - High contrast text
+colors.primary[400]; // #34D399 - Lighter
+colors.primary[500]; // #10B981 - Main brand color
+colors.primary[600]; // #059669 - Pressed states
+colors.primary[700]; // #047857 - High contrast text
 ```
 
 **Usage:** Primary buttons, active states, completed habits, strength indicators
@@ -86,9 +87,9 @@ colors.primary[700] // #047857 - High contrast text
 ### Secondary (Science Blue)
 
 ```typescript
-colors.secondary[400] // #60A5FA - Lighter
-colors.secondary[500] // #3B82F6 - Main science theme
-colors.secondary[600] // #2563EB - Pressed states
+colors.secondary[400]; // #60A5FA - Lighter
+colors.secondary[500]; // #3B82F6 - Main science theme
+colors.secondary[600]; // #2563EB - Pressed states
 ```
 
 **Usage:** Analytics charts, info messages, science badges
@@ -96,21 +97,21 @@ colors.secondary[600] // #2563EB - Pressed states
 ### Semantic Colors
 
 ```typescript
-colors.success // #10B981 (matches primary)
-colors.warning[500] // #F59E0B - Habits at risk
-colors.warning[700] // #D97706 - Better contrast for text
-colors.error // #EF4444 - Errors, delete confirmations
-colors.info // #3B82F6 (matches secondary)
+colors.success; // #10B981 (matches primary)
+colors.warning[500]; // #F59E0B - Habits at risk
+colors.warning[700]; // #D97706 - Better contrast for text
+colors.error; // #EF4444 - Errors, delete confirmations
+colors.info; // #3B82F6 (matches secondary)
 ```
 
 ### Habit Strength Levels
 
 ```typescript
-colors.strength.starting   // #86EFAC - 0-20% 🌱
-colors.strength.building   // #10B981 - 20-40% 🌿
-colors.strength.developing // #059669 - 40-60% 🌳
-colors.strength.strong     // #047857 - 60-80% 💪
-colors.strength.automatic  // #065F46 - 80-100% ⚡
+colors.strength.starting; // #86EFAC - 0-20% 🌱
+colors.strength.building; // #10B981 - 20-40% 🌿
+colors.strength.developing; // #059669 - 40-60% 🌳
+colors.strength.strong; // #047857 - 60-80% 💪
+colors.strength.automatic; // #065F46 - 80-100% ⚡
 ```
 
 **Always pair with emoji for accessibility** (color + icon, never color alone)
@@ -133,16 +134,16 @@ colors.warning[500] on white: 2.3:1 - Use warning[700] for text
 ### Type Scale
 
 ```typescript
-typography.displayLarge   // 34pt, Bold - Onboarding headlines
-typography.heading1       // 28pt, Bold - Screen titles
-typography.heading2       // 22pt, Semibold - Section titles
-typography.heading3       // 17pt, Semibold - Card titles, habit names
-typography.body           // 17pt, Regular - Primary text
-typography.bodySmall      // 15pt, Regular - Secondary info
-typography.caption        // 13pt, Regular - Meta info, timestamps
-typography.button         // 17pt, Semibold - Button text
-typography.tabBar         // 10pt, Medium - Tab bar labels
-typography.monospace      // 17pt, Regular - Numbers, percentages
+typography.displayLarge; // 34pt, Bold - Onboarding headlines
+typography.heading1; // 28pt, Bold - Screen titles
+typography.heading2; // 22pt, Semibold - Section titles
+typography.heading3; // 17pt, Semibold - Card titles, habit names
+typography.body; // 17pt, Regular - Primary text
+typography.bodySmall; // 15pt, Regular - Secondary info
+typography.caption; // 13pt, Regular - Meta info, timestamps
+typography.button; // 17pt, Semibold - Button text
+typography.tabBar; // 10pt, Medium - Tab bar labels
+typography.monospace; // 17pt, Regular - Numbers, percentages
 ```
 
 ### Helper Function
@@ -163,26 +164,26 @@ Typography automatically scales with iOS Dynamic Type settings (XS to XXXL). No 
 ### 8pt Grid System
 
 ```typescript
-spacing.xs    // 4pt - Tight spacing, icon padding
-spacing.sm    // 8pt - Compact spacing within components
-spacing.md    // 12pt - Component internal spacing
-spacing.base  // 16pt - Standard spacing (most common)
-spacing.lg    // 24pt - Section spacing
-spacing.xl    // 32pt - Screen margins, major sections
-spacing['2xl'] // 48pt - Large vertical spacing
-spacing['3xl'] // 64pt - Page sections
+spacing.xs; // 4pt - Tight spacing, icon padding
+spacing.sm; // 8pt - Compact spacing within components
+spacing.md; // 12pt - Component internal spacing
+spacing.base; // 16pt - Standard spacing (most common)
+spacing.lg; // 24pt - Section spacing
+spacing.xl; // 32pt - Screen margins, major sections
+spacing['2xl']; // 48pt - Large vertical spacing
+spacing['3xl']; // 64pt - Page sections
 ```
 
 ### Component-Specific Spacing
 
 ```typescript
-componentSpacing.card.padding          // 16pt all sides
-componentSpacing.card.marginVertical   // 8pt vertical
-componentSpacing.listItem.height       // 72pt minimum (thumb tap)
-componentSpacing.button.height         // 44pt (Apple HIG minimum)
-componentSpacing.input.height          // 44pt (consistent with buttons)
-componentSpacing.modal.padding         // 24pt all sides
-componentSpacing.tabBar.height         // 49pt + safe area
+componentSpacing.card.padding; // 16pt all sides
+componentSpacing.card.marginVertical; // 8pt vertical
+componentSpacing.listItem.height; // 72pt minimum (thumb tap)
+componentSpacing.button.height; // 44pt (Apple HIG minimum)
+componentSpacing.input.height; // 44pt (consistent with buttons)
+componentSpacing.modal.padding; // 24pt all sides
+componentSpacing.tabBar.height; // 49pt + safe area
 ```
 
 ### Helpers
@@ -202,23 +203,23 @@ const padding = createPadding(24, 16);
 ## Border Radius
 
 ```typescript
-borderRadius.small  // 8pt - Buttons, tags
-borderRadius.medium // 12pt - Cards, inputs
-borderRadius.large  // 16pt - Modals, sheets
-borderRadius.xl     // 20pt - Full screen modals (top corners only)
-borderRadius.full   // 9999 - Circular (50% for percentages)
+borderRadius.small; // 8pt - Buttons, tags
+borderRadius.medium; // 12pt - Cards, inputs
+borderRadius.large; // 16pt - Modals, sheets
+borderRadius.xl; // 20pt - Full screen modals (top corners only)
+borderRadius.full; // 9999 - Circular (50% for percentages)
 ```
 
 ## Shadows (iOS-style)
 
 ```typescript
-shadows.card // Subtle elevation for cards
+shadows.card; // Subtle elevation for cards
 // { shadowColor: '#000', shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.1, shadowRadius: 8 }
 
-shadows.modal // Medium elevation for modals
+shadows.modal; // Medium elevation for modals
 // { shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.12, shadowRadius: 16 }
 
-shadows.floatingActionButton // Higher elevation for FAB
+shadows.floatingActionButton; // Higher elevation for FAB
 // { shadowColor: '#000', shadowOffset: {width: 0, height: 6}, shadowOpacity: 0.15, shadowRadius: 12 }
 ```
 
@@ -315,6 +316,7 @@ function HabitCard({ title, strengthLevel }) {
 ### Dynamic Type Testing
 
 Test all text sizes from XS to XXXL:
+
 ```bash
 # iOS Settings → Accessibility → Display & Text Size → Larger Text
 # Move slider to XXXL and verify layouts don't clip/overflow
@@ -323,6 +325,7 @@ Test all text sizes from XS to XXXL:
 ### Color Contrast Testing
 
 Use online tools to verify WCAG 2.1 Level AA compliance:
+
 - [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - Minimum ratios: 4.5:1 (normal text), 3:1 (large text/UI)
 
@@ -331,9 +334,9 @@ Use online tools to verify WCAG 2.1 Level AA compliance:
 Theme includes dark mode colors (not yet implemented):
 
 ```typescript
-colors.dark.background // #111827
-colors.dark.surface    // #1F2937
-colors.dark.card       // #374151
+colors.dark.background; // #111827
+colors.dark.surface; // #1F2937
+colors.dark.card; // #374151
 ```
 
 To implement dark mode, create a separate `darkTheme` export and switch based on user preference or system settings.

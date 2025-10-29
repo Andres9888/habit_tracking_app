@@ -71,18 +71,21 @@
 ## Special Considerations
 
 ### Solo Developer Optimization
+
 - **Speed is priority** - Fast iteration and market validation critical
 - MVP-first approach with phased feature rollout
 - Focus on core differentiation: beautiful UX + science-backed features
 - Lean documentation - comprehensive but action-oriented
 
 ### Revenue Model Implications
+
 - Subscription requires high-value premium features
 - Strong onboarding to demonstrate value before paywall
 - Clear free vs. premium distinction
 - Retention features to reduce churn (streaks, progress, insights)
 
 ### Competitive Positioning
+
 - **vs Productive:** Match design quality, add science backing
 - **vs Atomic Habits:** Match science rigor, add superior UX
 - **vs Habitica:** Target mature users who want elegance over gamification
@@ -91,10 +94,12 @@
 ## Technical Preferences Captured
 
 ### Technology Stack
+
 - **Platform:** React Native (existing codebase)
 - **Current components:** CreateHabitModal, ColorPickerSheet, color picker integration
 
 ### Required Technical Capabilities
+
 - Push notifications (reminders optimized by behavioral science)
 - Analytics and insights (habit formation metrics)
 - Cross-device sync (cloud backend)
@@ -103,6 +108,7 @@
 - Local data persistence with cloud backup
 
 ### Architecture Priorities
+
 - **Performance:** Fast, responsive UI (reflects premium positioning)
 - **Offline-first:** Works without internet, syncs when available
 - **Scalability:** Cloud backend supporting growth

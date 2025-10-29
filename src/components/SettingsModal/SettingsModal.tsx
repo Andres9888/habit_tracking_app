@@ -27,7 +27,9 @@ interface SettingsModalProps {
   showCharacterScreen?: boolean;
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
-  onChangeShowHabitStrengthPercentage?: (value: boolean) => void | Promise<void>;
+  onChangeShowHabitStrengthPercentage?: (
+    value: boolean
+  ) => void | Promise<void>;
   showNotesStats?: boolean;
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
@@ -60,8 +62,7 @@ export default function SettingsModal({
     setHighContrastMode,
     useDyslexicFont,
     setUseDyslexicFont,
-  } =
-    useSettingsModalLogic({ onClose, visible });
+  } = useSettingsModalLogic({ onClose, visible });
 
   const [isDarkModeOptionsOpen, setIsDarkModeOptionsOpen] = useState(false);
 
@@ -72,8 +73,8 @@ export default function SettingsModal({
         card: '#111111',
         cardBorder: '#2f2f2f',
         headerText: '#ffffff',
-        mutedText: '#facc15',
         icon: '#facc15',
+        mutedText: '#facc15',
         selectionBackground: '#161616',
         selectionBorder: '#2f2f2f',
         versionText: '#facc15',
@@ -84,8 +85,8 @@ export default function SettingsModal({
         card: '#ffffff',
         cardBorder: '#f1f5f9',
         headerText: '#1a1a1a',
-        mutedText: '#8a8a8a',
         icon: '#1a1a1a',
+        mutedText: '#8a8a8a',
         selectionBackground: '#ffffff',
         selectionBorder: '#f1f5f9',
         versionText: '#6b7280',
@@ -98,14 +99,12 @@ export default function SettingsModal({
   }, [visible]);
 
   const darkModeLabels: Record<typeof darkModePreference, string> = {
-    system: 'Match System',
-    light: 'Light Mode',
     dark: 'Dark Mode',
+    light: 'Light Mode',
+    system: 'Match System',
   };
 
-  const handleSelectDarkMode = async (
-    value: typeof darkModePreference,
-  ) => {
+  const handleSelectDarkMode = async (value: typeof darkModePreference) => {
     await setDarkModePreference(value);
     setIsDarkModeOptionsOpen(false);
   };
@@ -114,31 +113,48 @@ export default function SettingsModal({
 
   if (view === 'archived') {
     return (
-      <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
-        <ArchivedHabitsModal onBack={() => setView('settings')} onClose={handleClose} />
+      <Modal
+        animationType='slide'
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <ArchivedHabitsModal
+          onBack={() => setView('settings')}
+          onClose={handleClose}
+        />
       </Modal>
     );
   }
 
   if (view === 'paused') {
     return (
-      <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
-        <PausedHabitsModal onBack={() => setView('settings')} onClose={handleClose} />
+      <Modal
+        animationType='slide'
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <PausedHabitsModal
+          onBack={() => setView('settings')}
+          onClose={handleClose}
+        />
       </Modal>
     );
   }
 
   return (
-    <Modal animationType="slide" visible={visible} onRequestClose={handleClose}>
+    <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
       <View
-        className="flex-1 bg-background"
+        className='flex-1 bg-background'
         style={{ backgroundColor: colors.background }}
       >
         {/* Header with status bar simulation */}
-        <View className="bg-background px-4 pb-4 pt-12" style={{ backgroundColor: colors.background }}>
-          <View className="mb-4 flex-row items-center justify-between">
+        <View
+          className='bg-background px-4 pb-4 pt-12'
+          style={{ backgroundColor: colors.background }}
+        >
+          <View className='mb-4 flex-row items-center justify-between'>
             <Text
-              className="text-[20px] font-bold leading-[28px] text-foreground"
+              className='text-[20px] font-bold leading-[28px] text-foreground'
               style={{ color: colors.headerText }}
             >
               {format(new Date(), 'H:mm')}
@@ -146,52 +162,50 @@ export default function SettingsModal({
           </View>
 
           {/* Settings Title */}
-          <View className="flex-row items-center justify-between">
+          <View className='flex-row items-center justify-between'>
             <TouchableOpacity
+              accessibilityLabel='Back'
+              accessibilityRole='button'
+              className='size-10 items-center justify-center rounded-full'
               onPress={handleClose}
-              className="size-10 items-center justify-center rounded-full"
-              accessibilityRole="button"
-              accessibilityLabel="Back"
             >
-              <ChevronLeft size={28} color={colors.icon} />
+              <ChevronLeft color={colors.icon} size={28} />
             </TouchableOpacity>
             <Text
-              className="text-[24px] font-bold leading-[32px] text-foreground"
+              className='text-[24px] font-bold leading-[32px] text-foreground'
               style={{ color: colors.headerText }}
             >
               Settings
             </Text>
-            <View className="size-10" />
+            <View className='size-10' />
           </View>
         </View>
 
         <ScrollView
-          className="flex-1 px-4"
+          className='flex-1 px-4'
           showsVerticalScrollIndicator={false}
           style={{ backgroundColor: colors.background }}
         >
-          <View className="gap-6 pb-8">
+          <View className='gap-6 pb-8'>
             {/* Visual Preferences */}
             <SettingsSection
-              title="Visual Preferences"
               highContrastMode={isHighContrastActive}
+              title='Visual Preferences'
             >
               <SettingsRow
-                icon={<Moon size={16} color="#f97316" />}
-                iconBackgroundColor="#fed7aa"
-                label="Dark Mode"
-                type="selection"
-                value={darkModeLabels[darkModePreference]}
-                onPress={() =>
-                  setIsDarkModeOptionsOpen((prev) => !prev)
-                }
-                showBorder={!isDarkModeOptionsOpen}
                 highContrastMode={isHighContrastActive}
+                icon={<Moon color='#f97316' size={16} />}
+                iconBackgroundColor='#fed7aa'
+                label='Dark Mode'
+                showBorder={!isDarkModeOptionsOpen}
+                type='selection'
+                value={darkModeLabels[darkModePreference]}
+                onPress={() => setIsDarkModeOptionsOpen((prev) => !prev)}
               />
               {isDarkModeOptionsOpen && (
-                <View className="px-4 pt-3">
+                <View className='px-4 pt-3'>
                   <View
-                    className="rounded-2xl border bg-white shadow-sm"
+                    className='rounded-2xl border bg-white shadow-sm'
                     style={{
                       backgroundColor: colors.selectionBackground,
                       borderColor: colors.selectionBorder,
@@ -199,9 +213,9 @@ export default function SettingsModal({
                   >
                     {(
                       [
-                        { value: 'system', label: 'Match System' },
-                        { value: 'light', label: 'Light Mode' },
-                        { value: 'dark', label: 'Dark Mode' },
+                        { label: 'Match System', value: 'system' },
+                        { label: 'Light Mode', value: 'light' },
+                        { label: 'Dark Mode', value: 'dark' },
                       ] as const
                     ).map(({ value, label }, index, array) => (
                       <TouchableOpacity
@@ -212,28 +226,28 @@ export default function SettingsModal({
                             ? 'border-b border-gray-100'
                             : ''
                         }`}
-                        onPress={() => handleSelectDarkMode(value)}
                         style={{
                           borderColor:
                             index < array.length - 1
                               ? colors.selectionBorder
                               : undefined,
                         }}
+                        onPress={() => handleSelectDarkMode(value)}
                       >
                         <Text
-                          className="text-[15px] font-medium"
+                          className='text-[15px] font-medium'
                           style={{ color: colors.headerText }}
                         >
                           {label}
                         </Text>
                         {darkModePreference === value && (
                           <View
-                            className="rounded-full p-1"
+                            className='rounded-full p-1'
                             style={{ backgroundColor: colors.accent }}
                           >
                             <Check
-                              size={14}
                               color={isHighContrastActive ? '#000000' : '#fff'}
+                              size={14}
                             />
                           </View>
                         )}
@@ -243,117 +257,117 @@ export default function SettingsModal({
                 </View>
               )}
               <SettingsRow
-                icon={<Smartphone size={16} color="#3b82f6" />}
-                iconBackgroundColor="#bfdbfe"
-                label="App Icon"
-                type="selection"
-                value="Default"
+                highContrastMode={isHighContrastActive}
+                icon={<Smartphone color='#3b82f6' size={16} />}
+                iconBackgroundColor='#bfdbfe'
+                label='App Icon'
+                showBorder={false}
+                type='selection'
+                value='Default'
                 onPress={() => {
                   // TODO: Navigate to app icon selector
                   console.log('Navigate to app icon selector');
                 }}
-                showBorder={false}
-                highContrastMode={isHighContrastActive}
               />
             </SettingsSection>
             {/* Habit Management */}
             <SettingsSection
-              title="Habit Management"
               highContrastMode={isHighContrastActive}
+              title='Habit Management'
             >
               <SettingsRow
-                icon={<BookOpen size={16} color="#8b5cf6" />}
-                iconBackgroundColor="#ddd6fe"
-                label="Paused Habits"
-                type="navigation"
-                onPress={() => setView('paused')}
-                showBorder={true}
+                showBorder
                 highContrastMode={isHighContrastActive}
+                icon={<BookOpen color='#8b5cf6' size={16} />}
+                iconBackgroundColor='#ddd6fe'
+                label='Paused Habits'
+                type='navigation'
+                onPress={() => setView('paused')}
               />
               <SettingsRow
-                icon={<BookOpen size={16} color="#64748b" />}
-                iconBackgroundColor="#e2e8f0"
-                label="Archived Habits"
-                type="navigation"
-                onPress={() => setView('archived')}
-                showBorder={false}
                 highContrastMode={isHighContrastActive}
+                icon={<BookOpen color='#64748b' size={16} />}
+                iconBackgroundColor='#e2e8f0'
+                label='Archived Habits'
+                showBorder={false}
+                type='navigation'
+                onPress={() => setView('archived')}
               />
             </SettingsSection>
 
             {/* Notifications */}
             <SettingsSection
-              title="Notifications"
               highContrastMode={isHighContrastActive}
+              title='Notifications'
             >
               <SettingsRow
-                icon={<Bell size={16} color="#eab308" />}
-                iconBackgroundColor="#fef08a"
-                label="Manage Reminders"
-                type="navigation"
+                highContrastMode={isHighContrastActive}
+                icon={<Bell color='#eab308' size={16} />}
+                iconBackgroundColor='#fef08a'
+                label='Manage Reminders'
+                showBorder={false}
+                type='navigation'
                 onPress={() => {
                   // TODO: Navigate to reminders management
                   console.log('Navigate to reminders management');
                 }}
-                showBorder={false}
-                highContrastMode={isHighContrastActive}
               />
             </SettingsSection>
 
             {/* Diagnostics */}
             <SettingsSection
-              title="Diagnostics"
               highContrastMode={isHighContrastActive}
+              title='Diagnostics'
             >
               <SettingsRow
-                icon={<Zap size={16} color="#22c55e" />}
-                iconBackgroundColor="#bbf7d0"
-                label="Haptic Test"
-                type="navigation"
+                highContrastMode={isHighContrastActive}
+                icon={<Zap color='#22c55e' size={16} />}
+                iconBackgroundColor='#bbf7d0'
+                label='Haptic Test'
+                showBorder={false}
+                type='navigation'
                 onPress={() => {
                   onOpenHapticTest?.();
                 }}
-                showBorder={false}
-                highContrastMode={isHighContrastActive}
               />
             </SettingsSection>
 
             {/* Support */}
             <SettingsSection
-              title="Support"
               highContrastMode={isHighContrastActive}
+              title='Support'
             >
               <SettingsRow
-                icon={<HelpCircle size={16} color="#6b7280" />}
-                iconBackgroundColor="#e5e7eb"
-                label="Help & FAQ"
-                type="navigation"
+                showBorder
+                highContrastMode={isHighContrastActive}
+                icon={<HelpCircle color='#6b7280' size={16} />}
+                iconBackgroundColor='#e5e7eb'
+                label='Help & FAQ'
+                type='navigation'
                 onPress={() => {
                   // TODO: Navigate to help & FAQ
                   console.log('Navigate to help & FAQ');
                 }}
-                showBorder={true}
-                highContrastMode={isHighContrastActive}
               />
               <SettingsRow
-                icon={<Send size={16} color="#6b7280" />}
-                iconBackgroundColor="#e5e7eb"
-                label="Contact Us"
-                type="navigation"
+                highContrastMode={isHighContrastActive}
+                icon={<Send color='#6b7280' size={16} />}
+                iconBackgroundColor='#e5e7eb'
+                label='Contact Us'
+                showBorder={false}
+                type='navigation'
                 onPress={() => {
                   // TODO: Navigate to contact form
                   console.log('Navigate to contact form');
                 }}
-                showBorder={false}
-                highContrastMode={isHighContrastActive}
               />
             </SettingsSection>
           </View>
 
           {/* Footer */}
-          <View className="items-center pb-8 pt-4">
+          <View className='items-center pb-8 pt-4'>
             <Text
-              className="text-center text-[14px] leading-[20px]"
+              className='text-center text-[14px] leading-[20px]'
               style={{ color: colors.versionText }}
             >
               Habit Tracker v1.0.0

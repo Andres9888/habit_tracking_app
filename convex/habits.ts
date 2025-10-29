@@ -8,29 +8,38 @@ export const create = mutation({
     name: v.string(),
     notes: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
-    reminderTime: v.optional(v.string()),
     reminderSound: v.optional(v.string()),
+    reminderTime: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Get all existing habits to determine next order value
     const allHabits = await ctx.db.query('habits').collect();
-    const maxOrder = allHabits.reduce(
-      (max, habit) => Math.max(max, habit.order ?? -1),
-      -1
-    );
+    let maxOrder = -1;
+    for (const habit of allHabits) {
+      const order = habit.order ?? -1;
+      if (order > maxOrder) {
+        maxOrder = order;
+      }
+    }
 
     return await ctx.db.insert('habits', {
+      bestStreak: 0,
       createdAt: Date.now(),
-      name: args.name,
-      notes: args.notes,
-      order: maxOrder + 1,
-      remindersEnabled: args.remindersEnabled,
-      reminderTime: args.reminderTime,
-      reminderSound: args.reminderSound,
       // Initialize streak tracking fields (Story 1.3)
       currentStreak: 0,
-      bestStreak: 0,
+
       lastCompletedDate: undefined,
+
+      name: args.name,
+
+      notes: args.notes,
+
+      order: maxOrder + 1,
+
+      remindersEnabled: args.remindersEnabled,
+
+      reminderSound: args.reminderSound,
+      reminderTime: args.reminderTime,
     });
   },
   returns: v.id('habits'),
@@ -52,19 +61,19 @@ export const updateNotes = mutation({
 
 export const update = mutation({
   args: {
+    daysOfWeek: v.optional(v.array(v.number())),
+    frequency: v.optional(v.string()),
+    goalDuration: v.optional(v.number()),
     habitId: v.id('habits'),
-    name: v.optional(v.string()),
-    notes: v.optional(v.string()),
+    goalUnit: v.optional(v.string()),
     icon: v.optional(v.string()),
     iconColor: v.optional(v.string()),
-    frequency: v.optional(v.string()),
-    daysOfWeek: v.optional(v.array(v.number())),
+    name: v.optional(v.string()),
+    notes: v.optional(v.string()),
     preferredTime: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
-    reminderTime: v.optional(v.string()),
     reminderSound: v.optional(v.string()),
-    goalDuration: v.optional(v.number()),
-    goalUnit: v.optional(v.string()),
+    reminderTime: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { habitId, ...updates } = args;
@@ -115,10 +124,13 @@ export const unarchive = mutation({
       .query('habits')
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
-    const maxOrder = activeHabits.reduce(
-      (max, h) => Math.max(max, h.order ?? -1),
-      -1
-    );
+    let maxOrder = -1;
+    for (const habit of activeHabits) {
+      const order = habit.order ?? -1;
+      if (order > maxOrder) {
+        maxOrder = order;
+      }
+    }
 
     await ctx.db.patch(args.habitId, {
       archived: false,
@@ -143,18 +155,19 @@ export const pause = mutation({
 
     // Store pause metadata
     await ctx.db.patch(args.habitId, {
+      accessibilityAtPause: habit.accessibility,
       paused: true,
+
       pausedAt: Date.now(),
       // Preserve strength values
       strengthAtPause: habit.strength,
-      accessibilityAtPause: habit.accessibility,
     });
 
-    return { success: true, habitId: args.habitId };
+    return { habitId: args.habitId, success: true };
   },
   returns: v.object({
-    success: v.boolean(),
     habitId: v.id('habits'),
+    success: v.boolean(),
   }),
 });
 
@@ -174,11 +187,11 @@ export const resume = mutation({
       // Strength values are preserved, just unpause
     });
 
-    return { success: true, habitId: args.habitId };
+    return { habitId: args.habitId, success: true };
   },
   returns: v.object({
-    success: v.boolean(),
     habitId: v.id('habits'),
+    success: v.boolean(),
   }),
 });
 
@@ -290,10 +303,13 @@ export const restore = mutation({
   handler: async (ctx, args) => {
     // Get all existing habits to determine next order value
     const allHabits = await ctx.db.query('habits').collect();
-    const maxOrder = allHabits.reduce(
-      (max, habit) => Math.max(max, habit.order ?? -1),
-      -1
-    );
+    let maxOrder = -1;
+    for (const habit of allHabits) {
+      const order = habit.order ?? -1;
+      if (order > maxOrder) {
+        maxOrder = order;
+      }
+    }
 
     // Recreate the habit with proper order
     const habitId = await ctx.db.insert('habits', {
@@ -325,42 +341,42 @@ export const get = query({
     v.object({
       _creationTime: v.number(),
       _id: v.id('habits'),
-      createdAt: v.number(),
-      name: v.string(),
-      notes: v.optional(v.string()),
-      order: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
-      strength: v.optional(v.number()),
-      strengthLevel: v.optional(v.string()),
-      strengthUpdatedAt: v.optional(v.number()),
-      tags: v.optional(v.array(v.string())),
-      userId: v.optional(v.string()),
-      currentStreak: v.optional(v.number()),
+      createdAt: v.number(),
       bestStreak: v.optional(v.number()),
-      lastCompletedDate: v.optional(v.string()),
+      currentStreak: v.optional(v.number()),
       consecutiveDays: v.optional(v.number()),
-      totalCompletions: v.optional(v.number()),
-      totalMisses: v.optional(v.number()),
+      name: v.string(),
       accessibility: v.optional(v.number()),
+      notes: v.optional(v.string()),
       accessibilityDecayParam: v.optional(v.number()),
+      order: v.optional(v.number()),
       accessibilityGainBehavior: v.optional(v.number()),
+      strength: v.optional(v.number()),
       accessibilityGainReminder: v.optional(v.number()),
+      strengthLevel: v.optional(v.string()),
       accessibilityUpdatedAt: v.optional(v.number()),
+      strengthUpdatedAt: v.optional(v.number()),
       habitDecayParam: v.optional(v.number()),
+      tags: v.optional(v.array(v.string())),
+      frequency: v.optional(v.string()),
+      userId: v.optional(v.string()),
+      daysOfWeek: v.optional(v.array(v.number())),
+      lastCompletedDate: v.optional(v.string()),
       habitGainParam: v.optional(v.number()),
-      lastPredictionAt: v.optional(v.number()),
-      predictedCompletionProb: v.optional(v.number()),
+      totalCompletions: v.optional(v.number()),
+      goalDuration: v.optional(v.number()),
+      totalMisses: v.optional(v.number()),
+      goalUnit: v.optional(v.string()),
       icon: v.optional(v.string()),
       iconColor: v.optional(v.string()),
-      frequency: v.optional(v.string()),
-      daysOfWeek: v.optional(v.array(v.number())),
+      lastPredictionAt: v.optional(v.number()),
+      predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
       remindersEnabled: v.optional(v.boolean()),
-      reminderTime: v.optional(v.string()),
       reminderSound: v.optional(v.string()),
-      goalDuration: v.optional(v.number()),
-      goalUnit: v.optional(v.string()),
+      reminderTime: v.optional(v.string()),
     })
   ),
 });
@@ -373,10 +389,7 @@ export const list = query({
       .filter((q) =>
         q.and(
           q.neq(q.field('archived'), true),
-          q.or(
-            q.eq(q.field('paused'), undefined),
-            q.eq(q.field('paused'), false)
-          )
+          q.or(q.eq(q.field('paused')), q.eq(q.field('paused'), false))
         )
       )
       .collect();
@@ -403,11 +416,10 @@ export const list = query({
       accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
-      currentStreak: v.optional(v.number()),
       bestStreak: v.optional(v.number()),
-      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
+      currentStreak: v.optional(v.number()),
       daysOfWeek: v.optional(v.array(v.number())),
       frequency: v.optional(v.string()),
       goalDuration: v.optional(v.number()),
@@ -416,15 +428,16 @@ export const list = query({
       habitGainParam: v.optional(v.number()),
       icon: v.optional(v.string()),
       iconColor: v.optional(v.string()),
+      lastCompletedDate: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
       predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
       reminderSound: v.optional(v.string()),
       reminderTime: v.optional(v.string()),
-      remindersEnabled: v.optional(v.boolean()),
       strength: v.optional(v.number()),
       strengthLevel: v.optional(v.string()),
       strengthUpdatedAt: v.optional(v.number()),
@@ -455,11 +468,10 @@ export const listArchived = query({
       accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
-      currentStreak: v.optional(v.number()),
       bestStreak: v.optional(v.number()),
-      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
+      currentStreak: v.optional(v.number()),
       daysOfWeek: v.optional(v.array(v.number())),
       frequency: v.optional(v.string()),
       goalDuration: v.optional(v.number()),
@@ -468,15 +480,16 @@ export const listArchived = query({
       habitGainParam: v.optional(v.number()),
       icon: v.optional(v.string()),
       iconColor: v.optional(v.string()),
+      lastCompletedDate: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
       order: v.optional(v.number()),
       predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
       reminderSound: v.optional(v.string()),
       reminderTime: v.optional(v.string()),
-      remindersEnabled: v.optional(v.boolean()),
       strength: v.optional(v.number()),
       strengthLevel: v.optional(v.string()),
       strengthUpdatedAt: v.optional(v.number()),
@@ -508,11 +521,10 @@ export const listPaused = query({
       accessibilityUpdatedAt: v.optional(v.number()),
       archived: v.optional(v.boolean()),
       archivedAt: v.optional(v.number()),
-      currentStreak: v.optional(v.number()),
       bestStreak: v.optional(v.number()),
-      lastCompletedDate: v.optional(v.string()),
       consecutiveDays: v.optional(v.number()),
       createdAt: v.number(),
+      currentStreak: v.optional(v.number()),
       daysOfWeek: v.optional(v.array(v.number())),
       frequency: v.optional(v.string()),
       goalDuration: v.optional(v.number()),
@@ -520,6 +532,8 @@ export const listPaused = query({
       habitDecayParam: v.optional(v.number()),
       habitGainParam: v.optional(v.number()),
       icon: v.optional(v.string()),
+      accessibilityAtPause: v.optional(v.number()),
+      lastCompletedDate: v.optional(v.string()),
       iconColor: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
@@ -527,15 +541,14 @@ export const listPaused = query({
       order: v.optional(v.number()),
       paused: v.optional(v.boolean()),
       pausedAt: v.optional(v.number()),
-      resumedAt: v.optional(v.number()),
-      strengthAtPause: v.optional(v.number()),
-      accessibilityAtPause: v.optional(v.number()),
       predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
+      remindersEnabled: v.optional(v.boolean()),
       reminderSound: v.optional(v.string()),
       reminderTime: v.optional(v.string()),
-      remindersEnabled: v.optional(v.boolean()),
+      resumedAt: v.optional(v.number()),
       strength: v.optional(v.number()),
+      strengthAtPause: v.optional(v.number()),
       strengthLevel: v.optional(v.string()),
       strengthUpdatedAt: v.optional(v.number()),
       tags: v.optional(v.array(v.string())),
@@ -608,8 +621,8 @@ export const toggleHabit = mutation({
       // Calculate updated streak (Story 1.3)
       const streakData = updateStreak(
         {
-          currentStreak: habit.currentStreak,
           bestStreak: habit.bestStreak,
+          currentStreak: habit.currentStreak,
           lastCompletedDate: habit.lastCompletedDate,
         },
         args.date,
@@ -619,25 +632,25 @@ export const toggleHabit = mutation({
       console.log('🔧 Habit Strength Update (replay):', {
         baseline: (snapshot.baseline * 100).toFixed(1) + '%',
         behaviorPerformed: newCompletedStatus,
+        bestStreak: streakData.bestStreak,
         change: ((snapshot.strength - previousStrength) * 100).toFixed(1) + '%',
         compliance: (snapshot.compliance * 100).toFixed(1) + '%',
+        currentStreak: streakData.currentStreak,
         habitName: habit.name,
         newStrength: (snapshot.strength * 100).toFixed(1) + '%',
         previousStrength: (previousStrength * 100).toFixed(1) + '%',
         strengthLevel: snapshot.strengthLevel,
         successes: snapshot.complianceSuccesses,
         windowDays: snapshot.complianceDaysConsidered,
-        currentStreak: streakData.currentStreak,
-        bestStreak: streakData.bestStreak,
       });
 
       await ctx.db.patch(args.habitId, {
+        bestStreak: streakData.bestStreak,
+        currentStreak: streakData.currentStreak,
+        lastCompletedDate: streakData.lastCompletedDate,
         strength: snapshot.strength,
         strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
-        currentStreak: streakData.currentStreak,
-        bestStreak: streakData.bestStreak,
-        lastCompletedDate: streakData.lastCompletedDate,
       });
     }
 
@@ -654,7 +667,7 @@ export const getTracking = query({
     // Optimize by querying a single date range then filtering to requested dates
     const sortedDates = [...args.dates].sort();
     const startDate = sortedDates[0];
-    const endDate = sortedDates[sortedDates.length - 1];
+    const endDate = sortedDates.at(-1);
 
     const range = await ctx.db
       .query('tracking')

@@ -38,16 +38,19 @@
 ## Technical Notes
 
 **Implementation:**
+
 - ✅ Reuse existing `generateHabitStrengthSnapshot()` from convex/habitStrength.ts
 - ✅ Validation: Unit tests comparing output to Lally et al. curve expectations
 - ✅ Performance: Cache calculations, only recompute on new tracking data
 - ✅ Documentation: Inline comments cite research papers (Zhang 2021, Lally 2010)
 
 **Key Files:**
+
 - `convex/habitStrength.ts` - Core algorithm implementation
 - `convex/__tests__/habitStrength.test.ts` - Comprehensive test suite
 
 **Algorithm Details:**
+
 ```typescript
 // Baseline: Logistic curve normalized to [0, 1]
 baseline = 1 / (1 + exp(-k × (days - midpoint)))
@@ -64,6 +67,7 @@ strength = baseline × compliance × 100
 ## Testing Strategy
 
 **Unit Tests:** ✅ COMPLETE
+
 - Baseline calculation accuracy
 - Compliance calculation with various success rates
 - Strength level categorization
@@ -71,11 +75,13 @@ strength = baseline × compliance × 100
 - Performance benchmarks (<100ms)
 
 **Integration Tests:** ✅ COMPLETE
+
 - Full calculation pipeline
 - Database persistence
 - Concurrent calculations
 
 **Validation Tests:** ✅ COMPLETE
+
 - Day 7: ~22% with perfect compliance
 - Day 30: ~50% with perfect compliance
 - Day 90: 100% with perfect compliance

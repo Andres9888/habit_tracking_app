@@ -38,10 +38,10 @@ export default function HeatmapCalendar({
   // Get days grouped by week day (0 = Sunday, 1 = Monday, etc.)
   const getDaysByWeekDay = (days: Date[]) => {
     const byWeekDay: Date[][] = Array.from({ length: 7 }, () => []);
-    days.forEach((day) => {
+    for (const day of days) {
       const weekDay = getDay(day);
       byWeekDay[weekDay].push(day);
-    });
+    }
     return byWeekDay;
   };
 
@@ -76,8 +76,8 @@ export default function HeatmapCalendar({
               const monthStart = startOfMonth(month);
               const monthEnd = endOfMonth(month);
               const days = eachDayOfInterval({
-                start: monthStart,
                 end: monthEnd,
+                start: monthStart,
               });
               const byWeekDay = getDaysByWeekDay(days);
               const daysForThisWeekDay = byWeekDay[dayOfWeek] || [];
@@ -87,37 +87,39 @@ export default function HeatmapCalendar({
                   key={monthIndex}
                   className='flex-1 flex-row justify-center gap-1.5'
                 >
-                  {Array.from({ length: maxOccurrences }).map((_, slotIndex) => {
-                    const day = daysForThisWeekDay[slotIndex];
+                  {Array.from({ length: maxOccurrences }).map(
+                    (_, slotIndex) => {
+                      const day = daysForThisWeekDay[slotIndex];
 
-                    if (!day) {
-                      // Empty slot for alignment
+                      if (!day) {
+                        // Empty slot for alignment
+                        return (
+                          <View
+                            key={`empty-${monthIndex}-${slotIndex}`}
+                            className='h-1.5 w-1.5'
+                          />
+                        );
+                      }
+
+                      const dateString = format(day, 'yyyy-MM-dd');
+                      const isCompleted = completedDates.has(dateString);
+                      const isFuture = day > today;
+
                       return (
                         <View
-                          key={`empty-${monthIndex}-${slotIndex}`}
-                          className='h-1.5 w-1.5'
+                          key={dateString}
+                          className='h-1.5 w-1.5 rounded-full'
+                          style={{
+                            backgroundColor: isFuture
+                              ? '#e2e8f0'
+                              : isCompleted
+                                ? '#10b981'
+                                : '#cbd5e1',
+                          }}
                         />
                       );
                     }
-
-                    const dateString = format(day, 'yyyy-MM-dd');
-                    const isCompleted = completedDates.has(dateString);
-                    const isFuture = day > today;
-
-                    return (
-                      <View
-                        key={dateString}
-                        className='h-1.5 w-1.5 rounded-full'
-                        style={{
-                          backgroundColor: isFuture
-                            ? '#e2e8f0'
-                            : isCompleted
-                              ? '#10b981'
-                              : '#cbd5e1',
-                        }}
-                      />
-                    );
-                  })}
+                  )}
                 </View>
               );
             })}

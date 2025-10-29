@@ -58,26 +58,26 @@ interface PredictionInsightsProps {
  */
 function RiskBadge({ level, theme }: { level: RiskLevel; theme: any }) {
   const config = {
+    high: {
+      backgroundColor: theme.custom.colors.error[50],
+      icon: AlertTriangle,
+      iconColor: theme.custom.colors.error[600],
+      label: 'High Risk',
+      textColor: theme.custom.colors.error[700],
+    },
     low: {
-      icon: CheckCircle,
-      label: 'Low Risk',
       backgroundColor: theme.custom.colors.success[50],
-      textColor: theme.custom.colors.success[700],
+      icon: CheckCircle,
       iconColor: theme.custom.colors.success[600],
+      label: 'Low Risk',
+      textColor: theme.custom.colors.success[700],
     },
     medium: {
-      icon: Activity,
-      label: 'Moderate Risk',
       backgroundColor: theme.custom.colors.warning[50],
-      textColor: theme.custom.colors.warning[700],
+      icon: Activity,
       iconColor: theme.custom.colors.warning[600],
-    },
-    high: {
-      icon: AlertTriangle,
-      label: 'High Risk',
-      backgroundColor: theme.custom.colors.error[50],
-      textColor: theme.custom.colors.error[700],
-      iconColor: theme.custom.colors.error[600],
+      label: 'Moderate Risk',
+      textColor: theme.custom.colors.warning[700],
     },
   }[level];
 
@@ -93,7 +93,7 @@ function RiskBadge({ level, theme }: { level: RiskLevel; theme: any }) {
         },
       ]}
     >
-      <Icon size={16} color={config.iconColor} />
+      <Icon color={config.iconColor} size={16} />
       <Text
         style={[
           theme.custom.typography.caption,
@@ -119,20 +119,20 @@ function TrendIndicator({
   theme: any;
 }) {
   const config = {
-    improving: {
-      icon: TrendingUp,
-      label: 'Improving',
-      color: theme.custom.colors.success[600],
-    },
-    stable: {
-      icon: Activity,
-      label: 'Stable',
-      color: theme.custom.colors.gray[600],
-    },
     declining: {
+      color: theme.custom.colors.error[600],
       icon: TrendingDown,
       label: 'Declining',
-      color: theme.custom.colors.error[600],
+    },
+    improving: {
+      color: theme.custom.colors.success[600],
+      icon: TrendingUp,
+      label: 'Improving',
+    },
+    stable: {
+      color: theme.custom.colors.gray[600],
+      icon: Activity,
+      label: 'Stable',
     },
   }[trend];
 
@@ -140,7 +140,7 @@ function TrendIndicator({
 
   return (
     <View style={styles.trendIndicator}>
-      <Icon size={20} color={config.color} />
+      <Icon color={config.color} size={20} />
       <Text
         style={[
           theme.custom.typography.bodyMedium,
@@ -152,7 +152,10 @@ function TrendIndicator({
       <Text
         style={[
           theme.custom.typography.bodyMedium,
-          { color: config.color, fontFamily: theme.custom.fontFamilies.monospace },
+          {
+            color: config.color,
+            fontFamily: theme.custom.fontFamilies.monospace,
+          },
         ]}
       >
         {change > 0 ? '+' : ''}
@@ -202,7 +205,11 @@ export default function PredictionInsights({
       </View>
 
       {/* Trend Indicator */}
-      <TrendIndicator trend={data.trend} change={strengthChange} theme={theme} />
+      <TrendIndicator
+        change={strengthChange}
+        theme={theme}
+        trend={data.trend}
+      />
 
       {/* Confidence Level */}
       <View style={styles.confidenceContainer}>
@@ -227,9 +234,9 @@ export default function PredictionInsights({
             style={[
               styles.confidenceFill,
               {
-                width: `${data.confidence}%`,
                 backgroundColor: theme.custom.colors.primary[500],
                 borderRadius: theme.custom.borderRadius.small,
+                width: `${data.confidence}%`,
               },
             ]}
           />
@@ -254,15 +261,15 @@ export default function PredictionInsights({
             styles.warningBox,
             {
               backgroundColor: theme.custom.colors.error[50],
-              borderLeftWidth: 3,
               borderLeftColor: theme.custom.colors.error[500],
+              borderLeftWidth: 3,
               borderRadius: theme.custom.borderRadius.medium,
             },
           ]}
         >
           <AlertTriangle
-            size={20}
             color={theme.custom.colors.error[600]}
+            size={20}
             style={{ marginTop: 2 }}
           />
           <View style={{ flex: 1 }}>
@@ -280,8 +287,8 @@ export default function PredictionInsights({
                 { color: theme.custom.colors.error[600], marginTop: 4 },
               ]}
             >
-              This habit shows signs of weakening. Take action now to maintain your
-              progress.
+              This habit shows signs of weakening. Take action now to maintain
+              your progress.
             </Text>
           </View>
         </View>
@@ -293,7 +300,11 @@ export default function PredictionInsights({
           <Text
             style={[
               theme.custom.typography.bodyMedium,
-              { color: theme.custom.colors.gray[900], fontWeight: '600', marginBottom: 8 },
+              {
+                color: theme.custom.colors.gray[900],
+                fontWeight: '600',
+                marginBottom: 8,
+              },
             ]}
           >
             Suggested Actions
@@ -327,8 +338,8 @@ export default function PredictionInsights({
             { color: theme.custom.colors.gray[500], fontStyle: 'italic' },
           ]}
         >
-          Predictions are based on your recent tracking patterns and historical data.
-          Results may vary based on your consistency.
+          Predictions are based on your recent tracking patterns and historical
+          data. Results may vary based on your consistency.
         </Text>
       </View>
     </View>
@@ -336,57 +347,57 @@ export default function PredictionInsights({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-  },
-  predictionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  riskBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  trendIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  confidenceContainer: {
-    gap: 6,
-  },
-  confidenceBar: {
-    height: 8,
-    overflow: 'hidden',
-  },
-  confidenceFill: {
-    height: '100%',
-  },
-  warningBox: {
-    flexDirection: 'row',
-    gap: 12,
-    padding: 16,
-  },
-  suggestionsContainer: {
-    paddingTop: 8,
-  },
-  suggestionItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    marginBottom: 8,
-  },
   bulletPoint: {
     width: 6,
     height: 6,
     borderRadius: 3,
     marginTop: 6,
   },
+  confidenceBar: {
+    height: 8,
+    overflow: 'hidden',
+  },
+  confidenceContainer: {
+    gap: 6,
+  },
+  confidenceFill: {
+    height: '100%',
+  },
+  container: {
+    gap: 16,
+  },
   methodologyNote: {
     paddingTop: 8,
+  },
+  predictionHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  riskBadge: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  suggestionItem: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 8,
+  },
+  suggestionsContainer: {
+    paddingTop: 8,
+  },
+  trendIndicator: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  warningBox: {
+    flexDirection: 'row',
+    gap: 12,
+    padding: 16,
   },
 });

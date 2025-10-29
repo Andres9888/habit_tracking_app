@@ -16,11 +16,13 @@ Story 1.2 was initially marked as "Ready for Review" but daily standup identifie
 ## 🚨 Critical Fixes Required
 
 ### ✅ Phase 1: Fix Timezone Validation Bug (CRITICAL)
+
 **Priority:** 🔴 P0 - Blocks Production
 **Estimated Time:** 5 minutes
 **Location:** `convex/tracking.ts:38-45`
 
 #### Tasks:
+
 - [ ] Remove server-side date range validation logic (lines 38-45)
 - [ ] Add explanatory comment about client-side date handling
 - [ ] Verify format validation (YYYY-MM-DD regex) still intact
@@ -28,6 +30,7 @@ Story 1.2 was initially marked as "Ready for Review" but daily standup identifie
 - [ ] Document timezone handling in code comments
 
 #### Validation Steps:
+
 ```bash
 # Test case 1: User in PST at 11:59pm can check off habit
 date="2025-10-27"  # User's local date
@@ -41,25 +44,30 @@ habitId="nonexistent"  # Should fail with "Habit not found"
 ```
 
 #### Success Criteria:
+
 - [ ] Users in all timezones can check off habits at 11:59pm local time
 - [ ] Format validation still rejects invalid date strings
 - [ ] Habit existence validation still works
 - [ ] No new test failures introduced
 
 **Files to Modify:**
+
 - `convex/tracking.ts` (remove lines 38-45)
 
 **Files to Test:**
+
 - `convex/__tests__/tracking.test.ts` (verify existing tests still pass)
 
 ---
 
 ### ✅ Phase 2: Add Error Handling & Debounce (MEDIUM)
+
 **Priority:** 🟡 P1 - Quality Improvement
 **Estimated Time:** 15 minutes
 **Location:** `src/components/HabitCard.tsx:158-180`
 
 #### Tasks:
+
 - [ ] Add `isToggling` state to prevent rapid-fire toggles
 - [ ] Wrap mutation call in try/catch for error handling
 - [ ] Add debounce mechanism (300ms cooldown)
@@ -68,6 +76,7 @@ habitId="nonexistent"  # Should fail with "Habit not found"
 - [ ] Document error handling behavior in code comments
 
 #### Implementation Pattern:
+
 ```typescript
 // Add state at component level
 const [isToggling, setIsToggling] = useState(false);
@@ -103,6 +112,7 @@ const [isToggling, setIsToggling] = useState(false);
 ```
 
 #### Validation Steps:
+
 ```bash
 # Test case 1: Network error handling
 # Simulate network failure → verify UI doesn't break
@@ -115,6 +125,7 @@ const [isToggling, setIsToggling] = useState(false);
 ```
 
 #### Success Criteria:
+
 - [ ] Rapid toggles are debounced (300ms cooldown)
 - [ ] Network errors don't crash the UI
 - [ ] Console shows error messages for debugging
@@ -122,19 +133,23 @@ const [isToggling, setIsToggling] = useState(false);
 - [ ] No double-mutations from rapid taps
 
 **Files to Modify:**
+
 - `src/components/HabitCard.tsx` (add state + error handling)
 
 **Files to Test:**
+
 - `src/components/__tests__/HabitCard.toggle.test.tsx` (add error handling tests)
 
 ---
 
 ### ✅ Phase 3: Add Error Handling Test Cases (MEDIUM)
+
 **Priority:** 🟡 P1 - Test Coverage
 **Estimated Time:** 10 minutes
 **Location:** `src/components/__tests__/HabitCard.toggle.test.tsx`
 
 #### Tasks:
+
 - [ ] Test: Network error → mutation fails gracefully
 - [ ] Test: Deleted habit → error logged, UI stable
 - [ ] Test: Rapid toggles → debounced (only first executes)
@@ -142,6 +157,7 @@ const [isToggling, setIsToggling] = useState(false);
 - [ ] Test: Error resets isToggling flag after debounce period
 
 #### Test Cases to Add:
+
 ```typescript
 describe('HabitCard - Error Handling', () => {
   it('handles network errors gracefully', async () => {
@@ -176,14 +192,17 @@ describe('HabitCard - Error Handling', () => {
 ```
 
 #### Success Criteria:
+
 - [ ] All new error handling tests pass
 - [ ] Existing tests still pass (no regressions)
 - [ ] Test coverage for error scenarios ≥80%
 
 **Files to Modify:**
+
 - `src/components/__tests__/HabitCard.toggle.test.tsx` (add 5 new tests)
 
 **Files to Review:**
+
 - `convex/__tests__/tracking.test.ts` (ensure mutation error handling tested)
 
 ---
@@ -191,6 +210,7 @@ describe('HabitCard - Error Handling', () => {
 ## 📋 Post-Fix Checklist
 
 ### Code Quality Verification
+
 - [ ] Run full test suite: `npm test` or `npm run test:coverage`
 - [ ] Verify 100% of tests passing (or document known failures)
 - [ ] Run linter: `npm run lint` (0 errors)
@@ -199,6 +219,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] Verify no commented-out code left in files
 
 ### Documentation Updates
+
 - [ ] Update story-1.2-daily-checkoff.md with fix completion dates
 - [ ] Update Updated Definition of Done checkboxes
 - [ ] Mark critical issues as "✅ RESOLVED" in story
@@ -206,6 +227,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] Document timezone handling decision in technical notes
 
 ### Manual Testing Requirements
+
 - [ ] Test on physical iOS device (haptic feedback)
 - [ ] Test rapid toggles (debounce behavior)
 - [ ] Test at 11:59pm local time (timezone fix)
@@ -213,6 +235,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] Test with multiple timezones (if possible)
 
 ### Pre-Merge Requirements
+
 - [ ] Create PR: "fix(story-1.2): Fix timezone bug and add error handling"
 - [ ] PR description includes:
   - Explanation of timezone bug and fix
@@ -230,6 +253,7 @@ describe('HabitCard - Error Handling', () => {
 **Overall Progress:** 0/3 phases complete
 
 ### Phase Status:
+
 - [ ] Phase 1: Fix Timezone Bug (0/5 tasks)
 - [ ] Phase 2: Add Error Handling (0/6 tasks)
 - [ ] Phase 3: Add Test Cases (0/5 tasks)
@@ -243,6 +267,7 @@ describe('HabitCard - Error Handling', () => {
 ## 🎯 Definition of Done (Updated)
 
 ### Implementation Complete
+
 - [x] All 4 acceptance criteria met (from original story)
 - [x] toggleCompletion mutation created (original work)
 - [x] HabitCard tap handler modified (original work)
@@ -251,6 +276,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] **Error handling + debounce added (HabitCard.tsx:173)** ← NEW
 
 ### Testing Complete
+
 - [x] Unit tests passing (40/40 tracking tests - original)
 - [x] Integration tests created (21/28 passing - original)
 - [ ] **Error handling tests added (5 new test cases)** ← NEW
@@ -259,6 +285,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] All CI/CD pipeline checks passing
 
 ### Code Quality
+
 - [ ] PR created with comprehensive description
 - [ ] Code reviewed and approved
 - [ ] No linting errors
@@ -267,6 +294,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] Accessibility tested
 
 ### Deployment Gates
+
 - [ ] All CI checks passing
 - [ ] No merge conflicts
 - [ ] Merged to main
@@ -274,6 +302,7 @@ describe('HabitCard - Error Handling', () => {
 - [ ] Smoke tested
 
 ### Shippability
+
 **Status:** ✅ INDEPENDENTLY SHIPPABLE (after fixes complete)
 **Blockers:** 2 remaining (timezone bug, error handling)
 
@@ -287,6 +316,7 @@ describe('HabitCard - Error Handling', () => {
 **Target Resolution:** Same day
 
 **Key Insights:**
+
 1. Timezone handling in distributed systems is complex - always use client-provided dates for user actions
 2. Optimistic UI updates require robust error handling to maintain data consistency
 3. Debouncing is critical for gesture-based interactions to prevent race conditions

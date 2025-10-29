@@ -7,11 +7,13 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 ## What Was Implemented
 
 ### 1. **Convex Schema Updates** (`convex/schema.ts`)
+
 - Added `templates` table with fields: name, description, category, icon, iconColor, frequency, scientificReference
 - Added `templateUsage` table for analytics tracking
 - Indexed by category for efficient filtering
 
 ### 2. **Convex Functions** (`convex/templates.ts`)
+
 - `list()` - Query all templates or filter by category
 - `getById()` - Get single template
 - `seedTemplates()` - Populate database with 20 science-backed templates
@@ -22,6 +24,7 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 ### 3. **UI Components**
 
 #### **TemplateCard** (`src/components/TemplateCard.tsx`)
+
 - Displays template with icon, name, description
 - Shows scientific reference citation
 - Category badge and popularity indicator
@@ -29,6 +32,7 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 - Animated interactions with spring physics
 
 #### **TemplatesScreen** (`src/screens/TemplatesScreen.tsx`)
+
 - Category filtering (All, Morning, Health, Productivity, Mindfulness)
 - Horizontal scrolling category chips
 - FlatList of template cards
@@ -37,17 +41,20 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 - Empty states for no templates/no results
 
 #### **TabBar** (`src/components/TabBar.tsx`)
+
 - 3-tab navigation: Home, Templates, Settings
 - Active state indicators
 - Haptic feedback on tab switch
 - iOS-style design
 
 #### **AppNavigator** (`src/components/AppNavigator.tsx`)
+
 - Simple tab navigation wrapper
 - Switches between Home (habits) and Templates screens
 - Settings handled as modal
 
 ### 4. **App Integration** (`src/App.tsx`)
+
 - Wrapped existing home screen with AppNavigator
 - Added Templates tab to navigation
 - Modals rendered outside navigator for proper z-index
@@ -55,12 +62,14 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 ## Templates Included (20 Total)
 
 ### Morning Routine (4 templates)
+
 1. 5-Minute Meditation - Goyal et al. (2014)
 2. Morning Pages - Cameron (1992)
 3. Hydration First - Popkin et al. (2010)
 4. Sunrise Viewing - Huberman (2021)
 
 ### Health & Fitness (5 templates)
+
 5. 7-Minute Workout - Jordan et al. (2013) 🔥 Popular
 6. 10,000 Steps - Lee et al. (2019)
 7. Strength Training - Westcott (2012)
@@ -68,6 +77,7 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 9. No Added Sugar - Yang et al. (2014)
 
 ### Productivity (5 templates)
+
 10. Deep Work Session - Newport (2016) 🔥 Popular
 11. Pomodoro Technique - Cirillo (2006)
 12. MIT (Most Important Task) - Tracy (2007)
@@ -75,6 +85,7 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 14. Evening Planning - Baumeister (2011)
 
 ### Mindfulness (6 templates)
+
 15. Gratitude Journaling - Emmons & McCullough (2003) 🔥 Popular
 16. Breathwork Practice - Ma et al. (2017)
 17. Evening Reflection - Kolb (1984)
@@ -95,6 +106,7 @@ This will create the new `templates` and `templateUsage` tables.
 ### 2. Seed Template Data
 
 Option A: **Via Convex Dashboard** (Recommended)
+
 1. Go to your Convex dashboard: https://dashboard.convex.dev
 2. Navigate to your project
 3. Go to "Functions" tab
@@ -103,6 +115,7 @@ Option A: **Via Convex Dashboard** (Recommended)
 6. Verify 20 templates were created in the `templates` table
 
 Option B: **Via Code**
+
 ```typescript
 // In a React component or script
 import { useMutation } from 'convex/react';
@@ -125,6 +138,7 @@ await seedTemplates({});
 ## File Changes Summary
 
 ### New Files Created
+
 - `convex/templates.ts` - Template functions
 - `src/screens/TemplatesScreen.tsx` - Templates UI
 - `src/components/TemplateCard.tsx` - Template card component
@@ -132,10 +146,12 @@ await seedTemplates({});
 - `src/components/AppNavigator.tsx` - Navigation wrapper
 
 ### Modified Files
+
 - `convex/schema.ts` - Added templates and templateUsage tables
 - `src/App.tsx` - Integrated AppNavigator
 
 ### Existing Components Used
+
 - `src/components/Modal.tsx` - Preview modal
 - `src/components/Button.tsx` - Import buttons
 - `src/components/EmptyState.tsx` - Empty states
@@ -181,16 +197,19 @@ await seedTemplates({});
 ## Troubleshooting
 
 **No templates showing?**
+
 - Run `seedTemplates()` mutation in Convex dashboard
 - Check Convex logs for any errors
 - Verify schema deployed successfully
 
 **Import not working?**
+
 - Check Convex mutation logs
 - Verify habit creation permissions
 - Check browser console for errors
 
 **Tab navigation not working?**
+
 - Verify `AppNavigator` is wrapping the app
 - Check `TabBar` component is rendered
 - Verify gesture handler root view is present

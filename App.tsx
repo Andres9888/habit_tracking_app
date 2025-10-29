@@ -239,7 +239,13 @@ function HabitsApp() {
       <View style={{ flex: 1 }}>
         <View style={{ padding: 16, backgroundColor: theme.accent }}>
           <Pressable onPress={() => setShowHapticTest(false)}>
-            <Text style={{ color: theme.accentText, fontSize: 16, fontWeight: 'bold' }}>
+            <Text
+              style={{
+                color: theme.accentText,
+                fontSize: 16,
+                fontWeight: 'bold',
+              }}
+            >
               ← Back to App
             </Text>
           </Pressable>
@@ -297,7 +303,11 @@ function HabitsApp() {
                   onPress={() => setShowHapticTest(true)}
                   style={{ backgroundColor: '#ff6b6b' }}
                 >
-                  <Text style={{ color: '#fff', fontSize: 12, fontWeight: 'bold' }}>H</Text>
+                  <Text
+                    style={{ color: '#fff', fontSize: 12, fontWeight: 'bold' }}
+                  >
+                    H
+                  </Text>
                 </Pressable>
               )}
 
@@ -447,7 +457,10 @@ function HabitsApp() {
         />
       </ScrollView>
       {/* Centered Floating Action Button */}
-      <View pointerEvents='box-none' className='absolute bottom-8 left-0 right-0 items-center'>
+      <View
+        pointerEvents='box-none'
+        className='absolute bottom-8 left-0 right-0 items-center'
+      >
         <Pressable
           accessibilityHint={
             isAdding ? 'Close add habit form' : 'Open add habit form'

@@ -43,11 +43,11 @@ export const ChainConnector: React.FC = () => {
           elevation: 2,
           height: 24,
           justifyContent: 'center',
-          
-// Ensure icon appears above the line
-shadowColor: '#000', 
-          
-shadowOffset: { height: 1, width: 0 },
+
+          // Ensure icon appears above the line
+          shadowColor: '#000',
+
+          shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.1,
           shadowRadius: 2,
           width: 24,

@@ -17,6 +17,7 @@ npm start
 ```
 
 Then:
+
 - Press `w` for web
 - OR scan QR code for iOS/Android simulator
 - OR run on real device for full testing (haptics, share)
@@ -26,6 +27,7 @@ Then:
 ## ✅ **TEST 1: Templates Library** (5 min)
 
 ### What to Test
+
 The Templates Library should show 20 science-backed habit templates organized by category.
 
 ### Steps
@@ -70,12 +72,14 @@ The Templates Library should show 20 science-backed habit templates organized by
    - ✅ Shows 0% strength (Starting 🌱)
 
 ### Expected Results
+
 - ✅ All categories filter correctly
 - ✅ Import creates habit instantly
 - ✅ Habit appears in home list
 - ✅ Scientific citations visible
 
 ### Common Issues
+
 - **Templates not loading:** Check Convex is running, templates were seeded
 - **Import fails:** Check network connection, Convex mutations working
 
@@ -84,15 +88,18 @@ The Templates Library should show 20 science-backed habit templates organized by
 ## 🎉 **TEST 2: Milestone Celebrations** (10 min) ⭐ CRITICAL
 
 ### What to Test
+
 **This is the main fix!** Celebrations should now trigger automatically when habit strength crosses thresholds.
 
 ### Preparation
+
 You need a habit with ~18% strength to test the 20% milestone.
 
 **Option A: Use Existing Habit**
 If you have a habit with 15-19% strength, use it.
 
 **Option B: Create Test Habit**
+
 1. Create a new habit manually
 2. Complete it multiple times to build strength
 3. Check strength percentage in habit card
@@ -132,6 +139,7 @@ Open Convex dashboard and manually set a habit's strength to 0.18
    - 90%+ → ⚡ Automatic
 
 ### Expected Results
+
 - ✅ Modal appears automatically on strength increase
 - ✅ Confetti smooth and performant
 - ✅ Correct emoji for each level
@@ -139,6 +147,7 @@ Open Convex dashboard and manually set a habit's strength to 0.18
 - ✅ Backdrop dismisses modal
 
 ### Common Issues
+
 - **Modal doesn't appear:**
   - Check console for errors
   - Verify strength actually increased (check habit card)
@@ -151,6 +160,7 @@ Open Convex dashboard and manually set a habit's strength to 0.18
 ## 📱 **TEST 3: Share Card Generator** (5 min)
 
 ### What to Test
+
 From milestone celebration, user should be able to create and share beautiful achievement cards.
 
 ### Steps
@@ -194,12 +204,14 @@ From milestone celebration, user should be able to create and share beautiful ac
    - ✅ Image quality looks good (1080x1920)
 
 ### Expected Results
+
 - ✅ All 5 gradients work
 - ✅ Personal message displays
 - ✅ Platform formats change correctly
 - ✅ Share sheet works (device only)
 
 ### Common Issues
+
 - **Share doesn't work on simulator:** Expected - use real device
 - **Image quality low:** Check dimensions in console
 - **Can't type message:** Check text input focus
@@ -209,6 +221,7 @@ From milestone celebration, user should be able to create and share beautiful ac
 ## 📊 **TEST 4: Habit Detail with Advanced Stats** (5 min)
 
 ### What to Test
+
 Premium users should see unlocked charts and predictions. Free users should see upgrade prompts.
 
 ### Steps
@@ -246,12 +259,14 @@ Premium users should see unlocked charts and predictions. Free users should see 
      - ✅ Delete button
 
 ### Expected Results
+
 - ✅ Charts render correctly
 - ✅ Predictions show real data (from Phase 4)
 - ✅ Premium gating works
 - ✅ All action buttons visible
 
 ### Common Issues
+
 - **Charts show mock data:** Expected if Phase 4 backend not connected
 - **Predictions missing:** Check Phase 4 implementation
 - **Always locked:** Check `isPremium` value (line 513)
@@ -261,6 +276,7 @@ Premium users should see unlocked charts and predictions. Free users should see 
 ## ✏️ **TEST 5: Edit Modal** (5 min) ⭐ CRITICAL FIX
 
 ### What to Test
+
 **This was just fixed!** Edit button should open modal with pre-filled habit data.
 
 ### Steps
@@ -307,12 +323,14 @@ Premium users should see unlocked charts and predictions. Free users should see 
    - ✅ Modal shows updated data
 
 ### Expected Results
+
 - ✅ Modal opens with current data
 - ✅ All fields editable
 - ✅ Changes save correctly
 - ✅ Updates persist
 
 ### Common Issues
+
 - **Modal empty:** Check `habitToEdit` prop being passed
 - **Changes don't save:** Check `updateHabit` mutation
 - **Name has emoji prefix:** Check emoji parsing logic
@@ -322,6 +340,7 @@ Premium users should see unlocked charts and predictions. Free users should see 
 ## 🗑️ **TEST 6: Delete Functionality** (5 min) ⭐ CRITICAL FIX
 
 ### What to Test
+
 **This was just fixed!** Delete button should work with platform-specific confirmation.
 
 ### Steps
@@ -363,6 +382,7 @@ Premium users should see unlocked charts and predictions. Free users should see 
    - ✅ Habit still gone (not just hidden)
 
 ### Expected Results
+
 - ✅ Platform-specific confirmation
 - ✅ Cancel works (no deletion)
 - ✅ Confirm deletes habit + data
@@ -370,6 +390,7 @@ Premium users should see unlocked charts and predictions. Free users should see 
 - ✅ Deletion is permanent
 
 ### Common Issues
+
 - **No confirmation:** Check Alert import and handler
 - **Habit not deleted:** Check `removeHabit` mutation
 - **Detail screen doesn't close:** Check state reset in handler
@@ -381,6 +402,7 @@ Premium users should see unlocked charts and predictions. Free users should see 
 After testing all features, verify:
 
 ### Core Functionality
+
 - [ ] Templates library loads and filters work
 - [ ] Template import creates habits
 - [ ] Milestone celebrations trigger automatically
@@ -394,6 +416,7 @@ After testing all features, verify:
 - [ ] Delete removes habit completely
 
 ### Integration Points
+
 - [ ] Template → Habit creation works
 - [ ] Habit completion → Milestone detection works
 - [ ] Milestone → Share card flow works
@@ -402,12 +425,14 @@ After testing all features, verify:
 - [ ] All modals dismiss correctly
 
 ### Premium Features
+
 - [ ] Premium status configurable (line 513)
 - [ ] Charts unlock for premium users
 - [ ] Predictions unlock for premium users
 - [ ] Paywall appears for free users
 
 ### User Experience
+
 - [ ] No console errors
 - [ ] Smooth animations (60fps)
 - [ ] Responsive interactions
@@ -421,6 +446,7 @@ After testing all features, verify:
 If you find bugs, document them:
 
 ### Template for Bug Report
+
 ```
 Feature: [Templates/Celebrations/Share/Detail/Edit/Delete]
 Issue: [Brief description]
@@ -438,6 +464,7 @@ Priority: [P0/P1/P2/P3]
 ## 📊 **SUCCESS CRITERIA**
 
 **Phase 3 is production-ready if:**
+
 - ✅ All 6 test sections pass
 - ✅ No critical bugs found (P0)
 - ✅ Maximum 2-3 minor bugs (P2-P3)
@@ -449,6 +476,7 @@ Priority: [P0/P1/P2/P3]
 ## 🎯 **NEXT STEPS AFTER TESTING**
 
 **If all tests pass:**
+
 1. Document any minor issues found
 2. Fix P0/P1 bugs if any
 3. Deploy to TestFlight for beta testing
@@ -456,6 +484,7 @@ Priority: [P0/P1/P2/P3]
 5. Move to production
 
 **If tests fail:**
+
 1. Document failing tests
 2. Prioritize fixes (P0 first)
 3. Re-run failed tests

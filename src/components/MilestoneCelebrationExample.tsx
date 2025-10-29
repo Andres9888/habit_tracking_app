@@ -90,11 +90,11 @@ export function MilestoneCelebrationExample() {
   // Simulate strength increases to trigger milestones
   const simulateMilestone = (targetLevel: StrengthLevel) => {
     const thresholds = {
-      starting: 15,
+      automatic: 85,
       building: 25,
       developing: 45,
+      starting: 15,
       strong: 65,
-      automatic: 85,
     };
 
     setHabitStrength(thresholds[targetLevel]);
@@ -170,32 +170,32 @@ export function MilestoneCelebrationExample() {
           </Text>
 
           <Button
-            variant="primary"
-            size="medium"
+            size='medium'
+            variant='primary'
             onPress={() => simulateMilestone('building')}
           >
             🌿 Building (20%)
           </Button>
 
           <Button
-            variant="primary"
-            size="medium"
+            size='medium'
+            variant='primary'
             onPress={() => simulateMilestone('developing')}
           >
             🌳 Developing (40%)
           </Button>
 
           <Button
-            variant="primary"
-            size="medium"
+            size='medium'
+            variant='primary'
             onPress={() => simulateMilestone('strong')}
           >
             💪 Strong (60%)
           </Button>
 
           <Button
-            variant="primary"
-            size="medium"
+            size='medium'
+            variant='primary'
             onPress={() => simulateMilestone('automatic')}
           >
             ⚡ Automatic (80%)
@@ -295,10 +295,10 @@ const { milestone, clearMilestone } = useMilestoneDetection(
       {/* Milestone Celebration Modal */}
       {milestone && (
         <MilestoneCelebration
-          visible={true}
+          visible
+          habitName={milestone.habitName}
           level={milestone.level}
           strength={milestone.strength}
-          habitName={milestone.habitName}
           onClose={clearMilestone}
           onShare={handleShare}
         />
@@ -308,40 +308,40 @@ const { milestone, clearMilestone } = useMilestoneDetection(
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 24,
-    gap: 24,
-  },
-  title: {
-    marginBottom: 8,
-  },
-  description: {
-    marginBottom: 16,
-  },
-  stateBox: {
-    padding: 16,
-    borderRadius: 8,
-    gap: 4,
-  },
   buttonGroup: {
     gap: 12,
+  },
+  codeBox: {
+    borderRadius: 8,
+    overflow: 'scroll',
+    padding: 16,
   },
   codeSection: {
     gap: 12,
   },
-  codeBox: {
-    padding: 16,
-    borderRadius: 8,
-    overflow: 'scroll',
+  container: {
+    flex: 1,
+  },
+  content: {
+    gap: 24,
+    padding: 24,
+  },
+  description: {
+    marginBottom: 16,
+  },
+  featuresList: {
+    gap: 8,
   },
   featuresSection: {
     gap: 12,
   },
-  featuresList: {
-    gap: 8,
+  stateBox: {
+    borderRadius: 8,
+    gap: 4,
+    padding: 16,
+  },
+  title: {
+    marginBottom: 8,
   },
 });
 

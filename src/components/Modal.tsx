@@ -18,10 +18,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import {
-  GestureDetector,
-  Gesture,
-} from 'react-native-gesture-handler';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -89,46 +86,70 @@ export function Modal({
   useEffect(() => {
     if (visible) {
       // Backdrop fade in
-      backdropOpacityValue.value = withTiming(backdropOpacity, { duration: 200 });
+      backdropOpacityValue.value = withTiming(backdropOpacity, {
+        duration: 200,
+      });
 
-      if (variant === 'bottomSheet') {
-        // Bottom sheet: slide up from bottom
-        translateY.value = withSpring(0, {
-          damping: 15,
-          stiffness: 150,
-        });
-      } else if (variant === 'fullScreen') {
-        // Full screen: slide in from right
-        translateX.value = withSpring(0, {
-          damping: 15,
-          stiffness: 150,
-        });
-      } else if (variant === 'centerAlert') {
-        // Center alert: scale up and fade in
-        scale.value = withSpring(1.0, {
-          damping: 15,
-          stiffness: 150,
-        });
+      switch (variant) {
+        case 'bottomSheet': {
+          // Bottom sheet: slide up from bottom
+          translateY.value = withSpring(0, {
+            damping: 15,
+            stiffness: 150,
+          });
+
+          break;
+        }
+        case 'fullScreen': {
+          // Full screen: slide in from right
+          translateX.value = withSpring(0, {
+            damping: 15,
+            stiffness: 150,
+          });
+
+          break;
+        }
+        case 'centerAlert': {
+          // Center alert: scale up and fade in
+          scale.value = withSpring(1, {
+            damping: 15,
+            stiffness: 150,
+          });
+
+          break;
+        }
+        // No default
       }
     } else {
       // Exit animation
       backdropOpacityValue.value = withTiming(0, { duration: 250 });
 
-      if (variant === 'bottomSheet') {
-        translateY.value = withSpring(SCREEN_HEIGHT, {
-          damping: 15,
-          stiffness: 150,
-        });
-      } else if (variant === 'fullScreen') {
-        translateX.value = withSpring(SCREEN_HEIGHT, {
-          damping: 15,
-          stiffness: 150,
-        });
-      } else if (variant === 'centerAlert') {
-        scale.value = withSpring(0.95, {
-          damping: 15,
-          stiffness: 150,
-        });
+      switch (variant) {
+        case 'bottomSheet': {
+          translateY.value = withSpring(SCREEN_HEIGHT, {
+            damping: 15,
+            stiffness: 150,
+          });
+
+          break;
+        }
+        case 'fullScreen': {
+          translateX.value = withSpring(SCREEN_HEIGHT, {
+            damping: 15,
+            stiffness: 150,
+          });
+
+          break;
+        }
+        case 'centerAlert': {
+          scale.value = withSpring(0.95, {
+            damping: 15,
+            stiffness: 150,
+          });
+
+          break;
+        }
+        // No default
       }
     }
   }, [visible, variant]);
@@ -202,8 +223,8 @@ export function Modal({
   }));
 
   const centerAlertStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
     opacity: backdropOpacityValue.value / backdropOpacity,
+    transform: [{ scale: scale.value }],
   }));
 
   // Handle backdrop press
@@ -256,8 +277,8 @@ export function Modal({
               styles.fullScreen,
               {
                 backgroundColor: theme.custom.colors.light.background,
-                paddingTop: insets.top,
                 paddingBottom: insets.bottom,
+                paddingTop: insets.top,
               },
               fullScreenStyle,
               style,
@@ -293,18 +314,18 @@ export function Modal({
 
   return (
     <RNModal
+      statusBarTranslucent
+      transparent
+      animationType='none' // We handle animations ourselves
       visible={visible}
-      transparent={true}
-      animationType="none" // We handle animations ourselves
       onRequestClose={onClose}
-      statusBarTranslucent={true}
     >
       <View style={styles.container}>
         {/* Backdrop */}
         <Pressable
+          accessible={false}
           style={StyleSheet.absoluteFill}
           onPress={handleBackdropPress}
-          accessible={false}
         >
           <Animated.View
             style={[
@@ -323,34 +344,34 @@ export function Modal({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   bottomSheet: {
     maxHeight: SCREEN_HEIGHT * 0.9,
     paddingHorizontal: 24,
     paddingTop: 8,
   },
-  pullIndicatorContainer: {
-    alignItems: 'center',
-    paddingVertical: 8,
+  centerAlert: {
+    alignSelf: 'center',
+    maxWidth: 400,
+    padding: 24,
+    position: 'absolute',
+    top: '30%',
+    width: '85%',
   },
-  pullIndicator: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   fullScreen: {
     ...StyleSheet.absoluteFillObject,
   },
-  centerAlert: {
-    position: 'absolute',
-    alignSelf: 'center',
-    top: '30%',
-    width: '85%',
-    maxWidth: 400,
-    padding: 24,
+  pullIndicator: {
+    borderRadius: 2,
+    height: 4,
+    width: 40,
+  },
+  pullIndicatorContainer: {
+    alignItems: 'center',
+    paddingVertical: 8,
   },
 });
 

@@ -17,110 +17,110 @@ import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
  */
 const customFonts = configureFonts({
   config: {
-    displayLarge: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 34,
-      fontWeight: fontWeights.bold as any,
-      lineHeight: 41,
-      letterSpacing: 0.37,
-    },
-    displayMedium: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 28,
-      fontWeight: fontWeights.bold as any,
-      lineHeight: 34,
-      letterSpacing: 0.36,
-    },
-    displaySmall: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 22,
-      fontWeight: fontWeights.semibold as any,
-      lineHeight: 28,
-      letterSpacing: 0.35,
-    },
-    headlineLarge: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 28,
-      fontWeight: fontWeights.bold as any,
-      lineHeight: 34,
-      letterSpacing: 0.36,
-    },
-    headlineMedium: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 22,
-      fontWeight: fontWeights.semibold as any,
-      lineHeight: 28,
-      letterSpacing: 0.35,
-    },
-    headlineSmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 17,
-      fontWeight: fontWeights.semibold as any,
-      lineHeight: 22,
-      letterSpacing: -0.41,
-    },
-    titleLarge: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 17,
-      fontWeight: fontWeights.semibold as any,
-      lineHeight: 22,
-      letterSpacing: -0.41,
-    },
-    titleMedium: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 15,
-      fontWeight: fontWeights.semibold as any,
-      lineHeight: 20,
-      letterSpacing: -0.24,
-    },
-    titleSmall: {
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
-      fontWeight: fontWeights.semibold as any,
-      lineHeight: 18,
-      letterSpacing: -0.08,
-    },
     bodyLarge: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       fontWeight: fontWeights.regular as any,
-      lineHeight: 22,
       letterSpacing: -0.41,
+      lineHeight: 22,
     },
     bodyMedium: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 15,
       fontWeight: fontWeights.regular as any,
-      lineHeight: 20,
       letterSpacing: -0.24,
+      lineHeight: 20,
+    },
+    displayLarge: {
+      fontFamily: fontFamilies.primary.display,
+      fontSize: 34,
+      fontWeight: fontWeights.bold as any,
+      letterSpacing: 0.37,
+      lineHeight: 41,
     },
     bodySmall: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: fontWeights.regular as any,
-      lineHeight: 18,
       letterSpacing: -0.08,
+      lineHeight: 18,
+    },
+    displayMedium: {
+      fontFamily: fontFamilies.primary.display,
+      fontSize: 28,
+      fontWeight: fontWeights.bold as any,
+      letterSpacing: 0.36,
+      lineHeight: 34,
+    },
+    displaySmall: {
+      fontFamily: fontFamilies.primary.display,
+      fontSize: 22,
+      fontWeight: fontWeights.semibold as any,
+      letterSpacing: 0.35,
+      lineHeight: 28,
+    },
+    headlineLarge: {
+      fontFamily: fontFamilies.primary.text,
+      fontSize: 28,
+      fontWeight: fontWeights.bold as any,
+      letterSpacing: 0.36,
+      lineHeight: 34,
+    },
+    headlineMedium: {
+      fontFamily: fontFamilies.primary.text,
+      fontSize: 22,
+      fontWeight: fontWeights.semibold as any,
+      letterSpacing: 0.35,
+      lineHeight: 28,
+    },
+    headlineSmall: {
+      fontFamily: fontFamilies.primary.text,
+      fontSize: 17,
+      fontWeight: fontWeights.semibold as any,
+      letterSpacing: -0.41,
+      lineHeight: 22,
     },
     labelLarge: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       fontWeight: fontWeights.semibold as any,
-      lineHeight: 22,
       letterSpacing: -0.41,
+      lineHeight: 22,
     },
     labelMedium: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: fontWeights.medium as any,
-      lineHeight: 18,
       letterSpacing: -0.08,
+      lineHeight: 18,
     },
     labelSmall: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 10,
       fontWeight: fontWeights.medium as any,
-      lineHeight: 12,
       letterSpacing: 0.12,
+      lineHeight: 12,
+    },
+    titleLarge: {
+      fontFamily: fontFamilies.primary.text,
+      fontSize: 17,
+      fontWeight: fontWeights.semibold as any,
+      letterSpacing: -0.41,
+      lineHeight: 22,
+    },
+    titleMedium: {
+      fontFamily: fontFamilies.primary.text,
+      fontSize: 15,
+      fontWeight: fontWeights.semibold as any,
+      letterSpacing: -0.24,
+      lineHeight: 20,
+    },
+    titleSmall: {
+      fontFamily: fontFamilies.primary.text,
+      fontSize: 13,
+      fontWeight: fontWeights.semibold as any,
+      letterSpacing: -0.08,
+      lineHeight: 18,
     },
   },
 });
@@ -130,58 +130,65 @@ const customFonts = configureFonts({
  */
 export const theme: MD3Theme = {
   ...MD3LightTheme,
-  fonts: customFonts,
   colors: {
     ...MD3LightTheme.colors,
-    // Primary (Brand Green)
-    primary: colors.primary[500],
-    primaryContainer: colors.primary[400],
+
     onPrimary: '#FFFFFF',
+
     onPrimaryContainer: colors.primary[700],
 
-    // Secondary (Science Blue)
-    secondary: colors.secondary[500],
-    secondaryContainer: colors.secondary[400],
     onSecondary: '#FFFFFF',
-    onSecondaryContainer: colors.secondary[600],
-
-    // Tertiary (can be used for accents)
-    tertiary: colors.primary[600],
-    tertiaryContainer: colors.primary[400],
-    onTertiary: '#FFFFFF',
-    onTertiaryContainer: colors.primary[700],
 
     // Error
     error: colors.error,
+
+    onSecondaryContainer: colors.secondary[600],
+
     errorContainer: '#FFEBEE',
-    onError: '#FFFFFF',
-    onErrorContainer: '#B71C1C',
+
+    onTertiary: '#FFFFFF',
 
     // Background & Surface
     background: colors.light.background,
+
+    // Primary (Brand Green)
+    primary: colors.primary[500],
+
     onBackground: colors.gray[900],
-    surface: colors.light.surface,
+
+    primaryContainer: colors.primary[400],
+
+    onError: '#FFFFFF',
+
+    // Secondary (Science Blue)
+    secondary: colors.secondary[500],
+
+    onErrorContainer: '#B71C1C',
+
+    secondaryContainer: colors.secondary[400],
+
     onSurface: colors.gray[900],
-    surfaceVariant: colors.gray[100],
-    onSurfaceVariant: colors.gray[600],
-    surfaceDisabled: colors.gray[200],
+
+    // Tertiary (can be used for accents)
+    tertiary: colors.primary[600],
     onSurfaceDisabled: colors.gray[400],
-
-    // Outline
-    outline: colors.gray[300],
-    outlineVariant: colors.gray[200],
-
+    tertiaryContainer: colors.primary[400],
     // Inverse
     inverseSurface: colors.gray[900],
+
+    onTertiaryContainer: colors.primary[700],
+
     inverseOnSurface: colors.gray[50],
+
     inversePrimary: colors.primary[400],
 
-    // Shadow
-    shadow: '#000000',
-    scrim: '#000000',
+    onSurfaceVariant: colors.gray[600],
 
     // Backdrop
     backdrop: 'rgba(0, 0, 0, 0.6)',
+
+    // Outline
+    outline: colors.gray[300],
 
     // Elevation
     elevation: {
@@ -192,7 +199,21 @@ export const theme: MD3Theme = {
       level4: colors.gray[100],
       level5: colors.gray[100],
     },
+
+    surface: colors.light.surface,
+
+    outlineVariant: colors.gray[200],
+
+    surfaceVariant: colors.gray[100],
+
+    scrim: '#000000',
+
+    surfaceDisabled: colors.gray[200],
+
+    // Shadow
+    shadow: '#000000',
   },
+  fonts: customFonts,
   roundness: borderRadius.medium, // Default: 12pt
 };
 
@@ -203,14 +224,14 @@ export const theme: MD3Theme = {
 export const extendedTheme = {
   ...theme,
   custom: {
-    colors,
-    typography,
-    spacing,
     borderRadius,
-    shadows,
+    colors,
     componentSpacing,
     fontFamilies,
     fontWeights,
+    shadows,
+    spacing,
+    typography,
   },
 } as const;
 
@@ -222,7 +243,6 @@ export type AppTheme = typeof extendedTheme;
 /**
  * Re-export individual modules for direct imports
  */
-export { colors, typography, spacing, borderRadius, shadows, componentSpacing };
 
 /**
  * Helper hook to use theme in components
@@ -242,3 +262,7 @@ export const useAppTheme = () => useTheme<AppTheme>();
  * Default export
  */
 export default extendedTheme;
+
+export { colors } from './colors';
+export { typography } from './typography';
+export { spacing, borderRadius, shadows, componentSpacing } from './spacing';

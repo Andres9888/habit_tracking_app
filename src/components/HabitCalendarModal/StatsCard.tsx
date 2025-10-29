@@ -32,7 +32,9 @@ export function StatsCard({
         )}
         <View className='flex-1'>
           <Text className='text-2xl font-semibold text-slate-900'>{name}</Text>
-          <Text className='mt-1 text-base text-slate-500'>Daily at 7:00 AM</Text>
+          <Text className='mt-1 text-base text-slate-500'>
+            Daily at 7:00 AM
+          </Text>
         </View>
       </View>
 

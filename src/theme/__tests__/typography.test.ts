@@ -8,7 +8,12 @@
  * - Typography scales support iOS Dynamic Type
  */
 
-import { typography, fontFamilies, fontWeights, textStyle } from '../typography';
+import {
+  typography,
+  fontFamilies,
+  fontWeights,
+  textStyle,
+} from '../typography';
 
 describe('Theme Typography - Phase 1', () => {
   describe('Font Families', () => {
@@ -185,20 +190,20 @@ describe('Theme Typography - Phase 1', () => {
         'monospace',
       ];
 
-      expectedVariants.forEach((variant) => {
+      for (const variant of expectedVariants) {
         expect(typography).toHaveProperty(variant);
-      });
+      }
     });
 
     it('should have valid TextStyle properties', () => {
       // Each typography variant should have these properties
-      Object.values(typography).forEach((variant) => {
+      for (const variant of Object.values(typography)) {
         expect(variant).toHaveProperty('fontFamily');
         expect(variant).toHaveProperty('fontSize');
         expect(variant).toHaveProperty('fontWeight');
         expect(variant).toHaveProperty('lineHeight');
         expect(variant).toHaveProperty('letterSpacing');
-      });
+      }
     });
   });
 
@@ -212,16 +217,17 @@ describe('Theme Typography - Phase 1', () => {
 
     it('should use points (pt) for iOS consistency', () => {
       // All fontSize values should be numbers (points for iOS)
-      Object.values(typography).forEach((variant) => {
+      for (const variant of Object.values(typography)) {
         expect(typeof variant.fontSize).toBe('number');
-      });
+      }
     });
   });
 
   describe('Line Height Ratios', () => {
     it('should have proper line height for display text (1.2x)', () => {
       // Display Large: 41 / 34 = 1.206
-      const ratio = typography.displayLarge.lineHeight / typography.displayLarge.fontSize;
+      const ratio =
+        typography.displayLarge.lineHeight / typography.displayLarge.fontSize;
       expect(ratio).toBeCloseTo(1.206, 2);
     });
 

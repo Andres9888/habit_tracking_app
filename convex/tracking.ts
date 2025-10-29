@@ -18,8 +18,8 @@ import { mutation, query } from './_generated/server';
  */
 export const toggleCompletion = mutation({
   args: {
-    habitId: v.id('habits'),
     date: v.string(),
+    habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
     // Validate date format (YYYY-MM-DD)
@@ -56,9 +56,9 @@ export const toggleCompletion = mutation({
     } else {
       // No record exists - create it (check)
       await ctx.db.insert('tracking', {
-        habitId: args.habitId,
-        date: args.date,
         completed: true,
+        date: args.date,
+        habitId: args.habitId,
       });
       return true;
     }
@@ -82,8 +82,8 @@ export const toggleCompletion = mutation({
  */
 export const getCompletionStatus = query({
   args: {
-    habitId: v.id('habits'),
     date: v.string(),
+    habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
     // Validate date format (YYYY-MM-DD)

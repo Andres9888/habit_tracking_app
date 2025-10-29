@@ -1,11 +1,14 @@
 # Fix React 19 Compatibility Issues
 
 ## Root Cause
+
 You're using React 19.1.0 which has breaking changes that aren't compatible with:
+
 - React Native Paper 5.x
 - Other React Native libraries
 
 The errors you're seeing:
+
 ```
 ERROR [TypeError: Cannot read property 'displayName' of undefined]
 ERROR [runtime not ready]: TypeError: Cannot read property 'secondary' of undefined
@@ -74,6 +77,7 @@ npx expo install \
 ## Expected Result
 
 After fixing:
+
 - ✅ No more `displayName` errors
 - ✅ No more `'secondary' of undefined` errors
 - ✅ Theme loads correctly

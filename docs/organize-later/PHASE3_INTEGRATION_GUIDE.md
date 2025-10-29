@@ -1,4 +1,5 @@
 # Phase 3 Integration Guide
+
 **Complete Feature Connection Map**
 
 ## Overview
@@ -74,6 +75,7 @@ const handleImport = async (template: Template) => {
 ```
 
 **User Flow:**
+
 1. User taps Templates tab
 2. Browses categories (Morning, Health, Productivity, Mindfulness)
 3. Taps template card → Preview modal
@@ -81,6 +83,7 @@ const handleImport = async (template: Template) => {
 5. Returns to Home tab with new habit visible
 
 **Analytics Tracked:**
+
 - Template impressions (which templates are viewed)
 - Import rate per template
 - Popular templates (sorted by imports)
@@ -145,6 +148,7 @@ function HabitTrackingScreen() {
 ```
 
 **Milestone Thresholds:**
+
 - 20% → Starting 🌱
 - 40% → Building 🌿
 - 60% → Developing 🌳
@@ -152,6 +156,7 @@ function HabitTrackingScreen() {
 - 90%+ → Automatic ⚡
 
 **What Happens:**
+
 1. User completes habit
 2. Backend recalculates strength
 3. Hook detects threshold crossing
@@ -206,6 +211,7 @@ function MilestoneCelebration({ level, strength, habitName, onClose }) {
 ```
 
 **Transition Flow:**
+
 1. User sees celebration modal (confetti)
 2. Taps "Share Achievement" button
 3. Celebration modal stays in background
@@ -217,6 +223,7 @@ function MilestoneCelebration({ level, strength, habitName, onClose }) {
 9. Both modals dismiss
 
 **Share Card Customizations:**
+
 - Background gradient (5 presets)
 - Personal message (100 char max)
 - User name visibility toggle
@@ -266,11 +273,13 @@ function App() {
 **Detail Screen Features:**
 
 **For All Users:**
+
 - Enhanced strength indicator (large, full variant)
 - Formula transparency ("See how it's calculated")
 - Edit/Pause/Archive/Delete buttons
 
 **For Premium Users:**
+
 - 30-day strength history graph (line chart)
 - 7-day predictions with confidence levels
 - Risk assessment (High/Medium/Low)
@@ -278,6 +287,7 @@ function App() {
 - Suggested actions based on risk
 
 **Paywall Triggers:**
+
 - Tap locked chart → Show paywall modal
 - Tap locked predictions → Show paywall modal
 
@@ -288,6 +298,7 @@ function App() {
 ### Scenario: New User Journey (Day 1 to Day 45)
 
 **Day 1: Discovery**
+
 ```
 1. User opens app
 2. Navigates to Templates tab
@@ -302,6 +313,7 @@ function App() {
 ```
 
 **Day 7: First Milestone**
+
 ```
 11. Strength reaches 21% (crosses 20% threshold)
 12. 🎉 Milestone Celebration modal appears
@@ -316,6 +328,7 @@ function App() {
 ```
 
 **Day 14: Deeper Engagement**
+
 ```
 21. Strength now at 38%
 22. User taps habit card → Opens Habit Detail
@@ -328,6 +341,7 @@ function App() {
 ```
 
 **Day 30: Strong Habit**
+
 ```
 29. Strength reaches 62% (crosses 60% threshold)
 30. 🎉 Celebration modal: 💪 Strong Level!
@@ -341,6 +355,7 @@ function App() {
 ```
 
 **Day 45: Fully Automatic**
+
 ```
 38. Strength reaches 82% (crosses 80% threshold)
 39. 🎉 Final celebration: ⚡ Automatic Level!
@@ -357,6 +372,7 @@ function App() {
 Use this checklist to verify all features are properly connected:
 
 ### ✅ Templates → Habits
+
 - [ ] Templates tab visible in tab bar
 - [ ] Category filtering works (All, Morning, Health, Productivity, Mindfulness)
 - [ ] Template cards display correctly
@@ -366,6 +382,7 @@ Use this checklist to verify all features are properly connected:
 - [ ] Template usage analytics tracked
 
 ### ✅ Habits → Milestones
+
 - [ ] useMilestoneDetection hook installed
 - [ ] Hook detects threshold crossings (20%, 40%, 60%, 80%)
 - [ ] MilestoneCelebration modal displays on detection
@@ -375,6 +392,7 @@ Use this checklist to verify all features are properly connected:
 - [ ] Reduce Motion alternative works
 
 ### ✅ Milestones → Sharing
+
 - [ ] "Share Achievement" button visible in celebration modal
 - [ ] Button tap opens ShareCardGenerator
 - [ ] Share card displays correct milestone data
@@ -386,6 +404,7 @@ Use this checklist to verify all features are properly connected:
 - [ ] Share completes successfully
 
 ### ✅ Habits → Detail Stats
+
 - [ ] Habit card tap opens HabitDetailScreen
 - [ ] Enhanced strength indicator shows
 - [ ] Formula transparency tooltip works
@@ -404,6 +423,7 @@ Use this checklist to verify all features are properly connected:
 ### Core Integration Files
 
 **App Entry Point:**
+
 ```
 src/App.tsx
 ├── Imports: HabitDetailScreen, MilestoneCelebration
@@ -412,6 +432,7 @@ src/App.tsx
 ```
 
 **Phase 3 Components:**
+
 ```
 src/
 ├── components/
@@ -430,6 +451,7 @@ src/
 ```
 
 **Backend Functions:**
+
 ```
 convex/
 ├── templates.ts
@@ -481,7 +503,9 @@ convex/
 ## Testing Integration Points
 
 ### 1. Templates → Habits
+
 **Test:** Import template and verify habit creation
+
 ```bash
 1. Open Templates tab
 2. Select "Morning Meditation"
@@ -491,7 +515,9 @@ convex/
 ```
 
 ### 2. Habits → Milestones
+
 **Test:** Complete habits until milestone triggers
+
 ```bash
 1. Complete "Morning Meditation" daily
 2. After ~7 days, strength should reach 20%
@@ -501,7 +527,9 @@ convex/
 ```
 
 ### 3. Milestones → Sharing
+
 **Test:** Share achievement from celebration
+
 ```bash
 1. In celebration modal, tap "Share Achievement"
 2. ✅ Verify ShareCardGenerator opens
@@ -511,7 +539,9 @@ convex/
 ```
 
 ### 4. Habits → Detail Stats
+
 **Test:** View habit history and predictions
+
 ```bash
 1. Tap any habit card
 2. ✅ Verify HabitDetailScreen opens
@@ -527,15 +557,18 @@ convex/
 ## Troubleshooting
 
 ### Milestones Not Triggering
+
 **Symptoms:** Habit strength increases but no celebration modal
 
 **Checks:**
+
 - Is `useMilestoneDetection` hook imported and used?
 - Is `MilestoneCelebration` component rendered in App?
 - Is `milestone` state checked for null before rendering?
 - Check console for errors
 
 **Fix:**
+
 ```typescript
 // Ensure hook is called at top level
 const { milestone, clearMilestone } = useMilestoneDetection(
@@ -553,28 +586,34 @@ const { milestone, clearMilestone } = useMilestoneDetection(
 ```
 
 ### Share Card Not Generating
+
 **Symptoms:** Share button tapped but nothing happens
 
 **Checks:**
+
 - Are dependencies installed? (`react-native-view-shot`, `expo-sharing`)
 - Is device (not simulator)?
 - Check console for errors
 
 **Fix:**
+
 ```bash
 npm install react-native-view-shot expo-sharing
 npx expo prebuild --clean
 ```
 
 ### Templates Not Loading
+
 **Symptoms:** Templates tab empty or loading forever
 
 **Checks:**
+
 - Did templates seed successfully?
 - Is Convex connected?
 - Check network tab for API errors
 
 **Fix:**
+
 ```bash
 # Re-seed templates
 npx convex run templates:seedTemplates
@@ -584,13 +623,16 @@ npx convex run templates:list
 ```
 
 ### Charts Not Showing (Premium Users)
+
 **Symptoms:** History chart shows "locked" even for premium
 
 **Checks:**
+
 - Is `isPremium` prop passed correctly to HabitDetailScreen?
 - Is subscription status up to date?
 
 **Fix:**
+
 ```typescript
 // Ensure premium status is checked
 <HabitDetailScreen
@@ -606,21 +648,25 @@ npx convex run templates:list
 ## Performance Optimization
 
 ### Milestone Detection
+
 - Hook uses `useMemo` to prevent re-detection on every render
 - Only recalculates when habit strength values change
 - Stores previous milestone to prevent duplicates
 
 ### Share Card Generation
+
 - Image generation is on-demand (not automatic)
 - Preview uses CSS transform (no re-render)
 - Off-screen rendering (no layout thrashing)
 
 ### Charts Rendering
+
 - SVG-based (lightweight, performant)
 - Data memoized (only recalculates on prop change)
 - Handles up to 90 days of data smoothly
 
 ### Templates Loading
+
 - Indexed by category in Convex
 - Client-side filtering for instant UX
 - Pagination for future expansion (not needed for 20 templates)

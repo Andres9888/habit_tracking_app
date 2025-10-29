@@ -29,14 +29,17 @@ export const useSettingsModalLogic = ({
   visible,
   onClose,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'paused'>('settings');
+  const [view, setView] = useState<'settings' | 'archived' | 'paused'>(
+    'settings'
+  );
 
   // Get settings from Convex
   const settings = useQuery(api.settings.get);
   const updateSettings = useMutation(api.settings.update);
 
   // Local state for settings
-  const [darkModePreference, setDarkModeState] = useState<DarkModePreference>('system');
+  const [darkModePreference, setDarkModeState] =
+    useState<DarkModePreference>('system');
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [highContrastMode, setHighContrastModeState] = useState(false);
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
@@ -99,16 +102,16 @@ export const useSettingsModalLogic = ({
   };
 
   return {
-    handleClose,
-    setView,
-    view,
     darkModePreference,
-    setDarkModePreference,
-    reduceMotion,
-    setReduceMotion,
+    handleClose,
     highContrastMode,
+    reduceMotion,
+    setDarkModePreference,
     setHighContrastMode,
-    useDyslexicFont,
+    setReduceMotion,
     setUseDyslexicFont,
+    setView,
+    useDyslexicFont,
+    view,
   };
 };

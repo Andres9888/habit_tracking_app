@@ -13,13 +13,7 @@
  */
 
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '../theme';
@@ -40,7 +34,10 @@ import {
 import type { Id } from '../../convex/_generated/dataModel';
 import type { StrengthLevel } from '../components/HabitStrengthIndicator/HabitStrengthIndicator';
 import StrengthHistoryChart from '../components/StrengthHistoryChart';
-import PredictionInsights, { type RiskLevel, type TrendDirection } from '../components/PredictionInsights';
+import PredictionInsights, {
+  type RiskLevel,
+  type TrendDirection,
+} from '../components/PredictionInsights';
 import * as Haptics from 'expo-haptics';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
@@ -106,16 +103,16 @@ function StrengthFormulaTooltip({ theme }: { theme: any }) {
   return (
     <View style={styles.formulaContainer}>
       <Pressable
+        accessible
+        accessibilityLabel='See how strength is calculated'
+        accessibilityRole='button'
+        style={styles.formulaButton}
         onPress={() => {
           setShowTooltip(!showTooltip);
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }}
-        style={styles.formulaButton}
-        accessible={true}
-        accessibilityLabel="See how strength is calculated"
-        accessibilityRole="button"
       >
-        <Info size={16} color={theme.custom.colors.gray[500]} />
+        <Info color={theme.custom.colors.gray[500]} size={16} />
         <Text
           style={[
             theme.custom.typography.caption,
@@ -161,9 +158,8 @@ function StrengthFormulaTooltip({ theme }: { theme: any }) {
               { color: theme.custom.colors.gray[600], marginTop: 8 },
             ]}
           >
-            • Baseline: How automatic the habit feels{'\n'}
-            • Compliance: How consistently you do it{'\n'}
-            • Strength: Combined habit robustness
+            • Baseline: How automatic the habit feels{'\n'}• Compliance: How
+            consistently you do it{'\n'}• Strength: Combined habit robustness
           </Text>
         </View>
       )}
@@ -192,7 +188,7 @@ function PremiumLock({
         },
       ]}
     >
-      <Lock size={32} color={theme.custom.colors.gray[400]} />
+      <Lock color={theme.custom.colors.gray[400]} size={32} />
       <Text
         style={[
           theme.custom.typography.bodyMedium,
@@ -210,17 +206,17 @@ function PremiumLock({
         Upgrade to unlock advanced analytics
       </Text>
       <Pressable
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          onUpgrade();
-        }}
+        accessible
+        accessibilityLabel='Upgrade to Premium'
+        accessibilityRole='button'
         style={[
           styles.upgradeButton,
           { backgroundColor: theme.custom.colors.primary[500] },
         ]}
-        accessible={true}
-        accessibilityLabel="Upgrade to Premium"
-        accessibilityRole="button"
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          onUpgrade();
+        }}
       >
         <Text
           style={[
@@ -267,19 +263,19 @@ function ActionButton({
 
   return (
     <Pressable
-      onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        onPress();
-      }}
+      accessible
+      accessibilityLabel={label}
+      accessibilityRole='button'
       style={[
         styles.actionButton,
         { backgroundColor, borderRadius: theme.custom.borderRadius.medium },
       ]}
-      accessible={true}
-      accessibilityLabel={label}
-      accessibilityRole="button"
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onPress();
+      }}
     >
-      <Icon size={20} color={iconColor} />
+      <Icon color={iconColor} size={20} />
       <Text style={[theme.custom.typography.bodyMedium, { color: textColor }]}>
         {label}
       </Text>
@@ -329,14 +325,14 @@ export default function HabitDetailScreen({
       'Pause Habit',
       'This habit will be hidden from your daily list. You can unpause it anytime from Settings.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { style: 'cancel', text: 'Cancel' },
         {
-          text: 'Pause',
-          style: 'destructive',
           onPress: () => {
             onPause?.(habit._id);
             onClose();
           },
+          style: 'destructive',
+          text: 'Pause',
         },
       ]
     );
@@ -347,14 +343,14 @@ export default function HabitDetailScreen({
       'Archive Habit',
       'Archived habits are moved to your archive but keep their history.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { style: 'cancel', text: 'Cancel' },
         {
-          text: 'Archive',
-          style: 'destructive',
           onPress: () => {
             onArchive?.(habit._id);
             onClose();
           },
+          style: 'destructive',
+          text: 'Archive',
         },
       ]
     );
@@ -365,14 +361,14 @@ export default function HabitDetailScreen({
       'Delete Habit',
       'This will permanently delete this habit and all its history. This cannot be undone.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { style: 'cancel', text: 'Cancel' },
         {
-          text: 'Delete',
-          style: 'destructive',
           onPress: () => {
             onDelete?.(habit._id);
             onClose();
           },
+          style: 'destructive',
+          text: 'Delete',
         },
       ]
     );
@@ -389,11 +385,11 @@ export default function HabitDetailScreen({
 
   return (
     <Modal
+      disableGestureClose
+      disableBackdropClose={false}
+      variant='fullScreen'
       visible={visible}
       onClose={onClose}
-      variant="fullScreen"
-      disableBackdropClose={false}
-      disableGestureClose={true}
     >
       <View style={{ flex: 1 }}>
         {/* Navigation Bar */}
@@ -401,19 +397,19 @@ export default function HabitDetailScreen({
           style={[
             styles.navigationBar,
             {
-              borderBottomWidth: 1,
               borderBottomColor: theme.custom.colors.gray[200],
+              borderBottomWidth: 1,
             },
           ]}
         >
           <Pressable
-            onPress={onClose}
+            accessible
+            accessibilityLabel='Close'
+            accessibilityRole='button'
             style={styles.closeButton}
-            accessible={true}
-            accessibilityLabel="Close"
-            accessibilityRole="button"
+            onPress={onClose}
           >
-            <X size={24} color={theme.custom.colors.gray[700]} />
+            <X color={theme.custom.colors.gray[700]} size={24} />
           </Pressable>
           <Text
             style={[
@@ -428,216 +424,264 @@ export default function HabitDetailScreen({
 
         {/* Scrollable Content */}
         <ScrollView
-          style={styles.content}
+          bounces
+          nestedScrollEnabled
+          scrollEnabled
+          showsVerticalScrollIndicator
           contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={true}
-          scrollEnabled={true}
-          bounces={true}
-          nestedScrollEnabled={true}
+          style={styles.content}
         >
-        {/* Habit Header */}
-        <View style={styles.habitHeader}>
-          {habit.icon && (
-            <View
-              style={[
-                styles.habitIcon,
-                {
-                  backgroundColor: habit.iconColor || theme.custom.colors.gray[200],
-                  borderRadius: theme.custom.borderRadius.medium,
-                },
-              ]}
-            >
-              <Text style={styles.habitIconText}>{habit.icon}</Text>
-            </View>
-          )}
-          <Text
-            style={[
-              theme.custom.typography.heading1,
-              { color: theme.custom.colors.gray[900], marginTop: 12 },
-            ]}
-          >
-            {habit.name}
-          </Text>
-          {habit.notes && (
-            <Text
-              style={[
-                theme.custom.typography.bodyMedium,
-                { color: theme.custom.colors.gray[600], marginTop: 8 },
-              ]}
-            >
-              {habit.notes}
-            </Text>
-          )}
-        </View>
-
-        {/* Enhanced Strength Visualization */}
-        <View style={styles.section}>
-          <Text
-            style={[
-              theme.custom.typography.heading3,
-              { color: theme.custom.colors.gray[900], marginBottom: 16 },
-            ]}
-          >
-            Current Strength
-          </Text>
-          <HabitStrengthIndicator
-            strength={strength}
-            strengthLevel={strengthLevel}
-            variant="full"
-            showPercentage={true}
-            showLabel={true}
-            habitName={habit.name}
-          />
-          <StrengthFormulaTooltip theme={theme} />
-        </View>
-
-        {/* History Graph (Premium) */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <TrendingUp size={20} color={theme.custom.colors.gray[700]} />
-            <Text
-              style={[
-                theme.custom.typography.heading3,
-                { color: theme.custom.colors.gray[900] },
-              ]}
-            >
-              30-Day Strength History
-            </Text>
-            {!isPremium && (
-              <View style={styles.premiumBadge}>
-                <Lock size={12} color={theme.custom.colors.primary[600]} />
-                <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    { color: theme.custom.colors.primary[600] },
-                  ]}
-                >
-                  Premium
-                </Text>
+          {/* Habit Header */}
+          <View style={styles.habitHeader}>
+            {habit.icon && (
+              <View
+                style={[
+                  styles.habitIcon,
+                  {
+                    backgroundColor:
+                      habit.iconColor || theme.custom.colors.gray[200],
+                    borderRadius: theme.custom.borderRadius.medium,
+                  },
+                ]}
+              >
+                <Text style={styles.habitIconText}>{habit.icon}</Text>
               </View>
+            )}
+            <Text
+              style={[
+                theme.custom.typography.heading1,
+                { color: theme.custom.colors.gray[900], marginTop: 12 },
+              ]}
+            >
+              {habit.name}
+            </Text>
+            {habit.notes && (
+              <Text
+                style={[
+                  theme.custom.typography.bodyMedium,
+                  { color: theme.custom.colors.gray[600], marginTop: 8 },
+                ]}
+              >
+                {habit.notes}
+              </Text>
             )}
           </View>
 
-          {isPremium ? (
-            <StrengthHistoryChart
-              data={generateMockHistoryData(habit._id)}
-              showDualAxis={false}
-              height={220}
-              interactive={true}
+          {/* Enhanced Strength Visualization */}
+          <View style={styles.section}>
+            <Text
+              style={[
+                theme.custom.typography.heading3,
+                { color: theme.custom.colors.gray[900], marginBottom: 16 },
+              ]}
+            >
+              Current Strength
+            </Text>
+            <HabitStrengthIndicator
+              showLabel
+              showPercentage
+              habitName={habit.name}
+              strength={strength}
+              strengthLevel={strengthLevel}
+              variant='full'
             />
-          ) : (
-            <PremiumLock theme={theme} onUpgrade={handleUpgrade} />
-          )}
-        </View>
-
-        {/* Prediction Insights (Premium) */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <AlertTriangle size={20} color={theme.custom.colors.gray[700]} />
-            <Text
-              style={[
-                theme.custom.typography.heading3,
-                { color: theme.custom.colors.gray[900] },
-              ]}
-            >
-              Predictions & Insights
-            </Text>
-            {!isPremium && (
-              <View style={styles.premiumBadge}>
-                <Lock size={12} color={theme.custom.colors.primary[600]} />
-                <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    { color: theme.custom.colors.primary[600] },
-                  ]}
-                >
-                  Premium
-                </Text>
-              </View>
-            )}
+            <StrengthFormulaTooltip theme={theme} />
           </View>
 
-          {isPremium ? (
-            predictionData ? (
-              <PredictionInsights
-                data={{
-                  predictedStrength: predictionData.predictedStrength,
-                  currentStrength: predictionData.currentStrength,
-                  confidence: predictionData.confidence,
-                  riskLevel: predictionData.riskLevel as RiskLevel,
-                  trend: predictionData.trend as TrendDirection,
-                  suggestions: predictionData.suggestions,
-                }}
-                showSuggestions={true}
+          {/* History Graph (Premium) */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <TrendingUp color={theme.custom.colors.gray[700]} size={20} />
+              <Text
+                style={[
+                  theme.custom.typography.heading3,
+                  { color: theme.custom.colors.gray[900] },
+                ]}
+              >
+                30-Day Strength History
+              </Text>
+              {!isPremium && (
+                <View style={styles.premiumBadge}>
+                  <Lock color={theme.custom.colors.primary[600]} size={12} />
+                  <Text
+                    style={[
+                      theme.custom.typography.caption,
+                      { color: theme.custom.colors.primary[600] },
+                    ]}
+                  >
+                    Premium
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {isPremium ? (
+              <StrengthHistoryChart
+                interactive
+                data={generateMockHistoryData(habit._id)}
+                height={220}
+                showDualAxis={false}
               />
             ) : (
-              <View style={styles.predictionContainer}>
-                <Text
-                  style={[
-                    theme.custom.typography.bodyMedium,
-                    { color: theme.custom.colors.gray[500] },
-                  ]}
-                >
-                  Loading predictions...
-                </Text>
-              </View>
-            )
-          ) : (
-            <PremiumLock theme={theme} onUpgrade={handleUpgrade} />
-          )}
-        </View>
-
-        {/* Action Buttons */}
-        <View style={styles.section}>
-          <Text
-            style={[
-              theme.custom.typography.heading3,
-              { color: theme.custom.colors.gray[900], marginBottom: 16 },
-            ]}
-          >
-            Manage Habit
-          </Text>
-          <View style={styles.actionsGrid}>
-            <ActionButton
-              icon={Calendar}
-              label="View Calendar"
-              onPress={handleOpenCalendar}
-              theme={theme}
-            />
-            <ActionButton
-              icon={Edit3}
-              label="Edit"
-              onPress={handleEdit}
-              theme={theme}
-            />
-            <ActionButton
-              icon={Pause}
-              label="Pause"
-              onPress={handlePause}
-              theme={theme}
-            />
-            <ActionButton
-              icon={Archive}
-              label="Archive"
-              onPress={handleArchive}
-              theme={theme}
-            />
-            <ActionButton
-              icon={Trash2}
-              label="Delete"
-              onPress={handleDelete}
-              variant="destructive"
-              theme={theme}
-            />
+              <PremiumLock theme={theme} onUpgrade={handleUpgrade} />
+            )}
           </View>
-        </View>
-      </ScrollView>
+
+          {/* Prediction Insights (Premium) */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <AlertTriangle color={theme.custom.colors.gray[700]} size={20} />
+              <Text
+                style={[
+                  theme.custom.typography.heading3,
+                  { color: theme.custom.colors.gray[900] },
+                ]}
+              >
+                Predictions & Insights
+              </Text>
+              {!isPremium && (
+                <View style={styles.premiumBadge}>
+                  <Lock color={theme.custom.colors.primary[600]} size={12} />
+                  <Text
+                    style={[
+                      theme.custom.typography.caption,
+                      { color: theme.custom.colors.primary[600] },
+                    ]}
+                  >
+                    Premium
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {isPremium ? (
+              predictionData ? (
+                <PredictionInsights
+                  showSuggestions
+                  data={{
+                    confidence: predictionData.confidence,
+                    currentStrength: predictionData.currentStrength,
+                    predictedStrength: predictionData.predictedStrength,
+                    riskLevel: predictionData.riskLevel as RiskLevel,
+                    suggestions: predictionData.suggestions,
+                    trend: predictionData.trend as TrendDirection,
+                  }}
+                />
+              ) : (
+                <View style={styles.predictionContainer}>
+                  <Text
+                    style={[
+                      theme.custom.typography.bodyMedium,
+                      { color: theme.custom.colors.gray[500] },
+                    ]}
+                  >
+                    Loading predictions...
+                  </Text>
+                </View>
+              )
+            ) : (
+              <PremiumLock theme={theme} onUpgrade={handleUpgrade} />
+            )}
+          </View>
+
+          {/* Action Buttons */}
+          <View style={styles.section}>
+            <Text
+              style={[
+                theme.custom.typography.heading3,
+                { color: theme.custom.colors.gray[900], marginBottom: 16 },
+              ]}
+            >
+              Manage Habit
+            </Text>
+            <View style={styles.actionsGrid}>
+              <ActionButton
+                icon={Calendar}
+                label='View Calendar'
+                theme={theme}
+                onPress={handleOpenCalendar}
+              />
+              <ActionButton
+                icon={Edit3}
+                label='Edit'
+                theme={theme}
+                onPress={handleEdit}
+              />
+              <ActionButton
+                icon={Pause}
+                label='Pause'
+                theme={theme}
+                onPress={handlePause}
+              />
+              <ActionButton
+                icon={Archive}
+                label='Archive'
+                theme={theme}
+                onPress={handleArchive}
+              />
+              <ActionButton
+                icon={Trash2}
+                label='Delete'
+                theme={theme}
+                variant='destructive'
+                onPress={handleDelete}
+              />
+            </View>
+          </View>
+        </ScrollView>
       </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
+  closeButton: {
+    alignItems: 'center',
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
+  content: {
+    flex: 1,
+  },
+  contentContainer: {
+    paddingBottom: 32,
+    paddingHorizontal: 24,
+  },
+  chartContainer: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  formulaButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+    paddingVertical: 8,
+  },
+  formulaContainer: {
+    marginTop: 12,
+  },
+  habitHeader: {
+    alignItems: 'center',
+    paddingVertical: 24,
+  },
+  actionsGrid: {
+    gap: 12,
+  },
+  habitIcon: {
+    alignItems: 'center',
+    height: 64,
+    justifyContent: 'center',
+    width: 64,
+  },
+  actionButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
   navigationBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -645,91 +689,44 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  closeButton: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  content: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-  },
-  habitHeader: {
-    alignItems: 'center',
-    paddingVertical: 24,
-  },
-  habitIcon: {
-    width: 64,
-    height: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   habitIconText: {
     fontSize: 32,
+  },
+  predictionContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  premiumBadge: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    paddingVertical: 4,
+  },
+  premiumLockContainer: {
+    alignItems: 'center',
+    padding: 32,
   },
   section: {
     marginBottom: 32,
   },
   sectionHeader: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 8,
     marginBottom: 16,
   },
-  premiumBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    backgroundColor: '#EEF2FF',
-    borderRadius: 12,
-  },
-  formulaContainer: {
-    marginTop: 12,
-  },
-  formulaButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 8,
-  },
   tooltipContainer: {
-    padding: 16,
     marginTop: 8,
-  },
-  chartContainer: {
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  predictionContainer: {
     padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  premiumLockContainer: {
-    padding: 32,
-    alignItems: 'center',
   },
   upgradeButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
     borderRadius: 12,
     marginTop: 16,
-  },
-  actionsGrid: {
-    gap: 12,
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
   },
 });

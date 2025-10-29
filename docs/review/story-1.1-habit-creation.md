@@ -38,6 +38,7 @@
 ## Technical Notes
 
 **Implementation:**
+
 - ✅ Use Convex mutation `createHabit` from existing backend
 - ✅ Color picker: ColorPickerSheet component (custom 36-color palette)
 - ✅ Icon library: 30 emoji icons available
@@ -45,6 +46,7 @@
 - ✅ Optimistic UI updates for instant feedback
 
 **Files:**
+
 - `src/components/CreateHabitModal/CreateHabitModal.tsx` - Main form component
 - `src/components/CreateHabitModal/ColorPickerSheet.tsx` - Color palette picker
 - `convex/habits.ts` - Backend mutations (create, update, delete)
@@ -54,16 +56,19 @@
 ## Testing Strategy
 
 **Unit Tests:**
+
 - Form validation logic
 - Emoji selection
 - Color selection
 
 **Integration Tests:**
+
 - Create habit flow end-to-end
 - Error handling scenarios
 - Optimistic UI updates
 
 **Manual Testing:**
+
 - Test on iPhone SE (small screen)
 - Test with VoiceOver enabled
 - Test network failure scenarios

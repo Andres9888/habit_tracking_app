@@ -1,6 +1,9 @@
 import { View, Text } from 'react-native';
 import { CheckCircle2, FastForward } from 'lucide-react-native';
-import { formatActivityDate, formatActivityTime } from '../../utils/habitCalculations';
+import {
+  formatActivityDate,
+  formatActivityTime,
+} from '../../utils/habitCalculations';
 
 interface ActivityEntry {
   _creationTime: number;
@@ -63,7 +66,7 @@ export function ActivityLog({ tracking }: ActivityLogProps) {
             {/* Right side - Time with Icon */}
             <View className='flex-row items-center gap-2'>
               {activity.completed ? (
-                <CheckCircle2 color='#10b981' size={18} fill='#10b981' />
+                <CheckCircle2 color='#10b981' fill='#10b981' size={18} />
               ) : (
                 <FastForward color='#94a3b8' size={18} />
               )}

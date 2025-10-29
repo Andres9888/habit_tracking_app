@@ -1,6 +1,7 @@
 # Habit Edit Screen Integration
 
 ## Summary
+
 Successfully integrated the Habit Edit screen into the habits detail screen (HabitCalendarModal) and replaced the 3-dots menu with an "Edit" text button.
 
 ## Changes Made
@@ -8,17 +9,20 @@ Successfully integrated the Habit Edit screen into the habits detail screen (Hab
 ### 1. HabitCalendarModal.tsx (`src/components/HabitCalendarModal.tsx`)
 
 #### Added Imports:
+
 ```typescript
 import { useState } from 'react';
 import HabitEditScreen from '../screens/HabitEditScreen';
 ```
 
 #### Removed Import:
+
 ```typescript
 import { MoreVertical } from 'lucide-react-native'; // Removed
 ```
 
 #### Added State Management:
+
 ```typescript
 const [showEditScreen, setShowEditScreen] = useState(false);
 
@@ -32,7 +36,9 @@ const handleCloseEdit = () => {
 ```
 
 #### Replaced 3-Dots Menu with Edit Button:
+
 **Before:**
+
 ```typescript
 <Pressable className='h-10 w-10 items-center justify-center rounded-full'>
   <MoreVertical color='#1a1a1a' size={24} />
@@ -40,6 +46,7 @@ const handleCloseEdit = () => {
 ```
 
 **After:**
+
 ```typescript
 <TouchableOpacity
   className='rounded-lg bg-blue-500 px-4 py-2'
@@ -50,6 +57,7 @@ const handleCloseEdit = () => {
 ```
 
 #### Added HabitEditScreen Component:
+
 ```typescript
 {/* Habit Edit Screen */}
 <HabitEditScreen
@@ -81,17 +89,20 @@ const handleCloseEdit = () => {
 ## Visual Changes
 
 ### Header Before:
+
 ```
 [←]        Exercise         [⋮]
 ```
 
 ### Header After:
+
 ```
 [←]        Exercise       [Edit]
                            (blue)
 ```
 
 ## Files Modified
+
 - ✅ `src/components/HabitCalendarModal.tsx` - Integrated edit button and screen
 - ✅ `convex/schema.ts` - Extended with new habit fields
 - ✅ `convex/habits.ts` - Added update mutation and get query
@@ -100,6 +111,7 @@ const handleCloseEdit = () => {
 ## Testing
 
 To test the integration:
+
 1. Run the app: `npm run expo:start`
 2. Tap on any habit card
 3. Look for the blue "Edit" button in the top-right
@@ -107,6 +119,7 @@ To test the integration:
 5. Make changes and save
 
 ## Notes
+
 - The Edit button uses a blue background to stand out from other UI elements
 - The edit screen opens as a modal overlay on top of the detail screen
 - All changes are saved to Convex backend when user clicks "Save Changes"

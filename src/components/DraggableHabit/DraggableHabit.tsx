@@ -143,8 +143,8 @@ export default function DraggableHabit({
 
   const habitCard = (
     <Pressable
-      onPress={() => onPress?.(habit)}
       onLongPress={() => onLongPress?.(habit)}
+      onPress={() => onPress?.(habit)}
     >
       <Animated.View
         className='overflow-hidden rounded-2xl'
@@ -167,18 +167,18 @@ export default function DraggableHabit({
                   backgroundColor: highContrastMode
                     ? colors.iconContainer
                     : accentColor === '#3b82f6'
-                        ? '#dbeafe' // blue-100
-                        : accentColor === '#f97316'
-                          ? '#ffedd5' // orange-100
-                          : accentColor === '#10b981'
-                            ? '#d1fae5' // emerald-100
-                            : accentColor === '#8b5cf6'
-                              ? '#ede9fe' // violet-100
-                              : accentColor === '#06b6d4'
-                                ? '#cffafe' // cyan-100
-                                : accentColor === '#ec4899'
-                                  ? '#fce7f3' // pink-100
-                                  : '#fef9c3', // yellow-100
+                      ? '#dbeafe' // blue-100
+                      : accentColor === '#f97316'
+                        ? '#ffedd5' // orange-100
+                        : accentColor === '#10b981'
+                          ? '#d1fae5' // emerald-100
+                          : accentColor === '#8b5cf6'
+                            ? '#ede9fe' // violet-100
+                            : accentColor === '#06b6d4'
+                              ? '#cffafe' // cyan-100
+                              : accentColor === '#ec4899'
+                                ? '#fce7f3' // pink-100
+                                : '#fef9c3', // yellow-100
                   borderColor: highContrastMode ? '#111111' : undefined,
                   borderWidth: highContrastMode ? 2 : 0,
                 }}
@@ -220,8 +220,8 @@ export default function DraggableHabit({
           <View>
             <HabitChainVisualizer
               accentColor={accentColor}
-              highContrastMode={highContrastMode}
               habitId={habit._id}
+              highContrastMode={highContrastMode}
               weekDateStrings={weekDateStrings}
               weekStatus={weekStatus}
               onToggle={toggleHabit}

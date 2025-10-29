@@ -7,8 +7,8 @@ describe('toggleCompletion mutation', () => {
   describe('argument validation', () => {
     it('requires habitId and date parameters', () => {
       const validArgs = {
-        habitId: 'test_habit_id' as any,
         date: '2025-01-15',
+        habitId: 'test_habit_id' as any,
       };
 
       expect(validArgs).toHaveProperty('habitId');
@@ -37,9 +37,9 @@ describe('toggleCompletion mutation', () => {
 
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-      invalidDates.forEach(date => {
+      for (const date of invalidDates) {
         expect(dateRegex.test(date)).toBe(false);
-      });
+      }
 
       // Note: Regex validates format, not semantic validity
       // Invalid month/day values like '2025-13-01' pass regex but fail in mutation
@@ -94,9 +94,9 @@ describe('toggleCompletion mutation', () => {
   describe('toggle behavior - checking (no existing record)', () => {
     it('should create new tracking record when none exists', () => {
       const newRecord = {
-        habitId: 'test_habit_id' as any,
-        date: '2025-01-15',
         completed: true,
+        date: '2025-01-15',
+        habitId: 'test_habit_id' as any,
       };
 
       expect(newRecord).toHaveProperty('habitId');
@@ -113,9 +113,9 @@ describe('toggleCompletion mutation', () => {
 
     it('should insert tracking record with correct fields', () => {
       const insertedRecord = {
-        habitId: 'habit_123' as any,
-        date: '2025-01-15',
         completed: true,
+        date: '2025-01-15',
+        habitId: 'habit_123' as any,
       };
 
       expect(insertedRecord.habitId).toBe('habit_123');
@@ -128,9 +128,9 @@ describe('toggleCompletion mutation', () => {
     it('should delete tracking record when it exists', () => {
       const existingRecord = {
         _id: 'tracking_123' as any,
-        habitId: 'habit_123' as any,
-        date: '2025-01-15',
         completed: true,
+        date: '2025-01-15',
+        habitId: 'habit_123' as any,
       };
 
       expect(existingRecord._id).toBeDefined();
@@ -145,9 +145,9 @@ describe('toggleCompletion mutation', () => {
 
     it('should use indexed query to find existing record', () => {
       const queryParams = {
-        index: 'by_habit_and_date',
-        habitId: 'habit_123' as any,
         date: '2025-01-15',
+        habitId: 'habit_123' as any,
+        index: 'by_habit_and_date',
       };
 
       expect(queryParams.index).toBe('by_habit_and_date');
@@ -194,13 +194,13 @@ describe('toggleCompletion mutation', () => {
 
     it('should handle different dates for same habit independently', () => {
       const habit1Date1 = {
-        habitId: 'habit_1' as any,
         date: '2025-01-15',
+        habitId: 'habit_1' as any,
       };
 
       const habit1Date2 = {
-        habitId: 'habit_1' as any,
         date: '2025-01-16',
+        habitId: 'habit_1' as any,
       };
 
       // These are independent records
@@ -210,13 +210,13 @@ describe('toggleCompletion mutation', () => {
 
     it('should handle different habits for same date independently', () => {
       const habit1 = {
-        habitId: 'habit_1' as any,
         date: '2025-01-15',
+        habitId: 'habit_1' as any,
       };
 
       const habit2 = {
-        habitId: 'habit_2' as any,
         date: '2025-01-15',
+        habitId: 'habit_2' as any,
       };
 
       // These are independent records
@@ -227,16 +227,12 @@ describe('toggleCompletion mutation', () => {
 
   describe('error handling', () => {
     it('should throw error for invalid date format', () => {
-      const invalidFormats = [
-        '2025/01/15',
-        '15-01-2025',
-        'invalid',
-      ];
+      const invalidFormats = ['2025/01/15', '15-01-2025', 'invalid'];
 
-      invalidFormats.forEach(format => {
+      for (const format of invalidFormats) {
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         expect(dateRegex.test(format)).toBe(false);
-      });
+      }
 
       // Mutation should throw: "Invalid date format. Expected YYYY-MM-DD"
     });
@@ -270,8 +266,8 @@ describe('getCompletionStatus query', () => {
   describe('argument validation', () => {
     it('requires habitId and date parameters', () => {
       const validArgs = {
-        habitId: 'test_habit_id' as any,
         date: '2025-01-15',
+        habitId: 'test_habit_id' as any,
       };
 
       expect(validArgs).toHaveProperty('habitId');
@@ -291,9 +287,9 @@ describe('getCompletionStatus query', () => {
     it('should return true when tracking record exists', () => {
       const existingRecord = {
         _id: 'tracking_123' as any,
-        habitId: 'habit_123' as any,
-        date: '2025-01-15',
         completed: true,
+        date: '2025-01-15',
+        habitId: 'habit_123' as any,
       };
 
       const result = existingRecord !== null;
@@ -311,9 +307,9 @@ describe('getCompletionStatus query', () => {
 
     it('should use indexed query to find record', () => {
       const queryParams = {
-        index: 'by_habit_and_date',
-        habitId: 'habit_123' as any,
         date: '2025-01-15',
+        habitId: 'habit_123' as any,
+        index: 'by_habit_and_date',
       };
 
       expect(queryParams.index).toBe('by_habit_and_date');
@@ -357,8 +353,12 @@ describe('getCompletionStatus query', () => {
       // If not completed (false) → user is checking → Medium haptic
       const hapticWhenNotCompleted = 'Medium';
 
-      expect(isCompleted ? hapticWhenCompleted : hapticWhenNotCompleted).toBe('Light');
-      expect(!isCompleted ? hapticWhenNotCompleted : hapticWhenCompleted).toBe('Light');
+      expect(isCompleted ? hapticWhenCompleted : hapticWhenNotCompleted).toBe(
+        'Light'
+      );
+      expect(isCompleted ? hapticWhenCompleted : hapticWhenNotCompleted).toBe(
+        'Light'
+      );
     });
 
     it('should be called before toggle for optimal UX', () => {
@@ -425,14 +425,14 @@ describe('toggleCompletion and getCompletionStatus integration', () => {
 
     it('should maintain consistency across multiple toggles', () => {
       const states = [
-        { toggle: true, query: true }, // First check
-        { toggle: false, query: false }, // Uncheck
-        { toggle: true, query: true }, // Check again
+        { query: true, toggle: true }, // First check
+        { query: false, toggle: false }, // Uncheck
+        { query: true, toggle: true }, // Check again
       ];
 
-      states.forEach(state => {
+      for (const state of states) {
         expect(state.toggle).toBe(state.query);
-      });
+      }
     });
   });
 
@@ -482,8 +482,8 @@ describe('toggleCompletion and getCompletionStatus integration', () => {
 
     it('both query with habitId and date', () => {
       const queryParams = {
-        habitId: 'habit_123' as any,
         date: '2025-01-15',
+        habitId: 'habit_123' as any,
       };
 
       expect(queryParams).toHaveProperty('habitId');

@@ -28,7 +28,8 @@ export const getHabitsAtRisk = query({
     const threshold = args.threshold ?? 0.4;
 
     // Get all active (non-archived) habits
-    const habits = await ctx.db.query('habits')
+    const habits = await ctx.db
+      .query('habits')
       .filter((q) => q.eq(q.field('archived'), false))
       .collect();
 
@@ -38,26 +39,29 @@ export const getHabitsAtRisk = query({
       // Calculate tomorrow's prediction using habit strength model
       // Predicted probability = strength * accessibility
       const strength = habit.strength ?? 0;
-      const accessibility = habit.accessibility ?? 1.0;
+      const accessibility = habit.accessibility ?? 1;
       const predictedProbability = strength * accessibility;
 
       // Only include habits below threshold
       if (predictedProbability < threshold) {
         atRiskHabits.push({
           _id: habit._id,
-          name: habit.name,
-          icon: habit.icon ?? '📌',
-          strength,
           accessibility,
+          icon: habit.icon ?? '📌',
+          name: habit.name,
           predictedProbability,
           // Risk level based on probability
           riskLevel: predictedProbability < 0.2 ? 'high' : 'medium',
+
+          strength,
         });
       }
     }
 
     // Sort by risk level (lowest probability first = highest risk)
-    return atRiskHabits.sort((a, b) => a.predictedProbability - b.predictedProbability);
+    return atRiskHabits.sort(
+      (a, b) => a.predictedProbability - b.predictedProbability
+    );
   },
 });
 
@@ -80,23 +84,27 @@ export const getHabitPrediction = query({
     }
 
     const strength = habit.strength ?? 0;
-    const accessibility = habit.accessibility ?? 1.0;
+    const accessibility = habit.accessibility ?? 1;
     const predictedProbability = strength * accessibility;
 
     // Calculate confidence based on data quality
     // Higher totalCompletions = higher confidence
     const totalCompletions = habit.totalCompletions ?? 0;
-    const confidence = Math.min(totalCompletions / 30, 1.0); // Max confidence at 30 completions
+    const confidence = Math.min(totalCompletions / 30, 1); // Max confidence at 30 completions
 
     return {
+      accessibility,
+      confidence,
       habitId: habit._id,
       habitName: habit.name,
       predictedProbability,
-      confidence,
+      riskLevel:
+        predictedProbability < 0.2
+          ? 'high'
+          : predictedProbability < 0.4
+            ? 'medium'
+            : 'low',
       strength,
-      accessibility,
-      riskLevel: predictedProbability < 0.2 ? 'high' :
-                 predictedProbability < 0.4 ? 'medium' : 'low',
     };
   },
 });
@@ -117,7 +125,7 @@ export const predict7Days = query({
     if (!habit) return null;
 
     const strength = habit.strength ?? 0;
-    const accessibility = habit.accessibility ?? 1.0;
+    const accessibility = habit.accessibility ?? 1;
 
     // Get tracking data to assess trend
     const tracking = await ctx.db
@@ -146,7 +154,11 @@ export const predict7Days = query({
     }).length;
 
     // Calculate trend direction
-    const trend = calculateTrend(strength, recentCompletions, previousCompletions);
+    const trend = calculateTrend(
+      strength,
+      recentCompletions,
+      previousCompletions
+    );
 
     // Calculate risk level
     const riskLevel = calculateRisk(strength, recentCompletions);
@@ -167,7 +179,7 @@ export const predict7Days = query({
 
       // Apply trend-based adjustment
       const trendAdjustment =
-        trend === 'improving' ? 1.1 : trend === 'declining' ? 0.9 : 1.0;
+        trend === 'improving' ? 1.1 : trend === 'declining' ? 0.9 : 1;
 
       // Combined probability
       let probability = baseProb * weekdayBoost * trendAdjustment;
@@ -184,56 +196,59 @@ export const predict7Days = query({
         strength > 0.6 ? 'high' : strength > 0.3 ? 'medium' : 'low';
 
       predictions.push({
+        confidence,
         date: date.toISOString().split('T')[0],
         probability: Math.round(probability * 100) / 100,
-        confidence,
       });
     }
 
     // Calculate current and predicted strength for UI
     const currentStrength = strength * 100;
     const avgPredictedProb =
-      predictions.reduce((sum, p) => sum + p.probability, 0) / predictions.length;
+      predictions.reduce((sum, p) => sum + p.probability, 0) /
+      predictions.length;
     const predictedStrength = avgPredictedProb * 100;
 
     // Calculate overall confidence based on data quality
     const dataPoints = tracking.length;
     const overallConfidence =
-      dataPoints >= 21 ? 85 + Math.random() * 10 : // High confidence with 3+ weeks
-      dataPoints >= 7 ? 70 + Math.random() * 10 :  // Medium with 1+ week
-      50 + Math.random() * 15;                     // Lower with less data
+      dataPoints >= 21
+        ? 85 + Math.random() * 10 // High confidence with 3+ weeks
+        : dataPoints >= 7
+          ? 70 + Math.random() * 10 // Medium with 1+ week
+          : 50 + Math.random() * 15; // Lower with less data
 
     // Generate suggestions based on risk level and strength
     const suggestions = generateSuggestions(riskLevel, strength, trend);
 
     return {
-      habitId: args.habitId,
-      predictions,
-      currentStrength,
-      predictedStrength,
       confidence: Math.round(overallConfidence),
+      currentStrength,
+      habitId: args.habitId,
+      predictedStrength,
+      predictions,
       riskLevel,
-      trend,
       suggestions,
+      trend,
     };
   },
   returns: v.union(
     v.null(),
     v.object({
+      confidence: v.number(),
+      currentStrength: v.number(),
       habitId: v.id('habits'),
+      predictedStrength: v.number(),
       predictions: v.array(
         v.object({
+          confidence: v.string(),
           date: v.string(),
           probability: v.number(),
-          confidence: v.string(),
         })
       ),
-      currentStrength: v.number(),
-      predictedStrength: v.number(),
-      confidence: v.number(),
       riskLevel: v.string(),
-      trend: v.string(),
       suggestions: v.array(v.string()),
+      trend: v.string(),
     })
   ),
 });

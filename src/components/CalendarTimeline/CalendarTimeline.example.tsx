@@ -119,7 +119,7 @@ export function TimelineInCardExample() {
 
   const monday = startOfWeek(new Date(), { weekStartsOn: 1 });
   const weekdays = Array.from({ length: 5 }, (_, i) => addDays(monday, i));
-  const lastWeekday = weekdays[weekdays.length - 1];
+  const lastWeekday = weekdays.at(-1);
 
   return (
     <View className='bg-[#f3f4f6] p-4'>

@@ -23,7 +23,7 @@ Create a 3-screen onboarding flow that educates users on the science-backed appr
 
 ## Success Metrics
 
-- >60% onboarding completion rate
+- > 60% onboarding completion rate
 - Average time to first habit created: <90 seconds
 - 0 crashes during onboarding
 - Users understand "habit strength" concept

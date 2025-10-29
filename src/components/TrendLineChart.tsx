@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import {
   VictoryChart,
   VictoryLine,
@@ -62,10 +68,10 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
 
   // Format data for Victory
   const chartData = data.map((item, index) => ({
-    x: index,
-    y: item.averageStrength,
     label: `${Math.round(item.averageStrength)}%`,
     originalData: item,
+    x: index,
+    y: item.averageStrength,
   }));
 
   // Generate x-axis labels (show every 7 days)
@@ -80,9 +86,6 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
   return (
     <Animated.View style={[styles.container, containerAnimatedStyle]}>
       <VictoryChart
-        width={chartWidth}
-        height={chartHeight}
-        padding={{ left: 50, top: 20, right: 20, bottom: 40 }}
         containerComponent={
           <VictoryVoronoiContainer
             onActivateData={(points) => {
@@ -94,18 +97,25 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
             }}
           />
         }
+        height={chartHeight}
+        padding={{ bottom: 40, left: 50, right: 20, top: 20 }}
+        width={chartWidth}
       >
         {/* X Axis */}
         <VictoryAxis
           dependentAxis={false}
           style={{
             axis: { stroke: colors.border },
-            tickLabels: {
-              fontSize: 10,
-              fill: colors.text.tertiary,
-              angle: -45,
+            grid: {
+              opacity: 0.3,
+              stroke: colors.border,
+              strokeDasharray: '2,2',
             },
-            grid: { stroke: colors.border, strokeDasharray: '2,2', opacity: 0.3 },
+            tickLabels: {
+              angle: -45,
+              fill: colors.text.tertiary,
+              fontSize: 10,
+            },
           }}
           tickFormat={(t, i) => xAxisLabels[i] || ''}
         />
@@ -116,29 +126,33 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
           domain={[0, 100]}
           style={{
             axis: { stroke: colors.border },
-            tickLabels: {
-              fontSize: 10,
-              fill: colors.text.tertiary,
+            grid: {
+              opacity: 0.3,
+              stroke: colors.border,
+              strokeDasharray: '2,2',
             },
-            grid: { stroke: colors.border, strokeDasharray: '2,2', opacity: 0.3 },
+            tickLabels: {
+              fill: colors.text.tertiary,
+              fontSize: 10,
+            },
           }}
           tickFormat={(t) => `${t}%`}
         />
 
         {/* Line */}
         <VictoryLine
+          animate={{
+            duration: 500,
+            onLoad: { duration: 500 },
+          }}
           data={chartData}
+          interpolation='catmullRom'
           style={{
             data: {
               stroke: colors.primary,
               strokeWidth: 2.5,
             },
           }}
-          animate={{
-            duration: 500,
-            onLoad: { duration: 500 },
-          }}
-          interpolation="catmullRom"
         />
 
         {/* Data Points */}
@@ -170,7 +184,9 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
       {/* Legend */}
       <View style={styles.legend}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendLine, { backgroundColor: colors.primary }]} />
+          <View
+            style={[styles.legendLine, { backgroundColor: colors.primary }]}
+          />
           <Text style={styles.legendText}>Average Habit Strength</Text>
         </View>
       </View>
@@ -185,35 +201,53 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   emptyContainer: {
-    padding: spacing.xl,
     alignItems: 'center',
-    justifyContent: 'center',
-    height: 200,
     backgroundColor: colors.surface,
     borderRadius: 12,
-  },
-  emptyText: {
-    ...typography.h3,
-    color: colors.text.secondary,
-    marginBottom: spacing.xs,
+    height: 200,
+    justifyContent: 'center',
+    padding: spacing.xl,
   },
   emptySubtext: {
     ...typography.body,
     color: colors.text.tertiary,
     textAlign: 'center',
   },
+  emptyText: {
+    ...typography.h3,
+    color: colors.text.secondary,
+    marginBottom: spacing.xs,
+  },
+  legend: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: spacing.md,
+  },
+  legendItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  legendLine: {
+    height: 2,
+    marginRight: spacing.xs,
+    width: 20,
+  },
+  legendText: {
+    ...typography.caption,
+    color: colors.text.secondary,
+  },
   tooltip: {
-    position: 'absolute',
-    top: spacing.md,
-    right: spacing.md,
     backgroundColor: colors.background,
-    padding: spacing.sm,
     borderRadius: 8,
+    padding: spacing.sm,
+    position: 'absolute',
+    elevation: 5,
+    right: spacing.md,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    top: spacing.md,
+    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5,
   },
   tooltipDate: {
     ...typography.caption,
@@ -224,23 +258,5 @@ const styles = StyleSheet.create({
     ...typography.bodyBold,
     color: colors.text.primary,
     fontSize: 12,
-  },
-  legend: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: spacing.md,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  legendLine: {
-    width: 20,
-    height: 2,
-    marginRight: spacing.xs,
-  },
-  legendText: {
-    ...typography.caption,
-    color: colors.text.secondary,
   },
 });

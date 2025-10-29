@@ -31,6 +31,56 @@ const generateWeekDateStrings = () => {
   return weekDates.map((d) => format(d, 'yyyy-MM-dd'));
 };
 
+const WeekDateToggle = ({
+  date,
+  habitId,
+  isCompleted,
+  isFuture,
+  onToggle,
+}: {
+  date: string;
+  habitId: string;
+  isCompleted: boolean;
+  isFuture: boolean;
+  onToggle: (habitId: string, date: string) => void;
+}) => {
+  const scale = useSharedValue(1);
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const backgroundClass = isFuture
+    ? 'bg-gray-100 opacity-50'
+    : isCompleted
+      ? 'bg-green-500'
+      : 'bg-gray-200';
+
+  const handlePress = () => {
+    if (!isFuture) {
+      onToggle(habitId, date);
+    }
+  };
+
+  return (
+    <Pressable
+      accessibilityRole='button'
+      className={`h-9 w-9 items-center justify-center rounded-full ${backgroundClass}`}
+      disabled={isFuture}
+      onPress={handlePress}
+      onPressIn={() => {
+        scale.value = withSpring(0.9);
+      }}
+      onPressOut={() => {
+        scale.value = withSpring(1);
+      }}
+    >
+      <Animated.View style={scaleStyle}>
+        {isCompleted ? <Text className='text-white'>✓</Text> : null}
+      </Animated.View>
+    </Pressable>
+  );
+};
+
 const ExampleHabitCard = ({
   habit,
   onDelete,
@@ -60,7 +110,9 @@ const ExampleHabitCard = ({
     return s;
   }, [habit.completedDates]);
 
-  const completionCount = weekDates.filter(isCompletedFor).length;
+  const completionCount = weekDates.filter((date) =>
+    isCompletedFor(date)
+  ).length;
 
   // Animated progress bar width
   const containerWidth = useSharedValue(0);
@@ -106,28 +158,15 @@ const ExampleHabitCard = ({
         {weekDates.map((date) => {
           const isFuture = new Date(date) > new Date();
           const isDone = isCompletedFor(date);
-          const scale = useSharedValue(1);
-          const scaleStyle = useAnimatedStyle(() => ({
-            transform: [{ scale: scale.value }],
-          }));
           return (
-            <Pressable
+            <WeekDateToggle
               key={date}
-              accessibilityRole='button'
-              className={`h-9 w-9 items-center justify-center rounded-full ${isFuture ? 'bg-gray-100 opacity-50' : isDone ? 'bg-green-500' : 'bg-gray-200'}`}
-              disabled={isFuture}
-              onPress={() => !isFuture && onToggle(habit.id, date)}
-              onPressIn={() => {
-                scale.value = withSpring(0.9);
-              }}
-              onPressOut={() => {
-                scale.value = withSpring(1);
-              }}
-            >
-              <Animated.View style={scaleStyle}>
-                {isDone ? <Text className='text-white'>✓</Text> : null}
-              </Animated.View>
-            </Pressable>
+              date={date}
+              habitId={habit.id}
+              isCompleted={isDone}
+              isFuture={isFuture}
+              onToggle={onToggle}
+            />
           );
         })}
       </View>

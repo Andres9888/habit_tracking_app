@@ -8,9 +8,7 @@ import type {
   ToggleableSettingKey,
 } from './SettingsDialog.types';
 
-const normalizeDarkModePreference = (
-  value: unknown,
-): DarkModePreference => {
+const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
   if (value === 'dark' || value === 'light' || value === 'system') {
     return value;
   }
@@ -30,8 +28,8 @@ const resolveShouldUseDark = (preference: DarkModePreference) => {
   if (preference === 'dark') return true;
   if (preference === 'light') return false;
 
-  if (typeof window !== 'undefined' && window.matchMedia) {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (globalThis.window !== undefined && globalThis.matchMedia) {
+    return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
   return false;
@@ -59,15 +57,15 @@ export function useSettingsDialog(isOpen: boolean) {
   useEffect(() => {
     document.documentElement.classList.toggle(
       'dark',
-      resolveShouldUseDark(localSettings.darkMode),
+      resolveShouldUseDark(localSettings.darkMode)
     );
   }, [localSettings.darkMode]);
 
   useEffect(() => {
     if (localSettings.darkMode !== 'system') return;
-    if (typeof window === 'undefined' || !window.matchMedia) return;
+    if (globalThis.window === undefined || !globalThis.matchMedia) return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = globalThis.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (event: MediaQueryListEvent) => {
       document.documentElement.classList.toggle('dark', event.matches);
     };

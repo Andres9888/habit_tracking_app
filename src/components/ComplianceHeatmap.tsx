@@ -28,13 +28,32 @@ interface Props {
 
 const CELL_SIZE = (screenWidth - spacing.lg * 2 - spacing.xs * 6) / 7;
 const LEVEL_COLORS = {
-  none: '#F3F4F6',     // Gray-100
-  low: '#D1FAE5',      // Green-100
-  medium: '#6EE7B7',   // Green-300
-  high: '#10B981',     // Primary green
+  // Green-300
+  high: '#10B981',
+
+  // Gray-100
+  low: '#D1FAE5',
+
+  // Green-100
+  medium: '#6EE7B7',
+
+  none: '#F3F4F6', // Primary green
 };
 
-const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 const DAY_NAMES = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export default function ComplianceHeatmap({ data, onDayPress }: Props) {
@@ -52,32 +71,32 @@ export default function ComplianceHeatmap({ data, onDayPress }: Props) {
     // Add empty cells for days before the first data point
     for (let i = 0; i < firstDayOfWeek; i++) {
       currentWeek.push({
-        date: '',
-        completionRate: 0,
-        level: 'none',
         completedHabits: 0,
+        completionRate: 0,
+        date: '',
+        level: 'none',
         totalHabits: 0,
       });
     }
 
-    data.forEach((day) => {
+    for (const day of data) {
       currentWeek.push(day);
 
       if (currentWeek.length === 7) {
         weeksData.push(currentWeek);
         currentWeek = [];
       }
-    });
+    }
 
     // Add remaining days
     if (currentWeek.length > 0) {
       // Fill the rest of the week with empty cells
       while (currentWeek.length < 7) {
         currentWeek.push({
-          date: '',
-          completionRate: 0,
-          level: 'none',
           completedHabits: 0,
+          completionRate: 0,
+          date: '',
+          level: 'none',
           totalHabits: 0,
         });
       }
@@ -93,8 +112,8 @@ export default function ComplianceHeatmap({ data, onDayPress }: Props) {
     const labels: { month: string; weekIndex: number }[] = [];
     let currentMonth = -1;
 
-    weeks.forEach((week, weekIndex) => {
-      const validDay = week.find(day => day.date);
+    for (const [weekIndex, week] of weeks.entries()) {
+      const validDay = week.find((day) => day.date);
       if (validDay) {
         const date = new Date(validDay.date);
         const month = date.getMonth();
@@ -106,7 +125,7 @@ export default function ComplianceHeatmap({ data, onDayPress }: Props) {
           });
         }
       }
-    });
+    }
 
     return labels;
   }, [weeks, data]);
@@ -162,6 +181,8 @@ export default function ComplianceHeatmap({ data, onDayPress }: Props) {
                 {week.map((day, dayIndex) => (
                   <TouchableOpacity
                     key={dayIndex}
+                    activeOpacity={0.7}
+                    disabled={!day.date}
                     style={[
                       styles.cell,
                       {
@@ -171,8 +192,6 @@ export default function ComplianceHeatmap({ data, onDayPress }: Props) {
                       },
                     ]}
                     onPress={() => day.date && onDayPress?.(day)}
-                    activeOpacity={0.7}
-                    disabled={!day.date}
                   >
                     {day.completionRate > 0 && (
                       <Text style={styles.cellText}>
@@ -215,89 +234,74 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
   },
-  emptyContainer: {
-    padding: spacing.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 200,
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-  },
-  emptyText: {
-    ...typography.h3,
-    color: colors.text.secondary,
-    marginBottom: spacing.xs,
-  },
-  emptySubtext: {
-    ...typography.body,
-    color: colors.text.tertiary,
-    textAlign: 'center',
-  },
-  dayLabelsContainer: {
-    flexDirection: 'column',
-    position: 'absolute',
-    left: 0,
-    top: 40,
-    zIndex: 1,
-  },
-  dayLabelCell: {
-    width: 20,
-    height: CELL_SIZE,
-    marginBottom: spacing.xs,
-    justifyContent: 'center',
-  },
   dayLabel: {
     ...typography.caption,
     color: colors.text.tertiary,
     fontSize: 10,
     textAlign: 'center',
   },
-  scrollView: {
-    marginLeft: 24,
-    marginTop: 20,
+  dayLabelCell: {
+    height: CELL_SIZE,
+    justifyContent: 'center',
+    marginBottom: spacing.xs,
+    width: 20,
   },
-  monthLabelsContainer: {
-    height: 20,
-    position: 'relative',
+  dayLabelsContainer: {
+    flexDirection: 'column',
+    left: 0,
+    position: 'absolute',
+    top: 40,
+    zIndex: 1,
+  },
+  cell: {
+    height: CELL_SIZE,
+    width: CELL_SIZE,
+    borderRadius: 2,
+    marginBottom: spacing.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    height: 200,
+    justifyContent: 'center',
+    padding: spacing.xl,
+  },
+  cellText: {
+    color: colors.surface,
+    fontSize: 8,
+    fontWeight: '600',
+  },
+  emptySubtext: {
+    ...typography.body,
+    color: colors.text.tertiary,
+    textAlign: 'center',
+  },
+  emptyText: {
+    ...typography.h3,
+    color: colors.text.secondary,
+    marginBottom: spacing.xs,
+  },
+  legend: {
+    alignItems: 'center',
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    borderTopColor: colors.border,
+    justifyContent: 'center',
+    marginTop: spacing.lg,
+    paddingTop: spacing.md,
+  },
+  legendCell: {
+    borderRadius: 2,
+    height: 12,
+    marginHorizontal: 2,
+    width: 12,
   },
   monthLabel: {
     position: 'absolute',
     top: 0,
-  },
-  monthLabelText: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    fontSize: 10,
-  },
-  weeksContainer: {
-    flexDirection: 'row',
-    marginTop: spacing.xs,
-  },
-  weekColumn: {
-    flexDirection: 'column',
-    marginRight: spacing.xs,
-  },
-  cell: {
-    width: CELL_SIZE,
-    height: CELL_SIZE,
-    marginBottom: spacing.xs,
-    borderRadius: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cellText: {
-    fontSize: 8,
-    color: colors.surface,
-    fontWeight: '600',
-  },
-  legend: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.lg,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
   legendLabel: {
     ...typography.caption,
@@ -305,11 +309,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginHorizontal: spacing.xs,
   },
-  legendCell: {
-    width: 12,
-    height: 12,
-    borderRadius: 2,
-    marginHorizontal: 2,
+  monthLabelsContainer: {
+    height: 20,
+    position: 'relative',
+  },
+  monthLabelText: {
+    ...typography.caption,
+    color: colors.text.secondary,
+    fontSize: 10,
+  },
+  scrollView: {
+    marginLeft: 24,
+    marginTop: 20,
   },
   summary: {
     alignItems: 'center',
@@ -319,5 +330,13 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.text.tertiary,
     fontSize: 10,
+  },
+  weekColumn: {
+    flexDirection: 'column',
+    marginRight: spacing.xs,
+  },
+  weeksContainer: {
+    flexDirection: 'row',
+    marginTop: spacing.xs,
   },
 });
