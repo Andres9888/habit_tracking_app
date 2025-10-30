@@ -5,7 +5,7 @@ import { ConvexProvider } from 'convex/react';
 import { PropsWithChildren } from 'react';
 import { PaperProvider } from 'react-native-paper';
 
-import { HabitsApp } from './features/habits/HabitsApp';
+import HabitsApp from './features/habits/HabitsApp';
 import { clerkPublishableKey, convexClient, tokenCache } from './lib/appConfig';
 import theme from './theme';
 
