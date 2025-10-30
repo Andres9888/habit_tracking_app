@@ -5,6 +5,7 @@ export default {
   ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testMatch: [
+    '**/tests/**/*.test.[jt]s?(x)',
     '**/__tests__/**/*.test.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
   ],
@@ -18,5 +19,5 @@ export default {
     '!**/coverage/**',
     '!**/*.d.ts',
   ],
-  testPathIgnorePatterns: ['/node_modules/', '/__tests__/.*\\.snap$'],
+  testPathIgnorePatterns: ['/node_modules/', '/__tests__/.*\\.snap$', '/tests/.*\\.snap$'],
 };
