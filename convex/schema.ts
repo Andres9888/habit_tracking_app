@@ -123,7 +123,8 @@ const applicationTables = {
       v.literal('morning_routine'),
       v.literal('health_fitness'),
       v.literal('productivity'),
-      v.literal('mindfulness')
+      v.literal('mindfulness'),
+      v.literal('andrew_huberman')
     ),
     // For sorting popular templates
     createdAt: v.number(),

@@ -16,7 +16,8 @@ export const list = query({
         v.literal('morning_routine'),
         v.literal('health_fitness'),
         v.literal('productivity'),
-        v.literal('mindfulness')
+        v.literal('mindfulness'),
+        v.literal('andrew_huberman')
       )
     ),
   },
@@ -403,7 +404,162 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Physiological sigh for stress regulation',
     });
 
-    return { message: '24 templates seeded successfully', success: true };
+    // Andrew Huberman Protocol Templates
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'View 2-10 minutes of morning sunlight within 30-60 minutes of waking. Critical for circadian rhythm regulation and dopamine production.',
+      frequency: 'daily',
+      icon: '☀️',
+      iconColor: '#F59E0B',
+      name: 'Morning Sunlight Viewing',
+      popularityScore: 95,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Morning sunlight for optimal circadian biology',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Delay caffeine intake by 90-120 minutes after waking. Allows natural adenosine clearance and prevents afternoon crash.',
+      frequency: 'daily',
+      icon: '⏰',
+      iconColor: '#B45309',
+      name: 'Delay Caffeine 90 Minutes',
+      popularityScore: 92,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Optimal caffeine timing protocol',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Perform 45 minutes of Zone 2 cardio 3x weekly. Builds mitochondrial health, fat oxidation, and cardiovascular fitness.',
+      frequency: 'weekly',
+      icon: '🚴',
+      iconColor: '#2563EB',
+      name: 'Zone 2 Cardio Training',
+      popularityScore: 90,
+      scientificLink:
+        'https://hubermanlab.com/zone-2-training-for-endurance-and-longevity/',
+      scientificReference:
+        'Huberman Lab (2022) - Zone 2 training for longevity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        '11 minutes of deliberate cold exposure per week. Enhances dopamine, mood, metabolism, and stress resilience.',
+      frequency: 'weekly',
+      icon: '🧊',
+      iconColor: '#38BDF8',
+      name: 'Deliberate Cold Exposure',
+      popularityScore: 88,
+      scientificLink:
+        'https://hubermanlab.com/optimal-deliberate-cold-exposure-protocols/',
+      scientificReference:
+        'Huberman Lab (2023) - Optimal deliberate cold exposure protocols',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Practice 10-20 minutes of Non-Sleep Deep Rest (NSDR) daily. Restores focus, accelerates learning, and improves sleep.',
+      frequency: 'daily',
+      icon: '🛌',
+      iconColor: '#7DD3FC',
+      name: 'NSDR Practice',
+      popularityScore: 89,
+      scientificLink:
+        'https://hubermanlab.com/using-nsdr-to-improve-learning-skill-memory/',
+      scientificReference:
+        'Huberman Lab (2021) - Using NSDR to improve learning and sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Perform 1-3 physiological sighs when stressed. Rapidly lowers autonomic arousal and steadies mood.',
+      frequency: 'daily',
+      icon: '😮‍💨',
+      iconColor: '#34D399',
+      name: 'Physiological Sigh',
+      popularityScore: 87,
+      scientificLink:
+        'https://hubermanlab.com/science-supported-tools-to-reduce-stress/',
+      scientificReference:
+        'Huberman Lab (2023) - Physiological sigh for stress regulation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Dim lights 2-3 hours before sleep. Avoid overhead lights and use low-angle lights. Supports melatonin production.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#6366F1',
+      name: 'Evening Light Dimming',
+      popularityScore: 86,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Evening light protocols for better sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Keep bedroom temperature 65-68°F (18-20°C) for optimal sleep. Cooler temperatures support deep sleep stages.',
+      frequency: 'daily',
+      icon: '🌡️',
+      iconColor: '#0EA5E9',
+      name: 'Cool Sleep Temperature',
+      popularityScore: 85,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Temperature minimum protocol for sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Consume 30-60g of protein within 30 minutes of waking. Supports neurotransmitter production and muscle maintenance.',
+      frequency: 'daily',
+      icon: '🍳',
+      iconColor: '#F97316',
+      name: 'Morning Protein Protocol',
+      popularityScore: 84,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Morning nutrition for optimal alertness',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Follow consistent meal timing within a 10-12 hour eating window. Supports circadian alignment and metabolic health.',
+      frequency: 'daily',
+      icon: '🍽️',
+      iconColor: '#10B981',
+      name: 'Time-Restricted Eating',
+      popularityScore: 88,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Meal timing and circadian biology',
+    });
+
+    return { message: '34 templates seeded successfully', success: true };
   },
 });
 

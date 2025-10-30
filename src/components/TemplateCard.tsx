@@ -79,6 +79,7 @@ export function TemplateCard({
 
   // Category display names
   const categoryLabels: Record<string, string> = {
+    andrew_huberman: 'Andrew Huberman',
     health_fitness: 'Health & Fitness',
     mindfulness: 'Mindfulness',
     morning_routine: 'Morning Routine',

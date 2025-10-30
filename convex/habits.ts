@@ -389,7 +389,7 @@ export const list = query({
       .filter((q) =>
         q.and(
           q.neq(q.field('archived'), true),
-          q.or(q.eq(q.field('paused')), q.eq(q.field('paused'), false))
+          q.neq(q.field('paused'), true)
         )
       )
       .collect();
@@ -668,6 +668,7 @@ export const getTracking = query({
     const sortedDates = [...args.dates].sort();
     const startDate = sortedDates[0];
     const endDate = sortedDates.at(-1);
+    if (!endDate) return [];
 
     const range = await ctx.db
       .query('tracking')

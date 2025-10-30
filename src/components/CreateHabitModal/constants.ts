@@ -15,6 +15,7 @@ export const CATEGORIES: CategoryFilter[] = [
   { icon: '💪', id: 'health_fitness', label: 'Health' },
   { icon: '🎯', id: 'productivity', label: 'Productivity' },
   { icon: '🧘', id: 'mindfulness', label: 'Mindfulness' },
+  { icon: '🔬', id: 'andrew_huberman', label: 'Huberman' },
 ];
 
 export const HABIT_NAME_REGEX = /^(\p{Emoji})\s+(.+)$/u;

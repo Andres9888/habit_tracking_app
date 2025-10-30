@@ -6,7 +6,7 @@ import {
   ensureNotificationPermissions,
   formatReminderTime,
   scheduleHabitReminder,
-} from '../../utils/notifications';
+} from '../../../utils/notifications';
 import { DEFAULT_EMOJI } from '../constants';
 import type { CreateHabitModalProps, HabitTemplate } from '../types';
 import { useHabitForm } from './useHabitForm';

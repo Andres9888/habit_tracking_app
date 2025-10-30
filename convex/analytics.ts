@@ -146,14 +146,17 @@ export const getOverviewStats = query({
           }
         : null,
       totalHabits: activeHabits.length,
-      weakestHabit: habitsWithStrength.at(-1)
-        ? {
-            emoji: habitsWithStrength.at(-1).icon || '🎯',
-            id: habitsWithStrength.at(-1)._id,
-            name: habitsWithStrength.at(-1).name,
-            strength: habitsWithStrength.at(-1).strength,
-          }
-        : null,
+      weakestHabit: (() => {
+        const weakest = habitsWithStrength.at(-1);
+        return weakest
+          ? {
+              emoji: weakest.icon || '🎯',
+              id: weakest._id,
+              name: weakest.name,
+              strength: weakest.strength,
+            }
+          : null;
+      })(),
     };
   },
 });

@@ -9,7 +9,8 @@ export type Category =
   | 'morning_routine'
   | 'health_fitness'
   | 'productivity'
-  | 'mindfulness';
+  | 'mindfulness'
+  | 'andrew_huberman';
 
 export interface CategoryFilter {
   id: Category;

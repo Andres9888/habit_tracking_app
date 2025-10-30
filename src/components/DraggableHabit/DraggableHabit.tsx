@@ -49,7 +49,7 @@ export default function DraggableHabit({
   habit,
   isCompactMode: _isCompactMode = false,
   highContrastMode = false,
-  showHabitStrengthPercentage = false,
+  showHabitStrengthPercentage: _showHabitStrengthPercentage = false,
   streak,
   toggleHabit,
   weekDateStrings,
@@ -109,7 +109,6 @@ export default function DraggableHabit({
     }
   };
 
-  const strengthPercentage = Math.round((habit.strength || 0) * 100);
   const gradientHeight = useRef(
     new Animated.Value((habit.strength || 0) * MAX_GRADIENT_HEIGHT)
   ).current;
@@ -157,7 +156,7 @@ export default function DraggableHabit({
         }}
       >
         <View className='p-4'>
-          {/* Header with icon, title and strength badge */}
+          {/* Header with icon and title */}
           <View className='mb-5 flex-row items-center justify-between'>
             <View className='flex-row items-center gap-4'>
               {/* Icon container - colored background based on habit */}
@@ -202,18 +201,6 @@ export default function DraggableHabit({
                 )}
               </View>
             </View>
-            {showHabitStrengthPercentage &&
-              habit.strength !== undefined &&
-              habit.strength > 0 && (
-                <View
-                  className='h-7 rounded-full px-3'
-                  style={{ backgroundColor: colors.strengthBackground }}
-                >
-                  <Text className='text-[14px] font-semibold leading-7 text-white'>
-                    {strengthPercentage}%
-                  </Text>
-                </View>
-              )}
           </View>
 
           {/* Week status visualizer */}

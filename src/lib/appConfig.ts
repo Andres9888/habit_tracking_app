@@ -1,4 +1,4 @@
-eimport { ConvexReactClient } from 'convex/react';
+import { ConvexReactClient } from 'convex/react';
 import * as SecureStore from 'expo-secure-store';
 
 const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
