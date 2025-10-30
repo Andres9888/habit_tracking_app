@@ -81,9 +81,9 @@ export function HabitsAtRiskWidget({ onHabitPress }: HabitsAtRiskWidgetProps) {
       </View>
 
       {/* At-Risk Habit Cards */}
-      {atRiskHabits.map((habit: AtRiskHabit) => (
+      {atRiskHabits.map((habit: AtRiskHabit, index: number) => (
         <Pressable
-          key={habit._id}
+          key={`at-risk-${index}`}
           accessibilityHint={`This habit has ${Math.round(habit.predictedProbability * 100)}% chance of completion tomorrow`}
           accessibilityLabel={`View ${habit.name} habit details`}
           accessibilityRole='button'

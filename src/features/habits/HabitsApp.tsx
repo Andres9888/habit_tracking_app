@@ -20,6 +20,7 @@ export function HabitsApp() {
           <HabitsHeader
             onOpenCreateHabit={list.handleToggleForm}
             onOpenSettings={modals.openSettings}
+            onOpenHabitScience={modals.openTemplatesScreen}
           />
 
           <CalendarTimeline

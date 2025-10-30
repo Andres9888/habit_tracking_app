@@ -49,6 +49,7 @@ export interface HabitsModalsState {
   showHapticTest: boolean;
   showShareCard: boolean;
   showPauseModal: boolean;
+  showTemplatesScreen: boolean;
   habitToEdit: Habit | null;
   habitToPause: Habit | null;
   selectedHabit: Habit | null;
@@ -66,6 +67,8 @@ export interface HabitsModalsState {
   closePauseModal: () => void;
   openHapticTest: () => void;
   closeHapticTest: () => void;
+  openTemplatesScreen: () => void;
+  closeTemplatesScreen: () => void;
   openHabitDetail: (habit: Habit) => void;
   openHabitCalendar: (habit: Habit) => void;
   openPauseModal: (habitId: Id<'habits'>) => void;
@@ -98,6 +101,7 @@ export function useHabitsApp(): UseHabitsAppResult {
   const [habitToPause, setHabitToPause] = useState<Habit | null>(null);
   const [habitToEdit, setHabitToEdit] = useState<Habit | null>(null);
   const [showHapticTest, setShowHapticTest] = useState(false);
+  const [showTemplatesScreen, setShowTemplatesScreen] = useState(false);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
@@ -349,6 +353,7 @@ export function useHabitsApp(): UseHabitsAppResult {
     showHapticTest,
     showShareCard,
     showPauseModal,
+    showTemplatesScreen,
     habitToEdit,
     habitToPause,
     selectedHabit,
@@ -380,6 +385,8 @@ export function useHabitsApp(): UseHabitsAppResult {
       setShowHapticTest(true);
     },
     closeHapticTest: () => setShowHapticTest(false),
+    openTemplatesScreen: () => setShowTemplatesScreen(true),
+    closeTemplatesScreen: () => setShowTemplatesScreen(false),
     openHabitDetail: (habit: Habit) => {
       setSelectedHabit(habit);
       setIsHabitDetailOpen(true);

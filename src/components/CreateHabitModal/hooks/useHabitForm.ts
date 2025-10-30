@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { DEFAULT_COLOR, DEFAULT_EMOJI } from '../constants';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
 import { buildHabitName, parseHabitName, parseReminderTime } from '../utils';
 
@@ -11,13 +11,13 @@ interface UseHabitFormOptions {
 
 export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   const parsed = useMemo(
-    () => parseHabitName(habitToEdit?.name ?? `${DEFAULT_EMOJI} `),
+    () => parseHabitName(habitToEdit?.name ?? ''),
     [habitToEdit?.name]
   );
 
   const [habitName, setHabitName] = useState(parsed.name);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
-    parsed.emoji ?? DEFAULT_EMOJI
+    parsed.emoji
   );
   const [selectedColor, setSelectedColor] = useState(
     habitToEdit?.iconColor ?? DEFAULT_COLOR
@@ -39,12 +39,27 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     [selectedEmoji, habitName]
   );
 
+  useEffect(() => {
+    if (!habitToEdit) {
+      return;
+    }
+
+    setHabitName(parsed.name);
+    setSelectedEmoji(parsed.emoji);
+    setSelectedColor(habitToEdit.iconColor ?? DEFAULT_COLOR);
+    setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
+    setReminderTime(parseReminderTime(habitToEdit.reminderTime));
+    setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
+  }, [habitToEdit, parsed]);
+
   const resetForm = useCallback(() => {
     setHabitName('');
-    setSelectedEmoji(DEFAULT_EMOJI);
+    setSelectedEmoji(null);
     setSelectedColor(DEFAULT_COLOR);
+    setColorPickerVisible(false);
     setRemindersEnabled(false);
     setReminderTime(parseReminderTime(undefined));
+    setShowTimePicker(false);
     setReminderSound(DEFAULT_SOUND);
   }, []);
 

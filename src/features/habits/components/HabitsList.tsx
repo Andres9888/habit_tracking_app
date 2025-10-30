@@ -37,7 +37,8 @@ export function HabitsList({ state }: HabitsListProps) {
   });
 
   const keyExtractor = useCallback(
-    (habit: (typeof habits)[number]) => habit._id,
+    (habit: (typeof habits)[number], index: number) =>
+      habit._id ?? `habit-${index}`,
     []
   );
 

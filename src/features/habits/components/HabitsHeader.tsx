@@ -1,14 +1,16 @@
-import { Plus, Settings } from 'lucide-react-native';
+import { Plus, Settings, Microscope } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 
 interface HabitsHeaderProps {
   onOpenCreateHabit: () => void;
   onOpenSettings: () => void;
+  onOpenHabitScience: () => void;
 }
 
 export function HabitsHeader({
   onOpenCreateHabit,
   onOpenSettings,
+  onOpenHabitScience,
 }: HabitsHeaderProps) {
   return (
     <View className='mt-3 flex-row items-center justify-between'>
@@ -25,6 +27,14 @@ export function HabitsHeader({
         </Text>
       </Pressable>
       <View className='flex-row gap-3'>
+        <Pressable
+          accessibilityLabel='Open habit science'
+          accessibilityRole='button'
+          className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+          onPress={onOpenHabitScience}
+        >
+          <Microscope color='#101727' size={20} strokeWidth={2.25} />
+        </Pressable>
         <Pressable
           accessibilityLabel='Open settings'
           accessibilityRole='button'

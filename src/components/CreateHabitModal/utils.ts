@@ -1,5 +1,5 @@
 import { getDefaultReminderTime } from '../../utils/notifications';
-import { DEFAULT_EMOJI, HABIT_NAME_REGEX } from './constants';
+import { HABIT_NAME_REGEX } from './constants';
 
 export interface ParsedHabitName {
   emoji: string | null;
@@ -7,9 +7,16 @@ export interface ParsedHabitName {
 }
 
 export const parseHabitName = (fullName: string): ParsedHabitName => {
+  if (!fullName || !fullName.trim()) {
+    return { emoji: null, name: '' };
+  }
+
   const match = fullName.match(HABIT_NAME_REGEX);
-  if (match) return { emoji: match[1], name: match[2] };
-  return { emoji: DEFAULT_EMOJI, name: fullName };
+  if (match) {
+    return { emoji: match[1], name: match[2] };
+  }
+
+  return { emoji: null, name: fullName.trim() };
 };
 
 export const parseReminderTime = (timeString?: string): Date => {

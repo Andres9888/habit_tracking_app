@@ -8,6 +8,7 @@ import { MilestoneCelebration } from '../../../components/MilestoneCelebration';
 import PauseHabitModal from '../../../components/PauseHabitModal';
 import SettingsModal from '../../../components/SettingsModal';
 import HapticTest from '../../../components/HapticTest';
+import TemplatesScreen from '../../../screens/TemplatesScreen';
 import type { ShareCardData } from '../types';
 import type { HabitsModalsState } from '../hooks/useHabitsApp';
 
@@ -25,6 +26,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     showHapticTest,
     showShareCard,
     showPauseModal,
+    showTemplatesScreen,
     habitToEdit,
     habitToPause,
     selectedHabit,
@@ -40,6 +42,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     closeHabitDetail,
     closeShareCard,
     closePauseModal,
+    closeTemplatesScreen,
     setShowHabitStrengthPercentage,
     onSettingsChange,
     onDeleteHabit,
@@ -166,6 +169,24 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onCancel={closePauseModal}
         onConfirm={confirmPause}
       />
+
+      <Modal
+        animationType='slide'
+        visible={showTemplatesScreen}
+        onRequestClose={closeTemplatesScreen}
+      >
+        <View className='flex-1'>
+          <TemplatesScreen />
+          <View className='absolute right-4 top-12'>
+            <Pressable
+              className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'
+              onPress={closeTemplatesScreen}
+            >
+              <Text style={{ fontSize: 20, fontWeight: '600' }}>×</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }

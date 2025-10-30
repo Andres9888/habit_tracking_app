@@ -200,38 +200,6 @@ export const seedTemplates = mutation({
         'Yang et al. (2014) - Added sugar intake and cardiovascular disease',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'health_fitness',
-      createdAt: now,
-      description:
-        'Perform 45 minutes of steady Zone 2 cardio 3x weekly. Builds mitochondrial efficiency and endurance.',
-      frequency: 'weekly',
-      icon: '🚴',
-      iconColor: '#2563EB',
-      name: 'Zone 2 Cardio',
-      popularityScore: 90,
-      scientificLink:
-        'https://hubermanlab.com/zone-2-training-for-endurance-and-longevity/',
-      scientificReference:
-        'Huberman Lab (2022) - Zone 2 training for longevity',
-    });
-
-    await ctx.db.insert('templates', {
-      category: 'health_fitness',
-      createdAt: now,
-      description:
-        'Accumulate 11 minutes of cold exposure per week to boost mood, metabolism, and stress resilience.',
-      frequency: 'weekly',
-      icon: '🧊',
-      iconColor: '#38BDF8',
-      name: 'Deliberate Cold Exposure',
-      popularityScore: 88,
-      scientificLink:
-        'https://hubermanlab.com/optimal-deliberate-cold-exposure-protocols/',
-      scientificReference:
-        'Huberman Lab (2023) - Optimal deliberate cold exposure protocols',
-    });
-
     // Productivity Templates
     await ctx.db.insert('templates', {
       category: 'productivity',
@@ -372,38 +340,6 @@ export const seedTemplates = mutation({
         'Hansen et al. (2017) - Shinrin-yoku (forest bathing) benefits',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'mindfulness',
-      createdAt: now,
-      description:
-        'Practice a 10-20 minute Non-Sleep Deep Rest session to restore focus and accelerate learning.',
-      frequency: 'daily',
-      icon: '🛌',
-      iconColor: '#7DD3FC',
-      name: 'NSDR Reset',
-      popularityScore: 89,
-      scientificLink:
-        'https://hubermanlab.com/using-nsdr-to-improve-learning-skill-memory/',
-      scientificReference:
-        'Huberman Lab (2021) - Using NSDR to improve learning and sleep',
-    });
-
-    await ctx.db.insert('templates', {
-      category: 'mindfulness',
-      createdAt: now,
-      description:
-        'Take 1-3 physiological sighs when stressed. Rapidly lowers autonomic arousal and steadies mood.',
-      frequency: 'daily',
-      icon: '😮‍💨',
-      iconColor: '#34D399',
-      name: 'Physiological Sigh Break',
-      popularityScore: 87,
-      scientificLink:
-        'https://hubermanlab.com/science-supported-tools-to-reduce-stress/',
-      scientificReference:
-        'Huberman Lab (2023) - Physiological sigh for stress regulation',
-    });
-
     // Andrew Huberman Protocol Templates
     await ctx.db.insert('templates', {
       category: 'andrew_huberman',
@@ -505,8 +441,8 @@ export const seedTemplates = mutation({
       description:
         'Dim lights 2-3 hours before sleep. Avoid overhead lights and use low-angle lights. Supports melatonin production.',
       frequency: 'daily',
-      icon: '🌙',
-      iconColor: '#6366F1',
+      icon: '💡',
+      iconColor: '#FDE047',
       name: 'Evening Light Dimming',
       popularityScore: 86,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
@@ -559,7 +495,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Meal timing and circadian biology',
     });
 
-    return { message: '34 templates seeded successfully', success: true };
+    return { message: '30 templates seeded successfully', success: true };
   },
 });
 

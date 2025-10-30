@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
@@ -47,6 +47,23 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
 
   const template = useTemplateBrowser({ isEditMode, visible, onTemplateSelect: applyTemplate });
   const science = useScienceModal({ onSelectTemplate: applyTemplate });
+  const { reset: resetTemplateCategories, closeTemplateBrowser } = template;
+  const { close: closeScienceModal } = science;
+
+  useEffect(() => {
+    if (!visible || isEditMode) return;
+    resetForm();
+    resetTemplateCategories();
+    closeTemplateBrowser();
+    closeScienceModal();
+  }, [
+    visible,
+    isEditMode,
+    resetForm,
+    resetTemplateCategories,
+    closeTemplateBrowser,
+    closeScienceModal,
+  ]);
   const handleCreate = useCallback(async () => {
     if (!habitName.trim() || !fullHabitName) return;
 
