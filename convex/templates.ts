@@ -17,7 +17,12 @@ export const list = query({
         v.literal('health_fitness'),
         v.literal('productivity'),
         v.literal('mindfulness'),
-        v.literal('andrew_huberman')
+        v.literal('andrew_huberman'),
+        v.literal('learning'),
+        v.literal('social'),
+        v.literal('financial'),
+        v.literal('creativity'),
+        v.literal('sleep')
       )
     ),
   },
@@ -495,7 +500,362 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Meal timing and circadian biology',
     });
 
-    return { message: '30 templates seeded successfully', success: true };
+    // Learning & Education Templates
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Read for 30 minutes daily. Improves vocabulary, cognitive function, and reduces stress significantly.',
+      frequency: 'daily',
+      icon: '📚',
+      iconColor: '#8B5CF6',
+      name: 'Daily Reading',
+      popularityScore: 94,
+      scientificReference:
+        'Bavishi et al. (2016) - A chapter a day: Association of book reading with longevity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice a new language for 15 minutes daily. Consistent short sessions are more effective than long irregular study.',
+      frequency: 'daily',
+      icon: '🌍',
+      iconColor: '#3B82F6',
+      name: 'Language Learning',
+      popularityScore: 89,
+      scientificReference:
+        'Krashen (1982) - Second language acquisition and input hypothesis',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Watch one educational video or take one online course lesson. Microlearning improves knowledge retention.',
+      frequency: 'daily',
+      icon: '🎓',
+      iconColor: '#F59E0B',
+      name: 'Learn Something New',
+      popularityScore: 87,
+      scientificReference:
+        'Giurgiu et al. (2020) - Microlearning effectiveness in education',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice active recall and spaced repetition for 10 minutes. The most effective learning technique backed by science.',
+      frequency: 'daily',
+      icon: '🧩',
+      iconColor: '#EC4899',
+      name: 'Spaced Repetition Study',
+      popularityScore: 91,
+      scientificReference:
+        'Dunlosky et al. (2013) - Improving students learning with effective techniques',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Write a summary of what you learned today. Consolidates knowledge and reveals gaps in understanding.',
+      frequency: 'daily',
+      icon: '✏️',
+      iconColor: '#06B6D4',
+      name: 'Learning Journal',
+      popularityScore: 85,
+      scientificReference:
+        'Bui et al. (2013) - Note-taking with computers: Exploring alternative strategies',
+    });
+
+    // Social & Relationships Templates
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Reach out to one friend or family member. Regular social connection significantly improves mental health and longevity.',
+      frequency: 'daily',
+      icon: '💬',
+      iconColor: '#10B981',
+      name: 'Daily Connection',
+      popularityScore: 92,
+      scientificReference:
+        'Holt-Lunstad et al. (2010) - Social relationships and mortality risk',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Practice active listening without interrupting. Strengthens relationships and improves empathy.',
+      frequency: 'daily',
+      icon: '👂',
+      iconColor: '#7C3AED',
+      name: 'Active Listening',
+      popularityScore: 88,
+      scientificReference:
+        'Rogers & Farson (1957) - Active listening communication technique',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Express appreciation to someone. Gratitude practices strengthen social bonds and increase life satisfaction.',
+      frequency: 'daily',
+      icon: '💝',
+      iconColor: '#F472B6',
+      name: 'Express Gratitude',
+      popularityScore: 90,
+      scientificReference:
+        'Algoe et al. (2010) - Its the little things: Everyday gratitude',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Put away phone during meals with others. Undivided attention improves relationship quality.',
+      frequency: 'daily',
+      icon: '📵',
+      iconColor: '#EF4444',
+      name: 'Device-Free Meals',
+      popularityScore: 86,
+      scientificReference:
+        'Przybylski & Weinstein (2013) - Can you connect with me now?',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Schedule quality time with loved ones. Intentional connection prevents relationship drift.',
+      frequency: 'weekly',
+      icon: '📅',
+      iconColor: '#0EA5E9',
+      name: 'Plan Quality Time',
+      popularityScore: 84,
+      scientificReference:
+        'Aron et al. (2000) - Couples shared participation in novel activities',
+    });
+
+    // Financial Health Templates
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Track every expense. Financial awareness is the first step to building wealth and reducing money stress.',
+      frequency: 'daily',
+      icon: '💰',
+      iconColor: '#10B981',
+      name: 'Track Expenses',
+      popularityScore: 91,
+      scientificReference:
+        'Thaler & Sunstein (2008) - Nudge: Improving decisions about health, wealth',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Review and update your budget. Regular budget review prevents overspending and builds financial security.',
+      frequency: 'weekly',
+      icon: '📊',
+      iconColor: '#3B82F6',
+      name: 'Budget Review',
+      popularityScore: 88,
+      scientificReference:
+        'Fernbach et al. (2015) - Financial literacy and household decision making',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Save before spending - automate transfers to savings. Pay yourself first principle builds wealth automatically.',
+      frequency: 'daily',
+      icon: '🏦',
+      iconColor: '#059669',
+      name: 'Automated Savings',
+      popularityScore: 93,
+      scientificReference:
+        'Thaler & Benartzi (2004) - Save More Tomorrow: Using behavioral economics',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Read financial news or learning content for 10 minutes. Financial literacy directly correlates with wealth building.',
+      frequency: 'daily',
+      icon: '📰',
+      iconColor: '#F59E0B',
+      name: 'Financial Education',
+      popularityScore: 85,
+      scientificReference:
+        'Lusardi & Mitchell (2014) - The economic importance of financial literacy',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Implement a no-spend day. Regular restraint builds discipline and increases savings rate.',
+      frequency: 'weekly',
+      icon: '🚫',
+      iconColor: '#DC2626',
+      name: 'No-Spend Day',
+      popularityScore: 82,
+      scientificReference:
+        'Baumeister et al. (2007) - Psychology of spending and consumer self-control',
+    });
+
+    // Creativity Templates
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Sketch, doodle, or draw for 10 minutes. Visual creativity reduces stress and enhances problem-solving.',
+      frequency: 'daily',
+      icon: '🎨',
+      iconColor: '#EC4899',
+      name: 'Daily Drawing',
+      popularityScore: 87,
+      scientificReference:
+        'Kaimal et al. (2016) - Reduction of cortisol levels through art making',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Free write for 10 minutes without editing. Stream-of-consciousness writing unlocks creative insights.',
+      frequency: 'daily',
+      icon: '✍️',
+      iconColor: '#7C3AED',
+      name: 'Creative Writing',
+      popularityScore: 89,
+      scientificReference:
+        'Pennebaker & Smyth (2016) - Opening up by writing it down',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Capture 3 ideas or observations. Building an idea bank fuels creativity and innovation.',
+      frequency: 'daily',
+      icon: '💡',
+      iconColor: '#F59E0B',
+      name: 'Idea Collection',
+      popularityScore: 86,
+      scientificReference:
+        'Sawyer (2011) - Explaining creativity: The science of human innovation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Practice your creative skill for 20 minutes. Deliberate practice is essential for creative mastery.',
+      frequency: 'daily',
+      icon: '🎭',
+      iconColor: '#8B5CF6',
+      name: 'Creative Practice',
+      popularityScore: 91,
+      scientificReference:
+        'Ericsson et al. (1993) - The role of deliberate practice in expertise',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Consume creative inspiration (art, music, poetry). Diverse input enhances creative output.',
+      frequency: 'daily',
+      icon: '🎵',
+      iconColor: '#06B6D4',
+      name: 'Creative Inspiration',
+      popularityScore: 84,
+      scientificReference:
+        'Getzels & Csikszentmihalyi (1976) - Creative vision: Longitudinal study',
+    });
+
+    // Sleep & Recovery Templates
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Maintain a consistent sleep schedule 7 days a week. Regular sleep timing is crucial for circadian health.',
+      frequency: 'daily',
+      icon: '⏰',
+      iconColor: '#6366F1',
+      name: 'Consistent Sleep Schedule',
+      popularityScore: 95,
+      scientificReference:
+        'Walker (2017) - Why We Sleep: Unlocking the power of sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Keep bedroom cool (65-68°F/18-20°C). Cooler temperatures significantly improve sleep quality.',
+      frequency: 'daily',
+      icon: '❄️',
+      iconColor: '#38BDF8',
+      name: 'Cool Sleep Environment',
+      popularityScore: 89,
+      scientificReference:
+        'Okamoto-Mizuno & Mizuno (2012) - Effects of thermal environment on sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Create a 30-minute wind-down routine before bed. Consistent pre-sleep rituals improve sleep onset.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#818CF8',
+      name: 'Bedtime Routine',
+      popularityScore: 92,
+      scientificReference:
+        'Irish et al. (2015) - The role of sleep hygiene in sleep quality',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Avoid caffeine after 2 PM. Caffeine has a 6-hour half-life and disrupts deep sleep stages.',
+      frequency: 'daily',
+      icon: '☕',
+      iconColor: '#92400E',
+      name: 'Afternoon Caffeine Cutoff',
+      popularityScore: 88,
+      scientificReference:
+        'Drake et al. (2013) - Caffeine effects on sleep taken 0, 3, or 6 hours',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Use blackout curtains or sleep mask. Complete darkness enhances melatonin production and sleep quality.',
+      frequency: 'daily',
+      icon: '🌑',
+      iconColor: '#1E293B',
+      name: 'Dark Sleep Environment',
+      popularityScore: 86,
+      scientificReference:
+        'Gooley et al. (2011) - Exposure to room light before bedtime',
+    });
+
+    return { message: '55 templates seeded successfully', success: true };
   },
 });
 

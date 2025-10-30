@@ -59,38 +59,92 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 - Added Templates tab to navigation
 - Modals rendered outside navigator for proper z-index
 
-## Templates Included (20 Total)
+## Templates Included (55 Total)
 
-### Morning Routine (4 templates)
+### Morning Routine (5 templates)
 
 1. 5-Minute Meditation - Goyal et al. (2014)
 2. Morning Pages - Cameron (1992)
 3. Hydration First - Popkin et al. (2010)
 4. Sunrise Viewing - Huberman (2021)
+5. Delay Caffeine 90 Minutes - Huberman Lab (2023)
 
 ### Health & Fitness (5 templates)
 
-5. 7-Minute Workout - Jordan et al. (2013) 🔥 Popular
-6. 10,000 Steps - Lee et al. (2019)
-7. Strength Training - Westcott (2012)
-8. Stretching Routine - Behm et al. (2016)
-9. No Added Sugar - Yang et al. (2014)
+6. 7-Minute Workout - Jordan et al. (2013) 🔥 Popular
+7. 10,000 Steps - Lee et al. (2019)
+8. Strength Training - Westcott (2012)
+9. Stretching Routine - Behm et al. (2016)
+10. No Added Sugar - Yang et al. (2014)
 
 ### Productivity (5 templates)
 
-10. Deep Work Session - Newport (2016) 🔥 Popular
-11. Pomodoro Technique - Cirillo (2006)
-12. MIT (Most Important Task) - Tracy (2007)
-13. Inbox Zero - Mann (2007)
-14. Evening Planning - Baumeister (2011)
+11. Deep Work Session - Newport (2016) 🔥 Popular
+12. Pomodoro Technique - Cirillo (2006)
+13. MIT (Most Important Task) - Tracy (2007)
+14. Inbox Zero - Mann (2007)
+15. Evening Planning - Baumeister (2011)
 
-### Mindfulness (6 templates)
+### Mindfulness (5 templates)
 
-15. Gratitude Journaling - Emmons & McCullough (2003) 🔥 Popular
-16. Breathwork Practice - Ma et al. (2017)
-17. Evening Reflection - Kolb (1984)
-18. Digital Detox Hour - Exelmans & Van den Bulck (2016)
-19. Walking in Nature - Hansen et al. (2017)
+16. Gratitude Journaling - Emmons & McCullough (2003) 🔥 Popular
+17. Breathwork Practice - Ma et al. (2017)
+18. Evening Reflection - Kolb (1984)
+19. Digital Detox Hour - Exelmans & Van den Bulck (2016)
+20. Walking in Nature - Hansen et al. (2017)
+
+### Andrew Huberman Protocols (10 templates)
+
+21. Morning Sunlight Viewing - Huberman Lab (2023)
+22. Delay Caffeine 90 Minutes - Huberman Lab (2023)
+23. Zone 2 Cardio Training - Huberman Lab (2022)
+24. Deliberate Cold Exposure - Huberman Lab (2023)
+25. NSDR Practice - Huberman Lab (2021)
+26. Physiological Sigh - Huberman Lab (2023)
+27. Evening Light Dimming - Huberman Lab (2023)
+28. Cool Sleep Temperature - Huberman Lab (2023)
+29. Morning Protein Protocol - Huberman Lab (2023)
+30. Time-Restricted Eating - Huberman Lab (2023)
+
+### Learning & Education (5 templates)
+
+31. Daily Reading - Bavishi et al. (2016)
+32. Language Learning - Krashen (1982)
+33. Learn Something New - Giurgiu et al. (2020)
+34. Spaced Repetition Study - Dunlosky et al. (2013)
+35. Learning Journal - Bui et al. (2013)
+
+### Social & Relationships (5 templates)
+
+36. Daily Connection - Holt-Lunstad et al. (2010)
+37. Active Listening - Rogers & Farson (1957)
+38. Express Gratitude - Algoe et al. (2010)
+39. Device-Free Meals - Przybylski & Weinstein (2013)
+40. Plan Quality Time - Aron et al. (2000)
+
+### Financial Health (5 templates)
+
+41. Track Expenses - Thaler & Sunstein (2008)
+42. Budget Review - Fernbach et al. (2015)
+43. Automated Savings - Thaler & Benartzi (2004) 🔥 Popular
+44. Financial Education - Lusardi & Mitchell (2014)
+45. No-Spend Day - Baumeister et al. (2007)
+
+### Creativity (5 templates)
+
+46. Daily Drawing - Kaimal et al. (2016)
+47. Creative Writing - Pennebaker & Smyth (2016)
+48. Idea Collection - Sawyer (2011)
+49. Creative Practice - Ericsson et al. (1993)
+50. Creative Inspiration - Getzels & Csikszentmihalyi (1976)
+
+### Sleep & Recovery (5 templates)
+
+51. Consistent Sleep Schedule - Walker (2017) 🔥 Popular
+52. Cool Sleep Environment - Okamoto-Mizuno & Mizuno (2012)
+53. Bedtime Routine - Irish et al. (2015)
+54. Afternoon Caffeine Cutoff - Drake et al. (2013)
+55. Dark Sleep Environment - Gooley et al. (2011)
 
 ## Setup Instructions
 
@@ -223,6 +277,8 @@ await seedTemplates({});
 
 ---
 
-**Implementation Status**: ✅ Complete and ready for testing
+**Implementation Status**: ✅ Complete with 55 templates across 10 categories
 
-**Last Updated**: 2025-10-22
+**Categories**: Morning Routine, Health & Fitness, Productivity, Mindfulness, Andrew Huberman Protocols, Learning & Education, Social & Relationships, Financial Health, Creativity, Sleep & Recovery
+
+**Last Updated**: 2025-10-30

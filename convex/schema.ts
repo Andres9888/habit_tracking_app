@@ -124,7 +124,12 @@ const applicationTables = {
       v.literal('health_fitness'),
       v.literal('productivity'),
       v.literal('mindfulness'),
-      v.literal('andrew_huberman')
+      v.literal('andrew_huberman'),
+      v.literal('learning'),
+      v.literal('social'),
+      v.literal('financial'),
+      v.literal('creativity'),
+      v.literal('sleep')
     ),
     // For sorting popular templates
     createdAt: v.number(),

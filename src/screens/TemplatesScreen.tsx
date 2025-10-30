@@ -41,7 +41,12 @@ type Category =
   | 'health_fitness'
   | 'productivity'
   | 'mindfulness'
-  | 'andrew_huberman';
+  | 'andrew_huberman'
+  | 'learning'
+  | 'social'
+  | 'financial'
+  | 'creativity'
+  | 'sleep';
 
 interface CategoryFilter {
   id: Category;
@@ -56,6 +61,11 @@ const CATEGORIES: CategoryFilter[] = [
   { icon: '🎯', id: 'productivity', label: 'Productivity' },
   { icon: '🧘', id: 'mindfulness', label: 'Mindfulness' },
   { icon: '🔬', id: 'andrew_huberman', label: 'Huberman' },
+  { icon: '📚', id: 'learning', label: 'Learning' },
+  { icon: '💬', id: 'social', label: 'Social' },
+  { icon: '💰', id: 'financial', label: 'Financial' },
+  { icon: '🎨', id: 'creativity', label: 'Creativity' },
+  { icon: '😴', id: 'sleep', label: 'Sleep' },
 ];
 
 export default function TemplatesScreen() {
