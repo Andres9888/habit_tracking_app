@@ -32,11 +32,11 @@ import Animated, {
   Extrapolate,
 } from 'react-native-reanimated';
 import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../convex/_generated/api';
-import type { Id } from '../../convex/_generated/dataModel';
-import { useAppTheme } from '../theme';
-import HabitStrengthIndicator from './HabitStrengthIndicator/HabitStrengthIndicator';
-import StreakIndicator from './StreakIndicator';
+import { api } from '../../../convex/_generated/api';
+import type { Id } from '../../../convex/_generated/dataModel';
+import { useAppTheme } from '../../theme';
+import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import StreakIndicator from '../StreakIndicator/StreakIndicator';
 import * as Haptics from 'expo-haptics';
 
 export interface HabitCardProps {

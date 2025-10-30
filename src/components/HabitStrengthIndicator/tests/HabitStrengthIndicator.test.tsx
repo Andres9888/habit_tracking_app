@@ -9,8 +9,8 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { PaperProvider } from 'react-native-paper';
-import { extendedTheme } from '../../theme';
-import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { extendedTheme } from '../../../theme';
+import HabitStrengthIndicator from '../HabitStrengthIndicator';
 
 // Wrapper for theme provider
 const renderWithTheme = (component: React.ReactElement) => {

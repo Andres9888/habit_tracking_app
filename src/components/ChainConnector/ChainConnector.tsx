@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ChainLinkIcon } from '../ChainLinkIcon';
+import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
 /**
  * ChainConnector - Visual connector between habit cards

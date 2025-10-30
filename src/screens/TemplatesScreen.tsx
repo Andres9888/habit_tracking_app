@@ -29,7 +29,7 @@ import type { Doc, Id } from '../../convex/_generated/dataModel';
 import { useAppTheme } from '../theme';
 import TemplateCard from '../components/TemplateCard';
 import Modal from '../components/Modal';
-import Button from '../components/Button';
+import Button from '../components/Button/Button';
 import EmptyState from '../components/EmptyState';
 import Toast from '../components/Toast';
 import { LinearGradient } from 'expo-linear-gradient';

@@ -28,7 +28,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import { useAppTheme } from '../theme';
-import { Button } from './Button';
+import { Button } from './Button/Button';
 import { Modal } from './Modal';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');

@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
+import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import type { HabitStatus } from '../types';
 
 export function useHabitTracking(tracking: any[], today: Date) {
@@ -19,25 +20,7 @@ export function useHabitTracking(tracking: any[], today: Date) {
     (habitId: string) => {
       const completedDates = completedDatesByHabit.get(habitId);
       if (!completedDates) return 0;
-
-      const startDate = new Date(today);
-      const todayString = format(startDate, 'yyyy-MM-dd');
-      startDate.setHours(0, 0, 0, 0);
-      if (!completedDates.has(todayString)) {
-        startDate.setDate(startDate.getDate() - 1);
-      }
-
-      let streak = 0;
-      while (true) {
-        const dateString = format(startDate, 'yyyy-MM-dd');
-        if (completedDates.has(dateString)) {
-          streak++;
-          startDate.setDate(startDate.getDate() - 1);
-        } else {
-          break;
-        }
-      }
-      return streak;
+      return computeCurrentStreakFromDates(completedDates, today);
     },
     [completedDatesByHabit, today]
   );

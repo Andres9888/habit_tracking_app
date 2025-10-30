@@ -12,7 +12,7 @@ import {
   type ShareCardData,
   type MilestoneLevel,
 } from './ShareCardGenerator';
-import { Button } from './Button';
+import { Button } from './Button/Button';
 
 /**
  * Example: Integration with Milestone Celebration Modal

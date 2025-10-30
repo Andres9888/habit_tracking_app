@@ -31,7 +31,7 @@ import ConfettiCannon from 'react-native-confetti-cannon';
 import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '../theme';
 import { Modal } from './Modal';
-import { Button } from './Button';
+import { Button } from './Button/Button';
 import {
   STRENGTH_LEVEL_CONFIG,
   type StrengthLevel,

@@ -20,7 +20,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { X, ExternalLink } from 'lucide-react-native';
 import Modal from './Modal';
-import Button from './Button';
+import Button from './Button/Button';
 import { useAppTheme } from '../theme';
 import type { Doc } from '../../convex/_generated/dataModel';
 

@@ -63,7 +63,7 @@
 
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Button } from './Button';
+import { Button } from './Button/Button';
 import MilestoneCelebration from './MilestoneCelebration';
 import { useMilestoneDetection } from '../hooks/useMilestoneDetection';
 import { useAppTheme } from '../theme';

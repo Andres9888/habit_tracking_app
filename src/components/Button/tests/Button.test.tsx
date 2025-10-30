@@ -10,7 +10,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { PaperProvider } from 'react-native-paper';
 import { Text } from 'react-native';
-import { extendedTheme } from '../../theme';
+import { extendedTheme } from '../../../theme';
 import { Button } from '../Button';
 
 const renderWithTheme = (component: React.ReactElement) => {

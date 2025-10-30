@@ -11,6 +11,7 @@ import { Alert, Platform } from 'react-native';
 
 import { api } from '../../../../convex/_generated/api';
 import { useMilestoneDetection } from '../../../hooks/useMilestoneDetection';
+import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import type { Habit, HabitId, HabitStatus, ShareCardData } from '../types';
 
 type HabitTrackingEntry = {
@@ -138,28 +139,9 @@ export function useHabitsAppState() {
     (habitId: string) => {
       const completedDates = completedDatesByHabit.get(habitId);
       if (!completedDates) return 0;
-
-      const todayDate = new Date();
-      todayDate.setHours(0, 0, 0, 0);
-
-      const todayString = format(todayDate, 'yyyy-MM-dd');
-      const currentDate = completedDates.has(todayString)
-        ? new Date(todayDate)
-        : new Date(todayDate.getTime() - 24 * 60 * 60 * 1000);
-
-      let streak = 0;
-      while (true) {
-        const dateString = format(currentDate, 'yyyy-MM-dd');
-        if (completedDates.has(dateString)) {
-          streak++;
-          currentDate.setDate(currentDate.getDate() - 1);
-        } else {
-          break;
-        }
-      }
-      return streak;
+      return computeCurrentStreakFromDates(completedDates, today);
     },
-    [completedDatesByHabit]
+    [completedDatesByHabit, today]
   );
 
   const handleToggleForm = useCallback(() => {

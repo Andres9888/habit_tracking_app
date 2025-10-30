@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import DraggableHabit from '../DraggableHabit/DraggableHabit';
-import type { Id } from '../../../convex/_generated/dataModel';
+import DraggableHabit from '../DraggableHabit';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 const buildHabit = (overrides: Partial<Record<string, unknown>> = {}) =>
   ({

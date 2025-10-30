@@ -1,4 +1,4 @@
-import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
+import { getEmojiAndName } from '../DraggableHabit.hooks';
 
 describe('getEmojiAndName', () => {
   it('extracts leading emoji and name', () => {

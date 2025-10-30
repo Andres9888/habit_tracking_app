@@ -9,7 +9,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Modal } from './Modal';
-import { Button } from './Button';
+import { Button } from './Button/Button';
 import { useAppTheme } from '../theme';
 
 interface PauseHabitModalProps {

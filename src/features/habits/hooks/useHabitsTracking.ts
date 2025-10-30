@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { useQuery } from 'convex/react';
 
 import { api } from '../../../convex/_generated/api';
+import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import type { HabitTrackingEntry, HabitStatus } from '../types';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
@@ -24,27 +25,8 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   const getStreak = useCallback(
     (habitId: string) => {
       const completedDates = completedDatesByHabit.get(habitId);
-      if (!completedDates) {
-        return 0;
-      }
-
-      const todayCopy = new Date(today);
-      const todayString = format(todayCopy, 'yyyy-MM-dd');
-      const currentDate = completedDates.has(todayString)
-        ? new Date(todayCopy)
-        : new Date(todayCopy.getTime() - 24 * 60 * 60 * 1000);
-
-      let streak = 0;
-      while (true) {
-        const dateString = format(currentDate, 'yyyy-MM-dd');
-        if (completedDates.has(dateString)) {
-          streak += 1;
-          currentDate.setDate(currentDate.getDate() - 1);
-        } else {
-          break;
-        }
-      }
-      return streak;
+      if (!completedDates) return 0;
+      return computeCurrentStreakFromDates(completedDates, today);
     },
     [completedDatesByHabit, today]
   );
