@@ -327,7 +327,7 @@ export function useHabitsApp(): UseHabitsAppResult {
     weekDateStrings,
     canNavigateForward,
     showHabitStrengthPercentage,
-    contentPadding: { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 96 },
+    contentPadding: { paddingHorizontal: 24, paddingTop: 0, paddingBottom: 96 },
     handleDragEnd,
     handleArchive,
     handleHabitPress,
