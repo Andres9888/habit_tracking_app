@@ -3,8 +3,12 @@ import type { CategoryFilter } from './types';
 export const DEFAULT_EMOJI = '💪';
 export const DEFAULT_COLOR = '#DBEAFE';
 
-export const EMOJIS = '💪 🧘 📖 💧 🎨 🏃 🍎 🥗 ☕ 💤 🎯 ✍️ 🚴 🧠 🎵 🌞 🌙 ⚡ 🔥 🌱 🏋️ 🚶 🧘‍♀️ 🎨 📝 💼 📚 🎓 💡 🏆'.split(
-  ' '
+export const EMOJIS = Array.from(
+  new Set(
+    '💪 🧘 📖 💧 🎨 🏃 🍎 🥗 ☕ 💤 🎯 ✍️ 🚴 🧠 🎵 🌞 🌙 ⚡ 🔥 🌱 🏋️ 🚶 🧘‍♀️ 🎨 📝 💼 📚 🎓 💡 🏆'.split(
+      ' '
+    )
+  )
 );
 
 export const COLORS = ['#DBEAFE', '#FFEDD5', '#DCFCE7', '#F3E8FF', '#FCE7F3', '#CCFBF1'];
