@@ -215,15 +215,36 @@ runOnJS(Haptics.impactAsync)(
 - Implemented and verified tap error handling + debounce in `src/components/HabitCard.tsx` (try/catch with 300ms cooldown); UI relies on Convex reactivity to revert state on failures; toast placeholder left for future UX.
 - Ran targeted tests: `convex/__tests__/tracking.test.ts` passed 40/40. `src/components/__tests__/HabitCard.toggle.test.tsx` currently 21/28 passing; remaining failures are due to ambiguous accessibility queries in tests, not runtime defects.
 
+### Haptic Fix Notes (2025-10-31)
+
+**Problem:** Haptic feedback not triggering when tapping/swiping habits despite working in HapticTest page.
+
+**Root Cause:** Incorrect `runOnJS()` pattern - IIFE `runOnJS(() => {...})()` doesn't properly schedule functions from Reanimated worklet to JS thread.
+
+**Solution:**
+1. Created `triggerHaptic` callback using `React.useCallback` (lines 129-138)
+2. Updated all gestures to use `runOnJS(triggerHaptic)(style)` pattern
+3. Applied fix to tap (line 216), swipe (line 158), and long press (line 263)
+
+**Status:**
+- ✅ Code fix complete
+- ✅ No linting errors
+- ✅ Documentation updated
+- ⏱️ **Awaiting physical device validation** - See `docs/stories/epic-1-home-screen/habit-card/testing/HAPTIC-FIX-SUMMARY.md`
+
+**Next Action:** Test on iPhone 8+ with Taptic Engine using validation checklist.
+
 ## Change Log
 
 - 2025-10-28: Marked DoD items complete (timezone validation fix; error handling + debounce). Added completion notes and recorded current test status.
+- 2025-10-31: **🔧 CRITICAL FIX** - Fixed `runOnJS()` pattern causing haptic feedback failure in gesture handlers. Root cause: IIFE pattern `runOnJS(() => {...})()` doesn't properly schedule functions from worklet to JS thread. Solution: Define `triggerHaptic` callback with `React.useCallback` and call via `runOnJS(triggerHaptic)(style)`. All three gestures (tap, swipe, long press) now use correct pattern. Ref: `docs/stories/epic-1-home-screen/habit-card/testing/haptic-fix-validation.md`
 
 ---
 
 **Completed:** 2025-10-27
+**Haptic Fix:** 2025-10-31
 **Implemented By:** Dev Agent (Amelia)
-**Ready for:** Code review and physical device testing
+**Ready for:** Physical device testing and final validation
 
 ---
 
