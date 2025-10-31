@@ -12,7 +12,7 @@ import {
   Pressable,
   StyleSheet,
 } from 'react-native';
-import { Palette, X, BookOpen, Microscope } from 'lucide-react-native';
+import { X, BookOpen, Microscope } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -22,7 +22,6 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../../utils/notifications';
-import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
 import { EmojiPicker } from '../EmojiPicker';
 
@@ -89,7 +88,6 @@ export default function CreateHabitModal({
   const [habitName, setHabitName] = useState(initialParsed.name);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(initialParsed.emoji);
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
-  const [isColorPickerVisible, setIsColorPickerVisible] = useState(false);
   const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
   const [remindersEnabled, setRemindersEnabled] = useState(habitToEdit?.remindersEnabled ?? false);
   const [reminderTime, setReminderTime] = useState(() =>
@@ -475,18 +473,6 @@ export default function CreateHabitModal({
                   />
                 ))}
               </View>
-              <TouchableOpacity
-                accessibilityRole='button'
-                className='mt-4 w-full flex-row items-center gap-2 rounded-full bg-white px-3 py-2'
-                onPress={() => setIsColorPickerVisible(true)}
-              >
-                <Palette color='#1a1a1a' size={16} />
-                <Text className='flex-1 text-sm font-medium text-[#1a1a1a]'>Custom color</Text>
-                <View
-                  className='h-4 w-4 rounded-full border border-[#1a1a1a]'
-                  style={{ backgroundColor: selectedColor }}
-                />
-              </TouchableOpacity>
             </View>
 
             {/* Reminders Section */}
@@ -553,13 +539,6 @@ export default function CreateHabitModal({
           )}
         </View>
       </View>
-      <ColorPickerSheet
-        presetColors={COLORS}
-        value={selectedColor}
-        visible={isColorPickerVisible}
-        onSelect={setSelectedColor}
-        onClose={() => setIsColorPickerVisible(false)}
-      />
 
       <TemplateScienceModal
         visible={scienceModalVisible}
