@@ -25,6 +25,7 @@ import {
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
 import { EmojiPicker } from '../EmojiPicker';
+import { CATEGORIES } from './constants';
 
 interface CreateHabitModalProps {
   visible: boolean;
@@ -32,7 +33,7 @@ interface CreateHabitModalProps {
   habitToEdit?: any; // Accept any Habit-like object with at least _id and name
 }
 
-type Category = 'all' | 'morning_routine' | 'health_fitness' | 'productivity' | 'mindfulness';
+type Category = 'all' | 'morning_routine' | 'health_fitness' | 'productivity' | 'mindfulness' | 'andrew_huberman' | 'learning' | 'social' | 'financial' | 'creativity' | 'sleep';
 
 interface CategoryFilter {
   id: Category;
@@ -50,13 +51,6 @@ const COLORS = [
   '#CCFBF1', // teal-100
 ];
 
-const CATEGORIES: CategoryFilter[] = [
-  { id: 'all', label: 'All', icon: '✨' },
-  { id: 'morning_routine', label: 'Morning', icon: '🌅' },
-  { id: 'health_fitness', label: 'Health', icon: '💪' },
-  { id: 'productivity', label: 'Productivity', icon: '🎯' },
-  { id: 'mindfulness', label: 'Mindfulness', icon: '🧘' },
-];
 
 export default function CreateHabitModal({
   visible,
