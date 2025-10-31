@@ -22,14 +22,13 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../utils/notifications';
+import { EmojiPicker } from '../components/EmojiPicker';
 
 interface HabitEditScreenProps {
   visible: boolean;
   habitId: Id<'habits'> | null;
   onClose: () => void;
 }
-
-const EMOJIS = ['💪', '🧘', '📚', '💧', '🏃', '🎨', '🎵', '🥗', '😴', '📱'];
 
 const EMOJI_COLORS = [
   '#DBEAFE', // blue-100
@@ -72,6 +71,7 @@ export default function HabitEditScreen({
   const [reminderSound, setReminderSound] = useState('default');
   const [goalValue, setGoalValue] = useState('30');
   const [goalUnit, setGoalUnit] = useState('minutes');
+  const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
 
   const updateHabit = useMutation(api.habits.update);
   const removeHabit = useMutation(api.habits.remove);
@@ -85,7 +85,7 @@ export default function HabitEditScreen({
       const name = parts.slice(1).join(' ');
 
       setHabitName(name || habit.name);
-      setSelectedEmoji(EMOJIS.includes(emoji) ? emoji : '💪');
+      setSelectedEmoji(emoji || '💪');
       setSelectedColor(habit.iconColor || '#DBEAFE');
       setFrequency((habit.frequency as any) || 'daily');
       setSelectedDays(habit.daysOfWeek || [0, 1, 2, 3, 4]);
@@ -214,27 +214,18 @@ export default function HabitEditScreen({
               </Text>
             </View>
 
-            {/* Icon Grid */}
-            <View className='flex-row flex-wrap gap-2'>
-              {EMOJIS.map((emoji, index) => (
-                <TouchableOpacity
-                  key={index}
-                  className={`h-12 w-12 items-center justify-center rounded-xl ${
-                    selectedEmoji === emoji ? 'border-2 border-blue-500' : ''
-                  }`}
-                  style={{
-                    backgroundColor: EMOJI_COLORS[index],
-                    transform: selectedEmoji === emoji ? [{ scale: 1.1 }] : [{ scale: 1 }]
-                  }}
-                  onPress={() => {
-                    setSelectedEmoji(emoji);
-                    setSelectedColor(EMOJI_COLORS[index]);
-                  }}
-                >
-                  <Text className='text-2xl'>{emoji}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {/* Icon Selector Button */}
+            <TouchableOpacity
+              accessibilityLabel='Choose icon'
+              accessibilityRole='button'
+              className='flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
+              onPress={() => setIsEmojiPickerVisible(true)}
+            >
+              <Text className='text-base font-medium text-[#1a1a1a]'>
+                Browse Icons
+              </Text>
+              <Text className='text-sm text-[#3B82F6]'>Change</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Habit Name Section */}
@@ -455,6 +446,18 @@ export default function HabitEditScreen({
           </TouchableOpacity>
         </View>
       </View>
+
+      <EmojiPicker
+        visible={isEmojiPickerVisible}
+        selectedEmoji={selectedEmoji}
+        onSelect={(emoji) => {
+          setSelectedEmoji(emoji);
+          // Optionally cycle through colors when selecting emoji
+          const randomColorIndex = Math.floor(Math.random() * EMOJI_COLORS.length);
+          setSelectedColor(EMOJI_COLORS[randomColorIndex]);
+        }}
+        onClose={() => setIsEmojiPickerVisible(false)}
+      />
     </Modal>
   );
 }
