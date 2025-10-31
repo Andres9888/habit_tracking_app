@@ -314,14 +314,16 @@ export default function TemplatesScreen() {
       </View>
 
       {/* Category Filters */}
-      <ScrollView
-        horizontal
-        contentContainerStyle={styles.categoriesContainer}
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoriesScroll}
-      >
-        {categories?.map((category) => renderCategoryChip(category))}
-      </ScrollView>
+      {categories && categories.length > 0 && (
+        <ScrollView
+          horizontal
+          contentContainerStyle={styles.categoriesContainer}
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoriesScroll}
+        >
+          {categories.map((category) => renderCategoryChip(category))}
+        </ScrollView>
+      )}
 
       {/* Templates List */}
       <View style={styles.listWrapper}>

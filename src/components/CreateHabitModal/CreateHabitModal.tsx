@@ -289,13 +289,14 @@ export default function CreateHabitModal({
             {showTemplateBrowser && !isEditMode && (
               <View className='mb-6 overflow-hidden rounded-2xl bg-white'>
                 {/* Category Filters */}
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  className='border-b border-gray-100'
-                  contentContainerClassName='px-3 py-3 gap-2'
-                >
-                  {categories?.map((category) => {
+                {categories && categories.length > 0 && (
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    className='border-b border-gray-100'
+                    contentContainerClassName='px-3 py-3 gap-2'
+                  >
+                    {categories.map((category: CategoryFilter) => {
                     const isSelected = selectedCategory === category.id;
                     return (
                       <Pressable
@@ -319,7 +320,8 @@ export default function CreateHabitModal({
                       </Pressable>
                     );
                   })}
-                </ScrollView>
+                  </ScrollView>
+                )}
 
                 {/* Templates List - Fixed height container, no nested ScrollView */}
                 <View style={templateScrollStyles.listWrapper}>
