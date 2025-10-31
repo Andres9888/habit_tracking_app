@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import ColorPicker, {
   BrightnessSlider,
@@ -32,14 +32,18 @@ export function ColorPickerSheet({
     }
   }, [value, visible]);
 
-  const handleColorChange = (color: ColorPickerValue) => {
+  const handleColorChange = useCallback((color: ColorPickerValue) => {
     setCurrentColor(color.hex);
-  };
+  }, []);
 
-  const handleDone = () => {
+  const handleDone = useCallback(() => {
     onSelect(currentColor);
     onClose();
-  };
+  }, [currentColor, onSelect, onClose]);
+
+  const handleSwatchSelect = useCallback((color: string) => {
+    setCurrentColor(color);
+  }, []);
 
   return (
     <Modal
@@ -80,7 +84,7 @@ export function ColorPickerSheet({
               colors={presetColors}
               style={{ marginBottom: 8 }}
               swatchStyle={{ borderRadius: 24, height: 44, width: 44 }}
-              onSelect={(color: string) => setCurrentColor(color)}
+              onSelect={handleSwatchSelect}
             />
           </ColorPicker>
         </View>
