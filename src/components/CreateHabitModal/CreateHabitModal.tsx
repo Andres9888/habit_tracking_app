@@ -31,14 +31,24 @@ interface CreateHabitModalProps {
   habitToEdit?: any; // Accept any Habit-like object with at least _id and name
 }
 
-type Category = 'all' | 'morning_routine' | 'health_fitness' | 'productivity' | 'mindfulness';
+type Category =
+  | 'all'
+  | 'morning_routine'
+  | 'health_fitness'
+  | 'productivity'
+  | 'mindfulness'
+  | 'andrew_huberman'
+  | 'learning'
+  | 'social'
+  | 'financial'
+  | 'creativity'
+  | 'sleep';
 
 interface CategoryFilter {
+  icon: string;
   id: Category;
   label: string;
-  icon: string;
 }
-
 
 const COLORS = [
   '#DBEAFE', // blue-100
@@ -47,14 +57,6 @@ const COLORS = [
   '#F3E8FF', // purple-100
   '#FCE7F3', // pink-100
   '#CCFBF1', // teal-100
-];
-
-const CATEGORIES: CategoryFilter[] = [
-  { id: 'all', label: 'All', icon: '✨' },
-  { id: 'morning_routine', label: 'Morning', icon: '🌅' },
-  { id: 'health_fitness', label: 'Health', icon: '💪' },
-  { id: 'productivity', label: 'Productivity', icon: '🎯' },
-  { id: 'mindfulness', label: 'Mindfulness', icon: '🧘' },
 ];
 
 export default function CreateHabitModal({
@@ -107,9 +109,10 @@ export default function CreateHabitModal({
   const createHabit = useMutation(api.habits.create);
   const updateHabit = useMutation(api.habits.update);
 
-  // Fetch templates
+  // Fetch templates and categories
   const allTemplates = useQuery(api.templates.list, {});
-  const isLoadingTemplates = allTemplates === undefined;
+  const categories = useQuery(api.categories.list, {});
+  const isLoadingTemplates = allTemplates === undefined || categories === undefined;
 
   // Filter templates by selected category
   const filteredTemplates = useMemo(() => {
@@ -292,7 +295,7 @@ export default function CreateHabitModal({
                   className='border-b border-gray-100'
                   contentContainerClassName='px-3 py-3 gap-2'
                 >
-                  {CATEGORIES.map((category) => {
+                  {categories?.map((category) => {
                     const isSelected = selectedCategory === category.id;
                     return (
                       <Pressable

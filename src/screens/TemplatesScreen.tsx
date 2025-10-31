@@ -50,23 +50,9 @@ type Category =
 
 interface CategoryFilter {
   id: Category;
-  label: string;
   icon: string;
+  label: string;
 }
-
-const CATEGORIES: CategoryFilter[] = [
-  { icon: '✨', id: 'all', label: 'All' },
-  { icon: '🌅', id: 'morning_routine', label: 'Morning' },
-  { icon: '💪', id: 'health_fitness', label: 'Health' },
-  { icon: '🎯', id: 'productivity', label: 'Productivity' },
-  { icon: '🧘', id: 'mindfulness', label: 'Mindfulness' },
-  { icon: '🔬', id: 'andrew_huberman', label: 'Huberman' },
-  { icon: '📚', id: 'learning', label: 'Learning' },
-  { icon: '👥', id: 'social', label: 'Social' },
-  { icon: '💰', id: 'financial', label: 'Financial' },
-  { icon: '🎨', id: 'creativity', label: 'Creativity' },
-  { icon: '😴', id: 'sleep', label: 'Sleep' },
-];
 
 export default function TemplatesScreen() {
   const theme = useAppTheme();
@@ -81,9 +67,10 @@ export default function TemplatesScreen() {
   const listScrollOffset = useRef(0);
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
 
-  // Fetch templates
+  // Fetch templates and categories
   const allTemplates = useQuery(api.templates.list, {});
-  const isLoading = allTemplates === undefined;
+  const categories = useQuery(api.categories.list, {});
+  const isLoading = allTemplates === undefined || categories === undefined;
 
   // Import template mutation
   const importTemplate = useMutation(api.templates.importTemplate);
@@ -333,7 +320,7 @@ export default function TemplatesScreen() {
         showsHorizontalScrollIndicator={false}
         style={styles.categoriesScroll}
       >
-        {CATEGORIES.map((category) => renderCategoryChip(category))}
+        {categories?.map((category) => renderCategoryChip(category))}
       </ScrollView>
 
       {/* Templates List */}

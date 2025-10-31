@@ -16,6 +16,7 @@ import type {
 import type * as analytics from "../analytics.js";
 import type * as articles from "../articles.js";
 import type * as auth from "../auth.js";
+import type * as categories from "../categories.js";
 import type * as character from "../character.js";
 import type * as debugHabitStrength from "../debugHabitStrength.js";
 import type * as diagnose from "../diagnose.js";
@@ -45,6 +46,7 @@ declare const fullApi: ApiFromModules<{
   analytics: typeof analytics;
   articles: typeof articles;
   auth: typeof auth;
+  categories: typeof categories;
   character: typeof character;
   debugHabitStrength: typeof debugHabitStrength;
   diagnose: typeof diagnose;

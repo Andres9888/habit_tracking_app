@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ScrollView } from 'react-native';
-import { CATEGORIES } from '../constants';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 import type { Category, HabitTemplate } from '../types';
 import { useKeyboardState } from './useKeyboardState';
 import { useTemplateAnimation } from './useTemplateAnimation';
@@ -25,6 +26,7 @@ export const useTemplateBrowser = ({ isEditMode, visible, onTemplateSelect }: Us
   const { showTopShadow, showBottomShadow, handleScroll, handleContentSizeChange, handleLayout, resetIndicators } =
     useTemplateScrollIndicators();
   const { filtered, isLoading } = useHabitTemplates(selectedCategory);
+  const categories = useQuery(api.categories.list, {});
   const handleCategoryPress = useCallback((category: Category) => setSelectedCategory(category), []);
   const {
     openBrowser,
@@ -58,29 +60,29 @@ export const useTemplateBrowser = ({ isEditMode, visible, onTemplateSelect }: Us
   const reset = useCallback(() => setSelectedCategory('all'), []);
 
   return {
-    scrollViewRef,
-    isTemplateBrowserOpen: isOpen,
-    isTemplateBrowserVisible: isVisible,
-    templateBrowserAnim: anim,
+    categories,
     chevronRotation,
-    templateBrowserTranslate: translateY,
-    selectedCategory,
-    handleCategoryPress,
-    categories: CATEGORIES,
-    isLoadingTemplates: isLoading,
-    filteredTemplates: filtered,
-    handleTemplateSelect,
     closeTemplateBrowser: closeBrowser,
-    handleTemplateListScroll: handleScroll,
-    handleTemplateListContentSizeChange: handleContentSizeChange,
-    handleTemplateListLayout: handleLayout,
-    showTemplateTopShadow: showTopShadow,
-    showTemplateBottomShadow: showBottomShadow,
+    filteredTemplates: filtered,
+    handleCategoryPress,
     handleHeroPress,
     handleMainScroll,
     handleReminderPress,
-    shouldShowTemplateReminder,
+    handleTemplateListContentSizeChange: handleContentSizeChange,
+    handleTemplateListLayout: handleLayout,
+    handleTemplateListScroll: handleScroll,
+    handleTemplateSelect,
+    isLoadingTemplates: isLoading,
+    isTemplateBrowserOpen: isOpen,
+    isTemplateBrowserVisible: isVisible,
     reminderBottomOffset,
     reset,
+    scrollViewRef,
+    selectedCategory,
+    shouldShowTemplateReminder,
+    showTemplateBottomShadow: showBottomShadow,
+    showTemplateTopShadow: showTopShadow,
+    templateBrowserAnim: anim,
+    templateBrowserTranslate: translateY,
   };
 };
