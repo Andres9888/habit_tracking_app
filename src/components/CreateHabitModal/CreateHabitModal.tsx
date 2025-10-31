@@ -26,6 +26,7 @@ import {
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
 import { LinearGradient } from 'expo-linear-gradient';
+import { EmojiPicker } from '../EmojiPicker/EmojiPicker';
 
 interface CreateHabitModalProps {
   visible: boolean;
@@ -40,12 +41,6 @@ interface CategoryFilter {
   label: string;
   icon: string;
 }
-
-const EMOJIS = [
-  '💪', '🧘', '📖', '💧', '🎨', '🏃', '🍎', '🥗', '☕', '💤',
-  '🎯', '✍️', '🚴', '🧠', '🎵', '🌞', '🌙', '⚡', '🔥', '🌱',
-  '🏋️', '🚶', '🧘‍♀️', '🎨', '📝', '💼', '📚', '🎓', '💡', '🏆',
-];
 
 const COLORS = [
   '#DBEAFE', // blue-100
@@ -102,6 +97,7 @@ export default function CreateHabitModal({
   );
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminderSound, setReminderSound] = useState(habitToEdit?.reminderSound ?? 'Default');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Template browsing state
   const [showTemplateBrowser, setShowTemplateBrowser] = useState(false);
@@ -519,45 +515,48 @@ export default function CreateHabitModal({
               <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
                 Icon
               </Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className='flex-row'
-                contentContainerClassName='gap-3'
+              
+              {/* Selected Emoji Preview */}
+              {selectedEmoji && (
+                <View className='mb-3 items-center'>
+                  <View
+                    className='h-16 w-16 items-center justify-center rounded-2xl'
+                    style={{ backgroundColor: selectedColor }}
+                  >
+                    <Text className='text-[30px]'>{selectedEmoji}</Text>
+                  </View>
+                </View>
+              )}
+
+              {/* Emoji Picker Button */}
+              <TouchableOpacity
+                accessibilityLabel='Open emoji picker'
+                accessibilityRole='button'
+                className='h-14 w-full items-center justify-center rounded-xl bg-blue-500'
+                onPress={() => setShowEmojiPicker(true)}
               >
-                {/* No Icon Option */}
+                <Text className='text-base font-semibold text-white'>
+                  {selectedEmoji ? 'Change Emoji' : 'Choose Emoji'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* No Icon Option */}
+              {selectedEmoji && (
                 <TouchableOpacity
-                  accessibilityLabel='No icon'
+                  accessibilityLabel='Remove icon'
                   accessibilityRole='button'
-                  className='h-12 items-center justify-center rounded-xl bg-white px-3'
+                  className='mt-3 h-12 w-full items-center justify-center rounded-xl bg-white'
                   style={{
                     borderColor: '#1a1a1a',
-                    borderWidth: selectedEmoji === null ? 2 : 0,
+                    borderWidth: 1,
                   }}
                   onPress={() => setSelectedEmoji(null)}
                 >
-                  <Text className='text-xs font-medium text-[#8a8a8a]'>
-                    None
+                  <Text className='text-sm font-medium text-[#8a8a8a]'>
+                    Remove Icon
                   </Text>
                 </TouchableOpacity>
-
-                {/* Emoji Options */}
-                {EMOJIS.map((emoji, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    accessibilityLabel={`Select ${emoji} icon`}
-                    accessibilityRole='button'
-                    className='h-12 w-12 items-center justify-center rounded-xl bg-white'
-                    style={{
-                      borderColor: '#1a1a1a',
-                      borderWidth: selectedEmoji === emoji ? 2 : 0,
-                    }}
-                    onPress={() => setSelectedEmoji(emoji)}
-                  >
-                    <Text className='text-2xl'>{emoji}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+              )}
             </View>
 
             {/* Color Picker */}
@@ -672,6 +671,17 @@ export default function CreateHabitModal({
         onClose={() => setScienceModalVisible(false)}
         template={selectedTemplateForScience}
         onUseTemplate={handleUseTemplateFromScience}
+      />
+
+      {/* Emoji Picker Modal */}
+      <EmojiPicker
+        visible={showEmojiPicker}
+        selectedEmoji={selectedEmoji}
+        onSelect={(emoji) => {
+          setSelectedEmoji(emoji);
+          setShowEmojiPicker(false);
+        }}
+        onClose={() => setShowEmojiPicker(false)}
       />
     </Modal>
   );
