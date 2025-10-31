@@ -41,6 +41,11 @@ export function ColorPickerSheet({
     onClose();
   };
 
+  // Only render ColorPicker when modal is visible to prevent performance issues
+  if (!visible) {
+    return null;
+  }
+
   return (
     <Modal
       transparent

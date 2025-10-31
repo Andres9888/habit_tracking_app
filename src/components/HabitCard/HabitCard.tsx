@@ -126,6 +126,9 @@ export function HabitCard({
     habitId: id,
   });
 
+  // Note: Haptic feedback will be called inline with runOnJS wrapper
+  // This pattern is required for Reanimated worklets
+
   // Swipe gesture handler
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
@@ -138,7 +141,7 @@ export function HabitCard({
     .onEnd((event) => {
       // If swiped past threshold, snap to open position
       if (event.translationX < SWIPE_THRESHOLD) {
-        console.log('🟢 SWIPE: Actions revealed - triggering haptic');
+        console.log('🟢 SWIPE: Actions revealed - triggering Light haptic');
         translateX.value = withSpring(ACTION_WIDTH * -2, {
           damping: 15,
           stiffness: 150,
@@ -187,37 +190,34 @@ export function HabitCard({
 
       if (!disabled && !isToggling) {
         console.log('🔴 ✓ Passed disabled/toggling check');
+        console.log('🔴 isCompleted value:', isCompleted);
 
         // Haptic feedback BEFORE mutation for best UX
         // Different intensity based on current completion state:
         // - If currently completed (true) → unchecking → Light haptic (softer)
         // - If not completed (false) → checking → Medium haptic (stronger)
         // - If loading (undefined) → default to Medium
-        const hapticStyle =
-          isCompleted === true
-            ? Haptics.ImpactFeedbackStyle.Light // Unchecking
-            : Haptics.ImpactFeedbackStyle.Medium; // Checking (or loading)
 
-        console.log('🔴 Haptic style selected:', hapticStyle);
-        console.log('🔴 About to call runOnJS for haptic...');
-
-        runOnJS(() => {
-          console.log('🔴🔴🔴 INSIDE runOnJS - CALLING HAPTIC NOW');
-          const startTime = Date.now();
-
-          Haptics.impactAsync(hapticStyle)
-            .then(() => {
-              const duration = Date.now() - startTime;
-              console.log(`✅ Haptic SUCCESS! Duration: ${duration}ms`);
-            })
-            .catch((error) => {
-              const duration = Date.now() - startTime;
-              console.error(`❌ Haptic FAILED after ${duration}ms:`, error);
-              console.error('❌ Error type:', typeof error);
-              console.error('❌ Error message:', error?.message);
-              console.error('❌ Error stack:', error?.stack);
-            });
-        })();
+        // Directly call haptic with ternary to avoid variable capture issues
+        if (isCompleted === true) {
+          // Unchecking - Light haptic
+          console.log('🔴 Triggering LIGHT haptic (unchecking)');
+          runOnJS(() => {
+            console.log('🔴 Inside runOnJS - LIGHT haptic');
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+              .then(() => console.log('✅ LIGHT Haptic SUCCESS'))
+              .catch((error) => console.error('❌ LIGHT Haptic FAILED:', error));
+          })();
+        } else {
+          // Checking or loading - Medium haptic
+          console.log('🔴 Triggering MEDIUM haptic (checking)');
+          runOnJS(() => {
+            console.log('🔴 Inside runOnJS - MEDIUM haptic');
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+              .then(() => console.log('✅ MEDIUM Haptic SUCCESS'))
+              .catch((error) => console.error('❌ MEDIUM Haptic FAILED:', error));
+          })();
+        }
 
         // Set debounce flag to prevent rapid toggles
         runOnJS(setIsToggling)(true);
@@ -268,13 +268,12 @@ export function HabitCard({
 
       if (onLongPress && !disabled) {
         console.log('🟡 Calling Heavy haptic for long press');
+        // Haptic feedback for long press
         runOnJS(() => {
           console.log('🟡 LONG PRESS: Inside runOnJS - calling Heavy haptic');
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
             .then(() => console.log('✅ LONG PRESS haptic SUCCESS'))
-            .catch((error) =>
-              console.error('❌ LONG PRESS haptic FAILED:', error)
-            );
+            .catch((error) => console.error('❌ LONG PRESS haptic FAILED:', error));
         })();
         runOnJS(onLongPress)();
       } else {

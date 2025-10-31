@@ -29,7 +29,7 @@ import type { Doc, Id } from '../../convex/_generated/dataModel';
 import { useAppTheme } from '../theme';
 import TemplateCard from '../components/TemplateCard';
 import Modal from '../components/Modal';
-import Button from '../components/Button/Button';
+import Button from '../components/Button';
 import EmptyState from '../components/EmptyState';
 import Toast from '../components/Toast';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -62,7 +62,7 @@ const CATEGORIES: CategoryFilter[] = [
   { icon: '🧘', id: 'mindfulness', label: 'Mindfulness' },
   { icon: '🔬', id: 'andrew_huberman', label: 'Huberman' },
   { icon: '📚', id: 'learning', label: 'Learning' },
-  { icon: '💬', id: 'social', label: 'Social' },
+  { icon: '👥', id: 'social', label: 'Social' },
   { icon: '💰', id: 'financial', label: 'Financial' },
   { icon: '🎨', id: 'creativity', label: 'Creativity' },
   { icon: '😴', id: 'sleep', label: 'Sleep' },

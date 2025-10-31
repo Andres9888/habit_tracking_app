@@ -22,14 +22,13 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../utils/notifications';
+import { EmojiPicker } from '../components/EmojiPicker';
 
 interface HabitEditScreenProps {
   visible: boolean;
   habitId: Id<'habits'> | null;
   onClose: () => void;
 }
-
-const EMOJIS = ['💪', '🧘', '📚', '💧', '🏃', '🎨', '🎵', '🥗', '😴', '📱'];
 
 const EMOJI_COLORS = [
   '#DBEAFE', // blue-100
@@ -63,21 +62,17 @@ export default function HabitEditScreen({
   const [habitName, setHabitName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
-  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>(
-    'daily'
-  );
+  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('daily');
   const [selectedDays, setSelectedDays] = useState<number[]>([0, 1, 2, 3, 4]); // M-F
-  const [preferredTime, setPreferredTime] = useState<
-    'morning' | 'afternoon' | 'evening'
-  >('afternoon');
+  const [preferredTime, setPreferredTime] = useState<'morning' | 'afternoon' | 'evening'>('afternoon');
   const [remindersEnabled, setRemindersEnabled] = useState(true);
-  const [reminderTime, setReminderTime] = useState<Date>(() =>
-    getDefaultReminderTime()
-  );
+  const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminderSound, setReminderSound] = useState('default');
   const [goalValue, setGoalValue] = useState('30');
   const [goalUnit, setGoalUnit] = useState('minutes');
+  const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
+
   const updateHabit = useMutation(api.habits.update);
   const removeHabit = useMutation(api.habits.remove);
 
@@ -90,7 +85,7 @@ export default function HabitEditScreen({
       const name = parts.slice(1).join(' ');
 
       setHabitName(name || habit.name);
-      setSelectedEmoji(EMOJIS.includes(emoji) ? emoji : '💪');
+      setSelectedEmoji(emoji || '💪');
       setSelectedColor(habit.iconColor || '#DBEAFE');
       setFrequency((habit.frequency as any) || 'daily');
       setSelectedDays(habit.daysOfWeek || [0, 1, 2, 3, 4]);
@@ -120,11 +115,11 @@ export default function HabitEditScreen({
 
       if (hasPermission) {
         const scheduled = await scheduleHabitReminder({
-          body: 'Time to check in on your habit progress!',
           habitId: String(habitId),
+          title: fullName,
+          body: 'Time to check in on your habit progress!',
           reminderTime,
           skipPermissionCheck: true,
-          title: fullName,
         });
         enableReminders = scheduled;
       }
@@ -141,18 +136,18 @@ export default function HabitEditScreen({
     }
 
     await updateHabit({
-      daysOfWeek: selectedDays,
-      frequency,
-      goalDuration: Number.parseInt(goalValue) || 30,
-      goalUnit,
       habitId,
+      name: fullName,
       icon: selectedEmoji,
       iconColor: selectedColor,
-      name: fullName,
+      frequency,
+      daysOfWeek: selectedDays,
       preferredTime,
       remindersEnabled: enableReminders,
-      reminderSound: enableReminders ? reminderSound : undefined,
       reminderTime: enableReminders ? reminderTimeString : undefined,
+      reminderSound: enableReminders ? reminderSound : undefined,
+      goalDuration: Number.parseInt(goalValue) || 30,
+      goalUnit,
     });
 
     onClose();
@@ -166,9 +161,7 @@ export default function HabitEditScreen({
 
   const toggleDay = (index: number) => {
     setSelectedDays((prev) =>
-      prev.includes(index)
-        ? prev.filter((d) => d !== index)
-        : [...prev, index].sort()
+      prev.includes(index) ? prev.filter((d) => d !== index) : [...prev, index].sort()
     );
   };
 
@@ -205,10 +198,7 @@ export default function HabitEditScreen({
           </TouchableOpacity>
         </View>
 
-        <ScrollView
-          className='flex-1 px-4'
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView className='flex-1 px-4' showsVerticalScrollIndicator={false}>
           {/* Icon Selection Section */}
           <View className='mb-4 rounded-2xl bg-white p-6'>
             {/* Large Icon Preview */}
@@ -224,30 +214,18 @@ export default function HabitEditScreen({
               </Text>
             </View>
 
-            {/* Icon Grid */}
-            <View className='flex-row flex-wrap gap-2'>
-              {EMOJIS.map((emoji, index) => (
-                <TouchableOpacity
-                  key={index}
-                  className={`h-12 w-12 items-center justify-center rounded-xl ${
-                    selectedEmoji === emoji ? 'border-2 border-blue-500' : ''
-                  }`}
-                  style={{
-                    backgroundColor: EMOJI_COLORS[index],
-                    transform:
-                      selectedEmoji === emoji
-                        ? [{ scale: 1.1 }]
-                        : [{ scale: 1 }],
-                  }}
-                  onPress={() => {
-                    setSelectedEmoji(emoji);
-                    setSelectedColor(EMOJI_COLORS[index]);
-                  }}
-                >
-                  <Text className='text-2xl'>{emoji}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {/* Icon Selector Button */}
+            <TouchableOpacity
+              accessibilityLabel='Choose icon'
+              accessibilityRole='button'
+              className='flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
+              onPress={() => setIsEmojiPickerVisible(true)}
+            >
+              <Text className='text-base font-medium text-[#1a1a1a]'>
+                Browse Icons
+              </Text>
+              <Text className='text-sm text-[#3B82F6]'>Change</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Habit Name Section */}
@@ -273,7 +251,7 @@ export default function HabitEditScreen({
               {(['daily', 'weekly', 'custom'] as const).map((freq) => (
                 <TouchableOpacity
                   key={freq}
-                  className={`h-12 flex-1 items-center justify-center rounded-xl ${
+                  className={`flex-1 h-12 items-center justify-center rounded-xl ${
                     frequency === freq ? 'bg-blue-500' : 'bg-gray-100'
                   }`}
                   onPress={() => setFrequency(freq)}
@@ -306,9 +284,7 @@ export default function HabitEditScreen({
                 >
                   <Text
                     className={`text-base font-semibold ${
-                      selectedDays.includes(index)
-                        ? 'text-white'
-                        : 'text-[#1a1a1a]'
+                      selectedDays.includes(index) ? 'text-white' : 'text-[#1a1a1a]'
                     }`}
                   >
                     {day}
@@ -327,12 +303,12 @@ export default function HabitEditScreen({
               {TIMES.map((time, index) => (
                 <TouchableOpacity
                   key={time}
-                  className={`h-17 flex-1 items-center justify-center rounded-xl ${
+                  className={`flex-1 h-17 items-center justify-center rounded-xl ${
                     preferredTime === time ? 'bg-blue-500' : 'bg-gray-100'
                   }`}
                   onPress={() => setPreferredTime(time as any)}
                 >
-                  <Text className='mb-1 text-xl'>{TIME_ICONS[index]}</Text>
+                  <Text className='text-xl mb-1'>{TIME_ICONS[index]}</Text>
                   <Text
                     className={`text-sm font-medium capitalize ${
                       preferredTime === time ? 'text-white' : 'text-[#1a1a1a]'
@@ -352,18 +328,18 @@ export default function HabitEditScreen({
                 Reminders
               </Text>
               <Switch
-                ios_backgroundColor='#D1D5DB'
-                thumbColor='#FFFFFF'
-                trackColor={{ false: '#D1D5DB', true: '#3B82F6' }}
                 value={remindersEnabled}
                 onValueChange={setRemindersEnabled}
+                trackColor={{ false: '#D1D5DB', true: '#3B82F6' }}
+                thumbColor='#FFFFFF'
+                ios_backgroundColor='#D1D5DB'
               />
             </View>
 
             {remindersEnabled && (
               <>
                 <TouchableOpacity
-                  className='mb-3 h-12 flex-row items-center justify-between rounded-xl bg-gray-50 px-3'
+                  className='mb-3 flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
                   onPress={() => setShowTimePicker(true)}
                 >
                   <Text className='text-base font-medium text-[#1a1a1a]'>
@@ -374,12 +350,12 @@ export default function HabitEditScreen({
                   </Text>
                 </TouchableOpacity>
 
-                <View className='h-12 flex-row items-center justify-between rounded-xl bg-gray-50 px-3'>
+                <View className='flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'>
                   <Text className='text-base font-medium text-[#1a1a1a]'>
                     Sound
                   </Text>
                   <TouchableOpacity>
-                    <Text className='text-base font-semibold capitalize text-blue-500'>
+                    <Text className='text-base font-semibold text-blue-500 capitalize'>
                       {reminderSound}
                     </Text>
                   </TouchableOpacity>
@@ -395,10 +371,10 @@ export default function HabitEditScreen({
             </Text>
             <View className='flex-row gap-3'>
               <TextInput
-                className='h-12 flex-1 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
-                keyboardType='numeric'
+                className='flex-1 h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
                 placeholder='30'
                 placeholderTextColor='#adaebc'
+                keyboardType='numeric'
                 value={goalValue}
                 onChangeText={setGoalValue}
               />
@@ -437,10 +413,10 @@ export default function HabitEditScreen({
 
         {showTimePicker && (
           <DateTimePicker
-            display='spinner'
-            is24Hour={false}
-            mode='time'
             value={reminderTime}
+            mode='time'
+            is24Hour={false}
+            display='spinner'
             onChange={(event, selectedTime) => {
               setShowTimePicker(false);
               if (selectedTime) {
@@ -451,9 +427,9 @@ export default function HabitEditScreen({
         )}
 
         {/* Bottom Buttons */}
-        <View className='flex-row gap-3 bg-[#f8f5f1] px-4 pb-8 pt-4'>
+        <View className='flex-row gap-3 px-4 pb-8 pt-4 bg-[#f8f5f1]'>
           <TouchableOpacity
-            className='h-14 flex-1 items-center justify-center rounded-2xl bg-gray-200'
+            className='flex-1 h-14 items-center justify-center rounded-2xl bg-gray-200'
             onPress={onClose}
           >
             <Text className='text-base font-semibold text-[#1a1a1a]'>
@@ -461,7 +437,7 @@ export default function HabitEditScreen({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className='h-14 flex-1 items-center justify-center rounded-2xl bg-[#1a1a1a]'
+            className='flex-1 h-14 items-center justify-center rounded-2xl bg-[#1a1a1a]'
             onPress={handleSave}
           >
             <Text className='text-base font-semibold text-white'>
@@ -470,6 +446,18 @@ export default function HabitEditScreen({
           </TouchableOpacity>
         </View>
       </View>
+
+      <EmojiPicker
+        visible={isEmojiPickerVisible}
+        selectedEmoji={selectedEmoji}
+        onSelect={(emoji) => {
+          setSelectedEmoji(emoji);
+          // Optionally cycle through colors when selecting emoji
+          const randomColorIndex = Math.floor(Math.random() * EMOJI_COLORS.length);
+          setSelectedColor(EMOJI_COLORS[randomColorIndex]);
+        }}
+        onClose={() => setIsEmojiPickerVisible(false)}
+      />
     </Modal>
   );
 }

@@ -20,7 +20,7 @@ export function HabitsList({ state }: HabitsListProps) {
     handleDragEnd,
     handleArchive,
     handleHabitPress,
-    handleToggleForm,
+    openCreateHabitScreen,
     getHabitStatus,
     getStreak,
     toggleHabit,
@@ -58,7 +58,7 @@ export function HabitsList({ state }: HabitsListProps) {
         ListEmptyComponent={
           <HabitsEmptyState
             isLoading={isHabitsLoading}
-            onCreateHabit={handleToggleForm}
+            onPressShowCreateHabitScreen={openCreateHabitScreen}
           />
         }
         showsVerticalScrollIndicator={false}

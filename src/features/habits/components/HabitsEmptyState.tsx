@@ -3,10 +3,10 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 interface HabitsEmptyStateProps {
   isLoading: boolean;
-  onCreateHabit: () => void;
+  onPressShowCreateHabitScreen: () => void;
 }
 
-export function HabitsEmptyState({ isLoading, onCreateHabit }: HabitsEmptyStateProps) {
+export function HabitsEmptyState({ isLoading, onPressShowCreateHabitScreen }: HabitsEmptyStateProps) {
   if (isLoading) {
     return (
       <View className='items-center justify-center gap-3 py-20'>
@@ -31,7 +31,7 @@ export function HabitsEmptyState({ isLoading, onCreateHabit }: HabitsEmptyStateP
         accessibilityLabel='Add habit'
         accessibilityRole='button'
         className='h-11 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
-        onPress={onCreateHabit}
+        onPress={onPressShowCreateHabitScreen}
       >
         <Plus color='#ffffff' size={18} strokeWidth={2.25} />
         <Text className='text-base font-medium tracking-tight text-white'>

@@ -2,13 +2,13 @@ import { Plus, Settings, Microscope } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 
 interface HabitsHeaderProps {
-  onOpenCreateHabit: () => void;
+  onPressShowCreateHabitScreen: () => void;
   onOpenSettings: () => void;
   onOpenHabitScience: () => void;
 }
 
 export function HabitsHeader({
-  onOpenCreateHabit,
+  onPressShowCreateHabitScreen,
   onOpenSettings,
   onOpenHabitScience,
 }: HabitsHeaderProps) {
@@ -19,7 +19,7 @@ export function HabitsHeader({
         accessibilityLabel='Add habit'
         accessibilityRole='button'
         className='h-12 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
-        onPress={onOpenCreateHabit}
+        onPress={onPressShowCreateHabitScreen}
       >
         <Plus color='#ffffff' size={18} strokeWidth={2.25} />
         <Text className='text-base font-normal tracking-tight text-white'>

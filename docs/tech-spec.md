@@ -1,133 +1,439 @@
 # My Project - Technical Specification
 
 **Author:** Jane
-**Date:** 2025-10-28
-**Project Level:** Level 3 (Full Product)
-**Project Type:** Mobile Application (iOS)
-**Development Context:** Brownfield - React Native + Convex codebase with existing habit strength algorithms
+**Date:** 2025-10-30
+**Project Level:** Level 0 (Single Atomic Change)
+**Project Type:** Mobile application
+**Development Context:** Brownfield - Adding to existing clean codebase
 
 ---
 
 ## Source Tree Structure
 
-### Current Project Structure
+**Single File to Modify:**
 
 ```
-habit_tracking_app/
-├── src/
-│   ├── components/
-│   │   ├── HabitCard.tsx                    # Main habit display component
-│   │   ├── HabitStrengthIndicator.tsx       # Existing - displays strength visually
-│   │   ├── ColorPickerSheet.tsx             # Existing - color selection modal
-│   │   ├── CreateHabitModal.tsx             # Existing - habit creation form
-│   │   ├── SettingsModal/
-│   │   │   └── SettingsModal.tsx            # Settings interface
-│   │   └── [NEW] Premium/
-│   │       ├── PaywallScreen.tsx            # Subscription paywall
-│   │       ├── AnalyticsDashboard.tsx       # Premium analytics
-│   │       ├── StrengthHistoryGraph.tsx     # Historical trends
-│   │       └── InsightCard.tsx              # Weekly insights
-│   ├── screens/
-│   │   ├── HomeScreen.tsx                   # Main habit list
-│   │   ├── HabitDetailScreen.tsx           # Individual habit view
-│   │   ├── [NEW] OnboardingScreen.tsx       # First-time user flow
-│   │   ├── [NEW] AnalyticsScreen.tsx        # Premium analytics tab
-│   │   └── [NEW] SettingsScreen.tsx         # App settings
-│   ├── hooks/
-│   │   ├── useHabits.ts                     # Convex habit queries
-│   │   ├── [NEW] useSubscription.ts         # IAP subscription status
-│   │   ├── [NEW] usePredictions.ts          # Behavior predictions
-│   │   └── [NEW] useNotifications.ts        # Push notification management
-│   ├── utils/
-│   │   ├── [NEW] subscriptionManager.ts     # StoreKit integration
-│   │   ├── [NEW] notificationScheduler.ts   # Notification scheduling
-│   │   └── analytics.ts                     # Event tracking
-│   ├── navigation/
-│   │   └── AppNavigator.tsx                 # React Navigation setup
-│   └── App.tsx                               # Root component
-├── convex/
-│   ├── schema.ts                            # Database schema
-│   ├── habits.ts                            # Habit CRUD mutations/queries
-│   ├── habitStrength.ts                     # Existing - Zhang/Lally algorithms
-│   ├── [NEW] predictions.ts                 # Behavior prediction functions
-│   ├── [NEW] subscriptions.ts               # Receipt validation
-│   ├── [NEW] insights.ts                    # Weekly insight generation
-│   └── [NEW] _generated/
-│       └── api.d.ts                          # Convex type definitions
-├── ios/
-│   ├── HabitTracker/
-│   │   ├── AppDelegate.mm                   # iOS app lifecycle
-│   │   ├── Info.plist                       # iOS configuration
-│   │   └── [NEW] NotificationService.swift  # Rich push notifications
-│   └── Podfile                              # CocoaPods dependencies
-├── assets/
-│   ├── icons/                               # Habit icons
-│   ├── images/                              # App images
-│   └── [NEW] share-templates/               # Social share card designs
-└── package.json                             # Dependencies
+src/screens/HabitDetailScreen.tsx
 ```
 
-### Key File Changes Required
+**Current Code Structure (lines 396-423):**
 
-**New Files (Epic 1 - MVP):**
+```typescript
+{/* Navigation Bar */}
+<View
+  style={[
+    styles.navigationBar,
+    {
+      borderBottomColor: theme.custom.colors.gray[200],
+      borderBottomWidth: 1,
+    },
+  ]}
+>
+  <Pressable
+    accessible
+    accessibilityLabel='Close'
+    accessibilityRole='button'
+    style={styles.closeButton}
+    onPress={onClose}
+  >
+    <X color={theme.custom.colors.gray[700]} size={24} />
+  </Pressable>
+  <Text
+    style={[
+      theme.custom.typography.heading3,
+      { color: theme.custom.colors.gray[900] },
+    ]}
+  >
+    Habit Detail
+  </Text>
+  <View style={styles.closeButton} />
+</View>
+```
 
-- `src/screens/OnboardingScreen.tsx` - 3-screen onboarding flow (moved to Epic 5)
-- `src/components/HabitList.tsx` - Optimized FlatList for habit display
-- `src/hooks/useHabitStrength.ts` - Hook for strength calculations
+**Current Style Definition (lines 685-691):**
 
-**New Files (Epic 2 - Premium):**
+```typescript
+navigationBar: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  paddingHorizontal: 16,
+  paddingVertical: 12,
+},
+```
 
-- `src/utils/subscriptionManager.ts` - StoreKit integration
-- `src/screens/PaywallScreen.tsx` - Strategic subscription paywall
-- `src/components/Premium/*` - All premium UI components
-- `convex/subscriptions.ts` - Receipt validation backend
+**Dependencies Already Imported (but not used):**
 
-**New Files (Epic 3 - Retention):**
-
-- `convex/predictions.ts` - Prediction engine (Zhang et al.)
-- `src/utils/notificationScheduler.ts` - Adaptive reminders
-- `convex/insights.ts` - Weekly report generation
-
-**New Files (Epic 4 - Viral):**
-
-- `src/screens/ShareScreen.tsx` - Share card generator
-- `src/components/ReferralCard.tsx` - Referral program UI
-- `convex/referrals.ts` - Referral tracking backend
-
-**New Files (Epic 5 - Polish):**
-
-- `src/components/AnimatedComponents.tsx` - Reanimated animations
-- `src/screens/OnboardingScreen.tsx` - Advanced interactive onboarding
-- `src/utils/accessibility.ts` - Accessibility helpers
-
-**Files to Modify:**
-
-- `convex/schema.ts` - Add subscription, prediction, referral tables
-- `src/App.tsx` - Add navigation, subscription provider
-- `src/components/HabitCard.tsx` - Add swipe gestures, animations
-- `convex/habitStrength.ts` - Integrate with predictions
+```typescript
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; // Line 18
+const insets = useSafeAreaInsets(); // Line 302
+```
 
 ---
 
 ## Technical Approach
 
-### Architecture Pattern: Offline-First with Real-Time Sync
+### Problem Analysis
 
-**Core Philosophy:**
-Local-first architecture where all UI state lives on device, syncs to Convex backend when online. User never experiences loading states for critical flows (habit check-off, strength updates).
+**Root Cause:**
+The navigation bar component in `HabitDetailScreen.tsx` is not accounting for device safe area insets (status bar/notch area on iOS devices). While `useSafeAreaInsets()` is imported and called, the returned `insets` object is never applied to the navigation bar styling.
 
-### Key Technical Decisions
+**Current Behavior:**
+- On devices with notches (iPhone X and newer), the navigation bar renders under the status bar
+- The "Habit Detail" heading and action buttons are partially obscured by the notch/status bar
+- The close button (X icon) and edit button area are cut off at the top
 
-#### 1. **React Native + Expo (Managed Workflow)**
+**Expected Behavior:**
+- Navigation bar should start below the safe area (status bar/notch)
+- All interactive elements should be fully visible and accessible
+- Design should adapt dynamically to different device safe areas
 
-- **Why:** Solo dev velocity, no need for native modules beyond standard Expo SDK
-- **Version:** React Native 0.74+, Expo SDK 51+
-- **Benefits:** Hot reload, OTA updates, easier TestFlight deployment
-- **Trade-offs:** Limited native customization (acceptable for this scope)
+### Solution Strategy
 
-#### 2. **Convex Backend (BaaS)**
+**Approach: Apply Safe Area Insets to Navigation Bar**
 
-- **Why:** Real-time sync, optimistic updates, serverless scaling
+We will use the existing `insets` variable (from `useSafeAreaInsets()`) to add top padding to the navigation bar. This is the standard React Native pattern for handling safe areas.
+
+**Why This Approach:**
+1. **Already Available:** The hook is already imported and called - we just need to use it
+2. **Standard Pattern:** This is the recommended React Native Safe Area Context approach
+3. **Minimal Change:** Single inline style addition, no new dependencies
+4. **Dynamic:** Automatically adapts to different device safe areas (iPhone notch, status bar, etc.)
+5. **Performance:** No performance impact - uses existing hooks
+
+**Alternative Considered (Rejected):**
+- Using `SafeAreaView` wrapper: Would require restructuring the component layout and might conflict with the Modal component's built-in safe area handling
+- Fixed padding values: Would not adapt to different devices and could cause issues on devices without notches
+
+---
+
+## Implementation Stack
+
+**No new dependencies required.** This fix uses existing libraries already installed in the project.
+
+### Existing Dependencies (Already Installed)
+
+**Core Framework:**
+- `react-native`: 0.74.x - React Native framework
+- `react`: 18.x - React library
+
+**Safe Area Handling:**
+- `react-native-safe-area-context`: ^4.x - Provides `useSafeAreaInsets()` hook (already imported)
+
+**UI Components:**
+- `lucide-react-native`: ^0.x - Icon library (X icon for close button)
+- Theme system from `../theme` - Custom theme with typography and colors
+
+### File Dependencies
+
+**Single File to Modify:**
+- `src/screens/HabitDetailScreen.tsx` - Add safe area padding to navigation bar
+
+**No Changes Required:**
+- `package.json` - All dependencies already installed
+- No native module changes
+- No iOS/Android specific code needed
+
+---
+
+## Technical Details
+
+### Precise Code Change
+
+**Location:** `src/screens/HabitDetailScreen.tsx`
+
+**Change Type:** Add inline style to existing View component
+
+**Exact Modification (Line 396-403):**
+
+**BEFORE:**
+```typescript
+<View
+  style={[
+    styles.navigationBar,
+    {
+      borderBottomColor: theme.custom.colors.gray[200],
+      borderBottomWidth: 1,
+    },
+  ]}
+>
+```
+
+**AFTER:**
+```typescript
+<View
+  style={[
+    styles.navigationBar,
+    {
+      paddingTop: insets.top,
+      borderBottomColor: theme.custom.colors.gray[200],
+      borderBottomWidth: 1,
+    },
+  ]}
+>
+```
+
+**Single Line Added:**
+```typescript
+paddingTop: insets.top,
+```
+
+### Safe Area Insets Explanation
+
+**What is `insets.top`?**
+- Returns the top safe area inset in pixels
+- On iPhone 14 Pro (with notch): ~47-59px
+- On iPhone SE (no notch): ~20px (status bar height)
+- On iPad: ~20px (status bar height)
+- Dynamically adapts based on device and orientation
+
+**Why `paddingTop` instead of `marginTop`?**
+- `paddingTop` keeps the navigation bar's background color extended into the safe area
+- `marginTop` would leave a gap above the navigation bar
+- The border-bottom should remain at the bottom of the navigation bar content
+
+**Combined Effect:**
+- Static `paddingVertical: 12` from `styles.navigationBar` provides base spacing
+- Dynamic `paddingTop: insets.top` adds device-specific safe area spacing
+- Total top padding = `12 + insets.top` pixels
+
+### Impact Analysis
+
+**Visual Changes:**
+- Navigation bar will have additional top padding on devices with notches
+- Content (title, close button) will shift down to be fully visible
+- No change on devices without notches (insets.top = 0 on older devices, but typically 20px for status bar)
+
+**Layout Implications:**
+- Navigation bar height increases by `insets.top` pixels
+- ScrollView content area height decreases proportionally (still fills remaining space)
+- No effect on horizontal spacing or bottom layout
+
+**Accessibility:**
+- Improved: Interactive elements (close button) are now in touchable area
+- No change to accessibility labels or roles
+- Better compliance with iOS Human Interface Guidelines
+
+**Performance:**
+- Zero performance impact
+- No re-renders triggered (insets are calculated once on mount)
+- No animation or layout thrashing
+
+---
+
+## Development Setup
+
+**No special setup required.** This is a single-line code change to an existing file.
+
+### Prerequisites
+
+1. **Existing development environment** - Project already set up
+2. **Text editor/IDE** - VS Code, WebStorm, or similar
+3. **React Native development tools** - Already configured for this project
+
+### Verification Before Making Change
+
+```bash
+# Ensure development server is running
+npm start
+# or
+yarn start
+
+# Run on iOS simulator to see current bug
+npm run ios
+# or
+yarn ios
+```
+
+### No Additional Dependencies
+
+- All required packages already installed
+- No `npm install` or `yarn install` needed
+- No pod install required
+- No native module linking needed
+
+---
+
+## Implementation Guide
+
+### Step-by-Step Implementation
+
+**Total Time Estimate: 2-5 minutes**
+
+#### Step 1: Open the File
+
+```bash
+# Open in your preferred editor
+code src/screens/HabitDetailScreen.tsx
+# or
+vim src/screens/HabitDetailScreen.tsx
+# or use any text editor
+```
+
+#### Step 2: Locate the Navigation Bar Component
+
+**Find lines 396-403** (or search for "Navigation Bar" comment):
+
+```typescript
+{/* Navigation Bar */}
+<View
+  style={[
+    styles.navigationBar,
+    {
+      borderBottomColor: theme.custom.colors.gray[200],
+      borderBottomWidth: 1,
+    },
+  ]}
+>
+```
+
+#### Step 3: Add Safe Area Padding
+
+**Add one line** inside the inline style object (after line 399):
+
+```typescript
+{/* Navigation Bar */}
+<View
+  style={[
+    styles.navigationBar,
+    {
+      paddingTop: insets.top,  // ← ADD THIS LINE
+      borderBottomColor: theme.custom.colors.gray[200],
+      borderBottomWidth: 1,
+    },
+  ]}
+>
+```
+
+**Important:**
+- Place `paddingTop: insets.top,` BEFORE `borderBottomColor`
+- Include the comma at the end of the line
+- Maintain proper indentation (6 spaces or 3 tabs)
+
+#### Step 4: Save the File
+
+```bash
+# Save in your editor
+# Ctrl+S (Windows/Linux) or Cmd+S (macOS)
+```
+
+#### Step 5: Verify the Change
+
+The development server should **hot reload automatically**. If not:
+
+```bash
+# Reload the app
+# Press 'r' in Metro bundler terminal
+# or shake device/simulator and select "Reload"
+```
+
+#### Step 6: Visual Verification
+
+**On iPhone simulator/device with notch:**
+1. Navigate to any habit in the app
+2. Tap on the habit to open Habit Detail screen
+3. Verify the navigation bar is now below the status bar/notch
+4. Verify "Habit Detail" heading is fully visible
+5. Verify close button (X) is fully visible and tappable
+
+**Expected Visual Result:**
+- Navigation bar should have extra top padding
+- All content should be visible (not cut off)
+- Close button should be in the touchable area
+
+### Troubleshooting
+
+**Issue: Hot reload didn't work**
+```bash
+# Full reload
+# In Metro terminal, press 'r'
+# or in simulator: Cmd+R (iOS)
+```
+
+**Issue: TypeScript error about `insets`**
+- Verify `const insets = useSafeAreaInsets();` exists on line 302
+- Verify import exists on line 18: `import { useSafeAreaInsets } from 'react-native-safe-area-context';`
+
+**Issue: Still cut off on device**
+- Check that you added `paddingTop: insets.top,` not `paddingTop: inset.top` (typo)
+- Verify the comma at the end of the line
+- Check indentation matches surrounding code
+
+---
+
+## Testing Approach
+
+### Manual Testing (Primary)
+
+**Test Devices:**
+
+1. **iPhone with notch** (iPhone X or newer)
+   - iPhone 14 Pro, iPhone 13, iPhone 12, etc.
+   - This is where the bug is most visible
+
+2. **iPhone without notch** (iPhone SE, iPhone 8)
+   - Verify no regression on older devices
+
+3. **iPad**
+   - Verify safe area handling on tablet
+
+**Test Procedure:**
+
+1. **Before Fix - Reproduce Bug:**
+   - Open app on iPhone with notch
+   - Navigate to any habit
+   - Tap to open Habit Detail screen
+   - **Verify:** Navigation bar is cut off at top
+   - **Verify:** "Habit Detail" heading is partially hidden
+   - **Verify:** Close button (X) is in notch area
+
+2. **After Fix - Verify Resolution:**
+   - Apply the code change
+   - Hot reload or restart app
+   - Open Habit Detail screen again
+   - **Verify:** Navigation bar starts below status bar/notch
+   - **Verify:** "Habit Detail" heading is fully visible
+   - **Verify:** Close button (X) is fully visible and tappable
+   - **Verify:** All action buttons in header are accessible
+
+3. **Cross-Device Verification:**
+   - Test on iPhone SE (no notch)
+   - **Verify:** Still looks correct with standard status bar
+   - Test in landscape orientation
+   - **Verify:** Safe area adapts correctly
+
+4. **Regression Testing:**
+   - Test other screens with navigation bars
+   - **Verify:** No other screens are affected
+   - Test ScrollView content
+   - **Verify:** Content still scrolls properly
+
+### Visual Regression Testing (Optional)
+
+**Take screenshots before and after:**
+
+```bash
+# iOS Simulator screenshots
+# Cmd+S to save screenshot
+
+# Compare:
+# - Navigation bar height
+# - Content positioning
+# - Touch target areas
+```
+
+### Automated Testing (Not Required for This Fix)
+
+This UI change doesn't require automated tests because:
+- Single line change
+- Visual change only
+- No business logic affected
+- No data mutations
+- Manual testing is sufficient
+
+---
+
+## Deployment Strategy
 - **Current State:** Already configured, habit strength algorithms implemented
 - **Responsibilities:** Data persistence, business logic, scheduled jobs (predictions, insights)
 - **Scaling:** Handles 10,000+ users without architecture changes

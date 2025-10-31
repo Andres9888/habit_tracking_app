@@ -18,7 +18,7 @@ export function HabitsApp() {
       <View className='flex-1 bg-[#F7F8FB]'>
         <View className='gap-4 px-6 pb-6 pt-12'>
           <HabitsHeader
-            onOpenCreateHabit={list.handleToggleForm}
+            onPressShowCreateHabitScreen={list.openCreateHabitScreen}
             onOpenSettings={modals.openSettings}
             onOpenHabitScience={modals.openTemplatesScreen}
           />
@@ -44,7 +44,7 @@ export function HabitsApp() {
         <HabitsList state={list} />
 
         <View className='absolute bottom-8 right-6'>
-          <FloatingActionButton onPress={list.handleToggleForm} />
+          <FloatingActionButton onPress={list.openCreateHabitScreen} />
         </View>
 
         <WebToaster />

@@ -34,7 +34,7 @@ export interface HabitsListState {
   handleHabitPress: (habit: Habit) => void;
   handleNextWeek: () => void;
   handlePreviousWeek: () => void;
-  handleToggleForm: () => void;
+  openCreateHabitScreen: () => void;
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
@@ -208,7 +208,7 @@ export function useHabitsApp(): UseHabitsAppResult {
     [completedDatesByHabit, today]
   );
 
-  const handleToggleForm = useCallback(() => {
+  const openCreateHabitScreen = useCallback(() => {
     setIsCreateHabitOpen(true);
   }, []);
 
@@ -319,7 +319,7 @@ export function useHabitsApp(): UseHabitsAppResult {
     handleHabitPress,
     handleNextWeek,
     handlePreviousWeek,
-    handleToggleForm,
+    openCreateHabitScreen,
     getHabitStatus,
     getStreak,
     toggleHabit,
