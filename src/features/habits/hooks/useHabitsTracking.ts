@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { useQuery } from 'convex/react';
 
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../../convex/_generated/api';
 import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import type { HabitTrackingEntry, HabitStatus } from '../types';
 

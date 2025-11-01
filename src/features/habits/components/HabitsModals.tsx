@@ -52,7 +52,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     toggleHabit,
     getStreak,
     openHabitCalendar,
-    setHabitToEdit,
+    openEditHabit,
     openPauseModal,
     handleArchive,
   } = state;
@@ -130,7 +130,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onClose={closeHabitDetail}
         onArchive={(habitId) => handleArchive(habitId)}
         onDelete={onDeleteHabit}
-        onEdit={(habit) => setHabitToEdit(habit)}
+        onEdit={(habit) => openEditHabit(habit)}
         onPause={(habitId) => openPauseModal(habitId)}
         onOpenCalendar={(habit) => openHabitCalendar(habit)}
         onUpgrade={() => {

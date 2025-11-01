@@ -6,7 +6,7 @@ import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { Plus, Settings } from 'lucide-react-native';
 
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitId, ShareCardData, SettingsDocument } from '../types';
 import DraggableHabit from '../../../components/DraggableHabit';
 import { CalendarTimeline } from '../../../components/CalendarTimeline';
