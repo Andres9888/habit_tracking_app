@@ -12,13 +12,13 @@ import { useHabitsApp } from './hooks/useHabitsApp';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
-
+  const { openCreateHabitScreen } = modals;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-[#F7F8FB]'>
         <View className='gap-4 px-6 pb-6 pt-12'>
           <HabitsHeader
-            onPressShowCreateHabitScreen={modals.openCreateHabitScreen}
+            onPressShowCreateHabitScreen={openCreateHabitScreen}
             onOpenSettings={modals.openSettings}
             onOpenHabitScience={modals.openTemplatesScreen}
           />
@@ -44,7 +44,7 @@ export function HabitsApp() {
         <HabitsList state={list} />
 
         <View className='absolute bottom-8 right-6'>
-          <FloatingActionButton onPress={list.openCreateHabitScreen} />
+          <FloatingActionButton openCreateHabitScreen={openCreateHabitScreen} />
         </View>
 
         <WebToaster />
