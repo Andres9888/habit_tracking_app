@@ -67,7 +67,7 @@ export function HabitsApp() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-[#f8f5f1]'>
-        <View className='gap-4 px-6 pb-2.5 pt-12'>
+        <View className='gap-3 px-6 pb-2.5 pt-11'>
           <HabitsHeader
             openCreateHabitScreen={openCreateHabitScreen}
             openSettings={openSettings}
