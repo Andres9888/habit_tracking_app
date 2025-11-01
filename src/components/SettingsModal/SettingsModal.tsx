@@ -86,7 +86,7 @@ export default function SettingsModal({
       }
     : {
         accent: '#1a1a1a',
-        background: '#f8f5f1',
+        background: '#F7F8FB',
         card: '#ffffff',
         cardBorder: '#f1f5f9',
         headerText: '#1a1a1a',
