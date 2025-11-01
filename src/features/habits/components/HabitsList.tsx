@@ -5,12 +5,14 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { HabitsEmptyState } from './HabitsEmptyState';
 import type { HabitsListState } from '../hooks/useHabitsApp';
 import { useHabitRenderItem } from '../hooks/useHabitRenderItem';
+import { HabitsModalsState } from '../hooks/types';
 
 interface HabitsListProps {
-  state: HabitsListState;
+  list: HabitsListState;
+  modals: HabitsModalsState;
 }
 
-export function HabitsList({ state }: HabitsListProps) {
+export function HabitsList({ list, modals }: HabitsListProps) {
   const {
     habits,
     isHabitsLoading,
@@ -20,11 +22,12 @@ export function HabitsList({ state }: HabitsListProps) {
     handleDragEnd,
     handleArchive,
     handleHabitPress,
-    openCreateHabitScreen,
     getHabitStatus,
     getStreak,
     toggleHabit,
-  } = state;
+  } = list;
+
+  const { openCreateHabitScreen } = modals;
 
   const renderItem = useHabitRenderItem({
     weekDateStrings,
@@ -58,7 +61,7 @@ export function HabitsList({ state }: HabitsListProps) {
         ListEmptyComponent={
           <HabitsEmptyState
             isLoading={isHabitsLoading}
-            onPressShowCreateHabitScreen={openCreateHabitScreen}
+            openCreateHabitScreen={openCreateHabitScreen}
           />
         }
         showsVerticalScrollIndicator={false}

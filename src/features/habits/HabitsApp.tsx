@@ -12,15 +12,15 @@ import { useHabitsApp } from './hooks/useHabitsApp';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
-  const { openCreateHabitScreen } = modals;
+  const { openCreateHabitScreen, openSettings, openTemplatesScreen } = modals;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-[#F7F8FB]'>
         <View className='gap-4 px-6 pb-6 pt-12'>
           <HabitsHeader
-            onPressShowCreateHabitScreen={openCreateHabitScreen}
-            onOpenSettings={modals.openSettings}
-            onOpenHabitScience={modals.openTemplatesScreen}
+            openCreateHabitScreen={openCreateHabitScreen}
+            openSettings={openSettings}
+            openTemplatesScreen={openTemplatesScreen}
           />
 
           <CalendarTimeline
@@ -31,17 +31,10 @@ export function HabitsApp() {
             onPreviousWeek={list.handlePreviousWeek}
           />
 
-          <HabitsAtRiskWidget
-            onHabitPress={(habitId) => {
-              const habit = list.habits.find((h) => h._id === habitId);
-              if (habit) {
-                list.handleHabitPress(habit);
-              }
-            }}
-          />
+          >
         </View>
 
-        <HabitsList state={list} />
+        <HabitsList list={list} modals={modals} />
 
         <View className='absolute bottom-8 right-6'>
           <FloatingActionButton openCreateHabitScreen={openCreateHabitScreen} />

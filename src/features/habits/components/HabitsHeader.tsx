@@ -2,15 +2,15 @@ import { Plus, Settings, Microscope } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 
 interface HabitsHeaderProps {
-  onPressShowCreateHabitScreen: () => void;
-  onOpenSettings: () => void;
-  onOpenHabitScience: () => void;
+  openCreateHabitScreen: () => void;
+  openSettings: () => void;
+  openTemplatesScreen: () => void;
 }
 
 export function HabitsHeader({
-  onPressShowCreateHabitScreen,
-  onOpenSettings,
-  onOpenHabitScience,
+  openCreateHabitScreen,
+  openSettings,
+  openTemplatesScreen,
 }: HabitsHeaderProps) {
   return (
     <View className='mt-3 flex-row items-center justify-between'>
@@ -19,7 +19,7 @@ export function HabitsHeader({
         accessibilityLabel='Add habit'
         accessibilityRole='button'
         className='h-12 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
-        onPress={onPressShowCreateHabitScreen}
+        onPress={openCreateHabitScreen}
       >
         <Plus color='#ffffff' size={18} strokeWidth={2.25} />
         <Text className='text-base font-normal tracking-tight text-white'>
@@ -31,7 +31,7 @@ export function HabitsHeader({
           accessibilityLabel='Open habit science'
           accessibilityRole='button'
           className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-          onPress={onOpenHabitScience}
+          onPress={openTemplatesScreen}
         >
           <Microscope color='#101727' size={20} strokeWidth={2.25} />
         </Pressable>
@@ -39,7 +39,7 @@ export function HabitsHeader({
           accessibilityLabel='Open settings'
           accessibilityRole='button'
           className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
-          onPress={onOpenSettings}
+          onPress={openSettings}
         >
           <Settings color='#101727' size={20} strokeWidth={2.25} />
         </Pressable>
