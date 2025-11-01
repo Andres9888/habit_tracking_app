@@ -216,10 +216,10 @@ export default function DraggableHabit({
                   {name || habit.name}
                 </Text>
                 {/* Always render streak container to prevent layout shift */}
-                <View className='mt-0.5' style={{ minHeight: 18 }}>
+                <View style={{ minHeight: 20 }}>
                   {streak > 0 && (
                     <Text
-                      className='flex-row items-center text-[13px] font-bold uppercase leading-[18px]'
+                      className='mt-0.5 flex-row items-center text-[13px] font-bold uppercase leading-[18px]'
                       style={{ color: colors.streakText }}
                     >
                       🔥 {streak} DAY STREAK
