@@ -179,10 +179,10 @@ export default function DraggableHabit({
             ...StyleSheet.absoluteFillObject,
           }}
         />
-        <View className='p-3.5'>
+        <View className='p-3'>
           {/* Header with icon and title */}
-          <View className='mb-4 flex-row items-center justify-between'>
-            <View className='flex-row items-center gap-3'>
+          <View className='mb-3.5 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-2.5'>
               {/* Icon container - colored background based on habit */}
               <View
                 className='h-11 w-11 items-center justify-center rounded-[11px]'

@@ -39,7 +39,7 @@ export function useHabitRenderItem({
 
       return (
         <ScaleDecorator>
-          <View className='mb-3' style={{ opacity: isActive ? 0.7 : 1 }}>
+          <View className='mb-2.5' style={{ opacity: isActive ? 0.7 : 1 }}>
             <DraggableHabit
               celebrationsEnabled={celebrationsEnabled}
               habit={item}

@@ -68,9 +68,9 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       };
 
   return (
-    <View className='mb-4'>
+    <View className='mb-3'>
       {/* Week Navigation Header */}
-      <View className='mb-4 flex-row items-center justify-between'>
+      <View className='mb-3.5 flex-row items-center justify-between'>
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
@@ -117,7 +117,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               key={`timeline-day-${index}`}
               accessibilityLabel={accessibilityLabel}
               accessibilityRole='text'
-              className='flex-1 items-center gap-1.5'
+              className='flex-1 items-center gap-1'
             >
               {/* Weekday label */}
               <Text
