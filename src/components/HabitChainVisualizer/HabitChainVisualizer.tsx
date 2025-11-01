@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, View } from 'react-native';
 import { parse, format } from 'date-fns';
 import { Check } from 'lucide-react-native';
@@ -176,45 +176,64 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
     [celebrationsEnabled, reduceMotionPreference]
   );
 
-  const handleToggleDay = (
-    dateString: string,
-    completed: boolean,
-    disabled: boolean,
-    index: number
-  ) => {
-    if (disabled) {
-      triggerSelection();
-      return;
-    }
+  const dateLabels = useMemo(
+    () =>
+      weekDateStrings.map((dateString) => {
+        const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+        return format(parsedDate, 'MMM d, EEE').toUpperCase();
+      }),
+    [weekDateStrings]
+  );
 
-    if (completed || !celebrationsEnabled) {
-      triggerSelection();
-    } else {
-      triggerSuccess();
-      setActiveBurst(dateString);
-    }
+  const handleToggleDay = useCallback(
+    (
+      dateString: string,
+      completed: boolean,
+      disabled: boolean,
+      index: number
+    ) => {
+      if (disabled) {
+        triggerSelection();
+        return;
+      }
 
-    onToggle({ date: dateString, habitId });
+      const isTogglingToComplete = !completed;
+      const willCompleteWeek =
+        isTogglingToComplete &&
+        weekStatus.every((status, statusIndex) =>
+          statusIndex === index ? true : status === 'done'
+        );
 
-    const isFinalCompletion =
-      !completed &&
-      weekStatus.every((status, statusIndex) =>
-        statusIndex === index ? true : status === 'done'
-      );
+      if (completed || !celebrationsEnabled) {
+        triggerSelection();
+      } else {
+        triggerSuccess();
+        setActiveBurst(dateString);
+      }
 
-    if (isFinalCompletion) {
-      onWeekComplete?.({ completedDate: dateString });
-    }
-  };
+      onToggle({ date: dateString, habitId });
+
+      if (willCompleteWeek) {
+        onWeekComplete?.({ completedDate: dateString });
+      }
+    },
+    [
+      celebrationsEnabled,
+      habitId,
+      onToggle,
+      onWeekComplete,
+      triggerSelection,
+      triggerSuccess,
+      weekStatus,
+    ]
+  );
 
   return (
     <View className='flex-row items-center justify-between'>
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
-
-        const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
-        const dateLabel = format(parsedDate, 'MMM d, EEE').toUpperCase();
+        const dateLabel = dateLabels[index];
         const statusLabel = completed ? 'Completed' : 'Not completed';
         const toggleInstruction = `Tap to toggle completion for ${dateLabel}`;
         const accessibilityLabel =

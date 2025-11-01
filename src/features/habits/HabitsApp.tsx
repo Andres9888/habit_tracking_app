@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -38,7 +38,7 @@ export function HabitsApp() {
     };
   }, [dismissRewardToast, rewardToast]);
 
-  const handleShareStreak = () => {
+  const handleShareStreak = useCallback(() => {
     if (!rewardToast) {
       return;
     }
@@ -49,9 +49,9 @@ export function HabitsApp() {
       streak: rewardToast.streak,
     });
     dismissRewardToast();
-  };
+  }, [dismissRewardToast, rewardToast]);
 
-  const handleUnlockBoosters = () => {
+  const handleUnlockBoosters = useCallback(() => {
     if (!rewardToast) {
       return;
     }
@@ -63,7 +63,7 @@ export function HabitsApp() {
     });
     dismissRewardToast();
     openTemplatesScreen();
-  };
+  }, [dismissRewardToast, openTemplatesScreen, rewardToast]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-[#F7F8FB]'>

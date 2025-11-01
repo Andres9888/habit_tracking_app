@@ -17,11 +17,18 @@ export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => 
 
     let isMounted = true;
 
-    AccessibilityInfo.isReduceMotionEnabled().then((value) => {
-      if (isMounted) {
-        setSystemReduceMotion(value ?? false);
-      }
-    });
+    AccessibilityInfo.isReduceMotionEnabled()
+      .then((value) => {
+        if (isMounted) {
+          setSystemReduceMotion(value ?? false);
+        }
+      })
+      .catch(() => {
+        // Silently fail - default to false if unable to read preference
+        if (isMounted) {
+          setSystemReduceMotion(false);
+        }
+      });
 
     const subscription = AccessibilityInfo.addEventListener(
       'reduceMotionChanged',

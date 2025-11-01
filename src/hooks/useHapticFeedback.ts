@@ -40,14 +40,20 @@ export const useHapticFeedback = ({ isEnabled = true, preference }: UseHapticFee
       };
     }
 
+    const safeCall = (fn: () => Promise<void>) => {
+      fn().catch(() => {
+        // Silently fail - haptics are non-critical UX enhancements
+      });
+    };
+
     return {
-      triggerError: () => INPUT_TO_FEEDBACK.error(),
-      triggerHeavyImpact: () => INPUT_TO_FEEDBACK.heavy(),
-      triggerLightImpact: () => INPUT_TO_FEEDBACK.light(),
-      triggerMediumImpact: () => INPUT_TO_FEEDBACK.medium(),
-      triggerSelection: () => Haptics.selectionAsync(),
-      triggerSuccess: () => INPUT_TO_FEEDBACK.success(),
-      triggerWarning: () => INPUT_TO_FEEDBACK.warning(),
+      triggerError: () => safeCall(INPUT_TO_FEEDBACK.error),
+      triggerHeavyImpact: () => safeCall(INPUT_TO_FEEDBACK.heavy),
+      triggerLightImpact: () => safeCall(INPUT_TO_FEEDBACK.light),
+      triggerMediumImpact: () => safeCall(INPUT_TO_FEEDBACK.medium),
+      triggerSelection: () => safeCall(() => Haptics.selectionAsync()),
+      triggerSuccess: () => safeCall(INPUT_TO_FEEDBACK.success),
+      triggerWarning: () => safeCall(INPUT_TO_FEEDBACK.warning),
     };
   }, [reduceMotion, isEnabled]);
 };
