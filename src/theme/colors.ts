@@ -19,13 +19,13 @@ export const colors = {
   error: '#EF4444',
 
   // Convenience aliases for common usage (defaults to light mode)
-  background: '#FFFFFF',
+  background: '#f8f5f1',
 
   // Matches secondary blue
   // Neutral Grays (iOS-inspired)
   gray: {
-    50: '#F9FAFB', // Background, cards in dark mode
-    100: '#F3F4F6', // Card backgrounds
+    50: '#f8f5f1', // Background, cards in dark mode
+    100: '#f8f5f1', // Card backgrounds
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
     400: '#9CA3AF', // Placeholder text
@@ -43,11 +43,11 @@ export const colors = {
 
   // Background & Surfaces
   light: {
-    background: '#FFFFFF',
-    // Gray-50, subtle off-white
+    background: '#f8f5f1',
+    // Warm beige background
     card: '#FFFFFF',
     // Pure white
-    surface: '#F9FAFB', // Card with shadow
+    surface: '#f8f5f1', // Card with shadow
   },
 
   // Primary Colors (Growth & Progress)
@@ -84,7 +84,7 @@ export const colors = {
   // Semantic Colors
   success: '#10B981',
 
-  surface: '#F9FAFB',
+  surface: '#f8f5f1',
 
   // Text Colors
   text: {
