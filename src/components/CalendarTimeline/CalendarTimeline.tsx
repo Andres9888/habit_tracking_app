@@ -68,16 +68,16 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       };
 
   return (
-    <View className='mb-3'>
+    <View className='mb-2'>
       {/* Week Navigation Header */}
-      <View className='mb-3.5 flex-row items-center justify-between'>
+      <View className='mb-2.5 flex-row items-center justify-between'>
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-10 w-7 items-center justify-center rounded-full'
+          className='h-9 w-7 items-center justify-center rounded-full'
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color={colors.icon} size={20} strokeWidth={2} />
+          <ChevronLeft color={colors.icon} size={18} strokeWidth={2} />
         </Pressable>
 
         <Text
@@ -91,11 +91,11 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className={`h-10 w-7 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
+          className={`h-9 w-7 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
-          <ChevronRight color={colors.icon} size={20} strokeWidth={2} />
+          <ChevronRight color={colors.icon} size={18} strokeWidth={2} />
         </Pressable>
       </View>
 
@@ -117,7 +117,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               key={`timeline-day-${index}`}
               accessibilityLabel={accessibilityLabel}
               accessibilityRole='text'
-              className='flex-1 items-center gap-1'
+              className='flex-1 items-center gap-0.5'
             >
               {/* Weekday label */}
               <Text
@@ -129,7 +129,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
 
               {/* Date number with rounded box */}
               <View
-                className='h-9 w-9 items-center justify-center rounded-[11px]'
+                className='h-8 w-8 items-center justify-center rounded-[10px]'
                 style={{
                   backgroundColor: isCurrentDay
                     ? colors.currentDayBackground
