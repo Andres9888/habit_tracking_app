@@ -17,5 +17,6 @@ export function useHabitsApp(): UseHabitsAppResult {
     showHabitStrengthPercentage: list.showHabitStrengthPercentage,
   });
 
-  return { list, modals };
+  // Ensure tapping a habit opens the calendar view as the habit details
+  return { list: { ...list, handleHabitPress: modals.openHabitCalendar }, modals };
 }
