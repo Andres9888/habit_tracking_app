@@ -185,7 +185,7 @@ export default function DraggableHabit({
             <View className='flex-row items-center gap-4'>
               {/* Icon container - colored background based on habit */}
               <View
-                className='h-12 w-12 items-center justify-center rounded-[12px]'
+                className='h-11 w-11 items-center justify-center rounded-[11px]'
                 style={{
                   backgroundColor: highContrastMode
                     ? colors.iconContainer
@@ -206,20 +206,20 @@ export default function DraggableHabit({
                   borderWidth: highContrastMode ? 2 : 0,
                 }}
               >
-                <Text className='text-[24px] leading-[32px]'>{emoji}</Text>
+                <Text className='text-[22px] leading-[28px]'>{emoji}</Text>
               </View>
               <View className='flex-col'>
                 <Text
-                  className='text-[18px] font-semibold leading-[28px]'
+                  className='text-[16px] font-semibold leading-[24px]'
                   style={{ color: colors.primaryText }}
                 >
                   {name || habit.name}
                 </Text>
                 {/* Always render streak container to prevent layout shift */}
-                <View className='mt-1' style={{ minHeight: 20 }}>
+                <View className='mt-0.5' style={{ minHeight: 18 }}>
                   {streak > 0 && (
                     <Text
-                      className='flex-row items-center text-[14px] font-bold uppercase leading-[20px]'
+                      className='flex-row items-center text-[13px] font-bold uppercase leading-[18px]'
                       style={{ color: colors.streakText }}
                     >
                       🔥 {streak} DAY STREAK

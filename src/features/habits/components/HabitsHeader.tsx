@@ -104,7 +104,7 @@ export function HabitsHeader({
           onPressOut={handleAddHabitPressOut}
         >
           <Plus color='#ffffff' size={18} strokeWidth={2.25} />
-          <Text className='text-base font-normal tracking-tight text-white'>
+          <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
             Habits
           </Text>
         </Pressable>

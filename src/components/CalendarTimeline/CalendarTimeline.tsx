@@ -81,7 +81,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         </Pressable>
 
         <Text
-          className='text-[18px] font-semibold leading-[28px]'
+          className='text-[16px] font-semibold leading-[24px]'
           style={{ color: colors.primaryText }}
         >
           {dateRangeText}
@@ -121,7 +121,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             >
               {/* Weekday label */}
               <Text
-                className='text-center text-[14px] font-normal leading-[20px]'
+                className='text-center text-[13px] font-normal leading-[18px]'
                 style={{ color: colors.secondaryText }}
               >
                 {weekday}
@@ -129,7 +129,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
 
               {/* Date number with rounded box */}
               <View
-                className='h-10 w-10 items-center justify-center rounded-[12px]'
+                className='h-9 w-9 items-center justify-center rounded-[11px]'
                 style={{
                   backgroundColor: isCurrentDay
                     ? colors.currentDayBackground
@@ -139,7 +139,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                 }}
               >
                 <Text
-                  className='text-center text-[16px] font-semibold leading-[24px]'
+                  className='text-center text-[15px] font-semibold leading-[20px]'
                   style={{
                     color: isCurrentDay
                       ? colors.currentDayText

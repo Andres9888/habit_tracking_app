@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { spacing } from '../theme/spacing';
+import { useHapticFeedback } from '../hooks/useHapticFeedback';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -24,6 +25,8 @@ export default function PremiumAnalyticsPaywall({
   onStartTrial,
   onClose,
 }: Props) {
+  const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+
   const features = [
     {
       description:
@@ -69,7 +72,10 @@ export default function PremiumAnalyticsPaywall({
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.closeButton}
-              onPress={onClose}
+              onPress={() => {
+                triggerLightImpact();
+                onClose();
+              }}
             >
               <Ionicons color={colors.text.primary} name='close' size={24} />
             </TouchableOpacity>
@@ -137,7 +143,10 @@ export default function PremiumAnalyticsPaywall({
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.ctaButton}
-            onPress={onStartTrial}
+            onPress={() => {
+              triggerSelection();
+              onStartTrial?.();
+            }}
           >
             <Text style={styles.ctaButtonText}>Start 7-Day Free Trial</Text>
             <Ionicons color={colors.surface} name='arrow-forward' size={20} />
@@ -151,7 +160,11 @@ export default function PremiumAnalyticsPaywall({
           </Text>
 
           {/* Already Premium Link */}
-          <TouchableOpacity activeOpacity={0.7} style={styles.restoreButton}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.restoreButton}
+            onPress={() => triggerLightImpact()}
+          >
             <Text style={styles.restoreButtonText}>
               Already premium? Restore purchases
             </Text>
@@ -177,10 +190,13 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
   },
   badgeText: {
-    ...typography.caption,
     color: colors.surface,
+    fontSize: 12,
     fontWeight: '700',
+    letterSpacing: 0.5,
+    lineHeight: 16,
     marginLeft: spacing.xs,
+    textTransform: 'uppercase',
   },
   blurView: {
     height: screenHeight,
@@ -209,9 +225,9 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   featureDescription: {
-    ...typography.caption,
     color: colors.text.secondary,
-    lineHeight: 16,
+    fontSize: 14,
+    lineHeight: 20,
   },
   featureIcon: {
     backgroundColor: colors.background,
@@ -248,39 +264,46 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   featureTitle: {
-    ...typography.bodyBold,
     color: colors.text.primary,
+    fontSize: 15,
+    fontWeight: '600',
+    lineHeight: 22,
     marginBottom: spacing.xxs,
   },
   ctaButtonText: {
-    ...typography.button,
     color: colors.surface,
-    fontSize: 18,
+    fontSize: 17,
+    fontWeight: '600',
+    lineHeight: 24,
     marginRight: spacing.sm,
   },
   subtitle: {
-    ...typography.body,
     color: colors.text.secondary,
+    fontSize: 15,
+    lineHeight: 22,
     marginBottom: spacing.xl,
     textAlign: 'center',
   },
   finePrint: {
-    ...typography.caption,
     color: colors.text.tertiary,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 18,
     marginBottom: spacing.lg,
     textAlign: 'center',
   },
   title: {
-    ...typography.h1,
     color: colors.text.primary,
-    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 28,
     marginBottom: spacing.xs,
+    textAlign: 'center',
   },
   pricingAmount: {
     color: colors.primary,
-    fontSize: 40,
+    fontSize: 28,
     fontWeight: '700',
+    lineHeight: 36,
   },
   pricingCard: {
     backgroundColor: colors.surface,
@@ -291,20 +314,25 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   pricingLabel: {
-    ...typography.caption,
     color: colors.text.secondary,
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    lineHeight: 18,
     marginBottom: spacing.xs,
     textAlign: 'center',
     textTransform: 'uppercase',
   },
   pricingNote: {
-    ...typography.caption,
     color: colors.text.tertiary,
+    fontSize: 12,
+    lineHeight: 18,
     textAlign: 'center',
   },
   pricingPeriod: {
-    ...typography.body,
     color: colors.text.secondary,
+    fontSize: 14,
+    lineHeight: 20,
     marginLeft: spacing.xs,
   },
   pricingRow: {
@@ -317,8 +345,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   restoreButtonText: {
-    ...typography.bodySmall,
     color: colors.primary,
+    fontSize: 14,
+    lineHeight: 20,
     textAlign: 'center',
   },
 });

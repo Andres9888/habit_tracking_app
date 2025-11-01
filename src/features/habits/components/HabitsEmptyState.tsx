@@ -20,10 +20,10 @@ export function HabitsEmptyState({ isLoading, openCreateHabitScreen }: HabitsEmp
 
   return (
     <View className='items-center justify-center gap-4 px-8 py-24'>
-      <Text className='text-center text-lg font-semibold text-[#101727]'>
+      <Text className='text-center text-[17px] font-semibold leading-[24px] text-[#101727]'>
         Create your first habit
       </Text>
-      <Text className='text-center text-sm text-[#475467]'>
+      <Text className='text-center text-[14px] leading-[20px] text-[#475467]'>
         Add a habit to start tracking your progress and building streaks.
       </Text>
       <Pressable
@@ -34,7 +34,7 @@ export function HabitsEmptyState({ isLoading, openCreateHabitScreen }: HabitsEmp
         onPress={openCreateHabitScreen}
       >
         <Plus color='#ffffff' size={18} strokeWidth={2.25} />
-        <Text className='text-base font-medium tracking-tight text-white'>
+        <Text className='text-[15px] font-medium leading-[20px] tracking-tight text-white'>
           New Habit
         </Text>
       </Pressable>
