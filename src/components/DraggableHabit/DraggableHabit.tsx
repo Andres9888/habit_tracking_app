@@ -179,7 +179,7 @@ export default function DraggableHabit({
             ...StyleSheet.absoluteFillObject,
           }}
         />
-        <View className='p-3'>
+        <View className='p-3.5'>
           {/* Header with icon and title */}
           <View className='mb-3.5 flex-row items-center justify-between'>
             <View className='flex-row items-center gap-2.5'>
