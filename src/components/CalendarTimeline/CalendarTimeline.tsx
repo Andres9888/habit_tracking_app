@@ -68,7 +68,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       };
 
   return (
-    <View className='mb-2'>
+    <View className='mb-1.5'>
       {/* Week Navigation Header */}
       <View className='mb-2.5 flex-row items-center justify-between'>
         <Pressable

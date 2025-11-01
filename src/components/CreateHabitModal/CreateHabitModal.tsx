@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   Alert,
   Modal,
@@ -11,8 +11,10 @@ import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
+  FlatList,
 } from 'react-native';
-import { X, BookOpen, Microscope } from 'lucide-react-native';
+import { X, BookOpen, Microscope, ChevronDown } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -101,6 +103,10 @@ export default function CreateHabitModal({
   // Template browsing state
   const [showTemplateBrowser, setShowTemplateBrowser] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [showTemplateTopShadow, setShowTemplateTopShadow] = useState(false);
+  const [showTemplateBottomShadow, setShowTemplateBottomShadow] = useState(false);
+  const templateScrollOffset = useRef(0);
+  const templateScrollMetrics = useRef({ layoutHeight: 0, contentHeight: 0 });
 
   // Science modal state
   const [scienceModalVisible, setScienceModalVisible] = useState(false);
@@ -160,6 +166,61 @@ export default function CreateHabitModal({
     }
   }, [selectedTemplateForScience, handleTemplateSelect]);
 
+  const updateTemplateScrollIndicators = useCallback(() => {
+    const { layoutHeight, contentHeight } = templateScrollMetrics.current;
+    const offsetY = templateScrollOffset.current;
+    const hasScrollableContent = contentHeight > layoutHeight + 1;
+
+    setShowTemplateTopShadow(hasScrollableContent && offsetY > 4);
+    setShowTemplateBottomShadow(
+      hasScrollableContent && contentHeight - (offsetY + layoutHeight) > 4
+    );
+  }, []);
+
+  const handleTemplateListScroll = useCallback(
+    (event: any) => {
+      const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+      templateScrollOffset.current = contentOffset.y;
+      templateScrollMetrics.current = {
+        layoutHeight: layoutMeasurement.height,
+        contentHeight: contentSize.height,
+      };
+      updateTemplateScrollIndicators();
+    },
+    [updateTemplateScrollIndicators]
+  );
+
+  const handleTemplateListContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      templateScrollMetrics.current = {
+        ...templateScrollMetrics.current,
+        contentHeight: height,
+      };
+      updateTemplateScrollIndicators();
+    },
+    [updateTemplateScrollIndicators]
+  );
+
+  const handleTemplateListLayout = useCallback(
+    (event: any) => {
+      templateScrollMetrics.current = {
+        ...templateScrollMetrics.current,
+        layoutHeight: event.nativeEvent.layout.height,
+      };
+      updateTemplateScrollIndicators();
+    },
+    [updateTemplateScrollIndicators]
+  );
+
+  useEffect(() => {
+    templateScrollOffset.current = 0;
+    templateScrollMetrics.current = {
+      ...templateScrollMetrics.current,
+      contentHeight: 0,
+    };
+    setShowTemplateTopShadow(false);
+    setShowTemplateBottomShadow(false);
+  }, [filteredTemplates.length, showTemplateBrowser]);
 
   const handleCreate = async () => {
     if (!habitName.trim()) return;
