@@ -384,7 +384,7 @@ export default function CreateHabitModal({
                   </ScrollView>
                 )}
 
-                {/* Templates List - Fixed height container, no nested ScrollView */}
+                {/* Templates List - Fixed height container with FlatList */}
                 <View style={templateScrollStyles.listWrapper}>
                   {isLoadingTemplates ? (
                     <View className='items-center justify-center py-12'>
@@ -402,9 +402,11 @@ export default function CreateHabitModal({
                       </Text>
                     </View>
                   ) : (
-                    <>
-                      {filteredTemplates.map((item) => (
-                        <View key={item._id} className='flex-row items-center gap-3 border-b border-gray-50 p-3'>
+                    <FlatList
+                      data={filteredTemplates}
+                      keyExtractor={(item) => item._id}
+                      renderItem={({ item }) => (
+                        <View className='flex-row items-center gap-3 border-b border-gray-50 p-3'>
                           <Pressable
                             onPress={() => handleTemplateSelect(item)}
                             className='flex-1 flex-row items-center gap-3'
@@ -440,8 +442,34 @@ export default function CreateHabitModal({
                             <Microscope color='#3B82F6' size={16} strokeWidth={2} />
                           </TouchableOpacity>
                         </View>
-                      ))}
-                    </>
+                      )}
+                      showsVerticalScrollIndicator={true}
+                      onScroll={handleTemplateListScroll}
+                      scrollEventThrottle={16}
+                      onContentSizeChange={handleTemplateListContentSizeChange}
+                      onLayout={handleTemplateListLayout}
+                    />
+                  )}
+                  {showTemplateTopShadow && (
+                    <LinearGradient
+                      pointerEvents='none'
+                      colors={['rgba(255,255,255,0.96)', 'rgba(255,255,255,0)']}
+                      style={templateScrollStyles.scrollFadeTop}
+                    />
+                  )}
+                  {showTemplateBottomShadow && (
+                    <LinearGradient
+                      pointerEvents='none'
+                      colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)']}
+                      style={templateScrollStyles.scrollFadeBottom}
+                    >
+                      <View style={templateScrollStyles.scrollHintChip}>
+                        <ChevronDown color='#1a1a1a' size={16} />
+                        <Text style={templateScrollStyles.scrollHintText}>
+                          Scroll for more templates
+                        </Text>
+                      </View>
+                    </LinearGradient>
                   )}
                 </View>
               </View>
@@ -626,5 +654,37 @@ export default function CreateHabitModal({
 const templateScrollStyles = StyleSheet.create({
   listWrapper: {
     maxHeight: 300,
+    position: 'relative',
+  },
+  scrollFadeTop: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 32,
+  },
+  scrollFadeBottom: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 4,
+  },
+  scrollHintChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999,
+    backgroundColor: 'rgba(26,26,26,0.08)',
+  },
+  scrollHintText: {
+    marginLeft: 6,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#1a1a1a',
   },
 });
