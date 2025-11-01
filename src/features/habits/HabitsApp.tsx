@@ -1,12 +1,11 @@
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { CalendarTimeline } from '../../components/CalendarTimeline';
-import HabitsAtRiskWidget from '../../components/HabitsAtRiskWidget';
-import FloatingActionButton from './components/FloatingActionButton';
 import { HabitsHeader } from './components/HabitsHeader';
+import { CalendarTimeline } from '../../components/CalendarTimeline';
 import { HabitsList } from './components/HabitsList';
 import { HabitsModals } from './components/HabitsModals';
+import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { useHabitsApp } from './hooks/useHabitsApp';
 
@@ -30,8 +29,6 @@ export function HabitsApp() {
             onNextWeek={list.handleNextWeek}
             onPreviousWeek={list.handlePreviousWeek}
           />
-
-          >
         </View>
 
         <HabitsList list={list} modals={modals} />
