@@ -18,7 +18,7 @@ export function HabitsApp() {
       <View className='flex-1 bg-[#F7F8FB]'>
         <View className='gap-4 px-6 pb-6 pt-12'>
           <HabitsHeader
-            onPressShowCreateHabitScreen={list.openCreateHabitScreen}
+            onPressShowCreateHabitScreen={modals.openCreateHabitScreen}
             onOpenSettings={modals.openSettings}
             onOpenHabitScience={modals.openTemplatesScreen}
           />

@@ -46,6 +46,7 @@ export interface HabitsModalsState {
   showHabitStrengthPercentage: boolean;
   closeSettings: () => void;
   openSettings: () => void;
+  openCreateHabitScreen: () => void;
   setShowHabitStrengthPercentage: (value: boolean) => void;
   closeCreateHabit: () => void;
   closeHabitCalendar: () => void;
