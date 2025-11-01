@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, View } from 'react-native';
 import { parse, format } from 'date-fns';
 import { Check } from 'lucide-react-native';
 import clsx from 'clsx';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { SparkleBurst } from '../microinteractions/SparkleBurst';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -131,8 +133,11 @@ type HabitStatus = 'done' | 'missed' | 'planned';
 
 interface HabitChainVisualizerProps {
   accentColor: string;
+  celebrationsEnabled: boolean;
   highContrastMode?: boolean;
   habitId: Id<'habits'>;
+  onWeekComplete?: (args: { completedDate: string }) => void;
+  reduceMotionPreference: boolean;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
@@ -140,9 +145,12 @@ interface HabitChainVisualizerProps {
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   accentColor,
+  celebrationsEnabled,
   highContrastMode = false,
   habitId,
+  onWeekComplete,
   onToggle,
+  reduceMotionPreference,
   weekDateStrings,
   weekStatus,
 }) => {
@@ -153,6 +161,51 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   const todayLabel = format(new Date(), 'MMM d, EEE').toUpperCase();
 
   const connectorColor = highContrastMode ? '#facc15' : '#e0e0e0';
+  const [activeBurst, setActiveBurst] = useState<string | null>(null);
+
+  const {
+    triggerSelection,
+    triggerSuccess,
+  } = useHapticFeedback({
+    isEnabled: celebrationsEnabled,
+    preference: reduceMotionPreference,
+  });
+
+  const shouldReduceMotion = useMemo(
+    () => reduceMotionPreference || !celebrationsEnabled,
+    [celebrationsEnabled, reduceMotionPreference]
+  );
+
+  const handleToggleDay = (
+    dateString: string,
+    completed: boolean,
+    disabled: boolean,
+    index: number
+  ) => {
+    if (disabled) {
+      triggerSelection();
+      return;
+    }
+
+    if (completed || !celebrationsEnabled) {
+      triggerSelection();
+    } else {
+      triggerSuccess();
+      setActiveBurst(dateString);
+    }
+
+    onToggle({ date: dateString, habitId });
+
+    const isFinalCompletion =
+      !completed &&
+      weekStatus.every((status, statusIndex) =>
+        statusIndex === index ? true : status === 'done'
+      );
+
+    if (isFinalCompletion) {
+      onWeekComplete?.({ completedDate: dateString });
+    }
+  };
 
   return (
     <View className='flex-row items-center justify-between'>
@@ -179,16 +232,26 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
         return (
           <React.Fragment key={dateString}>
-            <HabitDayToggle
-              accentColor={accentColor}
-              accessibilityHint={accessibilityHint}
-              accessibilityLabel={accessibilityLabel}
-              completed={completed}
-              disabled={disabled}
-              highContrastMode={highContrastMode}
-              isToday={isToday(index)}
-              onPress={() => onToggle({ date: dateString, habitId })}
-            />
+            <View className='items-center justify-center'>
+              <HabitDayToggle
+                accentColor={accentColor}
+                accessibilityHint={accessibilityHint}
+                accessibilityLabel={accessibilityLabel}
+                completed={completed}
+                disabled={disabled}
+                highContrastMode={highContrastMode}
+                isToday={isToday(index)}
+                onPress={() =>
+                  handleToggleDay(dateString, completed, disabled, index)
+                }
+              />
+              <SparkleBurst
+                color={accentColor}
+                isActive={activeBurst === dateString && celebrationsEnabled}
+                reduceMotion={shouldReduceMotion}
+                onComplete={() => setActiveBurst(null)}
+              />
+            </View>
             {!isLastItem && (
               <DayConnector color={connectorColor} visible={showConnector} />
             )}

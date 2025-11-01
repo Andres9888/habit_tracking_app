@@ -1,17 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, View, Text, Pressable } from 'react-native';
+import { Animated, Easing, View, Text, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 import { Archive } from 'lucide-react-native';
 import type { StrengthLevel } from '../HabitStrengthIndicator';
-
-// UI Constants
-const MAX_GRADIENT_HEIGHT = 36; // Maximum height of strength gradient in pixels
-const GRADIENT_OPACITY = 0.7; // Opacity of the strength gradient
-const GRADIENT_ANIMATION_DURATION = 600; // Duration of gradient height animation in ms
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -32,6 +27,7 @@ interface Habit {
 }
 
 interface DraggableHabitProps {
+  celebrationsEnabled: boolean;
   habit: Habit;
   isCompactMode?: boolean;
   highContrastMode?: boolean;
@@ -43,9 +39,12 @@ interface DraggableHabitProps {
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   onPress?: (habit: Habit) => void;
+  onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
+  reduceMotionPreference: boolean;
 }
 
 export default function DraggableHabit({
+  celebrationsEnabled,
   habit,
   isCompactMode: _isCompactMode = false,
   highContrastMode = false,
@@ -57,11 +56,19 @@ export default function DraggableHabit({
   onArchive,
   onLongPress,
   onPress,
+  onWeekComplete,
+  reduceMotionPreference,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
   const fade = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(12)).current;
+  const archiveFlash = useRef(new Animated.Value(0)).current;
+
+  const { triggerSelection, triggerWarning } = useHapticFeedback({
+    isEnabled: celebrationsEnabled,
+    preference: reduceMotionPreference,
+  });
 
   useEffect(() => {
     Animated.parallel([
@@ -104,23 +111,25 @@ export default function DraggableHabit({
   };
 
   const handleSwipeableOpen = () => {
+    triggerWarning();
+    Animated.sequence([
+      Animated.timing(archiveFlash, {
+        duration: 120,
+        easing: Easing.out(Easing.ease),
+        toValue: 1,
+        useNativeDriver: false,
+      }),
+      Animated.timing(archiveFlash, {
+        duration: 220,
+        easing: Easing.out(Easing.ease),
+        toValue: 0,
+        useNativeDriver: false,
+      }),
+    ]).start();
     if (onArchive) {
       onArchive(habit._id);
     }
   };
-
-  const gradientHeight = useRef(
-    new Animated.Value((habit.strength || 0) * MAX_GRADIENT_HEIGHT)
-  ).current;
-
-  useEffect(() => {
-    Animated.timing(gradientHeight, {
-      duration: GRADIENT_ANIMATION_DURATION,
-      easing: Easing.out(Easing.cubic),
-      toValue: (habit.strength || 0) * MAX_GRADIENT_HEIGHT,
-      useNativeDriver: false,
-    }).start();
-  }, [habit.strength, gradientHeight]);
 
   const colors = highContrastMode
     ? {
@@ -140,9 +149,14 @@ export default function DraggableHabit({
         strengthBackground: '#10b981',
       };
 
+  const handleLongPress = () => {
+    triggerSelection();
+    onLongPress?.(habit);
+  };
+
   const habitCard = (
     <Pressable
-      onLongPress={() => onLongPress?.(habit)}
+      onLongPress={handleLongPress}
       onPress={() => onPress?.(habit)}
     >
       <Animated.View
@@ -155,6 +169,16 @@ export default function DraggableHabit({
           transform: [{ translateY }],
         }}
       >
+        <Animated.View
+          pointerEvents='none'
+          style={{
+            backgroundColor: 'rgba(248, 113, 113, 0.18)',
+            borderRadius: 24,
+            opacity: archiveFlash,
+            position: 'absolute',
+            ...StyleSheet.absoluteFillObject,
+          }}
+        />
         <View className='p-4'>
           {/* Header with icon and title */}
           <View className='mb-5 flex-row items-center justify-between'>
@@ -210,8 +234,13 @@ export default function DraggableHabit({
           <View>
             <HabitChainVisualizer
               accentColor={accentColor}
+              celebrationsEnabled={celebrationsEnabled}
               habitId={habit._id}
               highContrastMode={highContrastMode}
+              onWeekComplete={({ completedDate }) =>
+                onWeekComplete?.({ completedDate, habit })
+              }
+              reduceMotionPreference={reduceMotionPreference}
               weekDateStrings={weekDateStrings}
               weekStatus={weekStatus}
               onToggle={toggleHabit}

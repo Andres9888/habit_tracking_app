@@ -8,12 +8,11 @@
  * Performance: 60fps target on iPhone SE
  */
 
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  AccessibilityInfo,
   Dimensions,
   Platform,
 } from 'react-native';
@@ -36,37 +35,9 @@ import {
   STRENGTH_LEVEL_CONFIG,
   type StrengthLevel,
 } from './HabitStrengthIndicator/HabitStrengthIndicator';
+import { useReduceMotion } from '../hooks/useReduceMotion';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-/**
- * Custom hook to detect Reduce Motion preference
- * Falls back to false if not available
- */
-function useReduceMotion(): boolean {
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    // Check if reduce motion is enabled
-    AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      setReduceMotion(enabled ?? false);
-    });
-
-    // Listen for changes
-    const subscription = AccessibilityInfo.addEventListener(
-      'reduceMotionChanged',
-      (enabled) => {
-        setReduceMotion(enabled);
-      }
-    );
-
-    return () => {
-      subscription?.remove();
-    };
-  }, []);
-
-  return reduceMotion;
-}
 
 export interface MilestoneCelebrationProps {
   /** Modal visibility */

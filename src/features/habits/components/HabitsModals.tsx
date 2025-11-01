@@ -18,6 +18,7 @@ interface HabitsModalsProps {
 
 export function HabitsModals({ state }: HabitsModalsProps) {
   const {
+    celebrationsEnabled,
     settings,
     showSettings,
     showCreateHabit,
@@ -55,6 +56,8 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     openEditHabit,
     openPauseModal,
     handleArchive,
+    onChangeCelebrationsEnabled,
+    reduceMotionPreference,
   } = state;
 
   const ShareCardGenerator: ComponentType<{
@@ -73,6 +76,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
   return (
     <>
       <SettingsModal
+        celebrationsEnabled={celebrationsEnabled}
         visible={showSettings}
         onClose={closeSettings}
         showHabitStrengthPercentage={showHabitStrengthPercentage}

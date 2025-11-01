@@ -14,6 +14,13 @@ export type ShareCardData = {
   userName?: string;
 };
 
+export interface RewardToastData {
+  habitId: HabitId;
+  habitName: string;
+  message: string;
+  streak: number;
+}
+
 export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;

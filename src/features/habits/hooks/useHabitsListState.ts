@@ -2,7 +2,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit } from '../types';
+import type { Habit, HabitSettings, RewardToastData } from '../types';
+import { logInteraction } from '../../../lib/analytics/interactions';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
 import type { HabitsListState } from './types';
@@ -17,6 +18,13 @@ export function useHabitsListState(): HabitsListState {
   const habitsQuery = useQuery(api.habits.list);
   const habits = (habitsQuery ?? []) as Habit[];
   const isHabitsLoading = habitsQuery === undefined;
+
+  const [rewardToast, setRewardToast] = useState<RewardToastData | null>(null);
+
+  const settingsQuery = useQuery(api.settings.get);
+  const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
+  const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const reduceMotionPreference = settings?.reduceMotion ?? false;
 
   const { today, weekDates, weekDateStrings, extendedDateStrings, canNavigateForward, handleNextWeek, handlePreviousWeek } = useHabitsWeekDates();
   const { getStreak, getHabitStatus } = useHabitsTracking(extendedDateStrings, today);
@@ -55,7 +63,38 @@ export function useHabitsListState(): HabitsListState {
     [toggleHabitMutation]
   );
 
+  const dismissRewardToast = useCallback(() => {
+    setRewardToast(null);
+  }, []);
+
+  const notifyWeekCompletion = useCallback(
+    ({ habit, completedDate }: { habit: Habit; completedDate: string }) => {
+      if (!celebrationsEnabled) {
+        return;
+      }
+
+      const streak = getStreak(habit._id);
+
+      setRewardToast({
+        habitId: habit._id,
+        habitName: habit.name,
+        message:
+          'Amazing consistency! Unlock a momentum booster to stack even more wins.',
+        streak,
+      });
+
+      logInteraction('habit_week_complete', {
+        completedDate,
+        habitId: habit._id,
+        habitName: habit.name,
+        streak,
+      });
+    },
+    [celebrationsEnabled, getStreak]
+  );
+
   return {
+    celebrationsEnabled,
     habits,
     isHabitsLoading,
     weekDates,
@@ -63,6 +102,7 @@ export function useHabitsListState(): HabitsListState {
     canNavigateForward,
     showHabitStrengthPercentage,
     contentPadding: { paddingHorizontal: 24, paddingTop: 0, paddingBottom: 96 },
+    dismissRewardToast,
     handleDragEnd,
     handleArchive,
     handleHabitPress,
@@ -71,6 +111,9 @@ export function useHabitsListState(): HabitsListState {
     openCreateHabitScreen,
     getHabitStatus,
     getStreak,
+    notifyWeekCompletion,
+    reduceMotionPreference,
+    rewardToast,
     toggleHabit,
   };
 }

@@ -6,6 +6,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitStatus } from '../types';
 
 interface UseHabitRenderItemArgs {
+  celebrationsEnabled: boolean;
   weekDateStrings: string[];
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
@@ -13,9 +14,12 @@ interface UseHabitRenderItemArgs {
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
   handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
   handleHabitPress: (habit: Habit) => void;
+  reduceMotionPreference: boolean;
+  notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
 }
 
 export function useHabitRenderItem({
+  celebrationsEnabled,
   weekDateStrings,
   getHabitStatus,
   getStreak,
@@ -23,6 +27,8 @@ export function useHabitRenderItem({
   toggleHabit,
   handleArchive,
   handleHabitPress,
+  reduceMotionPreference,
+  notifyWeekCompletion,
 }: UseHabitRenderItemArgs) {
   return useCallback(
     ({ item, drag, isActive }: RenderItemParams<Habit>) => {
@@ -35,6 +41,7 @@ export function useHabitRenderItem({
         <ScaleDecorator>
           <View className='mb-4' style={{ opacity: isActive ? 0.7 : 1 }}>
             <DraggableHabit
+              celebrationsEnabled={celebrationsEnabled}
               habit={item}
               showHabitStrengthPercentage={showHabitStrengthPercentage}
               streak={streak}
@@ -44,16 +51,23 @@ export function useHabitRenderItem({
               onArchive={handleArchive}
               onLongPress={drag}
               onPress={handleHabitPress}
+              onWeekComplete={({ completedDate }) =>
+                notifyWeekCompletion({ completedDate, habit: item })
+              }
+              reduceMotionPreference={reduceMotionPreference}
             />
           </View>
         </ScaleDecorator>
       );
     },
     [
+      celebrationsEnabled,
       getHabitStatus,
       getStreak,
       handleArchive,
       handleHabitPress,
+      reduceMotionPreference,
+      notifyWeekCompletion,
       showHabitStrengthPercentage,
       toggleHabit,
       weekDateStrings,

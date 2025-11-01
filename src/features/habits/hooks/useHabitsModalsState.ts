@@ -32,6 +32,8 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
 
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
+  const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const reduceMotionPreference = settings?.reduceMotion ?? false;
 
   // Use existing tracking hook for consistency
   const extendedDateStrings = Array.from({ length: 365 }, (_, i) => {
@@ -66,7 +68,11 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   const openEditHabit = useCallback((habit: Habit | null) => { setHabitToEdit(habit); if (habit) setIsCreateHabitOpen(true); }, []);
   const openCreateHabitScreen = useCallback(() => { setIsCreateHabitOpen(true); setHabitToEdit(null); }, []);
   const onSettingsChange = useCallback(async (updates: Partial<HabitSettingsUpdate>) => { if (!settings) return; await updateSettings({ ...settings, ...updates }); }, [settings, updateSettings]);
+
+  const onChangeCelebrationsEnabled = useCallback(async (value: boolean) => {
+    await onSettingsChange({ showMotivationalMessages: value });
+  }, [onSettingsChange]);
   const onDeleteHabit = useCallback(async (habitId: Id<'habits'>) => { await removeHabit({ habitId }); setIsHabitDetailOpen(false); setSelectedHabit(null); }, [removeHabit]);
 
-  return { habits, settings, showSettings: isSettingsOpen, showCreateHabit: isCreateHabitOpen || !!habitToEdit, showHabitCalendar: isHabitCalendarOpen, showHabitDetail: isHabitDetailOpen, showHapticTest, showShareCard, showPauseModal, showTemplatesScreen, habitToEdit, habitToPause, selectedHabit, shareCardData, milestone, tracking, showHabitStrengthPercentage, closeSettings: () => setIsSettingsOpen(false), openSettings: () => setIsSettingsOpen(true), openCreateHabitScreen, setShowHabitStrengthPercentage: () => {}, closeCreateHabit, closeHabitCalendar: () => setIsHabitCalendarOpen(false), closeHabitDetail: () => setIsHabitDetailOpen(false), closeShareCard, closePauseModal: () => { setShowPauseModal(false); setHabitToPause(null); }, openHapticTest: () => { setIsSettingsOpen(false); setShowHapticTest(true); }, closeHapticTest: () => setShowHapticTest(false), openTemplatesScreen: () => setShowTemplatesScreen(true), closeTemplatesScreen: () => setShowTemplatesScreen(false), openHabitDetail, openHabitCalendar, openPauseModal, openEditHabit, onSettingsChange, onDeleteHabit, onShareMilestone: (data: ShareCardData) => { setShareCardData(data); setShowShareCard(true); }, clearMilestone, confirmPause, toggleHabit, getStreak, handleArchive };
+  return { celebrationsEnabled, habits, settings, showSettings: isSettingsOpen, showCreateHabit: isCreateHabitOpen || !!habitToEdit, showHabitCalendar: isHabitCalendarOpen, showHabitDetail: isHabitDetailOpen, showHapticTest, showShareCard, showPauseModal, showTemplatesScreen, habitToEdit, habitToPause, selectedHabit, shareCardData, milestone, tracking, showHabitStrengthPercentage, closeSettings: () => setIsSettingsOpen(false), openSettings: () => setIsSettingsOpen(true), openCreateHabitScreen, onChangeCelebrationsEnabled, setShowHabitStrengthPercentage: () => {}, closeCreateHabit, closeHabitCalendar: () => setIsHabitCalendarOpen(false), closeHabitDetail: () => setIsHabitDetailOpen(false), closeShareCard, closePauseModal: () => { setShowPauseModal(false); setHabitToPause(null); }, openHapticTest: () => { setIsSettingsOpen(false); setShowHapticTest(true); }, closeHapticTest: () => setShowHapticTest(false), openTemplatesScreen: () => setShowTemplatesScreen(true), closeTemplatesScreen: () => setShowTemplatesScreen(false), openHabitDetail, openHabitCalendar, openPauseModal, openEditHabit, onSettingsChange, onDeleteHabit, onShareMilestone: (data: ShareCardData) => { setShareCardData(data); setShowShareCard(true); }, clearMilestone, confirmPause, toggleHabit, getStreak, handleArchive, reduceMotionPreference };
 }

@@ -6,6 +6,7 @@ import { HabitsEmptyState } from './HabitsEmptyState';
 import type { HabitsListState } from '../hooks/useHabitsApp';
 import { useHabitRenderItem } from '../hooks/useHabitRenderItem';
 import { HabitsModalsState } from '../hooks/types';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 interface HabitsListProps {
   list: HabitsListState;
@@ -14,6 +15,7 @@ interface HabitsListProps {
 
 export function HabitsList({ list, modals }: HabitsListProps) {
   const {
+    celebrationsEnabled,
     habits,
     isHabitsLoading,
     weekDateStrings,
@@ -25,19 +27,33 @@ export function HabitsList({ list, modals }: HabitsListProps) {
     getHabitStatus,
     getStreak,
     toggleHabit,
+    notifyWeekCompletion,
+    reduceMotionPreference,
   } = list;
 
   const { openCreateHabitScreen } = modals;
 
   const renderItem = useHabitRenderItem({
-    weekDateStrings,
+    celebrationsEnabled,
     getHabitStatus,
     getStreak,
-    showHabitStrengthPercentage,
-    toggleHabit,
     handleArchive,
     handleHabitPress,
+    notifyWeekCompletion,
+    reduceMotionPreference,
+    weekDateStrings,
+    showHabitStrengthPercentage,
+    toggleHabit,
   });
+
+  const { triggerSelection } = useHapticFeedback({
+    isEnabled: celebrationsEnabled,
+    preference: reduceMotionPreference,
+  });
+
+  const handleDragBegin = useCallback(() => {
+    triggerSelection();
+  }, [triggerSelection]);
 
   const keyExtractor = useCallback(
     (habit: (typeof habits)[number], index: number) =>
@@ -50,6 +66,7 @@ export function HabitsList({ list, modals }: HabitsListProps) {
       <DraggableFlatList
         data={habits}
         keyExtractor={keyExtractor}
+        onDragBegin={handleDragBegin}
         renderItem={renderItem}
         onDragEnd={handleDragEnd}
         activationDistance={12}

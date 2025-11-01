@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import {
-  Check,
-  Moon,
-  Smartphone,
-  Contrast,
-  Zap,
   Bell,
-  HelpCircle,
-  Send,
-  ChevronLeft,
   BookOpen,
+  Check,
+  ChevronLeft,
+  Contrast,
+  HelpCircle,
+  Moon,
+  PartyPopper,
+  Send,
+  Smartphone,
+  Zap,
 } from 'lucide-react-native';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
@@ -20,10 +21,12 @@ import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 
 interface SettingsModalProps {
+  celebrationsEnabled?: boolean;
   onClose: () => void;
   visible: boolean;
   isCompact?: boolean;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
+  onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   showCharacterScreen?: boolean;
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
@@ -37,10 +40,12 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({
+  celebrationsEnabled = true,
   visible,
   onClose,
   isCompact = false,
   onChangeCompact = () => {},
+  onChangeCelebrationsEnabled,
   showCharacterScreen = true,
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
@@ -313,6 +318,34 @@ export default function SettingsModal({
                 }}
               />
             </SettingsSection>
+
+          {/* Celebrations & Feedback */}
+          <SettingsSection
+            highContrastMode={isHighContrastActive}
+            title='Celebrations & Feedback'
+          >
+            <SettingsRow
+              highContrastMode={isHighContrastActive}
+              icon={<PartyPopper color='#22c55e' size={16} />}
+              iconBackgroundColor='#bbf7d0'
+              label='Celebration Animations'
+              type='toggle'
+              value={celebrationsEnabled}
+              onToggle={(value) => {
+                void onChangeCelebrationsEnabled?.(value);
+              }}
+            />
+            <SettingsRow
+              highContrastMode={isHighContrastActive}
+              icon={<Zap color='#22c55e' size={16} />}
+              iconBackgroundColor='#bbf7d0'
+              label='Reduce Motion'
+              showBorder={false}
+              type='toggle'
+              value={reduceMotion}
+              onToggle={setReduceMotion}
+            />
+          </SettingsSection>
 
             {/* Diagnostics */}
             <SettingsSection

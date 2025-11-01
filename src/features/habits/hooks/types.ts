@@ -1,5 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit, HabitSettings, HabitSettingsUpdate, HabitStatus, HabitTrackingEntry, ShareCardData } from '../types';
+import type { Habit, HabitSettings, HabitSettingsUpdate, HabitStatus, HabitTrackingEntry, RewardToastData, ShareCardData } from '../types';
 
 export interface LastUpdatedHabit {
   id: string;
@@ -8,6 +8,7 @@ export interface LastUpdatedHabit {
 }
 
 export interface HabitsListState {
+  celebrationsEnabled: boolean;
   habits: Habit[];
   isHabitsLoading: boolean;
   weekDates: Date[];
@@ -15,6 +16,7 @@ export interface HabitsListState {
   canNavigateForward: boolean;
   showHabitStrengthPercentage: boolean;
   contentPadding: { paddingHorizontal: number; paddingTop: number; paddingBottom: number };
+  dismissRewardToast: () => void;
   handleDragEnd: (event: { data: Habit[] }) => Promise<void>;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
   handleHabitPress: (habit: Habit) => void;
@@ -23,10 +25,14 @@ export interface HabitsListState {
   openCreateHabitScreen: () => void;
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
+  notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
+  reduceMotionPreference: boolean;
+  rewardToast: RewardToastData | null;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
 }
 
 export interface HabitsModalsState {
+  celebrationsEnabled: boolean;
   habits: Habit[];
   settings: HabitSettings | undefined;
   showSettings: boolean;
@@ -47,6 +53,7 @@ export interface HabitsModalsState {
   closeSettings: () => void;
   openSettings: () => void;
   openCreateHabitScreen: () => void;
+  onChangeCelebrationsEnabled: (value: boolean) => Promise<void>;
   setShowHabitStrengthPercentage: (value: boolean) => void;
   closeCreateHabit: () => void;
   closeHabitCalendar: () => void;
@@ -69,6 +76,7 @@ export interface HabitsModalsState {
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
   getStreak: (habitId: string) => number;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
+  reduceMotionPreference: boolean;
 }
 
 export interface UseHabitsAppResult {
