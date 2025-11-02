@@ -14,7 +14,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import {
   GestureHandlerRootView,
-  ScrollView,
 } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
 import { api } from './convex/_generated/api';
@@ -259,9 +258,8 @@ function HabitsApp() {
     <GestureHandlerRootView
       style={{ flex: 1, backgroundColor: theme.background }}
     >
-      <ScrollView
+      <View
         style={{ flex: 1, backgroundColor: theme.background }}
-        contentContainerStyle={{ backgroundColor: theme.background }}
       >
         <View className='mx-auto w-full max-w-[375px] px-4 pb-24 pt-4'>
           {/* Header Section */}
@@ -455,7 +453,7 @@ function HabitsApp() {
           onChangeCompact={handleCompactChange}
           isHighContrastActive={highContrastMode}
         />
-      </ScrollView>
+      </View>
       {/* Centered Floating Action Button */}
       <View
         pointerEvents='box-none'
