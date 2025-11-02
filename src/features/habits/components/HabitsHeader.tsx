@@ -174,6 +174,7 @@ export function HabitsHeader({
           </Pressable>
         </Animated.View>
       </View>
+      </View>
 
       {/* Today's Completion Indicator */}
       {totalHabits > 0 && (
