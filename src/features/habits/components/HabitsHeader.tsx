@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { TemplateTooltip } from '../../../components/TemplateTooltip';
 import { useTemplateTooltip } from '../hooks/useTemplateTooltip';
@@ -101,15 +102,28 @@ export function HabitsHeader({
           accessibilityHint='Open create habit modal'
           accessibilityLabel='Add habit'
           accessibilityRole='button'
-          className='h-12 flex-row items-center gap-2 rounded-full bg-[#101828] px-5'
           onPress={handleAddHabitPress}
           onPressIn={handleAddHabitPressIn}
           onPressOut={handleAddHabitPressOut}
         >
-          <Plus color='#ffffff' size={18} strokeWidth={2.25} />
-          <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
-            Habits
-          </Text>
+          <LinearGradient
+            colors={['#101828', '#1a2332']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className='h-12 flex-row items-center gap-2 rounded-full px-5'
+            style={{
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 6,
+              elevation: 4,
+            }}
+          >
+            <Plus color='#ffffff' size={18} strokeWidth={2.25} />
+            <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
+              Habits
+            </Text>
+          </LinearGradient>
         </Pressable>
       </Animated.View>
 
@@ -119,7 +133,7 @@ export function HabitsHeader({
             accessibilityHint='Browse science-backed habit templates'
             accessibilityLabel='Templates'
             accessibilityRole='button'
-            className='h-9 flex-row items-center gap-1.5 rounded-full bg-[#f3f4f6] px-3'
+            className='h-9 flex-row items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-transparent px-3'
             onPress={handleTemplatesPress}
             onPressIn={handleTemplatesPressIn}
             onPressOut={handleTemplatesPressOut}
@@ -136,7 +150,7 @@ export function HabitsHeader({
           <Pressable
             accessibilityLabel='Open settings'
             accessibilityRole='button'
-            className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+            className='h-9 w-9 items-center justify-center rounded-full border border-[#e5e7eb] bg-transparent'
             onPress={handleSettingsPress}
             onPressIn={handleSettingsPressIn}
             onPressOut={handleSettingsPressOut}

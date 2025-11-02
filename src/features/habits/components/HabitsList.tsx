@@ -76,7 +76,7 @@ export function HabitsList({
 
   const renderHeader = useCallback(
     () => (
-      <View className='gap-3 px-6 pb-2.5 pt-16'>
+      <View className='gap-3 pb-2.5 pt-16'>
         <HabitsHeader
           openCreateHabitScreen={openCreateHabitScreen}
           openSettings={openSettings}
@@ -104,7 +104,7 @@ export function HabitsList({
   );
 
   return (
-    <View className='flex-1'>
+    <View className='flex-1 bg-[#f8f7f5]'>
       <DraggableFlatList
         data={habits}
         keyExtractor={keyExtractor}

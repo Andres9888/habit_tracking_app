@@ -37,8 +37,11 @@ const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
       style={{
         backgroundColor: color,
         height: 1,
-        opacity,
-        width: 9,
+        opacity: opacity.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
+        }),
+        width: 12,
       }}
     />
   );
@@ -156,7 +159,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       accessibilityRole='button'
       accessibilityState={{ disabled }}
       className={clsx(
-        'h-11 w-11 items-center justify-center rounded-[11px]',
+        'h-7 w-7 items-center justify-center rounded-[7px]',
         !completed && 'border-2 border-[#1a1a1a]'
       )}
       disabled={disabled}
@@ -185,7 +188,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <Check color='#ffffff' size={17} strokeWidth={2.5} />
+        <Check color='#ffffff' size={14} strokeWidth={2.5} />
       </Animated.View>
     </AnimatedPressable>
   );

@@ -9,14 +9,14 @@ interface SparkleBurstProps {
   size?: number;
 }
 
-const DOT_COUNT = 4; // Subtle sparkle effect
+const DOT_COUNT = 6; // Enhanced sparkle for premium celebrations
 
 export const SparkleBurst = ({
   color = '#34D399',
   isActive,
   onComplete,
   reduceMotion = false,
-  size = 36,
+  size = 40, // Slightly larger for more impact
 }: SparkleBurstProps) => {
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.6)).current;
@@ -33,20 +33,20 @@ export const SparkleBurst = ({
     }
 
     console.log('🌟 SparkleBurst TRIGGERED!');
-    opacity.setValue(0.7); // Subtle, not overwhelming
+    opacity.setValue(0.9); // More prominent for celebration
     scale.setValue(0.6);
 
     Animated.parallel([
       Animated.timing(opacity, {
-        duration: 300, // Quick fade
+        duration: 400, // Slightly longer celebration
         easing: Easing.out(Easing.ease),
         toValue: 0,
         useNativeDriver: true,
       }),
       Animated.timing(scale, {
-        duration: 300, // Quick expansion
+        duration: 400, // Longer expansion for impact
         easing: Easing.out(Easing.cubic),
-        toValue: 1.4, // Gentle expansion
+        toValue: 1.6, // More expansive celebration
         useNativeDriver: true,
       }),
     ]).start(() => {

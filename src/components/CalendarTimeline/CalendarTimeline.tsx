@@ -68,7 +68,12 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       };
 
   return (
-    <View className='mb-0'>
+    <View
+      className='mb-0 rounded-2xl pb-3 pt-1'
+      style={{
+        backgroundColor: highContrastMode ? 'transparent' : '#f9fafb',
+      }}
+    >
       {/* Week Navigation Header */}
       <View className='mb-2.5 flex-row items-center justify-between'>
         <Pressable
@@ -99,7 +104,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         </Pressable>
       </View>
 
-      {/* Days Row - Show all 7 days */}
+      {/* Days Row - Show all 7 days - aligned with habit icon center */}
       <View className='flex-row items-start justify-between'>
         {dates.map((date, index) => {
           const weekday = format(date, 'EEE'); // Sun, Mon, Tue, etc.
@@ -132,17 +137,17 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                 className='h-8 w-8 items-center justify-center rounded-[10px]'
                 style={{
                   backgroundColor: isCurrentDay
-                    ? colors.currentDayBackground
+                    ? 'transparent'
                     : colors.dayBackground,
-                  borderColor: colors.dayBorder,
-                  borderWidth: highContrastMode && !isCurrentDay ? 2 : 0,
+                  borderColor: isCurrentDay ? '#1a1a1a' : (highContrastMode ? colors.dayBorder : 'transparent'),
+                  borderWidth: isCurrentDay ? 2 : (highContrastMode && !isCurrentDay ? 2 : 0),
                 }}
               >
                 <Text
                   className='text-center text-[15px] font-semibold leading-[20px]'
                   style={{
                     color: isCurrentDay
-                      ? colors.currentDayText
+                      ? '#1a1a1a'
                       : colors.dayText,
                     fontWeight: isCurrentDay ? '700' : '600',
                   }}

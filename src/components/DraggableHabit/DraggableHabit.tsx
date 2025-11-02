@@ -64,11 +64,16 @@ export default function DraggableHabit({
   const fade = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(12)).current;
   const archiveFlash = useRef(new Animated.Value(0)).current;
+  const cardScale = useRef(new Animated.Value(1)).current;
 
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: celebrationsEnabled,
     preference: reduceMotionPreference,
   });
+
+  // Calculate if week is complete for visual reward
+  const weekCompleteCount = weekStatus.filter(status => status === 'done').length;
+  const isWeekComplete = weekCompleteCount === 7;
 
   useEffect(() => {
     Animated.parallel([
@@ -142,7 +147,7 @@ export default function DraggableHabit({
       }
     : {
         border: '#ffffff',
-        cardBackground: '#ffffff',
+        cardBackground: '#fafafa', // Warm off-white for premium feel
         iconContainer: undefined as string | undefined,
         primaryText: '#1a1a1a',
         streakText: '#ff6500',
@@ -154,19 +159,47 @@ export default function DraggableHabit({
     onLongPress?.(habit);
   };
 
+  const handlePressIn = () => {
+    Animated.spring(cardScale, {
+      toValue: 0.995,
+      useNativeDriver: true,
+      damping: 20,
+      stiffness: 300,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(cardScale, {
+      toValue: 1,
+      useNativeDriver: true,
+      damping: 20,
+      stiffness: 300,
+    }).start();
+  };
+
   const habitCard = (
     <Pressable
       onLongPress={handleLongPress}
       onPress={() => onPress?.(habit)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
       <Animated.View
         className='overflow-hidden rounded-2xl'
         style={{
-          backgroundColor: colors.cardBackground,
+          backgroundColor: isWeekComplete
+            ? `${accentColor}08` // 3% accent tint for completion reward
+            : colors.cardBackground,
           borderColor: colors.border,
           borderWidth: highContrastMode ? 2 : 0,
           opacity: fade,
-          transform: [{ translateY }],
+          transform: [{ translateY }, { scale: cardScale }],
+          // Premium iOS-style shadow
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
+          elevation: 3, // Android
         }}
       >
         <Animated.View
@@ -179,21 +212,58 @@ export default function DraggableHabit({
             ...StyleSheet.absoluteFillObject,
           }}
         />
-        <View className='p-3.5'>
-          {/* Title and streak - above the main row */}
+        <View className='p-4'>
+          {/* Title row with icon and streak */}
           <View className='mb-2.5 flex-row items-center justify-between'>
-            <Text
-              className='text-[16px] font-semibold leading-[24px]'
-              style={{ color: colors.primaryText }}
-            >
-              {name || habit.name}
-            </Text>
-            {/* Streak badge - compact pill on the right */}
+            <View className='flex-row items-center gap-2.5'>
+              {/* Icon container - colored background based on habit */}
+              <View
+                className='h-8 w-8 items-center justify-center rounded-[8px]'
+                style={{
+                  backgroundColor: highContrastMode
+                    ? colors.iconContainer
+                    : accentColor === '#3b82f6'
+                      ? 'rgba(219, 234, 254, 0.75)' // blue-100 at 75%
+                      : accentColor === '#f97316'
+                        ? 'rgba(255, 237, 213, 0.75)' // orange-100 at 75%
+                        : accentColor === '#10b981'
+                          ? 'rgba(209, 250, 229, 0.75)' // emerald-100 at 75%
+                          : accentColor === '#8b5cf6'
+                            ? 'rgba(237, 233, 254, 0.75)' // violet-100 at 75%
+                            : accentColor === '#06b6d4'
+                              ? 'rgba(207, 250, 254, 0.75)' // cyan-100 at 75%
+                              : accentColor === '#ec4899'
+                                ? 'rgba(252, 231, 243, 0.75)' // pink-100 at 75%
+                                : 'rgba(254, 249, 195, 0.75)', // yellow-100 at 75%
+                  borderColor: highContrastMode ? '#111111' : undefined,
+                  borderWidth: highContrastMode ? 2 : 0,
+                }}
+              >
+                <Text className='text-[18px] leading-[22px]'>{emoji}</Text>
+              </View>
+
+              <Text
+                className='text-[14px] font-semibold leading-[20px]'
+                style={{ color: colors.primaryText, letterSpacing: 0.3 }}
+              >
+                {name || habit.name}
+              </Text>
+            </View>
+
+            {/* Streak badge - premium bold treatment */}
             {streak > 0 && (
-              <View className='rounded-full bg-orange-50 px-2 py-0.5'>
+              <View
+                className='rounded-full bg-orange-500 px-2.5 py-1'
+                style={{
+                  shadowColor: '#ff6500',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 2,
+                }}
+              >
                 <Text
-                  className='text-[11px] font-bold uppercase leading-[16px] tracking-tight'
-                  style={{ color: colors.streakText }}
+                  className='text-[11px] font-bold uppercase leading-[16px] tracking-tight text-white'
                 >
                   🔥 {streak}
                 </Text>
@@ -201,51 +271,35 @@ export default function DraggableHabit({
             )}
           </View>
 
-          {/* Main row: Icon and calendar toggles - vertically aligned */}
-          <View className='flex-row items-center gap-2.5'>
-            {/* Icon container - colored background based on habit */}
-            <View
-              className='h-11 w-11 items-center justify-center rounded-[11px]'
-              style={{
-                backgroundColor: highContrastMode
-                  ? colors.iconContainer
-                  : accentColor === '#3b82f6'
-                    ? '#dbeafe' // blue-100
-                    : accentColor === '#f97316'
-                      ? '#ffedd5' // orange-100
-                      : accentColor === '#10b981'
-                        ? '#d1fae5' // emerald-100
-                        : accentColor === '#8b5cf6'
-                          ? '#ede9fe' // violet-100
-                          : accentColor === '#06b6d4'
-                            ? '#cffafe' // cyan-100
-                            : accentColor === '#ec4899'
-                              ? '#fce7f3' // pink-100
-                              : '#fef9c3', // yellow-100
-                borderColor: highContrastMode ? '#111111' : undefined,
-                borderWidth: highContrastMode ? 2 : 0,
-              }}
-            >
-              <Text className='text-[22px] leading-[28px]'>{emoji}</Text>
-            </View>
+          {/* Internal divider for premium hierarchy */}
+          <View
+            className='my-2.5 h-[1px]'
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}
+          />
 
-            {/* Week status visualizer - same row as icon */}
-            <View className='flex-1'>
-              <HabitChainVisualizer
-                accentColor={accentColor}
-                celebrationsEnabled={celebrationsEnabled}
-                habitId={habit._id}
-                highContrastMode={highContrastMode}
-                onWeekComplete={({ completedDate }) =>
-                  onWeekComplete?.({ completedDate, habit })
-                }
-                reduceMotionPreference={reduceMotionPreference}
-                weekDateStrings={weekDateStrings}
-                weekStatus={weekStatus}
-                onToggle={toggleHabit}
-              />
+          {/* Week status visualizer - full width */}
+          <HabitChainVisualizer
+            accentColor={accentColor}
+            celebrationsEnabled={celebrationsEnabled}
+            habitId={habit._id}
+            highContrastMode={highContrastMode}
+            onWeekComplete={({ completedDate }) =>
+              onWeekComplete?.({ completedDate, habit })
+            }
+            reduceMotionPreference={reduceMotionPreference}
+            weekDateStrings={weekDateStrings}
+            weekStatus={weekStatus}
+            onToggle={toggleHabit}
+          />
+
+          {/* Completion reward indicator */}
+          {isWeekComplete && (
+            <View className='mt-2 flex-row items-center justify-center'>
+              <Text className='text-[11px] font-semibold uppercase tracking-wide' style={{ color: accentColor }}>
+                ✓ Week Complete
+              </Text>
             </View>
-          </View>
+          )}
         </View>
       </Animated.View>
     </Pressable>
