@@ -24,6 +24,7 @@ interface Habit {
   strength?: number;
   strengthLevel?: StrengthLevel;
   strengthUpdatedAt?: number;
+  bestStreak?: number;
 }
 
 interface DraggableHabitProps {
@@ -65,6 +66,7 @@ export default function DraggableHabit({
   const translateY = useRef(new Animated.Value(12)).current;
   const archiveFlash = useRef(new Animated.Value(0)).current;
   const cardScale = useRef(new Animated.Value(1)).current;
+  const iconPulse = useRef(new Animated.Value(1)).current;
 
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: celebrationsEnabled,
@@ -74,6 +76,7 @@ export default function DraggableHabit({
   // Calculate if week is complete for visual reward
   const weekCompleteCount = weekStatus.filter(status => status === 'done').length;
   const isWeekComplete = weekCompleteCount === 7;
+  const bestStreak = habit.bestStreak || 0;
 
   useEffect(() => {
     Animated.parallel([
@@ -91,6 +94,30 @@ export default function DraggableHabit({
       }),
     ]).start();
   }, [fade, translateY]);
+
+  // Pulse animation for icon when week is complete
+  useEffect(() => {
+    if (isWeekComplete && !reduceMotionPreference) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(iconPulse, {
+            toValue: 1.05,
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(iconPulse, {
+            toValue: 1,
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      iconPulse.setValue(1);
+    }
+  }, [isWeekComplete, iconPulse, reduceMotionPreference]);
 
   const renderRightActions = (
     progress: Animated.AnimatedInterpolation<number>,
@@ -216,31 +243,37 @@ export default function DraggableHabit({
           {/* Title row with icon and streak */}
           <View className='mb-2.5 flex-row items-center justify-between'>
             <View className='flex-row items-center gap-2.5'>
-              {/* Icon container - colored background based on habit */}
-              <View
-                className='h-8 w-8 items-center justify-center rounded-[8px]'
+              {/* Icon container with pulse animation - colored background based on habit */}
+              <Animated.View
                 style={{
-                  backgroundColor: highContrastMode
-                    ? colors.iconContainer
-                    : accentColor === '#2563eb'
-                      ? 'rgba(219, 234, 254, 0.75)' // blue-100 at 75%
-                      : accentColor === '#ea580c'
-                        ? 'rgba(255, 237, 213, 0.75)' // orange-100 at 75%
-                        : accentColor === '#059669'
-                          ? 'rgba(209, 250, 229, 0.75)' // emerald-100 at 75%
-                          : accentColor === '#7c3aed'
-                            ? 'rgba(237, 233, 254, 0.75)' // violet-100 at 75%
-                            : accentColor === '#0891b2'
-                              ? 'rgba(207, 250, 254, 0.75)' // cyan-100 at 75%
-                              : accentColor === '#db2777'
-                                ? 'rgba(252, 231, 243, 0.75)' // pink-100 at 75%
-                                : 'rgba(254, 249, 195, 0.75)', // yellow-100 at 75%
-                  borderColor: highContrastMode ? '#111111' : undefined,
-                  borderWidth: highContrastMode ? 2 : 0,
+                  transform: [{ scale: iconPulse }],
                 }}
               >
-                <Text className='text-[18px] leading-[22px]'>{emoji}</Text>
-              </View>
+                <View
+                  className='h-8 w-8 items-center justify-center rounded-[8px]'
+                  style={{
+                    backgroundColor: highContrastMode
+                      ? colors.iconContainer
+                      : accentColor === '#2563eb'
+                        ? 'rgba(219, 234, 254, 0.75)' // blue-100 at 75%
+                        : accentColor === '#ea580c'
+                          ? 'rgba(255, 237, 213, 0.75)' // orange-100 at 75%
+                          : accentColor === '#059669'
+                            ? 'rgba(209, 250, 229, 0.75)' // emerald-100 at 75%
+                            : accentColor === '#7c3aed'
+                              ? 'rgba(237, 233, 254, 0.75)' // violet-100 at 75%
+                              : accentColor === '#0891b2'
+                                ? 'rgba(207, 250, 254, 0.75)' // cyan-100 at 75%
+                                : accentColor === '#db2777'
+                                  ? 'rgba(252, 231, 243, 0.75)' // pink-100 at 75%
+                                  : 'rgba(254, 249, 195, 0.75)', // yellow-100 at 75%
+                    borderColor: highContrastMode ? '#111111' : undefined,
+                    borderWidth: highContrastMode ? 2 : 0,
+                  }}
+                >
+                  <Text className='text-[18px] leading-[22px]'>{emoji}</Text>
+                </View>
+              </Animated.View>
 
               <Text
                 className='text-[14px] font-semibold leading-[20px]'
@@ -250,23 +283,36 @@ export default function DraggableHabit({
               </Text>
             </View>
 
-            {/* Streak badge - premium bold treatment */}
+            {/* Streak badges - current and best */}
             {streak > 0 && (
-              <View
-                className='rounded-full bg-orange-600 px-2.5 py-1'
-                style={{
-                  shadowColor: '#ea580c',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 4,
-                  elevation: 2,
-                }}
-              >
-                <Text
-                  className='text-[11px] font-bold uppercase leading-[16px] tracking-tight text-white'
+              <View className='flex-row items-center gap-2'>
+                {/* Current streak badge */}
+                <View
+                  className='rounded-full bg-orange-600 px-2.5 py-1'
+                  style={{
+                    shadowColor: '#ea580c',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    elevation: 2,
+                  }}
                 >
-                  🔥 {streak}
-                </Text>
+                  <Text
+                    className='text-[11px] font-bold uppercase leading-[16px] tracking-tight text-white'
+                  >
+                    🔥 {streak}
+                  </Text>
+                </View>
+
+                {/* Best streak indicator - FOMO driver */}
+                {bestStreak > 0 && bestStreak > streak && (
+                  <Text
+                    className='text-[11px] font-medium uppercase leading-[16px] tracking-tight'
+                    style={{ color: '#9ca3af' }}
+                  >
+                    🏆 Best: {bestStreak}
+                  </Text>
+                )}
               </View>
             )}
           </View>

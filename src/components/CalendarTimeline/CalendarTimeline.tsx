@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { format } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useCalendarTimelineLogic } from './CalendarTimeline.hooks';
 
@@ -21,6 +21,8 @@ export interface CalendarTimelineProps {
   selectedDate?: Date;
   /** Callback when a date is selected (reserved for future interactive states) */
   onDateSelect?: (date: Date) => void;
+  /** Optional: completed dates for monthly progress (ISO strings) */
+  completedDates?: string[];
 }
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
@@ -32,8 +34,33 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   highContrastMode = false,
   selectedDate: _selectedDate,
   onDateSelect: _onDateSelect,
+  completedDates = [],
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
+
+  // Calculate monthly progress for retention
+  const monthlyProgress = useMemo(() => {
+    if (dates.length === 0) return null;
+
+    const currentMonth = dates[0];
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(currentMonth);
+    const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+
+    const completedInMonth = completedDates.filter(dateStr => {
+      const date = new Date(dateStr);
+      return date >= monthStart && date <= monthEnd;
+    }).length;
+
+    const today = new Date();
+    const daysElapsed = daysInMonth.filter(day => day <= today).length;
+
+    return {
+      completed: completedInMonth,
+      total: daysElapsed,
+      percentage: daysElapsed > 0 ? Math.round((completedInMonth / daysElapsed) * 100) : 0,
+    };
+  }, [dates, completedDates]);
 
   // Handle empty dates array
   if (dates.length === 0) {
@@ -159,6 +186,27 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           );
         })}
       </View>
+
+      {/* Monthly progress indicator - sunk cost retention driver */}
+      {monthlyProgress && monthlyProgress.total > 0 && (
+        <View className='mt-3 flex-row items-center justify-center gap-2'>
+          <View className='h-1.5 flex-1 overflow-hidden rounded-full bg-gray-200'>
+            <View
+              className='h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500'
+              style={{
+                width: `${monthlyProgress.percentage}%`,
+                backgroundColor: highContrastMode ? '#facc15' : '#2563eb',
+              }}
+            />
+          </View>
+          <Text
+            className='text-[11px] font-semibold uppercase tracking-wide'
+            style={{ color: highContrastMode ? '#facc15' : '#6b7280' }}
+          >
+            {monthlyProgress.completed}/{monthlyProgress.total} this month
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
