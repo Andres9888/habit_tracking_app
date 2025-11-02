@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { View, Animated, Easing } from 'react-native';
+import { useCallback } from 'react';
+import { View } from 'react-native';
 import { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -31,61 +31,20 @@ export function useHabitRenderItem({
   notifyWeekCompletion,
 }: UseHabitRenderItemArgs) {
   return useCallback(
-    ({ item, drag, isActive, getIndex }: RenderItemParams<Habit>) => {
+    ({ item, drag, isActive }: RenderItemParams<Habit>) => {
       const weekStatus = weekDateStrings.map((dateString) =>
         getHabitStatus(item._id, dateString)
       );
       const streak = getStreak(item._id);
-      const index = getIndex?.() ?? 0;
-
-      // Stagger animation values
-      const StaggeredCard = ({ children }: { children: React.ReactNode }) => {
-        const fadeAnim = useRef(new Animated.Value(0)).current;
-        const slideAnim = useRef(new Animated.Value(20)).current;
-
-        useEffect(() => {
-          // Stagger delay: 50ms per item for premium cascade
-          const delay = index * 50;
-
-          Animated.parallel([
-            Animated.timing(fadeAnim, {
-              toValue: 1,
-              duration: 400,
-              delay,
-              easing: Easing.out(Easing.cubic),
-              useNativeDriver: true,
-            }),
-            Animated.timing(slideAnim, {
-              toValue: 0,
-              duration: 400,
-              delay,
-              easing: Easing.out(Easing.cubic),
-              useNativeDriver: true,
-            }),
-          ]).start();
-        }, []);
-
-        return (
-          <Animated.View
-            style={{
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            }}
-          >
-            {children}
-          </Animated.View>
-        );
-      };
 
       return (
         <ScaleDecorator>
-          <StaggeredCard>
-            <View
-              className='mb-4'
-              style={{
-                opacity: isActive ? 0.7 : 1,
-              }}
-            >
+          <View
+            className='mb-4'
+            style={{
+              opacity: isActive ? 0.7 : 1,
+            }}
+          >
             <DraggableHabit
               celebrationsEnabled={celebrationsEnabled}
               habit={item}
@@ -103,7 +62,6 @@ export function useHabitRenderItem({
               reduceMotionPreference={reduceMotionPreference}
             />
           </View>
-          </StaggeredCard>
         </ScaleDecorator>
       );
     },

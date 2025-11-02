@@ -26,7 +26,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { useAppTheme } from '../theme';
 import * as Haptics from 'expo-haptics';
 
@@ -278,7 +278,6 @@ export function Modal({
               {
                 backgroundColor: theme.custom.colors.light.background,
                 paddingBottom: insets.bottom,
-                paddingTop: insets.top,
               },
               fullScreenStyle,
               style,
@@ -314,13 +313,16 @@ export function Modal({
 
   return (
     <RNModal
-      statusBarTranslucent
+      statusBarTranslucent={variant !== 'fullScreen'}
       transparent
       animationType='none' // We handle animations ourselves
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <View style={[
+        styles.container,
+        variant === 'fullScreen' && styles.containerFullScreen
+      ]}>
         {/* Backdrop */}
         <Pressable
           accessible={false}
@@ -361,8 +363,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
+  containerFullScreen: {
+    justifyContent: 'flex-start',
+  },
   fullScreen: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   pullIndicator: {
     borderRadius: 2,

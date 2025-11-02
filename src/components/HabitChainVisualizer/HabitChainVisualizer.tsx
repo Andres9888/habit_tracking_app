@@ -36,12 +36,12 @@ const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
     <Animated.View
       style={{
         backgroundColor: color,
-        height: 1,
+        height: 1.5,
         opacity: opacity.interpolate({
           inputRange: [0, 1],
           outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
         }),
-        width: 12,
+        width: 14,
       }}
     />
   );
@@ -208,7 +208,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       accessibilityRole='button'
       accessibilityState={{ disabled }}
       className={clsx(
-        'h-7 w-7 items-center justify-center rounded-[7px]',
+        'h-9 w-9 items-center justify-center rounded-[9px]',
         !completed && 'border-2'
       )}
       disabled={disabled}
@@ -223,7 +223,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           shadowColor: evolvedColor,
           shadowOffset: { width: 0, height: 0 },
           shadowOpacity: 0.3,
-          shadowRadius: 4,
+          shadowRadius: 5,
           elevation: 2,
         }),
       }}
@@ -245,7 +245,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <Check color='#ffffff' size={14} strokeWidth={2.5} />
+        <Check color='#ffffff' size={17} strokeWidth={2.5} />
       </Animated.View>
     </AnimatedPressable>
   );
@@ -360,16 +360,6 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
   return (
     <View className='relative flex-row items-center justify-between'>
-      {/* Golden overlay for week completion unification */}
-      {isWeekComplete && !highContrastMode && (
-        <View
-          className='absolute inset-0 rounded-lg'
-          style={{
-            backgroundColor: 'rgba(245, 158, 11, 0.08)', // Subtle gold tint
-          }}
-        />
-      )}
-
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);

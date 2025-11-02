@@ -301,6 +301,10 @@ export default function HabitDetailScreen({
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
+  // Ensure we have a minimum top padding for devices with notch/dynamic island
+  // If insets.top is 0, default to 44 (standard iOS status bar + some padding)
+  const safeTop = insets.top || 44;
+
   // Fetch real prediction data from Convex
   const predictionData = useQuery(
     api.predictions.predict7Days,
@@ -397,6 +401,7 @@ export default function HabitDetailScreen({
           style={[
             styles.navigationBar,
             {
+              paddingTop: safeTop,
               borderBottomColor: theme.custom.colors.gray[200],
               borderBottomWidth: 1,
             },

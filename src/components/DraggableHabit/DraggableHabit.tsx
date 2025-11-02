@@ -214,9 +214,7 @@ export default function DraggableHabit({
       <Animated.View
         className='overflow-hidden rounded-2xl'
         style={{
-          backgroundColor: isWeekComplete
-            ? `${accentColor}08` // 3% accent tint for completion reward
-            : colors.cardBackground,
+          backgroundColor: colors.cardBackground,
           borderColor: colors.border,
           borderWidth: highContrastMode ? 2 : 0,
           opacity: fade,
@@ -283,36 +281,23 @@ export default function DraggableHabit({
               </Text>
             </View>
 
-            {/* Streak badges - current and best */}
+            {/* Current streak badge */}
             {streak > 0 && (
-              <View className='flex-row items-center gap-2'>
-                {/* Current streak badge */}
-                <View
-                  className='rounded-full bg-orange-600 px-2.5 py-1'
-                  style={{
-                    shadowColor: '#ea580c',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                    elevation: 2,
-                  }}
+              <View
+                className='rounded-full bg-orange-600 px-2.5 py-1'
+                style={{
+                  shadowColor: '#ea580c',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 2,
+                }}
+              >
+                <Text
+                  className='text-[11px] font-bold uppercase leading-[16px] tracking-tight text-white'
                 >
-                  <Text
-                    className='text-[11px] font-bold uppercase leading-[16px] tracking-tight text-white'
-                  >
-                    🔥 {streak}
-                  </Text>
-                </View>
-
-                {/* Best streak indicator - FOMO driver */}
-                {bestStreak > 0 && bestStreak > streak && (
-                  <Text
-                    className='text-[11px] font-medium uppercase leading-[16px] tracking-tight'
-                    style={{ color: '#9ca3af' }}
-                  >
-                    🏆 Best: {bestStreak}
-                  </Text>
-                )}
+                  🔥 {streak}
+                </Text>
               </View>
             )}
           </View>
