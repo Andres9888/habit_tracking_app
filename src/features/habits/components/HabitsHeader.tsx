@@ -1,4 +1,4 @@
-import { Plus, Settings, Microscope } from 'lucide-react-native';
+import { Plus, Settings, Clipboard } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -7,6 +7,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
+import { TemplateTooltip } from '../../../components/TemplateTooltip';
+import { useTemplateTooltip } from '../hooks/useTemplateTooltip';
 
 interface HabitsHeaderProps {
   openCreateHabitScreen: () => void;
@@ -20,6 +22,7 @@ export function HabitsHeader({
   openTemplatesScreen,
 }: HabitsHeaderProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
+  const { dismissTooltip, showTooltip } = useTemplateTooltip();
 
   // Animated values for the main "Add Habit" button
   const addButtonScale = useSharedValue(1);
@@ -92,7 +95,7 @@ export function HabitsHeader({
   };
 
   return (
-    <View className='mt-3 flex-row items-center justify-between'>
+    <View className='flex-row items-center justify-between'>
       <Animated.View style={addButtonAnimatedStyle}>
         <Pressable
           accessibilityHint='Open create habit modal'
@@ -113,15 +116,20 @@ export function HabitsHeader({
       <View className='flex-row gap-3'>
         <Animated.View style={templatesButtonAnimatedStyle}>
           <Pressable
-            accessibilityLabel='Open habit science'
+            accessibilityHint='Browse science-backed habit templates'
+            accessibilityLabel='Templates'
             accessibilityRole='button'
-            className='h-9 w-9 items-center justify-center rounded-full bg-[#f3f4f6]'
+            className='h-9 flex-row items-center gap-1.5 rounded-full bg-[#f3f4f6] px-3'
             onPress={handleTemplatesPress}
             onPressIn={handleTemplatesPressIn}
             onPressOut={handleTemplatesPressOut}
           >
-            <Microscope color='#101727' size={20} strokeWidth={2.25} />
+            <Clipboard color='#101727' size={16} strokeWidth={2.25} />
+            <Text className='text-[13px] font-medium text-[#101727]'>Templates</Text>
           </Pressable>
+
+          {/* First-time user tooltip */}
+          <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
         </Animated.View>
 
         <Animated.View style={settingsButtonAnimatedStyle}>

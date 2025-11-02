@@ -76,7 +76,7 @@ export function HabitsList({
 
   const renderHeader = useCallback(
     () => (
-      <View className='gap-3 px-6 pb-2.5 pt-11'>
+      <View className='gap-3 px-6 pb-2.5 pt-16'>
         <HabitsHeader
           openCreateHabitScreen={openCreateHabitScreen}
           openSettings={openSettings}
