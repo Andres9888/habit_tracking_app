@@ -248,18 +248,10 @@ function ActionButton({
   variant?: 'default' | 'destructive';
   theme: any;
 }) {
-  const backgroundColor =
-    variant === 'destructive'
-      ? theme.custom.colors.error[50]
-      : theme.custom.colors.gray[100];
-  const textColor =
-    variant === 'destructive'
-      ? theme.custom.colors.error[600]
-      : theme.custom.colors.gray[700];
-  const iconColor =
-    variant === 'destructive'
-      ? theme.custom.colors.error[500]
-      : theme.custom.colors.gray[600];
+  const backgroundColor = variant === 'destructive' ? '#fef2f2' : '#ffffff';
+  const borderColor = variant === 'destructive' ? '#fecaca' : '#e5e7eb';
+  const textColor = variant === 'destructive' ? '#dc2626' : '#101727';
+  const iconColor = variant === 'destructive' ? '#ef4444' : '#374151';
 
   return (
     <Pressable
@@ -268,15 +260,18 @@ function ActionButton({
       accessibilityRole='button'
       style={[
         styles.actionButton,
-        { backgroundColor, borderRadius: theme.custom.borderRadius.medium },
+        { backgroundColor, borderColor },
       ]}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onPress();
       }}
     >
-      <Icon color={iconColor} size={20} />
-      <Text style={[theme.custom.typography.bodyMedium, { color: textColor }]}>
+      <Icon color={iconColor} size={20} strokeWidth={2.25} />
+      <Text style={[
+        theme.custom.typography.bodyMedium,
+        { color: textColor, fontWeight: '500' }
+      ]}>
         {label}
       </Text>
     </Pressable>
@@ -395,18 +390,9 @@ export default function HabitDetailScreen({
       visible={visible}
       onClose={onClose}
     >
-      <View style={{ flex: 1 }}>
+      <View style={[styles.container, { paddingTop: safeTop }]}>
         {/* Navigation Bar */}
-        <View
-          style={[
-            styles.navigationBar,
-            {
-              paddingTop: safeTop,
-              borderBottomColor: theme.custom.colors.gray[200],
-              borderBottomWidth: 1,
-            },
-          ]}
-        >
+        <View style={styles.navigationBar}>
           <Pressable
             accessible
             accessibilityLabel='Close'
@@ -414,17 +400,8 @@ export default function HabitDetailScreen({
             style={styles.closeButton}
             onPress={onClose}
           >
-            <X color={theme.custom.colors.gray[700]} size={24} />
+            <X color='#101727' size={24} strokeWidth={2.25} />
           </Pressable>
-          <Text
-            style={[
-              theme.custom.typography.heading3,
-              { color: theme.custom.colors.gray[900] },
-            ]}
-          >
-            Habit Detail
-          </Text>
-          <View style={styles.closeButton} />
         </View>
 
         {/* Scrollable Content */}
@@ -455,7 +432,7 @@ export default function HabitDetailScreen({
             <Text
               style={[
                 theme.custom.typography.heading1,
-                { color: theme.custom.colors.gray[900], marginTop: 12 },
+                { color: '#101727', marginTop: 12, fontWeight: '700' },
               ]}
             >
               {habit.name}
@@ -464,7 +441,7 @@ export default function HabitDetailScreen({
               <Text
                 style={[
                   theme.custom.typography.bodyMedium,
-                  { color: theme.custom.colors.gray[600], marginTop: 8 },
+                  { color: '#6b7280', marginTop: 8 },
                 ]}
               >
                 {habit.notes}
@@ -477,7 +454,7 @@ export default function HabitDetailScreen({
             <Text
               style={[
                 theme.custom.typography.heading3,
-                { color: theme.custom.colors.gray[900], marginBottom: 16 },
+                { color: '#101727', marginBottom: 16, fontWeight: '600' },
               ]}
             >
               Current Strength
@@ -496,11 +473,11 @@ export default function HabitDetailScreen({
           {/* History Graph (Premium) */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <TrendingUp color={theme.custom.colors.gray[700]} size={20} />
+              <TrendingUp color='#374151' size={20} strokeWidth={2.25} />
               <Text
                 style={[
                   theme.custom.typography.heading3,
-                  { color: theme.custom.colors.gray[900] },
+                  { color: '#101727', fontWeight: '600', flex: 1 },
                 ]}
               >
                 30-Day Strength History
@@ -535,11 +512,11 @@ export default function HabitDetailScreen({
           {/* Prediction Insights (Premium) */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <AlertTriangle color={theme.custom.colors.gray[700]} size={20} />
+              <AlertTriangle color='#374151' size={20} strokeWidth={2.25} />
               <Text
                 style={[
                   theme.custom.typography.heading3,
-                  { color: theme.custom.colors.gray[900] },
+                  { color: '#101727', fontWeight: '600', flex: 1 },
                 ]}
               >
                 Predictions & Insights
@@ -594,7 +571,7 @@ export default function HabitDetailScreen({
             <Text
               style={[
                 theme.custom.typography.heading3,
-                { color: theme.custom.colors.gray[900], marginBottom: 16 },
+                { color: '#101727', marginBottom: 16, fontWeight: '600' },
               ]}
             >
               Manage Habit
@@ -640,18 +617,29 @@ export default function HabitDetailScreen({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f7f5',
+  },
   closeButton: {
     alignItems: 'center',
     height: 44,
     justifyContent: 'center',
     width: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   content: {
     flex: 1,
   },
   contentContainer: {
     paddingBottom: 32,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
   },
   chartContainer: {
     height: 200,
@@ -670,6 +658,14 @@ const styles = StyleSheet.create({
   habitHeader: {
     alignItems: 'center',
     paddingVertical: 24,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
   },
   actionsGrid: {
     gap: 12,
@@ -685,14 +681,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
   },
   navigationBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 20,
+    paddingBottom: 12,
   },
   habitIconText: {
     fontSize: 32,
@@ -716,13 +714,24 @@ const styles = StyleSheet.create({
     padding: 32,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
   },
   sectionHeader: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
     marginBottom: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
   },
   tooltipContainer: {
     marginTop: 8,

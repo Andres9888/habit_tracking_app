@@ -80,6 +80,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityLabel='Previous week'
           accessibilityRole='button'
           className='h-9 w-7 items-center justify-center rounded-full'
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           onPress={onPreviousWeek}
         >
           <ChevronLeft color={colors.icon} size={18} strokeWidth={2} />
@@ -98,6 +99,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityState={{ disabled: !canNavigateForward }}
           className={`h-9 w-7 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           onPress={onNextWeek}
         >
           <ChevronRight color={colors.icon} size={18} strokeWidth={2} />

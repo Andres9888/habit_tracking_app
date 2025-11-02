@@ -206,6 +206,9 @@ export default function DraggableHabit({
 
   const habitCard = (
     <Pressable
+      style={({ pressed }) => ({
+        opacity: pressed ? 0.85 : 1,
+      })}
       onLongPress={handleLongPress}
       onPress={() => onPress?.(habit)}
       onPressIn={handlePressIn}
@@ -274,8 +277,15 @@ export default function DraggableHabit({
               </Animated.View>
 
               <Text
+                numberOfLines={1}
+                ellipsizeMode='tail'
                 className='text-[14px] font-semibold leading-[20px]'
-                style={{ color: colors.primaryText, letterSpacing: 0.3 }}
+                style={{
+                  color: colors.primaryText,
+                  letterSpacing: 0.3,
+                  maxWidth: '85%',
+                  flexShrink: 1,
+                }}
               >
                 {name || habit.name}
               </Text>
@@ -295,6 +305,11 @@ export default function DraggableHabit({
               >
                 <Text
                   className='text-[11px] font-bold uppercase leading-[16px] tracking-tight text-white'
+                  style={{
+                    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+                    textShadowOffset: { width: 0, height: 1 },
+                    textShadowRadius: 2,
+                  }}
                 >
                   🔥 {streak}
                 </Text>

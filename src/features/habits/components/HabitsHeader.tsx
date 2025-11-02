@@ -15,12 +15,16 @@ interface HabitsHeaderProps {
   openCreateHabitScreen: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;
+  completedToday?: number;
+  totalHabits?: number;
 }
 
 export function HabitsHeader({
   openCreateHabitScreen,
   openSettings,
   openTemplatesScreen,
+  completedToday = 0,
+  totalHabits = 0,
 }: HabitsHeaderProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
   const { dismissTooltip, showTooltip } = useTemplateTooltip();
@@ -95,9 +99,20 @@ export function HabitsHeader({
     openSettings();
   };
 
+  // Calculate completion percentage
+  const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
+
+  // Determine color based on completion
+  const getCompletionColor = () => {
+    if (percentage >= 80) return '#10b981'; // Green
+    if (percentage >= 41) return '#f59e0b'; // Yellow
+    return '#ef4444'; // Red
+  };
+
   return (
-    <View className='flex-row items-center justify-between'>
-      <Animated.View style={addButtonAnimatedStyle}>
+    <View className='gap-2'>
+      <View className='flex-row items-center justify-between'>
+        <Animated.View style={addButtonAnimatedStyle}>
         <Pressable
           accessibilityHint='Open create habit modal'
           accessibilityLabel='Add habit'
@@ -159,6 +174,27 @@ export function HabitsHeader({
           </Pressable>
         </Animated.View>
       </View>
+
+      {/* Today's Completion Indicator */}
+      {totalHabits > 0 && (
+        <View className='flex-row items-center justify-center gap-2 px-2'>
+          <Text
+            className='text-[13px] font-medium'
+            style={{ color: '#6b7280' }}
+          >
+            Today:
+          </Text>
+          <Text
+            className='text-[13px] font-semibold'
+            style={{ color: getCompletionColor() }}
+          >
+            {completedToday}/{totalHabits} Complete ({percentage}%)
+          </Text>
+          <Text style={{ fontSize: 14 }}>
+            {percentage >= 80 ? '⚡' : percentage >= 41 ? '💪' : '🎯'}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

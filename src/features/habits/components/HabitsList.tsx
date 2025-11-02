@@ -75,23 +75,34 @@ export function HabitsList({
   );
 
   const renderHeader = useCallback(
-    () => (
-      <View className='gap-3 pb-2.5 pt-16'>
-        <HabitsHeader
-          openCreateHabitScreen={openCreateHabitScreen}
-          openSettings={openSettings}
-          openTemplatesScreen={openTemplatesScreen}
-        />
+    () => {
+      // Calculate today's completion stats
+      const todayString = new Date().toISOString().split('T')[0];
+      const completedToday = habits.filter(
+        (habit) => getHabitStatus(habit._id, todayString) === 'done'
+      ).length;
+      const totalHabits = habits.length;
 
-        <CalendarTimeline
-          showSeparator
-          canNavigateForward={canNavigateForward}
-          dates={weekDates}
-          onNextWeek={onNextWeek}
-          onPreviousWeek={onPreviousWeek}
-        />
-      </View>
-    ),
+      return (
+        <View className='gap-3 pb-2.5 pt-16'>
+          <HabitsHeader
+            completedToday={completedToday}
+            openCreateHabitScreen={openCreateHabitScreen}
+            openSettings={openSettings}
+            openTemplatesScreen={openTemplatesScreen}
+            totalHabits={totalHabits}
+          />
+
+          <CalendarTimeline
+            showSeparator
+            canNavigateForward={canNavigateForward}
+            dates={weekDates}
+            onNextWeek={onNextWeek}
+            onPreviousWeek={onPreviousWeek}
+          />
+        </View>
+      );
+    },
     [
       openCreateHabitScreen,
       openSettings,
@@ -100,6 +111,8 @@ export function HabitsList({
       weekDates,
       onNextWeek,
       onPreviousWeek,
+      habits,
+      getHabitStatus,
     ]
   );
 
