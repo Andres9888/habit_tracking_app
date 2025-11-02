@@ -180,71 +180,71 @@ export default function DraggableHabit({
           }}
         />
         <View className='p-3.5'>
-          {/* Header with icon and title */}
-          <View className='mb-3.5 flex-row items-center justify-between'>
-            <View className='flex-row items-center gap-2.5'>
-              {/* Icon container - colored background based on habit */}
-              <View
-                className='h-11 w-11 items-center justify-center rounded-[11px]'
-                style={{
-                  backgroundColor: highContrastMode
-                    ? colors.iconContainer
-                    : accentColor === '#3b82f6'
-                      ? '#dbeafe' // blue-100
-                      : accentColor === '#f97316'
-                        ? '#ffedd5' // orange-100
-                        : accentColor === '#10b981'
-                          ? '#d1fae5' // emerald-100
-                          : accentColor === '#8b5cf6'
-                            ? '#ede9fe' // violet-100
-                            : accentColor === '#06b6d4'
-                              ? '#cffafe' // cyan-100
-                              : accentColor === '#ec4899'
-                                ? '#fce7f3' // pink-100
-                                : '#fef9c3', // yellow-100
-                  borderColor: highContrastMode ? '#111111' : undefined,
-                  borderWidth: highContrastMode ? 2 : 0,
-                }}
-              >
-                <Text className='text-[22px] leading-[28px]'>{emoji}</Text>
-              </View>
-              <View className='flex-col'>
+          {/* Title and streak - above the main row */}
+          <View className='mb-2.5 flex-row items-center justify-between'>
+            <Text
+              className='text-[16px] font-semibold leading-[24px]'
+              style={{ color: colors.primaryText }}
+            >
+              {name || habit.name}
+            </Text>
+            {/* Streak badge - compact pill on the right */}
+            {streak > 0 && (
+              <View className='rounded-full bg-orange-50 px-2 py-0.5'>
                 <Text
-                  className='text-[16px] font-semibold leading-[24px]'
-                  style={{ color: colors.primaryText }}
+                  className='text-[11px] font-bold uppercase leading-[16px] tracking-tight'
+                  style={{ color: colors.streakText }}
                 >
-                  {name || habit.name}
+                  🔥 {streak}
                 </Text>
-                {/* Always render streak container to prevent layout shift */}
-                <View style={{ height: 20, justifyContent: 'flex-end' }}>
-                  {streak > 0 && (
-                    <Text
-                      className='flex-row items-center text-[13px] font-bold uppercase leading-[18px]'
-                      style={{ color: colors.streakText }}
-                    >
-                      🔥 {streak} DAY STREAK
-                    </Text>
-                  )}
-                </View>
               </View>
-            </View>
+            )}
           </View>
 
-          {/* Week status visualizer */}
-          <View>
-            <HabitChainVisualizer
-              accentColor={accentColor}
-              celebrationsEnabled={celebrationsEnabled}
-              habitId={habit._id}
-              highContrastMode={highContrastMode}
-              onWeekComplete={({ completedDate }) =>
-                onWeekComplete?.({ completedDate, habit })
-              }
-              reduceMotionPreference={reduceMotionPreference}
-              weekDateStrings={weekDateStrings}
-              weekStatus={weekStatus}
-              onToggle={toggleHabit}
-            />
+          {/* Main row: Icon and calendar toggles - vertically aligned */}
+          <View className='flex-row items-center gap-2.5'>
+            {/* Icon container - colored background based on habit */}
+            <View
+              className='h-11 w-11 items-center justify-center rounded-[11px]'
+              style={{
+                backgroundColor: highContrastMode
+                  ? colors.iconContainer
+                  : accentColor === '#3b82f6'
+                    ? '#dbeafe' // blue-100
+                    : accentColor === '#f97316'
+                      ? '#ffedd5' // orange-100
+                      : accentColor === '#10b981'
+                        ? '#d1fae5' // emerald-100
+                        : accentColor === '#8b5cf6'
+                          ? '#ede9fe' // violet-100
+                          : accentColor === '#06b6d4'
+                            ? '#cffafe' // cyan-100
+                            : accentColor === '#ec4899'
+                              ? '#fce7f3' // pink-100
+                              : '#fef9c3', // yellow-100
+                borderColor: highContrastMode ? '#111111' : undefined,
+                borderWidth: highContrastMode ? 2 : 0,
+              }}
+            >
+              <Text className='text-[22px] leading-[28px]'>{emoji}</Text>
+            </View>
+
+            {/* Week status visualizer - same row as icon */}
+            <View className='flex-1'>
+              <HabitChainVisualizer
+                accentColor={accentColor}
+                celebrationsEnabled={celebrationsEnabled}
+                habitId={habit._id}
+                highContrastMode={highContrastMode}
+                onWeekComplete={({ completedDate }) =>
+                  onWeekComplete?.({ completedDate, habit })
+                }
+                reduceMotionPreference={reduceMotionPreference}
+                weekDateStrings={weekDateStrings}
+                weekStatus={weekStatus}
+                onToggle={toggleHabit}
+              />
+            </View>
           </View>
         </View>
       </Animated.View>
