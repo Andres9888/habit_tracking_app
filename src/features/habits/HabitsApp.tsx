@@ -2,8 +2,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { HabitsHeader } from './components/HabitsHeader';
-import { CalendarTimeline } from '../../components/CalendarTimeline';
 import { HabitsList } from './components/HabitsList';
 import { HabitsModals } from './components/HabitsModals';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -67,23 +65,14 @@ export function HabitsApp() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-[#f8f5f1]'>
-        <View className='gap-3 px-6 pb-2.5 pt-11'>
-          <HabitsHeader
-            openCreateHabitScreen={openCreateHabitScreen}
-            openSettings={openSettings}
-            openTemplatesScreen={openTemplatesScreen}
-          />
-
-          <CalendarTimeline
-            showSeparator
-            canNavigateForward={list.canNavigateForward}
-            dates={list.weekDates}
-            onNextWeek={list.handleNextWeek}
-            onPreviousWeek={list.handlePreviousWeek}
-          />
-        </View>
-
-        <HabitsList list={list} modals={modals} />
+        <HabitsList
+          list={list}
+          modals={modals}
+          canNavigateForward={list.canNavigateForward}
+          weekDates={list.weekDates}
+          onNextWeek={list.handleNextWeek}
+          onPreviousWeek={list.handlePreviousWeek}
+        />
 
         <View className='absolute bottom-8 right-6'>
           <FloatingActionButton

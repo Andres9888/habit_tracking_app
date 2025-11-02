@@ -7,13 +7,26 @@ import type { HabitsListState } from '../hooks/useHabitsApp';
 import { useHabitRenderItem } from '../hooks/useHabitRenderItem';
 import { HabitsModalsState } from '../hooks/types';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
+import { HabitsHeader } from './HabitsHeader';
+import { CalendarTimeline } from '../../../components/CalendarTimeline';
 
 interface HabitsListProps {
   list: HabitsListState;
   modals: HabitsModalsState;
+  canNavigateForward: boolean;
+  weekDates: string[];
+  onNextWeek: () => void;
+  onPreviousWeek: () => void;
 }
 
-export function HabitsList({ list, modals }: HabitsListProps) {
+export function HabitsList({
+  list,
+  modals,
+  canNavigateForward,
+  weekDates,
+  onNextWeek,
+  onPreviousWeek,
+}: HabitsListProps) {
   const {
     celebrationsEnabled,
     habits,
@@ -31,7 +44,7 @@ export function HabitsList({ list, modals }: HabitsListProps) {
     reduceMotionPreference,
   } = list;
 
-  const { openCreateHabitScreen } = modals;
+  const { openCreateHabitScreen, openSettings, openTemplatesScreen } = modals;
 
   const renderItem = useHabitRenderItem({
     celebrationsEnabled,
@@ -61,6 +74,35 @@ export function HabitsList({ list, modals }: HabitsListProps) {
     []
   );
 
+  const renderHeader = useCallback(
+    () => (
+      <View className='gap-3 px-6 pb-2.5 pt-11'>
+        <HabitsHeader
+          openCreateHabitScreen={openCreateHabitScreen}
+          openSettings={openSettings}
+          openTemplatesScreen={openTemplatesScreen}
+        />
+
+        <CalendarTimeline
+          showSeparator
+          canNavigateForward={canNavigateForward}
+          dates={weekDates}
+          onNextWeek={onNextWeek}
+          onPreviousWeek={onPreviousWeek}
+        />
+      </View>
+    ),
+    [
+      openCreateHabitScreen,
+      openSettings,
+      openTemplatesScreen,
+      canNavigateForward,
+      weekDates,
+      onNextWeek,
+      onPreviousWeek,
+    ]
+  );
+
   return (
     <View className='flex-1'>
       <DraggableFlatList
@@ -73,8 +115,9 @@ export function HabitsList({ list, modals }: HabitsListProps) {
         contentContainerStyle={{
           paddingBottom: contentPadding.paddingBottom,
           paddingHorizontal: contentPadding.paddingHorizontal,
-          paddingTop: contentPadding.paddingTop,
+          paddingTop: 0,
         }}
+        ListHeaderComponent={renderHeader}
         ListEmptyComponent={
           <HabitsEmptyState
             isLoading={isHabitsLoading}

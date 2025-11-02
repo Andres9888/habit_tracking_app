@@ -66,15 +66,38 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   highContrastMode,
 }) => {
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    Animated.timing(completion, {
-      duration: completed ? 220 : 180,
-      easing: Easing.out(Easing.cubic),
-      toValue: completed ? 1 : 0,
-      useNativeDriver: false,
-    }).start();
-  }, [completed, completion]);
+    if (completed) {
+      // PREMIUM ANIMATION: Simple, polished bounce
+      Animated.parallel([
+        // Gentle bounce - iOS native feel
+        Animated.spring(buttonScale, {
+          toValue: 1,
+          friction: 6,
+          tension: 300,
+          useNativeDriver: true,
+        }),
+
+        // Checkmark smooth scale-in
+        Animated.timing(completion, {
+          duration: 220,
+          easing: Easing.out(Easing.cubic),
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      // Gentle fade out
+      Animated.timing(completion, {
+        duration: 150,
+        easing: Easing.in(Easing.ease),
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [completed, completion, buttonScale]);
 
   // For Figma design: future/uncompleted boxes have white bg with border
   const backgroundColor = completed
@@ -83,12 +106,48 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       ? '#000000'
       : '#ffffff';
 
-  const scale = completion.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.96, 1],
-  });
-
   const borderColor = highContrastMode ? '#facc15' : '#1a1a1a';
+
+  // Press feedback handlers
+  const handlePressIn = () => {
+    Animated.spring(buttonScale, {
+      toValue: 0.95,
+      friction: 20,
+      tension: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    if (!completed) {
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 20,
+        tension: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const handlePress = () => {
+    // Bounce up on tap
+    Animated.sequence([
+      Animated.spring(buttonScale, {
+        toValue: 1.08,
+        friction: 6,
+        tension: 300,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 8,
+        tension: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    onPress();
+  };
 
   return (
     <AnimatedPressable
@@ -106,10 +165,13 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
         borderColor: completed ? accentColor : borderColor,
         borderWidth: completed ? 0 : 2,
         opacity: disabled ? 0.5 : 1,
-        transform: [{ scale }],
+        transform: [{ scale: buttonScale }],
       }}
-      onPress={onPress}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
+      {/* Checkmark - clean and simple */}
       <Animated.View
         style={{
           opacity: completion,
@@ -117,7 +179,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
             {
               scale: completion.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0.4, 1],
+                outputRange: [0.5, 1],
               }),
             },
           ],
@@ -208,7 +270,10 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         triggerSelection();
       } else {
         triggerSuccess();
-        setActiveBurst(dateString);
+        // Only show sparkles for week completion (premium feel)
+        if (willCompleteWeek) {
+          setActiveBurst(dateString);
+        }
       }
 
       onToggle({ date: dateString, habitId });

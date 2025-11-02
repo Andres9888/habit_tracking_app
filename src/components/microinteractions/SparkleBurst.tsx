@@ -9,7 +9,7 @@ interface SparkleBurstProps {
   size?: number;
 }
 
-const DOT_COUNT = 4;
+const DOT_COUNT = 4; // Subtle sparkle effect
 
 export const SparkleBurst = ({
   color = '#34D399',
@@ -22,30 +22,35 @@ export const SparkleBurst = ({
   const scale = useRef(new Animated.Value(0.6)).current;
 
   useEffect(() => {
+    console.log('🌟 SparkleBurst:', { isActive, reduceMotion, color });
+
     if (!isActive || reduceMotion) {
       if (isActive && reduceMotion) {
+        console.log('🌟 SparkleBurst skipped (reduceMotion enabled)');
         onComplete?.();
       }
       return;
     }
 
-    opacity.setValue(0.9);
+    console.log('🌟 SparkleBurst TRIGGERED!');
+    opacity.setValue(0.7); // Subtle, not overwhelming
     scale.setValue(0.6);
 
     Animated.parallel([
       Animated.timing(opacity, {
-        duration: 260,
+        duration: 300, // Quick fade
         easing: Easing.out(Easing.ease),
         toValue: 0,
         useNativeDriver: true,
       }),
       Animated.timing(scale, {
-        duration: 260,
+        duration: 300, // Quick expansion
         easing: Easing.out(Easing.cubic),
-        toValue: 1.4,
+        toValue: 1.4, // Gentle expansion
         useNativeDriver: true,
       }),
     ]).start(() => {
+      console.log('🌟 SparkleBurst completed');
       onComplete?.();
     });
   }, [isActive, onComplete, opacity, reduceMotion, scale]);
@@ -54,7 +59,7 @@ export const SparkleBurst = ({
     return null;
   }
 
-  const dotSize = size * 0.2;
+  const dotSize = size * 0.18; // Small, subtle sparkles
 
   return (
     <Animated.View
@@ -65,12 +70,13 @@ export const SparkleBurst = ({
         opacity,
         transform: [{ scale }],
         width: size,
+        zIndex: 1000, // Render ABOVE everything
       }}
     >
       {Array.from({ length: DOT_COUNT }).map((_, index) => {
         const angle = (index / DOT_COUNT) * Math.PI * 2;
-        const translateX = Math.cos(angle) * (size / 2.5);
-        const translateY = Math.sin(angle) * (size / 2.5);
+        const translateX = Math.cos(angle) * (size / 2.2);
+        const translateY = Math.sin(angle) * (size / 2.2);
 
         return (
           <Animated.View
@@ -78,7 +84,7 @@ export const SparkleBurst = ({
             key={index}
             className='absolute rounded-full'
             style={{
-              backgroundColor: color,
+              backgroundColor: color, // Use accent color
               height: dotSize,
               left: size / 2 - dotSize / 2,
               top: size / 2 - dotSize / 2,
@@ -87,18 +93,28 @@ export const SparkleBurst = ({
                 { translateY },
               ],
               width: dotSize,
+              shadowColor: color,
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0.5, // Subtle glow
+              shadowRadius: 3,
+              elevation: 4,
             }}
           />
         );
       })}
 
+      {/* Center glow - subtle */}
       <View
         className='absolute rounded-full'
         pointerEvents='none'
         style={{
-          backgroundColor: `${color}33`,
+          backgroundColor: `${color}40`, // 25% opacity
           height: dotSize * 2,
           width: dotSize * 2,
+          shadowColor: color,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.4,
+          shadowRadius: 4,
         }}
       />
     </Animated.View>

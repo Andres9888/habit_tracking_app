@@ -27,9 +27,12 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withSequence,
+  withTiming,
   runOnJS,
   interpolate,
   Extrapolate,
+  Easing,
 } from 'react-native-reanimated';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -37,6 +40,7 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
 import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import StreakIndicator from '../StreakIndicator/StreakIndicator';
+import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
 
 export interface HabitCardProps {
@@ -97,7 +101,7 @@ export function HabitCard({
   strength,
   currentStreak = 0,
   bestStreak = 0,
-  completed = false,
+  completed: completedProp = false,
   atRisk = false,
   disabled = false,
   onPress,
@@ -110,8 +114,19 @@ export function HabitCard({
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
 
+  // Enhanced animation values for completion
+  const checkmarkScale = useSharedValue(completedProp ? 1 : 0);
+  const checkmarkRotate = useSharedValue(completedProp ? 360 : 0);
+  const rippleScale = useSharedValue(0);
+  const rippleOpacity = useSharedValue(0);
+
+  // Floating XP text state
+  const [showFloatingXP, setShowFloatingXP] = React.useState(false);
+  const [xpPosition, setXPPosition] = React.useState({ x: 0, y: 0 });
+
   // Prevent rapid-fire toggles with debounce flag
   const [isToggling, setIsToggling] = React.useState(false);
+  const [completed, setCompleted] = React.useState(completedProp);
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
@@ -128,6 +143,68 @@ export function HabitCard({
 
   // Note: Haptic feedback will be called inline with runOnJS wrapper
   // This pattern is required for Reanimated worklets
+
+  // ========================================
+  // ENHANCED COMPLETION ANIMATION (Part B: Micro-Transitions)
+  // ========================================
+  const triggerCompletionCelebration = () => {
+    'worklet';
+
+    // Phase 1: Card bounce (100-400ms)
+    cardScale.value = withSequence(
+      withSpring(1.05, { damping: 10, stiffness: 200 }),
+      withSpring(1.0, { damping: 12, stiffness: 180 })
+    );
+
+    // Phase 2: Checkmark animation (0-400ms)
+    // Scale: 0 → 1.2 → 1.0 (elastic spring)
+    checkmarkScale.value = withSequence(
+      withSpring(1.2, { damping: 8, stiffness: 200 }),
+      withSpring(1.0, { damping: 10, stiffness: 180 })
+    );
+
+    // Rotation: 0 → 360deg
+    checkmarkRotate.value = withTiming(360, {
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    // Phase 3: Ripple effect (100-500ms)
+    rippleScale.value = 0;
+    rippleOpacity.value = 0.3;
+
+    rippleScale.value = withTiming(2, {
+      duration: 500,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    rippleOpacity.value = withTiming(0, {
+      duration: 500,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    // Phase 4: Trigger floating XP text
+    runOnJS(setShowFloatingXP)(true);
+    runOnJS(() => {
+      // Calculate position (center of card)
+      setXPPosition({ x: 150, y: 20 });
+
+      // Hide after animation completes
+      setTimeout(() => setShowFloatingXP(false), 1000);
+    })();
+  };
+
+  const triggerUncheckAnimation = () => {
+    'worklet';
+
+    // Simple fade out for checkmark
+    checkmarkScale.value = withTiming(0, {
+      duration: 200,
+      easing: Easing.in(Easing.cubic),
+    });
+
+    checkmarkRotate.value = 0;
+  };
 
   // Swipe gesture handler
   const panGesture = Gesture.Pan()
@@ -200,7 +277,7 @@ export function HabitCard({
 
         // Directly call haptic with ternary to avoid variable capture issues
         if (isCompleted === true) {
-          // Unchecking - Light haptic
+          // Unchecking - Light haptic + simple animation
           console.log('🔴 Triggering LIGHT haptic (unchecking)');
           runOnJS(() => {
             console.log('🔴 Inside runOnJS - LIGHT haptic');
@@ -208,15 +285,17 @@ export function HabitCard({
               .then(() => console.log('✅ LIGHT Haptic SUCCESS'))
               .catch((error) => console.error('❌ LIGHT Haptic FAILED:', error));
           })();
+          triggerUncheckAnimation();
         } else {
-          // Checking or loading - Medium haptic
-          console.log('🔴 Triggering MEDIUM haptic (checking)');
+          // Checking or loading - Medium haptic + CELEBRATION!
+          console.log('🔴 Triggering MEDIUM haptic (checking) + CELEBRATION');
           runOnJS(() => {
             console.log('🔴 Inside runOnJS - MEDIUM haptic');
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
               .then(() => console.log('✅ MEDIUM Haptic SUCCESS'))
               .catch((error) => console.error('❌ MEDIUM Haptic FAILED:', error));
           })();
+          triggerCompletionCelebration();
         }
 
         // Set debounce flag to prevent rapid toggles
@@ -229,6 +308,9 @@ export function HabitCard({
           try {
             await toggleCompletionMutation({ date: today, habitId: id });
             console.log('🔴 Mutation SUCCESS');
+
+            // Update local state to reflect new completion status
+            setCompleted(!isCompleted);
           } catch (error) {
             console.error('🔴 Toggle completion failed:', error);
             // TODO: Show toast notification when toast system is available
@@ -304,6 +386,20 @@ export function HabitCard({
       opacity,
     };
   });
+
+  // Checkmark animation (Part B: scale + rotation)
+  const checkmarkAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: checkmarkScale.value },
+      { rotate: `${checkmarkRotate.value}deg` },
+    ],
+  }));
+
+  // Ripple effect animation
+  const rippleAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: rippleScale.value }],
+    opacity: rippleOpacity.value,
+  }));
 
   // Get card background based on state
   const getBackgroundColor = () => {
@@ -409,14 +505,15 @@ export function HabitCard({
               {/* Status Indicator */}
               <View style={styles.statusContainer}>
                 {completed ? (
-                  <View
+                  <Animated.View
                     style={[
                       styles.checkmark,
                       { backgroundColor: theme.custom.colors.primary[500] },
+                      checkmarkAnimatedStyle,
                     ]}
                   >
                     <Text style={styles.checkmarkText}>✓</Text>
-                  </View>
+                  </Animated.View>
                 ) : atRisk ? (
                   <View
                     style={[
@@ -429,6 +526,12 @@ export function HabitCard({
                 ) : null}
               </View>
             </View>
+
+            {/* Ripple Effect Overlay (Part B: Micro-Transitions) */}
+            <Animated.View
+              style={[styles.rippleOverlay, rippleAnimatedStyle]}
+              pointerEvents="none"
+            />
 
             {/* Bottom Row: Strength Indicator + Streak */}
             <View style={styles.bottomRow}>
@@ -448,6 +551,15 @@ export function HabitCard({
           </View>
         </Animated.View>
       </GestureDetector>
+
+      {/* Floating XP Text (Part B: XP Gain Animation) */}
+      {showFloatingXP && (
+        <FloatingXPText
+          value={10}
+          startPosition={xpPosition}
+          onComplete={() => setShowFloatingXP(false)}
+        />
+      )}
     </View>
   );
 }
@@ -540,6 +652,18 @@ const styles = StyleSheet.create({
   },
   warningText: {
     fontSize: 12,
+  },
+  // Part B: Micro-Transitions - Ripple effect overlay
+  rippleOverlay: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: 40,
+    height: 40,
+    marginTop: -20,
+    marginLeft: -20,
+    backgroundColor: '#10B981', // Green 500
+    borderRadius: 20,
   },
 });
 
