@@ -56,6 +56,7 @@ interface HabitDayToggleProps {
   completed: boolean;
   isToday: boolean;
   highContrastMode: boolean;
+  currentStreak?: number;
 }
 
 const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
@@ -67,9 +68,11 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   completed,
   isToday,
   highContrastMode,
+  currentStreak = 0,
 }) => {
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
+  const breathingPulse = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (completed) {
@@ -102,9 +105,55 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     }
   }, [completed, completion, buttonScale]);
 
+  // Breathing animation for today's uncompleted circle - subtle urgency
+  useEffect(() => {
+    if (!completed && isToday) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(breathingPulse, {
+            toValue: 1.03,
+            duration: 1500,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(breathingPulse, {
+            toValue: 1,
+            duration: 1500,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      breathingPulse.setValue(1);
+    }
+  }, [completed, isToday, breathingPulse]);
+
+  // Streak-based color evolution - colors deepen with streak for retention
+  const getEvolvedColor = (baseColor: string): string => {
+    if (!completed || currentStreak === 0) return baseColor;
+
+    // Time-of-day adaptive brightness
+    const hour = new Date().getHours();
+    let brightnessAdjust = 0;
+    if (hour >= 6 && hour < 12) brightnessAdjust = 0.1; // Morning: brighter
+    else if (hour >= 18 && hour < 24) brightnessAdjust = -0.1; // Evening: darker
+
+    // Streak-based saturation boost
+    let saturationBoost = 0;
+    if (currentStreak >= 8 && currentStreak <= 30) saturationBoost = 0.15;
+    else if (currentStreak > 30) saturationBoost = 0.3;
+
+    // Simple color darkening logic (this is a simplified approach)
+    // In production, you'd use a proper color manipulation library
+    return baseColor; // Keep base for now, enhancement ready for color lib
+  };
+
+  const evolvedColor = getEvolvedColor(accentColor);
+
   // Premium design: uncompleted boxes have warm gray bg with soft border
   const backgroundColor = completed
-    ? accentColor
+    ? evolvedColor
     : highContrastMode
       ? '#000000'
       : '#f5f5f5'; // Warm gray instead of white
@@ -165,10 +214,18 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       disabled={disabled}
       style={{
         backgroundColor,
-        borderColor: completed ? accentColor : borderColor,
+        borderColor: completed ? evolvedColor : borderColor,
         borderWidth: completed ? 0 : 2,
         opacity: disabled ? 0.5 : 1,
-        transform: [{ scale: buttonScale }],
+        transform: [{ scale: buttonScale }, { scale: breathingPulse }],
+        // Subtle glow on completion - reward signal
+        ...(completed && !highContrastMode && {
+          shadowColor: evolvedColor,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+          elevation: 2,
+        }),
       }}
       onPress={handlePress}
       onPressIn={handlePressIn}
@@ -206,6 +263,7 @@ interface HabitChainVisualizerProps {
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
+  currentStreak?: number;
 }
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
@@ -218,6 +276,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   reduceMotionPreference,
   weekDateStrings,
   weekStatus,
+  currentStreak = 0,
 }) => {
   const { isFutureDate, isCompleted, isToday } = useHabitChainVisualizerLogic(
     weekDateStrings,
@@ -227,6 +286,9 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
   const connectorColor = highContrastMode ? '#facc15' : '#e0e0e0';
   const [activeBurst, setActiveBurst] = useState<string | null>(null);
+
+  // Check if week is complete for golden unification
+  const isWeekComplete = weekStatus.every(status => status === 'done');
 
   const {
     triggerSelection,
@@ -297,7 +359,17 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='flex-row items-center justify-between'>
+    <View className='relative flex-row items-center justify-between'>
+      {/* Golden overlay for week completion unification */}
+      {isWeekComplete && !highContrastMode && (
+        <View
+          className='absolute inset-0 rounded-lg'
+          style={{
+            backgroundColor: 'rgba(245, 158, 11, 0.08)', // Subtle gold tint
+          }}
+        />
+      )}
+
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
@@ -325,6 +397,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                 accessibilityHint={accessibilityHint}
                 accessibilityLabel={accessibilityLabel}
                 completed={completed}
+                currentStreak={currentStreak}
                 disabled={disabled}
                 highContrastMode={highContrastMode}
                 isToday={isToday(index)}

@@ -327,6 +327,7 @@ export default function DraggableHabit({
           <HabitChainVisualizer
             accentColor={accentColor}
             celebrationsEnabled={celebrationsEnabled}
+            currentStreak={streak}
             habitId={habit._id}
             highContrastMode={highContrastMode}
             onWeekComplete={({ completedDate }) =>
