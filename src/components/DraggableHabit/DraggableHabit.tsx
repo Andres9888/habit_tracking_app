@@ -150,7 +150,7 @@ export default function DraggableHabit({
         cardBackground: '#fafafa', // Warm off-white for premium feel
         iconContainer: undefined as string | undefined,
         primaryText: '#1a1a1a',
-        streakText: '#ff6500',
+        streakText: '#ea580c', // Richer orange for premium streak badge
         strengthBackground: '#10b981',
       };
 
@@ -222,17 +222,17 @@ export default function DraggableHabit({
                 style={{
                   backgroundColor: highContrastMode
                     ? colors.iconContainer
-                    : accentColor === '#3b82f6'
+                    : accentColor === '#2563eb'
                       ? 'rgba(219, 234, 254, 0.75)' // blue-100 at 75%
-                      : accentColor === '#f97316'
+                      : accentColor === '#ea580c'
                         ? 'rgba(255, 237, 213, 0.75)' // orange-100 at 75%
-                        : accentColor === '#10b981'
+                        : accentColor === '#059669'
                           ? 'rgba(209, 250, 229, 0.75)' // emerald-100 at 75%
-                          : accentColor === '#8b5cf6'
+                          : accentColor === '#7c3aed'
                             ? 'rgba(237, 233, 254, 0.75)' // violet-100 at 75%
-                            : accentColor === '#06b6d4'
+                            : accentColor === '#0891b2'
                               ? 'rgba(207, 250, 254, 0.75)' // cyan-100 at 75%
-                              : accentColor === '#ec4899'
+                              : accentColor === '#db2777'
                                 ? 'rgba(252, 231, 243, 0.75)' // pink-100 at 75%
                                 : 'rgba(254, 249, 195, 0.75)', // yellow-100 at 75%
                   borderColor: highContrastMode ? '#111111' : undefined,
@@ -253,9 +253,9 @@ export default function DraggableHabit({
             {/* Streak badge - premium bold treatment */}
             {streak > 0 && (
               <View
-                className='rounded-full bg-orange-500 px-2.5 py-1'
+                className='rounded-full bg-orange-600 px-2.5 py-1'
                 style={{
-                  shadowColor: '#ff6500',
+                  shadowColor: '#ea580c',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.25,
                   shadowRadius: 4,

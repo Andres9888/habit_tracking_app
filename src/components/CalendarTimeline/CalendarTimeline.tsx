@@ -64,7 +64,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         dayText: '#1a1a1a',
         icon: '#1a1a1a',
         primaryText: '#1a1a1a',
-        secondaryText: '#8a8a8a',
+        secondaryText: '#9ca3af', // Warmer gray for better cohesion
       };
 
   return (

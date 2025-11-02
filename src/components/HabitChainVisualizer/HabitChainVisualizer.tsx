@@ -102,14 +102,14 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     }
   }, [completed, completion, buttonScale]);
 
-  // For Figma design: future/uncompleted boxes have white bg with border
+  // Premium design: uncompleted boxes have warm gray bg with soft border
   const backgroundColor = completed
     ? accentColor
     : highContrastMode
       ? '#000000'
-      : '#ffffff';
+      : '#f5f5f5'; // Warm gray instead of white
 
-  const borderColor = highContrastMode ? '#facc15' : '#1a1a1a';
+  const borderColor = highContrastMode ? '#facc15' : '#6b7280'; // Softer gray instead of dark
 
   // Press feedback handlers
   const handlePressIn = () => {
@@ -160,7 +160,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       accessibilityState={{ disabled }}
       className={clsx(
         'h-7 w-7 items-center justify-center rounded-[7px]',
-        !completed && 'border-2 border-[#1a1a1a]'
+        !completed && 'border-2'
       )}
       disabled={disabled}
       style={{

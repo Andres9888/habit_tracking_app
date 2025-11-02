@@ -19,15 +19,15 @@ interface Habit {
   [key: string]: any;
 }
 
-// Figma design accent colors - blue and orange primary
+// Premium accent colors - deeper, more sophisticated tones
 const ACCENT_COLORS = [
-  '#3b82f6', // blue-500 (Exercise in Figma)
-  '#f97316', // orange-500 (Japanese in Figma)
-  '#10b981', // emerald-500
-  '#8b5cf6', // violet-500
-  '#06b6d4', // cyan-500
-  '#ec4899', // pink-500
-  '#eab308', // yellow-500
+  '#2563eb', // blue-600 - 20% deeper (was #3b82f6)
+  '#ea580c', // orange-600 - richer (was #f97316)
+  '#059669', // emerald-600 - deeper (was #10b981)
+  '#7c3aed', // violet-600 - richer (was #8b5cf6)
+  '#0891b2', // cyan-600 - deeper (was #06b6d4)
+  '#db2777', // pink-600 - sophisticated (was #ec4899)
+  '#ca8a04', // yellow-600 - golden (was #eab308)
 ];
 
 const pickAccentColor = (input: string): string => {
