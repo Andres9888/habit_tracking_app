@@ -147,19 +147,21 @@ export async function scheduleHabitReminder({
 
   await cancelHabitReminder(habitId);
 
+  const trigger = {
+    hour: reminderTime.getHours(),
+    minute: reminderTime.getMinutes(),
+    repeats: true,
+  };
+
   await Notifications.scheduleNotificationAsync({
     content: {
       title,
       body,
       sound: 'default',
       data: { habitId },
+      ...(Platform.OS === 'android' && { android: { channelId: ANDROID_CHANNEL_ID } }),
     },
-    trigger: {
-      hour: reminderTime.getHours(),
-      minute: reminderTime.getMinutes(),
-      repeats: true,
-      channelId: Platform.OS === 'android' ? ANDROID_CHANNEL_ID : undefined,
-    },
+    trigger,
   });
 
   return true;
