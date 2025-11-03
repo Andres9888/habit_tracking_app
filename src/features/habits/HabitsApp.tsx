@@ -40,19 +40,8 @@ export function HabitsApp() {
   }, [openTemplatesScreen, triggerSelection]);
 
   const handleCreateHabitRequest = useCallback(() => {
-    if (!list.isPremiumUser && list.hasReachedHabitLimit) {
-      triggerWarning();
-      handleUpgradeIntent();
-      return;
-    }
     openCreateHabitScreen();
-  }, [
-    handleUpgradeIntent,
-    list.hasReachedHabitLimit,
-    list.isPremiumUser,
-    openCreateHabitScreen,
-    triggerWarning,
-  ]);
+  }, [openCreateHabitScreen]);
 
   useEffect(() => {
     if (!rewardToast) {

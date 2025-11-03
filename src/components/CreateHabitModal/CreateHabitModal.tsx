@@ -1,4 +1,5 @@
 import { Modal, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
@@ -21,11 +22,15 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
   const { triggerSelection } = useHapticFeedback();
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
       <View className='flex-1 bg-black/50'>
-        <View className='mt-12 flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'>
+        <View
+          className='flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'
+          style={{ marginTop: Math.max(insets.top + 16, 48) }}
+        >
           <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
           <ScrollView
             ref={template.scrollViewRef}
