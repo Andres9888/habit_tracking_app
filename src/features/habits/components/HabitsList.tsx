@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
+import { useAnimatedStyle, interpolate } from 'react-native-reanimated';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 
 import { HabitsEmptyState } from './HabitsEmptyState';
@@ -209,9 +210,68 @@ function MonetizationHero({
   );
 }
 
-function PremiumBenefitsRow() {
+function PremiumBenefitsRow({ reduceMotion = false }: { reduceMotion?: boolean }) {
+  const shimmer = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (reduceMotion) {
+      shimmer.setValue(1);
+      return;
+    }
+
+    const shimmerAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(shimmer, {
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shimmer, {
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    shimmerAnimation.start();
+    return () => shimmerAnimation.stop();
+  }, [shimmer, reduceMotion]);
+
+  const shimmerAnimatedStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(
+      shimmer.value,
+      [0, 1],
+      [-100, 300]
+    );
+
+    return {
+      transform: [{ translateX }],
+    };
+  });
+
   return (
-    <View className='gap-4 rounded-3xl border border-[#e0e7ff] bg-white p-5 shadow-[0px_16px_44px_rgba(15,23,42,0.08)]'>
+    <View className='overflow-hidden rounded-3xl border border-[#e0e7ff] bg-white p-5 shadow-[0px_16px_44px_rgba(15,23,42,0.08)]'>
+      {/* Shimmer overlay */}
+      {!reduceMotion && (
+        <Animated.View
+          pointerEvents='none'
+          style={[
+            {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: 100,
+              background: 'linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.08) 50%, transparent 100%)',
+            },
+            shimmerAnimatedStyle,
+          ]}
+        />
+      )}
+
       <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#4f46e5]'>
         Why members upgrade
       </Text>
@@ -387,7 +447,6 @@ export function HabitsList({
     hasReachedHabitLimit,
     weekDateStrings,
     showHabitStrengthPercentage,
-    showWeekCompletionBar,
     contentPadding,
     handleDragEnd,
     handleArchive,
@@ -451,7 +510,6 @@ export function HabitsList({
             openCreateHabitScreen={handleAddHabitPress}
             openSettings={openSettings}
             openTemplatesScreen={openTemplatesScreen}
-            showCompletionSummary={showWeekCompletionBar}
             totalHabits={totalHabits}
           />
 
@@ -471,7 +529,7 @@ export function HabitsList({
                 onUpgradePress={onUpgradeIntent}
                 reduceMotion={reduceMotionPreference}
               />
-              <PremiumBenefitsRow />
+              <PremiumBenefitsRow reduceMotion={reduceMotionPreference} />
               <SocialProofCard />
             </View>
           )}
@@ -487,7 +545,6 @@ export function HabitsList({
       onUpgradeIntent,
       openSettings,
       openTemplatesScreen,
-      showWeekCompletionBar,
       canNavigateForward,
       weekDates,
       onNextWeek,

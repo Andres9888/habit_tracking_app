@@ -27,7 +27,7 @@ export function SettingsSection({
   return (
     <View className='gap-2'>
       <Text
-        className='px-2 text-[14px] font-semibold uppercase tracking-[0.7px]'
+        className='px-2 text-[11px] font-bold uppercase tracking-[4px]'
         style={{ color: colors.title }}
       >
         {title}

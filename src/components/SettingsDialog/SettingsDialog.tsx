@@ -25,7 +25,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className='mb-4 flex items-center justify-between'>
-          <h2 className='text-xl font-semibold text-foreground'>Settings</h2>
+          <h2 className='text-[20px] font-bold leading-[26px] tracking-tight text-foreground'>Settings</h2>
           <button
             aria-label='Close settings'
             className='rounded border border-transparent p-1 text-muted-foreground transition-colors hover:border-border hover:brightness-95'
@@ -39,7 +39,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         <div className='space-y-4'>
           <div className='rounded-lg border border-border p-4'>
             <label className='flex flex-col gap-2 text-sm font-medium text-muted-foreground'>
-              <span className='text-sm font-semibold text-foreground'>
+              <span className='text-[15px] font-bold text-foreground'>
                 Theme
               </span>
               <select

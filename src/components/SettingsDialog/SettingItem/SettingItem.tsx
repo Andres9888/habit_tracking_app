@@ -15,7 +15,7 @@ export function SettingItem({
 }: SettingItemProps) {
   return (
     <label className='flex w-full items-center justify-between rounded-lg py-2'>
-      <span className='text-foreground'>{label}</span>
+      <span className='text-[15px] font-normal text-foreground'>{label}</span>
       <Checkbox
         aria-label={ariaLabel}
         checked={checked}

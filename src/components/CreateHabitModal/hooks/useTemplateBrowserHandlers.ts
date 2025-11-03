@@ -49,7 +49,7 @@ export const useTemplateBrowserHandlers = ({
     (event: any) => {
       if (isEditMode || isOpen) return;
       const next = event.nativeEvent.contentOffset.y > 120;
-      setHasScrolledPastHero((prev) => (prev === next ? prev : next));
+      setHasScrolledPastHero(next);
     },
     [isEditMode, isOpen, setHasScrolledPastHero]
   );
