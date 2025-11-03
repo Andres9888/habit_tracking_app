@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAppTheme } from '../theme';
 import Button from './Button';
+import PremiumBadge from './PremiumBadge';
 import * as Haptics from 'expo-haptics';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -51,11 +52,23 @@ export interface TemplateCardProps {
   /** Popularity score (optional) */
   popularityScore?: number;
 
+  /** Is this a premium template? */
+  isPremium?: boolean;
+
+  /** Does user have access to premium? */
+  hasAccess?: boolean;
+
+  /** Is this a new template? */
+  isNew?: boolean;
+
   /** On import handler */
   onImport: () => void;
 
   /** On preview handler (tap card) */
   onPreview?: () => void;
+
+  /** On upgrade handler (for premium templates) */
+  onUpgrade?: () => void;
 
   /** Custom style */
   style?: ViewStyle;
@@ -70,8 +83,12 @@ export function TemplateCard({
   scientificReference,
   category,
   popularityScore,
+  isPremium = false,
+  hasAccess = true,
+  isNew = false,
   onImport,
   onPreview,
+  onUpgrade,
   style,
 }: TemplateCardProps) {
   const theme = useAppTheme();
@@ -128,9 +145,13 @@ export function TemplateCard({
       style={[
         styles.card,
         {
-          backgroundColor: theme.custom.colors.light.card,
-          borderRadius: theme.custom.borderRadius.medium,
-          ...theme.custom.shadows.card,
+          backgroundColor: '#ffffff',
+          borderRadius: 16,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.06,
+          shadowRadius: 6,
+          elevation: 2,
         },
         animatedStyle,
         style,
@@ -149,7 +170,7 @@ export function TemplateCard({
               styles.iconContainer,
               {
                 backgroundColor: iconColor + '20', // 20% opacity
-                borderRadius: theme.custom.borderRadius.small,
+                borderRadius: 12,
               },
             ]}
           >
@@ -162,15 +183,15 @@ export function TemplateCard({
               style={[
                 styles.categoryBadge,
                 {
-                  backgroundColor: theme.custom.colors.gray[100],
-                  borderRadius: theme.custom.borderRadius.small,
+                  backgroundColor: '#f3f4f6',
+                  borderRadius: 8,
                 },
               ]}
             >
               <Text
                 style={[
                   theme.custom.typography.caption,
-                  { color: theme.custom.colors.gray[600] },
+                  { color: '#6b7280', fontWeight: '500' },
                 ]}
               >
                 {categoryLabels[category] || category}
@@ -191,7 +212,7 @@ export function TemplateCard({
           numberOfLines={1}
           style={[
             theme.custom.typography.heading3,
-            { color: theme.custom.colors.gray[900], marginTop: 12 },
+            { color: '#101727', marginTop: 12, fontWeight: '600' },
           ]}
         >
           {name}
@@ -202,7 +223,7 @@ export function TemplateCard({
           numberOfLines={3}
           style={[
             theme.custom.typography.bodySmall,
-            { color: theme.custom.colors.gray[600], marginTop: 8 },
+            { color: '#6b7280', marginTop: 8, lineHeight: 20 },
           ]}
         >
           {description}
@@ -213,9 +234,11 @@ export function TemplateCard({
           style={[
             styles.scienceBox,
             {
-              backgroundColor: theme.custom.colors.secondary[500] + '10',
-              borderRadius: theme.custom.borderRadius.small,
+              backgroundColor: '#f0fdf4',
+              borderRadius: 8,
               marginTop: 12,
+              borderWidth: 1,
+              borderColor: '#bbf7d0',
             },
           ]}
         >
@@ -225,8 +248,9 @@ export function TemplateCard({
             style={[
               theme.custom.typography.caption,
               {
-                color: theme.custom.colors.secondary[600],
+                color: '#166534',
                 flex: 1,
+                lineHeight: 16,
               },
             ]}
           >
@@ -253,17 +277,17 @@ export function TemplateCard({
 
 const styles = StyleSheet.create({
   card: {
-    marginHorizontal: 16,
+    marginHorizontal: 20,
     marginVertical: 8,
     overflow: 'hidden',
   },
   categoryBadge: {
     flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   content: {
-    padding: 16,
+    padding: 20,
   },
   footer: {
     marginTop: 16,

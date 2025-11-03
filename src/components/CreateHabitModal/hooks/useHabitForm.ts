@@ -33,6 +33,9 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   const [reminderSound, setReminderSound] = useState(
     habitToEdit?.reminderSound ?? DEFAULT_SOUND
   );
+  const [frequency, setFrequency] = useState<string>(
+    (habitToEdit as any)?.frequency ?? ''
+  );
 
   const fullHabitName = useMemo(
     () => buildHabitName(selectedEmoji, habitName),
@@ -50,6 +53,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
+    setFrequency((habitToEdit as any)?.frequency ?? '');
   }, [habitToEdit, parsed]);
 
   const resetForm = useCallback(() => {
@@ -61,6 +65,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setReminderTime(parseReminderTime(undefined));
     setShowTimePicker(false);
     setReminderSound(DEFAULT_SOUND);
+    setFrequency('');
   }, []);
 
   return {
@@ -83,5 +88,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setReminderSound,
     fullHabitName,
     resetForm,
+    frequency,
+    setFrequency,
   };
 };

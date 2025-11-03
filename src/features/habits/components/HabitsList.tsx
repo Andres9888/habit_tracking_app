@@ -38,6 +38,7 @@ interface MonetizationHeroProps {
   habitSlotsUsed: number;
   hasReachedHabitLimit: boolean;
   onUpgradePress: () => void;
+  reduceMotion?: boolean;
 }
 
 function MonetizationHero({
@@ -45,6 +46,7 @@ function MonetizationHero({
   habitSlotsUsed,
   hasReachedHabitLimit,
   onUpgradePress,
+  reduceMotion = false,
 }: MonetizationHeroProps) {
   const progress = useRef(new Animated.Value(0)).current;
   const ctaPulse = useRef(new Animated.Value(1)).current;
@@ -59,6 +61,10 @@ function MonetizationHero({
   }, [freeHabitLimit, habitSlotsUsed]);
 
   useEffect(() => {
+    if (reduceMotion) {
+      progress.setValue(trackWidth * usageRatio);
+      return;
+    }
     const handle = Animated.timing(progress, {
       duration: 420,
       easing: Easing.out(Easing.cubic),
@@ -69,10 +75,10 @@ function MonetizationHero({
     return () => {
       handle.stop();
     };
-  }, [progress, trackWidth, usageRatio]);
+  }, [progress, trackWidth, usageRatio, reduceMotion]);
 
   useEffect(() => {
-    if (!hasReachedHabitLimit) {
+    if (reduceMotion || !hasReachedHabitLimit) {
       ctaPulse.stopAnimation();
       ctaPulse.setValue(1);
       return;
@@ -96,9 +102,13 @@ function MonetizationHero({
     );
     loop.start();
     return () => loop.stop();
-  }, [ctaPulse, hasReachedHabitLimit]);
+  }, [ctaPulse, hasReachedHabitLimit, reduceMotion]);
 
   useEffect(() => {
+    if (reduceMotion) {
+      shimmer.setValue(1);
+      return;
+    }
     const wave = Animated.loop(
       Animated.sequence([
         Animated.timing(shimmer, {
@@ -117,7 +127,7 @@ function MonetizationHero({
     );
     wave.start();
     return () => wave.stop();
-  }, [shimmer]);
+  }, [shimmer, reduceMotion]);
 
   const handleTrackLayout = useCallback((event: { nativeEvent: { layout: { width: number } } }) => {
     setTrackWidth(event.nativeEvent.layout.width);
@@ -239,13 +249,19 @@ function SocialProofCard() {
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
+  reduceMotion?: boolean;
 }
 
-function LockedHabitCard({ onUpgradePress }: LockedHabitCardProps) {
+function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCardProps) {
   const scale = useRef(new Animated.Value(0.94)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    if (reduceMotion) {
+      scale.setValue(1);
+      opacity.setValue(1);
+      return;
+    }
     Animated.parallel([
       Animated.spring(scale, {
         damping: 12,
@@ -260,7 +276,7 @@ function LockedHabitCard({ onUpgradePress }: LockedHabitCardProps) {
         useNativeDriver: true,
       }),
     ]).start();
-  }, [opacity, scale]);
+  }, [opacity, scale, reduceMotion]);
 
   return (
     <Animated.View
@@ -451,6 +467,7 @@ export function HabitsList({
                 habitSlotsUsed={habitSlotsUsed}
                 hasReachedHabitLimit={hasReachedHabitLimit}
                 onUpgradePress={onUpgradeIntent}
+                reduceMotion={reduceMotionPreference}
               />
               <PremiumBenefitsRow />
               <SocialProofCard />
@@ -495,7 +512,10 @@ export function HabitsList({
         ListFooterComponent={
           !isPremiumUser && hasReachedHabitLimit ? (
             <View className='mt-6'>
-              <LockedHabitCard onUpgradePress={onUpgradeIntent} />
+              <LockedHabitCard
+                onUpgradePress={onUpgradeIntent}
+                reduceMotion={reduceMotionPreference}
+              />
             </View>
           ) : null
         }

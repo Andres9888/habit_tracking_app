@@ -1,5 +1,6 @@
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
 import { BookOpen, ChevronRight } from 'lucide-react-native';
+import STRINGS from '../../../constants/strings';
 
 interface TemplateHeroProps {
   isEditMode: boolean;
@@ -18,7 +19,7 @@ export const TemplateHero = ({
   const label = isOpen ? 'Hide template browser' : 'Start from template';
   const subtitle = isOpen
     ? 'Hide template browser'
-    : 'Browse curated routines and auto-fill details.';
+    : STRINGS.CREATE_HABIT.templateHeroSubtitle;
 
   return (
     <TouchableOpacity
@@ -36,7 +37,9 @@ export const TemplateHero = ({
         <BookOpen color='#111827' size={20} strokeWidth={2} />
       </View>
       <View className='h-[80px] flex-1'>
-        <Text className='text-lg font-bold text-[#111827]'>Start from Template</Text>
+        <Text className='text-lg font-bold text-[#111827]'>
+          {STRINGS.CREATE_HABIT.templateHeroTitle}
+        </Text>
         <Text className='mt-1 text-sm font-medium text-[#111827]/70'>{subtitle}</Text>
       </View>
       <Animated.View style={{ transform: [{ rotate: chevronRotation }] }}>

@@ -1,4 +1,7 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { useRef } from 'react';
+import STRINGS from '../../../constants/strings';
+import { Motion } from '../../../constants/motion';
 import { X } from 'lucide-react-native';
 
 interface ModalHeaderProps {
@@ -10,10 +13,11 @@ interface ModalHeaderProps {
 
 export const ModalHeader = ({ isEditMode, habitName, onClose, onSave }: ModalHeaderProps) => {
   const canSave = habitName.trim().length > 0;
+  const saveScale = useRef(new Animated.Value(1)).current;
   return (
     <View className='flex-row items-center justify-between px-4 pb-4 pt-4'>
       <TouchableOpacity
-        accessibilityLabel='Close'
+        accessibilityLabel={STRINGS.CREATE_HABIT.close}
         accessibilityRole='button'
         className='h-10 w-10 items-center justify-center rounded-full'
         onPress={onClose}
@@ -21,18 +25,38 @@ export const ModalHeader = ({ isEditMode, habitName, onClose, onSave }: ModalHea
         <X color='#1a1a1a' size={24} strokeWidth={2} />
       </TouchableOpacity>
       <Text className='text-[20px] font-bold text-[#1a1a1a]'>
-        {isEditMode ? 'Edit Habit' : 'Create Habit'}
+        {isEditMode ? 'Edit Habit' : STRINGS.CREATE_HABIT.title}
       </Text>
-      <TouchableOpacity
-        accessibilityRole='button'
-        className={`h-9 items-center justify-center rounded-full px-6 ${
-          canSave ? 'bg-[#1a1a1a]' : 'bg-gray-300'
-        }`}
-        disabled={!canSave}
-        onPress={onSave}
-      >
-        <Text className='text-sm font-semibold text-white'>Save</Text>
-      </TouchableOpacity>
+      <Animated.View style={{ transform: [{ scale: saveScale }] }}>
+        <TouchableOpacity
+          accessibilityRole='button'
+          className={`h-9 items-center justify-center rounded-full px-6 ${
+            canSave ? 'bg-[#1a1a1a]' : 'bg-gray-300'
+          }`}
+          disabled={!canSave}
+          onPressIn={() => {
+            Animated.timing(saveScale, {
+              duration: Motion.duration.fast,
+              easing: Motion.easing.inEase,
+              toValue: 0.96,
+              useNativeDriver: true,
+            }).start();
+          }}
+          onPressOut={() => {
+            Animated.timing(saveScale, {
+              duration: Motion.duration.base,
+              easing: Motion.easing.outEase,
+              toValue: 1,
+              useNativeDriver: true,
+            }).start();
+          }}
+          onPress={onSave}
+        >
+          <Text className='text-sm font-semibold text-white'>
+            {STRINGS.CREATE_HABIT.save}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 };

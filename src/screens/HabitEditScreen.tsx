@@ -235,7 +235,7 @@ export default function HabitEditScreen({
             </Text>
             <TextInput
               className='h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
-              placeholder='Exercise'
+              placeholder='e.g., Read 10 minutes'
               placeholderTextColor='#adaebc'
               value={habitName}
               onChangeText={setHabitName}

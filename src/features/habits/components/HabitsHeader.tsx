@@ -9,7 +9,10 @@ import Animated, {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { TemplateTooltip } from '../../../components/TemplateTooltip';
+import { NotificationBadge } from '../../../components/NotificationBadge';
 import { useTemplateTooltip } from '../hooks/useTemplateTooltip';
+import { useTemplateBadge } from '../hooks/useTemplateBadge';
+import { colors } from '../../../theme';
 
 interface HabitsHeaderProps {
   openCreateHabitScreen: () => void;
@@ -28,6 +31,7 @@ export function HabitsHeader({
 }: HabitsHeaderProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
   const { dismissTooltip, showTooltip } = useTemplateTooltip();
+  const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
 
   // Animated values for the main "Add Habit" button
   const addButtonScale = useSharedValue(1);
@@ -79,6 +83,7 @@ export function HabitsHeader({
 
   const handleTemplatesPress = () => {
     triggerSelection();
+    dismissBadge(); // Dismiss badge when user clicks templates
     openTemplatesScreen();
   };
 
@@ -104,9 +109,9 @@ export function HabitsHeader({
 
   // Determine color based on completion
   const getCompletionColor = () => {
-    if (percentage >= 80) return '#10b981'; // Green
-    if (percentage >= 41) return '#f59e0b'; // Yellow
-    return '#ef4444'; // Red
+    if (percentage >= 80) return colors.primary[700];
+    if (percentage >= 41) return colors.warning[700];
+    return colors.error;
   };
 
   return (
@@ -136,7 +141,7 @@ export function HabitsHeader({
           >
             <Plus color='#ffffff' size={18} strokeWidth={2.25} />
             <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
-              Habits
+              Add Habit
             </Text>
           </LinearGradient>
         </Pressable>
@@ -144,18 +149,23 @@ export function HabitsHeader({
 
       <View className='flex-row gap-3'>
         <Animated.View style={templatesButtonAnimatedStyle}>
-          <Pressable
-            accessibilityHint='Browse science-backed habit templates'
-            accessibilityLabel='Templates'
-            accessibilityRole='button'
-            className='h-9 flex-row items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-transparent px-3'
-            onPress={handleTemplatesPress}
-            onPressIn={handleTemplatesPressIn}
-            onPressOut={handleTemplatesPressOut}
-          >
-            <Clipboard color='#101727' size={16} strokeWidth={2.25} />
-            <Text className='text-[13px] font-medium text-[#101727]'>Templates</Text>
-          </Pressable>
+          <View style={{ position: 'relative' }}>
+            <Pressable
+              accessibilityHint='Browse science-backed habit templates'
+              accessibilityLabel='Templates'
+              accessibilityRole='button'
+              className='h-9 flex-row items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-transparent px-3'
+              onPress={handleTemplatesPress}
+              onPressIn={handleTemplatesPressIn}
+              onPressOut={handleTemplatesPressOut}
+            >
+              <Clipboard color='#101727' size={16} strokeWidth={2.25} />
+              <Text className='text-[13px] font-medium text-[#101727]'>Templates</Text>
+            </Pressable>
+
+            {/* Smart notification badge */}
+            <NotificationBadge visible={showBadge} count={1} />
+          </View>
 
           {/* First-time user tooltip */}
           <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
@@ -178,7 +188,11 @@ export function HabitsHeader({
 
       {/* Today's Completion Indicator */}
       {totalHabits > 0 && (
-        <View className='flex-row items-center justify-center gap-2 px-2'>
+        <View
+          accessibilityRole='text'
+          accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}
+          className='flex-row items-center justify-center gap-2 px-2'
+        >
           <Text
             className='text-[13px] font-medium'
             style={{ color: '#6b7280' }}

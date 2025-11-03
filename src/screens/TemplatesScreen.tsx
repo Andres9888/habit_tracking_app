@@ -195,10 +195,10 @@ export default function TemplatesScreen() {
           style={[
             styles.categoryChip,
             {
-              backgroundColor: isSelected
-                ? theme.custom.colors.primary[500]
-                : theme.custom.colors.gray[100],
-              borderRadius: theme.custom.borderRadius.large,
+              backgroundColor: isSelected ? '#101828' : '#ffffff',
+              borderWidth: isSelected ? 0 : 1.5,
+              borderColor: isSelected ? 'transparent' : '#e5e7eb',
+              borderRadius: 20,
             },
           ]}
           onPress={() => handleCategoryPress(category.id)}
@@ -208,8 +208,8 @@ export default function TemplatesScreen() {
             style={[
               theme.custom.typography.bodySmall,
               {
-                color: isSelected ? '#FFFFFF' : theme.custom.colors.gray[700],
-                fontWeight: isSelected ? '600' : '400',
+                color: isSelected ? '#ffffff' : '#101727',
+                fontWeight: isSelected ? '600' : '500',
               },
             ]}
           >
@@ -243,12 +243,7 @@ export default function TemplatesScreen() {
   // Loading state
   if (isLoading) {
     return (
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: theme.custom.colors.light.background },
-        ]}
-      >
+      <View style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator
             color={theme.custom.colors.primary[500]}
@@ -257,7 +252,7 @@ export default function TemplatesScreen() {
           <Text
             style={[
               theme.custom.typography.bodySmall,
-              { color: theme.custom.colors.gray[600], marginTop: 16 },
+              { color: '#6b7280', marginTop: 16 },
             ]}
           >
             Loading templates...
@@ -270,12 +265,7 @@ export default function TemplatesScreen() {
   // Empty state (no templates)
   if (!allTemplates || allTemplates.length === 0) {
     return (
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: theme.custom.colors.light.background },
-        ]}
-      >
+      <View style={styles.container}>
         <EmptyState
           hideCTA
           description='Check back soon for science-backed habit templates.'
@@ -287,18 +277,13 @@ export default function TemplatesScreen() {
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: theme.custom.colors.light.background },
-      ]}
-    >
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text
           style={[
             theme.custom.typography.heading1,
-            { color: theme.custom.colors.gray[900] },
+            { color: '#101727', fontWeight: '700' },
           ]}
         >
           Templates
@@ -306,7 +291,7 @@ export default function TemplatesScreen() {
         <Text
           style={[
             theme.custom.typography.bodySmall,
-            { color: theme.custom.colors.gray[600], marginTop: 4 },
+            { color: '#6b7280', marginTop: 4 },
           ]}
         >
           Science-backed habits to get you started
@@ -362,14 +347,14 @@ export default function TemplatesScreen() {
             <View
               style={[
                 styles.scrollHintChip,
-                { backgroundColor: `${theme.custom.colors.gray[100]}CC` },
+                { backgroundColor: 'rgba(255, 255, 255, 0.9)' },
               ]}
             >
-              <ChevronDown color={theme.custom.colors.gray[700]} size={16} />
+              <ChevronDown color='#374151' size={16} strokeWidth={2.25} />
               <Text
                 style={[
                   styles.scrollHintText,
-                  { color: theme.custom.colors.gray[700] },
+                  { color: '#374151' },
                 ]}
               >
                 Scroll for more templates
@@ -403,7 +388,7 @@ export default function TemplatesScreen() {
               <Text
                 style={[
                   theme.custom.typography.heading2,
-                  { color: theme.custom.colors.gray[900], marginTop: 16 },
+                  { color: '#101727', marginTop: 16, fontWeight: '700' },
                 ]}
               >
                 {previewTemplate.name}
@@ -414,7 +399,7 @@ export default function TemplatesScreen() {
             <Text
               style={[
                 theme.custom.typography.body,
-                { color: theme.custom.colors.gray[700], marginTop: 16 },
+                { color: '#374151', marginTop: 16 },
               ]}
             >
               {previewTemplate.description}
@@ -436,7 +421,7 @@ export default function TemplatesScreen() {
                 <Text
                   style={[
                     theme.custom.typography.caption,
-                    { color: theme.custom.colors.gray[600], fontWeight: '600' },
+                    { color: '#6b7280', fontWeight: '600' },
                   ]}
                 >
                   Scientific Backing
@@ -444,7 +429,7 @@ export default function TemplatesScreen() {
                 <Text
                   style={[
                     theme.custom.typography.bodySmall,
-                    { color: theme.custom.colors.secondary[600], marginTop: 4 },
+                    { color: '#374151', marginTop: 4 },
                   ]}
                 >
                   {previewTemplate.scientificReference}
@@ -505,7 +490,7 @@ export default function TemplatesScreen() {
 const styles = StyleSheet.create({
   categoriesContainer: {
     gap: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 12,
   },
   categoriesScroll: {
@@ -517,18 +502,24 @@ const styles = StyleSheet.create({
     gap: 6,
     marginRight: 8,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   categoryIcon: {
     fontSize: 16,
   },
   container: {
     flex: 1,
+    backgroundColor: '#f8f7f5',
   },
   header: {
     paddingBottom: 16,
-    paddingHorizontal: 16,
-    paddingTop: 48,
+    paddingHorizontal: 20,
+    paddingTop: 60,
   },
   listContent: {
     paddingBottom: 24,
@@ -592,6 +583,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 14,
     paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   scrollHintText: {
     fontSize: 12,

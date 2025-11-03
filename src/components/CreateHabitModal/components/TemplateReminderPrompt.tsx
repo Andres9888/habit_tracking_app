@@ -1,4 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
+import STRINGS from '../../../constants/strings';
 
 interface TemplateReminderPromptProps {
   visible: boolean;
@@ -23,7 +24,10 @@ export const TemplateReminderPrompt = ({
         onPress={onPress}
       >
         <Text className='text-sm font-medium text-[#374151]'>
-          Prefer a ready-made routine? <Text className='font-bold text-[#111827]'>Browse curated templates</Text>
+          {STRINGS.CREATE_HABIT.templatePrompt}{' '}
+          <Text className='font-bold text-[#111827]'>
+            {STRINGS.CREATE_HABIT.templateCTA}
+          </Text>
         </Text>
       </TouchableOpacity>
     </View>

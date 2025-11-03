@@ -12,6 +12,7 @@ import type { CreateHabitModalProps, HabitTemplate } from '../types';
 import { useHabitForm } from './useHabitForm';
 import { useScienceModal } from './useScienceModal';
 import { useTemplateBrowser } from './useTemplateBrowser';
+import useHapticFeedback from '../../../hooks/useHapticFeedback';
 const extractTemplateDetails = (template: HabitTemplate) => {
   const emoji = template.icon?.match(/\p{Emoji}/u)?.[0] ?? template.icon ?? DEFAULT_EMOJI;
   const name = template.name.replace(/^\p{Emoji}\s*/u, '').trim();
@@ -20,10 +21,12 @@ const extractTemplateDetails = (template: HabitTemplate) => {
 export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHabitModalProps) => {
   const isEditMode = !!habitToEdit;
   const form = useHabitForm({ habitToEdit });
+  const { triggerSuccess } = useHapticFeedback();
   const {
     setHabitName,
     setSelectedEmoji,
     setSelectedColor,
+    setFrequency,
     habitName,
     fullHabitName,
     remindersEnabled,
@@ -41,8 +44,9 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
       setSelectedEmoji(emoji);
       setHabitName(name);
       if (template.iconColor) setSelectedColor(template.iconColor);
+      if ((template as any)?.frequency) setFrequency((template as any).frequency);
     },
-    [setHabitName, setSelectedColor, setSelectedEmoji]
+    [setHabitName, setSelectedColor, setSelectedEmoji, setFrequency]
   );
 
   const template = useTemplateBrowser({ isEditMode, visible, onTemplateSelect: applyTemplate });
@@ -109,6 +113,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
     template.reset();
     template.closeTemplateBrowser();
     science.close();
+    triggerSuccess();
     onClose();
   }, [createHabit, closeColorPicker, habitToEdit, isEditMode, onClose, reminderSound, reminderTime, remindersEnabled, resetForm, science, setShowTimePicker, template, updateHabit, fullHabitName]);
 

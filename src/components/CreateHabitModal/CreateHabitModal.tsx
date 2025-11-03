@@ -10,13 +10,17 @@ import { TemplateBrowser } from './components/TemplateBrowser';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
 import { HabitPreview } from './components/HabitPreview';
 import { HabitNameField } from './components/HabitNameField';
+import { NameSuggestions } from './components/NameSuggestions';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
+import useHapticFeedback from '../../hooks/useHapticFeedback';
+import { StickyCreateBar } from './components/StickyCreateBar';
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
+  const { triggerSelection } = useHapticFeedback();
 
   return (
     <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
@@ -33,8 +37,20 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             onScroll={template.handleMainScroll}
           >
             <TemplateBrowser isEditMode={isEditMode} template={template} onViewScience={science.open} />
-            <HabitPreview habitName={form.habitName} selectedEmoji={form.selectedEmoji} selectedColor={form.selectedColor} />
+            <HabitPreview
+              habitName={form.habitName}
+              selectedEmoji={form.selectedEmoji}
+              selectedColor={form.selectedColor}
+              frequencyLabel={form.frequency}
+            />
             <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
+            <NameSuggestions
+              query={form.habitName}
+              onPick={(emoji, name) => {
+                form.setHabitName(name);
+                form.setSelectedEmoji(emoji);
+              }}
+            />
             <EmojiPicker emojis={EMOJIS} selectedEmoji={form.selectedEmoji} onSelect={form.setSelectedEmoji} />
             <ColorPickerSection
               colors={COLORS}
@@ -48,12 +64,17 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               reminderTime={form.reminderTime}
               onTimePress={() => form.setShowTimePicker(true)}
               reminderSound={form.reminderSound}
+              onQuickTimeSelect={form.setReminderTime}
             />
           </ScrollView>
           <TemplateReminderPrompt
             visible={template.shouldShowTemplateReminder}
             bottomOffset={template.reminderBottomOffset}
             onPress={template.handleReminderPress}
+          />
+          <StickyCreateBar
+            disabled={!form.habitName.trim().length}
+            onPress={handleCreate}
           />
           {form.showTimePicker && (
             <DateTimePicker
@@ -63,7 +84,10 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               value={form.reminderTime}
               onChange={(_event, selected) => {
                 form.setShowTimePicker(false);
-                if (selected) form.setReminderTime(selected);
+                if (selected) {
+                  triggerSelection();
+                  form.setReminderTime(selected);
+                }
               }}
             />
           )}
