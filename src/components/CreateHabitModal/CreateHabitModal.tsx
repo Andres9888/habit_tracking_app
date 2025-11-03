@@ -18,6 +18,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
+  cancelHabitReminder,
   ensureNotificationPermissions,
   formatReminderTime,
   getDefaultReminderTime,
@@ -258,12 +259,14 @@ export default function CreateHabitModal({
 
       if (enableReminders) {
         await scheduleHabitReminder({
-          habitId: habitToEdit._id,
+          habitId: String(habitToEdit._id),
           title: fullName,
           body: 'Time to check in on your habit progress!',
           reminderTime,
           skipPermissionCheck: true,
         });
+      } else {
+        await cancelHabitReminder(String(habitToEdit._id));
       }
     } else {
       // Create new habit
@@ -277,7 +280,7 @@ export default function CreateHabitModal({
 
       if (enableReminders && habitId) {
         await scheduleHabitReminder({
-          habitId,
+          habitId: String(habitId),
           title: fullName,
           body: 'Time to check in on your habit progress!',
           reminderTime,
