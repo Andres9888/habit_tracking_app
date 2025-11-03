@@ -33,9 +33,11 @@ export interface HabitSettings {
   showConsistency: boolean;
   showEmojis: boolean;
   showMotivationalMessages: boolean;
+  showWeekCompletionBar: boolean;
   showNotesStats: boolean;
   showStreaks: boolean;
   useDyslexicFont: boolean;
 }
 
 export type HabitSettingsUpdate = HabitSettings;
+export type SettingsDocument = HabitSettings;

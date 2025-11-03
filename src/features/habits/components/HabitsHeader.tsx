@@ -20,6 +20,7 @@ interface HabitsHeaderProps {
   openTemplatesScreen: () => void;
   completedToday?: number;
   totalHabits?: number;
+  showCompletionSummary?: boolean;
 }
 
 export function HabitsHeader({
@@ -28,6 +29,7 @@ export function HabitsHeader({
   openTemplatesScreen,
   completedToday = 0,
   totalHabits = 0,
+  showCompletionSummary = true,
 }: HabitsHeaderProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
   const { dismissTooltip, showTooltip } = useTemplateTooltip();
@@ -187,7 +189,7 @@ export function HabitsHeader({
       </View>
 
       {/* Today's Completion Indicator */}
-      {totalHabits > 0 && (
+      {showCompletionSummary && totalHabits > 0 && (
         <View
           accessibilityRole='text'
           accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}

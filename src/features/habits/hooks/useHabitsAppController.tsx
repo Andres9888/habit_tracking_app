@@ -291,6 +291,7 @@ export function useHabitsAppController(): HabitsAppController {
         showConsistency: settings.showConsistency,
         showEmojis: settings.showEmojis,
         showMotivationalMessages: settings.showMotivationalMessages,
+        showWeekCompletionBar: settings.showWeekCompletionBar,
         showNotesStats: settings.showNotesStats,
         showStreaks: settings.showStreaks,
         appIcon: settings.appIcon,

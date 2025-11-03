@@ -83,6 +83,10 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onChangeShowHabitStrengthPercentage={(value) =>
           setShowHabitStrengthPercentage(value)
         }
+        showWeekCompletionBar={settings?.showWeekCompletionBar ?? true}
+        onChangeShowWeekCompletionBar={(value) =>
+          onSettingsChange({ showWeekCompletionBar: value })
+        }
         showNotesStats={settings?.showNotesStats ?? true}
         onChangeShowNotesStats={(value) =>
           onSettingsChange({ showNotesStats: value })

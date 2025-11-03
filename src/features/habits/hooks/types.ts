@@ -17,6 +17,7 @@ export interface HabitsListState {
   weekDateStrings: string[];
   canNavigateForward: boolean;
   showHabitStrengthPercentage: boolean;
+  showWeekCompletionBar: boolean;
   contentPadding: { paddingHorizontal: number; paddingTop: number; paddingBottom: number };
   dismissRewardToast: () => void;
   habitSlotsUsed: number;

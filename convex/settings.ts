@@ -26,6 +26,7 @@ const DEFAULT_SETTINGS = {
   showEmojis: true,
 
   showMotivationalMessages: true,
+  showWeekCompletionBar: true,
   showNotesStats: true,
   showStreaks: true,
   useDyslexicFont: false,
@@ -72,6 +73,9 @@ export const get = query({
       showMotivationalMessages:
         settings?.showMotivationalMessages ??
         DEFAULT_SETTINGS.showMotivationalMessages,
+      showWeekCompletionBar:
+        settings?.showWeekCompletionBar ??
+        DEFAULT_SETTINGS.showWeekCompletionBar,
       showNotesStats:
         settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
@@ -95,6 +99,7 @@ export const get = query({
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
+    showWeekCompletionBar: v.boolean(),
     showNotesStats: v.boolean(),
     showStreaks: v.boolean(),
     useDyslexicFont: v.boolean(),
@@ -119,6 +124,7 @@ export const update = mutation({
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
     showMotivationalMessages: v.boolean(),
+    showWeekCompletionBar: v.optional(v.boolean()),
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
     useDyslexicFont: v.optional(v.boolean()),

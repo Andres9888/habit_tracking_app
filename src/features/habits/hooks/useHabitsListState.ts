@@ -26,6 +26,7 @@ export function useHabitsListState(): HabitsListState {
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
+  const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
 
   const FREE_HABIT_LIMIT = 3;
   const habitSlotsUsed = isPremiumUser
@@ -110,6 +111,7 @@ export function useHabitsListState(): HabitsListState {
     weekDateStrings,
     canNavigateForward,
     showHabitStrengthPercentage,
+    showWeekCompletionBar,
     contentPadding: { paddingHorizontal: 24, paddingTop: 0, paddingBottom: 96 },
     dismissRewardToast,
     handleDragEnd,

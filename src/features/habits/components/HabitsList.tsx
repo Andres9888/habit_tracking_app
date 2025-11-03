@@ -387,6 +387,7 @@ export function HabitsList({
     hasReachedHabitLimit,
     weekDateStrings,
     showHabitStrengthPercentage,
+    showWeekCompletionBar,
     contentPadding,
     handleDragEnd,
     handleArchive,
@@ -450,6 +451,7 @@ export function HabitsList({
             openCreateHabitScreen={handleAddHabitPress}
             openSettings={openSettings}
             openTemplatesScreen={openTemplatesScreen}
+            showCompletionSummary={showWeekCompletionBar}
             totalHabits={totalHabits}
           />
 
@@ -485,6 +487,7 @@ export function HabitsList({
       onUpgradeIntent,
       openSettings,
       openTemplatesScreen,
+      showWeekCompletionBar,
       canNavigateForward,
       weekDates,
       onNextWeek,

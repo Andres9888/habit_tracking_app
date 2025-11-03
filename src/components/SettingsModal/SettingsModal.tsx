@@ -1,21 +1,15 @@
-import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import {
-  Bell,
   BookOpen,
   Check,
   ChevronLeft,
-  Contrast,
-  HelpCircle,
   Moon,
-  PartyPopper,
   Send,
   Smartphone,
-  Zap,
 } from 'lucide-react-native';
+import { useState } from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
-import PausedHabitsModal from '../PausedHabitsModal';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
@@ -33,6 +27,8 @@ interface SettingsModalProps {
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
   ) => void | Promise<void>;
+  showWeekCompletionBar?: boolean;
+  onChangeShowWeekCompletionBar?: (value: boolean) => void | Promise<void>;
   showNotesStats?: boolean;
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
@@ -50,6 +46,8 @@ export default function SettingsModal({
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
   onChangeShowHabitStrengthPercentage = () => {},
+  showWeekCompletionBar = true,
+  onChangeShowWeekCompletionBar = () => {},
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
   isHighContrastActive = false,
@@ -70,6 +68,17 @@ export default function SettingsModal({
   } = useSettingsModalLogic({ onClose, visible });
 
   const [isDarkModeOptionsOpen, setIsDarkModeOptionsOpen] = useState(false);
+
+  const darkModeLabels = {
+    system: 'Match System',
+    light: 'Light Mode',
+    dark: 'Dark Mode',
+  } as const;
+
+  const handleSelectDarkMode = (value: 'system' | 'light' | 'dark') => {
+    setDarkModePreference(value);
+    setIsDarkModeOptionsOpen(false);
+  };
 
   const colors = isHighContrastActive
     ? {
@@ -97,23 +106,6 @@ export default function SettingsModal({
         versionText: '#6b7280',
       };
 
-  useEffect(() => {
-    if (!visible) {
-      setIsDarkModeOptionsOpen(false);
-    }
-  }, [visible]);
-
-  const darkModeLabels: Record<typeof darkModePreference, string> = {
-    dark: 'Dark Mode',
-    light: 'Light Mode',
-    system: 'Match System',
-  };
-
-  const handleSelectDarkMode = async (value: typeof darkModePreference) => {
-    await setDarkModePreference(value);
-    setIsDarkModeOptionsOpen(false);
-  };
-
   if (!visible) return null;
 
   if (view === 'archived') {
@@ -124,21 +116,6 @@ export default function SettingsModal({
         onRequestClose={handleClose}
       >
         <ArchivedHabitsModal
-          onBack={() => setView('settings')}
-          onClose={handleClose}
-        />
-      </Modal>
-    );
-  }
-
-  if (view === 'paused') {
-    return (
-      <Modal
-        animationType='slide'
-        visible={visible}
-        onRequestClose={handleClose}
-      >
-        <PausedHabitsModal
           onBack={() => setView('settings')}
           onClose={handleClose}
         />
@@ -281,15 +258,6 @@ export default function SettingsModal({
               title='Habit Management'
             >
               <SettingsRow
-                showBorder
-                highContrastMode={isHighContrastActive}
-                icon={<BookOpen color='#8b5cf6' size={16} />}
-                iconBackgroundColor='#ddd6fe'
-                label='Paused Habits'
-                type='navigation'
-                onPress={() => setView('paused')}
-              />
-              <SettingsRow
                 highContrastMode={isHighContrastActive}
                 icon={<BookOpen color='#64748b' size={16} />}
                 iconBackgroundColor='#e2e8f0'
@@ -300,88 +268,11 @@ export default function SettingsModal({
               />
             </SettingsSection>
 
-            {/* Notifications */}
+            {/* Contact */}
             <SettingsSection
               highContrastMode={isHighContrastActive}
-              title='Notifications'
+              title='Contact'
             >
-              <SettingsRow
-                highContrastMode={isHighContrastActive}
-                icon={<Bell color='#eab308' size={16} />}
-                iconBackgroundColor='#fef08a'
-                label='Manage Reminders'
-                showBorder={false}
-                type='navigation'
-                onPress={() => {
-                  // TODO: Navigate to reminders management
-                  console.log('Navigate to reminders management');
-                }}
-              />
-            </SettingsSection>
-
-          {/* Celebrations & Feedback */}
-          <SettingsSection
-            highContrastMode={isHighContrastActive}
-            title='Celebrations & Feedback'
-          >
-            <SettingsRow
-              highContrastMode={isHighContrastActive}
-              icon={<PartyPopper color='#22c55e' size={16} />}
-              iconBackgroundColor='#bbf7d0'
-              label='Celebration Animations'
-              type='toggle'
-              value={celebrationsEnabled}
-              onToggle={(value) => {
-                void onChangeCelebrationsEnabled?.(value);
-              }}
-            />
-            <SettingsRow
-              highContrastMode={isHighContrastActive}
-              icon={<Zap color='#22c55e' size={16} />}
-              iconBackgroundColor='#bbf7d0'
-              label='Reduce Motion'
-              showBorder={false}
-              type='toggle'
-              value={reduceMotion}
-              onToggle={setReduceMotion}
-            />
-          </SettingsSection>
-
-            {/* Diagnostics */}
-            <SettingsSection
-              highContrastMode={isHighContrastActive}
-              title='Diagnostics'
-            >
-              <SettingsRow
-                highContrastMode={isHighContrastActive}
-                icon={<Zap color='#22c55e' size={16} />}
-                iconBackgroundColor='#bbf7d0'
-                label='Haptic Test'
-                showBorder={false}
-                type='navigation'
-                onPress={() => {
-                  onOpenHapticTest?.();
-                }}
-              />
-            </SettingsSection>
-
-            {/* Support */}
-            <SettingsSection
-              highContrastMode={isHighContrastActive}
-              title='Support'
-            >
-              <SettingsRow
-                showBorder
-                highContrastMode={isHighContrastActive}
-                icon={<HelpCircle color='#6b7280' size={16} />}
-                iconBackgroundColor='#e5e7eb'
-                label='Help & FAQ'
-                type='navigation'
-                onPress={() => {
-                  // TODO: Navigate to help & FAQ
-                  console.log('Navigate to help & FAQ');
-                }}
-              />
               <SettingsRow
                 highContrastMode={isHighContrastActive}
                 icon={<Send color='#6b7280' size={16} />}

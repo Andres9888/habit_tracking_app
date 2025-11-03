@@ -199,6 +199,8 @@ const applicationTables = {
 
     showMotivationalMessages: v.boolean(),
 
+    showWeekCompletionBar: v.optional(v.boolean()),
+
     showNotesStats: v.optional(v.boolean()),
     showStreaks: v.boolean(),
     textSize: v.optional(v.string()),
