@@ -785,6 +785,291 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Temperature regulation for sleep',
     });
 
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Perform 90-minute focused work blocks aligned with ultradian rhythms. Maximize cognitive performance and creativity.',
+      frequency: 'daily',
+      icon: '🧠',
+      iconColor: '#7C3AED',
+      name: 'Ultradian Focus Cycles',
+      popularityScore: 88,
+      scientificLink: 'https://hubermanlab.com/maximizing-productivity-and-focus/',
+      scientificReference:
+        'Huberman Lab (2021) - Ultradian rhythms for peak performance',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'View afternoon/evening sunlight for 5-10 minutes to anchor circadian timing. Protects against light sensitivity at night.',
+      frequency: 'daily',
+      icon: '🌇',
+      iconColor: '#F97316',
+      name: 'Evening Sunlight Viewing',
+      popularityScore: 82,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Afternoon light exposure protocols',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Perform 5-10 minutes of panoramic vision (distant gaze) after focused work. Reduces eye strain and activates parasympathetic nervous system.',
+      frequency: 'daily',
+      icon: '👁️',
+      iconColor: '#0EA5E9',
+      name: 'Panoramic Vision Practice',
+      popularityScore: 81,
+      scientificLink: 'https://hubermanlab.com/how-to-improve-your-vision/',
+      scientificReference:
+        'Huberman Lab (2022) - Vision and stress regulation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Do resistance training in the afternoon/evening. Aligns with natural circadian peak in body temperature and strength.',
+      frequency: 'weekly',
+      icon: '🏋️',
+      iconColor: '#DC2626',
+      name: 'Afternoon Strength Training',
+      popularityScore: 86,
+      scientificLink: 'https://hubermanlab.com/optimize-your-training-program/',
+      scientificReference:
+        'Huberman Lab (2022) - Circadian timing for strength gains',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Perform high-intensity cardio in the morning. Increases adrenaline and dopamine for sustained alertness throughout day.',
+      frequency: 'weekly',
+      icon: '🏃‍♂️',
+      iconColor: '#F59E0B',
+      name: 'Morning HIIT Training',
+      popularityScore: 84,
+      scientificLink: 'https://hubermanlab.com/optimize-your-training-program/',
+      scientificReference:
+        'Huberman Lab (2022) - Morning cardio for energy optimization',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Take Omega-3 EPA (1-2g daily). Supports mood, focus, cardiovascular health, and reduces inflammation.',
+      frequency: 'daily',
+      icon: '💊',
+      iconColor: '#0284C7',
+      name: 'Omega-3 EPA Supplementation',
+      popularityScore: 90,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Essential supplementation protocols',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Take Magnesium Threonate or Bisglycinate (200-400mg) 30-60 minutes before sleep. Enhances sleep quality and depth.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#6366F1',
+      name: 'Evening Magnesium Protocol',
+      popularityScore: 87,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Magnesium for sleep optimization',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Expose eyes to bright light (ideally sunlight) to increase alertness. Activates melanopsin pathway for sustained focus.',
+      frequency: 'daily',
+      icon: '✨',
+      iconColor: '#FDE047',
+      name: 'Midday Light Exposure',
+      popularityScore: 79,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Light exposure throughout the day',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Practice 10-30 minute cyclic hyperventilation breathing (Wim Hof style). Increases adrenaline, reduces stress, boosts immune function.',
+      frequency: 'daily',
+      icon: '🌬️',
+      iconColor: '#38BDF8',
+      name: 'Cyclic Hyperventilation',
+      popularityScore: 83,
+      scientificLink: 'https://hubermanlab.com/breathwork-for-stress-management/',
+      scientificReference:
+        'Huberman Lab (2022) - Cyclic hyperventilation protocols',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Practice box breathing (4-4-4-4) for 5 minutes. Reduces stress, improves HRV, and enhances autonomic control.',
+      frequency: 'daily',
+      icon: '📦',
+      iconColor: '#10B981',
+      name: 'Box Breathing Protocol',
+      popularityScore: 85,
+      scientificLink: 'https://hubermanlab.com/breathwork-for-stress-management/',
+      scientificReference:
+        'Huberman Lab (2022) - Box breathing for stress regulation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Consume high-quality salt (1/4 - 1/2 tsp) in morning water. Supports neuron function, blood pressure, and mental clarity.',
+      frequency: 'daily',
+      icon: '🧂',
+      iconColor: '#F8F9FA',
+      name: 'Morning Salt Protocol',
+      popularityScore: 78,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Sodium intake for optimal performance',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Delay first meal by 1-3 hours after waking. Extends fasting benefits, increases alertness, and supports fat oxidation.',
+      frequency: 'daily',
+      icon: '⏳',
+      iconColor: '#EAB308',
+      name: 'Delay First Meal Protocol',
+      popularityScore: 86,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Fasting protocols for metabolic health',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Perform high-rep, brief exercise (jumping jacks, burpees) to increase body temperature. Enhances wakefulness and alertness.',
+      frequency: 'daily',
+      icon: '💥',
+      iconColor: '#EF4444',
+      name: 'Morning Movement Protocol',
+      popularityScore: 82,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Movement for circadian alignment',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'View red/orange light (sunset, candles) in evening. Supports natural melatonin rise without disrupting circadian timing.',
+      frequency: 'daily',
+      icon: '🕯️',
+      iconColor: '#FB923C',
+      name: 'Red Light Evening Protocol',
+      popularityScore: 80,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Red light for evening wind-down',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Avoid eating 2-3 hours before bedtime. Prevents blood sugar spikes and supports deeper sleep and growth hormone release.',
+      frequency: 'daily',
+      icon: '🚫',
+      iconColor: '#DC2626',
+      name: 'Evening Eating Cutoff',
+      popularityScore: 84,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Meal timing for sleep quality',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Practice reveri hypnosis for 10-20 minutes. Reduces stress, improves sleep, and supports behavioral change.',
+      frequency: 'daily',
+      icon: '🌀',
+      iconColor: '#8B5CF6',
+      name: 'Self-Directed Hypnosis',
+      popularityScore: 81,
+      scientificLink: 'https://hubermanlab.com/using-hypnosis-to-enhance-health/',
+      scientificReference:
+        'Huberman Lab (2021) - Hypnosis for stress and behavior change',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Spend 10-20 minutes in nature without phone. Reduces cortisol, improves mood, and enhances cognitive function.',
+      frequency: 'daily',
+      icon: '🌳',
+      iconColor: '#16A34A',
+      name: 'Nature Immersion Protocol',
+      popularityScore: 83,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Nature exposure for mental health',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Use nasal breathing during all exercise and rest. Increases oxygen efficiency, reduces stress, and improves performance.',
+      frequency: 'daily',
+      icon: '👃',
+      iconColor: '#0EA5E9',
+      name: 'Nasal Breathing Practice',
+      popularityScore: 80,
+      scientificLink: 'https://hubermanlab.com/breathwork-for-stress-management/',
+      scientificReference:
+        'Huberman Lab (2022) - Nasal breathing for optimization',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Limit caffeine to 100-400mg per day, consumed before 2pm. Optimizes alertness while protecting sleep quality.',
+      frequency: 'daily',
+      icon: '☕',
+      iconColor: '#92400E',
+      name: 'Caffeine Timing & Dosage',
+      popularityScore: 89,
+      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
+      scientificReference:
+        'Huberman Lab (2023) - Caffeine optimization protocols',
+    });
+
     // Social Habits Templates
     await ctx.db.insert('templates', {
       category: 'social',
@@ -870,7 +1155,7 @@ export const seedTemplates = mutation({
         'Hawkley & Cacioppo (2010) - Loneliness and health',
     });
 
-    return { message: '54 templates seeded successfully', success: true };
+    return { message: '74 templates seeded successfully', success: true };
   },
 });
 
