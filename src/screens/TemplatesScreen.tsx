@@ -180,6 +180,19 @@ export default function TemplatesScreen() {
     setShowBottomScrollShadow(false);
   }, [selectedCategory, filteredTemplates.length]);
 
+  // Compute Andrew Huberman banner props
+  const hubermanBannerData = useMemo(() => {
+    const hubermanTemplates = allTemplates?.filter(
+      (t) => t.category === 'andrew_huberman'
+    ) || [];
+    
+    return {
+      count: hubermanTemplates.length,
+      isSelected: selectedCategory === 'andrew_huberman',
+      shouldShow: hubermanTemplates.length > 0,
+    };
+  }, [allTemplates, selectedCategory]);
+
   // Render category filter chip
   const renderCategoryChip = useCallback(
     (category: CategoryFilter) => {
@@ -297,6 +310,39 @@ export default function TemplatesScreen() {
           Science-backed habits to get you started
         </Text>
       </View>
+
+      {/* Featured: Andrew Huberman Habits */}
+      {hubermanBannerData.shouldShow && (
+        <Pressable
+          accessible
+          accessibilityLabel="View all Andrew Huberman habits"
+          accessibilityRole="button"
+          style={[
+            styles.hubermanBanner,
+            {
+              backgroundColor: '#0F172A',
+              borderColor: hubermanBannerData.isSelected ? '#14B8A6' : '#1E293B',
+              borderWidth: hubermanBannerData.isSelected ? 2 : 1.5,
+            },
+          ]}
+          onPress={() => handleCategoryPress('andrew_huberman')}
+        >
+          <View style={styles.hubermanBannerContent}>
+            <View style={styles.hubermanBannerLeft}>
+              <Text style={styles.hubermanIcon}>🧠</Text>
+              <View style={styles.hubermanTextContainer}>
+                <Text style={styles.hubermanTitle}>
+                  Andrew Huberman Protocols
+                </Text>
+                <Text style={styles.hubermanSubtitle}>
+                  {hubermanBannerData.count} neuroscience-backed habits
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.hubermanArrow}>→</Text>
+          </View>
+        </Pressable>
+      )}
 
       {/* Category Filters */}
       {categories && categories.length > 0 && (
@@ -591,6 +637,52 @@ const styles = StyleSheet.create({
   },
   scrollHintText: {
     fontSize: 12,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  hubermanBanner: {
+    borderRadius: 16,
+    marginHorizontal: 20,
+    marginBottom: 16,
+    marginTop: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  hubermanBannerContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  hubermanBannerLeft: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flex: 1,
+    gap: 12,
+  },
+  hubermanIcon: {
+    fontSize: 24,
+  },
+  hubermanTextContainer: {
+    flex: 1,
+  },
+  hubermanTitle: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  hubermanSubtitle: {
+    color: '#94A3B8',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  hubermanArrow: {
+    color: '#14B8A6',
+    fontSize: 20,
     fontWeight: '600',
     marginLeft: 8,
   },
