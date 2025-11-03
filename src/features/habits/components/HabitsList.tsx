@@ -139,13 +139,13 @@ function MonetizationHero({
       style={{ backgroundColor: '#141b2f', shadowColor: '#0f172a', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.22, shadowRadius: 28, elevation: 12 }}
     >
       <View className='gap-2'>
-        <Text className='text-[12px] font-semibold uppercase tracking-[3px] text-[#a5b4fc]'>
+        <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#a5b4fc]'>
           Premium unlock
         </Text>
-        <Text className='text-[26px] font-semibold leading-[32px] text-white'>
+        <Text className='text-[26px] font-bold leading-[32px] tracking-tight text-white'>
           Unlock unlimited habits
         </Text>
-        <Text className='text-[15px] leading-[22px] text-[#cbd5f5]'>
+        <Text className='text-[15px] font-normal leading-[22px] text-[#cbd5f5]'>
           Build every routine, stay accountable, and let smart insights guide your momentum.
         </Text>
       </View>
@@ -165,7 +165,7 @@ function MonetizationHero({
             elevation: 6,
           }}
         >
-          <Text className='text-[15px] font-semibold leading-[20px] text-white'>
+          <Text className='text-[15px] font-bold leading-[20px] tracking-wide text-white'>
             Upgrade now
           </Text>
         </AnimatedPressable>
@@ -181,10 +181,10 @@ function MonetizationHero({
 
       <View className='gap-2 pt-2'>
         <View className='flex-row items-center justify-between'>
-          <Text className='text-[12px] font-semibold uppercase tracking-[1px] text-[#94a3b8]'>
+          <Text className='text-[11px] font-bold uppercase tracking-[1px] text-[#94a3b8]'>
             Habit slots used
           </Text>
-          <Text className='text-[12px] font-semibold text-white'>
+          <Text className='text-[13px] font-bold tabular-nums text-white'>
             {habitSlotsUsed}/{freeHabitLimit}
           </Text>
         </View>
@@ -212,7 +212,7 @@ function MonetizationHero({
 function PremiumBenefitsRow() {
   return (
     <View className='gap-4 rounded-3xl border border-[#e0e7ff] bg-white p-5 shadow-[0px_16px_44px_rgba(15,23,42,0.08)]'>
-      <Text className='text-[12px] font-semibold uppercase tracking-[3px] text-[#4f46e5]'>
+      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#4f46e5]'>
         Why members upgrade
       </Text>
       <View className='gap-3'>
@@ -234,10 +234,10 @@ function PremiumBenefitsRow() {
 function SocialProofCard() {
   return (
     <View className='gap-3 rounded-3xl border border-[#e2e8f0] bg-[#f8fafc] p-5'>
-      <Text className='text-[12px] font-semibold uppercase tracking-[3px] text-[#0f172a]'>
+      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#0f172a]'>
         Proven momentum
       </Text>
-      <Text className='text-[14px] leading-[22px] text-[#0f172a]'>
+      <Text className='text-[14px] font-normal leading-[22px] text-[#0f172a]'>
         "{SOCIAL_PROOF.quote}"
       </Text>
       <Text className='text-[13px] font-semibold text-[#475569]'>
