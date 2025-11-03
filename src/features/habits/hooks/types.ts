@@ -9,14 +9,17 @@ export interface LastUpdatedHabit {
 
 export interface HabitsListState {
   celebrationsEnabled: boolean;
+  freeHabitLimit: number;
   habits: Habit[];
   isHabitsLoading: boolean;
+  hasReachedHabitLimit: boolean;
   weekDates: Date[];
   weekDateStrings: string[];
   canNavigateForward: boolean;
   showHabitStrengthPercentage: boolean;
   contentPadding: { paddingHorizontal: number; paddingTop: number; paddingBottom: number };
   dismissRewardToast: () => void;
+  habitSlotsUsed: number;
   handleDragEnd: (event: { data: Habit[] }) => Promise<void>;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
   handleHabitPress: (habit: Habit) => void;
@@ -29,6 +32,7 @@ export interface HabitsListState {
   reduceMotionPreference: boolean;
   rewardToast: RewardToastData | null;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
+  isPremiumUser: boolean;
 }
 
 export interface HabitsModalsState {

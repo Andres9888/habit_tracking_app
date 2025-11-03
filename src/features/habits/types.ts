@@ -24,6 +24,7 @@ export interface RewardToastData {
 export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;
+  hasPremium: boolean;
   darkMode: 'system' | 'light' | 'dark';
   highContrastMode: boolean;
   reduceMotion: boolean;

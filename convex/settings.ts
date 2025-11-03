@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
 
   catTheme: true,
+  hasPremium: false,
 
   darkMode: 'system' as DarkModePreference,
 
@@ -57,6 +58,7 @@ export const get = query({
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       darkMode: normalizeDarkMode(settings?.darkMode),
+      hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
       reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
@@ -80,6 +82,7 @@ export const get = query({
   returns: v.object({
     appIcon: v.string(),
     catTheme: v.boolean(),
+    hasPremium: v.boolean(),
     darkMode: v.union(
       v.literal('system'),
       v.literal('light'),
@@ -102,6 +105,7 @@ export const update = mutation({
   args: {
     appIcon: v.optional(v.string()),
     catTheme: v.boolean(),
+    hasPremium: v.optional(v.boolean()),
     darkMode: v.union(
       v.literal('system'),
       v.literal('light'),

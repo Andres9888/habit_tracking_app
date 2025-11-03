@@ -1,13 +1,13 @@
 import { Plus } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 interface HabitsEmptyStateProps {
   isLoading: boolean;
   openCreateHabitScreen: () => void;
+  openTemplatesScreen?: () => void;
 }
 
-export function HabitsEmptyState({ isLoading, openCreateHabitScreen }: HabitsEmptyStateProps) {
+export function HabitsEmptyState({ isLoading, openCreateHabitScreen, openTemplatesScreen }: HabitsEmptyStateProps) {
   if (isLoading) {
     return (
       <View className='items-center justify-center gap-3 py-20'>
@@ -20,53 +20,44 @@ export function HabitsEmptyState({ isLoading, openCreateHabitScreen }: HabitsEmp
   }
 
   return (
-    <View className='items-center justify-center gap-5 px-8 py-32'>
-      {/* Premium illustration placeholder */}
-      <View className='mb-2 h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-orange-50' style={{ backgroundColor: '#dbeafe' }}>
-        <Text className='text-5xl'>✨</Text>
-      </View>
-
-      <View className='gap-2'>
-        <Text className='text-center text-[20px] font-bold leading-[28px] text-[#101727]'>
-          Start Building Better Habits
+    <View className='items-center justify-center gap-6 py-24'>
+      <View className='items-center gap-4'>
+        <Text className='text-center text-[22px] font-semibold text-[#101727]'>
+          Create your first habit
         </Text>
-        <Text className='text-center text-[15px] leading-[22px] text-[#6b7280]'>
-          Create your first habit in 30 seconds.{'\n'}
-          Track progress, build streaks, achieve goals.
+        <Text className='text-center text-[14px] leading-[20px] text-[#6b7280]'>
+          Capture the routines that matter and start your momentum.
         </Text>
       </View>
 
-      {/* Premium gradient CTA */}
       <Pressable
-        accessibilityHint='Open create habit modal'
-        accessibilityLabel='Create your first habit'
+        accessibilityHint='Add your first habit'
+        accessibilityLabel='Add habit'
         accessibilityRole='button'
         onPress={openCreateHabitScreen}
       >
-        <LinearGradient
-          colors={['#2563eb', '#7c3aed']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className='h-12 flex-row items-center gap-2 rounded-full px-6'
-          style={{
-            shadowColor: '#2563eb',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
-            elevation: 6,
-          }}
+        <View
+          className='h-32 w-32 items-center justify-center rounded-3xl border-2 border-dashed'
+          style={{ borderColor: '#cbd5f5', backgroundColor: '#f8f9ff' }}
         >
-          <Plus color='#ffffff' size={20} strokeWidth={2.5} />
-          <Text className='text-[16px] font-semibold leading-[22px] tracking-tight text-white'>
-            Create First Habit
-          </Text>
-        </LinearGradient>
+          <View className='h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-[0px_12px_24px_rgba(99,102,241,0.15)]'>
+            <Plus color='#6d28d9' size={34} strokeWidth={2.5} />
+          </View>
+        </View>
       </Pressable>
 
-      {/* Value prop */}
-      <Text className='mt-2 text-center text-[13px] leading-[18px] text-[#9ca3af]'>
-        Join thousands building lasting habits
-      </Text>
+      {openTemplatesScreen && (
+        <Pressable
+          accessibilityHint='Explore expert-built habit templates'
+          accessibilityLabel='Browse templates'
+          accessibilityRole='button'
+          onPress={openTemplatesScreen}
+        >
+          <Text className='text-[14px] font-medium text-[#6366f1]'>
+            Browse templates instead →
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }

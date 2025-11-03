@@ -25,6 +25,13 @@ export function useHabitsListState(): HabitsListState {
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
   const reduceMotionPreference = settings?.reduceMotion ?? false;
+  const isPremiumUser = settings?.hasPremium ?? false;
+
+  const FREE_HABIT_LIMIT = 3;
+  const habitSlotsUsed = isPremiumUser
+    ? habits.length
+    : Math.min(habits.length, FREE_HABIT_LIMIT);
+  const hasReachedHabitLimit = !isPremiumUser && habits.length >= FREE_HABIT_LIMIT;
 
   const { today, weekDates, weekDateStrings, extendedDateStrings, canNavigateForward, handleNextWeek, handlePreviousWeek } = useHabitsWeekDates();
   const { getStreak, getHabitStatus } = useHabitsTracking(extendedDateStrings, today);
@@ -95,8 +102,10 @@ export function useHabitsListState(): HabitsListState {
 
   return {
     celebrationsEnabled,
+    freeHabitLimit: FREE_HABIT_LIMIT,
     habits,
     isHabitsLoading,
+    hasReachedHabitLimit,
     weekDates,
     weekDateStrings,
     canNavigateForward,
@@ -112,8 +121,10 @@ export function useHabitsListState(): HabitsListState {
     getHabitStatus,
     getStreak,
     notifyWeekCompletion,
+    habitSlotsUsed,
     reduceMotionPreference,
     rewardToast,
     toggleHabit,
+    isPremiumUser,
   };
 }

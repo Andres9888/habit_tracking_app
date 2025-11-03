@@ -183,6 +183,7 @@ const applicationTables = {
     ),
     // New settings from Figma design
     appIcon: v.optional(v.string()),
+    hasPremium: v.optional(v.boolean()),
 
     showCalendarView: v.boolean(),
 
