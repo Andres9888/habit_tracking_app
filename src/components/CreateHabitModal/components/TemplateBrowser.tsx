@@ -1,5 +1,5 @@
 import { Animated, View } from 'react-native';
-import type { CategoryFilter, HabitTemplate } from '../types';
+import type { HabitTemplate } from '../types';
 import { CategoryFilters } from './CategoryFilters';
 import { TemplateHero } from './TemplateHero';
 import { TemplateList } from './TemplateList';
@@ -12,7 +12,7 @@ interface TemplateBrowserProps {
     templateBrowserAnim: Animated.Value;
     templateBrowserTranslate: Animated.AnimatedInterpolation<number>;
     chevronRotation: Animated.AnimatedInterpolation<string>;
-    categories: CategoryFilter[];
+    categories: { id: string; label: string; icon: string }[];
     selectedCategory: string;
     handleCategoryPress: (category: string) => void;
     isLoadingTemplates: boolean;

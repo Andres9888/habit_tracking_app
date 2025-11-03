@@ -23,36 +23,46 @@ export const EmojiPicker = ({ emojis, selectedEmoji, onSelect }: EmojiPickerProp
         contentContainerClassName='gap-3'
         showsHorizontalScrollIndicator={false}
       >
-        <EmojiButton
-          emoji={null}
-          selected={selectedEmoji === null}
-          onSelect={onSelect}
-          triggerSelection={triggerSelection}
-        />
+        <AnimatedTouchable
+          accessibilityLabel='No icon'
+          accessibilityRole='button'
+          className='h-12 items-center justify-center rounded-xl bg-white px-3'
+          style={{ borderColor: '#1a1a1a', borderWidth: selectedEmoji === null ? 2 : 0 }}
+          onPress={() => {
+            triggerSelection();
+            onSelect(null);
+          }}
+        >
+          <Text className='text-xs font-medium text-[#8a8a8a]'>None</Text>
+        </AnimatedTouchable>
         {emojis.map((emoji) => (
-          <EmojiButton
+          <AnimatedTouchable
             key={emoji}
-            emoji={emoji}
-            selected={selectedEmoji === emoji}
-            onSelect={onSelect}
-            triggerSelection={triggerSelection}
-          />
+            accessibilityLabel={`Select ${emoji} icon`}
+            accessibilityRole='button'
+            className='h-12 w-12 items-center justify-center rounded-xl bg-white'
+            style={{ borderColor: '#1a1a1a', borderWidth: selectedEmoji === emoji ? 2 : 0 }}
+            onPress={() => {
+              triggerSelection();
+              onSelect(emoji);
+            }}
+          >
+            <Text className='text-2xl'>{emoji}</Text>
+          </AnimatedTouchable>
         ))}
       </ScrollView>
     </View>
   );
 };
 
-const EmojiButton = ({ emoji, selected, onSelect, triggerSelection }: { emoji: string | null; selected: boolean; onSelect: (emoji: string | null) => void; triggerSelection: () => void }) => {
+// Local helper adds press-in scale animation
+const AnimatedTouchable = ({ children, onPress, style, ...rest }: any) => {
   const scale = useRef(new Animated.Value(1)).current;
-
   return (
-    <Animated.View style={{ transform: [{ scale }] }}>
+    <Animated.View style={[{ transform: [{ scale }] }]}>
       <TouchableOpacity
-        accessibilityLabel={emoji ? `Select ${emoji} icon` : 'No icon'}
-        accessibilityRole='button'
-        className={`h-12 items-center justify-center rounded-xl bg-white ${emoji ? 'w-12' : 'px-3'}`}
-        style={{ borderColor: '#1a1a1a', borderWidth: selected ? 2 : 0 }}
+        {...rest}
+        style={style}
         onPressIn={() => {
           Animated.timing(scale, {
             duration: Motion.duration.fast,
@@ -69,16 +79,9 @@ const EmojiButton = ({ emoji, selected, onSelect, triggerSelection }: { emoji: s
             useNativeDriver: true,
           }).start();
         }}
-        onPress={() => {
-          triggerSelection();
-          onSelect(emoji);
-        }}
+        onPress={onPress}
       >
-        {emoji ? (
-          <Text className='text-2xl'>{emoji}</Text>
-        ) : (
-          <Text className='text-xs font-medium text-[#8a8a8a]'>None</Text>
-        )}
+        {children}
       </TouchableOpacity>
     </Animated.View>
   );

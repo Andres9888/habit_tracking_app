@@ -217,7 +217,7 @@ export default function SettingsModal({
                         onPress={() => handleSelectDarkMode(value)}
                       >
                         <Text
-                          className='text-[15px] font-normal'
+                          className='text-[15px] font-medium'
                           style={{ color: colors.headerText }}
                         >
                           {label}

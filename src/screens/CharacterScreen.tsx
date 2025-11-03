@@ -66,11 +66,11 @@ const AttributeCard = ({
               <View className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'>
                 {icon}
               </View>
-              <Text className='text-[16px] font-bold leading-6 text-[#101828]'>
+              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
                 {name}
               </Text>
             </View>
-            <Text className='text-[18px] font-extrabold leading-6 tabular-nums text-[#101828]'>
+            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
               {value}
             </Text>
           </View>
@@ -98,10 +98,10 @@ const StatCard = ({ emoji, value, label }: StatCardProps) => (
     entering={FadeInDown.duration(500)}
   >
     <Text className='text-2xl leading-8'>{emoji}</Text>
-    <Text className='text-[18px] font-extrabold leading-6 tabular-nums text-[#101828]'>
+    <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
       {value}
     </Text>
-    <Text className='text-center text-[11px] font-medium leading-4 text-[#6a7282]'>
+    <Text className='text-center text-xs font-normal leading-4 text-[#6a7282]'>
       {label}
     </Text>
   </Animated.View>
@@ -154,7 +154,7 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                 <ArrowLeft color='#101828' size={24} />
               </Pressable>
             )}
-            <Text className='text-[20px] font-bold leading-[26px] tracking-tight text-[#101828]'>
+            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
               Character
             </Text>
           </View>
@@ -185,7 +185,7 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                   </View>
                   <View className='flex-col'>
                     <View className='flex-row items-center gap-2'>
-                      <Text className='text-[18px] font-extrabold leading-6 tabular-nums text-[#101828]'>
+                      <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
                         Level {characterData.level}
                       </Text>
                       <Text className='text-lg'>✨</Text>
@@ -222,7 +222,7 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                   <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#4a5565]'>
                     Experience
                   </Text>
-                  <Text className='text-[15px] font-bold leading-5 tabular-nums text-[#101828]'>
+                  <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#101828]'>
                     {characterData.xp}/{characterData.xpToNextLevel} XP
                   </Text>
                 </View>
