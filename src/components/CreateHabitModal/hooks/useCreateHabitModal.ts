@@ -7,7 +7,7 @@ import {
   formatReminderTime,
   scheduleHabitReminder,
 } from '../../../utils/notifications';
-import { DEFAULT_EMOJI } from '../constants';
+import { DEFAULT_EMOJI, MIN_HABIT_NAME_LENGTH } from '../constants';
 import type { CreateHabitModalProps, HabitTemplate } from '../types';
 import { useHabitForm } from './useHabitForm';
 import { useScienceModal } from './useScienceModal';
@@ -18,7 +18,7 @@ const extractTemplateDetails = (template: HabitTemplate) => {
   const name = template.name.replace(/^\p{Emoji}\s*/u, '').trim();
   return { emoji, name };
 };
-export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHabitModalProps) => {
+export const useCreateHabitModal = ({ visible, onClose, habitToEdit, onSuccess }: CreateHabitModalProps) => {
   const isEditMode = !!habitToEdit;
   const form = useHabitForm({ habitToEdit });
   const { triggerSuccess } = useHapticFeedback();
@@ -70,13 +70,19 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
   ]);
   const handleCreate = useCallback(async () => {
     if (!habitName.trim() || !fullHabitName) return;
+    if (habitName.trim().length < MIN_HABIT_NAME_LENGTH) return;
 
     let hasReminders = remindersEnabled;
+    let formattedReminderTime: string | undefined;
     if (remindersEnabled) {
       const allowed = await ensureNotificationPermissions();
       hasReminders = allowed;
       if (!allowed)
         Alert.alert('Notifications Disabled', 'Enable notifications in your device settings to receive habit reminders.');
+    }
+
+    if (hasReminders) {
+      formattedReminderTime = formatReminderTime(reminderTime);
     }
 
     if (isEditMode && habitToEdit) {
@@ -86,7 +92,14 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
         notes: habitToEdit.notes ?? '',
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? reminderSound : undefined,
-        reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
+        reminderTime: formattedReminderTime,
+      });
+      onSuccess?.({
+        habitId: habitToEdit._id,
+        mode: 'update',
+        name: fullHabitName,
+        remindersEnabled: hasReminders,
+        reminderTime: formattedReminderTime,
       });
     } else {
       const habitId = await createHabit({
@@ -94,7 +107,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
         notes: '',
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? reminderSound : undefined,
-        reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
+        reminderTime: formattedReminderTime,
       });
       if (hasReminders && habitId) {
         await scheduleHabitReminder({
@@ -103,6 +116,15 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
           reminderTime,
           skipPermissionCheck: true,
           title: fullHabitName,
+        });
+      }
+      if (habitId) {
+        onSuccess?.({
+          habitId,
+          mode: 'create',
+          name: fullHabitName,
+          remindersEnabled: hasReminders,
+          reminderTime: formattedReminderTime,
         });
       }
     }
@@ -115,7 +137,23 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
     science.close();
     triggerSuccess();
     onClose();
-  }, [createHabit, closeColorPicker, habitToEdit, isEditMode, onClose, reminderSound, reminderTime, remindersEnabled, resetForm, science, setShowTimePicker, template, updateHabit, fullHabitName]);
+  }, [
+    createHabit,
+    closeColorPicker,
+    habitToEdit,
+    isEditMode,
+    onClose,
+    onSuccess,
+    reminderSound,
+    reminderTime,
+    remindersEnabled,
+    resetForm,
+    science,
+    setShowTimePicker,
+    template,
+    updateHabit,
+    fullHabitName,
+  ]);
 
   return { isEditMode, form, template, science, handleCreate };
 };

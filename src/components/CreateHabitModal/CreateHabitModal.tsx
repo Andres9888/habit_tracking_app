@@ -1,8 +1,11 @@
+import { useCallback, useMemo } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useQuery } from 'convex/react';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
-import { COLORS, EMOJIS } from './constants';
+import { COLORS, EMOJIS, MAX_HABIT_NAME_LENGTH, MIN_HABIT_NAME_LENGTH } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
@@ -16,17 +19,56 @@ import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
+import { api } from '../../../convex/_generated/api';
+import { parseHabitName } from './utils';
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
-  const { triggerSelection } = useHapticFeedback();
+  const { triggerSelection, triggerWarning } = useHapticFeedback();
+  const insets = useSafeAreaInsets();
+  const habits = useQuery(api.habits.list) ?? [];
+
+  const trimmedName = form.habitName.trim();
+  const normalizedName = trimmedName.toLowerCase();
+  const editingHabitId = props.habitToEdit?._id;
+
+  const isDuplicateName = useMemo(() => {
+    if (!trimmedName) return false;
+    return habits.some((habit) => {
+      if (editingHabitId && habit._id === editingHabitId) {
+        return false;
+      }
+      const parsed = parseHabitName(habit.name);
+      return parsed.name.trim().toLowerCase() === normalizedName;
+    });
+  }, [habits, editingHabitId, normalizedName, trimmedName]);
+
+  const isNameTooShort =
+    trimmedName.length > 0 && trimmedName.length < MIN_HABIT_NAME_LENGTH;
+  const canSubmit = trimmedName.length >= MIN_HABIT_NAME_LENGTH && !isDuplicateName;
+
+  const handleAttemptCreate = useCallback(() => {
+    if (!canSubmit) {
+      triggerWarning();
+      return;
+    }
+    handleCreate();
+  }, [canSubmit, handleCreate, triggerWarning]);
 
   return (
     <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
       <View className='flex-1 bg-black/50'>
-        <View className='mt-12 flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'>
-          <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
+        <View
+          className='flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'
+          style={{ marginTop: Math.max(insets.top + 16, 48) }}
+        >
+          <ModalHeader
+            isEditMode={isEditMode}
+            canSave={canSubmit}
+            onClose={onClose}
+            onSave={handleAttemptCreate}
+          />
           <ScrollView
             ref={template.scrollViewRef}
             className='flex-1 px-4'
@@ -43,7 +85,14 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               selectedColor={form.selectedColor}
               frequencyLabel={form.frequency}
             />
-            <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
+            <HabitNameField
+              value={form.habitName}
+              onChange={form.setHabitName}
+              autoFocus={visible && !isEditMode}
+              maxLength={MAX_HABIT_NAME_LENGTH}
+              isDuplicate={isDuplicateName}
+              isTooShort={isNameTooShort}
+            />
             <NameSuggestions
               query={form.habitName}
               onPick={(emoji, name) => {
@@ -72,10 +121,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             bottomOffset={template.reminderBottomOffset}
             onPress={template.handleReminderPress}
           />
-          <StickyCreateBar
-            disabled={!form.habitName.trim().length}
-            onPress={handleCreate}
-          />
+          <StickyCreateBar disabled={!canSubmit} onPress={handleAttemptCreate} />
           {form.showTimePicker && (
             <DateTimePicker
               display='spinner'

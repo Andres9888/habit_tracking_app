@@ -4,6 +4,8 @@ export const STRINGS = {
     nameLabel: 'Habit name',
     namePlaceholder: 'e.g., Read 10 minutes',
     nameHelper: 'Tip: Be specific — time, trigger, place.',
+    nameTooShort: 'Add a little more detail so it’s easy to remember.',
+    nameDuplicateWarning: 'You already track this habit — tweak the name to keep it unique.',
     iconLabel: 'Icon',
     colorLabel: 'Color',
     customColor: 'Custom color',
