@@ -53,8 +53,55 @@ const SUGGESTIONS: { emoji: string | null; name: string; color: string }[] = [
   { emoji: '🌱', name: 'Tend to plants', color: '#22c55e' },
 ];
 
-export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
+// Separate component to fix Rules of Hooks
+interface SuggestionChipProps {
+  emoji: string | null;
+  name: string;
+  color: string;
+  onPick: (emoji: string | null, name: string, color: string) => void;
+}
+
+const SuggestionChip = ({ emoji, name, color, onPick }: SuggestionChipProps) => {
+  const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
+
+  return (
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <Pressable
+        accessibilityRole='button'
+        accessibilityLabel={`Use template ${name}`}
+        className='flex-row items-center rounded-full bg-white px-3 py-2'
+        style={{ borderColor: '#cbd5e1', borderWidth: 1 }}
+        onPressIn={() => {
+          Animated.timing(scale, {
+            duration: Motion.duration.fast,
+            easing: Motion.easing.inEase,
+            toValue: 0.96,
+            useNativeDriver: true,
+          }).start();
+        }}
+        onPressOut={() => {
+          Animated.timing(scale, {
+            duration: Motion.duration.base,
+            easing: Motion.easing.outEase,
+            toValue: 1,
+            useNativeDriver: true,
+          }).start();
+        }}
+        onPress={() => {
+          triggerSelection();
+          onPick(emoji, name, color);
+        }}
+      >
+        {emoji && <Text className='mr-2 text-base'>{emoji}</Text>}
+        <Text className='text-sm font-medium text-[#0f172a]'>{name}</Text>
+        <Text className='ml-1 text-xs'>✨</Text>
+      </Pressable>
+    </Animated.View>
+  );
+};
+
+export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const items = useMemo(() => {
@@ -83,43 +130,15 @@ export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
         </ScrollView>
       ) : (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName='gap-2'>
-          {items.map(({ emoji, name, color }) => {
-          const scale = useRef(new Animated.Value(1)).current;
-          return (
-            <Animated.View key={`${emoji ?? 'none'}-${name}`} style={{ transform: [{ scale }] }}>
-              <Pressable
-                accessibilityRole='button'
-                accessibilityLabel={`Use template ${name}`}
-                className='flex-row items-center rounded-full bg-white px-3 py-2'
-                style={{ borderColor: '#cbd5e1', borderWidth: 1 }}
-                onPressIn={() => {
-                  Animated.timing(scale, {
-                    duration: Motion.duration.fast,
-                    easing: Motion.easing.inEase,
-                    toValue: 0.96,
-                    useNativeDriver: true,
-                  }).start();
-                }}
-                onPressOut={() => {
-                  Animated.timing(scale, {
-                    duration: Motion.duration.base,
-                    easing: Motion.easing.outEase,
-                    toValue: 1,
-                    useNativeDriver: true,
-                  }).start();
-                }}
-                onPress={() => {
-                  triggerSelection();
-                  onPick(emoji, name, color);
-                }}
-              >
-                {emoji && <Text className='mr-2 text-base'>{emoji}</Text>}
-                <Text className='text-sm font-medium text-[#0f172a]'>{name}</Text>
-                <Text className='ml-1 text-xs'>✨</Text>
-              </Pressable>
-            </Animated.View>
-          );
-        })}
+          {items.map(({ emoji, name, color }) => (
+            <SuggestionChip
+              key={`${emoji ?? 'none'}-${name}`}
+              emoji={emoji}
+              name={name}
+              color={color}
+              onPick={onPick}
+            />
+          ))}
         </ScrollView>
       )}
     </View>
