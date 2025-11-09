@@ -8,7 +8,7 @@ import { useHabitRenderItem } from '../hooks/useHabitRenderItem';
 import { HabitsModalsState } from '../hooks/types';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { HabitsHeader } from './HabitsHeader';
-import { CalendarTimeline } from '../../../components/CalendarTimeline';
+import { CalendarTimelineOptionB as CalendarTimeline } from '../../../components/CalendarTimeline';
 
 const PREMIUM_BENEFITS = [
   {
@@ -459,6 +459,7 @@ export function HabitsList({
             showSeparator
             canNavigateForward={canNavigateForward}
             dates={weekDates}
+            reduceMotion={reduceMotionPreference}
             onNextWeek={onNextWeek}
             onPreviousWeek={onPreviousWeek}
           />
@@ -476,6 +477,8 @@ export function HabitsList({
       onPreviousWeek,
       habits,
       getHabitStatus,
+      isHabitsLoading,
+      reduceMotionPreference,
     ]
   );
 
