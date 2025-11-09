@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { HabitsList } from './components/HabitsList';
@@ -40,14 +40,27 @@ export function HabitsApp() {
   }, [openTemplatesScreen, triggerSelection]);
 
   const handleCreateHabitRequest = useCallback(() => {
+    // Check if user has reached the free limit (3 habits)
     if (!list.isPremiumUser && list.hasReachedHabitLimit) {
       triggerWarning();
-      handleUpgradeIntent();
+
+      // TODO: Integrate RevenueCat for subscription management
+      // Show toast notification for 4th habit creation attempt
+      Alert.alert(
+        'Upgrade to Premium',
+        'You\'ve reached the free limit of 3 habits. Upgrade to premium to track unlimited habits!',
+        [
+          { text: 'Maybe Later', style: 'cancel' },
+          { text: 'Upgrade', onPress: () => {
+            // TODO: Navigate to RevenueCat paywall
+            console.log('Navigate to RevenueCat paywall');
+          }}
+        ]
+      );
       return;
     }
     openCreateHabitScreen();
   }, [
-    handleUpgradeIntent,
     list.hasReachedHabitLimit,
     list.isPremiumUser,
     openCreateHabitScreen,

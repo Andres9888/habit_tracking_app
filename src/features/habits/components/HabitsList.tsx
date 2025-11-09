@@ -462,29 +462,11 @@ export function HabitsList({
             onNextWeek={onNextWeek}
             onPreviousWeek={onPreviousWeek}
           />
-          {!isPremiumUser && hasReachedHabitLimit && (
-            <View className='gap-4 pt-4'>
-              <MonetizationHero
-                freeHabitLimit={freeHabitLimit}
-                habitSlotsUsed={habitSlotsUsed}
-                hasReachedHabitLimit={hasReachedHabitLimit}
-                onUpgradePress={onUpgradeIntent}
-                reduceMotion={reduceMotionPreference}
-              />
-              <PremiumBenefitsRow />
-              <SocialProofCard />
-            </View>
-          )}
         </View>
       );
     },
     [
-      freeHabitLimit,
-      habitSlotsUsed,
-      hasReachedHabitLimit,
       handleAddHabitPress,
-      isPremiumUser,
-      onUpgradeIntent,
       openSettings,
       openTemplatesScreen,
       showWeekCompletionBar,
