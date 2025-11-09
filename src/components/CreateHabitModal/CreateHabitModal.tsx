@@ -14,6 +14,7 @@ import { NameSuggestions } from './components/NameSuggestions';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
+import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
 
@@ -43,29 +44,33 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               selectedColor={form.selectedColor}
               frequencyLabel={form.frequency}
             />
-            <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
             <NameSuggestions
               query={form.habitName}
-              onPick={(emoji, name) => {
+              onPick={(emoji, name, color) => {
                 form.setHabitName(name);
                 form.setSelectedEmoji(emoji);
+                if (color) form.setSelectedColor(color);
+                triggerSelection();
               }}
             />
-            <EmojiPicker emojis={EMOJIS} selectedEmoji={form.selectedEmoji} onSelect={form.setSelectedEmoji} />
-            <ColorPickerSection
-              colors={COLORS}
-              selectedColor={form.selectedColor}
-              onSelectColor={form.setSelectedColor}
-              onCustomPress={form.openColorPicker}
-            />
-            <ReminderSection
-              remindersEnabled={form.remindersEnabled}
-              onToggle={form.setRemindersEnabled}
-              reminderTime={form.reminderTime}
-              onTimePress={() => form.setShowTimePicker(true)}
-              reminderSound={form.reminderSound}
-              onQuickTimeSelect={form.setReminderTime}
-            />
+            <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
+            <CollapsibleAdvancedOptions>
+              <EmojiPicker emojis={EMOJIS} selectedEmoji={form.selectedEmoji} onSelect={form.setSelectedEmoji} />
+              <ColorPickerSection
+                colors={COLORS}
+                selectedColor={form.selectedColor}
+                onSelectColor={form.setSelectedColor}
+                onCustomPress={form.openColorPicker}
+              />
+              <ReminderSection
+                remindersEnabled={form.remindersEnabled}
+                onToggle={form.setRemindersEnabled}
+                reminderTime={form.reminderTime}
+                onTimePress={() => form.setShowTimePicker(true)}
+                reminderSound={form.reminderSound}
+                onQuickTimeSelect={form.setReminderTime}
+              />
+            </CollapsibleAdvancedOptions>
           </ScrollView>
           <TemplateReminderPrompt
             visible={template.shouldShowTemplateReminder}

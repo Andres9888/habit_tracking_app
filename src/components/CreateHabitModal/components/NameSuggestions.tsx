@@ -5,16 +5,16 @@ import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface NameSuggestionsProps {
   query: string;
-  onPick: (emoji: string | null, name: string) => void;
+  onPick: (emoji: string | null, name: string, color?: string) => void;
 }
 
-const SUGGESTIONS: { emoji: string | null; name: string }[] = [
-  { emoji: '💧', name: 'Drink water' },
-  { emoji: '📖', name: 'Read 10 minutes' },
-  { emoji: '🚶', name: 'Walk 15 minutes' },
-  { emoji: '🧘', name: 'Meditate 5 minutes' },
-  { emoji: '🍎', name: 'Eat a healthy snack' },
-  { emoji: '📝', name: 'Journal 3 lines' },
+const SUGGESTIONS: { emoji: string | null; name: string; color: string }[] = [
+  { emoji: '💧', name: 'Drink water', color: '#60a5fa' },
+  { emoji: '📖', name: 'Read 10 minutes', color: '#f59e0b' },
+  { emoji: '🚶', name: 'Walk 15 minutes', color: '#10b981' },
+  { emoji: '🧘', name: 'Meditate 5 minutes', color: '#a78bfa' },
+  { emoji: '🍎', name: 'Eat a healthy snack', color: '#ef4444' },
+  { emoji: '📝', name: 'Journal 3 lines', color: '#f97316' },
 ];
 
 export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
@@ -29,9 +29,9 @@ export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
 
   return (
     <View className='mb-6'>
-      <Text className='mb-2 text-xs font-semibold uppercase tracking-wide text-[#64748b]'>Quick templates</Text>
+      <Text className='mb-2 text-xs font-semibold uppercase tracking-wide text-[#64748b]'>💡 Tap to use</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName='gap-2'>
-        {items.map(({ emoji, name }) => {
+        {items.map(({ emoji, name, color }) => {
           const scale = useRef(new Animated.Value(1)).current;
           return (
             <Animated.View key={`${emoji ?? 'none'}-${name}`} style={{ transform: [{ scale }] }}>
@@ -58,11 +58,12 @@ export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
                 }}
                 onPress={() => {
                   triggerSelection();
-                  onPick(emoji, name);
+                  onPick(emoji, name, color);
                 }}
               >
                 {emoji && <Text className='mr-2 text-base'>{emoji}</Text>}
                 <Text className='text-sm font-medium text-[#0f172a]'>{name}</Text>
+                <Text className='ml-1 text-xs'>✨</Text>
               </Pressable>
             </Animated.View>
           );
