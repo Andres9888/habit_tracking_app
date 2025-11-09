@@ -6,12 +6,13 @@ import { X } from 'lucide-react-native';
 
 interface ModalHeaderProps {
   isEditMode: boolean;
+  habitName: string;
   onClose: () => void;
   onSave: () => void;
-  canSave: boolean;
 }
 
-export const ModalHeader = ({ isEditMode, onClose, onSave, canSave }: ModalHeaderProps) => {
+export const ModalHeader = ({ isEditMode, habitName, onClose, onSave }: ModalHeaderProps) => {
+  const canSave = habitName.trim().length > 0;
   const saveScale = useRef(new Animated.Value(1)).current;
   return (
     <View className='flex-row items-center justify-between px-4 pb-4 pt-4'>

@@ -11,13 +11,12 @@ import {
 import { addDays, format } from 'date-fns';
 import { Plus, Settings, Search, Bell, Wifi } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import {
   GestureHandlerRootView,
   ScrollView,
 } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { api } from './convex/_generated/api';
 import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
@@ -30,8 +29,6 @@ import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
 import { HapticTest } from './src/components/HapticTest';
-import CreateHabitModal from './src/components/CreateHabitModal';
-import { Toast } from './src/components/Toast';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -64,14 +61,14 @@ const tokenCache = {
 };
 
 function HabitsApp() {
-  const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newHabitName, setNewHabitName] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
   const [showHapticTest, setShowHapticTest] = useState(false);
-  const [createToastVisible, setCreateToastVisible] = useState(false);
-  const [createdHabitName, setCreatedHabitName] = useState('');
 
+  const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
@@ -156,23 +153,30 @@ function HabitsApp() {
     await setCompactMode(next);
   };
 
-  const handleToggleCreateHabit = useCallback(() => {
-    setIsCreateHabitOpen((prev) => !prev);
-  }, []);
+  const canSubmit = useMemo(
+    () => newHabitName.trim().length > 0,
+    [newHabitName]
+  );
 
-  const handleCloseCreateHabit = useCallback(() => {
-    setIsCreateHabitOpen(false);
-  }, []);
+  const handleToggleForm = () => {
+    setIsAdding((prev) => {
+      if (prev) {
+        setNewHabitName('');
+      }
+      return !prev;
+    });
+  };
 
-  const handleCreateHabitSuccess = useCallback(({ name }) => {
-    setCreatedHabitName(name);
-    setCreateToastVisible(true);
-    setIsCreateHabitOpen(false);
-  }, []);
+  const handleSubmit = async () => {
+    const name = newHabitName.trim();
+    if (!name) {
+      return;
+    }
 
-  const handleDismissCreateToast = useCallback(() => {
-    setCreateToastVisible(false);
-  }, []);
+    await createHabit({ name, notes: '' });
+    setNewHabitName('');
+    setIsAdding(false);
+  };
 
   const getHabitStatus = (habitId: string, dateString: string): HabitStatus => {
     const trackingEntry = tracking.find(
@@ -326,6 +330,72 @@ function HabitsApp() {
             highContrastMode={highContrastMode}
           />
 
+          {isAdding && (
+            <View
+              className='mb-8 rounded-3xl border p-5'
+              style={{
+                backgroundColor: theme.surfaceMuted,
+                borderColor: theme.border,
+              }}
+            >
+              <View className='gap-4'>
+                <View className='gap-2'>
+                  <Text
+                    className='text-[11px] font-semibold tracking-[3px]'
+                    style={{ color: theme.secondaryText }}
+                  >
+                    NEW HABIT
+                  </Text>
+                  <TextInput
+                    autoFocus
+                    className='w-full rounded-3xl border px-5 py-3 text-sm font-medium'
+                    placeholder='Name your habit'
+                    placeholderTextColor={theme.inputPlaceholder}
+                    value={newHabitName}
+                    onChangeText={setNewHabitName}
+                    style={{
+                      backgroundColor: theme.inputBackground,
+                      borderColor: theme.border,
+                      color: theme.primaryText,
+                    }}
+                  />
+                </View>
+                <View className='flex-row items-center justify-end gap-3'>
+                  <Pressable
+                    accessibilityRole='button'
+                    className='py-2'
+                    onPress={handleToggleForm}
+                  >
+                    <Text
+                      className='text-[11px] font-semibold tracking-[3px]'
+                      style={{ color: theme.secondaryText }}
+                    >
+                      CANCEL
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    accessibilityRole='button'
+                    className={`rounded-3xl px-5 py-2 ${!canSubmit ? 'opacity-40' : ''}`}
+                    disabled={!canSubmit}
+                    onPress={handleSubmit}
+                    style={{
+                      backgroundColor: theme.accent,
+                      borderColor: theme.accent,
+                      borderWidth: 1,
+                    }}
+                  >
+                    <Text
+                      className='text-[11px] font-semibold tracking-[3px]'
+                      style={{ color: theme.accentText }}
+                    >
+                      ADD
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          )}
+
           <View className='gap-4'>
             {orderedHabits.map((habit) => {
               const weekStatus = displayWeekDateStrings.map((ds) =>
@@ -393,11 +463,9 @@ function HabitsApp() {
       >
         <Pressable
           accessibilityHint={
-            isCreateHabitOpen
-              ? 'Close create habit sheet'
-              : 'Open create habit sheet'
+            isAdding ? 'Close add habit form' : 'Open add habit form'
           }
-          accessibilityLabel={isCreateHabitOpen ? 'Close' : 'Add habit'}
+          accessibilityLabel={isAdding ? 'Close' : 'Add habit'}
           accessibilityRole='button'
           className='h-16 w-16 items-center justify-center rounded-full'
           style={{
@@ -408,23 +476,11 @@ function HabitsApp() {
             shadowRadius: 8,
             elevation: 8,
           }}
-          onPress={handleToggleCreateHabit}
+          onPress={handleToggleForm}
         >
           <Plus color={theme.accentText} size={28} strokeWidth={2.5} />
         </Pressable>
       </View>
-      <CreateHabitModal
-        visible={isCreateHabitOpen}
-        onClose={handleCloseCreateHabit}
-        onSuccess={handleCreateHabitSuccess}
-      />
-      <Toast
-        message={`${createdHabitName} added to Today`}
-        variant='success'
-        visible={createToastVisible}
-        onDismiss={handleDismissCreateToast}
-        duration={3200}
-      />
     </GestureHandlerRootView>
   );
 }
@@ -439,11 +495,9 @@ export default function App() {
     }
     return (
       <PaperProvider theme={extendedTheme}>
-        <SafeAreaProvider>
-          <ConvexProvider client={convex}>
-            <HabitsApp />
-          </ConvexProvider>
-        </SafeAreaProvider>
+        <ConvexProvider client={convex}>
+          <HabitsApp />
+        </ConvexProvider>
       </PaperProvider>
     );
   }
@@ -452,11 +506,9 @@ export default function App() {
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>
         <PaperProvider theme={extendedTheme}>
-          <SafeAreaProvider>
-            <ConvexProvider client={convex}>
-              <HabitsApp />
-            </ConvexProvider>
-          </SafeAreaProvider>
+          <ConvexProvider client={convex}>
+            <HabitsApp />
+          </ConvexProvider>
         </PaperProvider>
       </ClerkLoaded>
     </ClerkProvider>

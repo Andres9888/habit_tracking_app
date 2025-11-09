@@ -1,4 +1,4 @@
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { Doc } from '../../../convex/_generated/dataModel';
 
 export type HabitDoc = Doc<'habits'>;
 
@@ -27,11 +27,4 @@ export interface CreateHabitModalProps {
   visible: boolean;
   onClose: () => void;
   habitToEdit?: HabitDoc | null;
-  onSuccess?: (payload: {
-    habitId: Id<'habits'>;
-    name: string;
-    mode: 'create' | 'update';
-    remindersEnabled: boolean;
-    reminderTime?: string;
-  }) => void;
 }
