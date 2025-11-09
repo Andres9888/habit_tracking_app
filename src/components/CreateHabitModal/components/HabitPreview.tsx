@@ -1,5 +1,7 @@
-import { Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Text, View } from 'react-native';
 import STRINGS from '../../../constants/strings';
+import { SkeletonCard } from './SkeletonLoader';
 
 interface HabitPreviewProps {
   habitName: string;
@@ -16,34 +18,90 @@ export const HabitPreview = ({
 }: HabitPreviewProps) => {
   const isEmpty = !habitName && !selectedEmoji;
   const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const [showSkeleton, setShowSkeleton] = useState(false);
+
+  // Animations
+  const iconScale = useRef(new Animated.Value(1)).current;
+  const contentOpacity = useRef(new Animated.Value(1)).current;
+  const contentScale = useRef(new Animated.Value(1)).current;
+
+  // Brief skeleton on mount for polish
+  useEffect(() => {
+    setShowSkeleton(true);
+    const timer = setTimeout(() => setShowSkeleton(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Trigger spring animation when content changes
+  useEffect(() => {
+    if (!isEmpty) {
+      // Bounce the icon
+      Animated.sequence([
+        Animated.spring(iconScale, {
+          toValue: 1.15,
+          tension: 180,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+        Animated.spring(iconScale, {
+          toValue: 1,
+          tension: 180,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+      ]).start();
+
+      // Subtle content pulse
+      Animated.sequence([
+        Animated.spring(contentScale, {
+          toValue: 1.02,
+          tension: 200,
+          friction: 10,
+          useNativeDriver: true,
+        }),
+        Animated.spring(contentScale, {
+          toValue: 1,
+          tension: 200,
+          friction: 10,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [habitName, selectedEmoji, selectedColor, isEmpty, iconScale, contentScale]);
 
   return (
     <View className='mb-6 mt-4 rounded-2xl bg-white p-4'>
       <Text className='mb-2 text-xs font-semibold text-[#64748b]'>✨ Live Preview</Text>
 
-      {isEmpty ? (
+      {showSkeleton ? (
+        <View className='py-2'>
+          <SkeletonCard />
+        </View>
+      ) : isEmpty ? (
         <View className='items-center py-6'>
           <Text className='mb-2 text-4xl'>✨</Text>
           <Text className='mb-1 text-sm font-medium text-[#64748b]'>Your habit will appear here</Text>
           <Text className='text-xs text-[#94a3b8]'>Try: "Meditate", "Run", or "Read"</Text>
         </View>
       ) : (
-        <>
+        <Animated.View style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}>
           <View className='flex-row items-center gap-4'>
-            {selectedEmoji ? (
-              <View
-                className='h-16 w-16 items-center justify-center rounded-2xl'
-                style={{ backgroundColor: selectedColor }}
-              >
-                <Text className='text-[30px]'>{selectedEmoji}</Text>
-              </View>
-            ) : (
-              <View
-                className='h-16 w-16 items-center justify-center rounded-2xl bg-gray-200'
-              >
-                <Text className='text-2xl text-gray-400'>?</Text>
-              </View>
-            )}
+            <Animated.View style={{ transform: [{ scale: iconScale }] }}>
+              {selectedEmoji ? (
+                <View
+                  className='h-16 w-16 items-center justify-center rounded-2xl'
+                  style={{ backgroundColor: selectedColor }}
+                >
+                  <Text className='text-[30px]'>{selectedEmoji}</Text>
+                </View>
+              ) : (
+                <View
+                  className='h-16 w-16 items-center justify-center rounded-2xl bg-gray-200'
+                >
+                  <Text className='text-2xl text-gray-400'>?</Text>
+                </View>
+              )}
+            </Animated.View>
             <View className='flex-1'>
               {habitName ? (
                 <Text className='text-[20px] font-semibold text-[#1a1a1a]'>
@@ -76,7 +134,7 @@ export const HabitPreview = ({
               ))}
             </View>
           </View>
-        </>
+        </Animated.View>
       )}
     </View>
   );

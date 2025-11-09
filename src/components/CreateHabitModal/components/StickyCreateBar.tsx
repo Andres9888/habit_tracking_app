@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import STRINGS from '../../../constants/strings';
 import { Motion } from '../../../constants/motion';
 import { useKeyboardState } from '../hooks/useKeyboardState';
+import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface StickyCreateBarProps {
   disabled: boolean;
@@ -13,6 +14,7 @@ interface StickyCreateBarProps {
 export const StickyCreateBar = ({ disabled, onPress }: StickyCreateBarProps) => {
   const insets = useSafeAreaInsets();
   const { isKeyboardVisible, keyboardHeight } = useKeyboardState();
+  const { triggerSuccess } = useHapticFeedback();
   const scale = useRef(new Animated.Value(1)).current;
 
   const bottom = useMemo(() => {
@@ -50,7 +52,12 @@ export const StickyCreateBar = ({ disabled, onPress }: StickyCreateBarProps) => 
                 useNativeDriver: true,
               }).start();
             }}
-            onPress={onPress}
+            onPress={() => {
+              if (!disabled) {
+                triggerSuccess();
+                onPress();
+              }
+            }}
           >
             <Text className='text-[15px] font-semibold text-white'>
               {STRINGS.CREATE_HABIT.createAction}

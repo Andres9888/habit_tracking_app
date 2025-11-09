@@ -1,5 +1,7 @@
+import { useEffect, useRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import STRINGS from '../../../constants/strings';
+import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface HabitNameFieldProps {
   value: string;
@@ -11,6 +13,17 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
   const MAX_LENGTH = 50;
   const charCount = value.length;
   const isNearLimit = charCount > 40;
+  const isAtLimit = charCount >= 50;
+  const { triggerWarning } = useHapticFeedback();
+  const previousCount = useRef(charCount);
+
+  // Trigger haptic when hitting character limit
+  useEffect(() => {
+    if (charCount === 50 && previousCount.current < 50) {
+      triggerWarning();
+    }
+    previousCount.current = charCount;
+  }, [charCount, triggerWarning]);
 
   return (
     <View className='mb-6'>

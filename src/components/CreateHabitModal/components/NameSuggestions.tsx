@@ -1,7 +1,8 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, Text, View } from 'react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { SkeletonButton } from './SkeletonLoader';
 
 interface NameSuggestionsProps {
   query: string;
@@ -9,20 +10,64 @@ interface NameSuggestionsProps {
 }
 
 const SUGGESTIONS: { emoji: string | null; name: string; color: string }[] = [
+  // Health & Fitness
   { emoji: '💧', name: 'Drink water', color: '#60a5fa' },
-  { emoji: '📖', name: 'Read 10 minutes', color: '#f59e0b' },
   { emoji: '🚶', name: 'Walk 15 minutes', color: '#10b981' },
+  { emoji: '🏃', name: 'Run 20 minutes', color: '#22c55e' },
+  { emoji: '💪', name: 'Workout 30 minutes', color: '#14b8a6' },
   { emoji: '🧘', name: 'Meditate 5 minutes', color: '#a78bfa' },
+  { emoji: '🚴', name: 'Bike ride', color: '#06b6d4' },
+  { emoji: '🤸', name: 'Stretch 10 minutes', color: '#8b5cf6' },
+  { emoji: '😴', name: 'Sleep 8 hours', color: '#6366f1' },
+  { emoji: '🌅', name: 'Wake up early', color: '#f59e0b' },
+
+  // Nutrition
   { emoji: '🍎', name: 'Eat a healthy snack', color: '#ef4444' },
+  { emoji: '🥗', name: 'Eat vegetables', color: '#84cc16' },
+  { emoji: '🍊', name: 'Take vitamins', color: '#fb923c' },
+  { emoji: '☕', name: 'No coffee after 2pm', color: '#78716c' },
+  { emoji: '🥤', name: 'No soda today', color: '#64748b' },
+
+  // Mental & Learning
+  { emoji: '📖', name: 'Read 10 minutes', color: '#f59e0b' },
   { emoji: '📝', name: 'Journal 3 lines', color: '#f97316' },
+  { emoji: '🙏', name: 'Practice gratitude', color: '#ec4899' },
+  { emoji: '🧠', name: 'Learn something new', color: '#3b82f6' },
+  { emoji: '📚', name: 'Study 30 minutes', color: '#eab308' },
+  { emoji: '✍️', name: 'Write 100 words', color: '#a855f7' },
+
+  // Productivity & Focus
+  { emoji: '📱', name: 'No phone for 1 hour', color: '#64748b' },
+  { emoji: '🎯', name: 'Complete daily goal', color: '#dc2626' },
+  { emoji: '📅', name: 'Plan tomorrow', color: '#0891b2' },
+  { emoji: '🧹', name: 'Clean for 10 minutes', color: '#06b6d4' },
+  { emoji: '✅', name: 'Make my bed', color: '#10b981' },
+  { emoji: '⏰', name: 'Time block work', color: '#7c3aed' },
+
+  // Social & Creative
+  { emoji: '👨‍👩‍👧‍👦', name: 'Call family', color: '#f472b6' },
+  { emoji: '💌', name: 'Text a friend', color: '#fb7185' },
+  { emoji: '🎨', name: 'Creative time', color: '#ec4899' },
+  { emoji: '🎸', name: 'Practice instrument', color: '#a855f7' },
+  { emoji: '📷', name: 'Take a photo', color: '#6366f1' },
+  { emoji: '🌱', name: 'Tend to plants', color: '#22c55e' },
 ];
 
 export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const [isLoading, setIsLoading] = useState(true);
+
   const items = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (q.length < 2) return SUGGESTIONS.slice(0, 4);
     return SUGGESTIONS.filter(({ name }) => name.toLowerCase().includes(q)).slice(0, 6);
+  }, [query]);
+
+  // Simulate brief loading for polish
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
   }, [query]);
 
   if (items.length === 0) return null;
@@ -30,8 +75,15 @@ export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
   return (
     <View className='mb-6'>
       <Text className='mb-2 text-xs font-semibold uppercase tracking-wide text-[#64748b]'>💡 Tap to use</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName='gap-2'>
-        {items.map(({ emoji, name, color }) => {
+      {isLoading ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName='gap-2'>
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonButton key={i} />
+          ))}
+        </ScrollView>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName='gap-2'>
+          {items.map(({ emoji, name, color }) => {
           const scale = useRef(new Animated.Value(1)).current;
           return (
             <Animated.View key={`${emoji ?? 'none'}-${name}`} style={{ transform: [{ scale }] }}>
@@ -68,7 +120,8 @@ export const NameSuggestions = ({ query, onPick }: NameSuggestionsProps) => {
             </Animated.View>
           );
         })}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 };
