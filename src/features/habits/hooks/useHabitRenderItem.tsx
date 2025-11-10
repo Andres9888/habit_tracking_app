@@ -40,7 +40,7 @@ export function useHabitRenderItem({
       return (
         <ScaleDecorator>
           <View
-            className='mb-4'
+            className='mb-5'
             style={{
               opacity: isActive ? 0.7 : 1,
             }}
