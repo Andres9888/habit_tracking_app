@@ -570,20 +570,6 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Morning sunlight for optimal circadian biology',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'andrew_huberman',
-      createdAt: now,
-      description:
-        'Delay caffeine intake by 90-120 minutes after waking. Allows natural adenosine clearance and prevents afternoon crash.',
-      frequency: 'daily',
-      icon: '⏰',
-      iconColor: '#B45309',
-      name: 'Delay Caffeine 90 Minutes',
-      popularityScore: 92,
-      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
-      scientificReference:
-        'Huberman Lab (2023) - Optimal caffeine timing protocol',
-    });
 
     await ctx.db.insert('templates', {
       category: 'andrew_huberman',
@@ -1154,7 +1140,7 @@ export const seedTemplates = mutation({
         'Gooley et al. (2011) - Exposure to room light before bedtime suppresses melatonin onset',
     });
 
-    return { message: '79 templates seeded successfully', success: true };
+    return { message: '77 templates seeded successfully', success: true };
   },
 });
 

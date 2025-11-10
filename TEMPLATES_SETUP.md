@@ -2,7 +2,7 @@
 
 ## Phase 3 Feature: Science-Backed Habit Templates
 
-This feature adds a Templates Library with 79 curated, evidence-based habit templates across 10 categories.
+This feature adds a Templates Library with 77 curated, evidence-based habit templates across 10 categories.
 
 ## What Was Implemented
 
@@ -16,7 +16,7 @@ This feature adds a Templates Library with 79 curated, evidence-based habit temp
 
 - `list()` - Query all templates or filter by category
 - `getById()` - Get single template
-- `seedTemplates()` - Populate database with 79 science-backed templates
+- `seedTemplates()` - Populate database with 77 science-backed templates
 - `importTemplate()` - Import template and create habit from it
 - `getPopular()` - Get templates sorted by popularity score
 - `getUsageStats()` - Track template import analytics
@@ -59,7 +59,7 @@ This feature adds a Templates Library with 79 curated, evidence-based habit temp
 - Added Templates tab to navigation
 - Modals rendered outside navigator for proper z-index
 
-## Templates Included (79 Total)
+## Templates Included (77 Total)
 
 ### Morning Routine (5 templates)
 
@@ -93,34 +93,34 @@ This feature adds a Templates Library with 79 curated, evidence-based habit temp
 19. Digital Detox Hour - Exelmans & Van den Bulck (2016)
 20. Walking in Nature - Hansen et al. (2017)
 
-### Andrew Huberman Protocols (10 templates)
+### Andrew Huberman Protocols (13 templates)
 
 21. Morning Sunlight Viewing - Huberman Lab (2023)
-22. Delay Caffeine 90 Minutes - Huberman Lab (2023)
-23. Zone 2 Cardio Training - Huberman Lab (2022)
-24. Deliberate Cold Exposure - Huberman Lab (2023)
-25. NSDR Practice - Huberman Lab (2021)
-26. Physiological Sigh - Huberman Lab (2023)
-27. Evening Light Dimming - Huberman Lab (2023)
-28. Cool Sleep Temperature - Huberman Lab (2023)
-29. Morning Protein Protocol - Huberman Lab (2023)
-30. Time-Restricted Eating - Huberman Lab (2023)
+22. Zone 2 Cardio Training - Huberman Lab (2022)
+23. Deliberate Cold Exposure - Huberman Lab (2023)
+24. NSDR Practice - Huberman Lab (2021)
+25. Physiological Sigh - Huberman Lab (2023)
+26. Evening Light Dimming - Huberman Lab (2023)
+27. Cool Sleep Temperature - Huberman Lab (2023)
+28. Morning Protein Protocol - Huberman Lab (2023)
+29. Time-Restricted Eating - Huberman Lab (2023)
 
 ### Learning & Education (5 templates)
 
-31. Daily Reading - Bavishi et al. (2016)
-32. Language Learning - Krashen (1982)
-33. Learn Something New - Giurgiu et al. (2020)
-34. Spaced Repetition Study - Dunlosky et al. (2013)
-35. Learning Journal - Bui et al. (2013)
+30. Daily Reading - Bavishi et al. (2016)
+31. Language Learning - Krashen (1982)
+32. Learn Something New - Giurgiu et al. (2020)
+33. Spaced Repetition Study - Dunlosky et al. (2013)
+34. Learning Journal - Bui et al. (2013)
 
-### Social & Relationships (5 templates)
+### Social & Relationships (6 templates)
 
-36. Daily Connection - Holt-Lunstad et al. (2010)
-37. Active Listening - Rogers & Farson (1957)
+35. Daily Social Call - Holt-Lunstad et al. (2010)
+36. Reach Out Daily - Gable et al. (2004)
+37. Quality Partner Time - Gottman (1999)
 38. Express Gratitude - Algoe et al. (2010)
-39. Device-Free Meals - Przybylski & Weinstein (2013)
-40. Plan Quality Time - Aron et al. (2000)
+39. Acts of Service - Post (2005)
+40. Group Activities - Hawkley & Cacioppo (2010)
 
 ### Financial Health (5 templates)
 
@@ -138,37 +138,13 @@ This feature adds a Templates Library with 79 curated, evidence-based habit temp
 49. Creative Practice - Ericsson et al. (1993)
 50. Creative Inspiration - Getzels & Csikszentmihalyi (1976)
 
-### Learning & Education (5 templates)
-
-56. Daily Reading - Bavishi et al. (2016)
-57. Language Learning - Krashen (1982)
-58. Learn Something New - Giurgiu et al. (2020)
-59. Spaced Repetition Study - Dunlosky et al. (2013)
-60. Learning Journal - Bui et al. (2013)
-
-### Financial Health (5 templates)
-
-61. Track Expenses - Thaler & Sunstein (2008)
-62. Budget Review - Fernbach et al. (2015)
-63. Automated Savings - Thaler & Benartzi (2004) 🔥 Popular
-64. Financial Education - Lusardi & Mitchell (2014)
-65. No-Spend Day - Baumeister et al. (2007)
-
-### Creativity (5 templates)
-
-66. Daily Drawing - Kaimal et al. (2016)
-67. Creative Writing - Pennebaker & Smyth (2016)
-68. Idea Collection - Sawyer (2011)
-69. Creative Practice - Ericsson et al. (1993)
-70. Creative Inspiration - Getzels & Csikszentmihalyi (1976)
-
 ### Sleep & Recovery (5 templates)
 
-71. Consistent Sleep Schedule - Walker (2017) 🔥 Popular
-72. Cool Sleep Environment - Okamoto-Mizuno & Mizuno (2012)
-73. Bedtime Routine - Irish et al. (2015)
-74. Afternoon Caffeine Cutoff - Drake et al. (2013)
-75. Dark Sleep Environment - Gooley et al. (2011)
+51. Consistent Sleep Schedule - Walker (2017) 🔥 Popular
+52. Cool Sleep Environment - Okamoto-Mizuno & Mizuno (2012)
+53. Bedtime Routine - Irish et al. (2015)
+54. Afternoon Caffeine Cutoff - Drake et al. (2013)
+55. Dark Sleep Environment - Gooley et al. (2011)
 
 ## Setup Instructions
 
@@ -301,7 +277,7 @@ await seedTemplates({});
 
 ---
 
-**Implementation Status**: ✅ Complete with 79 templates across 10 categories
+**Implementation Status**: ✅ Complete with 77 templates across 10 categories
 
 **Categories**: Morning Routine, Health & Fitness, Productivity, Mindfulness, Andrew Huberman Protocols, Learning & Education, Social & Relationships, Financial Health, Creativity, Sleep & Recovery
 
