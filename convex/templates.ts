@@ -870,7 +870,713 @@ export const seedTemplates = mutation({
         'Hawkley & Cacioppo (2010) - Loneliness and health',
     });
 
-    return { message: '54 templates seeded successfully', success: true };
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Practice active listening in conversations. Focus fully on others without interrupting, strengthening connections.',
+      frequency: 'daily',
+      icon: '👂',
+      iconColor: '#F59E0B',
+      name: 'Active Listening',
+      popularityScore: 82,
+      scientificReference:
+        'Weger et al. (2014) - The relative effectiveness of active listening',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Have a device-free meal with family or friends. Strengthens bonds through undivided attention.',
+      frequency: 'daily',
+      icon: '🍴',
+      iconColor: '#EF4444',
+      name: 'Device-Free Meals',
+      popularityScore: 80,
+      scientificReference:
+        'Misra et al. (2016) - The iPhone Effect: The quality of in-person interactions',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Schedule regular date nights or quality time with significant other. Maintains relationship vitality and connection.',
+      frequency: 'weekly',
+      icon: '❤️',
+      iconColor: '#EC4899',
+      name: 'Date Night',
+      popularityScore: 85,
+      scientificReference:
+        'Gottman (2011) - The relationship cure',
+    });
+
+    // Learning Templates
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Read for 30 minutes daily. Improves vocabulary, knowledge, cognitive function, and reduces stress.',
+      frequency: 'daily',
+      icon: '📖',
+      iconColor: '#7C3AED',
+      name: 'Daily Reading',
+      popularityScore: 92,
+      scientificReference:
+        'Mangen & Kuiken (2014) - Lost in an iPad: Narrative engagement on paper',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Listen to educational podcasts or audiobooks during commute. Transforms idle time into learning opportunities.',
+      frequency: 'daily',
+      icon: '🎧',
+      iconColor: '#F97316',
+      name: 'Podcast Learning',
+      popularityScore: 88,
+      scientificReference:
+        'Knowles (1975) - Self-Directed Learning: A Guide',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice a new language for 15 minutes. Enhances cognitive flexibility and delays cognitive decline.',
+      frequency: 'daily',
+      icon: '🗣️',
+      iconColor: '#10B981',
+      name: 'Language Practice',
+      popularityScore: 86,
+      scientificReference:
+        'Bialystok et al. (2007) - Bilingualism as a protection against cognitive decline',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Take an online course or watch educational videos. Continuous learning keeps mind sharp and competitive.',
+      frequency: 'weekly',
+      icon: '🎓',
+      iconColor: '#3B82F6',
+      name: 'Online Course',
+      popularityScore: 84,
+      scientificReference:
+        'Hone & El Said (2016) - Exploring the factors affecting MOOC retention',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice spaced repetition with flashcards. Scientifically proven most effective method for long-term memory.',
+      frequency: 'daily',
+      icon: '🗂️',
+      iconColor: '#EC4899',
+      name: 'Spaced Repetition',
+      popularityScore: 87,
+      scientificReference:
+        'Cepeda et al. (2006) - Distributed practice in verbal recall tasks',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Teach something you learned to someone else. Teaching solidifies understanding and reveals knowledge gaps.',
+      frequency: 'weekly',
+      icon: '👨‍🏫',
+      iconColor: '#F59E0B',
+      name: 'Teach to Learn',
+      popularityScore: 83,
+      scientificReference:
+        'Fiorella & Mayer (2013) - The relative benefits of learning by teaching',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice a musical instrument for 20-30 minutes. Enhances brain plasticity, memory, and coordination.',
+      frequency: 'daily',
+      icon: '🎹',
+      iconColor: '#8B5CF6',
+      name: 'Music Practice',
+      popularityScore: 81,
+      scientificReference:
+        'Schellenberg (2004) - Music lessons enhance IQ',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Write summary notes after learning. Active recall strengthens memory retention and understanding.',
+      frequency: 'daily',
+      icon: '📝',
+      iconColor: '#06B6D4',
+      name: 'Learning Journal',
+      popularityScore: 85,
+      scientificReference:
+        'Karpicke & Blunt (2011) - Retrieval practice produces more learning',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Solve puzzles or brain teasers daily. Maintains cognitive function and problem-solving skills.',
+      frequency: 'daily',
+      icon: '🧩',
+      iconColor: '#EF4444',
+      name: 'Daily Puzzles',
+      popularityScore: 79,
+      scientificReference:
+        'Park et al. (2014) - The impact of sustained engagement on cognitive function',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Attend workshops, seminars, or conferences. Networking and learning from experts accelerates growth.',
+      frequency: 'monthly',
+      icon: '🏛️',
+      iconColor: '#6366F1',
+      name: 'Attend Events',
+      popularityScore: 76,
+      scientificReference:
+        'Wenger (1998) - Communities of Practice: Learning, Meaning, and Identity',
+    });
+
+    // Financial Templates
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Track every expense daily. Awareness is the first step to financial control and better spending decisions.',
+      frequency: 'daily',
+      icon: '💰',
+      iconColor: '#059669',
+      name: 'Expense Tracking',
+      popularityScore: 90,
+      scientificReference:
+        'Thaler & Sunstein (2008) - Nudge: Improving Decisions About Health and Wealth',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Review and update your budget weekly. Regular monitoring prevents overspending and ensures financial goals.',
+      frequency: 'weekly',
+      icon: '📊',
+      iconColor: '#3B82F6',
+      name: 'Budget Review',
+      popularityScore: 87,
+      scientificReference:
+        'Fernbach et al. (2015) - Political extremism is supported by an illusion of understanding',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Save or invest a fixed amount automatically. Pay yourself first builds wealth consistently over time.',
+      frequency: 'monthly',
+      icon: '🏦',
+      iconColor: '#10B981',
+      name: 'Automated Savings',
+      popularityScore: 92,
+      scientificReference:
+        'Thaler & Benartzi (2004) - Save More Tomorrow: Using Behavioral Economics',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Read financial news or investment books for 15 minutes. Financial literacy leads to better money decisions.',
+      frequency: 'daily',
+      icon: '📰',
+      iconColor: '#F59E0B',
+      name: 'Financial Education',
+      popularityScore: 84,
+      scientificReference:
+        'Lusardi & Mitchell (2014) - The Economic Importance of Financial Literacy',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Review investment portfolio monthly. Regular rebalancing maintains risk levels and optimizes returns.',
+      frequency: 'monthly',
+      icon: '📈',
+      iconColor: '#0EA5E9',
+      name: 'Portfolio Review',
+      popularityScore: 83,
+      scientificReference:
+        'Bogle (2007) - The Little Book of Common Sense Investing',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Pack lunch instead of eating out. Saves thousands annually while often being healthier.',
+      frequency: 'daily',
+      icon: '🥡',
+      iconColor: '#16A34A',
+      name: 'Bring Lunch',
+      popularityScore: 86,
+      scientificReference:
+        'Thaler (1999) - Mental accounting matters',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Practice the 24-hour rule before non-essential purchases. Reduces impulse buying and buyer\'s remorse.',
+      frequency: 'daily',
+      icon: '⏰',
+      iconColor: '#DC2626',
+      name: '24-Hour Purchase Rule',
+      popularityScore: 88,
+      scientificReference:
+        'Baumeister (2002) - Yielding to Temptation: Self-Control Failure',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Negotiate bills and recurring expenses quarterly. Simple calls can save hundreds on insurance, phone, internet.',
+      frequency: 'quarterly',
+      icon: '📞',
+      iconColor: '#8B5CF6',
+      name: 'Bill Negotiation',
+      popularityScore: 81,
+      scientificReference:
+        'Cialdini (2006) - Influence: The Psychology of Persuasion',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Review and pay off high-interest debt first. Debt avalanche method saves most on interest over time.',
+      frequency: 'monthly',
+      icon: '💳',
+      iconColor: '#EF4444',
+      name: 'Debt Reduction Plan',
+      popularityScore: 89,
+      scientificReference:
+        'Ramsey (2013) - The Total Money Makeover',
+    });
+
+    // Creativity Templates
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Free write for 10 minutes without editing. Unlocks creativity and processes subconscious thoughts.',
+      frequency: 'daily',
+      icon: '✍️',
+      iconColor: '#F59E0B',
+      name: 'Creative Writing',
+      popularityScore: 85,
+      scientificReference:
+        'Pennebaker (1997) - Writing About Emotional Experiences',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Sketch, doodle, or draw for 15 minutes. Visual creativity enhances problem-solving and reduces stress.',
+      frequency: 'daily',
+      icon: '🎨',
+      iconColor: '#EC4899',
+      name: 'Daily Sketching',
+      popularityScore: 82,
+      scientificReference:
+        'Brown (2014) - The Doodle Revolution',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Brainstorm ideas without judgment. Quantity over quality initially - divergent thinking sparks innovation.',
+      frequency: 'weekly',
+      icon: '💡',
+      iconColor: '#FDE047',
+      name: 'Brainstorming Sessions',
+      popularityScore: 83,
+      scientificReference:
+        'Osborn (1953) - Applied Imagination: Principles of Creative Problem-Solving',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Try a new creative hobby or craft. Novelty stimulates neuroplasticity and creative thinking.',
+      frequency: 'weekly',
+      icon: '🎭',
+      iconColor: '#8B5CF6',
+      name: 'New Creative Project',
+      popularityScore: 79,
+      scientificReference:
+        'Kaufman & Gregoire (2015) - Wired to Create',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Take photos or capture moments creatively. Photography trains observation and artistic perspective.',
+      frequency: 'daily',
+      icon: '📷',
+      iconColor: '#0EA5E9',
+      name: 'Daily Photography',
+      popularityScore: 80,
+      scientificReference:
+        'Csikszentmihalyi (1996) - Creativity: Flow and the Psychology of Discovery',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Cook a new recipe without following instructions exactly. Culinary improvisation builds creative confidence.',
+      frequency: 'weekly',
+      icon: '👨‍🍳',
+      iconColor: '#F97316',
+      name: 'Creative Cooking',
+      popularityScore: 77,
+      scientificReference:
+        'Sternberg (1999) - Handbook of Creativity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Mind map ideas and connections visually. Non-linear thinking reveals creative insights and patterns.',
+      frequency: 'weekly',
+      icon: '🗺️',
+      iconColor: '#10B981',
+      name: 'Mind Mapping',
+      popularityScore: 81,
+      scientificReference:
+        'Buzan & Buzan (1994) - The Mind Map Book',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Visit museums, galleries, or cultural events. Exposure to diverse art forms inspires creative thinking.',
+      frequency: 'monthly',
+      icon: '🖼️',
+      iconColor: '#7C3AED',
+      name: 'Cultural Exploration',
+      popularityScore: 76,
+      scientificReference:
+        'Amabile (1996) - Creativity in Context',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Practice improvisation or spontaneous creation. Letting go of control unleashes creative potential.',
+      frequency: 'weekly',
+      icon: '🎪',
+      iconColor: '#EF4444',
+      name: 'Creative Improvisation',
+      popularityScore: 78,
+      scientificReference:
+        'Limb & Braun (2008) - Neural substrates of spontaneous musical performance',
+    });
+
+    // Sleep Templates
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Go to bed and wake up at the same time daily, even weekends. Regulates circadian rhythm for better sleep.',
+      frequency: 'daily',
+      icon: '⏰',
+      iconColor: '#3B82F6',
+      name: 'Consistent Sleep Schedule',
+      popularityScore: 94,
+      scientificReference:
+        'Walker (2017) - Why We Sleep: Unlocking the Power of Sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Avoid screens 1 hour before bed. Blue light suppresses melatonin production and disrupts sleep cycles.',
+      frequency: 'daily',
+      icon: '📵',
+      iconColor: '#EF4444',
+      name: 'Screen-Free Before Bed',
+      popularityScore: 91,
+      scientificReference:
+        'Chang et al. (2015) - Evening use of light-emitting eReaders',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Create a relaxing bedtime routine. Signals body it\'s time to wind down, improving sleep onset.',
+      frequency: 'daily',
+      icon: '🛀',
+      iconColor: '#8B5CF6',
+      name: 'Bedtime Routine',
+      popularityScore: 89,
+      scientificReference:
+        'Irish et al. (2015) - The role of sleep hygiene in promoting public health',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Keep bedroom cool, dark, and quiet. Optimal sleep environment enhances deep sleep stages.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#1E293B',
+      name: 'Optimize Sleep Environment',
+      popularityScore: 90,
+      scientificReference:
+        'Okamoto-Mizuno & Mizuno (2012) - Effects of thermal environment on sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Limit caffeine after 2 PM. Caffeine half-life is 6 hours, affecting sleep quality even if you fall asleep.',
+      frequency: 'daily',
+      icon: '☕',
+      iconColor: '#B45309',
+      name: 'Afternoon Caffeine Cutoff',
+      popularityScore: 88,
+      scientificReference:
+        'Drake et al. (2013) - Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Avoid large meals 2-3 hours before bed. Late eating disrupts sleep quality and circadian rhythms.',
+      frequency: 'daily',
+      icon: '🍽️',
+      iconColor: '#059669',
+      name: 'No Late Heavy Meals',
+      popularityScore: 85,
+      scientificReference:
+        'St-Onge et al. (2016) - Effects of diet on sleep quality',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Use white noise or nature sounds if environment is noisy. Masks disturbances for uninterrupted sleep.',
+      frequency: 'daily',
+      icon: '🎵',
+      iconColor: '#06B6D4',
+      name: 'Sleep Sounds',
+      popularityScore: 83,
+      scientificReference:
+        'Messineo et al. (2017) - Broadband sound administration improves sleep onset latency',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Track sleep quality and duration. Awareness helps identify patterns and optimize sleep habits.',
+      frequency: 'daily',
+      icon: '📊',
+      iconColor: '#7C3AED',
+      name: 'Sleep Tracking',
+      popularityScore: 86,
+      scientificReference:
+        'Kolla et al. (2016) - Consumer sleep tracking devices',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Practice 4-7-8 breathing technique before sleep. Calms nervous system and promotes faster sleep onset.',
+      frequency: 'daily',
+      icon: '😴',
+      iconColor: '#10B981',
+      name: '4-7-8 Sleep Breathing',
+      popularityScore: 84,
+      scientificReference:
+        'Weil (2015) - Breathing: The Master Key to Self Healing',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'If unable to sleep after 20 minutes, get up and do calm activity. Prevents bed-sleep anxiety association.',
+      frequency: 'daily',
+      icon: '🚶',
+      iconColor: '#F59E0B',
+      name: '20-Minute Sleep Rule',
+      popularityScore: 81,
+      scientificReference:
+        'Morin & Espie (2003) - Insomnia: A Clinical Guide to Assessment and Treatment',
+    });
+
+    // Additional Health & Fitness Templates
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Practice intermittent fasting with 16:8 window. Supports metabolic health, autophagy, and weight management.',
+      frequency: 'daily',
+      icon: '⏲️',
+      iconColor: '#7C3AED',
+      name: 'Intermittent Fasting',
+      popularityScore: 90,
+      scientificReference:
+        'Mattson et al. (2017) - Impact of intermittent fasting on health and disease',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Take stairs instead of elevator. Simple daily cardio improves heart health and burns calories.',
+      frequency: 'daily',
+      icon: '🪜',
+      iconColor: '#F97316',
+      name: 'Take the Stairs',
+      popularityScore: 82,
+      scientificReference:
+        'Boreham et al. (2005) - Training effects of accumulated daily stair-climbing',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Practice proper posture throughout the day. Prevents back pain, improves breathing and confidence.',
+      frequency: 'daily',
+      icon: '🧍',
+      iconColor: '#0EA5E9',
+      name: 'Posture Check',
+      popularityScore: 84,
+      scientificReference:
+        'Nair et al. (2015) - Do slumped and upright postures affect stress responses?',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Spend 15 minutes in sunlight daily for Vitamin D. Essential for bone health, immunity, and mood.',
+      frequency: 'daily',
+      icon: '☀️',
+      iconColor: '#FDE047',
+      name: 'Vitamin D Sunlight',
+      popularityScore: 87,
+      scientificReference:
+        'Holick (2007) - Vitamin D deficiency',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Do mobility exercises for 10 minutes. Prevents injuries, reduces stiffness, improves movement quality.',
+      frequency: 'daily',
+      icon: '🤸‍♂️',
+      iconColor: '#EC4899',
+      name: 'Mobility Work',
+      popularityScore: 83,
+      scientificReference:
+        'Behm & Chaouachi (2011) - A review of the acute effects of static and dynamic stretching',
+    });
+
+    // Additional Productivity Templates
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Use the Eisenhower Matrix to prioritize tasks. Distinguish urgent vs important for better decision-making.',
+      frequency: 'daily',
+      icon: '📋',
+      iconColor: '#EF4444',
+      name: 'Eisenhower Matrix',
+      popularityScore: 88,
+      scientificReference:
+        'Covey (1989) - The 7 Habits of Highly Effective People',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Batch similar tasks together. Context switching drains energy; grouping saves mental bandwidth.',
+      frequency: 'daily',
+      icon: '📦',
+      iconColor: '#10B981',
+      name: 'Task Batching',
+      popularityScore: 86,
+      scientificReference:
+        'Leroy (2009) - Why is it so hard to do my work?',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Review weekly goals every Monday. Sets clear direction and maintains alignment with bigger objectives.',
+      frequency: 'weekly',
+      icon: '🎯',
+      iconColor: '#3B82F6',
+      name: 'Weekly Goal Review',
+      popularityScore: 89,
+      scientificReference:
+        'Locke & Latham (2002) - Building a practically useful theory of goal setting',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Eliminate or automate one repetitive task weekly. Frees up time and mental space for important work.',
+      frequency: 'weekly',
+      icon: '🤖',
+      iconColor: '#8B5CF6',
+      name: 'Automate Tasks',
+      popularityScore: 85,
+      scientificReference:
+        'Ferriss (2009) - The 4-Hour Workweek',
+    });
+
+    return { message: '119 templates seeded successfully', success: true };
   },
 });
 
