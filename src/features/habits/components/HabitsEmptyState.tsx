@@ -1,11 +1,25 @@
 import { Plus, Sparkles } from 'lucide-react-native';
+import { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring
+} from 'react-native-reanimated';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 interface HabitsEmptyStateProps {
   isLoading: boolean;
   openCreateHabitScreen: () => void;
   openTemplatesScreen?: () => void;
+  onQuickCreateHabit?: (habitName: string) => Promise<void>;
 }
+
+const QUICK_START_HABITS = [
+  { emoji: '💪', name: 'Morning Exercise', fullName: '💪 Morning Exercise' },
+  { emoji: '📚', name: 'Read 10 Minutes', fullName: '📚 Read 10 Minutes' },
+  { emoji: '🧘', name: 'Meditate', fullName: '🧘 Meditate' },
+];
 
 const POPULAR_HABITS = [
   { emoji: '💪', name: 'Exercise' },
@@ -13,7 +27,11 @@ const POPULAR_HABITS = [
   { emoji: '🧘', name: 'Meditation' },
 ];
 
-export function HabitsEmptyState({ isLoading, openCreateHabitScreen, openTemplatesScreen }: HabitsEmptyStateProps) {
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+export function HabitsEmptyState({ isLoading, openCreateHabitScreen, openTemplatesScreen, onQuickCreateHabit }: HabitsEmptyStateProps) {
+  const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
+  const { triggerSuccess } = useHapticFeedback();
   if (isLoading) {
     return (
       <View className='items-center justify-center gap-3 py-20'>
@@ -63,6 +81,40 @@ export function HabitsEmptyState({ isLoading, openCreateHabitScreen, openTemplat
           </Text>
         </View>
       </View>
+
+      {/* Quick Start Suggestions */}
+      {onQuickCreateHabit && (
+        <View className='w-full gap-3'>
+          <Text className='text-center text-[13px] font-semibold uppercase tracking-wider text-[#6b7280]'>
+            Quick Start
+          </Text>
+          <View className='flex-row justify-center gap-3'>
+            {QUICK_START_HABITS.map((habit) => {
+              const isCreating = creatingHabit === habit.fullName;
+
+              return (
+                <QuickStartButton
+                  key={habit.fullName}
+                  habit={habit}
+                  isCreating={isCreating}
+                  onPress={async () => {
+                    setCreatingHabit(habit.fullName);
+                    triggerSuccess();
+                    try {
+                      await onQuickCreateHabit(habit.fullName);
+                    } finally {
+                      setCreatingHabit(null);
+                    }
+                  }}
+                />
+              );
+            })}
+          </View>
+          <Text className='text-center text-[11px] text-[#9ca3af]'>
+            Tap to instantly add a habit
+          </Text>
+        </View>
+      )}
 
       {/* CTA Section */}
       <View className='items-center gap-4'>
@@ -121,5 +173,58 @@ export function HabitsEmptyState({ isLoading, openCreateHabitScreen, openTemplat
         </View>
       </View>
     </View>
+  );
+}
+
+// Quick Start Button Component with animations
+interface QuickStartButtonProps {
+  habit: { emoji: string; name: string; fullName: string };
+  isCreating: boolean;
+  onPress: () => Promise<void>;
+}
+
+function QuickStartButton({ habit, isCreating, onPress }: QuickStartButtonProps) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel={`Add ${habit.name} habit`}
+      accessibilityRole='button'
+      className='items-center gap-2 rounded-2xl border-2 border-[#e5e7eb] bg-white px-4 py-3'
+      disabled={isCreating}
+      style={[
+        animatedStyle,
+        {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 4,
+          elevation: 2,
+          minWidth: 90,
+        },
+      ]}
+      onPress={onPress}
+      onPressIn={() => {
+        scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
+      }}
+      onPressOut={() => {
+        scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+      }}
+    >
+      {isCreating ? (
+        <ActivityIndicator color='#6366f1' size='small' />
+      ) : (
+        <>
+          <Text className='text-[28px]'>{habit.emoji}</Text>
+          <Text className='text-center text-[12px] font-semibold text-[#1a1a1a]'>
+            {habit.name}
+          </Text>
+        </>
+      )}
+    </AnimatedPressable>
   );
 }

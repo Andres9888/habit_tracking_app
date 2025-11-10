@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import { useMutation } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 
 import { HabitsEmptyState } from './HabitsEmptyState';
 import type { HabitsListState } from '../hooks/useHabitsApp';
@@ -403,6 +405,30 @@ export function HabitsList({
 
   const { openSettings, openTemplatesScreen } = modals;
 
+  // Quick-create habit mutation for instant habit creation
+  const createHabit = useMutation(api.habits.create);
+
+  const handleQuickCreateHabit = useCallback(
+    async (habitName: string) => {
+      // Check if user has reached habit limit (free users only)
+      if (!isPremiumUser && hasReachedHabitLimit) {
+        onCreateHabitRequest(); // Trigger paywall
+        return;
+      }
+
+      try {
+        await createHabit({
+          name: habitName,
+          notes: '',
+          remindersEnabled: false,
+        });
+      } catch (error) {
+        console.error('Failed to create habit:', error);
+      }
+    },
+    [createHabit, hasReachedHabitLimit, isPremiumUser, onCreateHabitRequest]
+  );
+
   const renderItem = useHabitRenderItem({
     celebrationsEnabled,
     getHabitStatus,
@@ -512,6 +538,7 @@ export function HabitsList({
             isLoading={isHabitsLoading}
             openCreateHabitScreen={handleAddHabitPress}
             openTemplatesScreen={openTemplatesScreen}
+            onQuickCreateHabit={handleQuickCreateHabit}
           />
         }
         showsVerticalScrollIndicator={false}
