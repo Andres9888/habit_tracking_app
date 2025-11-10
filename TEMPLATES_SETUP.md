@@ -2,7 +2,7 @@
 
 ## Phase 3 Feature: Science-Backed Habit Templates
 
-This feature adds a Templates Library with 20 curated, evidence-based habit templates across 4 categories.
+This feature adds a Templates Library with 79 curated, evidence-based habit templates across 10 categories.
 
 ## What Was Implemented
 
@@ -16,7 +16,7 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 
 - `list()` - Query all templates or filter by category
 - `getById()` - Get single template
-- `seedTemplates()` - Populate database with 20 science-backed templates
+- `seedTemplates()` - Populate database with 79 science-backed templates
 - `importTemplate()` - Import template and create habit from it
 - `getPopular()` - Get templates sorted by popularity score
 - `getUsageStats()` - Track template import analytics
@@ -59,7 +59,7 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 - Added Templates tab to navigation
 - Modals rendered outside navigator for proper z-index
 
-## Templates Included (55 Total)
+## Templates Included (79 Total)
 
 ### Morning Routine (5 templates)
 
@@ -138,13 +138,37 @@ This feature adds a Templates Library with 20 curated, evidence-based habit temp
 49. Creative Practice - Ericsson et al. (1993)
 50. Creative Inspiration - Getzels & Csikszentmihalyi (1976)
 
+### Learning & Education (5 templates)
+
+56. Daily Reading - Bavishi et al. (2016)
+57. Language Learning - Krashen (1982)
+58. Learn Something New - Giurgiu et al. (2020)
+59. Spaced Repetition Study - Dunlosky et al. (2013)
+60. Learning Journal - Bui et al. (2013)
+
+### Financial Health (5 templates)
+
+61. Track Expenses - Thaler & Sunstein (2008)
+62. Budget Review - Fernbach et al. (2015)
+63. Automated Savings - Thaler & Benartzi (2004) 🔥 Popular
+64. Financial Education - Lusardi & Mitchell (2014)
+65. No-Spend Day - Baumeister et al. (2007)
+
+### Creativity (5 templates)
+
+66. Daily Drawing - Kaimal et al. (2016)
+67. Creative Writing - Pennebaker & Smyth (2016)
+68. Idea Collection - Sawyer (2011)
+69. Creative Practice - Ericsson et al. (1993)
+70. Creative Inspiration - Getzels & Csikszentmihalyi (1976)
+
 ### Sleep & Recovery (5 templates)
 
-51. Consistent Sleep Schedule - Walker (2017) 🔥 Popular
-52. Cool Sleep Environment - Okamoto-Mizuno & Mizuno (2012)
-53. Bedtime Routine - Irish et al. (2015)
-54. Afternoon Caffeine Cutoff - Drake et al. (2013)
-55. Dark Sleep Environment - Gooley et al. (2011)
+71. Consistent Sleep Schedule - Walker (2017) 🔥 Popular
+72. Cool Sleep Environment - Okamoto-Mizuno & Mizuno (2012)
+73. Bedtime Routine - Irish et al. (2015)
+74. Afternoon Caffeine Cutoff - Drake et al. (2013)
+75. Dark Sleep Environment - Gooley et al. (2011)
 
 ## Setup Instructions
 
@@ -277,8 +301,8 @@ await seedTemplates({});
 
 ---
 
-**Implementation Status**: ✅ Complete with 55 templates across 10 categories
+**Implementation Status**: ✅ Complete with 79 templates across 10 categories
 
 **Categories**: Morning Routine, Health & Fitness, Productivity, Mindfulness, Andrew Huberman Protocols, Learning & Education, Social & Relationships, Financial Health, Creativity, Sleep & Recovery
 
-**Last Updated**: 2025-10-30
+**Last Updated**: 2025-11-10

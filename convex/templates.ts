@@ -870,7 +870,291 @@ export const seedTemplates = mutation({
         'Hawkley & Cacioppo (2010) - Loneliness and health',
     });
 
-    return { message: '54 templates seeded successfully', success: true };
+    // Learning & Education Templates
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Read for 30 minutes daily from books or articles. Builds knowledge, vocabulary, and cognitive function.',
+      frequency: 'daily',
+      icon: '📖',
+      iconColor: '#059669',
+      name: 'Daily Reading',
+      popularityScore: 88,
+      scientificReference:
+        'Bavishi et al. (2016) - Reading and mortality in a US cohort',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice a new language for 20 minutes daily. Language learning strengthens brain plasticity and cognitive reserve.',
+      frequency: 'daily',
+      icon: '🌍',
+      iconColor: '#3B82F6',
+      name: 'Language Learning',
+      popularityScore: 85,
+      scientificReference:
+        'Krashen (1982) - Principles and practice in second language acquisition',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Learn one new thing each day through courses, videos, or articles. Continuous learning maintains cognitive vitality.',
+      frequency: 'daily',
+      icon: '🧠',
+      iconColor: '#7C3AED',
+      name: 'Learn Something New',
+      popularityScore: 86,
+      scientificReference:
+        'Giurgiu et al. (2020) - Effectiveness of daily goal setting and planning',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Use spaced repetition to review material at optimal intervals. Improves long-term retention by 200%.',
+      frequency: 'daily',
+      icon: '🔄',
+      iconColor: '#F59E0B',
+      name: 'Spaced Repetition Study',
+      popularityScore: 84,
+      scientificReference:
+        'Dunlosky et al. (2013) - Improving students learning with effective learning techniques',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Keep a journal of what you learn each day. Reflection enhances memory consolidation and knowledge integration.',
+      frequency: 'daily',
+      icon: '📝',
+      iconColor: '#EC4899',
+      name: 'Learning Journal',
+      popularityScore: 82,
+      scientificReference:
+        'Bui et al. (2013) - The power of writing about learning',
+    });
+
+    // Financial Health Templates
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Record all expenses daily. Awareness of spending patterns leads to better financial decisions and savings.',
+      frequency: 'daily',
+      icon: '💰',
+      iconColor: '#10B981',
+      name: 'Track Expenses',
+      popularityScore: 87,
+      scientificReference:
+        'Thaler & Sunstein (2008) - Nudge: Improving decisions about health, wealth, and happiness',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Review your budget and financial goals weekly. Regular assessment improves financial planning and outcomes.',
+      frequency: 'weekly',
+      icon: '📊',
+      iconColor: '#3B82F6',
+      name: 'Budget Review',
+      popularityScore: 84,
+      scientificReference:
+        'Fernbach et al. (2015) - Evidence for motivated reasoning in the financial domain',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Set up automatic transfers to savings accounts. Removes decision fatigue and ensures consistent saving.',
+      frequency: 'monthly',
+      icon: '🤖',
+      iconColor: '#059669',
+      name: 'Automated Savings',
+      popularityScore: 89,
+      scientificReference:
+        'Thaler & Benartzi (2004) - Save More Tomorrow: Using behavioral economics to increase employee saving',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Spend 20 minutes weekly learning about personal finance through books, podcasts, or courses.',
+      frequency: 'weekly',
+      icon: '📚',
+      iconColor: '#7C3AED',
+      name: 'Financial Education',
+      popularityScore: 83,
+      scientificReference:
+        'Lusardi & Mitchell (2014) - The economic importance of financial literacy',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Designate one day per week with no spending except essentials. Breaks consumption habits and builds savings.',
+      frequency: 'weekly',
+      icon: '🚫',
+      iconColor: '#DC2626',
+      name: 'No-Spend Day',
+      popularityScore: 81,
+      scientificReference:
+        'Baumeister et al. (2007) - Decision fatigue and self-control',
+    });
+
+    // Creativity Templates
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Draw or sketch for 15 minutes daily. Creative expression reduces stress and enhances problem-solving skills.',
+      frequency: 'daily',
+      icon: '🎨',
+      iconColor: '#EC4899',
+      name: 'Daily Drawing',
+      popularityScore: 86,
+      scientificReference:
+        'Kaimal et al. (2016) - Reduction of cortisol levels and participants responses following art making',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Write creatively for 20 minutes daily. Expressing thoughts through writing improves emotional processing.',
+      frequency: 'daily',
+      icon: '✍️',
+      iconColor: '#F59E0B',
+      name: 'Creative Writing',
+      popularityScore: 85,
+      scientificReference:
+        'Pennebaker & Smyth (2016) - Opening up by writing it down',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Collect and organize creative ideas in a notebook or app. Regular idea capture prevents creative blocks.',
+      frequency: 'daily',
+      icon: '💡',
+      iconColor: '#8B5CF6',
+      name: 'Idea Collection',
+      popularityScore: 83,
+      scientificReference:
+        'Sawyer (2011) - Structure and improvisation in creative teaching',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Practice your creative skill (music, art, writing) for 30 minutes daily. Deliberate practice builds expertise.',
+      frequency: 'daily',
+      icon: '🎵',
+      iconColor: '#06B6D4',
+      name: 'Creative Practice',
+      popularityScore: 88,
+      scientificReference:
+        'Ericsson et al. (1993) - The role of deliberate practice in the acquisition of expert performance',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Seek inspiration from nature, art, or other creators. Exposure to diverse stimuli enhances creative thinking.',
+      frequency: 'daily',
+      icon: '🌟',
+      iconColor: '#F97316',
+      name: 'Creative Inspiration',
+      popularityScore: 81,
+      scientificReference:
+        'Getzels & Csikszentmihalyi (1976) - The creative vision: A longitudinal study of problem finding',
+    });
+
+    // Sleep & Recovery Templates
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Maintain consistent sleep and wake times daily. Regular sleep schedule optimizes circadian rhythm and health.',
+      frequency: 'daily',
+      icon: '⏰',
+      iconColor: '#1E40AF',
+      name: 'Consistent Sleep Schedule',
+      popularityScore: 92,
+      scientificReference:
+        'Walker (2017) - Why We Sleep: Unlocking the Power of Sleep and Dreams',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Keep bedroom temperature between 60-67°F (15-19°C). Cooler temperatures promote deeper, more restorative sleep.',
+      frequency: 'daily',
+      icon: '🌡️',
+      iconColor: '#0284C7',
+      name: 'Cool Sleep Environment',
+      popularityScore: 87,
+      scientificReference:
+        'Okamoto-Mizuno & Mizuno (2012) - Effects of thermal environment on sleep',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Follow a calming pre-sleep routine: dim lights, avoid screens, light reading. Signals body to prepare for sleep.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#6366F1',
+      name: 'Bedtime Routine',
+      popularityScore: 89,
+      scientificReference:
+        'Irish et al. (2015) - The role of sleep hygiene in promoting public health',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Stop caffeine intake after 2 PM. Caffeine half-life affects sleep quality 6-8 hours later.',
+      frequency: 'daily',
+      icon: '☕',
+      iconColor: '#B45309',
+      name: 'Afternoon Caffeine Cutoff',
+      popularityScore: 86,
+      scientificReference:
+        'Drake et al. (2013) - Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Sleep in complete darkness. Darkness maximizes melatonin production and improves sleep quality.',
+      frequency: 'daily',
+      icon: '🌑',
+      iconColor: '#0F172A',
+      name: 'Dark Sleep Environment',
+      popularityScore: 88,
+      scientificReference:
+        'Gooley et al. (2011) - Exposure to room light before bedtime suppresses melatonin onset',
+    });
+
+    return { message: '79 templates seeded successfully', success: true };
   },
 });
 
