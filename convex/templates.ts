@@ -117,20 +117,6 @@ export const seedTemplates = mutation({
         'Huberman (2021) - Light exposure and circadian biology',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'morning_routine',
-      createdAt: now,
-      description:
-        'Wait 90 minutes after waking before having caffeine. Supports adenosine clearance and sustained alertness.',
-      frequency: 'daily',
-      icon: '☕',
-      iconColor: '#B45309',
-      name: 'Delay Caffeine 90 Minutes',
-      popularityScore: 82,
-      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
-      scientificReference:
-        'Huberman Lab (2023) - Caffeine timing for optimal alertness',
-    });
 
     await ctx.db.insert('templates', {
       category: 'morning_routine',
@@ -664,20 +650,6 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Evening light protocols for better sleep',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'andrew_huberman',
-      createdAt: now,
-      description:
-        'Keep bedroom temperature 65-68°F (18-20°C) for optimal sleep. Cooler temperatures support deep sleep stages.',
-      frequency: 'daily',
-      icon: '🌡️',
-      iconColor: '#0EA5E9',
-      name: 'Cool Sleep Temperature',
-      popularityScore: 85,
-      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
-      scientificReference:
-        'Huberman Lab (2023) - Temperature minimum protocol for sleep',
-    });
 
     await ctx.db.insert('templates', {
       category: 'andrew_huberman',
@@ -770,20 +742,6 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Darkness and sleep optimization',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'andrew_huberman',
-      createdAt: now,
-      description:
-        'Maintain indoor temperature 65-68°F during sleep. Cooler temperatures promote deeper, more restorative sleep.',
-      frequency: 'daily',
-      icon: '🌡️',
-      iconColor: '#06B6D4',
-      name: 'Optimal Sleep Temperature',
-      popularityScore: 85,
-      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
-      scientificReference:
-        'Huberman Lab (2023) - Temperature regulation for sleep',
-    });
 
     // Social Habits Templates
     await ctx.db.insert('templates', {
@@ -1466,7 +1424,7 @@ export const seedTemplates = mutation({
         'Bootzin & Perlis (2011) - Stimulus control therapy for insomnia',
     });
 
-    return { message: '94 templates seeded successfully', success: true };
+    return { message: '91 templates seeded successfully', success: true };
   },
 });
 
