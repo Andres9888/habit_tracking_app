@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { eachDayOfInterval, format, subMonths } from 'date-fns';
+import { A } from '@mobily/ts-belt';
 import type { Id } from '../../convex/_generated/dataModel';
 import { api } from '../../convex/_generated/api';
-import { reduce } from 'ramda';
 
 export type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -15,8 +15,10 @@ type HabitTrackingEntry = {
 
 export const buildTrackingIndex = (
   entries: HabitTrackingEntry[],
-): Map<Id<'habits'>, Map<string, HabitTrackingEntry>> => {
-  return reduce<HabitTrackingEntry, Map<Id<'habits'>, Map<string, HabitTrackingEntry>>>(
+): Map<Id<'habits'>, Map<string, HabitTrackingEntry>> =>
+  A.reduce(
+    entries,
+    new Map<Id<'habits'>, Map<string, HabitTrackingEntry>>(),
     (accumulator, entry) => {
       if (!accumulator.has(entry.habitId)) {
         accumulator.set(entry.habitId, new Map());
@@ -24,18 +26,14 @@ export const buildTrackingIndex = (
       accumulator.get(entry.habitId)?.set(entry.date, entry);
       return accumulator;
     },
-    new Map(),
-    entries,
   );
-};
 
 export const buildCompletedDateSets = (
   trackingIndex: Map<Id<'habits'>, Map<string, HabitTrackingEntry>>,
-): Map<Id<'habits'>, Set<string>> => {
-  return reduce<
-    [Id<'habits'>, Map<string, HabitTrackingEntry>],
-    Map<Id<'habits'>, Set<string>>
-  >(
+): Map<Id<'habits'>, Set<string>> =>
+  A.reduce(
+    Array.from(trackingIndex.entries()),
+    new Map<Id<'habits'>, Set<string>>(),
     (accumulator, [habitId, dateMap]) => {
       const completedDates = Array.from(dateMap.values())
         .filter((entry) => entry.completed)
@@ -43,10 +41,7 @@ export const buildCompletedDateSets = (
       accumulator.set(habitId, new Set(completedDates));
       return accumulator;
     },
-    new Map(),
-    Array.from(trackingIndex.entries()),
   );
-};
 
 const parseLocalDateFromISO = (dateString: string) => {
   const [year, month, day] = dateString.split('-').map(Number);
