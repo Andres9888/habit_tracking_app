@@ -29,6 +29,9 @@ import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
 import { HapticTest } from './src/components/HapticTest';
+import PremiumUpgradeScreen from './src/screens/PremiumUpgradeScreen';
+import PremiumCTA from './src/components/PremiumCTA';
+import { usePremium } from './src/hooks/usePremium';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -67,11 +70,16 @@ function HabitsApp() {
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
   const [showHapticTest, setShowHapticTest] = useState(false);
+  const [showPremiumScreen, setShowPremiumScreen] = useState(false);
+  const { isPremium } = usePremium();
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
   const habits = useQuery(api.habits.list) ?? [];
+
+  const FREE_HABIT_LIMIT = 3;
+  const hasReachedHabitLimit = !isPremium && habits.length >= FREE_HABIT_LIMIT;
   const settings = useQuery(api.settings.get);
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
 
@@ -229,6 +237,18 @@ function HabitsApp() {
     [archiveHabit]
   );
 
+  if (showPremiumScreen) {
+    return (
+      <PremiumUpgradeScreen
+        onClose={() => setShowPremiumScreen(false)}
+        onUpgrade={() => {
+          setShowPremiumScreen(false);
+          // Show success message or navigate
+        }}
+      />
+    );
+  }
+
   if (showCharacterScreen) {
     return <CharacterScreen onBack={() => setShowCharacterScreen(false)} />;
   }
@@ -360,6 +380,22 @@ function HabitsApp() {
                     }}
                   />
                 </View>
+                {hasReachedHabitLimit && !isPremium && (
+                  <View className='rounded-2xl border p-4' style={{ backgroundColor: '#FFD70015', borderColor: '#FFD70040' }}>
+                    <Text
+                      className='text-[13px] font-semibold mb-2'
+                      style={{ color: theme.primaryText }}
+                    >
+                      You've reached the free limit of {FREE_HABIT_LIMIT} habits
+                    </Text>
+                    <PremiumCTA
+                      compact
+                      onUpgrade={() => setShowPremiumScreen(true)}
+                      title='Upgrade to Premium for Unlimited Habits'
+                      variant='default'
+                    />
+                  </View>
+                )}
                 <View className='flex-row items-center justify-end gap-3'>
                   <Pressable
                     accessibilityRole='button'
@@ -375,8 +411,8 @@ function HabitsApp() {
                   </Pressable>
                   <Pressable
                     accessibilityRole='button'
-                    className={`rounded-3xl px-5 py-2 ${!canSubmit ? 'opacity-40' : ''}`}
-                    disabled={!canSubmit}
+                    className={`rounded-3xl px-5 py-2 ${!canSubmit || hasReachedHabitLimit ? 'opacity-40' : ''}`}
+                    disabled={!canSubmit || (hasReachedHabitLimit && !isPremium)}
                     onPress={handleSubmit}
                     style={{
                       backgroundColor: theme.accent,
@@ -449,11 +485,15 @@ function HabitsApp() {
           </View>
         </View>
         <SettingsModal
-          visible={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
+          isHighContrastActive={highContrastMode}
           isCompact={isCompactMode}
           onChangeCompact={handleCompactChange}
-          isHighContrastActive={highContrastMode}
+          onClose={() => setIsSettingsOpen(false)}
+          onOpenPremium={() => {
+            setIsSettingsOpen(false);
+            setShowPremiumScreen(true);
+          }}
+          visible={isSettingsOpen}
         />
       </ScrollView>
       {/* Centered Floating Action Button */}

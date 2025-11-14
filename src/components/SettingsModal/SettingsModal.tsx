@@ -3,6 +3,7 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
+  Crown,
   Moon,
   Send,
   Smartphone,
@@ -10,13 +11,16 @@ import {
 import { useState } from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import PremiumCTA from '../PremiumCTA';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
+import { usePremium } from '../../hooks/usePremium';
 
 interface SettingsModalProps {
   celebrationsEnabled?: boolean;
   onClose: () => void;
+  onOpenPremium?: () => void;
   visible: boolean;
   isCompact?: boolean;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
@@ -39,6 +43,7 @@ export default function SettingsModal({
   celebrationsEnabled = true,
   visible,
   onClose,
+  onOpenPremium,
   isCompact = false,
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
@@ -53,6 +58,7 @@ export default function SettingsModal({
   isHighContrastActive = false,
   onOpenHapticTest,
 }: SettingsModalProps) {
+  const { isPremium } = usePremium();
   const {
     view,
     setView,
@@ -266,6 +272,60 @@ export default function SettingsModal({
                 type='navigation'
                 onPress={() => setView('archived')}
               />
+            </SettingsSection>
+
+            {/* Premium */}
+            <SettingsSection
+              highContrastMode={isHighContrastActive}
+              title='Premium'
+            >
+              {isPremium ? (
+                <View
+                  style={{
+                    backgroundColor: colors.card,
+                    borderRadius: 12,
+                    padding: 16,
+                  }}
+                >
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      gap: 8,
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Crown color={colors.accent} size={20} strokeWidth={2.5} />
+                    <Text
+                      style={{
+                        color: colors.headerText,
+                        fontSize: 16,
+                        fontWeight: '600',
+                      }}
+                    >
+                      You're Premium!
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: colors.mutedText,
+                      fontSize: 14,
+                      marginTop: 8,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Thank you for supporting the app. Enjoy all premium features.
+                  </Text>
+                </View>
+              ) : (
+                <View style={{ paddingHorizontal: 4 }}>
+                  <PremiumCTA
+                    onUpgrade={onOpenPremium}
+                    title='Upgrade to Premium'
+                    variant='prominent'
+                  />
+                </View>
+              )}
             </SettingsSection>
 
             {/* Contact */}
