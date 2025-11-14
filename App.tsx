@@ -29,6 +29,7 @@ import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
 import { HapticTest } from './src/components/HapticTest';
+import QuickAddHabitSheet from './src/components/QuickAddHabitSheet';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -67,6 +68,7 @@ function HabitsApp() {
   const [showCharacterScreen, setShowCharacterScreen] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
   const [showHapticTest, setShowHapticTest] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   const createHabit = useMutation(api.habits.create);
   const toggleHabit = useMutation(api.habits.toggleHabit);
@@ -165,6 +167,17 @@ function HabitsApp() {
       }
       return !prev;
     });
+  };
+
+  const handleFABPress = () => {
+    if (isAdding) {
+      // Close the inline form if it's open
+      setIsAdding(false);
+      setNewHabitName('');
+    } else {
+      // Show quick add sheet
+      setShowQuickAdd(true);
+    }
   };
 
   const handleSubmit = async () => {
@@ -476,11 +489,20 @@ function HabitsApp() {
             shadowRadius: 8,
             elevation: 8,
           }}
-          onPress={handleToggleForm}
+          onPress={handleFABPress}
         >
           <Plus color={theme.accentText} size={28} strokeWidth={2.5} />
         </Pressable>
       </View>
+      {/* Quick Add Sheet */}
+      <QuickAddHabitSheet
+        visible={showQuickAdd}
+        onClose={() => setShowQuickAdd(false)}
+        onOpenFullModal={() => {
+          setShowQuickAdd(false);
+          setIsAdding(true);
+        }}
+      />
     </GestureHandlerRootView>
   );
 }

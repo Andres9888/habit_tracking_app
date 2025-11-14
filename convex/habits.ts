@@ -7,6 +7,8 @@ export const create = mutation({
   args: {
     name: v.string(),
     notes: v.optional(v.string()),
+    icon: v.optional(v.string()),
+    iconColor: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
     reminderSound: v.optional(v.string()),
     reminderTime: v.optional(v.string()),
@@ -33,6 +35,10 @@ export const create = mutation({
       name: args.name,
 
       notes: args.notes,
+
+      icon: args.icon,
+
+      iconColor: args.iconColor,
 
       order: maxOrder + 1,
 
