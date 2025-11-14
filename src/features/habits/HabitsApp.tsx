@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { HabitsList } from './components/HabitsList';
@@ -8,6 +8,8 @@ import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import RewardCelebrationToast from '../../components/RewardCelebrationToast';
+import HabitLimitPaywall from '../../components/HabitLimitPaywall';
+import PremiumUpgradeScreen from '../../screens/PremiumUpgradeScreen';
 import { logInteraction } from '../../lib/analytics/interactions';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
@@ -17,6 +19,8 @@ export function HabitsApp() {
   const { dismissRewardToast, rewardToast } = list;
   const autoDismissTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
+  const [showHabitLimitPaywall, setShowHabitLimitPaywall] = useState(false);
+  const [showPremiumUpgrade, setShowPremiumUpgrade] = useState(false);
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
@@ -43,29 +47,44 @@ export function HabitsApp() {
     // Check if user has reached the free limit (3 habits)
     if (!list.isPremiumUser && list.hasReachedHabitLimit) {
       triggerWarning();
-
-      // TODO: Integrate RevenueCat for subscription management
-      // Show toast notification for 4th habit creation attempt
-      Alert.alert(
-        'Upgrade to Premium',
-        'You\'ve reached the free limit of 3 habits. Upgrade to premium to track unlimited habits!',
-        [
-          { text: 'Maybe Later', style: 'cancel' },
-          { text: 'Upgrade', onPress: () => {
-            // TODO: Navigate to RevenueCat paywall
-            console.log('Navigate to RevenueCat paywall');
-          }}
-        ]
-      );
+      setShowHabitLimitPaywall(true);
       return;
     }
+    
+    // Show soft paywall if approaching limit (2/3 habits)
+    if (!list.isPremiumUser && list.habits.length >= list.freeHabitLimit - 1) {
+      setShowHabitLimitPaywall(true);
+      return;
+    }
+    
     openCreateHabitScreen();
   }, [
     list.hasReachedHabitLimit,
     list.isPremiumUser,
+    list.habits.length,
+    list.freeHabitLimit,
     openCreateHabitScreen,
     triggerWarning,
   ]);
+
+  const handleUpgradeFromPaywall = useCallback(() => {
+    setShowHabitLimitPaywall(false);
+    setShowPremiumUpgrade(true);
+  }, []);
+
+  const handleStartTrial = useCallback(async () => {
+    // TODO: Integrate with RevenueCat/StoreKit
+    logInteraction('premium_trial_start', { source: 'upgrade_screen' });
+    console.log('Start premium trial - integrate with RevenueCat');
+    // For now, just close the modal
+    setShowPremiumUpgrade(false);
+  }, []);
+
+  const handleRestorePurchases = useCallback(async () => {
+    // TODO: Integrate with RevenueCat restore purchases
+    logInteraction('premium_restore', { source: 'upgrade_screen' });
+    console.log('Restore purchases - integrate with RevenueCat');
+  }, []);
 
   useEffect(() => {
     if (!rewardToast) {
@@ -149,6 +168,22 @@ export function HabitsApp() {
           onSecondaryAction={handleShareStreak}
           streak={rewardToast?.streak}
           visible={Boolean(rewardToast)}
+        />
+        
+        <HabitLimitPaywall
+          currentHabitCount={list.habits.length}
+          maxFreeHabits={list.freeHabitLimit}
+          type={list.hasReachedHabitLimit ? 'hard' : 'soft'}
+          visible={showHabitLimitPaywall}
+          onClose={() => setShowHabitLimitPaywall(false)}
+          onUpgrade={handleUpgradeFromPaywall}
+        />
+        
+        <PremiumUpgradeScreen
+          visible={showPremiumUpgrade}
+          onClose={() => setShowPremiumUpgrade(false)}
+          onStartTrial={handleStartTrial}
+          onRestorePurchases={handleRestorePurchases}
         />
       </View>
     </GestureHandlerRootView>

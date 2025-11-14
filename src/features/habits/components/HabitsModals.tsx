@@ -97,6 +97,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         }
         isHighContrastActive={settings?.highContrastMode ?? false}
         onOpenHapticTest={openHapticTest}
+        isPremium={settings?.hasPremium ?? false}
       />
 
       <CreateHabitModal

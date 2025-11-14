@@ -6,6 +6,8 @@ import {
   Moon,
   Send,
   Smartphone,
+  Sparkles,
+  Crown,
 } from 'lucide-react-native';
 import { useState } from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -13,6 +15,7 @@ import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
+import PremiumUpgradeScreen from '../../screens/PremiumUpgradeScreen';
 
 interface SettingsModalProps {
   celebrationsEnabled?: boolean;
@@ -33,6 +36,7 @@ interface SettingsModalProps {
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
   onOpenHapticTest?: () => void;
+  isPremium?: boolean;
 }
 
 export default function SettingsModal({
@@ -52,7 +56,9 @@ export default function SettingsModal({
   onChangeShowNotesStats = () => {},
   isHighContrastActive = false,
   onOpenHapticTest,
+  isPremium = false,
 }: SettingsModalProps) {
+  const [showPremiumUpgrade, setShowPremiumUpgrade] = useState(false);
   const {
     view,
     setView,
@@ -252,6 +258,48 @@ export default function SettingsModal({
                 }}
               />
             </SettingsSection>
+            {/* Premium Section */}
+            <SettingsSection
+              highContrastMode={isHighContrastActive}
+              title='Premium'
+            >
+              {isPremium ? (
+                <>
+                  <SettingsRow
+                    highContrastMode={isHighContrastActive}
+                    icon={<Crown color='#FFD700' size={16} />}
+                    iconBackgroundColor='#FFFBEB'
+                    label='Premium Active'
+                    showBorder={true}
+                    type='selection'
+                    value='Active'
+                  />
+                  <SettingsRow
+                    highContrastMode={isHighContrastActive}
+                    icon={<Sparkles color='#6b7280' size={16} />}
+                    iconBackgroundColor='#e5e7eb'
+                    label='Manage Subscription'
+                    showBorder={false}
+                    type='navigation'
+                    onPress={() => {
+                      // TODO: Open subscription management (iOS Settings or web portal)
+                      console.log('Open subscription management');
+                    }}
+                  />
+                </>
+              ) : (
+                <SettingsRow
+                  highContrastMode={isHighContrastActive}
+                  icon={<Sparkles color='#FFD700' size={16} />}
+                  iconBackgroundColor='#FFFBEB'
+                  label='Upgrade to Premium'
+                  showBorder={false}
+                  type='navigation'
+                  onPress={() => setShowPremiumUpgrade(true)}
+                />
+              )}
+            </SettingsSection>
+
             {/* Habit Management */}
             <SettingsSection
               highContrastMode={isHighContrastActive}
@@ -299,6 +347,20 @@ export default function SettingsModal({
           </View>
         </ScrollView>
       </View>
+      
+      <PremiumUpgradeScreen
+        visible={showPremiumUpgrade}
+        onClose={() => setShowPremiumUpgrade(false)}
+        onStartTrial={async () => {
+          // TODO: Integrate with RevenueCat
+          console.log('Start premium trial');
+          setShowPremiumUpgrade(false);
+        }}
+        onRestorePurchases={async () => {
+          // TODO: Integrate with RevenueCat
+          console.log('Restore purchases');
+        }}
+      />
     </Modal>
   );
 }
