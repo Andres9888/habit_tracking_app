@@ -9,40 +9,37 @@
  * PRD Reference: Epic 3 - Adaptive Interventions
  */
 
-import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, Pressable } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAppTheme } from '../theme';
 import type { Id } from '../../convex/_generated/dataModel';
 
-interface HabitsAtRiskWidgetProps {
+type HabitsAtRiskWidgetProps = {
   onHabitPress: (habitId: Id<'habits'>) => void;
-}
+  onViewAllPredictions?: (habits: AtRiskHabit[]) => void;
+};
 
-/**
- * At-risk habit type from predictions query
- * Matches the return type from api.predictions.getHabitsAtRisk
- */
-interface AtRiskHabit {
+export type AtRiskHabit = {
   _id: Id<'habits'>;
-  name: string;
-  icon: string;
-  strength: number;
   accessibility: number;
+  icon: string;
+  name: string;
   predictedProbability: number;
-  riskLevel: string; // 'high' or 'medium' from query
-}
+  riskLevel: string;
+  strength: number;
+};
 
 /**
  * Get intervention suggestion based on habit strength
  * Lower strength = more intensive intervention needed
  */
-function getInterventionSuggestion(strength: number): string {
+const getInterventionSuggestion = (strength: number): string => {
   if (strength < 0.3) return 'Needs intensive support';
   if (strength < 0.5) return 'Gentle reminder recommended';
   return 'Quick check-in suggested';
-}
+};
 
 /**
  * HabitsAtRiskWidget
@@ -50,7 +47,10 @@ function getInterventionSuggestion(strength: number): string {
  * Shows habits with <40% predicted completion probability.
  * Provides proactive alerts to help users maintain consistency.
  */
-export function HabitsAtRiskWidget({ onHabitPress }: HabitsAtRiskWidgetProps) {
+export const HabitsAtRiskWidget = ({
+  onHabitPress,
+  onViewAllPredictions,
+}: HabitsAtRiskWidgetProps) => {
   const theme = useAppTheme();
 
   // Query habits with low prediction probability (default threshold: 0.4)
@@ -58,119 +58,94 @@ export function HabitsAtRiskWidget({ onHabitPress }: HabitsAtRiskWidgetProps) {
     threshold: 0.4, // <40% completion probability
   });
 
-  // Don't show widget if loading or no at-risk habits
   if (!atRiskHabits || atRiskHabits.length === 0) {
     return null;
   }
 
+  const handleHabitPress = useCallback(
+    (habitId: Id<'habits'>) => {
+      onHabitPress(habitId);
+    },
+    [onHabitPress],
+  );
+
+  const handleHabitKeyDown = useCallback(
+    (habitId: Id<'habits'>, name: string) =>
+      (event: { nativeEvent: { key?: string } }) => {
+        const key = event.nativeEvent.key;
+        if (key === 'Enter' || key === ' ') {
+          event.preventDefault?.();
+          handleHabitPress(habitId);
+        } else if (!key && __DEV__) {
+          console.debug(`Unhandled key event for habit ${name}`);
+        }
+      },
+    [handleHabitPress],
+  );
+
+  const handleViewAll = useCallback(() => {
+    onViewAllPredictions?.(atRiskHabits);
+  }, [atRiskHabits, onViewAllPredictions]);
+
   return (
-    <View style={[styles.container, { borderColor: '#FCD34D' }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.custom.colors.warning[700] }]}>
+    <View className='mx-4 my-4 rounded-3xl border border-[#FCD34D] bg-white p-4 shadow-sm'>
+      <View className='mb-4 gap-1'>
+        <Text
+          className='text-lg font-semibold text-[#B45309]'
+          accessibilityRole='text'
+        >
           ⚠️ Habits at Risk
         </Text>
-        <Text style={[styles.subtitle, { color: theme.custom.colors.gray[600] }]}>
+        <Text
+          className='text-sm text-[#4B5563]'
+          accessibilityRole='text'
+        >
           {atRiskHabits.length} {atRiskHabits.length === 1 ? 'habit needs' : 'habits need'} attention
         </Text>
       </View>
 
-      {/* At-Risk Habit Cards */}
-      {atRiskHabits.map((habit: AtRiskHabit) => (
+      {atRiskHabits.map((habit) => (
         <Pressable
-          key={habit._id}
-          style={({ pressed }) => [
-            styles.habitCard,
-            { backgroundColor: '#FFFBEB' },
-            pressed && { opacity: 0.7 },
-          ]}
-          onPress={() => onHabitPress(habit._id)}
-          accessibilityRole="button"
+          accessibilityHint={`This habit has ${Math.round(habit.predictedProbability * 100)} percent chance of completion tomorrow`}
           accessibilityLabel={`View ${habit.name} habit details`}
-          accessibilityHint={`This habit has ${Math.round(habit.predictedProbability * 100)}% chance of completion tomorrow`}
+          accessibilityRole='button'
+          className='mb-3 rounded-2xl bg-[#FFFBEB] px-4 py-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FCD34D]'
+          key={habit._id}
+          onKeyDown={handleHabitKeyDown(habit._id, habit.name)}
+          onPress={() => handleHabitPress(habit._id)}
+          tabIndex={0}
         >
-          <View style={styles.habitInfo}>
-            <Text style={[styles.habitName, { color: theme.custom.colors.gray[900] }]}>
+          <View className='mb-2'>
+            <Text className='text-base font-medium text-[#111827]'>
               {habit.icon} {habit.name}
             </Text>
-            <Text style={[styles.prediction, { color: theme.custom.colors.warning[700] }]}>
+            <Text className='text-sm font-medium text-[#B45309]'>
               {Math.round(habit.predictedProbability * 100)}% chance tomorrow
             </Text>
           </View>
 
-          <View style={styles.interventionBadge}>
-            <Text style={[styles.interventionText, { color: theme.custom.colors.warning[700] }]}>
+          <View className='rounded-full bg-white/80 px-3 py-1'>
+            <Text className='text-xs font-semibold text-[#B45309]'>
               {getInterventionSuggestion(habit.strength)}
             </Text>
           </View>
         </Pressable>
       ))}
 
-      {/* View All Link */}
       <Pressable
-        style={styles.viewAllButton}
-        accessibilityRole="button"
-        accessibilityLabel="View all predictions"
+        accessibilityLabel='View all predictions'
+        accessibilityRole='button'
+        className='mt-2 flex-row items-center justify-start rounded-full px-2 py-1'
+        onKeyDown={handleHabitKeyDown(atRiskHabits[0]._id, atRiskHabits[0].name)}
+        onPress={handleViewAll}
+        tabIndex={0}
       >
-        <Text style={[styles.viewAllText, { color: theme.custom.colors.primary[600] }]}>
+        <Text className='text-sm font-semibold text-[#0F172A]'>
           View All Predictions →
         </Text>
       </Pressable>
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 16,
-    marginHorizontal: 16,
-    padding: 16,
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    borderWidth: 1,
-  },
-  header: {
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-  },
-  habitCard: {
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  habitInfo: {
-    marginBottom: 6,
-  },
-  habitName: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 2,
-  },
-  prediction: {
-    fontSize: 14,
-  },
-  interventionBadge: {
-    alignSelf: 'flex-start',
-  },
-  interventionText: {
-    fontSize: 12,
-    fontWeight: '500',
-  },
-  viewAllButton: {
-    marginTop: 8,
-    paddingVertical: 8,
-  },
-  viewAllText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-});
+};
 
 export default HabitsAtRiskWidget;

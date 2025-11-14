@@ -8,7 +8,7 @@ import {
   useMutation,
   useQuery,
 } from 'convex/react';
-import { addDays, format, startOfDay, subMonths, eachDayOfInterval } from 'date-fns';
+import { addDays, format, startOfDay } from 'date-fns';
 import { Plus, Settings } from 'lucide-react-native';
 import type { ComponentType } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -48,13 +48,14 @@ type ShareCardData = {
 };
 import { useMilestoneDetection } from './hooks/useMilestoneDetection';
 import PauseHabitModal from './components/PauseHabitModal';
-import HabitsAtRiskWidget from './components/HabitsAtRiskWidget';
+import HabitsAtRiskWidget, { type AtRiskHabit } from './components/HabitsAtRiskWidget';
 import * as SecureStore from 'expo-secure-store';
 
 // Import custom theme
 import theme from './theme';
-
-type HabitStatus = 'done' | 'missed' | 'planned';
+import { useHabitsData } from './hooks/useHabitsData';
+import type { HabitStatus } from './hooks/useHabitsData';
+import { useSafeMutation } from './hooks/useSafeMutation';
 
 // Initialize Convex client for Expo
 const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
@@ -62,6 +63,7 @@ if (!convexUrl) {
   throw new Error('EXPO_PUBLIC_CONVEX_URL is required but was not provided');
 }
 const convex = new ConvexReactClient(convexUrl);
+const premiumFeatureEnabled = process.env.EXPO_PUBLIC_ENABLE_PREMIUM === 'true';
 
 // Initialize Clerk (optional for development)
 const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -89,7 +91,7 @@ const WebToaster: ComponentType =
     ? (require('sonner').Toaster as ComponentType)
     : () => null;
 
-function HabitsApp() {
+const HabitsApp = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
@@ -105,15 +107,29 @@ function HabitsApp() {
   const [showHapticTest, setShowHapticTest] = useState(false);
 
   const toggleHabit = useMutation(api.habits.toggleHabit);
-  const archiveHabit = useMutation(api.habits.archive);
-  const pauseHabit = useMutation(api.habits.pause);
-  const removeHabit = useMutation(api.habits.remove);
-  const reorderHabits = useMutation(api.habits.reorderHabits);
-  const updateSettings = useMutation(api.settings.update);
-  const habitsQuery = useQuery(api.habits.list);
-  const habits = habitsQuery ?? [];
-  const isHabitsLoading = habitsQuery === undefined;
+  const archiveHabit = useSafeMutation(api.habits.archive, {
+    errorMessage: 'Unable to archive habit.',
+    successMessage: 'Habit archived.',
+  });
+  const pauseHabit = useSafeMutation(api.habits.pause, {
+    errorMessage: 'Unable to pause habit.',
+    successMessage: 'Habit paused.',
+  });
+  const removeHabit = useSafeMutation(api.habits.remove, {
+    errorMessage: 'Unable to delete habit.',
+    successMessage: 'Habit deleted.',
+  });
+  const reorderHabits = useSafeMutation(api.habits.reorderHabits, {
+    errorMessage: 'Unable to reorder habits.',
+  });
+  const updateSettings = useSafeMutation(api.settings.update, {
+    errorMessage: 'Unable to update settings.',
+  });
   const settings = useQuery(api.settings.get);
+  const today = useMemo(() => startOfDay(new Date()), []);
+  const { habits, isHabitsLoading, tracking, getHabitStatus, getStreak } =
+    useHabitsData(today);
+  const shouldShowPremiumWidgets = premiumFeatureEnabled;
 
   type Habit = typeof habits[number];
 
@@ -143,40 +159,37 @@ function HabitsApp() {
     }
   }, [milestone]);
 
-  // Track previous strengths to detect changes
-  const prevStrengthsRef = useRef<Map<string, number>>(new Map());
+    // Track previous strengths to detect changes
+    const prevStrengthsRef = useRef<Map<string, number>>(new Map());
 
-  // Detect strength changes and trigger milestone detection
-  useEffect(() => {
-    // Skip if habits are still loading
-    if (isHabitsLoading) return;
-
-    // Check if any habit's strength has changed
-    habits.forEach((habit) => {
-      const prevStrength = prevStrengthsRef.current.get(habit._id) || 0;
-      const currentStrength = habit.strength || 0;
-
-      // If strength increased, this might be a milestone crossing
-      if (currentStrength > prevStrength) {
-        console.log('🎯 Strength increased!', {
-          habitName: habit.name,
-          prevStrength: (prevStrength * 100).toFixed(1) + '%',
-          currentStrength: (currentStrength * 100).toFixed(1) + '%',
-        });
-        setLastUpdatedHabit({
-          id: habit._id,
-          name: habit.name,
-          strength: currentStrength,
-        });
+    // Detect strength changes and trigger milestone detection
+    useEffect(() => {
+      if (isHabitsLoading) {
+        return;
       }
 
-      // Update previous strength
-      prevStrengthsRef.current.set(habit._id, currentStrength);
-    });
-  }, [habits, isHabitsLoading]);
+      habits.forEach((habit) => {
+        const prevStrength = prevStrengthsRef.current.get(habit._id) || 0;
+        const currentStrength = habit.strength || 0;
 
-  const today = useMemo(() => startOfDay(new Date()), []);
-  const [weekAnchor, setWeekAnchor] = useState(today);
+        if (currentStrength > prevStrength) {
+          console.log('🎯 Strength increased!', {
+            habitName: habit.name,
+            prevStrength: (prevStrength * 100).toFixed(1) + '%',
+            currentStrength: (currentStrength * 100).toFixed(1) + '%',
+          });
+          setLastUpdatedHabit({
+            id: habit._id,
+            name: habit.name,
+            strength: currentStrength,
+          });
+        }
+
+        prevStrengthsRef.current.set(habit._id, currentStrength);
+      });
+    }, [habits, isHabitsLoading]);
+
+    const [weekAnchor, setWeekAnchor] = useState(today);
 
   const weekDates = useMemo(
     () => Array.from({ length: 5 }, (_, i) => addDays(weekAnchor, i - 4)),
@@ -185,63 +198,6 @@ function HabitsApp() {
   const weekDateStrings = useMemo(
     () => weekDates.map((d) => format(d, 'yyyy-MM-dd')),
     [weekDates]
-  );
-
-  // Load 12 months of tracking data for calendar modal and heatmap
-  const extendedDateRange = useMemo(() => {
-    const endDate = today;
-    const startDate = subMonths(endDate, 12);
-    return eachDayOfInterval({ start: startDate, end: endDate });
-  }, [today]);
-
-  const extendedDateStrings = useMemo(
-    () => extendedDateRange.map((d) => format(d, 'yyyy-MM-dd')),
-    [extendedDateRange]
-  );
-
-  const tracking =
-    useQuery(api.habits.getTracking, { dates: extendedDateStrings }) ?? [];
-
-  const completedDatesByHabit = useMemo(() => {
-    const map = new Map<string, Set<string>>();
-    for (const t of tracking) {
-      if (!t.completed) continue;
-      if (!map.has(t.habitId)) {
-        map.set(t.habitId, new Set<string>());
-      }
-      map.get(t.habitId)!.add(t.date);
-    }
-    return map;
-  }, [tracking]);
-
-  const getStreak = useCallback(
-    (habitId: string) => {
-      const completedDates = completedDatesByHabit.get(habitId);
-      if (!completedDates) return 0;
-
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      // Start from today if completed, otherwise start from yesterday
-      const todayString = format(today, 'yyyy-MM-dd');
-      const currentDate = completedDates.has(todayString)
-        ? new Date(today)
-        : new Date(today.getTime() - 24 * 60 * 60 * 1000);
-
-      let streak = 0;
-      // Count consecutive days backward
-      while (true) {
-        const dateString = format(currentDate, 'yyyy-MM-dd');
-        if (completedDates.has(dateString)) {
-          streak++;
-          currentDate.setDate(currentDate.getDate() - 1);
-        } else {
-          break;
-        }
-      }
-      return streak;
-    },
-    [completedDatesByHabit]
   );
 
   const handleToggleForm = () => {
@@ -259,26 +215,6 @@ function HabitsApp() {
   const canNavigateForward = useMemo(
     () => weekAnchor.getTime() < today.getTime(),
     [weekAnchor, today]
-  );
-
-  const getHabitStatus = useCallback(
-    (habitId: string, dateString: string): HabitStatus => {
-      const trackingEntry = tracking.find(
-        (t) => t.habitId === habitId && t.date === dateString
-      );
-
-      if (trackingEntry?.completed) return 'done';
-
-      // Parse date in local timezone to avoid timezone shifting
-      // YYYY-MM-DD format is interpreted as UTC, which can shift dates
-      const [year, month, day] = dateString.split('-').map(Number);
-      const date = new Date(year, month - 1, day); // month is 0-indexed
-      date.setHours(0, 0, 0, 0);
-
-      if (date < today) return 'missed';
-      return 'planned';
-    },
-    [tracking, today]
   );
 
   const handleDragEnd = useCallback(
@@ -341,6 +277,27 @@ function HabitsApp() {
   const handleHabitPress = useCallback((habit: Habit) => {
     setSelectedHabit(habit);
     setIsHabitCalendarOpen(true);
+  }, []);
+
+  const handleViewAllPredictions = useCallback(
+    (atRiskEntries: AtRiskHabit[]) => {
+      if (!atRiskEntries.length) {
+        return;
+      }
+      const primaryHabit = habits.find((habit) => habit._id === atRiskEntries[0]._id);
+      if (primaryHabit) {
+        setSelectedHabit(primaryHabit);
+        setIsHabitCalendarOpen(true);
+      }
+    },
+    [habits],
+  );
+
+  const handleUpgradePrompt = useCallback(() => {
+    Alert.alert(
+      'Upgrade required',
+      'Please contact support to enable premium features on your account.'
+    );
   }, []);
 
   // Memoize content container style to prevent re-renders on iOS
@@ -461,14 +418,17 @@ function HabitsApp() {
       />
 
       {/* Habits at Risk Widget - Phase 4: Retention Engine */}
-      <HabitsAtRiskWidget
-        onHabitPress={(habitId) => {
-          const habit = habits.find(h => h._id === habitId);
-          if (habit) {
-            handleHabitPress(habit);
-          }
-        }}
-      />
+      {shouldShowPremiumWidgets && (
+        <HabitsAtRiskWidget
+          onHabitPress={(habitId) => {
+            const habit = habits.find((h) => h._id === habitId);
+            if (habit) {
+              handleHabitPress(habit);
+            }
+          }}
+          onViewAllPredictions={handleViewAllPredictions}
+        />
+      )}
     </View>
   ), [
     canNavigateForward,
@@ -476,7 +436,9 @@ function HabitsApp() {
     handlePreviousWeek,
     handleToggleForm,
     handleHabitPress,
+    handleViewAllPredictions,
     habits,
+    shouldShowPremiumWidgets,
     weekDates,
   ]);
 
@@ -592,33 +554,30 @@ function HabitsApp() {
         visible={isHabitCalendarOpen}
         onClose={() => setIsHabitCalendarOpen(false)}
       />
-      <HabitDetailScreen
-        visible={isHabitDetailOpen}
-        onClose={() => setIsHabitDetailOpen(false)}
-        habit={selectedHabit}
-        isPremium={process.env.EXPO_PUBLIC_ENABLE_PREMIUM === 'true' || true} // Set to true for testing, false to test paywall
-        onEdit={(habit) => {
-          setIsHabitDetailOpen(false);
-          setHabitToEdit(habit);
-        }}
-        onPause={(habitId) => {
-          const habit = habits.find(h => h._id === habitId);
-          if (habit) {
-            setHabitToPause(habit);
-            setShowPauseModal(true);
-          }
-        }}
-        onArchive={handleArchive}
-        onDelete={handleDeleteHabit}
-        onUpgrade={() => {
-          // TODO: Navigate to subscription screen
-          console.log('Upgrade to premium');
-        }}
-        onOpenCalendar={(habit) => {
-          setSelectedHabit(habit);
-          setIsHabitCalendarOpen(true);
-        }}
-      />
+        <HabitDetailScreen
+          visible={isHabitDetailOpen}
+          onClose={() => setIsHabitDetailOpen(false)}
+          habit={selectedHabit}
+          isPremium={premiumFeatureEnabled}
+          onEdit={(habit) => {
+            setIsHabitDetailOpen(false);
+            setHabitToEdit(habit);
+          }}
+          onPause={(habitId) => {
+            const habit = habits.find((h) => h._id === habitId);
+            if (habit) {
+              setHabitToPause(habit);
+              setShowPauseModal(true);
+            }
+          }}
+          onArchive={handleArchive}
+          onDelete={handleDeleteHabit}
+          onUpgrade={handleUpgradePrompt}
+          onOpenCalendar={(habit) => {
+            setSelectedHabit(habit);
+            setIsHabitCalendarOpen(true);
+          }}
+        />
 
       {/* Milestone Celebration Modal */}
       {milestone && (
