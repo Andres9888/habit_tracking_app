@@ -47,11 +47,11 @@ export function HabitsApp() {
       // TODO: Integrate RevenueCat for subscription management
       // Show toast notification for 4th habit creation attempt
       Alert.alert(
-        'Upgrade to Premium',
-        'You\'ve reached the free limit of 3 habits. Upgrade to premium to track unlimited habits!',
+        '🎉 Great progress!',
+        'You\'ve built 3 solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.',
         [
-          { text: 'Maybe Later', style: 'cancel' },
-          { text: 'Upgrade', onPress: () => {
+          { text: 'Keep 3 Free', style: 'cancel' },
+          { text: 'Unlock Unlimited', onPress: () => {
             // TODO: Navigate to RevenueCat paywall
             console.log('Navigate to RevenueCat paywall');
           }}
@@ -132,13 +132,15 @@ export function HabitsApp() {
           onPreviousWeek={list.handlePreviousWeek}
         />
 
-        <View className='absolute bottom-8 right-6'>
-          <FloatingActionButton
-            celebrationsEnabled={list.celebrationsEnabled}
-            openCreateHabitScreen={handleCreateHabitRequest}
-            reduceMotionPreference={list.reduceMotionPreference}
-          />
-        </View>
+        {list.habits.length > 0 && (
+          <View className='absolute bottom-8 right-6'>
+            <FloatingActionButton
+              celebrationsEnabled={list.celebrationsEnabled}
+              openCreateHabitScreen={handleCreateHabitRequest}
+              reduceMotionPreference={list.reduceMotionPreference}
+            />
+          </View>
+        )}
 
         <WebToaster />
         <HabitsModals state={modals} />

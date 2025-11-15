@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#F5F1ED"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
@@ -31,6 +33,10 @@
         "projectId": "your-project-id-here"
       }
     },
-    "plugins": ["expo-font", "expo-notifications"]
+    "plugins": [
+      "expo-font",
+      "expo-notifications",
+      "expo-web-browser"
+    ]
   }
 }

@@ -75,3 +75,7 @@ This app uses the same Convex backend as the web version. Make sure to copy over
 
 - `convex/` directory with all your functions
 - Environment variables in your Convex dashboard
+
+## Troubleshooting
+
+- `xcrun simctl openurl ... exp://... code=60`: The simulator sometimes takes too long to accept the Expo link which previously caused `npm run expo:ios` to exit. We've patched the Expo CLI so it now prints a warning instead of crashing. When you see the warning, manually launch the iOS Simulator (or Expo Go inside it) and press `i` in the Expo CLI terminal to re-send the link, or scan the QR code directly inside Expo Go.

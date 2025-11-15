@@ -142,13 +142,13 @@ function MonetizationHero({
     >
       <View className='gap-2'>
         <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#a5b4fc]'>
-          Premium unlock
+          Level up
         </Text>
         <Text className='text-[26px] font-bold leading-[32px] tracking-tight text-white'>
-          Unlock unlimited habits
+          Ready to build more?
         </Text>
         <Text className='text-[15px] font-normal leading-[22px] text-[#cbd5f5]'>
-          Build every routine, stay accountable, and let smart insights guide your momentum.
+          Track unlimited habits, get smart reminders, and unlock insights to guide your growth.
         </Text>
       </View>
 
@@ -168,7 +168,7 @@ function MonetizationHero({
           }}
         >
           <Text className='text-[15px] font-bold leading-[20px] tracking-wide text-white'>
-            Upgrade now
+            Go Premium
           </Text>
         </AnimatedPressable>
         <View className='flex-1 rounded-full border border-white/22 px-4 py-3'>
@@ -203,8 +203,8 @@ function MonetizationHero({
 
         <Text className='text-[12px] font-medium text-[#fbbf24]'>
           {hasReachedHabitLimit
-            ? 'Power users track 6+ habits -- unlock your next routine today.'
-            : 'You are close to your limit. Your next slot unlocks with Premium.'}
+            ? 'You\'re making great progress! Upgrade to track every area of your life.'
+            : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
         </Text>
       </View>
     </View>
@@ -282,24 +282,27 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
 
   return (
     <Animated.View
-      className='gap-3 rounded-3xl border border-dashed border-[#c4b5fd] bg-[#f5f3ff] p-5'
+      className='gap-4 rounded-3xl border border-dashed border-[#c4b5fd] bg-gradient-to-b from-[#f5f3ff] to-[#faf5ff] p-5'
       style={{ opacity, transform: [{ scale }] }}
     >
-      <View className='gap-1'>
-        <Text className='text-[14px] font-semibold text-[#312e81]'>
-          Add your Evening Reset -- locked
-        </Text>
-        <Text className='text-[13px] leading-[18px] text-[#4338ca]'>
-          Unlimited habits, flexible reminders, and richer insights for every routine.
-        </Text>
+      <View className='items-center gap-2'>
+        <Text className='text-[24px]'>✨</Text>
+        <View className='gap-1'>
+          <Text className='text-center text-[16px] font-semibold text-[#312e81]'>
+            Want to add more habits?
+          </Text>
+          <Text className='text-center text-[13px] leading-[18px] text-[#4338ca]'>
+            Track unlimited habits, get smart reminders, and unlock deeper insights to build stronger routines.
+          </Text>
+        </View>
       </View>
       <Pressable
         accessibilityLabel='Upgrade to unlock unlimited habits'
         accessibilityRole='button'
-        className='items-center rounded-full bg-[#4338ca] px-5 py-3'
+        className='items-center rounded-full bg-[#6d28d9] px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
         onPress={onUpgradePress}
       >
-        <Text className='text-[14px] font-semibold text-white'>Upgrade to unlock</Text>
+        <Text className='text-[14px] font-semibold text-white'>Upgrade to Premium</Text>
       </Pressable>
     </Animated.View>
   );
@@ -326,27 +329,30 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
       />
       <View className='w-full rounded-t-3xl bg-white px-6 py-8'>
         <View className='gap-4'>
-          <Text className='text-[18px] font-bold text-[#0f172a]'>
-            Unlimited habits unlock your next big goal
+          <View className='items-center pb-2'>
+            <Text className='text-[32px]'>🚀</Text>
+          </View>
+          <Text className='text-center text-[20px] font-bold text-[#0f172a]'>
+            You're on a roll! Ready for more?
           </Text>
-          <Text className='text-[14px] leading-[20px] text-[#475569]'>
-            Track morning, work, and wellness routines without limits. Premium members stay consistent 2× longer.
+          <Text className='text-center text-[15px] leading-[22px] text-[#475569]'>
+            Track unlimited habits across all areas of your life. Premium members build stronger routines and stay consistent 2× longer.
           </Text>
           <Pressable
-            accessibilityLabel='Upgrade now'
+            accessibilityLabel='Upgrade to premium'
             accessibilityRole='button'
-            className='items-center rounded-full bg-[#6366f1] px-5 py-3'
+            className='items-center rounded-full bg-[#6d28d9] px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
             onPress={onUpgradePress}
           >
-            <Text className='text-[15px] font-semibold text-white'>Upgrade now</Text>
+            <Text className='text-[15px] font-semibold text-white'>Unlock unlimited habits</Text>
           </Pressable>
           <Pressable
-            accessibilityLabel='Not now'
+            accessibilityLabel='Continue with free plan'
             accessibilityRole='button'
-            className='items-center rounded-full border border-[#cbd5f5] px-5 py-3'
+            className='items-center rounded-full border-2 border-[#e5e7eb] bg-white px-5 py-3'
             onPress={onClose}
           >
-            <Text className='text-[14px] font-semibold text-[#6366f1]'>Maybe later</Text>
+            <Text className='text-[14px] font-semibold text-[#64748b]'>Keep 3 habits free</Text>
           </Pressable>
         </View>
       </View>

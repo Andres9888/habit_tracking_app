@@ -1,11 +1,7 @@
-import { Plus, Sparkles } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring
-} from 'react-native-reanimated';
+import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
+import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 interface HabitsEmptyStateProps {
@@ -21,194 +17,74 @@ const QUICK_START_HABITS = [
   { emoji: '🧘', name: 'Meditate', fullName: '🧘 Meditate' },
 ];
 
-const POPULAR_HABITS = [
-  { emoji: '💪', name: 'Exercise' },
-  { emoji: '📚', name: 'Reading' },
-  { emoji: '🧘', name: 'Meditation' },
-];
-
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function HabitsEmptyState({ isLoading, openCreateHabitScreen, openTemplatesScreen, onQuickCreateHabit }: HabitsEmptyStateProps) {
   const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
   const { triggerSuccess } = useHapticFeedback();
+
   if (isLoading) {
     return (
       <View className='items-center justify-center gap-3 py-20'>
         <ActivityIndicator color='#101727' size='small' />
-        <Text className='text-sm font-medium text-[#475467]'>
-          Loading your habits…
-        </Text>
+        <Text className='text-sm font-medium text-[#475467]'>Loading your habits…</Text>
       </View>
     );
   }
 
   return (
-    <View className='items-center justify-center gap-8 py-20'>
-      {/* Hero Section */}
-      <View className='items-center gap-5'>
-        {/* Emoji illustration */}
-        <View className='flex-row gap-3'>
-          {POPULAR_HABITS.map((habit, index) => (
-            <View
-              key={index}
-              className='h-14 w-14 items-center justify-center rounded-2xl'
-              style={{
-                backgroundColor: index === 0 ? '#fef3c7' : index === 1 ? '#dbeafe' : '#dcfce7',
-                transform: [{ rotate: index === 0 ? '-8deg' : index === 2 ? '8deg' : '0deg' }],
-              }}
-            >
-              <Text className='text-[28px]'>{habit.emoji}</Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Headline & value prop */}
-        <View className='items-center gap-3'>
-          <Text className='text-center text-[26px] font-bold leading-[32px] text-[#101727]'>
-            Build lasting habits
-          </Text>
-          <Text className='max-w-[280px] text-center text-[15px] leading-[22px] text-[#6b7280]'>
-            Start with just one routine. Track your progress, build momentum, and watch your consistency grow.
-          </Text>
-        </View>
-
-        {/* Social proof / encouragement */}
-        <View className='flex-row items-center gap-2 rounded-full bg-[#f0fdf4] px-4 py-2'>
-          <Sparkles color='#16a34a' size={14} strokeWidth={2} />
-          <Text className='text-[12px] font-semibold text-[#16a34a]'>
-            Most people start with 1-3 habits
-          </Text>
-        </View>
-      </View>
-
-      {/* Quick Start Suggestions */}
+    <View className='flex-1 gap-4 bg-[#f6f7fb] px-6 py-4'>
       {onQuickCreateHabit && (
-        <View className='w-full gap-3'>
-          <Text className='text-center text-[13px] font-semibold uppercase tracking-wider text-[#6b7280]'>
-            Quick Start
-          </Text>
-          <View className='flex-row justify-center gap-3'>
-            {QUICK_START_HABITS.map((habit) => {
-              const isCreating = creatingHabit === habit.fullName;
-
-              return (
-                <QuickStartButton
-                  key={habit.fullName}
-                  habit={habit}
-                  isCreating={isCreating}
-                  onPress={async () => {
-                    setCreatingHabit(habit.fullName);
-                    triggerSuccess();
-                    try {
-                      await onQuickCreateHabit(habit.fullName);
-                    } finally {
-                      setCreatingHabit(null);
-                    }
-                  }}
-                />
-              );
-            })}
-          </View>
-          <Text className='text-center text-[11px] text-[#9ca3af]'>
-            Tap to instantly add a habit
-          </Text>
-        </View>
+        <QuickWinCard
+          creatingHabit={creatingHabit}
+          onQuickCreateHabit={async (habitName) => {
+            setCreatingHabit(habitName);
+            triggerSuccess();
+            try {
+              await onQuickCreateHabit(habitName);
+            } finally {
+              setCreatingHabit(null);
+            }
+          }}
+        />
       )}
 
-      {/* CTA Section */}
-      <View className='items-center gap-4'>
-        <Pressable
-          accessibilityHint='Add your first habit'
-          accessibilityLabel='Create first habit'
-          accessibilityRole='button'
-          onPress={openCreateHabitScreen}
-        >
-          <View
-            className='h-36 w-36 items-center justify-center rounded-3xl border-2 border-dashed'
-            style={{ borderColor: '#cbd5f5', backgroundColor: '#f8f9ff' }}
-          >
-            <View className='h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-[0px_12px_24px_rgba(99,102,241,0.15)]'>
-              <Plus color='#6d28d9' size={36} strokeWidth={2.5} />
-            </View>
-            <Text className='mt-3 text-[13px] font-semibold text-[#6d28d9]'>
-              Create habit
-            </Text>
-          </View>
-        </Pressable>
+      <CustomHabitCard onPress={openCreateHabitScreen} />
 
-        {openTemplatesScreen && (
-          <Pressable
-            accessibilityHint='Explore expert-built habit templates and get inspired'
-            accessibilityLabel='Browse habit templates'
-            accessibilityRole='button'
-            className='rounded-full border-2 border-[#e0e7ff] bg-white px-6 py-3'
-            onPress={openTemplatesScreen}
-          >
-            <Text className='text-[14px] font-semibold text-[#6366f1]'>
-              Browse popular templates →
-            </Text>
-          </Pressable>
-        )}
-      </View>
-
-      {/* Simple steps hint */}
-      <View className='items-center gap-2 pt-2'>
-        <Text className='text-[11px] font-semibold uppercase tracking-wider text-[#9ca3af]'>
-          It's easy to get started
-        </Text>
-        <View className='flex-row gap-8'>
-          <View className='items-center gap-1'>
-            <Text className='text-[20px]'>✨</Text>
-            <Text className='text-[11px] font-medium text-[#6b7280]'>Choose</Text>
-          </View>
-          <View className='items-center gap-1'>
-            <Text className='text-[20px]'>📅</Text>
-            <Text className='text-[11px] font-medium text-[#6b7280]'>Track</Text>
-          </View>
-          <View className='items-center gap-1'>
-            <Text className='text-[20px]'>🔥</Text>
-            <Text className='text-[11px] font-medium text-[#6b7280]'>Grow</Text>
-          </View>
-        </View>
-      </View>
+      {openTemplatesScreen && (
+        <TemplatesPeekCard onPress={openTemplatesScreen} />
+      )}
     </View>
   );
 }
 
-// Quick Start Button Component with animations
 interface QuickStartButtonProps {
   habit: { emoji: string; name: string; fullName: string };
   isCreating: boolean;
   onPress: () => Promise<void>;
+  containerStyle?: ViewStyle;
 }
 
-function QuickStartButton({ habit, isCreating, onPress }: QuickStartButtonProps) {
+function QuickStartButton({ habit, isCreating, onPress, containerStyle }: QuickStartButtonProps) {
   const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback();
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const handlePress = async () => {
+    triggerSelection();
+    await onPress();
+  };
 
   return (
     <AnimatedPressable
       accessibilityLabel={`Add ${habit.name} habit`}
       accessibilityRole='button'
-      className='items-center gap-2 rounded-2xl border-2 border-[#e5e7eb] bg-white px-4 py-3'
+      className='items-center gap-2 rounded-2xl border border-[#e3e7ef] bg-white px-4 py-3 shadow-sm'
       disabled={isCreating}
-      style={[
-        animatedStyle,
-        {
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.05,
-          shadowRadius: 4,
-          elevation: 2,
-          minWidth: 90,
-        },
-      ]}
-      onPress={onPress}
+      style={[animatedStyle, containerStyle]}
+      onPress={handlePress}
       onPressIn={() => {
+        triggerLightImpact();
         scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
       }}
       onPressOut={() => {
@@ -219,12 +95,130 @@ function QuickStartButton({ habit, isCreating, onPress }: QuickStartButtonProps)
         <ActivityIndicator color='#6366f1' size='small' />
       ) : (
         <>
-          <Text className='text-[28px]'>{habit.emoji}</Text>
-          <Text className='text-center text-[12px] font-semibold text-[#1a1a1a]'>
-            {habit.name}
-          </Text>
+          <Text className='text-[26px]'>{habit.emoji}</Text>
+          <Text className='text-center text-[12px] font-semibold text-[#263040]'>{habit.name}</Text>
         </>
       )}
+    </AnimatedPressable>
+  );
+}
+
+function QuickWinCard({
+  creatingHabit,
+  onQuickCreateHabit,
+}: {
+  creatingHabit: string | null;
+  onQuickCreateHabit: (habitName: string) => Promise<void>;
+}) {
+  return (
+    <Animated.View
+      entering={FadeInDown.delay(20).springify().damping(18)}
+      className='rounded-[28px] border border-[#f4d38c] bg-white p-5 shadow-[0px_14px_32px_rgba(247,171,60,0.18)]'
+    >
+      <View className='gap-2 text-center'>
+        <View className='self-center rounded-full bg-[#fff4df] px-4 py-1'>
+          <Text className='text-[11px] font-semibold uppercase tracking-[3px] text-[#b35309]'>Instant start</Text>
+        </View>
+        <Text className='text-[18px] font-semibold text-[#0f172a]'>Start your first streak in seconds</Text>
+        <Text className='text-[13px] leading-[18px] text-[#5c606f]'>Pick a popular habit to begin your journey—you can customize it later.</Text>
+      </View>
+      <View className='mt-3 flex-row flex-wrap justify-center gap-2'>
+        {QUICK_START_HABITS.map((habit) => (
+          <QuickStartButton
+            key={habit.fullName}
+            habit={habit}
+            isCreating={creatingHabit === habit.fullName}
+            containerStyle={{ flexBasis: '30%' }}
+            onPress={async () => onQuickCreateHabit(habit.fullName)}
+          />
+        ))}
+      </View>
+    </Animated.View>
+  );
+}
+
+function CustomHabitCard({ onPress }: { onPress: () => void }) {
+  const pressScale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: pressScale.value }] }));
+  const { triggerSelection, triggerLightImpact } = useHapticFeedback();
+
+  return (
+    <AnimatedPressable
+      accessibilityHint='Create a habit from scratch'
+      accessibilityLabel='Create custom habit'
+      accessibilityRole='button'
+      entering={FadeInDown.delay(60).springify().damping(18)}
+      className='rounded-[28px] border border-[#e4e7ef] bg-white p-5 shadow-[0px_14px_30px_rgba(15,23,42,0.12)]'
+      style={animatedStyle}
+      onPress={() => {
+        triggerSelection();
+        onPress();
+      }}
+      onPressIn={() => {
+        triggerLightImpact();
+        pressScale.value = withSpring(0.97, { damping: 16, stiffness: 260 });
+      }}
+      onPressOut={() => {
+        pressScale.value = withSpring(1, { damping: 16, stiffness: 260 });
+      }}
+    >
+      <View className='gap-2 text-center'>
+        <View className='self-center rounded-full bg-[#f0f1ff] px-4 py-1'>
+          <Text className='text-[11px] font-semibold uppercase tracking-[3px] text-[#4c3bdc]'>Custom flow</Text>
+        </View>
+        <Text className='text-[18px] font-semibold text-[#0f172a]'>Create your own habit</Text>
+        <Text className='text-[13px] leading-[18px] text-[#5c606f]'>Design a habit that fits your unique goals and schedule.</Text>
+      </View>
+      <View className='mt-4 flex-row items-center justify-center'>
+        <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6d28d9] to-[#4338ca] shadow-[0px_12px_24px_rgba(109,40,217,0.25)]'>
+          <Plus color='#ffffff' size={28} strokeWidth={2.5} />
+        </View>
+      </View>
+      <View className='mt-3 rounded-full border border-[#dcdff5] bg-[#f6f7ff] px-4 py-2'>
+        <Text className='text-center text-[13px] font-semibold text-[#4338ca]'>Start from scratch →</Text>
+      </View>
+    </AnimatedPressable>
+  );
+}
+
+function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
+  const pressScale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: pressScale.value }] }));
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback();
+
+  return (
+    <AnimatedPressable
+      accessibilityHint='Preview expert-designed habit journeys'
+      accessibilityLabel='Explore premium templates'
+      accessibilityRole='button'
+      entering={FadeInDown.delay(100).springify().damping(18)}
+      className='rounded-[28px] border border-[#e0e7ff] bg-white p-5 text-center shadow-[0px_14px_32px_rgba(99,102,241,0.12)]'
+      style={animatedStyle}
+      onPress={() => {
+        triggerSelection();
+        onPress();
+      }}
+      onPressIn={() => {
+        triggerLightImpact();
+        pressScale.value = withSpring(0.97, { damping: 18, stiffness: 260 });
+      }}
+      onPressOut={() => {
+        pressScale.value = withSpring(1, { damping: 18, stiffness: 260 });
+      }}
+    >
+      <View className='gap-2 text-center'>
+        <View className='flex-row items-center justify-center gap-2'>
+          <Text className='text-[11px] font-semibold uppercase tracking-[3px] text-[#a855f7]'>Science-backed templates</Text>
+          <View className='rounded-full bg-[#fbbf24] px-2 py-0.5'>
+            <Text className='text-[9px] font-bold uppercase tracking-[1px] text-white'>Premium</Text>
+          </View>
+        </View>
+        <Text className='text-[18px] font-semibold text-[#4338ca]'>Skip the guesswork</Text>
+        <Text className='text-[13px] leading-[18px] text-[#4c1d95]'>Explore expert-designed habit journeys like 'Morning Momentum' and 'Focus Flow'—backed by behavioral science.</Text>
+      </View>
+      <View className='mt-3 rounded-full border border-[#dcdff5] bg-[#f6f7ff] px-4 py-2'>
+        <Text className='text-[13px] font-semibold text-[#4338ca]'>Preview templates →</Text>
+      </View>
     </AnimatedPressable>
   );
 }
