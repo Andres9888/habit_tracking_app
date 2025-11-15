@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import Animated, {
   FadeInDown,
+  FadeOutUp,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
@@ -150,6 +151,7 @@ interface QuickStartButtonProps {
   onPress: () => Promise<void>;
   containerStyle?: ViewStyle;
   index: number;
+  justShuffled?: boolean;
 }
 
 function QuickStartButton({
@@ -159,6 +161,7 @@ function QuickStartButton({
   onPress,
   containerStyle,
   index,
+  justShuffled = false,
 }: QuickStartButtonProps) {
   const scale = useSharedValue(1);
   const rotation = useSharedValue(0);
@@ -214,9 +217,10 @@ function QuickStartButton({
       accessibilityRole='button'
       className='items-center justify-center gap-2 rounded-2xl border px-3 py-4 shadow-sm'
       disabled={isCreating || isSuccess}
-      entering={FadeInDown.delay(120 + index * 50)
+      entering={FadeInDown.delay(justShuffled ? 150 + index * 60 : 120 + index * 50)
         .springify()
         .damping(14)}
+      exiting={FadeOutUp.duration(200)}
       style={[animatedStyle, containerStyle]}
       onPress={handlePress}
       onPressIn={() => {
@@ -269,22 +273,46 @@ function QuickWinCard({
 }) {
   const [suggestions, setSuggestions] = useState(() => QUICK_START_HABITS.slice(0, 4));
   const [shuffleCount, setShuffleCount] = useState(0);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const [justShuffled, setJustShuffled] = useState(false);
   const shuffleScale = useSharedValue(1);
+  const shuffleRotation = useSharedValue(0);
   const { triggerSelection } = useHapticFeedback();
 
   const shuffleButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: shuffleScale.value }],
+    transform: [
+      { scale: shuffleScale.value },
+      { rotate: `${shuffleRotation.value}deg` },
+    ],
   }));
 
   const shuffleSuggestions = () => {
     triggerSelection();
+    setIsShuffling(true);
 
-    // Quick press feedback
-    shuffleScale.value = withSequence(withTiming(0.85, { duration: 100 }), withSpring(1, { damping: 12 }));
+    // Enhanced shuffle button animation with rotation
+    shuffleScale.value = withSequence(
+      withTiming(0.85, { duration: 100 }),
+      withSpring(1, { damping: 12 })
+    );
+    shuffleRotation.value = withSequence(
+      withSpring(360, { damping: 10, stiffness: 200 }),
+      withSpring(0, { damping: 12 })
+    );
 
-    const shuffled = [...QUICK_START_HABITS].sort(() => Math.random() - 0.5);
-    setSuggestions(shuffled.slice(0, 4));
-    setShuffleCount((c) => c + 1);
+    // Delay the actual shuffle to allow exit animations to play
+    setTimeout(() => {
+      const shuffled = [...QUICK_START_HABITS].sort(() => Math.random() - 0.5);
+      setSuggestions(shuffled.slice(0, 4));
+      setShuffleCount((c) => c + 1);
+      setJustShuffled(true);
+      setIsShuffling(false);
+      
+      // Clear justShuffled flag after animations complete
+      setTimeout(() => {
+        setJustShuffled(false);
+      }, 500);
+    }, 150);
   };
 
   return (
@@ -314,11 +342,12 @@ function QuickWinCard({
       <View className='mt-4 flex-row flex-wrap justify-between gap-y-3'>
         {suggestions.map((habit, index) => (
           <QuickStartButton
-            key={`${shuffleCount}-${index}`}
+            key={`${shuffleCount}-${habit.fullName}-${index}`}
             habit={habit}
-            index={shuffleCount === 0 ? index : 0}
+            index={index}
             isCreating={creatingHabit === habit.fullName}
             isSuccess={successHabit === habit.fullName}
+            justShuffled={justShuffled}
             containerStyle={{ width: '48%' }}
             onPress={async () => onQuickCreateHabit(habit.fullName)}
           />
@@ -327,6 +356,7 @@ function QuickWinCard({
       <Pressable
         accessibilityLabel='Shuffle quick start habit suggestions'
         className='mt-3 self-center rounded-full px-4 py-1.5 active:bg-[#fef3c7]'
+        disabled={isShuffling}
         onPress={shuffleSuggestions}
       >
         <Animated.Text className='text-[12px] font-semibold text-[#d97706]' style={shuffleButtonStyle}>
