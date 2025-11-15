@@ -150,6 +150,8 @@ interface QuickStartButtonProps {
   onPress: () => Promise<void>;
   containerStyle?: ViewStyle;
   index: number;
+  isShuffling?: boolean;
+  shuffleCount: number;
 }
 
 function QuickStartButton({
@@ -159,17 +161,26 @@ function QuickStartButton({
   onPress,
   containerStyle,
   index,
+  isShuffling = false,
+  shuffleCount,
 }: QuickStartButtonProps) {
   const scale = useSharedValue(1);
   const rotation = useSharedValue(0);
   const bgProgress = useSharedValue(0);
   const checkScale = useSharedValue(0);
+  const opacity = useSharedValue(1);
+  const translateY = useSharedValue(0);
   const { triggerLightImpact, triggerSelection } = useHapticFeedback();
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }, { rotate: `${rotation.value}deg` }],
+    transform: [
+      { scale: scale.value },
+      { rotate: `${rotation.value}deg` },
+      { translateY: translateY.value }
+    ],
     backgroundColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#ffffff', '#f0f9ff', '#dcfce7']),
     borderColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#e3e7ef', '#bfdbfe', '#86efac']),
+    opacity: opacity.value,
   }));
 
   const checkmarkStyle = useAnimatedStyle(() => ({
@@ -180,6 +191,17 @@ function QuickStartButton({
   const contentStyle = useAnimatedStyle(() => ({
     opacity: isSuccess ? 0 : 1,
   }));
+
+  // Shuffle animation effect
+  useEffect(() => {
+    if (isShuffling) {
+      // Exit animation: fade out, rotate slightly, and slide down
+      opacity.value = withTiming(0, { duration: 250 });
+      rotation.value = withTiming(-15, { duration: 250 });
+      translateY.value = withTiming(20, { duration: 250 });
+      scale.value = withTiming(0.9, { duration: 250 });
+    }
+  }, [isShuffling, opacity, rotation, translateY, scale]);
 
   // Success celebration effect
   useEffect(() => {
@@ -214,7 +236,7 @@ function QuickStartButton({
       accessibilityRole='button'
       className='items-center justify-center gap-2 rounded-2xl border px-3 py-4 shadow-sm'
       disabled={isCreating || isSuccess}
-      entering={FadeInDown.delay(120 + index * 50)
+      entering={FadeInDown.delay(shuffleCount === 0 ? 120 + index * 50 : 450 + index * 80)
         .springify()
         .damping(14)}
       style={[animatedStyle, containerStyle]}
@@ -269,22 +291,50 @@ function QuickWinCard({
 }) {
   const [suggestions, setSuggestions] = useState(() => QUICK_START_HABITS.slice(0, 4));
   const [shuffleCount, setShuffleCount] = useState(0);
+  const [isShuffling, setIsShuffling] = useState(false);
   const shuffleScale = useSharedValue(1);
+  const shuffleRotation = useSharedValue(0);
+  const shuffleOpacity = useSharedValue(1);
   const { triggerSelection } = useHapticFeedback();
 
   const shuffleButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: shuffleScale.value }],
+    transform: [
+      { scale: shuffleScale.value },
+      { rotate: `${shuffleRotation.value}deg` }
+    ],
+    opacity: shuffleOpacity.value,
   }));
 
   const shuffleSuggestions = () => {
+    if (isShuffling) return;
+
     triggerSelection();
+    setIsShuffling(true);
 
-    // Quick press feedback
-    shuffleScale.value = withSequence(withTiming(0.85, { duration: 100 }), withSpring(1, { damping: 12 }));
+    // Enhanced shuffle animation sequence
+    shuffleScale.value = withSequence(
+      withTiming(0.8, { duration: 120 }),
+      withSpring(1.2, { damping: 8, stiffness: 300 }),
+      withTiming(1, { duration: 200 })
+    );
 
-    const shuffled = [...QUICK_START_HABITS].sort(() => Math.random() - 0.5);
-    setSuggestions(shuffled.slice(0, 4));
-    setShuffleCount((c) => c + 1);
+    shuffleRotation.value = withSequence(
+      withTiming(180, { duration: 300 }),
+      withTiming(360, { duration: 300 })
+    );
+
+    shuffleOpacity.value = withSequence(
+      withTiming(0.7, { duration: 150 }),
+      withTiming(1, { duration: 300 })
+    );
+
+    // Delay the actual shuffle to sync with animation
+    setTimeout(() => {
+      const shuffled = [...QUICK_START_HABITS].sort(() => Math.random() - 0.5);
+      setSuggestions(shuffled.slice(0, 4));
+      setShuffleCount((c) => c + 1);
+      setIsShuffling(false);
+    }, 400);
   };
 
   return (
@@ -316,9 +366,11 @@ function QuickWinCard({
           <QuickStartButton
             key={`${shuffleCount}-${index}`}
             habit={habit}
-            index={shuffleCount === 0 ? index : 0}
+            index={index}
             isCreating={creatingHabit === habit.fullName}
             isSuccess={successHabit === habit.fullName}
+            isShuffling={isShuffling}
+            shuffleCount={shuffleCount}
             containerStyle={{ width: '48%' }}
             onPress={async () => onQuickCreateHabit(habit.fullName)}
           />
@@ -326,11 +378,15 @@ function QuickWinCard({
       </View>
       <Pressable
         accessibilityLabel='Shuffle quick start habit suggestions'
-        className='mt-3 self-center rounded-full px-4 py-1.5 active:bg-[#fef3c7]'
+        className={clsx(
+          'mt-3 self-center rounded-full px-4 py-1.5 active:bg-[#fef3c7]',
+          isShuffling && 'opacity-50'
+        )}
+        disabled={isShuffling}
         onPress={shuffleSuggestions}
       >
         <Animated.Text className='text-[12px] font-semibold text-[#d97706]' style={shuffleButtonStyle}>
-          Shuffle suggestions ↻
+          {isShuffling ? 'Shuffling...' : 'Shuffle suggestions ↻'}
         </Animated.Text>
       </Pressable>
     </Animated.View>
