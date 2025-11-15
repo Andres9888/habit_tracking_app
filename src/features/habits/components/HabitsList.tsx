@@ -476,6 +476,8 @@ export function HabitsList({
       ).length;
       const totalHabits = habits.length;
 
+      const shouldShowTimeline = totalHabits > 0;
+
       return (
         <View className='gap-3 pb-2.5 pt-16'>
           <HabitsHeader
@@ -487,14 +489,16 @@ export function HabitsList({
             totalHabits={totalHabits}
           />
 
-          <CalendarTimeline
-            showSeparator
-            canNavigateForward={canNavigateForward}
-            dates={weekDates}
-            reduceMotion={reduceMotionPreference}
-            onNextWeek={onNextWeek}
-            onPreviousWeek={onPreviousWeek}
-          />
+          {shouldShowTimeline && (
+            <CalendarTimeline
+              showSeparator
+              canNavigateForward={canNavigateForward}
+              dates={weekDates}
+              reduceMotion={reduceMotionPreference}
+              onNextWeek={onNextWeek}
+              onPreviousWeek={onPreviousWeek}
+            />
+          )}
         </View>
       );
     },
