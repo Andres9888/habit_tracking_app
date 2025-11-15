@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import { Plus } from 'lucide-react-native';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import ConfettiCannon from 'react-native-confetti-cannon';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 interface HabitsEmptyStateProps {
@@ -28,7 +29,7 @@ const TEMPLATE_PREVIEWS = [
   { title: 'Focus Flow', tagline: 'Deep work ritual' },
 ];
 
-const BASE_CARD_CLASS = 'w-full rounded-[22px] border border-[#e6e9f2] bg-white px-5 py-5 shadow-[0px_10px_24px_rgba(15,23,42,0.07)]';
+const BASE_CARD_CLASS = 'w-full rounded-[20px] border border-[#e6e9f2] bg-white px-4 py-4 shadow-[0px_8px_18px_rgba(15,23,42,0.06)]';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -41,7 +42,8 @@ export function HabitsEmptyState({
   onScheduleReminder,
 }: HabitsEmptyStateProps) {
   const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
-  const { triggerSuccess } = useHapticFeedback();
+  const confettiRef = useRef<ConfettiCannon | null>(null);
+  const { triggerSuccess, triggerLightImpact } = useHapticFeedback();
 
   if (isLoading) {
     return (
@@ -53,15 +55,18 @@ export function HabitsEmptyState({
   }
 
   return (
-    <View className='flex-1 gap-4 bg-[#f6f7fb] px-6 py-4'>
+    <View className='flex-1 gap-3 bg-[#f8f9fc] px-4 py-3'>
       {onQuickCreateHabit && (
         <QuickWinCard
+          confettiRef={confettiRef}
           creatingHabit={creatingHabit}
           onQuickCreateHabit={async (habitName) => {
             setCreatingHabit(habitName);
             triggerSuccess();
+            triggerLightImpact();
             try {
               await onQuickCreateHabit(habitName);
+              confettiRef.current?.start();
             } finally {
               setCreatingHabit(null);
             }
@@ -69,13 +74,15 @@ export function HabitsEmptyState({
         />
       )}
 
-      <CustomHabitCard onPress={openCreateHabitScreen} onNeedHelpQuiz={onNeedHelpQuiz} />
-
       {openTemplatesScreen && (
         <TemplatesPeekCard onPress={openTemplatesScreen} />
       )}
 
-      <HelperRow onNeedHelpQuiz={onNeedHelpQuiz} onScheduleReminder={onScheduleReminder} />
+      <CustomHabitCard onPress={openCreateHabitScreen} onNeedHelpQuiz={onNeedHelpQuiz} />
+
+      {(onNeedHelpQuiz || onScheduleReminder) && (
+        <CompactHelperRow onNeedHelpQuiz={onNeedHelpQuiz} onScheduleReminder={onScheduleReminder} />
+      )}
     </View>
   );
 }
@@ -101,7 +108,7 @@ function QuickStartButton({ habit, isCreating, onPress, containerStyle }: QuickS
     <AnimatedPressable
       accessibilityLabel={`Add ${habit.name} habit`}
       accessibilityRole='button'
-      className='items-center gap-2 rounded-2xl border border-[#e3e7ef] bg-white px-4 py-3 shadow-sm'
+      className='items-center gap-1.5 rounded-2xl border border-[#e3e7ef] bg-white px-3 py-3 shadow-sm'
       disabled={isCreating}
       style={[animatedStyle, containerStyle]}
       onPress={handlePress}
@@ -131,9 +138,11 @@ function QuickStartButton({ habit, isCreating, onPress, containerStyle }: QuickS
 function QuickWinCard({
   creatingHabit,
   onQuickCreateHabit,
+  confettiRef,
 }: {
   creatingHabit: string | null;
   onQuickCreateHabit: (habitName: string) => Promise<void>;
+  confettiRef: React.MutableRefObject<ConfettiCannon | null>;
 }) {
   const [suggestions, setSuggestions] = useState(() => QUICK_START_HABITS.slice(0, 4));
   const { triggerSelection } = useHapticFeedback();
@@ -149,11 +158,22 @@ function QuickWinCard({
       entering={FadeInDown.delay(20).springify().damping(18)}
       className={clsx(BASE_CARD_CLASS, 'border-[#f4d38c] bg-[#fffdf7]')}
     >
+      <ConfettiCannon
+        autoStart={false}
+        count={25}
+        fadeOut
+        origin={{ x: 0, y: 0 }}
+        explosionSpeed={250}
+        fallSpeed={1800}
+        ref={(instance) => {
+          confettiRef.current = instance;
+        }}
+      />
       <View className='gap-2 text-center'>
         <Text className='text-[18px] font-semibold text-[#0f172a]'>Start your first streak in seconds</Text>
         <Text className='text-[13px] leading-[18px] text-[#5c606f]'>Pick a habit you can try today—you can customize it anytime.</Text>
       </View>
-      <View className='mt-3 flex-row flex-wrap justify-between gap-y-3'>
+      <View className='mt-3 flex-row flex-wrap justify-between gap-y-2'>
         {suggestions.map((habit) => (
           <QuickStartButton
             key={habit.fullName}
@@ -166,10 +186,10 @@ function QuickWinCard({
       </View>
       <Pressable
         accessibilityLabel='Shuffle quick start habit suggestions'
-        className='mt-3 self-center'
+        className='mt-2 self-center'
         onPress={shuffleSuggestions}
       >
-        <Text className='text-[12px] font-semibold text-[#b35309]'>Shuffle suggestions ↻</Text>
+        <Text className='text-[11px] font-semibold text-[#b35309]'>Shuffle ↻</Text>
       </Pressable>
     </Animated.View>
   );
@@ -186,7 +206,7 @@ function CustomHabitCard({ onPress, onNeedHelpQuiz }: { onPress: () => void; onN
       accessibilityLabel='Create custom habit'
       accessibilityRole='button'
       entering={FadeInDown.delay(60).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'items-center text-center')}
+      className={clsx(BASE_CARD_CLASS, 'flex-row items-center gap-3')}
       style={animatedStyle}
       onPress={() => {
         triggerSelection();
@@ -200,28 +220,17 @@ function CustomHabitCard({ onPress, onNeedHelpQuiz }: { onPress: () => void; onN
         pressScale.value = withSpring(1, { damping: 16, stiffness: 260 });
       }}
     >
-      <View className='gap-2 text-center'>
-        <View className='self-center rounded-full bg-[#f0f1ff] px-4 py-1'>
-          <Text className='text-[11px] font-semibold uppercase tracking-[3px] text-[#4c3bdc]'>Custom flow · takes ~30s</Text>
-        </View>
+      <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6d28d9] to-[#4338ca] shadow-[0px_8px_18px_rgba(109,40,217,0.2)]'>
+        <Plus color='#ffffff' size={24} strokeWidth={2.2} />
+      </View>
+      <View className='flex-1 gap-1'>
         <Text className='text-[18px] font-semibold text-[#0f172a]'>Create your own habit</Text>
-        <Text className='text-[13px] leading-[18px] text-[#5c606f]'>Set the name, schedule, and reminders—every detail is built around you.</Text>
-      </View>
-      <View className='mt-4 flex-row items-center justify-center'>
-        <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6d28d9] to-[#4338ca] shadow-[0px_12px_24px_rgba(109,40,217,0.25)]'>
-          <Plus color='#ffffff' size={28} strokeWidth={2.5} />
-        </View>
-      </View>
-      <View className='mt-3 rounded-full border border-[#dcdff5] bg-[#f6f7ff] px-4 py-2'>
-        <Text className='text-center text-[13px] font-semibold text-[#4338ca]'>Start from scratch →</Text>
+        <Text className='text-[13px] leading-[18px] text-[#5c606f]'>Set the name, schedule, and reminders to fit your day. Takes ~30s.</Text>
+        <Text className='text-[13px] font-semibold text-[#4338ca]'>Start from scratch →</Text>
       </View>
       {onNeedHelpQuiz && (
-        <Pressable
-          accessibilityLabel='Need inspiration? Take the quiz'
-          className='mt-2'
-          onPress={onNeedHelpQuiz}
-        >
-          <Text className='text-center text-[12px] font-semibold text-[#6366f1]'>Need inspiration? Take the 30-second quiz →</Text>
+        <Pressable accessibilityLabel='Need inspiration? Take the quiz' onPress={onNeedHelpQuiz}>
+          <Text className='text-[11px] font-semibold text-[#6366f1]'>Quiz</Text>
         </Pressable>
       )}
     </AnimatedPressable>
@@ -236,10 +245,10 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
   return (
     <AnimatedPressable
       accessibilityHint='Preview expert-designed habit journeys'
-      accessibilityLabel='Explore premium templates'
+      accessibilityLabel='Explore templates'
       accessibilityRole='button'
       entering={FadeInDown.delay(100).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'gap-3 text-center')}
+      className={clsx(BASE_CARD_CLASS, 'gap-2')}
       style={animatedStyle}
       onPress={() => {
         triggerSelection();
@@ -253,61 +262,48 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
         pressScale.value = withSpring(1, { damping: 18, stiffness: 260 });
       }}
     >
-      <View className='gap-2 text-center'>
-        <View className='flex-row flex-wrap items-center justify-center gap-2'>
+      <View className='flex-row items-center justify-between'>
+        <View className='flex-1'>
           <Text className='text-[11px] font-semibold uppercase tracking-[3px] text-[#a855f7]'>Science-backed templates</Text>
-          <View className='rounded-full bg-[#fbbf24] px-2 py-0.5'>
-            <Text className='text-[9px] font-bold uppercase tracking-[1px] text-white'>Premium · +96% completion</Text>
-          </View>
+          <Text className='text-[18px] font-semibold text-[#4338ca]'>Skip the guesswork</Text>
+          <Text className='text-[13px] leading-[18px] text-[#4c1d95]'>Morning Momentum, Focus Flow, and more curated journeys.</Text>
         </View>
-        <Text className='text-[18px] font-semibold text-[#4338ca]'>Skip the guesswork</Text>
-        <Text className='text-[13px] leading-[18px] text-[#4c1d95]'>Explore guided journeys like “Morning Momentum” or “Focus Flow” with reminders and celebration moments built-in.</Text>
+        <View className='items-end gap-1'>
+          {TEMPLATE_PREVIEWS.map((template) => (
+            <Text key={template.title} className='text-[12px] font-semibold text-[#4338ca]'>• {template.title}</Text>
+          ))}
+        </View>
       </View>
-      <View className='mt-3 gap-2'>
-        {TEMPLATE_PREVIEWS.map((template) => (
-          <View key={template.title} className='rounded-2xl border border-[#ece9ff] bg-[#f7f5ff] px-4 py-3 text-left'>
-            <Text className='text-[12px] font-semibold text-[#4338ca]'>{template.title}</Text>
-            <Text className='text-[11px] text-[#6b5aa6]'>{template.tagline}</Text>
-          </View>
-        ))}
-      </View>
-      <View className='mt-4 rounded-full border border-[#dcdff5] bg-[#f6f7ff] px-4 py-2'>
-        <Text className='text-[13px] font-semibold text-[#4338ca]'>Preview templates →</Text>
+      <View className='rounded-full border border-[#dcdff5] bg-[#f6f7ff] px-4 py-2'>
+        <Text className='text-center text-[13px] font-semibold text-[#4338ca]'>Preview templates →</Text>
       </View>
     </AnimatedPressable>
   );
 }
 
-function HelperRow({
+function CompactHelperRow({
   onNeedHelpQuiz,
   onScheduleReminder,
 }: {
   onNeedHelpQuiz?: () => void;
   onScheduleReminder?: () => void;
 }) {
-  if (!onNeedHelpQuiz && !onScheduleReminder) {
-    return null;
-  }
-
   return (
-    <View className={clsx(BASE_CARD_CLASS, 'items-center justify-center gap-3 border-dashed bg-[#fbfbff]')}>
-      {onNeedHelpQuiz && (
-        <Pressable
-          accessibilityLabel='Get help choosing a habit'
-          className='w-full rounded-full bg-[#eef2ff] px-5 py-2'
-          onPress={onNeedHelpQuiz}
-        >
-          <Text className='text-center text-[13px] font-semibold text-[#4338ca]'>Need help choosing? Take the 30-second quiz →</Text>
+    <View className='flex-row items-center justify-between rounded-[16px] border border-dashed border-[#dfe4fa] bg-white/80 px-3 py-2'>
+      {onNeedHelpQuiz ? (
+        <Pressable accessibilityLabel='Open habit quiz' onPress={onNeedHelpQuiz}>
+          <Text className='text-[12px] font-semibold text-[#4338ca]'>Need help? Quiz →</Text>
         </Pressable>
+      ) : (
+        <View />
       )}
       {onScheduleReminder && (
         <Pressable
           accessibilityHint='Schedules a reminder notification to revisit habit setup later'
           accessibilityLabel='Remind me later'
-          className='w-full rounded-full border border-[#dcdff5] px-4 py-2'
           onPress={onScheduleReminder}
         >
-          <Text className='text-center text-[12px] font-semibold text-[#4c1d95]'>Remind me later</Text>
+          <Text className='text-[11px] font-semibold text-[#4c1d95]'>Remind me later</Text>
         </Pressable>
       )}
     </View>
