@@ -42,6 +42,7 @@ interface DraggableHabitProps {
   onPress?: (habit: Habit) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
+  isJustCreated?: boolean;
 }
 
 export default function DraggableHabit({
@@ -59,6 +60,7 @@ export default function DraggableHabit({
   onPress,
   onWeekComplete,
   reduceMotionPreference,
+  isJustCreated = false,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
@@ -67,6 +69,7 @@ export default function DraggableHabit({
   const archiveFlash = useRef(new Animated.Value(0)).current;
   const cardScale = useRef(new Animated.Value(1)).current;
   const iconPulse = useRef(new Animated.Value(1)).current;
+  const highlightGlow = useRef(new Animated.Value(0)).current;
 
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: celebrationsEnabled,
@@ -94,6 +97,44 @@ export default function DraggableHabit({
       }),
     ]).start();
   }, [fade, translateY]);
+
+  useEffect(() => {
+    if (!isJustCreated || reduceMotionPreference) {
+      highlightGlow.setValue(0);
+      return;
+    }
+    highlightGlow.setValue(0);
+    Animated.parallel([
+      Animated.sequence([
+        Animated.spring(cardScale, {
+          toValue: 1.035,
+          useNativeDriver: true,
+          damping: 16,
+          stiffness: 250,
+        }),
+        Animated.spring(cardScale, {
+          toValue: 1,
+          useNativeDriver: true,
+          damping: 18,
+          stiffness: 250,
+        }),
+      ]),
+      Animated.sequence([
+        Animated.timing(highlightGlow, {
+          duration: 220,
+          easing: Easing.out(Easing.ease),
+          toValue: 1,
+          useNativeDriver: false,
+        }),
+        Animated.timing(highlightGlow, {
+          duration: 320,
+          easing: Easing.in(Easing.ease),
+          toValue: 0,
+          useNativeDriver: false,
+        }),
+      ]),
+    ]).start();
+  }, [cardScale, highlightGlow, isJustCreated, reduceMotionPreference]);
 
   // Pulse animation for icon when week is complete
   useEffect(() => {
@@ -236,6 +277,17 @@ export default function DraggableHabit({
             backgroundColor: 'rgba(248, 113, 113, 0.18)',
             borderRadius: 24,
             opacity: archiveFlash,
+            position: 'absolute',
+            ...StyleSheet.absoluteFillObject,
+          }}
+        />
+        <Animated.View
+          pointerEvents='none'
+          style={{
+            borderColor: accentColor ?? '#a855f7',
+            borderRadius: 24,
+            borderWidth: 2,
+            opacity: highlightGlow,
             position: 'absolute',
             ...StyleSheet.absoluteFillObject,
           }}

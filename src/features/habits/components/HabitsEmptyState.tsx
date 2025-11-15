@@ -268,33 +268,23 @@ function QuickWinCard({
   confettiRef: React.MutableRefObject<ConfettiCannon | null>;
 }) {
   const [suggestions, setSuggestions] = useState(() => QUICK_START_HABITS.slice(0, 4));
-  const shuffleRotation = useSharedValue(0);
-  const { triggerSelection, triggerLightImpact } = useHapticFeedback();
+  const [shuffleCount, setShuffleCount] = useState(0);
+  const shuffleScale = useSharedValue(1);
+  const { triggerSelection } = useHapticFeedback();
 
   const shuffleButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${shuffleRotation.value}deg` }],
+    transform: [{ scale: shuffleScale.value }],
   }));
 
   const shuffleSuggestions = () => {
-    // Card dealing haptic pattern
-    triggerLightImpact();
-    setTimeout(() => triggerLightImpact(), 80);
-    setTimeout(() => triggerLightImpact(), 160);
-    setTimeout(() => triggerSelection(), 240);
+    triggerSelection();
 
-    // Spin animation for shuffle icon
-    shuffleRotation.value = withSequence(
-      withSpring(180, { damping: 12, stiffness: 200 }),
-      withSpring(360, { damping: 15, stiffness: 180 }),
-    );
-
-    // Reset rotation for next shuffle
-    setTimeout(() => {
-      shuffleRotation.value = 0;
-    }, 600);
+    // Quick press feedback
+    shuffleScale.value = withSequence(withTiming(0.85, { duration: 100 }), withSpring(1, { damping: 12 }));
 
     const shuffled = [...QUICK_START_HABITS].sort(() => Math.random() - 0.5);
     setSuggestions(shuffled.slice(0, 4));
+    setShuffleCount((c) => c + 1);
   };
 
   return (
@@ -324,9 +314,9 @@ function QuickWinCard({
       <View className='mt-4 flex-row flex-wrap justify-between gap-y-3'>
         {suggestions.map((habit, index) => (
           <QuickStartButton
-            key={habit.fullName}
+            key={`${shuffleCount}-${index}`}
             habit={habit}
-            index={index}
+            index={shuffleCount === 0 ? index : 0}
             isCreating={creatingHabit === habit.fullName}
             isSuccess={successHabit === habit.fullName}
             containerStyle={{ width: '48%' }}
@@ -451,23 +441,11 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
         bgProgress.value = withTiming(0, { duration: 150 });
       }}
     >
-      <View className='gap-3'>
-        <View className='flex-row items-center gap-2'>
-          <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#4f46e5]'>Pro Templates</Text>
-        </View>
-        <View className='gap-1.5'>
-          <Text className='text-[18px] font-bold text-[#4f46e5]'>Skip the guesswork</Text>
-          <Text className='text-[14px] leading-[20px] text-[#6366f1]'>
-            Science-backed routines designed by habit experts.
-          </Text>
-        </View>
-        <View className='flex-row flex-wrap gap-2'>
-          {TEMPLATE_PREVIEWS.map((template) => (
-            <View key={template.title} className='rounded-lg bg-[#eef2ff] px-3 py-1.5'>
-              <Text className='text-[12px] font-semibold text-[#4f46e5]'>{template.title}</Text>
-            </View>
-          ))}
-        </View>
+      <View className='gap-1.5'>
+        <Text className='text-[18px] font-bold text-[#4f46e5]'>Skip the guesswork</Text>
+        <Text className='text-[14px] leading-[20px] text-[#6366f1]'>
+          Science-backed routines designed by habit experts.
+        </Text>
       </View>
       <View className='rounded-full bg-[#6d28d9] px-5 py-3'>
         <Text className='text-center text-[15px] font-bold tracking-wide text-white'>Explore templates →</Text>

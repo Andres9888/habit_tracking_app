@@ -3,6 +3,7 @@ import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 import { HabitsEmptyState } from './HabitsEmptyState';
 import type { HabitsListState } from '../hooks/useHabitsApp';
@@ -413,6 +414,7 @@ export function HabitsList({
 
   // Quick-create habit mutation for instant habit creation
   const createHabit = useMutation(api.habits.create);
+  const [justCreatedHabitId, setJustCreatedHabitId] = useState<Id<'habits'> | null>(null);
 
   const handleQuickCreateHabit = useCallback(
     async (habitName: string) => {
@@ -423,17 +425,28 @@ export function HabitsList({
       }
 
       try {
-        await createHabit({
+        const newHabitId = (await createHabit({
           name: habitName,
           notes: '',
           remindersEnabled: false,
-        });
+        })) as Id<'habits'>;
+        if (newHabitId) {
+          setJustCreatedHabitId(newHabitId);
+        }
       } catch (error) {
         console.error('Failed to create habit:', error);
       }
     },
     [createHabit, hasReachedHabitLimit, isPremiumUser, onCreateHabitRequest]
   );
+
+  useEffect(() => {
+    if (!justCreatedHabitId) {
+      return;
+    }
+    const timeout = setTimeout(() => setJustCreatedHabitId(null), 2000);
+    return () => clearTimeout(timeout);
+  }, [justCreatedHabitId]);
 
   const renderItem = useHabitRenderItem({
     celebrationsEnabled,
@@ -446,6 +459,7 @@ export function HabitsList({
     weekDateStrings,
     showHabitStrengthPercentage,
     toggleHabit,
+    highlightHabitId: justCreatedHabitId,
   });
 
   const { triggerSelection } = useHapticFeedback({

@@ -16,6 +16,7 @@ interface UseHabitRenderItemArgs {
   handleHabitPress: (habit: Habit) => void;
   reduceMotionPreference: boolean;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
+  highlightHabitId?: Id<'habits'> | null;
 }
 
 export function useHabitRenderItem({
@@ -29,6 +30,7 @@ export function useHabitRenderItem({
   handleHabitPress,
   reduceMotionPreference,
   notifyWeekCompletion,
+  highlightHabitId,
 }: UseHabitRenderItemArgs) {
   return useCallback(
     ({ item, drag, isActive }: RenderItemParams<Habit>) => {
@@ -48,6 +50,7 @@ export function useHabitRenderItem({
             <DraggableHabit
               celebrationsEnabled={celebrationsEnabled}
               habit={item}
+              isJustCreated={highlightHabitId === item._id}
               showHabitStrengthPercentage={showHabitStrengthPercentage}
               streak={streak}
               toggleHabit={toggleHabit}
@@ -73,6 +76,7 @@ export function useHabitRenderItem({
       handleHabitPress,
       reduceMotionPreference,
       notifyWeekCompletion,
+      highlightHabitId,
       showHabitStrengthPercentage,
       toggleHabit,
       weekDateStrings,
