@@ -40,7 +40,6 @@ import {
   Search,
   SlidersHorizontal,
   Filter,
-  Sparkles,
   X,
   ExternalLink,
 } from 'lucide-react-native';
@@ -158,16 +157,6 @@ export default function TemplatesScreen() {
 
     return data.sort(sorter[sortOption]);
   }, [allTemplates, selectedCategory, researchOnly, searchQuery, sortOption]);
-
-  const featuredTemplate = useMemo(() => {
-    if (filteredTemplates.length === 0) return null;
-    return filteredTemplates[0];
-  }, [filteredTemplates]);
-
-  const templatesForList = useMemo(() => {
-    if (!featuredTemplate) return filteredTemplates;
-    return filteredTemplates.slice(1);
-  }, [filteredTemplates, featuredTemplate]);
 
   const hasActiveFilters =
     selectedCategory !== 'all' || Boolean(searchQuery.trim()) || researchOnly;
@@ -524,70 +513,11 @@ export default function TemplatesScreen() {
         </ScrollView>
       )}
 
-      {/* Featured Template */}
-      {featuredTemplate && (
-        <Pressable
-          accessibilityLabel={`Preview ${featuredTemplate.name}`}
-          style={styles.featuredWrapper}
-          onPress={() => handleTemplatePreview(featuredTemplate)}
-        >
-          <LinearGradient
-            colors={['#EEF2FF', '#ECFDF5']}
-            end={{ x: 1, y: 1 }}
-            start={{ x: 0, y: 0 }}
-            style={styles.featuredCard}
-          >
-            <View style={styles.featuredHeader}>
-              <Sparkles color='#4f46e5' size={18} />
-              <Text style={styles.featuredEyebrow}>Spotlight Habit</Text>
-            </View>
-            <Text style={styles.featuredTitle}>{featuredTemplate.name}</Text>
-            <Text numberOfLines={2} style={styles.featuredDescription}>
-              {featuredTemplate.description}
-            </Text>
-            <View style={styles.featuredMetaRow}>
-              <View style={styles.featuredMetaPill}>
-                <Text style={styles.featuredMetaText}>
-                  ⏱️ {featuredTemplate.frequency === 'daily' ? 'Daily' : 'Flexible'}
-                </Text>
-              </View>
-              {featuredTemplate.popularityScore ? (
-                <View style={styles.featuredMetaPill}>
-                  <Text style={styles.featuredMetaText}>
-                    🔥 Popular pick
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-            <View style={styles.featuredActions}>
-              <Button
-                fullWidth
-                size='small'
-                variant='secondary'
-                onPress={() => handleTemplatePreview(featuredTemplate)}
-              >
-                Preview
-              </Button>
-              <Button
-                fullWidth
-                loading={importingTemplateId === featuredTemplate._id}
-                size='small'
-                style={{ marginTop: 8 }}
-                variant='primary'
-                onPress={() => handleTemplateImport(featuredTemplate._id)}
-              >
-                Import habit
-              </Button>
-            </View>
-          </LinearGradient>
-        </Pressable>
-      )}
-
       {/* Templates List */}
       <View style={styles.listWrapper}>
         <FlatList
           contentContainerStyle={styles.listContent}
-          data={templatesForList}
+          data={filteredTemplates}
           keyExtractor={(item) => item._id}
           ListEmptyComponent={
             filteredTemplates.length === 0 ? (
@@ -928,53 +858,6 @@ const styles = StyleSheet.create({
   emptyStateWrapper: {
     paddingHorizontal: 32,
     paddingVertical: 24,
-  },
-  featuredActions: {
-    marginTop: 12,
-  },
-  featuredCard: {
-    borderRadius: 20,
-    padding: 20,
-  },
-  featuredDescription: {
-    color: '#374151',
-    marginTop: 8,
-  },
-  featuredEyebrow: {
-    color: '#4f46e5',
-    fontSize: 13,
-    fontWeight: '700',
-    marginLeft: 6,
-    textTransform: 'uppercase',
-  },
-  featuredHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  featuredMetaPill: {
-    backgroundColor: 'rgba(255,255,255,0.6)',
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  featuredMetaRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 12,
-  },
-  featuredMetaText: {
-    color: '#0f172a',
-    fontWeight: '600',
-  },
-  featuredTitle: {
-    color: '#0f172a',
-    fontSize: 22,
-    fontWeight: '700',
-    marginTop: 12,
-  },
-  featuredWrapper: {
-    paddingHorizontal: 20,
-    paddingTop: 12,
   },
   header: {
     paddingBottom: 16,
