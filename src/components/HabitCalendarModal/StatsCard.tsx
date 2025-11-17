@@ -8,6 +8,8 @@ interface StatsCardProps {
   currentStreak: number;
   bestStreak: number;
   completionPercentage: number;
+  scheduleLabel?: string;
+  showHeader?: boolean;
 }
 
 export function StatsCard({
@@ -17,26 +19,37 @@ export function StatsCard({
   currentStreak,
   bestStreak,
   completionPercentage,
+  scheduleLabel,
+  showHeader = true,
 }: StatsCardProps) {
   const { emoji: extractedEmoji, name } = getEmojiAndName(habitName);
   const displayEmoji = emoji || extractedEmoji;
+  const scheduleText = scheduleLabel || 'Daily at 7:00 AM';
 
   return (
     <View className='rounded-2xl bg-white p-5'>
       {/* Habit Header */}
-      <View className='mb-6 flex-row items-start gap-3'>
-        {displayEmoji && (
-          <View className='h-14 w-14 items-center justify-center rounded-xl bg-blue-100'>
-            <Text className='text-[30px]'>{displayEmoji}</Text>
+      {showHeader && (
+        <View className='mb-6 flex-row items-start gap-3'>
+          {displayEmoji && (
+            <View className='h-14 w-14 items-center justify-center rounded-xl bg-blue-100'>
+              <Text className='text-[30px]'>{displayEmoji}</Text>
+            </View>
+          )}
+          <View className='flex-1'>
+            <Text className='text-2xl font-semibold text-slate-900'>{name}</Text>
+            <Text className='mt-1 text-base text-slate-500'>{scheduleText}</Text>
+            {habitNotes ? (
+              <Text
+                className='mt-2 text-sm text-slate-500'
+                numberOfLines={2}
+              >
+                {habitNotes}
+              </Text>
+            ) : null}
           </View>
-        )}
-        <View className='flex-1'>
-          <Text className='text-2xl font-semibold text-slate-900'>{name}</Text>
-          <Text className='mt-1 text-base text-slate-500'>
-            Daily at 7:00 AM
-          </Text>
         </View>
-      </View>
+      )}
 
       {/* Stats Row */}
       <View className='flex-row items-center justify-between'>

@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { ChevronLeft } from 'lucide-react-native';
+import { format, parseISO } from 'date-fns';
+import {
+  AlertTriangle,
+  ChevronLeft,
+  Flame,
+  MoreVertical,
+} from 'lucide-react-native';
 import {
   Modal,
   View,
@@ -29,6 +35,9 @@ interface Habit {
   name: string;
   notes?: string;
   strength?: number;
+  frequency?: string;
+  reminderTime?: string;
+  preferredTime?: string;
   [key: string]: any;
 }
 
@@ -60,6 +69,22 @@ export default function HabitCalendarModal({
   if (!habit) return null;
 
   const { emoji, name } = getEmojiAndName(habit.name);
+  const scheduleLabel = buildScheduleLabel(habit);
+  const todayDateString = format(new Date(), 'yyyy-MM-dd');
+  const habitTrackingEntries = tracking.filter((t) => t.habitId === habit._id);
+  const habitTracking = habitTrackingEntries.map((t) => ({
+    completed: t.completed,
+    date: t.date,
+  }));
+  const todayTracking = habitTrackingEntries.find(
+    (t) => t.date === todayDateString
+  );
+  const isTodayCompleted = Boolean(todayTracking?.completed);
+  const recentMissBadge = getLatestMissedBadge(
+    habitTrackingEntries,
+    todayDateString
+  );
+  const markTodayLabel = isTodayCompleted ? 'Completed today' : 'Mark Today Done';
 
   const handleEditPress = () => {
     setShowEditScreen(true);
@@ -69,11 +94,6 @@ export default function HabitCalendarModal({
     setShowEditScreen(false);
   };
 
-  // Calculate stats
-  const habitTracking = tracking
-    .filter((t) => t.habitId === habit._id)
-    .map((t) => ({ completed: t.completed, date: t.date }));
-
   const bestStreak = calculateBestStreak(habitTracking);
   const completionPercentage = calculateCompletionPercentage(
     habit.createdAt || Date.now(),
@@ -81,31 +101,143 @@ export default function HabitCalendarModal({
   );
 
   // Filter tracking for activity log
-  const activityTracking = tracking.filter((t) => t.habitId === habit._id);
+  const activityTracking = habitTrackingEntries;
+
+  const handleQuickLogPress = () => {
+    if (isTodayCompleted) return;
+    toggleHabit({ habitId: habit._id, date: todayDateString });
+  };
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
       <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
-        {/* Navigation Header - Matches Figma */}
+        {/* Navigation Header */}
         <View className='flex-row items-center justify-between px-4 pb-4 pt-2'>
           <Pressable
+            accessibilityHint='Return to the previous screen'
+            accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full active:bg-slate-200'
             onPress={onClose}
           >
             <ChevronLeft color='#1a1a1a' size={24} />
           </Pressable>
           <Text className='text-xl font-bold text-slate-900'>{name}</Text>
-          <TouchableOpacity
-            className='rounded-lg bg-blue-500 px-4 py-2'
+          <Pressable
+            accessibilityLabel='Habit options'
+            accessibilityRole='button'
+            className='h-10 w-10 items-center justify-center rounded-full active:bg-slate-200'
             onPress={handleEditPress}
           >
-            <Text className='text-sm font-semibold text-white'>Edit</Text>
-          </TouchableOpacity>
+            <MoreVertical color='#1a1a1a' size={20} />
+          </Pressable>
         </View>
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
-          {/* Stats Card - Already matches Figma design */}
-          <View className='mt-4'>
+          {/* Status Ribbon */}
+          <View className='mt-2'>
+            <View
+              className='rounded-3xl bg-white p-5'
+              style={{
+                shadowColor: '#0f172a',
+                shadowOffset: { width: 0, height: 12 },
+                shadowOpacity: 0.08,
+                shadowRadius: 24,
+              }}
+            >
+              <View className='flex-row gap-4'>
+                <View className='items-center'>
+                  <View className='h-16 w-16 items-center justify-center rounded-2xl bg-blue-50'>
+                    <Text className='text-4xl'>{emoji}</Text>
+                  </View>
+                </View>
+
+                <View className='flex-1'>
+                  <View className='flex-row items-start justify-between'>
+                    <View className='flex-1 pr-4'>
+                      <Text className='text-xl font-semibold text-slate-900'>
+                        {name}
+                      </Text>
+                      {scheduleLabel ? (
+                        <Text className='mt-1 text-sm text-slate-500'>
+                          {scheduleLabel}
+                        </Text>
+                      ) : null}
+                      {habit.notes ? (
+                        <Text
+                          className='mt-2 text-sm text-slate-500'
+                          numberOfLines={2}
+                        >
+                          {habit.notes}
+                        </Text>
+                      ) : null}
+                    </View>
+
+                    <View className='items-end'>
+                      <View className='flex-row items-center rounded-full bg-orange-50 px-3 py-1'>
+                        <Flame color='#ea580c' size={16} />
+                        <Text className='ml-1 text-xs font-semibold text-orange-700'>
+                          Current streak
+                        </Text>
+                      </View>
+                      <Text className='mt-2 text-lg font-semibold text-slate-900'>
+                        {streak} days
+                      </Text>
+                      <Text className='text-xs text-slate-400'>
+                        Best {bestStreak} {bestStreak === 1 ? 'day' : 'days'}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {recentMissBadge ? (
+                    <View className='mt-3 flex-row items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1'>
+                      <AlertTriangle color='#b45309' size={14} />
+                      <Text className='text-xs font-medium text-amber-700'>
+                        {recentMissBadge} · Tap to review
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  <View className='mt-4 flex-row gap-3'>
+                    <TouchableOpacity
+                      accessibilityLabel={
+                        isTodayCompleted
+                          ? 'Today already completed'
+                          : 'Mark this habit as done today'
+                      }
+                      accessibilityRole='button'
+                      className={`flex-1 rounded-2xl px-4 py-3 ${
+                        isTodayCompleted ? 'bg-slate-200' : 'bg-blue-500'
+                      }`}
+                      disabled={isTodayCompleted}
+                      onPress={handleQuickLogPress}
+                    >
+                      <Text
+                        className={`text-center text-base font-semibold ${
+                          isTodayCompleted ? 'text-slate-600' : 'text-white'
+                        }`}
+                      >
+                        {markTodayLabel}
+                      </Text>
+                    </TouchableOpacity>
+
+                    <Pressable
+                      accessibilityLabel='Edit habit'
+                      accessibilityRole='button'
+                      className='w-[110px] items-center justify-center rounded-2xl border border-slate-200 px-3'
+                      onPress={handleEditPress}
+                    >
+                      <Text className='text-sm font-semibold text-slate-700'>
+                        Edit habit
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Stats Card */}
+          <View className='mt-5'>
             <StatsCard
               bestStreak={bestStreak}
               completionPercentage={completionPercentage}
@@ -113,6 +245,7 @@ export default function HabitCalendarModal({
               emoji={emoji}
               habitName={habit.name}
               habitNotes={habit.notes}
+              showHeader={false}
             />
           </View>
 
@@ -154,4 +287,49 @@ export default function HabitCalendarModal({
       />
     </Modal>
   );
+}
+
+const FREQUENCY_LABELS: Record<string, string> = {
+  daily: 'Daily',
+  weekly: 'Weekly',
+  custom: 'Custom',
+};
+
+function buildScheduleLabel(habit: Habit) {
+  const { frequency, reminderTime, preferredTime } = habit;
+  const formattedFrequency = frequency
+    ? FREQUENCY_LABELS[frequency] ||
+      frequency
+        .split('_')
+        .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+        .join(' ')
+    : undefined;
+  const formattedTime = reminderTime
+    ? reminderTime
+    : preferredTime
+    ? preferredTime.charAt(0).toUpperCase() + preferredTime.slice(1)
+    : undefined;
+
+  if (formattedFrequency && formattedTime) {
+    return `${formattedFrequency} · ${formattedTime}`;
+  }
+
+  return formattedFrequency || formattedTime;
+}
+
+type TrackingEntry = HabitCalendarModalProps['tracking'][number];
+
+function getLatestMissedBadge(
+  trackingEntries: TrackingEntry[],
+  todayDate: string
+) {
+  const previousMiss = trackingEntries
+    .filter((entry) => !entry.completed && entry.date < todayDate)
+    .sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+
+  if (!previousMiss) {
+    return null;
+  }
+
+  return `Missed ${format(parseISO(previousMiss.date), 'EEE')}`;
 }
