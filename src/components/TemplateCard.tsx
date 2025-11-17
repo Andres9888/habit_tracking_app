@@ -23,7 +23,6 @@ import Animated, {
 import { useAppTheme } from '../theme';
 import Button from './Button';
 import * as Haptics from 'expo-haptics';
-import { Eye } from 'lucide-react-native';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -365,21 +364,6 @@ export function TemplateCard({
           >
             {isLocked ? 'Unlock with Pro' : 'Import Template'}
           </Button>
-
-          {onPreview && showPreviewCTA && (
-            <Button
-              accessibilityLabel={`Preview ${name} template`}
-              icon={<Eye color={theme.custom.colors.primary[500]} size={16} />}
-              iconPosition='left'
-              size='medium'
-              style={styles.previewButton}
-              textStyle={{ fontSize: 15 }}
-              variant='ghost'
-              onPress={handleCardPress}
-            >
-              Preview
-            </Button>
-          )}
         </View>
       </View>
     </AnimatedPressable>
@@ -473,9 +457,6 @@ const styles = StyleSheet.create({
   },
   popularEmoji: {
     fontSize: 20,
-  },
-  previewButton: {
-    alignSelf: 'flex-start',
   },
   scienceBox: {
     alignItems: 'flex-start',
