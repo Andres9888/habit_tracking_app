@@ -139,7 +139,7 @@ function MonetizationHero({
   return (
     <View
       className='overflow-hidden rounded-3xl p-6'
-      style={{ backgroundColor: '#141b2f', shadowColor: '#0f172a', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.22, shadowRadius: 28, elevation: 12 }}
+      style={{ backgroundColor: '#1c1917', shadowColor: '#78350f', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.18, shadowRadius: 28, elevation: 12 }}
     >
       <View className='gap-2'>
         <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#a5b4fc]'>
@@ -214,17 +214,17 @@ function MonetizationHero({
 
 function PremiumBenefitsRow() {
   return (
-    <View className='gap-4 rounded-3xl border border-[#e0e7ff] bg-white p-5 shadow-[0px_16px_44px_rgba(15,23,42,0.08)]'>
-      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#4f46e5]'>
+    <View className='gap-4 rounded-3xl border border-amber-100/60 bg-white/90 p-5 shadow-[0px_16px_44px_rgba(120,90,50,0.06)]'>
+      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-amber-700'>
         Why members upgrade
       </Text>
       <View className='gap-3'>
         {PREMIUM_BENEFITS.map((benefit) => (
           <View className='gap-1' key={benefit.title}>
-            <Text className='text-[14px] font-semibold text-[#111827]'>
+            <Text className='text-[14px] font-semibold text-stone-800'>
               {benefit.title}
             </Text>
-            <Text className='text-[13px] leading-[18px] text-[#4b5563]'>
+            <Text className='text-[13px] leading-[18px] text-stone-600'>
               {benefit.description}
             </Text>
           </View>
@@ -236,14 +236,14 @@ function PremiumBenefitsRow() {
 
 function SocialProofCard() {
   return (
-    <View className='gap-3 rounded-3xl border border-[#e2e8f0] bg-[#f8fafc] p-5'>
-      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#0f172a]'>
+    <View className='gap-3 rounded-3xl border border-stone-200 bg-stone-50/80 p-5'>
+      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-stone-700'>
         Proven momentum
       </Text>
-      <Text className='text-[14px] font-normal leading-[22px] text-[#0f172a]'>
+      <Text className='text-[14px] font-normal leading-[22px] text-stone-800'>
         "{SOCIAL_PROOF.quote}"
       </Text>
-      <Text className='text-[13px] font-semibold text-[#475569]'>
+      <Text className='text-[13px] font-semibold text-stone-500'>
         {SOCIAL_PROOF.attribution}
       </Text>
     </View>
@@ -283,16 +283,16 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
 
   return (
     <Animated.View
-      className='gap-4 rounded-3xl border border-dashed border-[#c4b5fd] bg-gradient-to-b from-[#f5f3ff] to-[#faf5ff] p-5'
+      className='gap-4 rounded-3xl border border-dashed border-violet-200 bg-gradient-to-b from-violet-50/80 to-amber-50/40 p-5'
       style={{ opacity, transform: [{ scale }] }}
     >
       <View className='items-center gap-2'>
         <Text className='text-[24px]'>✨</Text>
         <View className='gap-1'>
-          <Text className='text-center text-[16px] font-semibold text-[#312e81]'>
+          <Text className='text-center text-[16px] font-semibold text-stone-800'>
             Want to add more habits?
           </Text>
-          <Text className='text-center text-[13px] leading-[18px] text-[#4338ca]'>
+          <Text className='text-center text-[13px] leading-[18px] text-stone-600'>
             Track unlimited habits, get smart reminders, and unlock deeper insights to build stronger routines.
           </Text>
         </View>
@@ -300,10 +300,10 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
       <Pressable
         accessibilityLabel='Upgrade to unlock unlimited habits'
         accessibilityRole='button'
-        className='items-center rounded-full bg-[#6d28d9] px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
+        className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
         onPress={onUpgradePress}
       >
-        <Text className='text-[14px] font-semibold text-white'>Upgrade to Premium</Text>
+        <Text className='text-[14px] font-semibold text-white'>✨ Upgrade to Premium</Text>
       </Pressable>
     </Animated.View>
   );
@@ -321,39 +321,39 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
   }
 
   return (
-    <View className='absolute inset-0 z-20 items-center justify-end bg-black/45'>
+    <View className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'>
       <Pressable
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
         onPress={onClose}
       />
-      <View className='w-full rounded-t-3xl bg-white px-6 py-8'>
+      <View className='w-full rounded-t-3xl bg-gradient-to-b from-white to-amber-50/30 px-6 py-8'>
         <View className='gap-4'>
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
           </View>
-          <Text className='text-center text-[20px] font-bold text-[#0f172a]'>
+          <Text className='text-center text-[20px] font-bold text-stone-900'>
             You're on a roll! Ready for more?
           </Text>
-          <Text className='text-center text-[15px] leading-[22px] text-[#475569]'>
+          <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
             Track unlimited habits across all areas of your life. Premium members build stronger routines and stay consistent 2× longer.
           </Text>
           <Pressable
             accessibilityLabel='Upgrade to premium'
             accessibilityRole='button'
-            className='items-center rounded-full bg-[#6d28d9] px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
             onPress={onUpgradePress}
           >
-            <Text className='text-[15px] font-semibold text-white'>Unlock unlimited habits</Text>
+            <Text className='text-[15px] font-semibold text-white'>✨ Unlock unlimited habits</Text>
           </Pressable>
           <Pressable
             accessibilityLabel='Continue with free plan'
             accessibilityRole='button'
-            className='items-center rounded-full border-2 border-[#e5e7eb] bg-white px-5 py-3'
+            className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
             onPress={onClose}
           >
-            <Text className='text-[14px] font-semibold text-[#64748b]'>Keep 3 habits free</Text>
+            <Text className='text-[14px] font-semibold text-stone-500'>Keep 3 habits free</Text>
           </Pressable>
         </View>
       </View>

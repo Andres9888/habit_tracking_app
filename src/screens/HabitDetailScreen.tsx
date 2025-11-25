@@ -13,10 +13,8 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, Text, Pressable, Alert, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAppTheme } from '../theme';
 import { Modal } from '../components/Modal';
 import HabitStrengthIndicator from '../components/HabitStrengthIndicator/HabitStrengthIndicator';
 import {
@@ -41,6 +39,7 @@ import PredictionInsights, {
 import * as Haptics from 'expo-haptics';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
+import { clsx } from 'clsx';
 
 // Types
 interface Habit {
@@ -81,83 +80,51 @@ function generateMockHistoryData(habitId: Id<'habits'>) {
 }
 
 interface HabitDetailScreenProps {
-  visible: boolean;
-  onClose: () => void;
   habit: Habit | null;
   isPremium: boolean;
-  onEdit?: (habit: Habit) => void;
-  onPause?: (habitId: Id<'habits'>) => void;
   onArchive?: (habitId: Id<'habits'>) => void;
+  onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
-  onUpgrade?: () => void;
+  onEdit?: (habit: Habit) => void;
   onOpenCalendar?: (habit: Habit) => void;
+  onPause?: (habitId: Id<'habits'>) => void;
+  onUpgrade?: () => void;
+  visible: boolean;
 }
 
 /**
  * Strength Calculation Formula Component
  * Shows transparency in how strength is calculated: Baseline × Compliance = Strength
  */
-function StrengthFormulaTooltip({ theme }: { theme: any }) {
+function StrengthFormulaTooltip() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <View style={styles.formulaContainer}>
+    <View className="mt-3">
       <Pressable
-        accessible
         accessibilityLabel='See how strength is calculated'
         accessibilityRole='button'
-        style={styles.formulaButton}
+        className="flex-row items-center gap-1.5 py-2 active:opacity-70"
         onPress={() => {
           setShowTooltip(!showTooltip);
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }}
       >
-        <Info color={theme.custom.colors.gray[500]} size={16} />
-        <Text
-          style={[
-            theme.custom.typography.caption,
-            { color: theme.custom.colors.gray[500] },
-          ]}
-        >
-          How is this calculated?
+        <Info className="text-amber-600" size={16} />
+        <Text className="font-medium text-xs text-amber-700">
+          What powers this?
         </Text>
       </Pressable>
 
       {showTooltip && (
-        <View
-          style={[
-            styles.tooltipContainer,
-            {
-              backgroundColor: theme.custom.colors.gray[100],
-              borderRadius: theme.custom.borderRadius.medium,
-            },
-          ]}
-        >
-          <Text
-            style={[
-              theme.custom.typography.bodySmall,
-              { color: theme.custom.colors.gray[700], marginBottom: 8 },
-            ]}
-          >
+        <View className="mt-2 rounded-xl bg-amber-50/80 border border-amber-100 p-4">
+          <Text className="mb-2 text-sm font-medium text-stone-700">
             Strength Formula:
           </Text>
-          <Text
-            style={[
-              theme.custom.typography.bodySmall,
-              {
-                color: theme.custom.colors.gray[900],
-                fontFamily: theme.custom.fontFamilies.monospace,
-              },
-            ]}
-          >
+          <Text className="font-mono text-sm text-stone-900">
             Baseline × Compliance = Strength
           </Text>
-          <Text
-            style={[
-              theme.custom.typography.caption,
-              { color: theme.custom.colors.gray[600], marginTop: 8 },
-            ]}
-          >
+          <Text className="mt-2 text-xs leading-5 text-stone-600">
             • Baseline: How automatic the habit feels{'\n'}• Compliance: How
             consistently you do it{'\n'}• Strength: Combined habit robustness
           </Text>
@@ -171,60 +138,29 @@ function StrengthFormulaTooltip({ theme }: { theme: any }) {
  * Premium Feature Lock Component
  * Shows a locked state for premium-only features
  */
-function PremiumLock({
-  theme,
-  onUpgrade,
-}: {
-  theme: any;
-  onUpgrade: () => void;
-}) {
+function PremiumLock({ onUpgrade }: { onUpgrade: () => void }) {
   return (
-    <View
-      style={[
-        styles.premiumLockContainer,
-        {
-          backgroundColor: theme.custom.colors.gray[100],
-          borderRadius: theme.custom.borderRadius.medium,
-        },
-      ]}
-    >
-      <Lock color={theme.custom.colors.gray[400]} size={32} />
-      <Text
-        style={[
-          theme.custom.typography.bodyMedium,
-          { color: theme.custom.colors.gray[700], marginTop: 8 },
-        ]}
-      >
-        Premium Feature
+    <View className="items-center rounded-xl bg-gradient-to-br from-violet-50 to-amber-50 border border-violet-100/50 p-8">
+      <View className="rounded-full bg-violet-100 p-3">
+        <Lock className="text-violet-500" size={24} />
+      </View>
+      <Text className="mt-3 text-base font-semibold text-stone-800">
+        Unlock Your Full Potential
       </Text>
-      <Text
-        style={[
-          theme.custom.typography.caption,
-          { color: theme.custom.colors.gray[500], marginTop: 4 },
-        ]}
-      >
-        Upgrade to unlock advanced analytics
+      <Text className="mt-1 text-sm text-stone-500 text-center">
+        See patterns and predictions that help you grow
       </Text>
       <Pressable
-        accessible
         accessibilityLabel='Upgrade to Premium'
         accessibilityRole='button'
-        style={[
-          styles.upgradeButton,
-          { backgroundColor: theme.custom.colors.primary[500] },
-        ]}
+        className="mt-5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-3.5 shadow-lg shadow-violet-500/25 active:opacity-90"
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           onUpgrade();
         }}
       >
-        <Text
-          style={[
-            theme.custom.typography.buttonMedium,
-            { color: theme.custom.colors.light.text },
-          ]}
-        >
-          Upgrade Now
+        <Text className="font-bold text-sm text-white">
+          ✨ Unlock Insights
         </Text>
       </Pressable>
     </View>
@@ -240,38 +176,38 @@ function ActionButton({
   label,
   onPress,
   variant = 'default',
-  theme,
 }: {
   icon: any;
   label: string;
   onPress: () => void;
   variant?: 'default' | 'destructive';
-  theme: any;
 }) {
-  const backgroundColor = variant === 'destructive' ? '#fef2f2' : '#ffffff';
-  const borderColor = variant === 'destructive' ? '#fecaca' : '#e5e7eb';
-  const textColor = variant === 'destructive' ? '#dc2626' : '#101727';
-  const iconColor = variant === 'destructive' ? '#ef4444' : '#374151';
+  const isDestructive = variant === 'destructive';
 
   return (
     <Pressable
-      accessible
       accessibilityLabel={label}
       accessibilityRole='button'
-      style={[
-        styles.actionButton,
-        { backgroundColor, borderColor },
-      ]}
+      className={clsx(
+        "flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70",
+        isDestructive
+          ? "border-red-200/60 bg-red-50/50"
+          : "border-stone-200 bg-white/80"
+      )}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onPress();
       }}
     >
-      <Icon color={iconColor} size={20} strokeWidth={2.25} />
-      <Text style={[
-        theme.custom.typography.bodyMedium,
-        { color: textColor, fontWeight: '500' }
-      ]}>
+      <Icon
+        className={isDestructive ? "text-red-500" : "text-stone-600"}
+        size={20}
+        strokeWidth={2.25}
+      />
+      <Text className={clsx(
+        "text-base font-medium",
+        isDestructive ? "text-red-600" : "text-stone-800"
+      )}>
         {label}
       </Text>
     </Pressable>
@@ -282,18 +218,17 @@ function ActionButton({
  * Main HabitDetailScreen Component
  */
 export default function HabitDetailScreen({
-  visible,
-  onClose,
   habit,
   isPremium,
-  onEdit,
-  onPause,
   onArchive,
+  onClose,
   onDelete,
-  onUpgrade,
+  onEdit,
   onOpenCalendar,
+  onPause,
+  onUpgrade,
+  visible,
 }: HabitDetailScreenProps) {
-  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
   // Ensure we have a minimum top padding for devices with notch/dynamic island
@@ -384,113 +319,86 @@ export default function HabitDetailScreen({
 
   return (
     <Modal
-      disableGestureClose
       disableBackdropClose={false}
+      disableGestureClose
+      onClose={onClose}
       variant='fullScreen'
       visible={visible}
-      onClose={onClose}
     >
-      <View style={[styles.container, { paddingTop: safeTop }]}>
+      <View
+        className="flex-1 bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100"
+        style={{ paddingTop: safeTop }}
+      >
         {/* Navigation Bar */}
-        <View style={styles.navigationBar}>
+        <View className="flex-row items-center justify-start px-5 pb-3">
           <Pressable
-            accessible
             accessibilityLabel='Close'
             accessibilityRole='button'
-            style={styles.closeButton}
+            className="h-11 w-11 items-center justify-center rounded-full bg-white/95 shadow-sm shadow-stone-200/50 active:bg-stone-50"
             onPress={onClose}
           >
-            <X color='#101727' size={24} strokeWidth={2.25} />
+            <X className="text-stone-700" size={24} strokeWidth={2.25} />
           </Pressable>
         </View>
 
         {/* Scrollable Content */}
         <ScrollView
           bounces
+          className="flex-1"
+          contentContainerClassName="pb-8 px-5"
           nestedScrollEnabled
           scrollEnabled
           showsVerticalScrollIndicator
-          contentContainerStyle={styles.contentContainer}
-          style={styles.content}
         >
           {/* Habit Header */}
-          <View style={styles.habitHeader}>
+          <View className="mb-5 items-center rounded-2xl bg-white/90 backdrop-blur-sm py-6 shadow-sm shadow-stone-200/50">
             {habit.icon && (
               <View
-                style={[
-                  styles.habitIcon,
-                  {
-                    backgroundColor:
-                      habit.iconColor || theme.custom.colors.gray[200],
-                    borderRadius: theme.custom.borderRadius.medium,
-                  },
-                ]}
+                className="h-16 w-16 items-center justify-center rounded-2xl shadow-sm"
+                style={{
+                  backgroundColor: habit.iconColor || '#fef3c7', // amber-100 fallback
+                }}
               >
-                <Text style={styles.habitIconText}>{habit.icon}</Text>
+                <Text className="text-4xl">{habit.icon}</Text>
               </View>
             )}
-            <Text
-              style={[
-                theme.custom.typography.heading1,
-                { color: '#101727', marginTop: 12, fontWeight: '700' },
-              ]}
-            >
+            <Text className="mt-3 text-2xl font-bold text-stone-900">
               {habit.name}
             </Text>
             {habit.notes && (
-              <Text
-                style={[
-                  theme.custom.typography.bodyMedium,
-                  { color: '#6b7280', marginTop: 8 },
-                ]}
-              >
+              <Text className="mt-2 text-base text-stone-500">
                 {habit.notes}
               </Text>
             )}
           </View>
 
           {/* Enhanced Strength Visualization */}
-          <View style={styles.section}>
-            <Text
-              style={[
-                theme.custom.typography.heading3,
-                { color: '#101727', marginBottom: 16, fontWeight: '600' },
-              ]}
-            >
-              Current Strength
+          <View className="mb-5 rounded-2xl bg-white/90 backdrop-blur-sm p-5 shadow-sm shadow-stone-200/50">
+            <Text className="mb-4 text-lg font-semibold text-stone-800">
+              Your {habit.name} Strength
             </Text>
             <HabitStrengthIndicator
+              habitName={habit.name}
               showLabel
               showPercentage
-              habitName={habit.name}
               strength={strength}
               strengthLevel={strengthLevel}
               variant='full'
             />
-            <StrengthFormulaTooltip theme={theme} />
+            <StrengthFormulaTooltip />
           </View>
 
           {/* History Graph (Premium) */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <TrendingUp color='#374151' size={20} strokeWidth={2.25} />
-              <Text
-                style={[
-                  theme.custom.typography.heading3,
-                  { color: '#101727', fontWeight: '600', flex: 1 },
-                ]}
-              >
+          <View className="mb-5 rounded-2xl bg-white/90 backdrop-blur-sm p-5 shadow-sm shadow-stone-200/50">
+            <View className="mb-4 flex-row items-center gap-2 border-b border-stone-100 pb-3">
+              <TrendingUp className="text-amber-600" size={20} strokeWidth={2.25} />
+              <Text className="flex-1 text-lg font-semibold text-stone-800">
                 30-Day Strength History
               </Text>
               {!isPremium && (
-                <View style={styles.premiumBadge}>
-                  <Lock color={theme.custom.colors.primary[600]} size={12} />
-                  <Text
-                    style={[
-                      theme.custom.typography.caption,
-                      { color: theme.custom.colors.primary[600] },
-                    ]}
-                  >
+                <View className="flex-row items-center gap-1 rounded-xl bg-indigo-50 px-2 py-1">
+                  <Lock className="text-indigo-600" size={12} />
+                  <Text className="text-xs font-medium text-indigo-600">
                     Premium
                   </Text>
                 </View>
@@ -499,37 +407,27 @@ export default function HabitDetailScreen({
 
             {isPremium ? (
               <StrengthHistoryChart
-                interactive
                 data={generateMockHistoryData(habit._id)}
                 height={220}
+                interactive
                 showDualAxis={false}
               />
             ) : (
-              <PremiumLock theme={theme} onUpgrade={handleUpgrade} />
+              <PremiumLock onUpgrade={handleUpgrade} />
             )}
           </View>
 
           {/* Prediction Insights (Premium) */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <AlertTriangle color='#374151' size={20} strokeWidth={2.25} />
-              <Text
-                style={[
-                  theme.custom.typography.heading3,
-                  { color: '#101727', fontWeight: '600', flex: 1 },
-                ]}
-              >
+          <View className="mb-5 rounded-2xl bg-white/90 backdrop-blur-sm p-5 shadow-sm shadow-stone-200/50">
+            <View className="mb-4 flex-row items-center gap-2 border-b border-stone-100 pb-3">
+              <AlertTriangle className="text-violet-500" size={20} strokeWidth={2.25} />
+              <Text className="flex-1 text-lg font-semibold text-stone-800">
                 Predictions & Insights
               </Text>
               {!isPremium && (
-                <View style={styles.premiumBadge}>
-                  <Lock color={theme.custom.colors.primary[600]} size={12} />
-                  <Text
-                    style={[
-                      theme.custom.typography.caption,
-                      { color: theme.custom.colors.primary[600] },
-                    ]}
-                  >
+                <View className="flex-row items-center gap-1 rounded-xl bg-indigo-50 px-2 py-1">
+                  <Lock className="text-indigo-600" size={12} />
+                  <Text className="text-xs font-medium text-indigo-600">
                     Premium
                   </Text>
                 </View>
@@ -539,7 +437,6 @@ export default function HabitDetailScreen({
             {isPremium ? (
               predictionData ? (
                 <PredictionInsights
-                  showSuggestions
                   data={{
                     confidence: predictionData.confidence,
                     currentStrength: predictionData.currentStrength,
@@ -548,65 +445,51 @@ export default function HabitDetailScreen({
                     suggestions: predictionData.suggestions,
                     trend: predictionData.trend as TrendDirection,
                   }}
+                  showSuggestions
                 />
               ) : (
-                <View style={styles.predictionContainer}>
-                  <Text
-                    style={[
-                      theme.custom.typography.bodyMedium,
-                      { color: theme.custom.colors.gray[500] },
-                    ]}
-                  >
-                    Loading predictions...
+                <View className="items-center justify-center p-6">
+                  <Text className="text-sm text-stone-400 italic">
+                    ✨ Reading your patterns...
                   </Text>
                 </View>
               )
             ) : (
-              <PremiumLock theme={theme} onUpgrade={handleUpgrade} />
+              <PremiumLock onUpgrade={handleUpgrade} />
             )}
           </View>
 
           {/* Action Buttons */}
-          <View style={styles.section}>
-            <Text
-              style={[
-                theme.custom.typography.heading3,
-                { color: '#101727', marginBottom: 16, fontWeight: '600' },
-              ]}
-            >
+          <View className="rounded-2xl bg-white/90 backdrop-blur-sm p-5 shadow-sm shadow-stone-200/50">
+            <Text className="mb-4 text-lg font-semibold text-stone-800">
               Manage Habit
             </Text>
-            <View style={styles.actionsGrid}>
+            <View className="gap-3">
               <ActionButton
                 icon={Calendar}
                 label='View Calendar'
-                theme={theme}
                 onPress={handleOpenCalendar}
               />
               <ActionButton
                 icon={Edit3}
                 label='Edit'
-                theme={theme}
                 onPress={handleEdit}
               />
               <ActionButton
                 icon={Pause}
                 label='Pause'
-                theme={theme}
                 onPress={handlePause}
               />
               <ActionButton
                 icon={Archive}
                 label='Archive'
-                theme={theme}
                 onPress={handleArchive}
               />
               <ActionButton
                 icon={Trash2}
                 label='Delete'
-                theme={theme}
-                variant='destructive'
                 onPress={handleDelete}
+                variant='destructive'
               />
             </View>
           </View>
@@ -615,132 +498,3 @@ export default function HabitDetailScreen({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f7f5',
-  },
-  closeButton: {
-    alignItems: 'center',
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  content: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingBottom: 32,
-    paddingHorizontal: 20,
-  },
-  chartContainer: {
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formulaButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 6,
-    paddingVertical: 8,
-  },
-  formulaContainer: {
-    marginTop: 12,
-  },
-  habitHeader: {
-    alignItems: 'center',
-    paddingVertical: 24,
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  actionsGrid: {
-    gap: 12,
-  },
-  habitIcon: {
-    alignItems: 'center',
-    height: 64,
-    justifyContent: 'center',
-    width: 64,
-  },
-  actionButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-    borderWidth: 1.5,
-  },
-  navigationBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  habitIconText: {
-    fontSize: 32,
-  },
-  predictionContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-  },
-  premiumBadge: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 4,
-    backgroundColor: '#EEF2FF',
-    paddingHorizontal: 8,
-    borderRadius: 12,
-    paddingVertical: 4,
-  },
-  premiumLockContainer: {
-    alignItems: 'center',
-    padding: 32,
-  },
-  section: {
-    marginBottom: 20,
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  sectionHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  tooltipContainer: {
-    marginTop: 8,
-    padding: 16,
-  },
-  upgradeButton: {
-    borderRadius: 12,
-    marginTop: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-  },
-});

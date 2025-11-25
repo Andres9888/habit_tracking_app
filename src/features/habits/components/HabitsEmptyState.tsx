@@ -25,14 +25,38 @@ interface HabitsEmptyStateProps {
   onScheduleReminder?: () => void;
 }
 
-const QUICK_START_HABITS = [
-  { emoji: '💪', name: 'Morning Boost', fullName: '💪 Morning Boost', duration: '~5 min' },
-  { emoji: '📚', name: 'Read 10 Minutes', fullName: '📚 Read 10 Minutes', duration: '~10 min' },
-  { emoji: '🧘', name: 'Mindful Pause', fullName: '🧘 Mindful Pause', duration: '~3 min' },
-  { emoji: '🍋', name: 'Hydrate Break', fullName: '🍋 Hydrate Break', duration: '~2 min' },
-  { emoji: '📝', name: 'Daily Gratitude', fullName: '📝 Daily Gratitude', duration: '~5 min' },
-  { emoji: '🚶', name: 'Walk & Stretch', fullName: '🚶 Walk & Stretch', duration: '~8 min' },
+// Time-of-day based habit suggestions
+const MORNING_HABITS = [
+  { emoji: '💪', name: 'Morning Boost', fullName: '💪 Morning Boost', duration: '~5 min', timeHint: 'Perfect for now' },
+  { emoji: '🍋', name: 'Hydrate First', fullName: '🍋 Hydrate First', duration: '~2 min', timeHint: 'Start fresh' },
+  { emoji: '🧘', name: 'Mindful Minute', fullName: '🧘 Mindful Minute', duration: '~3 min', timeHint: 'Set your intention' },
+  { emoji: '📝', name: 'Morning Pages', fullName: '📝 Morning Pages', duration: '~10 min', timeHint: 'Clear your mind' },
 ];
+
+const AFTERNOON_HABITS = [
+  { emoji: '🚶', name: 'Walk Break', fullName: '🚶 Walk Break', duration: '~8 min', timeHint: 'Recharge now' },
+  { emoji: '📚', name: 'Read 10 Min', fullName: '📚 Read 10 Min', duration: '~10 min', timeHint: 'Afternoon wisdom' },
+  { emoji: '💧', name: 'Hydrate Check', fullName: '💧 Hydrate Check', duration: '~1 min', timeHint: 'Stay sharp' },
+  { emoji: '🧘', name: 'Desk Stretch', fullName: '🧘 Desk Stretch', duration: '~5 min', timeHint: 'Release tension' },
+];
+
+const EVENING_HABITS = [
+  { emoji: '📝', name: 'Daily Gratitude', fullName: '📝 Daily Gratitude', duration: '~5 min', timeHint: 'End on a high' },
+  { emoji: '🧘', name: 'Wind Down', fullName: '🧘 Wind Down', duration: '~10 min', timeHint: 'Prepare for rest' },
+  { emoji: '📵', name: 'Screen Break', fullName: '📵 Screen Break', duration: '~30 min', timeHint: 'Better sleep' },
+  { emoji: '📚', name: 'Bedtime Read', fullName: '📚 Bedtime Read', duration: '~15 min', timeHint: 'Unwind gently' },
+];
+
+// Get habits based on current time of day
+function getTimeBasedHabits() {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return { habits: MORNING_HABITS, greeting: 'Good morning', period: 'morning' };
+  if (hour >= 12 && hour < 17) return { habits: AFTERNOON_HABITS, greeting: 'Good afternoon', period: 'afternoon' };
+  return { habits: EVENING_HABITS, greeting: 'Good evening', period: 'evening' };
+}
+
+// Fallback for shuffle (all habits combined)
+const ALL_HABITS = [...MORNING_HABITS, ...AFTERNOON_HABITS, ...EVENING_HABITS];
 
 const TEMPLATE_PREVIEWS = [
   { title: 'Morning Momentum', tagline: 'Prime your AM energy' },
@@ -90,20 +114,47 @@ export function HabitsEmptyState({
 
   if (isLoading) {
     return (
-      <View className='items-center justify-center gap-4 py-24'>
-        <ActivityIndicator color='#64748b' size='small' />
-        <Text className='text-[15px] font-medium text-[#64748b]'>Loading your habits…</Text>
+      <View className='items-center justify-center gap-5 py-24'>
+        <Animated.View
+          entering={FadeInDown.delay(100).springify()}
+          className='h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100'
+        >
+          <Text className='text-3xl'>🌱</Text>
+        </Animated.View>
+        <View className='items-center gap-2'>
+          <Animated.Text
+            entering={FadeInDown.delay(200).springify()}
+            className='text-[16px] font-semibold text-stone-700'
+          >
+            Preparing your habit garden
+          </Animated.Text>
+          <Animated.View
+            entering={FadeInDown.delay(300).springify()}
+            className='flex-row items-center gap-1'
+          >
+            <ActivityIndicator color='#d97706' size='small' />
+            <Text className='text-[13px] font-medium text-stone-400 italic'>
+              Good things take a moment...
+            </Text>
+          </Animated.View>
+        </View>
       </View>
     );
   }
 
+  const timeContext = getTimeBasedHabits();
+
   return (
-    <View className='flex-1 gap-4 bg-[#f8fafc] px-4 py-4'>
+    <View className='flex-1 gap-4 bg-transparent px-4 py-4'>
+      {/* Welcome Hero */}
+      <WelcomeHero greeting={timeContext.greeting} period={timeContext.period} />
+
       {onQuickCreateHabit && (
         <QuickWinCard
           confettiRef={confettiRef}
           creatingHabit={creatingHabit}
           successHabit={successHabit}
+          timeContext={timeContext}
           onQuickCreateHabit={async (habitName) => {
             setCreatingHabit(habitName);
             triggerMediumImpact(); // Immediate tactile confirmation
@@ -143,8 +194,59 @@ export function HabitsEmptyState({
   );
 }
 
+// Welcome Hero Component
+function WelcomeHero({ greeting, period }: { greeting: string; period: string }) {
+  const waveRotation = useSharedValue(0);
+
+  useEffect(() => {
+    waveRotation.value = withRepeat(
+      withSequence(
+        withTiming(14, { duration: 300 }),
+        withTiming(-8, { duration: 200 }),
+        withTiming(14, { duration: 200 }),
+        withTiming(-4, { duration: 200 }),
+        withTiming(0, { duration: 300 }),
+        withDelay(2000, withTiming(0, { duration: 0 }))
+      ),
+      -1,
+      false
+    );
+  }, [waveRotation]);
+
+  const waveStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${waveRotation.value}deg` }],
+  }));
+
+  const periodEmoji = period === 'morning' ? '🌅' : period === 'afternoon' ? '☀️' : '🌙';
+
+  return (
+    <Animated.View
+      entering={FadeInDown.delay(0).springify().damping(18)}
+      className='items-center gap-3 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-200/40 px-6 py-6'
+    >
+      <Animated.Text style={waveStyle} className='text-4xl'>
+        👋
+      </Animated.Text>
+      <View className='items-center gap-1.5'>
+        <Text className='text-[22px] font-bold text-stone-800'>
+          {greeting}!
+        </Text>
+        <Text className='text-[15px] text-stone-600 text-center leading-[22px]'>
+          Your first streak starts now {periodEmoji}
+        </Text>
+      </View>
+      <View className='flex-row items-center gap-2 mt-1 rounded-full bg-white/60 px-4 py-2'>
+        <Text className='text-lg'>🔥</Text>
+        <Text className='text-[13px] font-semibold text-amber-700'>
+          0 day streak • Let's change that
+        </Text>
+      </View>
+    </Animated.View>
+  );
+}
+
 interface QuickStartButtonProps {
-  habit: { emoji: string; name: string; fullName: string; duration: string };
+  habit: { emoji: string; name: string; fullName: string; duration: string; timeHint?: string };
   isCreating: boolean;
   isSuccess: boolean;
   onPress: () => Promise<void>;
@@ -247,8 +349,11 @@ function QuickStartButton({
         <Animated.View className='items-center gap-2' style={contentStyle}>
           <Text className='text-[28px]'>{habit.emoji}</Text>
           <View className='items-center gap-0.5'>
-            <Text className='text-center text-[13px] font-semibold text-[#111827]'>{habit.name}</Text>
-            <Text className='text-[11px] font-medium text-[#64748b]'>{habit.duration}</Text>
+            <Text className='text-center text-[13px] font-semibold text-stone-800'>{habit.name}</Text>
+            <Text className='text-[11px] font-medium text-stone-500'>{habit.duration}</Text>
+            {habit.timeHint && (
+              <Text className='text-[10px] font-medium text-amber-600 mt-0.5'>{habit.timeHint}</Text>
+            )}
           </View>
         </Animated.View>
       )}
@@ -261,14 +366,17 @@ function QuickWinCard({
   successHabit,
   onQuickCreateHabit,
   confettiRef,
+  timeContext,
 }: {
   creatingHabit: string | null;
   successHabit: string | null;
   onQuickCreateHabit: (habitName: string) => Promise<void>;
   confettiRef: React.MutableRefObject<ConfettiCannon | null>;
+  timeContext: { habits: typeof MORNING_HABITS; greeting: string; period: string };
 }) {
-  const [suggestions, setSuggestions] = useState(() => QUICK_START_HABITS.slice(0, 4));
+  const [suggestions, setSuggestions] = useState(() => timeContext.habits);
   const [shuffleCount, setShuffleCount] = useState(0);
+  const [isShuffled, setIsShuffled] = useState(false);
   const shuffleScale = useSharedValue(1);
   const { triggerSelection } = useHapticFeedback();
 
@@ -282,15 +390,23 @@ function QuickWinCard({
     // Quick press feedback
     shuffleScale.value = withSequence(withTiming(0.85, { duration: 100 }), withSpring(1, { damping: 12 }));
 
-    const shuffled = [...QUICK_START_HABITS].sort(() => Math.random() - 0.5);
+    // Shuffle from all habits when user wants variety
+    const shuffled = [...ALL_HABITS].sort(() => Math.random() - 0.5);
     setSuggestions(shuffled.slice(0, 4));
     setShuffleCount((c) => c + 1);
+    setIsShuffled(true);
   };
+
+  const periodLabel = timeContext.period === 'morning'
+    ? '🌅 Morning picks'
+    : timeContext.period === 'afternoon'
+    ? '☀️ Afternoon picks'
+    : '🌙 Evening picks';
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(20).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'border-[#fcd34d]/40 bg-[#fffbeb]')}
+      entering={FadeInDown.delay(80).springify().damping(18)}
+      className={clsx(BASE_CARD_CLASS, 'border-amber-200/50 bg-gradient-to-br from-amber-50/80 to-orange-50/40')}
     >
       <ConfettiCannon
         autoStart={false}
@@ -304,11 +420,18 @@ function QuickWinCard({
         }}
       />
       <View className='mb-1 gap-2'>
-        <Text className='text-[20px] font-bold leading-[26px] text-[#0f172a]'>
-          Start your first streak in seconds
-        </Text>
-        <Text className='text-[14px] leading-[20px] text-[#475569]'>
-          Pick a habit you can try today—you can customize it anytime.
+        <View className='flex-row items-center justify-between'>
+          <Text className='text-[18px] font-bold leading-[24px] text-stone-800'>
+            Tap one you can do now
+          </Text>
+          {!isShuffled && (
+            <View className='rounded-full bg-amber-100/80 px-2.5 py-1'>
+              <Text className='text-[11px] font-semibold text-amber-700'>{periodLabel}</Text>
+            </View>
+          )}
+        </View>
+        <Text className='text-[14px] leading-[20px] text-stone-600'>
+          Start small—you can always customize later.
         </Text>
       </View>
       <View className='mt-4 flex-row flex-wrap justify-between gap-y-3'>
@@ -325,12 +448,12 @@ function QuickWinCard({
         ))}
       </View>
       <Pressable
-        accessibilityLabel='Shuffle quick start habit suggestions'
-        className='mt-3 self-center rounded-full px-4 py-1.5 active:bg-[#fef3c7]'
+        accessibilityLabel='Show different habit suggestions'
+        className='mt-3 self-center rounded-full px-4 py-1.5 active:bg-amber-100/60'
         onPress={shuffleSuggestions}
       >
-        <Animated.Text className='text-[12px] font-semibold text-[#d97706]' style={shuffleButtonStyle}>
-          Shuffle suggestions ↻
+        <Animated.Text className='text-[12px] font-semibold text-amber-700' style={shuffleButtonStyle}>
+          Show me different ideas ↻
         </Animated.Text>
       </Pressable>
     </Animated.View>
@@ -374,8 +497,17 @@ function CustomHabitCard({ onPress, onNeedHelpQuiz }: { onPress: () => void; onN
       accessibilityLabel='Create custom habit'
       accessibilityRole='button'
       entering={FadeInDown.delay(280).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'flex-row items-center gap-4')}
-      style={animatedStyle}
+      className={clsx(BASE_CARD_CLASS, 'flex-row items-center gap-4 border-violet-200 bg-white')}
+      style={[
+        animatedStyle,
+        {
+          shadowColor: '#7c3aed',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.12,
+          shadowRadius: 12,
+          elevation: 4,
+        }
+      ]}
       onPress={() => {
         triggerSelection();
         onPress();
@@ -389,20 +521,31 @@ function CustomHabitCard({ onPress, onNeedHelpQuiz }: { onPress: () => void; onN
       }}
     >
       <Animated.View
-        className='h-14 w-14 items-center justify-center rounded-2xl bg-[#7c3aed]'
-        style={[pulseStyle, glowStyle, { shadowColor: '#7c3aed', shadowOffset: { width: 0, height: 4 } }]}
+        className='h-14 w-14 items-center justify-center rounded-2xl'
+        style={[
+          pulseStyle,
+          glowStyle,
+          {
+            backgroundColor: '#7c3aed',
+            shadowColor: '#7c3aed',
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.4,
+            shadowRadius: 12,
+            elevation: 8,
+          }
+        ]}
       >
-        <Plus color='#ffffff' size={26} strokeWidth={2.4} />
+        <Plus color='#ffffff' size={28} strokeWidth={2.8} />
       </Animated.View>
       <View className='flex-1 gap-1.5'>
-        <Text className='text-[18px] font-bold text-[#111827]'>Create your own habit</Text>
-        <Text className='text-[14px] leading-[20px] text-[#4b5563]'>
-          Set the name, schedule, and reminders to fit your day.
+        <Text className='text-[18px] font-bold text-stone-800'>Build something just for you</Text>
+        <Text className='text-[14px] leading-[20px] text-stone-600'>
+          Name it, schedule it, make it yours.
         </Text>
         <View className='mt-0.5 flex-row items-center gap-2'>
-          <Text className='text-[13px] font-semibold text-[#6d28d9]'>Start from scratch →</Text>
-          <View className='rounded-full bg-[#f3e8ff] px-2 py-0.5'>
-            <Text className='text-[10px] font-semibold text-[#6d28d9]'>~30s</Text>
+          <Text className='text-[13px] font-semibold text-violet-600'>Start from scratch →</Text>
+          <View className='rounded-full bg-violet-100 px-2 py-0.5'>
+            <Text className='text-[10px] font-semibold text-violet-600'>~30s</Text>
           </View>
         </View>
       </View>
@@ -415,7 +558,7 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
   const bgProgress = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pressScale.value }],
-    backgroundColor: interpolateColor(bgProgress.value, [0, 1], ['#ffffff', '#faf5ff']),
+    backgroundColor: interpolateColor(bgProgress.value, [0, 1], ['#ffffff', '#f5f3ff']),
   }));
   const { triggerLightImpact, triggerSelection } = useHapticFeedback();
 
@@ -424,9 +567,18 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
       accessibilityHint='Preview expert-designed habit journeys'
       accessibilityLabel='Explore templates'
       accessibilityRole='button'
-      entering={FadeInDown.delay(340).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'gap-4')}
-      style={animatedStyle}
+      entering={FadeInDown.delay(200).springify().damping(18)}
+      className={clsx(BASE_CARD_CLASS, 'gap-4 border-indigo-200')}
+      style={[
+        animatedStyle,
+        {
+          shadowColor: '#4f46e5',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.1,
+          shadowRadius: 12,
+          elevation: 4,
+        }
+      ]}
       onPress={() => {
         triggerSelection();
         onPress();
@@ -442,12 +594,25 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
       }}
     >
       <View className='gap-1.5'>
-        <Text className='text-[18px] font-bold text-[#4f46e5]'>Skip the guesswork</Text>
-        <Text className='text-[14px] leading-[20px] text-[#6366f1]'>
-          Science-backed routines designed by habit experts.
+        <View className='flex-row items-center gap-2'>
+          <Text className='text-lg'>🧪</Text>
+          <Text className='text-[18px] font-bold text-indigo-700'>Skip the guesswork</Text>
+        </View>
+        <Text className='text-[14px] leading-[20px] text-stone-600'>
+          Science-backed routines designed by habit researchers.
         </Text>
       </View>
-      <View className='rounded-full bg-[#6d28d9] px-5 py-3'>
+      <View
+        className='rounded-full px-6 py-3.5'
+        style={{
+          backgroundColor: '#4f46e5',
+          shadowColor: '#4f46e5',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.35,
+          shadowRadius: 8,
+          elevation: 6,
+        }}
+      >
         <Text className='text-center text-[15px] font-bold tracking-wide text-white'>Explore templates →</Text>
       </View>
     </AnimatedPressable>
@@ -466,31 +631,31 @@ function CompactHelperRow({
   return (
     <Animated.View
       entering={FadeInDown.delay(400).springify().damping(18)}
-      className='flex-row items-center justify-center gap-6 rounded-3xl bg-[#f8fafc] px-4 py-3'
+      className='flex-row items-center justify-center gap-6 rounded-3xl bg-stone-100/60 px-4 py-3'
     >
       {onNeedHelpQuiz && (
         <Pressable
           accessibilityLabel='Open habit quiz'
-          className='rounded-lg px-3 py-1.5 active:bg-[#e2e8f0]'
+          className='rounded-lg px-3 py-1.5 active:bg-stone-200/60'
           onPress={() => {
             triggerSelection();
             onNeedHelpQuiz();
           }}
         >
-          <Text className='text-[13px] font-semibold text-[#475569]'>Need help? Take quiz →</Text>
+          <Text className='text-[13px] font-semibold text-stone-600'>Need help? Take quiz →</Text>
         </Pressable>
       )}
       {onScheduleReminder && (
         <Pressable
           accessibilityHint='Schedules a reminder notification to revisit habit setup later'
           accessibilityLabel='Remind me later'
-          className='rounded-lg px-3 py-1.5 active:bg-[#e2e8f0]'
+          className='rounded-lg px-3 py-1.5 active:bg-stone-200/60'
           onPress={() => {
             triggerSelection();
             onScheduleReminder();
           }}
         >
-          <Text className='text-[13px] font-medium text-[#64748b]'>Remind me later</Text>
+          <Text className='text-[13px] font-medium text-stone-500'>Remind me later</Text>
         </Pressable>
       )}
     </Animated.View>

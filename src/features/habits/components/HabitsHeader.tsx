@@ -156,13 +156,13 @@ export function HabitsHeader({
               accessibilityHint='Browse science-backed habit templates'
               accessibilityLabel='Templates'
               accessibilityRole='button'
-              className='h-9 flex-row items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-transparent px-3'
+              className='h-9 flex-row items-center gap-1.5 rounded-full border border-stone-200 bg-white/60 px-3'
               onPress={handleTemplatesPress}
               onPressIn={handleTemplatesPressIn}
               onPressOut={handleTemplatesPressOut}
             >
-              <Clipboard color='#101727' size={16} strokeWidth={2.25} />
-              <Text className='text-[13px] font-medium text-[#101727]'>Templates</Text>
+              <Clipboard color='#44403c' size={16} strokeWidth={2.25} />
+              <Text className='text-[13px] font-medium text-stone-700'>Templates</Text>
             </Pressable>
 
             {/* Smart notification badge */}
@@ -177,12 +177,12 @@ export function HabitsHeader({
           <Pressable
             accessibilityLabel='Open settings'
             accessibilityRole='button'
-            className='h-9 w-9 items-center justify-center rounded-full border border-[#e5e7eb] bg-transparent'
+            className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
             onPress={handleSettingsPress}
             onPressIn={handleSettingsPressIn}
             onPressOut={handleSettingsPressOut}
           >
-            <Settings color='#101727' size={20} strokeWidth={2.25} />
+            <Settings color='#44403c' size={20} strokeWidth={2.25} />
           </Pressable>
         </Animated.View>
       </View>
@@ -197,7 +197,7 @@ export function HabitsHeader({
         >
           <Text
             className='text-[13px] font-medium'
-            style={{ color: '#6b7280' }}
+            style={{ color: '#78716c' }}
           >
             Today:
           </Text>

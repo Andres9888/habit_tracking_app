@@ -115,9 +115,9 @@ export function HabitsApp() {
   }, [dismissRewardToast, openTemplatesScreen, rewardToast]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View className='flex-1 bg-[#f3f4f6]'>
-        <View className='pointer-events-none absolute inset-0 bg-[#f3f4f6]' />
-        <View className='pointer-events-none absolute inset-x-0 top-0 h-56 rounded-b-[40px] bg-white shadow-[0px_24px_48px_rgba(15,23,42,0.08)]' />
+      <View className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100'>
+        <View className='pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100' />
+        <View className='pointer-events-none absolute inset-x-0 top-0 h-56 rounded-b-[40px] bg-white/95 shadow-[0px_24px_48px_rgba(120,90,50,0.06)]' />
         <HabitsList
           list={list}
           modals={modals}
