@@ -317,20 +317,22 @@ export default function DraggableHabit({
   };
 
   const handlePressIn = () => {
+    // Enhanced press feedback - more noticeable scale
     Animated.spring(cardScale, {
-      toValue: 0.995,
+      toValue: 0.97,
       useNativeDriver: true,
-      damping: 20,
-      stiffness: 300,
+      damping: 12,
+      stiffness: 200,
     }).start();
   };
 
   const handlePressOut = () => {
+    // Smooth spring back with subtle bounce
     Animated.spring(cardScale, {
       toValue: 1,
       useNativeDriver: true,
-      damping: 20,
-      stiffness: 300,
+      damping: 10,
+      stiffness: 180,
     }).start();
   };
 
@@ -433,7 +435,7 @@ export default function DraggableHabit({
                     shadowRadius: 4,
                   }}
                 >
-                  <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
+                  <Text className='text-[26px] leading-[30px]'>{emoji}</Text>
                 </View>
               </Animated.View>
 

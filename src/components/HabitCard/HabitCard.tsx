@@ -39,7 +39,6 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
 import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
-import StreakIndicator from '../StreakIndicator/StreakIndicator';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
 
@@ -240,20 +239,22 @@ export function HabitCard({
       }
     });
 
-  // Tap gesture handler
+  // Tap gesture handler with enhanced press feedback
   const tapGesture = Gesture.Tap()
     .onBegin(() => {
       console.log('🔴 TAP GESTURE BEGIN');
-      cardScale.value = withSpring(0.98, {
-        damping: 15,
-        stiffness: 150,
+      // Enhanced press state - more noticeable scale down
+      cardScale.value = withSpring(0.96, {
+        damping: 12,
+        stiffness: 200,
       });
     })
     .onFinalize(() => {
       console.log('🔴 TAP GESTURE FINALIZE');
+      // Smooth spring back with slight bounce
       cardScale.value = withSpring(1, {
-        damping: 15,
-        stiffness: 150,
+        damping: 10,
+        stiffness: 180,
       });
     })
     .onEnd(() => {
@@ -465,8 +466,13 @@ export function HabitCard({
             styles.card,
             {
               backgroundColor: getBackgroundColor(),
-              borderRadius: theme.custom.borderRadius.medium,
-              ...theme.custom.shadows.card,
+              borderRadius: theme.custom.borderRadius.large,
+              // Refined iOS-style shadow - more defined depth
+              elevation: 3,
+              shadowColor: '#000000',
+              shadowOffset: { height: 3, width: 0 },
+              shadowOpacity: 0.08,
+              shadowRadius: 12,
             },
             disabled && styles.disabled,
             cardAnimatedStyle,
@@ -478,8 +484,8 @@ export function HabitCard({
               styles.accentBar,
               {
                 backgroundColor: accentColor,
-                borderBottomLeftRadius: theme.custom.borderRadius.medium,
-                borderTopLeftRadius: theme.custom.borderRadius.medium,
+                borderBottomLeftRadius: theme.custom.borderRadius.large,
+                borderTopLeftRadius: theme.custom.borderRadius.large,
               },
             ]}
           />
@@ -527,25 +533,45 @@ export function HabitCard({
               </View>
             </View>
 
+            {/* Streak Badge Row - Prominent placement for motivation */}
+            {currentStreak > 0 && (
+              <View style={styles.streakRow}>
+                <View style={[styles.streakBadge, { backgroundColor: '#FEF3C7' }]}>
+                  <Text style={styles.streakFireIcon}>🔥</Text>
+                  <Text style={[styles.streakText, { color: theme.custom.colors.warning[700] }]}>
+                    {currentStreak} Day{currentStreak !== 1 ? 's' : ''} Streak
+                  </Text>
+                </View>
+                {/* Best Streak Badge - Shows when approaching or at personal record */}
+                {bestStreak > 0 && currentStreak >= bestStreak - 2 && (
+                  <View style={[styles.bestStreakBadge, {
+                    backgroundColor: currentStreak >= bestStreak ? '#FEF9C3' : '#F3F4F6',
+                    borderColor: currentStreak >= bestStreak ? '#FACC15' : '#E5E7EB',
+                  }]}>
+                    <Text style={styles.bestStreakIcon}>🏅</Text>
+                    <Text style={[styles.bestStreakText, {
+                      color: currentStreak >= bestStreak ? '#A16207' : '#6B7280'
+                    }]}>
+                      {currentStreak >= bestStreak ? 'New Record!' : `Best: ${bestStreak}`}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+
             {/* Ripple Effect Overlay (Part B: Micro-Transitions) */}
             <Animated.View
               style={[styles.rippleOverlay, rippleAnimatedStyle]}
               pointerEvents="none"
             />
 
-            {/* Bottom Row: Strength Indicator + Streak */}
+            {/* Bottom Row: Strength Indicator */}
             <View style={styles.bottomRow}>
               <HabitStrengthIndicator
                 showPercentage
                 habitName={name}
                 strength={strength}
                 variant='compact'
-              />
-              {/* Streak Indicator (Story 1.4) */}
-              <StreakIndicator
-                compact
-                bestStreak={bestStreak}
-                currentStreak={currentStreak}
               />
             </View>
           </View>
@@ -566,7 +592,7 @@ export function HabitCard({
 
 const styles = StyleSheet.create({
   accentBar: {
-    width: 4,
+    width: 6,
   },
   actionButton: {
     alignItems: 'center',
@@ -614,14 +640,14 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   container: {
-    height: 72,
+    height: 88,
     position: 'relative', // As per UX spec
-    marginVertical: 4,
+    marginVertical: 6,
   },
   content: {
     flex: 1,
     justifyContent: 'space-between',
-    padding: 12,
+    padding: 16,
   },
   disabled: {
     opacity: 0.5,
@@ -633,7 +659,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   icon: {
-    fontSize: 24,
+    fontSize: 32,
   },
   statusContainer: {
     marginLeft: 8,
@@ -652,6 +678,48 @@ const styles = StyleSheet.create({
   },
   warningText: {
     fontSize: 12,
+  },
+  // Streak Badge Styles - Prominent motivational display
+  streakRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 2,
+    marginTop: 4,
+  },
+  streakBadge: {
+    alignItems: 'center',
+    borderRadius: 12,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  streakFireIcon: {
+    fontSize: 14,
+  },
+  streakText: {
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+  },
+  // Best Streak Badge Styles
+  bestStreakBadge: {
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 3,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  bestStreakIcon: {
+    fontSize: 12,
+  },
+  bestStreakText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
   // Part B: Micro-Transitions - Ripple effect overlay
   rippleOverlay: {
