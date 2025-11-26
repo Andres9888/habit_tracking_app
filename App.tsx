@@ -494,11 +494,9 @@ function HabitsApp() {
 
 function Providers({ children }: { children: ReactNode }) {
   return (
-    <SafeAreaProvider>
-      <PaperProvider theme={extendedTheme}>
-        <ConvexProvider client={convex}>{children}</ConvexProvider>
-      </PaperProvider>
-    </SafeAreaProvider>
+    <PaperProvider theme={extendedTheme}>
+      <ConvexProvider client={convex}>{children}</ConvexProvider>
+    </PaperProvider>
   );
 }
 
@@ -511,19 +509,25 @@ export default function App() {
       console.log('ℹ️ Running in development mode without authentication');
     }
     return (
-      <Providers>
-        <HabitsApp />
-      </Providers>
-    );
-  }
-
-  return (
-    <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
-      <ClerkLoaded>
+      <SafeAreaProvider>
         <Providers>
           <HabitsApp />
         </Providers>
-      </ClerkLoaded>
-    </ClerkProvider>
+      </SafeAreaProvider>
+    );
+  }
+
+  // SafeAreaProvider must be outermost to provide safe area insets to all components,
+  // including Clerk's authentication UI surfaces
+  return (
+    <SafeAreaProvider>
+      <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
+        <ClerkLoaded>
+          <Providers>
+            <HabitsApp />
+          </Providers>
+        </ClerkLoaded>
+      </ClerkProvider>
+    </SafeAreaProvider>
   );
 }
