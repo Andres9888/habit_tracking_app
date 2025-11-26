@@ -3,6 +3,7 @@ import { Check, Plus } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import Animated, {
+  cancelAnimation,
   FadeInDown,
   interpolateColor,
   useAnimatedStyle,
@@ -194,11 +195,77 @@ export function HabitsEmptyState({
   );
 }
 
-// Welcome Hero Component
-function WelcomeHero({ greeting, period }: { greeting: string; period: string }) {
-  const waveRotation = useSharedValue(0);
+// Floating particle component for visual delight
+function FloatingParticle({ delay, emoji, duration = 3000 }: { delay: number; emoji: string; duration?: number }) {
+  const translateY = useSharedValue(0);
+  const translateX = useSharedValue(0);
+  const opacity = useSharedValue(0);
+  const scale = useSharedValue(0.5);
 
   useEffect(() => {
+    // Fade in
+    opacity.value = withDelay(delay, withTiming(0.6, { duration: 500 }));
+    scale.value = withDelay(delay, withSpring(1, { damping: 12 }));
+
+    // Float animation
+    translateY.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(-12, { duration: duration / 2 }),
+          withTiming(0, { duration: duration / 2 })
+        ),
+        -1,
+        true
+      )
+    );
+
+    translateX.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(6, { duration: duration / 3 }),
+          withTiming(-6, { duration: duration / 3 }),
+          withTiming(0, { duration: duration / 3 })
+        ),
+        -1,
+        true
+      )
+    );
+
+    // Cleanup: cancel all animations on unmount or dependency change
+    return () => {
+      cancelAnimation(translateY);
+      cancelAnimation(translateX);
+      cancelAnimation(opacity);
+      cancelAnimation(scale);
+    };
+  }, [delay, duration, translateY, translateX, opacity, scale]);
+
+  const particleStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: translateY.value },
+      { translateX: translateX.value },
+      { scale: scale.value },
+    ],
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.Text style={particleStyle} className='text-lg'>
+      {emoji}
+    </Animated.Text>
+  );
+}
+
+// Welcome Hero Component - Enhanced with floating particles
+function WelcomeHero({ greeting, period }: { greeting: string; period: string }) {
+  const waveRotation = useSharedValue(0);
+  const streakPulse = useSharedValue(1);
+  const glowOpacity = useSharedValue(0.3);
+
+  useEffect(() => {
+    // Wave animation
     waveRotation.value = withRepeat(
       withSequence(
         withTiming(14, { duration: 300 }),
@@ -211,19 +278,88 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
       -1,
       false
     );
-  }, [waveRotation]);
+
+    // Streak badge pulse
+    streakPulse.value = withRepeat(
+      withSequence(
+        withTiming(1.05, { duration: 1200 }),
+        withTiming(1, { duration: 1200 })
+      ),
+      -1,
+      true
+    );
+
+    // Background glow pulse
+    glowOpacity.value = withRepeat(
+      withSequence(
+        withTiming(0.5, { duration: 2000 }),
+        withTiming(0.3, { duration: 2000 })
+      ),
+      -1,
+      true
+    );
+
+    // Cleanup: cancel all animations on unmount
+    return () => {
+      cancelAnimation(waveRotation);
+      cancelAnimation(streakPulse);
+      cancelAnimation(glowOpacity);
+    };
+  }, [waveRotation, streakPulse, glowOpacity]);
 
   const waveStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${waveRotation.value}deg` }],
   }));
 
+  const streakStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: streakPulse.value }],
+  }));
+
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+  }));
+
   const periodEmoji = period === 'morning' ? '🌅' : period === 'afternoon' ? '☀️' : '🌙';
+  const particles = period === 'morning'
+    ? ['✨', '🌟', '💫']
+    : period === 'afternoon'
+    ? ['⚡', '💪', '🎯']
+    : ['🌙', '⭐', '💤'];
 
   return (
     <Animated.View
       entering={FadeInDown.delay(0).springify().damping(18)}
-      className='items-center gap-3 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-200/40 px-6 py-6'
+      className='relative items-center gap-3 overflow-hidden rounded-3xl border border-amber-200/40 px-6 py-6'
+      style={{ backgroundColor: '#fffbeb' }}
     >
+      {/* Animated background glow */}
+      <Animated.View
+        className='absolute inset-0 rounded-3xl'
+        style={[
+          glowStyle,
+          {
+            backgroundColor: '#fcd34d',
+          },
+        ]}
+      />
+
+      {/* Floating particles */}
+      <View className='absolute inset-0' pointerEvents='none'>
+        <View className='absolute left-4 top-4'>
+          <FloatingParticle delay={0} duration={2500} emoji={particles[0]} />
+        </View>
+        <View className='absolute right-6 top-6'>
+          <FloatingParticle delay={400} duration={3000} emoji={particles[1]} />
+        </View>
+        <View className='absolute bottom-4 left-8'>
+          <FloatingParticle delay={800} duration={2800} emoji={particles[2]} />
+        </View>
+        <View className='absolute bottom-6 right-4'>
+          <FloatingParticle delay={200} duration={3200} emoji='🌱' />
+        </View>
+      </View>
+
+      {/* Main content */}
       <Animated.Text style={waveStyle} className='text-4xl'>
         👋
       </Animated.Text>
@@ -231,16 +367,28 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
         <Text className='text-[22px] font-bold text-stone-800'>
           {greeting}!
         </Text>
-        <Text className='text-[15px] text-stone-600 text-center leading-[22px]'>
+        <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
           Your first streak starts now {periodEmoji}
         </Text>
       </View>
-      <View className='flex-row items-center gap-2 mt-1 rounded-full bg-white/60 px-4 py-2'>
+      <Animated.View
+        className='mt-1 flex-row items-center gap-2 rounded-full bg-white/80 px-4 py-2'
+        style={[
+          streakStyle,
+          {
+            shadowColor: '#f59e0b',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.2,
+            shadowRadius: 8,
+            elevation: 4,
+          },
+        ]}
+      >
         <Text className='text-lg'>🔥</Text>
         <Text className='text-[13px] font-semibold text-amber-700'>
           0 day streak • Let's change that
         </Text>
-      </View>
+      </Animated.View>
     </Animated.View>
   );
 }

@@ -10,13 +10,20 @@ import {
 } from 'convex/react';
 import { addDays, format } from 'date-fns';
 import { Plus, Settings, Search, Bell, Wifi } from 'lucide-react-native';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import {
   GestureHandlerRootView,
   ScrollView,
 } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { api } from './convex/_generated/api';
 import type { Id } from './convex/_generated/dataModel';
 import { DateSelector } from './src/components/DateSelector';
@@ -485,6 +492,16 @@ function HabitsApp() {
   );
 }
 
+function Providers({ children }: { children: ReactNode }) {
+  return (
+    <SafeAreaProvider>
+      <PaperProvider theme={extendedTheme}>
+        <ConvexProvider client={convex}>{children}</ConvexProvider>
+      </PaperProvider>
+    </SafeAreaProvider>
+  );
+}
+
 export default function App() {
   // Temporarily bypass Clerk authentication for development
   if (!clerkPublishableKey) {
@@ -494,22 +511,18 @@ export default function App() {
       console.log('ℹ️ Running in development mode without authentication');
     }
     return (
-      <PaperProvider theme={extendedTheme}>
-        <ConvexProvider client={convex}>
-          <HabitsApp />
-        </ConvexProvider>
-      </PaperProvider>
+      <Providers>
+        <HabitsApp />
+      </Providers>
     );
   }
 
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>
-        <PaperProvider theme={extendedTheme}>
-          <ConvexProvider client={convex}>
-            <HabitsApp />
-          </ConvexProvider>
-        </PaperProvider>
+        <Providers>
+          <HabitsApp />
+        </Providers>
       </ClerkLoaded>
     </ClerkProvider>
   );

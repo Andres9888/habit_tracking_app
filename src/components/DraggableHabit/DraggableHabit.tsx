@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, View, Text, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { Archive } from 'lucide-react-native';
+import { Archive, TrendingUp } from 'lucide-react-native';
 import type { StrengthLevel } from '../HabitStrengthIndicator';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
@@ -43,6 +43,7 @@ interface DraggableHabitProps {
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   isJustCreated?: boolean;
+  previousStreak?: number; // For detecting new personal records
 }
 
 export default function DraggableHabit({
@@ -61,6 +62,7 @@ export default function DraggableHabit({
   onWeekComplete,
   reduceMotionPreference,
   isJustCreated = false,
+  previousStreak,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
@@ -70,8 +72,13 @@ export default function DraggableHabit({
   const cardScale = useRef(new Animated.Value(1)).current;
   const iconPulse = useRef(new Animated.Value(1)).current;
   const highlightGlow = useRef(new Animated.Value(0)).current;
+  const streakBadgeGlow = useRef(new Animated.Value(0)).current;
+  const newRecordScale = useRef(new Animated.Value(0)).current;
+  const newRecordOpacity = useRef(new Animated.Value(0)).current;
 
-  const { triggerSelection, triggerWarning } = useHapticFeedback({
+  const [showNewRecord, setShowNewRecord] = useState(false);
+
+  const { triggerSelection, triggerWarning, triggerSuccess } = useHapticFeedback({
     isEnabled: celebrationsEnabled,
     preference: reduceMotionPreference,
   });
@@ -80,6 +87,8 @@ export default function DraggableHabit({
   const weekCompleteCount = weekStatus.filter(status => status === 'done').length;
   const isWeekComplete = weekCompleteCount === 7;
   const bestStreak = habit.bestStreak || 0;
+  const isNewPersonalRecord = previousStreak !== undefined && streak > bestStreak && streak > (previousStreak || 0);
+  const hasSignificantStreak = streak >= 7;
 
   useEffect(() => {
     Animated.parallel([
@@ -160,6 +169,86 @@ export default function DraggableHabit({
     }
   }, [isWeekComplete, iconPulse, reduceMotionPreference]);
 
+  // Streak badge glow animation for significant streaks (7+ days)
+  useEffect(() => {
+    if (hasSignificantStreak && !reduceMotionPreference) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(streakBadgeGlow, {
+            toValue: 1,
+            duration: 1500,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: false,
+          }),
+          Animated.timing(streakBadgeGlow, {
+            toValue: 0.3,
+            duration: 1500,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: false,
+          }),
+        ])
+      ).start();
+    } else {
+      streakBadgeGlow.setValue(0);
+    }
+  }, [hasSignificantStreak, streakBadgeGlow, reduceMotionPreference]);
+
+  // New personal record celebration
+  useEffect(() => {
+    if (isNewPersonalRecord && !reduceMotionPreference) {
+      setShowNewRecord(true);
+      triggerSuccess();
+
+      // Animate the "New Record!" badge
+      Animated.parallel([
+        Animated.spring(newRecordScale, {
+          toValue: 1,
+          friction: 5,
+          tension: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(newRecordOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        // Extra bounce on card
+        Animated.sequence([
+          Animated.spring(cardScale, {
+            toValue: 1.03,
+            friction: 8,
+            tension: 200,
+            useNativeDriver: true,
+          }),
+          Animated.spring(cardScale, {
+            toValue: 1,
+            friction: 10,
+            tension: 200,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+
+      // Hide the badge after 3 seconds
+      const timeout = setTimeout(() => {
+        Animated.parallel([
+          Animated.timing(newRecordScale, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(newRecordOpacity, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start(() => setShowNewRecord(false));
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isNewPersonalRecord, reduceMotionPreference, triggerSuccess, newRecordScale, newRecordOpacity, cardScale]);
+
   const renderRightActions = (
     progress: Animated.AnimatedInterpolation<number>,
     dragX: Animated.AnimatedInterpolation<number>
@@ -214,11 +303,11 @@ export default function DraggableHabit({
         strengthBackground: '#10b981',
       }
     : {
-        border: '#ffffff',
-        cardBackground: '#fafafa', // Warm off-white for premium feel
+        border: '#fafaf9', // stone-50
+        cardBackground: '#fafaf9', // Warm stone-50 for cozy feel
         iconContainer: undefined as string | undefined,
-        primaryText: '#1a1a1a',
-        streakText: '#ea580c', // Richer orange for premium streak badge
+        primaryText: '#1c1917', // stone-900
+        streakText: '#c2410c', // orange-700 for richer streak
         strengthBackground: '#10b981',
       };
 
@@ -245,10 +334,35 @@ export default function DraggableHabit({
     }).start();
   };
 
+  // Get enhanced background color for icon based on accent color
+  const getIconBackground = () => {
+    if (highContrastMode) return colors.iconContainer;
+
+    const colorMap: Record<string, string> = {
+      '#2563eb': 'rgba(219, 234, 254, 0.85)', // blue-100
+      '#ea580c': 'rgba(255, 237, 213, 0.85)', // orange-100
+      '#059669': 'rgba(209, 250, 229, 0.85)', // emerald-100
+      '#7c3aed': 'rgba(237, 233, 254, 0.85)', // violet-100
+      '#0891b2': 'rgba(207, 250, 254, 0.85)', // cyan-100
+      '#db2777': 'rgba(252, 231, 243, 0.85)', // pink-100
+    };
+    return colorMap[accentColor] || 'rgba(254, 249, 195, 0.85)'; // yellow-100 default
+  };
+
+  // Get streak badge colors based on streak length
+  const getStreakBadgeColors = () => {
+    if (streak >= 30) return { bg: '#7c3aed', glow: '#8b5cf6' }; // Purple for 30+
+    if (streak >= 14) return { bg: '#ea580c', glow: '#f97316' }; // Orange for 14+
+    if (streak >= 7) return { bg: '#dc2626', glow: '#ef4444' }; // Red for 7+
+    return { bg: '#c2410c', glow: '#c2410c' }; // Default orange-700
+  };
+
+  const streakColors = getStreakBadgeColors();
+
   const habitCard = (
     <Pressable
       style={({ pressed }) => ({
-        opacity: pressed ? 0.85 : 1,
+        opacity: pressed ? 0.92 : 1,
       })}
       onLongPress={handleLongPress}
       onPress={() => onPress?.(habit)}
@@ -256,21 +370,22 @@ export default function DraggableHabit({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='overflow-hidden rounded-2xl'
+        className='overflow-hidden rounded-3xl'
         style={{
           backgroundColor: colors.cardBackground,
           borderColor: colors.border,
           borderWidth: highContrastMode ? 2 : 0,
           opacity: fade,
           transform: [{ translateY }, { scale: cardScale }],
-          // Premium iOS-style shadow
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
+          // Premium elevated shadow
+          shadowColor: '#44403c', // stone-700
+          shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.08,
-          shadowRadius: 8,
-          elevation: 3, // Android
+          shadowRadius: 16,
+          elevation: 4, // Android
         }}
       >
+        {/* Archive flash overlay */}
         <Animated.View
           pointerEvents='none'
           style={{
@@ -281,6 +396,7 @@ export default function DraggableHabit({
             ...StyleSheet.absoluteFillObject,
           }}
         />
+        {/* Just-created highlight glow */}
         <Animated.View
           pointerEvents='none'
           style={{
@@ -292,88 +408,133 @@ export default function DraggableHabit({
             ...StyleSheet.absoluteFillObject,
           }}
         />
-        <View className='p-4'>
+
+        {/* Main card content with increased padding */}
+        <View className='px-5 pb-5 pt-4'>
           {/* Title row with icon and streak */}
-          <View className='mb-2.5 flex-row items-center justify-between'>
-            <View className='flex-row items-center gap-2.5'>
-              {/* Icon container with pulse animation - colored background based on habit */}
+          <View className='mb-3 flex-row items-center justify-between'>
+            <View className='flex-1 flex-row items-center gap-3'>
+              {/* Icon container - larger and more prominent */}
               <Animated.View
                 style={{
                   transform: [{ scale: iconPulse }],
                 }}
               >
                 <View
-                  className='h-8 w-8 items-center justify-center rounded-[8px]'
+                  className='h-11 w-11 items-center justify-center rounded-xl'
                   style={{
-                    backgroundColor: highContrastMode
-                      ? colors.iconContainer
-                      : accentColor === '#2563eb'
-                        ? 'rgba(219, 234, 254, 0.75)' // blue-100 at 75%
-                        : accentColor === '#ea580c'
-                          ? 'rgba(255, 237, 213, 0.75)' // orange-100 at 75%
-                          : accentColor === '#059669'
-                            ? 'rgba(209, 250, 229, 0.75)' // emerald-100 at 75%
-                            : accentColor === '#7c3aed'
-                              ? 'rgba(237, 233, 254, 0.75)' // violet-100 at 75%
-                              : accentColor === '#0891b2'
-                                ? 'rgba(207, 250, 254, 0.75)' // cyan-100 at 75%
-                                : accentColor === '#db2777'
-                                  ? 'rgba(252, 231, 243, 0.75)' // pink-100 at 75%
-                                  : 'rgba(254, 249, 195, 0.75)', // yellow-100 at 75%
-                    borderColor: highContrastMode ? '#111111' : undefined,
-                    borderWidth: highContrastMode ? 2 : 0,
+                    backgroundColor: getIconBackground(),
+                    borderColor: highContrastMode ? '#111111' : 'rgba(0,0,0,0.04)',
+                    borderWidth: highContrastMode ? 2 : 1,
+                    // Subtle inner glow
+                    shadowColor: accentColor,
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 4,
                   }}
                 >
-                  <Text className='text-[18px] leading-[22px]'>{emoji}</Text>
+                  <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
                 </View>
               </Animated.View>
 
-              <Text
-                numberOfLines={1}
-                ellipsizeMode='tail'
-                className='text-[16px] font-bold leading-[22px]'
-                style={{
-                  color: colors.primaryText,
-                  letterSpacing: -0.2,
-                  maxWidth: '85%',
-                  flexShrink: 1,
-                }}
-              >
-                {name || habit.name}
-              </Text>
-            </View>
-
-            {/* Current streak badge */}
-            {streak > 0 && (
-              <View
-                className='rounded-full bg-orange-600 px-2.5 py-1'
-                style={{
-                  shadowColor: '#ea580c',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 4,
-                  elevation: 2,
-                }}
-              >
+              {/* Habit name with better typography */}
+              <View className='flex-1'>
                 <Text
-                  className='text-[13px] font-extrabold uppercase leading-[16px] tabular-nums text-white'
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
+                  className='text-[17px] font-bold leading-[22px]'
                   style={{
-                    letterSpacing: 0.5,
-                    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-                    textShadowOffset: { width: 0, height: 1 },
-                    textShadowRadius: 2,
+                    color: colors.primaryText,
+                    letterSpacing: -0.3,
                   }}
                 >
-                  🔥 {streak}
+                  {name || habit.name}
                 </Text>
+                {/* Best streak hint for motivation */}
+                {bestStreak > 0 && bestStreak > streak && (
+                  <Text
+                    className='mt-0.5 text-[12px] font-medium'
+                    style={{ color: '#a8a29e' }} // stone-400
+                  >
+                    Best: {bestStreak} days
+                  </Text>
+                )}
               </View>
+            </View>
+
+            {/* Enhanced streak badge with glow effect */}
+            {streak > 0 && (
+              <Animated.View
+                style={{
+                  shadowColor: streakColors.glow,
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: hasSignificantStreak
+                    ? streakBadgeGlow.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.3, 0.6],
+                      })
+                    : 0.25,
+                  shadowRadius: hasSignificantStreak ? 10 : 6,
+                  elevation: hasSignificantStreak ? 6 : 4,
+                }}
+              >
+                <View
+                  className='flex-row items-center gap-1 rounded-full px-3 py-1.5'
+                  style={{
+                    backgroundColor: streakColors.bg,
+                  }}
+                >
+                  <Text className='text-[14px]'>🔥</Text>
+                  <Text
+                    className='text-[14px] font-extrabold tabular-nums text-white'
+                    style={{
+                      letterSpacing: 0.3,
+                      textShadowColor: 'rgba(0, 0, 0, 0.2)',
+                      textShadowOffset: { width: 0, height: 1 },
+                      textShadowRadius: 2,
+                    }}
+                  >
+                    {streak}
+                  </Text>
+                  {/* Milestone indicator */}
+                  {streak >= 7 && (
+                    <Text className='text-[12px]'>
+                      {streak >= 30 ? '💎' : streak >= 14 ? '⭐' : '✨'}
+                    </Text>
+                  )}
+                </View>
+              </Animated.View>
             )}
           </View>
 
-          {/* Internal divider for premium hierarchy */}
+          {/* New Personal Record celebration badge */}
+          {showNewRecord && (
+            <Animated.View
+              className='mb-3 flex-row items-center justify-center gap-1.5 rounded-full bg-gradient-to-r py-2'
+              style={{
+                backgroundColor: '#fef3c7', // amber-100
+                borderColor: '#fcd34d', // amber-300
+                borderWidth: 1,
+                opacity: newRecordOpacity,
+                transform: [{ scale: newRecordScale }],
+              }}
+            >
+              <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
+              <Text
+                className='text-[13px] font-bold uppercase tracking-wide'
+                style={{ color: '#b45309' }} // amber-700
+              >
+                New Personal Record! 🎉
+              </Text>
+            </Animated.View>
+          )}
+
+          {/* Refined divider */}
           <View
-            className='my-2.5 h-[1px]'
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}
+            className='mb-3 h-[1px]'
+            style={{
+              backgroundColor: 'rgba(120, 113, 108, 0.08)', // Lighter divider
+            }}
           />
 
           {/* Week status visualizer - full width */}
@@ -392,12 +553,22 @@ export default function DraggableHabit({
             onToggle={toggleHabit}
           />
 
-          {/* Completion reward indicator */}
+          {/* Completion reward indicator - enhanced */}
           {isWeekComplete && (
-            <View className='mt-2 flex-row items-center justify-center'>
-              <Text className='text-[11px] font-semibold uppercase tracking-wide' style={{ color: accentColor }}>
-                ✓ Week Complete
+            <View
+              className='mt-3 flex-row items-center justify-center gap-1.5 rounded-full py-1.5'
+              style={{
+                backgroundColor: `${accentColor}15`, // 15% opacity accent color
+              }}
+            >
+              <Text className='text-[12px]'>✨</Text>
+              <Text
+                className='text-[12px] font-bold uppercase tracking-wider'
+                style={{ color: accentColor }}
+              >
+                Perfect Week
               </Text>
+              <Text className='text-[12px]'>✨</Text>
             </View>
           )}
         </View>

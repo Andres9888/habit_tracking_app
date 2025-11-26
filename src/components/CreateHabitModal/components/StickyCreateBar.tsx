@@ -28,13 +28,13 @@ export const StickyCreateBar = ({ disabled, onPress }: StickyCreateBarProps) => 
       pointerEvents='box-none'
       style={{ position: 'absolute', left: 16, right: 16, bottom }}
     >
-      <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-black/10'>
+      <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-stone-300/40'>
         <Animated.View style={{ transform: [{ scale }] }}>
           <Pressable
             accessibilityLabel={STRINGS.CREATE_HABIT.createAction}
             accessibilityRole='button'
-            className={`items-center justify-center rounded-xl py-3 ${disabled ? 'bg-gray-300' : ''}`}
-            style={{ backgroundColor: disabled ? '#D1D5DB' : '#111827' }}
+            className={`items-center justify-center rounded-xl py-3.5 ${disabled ? 'bg-stone-300' : ''}`}
+            style={{ backgroundColor: disabled ? '#d6d3d1' : '#292524' }}
             disabled={disabled}
             onPressIn={() => {
               Animated.timing(scale, {

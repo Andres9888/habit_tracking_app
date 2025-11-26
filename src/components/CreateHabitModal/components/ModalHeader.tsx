@@ -22,16 +22,16 @@ export const ModalHeader = ({ isEditMode, habitName, onClose, onSave }: ModalHea
         className='h-10 w-10 items-center justify-center rounded-full'
         onPress={onClose}
       >
-        <X color='#1a1a1a' size={24} strokeWidth={2} />
+        <X color='#44403c' size={24} strokeWidth={2} />
       </TouchableOpacity>
-      <Text className='text-[20px] font-bold text-[#1a1a1a]'>
+      <Text className='text-[20px] font-bold text-stone-900'>
         {isEditMode ? 'Edit Habit' : STRINGS.CREATE_HABIT.title}
       </Text>
       <Animated.View style={{ transform: [{ scale: saveScale }] }}>
         <TouchableOpacity
           accessibilityRole='button'
           className={`h-9 items-center justify-center rounded-full px-6 ${
-            canSave ? 'bg-[#1a1a1a]' : 'bg-gray-300'
+            canSave ? 'bg-stone-800' : 'bg-stone-300'
           }`}
           disabled={!canSave}
           onPressIn={() => {

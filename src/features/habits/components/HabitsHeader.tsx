@@ -12,7 +12,7 @@ import { TemplateTooltip } from '../../../components/TemplateTooltip';
 import { NotificationBadge } from '../../../components/NotificationBadge';
 import { useTemplateTooltip } from '../hooks/useTemplateTooltip';
 import { useTemplateBadge } from '../hooks/useTemplateBadge';
-import { colors } from '../../../theme';
+import { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';
 
 interface HabitsHeaderProps {
   openCreateHabitScreen: () => void;
@@ -21,6 +21,7 @@ interface HabitsHeaderProps {
   completedToday?: number;
   totalHabits?: number;
   showCompletionSummary?: boolean;
+  reduceMotion?: boolean;
 }
 
 export function HabitsHeader({
@@ -30,6 +31,7 @@ export function HabitsHeader({
   completedToday = 0,
   totalHabits = 0,
   showCompletionSummary = true,
+  reduceMotion = false,
 }: HabitsHeaderProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
   const { dismissTooltip, showTooltip } = useTemplateTooltip();
@@ -106,15 +108,8 @@ export function HabitsHeader({
     openSettings();
   };
 
-  // Calculate completion percentage
+  // Calculate completion percentage for accessibility
   const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
-
-  // Determine color based on completion
-  const getCompletionColor = () => {
-    if (percentage >= 80) return colors.primary[700];
-    if (percentage >= 41) return colors.warning[700];
-    return colors.error;
-  };
 
   return (
     <View className='gap-2'>
@@ -188,28 +183,18 @@ export function HabitsHeader({
       </View>
       </View>
 
-      {/* Today's Completion Indicator */}
+      {/* Daily Momentum Meter */}
       {showCompletionSummary && totalHabits > 0 && (
         <View
           accessibilityRole='text'
           accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}
-          className='flex-row items-center justify-center gap-2 px-2'
         >
-          <Text
-            className='text-[13px] font-medium'
-            style={{ color: '#78716c' }}
-          >
-            Today:
-          </Text>
-          <Text
-            className='text-[13px] font-semibold'
-            style={{ color: getCompletionColor() }}
-          >
-            {completedToday}/{totalHabits} Complete ({percentage}%)
-          </Text>
-          <Text style={{ fontSize: 14 }}>
-            {percentage >= 80 ? '⚡' : percentage >= 41 ? '💪' : '🎯'}
-          </Text>
+          <DailyMomentumMeter
+            completedToday={completedToday}
+            reduceMotion={reduceMotion}
+            size='standard'
+            totalHabits={totalHabits}
+          />
         </View>
       )}
     </View>

@@ -39,9 +39,9 @@ export interface StreakIndicatorProps {
 }
 
 const MILESTONE_BADGES = {
-  7: { emoji: '⭐', label: '7-Day Streak' },
-  30: { emoji: '🏆', label: '30-Day Streak' },
-  100: { emoji: '💎', label: '100-Day Streak' },
+  7: { emoji: '⭐', label: '1 Week Strong', color: '#f59e0b' }, // amber-500
+  30: { emoji: '🏆', label: 'Monthly Champion', color: '#eab308' }, // yellow-500
+  100: { emoji: '💎', label: 'Legendary', color: '#8b5cf6' }, // violet-500
 } as const;
 
 const MILESTONES = [7, 30, 100] as const;
@@ -115,18 +115,18 @@ export function StreakIndicator({
             <Text
               style={[
                 styles.fireEmoji,
-                { color: theme.custom.colors.gray[400] },
+                { color: '#a8a29e' }, // stone-400
               ]}
             >
-              🔥
+              🌱
             </Text>
             <Text
               style={[
                 styles.zeroStreakText,
-                { color: theme.custom.colors.gray[500] },
+                { color: '#78716c' }, // stone-500
               ]}
             >
-              Start your streak!
+              Ready to grow!
             </Text>
           </View>
         ) : (
@@ -142,7 +142,7 @@ export function StreakIndicator({
             <Text
               style={[
                 styles.streakNumber,
-                { color: theme.custom.colors.gray[900] },
+                { color: '#1c1917' }, // stone-900
               ]}
             >
               {currentStreak}
@@ -174,7 +174,7 @@ export function StreakIndicator({
             <Text
               style={[
                 styles.streakNumberLarge,
-                { color: theme.custom.colors.gray[900] },
+                { color: '#1c1917' }, // stone-900
               ]}
             >
               {currentStreak}
@@ -182,10 +182,10 @@ export function StreakIndicator({
             <Text
               style={[
                 styles.streakLabel,
-                { color: theme.custom.colors.gray[600] },
+                { color: '#57534e' }, // stone-600
               ]}
             >
-              Current Streak
+              {currentStreak === 1 ? 'Day Strong' : 'Days Strong'}
             </Text>
           </View>
         </View>
@@ -196,16 +196,16 @@ export function StreakIndicator({
         <View
           style={[
             styles.bestStreakContainer,
-            { backgroundColor: theme.custom.colors.gray[100] },
+            { backgroundColor: '#fef3c7' }, // amber-100
           ]}
         >
           <Text
             style={[
               styles.bestStreakText,
-              { color: theme.custom.colors.gray[700] },
+              { color: '#92400e' }, // amber-800
             ]}
           >
-            Best: {bestStreak} {bestStreak === 1 ? 'day' : 'days'}
+            🏅 Personal Best: {bestStreak} {bestStreak === 1 ? 'day' : 'days'}
           </Text>
         </View>
       )}
@@ -215,6 +215,7 @@ export function StreakIndicator({
         <View style={styles.milestonesLegend}>
           {MILESTONES.map((milestone) => {
             const achieved = currentStreak >= milestone;
+            const badge = MILESTONE_BADGES[milestone];
             return (
               <View
                 key={milestone}
@@ -222,25 +223,30 @@ export function StreakIndicator({
                   styles.milestoneBadge,
                   {
                     backgroundColor: achieved
-                      ? theme.custom.colors.primary[100]
-                      : theme.custom.colors.gray[100],
+                      ? '#fef3c7' // amber-100
+                      : '#f5f5f4', // stone-100
+                    borderWidth: achieved ? 1 : 0,
+                    borderColor: achieved ? '#fcd34d' : 'transparent', // amber-300
                   },
                 ]}
               >
-                <Text style={styles.milestoneBadgeEmoji}>
-                  {MILESTONE_BADGES[milestone].emoji}
+                <Text style={[
+                  styles.milestoneBadgeEmoji,
+                  { opacity: achieved ? 1 : 0.5 }
+                ]}>
+                  {badge.emoji}
                 </Text>
                 <Text
                   style={[
                     styles.milestoneBadgeLabel,
                     {
                       color: achieved
-                        ? theme.custom.colors.gray[900]
-                        : theme.custom.colors.gray[500],
+                        ? '#78350f' // amber-900
+                        : '#a8a29e', // stone-400
                     },
                   ]}
                 >
-                  {milestone}
+                  {milestone}d
                 </Text>
               </View>
             );
