@@ -1532,3 +1532,587 @@ export const clearTemplates = mutation({
     return { message: `Deleted ${templates.length} templates`, success: true };
   },
 });
+
+/**
+ * Mutation: Seed additional science-backed templates (Phase 3.1)
+ * 37 new habits covering: Physical Resilience, Cognitive, Nutrition, Digital Wellness, Social
+ */
+export const seedAdditionalTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Physical Resilience & Movement
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Stand up and move for 2-3 minutes every hour. Prolonged sitting increases cardiovascular disease risk even with regular exercise.',
+      frequency: 'daily',
+      icon: '🧍',
+      iconColor: '#10B981',
+      name: 'Standing Every Hour',
+      popularityScore: 91,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/22890825/',
+      scientificReference:
+        'Dunstan et al. (2012) - Too much sitting: The population health science of sedentary behavior',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Check and correct your posture 3x daily. Good posture reduces back pain, improves breathing, and boosts confidence.',
+      frequency: 'daily',
+      icon: '🪑',
+      iconColor: '#6366F1',
+      name: 'Posture Check',
+      popularityScore: 84,
+      scientificReference:
+        'Carney et al. (2010) - Power posing: Brief nonverbal displays affect neuroendocrine levels',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Walk barefoot on grass, sand, or earth for 10-20 minutes. Grounding reduces inflammation and improves sleep quality.',
+      frequency: 'daily',
+      icon: '🦶',
+      iconColor: '#84CC16',
+      name: 'Barefoot Grounding',
+      popularityScore: 79,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/22291721/',
+      scientificReference:
+        'Chevalier et al. (2012) - Earthing: Health implications of reconnecting the human body to the Earth',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Every 20 minutes, look at something 20 feet away for 20 seconds. Reduces digital eye strain and prevents myopia progression.',
+      frequency: 'daily',
+      icon: '👁️',
+      iconColor: '#0EA5E9',
+      name: '20-20-20 Eye Rule',
+      popularityScore: 93,
+      scientificReference:
+        'American Optometric Association - Digital eye strain prevention guidelines',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Practice breathing through your nose throughout the day. Nasal breathing filters air, produces nitric oxide, and activates the parasympathetic nervous system.',
+      frequency: 'daily',
+      icon: '👃',
+      iconColor: '#14B8A6',
+      name: 'Nasal Breathing',
+      popularityScore: 88,
+      scientificReference:
+        'Nestor (2020) - Breath: The New Science of a Lost Art',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Train at high intensity 1-2x weekly to improve VO2 max. VO2 max is the single strongest predictor of longevity.',
+      frequency: 'weekly',
+      icon: '🫀',
+      iconColor: '#EF4444',
+      name: 'VO2 Max Training',
+      popularityScore: 89,
+      scientificLink: 'https://peterattiamd.com/outlive/',
+      scientificReference:
+        'Attia (2023) - Outlive: The Science and Art of Longevity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Practice single-leg stands, heel-to-toe walking, or balance board exercises. Balance training reduces fall risk and improves coordination at any age.',
+      frequency: 'daily',
+      icon: '⚖️',
+      iconColor: '#8B5CF6',
+      name: 'Balance Training',
+      popularityScore: 85,
+      scientificReference:
+        'Sherrington et al. (2019) - Exercise for preventing falls in older people living in the community',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Train grip strength with dead hangs, farmer carries, or grip exercises. Grip strength is a powerful predictor of all-cause mortality.',
+      frequency: 'daily',
+      icon: '✊',
+      iconColor: '#F97316',
+      name: 'Grip Strength Training',
+      popularityScore: 87,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/25953784/',
+      scientificReference:
+        'Leong et al. (2015) - Prognostic value of grip strength: findings from the PURE study',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Take a hot bath (104°F/40°C) for 15-20 minutes. Passive heat therapy provides cardiovascular benefits similar to moderate exercise.',
+      frequency: 'daily',
+      icon: '🛀',
+      iconColor: '#F43F5E',
+      name: 'Heat Therapy Bath',
+      popularityScore: 82,
+      scientificReference:
+        'Laukkanen et al. (2018) - Cardiovascular and other health benefits of passive heat therapy',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Hang from a bar for 30-60 seconds daily. Decompresses spine, improves shoulder mobility, and builds grip strength.',
+      frequency: 'daily',
+      icon: '🙆',
+      iconColor: '#0891B2',
+      name: 'Daily Hanging',
+      popularityScore: 81,
+      scientificReference:
+        'McGill (2016) - Back Mechanic: spinal decompression techniques',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // MINDFULNESS - Cognitive & Mental Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Spend 15 minutes on puzzles, crosswords, or brain training games. Novel cognitive challenges build neuroplasticity and cognitive reserve.',
+      frequency: 'daily',
+      icon: '🧩',
+      iconColor: '#A855F7',
+      name: 'Brain Games',
+      popularityScore: 83,
+      scientificReference:
+        'Park et al. (2014) - The impact of sustained engagement on cognitive function in older adults',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Schedule 15-30 minutes to write down worries, then close the notebook. Containing worry to a specific time reduces generalized anxiety.',
+      frequency: 'daily',
+      icon: '📓',
+      iconColor: '#64748B',
+      name: 'Scheduled Worry Time',
+      popularityScore: 86,
+      scientificReference:
+        'Borkovec et al. (1990) - Stimulus control treatment for worry and insomnia',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Systematically scan your body from head to toe, noticing sensations. Reduces chronic pain, increases body awareness, and calms the nervous system.',
+      frequency: 'daily',
+      icon: '🫥',
+      iconColor: '#06B6D4',
+      name: 'Body Scan Meditation',
+      popularityScore: 88,
+      scientificReference:
+        'Kabat-Zinn (1990) - Full Catastrophe Living: Using the Wisdom of Your Body and Mind',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Take periodic breaks from high-dopamine activities (social media, games, junk food). Resets reward circuitry and increases motivation.',
+      frequency: 'weekly',
+      icon: '🧘‍♂️',
+      iconColor: '#475569',
+      name: 'Dopamine Reset',
+      popularityScore: 84,
+      scientificReference:
+        'Sepah (2019) - The Definitive Guide to Dopamine Fasting 2.0',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice Dual N-Back training for 20 minutes. One of the few brain training methods shown to improve fluid intelligence and working memory.',
+      frequency: 'daily',
+      icon: '🔢',
+      iconColor: '#7C3AED',
+      name: 'Dual N-Back Training',
+      popularityScore: 80,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/18425231/',
+      scientificReference:
+        'Jaeggi et al. (2008) - Improving fluid intelligence with training on working memory',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SLEEP - Recovery & Rest
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Sleep under a weighted blanket (10% of body weight). Deep pressure stimulation reduces anxiety and improves sleep quality.',
+      frequency: 'daily',
+      icon: '🛋️',
+      iconColor: '#4338CA',
+      name: 'Weighted Blanket Sleep',
+      popularityScore: 82,
+      scientificReference:
+        'Ackerley et al. (2015) - Positive effects of a weighted blanket on insomnia',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Use white or pink noise while sleeping. Background noise masks disruptions and improves sleep onset and quality.',
+      frequency: 'daily',
+      icon: '🔊',
+      iconColor: '#94A3B8',
+      name: 'Sleep Sound Machine',
+      popularityScore: 79,
+      scientificReference:
+        'Messineo et al. (2017) - Broadband sound administration improves sleep onset latency',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Take 200-400mg magnesium glycinate or threonate 30-60 minutes before bed. Magnesium supports GABA activity and improves sleep quality.',
+      frequency: 'daily',
+      icon: '💊',
+      iconColor: '#10B981',
+      name: 'Evening Magnesium',
+      popularityScore: 85,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/23853635/',
+      scientificReference:
+        'Abbasi et al. (2012) - The effect of magnesium supplementation on sleep quality',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Nutrition
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Eat 30+ different plant foods per week (fruits, vegetables, nuts, seeds, legumes, grains). Diversity is the key to a healthy gut microbiome.',
+      frequency: 'weekly',
+      icon: '🌈',
+      iconColor: '#F59E0B',
+      name: '30 Plants Per Week',
+      popularityScore: 92,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/29795809/',
+      scientificReference:
+        'McDonald et al. (2018) - American Gut: an open platform for citizen science microbiome research',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Consume fermented foods daily (yogurt, kefir, kimchi, sauerkraut, kombucha). Increases gut microbiome diversity and reduces inflammation.',
+      frequency: 'daily',
+      icon: '🥬',
+      iconColor: '#84CC16',
+      name: 'Daily Fermented Foods',
+      popularityScore: 90,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/34256014/',
+      scientificReference:
+        'Wastyk et al. (2021) - Gut-microbiota-targeted diets modulate human immune status (Stanford study)',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Eat fatty fish 2-3x weekly or supplement with omega-3s. DHA supports brain health, reduces inflammation, and protects against neurodegeneration.',
+      frequency: 'weekly',
+      icon: '🐟',
+      iconColor: '#0284C7',
+      name: 'Omega-3 Rich Foods',
+      popularityScore: 88,
+      scientificReference:
+        'Dyall (2015) - Long-chain omega-3 fatty acids and the brain: A review of evidence',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Eat vegetables or salad before carbohydrates at meals. Eating greens first blunts blood sugar spikes by up to 73%.',
+      frequency: 'daily',
+      icon: '🥗',
+      iconColor: '#22C55E',
+      name: 'Eat Greens First',
+      popularityScore: 86,
+      scientificReference:
+        'Imai et al. (2014) - Eating vegetables before carbohydrates improves postprandial glucose',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Stop eating at least 3 hours before bedtime. Late eating disrupts sleep architecture and increases acid reflux risk.',
+      frequency: 'daily',
+      icon: '🍽️',
+      iconColor: '#EF4444',
+      name: 'No Late Night Eating',
+      popularityScore: 84,
+      scientificReference:
+        'Fujiwara et al. (2005) - Association between dinner-to-bed time and gastro-esophageal reflux disease',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Chew each bite 20-30 times before swallowing. Thorough chewing improves digestion, nutrient absorption, and naturally reduces calorie intake.',
+      frequency: 'daily',
+      icon: '😋',
+      iconColor: '#F97316',
+      name: 'Mindful Chewing',
+      popularityScore: 78,
+      scientificReference:
+        'Zhu & Hollis (2014) - Increasing the number of chews before swallowing reduces meal size',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PRODUCTIVITY - Environment & Lifestyle
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Care for indoor plants daily. Tending plants reduces stress, improves air quality, and provides a sense of accomplishment.',
+      frequency: 'daily',
+      icon: '🪴',
+      iconColor: '#22C55E',
+      name: 'House Plant Care',
+      popularityScore: 80,
+      scientificReference:
+        'Lohr et al. (2010) - Interior plants may improve worker productivity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Remove, donate, or discard one item from your space daily. Physical clutter increases cortisol and reduces focus.',
+      frequency: 'daily',
+      icon: '🗑️',
+      iconColor: '#64748B',
+      name: 'Daily Declutter',
+      popularityScore: 83,
+      scientificReference:
+        'Saxbe & Repetti (2010) - No place like home: Home tours correlate with cortisol levels',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Open windows for 10-15 minutes to ventilate your space. Fresh air reduces indoor CO2 levels, improving cognitive function by up to 50%.',
+      frequency: 'daily',
+      icon: '🪟',
+      iconColor: '#38BDF8',
+      name: 'Fresh Air Break',
+      popularityScore: 81,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/26502459/',
+      scientificReference:
+        'Allen et al. (2016) - Associations of cognitive function scores with CO2 and ventilation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Watch comedy, read jokes, or spend time with funny friends. Laughter reduces cortisol, boosts immunity, and improves cardiovascular health.',
+      frequency: 'daily',
+      icon: '😂',
+      iconColor: '#FBBF24',
+      name: 'Daily Laughter',
+      popularityScore: 85,
+      scientificReference:
+        'Bennett & Lengacher (2009) - Humor and laughter may influence health: Complementary therapies review',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Spend quality time with a pet—petting, playing, or walking. Human-animal interaction increases oxytocin and reduces stress hormones.',
+      frequency: 'daily',
+      icon: '🐕',
+      iconColor: '#F97316',
+      name: 'Pet Time',
+      popularityScore: 89,
+      scientificReference:
+        'Beetz et al. (2012) - Psychosocial and psychophysiological effects of human-animal interactions',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SOCIAL - Connection & Emotional Intelligence
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Practice listening without interrupting or planning your response. Deep listening improves relationships and builds empathy.',
+      frequency: 'daily',
+      icon: '👂',
+      iconColor: '#8B5CF6',
+      name: 'Deep Listening',
+      popularityScore: 84,
+      scientificReference:
+        'Rogers (1951) - Client-centered therapy: Its current practice, implications, and theory',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Perform one random act of kindness daily. Helping others increases your own happiness and reduces depression symptoms.',
+      frequency: 'daily',
+      icon: '💝',
+      iconColor: '#EC4899',
+      name: 'Random Act of Kindness',
+      popularityScore: 91,
+      scientificReference:
+        'Lyubomirsky et al. (2005) - Pursuing happiness: The architecture of sustainable change',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Have at least one face-to-face conversation daily. In-person interaction provides stronger wellbeing benefits than digital communication.',
+      frequency: 'daily',
+      icon: '👥',
+      iconColor: '#3B82F6',
+      name: 'Face-to-Face Time',
+      popularityScore: 87,
+      scientificReference:
+        'Helliwell & Huang (2013) - Comparing the happiness effects of real and online friends',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Practice saying no to requests that don\'t align with your priorities. Healthy boundaries reduce stress and prevent burnout.',
+      frequency: 'daily',
+      icon: '🚫',
+      iconColor: '#DC2626',
+      name: 'Boundary Practice',
+      popularityScore: 82,
+      scientificReference:
+        'Cloud & Townsend (1992) - Boundaries: When to Say Yes, How to Say No',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Give at least one sincere compliment daily. Giving compliments activates reward centers in your own brain and strengthens relationships.',
+      frequency: 'daily',
+      icon: '⭐',
+      iconColor: '#FBBF24',
+      name: 'Daily Compliment',
+      popularityScore: 83,
+      scientificReference:
+        'Izuma et al. (2008) - Processing of social and monetary rewards in the human striatum',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PRODUCTIVITY - Digital Wellness
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Keep phones away from the table during meals. Phone-free meals improve digestion, strengthen relationships, and increase enjoyment.',
+      frequency: 'daily',
+      icon: '📵',
+      iconColor: '#EF4444',
+      name: 'Phone-Free Meals',
+      popularityScore: 90,
+      scientificReference:
+        'Dwyer et al. (2018) - Smartphone use undermines enjoyment of face-to-face social interactions',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Limit social media to 30 minutes daily. Reducing social media use decreases anxiety and depression while improving life satisfaction.',
+      frequency: 'daily',
+      icon: '📱',
+      iconColor: '#6366F1',
+      name: 'Social Media Limit',
+      popularityScore: 88,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/30570350/',
+      scientificReference:
+        'Hunt et al. (2018) - No more FOMO: Limiting social media decreases loneliness and depression',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Focus on one task at a time without switching. Multitasking reduces productivity by up to 40% and impairs attention.',
+      frequency: 'daily',
+      icon: '🎯',
+      iconColor: '#059669',
+      name: 'Single-Tasking',
+      popularityScore: 89,
+      scientificReference:
+        'Ophir et al. (2009) - Cognitive control in media multitaskers',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Keep your phone on airplane mode for the first hour after waking. Protects your attention and prevents reactive morning mode.',
+      frequency: 'daily',
+      icon: '✈️',
+      iconColor: '#0EA5E9',
+      name: 'Airplane Mode Morning',
+      popularityScore: 86,
+      scientificReference:
+        'Newport (2019) - Digital Minimalism: Choosing a Focused Life in a Noisy World',
+    });
+
+    return { message: '37 additional templates seeded successfully', success: true };
+  },
+});
+
