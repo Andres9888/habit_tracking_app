@@ -1,13 +1,12 @@
 /**
  * TemplateCard Component
- * Based on UX Specification Section 2.1 (Templates Tab)
+ * Enhanced design with accent bar, color tint, and icon glow
  *
- * Purpose: Display habit template with description, science reference, and import button
- * Includes: Template name, description, icon, color preview, scientific citation, import CTA
- * Usage: Templates screen list
+ * Purpose: Display habit template with rich visual personality
+ * Features: Left accent bar, tinted background, glowing icon, scientific citation
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -19,6 +18,9 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withDelay,
+  withTiming,
+  Easing,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../theme';
 import Button from './Button';
@@ -81,6 +83,9 @@ export interface TemplateCardProps {
   /** Loading flag for import mutation */
   isImporting?: boolean;
 
+  /** Animation index for staggered entrance */
+  animationIndex?: number;
+
   /** Custom style */
   style?: ViewStyle;
 }
@@ -104,16 +109,35 @@ export function TemplateCard({
   onUpgrade,
   showPreviewCTA = true,
   isImporting = false,
+  animationIndex = 0,
   style,
 }: TemplateCardProps) {
   const theme = useAppTheme();
-  const cardScale = useSharedValue(1);
   const isLocked = isPremium && !hasAccess;
 
+  // Animation values
+  const cardOpacity = useSharedValue(0);
+  const cardTranslateY = useSharedValue(20);
+  const pressScale = useSharedValue(1);
+  const shadowOpacity = useSharedValue(0.06);
+
+  // Entrance animation
+  useEffect(() => {
+    const delay = animationIndex * 80;
+    cardOpacity.value = withDelay(
+      delay,
+      withTiming(1, { duration: 350, easing: Easing.out(Easing.cubic) })
+    );
+    cardTranslateY.value = withDelay(
+      delay,
+      withSpring(0, { damping: 18, stiffness: 120 })
+    );
+  }, [animationIndex]);
+
   const frequencyLabels: Record<string, string> = {
+    custom: 'Custom',
     daily: 'Daily',
     weekly: 'Weekly',
-    custom: 'Custom',
   };
   const formattedFrequency = frequency
     ? frequencyLabels[frequency] ||
@@ -126,29 +150,38 @@ export function TemplateCard({
   // Category display names
   const categoryLabels: Record<string, string> = {
     andrew_huberman: 'Andrew Huberman',
+    creativity: 'Creativity',
+    financial: 'Financial',
     health_fitness: 'Health & Fitness',
+    learning: 'Learning',
     mindfulness: 'Mindfulness',
     morning_routine: 'Morning Routine',
     productivity: 'Productivity',
+    sleep: 'Sleep',
+    social: 'Social',
   };
 
-  // Animation: Scale on press
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: cardScale.value }],
+  // Animated styles
+  const containerStyle = useAnimatedStyle(() => ({
+    opacity: cardOpacity.value,
+    transform: [
+      { translateY: cardTranslateY.value },
+      { scale: pressScale.value },
+    ],
+  }));
+
+  const shadowStyle = useAnimatedStyle(() => ({
+    shadowOpacity: shadowOpacity.value,
   }));
 
   const handlePressIn = () => {
-    cardScale.value = withSpring(0.98, {
-      damping: 15,
-      stiffness: 150,
-    });
+    pressScale.value = withSpring(0.97, { damping: 15, stiffness: 200 });
+    shadowOpacity.value = withTiming(0.12, { duration: 120 });
   };
 
   const handlePressOut = () => {
-    cardScale.value = withSpring(1, {
-      damping: 15,
-      stiffness: 150,
-    });
+    pressScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+    shadowOpacity.value = withTiming(0.06, { duration: 200 });
   };
 
   const handleCardPress = () => {
@@ -159,7 +192,6 @@ export function TemplateCard({
   };
 
   const handleImportPress = (e: any) => {
-    // Prevent card press when import button is tapped
     e.stopPropagation();
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
@@ -173,46 +205,57 @@ export function TemplateCard({
     }
   };
 
+  // Generate tinted background color (3% opacity of accent)
+  const tintedBackground = `${iconColor}08`;
+
   return (
     <AnimatedPressable
       accessible
-      accessibilityHint='Tap to preview, or tap import to add to your habits'
+      accessibilityHint="Tap to preview, or tap import to add to your habits"
       accessibilityLabel={`${name} template. ${description}`}
-      accessibilityRole='button'
+      accessibilityRole="button"
       style={[
         styles.card,
         {
-          backgroundColor: '#ffffff',
-          borderRadius: 16,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.06,
-          shadowRadius: 6,
-          elevation: 2,
+          backgroundColor: tintedBackground,
           opacity: isLocked ? 0.75 : 1,
         },
-        animatedStyle,
+        containerStyle,
+        shadowStyle,
         style,
       ]}
       onPress={handleCardPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
+      {/* Left accent bar */}
+      <View style={[styles.accentBar, { backgroundColor: iconColor }]} />
+
       {/* Card Content */}
       <View style={styles.content}>
         {/* Header: Icon + Category Badge */}
         <View style={styles.header}>
-          {/* Icon with color background */}
-          <View
-            style={[
-              styles.iconContainer,
-              {
-                backgroundColor: iconColor + '20', // 20% opacity
-                borderRadius: 12,
-              },
-            ]}
-          >
-            <Text style={styles.icon}>{icon}</Text>
+          {/* Icon with glow effect */}
+          <View style={styles.iconWrapper}>
+            <View
+              style={[
+                styles.iconGlow,
+                {
+                  backgroundColor: iconColor,
+                  shadowColor: iconColor,
+                },
+              ]}
+            />
+            <View
+              style={[
+                styles.iconContainer,
+                {
+                  backgroundColor: `${iconColor}25`,
+                },
+              ]}
+            >
+              <Text style={styles.icon}>{icon}</Text>
+            </View>
           </View>
 
           <View style={styles.badgeRow}>
@@ -220,16 +263,13 @@ export function TemplateCard({
               <View
                 style={[
                   styles.categoryBadge,
-                  {
-                    backgroundColor: '#f3f4f6',
-                    borderRadius: 8,
-                  },
+                  { backgroundColor: `${iconColor}15` },
                 ]}
               >
                 <Text
                   style={[
                     theme.custom.typography.caption,
-                    { color: '#6b7280', fontWeight: '500' },
+                    { color: '#4b5563', fontWeight: '600' },
                   ]}
                 >
                   {categoryLabels[category] || category}
@@ -262,16 +302,17 @@ export function TemplateCard({
           numberOfLines={1}
           style={[
             theme.custom.typography.heading3,
-            { color: '#101727', marginTop: 12, fontWeight: '600' },
+            { color: '#101727', fontWeight: '700', marginTop: 14 },
           ]}
         >
           {name}
         </Text>
 
+        {/* Metadata pills */}
         {(formattedFrequency || scientificLink || popularityScore) && (
           <View style={styles.metadataRow}>
             {formattedFrequency && (
-              <View style={styles.metadataPill}>
+              <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
                 <Text
                   style={[
                     theme.custom.typography.caption,
@@ -284,20 +325,20 @@ export function TemplateCard({
             )}
 
             {scientificLink && (
-              <View style={styles.metadataPill}>
+              <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
                 <Text
                   style={[
                     theme.custom.typography.caption,
                     styles.metadataText,
                   ]}
                 >
-                  🔗 Research link
+                  🔗 Research
                 </Text>
               </View>
             )}
 
             {typeof popularityScore === 'number' && (
-              <View style={styles.metadataPill}>
+              <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
                 <Text
                   style={[
                     theme.custom.typography.caption,
@@ -316,7 +357,7 @@ export function TemplateCard({
           numberOfLines={3}
           style={[
             theme.custom.typography.bodySmall,
-            { color: '#6b7280', marginTop: 8, lineHeight: 20 },
+            { color: '#4b5563', lineHeight: 20, marginTop: 10 },
           ]}
         >
           {description}
@@ -328,9 +369,6 @@ export function TemplateCard({
             styles.scienceBox,
             {
               backgroundColor: '#f0fdf4',
-              borderRadius: 8,
-              marginTop: 12,
-              borderWidth: 1,
               borderColor: '#bbf7d0',
             },
           ]}
@@ -347,7 +385,7 @@ export function TemplateCard({
               },
             ]}
           >
-            Research: {scientificReference}
+            {scientificReference}
           </Text>
         </View>
 
@@ -355,11 +393,14 @@ export function TemplateCard({
         <View style={styles.footer}>
           <Button
             accessibilityLabel={`Import ${name} template`}
-            size='medium'
-            style={styles.importButton}
-            variant='primary'
-            loading={isImporting}
             disabled={isLocked}
+            loading={isImporting}
+            size="medium"
+            style={[
+              styles.importButton,
+              { backgroundColor: isLocked ? '#9ca3af' : iconColor },
+            ]}
+            variant="primary"
             onPress={handleImportPress}
           >
             {isLocked ? 'Unlock with Pro' : 'Import Template'}
@@ -371,28 +412,45 @@ export function TemplateCard({
 }
 
 const styles = StyleSheet.create({
+  accentBar: {
+    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
+    left: 0,
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    width: 4,
+  },
+  badgeRow: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginLeft: 8,
+  },
   card: {
+    borderRadius: 16,
     marginHorizontal: 20,
     marginVertical: 8,
     overflow: 'hidden',
-  },
-  badgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 8,
-    gap: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 3,
   },
   categoryBadge: {
-    flex: 1,
+    borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
   content: {
     padding: 20,
+    paddingLeft: 20,
   },
   footer: {
-    marginTop: 16,
     gap: 8,
+    marginTop: 16,
   },
   header: {
     alignItems: 'center',
@@ -404,29 +462,26 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    height: 48,
+    borderRadius: 14,
+    height: 56,
     justifyContent: 'center',
-    width: 48,
+    width: 56,
+  },
+  iconGlow: {
+    borderRadius: 28,
+    height: 56,
+    opacity: 0.2,
+    position: 'absolute',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    width: 56,
+  },
+  iconWrapper: {
+    position: 'relative',
   },
   importButton: {
     width: '100%',
-  },
-  metadataPill: {
-    backgroundColor: '#f9fafb',
-    borderColor: '#e5e7eb',
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  metadataRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 10,
-  },
-  metadataText: {
-    color: '#4b5563',
   },
   inlinePremiumBadge: {
     backgroundColor: '#FEF3C7',
@@ -440,6 +495,22 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.5,
     textTransform: 'uppercase',
+  },
+  metadataPill: {
+    backgroundColor: '#ffffff',
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  metadataRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 10,
+  },
+  metadataText: {
+    color: '#4b5563',
   },
   newBadge: {
     backgroundColor: '#EEF2FF',
@@ -456,16 +527,19 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   popularEmoji: {
-    fontSize: 20,
+    fontSize: 18,
   },
   scienceBox: {
     alignItems: 'flex-start',
+    borderRadius: 10,
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 8,
+    marginTop: 14,
     padding: 12,
   },
   scienceIcon: {
-    fontSize: 16,
+    fontSize: 14,
   },
 });
 
