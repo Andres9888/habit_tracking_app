@@ -572,6 +572,7 @@ export default function HabitDetailScreen({
           {/* Notes Section */}
           <Animated.View entering={FadeInDown.delay(700).springify()}>
             <NotesSection
+              habitName={habit.name}
               onAddNote={handleAddNote}
               onViewAllNotes={handleViewNotes}
               recentNote={undefined} // TODO: Fetch from notes query

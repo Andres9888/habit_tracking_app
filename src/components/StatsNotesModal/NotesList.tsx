@@ -1,17 +1,24 @@
 import { useMutation, useQuery } from 'convex/react';
 import { format } from 'date-fns';
-import { Plus, Search, Trash2, Edit3 } from 'lucide-react-native';
+import { Plus, Search, Trash2, Edit3, Eye } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import {
+  Modal,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   ActivityIndicator,
 } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
+import { X } from 'lucide-react-native';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import NoteEditor from './NoteEditor';
+import { VisualizationGuide } from '../NotesSection/VisualizationGuide';
 
 interface NotesListProps {
   onAddNote?: () => void;
@@ -24,6 +31,18 @@ export default function NotesList({ onAddNote }: NotesListProps) {
   >('all');
   const [editingNoteId, setEditingNoteId] = useState<Id<'notes'> | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
+  const insets = useSafeAreaInsets();
+
+  const handleOpenVisualizationGuide = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setShowVisualizationGuide(true);
+  };
+
+  const handleCloseVisualizationGuide = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setShowVisualizationGuide(false);
+  };
 
   const habits = useQuery(api.habits.list) ?? [];
   const notes =
@@ -173,6 +192,22 @@ export default function NotesList({ onAddNote }: NotesListProps) {
         </View>
       </View>
 
+      {/* Visualization Guide Button */}
+      <TouchableOpacity
+        accessibilityLabel='Open goal visualization guide'
+        accessibilityRole='button'
+        className='flex-row items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-600 py-3.5 active:opacity-90'
+        onPress={handleOpenVisualizationGuide}
+      >
+        <Eye color='#ffffff' size={18} />
+        <Text className='text-sm font-semibold text-white'>
+          Visualization Guide
+        </Text>
+        <View className='rounded-full bg-white/20 px-2 py-0.5'>
+          <Text className='text-xs font-medium text-white'>Huberman</Text>
+        </View>
+      </TouchableOpacity>
+
       {/* Notes list grouped by date */}
       {groupedNotes.length === 0 ? (
         <View className='items-center py-8'>
@@ -252,6 +287,54 @@ export default function NotesList({ onAddNote }: NotesListProps) {
           ))}
         </View>
       )}
+
+      {/* Visualization Guide Modal */}
+      <Modal
+        transparent
+        animationType='slide'
+        visible={showVisualizationGuide}
+        onRequestClose={handleCloseVisualizationGuide}
+      >
+        <View className='flex-1 bg-gradient-to-b from-violet-50 via-white to-stone-50'>
+          {/* Header */}
+          <Animated.View
+            className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
+            entering={FadeIn.delay(100)}
+            style={{ paddingTop: insets.top + 8 }}
+          >
+            <View className='flex-row items-center gap-3'>
+              <View className='h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600'>
+                <Eye color='#ffffff' size={20} />
+              </View>
+              <View>
+                <Text className='text-lg font-bold text-stone-900'>
+                  Visualization Guide
+                </Text>
+                <Text className='text-xs text-stone-500'>
+                  Science-backed goal techniques
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              accessibilityLabel='Close visualization guide'
+              accessibilityRole='button'
+              className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+              onPress={handleCloseVisualizationGuide}
+            >
+              <X color='#57534e' size={22} />
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* Scrollable Content */}
+          <ScrollView
+            className='flex-1'
+            contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 20 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <VisualizationGuide onClose={handleCloseVisualizationGuide} />
+          </ScrollView>
+        </View>
+      </Modal>
     </View>
   );
 }
