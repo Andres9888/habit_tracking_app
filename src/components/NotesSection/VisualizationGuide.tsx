@@ -137,8 +137,9 @@ function VisualizationCard({ technique }: VisualizationCardProps) {
 
   return (
     <Animated.View
-      className="overflow-hidden rounded-2xl border border-stone-100 bg-white/90"
+      className="overflow-hidden rounded-2xl border border-stone-100"
       entering={FadeInDown.delay(100).springify()}
+      style={{ backgroundColor: '#ffffff' }}
     >
       {/* Header */}
       <Pressable
@@ -147,8 +148,11 @@ function VisualizationCard({ technique }: VisualizationCardProps) {
         className="flex-row items-center gap-3 p-4 active:bg-stone-50"
         onPress={handleToggle}
       >
-        <View className="h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-100 to-indigo-100">
-          <Brain className="text-violet-600" size={20} />
+        <View
+          className="h-10 w-10 items-center justify-center rounded-xl"
+          style={{ backgroundColor: '#ede9fe' }}
+        >
+          <Brain color="#7c3aed" size={20} />
         </View>
         <View className="flex-1">
           <Text className="text-base font-semibold text-stone-800">
@@ -159,17 +163,18 @@ function VisualizationCard({ technique }: VisualizationCardProps) {
           </Text>
         </View>
         {expanded ? (
-          <ChevronUp className="text-stone-400" size={20} />
+          <ChevronUp color="#a8a29e" size={20} />
         ) : (
-          <ChevronDown className="text-stone-400" size={20} />
+          <ChevronDown color="#a8a29e" size={20} />
         )}
       </Pressable>
 
       {/* Expanded Content */}
       {expanded && (
         <Animated.View
-          className="border-t border-stone-100 bg-stone-50/50 px-4 pb-4"
+          className="border-t border-stone-100 px-4 pb-4"
           entering={FadeIn.duration(200)}
+          style={{ backgroundColor: '#fafaf9' }}
         >
           {/* Good Visualization */}
           <View className="mt-4">
@@ -179,17 +184,20 @@ function VisualizationCard({ technique }: VisualizationCardProps) {
                 ✓ Effective Approach
               </Text>
             </View>
-            <View className="rounded-xl bg-emerald-50 p-3">
+            <View className="rounded-xl p-3" style={{ backgroundColor: '#ecfdf5' }}>
               <Text className="text-sm leading-relaxed text-stone-700">
                 {technique.good.description}
               </Text>
-              <View className="mt-3 rounded-lg bg-white/80 p-2.5">
+              <View
+                className="mt-3 rounded-lg p-2.5"
+                style={{ backgroundColor: 'rgba(255,255,255,0.8)' }}
+              >
                 <Text className="text-xs italic text-stone-600">
                   {technique.good.example}
                 </Text>
               </View>
               <View className="mt-2 flex-row items-start gap-2">
-                <Lightbulb className="mt-0.5 text-amber-500" size={14} />
+                <Lightbulb color="#f59e0b" size={14} style={{ marginTop: 2 }} />
                 <Text className="flex-1 text-xs text-stone-600">
                   <Text className="font-medium">Why it works: </Text>
                   {technique.good.why}
@@ -206,17 +214,20 @@ function VisualizationCard({ technique }: VisualizationCardProps) {
                 ✗ Common Mistake
               </Text>
             </View>
-            <View className="rounded-xl bg-rose-50 p-3">
+            <View className="rounded-xl p-3" style={{ backgroundColor: '#fff1f2' }}>
               <Text className="text-sm leading-relaxed text-stone-700">
                 {technique.bad.description}
               </Text>
-              <View className="mt-3 rounded-lg bg-white/80 p-2.5">
+              <View
+                className="mt-3 rounded-lg p-2.5"
+                style={{ backgroundColor: 'rgba(255,255,255,0.8)' }}
+              >
                 <Text className="text-xs italic text-stone-600">
                   {technique.bad.example}
                 </Text>
               </View>
               <View className="mt-2 flex-row items-start gap-2">
-                <AlertTriangle className="mt-0.5 text-rose-500" size={14} />
+                <AlertTriangle color="#f43f5e" size={14} style={{ marginTop: 2 }} />
                 <Text className="flex-1 text-xs text-stone-600">
                   <Text className="font-medium">Why to avoid: </Text>
                   {technique.bad.why}
@@ -238,8 +249,14 @@ interface QuickTipProps {
 
 function QuickTip({ description, icon, title }: QuickTipProps) {
   return (
-    <View className="flex-row items-start gap-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 p-3">
-      <View className="h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
+    <View
+      className="flex-row items-start gap-3 rounded-xl p-3"
+      style={{ backgroundColor: '#fffbeb' }}
+    >
+      <View
+        className="h-8 w-8 items-center justify-center rounded-lg"
+        style={{ backgroundColor: '#fef3c7' }}
+      >
         {icon}
       </View>
       <View className="flex-1">
@@ -273,12 +290,16 @@ export function VisualizationGuide({ habitName, onClose }: VisualizationGuidePro
     <View className="gap-5">
       {/* Header with Huberman branding */}
       <Animated.View
-        className="overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 p-5"
+        className="overflow-hidden rounded-2xl p-5"
         entering={FadeInDown.delay(50).springify()}
+        style={{ backgroundColor: '#6d28d9' }}
       >
         <View className="flex-row items-start gap-3">
-          <View className="h-12 w-12 items-center justify-center rounded-2xl bg-white/20">
-            <Eye className="text-white" size={24} />
+          <View
+            className="h-12 w-12 items-center justify-center rounded-2xl"
+            style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+          >
+            <Eye color="#ffffff" size={24} />
           </View>
           <View className="flex-1">
             <Text className="text-lg font-bold text-white">
@@ -290,9 +311,12 @@ export function VisualizationGuide({ habitName, onClose }: VisualizationGuidePro
           </View>
         </View>
 
-        <View className="mt-4 flex-row items-center gap-2 rounded-xl bg-white/10 p-3">
-          <Sparkles className="text-amber-300" size={16} />
-          <Text className="flex-1 text-xs leading-relaxed text-white/90">
+        <View
+          className="mt-4 flex-row items-center gap-2 rounded-xl p-3"
+          style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+        >
+          <Sparkles color="#fcd34d" size={16} />
+          <Text style={{ color: 'rgba(255,255,255,0.9)' }} className="flex-1 text-xs leading-relaxed">
             <Text className="font-semibold">Based on Andrew Huberman's research: </Text>
             How you visualize goals dramatically affects whether you achieve them.
           </Text>
@@ -300,8 +324,8 @@ export function VisualizationGuide({ habitName, onClose }: VisualizationGuidePro
 
         {habitName && (
           <View className="mt-3 flex-row items-center gap-2">
-            <Target className="text-violet-200" size={14} />
-            <Text className="text-xs text-violet-200">
+            <Target color="#ddd6fe" size={14} />
+            <Text style={{ color: '#ddd6fe' }} className="text-xs">
               Apply these techniques to: <Text className="font-medium text-white">{habitName}</Text>
             </Text>
           </View>
@@ -310,11 +334,15 @@ export function VisualizationGuide({ habitName, onClose }: VisualizationGuidePro
 
       {/* Key Insight Box */}
       <Animated.View
-        className="flex-row items-start gap-3 rounded-2xl border border-amber-200/50 bg-gradient-to-r from-amber-50 to-yellow-50 p-4"
+        className="flex-row items-start gap-3 rounded-2xl border p-4"
         entering={FadeInDown.delay(100).springify()}
+        style={{ backgroundColor: '#fffbeb', borderColor: '#fde68a' }}
       >
-        <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
-          <Zap className="text-amber-600" size={20} />
+        <View
+          className="h-10 w-10 items-center justify-center rounded-xl"
+          style={{ backgroundColor: '#fef3c7' }}
+        >
+          <Zap color="#d97706" size={20} />
         </View>
         <View className="flex-1">
           <Text className="text-sm font-bold text-amber-900">
@@ -341,16 +369,17 @@ export function VisualizationGuide({ habitName, onClose }: VisualizationGuidePro
           <Pressable
             accessibilityLabel={showAllTechniques ? 'Show less techniques' : 'Show more techniques'}
             accessibilityRole="button"
-            className="flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-violet-200 bg-violet-50/50 py-3 active:bg-violet-100"
+            className="flex-row items-center justify-center gap-2 rounded-xl border py-3 active:opacity-70"
+            style={{ backgroundColor: '#f5f3ff', borderColor: '#c4b5fd', borderStyle: 'dashed' }}
             onPress={handleShowMore}
           >
-            <Text className="text-sm font-medium text-violet-700">
+            <Text style={{ color: '#6d28d9' }} className="text-sm font-medium">
               {showAllTechniques ? 'Show Less' : `Show ${VISUALIZATION_TECHNIQUES.length - 2} More Techniques`}
             </Text>
             {showAllTechniques ? (
-              <ChevronUp className="text-violet-600" size={16} />
+              <ChevronUp color="#7c3aed" size={16} />
             ) : (
-              <ChevronDown className="text-violet-600" size={16} />
+              <ChevronDown color="#7c3aed" size={16} />
             )}
           </Pressable>
         )}
@@ -367,24 +396,27 @@ export function VisualizationGuide({ habitName, onClose }: VisualizationGuidePro
         <View className="gap-2">
           <QuickTip
             description="Spend 30 seconds visualizing yourself doing the habit, not having done it"
-            icon={<Eye className="text-amber-600" size={16} />}
+            icon={<Eye color="#d97706" size={16} />}
             title="Morning Visualization"
           />
           <QuickTip
             description='Identify your biggest obstacle and create an "if-then" plan'
-            icon={<Mountain className="text-amber-600" size={16} />}
+            icon={<Mountain color="#d97706" size={16} />}
             title="Obstacle Planning"
           />
           <QuickTip
             description="See yourself taking the first small step of your habit"
-            icon={<ArrowRight className="text-amber-600" size={16} />}
+            icon={<ArrowRight color="#d97706" size={16} />}
             title="Next Action Preview"
           />
         </View>
       </Animated.View>
 
       {/* Scientific Citation */}
-      <View className="items-center rounded-xl bg-stone-100/50 px-4 py-3">
+      <View
+        className="items-center rounded-xl px-4 py-3"
+        style={{ backgroundColor: '#f5f5f4' }}
+      >
         <Text className="text-center text-xs text-stone-500">
           Based on research by Gabriele Oettingen (Mental Contrasting), 
           Peter Gollwitzer (Implementation Intentions), and 

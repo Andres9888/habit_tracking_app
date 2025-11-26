@@ -196,14 +196,18 @@ export default function NotesList({ onAddNote }: NotesListProps) {
       <TouchableOpacity
         accessibilityLabel='Open goal visualization guide'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-600 py-3.5 active:opacity-90'
+        className='flex-row items-center justify-center gap-2 rounded-2xl py-3.5 active:opacity-90'
+        style={{ backgroundColor: '#7c3aed' }}
         onPress={handleOpenVisualizationGuide}
       >
         <Eye color='#ffffff' size={18} />
         <Text className='text-sm font-semibold text-white'>
           Visualization Guide
         </Text>
-        <View className='rounded-full bg-white/20 px-2 py-0.5'>
+        <View
+          className='rounded-full px-2 py-0.5'
+          style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+        >
           <Text className='text-xs font-medium text-white'>Huberman</Text>
         </View>
       </TouchableOpacity>
@@ -290,20 +294,22 @@ export default function NotesList({ onAddNote }: NotesListProps) {
 
       {/* Visualization Guide Modal */}
       <Modal
-        transparent
         animationType='slide'
         visible={showVisualizationGuide}
         onRequestClose={handleCloseVisualizationGuide}
       >
-        <View className='flex-1 bg-gradient-to-b from-violet-50 via-white to-stone-50'>
+        <View className='flex-1' style={{ backgroundColor: '#fafaf9' }}>
           {/* Header */}
           <Animated.View
-            className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
+            className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'
             entering={FadeIn.delay(100)}
-            style={{ paddingTop: insets.top + 8 }}
+            style={{ paddingTop: insets.top + 8, backgroundColor: '#ffffff' }}
           >
             <View className='flex-row items-center gap-3'>
-              <View className='h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600'>
+              <View
+                className='h-10 w-10 items-center justify-center rounded-xl'
+                style={{ backgroundColor: '#7c3aed' }}
+              >
                 <Eye color='#ffffff' size={20} />
               </View>
               <View>
@@ -318,7 +324,8 @@ export default function NotesList({ onAddNote }: NotesListProps) {
             <TouchableOpacity
               accessibilityLabel='Close visualization guide'
               accessibilityRole='button'
-              className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+              className='h-10 w-10 items-center justify-center rounded-full'
+              style={{ backgroundColor: '#f5f5f4' }}
               onPress={handleCloseVisualizationGuide}
             >
               <X color='#57534e' size={22} />
