@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Check, Plus } from 'lucide-react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -14,7 +14,6 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import ConfettiCannon from 'react-native-confetti-cannon';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 interface HabitsEmptyStateProps {
@@ -110,7 +109,6 @@ export function HabitsEmptyState({
 }: HabitsEmptyStateProps) {
   const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
   const [successHabit, setSuccessHabit] = useState<string | null>(null);
-  const confettiRef = useRef<ConfettiCannon | null>(null);
   const { triggerMediumImpact, triggerSuccess, triggerLightImpact } = useHapticFeedback();
 
   if (isLoading) {
@@ -152,7 +150,6 @@ export function HabitsEmptyState({
 
       {onQuickCreateHabit && (
         <QuickWinCard
-          confettiRef={confettiRef}
           creatingHabit={creatingHabit}
           successHabit={successHabit}
           timeContext={timeContext}
@@ -166,7 +163,6 @@ export function HabitsEmptyState({
               // Success celebration sequence
               setSuccessHabit(habitName);
               triggerSuccess();
-              confettiRef.current?.start();
 
               // Delayed echo haptic for satisfaction
               setTimeout(() => {
@@ -513,13 +509,11 @@ function QuickWinCard({
   creatingHabit,
   successHabit,
   onQuickCreateHabit,
-  confettiRef,
   timeContext,
 }: {
   creatingHabit: string | null;
   successHabit: string | null;
   onQuickCreateHabit: (habitName: string) => Promise<void>;
-  confettiRef: React.MutableRefObject<ConfettiCannon | null>;
   timeContext: { habits: typeof MORNING_HABITS; greeting: string; period: string };
 }) {
   const [suggestions, setSuggestions] = useState(() => timeContext.habits);
@@ -556,17 +550,6 @@ function QuickWinCard({
       entering={FadeInDown.delay(80).springify().damping(18)}
       className={clsx(BASE_CARD_CLASS, 'border-amber-200/50 bg-gradient-to-br from-amber-50/80 to-orange-50/40')}
     >
-      <ConfettiCannon
-        autoStart={false}
-        count={35}
-        fadeOut
-        origin={{ x: 180, y: 120 }}
-        explosionSpeed={280}
-        fallSpeed={2200}
-        ref={(instance) => {
-          confettiRef.current = instance;
-        }}
-      />
       <View className='mb-1 gap-2'>
         <View className='flex-row items-center justify-between'>
           <Text className='text-[18px] font-bold leading-[24px] text-stone-800'>
