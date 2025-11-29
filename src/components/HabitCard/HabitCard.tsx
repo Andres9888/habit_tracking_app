@@ -9,7 +9,7 @@
  * Usage: Main list item on Home screen
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -34,11 +34,12 @@ import Animated, {
   Extrapolate,
   Easing,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
-import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import HabitStrengthIndicator, { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
 
@@ -113,6 +114,9 @@ export function HabitCard({
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
 
+  // Strength fill animation - fills card background based on habit strength percentage
+  const strengthFillWidth = useSharedValue(strength);
+
   // Enhanced animation values for completion
   const checkmarkScale = useSharedValue(completedProp ? 1 : 0);
   const checkmarkRotate = useSharedValue(completedProp ? 360 : 0);
@@ -129,6 +133,33 @@ export function HabitCard({
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
+
+  // Animate strength fill when strength changes
+  useEffect(() => {
+    strengthFillWidth.value = withSpring(strength, {
+      damping: 15,
+      stiffness: 100,
+    });
+  }, [strength]);
+
+  // Get strength color based on current level
+  const getStrengthColor = (): string => {
+    const level = getStrengthLevel(strength);
+    switch (level) {
+      case 'starting':
+        return theme.custom.colors.strength.starting;
+      case 'building':
+        return theme.custom.colors.strength.building;
+      case 'developing':
+        return theme.custom.colors.strength.developing;
+      case 'strong':
+        return theme.custom.colors.strength.strong;
+      case 'automatic':
+        return theme.custom.colors.strength.automatic;
+      default:
+        return theme.custom.colors.primary[500];
+    }
+  };
 
   // Convex mutation for toggling completion
   const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
@@ -402,6 +433,11 @@ export function HabitCard({
     opacity: rippleOpacity.value,
   }));
 
+  // Strength fill animation - width based on strength percentage
+  const strengthFillStyle = useAnimatedStyle(() => ({
+    width: `${strengthFillWidth.value}%`,
+  }));
+
   // Get card background based on state
   const getBackgroundColor = () => {
     if (completed) {
@@ -478,6 +514,32 @@ export function HabitCard({
             cardAnimatedStyle,
           ]}
         >
+          {/* Strength Fill Background - fills from left based on habit strength % with organic gradient fade */}
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              styles.strengthFill,
+              strengthFillStyle,
+              {
+                borderBottomLeftRadius: theme.custom.borderRadius.large,
+                borderTopLeftRadius: theme.custom.borderRadius.large,
+                overflow: 'hidden',
+              },
+            ]}
+          >
+            <LinearGradient
+              colors={[
+                getStrengthColor() + '30', // 19% opacity at the start (left)
+                getStrengthColor() + '18', // 9% opacity in middle
+                getStrengthColor() + '00', // Fully transparent at end (right)
+              ]}
+              end={{ x: 1, y: 0.5 }}
+              locations={[0, 0.6, 1]} // Gradient stops: solid → fade → transparent
+              start={{ x: 0, y: 0.5 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </Animated.View>
+
           {/* Color Accent Bar (Left edge) */}
           <View
             style={[
@@ -593,6 +655,13 @@ export function HabitCard({
 const styles = StyleSheet.create({
   accentBar: {
     width: 6,
+  },
+  // Strength fill - absolute positioned background that fills based on strength %
+  strengthFill: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
   },
   actionButton: {
     alignItems: 'center',
