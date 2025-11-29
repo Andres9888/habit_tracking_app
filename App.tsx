@@ -263,9 +263,7 @@ function HabitsApp() {
   }
 
   return (
-    <GestureHandlerRootView
-      style={{ flex: 1, backgroundColor: theme.background }}
-    >
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <ScrollView
         style={{ flex: 1, backgroundColor: theme.background }}
         contentContainerStyle={{ backgroundColor: theme.background }}
@@ -488,7 +486,7 @@ function HabitsApp() {
           <Plus color={theme.accentText} size={28} strokeWidth={2.5} />
         </Pressable>
       </View>
-    </GestureHandlerRootView>
+    </View>
   );
 }
 
@@ -509,25 +507,29 @@ export default function App() {
       console.log('ℹ️ Running in development mode without authentication');
     }
     return (
-      <SafeAreaProvider>
-        <Providers>
-          <HabitsApp />
-        </Providers>
-      </SafeAreaProvider>
-    );
-  }
-
-  // SafeAreaProvider must be outermost to provide safe area insets to all components,
-  // including Clerk's authentication UI surfaces
-  return (
-    <SafeAreaProvider>
-      <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
-        <ClerkLoaded>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
           <Providers>
             <HabitsApp />
           </Providers>
-        </ClerkLoaded>
-      </ClerkProvider>
-    </SafeAreaProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    );
+  }
+
+  // GestureHandlerRootView must be outermost for gesture handling to work correctly
+  // SafeAreaProvider provides safe area insets to all components including Clerk's UI
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
+          <ClerkLoaded>
+            <Providers>
+              <HabitsApp />
+            </Providers>
+          </ClerkLoaded>
+        </ClerkProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
