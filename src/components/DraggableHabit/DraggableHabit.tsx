@@ -51,7 +51,7 @@ export default function DraggableHabit({
   habit,
   isCompactMode: _isCompactMode = false,
   highContrastMode = false,
-  showHabitStrengthPercentage: _showHabitStrengthPercentage = false,
+  showHabitStrengthPercentage = false,
   streak,
   toggleHabit,
   weekDateStrings,
@@ -361,6 +361,18 @@ export default function DraggableHabit({
 
   const streakColors = getStreakBadgeColors();
 
+  // Get strength as percentage (0-100) from decimal (0-1)
+  const strengthPercent = Math.round((habit.strength ?? 0) * 100);
+
+  // Get strength color based on percentage
+  const getStrengthColor = () => {
+    if (strengthPercent >= 80) return '#22c55e'; // green-500 (Automatic)
+    if (strengthPercent >= 60) return '#84cc16'; // lime-500 (Strong)
+    if (strengthPercent >= 40) return '#eab308'; // yellow-500 (Developing)
+    if (strengthPercent >= 20) return '#f97316'; // orange-500 (Building)
+    return '#ef4444'; // red-500 (Starting)
+  };
+
   const habitCard = (
     <Pressable
       style={({ pressed }) => ({
@@ -452,15 +464,38 @@ export default function DraggableHabit({
                 >
                   {name || habit.name}
                 </Text>
-                {/* Best streak hint for motivation */}
-                {bestStreak > 0 && bestStreak > streak && (
-                  <Text
-                    className='mt-0.5 text-[12px] font-medium'
-                    style={{ color: '#a8a29e' }} // stone-400
-                  >
-                    Best: {bestStreak} days
-                  </Text>
-                )}
+                {/* Strength percentage + Best streak hint */}
+                <View className='mt-0.5 flex-row items-center gap-2'>
+                  {showHabitStrengthPercentage && (
+                    <View className='flex-row items-center gap-1'>
+                      <View
+                        className='h-1.5 w-12 overflow-hidden rounded-full bg-stone-200'
+                      >
+                        <View
+                          className='h-full rounded-full'
+                          style={{
+                            backgroundColor: getStrengthColor(),
+                            width: `${strengthPercent}%`,
+                          }}
+                        />
+                      </View>
+                      <Text
+                        className='text-[12px] font-bold'
+                        style={{ color: getStrengthColor() }}
+                      >
+                        {strengthPercent}%
+                      </Text>
+                    </View>
+                  )}
+                  {bestStreak > 0 && bestStreak > streak && (
+                    <Text
+                      className='text-[12px] font-medium'
+                      style={{ color: '#a8a29e' }} // stone-400
+                    >
+                      Best: {bestStreak} days
+                    </Text>
+                  )}
+                </View>
               </View>
             </View>
 

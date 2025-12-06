@@ -21,6 +21,7 @@ type LocalHabit = {
   emoji: string;
   id: string;
   name: string;
+  strength: number;
 };
 
 const generateWeekDateStrings = () => {
@@ -171,6 +172,30 @@ const ExampleHabitCard = ({
         })}
       </View>
 
+      {/* Habit Strength */}
+      <View className='mt-3 flex-row items-center justify-between'>
+        <View className='flex-row items-center gap-2'>
+          <Text className='text-sm text-gray-500'>Strength</Text>
+          <View className='h-2 w-20 overflow-hidden rounded-full bg-gray-200'>
+            <View
+              className='h-full rounded-full'
+              style={{
+                backgroundColor: habit.strength >= 60 ? '#22C55E' : habit.strength >= 40 ? '#F59E0B' : '#EF4444',
+                width: `${habit.strength}%`,
+              }}
+            />
+          </View>
+        </View>
+        <Text
+          className='text-base font-bold'
+          style={{
+            color: habit.strength >= 60 ? '#22C55E' : habit.strength >= 40 ? '#F59E0B' : '#EF4444',
+          }}
+        >
+          {habit.strength}%
+        </Text>
+      </View>
+
       <View
         className='mt-4 h-1.5 w-full overflow-hidden rounded-full bg-gray-100'
         onLayout={(e) => {
@@ -212,6 +237,7 @@ export default function HabitHomeExample() {
       emoji: '🧘',
       id: '1',
       name: 'Meditation',
+      strength: 45,
     },
     {
       color: '#60A5FA',
@@ -219,6 +245,7 @@ export default function HabitHomeExample() {
       emoji: '📚',
       id: '2',
       name: 'Reading',
+      strength: 72,
     },
     {
       color: '#F59E0B',
@@ -226,6 +253,7 @@ export default function HabitHomeExample() {
       emoji: '💪',
       id: '3',
       name: 'Exercise',
+      strength: 28,
     },
   ]);
 

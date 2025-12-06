@@ -627,14 +627,22 @@ export function HabitCard({
               pointerEvents="none"
             />
 
-            {/* Bottom Row: Strength Indicator */}
+            {/* Bottom Row: Strength Indicator with Prominent Percentage */}
             <View style={styles.bottomRow}>
               <HabitStrengthIndicator
-                showPercentage
                 habitName={name}
+                showPercentage={false}
                 strength={strength}
                 variant='compact'
               />
+              <Text
+                style={[
+                  styles.strengthPercentage,
+                  { color: getStrengthColor() },
+                ]}
+              >
+                {Math.round(strength)}%
+              </Text>
             </View>
           </View>
         </Animated.View>
@@ -704,6 +712,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 4,
+  },
+  strengthPercentage: {
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   completedText: {
     opacity: 0.6,

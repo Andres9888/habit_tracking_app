@@ -141,27 +141,18 @@ function computeCompliance({
     }
   }
 
+  // No days to consider = 0% compliance (not inflated)
   if (daysConsidered === 0) {
     return {
-      compliance:
-        COMPLIANCE_PRIOR_ALPHA /
-        (COMPLIANCE_PRIOR_ALPHA + COMPLIANCE_PRIOR_BETA),
+      compliance: 0,
       daysConsidered: 0,
       successes: 0,
     };
   }
 
-  if (successes === daysConsidered) {
-    return {
-      compliance: 1,
-      daysConsidered,
-      successes,
-    };
-  }
-
-  const compliance =
-    (successes + COMPLIANCE_PRIOR_ALPHA) /
-    (daysConsidered + COMPLIANCE_PRIOR_ALPHA + COMPLIANCE_PRIOR_BETA);
+  // Simple ratio: 0 completions = 0%, all completions = 100%
+  // No Laplace smoothing - what you do is what you get
+  const compliance = successes / daysConsidered;
 
   return { compliance, daysConsidered, successes };
 }
@@ -194,7 +185,16 @@ export function generateHabitStrengthSnapshot({
     trackingMap,
   });
 
-  const strength = clamp(baseline * complianceStats.compliance, 0, 1);
+  // New formula: Compliance is primary driver, baseline is a time bonus
+  // - 0% compliance = 0% strength (always)
+  // - 100% compliance + time = up to 100% strength
+  // Formula: compliance × (0.4 + 0.6 × baseline)
+  // Day 1 with 100% compliance = 100% × (0.4 + 0.6 × 0.15) = ~49%
+  // Day 7 with 100% compliance = 100% × (0.4 + 0.6 × 0.22) = ~53%
+  // Day 30 with 100% compliance = 100% × (0.4 + 0.6 × 0.50) = ~70%
+  // Day 90 with 100% compliance = 100% × (0.4 + 0.6 × 1.0) = 100%
+  const timeBonus = 0.4 + 0.6 * baseline;
+  const strength = clamp(complianceStats.compliance * timeBonus, 0, 1);
 
   return {
     baseline,
