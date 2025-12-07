@@ -10,7 +10,7 @@ import {
   getStrengthLevel,
   predictCompletionProbability,
   type StrengthLevel as _StrengthLevel,
-} from '../habitStrength';
+} from '../../../convex/habitStrength';
 
 describe('Habit Strength Calculation (Klein et al., 2011)', () => {
   describe('calculateHabitStrength', () => {
@@ -88,7 +88,8 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
     it('uses default parameters when not provided', () => {
       const strength = 0.5;
       const result1 = calculateHabitStrength(strength, true);
-      const result2 = calculateHabitStrength(strength, true, 0.175, 0.15);
+      // DEFAULT_HABIT_DECAY_PARAM = 0.02, DEFAULT_HABIT_GAIN_PARAM = 0.15
+      const result2 = calculateHabitStrength(strength, true, 0.02, 0.15);
 
       expect(result1).toBe(result2);
     });
@@ -121,33 +122,33 @@ describe('Habit Strength Calculation (Klein et al., 2011)', () => {
   });
 
   describe('getStrengthLevel', () => {
-    it('returns correct level for each threshold', () => {
+    it('returns correct level for each threshold (v2.0 thresholds)', () => {
+      // 0-29%: starting
       expect(getStrengthLevel(0)).toBe('starting');
       expect(getStrengthLevel(0.1)).toBe('starting');
-      expect(getStrengthLevel(0.19)).toBe('starting');
+      expect(getStrengthLevel(0.29)).toBe('starting');
 
-      expect(getStrengthLevel(0.2)).toBe('building');
+      // 30-59%: building
       expect(getStrengthLevel(0.3)).toBe('building');
-      expect(getStrengthLevel(0.39)).toBe('building');
+      expect(getStrengthLevel(0.45)).toBe('building');
+      expect(getStrengthLevel(0.59)).toBe('building');
 
-      expect(getStrengthLevel(0.4)).toBe('developing');
-      expect(getStrengthLevel(0.5)).toBe('developing');
-      expect(getStrengthLevel(0.59)).toBe('developing');
-
+      // 60-84%: strong
       expect(getStrengthLevel(0.6)).toBe('strong');
       expect(getStrengthLevel(0.7)).toBe('strong');
-      expect(getStrengthLevel(0.79)).toBe('strong');
+      expect(getStrengthLevel(0.84)).toBe('strong');
 
-      expect(getStrengthLevel(0.8)).toBe('automatic');
+      // 85-100%: automatic
+      expect(getStrengthLevel(0.85)).toBe('automatic');
       expect(getStrengthLevel(0.9)).toBe('automatic');
       expect(getStrengthLevel(1)).toBe('automatic');
     });
 
-    it('handles boundary values correctly', () => {
-      expect(getStrengthLevel(0.2)).toBe('building');
-      expect(getStrengthLevel(0.4)).toBe('developing');
-      expect(getStrengthLevel(0.6)).toBe('strong');
-      expect(getStrengthLevel(0.8)).toBe('automatic');
+    it('handles boundary values correctly (v2.0 thresholds)', () => {
+      expect(getStrengthLevel(0.29)).toBe('starting'); // Just below building
+      expect(getStrengthLevel(0.3)).toBe('building'); // Building threshold
+      expect(getStrengthLevel(0.6)).toBe('strong'); // Strong threshold
+      expect(getStrengthLevel(0.85)).toBe('automatic'); // Automatic threshold
     });
   });
 });

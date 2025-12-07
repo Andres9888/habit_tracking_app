@@ -1,5 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { calculateNewStrength, getStrengthLevel } from './habitStrength';
 
 /**
  * Toggle completion status for a habit on a specific date.
@@ -49,10 +50,12 @@ export const toggleCompletion = mutation({
       )
       .unique();
 
+    // Determine new completion state and perform toggle
+    let newCompletionState: boolean;
     if (existingRecord) {
       // Record exists - delete it (uncheck)
       await ctx.db.delete(existingRecord._id);
-      return false;
+      newCompletionState = false;
     } else {
       // No record exists - create it (check)
       await ctx.db.insert('tracking', {
@@ -60,8 +63,59 @@ export const toggleCompletion = mutation({
         date: args.date,
         habitId: args.habitId,
       });
-      return true;
+      newCompletionState = true;
     }
+
+    // Calculate completionsLast7Days for streak shield (7 days before toggle date)
+    const toggleDate = new Date(args.date);
+    const sevenDaysAgo = new Date(toggleDate);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Query all tracking for this habit to count recent completions
+    const allTracking = await ctx.db
+      .query('tracking')
+      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .collect();
+
+    // Count completions in last 7 days (not including toggle date)
+    let completionsLast7Days = 0;
+    for (const record of allTracking) {
+      const recordDate = new Date(record.date);
+      if (recordDate >= sevenDaysAgo && recordDate < toggleDate && record.completed) {
+        completionsLast7Days++;
+      }
+    }
+
+    // Get current strength (default to 0 for new habits)
+    const currentStrength = habit.strength ?? 0;
+
+    // Calculate new strength using momentum-based formula
+    // Note: strength is stored as 0-1, but calculateNewStrength uses 0-100 scale
+    const newStrength = calculateNewStrength(
+      currentStrength * 100,
+      newCompletionState,
+      completionsLast7Days
+    ) / 100;
+
+    // Update habit with new strength and level
+    const strengthLevel = getStrengthLevel(newStrength);
+    await ctx.db.patch(args.habitId, {
+      strength: newStrength,
+      strengthLevel,
+      strengthUpdatedAt: Date.now(),
+    });
+
+    console.log('🔧 Updated habit strength:', {
+      habitName: habit.name,
+      date: args.date,
+      completed: newCompletionState,
+      completionsLast7Days,
+      previousStrength: `${(currentStrength * 100).toFixed(1)}%`,
+      newStrength: `${(newStrength * 100).toFixed(1)}%`,
+      strengthLevel,
+    });
+
+    return newCompletionState;
   },
   returns: v.boolean(),
 });

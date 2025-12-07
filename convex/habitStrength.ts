@@ -61,6 +61,92 @@ const COMPLIANCE_WINDOW_DAYS = 30;
 const COMPLIANCE_PRIOR_ALPHA = 1;
 const COMPLIANCE_PRIOR_BETA = 1;
 
+// ============================================================================
+// NEW MOMENTUM-BASED FORMULA (v2.0) - Forgiving strength calculation
+// ============================================================================
+
+/**
+ * Growth rate: percentage of remaining gap filled per completion
+ * Set to 5% means each completion fills 5% of the distance to 100%
+ * Results in exponential approach to 100% over ~90 days with perfect compliance
+ */
+export const GROWTH_RATE = 0.05;
+
+/**
+ * Base decay rate: percentage lost per miss without streak protection
+ * Set to 2.5% base decay, reduced by streak shield effectiveness
+ */
+export const BASE_DECAY = 0.025;
+
+/**
+ * Streak shield effectiveness: how much the streak protects against decay
+ * Set to 60% means a perfect 7-day streak reduces decay by 60%
+ * Range: 0 (no protection) to 1 (full protection)
+ */
+export const SHIELD_EFFECTIVENESS = 0.6;
+
+/**
+ * Calculate new habit strength after a completion or miss using momentum-based formula.
+ *
+ * This forgiving formula encourages consistency while being gentle on misses:
+ * - **Growth on completion**: Fills 5% of remaining gap toward 100
+ * - **Graceful decay on miss**: Protected by recent consistency (streak shield)
+ * - **90-day target**: Perfect compliance reaches ~99-100% strength
+ *
+ * Formula behavior:
+ * - Miss 1 day after good streak (7/7 last week): ~1% drop (vs old: ~5-10% drop)
+ * - Miss 3 days in row after 30-day streak: ~4-5% total drop (vs old: ~15-20% drop)
+ * - Recovery from bad week: ~5 good days (vs old: ~10-15 days)
+ *
+ * @param currentStrength - Current strength value (0-100)
+ * @param completed - Whether the habit was completed today
+ * @param completionsLast7Days - Number of completions in last 7 days (0-7), used for streak shield
+ * @returns New strength value (0-100), clamped to valid range
+ *
+ * @example
+ * // Growth: 50% strength, completed today
+ * calculateNewStrength(50, true, 7) // Returns ~52.5
+ *
+ * @example
+ * // Decay with full protection: 50% strength, missed today, perfect 7-day streak
+ * calculateNewStrength(50, false, 7) // Returns ~49.5 (only 1% drop due to shield)
+ *
+ * @example
+ * // Decay with no protection: 50% strength, missed today, no recent completions
+ * calculateNewStrength(50, false, 0) // Returns ~48.75 (full 2.5% decay)
+ */
+export function calculateNewStrength(
+  currentStrength: number,
+  completed: boolean,
+  completionsLast7Days: number
+): number {
+  // Ensure inputs are within valid ranges
+  const strength = Math.max(0, Math.min(100, currentStrength));
+  const recentCompletions = Math.max(0, Math.min(7, completionsLast7Days));
+
+  if (completed) {
+    // Growth: Fill GROWTH_RATE (5%) of remaining gap toward 100
+    // Example: 50% + (100 - 50) * 0.05 = 50% + 2.5% = 52.5%
+    // As strength increases, growth slows (exponential approach)
+    const gap = 100 - strength;
+    const growth = gap * GROWTH_RATE;
+    return Math.min(100, strength + growth);
+  } else {
+    // Decay: Protected by recent consistency (streak shield)
+    // Streak shield: 0/7 = 0% protection, 7/7 = 100% protection
+    const streakShield = recentCompletions / 7;
+
+    // Protected decay = base decay reduced by (shield × effectiveness)
+    // Example with 7/7 streak: 0.025 * (1 - 1.0 * 0.6) = 0.01 (60% less decay)
+    // Example with 0/7 streak: 0.025 * (1 - 0 * 0.6) = 0.025 (full decay)
+    const protectedDecay = BASE_DECAY * (1 - streakShield * SHIELD_EFFECTIVENESS);
+
+    // Apply multiplicative decay (percentage-based, not absolute)
+    // Example: 50% * (1 - 0.01) = 49.5% (1% drop with full protection)
+    return Math.max(0, strength * (1 - protectedDecay));
+  }
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
@@ -236,7 +322,7 @@ export const STRENGTH_LEVELS: Record<StrengthLevel, StrengthLevelInfo> = {
     description: 'Getting stronger each day!',
     emoji: '🌳',
     label: 'Developing',
-    level: 'developing', // green-500
+    level: 'developing', // green-500 (deprecated - kept for backwards compatibility)
   },
   starting: {
     color: '#86efac',
@@ -246,11 +332,11 @@ export const STRENGTH_LEVELS: Record<StrengthLevel, StrengthLevelInfo> = {
     level: 'starting', // green-300
   },
   strong: {
-    color: '#16a34a',
+    color: '#22c55e',
     description: 'Habit is well-established!',
     emoji: '💪',
     label: 'Strong',
-    level: 'strong', // green-600
+    level: 'strong', // green-500 (updated to match new spec)
   },
 };
 
@@ -296,12 +382,19 @@ export function calculateHabitStrength(
 
 /**
  * Determine strength level from numerical strength value
+ * Updated thresholds for v2.0 momentum-based formula:
+ * - 0-29%: Starting (just beginning)
+ * - 30-59%: Building (making progress)
+ * - 60-84%: Strong (well-established)
+ * - 85-100%: Automatic (fully habitual)
  */
 export function getStrengthLevel(strength: number): StrengthLevel {
-  if (strength < 0.2) return 'starting';
-  if (strength < 0.4) return 'building';
-  if (strength < 0.6) return 'developing';
-  if (strength < 0.8) return 'strong';
+  // Convert 0-100 scale to 0-1 if needed (backwards compatible)
+  const normalizedStrength = strength > 1 ? strength / 100 : strength;
+
+  if (normalizedStrength < 0.3) return 'starting';
+  if (normalizedStrength < 0.6) return 'building';
+  if (normalizedStrength < 0.85) return 'strong';
   return 'automatic';
 }
 
@@ -387,6 +480,8 @@ export function predictCompletionProbability(
 
 /**
  * Update habit strength for a given habit based on today's completion status
+ * @deprecated Use tracking.toggleCompletion instead, which uses the new momentum-based formula
+ * This function is kept for backwards compatibility and also updated to use new formula
  */
 export const updateHabitStrength = mutation({
   args: {
@@ -408,6 +503,7 @@ export const updateHabitStrength = mutation({
 
       const previousStrength = habit.strength ?? 0;
 
+      // Update tracking record
       const trackingForDay = await ctx.db
         .query('tracking')
         .withIndex('by_habit_and_date', (q) =>
@@ -429,47 +525,54 @@ export const updateHabitStrength = mutation({
         });
       }
 
-      const tracking = await ctx.db
+      // Calculate completionsLast7Days for streak shield
+      const toggleDate = new Date(args.date);
+      const sevenDaysAgo = new Date(toggleDate);
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const allTracking = await ctx.db
         .query('tracking')
         .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
         .collect();
 
-      const snapshot = generateHabitStrengthSnapshot({
-        habitCreatedAt: habit.createdAt,
-        throughDate: startOfDay(new Date()),
-        tracking: tracking.map((t) => ({
-          completed: t.completed,
-          date: t.date,
-        })),
-      });
+      let completionsLast7Days = 0;
+      for (const record of allTracking) {
+        const recordDate = new Date(record.date);
+        if (recordDate >= sevenDaysAgo && recordDate < toggleDate && record.completed) {
+          completionsLast7Days++;
+        }
+      }
 
-      // Determine strength level
-      const { strength: newStrength, strengthLevel } = snapshot;
+      // Use NEW momentum-based formula
+      const newStrength = calculateNewStrength(
+        previousStrength * 100,
+        args.behaviorPerformed,
+        completionsLast7Days
+      ) / 100;
 
-      console.log('🔧 Updating habit strength (replay):', {
-        baseline: (snapshot.baseline * 100).toFixed(1) + '%',
+      const strengthLevel = getStrengthLevel(newStrength);
+
+      console.log('🔧 Updating habit strength (legacy API):', {
         behaviorPerformed: args.behaviorPerformed,
-        compliance: (snapshot.compliance * 100).toFixed(1) + '%',
+        completionsLast7Days,
         date: args.date,
         habitName: habit.name,
         newStrength: (newStrength * 100).toFixed(1) + '%',
         previousStrength: (previousStrength * 100).toFixed(1) + '%',
         strengthLevel,
-        successes: snapshot.complianceSuccesses,
-        windowDays: snapshot.complianceDaysConsidered,
       });
 
       // Update habit
       await ctx.db.patch(args.habitId, {
         strength: newStrength,
         strengthLevel,
-        strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
+        strengthUpdatedAt: Date.now(),
       });
 
       return {
-        baseline: snapshot.baseline,
-        compliance: snapshot.compliance,
-        daysSinceCreation: snapshot.daysSinceCreation,
+        baseline: 0, // Deprecated field, kept for API compatibility
+        compliance: 0, // Deprecated field, kept for API compatibility
+        daysSinceCreation: 0, // Deprecated field, kept for API compatibility
         newStrength,
         predictionProbability: predictCompletionProbability(newStrength),
         previousStrength,
@@ -496,8 +599,9 @@ export const updateHabitStrength = mutation({
 });
 
 /**
- * Recalculate habit strength for all past tracking data
- * Useful for initializing strength for existing habits or after parameter changes
+ * Recalculate habit strength for all past tracking data using NEW momentum-based formula
+ * Simulates completing habits day by day with the new formula
+ * Useful for initializing strength for existing habits after formula change
  */
 export const recalculateHabitStrength = mutation({
   args: {
@@ -511,7 +615,7 @@ export const recalculateHabitStrength = mutation({
         throw new Error('Habit not found');
       }
 
-      console.log('🔄 Recalculating strength for:', habit.name);
+      console.log('🔄 Recalculating strength with NEW formula for:', habit.name);
 
       // Get all tracking data for this habit
       const tracking = await ctx.db
@@ -521,36 +625,75 @@ export const recalculateHabitStrength = mutation({
 
       console.log(`  ▸ Found ${tracking.length} tracking entries`);
 
-      const snapshot = generateHabitStrengthSnapshot({
-        habitCreatedAt: habit.createdAt,
-        throughDate: startOfDay(new Date()),
-        tracking: tracking.map((t) => ({
-          completed: t.completed,
-          date: t.date,
-        })),
-      });
+      if (tracking.length === 0) {
+        console.log('  ▸ No tracking data, setting strength to 0');
+        await ctx.db.patch(args.habitId, {
+          strength: 0,
+          strengthLevel: 'starting',
+          strengthUpdatedAt: Date.now(),
+        });
+        return {
+          daysProcessed: 0,
+          strength: 0,
+          strengthLevel: 'starting',
+        };
+      }
+
+      // Sort tracking by date
+      const sortedTracking = tracking.sort((a, b) => a.date.localeCompare(b.date));
+
+      // Simulate day-by-day progression with new formula
+      let currentStrength = 0; // Start from 0
+      const completionsByDate = new Map<string, boolean>();
+
+      for (const record of sortedTracking) {
+        completionsByDate.set(record.date, record.completed);
+      }
+
+      // Process each day chronologically
+      for (const record of sortedTracking) {
+        const recordDate = new Date(record.date);
+        const sevenDaysAgo = new Date(recordDate);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        // Count completions in last 7 days (before this date)
+        let completionsLast7Days = 0;
+        for (const [date, completed] of completionsByDate.entries()) {
+          const checkDate = new Date(date);
+          if (checkDate >= sevenDaysAgo && checkDate < recordDate && completed) {
+            completionsLast7Days++;
+          }
+        }
+
+        // Apply new formula
+        currentStrength = calculateNewStrength(
+          currentStrength,
+          record.completed,
+          completionsLast7Days
+        );
+      }
+
+      // Convert to 0-1 scale for storage
+      const finalStrength = currentStrength / 100;
+      const strengthLevel = getStrengthLevel(finalStrength);
 
       console.log(
-        `  ✅ Calculated: strength=${(snapshot.strength * 100).toFixed(
+        `  ✅ Calculated with NEW formula: strength=${currentStrength.toFixed(
           1
-        )}%, baseline=${(snapshot.baseline * 100).toFixed(1)}%, compliance=${(
-          snapshot.compliance * 100
-        ).toFixed(
-          1
-        )}%, level=${snapshot.strengthLevel}, window=${snapshot.complianceDaysConsidered}d`
+        )}%, level=${strengthLevel}, days=${tracking.length}`
       );
 
       // Update habit with final strength
       await ctx.db.patch(args.habitId, {
-        strength: snapshot.strength,
-        strengthLevel: snapshot.strengthLevel,
-        strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
+        strength: finalStrength,
+        strengthLevel,
+        strengthUpdatedAt: Date.now(),
       });
 
       return {
-        daysProcessed: snapshot.complianceDaysConsidered,
-        strength: snapshot.strength,
-        strengthLevel: snapshot.strengthLevel,
+        daysProcessed: tracking.length,
+        strength: finalStrength,
+        strengthLevel,
       };
     } catch (error) {
       console.error('❌ Error in recalculateHabitStrength:', error);

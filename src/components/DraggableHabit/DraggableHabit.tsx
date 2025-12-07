@@ -7,6 +7,7 @@ import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 import { Archive, TrendingUp } from 'lucide-react-native';
 import type { StrengthLevel } from '../HabitStrengthIndicator';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { StrengthRing } from '../StrengthRing';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -464,21 +465,16 @@ export default function DraggableHabit({
                 >
                   {name || habit.name}
                 </Text>
-                {/* Strength percentage + Best streak hint */}
+                {/* Strength ring + Best streak hint */}
                 <View className='mt-0.5 flex-row items-center gap-2'>
                   {showHabitStrengthPercentage && (
-                    <View className='flex-row items-center gap-1'>
-                      <View
-                        className='h-1.5 w-12 overflow-hidden rounded-full bg-stone-200'
-                      >
-                        <View
-                          className='h-full rounded-full'
-                          style={{
-                            backgroundColor: getStrengthColor(),
-                            width: `${strengthPercent}%`,
-                          }}
-                        />
-                      </View>
+                    <View className='flex-row items-center gap-1.5'>
+                      <StrengthRing
+                        strength={strengthPercent}
+                        size='small'
+                        showPercentage={false}
+                        showLevel={false}
+                      />
                       <Text
                         className='text-[12px] font-bold'
                         style={{ color: getStrengthColor() }}

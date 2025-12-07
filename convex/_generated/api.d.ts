@@ -23,6 +23,7 @@ import type * as diagnose from "../diagnose.js";
 import type * as habitStrength from "../habitStrength.js";
 import type * as habits from "../habits.js";
 import type * as http from "../http.js";
+import type * as initializeAllHabitsStrength from "../initializeAllHabitsStrength.js";
 import type * as migration from "../migration.js";
 import type * as notes from "../notes.js";
 import type * as predictions from "../predictions.js";
@@ -53,6 +54,7 @@ declare const fullApi: ApiFromModules<{
   habitStrength: typeof habitStrength;
   habits: typeof habits;
   http: typeof http;
+  initializeAllHabitsStrength: typeof initializeAllHabitsStrength;
   migration: typeof migration;
   notes: typeof notes;
   predictions: typeof predictions;

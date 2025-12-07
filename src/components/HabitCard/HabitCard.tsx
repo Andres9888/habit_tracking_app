@@ -39,7 +39,8 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
-import HabitStrengthIndicator, { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { StrengthRing } from '../StrengthRing';
+import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
 
@@ -627,13 +628,13 @@ export function HabitCard({
               pointerEvents="none"
             />
 
-            {/* Bottom Row: Strength Indicator with Prominent Percentage */}
+            {/* Bottom Row: Strength Ring with Percentage */}
             <View style={styles.bottomRow}>
-              <HabitStrengthIndicator
-                habitName={name}
-                showPercentage={false}
+              <StrengthRing
                 strength={strength}
-                variant='compact'
+                size='small'
+                showPercentage={false}
+                showLevel={false}
               />
               <Text
                 style={[
