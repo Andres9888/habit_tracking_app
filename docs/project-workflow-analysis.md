@@ -1,65 +1,84 @@
 # Project Workflow Analysis
 
-**Date:** 2025-10-30
-**Project:** My Project
+**Date:** 2025-12-09
+**Project:** Habit Strength Rework
 **Analyst:** Jane
 
 ## Assessment Results
 
 ### Project Classification
 
-- **Project Type:** Mobile application
-- **Project Level:** Level 0 (Single Atomic Change)
-- **Instruction Set:** instructions-sm.md
+- **Project Type:** Mobile application (existing)
+- **Project Level:** Level 1 (Coherent Feature)
+- **Instruction Set:** instructions-med.md
 
 ### Scope Summary
 
-- **Brief Description:** Reduce the height of the top bar in the habit details screen
-- **Estimated Stories:** 1
-- **Estimated Epics:** 0 (not applicable for Level 0)
-- **Timeline:** Quick implementation (hours to 1 day)
+- **Brief Description:** Fix and improve the habit strength calculation system - currently broken due to two competing formulas, and when working, strength increases too quickly
+- **Estimated Stories:** 3-5
+- **Estimated Epics:** 1
+- **Timeline:** 1-3 days
 
 ### Context
 
 - **Greenfield/Brownfield:** Brownfield (adding to existing clean codebase)
-- **Existing Documentation:** None provided
+- **Existing Documentation:**
+  - HABIT_STRENGTH_SYSTEM.md (v1 documentation)
+  - habit-strength-rework-v2.md (v2 spec, partially implemented)
 - **Team Size:** Individual developer
-- **Deployment Intent:** Standard app update
+- **Deployment Intent:** Production app fix
+
+## Identified Problems
+
+### Problem 1: Two Competing Formulas
+- `habits.toggleHabit` uses v1 formula (logistic × compliance)
+- `tracking.toggleCompletion` uses v2 formula (momentum-based)
+- Different UI paths produce inconsistent results
+
+### Problem 2: v1 Formula Starts Too High
+- Day 1 with single completion = 49% strength
+- Not realistic or motivating
+
+### Problem 3: v2 Formula Grows Too Fast
+- Current GROWTH_RATE = 5%
+- Day 7 = 30%, Day 14 = 51%
+- Users reported it feels too quick
+
+## Recommended Solution
+
+### Formula Constants (v2 tuned)
+- GROWTH_RATE: 5% → **3%**
+- BASE_DECAY: 2.5% → **2%**
+- SHIELD_EFFECTIVENESS: 60% → **70%**
+
+### Expected Behavior
+- Day 7: ~19% (Starting)
+- Day 21: ~47% (Building)
+- Day 66: ~87% (Automatic) ← Aligns with "66 day" habit belief
+- Day 90: ~94% (Automatic)
 
 ## Recommended Workflow Path
 
 ### Primary Outputs
 
-- **Tech Spec only** - Level 0 projects require technical specification only, no PRD needed
+- **PRD** - Document requirements and acceptance criteria
+- **Tech Spec** - Implementation details (can be minimal, straightforward fix)
 
 ### Workflow Sequence
 
-1. Create technical specification for top bar height reduction
-2. Implementation guidance
-3. Testing considerations
-
-### Next Actions
-
-1. Create detailed tech spec documenting:
-   - Current top bar implementation
-   - Proposed height change
-   - Technical approach
-   - Potential side effects
-2. Implement the change
-3. Test on various screen sizes
-4. Verify no layout breaking changes
-
-## Special Considerations
-
-- This is a straightforward UI adjustment
-- Should verify impact on different device sizes
-- Check if top bar height is referenced in multiple places
-- Consider accessibility implications (touch target sizes)
+1. Create PRD documenting the fix
+2. Unify mutations to use v2 formula
+3. Tune formula constants
+4. Recalculate existing habit strengths
+5. Test and validate
 
 ## Technical Preferences Captured
 
-- None specified - will use existing codebase patterns and conventions
+- Use v2 momentum-based formula (not v1 logistic)
+- Streak shield concept approved
+- Target "Automatic" level around 66 days
+- Forgiving on misses
 
 ---
 
-_This analysis serves as the routing decision for the adaptive PRD workflow and will be referenced by future orchestration workflows._
+_This analysis serves as the routing decision for the adaptive PRD workflow._

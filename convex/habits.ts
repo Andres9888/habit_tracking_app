@@ -40,6 +40,11 @@ export const create = mutation({
 
       reminderSound: args.reminderSound,
       reminderTime: args.reminderTime,
+
+      // Initialize habit strength fields (v2.0 momentum-based formula)
+      strength: 0,
+      strengthLevel: 'starting',
+      strengthUpdatedAt: Date.now(),
     });
   },
   returns: v.id('habits'),
@@ -311,10 +316,14 @@ export const restore = mutation({
       }
     }
 
-    // Recreate the habit with proper order
+    // Recreate the habit with proper order and initialize strength
     const habitId = await ctx.db.insert('habits', {
       ...args.habitData,
       order: maxOrder + 1,
+      // Initialize habit strength fields (will be recalculated from tracking data)
+      strength: 0,
+      strengthLevel: 'starting',
+      strengthUpdatedAt: Date.now(),
     });
 
     // Recreate all tracking data
