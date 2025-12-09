@@ -3,8 +3,7 @@
  * Habit Detail Page - Simplified
  *
  * Features:
- * - Hero section with icon, name, and notes
- * - Notes section with recent note preview
+ * - Hero section with icon, name, and description
  * - Manage habit actions
  */
 
@@ -13,7 +12,6 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal } from 'reac
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Modal } from '../components/Modal';
-import NotesSection from '../components/NotesSection';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
 import {
@@ -45,14 +43,12 @@ interface Habit {
 
 interface HabitDetailScreenProps {
   habit: Habit | null;
-  onAddNote?: (habitId: Id<'habits'>) => void;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
   onEdit?: (habit: Habit) => void;
   onOpenCalendar?: (habit: Habit) => void;
   onPause?: (habitId: Id<'habits'>) => void;
-  onViewNotes?: (habitId: Id<'habits'>) => void;
   visible: boolean;
 }
 
@@ -185,14 +181,12 @@ function ActionButton({
  */
 export default function HabitDetailScreen({
   habit,
-  onAddNote,
   onArchive,
   onClose,
   onDelete,
   onEdit,
   onOpenCalendar,
   onPause,
-  onViewNotes,
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
@@ -266,14 +260,6 @@ export default function HabitDetailScreen({
   const handleOpenCalendar = () => {
     onOpenCalendar?.(habit);
     onClose();
-  };
-
-  const handleAddNote = () => {
-    onAddNote?.(habit._id);
-  };
-
-  const handleViewNotes = () => {
-    onViewNotes?.(habit._id);
   };
 
   const handleOpenVisualizationGuide = () => {
@@ -351,20 +337,10 @@ export default function HabitDetailScreen({
           {/* Hero Section */}
           <HeroSection habit={habit} />
 
-          {/* Notes Section */}
-          <Animated.View entering={FadeInDown.delay(200).springify()}>
-            <NotesSection
-              onAddNote={handleAddNote}
-              onViewAllNotes={handleViewNotes}
-              recentNote={undefined} // TODO: Fetch from notes query
-              totalNotes={0}
-            />
-          </Animated.View>
-
           {/* Motivational Boosters */}
           <Animated.View
             className="rounded-2xl bg-gradient-to-br from-violet-50/80 via-white to-indigo-50/80 p-5 shadow-sm shadow-violet-200/30"
-            entering={FadeInDown.delay(300).springify()}
+            entering={FadeInDown.delay(200).springify()}
           >
             <View className="mb-4 flex-row items-center gap-2">
               <Sparkles className="text-violet-500" size={20} />
@@ -398,7 +374,7 @@ export default function HabitDetailScreen({
           {/* Manage Habit */}
           <Animated.View
             className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50"
-            entering={FadeInDown.delay(400).springify()}
+            entering={FadeInDown.delay(300).springify()}
           >
             <Text className="mb-4 text-lg font-semibold text-stone-800">
               Manage Habit
