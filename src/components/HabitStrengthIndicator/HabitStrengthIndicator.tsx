@@ -10,7 +10,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, AccessibilityInfo } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -19,6 +19,14 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+
+// Safely import AccessibilityInfo (may not be available in all environments)
+let AccessibilityInfo: any;
+try {
+  AccessibilityInfo = require('react-native').AccessibilityInfo;
+} catch (e) {
+  AccessibilityInfo = null;
+}
 
 export type StrengthLevel =
   | 'starting'
@@ -172,7 +180,7 @@ export default function HabitStrengthIndicator({
       ? `${habitName}, ${Math.round(strength)}% strength, ${config.label} level`
       : `${Math.round(strength)}% strength, ${config.label} level`;
 
-    AccessibilityInfo.announceForAccessibility(message);
+    AccessibilityInfo?.announceForAccessibility?.(message);
   }, [strength, level, habitName]);
 
   // Animated styles

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AccessibilityInfo, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
 interface UseReduceMotionOptions {
   preference?: boolean;
@@ -7,11 +7,21 @@ interface UseReduceMotionOptions {
 
 const isNativePlatform = Platform.OS === 'ios' || Platform.OS === 'android';
 
+// Lazy import AccessibilityInfo only when available
+let AccessibilityInfo: any;
+try {
+  AccessibilityInfo = require('react-native').AccessibilityInfo;
+} catch (e) {
+  // AccessibilityInfo not available in this environment
+  AccessibilityInfo = null;
+}
+
 export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => {
   const [systemReduceMotion, setSystemReduceMotion] = useState(false);
 
   useEffect(() => {
-    if (!isNativePlatform) {
+    // Only run on native platforms and if AccessibilityInfo is available
+    if (!isNativePlatform || !AccessibilityInfo) {
       return;
     }
 

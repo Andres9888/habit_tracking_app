@@ -16,6 +16,14 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+
+// Safely import AccessibilityInfo (may not be available in all environments)
+let AccessibilityInfo: any;
+try {
+  AccessibilityInfo = require('react-native').AccessibilityInfo;
+} catch (e) {
+  AccessibilityInfo = null;
+}
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -171,7 +179,7 @@ export function MilestoneCelebration({
 
       // VoiceOver announcement
       const message = `Milestone achieved! ${habitName} reached ${config.label} level at ${Math.round(strength)}% strength. ${config.description}`;
-      AccessibilityInfo.announceForAccessibility(message);
+      AccessibilityInfo?.announceForAccessibility?.(message);
     } else {
       // Reset animations when modal closes
       badgeScale.value = 0;
