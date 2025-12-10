@@ -34,7 +34,7 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       expect(newStrength).toBeGreaterThan(currentStrength);
     });
 
-    it('should fill 5% of remaining gap on completion', () => {
+    it('should fill 3% of remaining gap on completion', () => {
       const currentStrength = 50;
       const completed = true;
       const completionsLast7Days = 7;
@@ -46,9 +46,9 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       );
 
       // Gap = 100 - 50 = 50
-      // Growth = 50 * 0.05 = 2.5
-      // Expected = 50 + 2.5 = 52.5
-      expect(newStrength).toBeCloseTo(52.5, 1);
+      // Growth = 50 * 0.03 = 1.5
+      // Expected = 50 + 1.5 = 51.5
+      expect(newStrength).toBeCloseTo(51.5, 1);
     });
 
     it('should grow slower as strength approaches 100 (exponential approach)', () => {
@@ -97,7 +97,7 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       expect(newStrength).toBeLessThan(currentStrength);
     });
 
-    it('should apply 2.5% base decay with no streak protection', () => {
+    it('should apply 2% base decay with no streak protection', () => {
       const currentStrength = 50;
       const completed = false;
       const completionsLast7Days = 0; // No protection
@@ -108,9 +108,9 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
         completionsLast7Days
       );
 
-      // Decay = 50 * 0.025 = 1.25
-      // Expected = 50 * (1 - 0.025) = 48.75
-      expect(newStrength).toBeCloseTo(48.75, 1);
+      // Decay = 50 * 0.02 = 1.0
+      // Expected = 50 * (1 - 0.02) = 49.0
+      expect(newStrength).toBeCloseTo(49.0, 1);
     });
 
     it('should never go below 0%', () => {
@@ -129,7 +129,7 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
   });
 
   describe('Streak Shield Protection (AC3)', () => {
-    it('should reduce decay with perfect 7-day streak (60% protection)', () => {
+    it('should reduce decay with perfect 7-day streak (70% protection)', () => {
       const currentStrength = 50;
       const completed = false;
       const completionsLast7Days = 7; // Perfect streak
@@ -141,12 +141,12 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       );
 
       // Streak shield = 7/7 = 1.0
-      // Protected decay = 0.025 * (1 - 1.0 * 0.6) = 0.025 * 0.4 = 0.01
-      // Expected = 50 * (1 - 0.01) = 49.5 (-1% drop)
-      expect(newStrength).toBeCloseTo(49.5, 1);
+      // Protected decay = 0.02 * (1 - 1.0 * 0.7) = 0.02 * 0.3 = 0.006
+      // Expected = 50 * (1 - 0.006) = 49.7 (-0.3% drop)
+      expect(newStrength).toBeCloseTo(49.7, 1);
     });
 
-    it('should have 60% less decay with 7/7 streak vs 0/7 streak', () => {
+    it('should have 70% less decay with 7/7 streak vs 0/7 streak', () => {
       const currentStrength = 50;
       const completed = false;
 
@@ -156,8 +156,8 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       const noStreakDrop = currentStrength - noStreakStrength;
       const fullStreakDrop = currentStrength - fullStreakStrength;
 
-      // Full streak should have 60% less decay
-      expect(fullStreakDrop).toBeCloseTo(noStreakDrop * 0.4, 1);
+      // Full streak should have 70% less decay
+      expect(fullStreakDrop).toBeCloseTo(noStreakDrop * 0.3, 1);
     });
 
     it('should scale protection proportionally with streak length', () => {
@@ -194,29 +194,29 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
     });
   });
 
-  describe('90-Day Target (AC4)', () => {
-    it('should reach ~99-100% after 90 perfect days', () => {
+  describe('66-Day Target (AC4)', () => {
+    it('should reach ~87% after 66 perfect days (Automatic level)', () => {
       let strength = 0;
-      const daysToSimulate = 90;
+      const daysToSimulate = 66;
 
       for (let day = 0; day < daysToSimulate; day++) {
         strength = calculateNewStrength(strength, true, 7);
       }
 
-      expect(strength).toBeGreaterThanOrEqual(99);
-      expect(strength).toBeLessThanOrEqual(100);
+      expect(strength).toBeGreaterThanOrEqual(85); // Automatic level starts at 85%
+      expect(strength).toBeLessThanOrEqual(90);
     });
 
-    it('should show progressive growth over 90 days', () => {
-      const progressionPoints: Array<{ day: number; expectedMin: number }> = [
-        { day: 1, expectedMin: 0 },
-        { day: 7, expectedMin: 25 },
-        { day: 14, expectedMin: 45 },
-        { day: 21, expectedMin: 60 },
-        { day: 30, expectedMin: 75 },
-        { day: 45, expectedMin: 87 },
-        { day: 60, expectedMin: 93 },
-        { day: 90, expectedMin: 99 },
+    it('should show progressive growth aligned with PRD', () => {
+      const progressionPoints: Array<{ day: number; expectedMin: number; expectedMax: number }> = [
+        { day: 1, expectedMin: 2.5, expectedMax: 3.5 },    // ~3%
+        { day: 7, expectedMin: 18, expectedMax: 21 },       // ~19.2%
+        { day: 14, expectedMin: 33, expectedMax: 36 },      // ~34.7%
+        { day: 21, expectedMin: 46, expectedMax: 49 },      // ~47.3%
+        { day: 30, expectedMin: 58, expectedMax: 62 },      // ~59.9%
+        { day: 45, expectedMin: 73, expectedMax: 77 },      // ~74.6%
+        { day: 60, expectedMin: 82, expectedMax: 86 },      // ~83.9%
+        { day: 66, expectedMin: 85, expectedMax: 89 },      // ~86.6%
       ];
 
       for (const point of progressionPoints) {
@@ -225,6 +225,7 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
           strength = calculateNewStrength(strength, true, 7);
         }
         expect(strength).toBeGreaterThanOrEqual(point.expectedMin);
+        expect(strength).toBeLessThanOrEqual(point.expectedMax);
       }
     });
   });
@@ -256,16 +257,16 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       expect(result).toBeLessThanOrEqual(100);
     });
 
-    it('should match spec example: 50% completion increases to ~52.5%', () => {
+    it('should match spec example: 50% completion increases to ~51.5%', () => {
       const result = calculateNewStrength(50, true, 7);
-      expect(result).toBeCloseTo(52.5, 1);
+      expect(result).toBeCloseTo(51.5, 1);
     });
 
-    it('should match spec example: 50% miss with shield drops to ~48.75%', () => {
+    it('should match spec example: 50% miss with shield drops to ~49.7%', () => {
       const result = calculateNewStrength(50, false, 7);
-      // With 7/7 streak: drop is ~1%, so ~49%
-      // Spec says ~48.75% which might be with less protection
-      expect(result).toBeCloseTo(49.5, 1); // Full protection case
+      // With 7/7 streak: drop is ~0.3%, so ~49.7%
+      // New constants: 70% shield effectiveness with 2% base decay
+      expect(result).toBeCloseTo(49.7, 1); // Full protection case
     });
   });
 
@@ -279,12 +280,12 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       strength = calculateNewStrength(strength, false, 5);
 
       const afterMisses = strength;
-      // With BASE_DECAY=0.025 and SHIELD_EFFECTIVENESS=0.6:
-      // Miss 1 (7/7): 78 * (1 - 0.01) = 77.22
-      // Miss 2 (6/7): 77.22 * (1 - 0.01215) = 76.28
-      // Miss 3 (5/7): 76.28 * (1 - 0.01429) = 75.19
-      // Total drop: ~2.8% (forgiving formula)
-      expect(afterMisses).toBeCloseTo(75.2, 1);
+      // With BASE_DECAY=0.02 and SHIELD_EFFECTIVENESS=0.7:
+      // Miss 1 (7/7): 78 * (1 - 0.006) = 77.532
+      // Miss 2 (6/7): 77.532 * (1 - 0.008) = 76.912
+      // Miss 3 (5/7): 76.912 * (1 - 0.010) = 76.143
+      // Total drop: ~1.9% (forgiving formula)
+      expect(afterMisses).toBeCloseTo(76.1, 1);
 
       // Recovery: 5 good days
       for (let i = 0; i < 5; i++) {
@@ -293,10 +294,10 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
 
       const afterRecovery = strength;
       expect(afterRecovery).toBeGreaterThan(afterMisses);
-      // Forgiving formula with 5% gap fill overshoots slightly beyond original
-      // After 5 good days: recovers from 75.2% to ~80.8% (beyond original 78%)
-      expect(afterRecovery).toBeGreaterThanOrEqual(78); // Fully recovered
-      expect(afterRecovery).toBeLessThan(82); // But not excessive
+      // Forgiving formula with 3% gap fill recovers but more slowly
+      // After 5 good days: recovers from 76.1% to ~78.5% (close to original 78%)
+      expect(afterRecovery).toBeGreaterThanOrEqual(76); // Recovered significantly
+      expect(afterRecovery).toBeLessThan(80); // But not excessive
     });
   });
 });
@@ -336,8 +337,8 @@ describe('getStrengthLevel - Updated Thresholds', () => {
 
 describe('Formula Constants', () => {
   it('should have correct constant values', () => {
-    expect(GROWTH_RATE).toBe(0.05);
-    expect(BASE_DECAY).toBe(0.025);
-    expect(SHIELD_EFFECTIVENESS).toBe(0.6);
+    expect(GROWTH_RATE).toBe(0.03);
+    expect(BASE_DECAY).toBe(0.02);
+    expect(SHIELD_EFFECTIVENESS).toBe(0.7);
   });
 });

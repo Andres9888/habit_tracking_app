@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { generateHabitStrengthSnapshot } from './habitStrength';
+import { calculateNewStrength, getStrengthLevel } from './habitStrength';
 import { updateStreak } from './streakUtils';
 
 export const create = mutation({
@@ -610,22 +610,35 @@ export const toggleHabit = mutation({
     if (habit) {
       const previousStrength = habit.strength ?? 0;
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      // Calculate completionsLast7Days for streak shield (7 days before toggle date)
+      const toggleDate = new Date(args.date);
+      const sevenDaysAgo = new Date(toggleDate);
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-      const tracking = await ctx.db
+      // Query all tracking for this habit to count recent completions
+      const allTracking = await ctx.db
         .query('tracking')
         .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
         .collect();
 
-      const snapshot = generateHabitStrengthSnapshot({
-        habitCreatedAt: habit.createdAt,
-        throughDate: today,
-        tracking: tracking.map((t) => ({
-          completed: t.completed,
-          date: t.date,
-        })),
-      });
+      // Count completions in last 7 days (not including toggle date)
+      let completionsLast7Days = 0;
+      for (const record of allTracking) {
+        const recordDate = new Date(record.date);
+        if (recordDate >= sevenDaysAgo && recordDate < toggleDate && record.completed) {
+          completionsLast7Days++;
+        }
+      }
+
+      // Calculate new strength using momentum-based formula (v2)
+      // Note: strength is stored as 0-1, but calculateNewStrength uses 0-100 scale
+      const newStrength = calculateNewStrength(
+        previousStrength * 100,
+        newCompletedStatus,
+        completionsLast7Days
+      ) / 100;
+
+      const strengthLevel = getStrengthLevel(newStrength);
 
       // Calculate updated streak (Story 1.3)
       const streakData = updateStreak(
@@ -638,28 +651,26 @@ export const toggleHabit = mutation({
         newCompletedStatus
       );
 
-      console.log('🔧 Habit Strength Update (replay):', {
-        baseline: (snapshot.baseline * 100).toFixed(1) + '%',
+      console.log('🔧 Habit Strength Update (v2 formula):', {
         behaviorPerformed: newCompletedStatus,
         bestStreak: streakData.bestStreak,
-        change: ((snapshot.strength - previousStrength) * 100).toFixed(1) + '%',
-        compliance: (snapshot.compliance * 100).toFixed(1) + '%',
+        change: ((newStrength - previousStrength) * 100).toFixed(1) + '%',
+        completionsLast7Days,
         currentStreak: streakData.currentStreak,
+        date: args.date,
         habitName: habit.name,
-        newStrength: (snapshot.strength * 100).toFixed(1) + '%',
+        newStrength: (newStrength * 100).toFixed(1) + '%',
         previousStrength: (previousStrength * 100).toFixed(1) + '%',
-        strengthLevel: snapshot.strengthLevel,
-        successes: snapshot.complianceSuccesses,
-        windowDays: snapshot.complianceDaysConsidered,
+        strengthLevel,
       });
 
       await ctx.db.patch(args.habitId, {
         bestStreak: streakData.bestStreak,
         currentStreak: streakData.currentStreak,
         lastCompletedDate: streakData.lastCompletedDate,
-        strength: snapshot.strength,
-        strengthLevel: snapshot.strengthLevel,
-        strengthUpdatedAt: snapshot.lastEvaluatedDate.getTime(),
+        strength: newStrength,
+        strengthLevel,
+        strengthUpdatedAt: Date.now(),
       });
     }
 

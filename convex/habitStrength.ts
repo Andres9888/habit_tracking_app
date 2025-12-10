@@ -67,36 +67,36 @@ const COMPLIANCE_PRIOR_BETA = 1;
 
 /**
  * Growth rate: percentage of remaining gap filled per completion
- * Set to 5% means each completion fills 5% of the distance to 100%
- * Results in exponential approach to 100% over ~90 days with perfect compliance
+ * Set to 3% means each completion fills 3% of the distance to 100%
+ * Results in exponential approach to 100% over ~66 days with perfect compliance
  */
-export const GROWTH_RATE = 0.05;
+export const GROWTH_RATE = 0.03;
 
 /**
  * Base decay rate: percentage lost per miss without streak protection
- * Set to 2.5% base decay, reduced by streak shield effectiveness
+ * Set to 2% base decay, reduced by streak shield effectiveness
  */
-export const BASE_DECAY = 0.025;
+export const BASE_DECAY = 0.02;
 
 /**
  * Streak shield effectiveness: how much the streak protects against decay
- * Set to 60% means a perfect 7-day streak reduces decay by 60%
+ * Set to 70% means a perfect 7-day streak reduces decay by 70%
  * Range: 0 (no protection) to 1 (full protection)
  */
-export const SHIELD_EFFECTIVENESS = 0.6;
+export const SHIELD_EFFECTIVENESS = 0.7;
 
 /**
  * Calculate new habit strength after a completion or miss using momentum-based formula.
  *
  * This forgiving formula encourages consistency while being gentle on misses:
- * - **Growth on completion**: Fills 5% of remaining gap toward 100
+ * - **Growth on completion**: Fills 3% of remaining gap toward 100
  * - **Graceful decay on miss**: Protected by recent consistency (streak shield)
- * - **90-day target**: Perfect compliance reaches ~99-100% strength
+ * - **66-day target**: Perfect compliance reaches ~87% strength (Automatic level)
  *
  * Formula behavior:
- * - Miss 1 day after good streak (7/7 last week): ~1% drop (vs old: ~5-10% drop)
- * - Miss 3 days in row after 30-day streak: ~4-5% total drop (vs old: ~15-20% drop)
- * - Recovery from bad week: ~5 good days (vs old: ~10-15 days)
+ * - Miss 1 day after good streak (7/7 last week): <0.5% drop (very forgiving)
+ * - Miss 3 days in row after 30-day streak: <2% total drop (gentle decay)
+ * - Recovery from bad week: gradual with 3% gap fill per completion
  *
  * @param currentStrength - Current strength value (0-100)
  * @param completed - Whether the habit was completed today
@@ -105,15 +105,15 @@ export const SHIELD_EFFECTIVENESS = 0.6;
  *
  * @example
  * // Growth: 50% strength, completed today
- * calculateNewStrength(50, true, 7) // Returns ~52.5
+ * calculateNewStrength(50, true, 7) // Returns ~51.5
  *
  * @example
  * // Decay with full protection: 50% strength, missed today, perfect 7-day streak
- * calculateNewStrength(50, false, 7) // Returns ~49.5 (only 1% drop due to shield)
+ * calculateNewStrength(50, false, 7) // Returns ~49.7 (only 0.3% drop due to 70% shield)
  *
  * @example
  * // Decay with no protection: 50% strength, missed today, no recent completions
- * calculateNewStrength(50, false, 0) // Returns ~48.75 (full 2.5% decay)
+ * calculateNewStrength(50, false, 0) // Returns ~49.0 (full 2% decay)
  */
 export function calculateNewStrength(
   currentStrength: number,
@@ -125,8 +125,8 @@ export function calculateNewStrength(
   const recentCompletions = Math.max(0, Math.min(7, completionsLast7Days));
 
   if (completed) {
-    // Growth: Fill GROWTH_RATE (5%) of remaining gap toward 100
-    // Example: 50% + (100 - 50) * 0.05 = 50% + 2.5% = 52.5%
+    // Growth: Fill GROWTH_RATE (3%) of remaining gap toward 100
+    // Example: 50% + (100 - 50) * 0.03 = 50% + 1.5% = 51.5%
     // As strength increases, growth slows (exponential approach)
     const gap = 100 - strength;
     const growth = gap * GROWTH_RATE;
@@ -137,12 +137,12 @@ export function calculateNewStrength(
     const streakShield = recentCompletions / 7;
 
     // Protected decay = base decay reduced by (shield × effectiveness)
-    // Example with 7/7 streak: 0.025 * (1 - 1.0 * 0.6) = 0.01 (60% less decay)
-    // Example with 0/7 streak: 0.025 * (1 - 0 * 0.6) = 0.025 (full decay)
+    // Example with 7/7 streak: 0.02 * (1 - 1.0 * 0.7) = 0.006 (70% less decay)
+    // Example with 0/7 streak: 0.02 * (1 - 0 * 0.7) = 0.02 (full decay)
     const protectedDecay = BASE_DECAY * (1 - streakShield * SHIELD_EFFECTIVENESS);
 
     // Apply multiplicative decay (percentage-based, not absolute)
-    // Example: 50% * (1 - 0.01) = 49.5% (1% drop with full protection)
+    // Example: 50% * (1 - 0.006) = 49.7% (0.3% drop with full protection)
     return Math.max(0, strength * (1 - protectedDecay));
   }
 }
