@@ -600,7 +600,7 @@ export const updateHabitStrength = mutation({
 
 /**
  * Recalculate habit strength for all past tracking data using NEW momentum-based formula
- * Simulates completing habits day by day with the new formula
+ * Simulates completing habits day by day with the new formula, including missed days
  * Useful for initializing strength for existing habits after formula change
  */
 export const recalculateHabitStrength = mutation({
@@ -625,52 +625,70 @@ export const recalculateHabitStrength = mutation({
 
       console.log(`  ▸ Found ${tracking.length} tracking entries`);
 
-      if (tracking.length === 0) {
-        console.log('  ▸ No tracking data, setting strength to 0');
-        await ctx.db.patch(args.habitId, {
-          strength: 0,
-          strengthLevel: 'starting',
-          strengthUpdatedAt: Date.now(),
-        });
-        return {
-          daysProcessed: 0,
-          strength: 0,
-          strengthLevel: 'starting',
-        };
-      }
+      // Build a set of completion dates for efficient lookup
+      const completionDates = new Set(
+        tracking.filter((r) => r.completed).map((r) => r.date)
+      );
 
-      // Sort tracking by date
-      const sortedTracking = tracking.sort((a, b) => a.date.localeCompare(b.date));
+      // Determine date range: from habit creation to today
+      const habitCreatedDate = new Date(habit.createdAt);
+      const today = new Date();
 
-      // Simulate day-by-day progression with new formula
-      let currentStrength = 0; // Start from 0
-      const completionsByDate = new Map<string, boolean>();
+      // Get the start date (habit creation, normalized to YYYY-MM-DD)
+      const startDate = new Date(
+        habitCreatedDate.getFullYear(),
+        habitCreatedDate.getMonth(),
+        habitCreatedDate.getDate()
+      );
 
-      for (const record of sortedTracking) {
-        completionsByDate.set(record.date, record.completed);
-      }
+      // Get the end date (today, normalized to YYYY-MM-DD)
+      const endDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
 
-      // Process each day chronologically
-      for (const record of sortedTracking) {
-        const recordDate = new Date(record.date);
-        const sevenDaysAgo = new Date(recordDate);
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      // Helper to format date as YYYY-MM-DD
+      const formatDateKey = (d: Date): string => {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
 
-        // Count completions in last 7 days (before this date)
-        let completionsLast7Days = 0;
-        for (const [date, completed] of completionsByDate.entries()) {
-          const checkDate = new Date(date);
-          if (checkDate >= sevenDaysAgo && checkDate < recordDate && completed) {
-            completionsLast7Days++;
+      // Helper to count completions in the 7 days before a given date
+      const countRecentCompletions = (beforeDate: Date): number => {
+        let count = 0;
+        for (let i = 1; i <= 7; i++) {
+          const checkDate = new Date(beforeDate);
+          checkDate.setDate(checkDate.getDate() - i);
+          if (completionDates.has(formatDateKey(checkDate))) {
+            count++;
           }
         }
+        return count;
+      };
 
-        // Apply new formula
+      // Simulate day-by-day progression from habit creation to today
+      let currentStrength = 0; // Start from 0
+      let daysProcessed = 0;
+      const currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        const dateStr = formatDateKey(currentDate);
+        const wasCompleted = completionDates.has(dateStr);
+        const recentCompletions = countRecentCompletions(currentDate);
+
+        // Apply growth for completions OR decay for misses
         currentStrength = calculateNewStrength(
           currentStrength,
-          record.completed,
-          completionsLast7Days
+          wasCompleted,
+          recentCompletions
         );
+
+        daysProcessed++;
+        // Move to next day
+        currentDate.setDate(currentDate.getDate() + 1);
       }
 
       // Convert to 0-1 scale for storage
@@ -680,7 +698,7 @@ export const recalculateHabitStrength = mutation({
       console.log(
         `  ✅ Calculated with NEW formula: strength=${currentStrength.toFixed(
           1
-        )}%, level=${strengthLevel}, days=${tracking.length}`
+        )}%, level=${strengthLevel}, days=${daysProcessed}, completions=${completionDates.size}`
       );
 
       // Update habit with final strength
@@ -691,7 +709,7 @@ export const recalculateHabitStrength = mutation({
       });
 
       return {
-        daysProcessed: tracking.length,
+        daysProcessed,
         strength: finalStrength,
         strengthLevel,
       };

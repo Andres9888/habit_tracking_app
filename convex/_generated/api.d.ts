@@ -28,6 +28,7 @@ import type * as migration from "../migration.js";
 import type * as notes from "../notes.js";
 import type * as predictions from "../predictions.js";
 import type * as quickFix from "../quickFix.js";
+import type * as recalculateAllHabitsStrength from "../recalculateAllHabitsStrength.js";
 import type * as router from "../router.js";
 import type * as settings from "../settings.js";
 import type * as streakUtils from "../streakUtils.js";
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   notes: typeof notes;
   predictions: typeof predictions;
   quickFix: typeof quickFix;
+  recalculateAllHabitsStrength: typeof recalculateAllHabitsStrength;
   router: typeof router;
   settings: typeof settings;
   streakUtils: typeof streakUtils;

@@ -50,12 +50,19 @@ export const toggleCompletion = mutation({
       )
       .unique();
 
+    console.log('========== TOGGLE v5 ==========');
+    console.log('Habit:', habit.name);
+    console.log('Date:', args.date);
+    console.log('Record exists?', !!existingRecord);
+    console.log('Current strength:', `${((habit.strength ?? 0) * 100).toFixed(1)}%`);
+
     // Determine new completion state and perform toggle
     let newCompletionState: boolean;
     if (existingRecord) {
       // Record exists - delete it (uncheck)
       await ctx.db.delete(existingRecord._id);
       newCompletionState = false;
+      console.log('  → Deleting record (TOGGLE OFF)');
     } else {
       // No record exists - create it (check)
       await ctx.db.insert('tracking', {
@@ -64,38 +71,43 @@ export const toggleCompletion = mutation({
         habitId: args.habitId,
       });
       newCompletionState = true;
+      console.log('  → Creating record (TOGGLE ON)');
     }
 
-    // Calculate completionsLast7Days for streak shield (7 days before toggle date)
-    const toggleDate = new Date(args.date);
-    const sevenDaysAgo = new Date(toggleDate);
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-    // Query all tracking for this habit to count recent completions
+    // Get all tracking records AFTER the toggle (reflects current state)
     const allTracking = await ctx.db
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    // Count completions in last 7 days (not including toggle date)
-    let completionsLast7Days = 0;
-    for (const record of allTracking) {
-      const recordDate = new Date(record.date);
-      if (recordDate >= sevenDaysAgo && recordDate < toggleDate && record.completed) {
-        completionsLast7Days++;
-      }
-    }
+    // Get all completion dates for this habit
+    const completionDates = new Set(
+      allTracking.filter((r) => r.completed).map((r) => r.date)
+    );
 
-    // Get current strength (default to 0 for new habits)
-    const currentStrength = habit.strength ?? 0;
+    // Recalculate strength from scratch based on NUMBER of completions
+    // Simple approach: Each completion adds a fixed amount, each miss subtracts
+    // This ensures toggle ON/OFF always changes by the same amount
+    const STRENGTH_PER_COMPLETION = 3; // 3% per completion (matches GROWTH_RATE * 100 at 0%)
 
-    // Calculate new strength using momentum-based formula
-    // Note: strength is stored as 0-1, but calculateNewStrength uses 0-100 scale
-    const newStrength = calculateNewStrength(
-      currentStrength * 100,
-      newCompletionState,
-      completionsLast7Days
-    ) / 100;
+    const totalCompletions = completionDates.size;
+
+    // Simple linear calculation: more completions = higher strength
+    // Capped at 100%, minimum 0%
+    const newStrength100 = Math.min(100, Math.max(0, totalCompletions * STRENGTH_PER_COMPLETION));
+
+    // Convert to 0-1 scale for storage
+    const newStrength = newStrength100 / 100;
+
+    const previousStrength = (habit.strength ?? 0) * 100;
+
+    console.log('🔧 [v4] Strength calculation:', {
+      action: newCompletionState ? 'TOGGLE ON' : 'TOGGLE OFF',
+      totalCompletions,
+      previousStrength: `${previousStrength.toFixed(1)}%`,
+      newStrength: `${newStrength100.toFixed(1)}%`,
+      change: `${(newStrength100 - previousStrength).toFixed(2)}%`,
+    });
 
     // Update habit with new strength and level
     const strengthLevel = getStrengthLevel(newStrength);
@@ -105,14 +117,14 @@ export const toggleCompletion = mutation({
       strengthUpdatedAt: Date.now(),
     });
 
-    console.log('🔧 Updated habit strength:', {
+    console.log('🔧 [v4] Updated habit:', {
       habitName: habit.name,
       date: args.date,
-      completed: newCompletionState,
-      completionsLast7Days,
-      previousStrength: `${(currentStrength * 100).toFixed(1)}%`,
-      newStrength: `${(newStrength * 100).toFixed(1)}%`,
+      action: newCompletionState ? 'COMPLETED' : 'UNCOMPLETED',
+      strengthBefore: `${previousStrength.toFixed(1)}%`,
+      strengthAfter: `${newStrength100.toFixed(1)}%`,
       strengthLevel,
+      totalCompletions,
     });
 
     return newCompletionState;

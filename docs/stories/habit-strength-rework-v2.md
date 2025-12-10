@@ -394,5 +394,11 @@ Successfully implemented all core features of the Habit Strength Rework v2.0:
 | 2025-12-07 | **BUG FIX**: Corrected test expectations and spec examples to match actual formula constants (BASE_DECAY=0.025, SHIELD_EFFECTIVENESS=0.6) | Dev Agent |
 | 2025-12-07 | **BUG FIX**: Fixed import path in tests/unit/convex/habitStrength.test.ts | Dev Agent |
 | 2025-12-07 | **BUG FIX**: Updated getStrengthLevel tests to match v2.0 thresholds (0-29%, 30-59%, 60-84%, 85-100%) | Dev Agent |
+| 2025-12-09 | **BUG FIX**: Fixed infinite strength increase when toggling habit - uncheck now reverses growth instead of applying decay | Dev Agent |
+| 2025-12-10 | **BUG FIX**: Fixed toggle OFF not recalculating properly - now processes ALL days from habit creation to toggle date, applying decay for missed days between completions | Dev Agent |
+| 2025-12-10 | **BUG FIX**: Fixed timezone bug - `new Date("YYYY-MM-DD")` parses as UTC, causing toggle date to be off by a day in non-UTC timezones. Now parses as local time. | Dev Agent |
+| 2025-12-10 | **BUG FIX**: Fixed toggle OFF not decreasing strength - was applying decay formula instead of reversing growth. Now correctly reverses the growth calculation so toggle ON→OFF returns to original strength. | Dev Agent |
 
 
+
+| 2025-12-10 | **MAJOR FIX**: Completely simplified strength calculation to use simple linear formula (3% per completion). Toggle ON adds exactly +3%, toggle OFF subtracts exactly -3%. No more complex momentum formulas causing unpredictable behavior. | Dev Agent |

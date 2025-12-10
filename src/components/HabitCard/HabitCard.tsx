@@ -119,8 +119,8 @@ export function HabitCard({
   const strengthFillWidth = useSharedValue(strength);
 
   // Enhanced animation values for completion
-  const checkmarkScale = useSharedValue(completedProp ? 1 : 0);
-  const checkmarkRotate = useSharedValue(completedProp ? 360 : 0);
+  const checkmarkScale = useSharedValue(0);
+  const checkmarkRotate = useSharedValue(0);
   const rippleScale = useSharedValue(0);
   const rippleOpacity = useSharedValue(0);
 
@@ -130,7 +130,6 @@ export function HabitCard({
 
   // Prevent rapid-fire toggles with debounce flag
   const [isToggling, setIsToggling] = React.useState(false);
-  const [completed, setCompleted] = React.useState(completedProp);
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
@@ -142,6 +141,20 @@ export function HabitCard({
       stiffness: 100,
     });
   }, [strength]);
+
+  // Sync checkmark animation with query result
+  useEffect(() => {
+    if (isCompleted === true) {
+      // Show checkmark without animation (already completed)
+      checkmarkScale.value = 1;
+      checkmarkRotate.value = 360;
+    } else if (isCompleted === false) {
+      // Hide checkmark without animation (not completed)
+      checkmarkScale.value = 0;
+      checkmarkRotate.value = 0;
+    }
+    // If undefined (loading), keep current animation state
+  }, [isCompleted]);
 
   // Get strength color based on current level
   const getStrengthColor = (): string => {
@@ -341,9 +354,7 @@ export function HabitCard({
           try {
             await toggleCompletionMutation({ date: today, habitId: id });
             console.log('🔴 Mutation SUCCESS');
-
-            // Update local state to reflect new completion status
-            setCompleted(!isCompleted);
+            // State will update automatically via Convex query reactivity
           } catch (error) {
             console.error('🔴 Toggle completion failed:', error);
             // TODO: Show toast notification when toast system is available
