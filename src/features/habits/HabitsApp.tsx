@@ -100,19 +100,6 @@ export function HabitsApp() {
     dismissRewardToast();
   }, [dismissRewardToast, rewardToast]);
 
-  const handleUnlockBoosters = useCallback(() => {
-    if (!rewardToast) {
-      return;
-    }
-
-    logInteraction('premium_upsell_tap', {
-      habitId: rewardToast.habitId,
-      habitName: rewardToast.habitName,
-      streak: rewardToast.streak,
-    });
-    dismissRewardToast();
-    openTemplatesScreen();
-  }, [dismissRewardToast, openTemplatesScreen, rewardToast]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100'>
@@ -147,7 +134,6 @@ export function HabitsApp() {
         <RewardCelebrationToast
           message={rewardToast?.message ?? ''}
           onDismiss={dismissRewardToast}
-          onPrimaryAction={handleUnlockBoosters}
           onSecondaryAction={handleShareStreak}
           streak={rewardToast?.streak}
           visible={Boolean(rewardToast)}
