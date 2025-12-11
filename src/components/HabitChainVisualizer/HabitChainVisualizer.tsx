@@ -11,40 +11,125 @@ import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
-  color: string;
-  visible: boolean;
+  accentColor: string;
+  baseColor: string;
+  currentStreak: number;
   style?: ViewStyle;
+  visible: boolean;
 }
 
 /**
  * DayConnector - Visual link between consecutive completed days
- * Shows a horizontal gray line when both adjacent days are completed,
- * creating a visual "chain" effect for habit tracking.
+ *
+ * Features strength-based evolution:
+ * - Day 1-6: Subtle connection (1.5px, 35% opacity)
+ * - Day 7-13: Growing strength (2px, 50% opacity)
+ * - Day 14-29: Strong chain (2.5px, 65% opacity)
+ * - Day 30+: Legendary status (3px, 80% opacity, accent glow)
+ *
+ * Includes animated energy flow that creates sense of momentum.
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ color, visible, style }) => {
+const DayConnector: React.FC<DayConnectorProps> = ({
+  accentColor,
+  baseColor,
+  currentStreak,
+  style,
+  visible,
+}) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const shimmerPosition = useRef(new Animated.Value(0)).current;
 
+  // Strength-based evolution values
+  const getStrengthConfig = (streak: number) => {
+    if (streak >= 30) return { height: 3, maxOpacity: 0.8, useAccent: true, shimmerSpeed: 1200 };
+    if (streak >= 14) return { height: 2.5, maxOpacity: 0.65, useAccent: true, shimmerSpeed: 1500 };
+    if (streak >= 7) return { height: 2, maxOpacity: 0.5, useAccent: false, shimmerSpeed: 2000 };
+    return { height: 1.5, maxOpacity: 0.35, useAccent: false, shimmerSpeed: 0 }; // No shimmer for early streaks
+  };
+
+  const strengthConfig = getStrengthConfig(currentStreak);
+  const connectorColor = strengthConfig.useAccent ? accentColor : baseColor;
+
+  // Fade in/out animation
   useEffect(() => {
     Animated.timing(opacity, {
-      duration: 200,
+      duration: 250,
       easing: Easing.inOut(Easing.ease),
       toValue: visible ? 1 : 0,
       useNativeDriver: true,
     }).start();
   }, [visible, opacity]);
 
+  // Energy flow shimmer animation (only for 7+ day streaks)
+  useEffect(() => {
+    if (visible && strengthConfig.shimmerSpeed > 0) {
+      const shimmerAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(shimmerPosition, {
+            toValue: 1,
+            duration: strengthConfig.shimmerSpeed,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(shimmerPosition, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      shimmerAnimation.start();
+      return () => shimmerAnimation.stop();
+    } else {
+      shimmerPosition.setValue(0);
+    }
+  }, [visible, strengthConfig.shimmerSpeed, shimmerPosition]);
+
   return (
     <Animated.View
-      style={[{
-        backgroundColor: color,
-        height: 1.5,
-        opacity: opacity.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
-        }),
-        width: 14,
-      }, style]}
-    />
+      style={[
+        {
+          backgroundColor: connectorColor,
+          borderRadius: strengthConfig.height / 2,
+          height: strengthConfig.height,
+          opacity: opacity.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, strengthConfig.maxOpacity],
+          }),
+          overflow: 'hidden',
+          width: 14,
+        },
+        // Subtle glow for legendary streaks (30+)
+        strengthConfig.useAccent && currentStreak >= 30 && {
+          shadowColor: accentColor,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.4,
+          shadowRadius: 3,
+        },
+        style,
+      ]}
+    >
+      {/* Energy flow shimmer overlay */}
+      {strengthConfig.shimmerSpeed > 0 && (
+        <Animated.View
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+            borderRadius: strengthConfig.height,
+            height: '100%',
+            position: 'absolute',
+            transform: [
+              {
+                translateX: shimmerPosition.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-20, 34], // Flow from left to right across the connector
+                }),
+              },
+            ],
+            width: 20,
+          }}
+        />
+      )}
+    </Animated.View>
   );
 };
 
@@ -368,13 +453,18 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         <View
           style={{
             left: -10, // Connects to the left of the first circle (padding 4 - width 14)
-            marginTop: -0.75, // Half of 1.5px height to center vertically
+            marginTop: -1, // Adjusted for dynamic height centering
             position: 'absolute',
             top: '50%',
             zIndex: -1, // Behind the circles
           }}
         >
-          <DayConnector color={connectorColor} visible={true} />
+          <DayConnector
+            accentColor={accentColor}
+            baseColor={connectorColor}
+            currentStreak={currentStreak}
+            visible={true}
+          />
         </View>
       )}
 
@@ -421,7 +511,13 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               />
             </View>
             {!isLastItem && (
-              <DayConnector color={connectorColor} style={{ flex: 1, width: 'auto' }} visible={showConnector} />
+              <DayConnector
+                accentColor={accentColor}
+                baseColor={connectorColor}
+                currentStreak={currentStreak}
+                style={{ flex: 1, minWidth: 14, width: 'auto' }}
+                visible={showConnector}
+              />
             )}
           </React.Fragment>
         );
