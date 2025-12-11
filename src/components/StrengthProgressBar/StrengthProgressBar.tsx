@@ -25,6 +25,8 @@ export interface StrengthProgressBarProps {
   size?: 'compact' | 'default' | 'large';
   /** Show percentage text */
   showPercentage?: boolean;
+  /** Position of the percentage text */
+  percentagePosition?: 'left' | 'inside';
   /** Show next level hint */
   showNextLevel?: boolean;
   /** Show level label text */
@@ -81,6 +83,7 @@ export const StrengthProgressBar = ({
   strength,
   size = 'default',
   showPercentage = true,
+  percentagePosition = 'left',
   showNextLevel = true,
   showLabel = false,
   showMarkers = true,
@@ -89,6 +92,10 @@ export const StrengthProgressBar = ({
   const currentLevel = getCurrentLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
   const config = SIZE_CONFIG[size];
+
+  // Adjust bar height if text is inside to ensure readability
+  const barHeight = percentagePosition === 'inside' ? Math.max(config.barHeight, 20) : config.barHeight;
+  const borderRadius = barHeight / 2;
 
   const pointsToNext = nextLevel ? nextLevel.threshold - clampedStrength : 0;
 
@@ -114,9 +121,9 @@ export const StrengthProgressBar = ({
       style={styles.container}
     >
       {/* Top row: Percentage + Bar */}
-      <View style={[styles.topRow, { gap: config.gap }]}>
+      <View style={[styles.topRow, { gap: percentagePosition === 'inside' ? 0 : config.gap }]}>
         {/* Percentage (left side) */}
-        {showPercentage && (
+        {showPercentage && percentagePosition === 'left' && (
           <Text
             style={[
               styles.percentage,
@@ -135,8 +142,8 @@ export const StrengthProgressBar = ({
               styles.barContainer,
               {
                 backgroundColor: '#e5e7eb',
-                borderRadius: config.barHeight / 2,
-                height: config.barHeight,
+                borderRadius: borderRadius,
+                height: barHeight,
               },
             ]}
           >
@@ -150,10 +157,12 @@ export const StrengthProgressBar = ({
                     styles.marker,
                     {
                       backgroundColor: isPassed ? currentLevel.color : '#d1d5db',
-                      height: config.barHeight + 4,
+                      height: barHeight + 4,
                       left: `${threshold}%`,
                       marginLeft: -1,
                       width: 2,
+                      // Center markers vertically relative to new height
+                      top: -2, 
                     },
                   ]}
                 />
@@ -166,11 +175,25 @@ export const StrengthProgressBar = ({
                 styles.barFill,
                 {
                   backgroundColor: currentLevel.color,
-                  borderRadius: config.barHeight / 2,
+                  borderRadius: borderRadius,
                 },
                 progressAnimatedStyle,
               ]}
             />
+
+            {/* Percentage (inside) */}
+            {showPercentage && percentagePosition === 'inside' && (
+              <View style={styles.centeredTextContainer}>
+                <Text
+                  style={[
+                    styles.centeredText,
+                    { fontSize: Math.max(11, config.fontSize - 1) },
+                  ]}
+                >
+                  {Math.round(clampedStrength)}%
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -226,6 +249,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  centeredText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    textShadowColor: 'rgba(0,0,0,0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  centeredTextContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+  },
   container: {
     width: '100%',
   },
@@ -235,7 +271,6 @@ const styles = StyleSheet.create({
   marker: {
     borderRadius: 1,
     position: 'absolute',
-    top: -2,
     zIndex: 10,
   },
   nextHint: {
