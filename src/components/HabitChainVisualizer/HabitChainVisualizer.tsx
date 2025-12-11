@@ -11,38 +11,91 @@ import { SparkleBurst } from '../microinteractions/SparkleBurst';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
-  color: string;
+  accentColor: string;
+  baseColor: string;
+  currentStreak: number;
+  highContrastMode: boolean;
   visible: boolean;
 }
 
 /**
  * DayConnector - Visual link between consecutive completed days
- * Shows a horizontal gray line when both adjacent days are completed,
- * creating a visual "chain" effect for habit tracking.
+ * Shows a horizontal line connecting completed days, using accent color
+ * for a premium visual chain effect. Enhances with streak-aware styling.
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
+const DayConnector: React.FC<DayConnectorProps> = ({
+  accentColor,
+  baseColor,
+  currentStreak,
+  highContrastMode,
+  visible,
+}) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const scale = useRef(new Animated.Value(visible ? 1 : 0.8)).current;
 
   useEffect(() => {
-    Animated.timing(opacity, {
-      duration: 200,
-      easing: Easing.inOut(Easing.ease),
-      toValue: visible ? 1 : 0,
-      useNativeDriver: true,
-    }).start();
-  }, [visible, opacity]);
+    Animated.parallel([
+      Animated.timing(opacity, {
+        duration: 300,
+        easing: Easing.out(Easing.cubic),
+        toValue: visible ? 1 : 0,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scale, {
+        toValue: visible ? 1 : 0.8,
+        friction: 8,
+        tension: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [visible, opacity, scale]);
+
+  // Streak-aware styling: longer streaks get more prominent connectors
+  const getConnectorStyle = () => {
+    const isLongStreak = currentStreak >= 7;
+    const isMediumStreak = currentStreak >= 3;
+
+    // Use accent color for completed connections, base color for inactive
+    const connectorColor = visible ? accentColor : baseColor;
+
+    // Height increases slightly with streak length for visual emphasis
+    const height = isLongStreak ? 2.5 : isMediumStreak ? 2 : 1.5;
+
+    // Width slightly increases for longer streaks
+    const width = isLongStreak ? 16 : isMediumStreak ? 15 : 14;
+
+    // Opacity increases with streak for better visibility
+    const maxOpacity = isLongStreak ? 0.85 : isMediumStreak ? 0.7 : 0.6;
+
+    return {
+      backgroundColor: connectorColor,
+      height,
+      opacity: opacity.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, maxOpacity],
+      }),
+      transform: [{ scaleX: scale }],
+      width,
+      // Subtle glow for longer streaks
+      ...(isLongStreak &&
+        !highContrastMode && {
+          shadowColor: accentColor,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.4,
+          shadowRadius: 3,
+          elevation: 1,
+        }),
+    };
+  };
 
   return (
     <Animated.View
-      style={{
-        backgroundColor: color,
-        height: 1.5,
-        opacity: opacity.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
-        }),
-        width: 14,
-      }}
+      style={[
+        getConnectorStyle(),
+        {
+          borderRadius: 1, // Slight rounding for smoother appearance
+        },
+      ]}
     />
   );
 };
@@ -284,7 +337,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
   const todayLabel = format(new Date(), 'MMM d, EEE').toUpperCase();
 
-  const connectorColor = highContrastMode ? '#facc15' : '#e0e0e0';
+  const connectorBaseColor = highContrastMode ? '#facc15' : '#e0e0e0';
   const [activeBurst, setActiveBurst] = useState<string | null>(null);
 
   // Check if week is complete for golden unification
@@ -359,7 +412,13 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='relative flex-row items-center justify-between' style={{ paddingHorizontal: 4 }}>
+    <View
+      className='relative flex-row items-center'
+      style={{
+        gap: 8, // Consistent spacing between circles and connectors
+        paddingHorizontal: 4,
+      }}
+    >
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
@@ -403,7 +462,15 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               />
             </View>
             {!isLastItem && (
-              <DayConnector color={connectorColor} visible={showConnector} />
+              <View className='items-center justify-center' style={{ width: 16 }}>
+                <DayConnector
+                  accentColor={accentColor}
+                  baseColor={connectorBaseColor}
+                  currentStreak={currentStreak}
+                  highContrastMode={highContrastMode}
+                  visible={showConnector}
+                />
+              </View>
             )}
           </React.Fragment>
         );
