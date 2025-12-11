@@ -381,7 +381,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
         return (
           <React.Fragment key={dateString}>
-            <View className='items-center justify-center'>
+            <View className='items-center justify-center' style={{ width: 44 }}>
               <HabitDayToggle
                 accentColor={accentColor}
                 accessibilityHint={accessibilityHint}
