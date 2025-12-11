@@ -24,6 +24,7 @@ export function useHabitsListState(): HabitsListState {
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
@@ -105,6 +106,7 @@ export function useHabitsListState(): HabitsListState {
     celebrationsEnabled,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habits,
+    habitCompletionIcon,
     isHabitsLoading,
     hasReachedHabitLimit,
     weekDates,

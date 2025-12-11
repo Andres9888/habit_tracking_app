@@ -25,7 +25,9 @@ describe("DraggableHabit compact mode", () => {
   it("keeps full habit card padding in default mode", () => {
     const { toJSON } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         weekDateStrings={weekDateStrings}
         weekStatus={weekStatus}
         streak={0}
@@ -45,7 +47,9 @@ describe("DraggableHabit compact mode", () => {
   it("reduces only vertical padding when compact mode is enabled", () => {
     const { toJSON } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         weekDateStrings={weekDateStrings}
         weekStatus={weekStatus}
         streak={0}

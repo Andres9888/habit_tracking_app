@@ -3,6 +3,7 @@ import type { Settings, SettingConfig } from './SettingsDialog.types';
 export const DEFAULT_SETTINGS: Settings = {
   catTheme: true,
   darkMode: 'system',
+  habitCompletionIcon: 'chain',
   showCalendarView: true,
   showConsistency: true,
   showEmojis: true,

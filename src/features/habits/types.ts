@@ -25,6 +25,7 @@ export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;
   hasPremium: boolean;
+  habitCompletionIcon: 'chain' | 'checkbox';
   darkMode: 'system' | 'light' | 'dark';
   highContrastMode: boolean;
   reduceMotion: boolean;

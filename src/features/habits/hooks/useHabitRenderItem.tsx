@@ -8,32 +8,34 @@ import type { Habit, HabitStatus } from '../types';
 
 interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;
-  weekDateStrings: string[];
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
-  showHabitStrengthPercentage: boolean;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
+  habitCompletionIcon: 'chain' | 'checkbox';
   handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
   handleHabitPress: (habit: Habit) => void;
   handleMorePress?: (habit: Habit) => void;
-  reduceMotionPreference: boolean;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   highlightHabitId?: Id<'habits'> | null;
+  reduceMotionPreference: boolean;
+  showHabitStrengthPercentage: boolean;
+  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
+  weekDateStrings: string[];
 }
 
 export function useHabitRenderItem({
   celebrationsEnabled,
-  weekDateStrings,
   getHabitStatus,
   getStreak,
-  showHabitStrengthPercentage,
-  toggleHabit,
+  habitCompletionIcon,
   handleArchive,
   handleHabitPress,
   handleMorePress,
-  reduceMotionPreference,
   notifyWeekCompletion,
   highlightHabitId,
+  reduceMotionPreference,
+  showHabitStrengthPercentage,
+  toggleHabit,
+  weekDateStrings,
 }: UseHabitRenderItemArgs) {
   return useCallback(
     ({ item, drag, isActive }: RenderItemParams<Habit>) => {
@@ -67,6 +69,7 @@ export function useHabitRenderItem({
           >
             <DraggableHabit
               celebrationsEnabled={celebrationsEnabled}
+              habitCompletionIcon={habitCompletionIcon}
               habit={item}
               isConnectedToPreviousWeek={isConnectedToPreviousWeek}
               isJustCreated={highlightHabitId === item._id}
@@ -92,6 +95,7 @@ export function useHabitRenderItem({
       celebrationsEnabled,
       getHabitStatus,
       getStreak,
+      habitCompletionIcon,
       handleArchive,
       handleHabitPress,
       handleMorePress,

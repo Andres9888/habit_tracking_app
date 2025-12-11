@@ -32,8 +32,10 @@ describe('DraggableHabit compact mode', () => {
   it('has consistent padding in default mode', () => {
     const { toJSON } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
         isCompactMode={false}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -55,8 +57,10 @@ describe('DraggableHabit compact mode', () => {
   it('maintains consistent padding structure', () => {
     const { toJSON } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         isCompactMode
         habit={buildHabit()}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -80,7 +84,9 @@ describe('DraggableHabit swipe to archive', () => {
   it('renders without Swipeable when onArchive is not provided', () => {
     const { toJSON } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -101,7 +107,9 @@ describe('DraggableHabit swipe to archive', () => {
     const mockOnArchive = jest.fn();
     const { UNSAFE_getByType } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -121,7 +129,9 @@ describe('DraggableHabit swipe to archive', () => {
 
     const { UNSAFE_getByType } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={habit}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -148,7 +158,9 @@ describe('DraggableHabit swipe to archive', () => {
 
     const { UNSAFE_getByType } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -171,7 +183,9 @@ describe('DraggableHabit swipe to archive', () => {
 
     const { UNSAFE_getByType } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -201,7 +215,9 @@ describe('DraggableHabit swipe to archive', () => {
 
     render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
+        reduceMotionPreference={true}
         streak={0}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}
@@ -223,7 +239,9 @@ describe('DraggableHabit swipe to archive', () => {
 
     const { toJSON } = render(
       <DraggableHabit
+        celebrationsEnabled={false}
         habit={habitWithStrength}
+        reduceMotionPreference={true}
         streak={5}
         toggleHabit={jest.fn()}
         weekDateStrings={weekDateStrings}

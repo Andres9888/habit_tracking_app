@@ -17,13 +17,13 @@ import { useSettingsModalLogic } from './SettingsModal.hooks';
 
 interface SettingsModalProps {
   celebrationsEnabled?: boolean;
-  onClose: () => void;
-  visible: boolean;
-  isCompact?: boolean;
-  onChangeCompact?: (value: boolean) => void | Promise<void>;
-  onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
-  showCharacterScreen?: boolean;
+  habitCompletionIcon?: 'chain' | 'checkbox';
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
+  onChangeHabitCompletionIcon?: (
+    value: 'chain' | 'checkbox'
+  ) => void | Promise<void>;
+  onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
+  onChangeCompact?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
@@ -33,15 +33,21 @@ interface SettingsModalProps {
   showNotesStats?: boolean;
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
+  isCompact?: boolean;
   onOpenHapticTest?: () => void;
+  onClose: () => void;
+  showCharacterScreen?: boolean;
+  visible: boolean;
 }
 
 export default function SettingsModal({
   celebrationsEnabled = true,
+  habitCompletionIcon = 'chain',
   isCompact = false,
   isHighContrastActive = false,
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
+  onChangeHabitCompletionIcon = () => {},
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
   onChangeShowHabitStrengthPercentage = () => {},
@@ -247,6 +253,17 @@ export default function SettingsModal({
                 type='toggle'
                 value={showWeekCompletionBar}
                 onToggle={(value) => void onChangeShowWeekCompletionBar(value)}
+              />
+              <SettingsRow
+                highContrastMode={isHighContrastActive}
+                icon={<Check color='#0284c7' size={16} />}
+                iconBackgroundColor='#bae6fd'
+                label='Use checkbox completion icon'
+                type='toggle'
+                value={habitCompletionIcon === 'checkbox'}
+                onToggle={(value) =>
+                  void onChangeHabitCompletionIcon(value ? 'checkbox' : 'chain')
+                }
               />
               <SettingsRow
                 highContrastMode={isHighContrastActive}

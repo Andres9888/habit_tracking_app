@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
 
   catTheme: true,
+  habitCompletionIcon: 'chain' as const,
   hasPremium: false,
 
   darkMode: 'system' as DarkModePreference,
@@ -59,6 +60,8 @@ export const get = query({
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       darkMode: normalizeDarkMode(settings?.darkMode),
+      habitCompletionIcon:
+        settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon,
       hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
@@ -92,6 +95,7 @@ export const get = query({
       v.literal('light'),
       v.literal('dark')
     ),
+    habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
     highContrastMode: v.boolean(),
     reduceMotion: v.boolean(),
     showCalendarView: v.boolean(),
@@ -110,6 +114,9 @@ export const update = mutation({
   args: {
     appIcon: v.optional(v.string()),
     catTheme: v.boolean(),
+    habitCompletionIcon: v.optional(
+      v.union(v.literal('chain'), v.literal('checkbox'))
+    ),
     hasPremium: v.optional(v.boolean()),
     darkMode: v.union(
       v.literal('system'),

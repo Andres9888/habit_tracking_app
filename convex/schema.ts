@@ -183,6 +183,9 @@ const applicationTables = {
     ),
     // New settings from Figma design
     appIcon: v.optional(v.string()),
+    habitCompletionIcon: v.optional(
+      v.union(v.literal('chain'), v.literal('checkbox'))
+    ),
     hasPremium: v.optional(v.boolean()),
 
     showCalendarView: v.boolean(),

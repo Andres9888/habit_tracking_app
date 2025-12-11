@@ -24,6 +24,16 @@ const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
   return DEFAULT_SETTINGS.darkMode;
 };
 
+const normalizeHabitCompletionIcon = (
+  value: unknown
+): Settings['habitCompletionIcon'] => {
+  if (value === 'chain' || value === 'checkbox') {
+    return value;
+  }
+
+  return DEFAULT_SETTINGS.habitCompletionIcon;
+};
+
 const resolveShouldUseDark = (preference: DarkModePreference) => {
   if (preference === 'dark') return true;
   if (preference === 'light') return false;
@@ -41,6 +51,9 @@ export function useSettingsDialog(isOpen: boolean) {
     ? {
         ...serverSettings,
         darkMode: normalizeDarkModePreference(serverSettings.darkMode),
+        habitCompletionIcon: normalizeHabitCompletionIcon(
+          serverSettings.habitCompletionIcon
+        ),
       }
     : { ...DEFAULT_SETTINGS };
   const updateSettings = useMutation(api.settings.update);
@@ -93,7 +106,20 @@ export function useSettingsDialog(isOpen: boolean) {
     });
   };
 
-  return { localSettings, toggleSetting, updateTheme };
+  const updateHabitCompletionIcon = (value: Settings['habitCompletionIcon']) => {
+    setLocalSettings((prev) => {
+      const updatedSettings = { ...prev, habitCompletionIcon: value };
+      updateSettings(updatedSettings);
+      return updatedSettings;
+    });
+  };
+
+  return {
+    localSettings,
+    toggleSetting,
+    updateHabitCompletionIcon,
+    updateTheme,
+  };
 }
 
 export function useEscapeKey(onEscape: () => void) {

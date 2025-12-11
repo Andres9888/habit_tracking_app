@@ -7,6 +7,7 @@ import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { SparkleBurst } from '../microinteractions/SparkleBurst';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
+import { Check } from 'lucide-react-native';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -137,6 +138,7 @@ interface HabitDayToggleProps {
   accentColor: string;
   accessibilityHint?: string;
   accessibilityLabel: string;
+  completionIcon: 'chain' | 'checkbox';
   disabled: boolean;
   onPress: () => void;
   completed: boolean;
@@ -149,6 +151,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   accentColor,
   accessibilityHint,
   accessibilityLabel,
+  completionIcon,
   disabled,
   onPress,
   completed,
@@ -331,7 +334,11 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <ChainLinkIcon color='#ffffff' size={18} variant='stroke' />
+        {completionIcon === 'checkbox' ? (
+          <Check color='#ffffff' size={18} />
+        ) : (
+          <ChainLinkIcon color='#ffffff' size={18} variant='stroke' />
+        )}
       </Animated.View>
     </AnimatedPressable>
   );
@@ -342,6 +349,7 @@ type HabitStatus = 'done' | 'missed' | 'planned';
 interface HabitChainVisualizerProps {
   accentColor: string;
   celebrationsEnabled: boolean;
+  habitCompletionIcon?: 'chain' | 'checkbox';
   highContrastMode?: boolean;
   habitId: Id<'habits'>;
   onWeekComplete?: (args: { completedDate: string }) => void;
@@ -356,6 +364,7 @@ interface HabitChainVisualizerProps {
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   accentColor,
   celebrationsEnabled,
+  habitCompletionIcon = 'chain',
   highContrastMode = false,
   habitId,
   onWeekComplete,
@@ -495,6 +504,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                 accessibilityHint={accessibilityHint}
                 accessibilityLabel={accessibilityLabel}
                 completed={completed}
+                completionIcon={habitCompletionIcon}
                 currentStreak={currentStreak}
                 disabled={disabled}
                 highContrastMode={highContrastMode}

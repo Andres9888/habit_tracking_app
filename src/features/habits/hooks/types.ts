@@ -11,6 +11,7 @@ export interface HabitsListState {
   celebrationsEnabled: boolean;
   freeHabitLimit: number;
   habits: Habit[];
+  habitCompletionIcon: HabitSettings['habitCompletionIcon'];
   isHabitsLoading: boolean;
   hasReachedHabitLimit: boolean;
   weekDates: Date[];

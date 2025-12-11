@@ -4,7 +4,12 @@ import { useEscapeKey, useSettingsDialog } from './SettingsDialog.hooks';
 import type { SettingsDialogProps } from './SettingsDialog.types';
 
 export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
-  const { localSettings, toggleSetting, updateTheme } =
+  const {
+    localSettings,
+    toggleSetting,
+    updateHabitCompletionIcon,
+    updateTheme,
+  } =
     useSettingsDialog(isOpen);
   useEscapeKey(onClose);
 
@@ -55,6 +60,26 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                 <option value='system'>Match system</option>
                 <option value='light'>Light mode</option>
                 <option value='dark'>Dark mode</option>
+              </select>
+            </label>
+          </div>
+          <div className='rounded-lg border border-border p-4'>
+            <label className='flex flex-col gap-2 text-sm font-medium text-muted-foreground'>
+              <span className='text-sm font-semibold text-foreground'>
+                Completion icon
+              </span>
+              <select
+                aria-label='Select completion icon'
+                className='w-full rounded-md border border-border bg-background px-3 py-2 text-base text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'
+                value={localSettings.habitCompletionIcon}
+                onChange={(event) =>
+                  updateHabitCompletionIcon(
+                    event.target.value as typeof localSettings.habitCompletionIcon
+                  )
+                }
+              >
+                <option value='chain'>Chain</option>
+                <option value='checkbox'>Checkbox</option>
               </select>
             </label>
           </div>

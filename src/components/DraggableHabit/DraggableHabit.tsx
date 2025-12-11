@@ -32,8 +32,9 @@ interface Habit {
 interface DraggableHabitProps {
   celebrationsEnabled: boolean;
   habit: Habit;
-  isCompactMode?: boolean;
+  habitCompletionIcon?: 'chain' | 'checkbox';
   highContrastMode?: boolean;
+  isCompactMode?: boolean;
   showHabitStrengthPercentage?: boolean;
   streak: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
@@ -41,6 +42,7 @@ interface DraggableHabitProps {
   weekStatus: HabitStatus[];
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
+  onMorePress?: (habit: Habit) => void;
   onPress?: (habit: Habit) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
@@ -52,8 +54,9 @@ interface DraggableHabitProps {
 export default function DraggableHabit({
   celebrationsEnabled,
   habit,
-  isCompactMode: _isCompactMode = false,
+  habitCompletionIcon = 'chain',
   highContrastMode = false,
+  isCompactMode: _isCompactMode = false,
   showHabitStrengthPercentage = false,
   streak,
   toggleHabit,
@@ -61,6 +64,7 @@ export default function DraggableHabit({
   weekStatus,
   onArchive,
   onLongPress,
+  onMorePress,
   onPress,
   onWeekComplete,
   reduceMotionPreference,
@@ -479,8 +483,19 @@ export default function DraggableHabit({
                 )}
               </View>
             </View>
-
-
+            {onMorePress && (
+              <Pressable
+                accessibilityHint='Open habit actions'
+                accessibilityLabel='Open habit actions'
+                accessibilityRole='button'
+                className='ml-3 h-10 w-10 items-center justify-center rounded-full bg-black/5'
+                onPress={() => onMorePress(habit)}
+              >
+                <Text className='text-[20px] leading-[20px]' style={{ color: colors.primaryText }}>
+                  ⋯
+                </Text>
+              </Pressable>
+            )}
           </View>
 
           {/* New Personal Record celebration badge */}
@@ -533,6 +548,7 @@ export default function DraggableHabit({
             celebrationsEnabled={celebrationsEnabled}
             currentStreak={streak}
             habitId={habit._id}
+            habitCompletionIcon={habitCompletionIcon}
             highContrastMode={highContrastMode}
             onWeekComplete={({ completedDate }) =>
               onWeekComplete?.({ completedDate, habit })

@@ -91,7 +91,11 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     <>
       <SettingsModal
         celebrationsEnabled={celebrationsEnabled}
+        habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
         isHighContrastActive={settings?.highContrastMode ?? false}
+        onChangeHabitCompletionIcon={(value) =>
+          onSettingsChange({ habitCompletionIcon: value })
+        }
         onChangeShowCharacterScreen={(value) =>
           onSettingsChange({ showCharacterScreen: value })
         }

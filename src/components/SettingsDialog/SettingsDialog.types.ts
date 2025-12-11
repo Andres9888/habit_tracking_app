@@ -3,6 +3,7 @@ export type DarkModePreference = 'system' | 'light' | 'dark';
 export interface Settings {
   catTheme: boolean;
   darkMode: DarkModePreference;
+  habitCompletionIcon: 'chain' | 'checkbox';
   showCalendarView: boolean;
   showConsistency: boolean;
   showEmojis: boolean;
@@ -16,7 +17,10 @@ export interface SettingsDialogProps {
   onClose: () => void;
 }
 
-export type ToggleableSettingKey = Exclude<keyof Settings, 'darkMode'>;
+export type ToggleableSettingKey = Exclude<
+  keyof Settings,
+  'darkMode' | 'habitCompletionIcon'
+>;
 
 export interface SettingConfig {
   key: ToggleableSettingKey;
