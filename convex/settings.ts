@@ -26,7 +26,7 @@ const DEFAULT_SETTINGS = {
   showEmojis: true,
 
   showMotivationalMessages: true,
-  showWeekCompletionBar: true,
+  showWeekCompletionBar: false,
   showNotesStats: true,
   showStreaks: true,
   useDyslexicFont: false,

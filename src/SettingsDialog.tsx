@@ -6,21 +6,23 @@ import { Checkbox } from './components/Checkbox';
 type DarkModePreference = 'system' | 'light' | 'dark';
 
 type ToggleableSettingKey =
-  | 'showStreaks'
-  | 'showConsistency'
-  | 'showMotivationalMessages'
-  | 'showEmojis'
+  | 'catTheme'
   | 'showCalendarView'
-  | 'catTheme';
+  | 'showConsistency'
+  | 'showEmojis'
+  | 'showMotivationalMessages'
+  | 'showStreaks'
+  | 'showWeekCompletionBar';
 
 interface Settings {
-  showStreaks: boolean;
-  showConsistency: boolean;
-  showMotivationalMessages: boolean;
-  showEmojis: boolean;
-  showCalendarView: boolean;
   catTheme: boolean;
   darkMode: DarkModePreference;
+  showCalendarView: boolean;
+  showConsistency: boolean;
+  showEmojis: boolean;
+  showMotivationalMessages: boolean;
+  showStreaks: boolean;
+  showWeekCompletionBar: boolean;
 }
 
 const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
@@ -65,6 +67,7 @@ export function SettingsDialog({
     showEmojis: true,
     showMotivationalMessages: true,
     showStreaks: true,
+    showWeekCompletionBar: false,
   };
 
   const serverSettings = useQuery(api.settings.get);
@@ -227,6 +230,16 @@ export function SettingsDialog({
               checked={localSettings.showCalendarView}
               variant='primary'
               onPress={() => toggleSetting('showCalendarView')}
+            />
+          </label>
+
+          <label className='flex w-full items-center justify-between rounded-lg py-2'>
+            <span className='text-foreground'>Show Daily Progress</span>
+            <Checkbox
+              aria-label='Toggle daily progress tracker'
+              checked={localSettings.showWeekCompletionBar}
+              variant='primary'
+              onPress={() => toggleSetting('showWeekCompletionBar')}
             />
           </label>
 
