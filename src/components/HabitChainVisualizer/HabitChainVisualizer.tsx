@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, View } from 'react-native';
-import { parse, format } from 'date-fns';
+import { Animated, Easing, Pressable, View, Text } from 'react-native';
+import { parse, format, getDay } from 'date-fns';
 import { Check } from 'lucide-react-native';
 import clsx from 'clsx';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -11,39 +11,145 @@ import { SparkleBurst } from '../microinteractions/SparkleBurst';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
-  color: string;
+  accentColor: string;
+  chainStrength: number; // 0-7 representing consecutive completed days
+  isBroken: boolean; // Gap in the chain (missed day between completed days)
   visible: boolean;
 }
 
 /**
- * DayConnector - Visual link between consecutive completed days
- * Shows a horizontal gray line when both adjacent days are completed,
- * creating a visual "chain" effect for habit tracking.
+ * DayConnector - Enhanced visual chain link between consecutive days
+ * 
+ * Features:
+ * - Thicker, more visible line (3px vs 1.5px)
+ * - Accent color when chain is active
+ * - Animated connection with spring physics
+ * - Chain strength glow effect for longer streaks
+ * - Dashed appearance for broken chains
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
-  const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+const DayConnector: React.FC<DayConnectorProps> = ({ 
+  accentColor, 
+  chainStrength,
+  isBroken,
+  visible, 
+}) => {
+  const scaleX = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const glowOpacity = useRef(new Animated.Value(0)).current;
 
+  // Animate connection/disconnection with spring physics
   useEffect(() => {
-    Animated.timing(opacity, {
-      duration: 200,
-      easing: Easing.inOut(Easing.ease),
-      toValue: visible ? 1 : 0,
-      useNativeDriver: true,
-    }).start();
-  }, [visible, opacity]);
+    if (visible) {
+      // Chain connecting animation - satisfying spring
+      Animated.parallel([
+        Animated.spring(scaleX, {
+          friction: 8,
+          tension: 150,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          duration: 200,
+          easing: Easing.out(Easing.ease),
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start();
+
+      // Glow effect for strong chains (3+ consecutive)
+      if (chainStrength >= 3) {
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(glowOpacity, {
+              duration: 1200,
+              easing: Easing.inOut(Easing.ease),
+              toValue: 0.6,
+              useNativeDriver: true,
+            }),
+            Animated.timing(glowOpacity, {
+              duration: 1200,
+              easing: Easing.inOut(Easing.ease),
+              toValue: 0.2,
+              useNativeDriver: true,
+            }),
+          ])
+        ).start();
+      }
+    } else {
+      // Chain breaking animation
+      Animated.parallel([
+        Animated.spring(scaleX, {
+          friction: 12,
+          tension: 200,
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          duration: 150,
+          easing: Easing.in(Easing.ease),
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+      ]).start();
+      glowOpacity.setValue(0);
+    }
+  }, [visible, chainStrength, scaleX, opacity, glowOpacity]);
+
+  // Get chain color based on strength
+  const getChainColor = () => {
+    if (!visible) return '#d4d4d4'; // stone-300 for inactive
+    if (chainStrength >= 5) return accentColor; // Full accent for strong chains
+    if (chainStrength >= 3) return `${accentColor}CC`; // 80% opacity
+    return `${accentColor}99`; // 60% opacity for new chains
+  };
+
+  const chainColor = getChainColor();
 
   return (
-    <Animated.View
-      style={{
-        backgroundColor: color,
-        height: 1.5,
-        opacity: opacity.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
-        }),
-        width: 14,
-      }}
-    />
+    <View className="items-center justify-center" style={{ width: 16 }}>
+      {/* Glow layer for strong chains */}
+      {chainStrength >= 3 && visible && (
+        <Animated.View
+          pointerEvents="none"
+          style={{
+            backgroundColor: accentColor,
+            borderRadius: 3,
+            height: 6,
+            opacity: glowOpacity,
+            position: 'absolute',
+            shadowColor: accentColor,
+            shadowOffset: { height: 0, width: 0 },
+            shadowOpacity: 0.8,
+            shadowRadius: 6,
+            width: 16,
+          }}
+        />
+      )}
+
+      {/* Main chain link line */}
+      <Animated.View
+        style={{
+          backgroundColor: chainColor,
+          borderRadius: 1.5,
+          height: 3,
+          opacity,
+          transform: [{ scaleX }],
+          width: 16,
+        }}
+      />
+
+      {/* Broken chain indicator (dashed effect) */}
+      {isBroken && !visible && (
+        <View 
+          className="absolute flex-row items-center justify-center" 
+          style={{ width: 16 }}
+        >
+          <View style={{ backgroundColor: '#d4d4d4', borderRadius: 1, height: 2, width: 4 }} />
+          <View style={{ width: 3 }} />
+          <View style={{ backgroundColor: '#d4d4d4', borderRadius: 1, height: 2, width: 4 }} />
+        </View>
+      )}
+    </View>
   );
 };
 
@@ -51,24 +157,28 @@ interface HabitDayToggleProps {
   accentColor: string;
   accessibilityHint?: string;
   accessibilityLabel: string;
-  disabled: boolean;
-  onPress: () => void;
   completed: boolean;
-  isToday: boolean;
-  highContrastMode: boolean;
   currentStreak?: number;
+  dayLabel: string;
+  disabled: boolean;
+  highContrastMode: boolean;
+  isToday: boolean;
+  onPress: () => void;
+  showDayLabel?: boolean;
 }
 
 const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   accentColor,
   accessibilityHint,
   accessibilityLabel,
-  disabled,
-  onPress,
   completed,
-  isToday,
-  highContrastMode,
   currentStreak = 0,
+  dayLabel,
+  disabled,
+  highContrastMode,
+  isToday,
+  onPress,
+  showDayLabel = true,
 }) => {
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
@@ -80,9 +190,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       Animated.parallel([
         // Gentle bounce - iOS native feel
         Animated.spring(buttonScale, {
-          toValue: 1,
           friction: 6,
           tension: 300,
+          toValue: 1,
           useNativeDriver: true,
         }),
 
@@ -111,15 +221,15 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       Animated.loop(
         Animated.sequence([
           Animated.timing(breathingPulse, {
-            toValue: 1.03,
             duration: 1500,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1.03,
             useNativeDriver: true,
           }),
           Animated.timing(breathingPulse, {
-            toValue: 1,
             duration: 1500,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1,
             useNativeDriver: true,
           }),
         ])
@@ -135,14 +245,14 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
 
     // Time-of-day adaptive brightness
     const hour = new Date().getHours();
-    let brightnessAdjust = 0;
-    if (hour >= 6 && hour < 12) brightnessAdjust = 0.1; // Morning: brighter
-    else if (hour >= 18 && hour < 24) brightnessAdjust = -0.1; // Evening: darker
+    let _brightnessAdjust = 0;
+    if (hour >= 6 && hour < 12) _brightnessAdjust = 0.1; // Morning: brighter
+    else if (hour >= 18 && hour < 24) _brightnessAdjust = -0.1; // Evening: darker
 
     // Streak-based saturation boost
-    let saturationBoost = 0;
-    if (currentStreak >= 8 && currentStreak <= 30) saturationBoost = 0.15;
-    else if (currentStreak > 30) saturationBoost = 0.3;
+    let _saturationBoost = 0;
+    if (currentStreak >= 8 && currentStreak <= 30) _saturationBoost = 0.15;
+    else if (currentStreak > 30) _saturationBoost = 0.3;
 
     // Simple color darkening logic (this is a simplified approach)
     // In production, you'd use a proper color manipulation library
@@ -163,9 +273,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   // Press feedback handlers
   const handlePressIn = () => {
     Animated.spring(buttonScale, {
-      toValue: 0.95,
       friction: 20,
       tension: 300,
+      toValue: 0.95,
       useNativeDriver: true,
     }).start();
   };
@@ -173,9 +283,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const handlePressOut = () => {
     if (!completed) {
       Animated.spring(buttonScale, {
-        toValue: 1,
         friction: 20,
         tension: 300,
+        toValue: 1,
         useNativeDriver: true,
       }).start();
     }
@@ -185,15 +295,15 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     // Bounce up on tap
     Animated.sequence([
       Animated.spring(buttonScale, {
-        toValue: 1.08,
         friction: 6,
         tension: 300,
+        toValue: 1.08,
         useNativeDriver: true,
       }),
       Animated.spring(buttonScale, {
-        toValue: 1,
         friction: 8,
         tension: 300,
+        toValue: 1,
         useNativeDriver: true,
       }),
     ]).start();
@@ -202,81 +312,148 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   };
 
   return (
-    <AnimatedPressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole='button'
-      accessibilityState={{ disabled }}
-      className={clsx(
-        'h-9 w-9 items-center justify-center rounded-[9px]',
-        !completed && 'border-2'
-      )}
-      disabled={disabled}
-      style={{
-        backgroundColor,
-        borderColor: completed ? evolvedColor : borderColor,
-        borderWidth: completed ? 0 : 2,
-        opacity: disabled ? 0.5 : 1,
-        transform: [{ scale: buttonScale }, { scale: breathingPulse }],
-        // Subtle glow on completion - reward signal
-        ...(completed && !highContrastMode && {
-          shadowColor: evolvedColor,
-          shadowOffset: { width: 0, height: 0 },
-          shadowOpacity: 0.3,
-          shadowRadius: 5,
-          elevation: 2,
-        }),
-      }}
-      onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
-      {/* Checkmark - clean and simple */}
-      <Animated.View
+    <View className="items-center">
+      <AnimatedPressable
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole='button'
+        accessibilityState={{ disabled }}
+        className={clsx(
+          'h-9 w-9 items-center justify-center rounded-[10px]',
+          !completed && 'border-2'
+        )}
+        disabled={disabled}
         style={{
-          opacity: completion,
-          transform: [
-            {
-              scale: completion.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.5, 1],
-              }),
-            },
-          ],
+          backgroundColor,
+          borderColor: completed ? evolvedColor : borderColor,
+          borderWidth: completed ? 0 : 2,
+          opacity: disabled ? 0.5 : 1,
+          transform: [{ scale: buttonScale }, { scale: breathingPulse }],
+          // Enhanced glow on completion - reward signal
+          ...(completed && !highContrastMode && {
+            elevation: 3,
+            shadowColor: evolvedColor,
+            shadowOffset: { height: 0, width: 0 },
+            shadowOpacity: 0.35,
+            shadowRadius: 6,
+          }),
+          // Today indicator ring
+          ...(isToday && !completed && {
+            borderColor: `${accentColor}80`,
+            borderWidth: 2.5,
+          }),
         }}
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
-        <Check color='#ffffff' size={17} strokeWidth={2.5} />
-      </Animated.View>
-    </AnimatedPressable>
+        {/* Checkmark - clean and simple */}
+        <Animated.View
+          style={{
+            opacity: completion,
+            transform: [
+              {
+                scale: completion.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.5, 1],
+                }),
+              },
+            ],
+          }}
+        >
+          <Check color='#ffffff' size={17} strokeWidth={2.5} />
+        </Animated.View>
+      </AnimatedPressable>
+
+      {/* Day label */}
+      {showDayLabel && (
+        <Text 
+          className={clsx(
+            'mt-1 text-[10px] font-medium',
+            isToday ? 'text-stone-700' : 'text-stone-400'
+          )}
+          style={{
+            letterSpacing: 0.3,
+            ...(isToday && { fontWeight: '600' }),
+          }}
+        >
+          {isToday ? 'TODAY' : dayLabel}
+        </Text>
+      )}
+    </View>
   );
 };
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
+// Day label abbreviations
+const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
 interface HabitChainVisualizerProps {
   accentColor: string;
   celebrationsEnabled: boolean;
-  highContrastMode?: boolean;
+  currentStreak?: number;
   habitId: Id<'habits'>;
+  highContrastMode?: boolean;
+  onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   onWeekComplete?: (args: { completedDate: string }) => void;
   reduceMotionPreference: boolean;
-  onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
+  showDayLabels?: boolean;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
-  currentStreak?: number;
 }
+
+/**
+ * Calculate chain strength at each position
+ * Returns array of consecutive completion counts ending at each index
+ */
+const calculateChainStrengths = (weekStatus: HabitStatus[]): number[] => {
+  const strengths: number[] = [];
+  let currentStrength = 0;
+
+  for (const status of weekStatus) {
+    if (status === 'done') {
+      currentStrength++;
+    } else {
+      currentStrength = 0;
+    }
+    strengths.push(currentStrength);
+  }
+
+  return strengths;
+};
+
+/**
+ * Detect broken chains (gaps between completed days)
+ */
+const detectBrokenChains = (weekStatus: HabitStatus[]): boolean[] => {
+  const broken: boolean[] = [];
+
+  for (let i = 0; i < weekStatus.length - 1; i++) {
+    // A chain is "broken" at position i if:
+    // - Current day is missed AND there are completed days on both sides
+    const hasCompletedBefore = weekStatus.slice(0, i + 1).includes('done');
+    const hasCompletedAfter = weekStatus.slice(i + 1).includes('done');
+    const isMissed = weekStatus[i] === 'missed';
+
+    broken.push(isMissed && hasCompletedBefore && hasCompletedAfter);
+  }
+
+  return broken;
+};
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   accentColor,
   celebrationsEnabled,
-  highContrastMode = false,
+  currentStreak = 0,
   habitId,
-  onWeekComplete,
+  highContrastMode = false,
   onToggle,
+  onWeekComplete,
   reduceMotionPreference,
+  showDayLabels = true,
   weekDateStrings,
   weekStatus,
-  currentStreak = 0,
 }) => {
   const { isFutureDate, isCompleted, isToday } = useHabitChainVisualizerLogic(
     weekDateStrings,
@@ -284,11 +461,21 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
   const todayLabel = format(new Date(), 'MMM d, EEE').toUpperCase();
 
-  const connectorColor = highContrastMode ? '#facc15' : '#e0e0e0';
   const [activeBurst, setActiveBurst] = useState<string | null>(null);
 
-  // Check if week is complete for golden unification
-  const isWeekComplete = weekStatus.every(status => status === 'done');
+  // Calculate chain strengths and broken positions
+  const chainStrengths = useMemo(() => calculateChainStrengths(weekStatus), [weekStatus]);
+  const brokenChains = useMemo(() => detectBrokenChains(weekStatus), [weekStatus]);
+
+  // Check if week is complete for golden unification (used by parent component)
+  const _isWeekComplete = weekStatus.every(status => status === 'done');
+
+  // Get day label for each date
+  const getDayLabel = useCallback((dateString: string): string => {
+    const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+    const dayOfWeek = getDay(parsedDate); // 0 = Sunday, 6 = Saturday
+    return DAY_LABELS[dayOfWeek];
+  }, []);
 
   const {
     triggerSelection,
@@ -359,55 +546,75 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='relative flex-row items-center justify-between' style={{ paddingHorizontal: 4 }}>
-      {weekDateStrings.map((dateString, index) => {
-        const completed = isCompleted(index);
-        const disabled = isFutureDate(index);
-        const dateLabel = dateLabels[index];
-        const statusLabel = completed ? 'Completed' : 'Not completed';
-        const toggleInstruction = `Tap to toggle completion for ${dateLabel}`;
-        const accessibilityLabel =
-          dateLabel === todayLabel
-            ? `Today, ${statusLabel}`
-            : `${dateLabel}: ${statusLabel}`;
-        const accessibilityHint = disabled
-          ? 'Future dates are unavailable'
-          : toggleInstruction;
+    <View className='relative' style={{ paddingHorizontal: 2 }}>
+      <View className='flex-row items-start justify-between'>
+        {weekDateStrings.map((dateString, index) => {
+          const completed = isCompleted(index);
+          const disabled = isFutureDate(index);
+          const dateLabel = dateLabels[index];
+          const dayLabel = getDayLabel(dateString);
+          const statusLabel = completed ? 'Completed' : 'Not completed';
+          const toggleInstruction = `Tap to toggle completion for ${dateLabel}`;
+          const accessibilityLabel =
+            dateLabel === todayLabel
+              ? `Today, ${statusLabel}`
+              : `${dateLabel}: ${statusLabel}`;
+          const accessibilityHint = disabled
+            ? 'Future dates are unavailable'
+            : toggleInstruction;
 
-        const isLastItem = index === weekDateStrings.length - 1;
-        // Show connector line only when both current and next day are completed
-        const showConnector =
-          !isLastItem && completed && isCompleted(index + 1);
+          const isLastItem = index === weekDateStrings.length - 1;
+          // Show connector line only when both current and next day are completed
+          const showConnector =
+            !isLastItem && completed && isCompleted(index + 1);
+          
+          // Chain strength is the minimum of current and next day's strength
+          const chainStrength = showConnector 
+            ? Math.min(chainStrengths[index], chainStrengths[index + 1])
+            : 0;
+          
+          // Check if this position represents a broken chain
+          const isBrokenChain = !isLastItem && brokenChains[index];
 
-        return (
-          <React.Fragment key={dateString}>
-            <View className='items-center justify-center'>
-              <HabitDayToggle
-                accentColor={accentColor}
-                accessibilityHint={accessibilityHint}
-                accessibilityLabel={accessibilityLabel}
-                completed={completed}
-                currentStreak={currentStreak}
-                disabled={disabled}
-                highContrastMode={highContrastMode}
-                isToday={isToday(index)}
-                onPress={() =>
-                  handleToggleDay(dateString, completed, disabled, index)
-                }
-              />
-              <SparkleBurst
-                color={accentColor}
-                isActive={activeBurst === dateString && celebrationsEnabled}
-                reduceMotion={shouldReduceMotion}
-                onComplete={() => setActiveBurst(null)}
-              />
-            </View>
-            {!isLastItem && (
-              <DayConnector color={connectorColor} visible={showConnector} />
-            )}
-          </React.Fragment>
-        );
-      })}
+          return (
+            <React.Fragment key={dateString}>
+              <View className='items-center justify-center'>
+                <HabitDayToggle
+                  accentColor={accentColor}
+                  accessibilityHint={accessibilityHint}
+                  accessibilityLabel={accessibilityLabel}
+                  completed={completed}
+                  currentStreak={currentStreak}
+                  dayLabel={dayLabel}
+                  disabled={disabled}
+                  highContrastMode={highContrastMode}
+                  isToday={isToday(index)}
+                  showDayLabel={showDayLabels}
+                  onPress={() =>
+                    handleToggleDay(dateString, completed, disabled, index)
+                  }
+                />
+                <SparkleBurst
+                  color={accentColor}
+                  isActive={activeBurst === dateString && celebrationsEnabled}
+                  reduceMotion={shouldReduceMotion}
+                  onComplete={() => setActiveBurst(null)}
+                />
+              </View>
+              {!isLastItem && (
+                <View className="items-center justify-center" style={{ marginTop: 13 }}>
+                  <DayConnector 
+                    accentColor={accentColor}
+                    chainStrength={chainStrength}
+                    isBroken={isBrokenChain}
+                    visible={showConnector} 
+                  />
+                </View>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </View>
     </View>
   );
 };
