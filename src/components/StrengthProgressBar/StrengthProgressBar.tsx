@@ -24,14 +24,16 @@ export interface StrengthProgressBarProps {
   strength: number;
   /** Size variant */
   size?: 'compact' | 'default' | 'large';
-  /** Show percentage text */
-  showPercentage?: boolean;
+  /** Show dividers at level thresholds */
+  showDividers?: boolean;
   /** Show level emoji */
   showEmoji?: boolean;
-  /** Show next level hint */
-  showNextLevel?: boolean;
   /** Show level label text */
   showLabel?: boolean;
+  /** Show next level hint */
+  showNextLevel?: boolean;
+  /** Show percentage text */
+  showPercentage?: boolean;
 }
 
 interface LevelConfig {
@@ -74,13 +76,17 @@ const SIZE_CONFIG = {
   large: { barHeight: 8, fontSize: 14, emojiSize: 24, gap: 8 },
 };
 
+// Threshold positions for dividers (excluding 0 and 100)
+const DIVIDER_POSITIONS = [20, 40, 60, 80];
+
 export const StrengthProgressBar = ({
-  strength,
-  size = 'default',
-  showPercentage = true,
+  showDividers = true,
   showEmoji = true,
-  showNextLevel = true,
   showLabel = false,
+  showNextLevel = true,
+  showPercentage = true,
+  size = 'default',
+  strength,
 }: StrengthProgressBarProps) => {
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const currentLevel = getCurrentLevel(clampedStrength);
@@ -159,6 +165,20 @@ export const StrengthProgressBar = ({
               progressAnimatedStyle,
             ]}
           />
+          {/* Level dividers */}
+          {showDividers &&
+            DIVIDER_POSITIONS.map((position) => (
+              <View
+                key={position}
+                style={[
+                  styles.divider,
+                  {
+                    height: config.barHeight,
+                    left: `${position}%`,
+                  },
+                ]}
+              />
+            ))}
         </View>
 
         {/* Percentage */}
@@ -224,6 +244,12 @@ const styles = StyleSheet.create({
   },
   barFill: {
     height: '100%',
+  },
+  divider: {
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    position: 'absolute',
+    top: 0,
+    width: 1,
   },
   bottomRow: {
     alignItems: 'center',
