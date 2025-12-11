@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, View } from 'react-native';
+import { Animated, Easing, Pressable, View, type ViewStyle } from 'react-native';
 import { parse, format } from 'date-fns';
-import { Check } from 'lucide-react-native';
 import clsx from 'clsx';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { SparkleBurst } from '../microinteractions/SparkleBurst';
+import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
   color: string;
   visible: boolean;
+  style?: ViewStyle;
 }
 
 /**
@@ -20,7 +21,7 @@ interface DayConnectorProps {
  * Shows a horizontal gray line when both adjacent days are completed,
  * creating a visual "chain" effect for habit tracking.
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
+const DayConnector: React.FC<DayConnectorProps> = ({ color, visible, style }) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
 
   return (
     <Animated.View
-      style={{
+      style={[{
         backgroundColor: color,
         height: 1.5,
         opacity: opacity.interpolate({
@@ -42,7 +43,7 @@ const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
           outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
         }),
         width: 14,
-      }}
+      }, style]}
     />
   );
 };
@@ -245,7 +246,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           ],
         }}
       >
-        <Check color='#ffffff' size={17} strokeWidth={2.5} />
+        <ChainLinkIcon color='#ffffff' size={18} variant='stroke' />
       </Animated.View>
     </AnimatedPressable>
   );
@@ -264,6 +265,7 @@ interface HabitChainVisualizerProps {
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   currentStreak?: number;
+  isConnectedToPreviousWeek?: boolean;
 }
 
 export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
@@ -277,6 +279,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   weekDateStrings,
   weekStatus,
   currentStreak = 0,
+  isConnectedToPreviousWeek = false,
 }) => {
   const { isFutureDate, isCompleted, isToday } = useHabitChainVisualizerLogic(
     weekDateStrings,
@@ -359,7 +362,22 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='relative flex-row items-center justify-between'>
+    <View className='relative flex-row items-center justify-between' style={{ paddingHorizontal: 4 }}>
+      {/* Visual link to previous week if streak continues */}
+      {isConnectedToPreviousWeek && isCompleted(0) && (
+        <View
+          style={{
+            left: -10, // Connects to the left of the first circle (padding 4 - width 14)
+            marginTop: -0.75, // Half of 1.5px height to center vertically
+            position: 'absolute',
+            top: '50%',
+            zIndex: -1, // Behind the circles
+          }}
+        >
+          <DayConnector color={connectorColor} visible={true} />
+        </View>
+      )}
+
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
@@ -403,7 +421,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               />
             </View>
             {!isLastItem && (
-              <DayConnector color={connectorColor} visible={showConnector} />
+              <DayConnector color={connectorColor} style={{ flex: 1, width: 'auto' }} visible={showConnector} />
             )}
           </React.Fragment>
         );
