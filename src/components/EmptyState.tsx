@@ -17,7 +17,7 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../theme';
-import Button from './Button';
+import Button from './Button/Button';
 
 export type EmptyStateVariant =
   | 'noHabits'

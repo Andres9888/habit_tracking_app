@@ -359,7 +359,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='relative flex-row items-center justify-between'>
+    <View className='relative flex-row items-center justify-between' style={{ paddingHorizontal: 4 }}>
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);
@@ -381,7 +381,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
         return (
           <React.Fragment key={dateString}>
-            <View className='items-center justify-center' style={{ width: 44 }}>
+            <View className='items-center justify-center'>
               <HabitDayToggle
                 accentColor={accentColor}
                 accessibilityHint={accessibilityHint}

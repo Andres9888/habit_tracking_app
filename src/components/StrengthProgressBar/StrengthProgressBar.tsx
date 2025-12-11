@@ -238,9 +238,9 @@ const styles = StyleSheet.create({
   },
   emojiContainer: {
     alignItems: 'center',
-    height: 44, // Match DraggableHabit icon container (h-11 w-11)
+    height: 44,
     justifyContent: 'center',
-    width: 44,
+    width: 44, // Match DraggableHabit icon container (h-11 w-11)
   },
   label: {
     fontWeight: '600',
