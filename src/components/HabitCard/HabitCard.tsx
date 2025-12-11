@@ -39,10 +39,8 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
-import { StrengthRing } from '../StrengthRing';
 import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
-import { MoreVertical } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 export interface HabitCardProps {
@@ -88,9 +86,6 @@ export interface HabitCardProps {
   /** On delete handler (swipe action) */
   onDelete?: () => void;
 
-  /** On more press handler (quick actions menu) */
-  onMorePress?: () => void;
-
   /** Custom style */
   style?: ViewStyle;
 }
@@ -113,7 +108,6 @@ export function HabitCard({
   onLongPress,
   onEdit,
   onDelete,
-  onMorePress,
   style,
 }: HabitCardProps) {
   const theme = useAppTheme();
@@ -177,6 +171,25 @@ export function HabitCard({
         return theme.custom.colors.strength.automatic;
       default:
         return theme.custom.colors.primary[500];
+    }
+  };
+
+  // Get strength level emoji for visual reinforcement
+  const getStrengthEmoji = (): string => {
+    const level = getStrengthLevel(strength);
+    switch (level) {
+      case 'starting':
+        return '🌱';
+      case 'building':
+        return '🌿';
+      case 'developing':
+        return '🌳';
+      case 'strong':
+        return '💪';
+      case 'automatic':
+        return '⚡';
+      default:
+        return '🌱';
     }
   };
 
@@ -609,23 +622,6 @@ export function HabitCard({
                     <Text style={styles.warningText}>⚠️</Text>
                   </View>
                 ) : null}
-
-                {/* More Button for Quick Actions */}
-                {onMorePress && (
-                  <Pressable
-                    accessibilityLabel={`More actions for ${name}`}
-                    accessibilityRole="button"
-                    hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
-                    style={styles.moreButton}
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                      onMorePress();
-                    }}
-                  >
-                    <MoreVertical color={theme.custom.colors.gray[400]} size={20} />
-                  </Pressable>
-                )}
               </View>
             </View>
 
@@ -661,22 +657,19 @@ export function HabitCard({
               pointerEvents="none"
             />
 
-            {/* Bottom Row: Strength Ring with Percentage */}
+            {/* Bottom Row: Strength Percentage with Level Emoji */}
             <View style={styles.bottomRow}>
-              <StrengthRing
-                strength={strength}
-                size='small'
-                showPercentage={false}
-                showLevel={false}
-              />
-              <Text
-                style={[
-                  styles.strengthPercentage,
-                  { color: getStrengthColor() },
-                ]}
-              >
-                {Math.round(strength)}%
-              </Text>
+              <View style={styles.strengthContainer}>
+                <Text style={styles.strengthEmoji}>{getStrengthEmoji()}</Text>
+                <Text
+                  style={[
+                    styles.strengthPercentage,
+                    { color: getStrengthColor() },
+                  ]}
+                >
+                  {Math.round(strength)}%
+                </Text>
+              </View>
             </View>
           </View>
         </Animated.View>
@@ -744,13 +737,21 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginTop: 4,
   },
+  strengthContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+  strengthEmoji: {
+    fontSize: 14,
+  },
   strengthPercentage: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   completedText: {
     opacity: 0.6,
@@ -782,12 +783,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     marginLeft: 8,
-  },
-  moreButton: {
-    alignItems: 'center',
-    height: 32,
-    justifyContent: 'center',
-    width: 32,
   },
   topRow: {
     alignItems: 'center',
