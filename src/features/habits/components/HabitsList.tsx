@@ -12,7 +12,6 @@ import { HabitsModalsState } from '../hooks/types';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { HabitsHeader } from './HabitsHeader';
 import { CalendarTimeline, type DayCompletionStatus } from '../../../components/CalendarTimeline';
-import { WeeklySummaryCard } from '../../../components/WeeklySummaryCard';
 
 const PREMIUM_BENEFITS = [
   {
@@ -551,66 +550,17 @@ export function HabitsList({
     ]
   );
 
-  // Calculate week stats for WeeklySummaryCard
-  const weekStats = useMemo(() => {
-    return weekDateStrings.map((dateString) => {
-      const completed = habits.filter(
-        (habit) => getHabitStatus(habit._id, dateString) === 'done'
-      ).length;
-      return {
-        date: dateString,
-        completed,
-        total: habits.length,
-      };
-    });
-  }, [weekDateStrings, habits, getHabitStatus]);
-
-  // Check if viewing a past week (not the current week)
-  const isViewingPastWeek = useMemo(() => {
-    if (weekDates.length === 0) return false;
-    const today = new Date();
-    const lastDayOfWeek = weekDates[weekDates.length - 1];
-    // If the last day of the viewed week is before today, it's a past week
-    return lastDayOfWeek < today && !weekDates.some(date =>
-      date.toDateString() === today.toDateString()
-    );
-  }, [weekDates]);
-
-  // Calculate average streak for display
-  const averageStreak = useMemo(() => {
-    if (habits.length === 0) return 0;
-    // This is a simplified calculation - in a real app you'd want to calculate actual streaks
-    const totalCompleted = weekStats.reduce((sum, day) => sum + day.completed, 0);
-    return Math.round(totalCompleted / 7);
-  }, [weekStats, habits.length]);
-
-  // Show weekly summary for past weeks or when there are habits
-  const showWeeklySummary = habits.length > 0 && isViewingPastWeek;
 
   const renderFooter = useCallback(() => {
     const showLockedCard = !isPremiumUser && hasReachedHabitLimit;
-    // Compute inside callback to avoid stale closure issues with derived state
-    const shouldShowWeeklySummary = habits.length > 0 && isViewingPastWeek;
 
-    // Return null when neither condition is met to avoid unnecessary padding
-    if (!shouldShowWeeklySummary && !showLockedCard) {
+    // Return null when condition is not met to avoid unnecessary padding
+    if (!showLockedCard) {
       return null;
     }
 
     return (
       <View className='gap-4'>
-        {/* Weekly Summary Card - shown for past weeks */}
-        {shouldShowWeeklySummary && (
-          <View className='mt-4'>
-            <WeeklySummaryCard
-              currentStreak={averageStreak}
-              reduceMotion={reduceMotionPreference}
-              visible={shouldShowWeeklySummary}
-              weekStats={weekStats}
-            />
-          </View>
-        )}
-
         {/* Locked Habit Card - for free users at limit */}
         {showLockedCard && (
           <View className='mt-2'>
@@ -623,15 +573,10 @@ export function HabitsList({
       </View>
     );
   }, [
-    // Source values instead of derived state to prevent stale closures
-    habits.length,
-    isViewingPastWeek,
-    weekStats,
-    averageStreak,
-    reduceMotionPreference,
     isPremiumUser,
     hasReachedHabitLimit,
     onUpgradeIntent,
+    reduceMotionPreference,
   ]);
 
   return (
