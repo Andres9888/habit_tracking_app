@@ -12,38 +12,154 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DayConnectorProps {
   color: string;
+  currentStreak?: number;
+  highContrastMode: boolean;
+  isPartOfWeekComplete: boolean;
   visible: boolean;
 }
 
 /**
  * DayConnector - Visual link between consecutive completed days
- * Shows a horizontal gray line when both adjacent days are completed,
+ * Shows an enhanced horizontal line when both adjacent days are completed,
  * creating a visual "chain" effect for habit tracking.
+ * 
+ * Features:
+ * - Progressive thickness based on streak length
+ * - Enhanced visibility with gradient effects
+ * - Golden highlight for complete weeks
+ * - Celebration pulse when chain forms
  */
-const DayConnector: React.FC<DayConnectorProps> = ({ color, visible }) => {
+const DayConnector: React.FC<DayConnectorProps> = ({ 
+  color, 
+  currentStreak = 0,
+  highContrastMode,
+  isPartOfWeekComplete,
+  visible 
+}) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
+  const pulseAnimation = useRef(new Animated.Value(0)).current;
 
+  // Enhanced fade in/out with scale animation
   useEffect(() => {
-    Animated.timing(opacity, {
-      duration: 200,
-      easing: Easing.inOut(Easing.ease),
-      toValue: visible ? 1 : 0,
-      useNativeDriver: true,
-    }).start();
-  }, [visible, opacity]);
+    if (visible) {
+      // Celebration when chain link forms
+      Animated.parallel([
+        Animated.timing(opacity, {
+          duration: 300,
+          easing: Easing.out(Easing.cubic),
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.sequence([
+          Animated.spring(scale, {
+            friction: 5,
+            tension: 200,
+            toValue: 1.2,
+            useNativeDriver: true,
+          }),
+          Animated.spring(scale, {
+            friction: 8,
+            tension: 200,
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    } else {
+      Animated.timing(opacity, {
+        duration: 150,
+        easing: Easing.in(Easing.ease),
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible, opacity, scale]);
+
+  // Subtle pulse for complete weeks
+  useEffect(() => {
+    if (isPartOfWeekComplete && visible) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnimation, {
+            duration: 2000,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnimation, {
+            duration: 2000,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 0,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      pulseAnimation.setValue(0);
+    }
+  }, [isPartOfWeekComplete, visible, pulseAnimation]);
+
+  // Progressive thickness based on streak (2.5px base, up to 4px for long streaks)
+  const getLineHeight = (): number => {
+    if (currentStreak >= 30) return 4;
+    if (currentStreak >= 14) return 3.5;
+    if (currentStreak >= 7) return 3;
+    return 2.5;
+  };
+
+  // Enhanced opacity for better visibility (60% base, 75% for complete weeks)
+  const baseOpacity = isPartOfWeekComplete ? 0.75 : 0.6;
+  
+  // Golden glow for complete weeks
+  const glowOpacity = pulseAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0.3],
+  });
+
+  const lineHeight = getLineHeight();
+  const lineColor = isPartOfWeekComplete && !highContrastMode 
+    ? '#fbbf24' // Golden for complete weeks
+    : color;
 
   return (
-    <Animated.View
-      style={{
-        backgroundColor: color,
-        height: 1.5,
-        opacity: opacity.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 0.4], // Reduced from full opacity to 40% for premium subtlety
-        }),
-        width: 14,
-      }}
-    />
+    <View className='relative items-center justify-center'>
+      {/* Golden glow layer for complete weeks */}
+      {isPartOfWeekComplete && !highContrastMode && (
+        <Animated.View
+          style={{
+            backgroundColor: '#fef3c7',
+            borderRadius: 2,
+            height: lineHeight + 4,
+            opacity: glowOpacity,
+            position: 'absolute',
+            width: 18,
+          }}
+        />
+      )}
+      
+      {/* Main connector line */}
+      <Animated.View
+        style={{
+          backgroundColor: lineColor,
+          borderRadius: lineHeight / 2,
+          height: lineHeight,
+          opacity: opacity.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, baseOpacity],
+          }),
+          transform: [{ scaleX: scale }],
+          width: 14,
+          // Subtle shadow for depth
+          ...(visible && !highContrastMode && {
+            shadowColor: lineColor,
+            shadowOffset: { height: 1, width: 0 },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+          }),
+        }}
+      />
+    </View>
   );
 };
 
@@ -403,7 +519,13 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               />
             </View>
             {!isLastItem && (
-              <DayConnector color={connectorColor} visible={showConnector} />
+              <DayConnector 
+                color={connectorColor} 
+                currentStreak={currentStreak}
+                highContrastMode={highContrastMode}
+                isPartOfWeekComplete={isWeekComplete}
+                visible={showConnector} 
+              />
             )}
           </React.Fragment>
         );
