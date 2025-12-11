@@ -113,20 +113,8 @@ export const StrengthProgressBar = ({
       accessibilityRole="progressbar"
       style={styles.container}
     >
-      {/* Top row: Percentage + Bar */}
-      <View style={[styles.topRow, { gap: config.gap }]}>
-        {/* Percentage (left side) */}
-        {showPercentage && (
-          <Text
-            style={[
-              styles.percentage,
-              { color: currentLevel.color, fontSize: config.fontSize },
-            ]}
-          >
-            {Math.round(clampedStrength)}%
-          </Text>
-        )}
-
+      {/* Top row: Bar with centered percentage */}
+      <View style={styles.topRow}>
         {/* Progress Bar Container */}
         <View style={styles.barWrapper}>
           {/* Bar Background */}
@@ -171,6 +159,20 @@ export const StrengthProgressBar = ({
                 progressAnimatedStyle,
               ]}
             />
+
+            {/* Percentage centered inside bar */}
+            {showPercentage && (
+              <View style={styles.percentageContainer}>
+                <Text
+                  style={[
+                    styles.percentage,
+                    { color: currentLevel.color, fontSize: config.fontSize },
+                  ]}
+                >
+                  {Math.round(clampedStrength)}%
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -209,6 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     overflow: 'visible',
+    position: 'relative',
   },
   barFill: {
     bottom: 0,
@@ -243,8 +246,17 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontWeight: '700',
-    minWidth: 36,
-    textAlign: 'left',
+    textAlign: 'center',
+  },
+  percentageContainer: {
+    alignItems: 'center',
+    height: '100%',
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 5,
   },
   topRow: {
     alignItems: 'center',
