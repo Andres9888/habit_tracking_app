@@ -5,7 +5,6 @@ import { useHapticFeedback } from '../hooks/useHapticFeedback';
 interface RewardCelebrationToastProps {
   message: string;
   onDismiss: () => void;
-  onPrimaryAction: () => void;
   onSecondaryAction: () => void;
   streak?: number;
   visible: boolean;
@@ -16,7 +15,6 @@ const AnimatedContainer = Animated.createAnimatedComponent(View);
 export const RewardCelebrationToast = ({
   message,
   onDismiss,
-  onPrimaryAction,
   onSecondaryAction,
   streak,
   visible,
@@ -67,32 +65,6 @@ export const RewardCelebrationToast = ({
     return 'Momentum boost unlocked';
   }, [streak]);
 
-  // Dynamic CTA based on streak milestone
-  const premiumCTA = useMemo(() => {
-    if (!streak || streak < 7) {
-      return {
-        text: 'Get Premium Templates',
-        benefit: 'Science-backed habits from experts'
-      };
-    }
-    if (streak < 14) {
-      return {
-        text: 'Unlock Streak Protection',
-        benefit: 'Never lose progress on rest days'
-      };
-    }
-    if (streak < 30) {
-      return {
-        text: 'Get Advanced Analytics',
-        benefit: 'See your trends & insights'
-      };
-    }
-    return {
-      text: 'Join Premium Community',
-      benefit: 'Connect with 10k+ habit builders'
-    };
-  }, [streak]);
-
   return (
     <AnimatedContainer
       accessibilityLiveRegion='polite'
@@ -107,47 +79,31 @@ export const RewardCelebrationToast = ({
         <Text className='text-[17px] font-bold leading-[24px] text-[#101727]'>{title}</Text>
         <Text className='mt-2 text-[14px] leading-[20px] text-[#334155]'>{message}</Text>
 
-        {/* Premium value prop */}
-        <View className='mt-3 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 p-3' style={{ backgroundColor: '#faf5ff' }}>
-          <Text className='text-[13px] font-semibold text-[#7c3aed]'>✨ {premiumCTA.benefit}</Text>
-        </View>
-
         <View className='mt-4 flex-row items-center justify-between gap-3'>
+          <Pressable
+            accessibilityHint='Dismiss this celebration'
+            accessibilityLabel='Dismiss'
+            className='flex-1 items-center justify-center rounded-full border border-[#cbd5e1] px-3 py-2.5'
+            onPress={() => {
+              triggerLightImpact();
+              onDismiss();
+            }}
+          >
+            <Text className='text-[14px] font-semibold leading-[20px] text-[#475467]'>Dismiss</Text>
+          </Pressable>
           <Pressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#cbd5e1] px-3 py-2.5'
+            className='flex-1 items-center justify-center rounded-full px-3 py-2.5'
+            style={{ backgroundColor: '#3b82f6' }}
             onPress={() => {
               triggerSelection();
               onSecondaryAction();
             }}
           >
-            <Text className='text-[14px] font-semibold leading-[20px] text-[#475467]'>Share</Text>
-          </Pressable>
-          <Pressable
-            accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
-            accessibilityLabel={premiumCTA.text}
-            className='flex-1 items-center justify-center rounded-full px-3 py-2.5'
-            style={{ backgroundColor: '#7c3aed' }}
-            onPress={() => {
-              triggerSelection();
-              onPrimaryAction();
-            }}
-          >
-            <Text className='text-[14px] font-semibold leading-[20px] text-white'>{premiumCTA.text}</Text>
+            <Text className='text-[14px] font-semibold leading-[20px] text-white'>Share</Text>
           </Pressable>
         </View>
-
-        <Pressable
-          accessibilityLabel='Dismiss reward toast'
-          className='mt-3 items-center'
-          onPress={() => {
-            triggerLightImpact();
-            onDismiss();
-          }}
-        >
-          <Text className='text-[11px] font-semibold uppercase leading-[16px] tracking-wider text-[#64748b]'>Not now</Text>
-        </Pressable>
       </View>
     </AnimatedContainer>
   );

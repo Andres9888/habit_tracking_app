@@ -6,14 +6,12 @@ import { RewardCelebrationToast } from '../RewardCelebrationToast';
 describe('RewardCelebrationToast', () => {
   it('invokes actions when buttons are pressed', () => {
     const onDismiss = jest.fn();
-    const onPrimaryAction = jest.fn();
     const onSecondaryAction = jest.fn();
 
     const { getByText } = render(
       <RewardCelebrationToast
         message='Test reward message'
         onDismiss={onDismiss}
-        onPrimaryAction={onPrimaryAction}
         onSecondaryAction={onSecondaryAction}
         streak={5}
         visible
@@ -23,11 +21,9 @@ describe('RewardCelebrationToast', () => {
     expect(getByText('🔥 5 day streak unlocked')).toBeTruthy();
     expect(getByText('Test reward message')).toBeTruthy();
 
-    fireEvent.press(getByText('Unlock boosters'));
-    fireEvent.press(getByText('Share streak'));
-    fireEvent.press(getByText('Not now'));
+    fireEvent.press(getByText('Share'));
+    fireEvent.press(getByText('Dismiss'));
 
-    expect(onPrimaryAction).toHaveBeenCalledTimes(1);
     expect(onSecondaryAction).toHaveBeenCalledTimes(1);
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
