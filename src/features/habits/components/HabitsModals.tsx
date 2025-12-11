@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Alert, Modal, Pressable, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { X } from 'lucide-react-native';
 
 import CreateHabitModal from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
@@ -9,6 +11,8 @@ import PauseHabitModal from '../../../components/PauseHabitModal';
 import SettingsModal from '../../../components/SettingsModal';
 import HapticTest from '../../../components/HapticTest';
 import TemplatesScreen from '../../../screens/TemplatesScreen';
+import { QuickActionsSheet } from '../../../components/QuickActionsSheet';
+import { VisualizationExercise } from '../../../components/VisualizationExercise';
 import type { ShareCardData } from '../types';
 import type { HabitsModalsState } from '../hooks/useHabitsApp';
 
@@ -17,6 +21,7 @@ interface HabitsModalsProps {
 }
 
 export function HabitsModals({ state }: HabitsModalsProps) {
+  const insets = useSafeAreaInsets();
   const {
     celebrationsEnabled,
     settings,
@@ -28,9 +33,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     showShareCard,
     showPauseModal,
     showTemplatesScreen,
+    showQuickActions,
+    showVisualizationExercise,
     habitToEdit,
     habitToPause,
     selectedHabit,
+    quickActionsHabit,
     shareCardData,
     milestone,
     tracking,
@@ -44,6 +52,9 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     closeShareCard,
     closePauseModal,
     closeTemplatesScreen,
+    closeQuickActions,
+    closeVisualizationExercise,
+    openVisualizationExercise,
     setShowHabitStrengthPercentage,
     onSettingsChange,
     onDeleteHabit,
@@ -59,6 +70,9 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     onChangeCelebrationsEnabled,
     reduceMotionPreference,
   } = state;
+
+  // Today's date for toggle completion
+  const today = new Date().toISOString().split('T')[0];
 
   const ShareCardGenerator: ComponentType<{
     data: ShareCardData;
@@ -192,6 +206,104 @@ export function HabitsModals({ state }: HabitsModalsProps) {
             >
               <Text style={{ fontSize: 20, fontWeight: '600' }}>×</Text>
             </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Quick Actions Sheet */}
+      <QuickActionsSheet
+        habit={quickActionsHabit ? {
+          _id: quickActionsHabit._id,
+          name: quickActionsHabit.name,
+          icon: quickActionsHabit.icon,
+          completed: tracking.some(
+            (t) => t.habitId === quickActionsHabit._id && t.date === today && t.completed
+          ),
+        } : null}
+        visible={showQuickActions}
+        onClose={closeQuickActions}
+        onComplete={() => {
+          if (quickActionsHabit) {
+            toggleHabit({ habitId: quickActionsHabit._id, date: today });
+          }
+        }}
+        onMentalBoost={() => {
+          if (quickActionsHabit) {
+            openVisualizationExercise(quickActionsHabit);
+          }
+        }}
+        onViewCalendar={() => {
+          if (quickActionsHabit) {
+            openHabitCalendar(quickActionsHabit);
+          }
+        }}
+        onEdit={() => {
+          if (quickActionsHabit) {
+            openEditHabit(quickActionsHabit);
+          }
+        }}
+        onPause={() => {
+          if (quickActionsHabit) {
+            openPauseModal(quickActionsHabit._id);
+          }
+        }}
+        onDelete={() => {
+          if (quickActionsHabit) {
+            Alert.alert(
+              'Delete Habit',
+              `Are you sure you want to delete "${quickActionsHabit.name}"? This cannot be undone.`,
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Delete',
+                  style: 'destructive',
+                  onPress: () => onDeleteHabit(quickActionsHabit._id),
+                },
+              ]
+            );
+          }
+        }}
+      />
+
+      {/* Visualization Exercise Modal (Mental Boost) */}
+      <Modal
+        animationType='slide'
+        visible={showVisualizationExercise}
+        onRequestClose={closeVisualizationExercise}
+      >
+        <View className='flex-1 bg-white' style={{ paddingTop: insets.top + 16 }}>
+          {/* Header */}
+          <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
+            <Text className='text-lg font-bold text-stone-900'>
+              Mental Boost
+            </Text>
+            <Pressable
+              accessibilityLabel='Close mental boost'
+              accessibilityRole='button'
+              className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+              onPress={closeVisualizationExercise}
+            >
+              <X color='#57534e' size={22} />
+            </Pressable>
+          </View>
+
+          {/* Exercise Content */}
+          <View
+            className='flex-1 px-5 pt-4'
+            style={{ paddingBottom: insets.bottom + 16 }}
+          >
+            <VisualizationExercise
+              habitName={selectedHabit?.name ?? ''}
+              onClose={closeVisualizationExercise}
+              onSave={(data) => {
+                console.log('Visualization saved:', data);
+                Alert.alert(
+                  'Visualization Saved! ✨',
+                  'Your mental contrasting exercise has been saved. Review it when you need motivation.',
+                  [{ text: 'Got it' }]
+                );
+              }}
+            />
           </View>
         </View>
       </Modal>

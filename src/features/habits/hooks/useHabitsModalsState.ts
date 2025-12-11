@@ -26,6 +26,9 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   const [habitToEdit, setHabitToEdit] = useState<Habit | null>(null);
   const [showHapticTest, setShowHapticTest] = useState(false);
   const [showTemplatesScreen, setShowTemplatesScreen] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(false);
+  const [quickActionsHabit, setQuickActionsHabit] = useState<Habit | null>(null);
+  const [showVisualizationExercise, setShowVisualizationExercise] = useState(false);
 
   const { pauseHabit, removeHabit, updateSettings, toggleHabit, archiveHabit } = useHabitMutations();
   const { milestone, clearMilestone } = useHabitMilestones(habits, false);
@@ -69,10 +72,18 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   const openCreateHabitScreen = useCallback(() => { setIsCreateHabitOpen(true); setHabitToEdit(null); }, []);
   const onSettingsChange = useCallback(async (updates: Partial<HabitSettingsUpdate>) => { if (!settings) return; await updateSettings({ ...settings, ...updates }); }, [settings, updateSettings]);
 
+  // Quick Actions Sheet handlers
+  const openQuickActions = useCallback((habit: Habit) => { setQuickActionsHabit(habit); setShowQuickActions(true); }, []);
+  const closeQuickActions = useCallback(() => { setShowQuickActions(false); setQuickActionsHabit(null); }, []);
+
+  // Visualization Exercise handlers (Mental Boost)
+  const openVisualizationExercise = useCallback((habit: Habit) => { setSelectedHabit(habit); setShowVisualizationExercise(true); }, []);
+  const closeVisualizationExercise = useCallback(() => { setShowVisualizationExercise(false); }, []);
+
   const onChangeCelebrationsEnabled = useCallback(async (value: boolean) => {
     await onSettingsChange({ showMotivationalMessages: value });
   }, [onSettingsChange]);
   const onDeleteHabit = useCallback(async (habitId: Id<'habits'>) => { await removeHabit({ habitId }); setIsHabitDetailOpen(false); setSelectedHabit(null); }, [removeHabit]);
 
-  return { celebrationsEnabled, habits, settings, showSettings: isSettingsOpen, showCreateHabit: isCreateHabitOpen || !!habitToEdit, showHabitCalendar: isHabitCalendarOpen, showHabitDetail: isHabitDetailOpen, showHapticTest, showShareCard, showPauseModal, showTemplatesScreen, habitToEdit, habitToPause, selectedHabit, shareCardData, milestone, tracking, showHabitStrengthPercentage, closeSettings: () => setIsSettingsOpen(false), openSettings: () => setIsSettingsOpen(true), openCreateHabitScreen, onChangeCelebrationsEnabled, setShowHabitStrengthPercentage: () => {}, closeCreateHabit, closeHabitCalendar: () => setIsHabitCalendarOpen(false), closeHabitDetail: () => setIsHabitDetailOpen(false), closeShareCard, closePauseModal: () => { setShowPauseModal(false); setHabitToPause(null); }, openHapticTest: () => { setIsSettingsOpen(false); setShowHapticTest(true); }, closeHapticTest: () => setShowHapticTest(false), openTemplatesScreen: () => setShowTemplatesScreen(true), closeTemplatesScreen: () => setShowTemplatesScreen(false), openHabitDetail, openHabitCalendar, openPauseModal, openEditHabit, onSettingsChange, onDeleteHabit, onShareMilestone: (data: ShareCardData) => { setShareCardData(data); setShowShareCard(true); }, clearMilestone, confirmPause, toggleHabit, getStreak, handleArchive, reduceMotionPreference };
+  return { celebrationsEnabled, habits, settings, showSettings: isSettingsOpen, showCreateHabit: isCreateHabitOpen || !!habitToEdit, showHabitCalendar: isHabitCalendarOpen, showHabitDetail: isHabitDetailOpen, showHapticTest, showShareCard, showPauseModal, showTemplatesScreen, showQuickActions, showVisualizationExercise, habitToEdit, habitToPause, selectedHabit, quickActionsHabit, shareCardData, milestone, tracking, showHabitStrengthPercentage, closeSettings: () => setIsSettingsOpen(false), openSettings: () => setIsSettingsOpen(true), openCreateHabitScreen, onChangeCelebrationsEnabled, setShowHabitStrengthPercentage: () => {}, closeCreateHabit, closeHabitCalendar: () => setIsHabitCalendarOpen(false), closeHabitDetail: () => setIsHabitDetailOpen(false), closeShareCard, closePauseModal: () => { setShowPauseModal(false); setHabitToPause(null); }, openHapticTest: () => { setIsSettingsOpen(false); setShowHapticTest(true); }, closeHapticTest: () => setShowHapticTest(false), openTemplatesScreen: () => setShowTemplatesScreen(true), closeTemplatesScreen: () => setShowTemplatesScreen(false), openHabitDetail, openHabitCalendar, openPauseModal, openEditHabit, openQuickActions, closeQuickActions, openVisualizationExercise, closeVisualizationExercise, onSettingsChange, onDeleteHabit, onShareMilestone: (data: ShareCardData) => { setShareCardData(data); setShowShareCard(true); }, clearMilestone, confirmPause, toggleHabit, getStreak, handleArchive, reduceMotionPreference };
 }

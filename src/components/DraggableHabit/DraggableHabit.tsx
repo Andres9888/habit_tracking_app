@@ -4,10 +4,11 @@ import { Swipeable } from 'react-native-gesture-handler';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { Archive, TrendingUp } from 'lucide-react-native';
+import { Archive, MoreVertical, TrendingUp } from 'lucide-react-native';
 import type { StrengthLevel } from '../HabitStrengthIndicator';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { StrengthRing } from '../StrengthRing';
+import * as Haptics from 'expo-haptics';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -40,6 +41,7 @@ interface DraggableHabitProps {
   weekStatus: HabitStatus[];
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
+  onMorePress?: (habit: Habit) => void;
   onPress?: (habit: Habit) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
@@ -59,6 +61,7 @@ export default function DraggableHabit({
   weekStatus,
   onArchive,
   onLongPress,
+  onMorePress,
   onPress,
   onWeekComplete,
   reduceMotionPreference,
@@ -537,6 +540,29 @@ export default function DraggableHabit({
                   )}
                 </View>
               </Animated.View>
+            )}
+
+            {/* More Button for Quick Actions */}
+            {onMorePress && (
+              <Pressable
+                accessibilityLabel={`More actions for ${habit.name}`}
+                accessibilityRole='button'
+                hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+                className='ml-2 h-8 w-8 items-center justify-center rounded-lg'
+                style={{
+                  backgroundColor: highContrastMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.04)',
+                }}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  onMorePress(habit);
+                }}
+              >
+                <MoreVertical
+                  color={highContrastMode ? '#facc15' : '#78716c'}
+                  size={18}
+                />
+              </Pressable>
             )}
           </View>
 

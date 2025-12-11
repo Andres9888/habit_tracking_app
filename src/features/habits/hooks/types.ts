@@ -48,9 +48,12 @@ export interface HabitsModalsState {
   showShareCard: boolean;
   showPauseModal: boolean;
   showTemplatesScreen: boolean;
+  showQuickActions: boolean;
+  showVisualizationExercise: boolean;
   habitToEdit: Habit | null;
   habitToPause: Habit | null;
   selectedHabit: Habit | null;
+  quickActionsHabit: Habit | null;
   shareCardData: ShareCardData | null;
   milestone: any; // Using any to avoid complex type from useMilestoneDetection
   tracking: HabitTrackingEntry[];
@@ -73,6 +76,10 @@ export interface HabitsModalsState {
   openHabitCalendar: (habit: Habit) => void;
   openPauseModal: (habitId: Id<'habits'>) => void;
   openEditHabit: (habit: Habit | null) => void;
+  openQuickActions: (habit: Habit) => void;
+  closeQuickActions: () => void;
+  openVisualizationExercise: (habit: Habit) => void;
+  closeVisualizationExercise: () => void;
   onSettingsChange: (updates: Partial<HabitSettingsUpdate>) => Promise<void>;
   onDeleteHabit: (habitId: Id<'habits'>) => Promise<void>;
   onShareMilestone: (data: ShareCardData) => void;

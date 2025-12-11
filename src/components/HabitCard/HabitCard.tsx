@@ -42,6 +42,7 @@ import { useAppTheme } from '../../theme';
 import { StrengthRing } from '../StrengthRing';
 import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
+import { MoreVertical } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 export interface HabitCardProps {
@@ -87,6 +88,9 @@ export interface HabitCardProps {
   /** On delete handler (swipe action) */
   onDelete?: () => void;
 
+  /** On more press handler (quick actions menu) */
+  onMorePress?: () => void;
+
   /** Custom style */
   style?: ViewStyle;
 }
@@ -109,6 +113,7 @@ export function HabitCard({
   onLongPress,
   onEdit,
   onDelete,
+  onMorePress,
   style,
 }: HabitCardProps) {
   const theme = useAppTheme();
@@ -582,7 +587,7 @@ export function HabitCard({
                 </Text>
               </View>
 
-              {/* Status Indicator */}
+              {/* Status Indicator + More Button */}
               <View style={styles.statusContainer}>
                 {completed ? (
                   <Animated.View
@@ -604,6 +609,23 @@ export function HabitCard({
                     <Text style={styles.warningText}>⚠️</Text>
                   </View>
                 ) : null}
+
+                {/* More Button for Quick Actions */}
+                {onMorePress && (
+                  <Pressable
+                    accessibilityLabel={`More actions for ${name}`}
+                    accessibilityRole="button"
+                    hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+                    style={styles.moreButton}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      onMorePress();
+                    }}
+                  >
+                    <MoreVertical color={theme.custom.colors.gray[400]} size={20} />
+                  </Pressable>
+                )}
               </View>
             </View>
 
@@ -756,7 +778,16 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   statusContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
     marginLeft: 8,
+  },
+  moreButton: {
+    alignItems: 'center',
+    height: 32,
+    justifyContent: 'center',
+    width: 32,
   },
   topRow: {
     alignItems: 'center',

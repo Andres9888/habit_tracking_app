@@ -411,7 +411,7 @@ export function HabitsList({
     isPremiumUser,
   } = list;
 
-  const { openSettings, openTemplatesScreen } = modals;
+  const { openSettings, openTemplatesScreen, openQuickActions } = modals;
 
   // Quick-create habit mutation for instant habit creation
   const createHabit = useMutation(api.habits.create);
@@ -455,6 +455,7 @@ export function HabitsList({
     getStreak,
     handleArchive,
     handleHabitPress,
+    handleMorePress: openQuickActions,
     notifyWeekCompletion,
     reduceMotionPreference,
     weekDateStrings,
