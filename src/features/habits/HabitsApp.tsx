@@ -105,7 +105,7 @@ export function HabitsApp() {
       return;
     }
 
-    logInteraction('premium_upsell_tap', {
+    logInteraction('reward_boosters_tap', {
       habitId: rewardToast.habitId,
       habitName: rewardToast.habitName,
       streak: rewardToast.streak,

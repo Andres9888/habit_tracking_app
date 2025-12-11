@@ -4,8 +4,6 @@ import { Platform } from 'react-native';
 
 import { useReduceMotion } from './useReduceMotion';
 
-type HapticKind = 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error';
-
 interface UseHapticFeedbackOptions {
   isEnabled?: boolean;
   preference?: boolean;
@@ -13,22 +11,21 @@ interface UseHapticFeedbackOptions {
 
 const noop = async () => {};
 
-const INPUT_TO_FEEDBACK: Record<HapticKind, () => Promise<void>> = {
-  error: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error),
-  heavy: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-  light: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-  medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-  success: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
-  warning: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
-};
-
 const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
 
 export const useHapticFeedback = ({ isEnabled = true, preference }: UseHapticFeedbackOptions = {}) => {
   const reduceMotion = useReduceMotion({ preference });
 
   return useMemo(() => {
-    if (!isEnabled || reduceMotion || !isHapticsSupported) {
+    const hasHapticsApis = Boolean(
+      Haptics?.impactAsync &&
+        Haptics?.notificationAsync &&
+        Haptics?.selectionAsync &&
+        Haptics?.ImpactFeedbackStyle &&
+        Haptics?.NotificationFeedbackType
+    );
+
+    if (!isEnabled || reduceMotion || !isHapticsSupported || !hasHapticsApis) {
       return {
         triggerError: noop,
         triggerHeavyImpact: noop,
@@ -40,20 +37,23 @@ export const useHapticFeedback = ({ isEnabled = true, preference }: UseHapticFee
       };
     }
 
-    const safeCall = (fn: () => Promise<void>) => {
-      fn().catch(() => {
+    const safeCall = (fn: () => Promise<void> | void) => {
+      Promise.resolve(fn()).catch(() => {
         // Silently fail - haptics are non-critical UX enhancements
       });
     };
 
     return {
-      triggerError: () => safeCall(INPUT_TO_FEEDBACK.error),
-      triggerHeavyImpact: () => safeCall(INPUT_TO_FEEDBACK.heavy),
-      triggerLightImpact: () => safeCall(INPUT_TO_FEEDBACK.light),
-      triggerMediumImpact: () => safeCall(INPUT_TO_FEEDBACK.medium),
+      triggerError: () =>
+        safeCall(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)),
+      triggerHeavyImpact: () => safeCall(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)),
+      triggerLightImpact: () => safeCall(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)),
+      triggerMediumImpact: () => safeCall(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)),
       triggerSelection: () => safeCall(() => Haptics.selectionAsync()),
-      triggerSuccess: () => safeCall(INPUT_TO_FEEDBACK.success),
-      triggerWarning: () => safeCall(INPUT_TO_FEEDBACK.warning),
+      triggerSuccess: () =>
+        safeCall(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
+      triggerWarning: () =>
+        safeCall(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)),
     };
   }, [reduceMotion, isEnabled]);
 };

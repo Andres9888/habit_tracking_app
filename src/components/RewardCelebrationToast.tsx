@@ -67,32 +67,6 @@ export const RewardCelebrationToast = ({
     return 'Momentum boost unlocked';
   }, [streak]);
 
-  // Dynamic CTA based on streak milestone
-  const premiumCTA = useMemo(() => {
-    if (!streak || streak < 7) {
-      return {
-        text: 'Get Premium Templates',
-        benefit: 'Science-backed habits from experts'
-      };
-    }
-    if (streak < 14) {
-      return {
-        text: 'Unlock Streak Protection',
-        benefit: 'Never lose progress on rest days'
-      };
-    }
-    if (streak < 30) {
-      return {
-        text: 'Get Advanced Analytics',
-        benefit: 'See your trends & insights'
-      };
-    }
-    return {
-      text: 'Join Premium Community',
-      benefit: 'Connect with 10k+ habit builders'
-    };
-  }, [streak]);
-
   return (
     <AnimatedContainer
       accessibilityLiveRegion='polite'
@@ -107,11 +81,6 @@ export const RewardCelebrationToast = ({
         <Text className='text-[17px] font-bold leading-[24px] text-[#101727]'>{title}</Text>
         <Text className='mt-2 text-[14px] leading-[20px] text-[#334155]'>{message}</Text>
 
-        {/* Premium value prop */}
-        <View className='mt-3 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 p-3' style={{ backgroundColor: '#faf5ff' }}>
-          <Text className='text-[13px] font-semibold text-[#7c3aed]'>✨ {premiumCTA.benefit}</Text>
-        </View>
-
         <View className='mt-4 flex-row items-center justify-between gap-3'>
           <Pressable
             accessibilityHint='Share this streak to motivate friends'
@@ -122,11 +91,11 @@ export const RewardCelebrationToast = ({
               onSecondaryAction();
             }}
           >
-            <Text className='text-[14px] font-semibold leading-[20px] text-[#475467]'>Share</Text>
+            <Text className='text-[14px] font-semibold leading-[20px] text-[#475467]'>Share streak</Text>
           </Pressable>
           <Pressable
-            accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
-            accessibilityLabel={premiumCTA.text}
+            accessibilityHint='Unlock a momentum booster to build consistency'
+            accessibilityLabel='Unlock boosters'
             className='flex-1 items-center justify-center rounded-full px-3 py-2.5'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
@@ -134,7 +103,7 @@ export const RewardCelebrationToast = ({
               onPrimaryAction();
             }}
           >
-            <Text className='text-[14px] font-semibold leading-[20px] text-white'>{premiumCTA.text}</Text>
+            <Text className='text-[14px] font-semibold leading-[20px] text-white'>Unlock boosters</Text>
           </Pressable>
         </View>
 
