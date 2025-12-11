@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showEmojis: true,
   showMotivationalMessages: true,
   showStreaks: true,
+  showWeekCompletionBar: false,
 };
 
 export const SETTINGS_CONFIG: SettingConfig[] = [
@@ -31,6 +32,11 @@ export const SETTINGS_CONFIG: SettingConfig[] = [
     ariaLabel: 'Toggle calendar view',
     key: 'showCalendarView',
     label: 'Enable Calendar View',
+  },
+  {
+    ariaLabel: 'Toggle daily progress bar',
+    key: 'showWeekCompletionBar',
+    label: 'Show Daily Progress',
   },
   { ariaLabel: 'Toggle cat theme', key: 'catTheme', label: 'Cat Theme' },
 ];

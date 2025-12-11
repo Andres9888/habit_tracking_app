@@ -91,26 +91,26 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     <>
       <SettingsModal
         celebrationsEnabled={celebrationsEnabled}
-        visible={showSettings}
-        onClose={closeSettings}
-        showHabitStrengthPercentage={showHabitStrengthPercentage}
-        onChangeShowHabitStrengthPercentage={(value) =>
-          setShowHabitStrengthPercentage(value)
-        }
-        showWeekCompletionBar={settings?.showWeekCompletionBar ?? true}
-        onChangeShowWeekCompletionBar={(value) =>
-          onSettingsChange({ showWeekCompletionBar: value })
-        }
-        showNotesStats={settings?.showNotesStats ?? true}
-        onChangeShowNotesStats={(value) =>
-          onSettingsChange({ showNotesStats: value })
-        }
-        showCharacterScreen={settings?.showCharacterScreen ?? true}
+        isHighContrastActive={settings?.highContrastMode ?? false}
         onChangeShowCharacterScreen={(value) =>
           onSettingsChange({ showCharacterScreen: value })
         }
-        isHighContrastActive={settings?.highContrastMode ?? false}
+        onChangeShowHabitStrengthPercentage={(value) =>
+          setShowHabitStrengthPercentage(value)
+        }
+        onChangeShowNotesStats={(value) =>
+          onSettingsChange({ showNotesStats: value })
+        }
+        onChangeShowWeekCompletionBar={(value) =>
+          onSettingsChange({ showWeekCompletionBar: value })
+        }
+        onClose={closeSettings}
         onOpenHapticTest={openHapticTest}
+        showCharacterScreen={settings?.showCharacterScreen ?? true}
+        showHabitStrengthPercentage={showHabitStrengthPercentage}
+        showNotesStats={settings?.showNotesStats ?? true}
+        showWeekCompletionBar={settings?.showWeekCompletionBar ?? true}
+        visible={showSettings}
       />
 
       <CreateHabitModal

@@ -1,13 +1,14 @@
 export type DarkModePreference = 'system' | 'light' | 'dark';
 
 export interface Settings {
-  showStreaks: boolean;
-  showConsistency: boolean;
-  showMotivationalMessages: boolean;
-  showEmojis: boolean;
-  showCalendarView: boolean;
   catTheme: boolean;
   darkMode: DarkModePreference;
+  showCalendarView: boolean;
+  showConsistency: boolean;
+  showEmojis: boolean;
+  showMotivationalMessages: boolean;
+  showStreaks: boolean;
+  showWeekCompletionBar: boolean;
 }
 
 export interface SettingsDialogProps {

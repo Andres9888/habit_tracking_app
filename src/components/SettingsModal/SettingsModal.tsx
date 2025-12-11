@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import {
+  Activity,
   BookOpen,
   Check,
   ChevronLeft,
@@ -37,21 +38,21 @@ interface SettingsModalProps {
 
 export default function SettingsModal({
   celebrationsEnabled = true,
-  visible,
-  onClose,
   isCompact = false,
+  isHighContrastActive = false,
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
-  showCharacterScreen = true,
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
   onChangeShowHabitStrengthPercentage = () => {},
-  showWeekCompletionBar = true,
   onChangeShowWeekCompletionBar = () => {},
   showNotesStats = true,
   onChangeShowNotesStats = () => {},
-  isHighContrastActive = false,
+  onClose,
   onOpenHapticTest,
+  showCharacterScreen = true,
+  showWeekCompletionBar = true,
+  visible,
 }: SettingsModalProps) {
   const {
     view,
@@ -238,6 +239,15 @@ export default function SettingsModal({
                   </View>
                 </View>
               )}
+              <SettingsRow
+                highContrastMode={isHighContrastActive}
+                icon={<Activity color='#16a34a' size={16} />}
+                iconBackgroundColor='#bbf7d0'
+                label='Daily progress bar'
+                type='toggle'
+                value={showWeekCompletionBar}
+                onToggle={(value) => void onChangeShowWeekCompletionBar(value)}
+              />
               <SettingsRow
                 highContrastMode={isHighContrastActive}
                 icon={<Smartphone color='#3b82f6' size={16} />}

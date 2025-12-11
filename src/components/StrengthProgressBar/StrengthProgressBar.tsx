@@ -71,9 +71,9 @@ const getNextLevel = (strength: number): LevelConfig | null => {
 };
 
 const SIZE_CONFIG = {
-  compact: { barHeight: 4, fontSize: 11, emojiSize: 24, gap: 4 },
-  default: { barHeight: 6, fontSize: 12, emojiSize: 24, gap: 6 },
-  large: { barHeight: 8, fontSize: 14, emojiSize: 24, gap: 8 },
+  compact: { barHeight: 4, emojiContainerSize: 24, emojiSize: 18, fontSize: 11, gap: 6 },
+  default: { barHeight: 6, emojiContainerSize: 28, emojiSize: 20, fontSize: 12, gap: 8 },
+  large: { barHeight: 8, emojiContainerSize: 32, emojiSize: 24, fontSize: 14, gap: 8 },
 };
 
 // Threshold positions for dividers (excluding 0 and 100)
@@ -131,7 +131,15 @@ export const StrengthProgressBar = ({
       <View style={[styles.topRow, { gap: config.gap }]}>
         {/* Current Level Emoji */}
         {showEmoji && (
-          <View style={styles.emojiContainer}>
+          <View
+            style={[
+              styles.emojiContainer,
+              {
+                height: config.emojiContainerSize,
+                width: config.emojiContainerSize,
+              },
+            ]}
+          >
             <Animated.Text
               style={[
                 styles.emoji,
@@ -264,9 +272,7 @@ const styles = StyleSheet.create({
   },
   emojiContainer: {
     alignItems: 'center',
-    height: 44,
     justifyContent: 'center',
-    width: 44, // Match DraggableHabit icon container (h-11 w-11)
   },
   label: {
     fontWeight: '600',

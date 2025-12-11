@@ -359,7 +359,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='relative flex-row items-center justify-between' style={{ paddingHorizontal: 4 }}>
+    <View className='relative flex-row items-center justify-between'>
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);
         const disabled = isFutureDate(index);

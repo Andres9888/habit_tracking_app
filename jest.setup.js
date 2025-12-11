@@ -85,6 +85,7 @@ jest.mock('lucide-react-native', () => {
   };
 
   return {
+    Activity: createMockIcon('Activity'),
     Link2: createMockIcon('Link2'),
     Settings: createMockIcon('Settings'),
     ChevronLeft: createMockIcon('ChevronLeft'),
