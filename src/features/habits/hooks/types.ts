@@ -1,5 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit, HabitSettings, HabitSettingsUpdate, HabitStatus, HabitTrackingEntry, RewardToastData, ShareCardData } from '../types';
+import type { Habit, HabitSettings, HabitSettingsUpdate, HabitStatus, HabitTrackingEntry, ShareCardData } from '../types';
 
 export interface LastUpdatedHabit {
   id: string;
@@ -19,7 +19,6 @@ export interface HabitsListState {
   showHabitStrengthPercentage: boolean;
   showWeekCompletionBar: boolean;
   contentPadding: { paddingHorizontal: number; paddingTop: number; paddingBottom: number };
-  dismissRewardToast: () => void;
   habitSlotsUsed: number;
   handleDragEnd: (event: { data: Habit[] }) => Promise<void>;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
@@ -31,7 +30,6 @@ export interface HabitsListState {
   getStreak: (habitId: string) => number;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
-  rewardToast: RewardToastData | null;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
   isPremiumUser: boolean;
 }

@@ -7,15 +7,12 @@ import { HabitsModals } from './components/HabitsModals';
 import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { useHabitsApp } from './hooks/useHabitsApp';
-import RewardCelebrationToast from '../../components/RewardCelebrationToast';
 import { logInteraction } from '../../lib/analytics/interactions';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
   const { openCreateHabitScreen, openTemplatesScreen } = modals;
-  const { dismissRewardToast, rewardToast } = list;
-  const autoDismissTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
@@ -67,52 +64,7 @@ export function HabitsApp() {
     triggerWarning,
   ]);
 
-  useEffect(() => {
-    if (!rewardToast) {
-      return;
-    }
 
-    if (autoDismissTimer.current) {
-      clearTimeout(autoDismissTimer.current);
-    }
-
-    autoDismissTimer.current = setTimeout(() => {
-      dismissRewardToast();
-    }, 5200);
-
-    return () => {
-      if (autoDismissTimer.current) {
-        clearTimeout(autoDismissTimer.current);
-      }
-    };
-  }, [dismissRewardToast, rewardToast]);
-
-  const handleShareStreak = useCallback(() => {
-    if (!rewardToast) {
-      return;
-    }
-
-    logInteraction('reward_share_tap', {
-      habitId: rewardToast.habitId,
-      habitName: rewardToast.habitName,
-      streak: rewardToast.streak,
-    });
-    dismissRewardToast();
-  }, [dismissRewardToast, rewardToast]);
-
-  const handleUnlockBoosters = useCallback(() => {
-    if (!rewardToast) {
-      return;
-    }
-
-    logInteraction('premium_upsell_tap', {
-      habitId: rewardToast.habitId,
-      habitName: rewardToast.habitName,
-      streak: rewardToast.streak,
-    });
-    dismissRewardToast();
-    openTemplatesScreen();
-  }, [dismissRewardToast, openTemplatesScreen, rewardToast]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100'>
@@ -144,14 +96,6 @@ export function HabitsApp() {
 
         <WebToaster />
         <HabitsModals state={modals} />
-        <RewardCelebrationToast
-          message={rewardToast?.message ?? ''}
-          onDismiss={dismissRewardToast}
-          onPrimaryAction={handleUnlockBoosters}
-          onSecondaryAction={handleShareStreak}
-          streak={rewardToast?.streak}
-          visible={Boolean(rewardToast)}
-        />
       </View>
     </GestureHandlerRootView>
   );
