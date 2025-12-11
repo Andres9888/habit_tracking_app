@@ -7,7 +7,7 @@ import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 import { Archive, TrendingUp } from 'lucide-react-native';
 import type { StrengthLevel } from '../HabitStrengthIndicator';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { StrengthRing } from '../StrengthRing';
+import { StrengthProgressBar } from '../StrengthProgressBar';
 import * as Haptics from 'expo-haptics';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
@@ -466,79 +466,18 @@ export default function DraggableHabit({
                 >
                   {name || habit.name}
                 </Text>
-                {/* Strength ring + Best streak hint */}
-                <View className='mt-0.5 flex-row items-center gap-2'>
-                  {showHabitStrengthPercentage && (
-                    <View className='flex-row items-center gap-1.5'>
-                      <StrengthRing
-                        strength={strengthPercent}
-                        size='small'
-                        showPercentage={false}
-                        showLevel={false}
-                      />
-                      <Text
-                        className='text-[12px] font-bold'
-                        style={{ color: getStrengthColor() }}
-                      >
-                        {strengthPercent}%
-                      </Text>
-                    </View>
-                  )}
-                  {bestStreak > 0 && bestStreak > streak && (
-                    <Text
-                      className='text-[12px] font-medium'
-                      style={{ color: '#a8a29e' }} // stone-400
-                    >
-                      Best: {bestStreak} days
-                    </Text>
-                  )}
-                </View>
+                {/* Best streak hint (only if not showing strength bar) */}
+                {bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage && (
+                  <Text
+                    className='mt-0.5 text-[12px] font-medium'
+                    style={{ color: '#a8a29e' }} // stone-400
+                  >
+                    Best: {bestStreak} days
+                  </Text>
+                )}
               </View>
             </View>
 
-            {/* Enhanced streak badge with glow effect */}
-            {streak > 0 && (
-              <Animated.View
-                style={{
-                  shadowColor: streakColors.glow,
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: hasSignificantStreak
-                    ? streakBadgeGlow.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0.3, 0.6],
-                      })
-                    : 0.25,
-                  shadowRadius: hasSignificantStreak ? 10 : 6,
-                  elevation: hasSignificantStreak ? 6 : 4,
-                }}
-              >
-                <View
-                  className='flex-row items-center gap-1 rounded-full px-3 py-1.5'
-                  style={{
-                    backgroundColor: streakColors.bg,
-                  }}
-                >
-                  <Text className='text-[14px]'>🔥</Text>
-                  <Text
-                    className='text-[14px] font-extrabold tabular-nums text-white'
-                    style={{
-                      letterSpacing: 0.3,
-                      textShadowColor: 'rgba(0, 0, 0, 0.2)',
-                      textShadowOffset: { width: 0, height: 1 },
-                      textShadowRadius: 2,
-                    }}
-                  >
-                    {streak}
-                  </Text>
-                  {/* Milestone indicator */}
-                  {streak >= 7 && (
-                    <Text className='text-[12px]'>
-                      {streak >= 30 ? '💎' : streak >= 14 ? '⭐' : '✨'}
-                    </Text>
-                  )}
-                </View>
-              </Animated.View>
-            )}
 
           </View>
 
@@ -564,13 +503,27 @@ export default function DraggableHabit({
             </Animated.View>
           )}
 
-          {/* Refined divider */}
-          <View
-            className='mb-3 h-[1px]'
-            style={{
-              backgroundColor: 'rgba(120, 113, 108, 0.08)', // Lighter divider
-            }}
-          />
+          {/* Strength Progress Bar as divider - full width with milestone markers */}
+          {showHabitStrengthPercentage && (
+            <View className='mb-3'>
+              <StrengthProgressBar
+                showMarkers
+                showNextLevel={false}
+                showPercentage={false}
+                size="large"
+                strength={strengthPercent}
+              />
+            </View>
+          )}
+          {/* Fallback divider when strength is hidden */}
+          {!showHabitStrengthPercentage && (
+            <View
+              className='mb-3 h-[1px]'
+              style={{
+                backgroundColor: 'rgba(120, 113, 108, 0.08)',
+              }}
+            />
+          )}
 
           {/* Week status visualizer - full width */}
           <HabitChainVisualizer

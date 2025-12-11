@@ -40,6 +40,7 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
 import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { StrengthProgressBar } from '../StrengthProgressBar/StrengthProgressBar';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
 
@@ -657,19 +658,15 @@ export function HabitCard({
               pointerEvents="none"
             />
 
-            {/* Bottom Row: Strength Percentage with Level Emoji */}
+            {/* Bottom Row: Strength Progress Bar */}
             <View style={styles.bottomRow}>
-              <View style={styles.strengthContainer}>
-                <Text style={styles.strengthEmoji}>{getStrengthEmoji()}</Text>
-                <Text
-                  style={[
-                    styles.strengthPercentage,
-                    { color: getStrengthColor() },
-                  ]}
-                >
-                  {Math.round(strength)}%
-                </Text>
-              </View>
+              <StrengthProgressBar
+                showEmoji
+                showNextLevel
+                showPercentage
+                size="compact"
+                strength={strength}
+              />
             </View>
           </View>
         </Animated.View>
@@ -735,23 +732,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomRow: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginTop: 4,
-  },
-  strengthContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 4,
-  },
-  strengthEmoji: {
-    fontSize: 14,
-  },
-  strengthPercentage: {
-    fontSize: 14,
-    fontWeight: '700',
-    letterSpacing: 0.3,
+    marginTop: 2,
   },
   completedText: {
     opacity: 0.6,

@@ -14,6 +14,7 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
+import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import {
   X,
   Edit3,
@@ -34,11 +35,17 @@ import { clsx } from 'clsx';
 interface Habit {
   _id: Id<'habits'>;
   archived?: boolean;
+  bestStreak?: number;
   createdAt: number;
+  currentStreak?: number;
   icon?: string;
   iconColor?: string;
   name: string;
   notes?: string;
+  strength?: number;
+  successRate?: number;
+  totalCompletions?: number;
+  totalMisses?: number;
 }
 
 interface HabitDetailScreenProps {
@@ -336,6 +343,29 @@ export default function HabitDetailScreen({
         >
           {/* Hero Section */}
           <HeroSection habit={habit} />
+
+          {/* Habit Strength Section */}
+          <HabitStrengthSection
+            currentStreak={habit.currentStreak ?? 0}
+            daysTracking={habit.createdAt ? Math.floor((Date.now() - habit.createdAt) / (1000 * 60 * 60 * 24)) : 0}
+            onInfoPress={() => {
+              Alert.alert(
+                'What is Habit Strength?',
+                'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
+                '🔥 Current Streak - Consecutive days completed\n\n' +
+                '📊 Success Rate - % of days you\'ve completed\n\n' +
+                '📅 Consistency - How regular your habit is\n\n' +
+                'The stronger your habit, the easier it becomes to maintain!',
+                [{ text: 'Got it' }]
+              );
+            }}
+            strength={habit.strength ?? 0}
+            successRate={
+              habit.totalCompletions !== undefined && habit.totalMisses !== undefined
+                ? (habit.totalCompletions / Math.max(1, habit.totalCompletions + habit.totalMisses)) * 100
+                : 0
+            }
+          />
 
           {/* Motivational Boosters */}
           <Animated.View
