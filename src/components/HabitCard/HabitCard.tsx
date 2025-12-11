@@ -760,7 +760,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   icon: {
-    fontSize: 32,
+    fontSize: 24,
   },
   statusContainer: {
     alignItems: 'center',
