@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
+import { addDays, format, parse } from 'date-fns';
 import { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -41,6 +42,21 @@ export function useHabitRenderItem({
       );
       const streak = getStreak(item._id);
 
+      // Check if previous day was completed to show connecting chain
+      const firstDateString = weekDateStrings[0];
+      let isConnectedToPreviousWeek = false;
+
+      if (firstDateString) {
+        try {
+          const firstDate = parse(firstDateString, 'yyyy-MM-dd', new Date());
+          const previousDate = addDays(firstDate, -1);
+          const previousDateString = format(previousDate, 'yyyy-MM-dd');
+          isConnectedToPreviousWeek = getHabitStatus(item._id, previousDateString) === 'done';
+        } catch (e) {
+          console.warn('Error calculating previous date status', e);
+        }
+      }
+
       return (
         <ScaleDecorator>
           <View
@@ -52,6 +68,7 @@ export function useHabitRenderItem({
             <DraggableHabit
               celebrationsEnabled={celebrationsEnabled}
               habit={item}
+              isConnectedToPreviousWeek={isConnectedToPreviousWeek}
               isJustCreated={highlightHabitId === item._id}
               showHabitStrengthPercentage={showHabitStrengthPercentage}
               streak={streak}

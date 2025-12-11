@@ -46,6 +46,7 @@ interface DraggableHabitProps {
   reduceMotionPreference: boolean;
   isJustCreated?: boolean;
   previousStreak?: number; // For detecting new personal records
+  isConnectedToPreviousWeek?: boolean;
 }
 
 export default function DraggableHabit({
@@ -65,6 +66,7 @@ export default function DraggableHabit({
   reduceMotionPreference,
   isJustCreated = false,
   previousStreak,
+  isConnectedToPreviousWeek = false,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
@@ -539,6 +541,7 @@ export default function DraggableHabit({
             weekDateStrings={weekDateStrings}
             weekStatus={weekStatus}
             onToggle={toggleHabit}
+            isConnectedToPreviousWeek={isConnectedToPreviousWeek}
           />
 
           {/* Completion reward indicator - enhanced */}
