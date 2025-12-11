@@ -509,7 +509,7 @@ export default function DraggableHabit({
               <StrengthProgressBar
                 showMarkers
                 showNextLevel={false}
-                showPercentage={false}
+                showPercentage
                 size="large"
                 strength={strengthPercent}
               />

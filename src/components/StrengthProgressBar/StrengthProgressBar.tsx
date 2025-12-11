@@ -4,7 +4,7 @@
  *
  * Features:
  * - Horizontal progress bar (better visibility at low %)
- * - Level markers at 20%, 40%, 60%, 80%
+ * - Level emoji showing current state
  * - Next level hint for motivation
  * - Animated fill with spring physics
  * - Color-coded by strength level
@@ -13,9 +13,10 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
-  useAnimatedStyle,
   useSharedValue,
+  useAnimatedStyle,
   withSpring,
+  withSequence,
 } from 'react-native-reanimated';
 
 export interface StrengthProgressBarProps {
@@ -25,33 +26,29 @@ export interface StrengthProgressBarProps {
   size?: 'compact' | 'default' | 'large';
   /** Show percentage text */
   showPercentage?: boolean;
+  /** Show level emoji */
+  showEmoji?: boolean;
   /** Show next level hint */
   showNextLevel?: boolean;
   /** Show level label text */
   showLabel?: boolean;
-  /** Show level markers on bar */
-  showMarkers?: boolean;
 }
 
 interface LevelConfig {
   color: string;
   colorBg: string;
-  colorGlow: string;
   emoji: string;
   label: string;
   threshold: number;
 }
 
 const LEVELS: LevelConfig[] = [
-  { color: '#65a30d', colorBg: '#ecfccb', colorGlow: '#84cc16', emoji: '🌱', label: 'Starting', threshold: 0 },
-  { color: '#16a34a', colorBg: '#dcfce7', colorGlow: '#22c55e', emoji: '🌿', label: 'Building', threshold: 20 },
-  { color: '#0d9488', colorBg: '#ccfbf1', colorGlow: '#14b8a6', emoji: '🌳', label: 'Developing', threshold: 40 },
-  { color: '#0891b2', colorBg: '#cffafe', colorGlow: '#06b6d4', emoji: '💪', label: 'Strong', threshold: 60 },
-  { color: '#059669', colorBg: '#d1fae5', colorGlow: '#10b981', emoji: '⚡', label: 'Automatic', threshold: 80 },
+  { color: '#65a30d', colorBg: '#ecfccb', emoji: '🌱', label: 'Starting', threshold: 0 },
+  { color: '#16a34a', colorBg: '#dcfce7', emoji: '🌿', label: 'Building', threshold: 20 },
+  { color: '#0d9488', colorBg: '#ccfbf1', emoji: '🌳', label: 'Developing', threshold: 40 },
+  { color: '#0891b2', colorBg: '#cffafe', emoji: '💪', label: 'Strong', threshold: 60 },
+  { color: '#059669', colorBg: '#d1fae5', emoji: '⚡', label: 'Automatic', threshold: 80 },
 ];
-
-// Level thresholds for markers (skip 0 and 100)
-const MARKER_THRESHOLDS = [20, 40, 60, 80];
 
 const getCurrentLevel = (strength: number): LevelConfig => {
   for (let i = LEVELS.length - 1; i >= 0; i--) {
@@ -72,39 +69,50 @@ const getNextLevel = (strength: number): LevelConfig | null => {
 };
 
 const SIZE_CONFIG = {
-  compact: { barHeight: 6, fontSize: 11, gap: 4 },
-  default: { barHeight: 8, fontSize: 12, gap: 6 },
-  large: { barHeight: 10, fontSize: 14, gap: 8 },
+  compact: { barHeight: 4, fontSize: 11, emojiSize: 14, gap: 4 },
+  default: { barHeight: 6, fontSize: 12, emojiSize: 16, gap: 6 },
+  large: { barHeight: 8, fontSize: 14, emojiSize: 20, gap: 8 },
 };
 
 export const StrengthProgressBar = ({
   strength,
   size = 'default',
   showPercentage = true,
+  showEmoji = true,
   showNextLevel = true,
   showLabel = false,
-  showMarkers = true,
 }: StrengthProgressBarProps) => {
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const currentLevel = getCurrentLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
   const config = SIZE_CONFIG[size];
 
-  const pointsToNext = nextLevel ? nextLevel.threshold - clampedStrength : 0;
-
   // Animation values
   const progressWidth = useSharedValue(0);
+  const emojiScale = useSharedValue(1);
 
   useEffect(() => {
     progressWidth.value = withSpring(clampedStrength, {
       damping: 15,
       stiffness: 100,
     });
+
+    // Bounce emoji on change
+    emojiScale.value = withSequence(
+      withSpring(1.15, { damping: 8, stiffness: 200 }),
+      withSpring(1, { damping: 12, stiffness: 150 })
+    );
   }, [clampedStrength]);
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,
   }));
+
+  const emojiAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: emojiScale.value }],
+  }));
+
+  const pointsToNext = nextLevel ? nextLevel.threshold - clampedStrength : 0;
 
   return (
     <View
@@ -113,9 +121,45 @@ export const StrengthProgressBar = ({
       accessibilityRole="progressbar"
       style={styles.container}
     >
-      {/* Top row: Percentage + Bar */}
+      {/* Top row: Emoji + Bar + Percentage */}
       <View style={[styles.topRow, { gap: config.gap }]}>
-        {/* Percentage (left side) */}
+        {/* Current Level Emoji */}
+        {showEmoji && (
+          <Animated.Text
+            style={[
+              styles.emoji,
+              { fontSize: config.emojiSize },
+              emojiAnimatedStyle,
+            ]}
+          >
+            {currentLevel.emoji}
+          </Animated.Text>
+        )}
+
+        {/* Progress Bar */}
+        <View
+          style={[
+            styles.barContainer,
+            {
+              backgroundColor: '#e5e7eb',
+              borderRadius: config.barHeight / 2,
+              height: config.barHeight,
+            },
+          ]}
+        >
+          <Animated.View
+            style={[
+              styles.barFill,
+              {
+                backgroundColor: currentLevel.color,
+                borderRadius: config.barHeight / 2,
+              },
+              progressAnimatedStyle,
+            ]}
+          />
+        </View>
+
+        {/* Percentage */}
         {showPercentage && (
           <Text
             style={[
@@ -127,52 +171,15 @@ export const StrengthProgressBar = ({
           </Text>
         )}
 
-        {/* Progress Bar Container */}
-        <View style={styles.barWrapper}>
-          {/* Bar Background */}
-          <View
-            style={[
-              styles.barContainer,
-              {
-                backgroundColor: '#e5e7eb',
-                borderRadius: config.barHeight / 2,
-                height: config.barHeight,
-              },
-            ]}
-          >
-            {/* Level Markers - simple tick marks */}
-            {showMarkers && MARKER_THRESHOLDS.map((threshold) => {
-              const isPassed = clampedStrength >= threshold;
-              return (
-                <View
-                  key={threshold}
-                  style={[
-                    styles.marker,
-                    {
-                      backgroundColor: isPassed ? currentLevel.color : '#d1d5db',
-                      height: config.barHeight + 4,
-                      left: `${threshold}%`,
-                      marginLeft: -1,
-                      width: 2,
-                    },
-                  ]}
-                />
-              );
-            })}
-
-            {/* Progress Fill */}
-            <Animated.View
-              style={[
-                styles.barFill,
-                {
-                  backgroundColor: currentLevel.color,
-                  borderRadius: config.barHeight / 2,
-                },
-                progressAnimatedStyle,
-              ]}
-            />
+        {/* Next Level Hint */}
+        {showNextLevel && nextLevel && (
+          <View style={styles.nextLevelContainer}>
+            <Text style={[styles.arrow, { fontSize: config.fontSize }]}>→</Text>
+            <Text style={[styles.nextEmoji, { fontSize: config.emojiSize * 0.85 }]}>
+              {nextLevel.emoji}
+            </Text>
           </View>
-        </View>
+        )}
       </View>
 
       {/* Bottom row: Label + Points to next (optional) */}
@@ -205,21 +212,16 @@ export const StrengthProgressBar = ({
 };
 
 const styles = StyleSheet.create({
+  arrow: {
+    color: '#9ca3af',
+    marginRight: 2,
+  },
   barContainer: {
     flex: 1,
-    justifyContent: 'center',
-    overflow: 'visible',
+    overflow: 'hidden',
   },
   barFill: {
-    bottom: 0,
     height: '100%',
-    left: 0,
-    position: 'absolute',
-    top: 0,
-  },
-  barWrapper: {
-    flex: 1,
-    position: 'relative',
   },
   bottomRow: {
     alignItems: 'center',
@@ -229,22 +231,26 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  emoji: {
+    textAlign: 'center',
+  },
   label: {
     fontWeight: '600',
   },
-  marker: {
-    borderRadius: 1,
-    position: 'absolute',
-    top: -2,
-    zIndex: 10,
+  nextEmoji: {
+    opacity: 0.6,
   },
   nextHint: {
     color: '#9ca3af',
   },
+  nextLevelContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   percentage: {
     fontWeight: '700',
-    minWidth: 36,
-    textAlign: 'left',
+    minWidth: 32,
+    textAlign: 'right',
   },
   topRow: {
     alignItems: 'center',
