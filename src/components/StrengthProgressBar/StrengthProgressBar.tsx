@@ -113,65 +113,67 @@ export const StrengthProgressBar = ({
       accessibilityRole="progressbar"
       style={styles.container}
     >
-      {/* Top row: Percentage + Bar */}
-      <View style={[styles.topRow, { gap: config.gap }]}>
-        {/* Percentage (left side) */}
-        {showPercentage && (
-          <Text
-            style={[
-              styles.percentage,
-              { color: currentLevel.color, fontSize: config.fontSize },
-            ]}
-          >
-            {Math.round(clampedStrength)}%
-          </Text>
-        )}
+      {/* Progress Bar Container */}
+      <View style={styles.barWrapper}>
+        {/* Bar Background */}
+        <View
+          style={[
+            styles.barContainer,
+            {
+              backgroundColor: '#e5e7eb',
+              borderRadius: config.barHeight / 2,
+              height: config.barHeight,
+            },
+          ]}
+        >
+          {/* Level Markers - simple tick marks */}
+          {showMarkers && MARKER_THRESHOLDS.map((threshold) => {
+            const isPassed = clampedStrength >= threshold;
+            return (
+              <View
+                key={threshold}
+                style={[
+                  styles.marker,
+                  {
+                    backgroundColor: isPassed ? currentLevel.color : '#d1d5db',
+                    height: config.barHeight + 4,
+                    left: `${threshold}%`,
+                    marginLeft: -1,
+                    width: 2,
+                  },
+                ]}
+              />
+            );
+          })}
 
-        {/* Progress Bar Container */}
-        <View style={styles.barWrapper}>
-          {/* Bar Background */}
-          <View
+          {/* Progress Fill */}
+          <Animated.View
             style={[
-              styles.barContainer,
+              styles.barFill,
               {
-                backgroundColor: '#e5e7eb',
+                backgroundColor: currentLevel.color,
                 borderRadius: config.barHeight / 2,
-                height: config.barHeight,
               },
+              progressAnimatedStyle,
             ]}
-          >
-            {/* Level Markers - simple tick marks */}
-            {showMarkers && MARKER_THRESHOLDS.map((threshold) => {
-              const isPassed = clampedStrength >= threshold;
-              return (
-                <View
-                  key={threshold}
-                  style={[
-                    styles.marker,
-                    {
-                      backgroundColor: isPassed ? currentLevel.color : '#d1d5db',
-                      height: config.barHeight + 4,
-                      left: `${threshold}%`,
-                      marginLeft: -1,
-                      width: 2,
-                    },
-                  ]}
-                />
-              );
-            })}
+          />
 
-            {/* Progress Fill */}
-            <Animated.View
-              style={[
-                styles.barFill,
-                {
-                  backgroundColor: currentLevel.color,
-                  borderRadius: config.barHeight / 2,
-                },
-                progressAnimatedStyle,
-              ]}
-            />
-          </View>
+          {/* Centered Percentage inside progress bar */}
+          {showPercentage && (
+            <View style={styles.percentageContainer}>
+              <Text
+                style={[
+                  styles.percentage,
+                  { 
+                    color: currentLevel.color, 
+                    fontSize: config.fontSize,
+                  },
+                ]}
+              >
+                {Math.round(clampedStrength)}%
+              </Text>
+            </View>
+          )}
         </View>
       </View>
 
@@ -209,6 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     overflow: 'visible',
+    position: 'relative',
   },
   barFill: {
     bottom: 0,
@@ -243,12 +246,20 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontWeight: '700',
-    minWidth: 36,
-    textAlign: 'left',
+    textAlign: 'center',
+    textShadowColor: 'rgba(255, 255, 255, 0.8)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 2,
   },
-  topRow: {
+  percentageContainer: {
     alignItems: 'center',
-    flexDirection: 'row',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 20,
   },
 });
 
