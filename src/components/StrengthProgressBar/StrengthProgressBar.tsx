@@ -31,6 +31,8 @@ export interface StrengthProgressBarProps {
   showLabel?: boolean;
   /** Show level markers on bar */
   showMarkers?: boolean;
+  /** Show level emoji */
+  showEmoji?: boolean;
 }
 
 interface LevelConfig {
@@ -84,6 +86,7 @@ export const StrengthProgressBar = ({
   showNextLevel = true,
   showLabel = false,
   showMarkers = true,
+  showEmoji = false,
 }: StrengthProgressBarProps) => {
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const currentLevel = getCurrentLevel(clampedStrength);
@@ -113,38 +116,47 @@ export const StrengthProgressBar = ({
       accessibilityRole="progressbar"
       style={styles.container}
     >
-      {/* Progress Bar Container */}
-      <View style={styles.barWrapper}>
-        {/* Bar Background */}
-        <View
-          style={[
-            styles.barContainer,
-            {
-              backgroundColor: '#e5e7eb',
-              borderRadius: config.barHeight / 2,
-              height: config.barHeight,
-            },
-          ]}
-        >
-          {/* Level Markers - simple tick marks */}
-          {showMarkers && MARKER_THRESHOLDS.map((threshold) => {
-            const isPassed = clampedStrength >= threshold;
-            return (
-              <View
-                key={threshold}
-                style={[
-                  styles.marker,
-                  {
-                    backgroundColor: isPassed ? currentLevel.color : '#d1d5db',
-                    height: config.barHeight + 4,
-                    left: `${threshold}%`,
-                    marginLeft: -1,
-                    width: 2,
-                  },
-                ]}
-              />
-            );
-          })}
+      {/* Row with emoji and progress bar */}
+      <View style={styles.progressRow}>
+        {/* Level Emoji */}
+        {showEmoji && (
+          <Text style={[styles.emoji, { fontSize: config.fontSize + 2 }]}>
+            {currentLevel.emoji}
+          </Text>
+        )}
+
+        {/* Progress Bar Container */}
+        <View style={styles.barWrapper}>
+          {/* Bar Background */}
+          <View
+            style={[
+              styles.barContainer,
+              {
+                backgroundColor: '#e5e7eb',
+                borderRadius: config.barHeight / 2,
+                height: config.barHeight,
+              },
+            ]}
+          >
+            {/* Level Markers - small dashes */}
+            {showMarkers && MARKER_THRESHOLDS.map((threshold) => {
+              const isPassed = clampedStrength >= threshold;
+              return (
+                <View
+                  key={threshold}
+                  style={[
+                    styles.marker,
+                    {
+                      backgroundColor: isPassed ? currentLevel.color : '#d1d5db',
+                      height: config.barHeight - 2,
+                      left: `${threshold}%`,
+                      marginLeft: -0.5,
+                      width: 1,
+                    },
+                  ]}
+                />
+              );
+            })}
 
           {/* Progress Fill */}
           <Animated.View
@@ -176,6 +188,7 @@ export const StrengthProgressBar = ({
           )}
         </View>
       </View>
+    </View>
 
       {/* Bottom row: Label + Points to next (optional) */}
       {(showLabel || (showNextLevel && nextLevel)) && (
@@ -232,13 +245,16 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  emoji: {
+    marginRight: 6,
+  },
   label: {
     fontWeight: '600',
   },
   marker: {
-    borderRadius: 1,
+    borderRadius: 0.5,
     position: 'absolute',
-    top: -2,
+    top: 1,
     zIndex: 10,
   },
   nextHint: {
@@ -260,6 +276,10 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 20,
+  },
+  progressRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
 
