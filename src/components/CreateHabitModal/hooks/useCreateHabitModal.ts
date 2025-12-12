@@ -35,6 +35,8 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
     resetForm,
     closeColorPicker,
     setShowTimePicker,
+    selectedEmoji,
+    selectedColor,
   } = form;
   const createHabit = useMutation(api.habits.create);
   const updateHabit = useMutation(api.habits.update);
@@ -82,6 +84,8 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
     if (isEditMode && habitToEdit) {
       await updateHabit({
         habitId: habitToEdit._id,
+        icon: selectedEmoji ?? undefined,
+        iconColor: selectedColor,
         name: fullHabitName,
         notes: habitToEdit.notes ?? '',
         remindersEnabled: hasReminders,
@@ -90,6 +94,8 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
       });
     } else {
       const habitId = await createHabit({
+        icon: selectedEmoji ?? undefined,
+        iconColor: selectedColor,
         name: fullHabitName,
         notes: '',
         remindersEnabled: hasReminders,
@@ -115,7 +121,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
     science.close();
     triggerSuccess();
     onClose();
-  }, [createHabit, closeColorPicker, habitToEdit, isEditMode, onClose, reminderSound, reminderTime, remindersEnabled, resetForm, science, setShowTimePicker, template, updateHabit, fullHabitName]);
+  }, [createHabit, closeColorPicker, habitToEdit, isEditMode, onClose, reminderSound, reminderTime, remindersEnabled, resetForm, science, selectedColor, selectedEmoji, setShowTimePicker, template, updateHabit, fullHabitName]);
 
   return { isEditMode, form, template, science, handleCreate };
 };

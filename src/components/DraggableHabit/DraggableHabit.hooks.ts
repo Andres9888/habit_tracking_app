@@ -15,6 +15,8 @@ export const getEmojiAndName = (
 };
 
 interface Habit {
+  icon?: string;
+  iconColor?: string;
   name: string;
   [key: string]: any;
 }
@@ -44,8 +46,12 @@ const pickAccentColor = (input: string): string => {
 };
 
 export const useDraggableHabitLogic = (habit: Habit) => {
-  const { emoji, name } = getEmojiAndName(habit.name);
-  const accentColor = pickAccentColor(name || habit.name);
+  // Use icon field if available, otherwise extract from name
+  const { emoji: extractedEmoji, name } = getEmojiAndName(habit.name);
+  const emoji = habit.icon || extractedEmoji;
+
+  // Use iconColor if available, otherwise pick based on name
+  const accentColor = habit.iconColor || pickAccentColor(name || habit.name);
 
   return {
     accentColor,

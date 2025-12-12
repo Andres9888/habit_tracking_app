@@ -18,6 +18,8 @@ interface Habit {
   notes?: string;
   createdAt: number;
   _creationTime: number;
+  icon?: string;
+  iconColor?: string;
   order?: number;
   tags?: string[];
   userId?: string;

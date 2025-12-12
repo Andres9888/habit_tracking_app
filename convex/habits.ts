@@ -5,6 +5,8 @@ import { updateStreak } from "./streakUtils";
 
 export const create = mutation({
   args: {
+    icon: v.optional(v.string()),
+    iconColor: v.optional(v.string()),
     name: v.string(),
     notes: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
@@ -27,6 +29,10 @@ export const create = mutation({
       createdAt: Date.now(),
       // Initialize streak tracking fields (Story 1.3)
       currentStreak: 0,
+
+      icon: args.icon,
+
+      iconColor: args.iconColor,
 
       lastCompletedDate: undefined,
 
