@@ -5,13 +5,17 @@
 
 import { render, screen } from '@testing-library/react-native';
 import { format } from 'date-fns';
-import App from '../src/App';
-import { DateSelector } from '../src/components/DateSelector';
-import { HabitChainVisualizer } from '../src/components/HabitChainVisualizer';
-import DraggableHabit from '../src/components/DraggableHabit';
+import App from '../../../src/App';
+import { DateSelector } from '../../../src/components/DateSelector';
+import { HabitChainVisualizer } from '../../../src/components/HabitChainVisualizer';
+import DraggableHabit from '../../../src/components/DraggableHabit';
 
 // Mock Convex hooks
 jest.mock('convex/react', () => ({
+  ConvexProvider: ({ children }: any) => children,
+  ConvexReactClient: jest.fn(function ConvexReactClient() {
+    return {};
+  }),
   useQuery: jest.fn(() => []),
   useMutation: jest.fn(() => jest.fn()),
 }));

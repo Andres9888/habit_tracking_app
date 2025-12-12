@@ -19,5 +19,10 @@ export default {
     '!**/coverage/**',
     '!**/*.d.ts',
   ],
-  testPathIgnorePatterns: ['/node_modules/', '/__tests__/.*\\.snap$', '/tests/.*\\.snap$'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/__tests__/.*\\.snap$',
+    '/tests/.*\\.snap$',
+    '/tests/e2e/',
+  ],
 };

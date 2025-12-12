@@ -134,6 +134,18 @@ export function HabitCard({
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
 
+  // Convex mutation for toggling completion
+  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
+
+  // Query current completion status for conditional haptic feedback
+  // Returns true if completed, false if not completed, undefined while loading
+  const isCompleted = useQuery(api.tracking.getCompletionStatus, {
+    date: today,
+    habitId: id,
+  });
+
+  const completed = isCompleted === undefined ? completedProp : isCompleted;
+
   // Animate strength fill when strength changes
   useEffect(() => {
     strengthFillWidth.value = withSpring(strength, {
@@ -193,16 +205,6 @@ export function HabitCard({
         return '🌱';
     }
   };
-
-  // Convex mutation for toggling completion
-  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
-
-  // Query current completion status for conditional haptic feedback
-  // Returns true if completed, false if not completed, undefined while loading
-  const isCompleted = useQuery(api.tracking.getCompletionStatus, {
-    date: today,
-    habitId: id,
-  });
 
   // Note: Haptic feedback will be called inline with runOnJS wrapper
   // This pattern is required for Reanimated worklets

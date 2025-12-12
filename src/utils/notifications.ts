@@ -16,6 +16,8 @@ Notifications.setNotificationHandler({
     shouldPlaySound: true,
     shouldSetBadge: false,
     shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
@@ -38,9 +40,14 @@ async function configureAndroidChannel() {
 export async function ensureNotificationPermissions(): Promise<boolean> {
   const currentPermissions = await Notifications.getPermissionsAsync();
 
+  const currentIosStatus = currentPermissions.ios?.status;
+  const hasCurrentIosPermission =
+    currentIosStatus === Notifications.IosAuthorizationStatus.AUTHORIZED ||
+    currentIosStatus === Notifications.IosAuthorizationStatus.PROVISIONAL;
+
   if (
     currentPermissions.granted ||
-    currentPermissions.ios?.status === Notifications.AuthorizationStatus.GRANTED
+    hasCurrentIosPermission
   ) {
     await configureAndroidChannel();
     return true;
@@ -48,10 +55,14 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
 
   const requestedPermissions = await Notifications.requestPermissionsAsync();
 
+  const requestedIosStatus = requestedPermissions.ios?.status;
+  const hasRequestedIosPermission =
+    requestedIosStatus === Notifications.IosAuthorizationStatus.AUTHORIZED ||
+    requestedIosStatus === Notifications.IosAuthorizationStatus.PROVISIONAL;
+
   if (
     requestedPermissions.granted ||
-    requestedPermissions.ios?.status ===
-      Notifications.AuthorizationStatus.GRANTED
+    hasRequestedIosPermission
   ) {
     await configureAndroidChannel();
     return true;
@@ -160,7 +171,7 @@ export async function scheduleHabitReminder({
       channelId: Platform.OS === 'android' ? ANDROID_CHANNEL_ID : undefined,
       hour: reminderTime.getHours(),
       minute: reminderTime.getMinutes(),
-      repeats: true,
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
     },
   });
 

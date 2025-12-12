@@ -23,7 +23,7 @@ export interface CalendarTimelineProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const CalendarTimelineDebug: React.FC<CalendarTimelineProps> = ({
+const CalendarTimelineDebugComponent: React.FC<CalendarTimelineProps> = ({
   dates,
   onPreviousWeek,
   onNextWeek,
@@ -40,7 +40,7 @@ const CalendarTimelineDebug: React.FC<CalendarTimelineProps> = ({
   }
 
   const firstDate = dates[0];
-  const lastDate = dates.at(-1);
+  const lastDate = dates[dates.length - 1];
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   const colors = highContrastMode
@@ -201,4 +201,4 @@ const CalendarTimelineDebug: React.FC<CalendarTimelineProps> = ({
   );
 };
 
-export const CalendarTimelineDebug = memo(CalendarTimelineDebug);
+export const CalendarTimelineDebug = memo(CalendarTimelineDebugComponent);

@@ -7,6 +7,9 @@ global.__ExpoImportMetaRegistry = {
   get: jest.fn(() => ({})),
 };
 
+// Provide required app config env vars for tests
+process.env.EXPO_PUBLIC_CONVEX_URL ??= 'https://test.convex.cloud';
+
 // Polyfill structuredClone for Expo 54
 if (typeof global.structuredClone === 'undefined') {
   global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
@@ -28,6 +31,13 @@ jest.mock('react-native-gesture-handler', () => {
     PanGestureHandler: View,
     State: {},
   };
+});
+
+// Mock react-native-reanimated (required by many RN gesture libraries)
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+  Reanimated.default.call = () => {};
+  return Reanimated;
 });
 
 // Mock @expo/vector-icons
