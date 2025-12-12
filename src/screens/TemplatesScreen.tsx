@@ -106,7 +106,7 @@ export default function TemplatesScreen() {
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
   const previewScrollOffset = useRef(0);
   const previewScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
-  
+
   // Animation values for preview modal sections
   const headerProgress = useSharedValue(0);
   const descProgress = useSharedValue(0);
@@ -953,7 +953,7 @@ export default function TemplatesScreen() {
                     <Text style={styles.customizeTitle}>Make it yours</Text>
                     <Text style={styles.customizeSubtitle}>Optional</Text>
                   </View>
-                  
+
                   <View style={styles.inputWrapper}>
                     <Text style={styles.inputLabel}>Habit name</Text>
                     <TextInput
@@ -1268,19 +1268,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   youtubeIcon: {
-    fontSize: 20,
-    marginRight: 12,
+    fontSize: 18,
+  },
+  youtubeIconWrapper: {
+    alignItems: 'center',
+    backgroundColor: '#DC2626',
+    borderRadius: 10,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
   },
   youtubeLink: {
     alignItems: 'center',
-    backgroundColor: '#FEE2E2',
+    backgroundColor: '#FEF2F2',
     borderColor: '#FECACA',
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     flexDirection: 'row',
-    gap: 12,
+    gap: 14,
     marginTop: 12,
-    padding: 16,
+    padding: 14,
   },
   reminderRow: {
     flexDirection: 'row',
