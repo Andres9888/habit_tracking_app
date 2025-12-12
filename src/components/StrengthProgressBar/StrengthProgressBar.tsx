@@ -10,13 +10,16 @@
  * - Color-coded by strength level
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withSequence,
+  withTiming,
+  withDelay,
+  Easing,
 } from 'react-native-reanimated';
 
 export interface StrengthProgressBarProps {
@@ -93,9 +96,14 @@ export const StrengthProgressBar = ({
   const nextLevel = getNextLevel(clampedStrength);
   const config = SIZE_CONFIG[size];
 
+  // Track previous level to detect actual level changes
+  const previousLevelRef = useRef<string>(currentLevel.label);
+
   // Animation values
   const progressWidth = useSharedValue(0);
   const emojiScale = useSharedValue(1);
+  const emojiOpacity = useSharedValue(1);
+  const emojiRotation = useSharedValue(0);
 
   useEffect(() => {
     progressWidth.value = withSpring(clampedStrength, {
@@ -103,19 +111,61 @@ export const StrengthProgressBar = ({
       stiffness: 100,
     });
 
-    // Bounce emoji on change
-    emojiScale.value = withSequence(
-      withSpring(1.15, { damping: 8, stiffness: 200 }),
-      withSpring(1, { damping: 12, stiffness: 150 })
-    );
-  }, [clampedStrength]);
+    // Detect if level actually changed (meaningful transition)
+    const levelChanged = previousLevelRef.current !== currentLevel.label;
+    previousLevelRef.current = currentLevel.label;
+
+    if (levelChanged) {
+      // 🌱→🌿→🌳 LEVEL-UP ANIMATION: Meaningful growth transition
+      // Phase 1: Fade out + shrink old emoji (transformation begins)
+      emojiOpacity.value = withTiming(0.3, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+      emojiScale.value = withTiming(0.6, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+      // Gentle wobble like a plant swaying
+      emojiRotation.value = withSequence(
+        withTiming(-8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
+        withTiming(8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 60, easing: Easing.out(Easing.ease) })
+      );
+
+      // Phase 2: Fade in + grow new emoji (emergence)
+      emojiOpacity.value = withDelay(
+        150,
+        withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+      );
+      emojiScale.value = withDelay(
+        150,
+        withSequence(
+          // Grow with overshoot (blossoming)
+          withSpring(1.4, { damping: 6, stiffness: 120 }),
+          // Settle to final size (rooted)
+          withSpring(1, { damping: 10, stiffness: 180 })
+        )
+      );
+    } else {
+      // Regular strength update: subtle pulse to acknowledge change
+      emojiScale.value = withSequence(
+        withTiming(1.08, { duration: 100, easing: Easing.out(Easing.ease) }),
+        withSpring(1, { damping: 15, stiffness: 200 })
+      );
+    }
+  }, [clampedStrength, currentLevel.label]);
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,
   }));
 
   const emojiAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: emojiScale.value }],
+    opacity: emojiOpacity.value,
+    transform: [
+      { scale: emojiScale.value },
+      { rotate: `${emojiRotation.value}deg` },
+    ],
   }));
 
   const pointsToNext = nextLevel ? nextLevel.threshold - clampedStrength : 0;
