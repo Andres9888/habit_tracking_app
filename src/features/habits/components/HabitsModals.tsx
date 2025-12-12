@@ -6,7 +6,6 @@ import { X } from 'lucide-react-native';
 import CreateHabitModal from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../screens/HabitDetailScreen';
-import { MilestoneCelebration } from '../../../components/MilestoneCelebration';
 import PauseHabitModal from '../../../components/PauseHabitModal';
 import SettingsModal from '../../../components/SettingsModal';
 import HapticTest from '../../../components/HapticTest';
@@ -40,7 +39,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     selectedHabit,
     quickActionsHabit,
     shareCardData,
-    milestone,
     tracking,
     showHabitStrengthPercentage,
     closeSettings,
@@ -58,8 +56,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     setShowHabitStrengthPercentage,
     onSettingsChange,
     onDeleteHabit,
-    onShareMilestone,
-    clearMilestone,
     confirmPause,
     toggleHabit,
     getStreak,
@@ -163,23 +159,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
           console.log('Upgrade to premium');
         }}
       />
-
-      {milestone && (
-        <MilestoneCelebration
-          visible
-          habitName={milestone.habitName}
-          level={milestone.level}
-          strength={milestone.strength}
-          onClose={clearMilestone}
-          onShare={() =>
-            onShareMilestone({
-              habitName: milestone.habitName,
-              milestoneLevel: milestone.level,
-              strengthPercentage: milestone.strength,
-            })
-          }
-        />
-      )}
 
       {showShareCard && shareCardData && ShareCardGenerator && (
         <ShareCardGenerator
