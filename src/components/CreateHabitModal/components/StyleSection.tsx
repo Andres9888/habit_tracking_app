@@ -74,13 +74,6 @@ const AnimatedButton = ({
   );
 };
 
-// Premium gradient colors (locked)
-const PREMIUM_GRADIENTS = [
-  { colors: ['#FF6B6B', '#FFA500'], id: 'sunset', name: 'Sunset' },
-  { colors: ['#667EEA', '#764BA2'], id: 'ocean', name: 'Ocean' },
-  { colors: ['#11998e', '#38ef7d'], id: 'aurora', name: 'Aurora' },
-];
-
 export const StyleSection = ({
   colors,
   emojis,
@@ -196,37 +189,6 @@ export const StyleSection = ({
               )}
             </AnimatedButton>
           ))}
-        </View>
-
-        {/* Premium Gradients (Teaser) */}
-        <View className="mb-4">
-          <View className="mb-2 flex-row items-center">
-            <Text className="text-xs font-semibold text-amber-600">✨ Premium</Text>
-            <View className="ml-2 rounded-full bg-amber-100 px-2 py-0.5">
-              <Text className="text-[10px] font-bold text-amber-700">PRO</Text>
-            </View>
-          </View>
-          <View className="flex-row gap-3">
-            {PREMIUM_GRADIENTS.map((gradient) => (
-              <Pressable
-                key={gradient.id}
-                accessibilityLabel={`${gradient.name} gradient - Premium feature`}
-                className="relative h-10 w-16 items-center justify-center overflow-hidden rounded-xl"
-                style={{
-                  backgroundColor: gradient.colors[0],
-                  opacity: 0.7,
-                }}
-                onPress={() => {
-                  triggerSelection();
-                  // TODO: Navigate to premium screen
-                }}
-              >
-                <View className="absolute inset-0 items-center justify-center bg-black/20">
-                  <Text className="text-sm">🔒</Text>
-                </View>
-              </Pressable>
-            ))}
-          </View>
         </View>
 
         {/* Custom Color Button */}
