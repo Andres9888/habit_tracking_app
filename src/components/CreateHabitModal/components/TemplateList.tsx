@@ -41,6 +41,8 @@ export const TemplateList = ({
       <FlatList
         data={templates}
         keyExtractor={(item) => item._id}
+        ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
+        nestedScrollEnabled
         renderItem={({ item }) => (
           <TemplateListItem
             template={item}
@@ -48,9 +50,8 @@ export const TemplateList = ({
             onViewScience={onViewScience}
           />
         )}
-        ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
-        showsVerticalScrollIndicator
         scrollEventThrottle={16}
+        showsVerticalScrollIndicator
         onContentSizeChange={onContentSizeChange}
         onLayout={onLayout}
         onScroll={onScroll}

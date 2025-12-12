@@ -137,7 +137,9 @@ export default function HabitRankingsList({ habits, onHabitPress }: Props) {
       data={habits}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       keyExtractor={(item) => item.id}
+      nestedScrollEnabled
       renderItem={renderHabitItem}
+      scrollEnabled={false}
       showsVerticalScrollIndicator={false}
     />
   );

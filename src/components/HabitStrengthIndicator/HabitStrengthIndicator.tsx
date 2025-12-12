@@ -9,14 +9,16 @@
  * Accessibility: Announces "Meditation habit, 65% strength, Strong level"
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withSequence,
-  interpolate,
+  withTiming,
+  withDelay,
+  Easing,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 
@@ -156,22 +158,66 @@ export default function HabitStrengthIndicator({
     }
   };
 
+  // Track previous level to detect actual level changes
+  const previousLevelRef = useRef<StrengthLevel>(level);
+
   // Animation values
   const progressWidth = useSharedValue(0);
   const emojiScale = useSharedValue(1);
+  const emojiOpacity = useSharedValue(1);
+  const emojiRotation = useSharedValue(0);
 
-  // Animate progress bar when strength changes
+  // Animate progress bar and emoji when strength/level changes
   useEffect(() => {
+    // Smooth progress bar fill
     progressWidth.value = withSpring(strength, {
       damping: 15,
       stiffness: 150,
     });
 
-    // Emoji bounce animation when level changes (scale up then down)
-    emojiScale.value = withSequence(
-      withSpring(1.2, { damping: 10, stiffness: 100 }),
-      withSpring(1, { damping: 15, stiffness: 150 })
-    );
+    // Detect if level actually changed (meaningful transition)
+    const levelChanged = previousLevelRef.current !== level;
+    previousLevelRef.current = level;
+
+    if (levelChanged) {
+      // 🌱→🌿→🌳 LEVEL-UP ANIMATION: Meaningful growth transition
+      // Phase 1: Fade out + shrink old emoji (transformation begins)
+      emojiOpacity.value = withTiming(0.3, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+      emojiScale.value = withTiming(0.6, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+      // Gentle wobble like a plant swaying
+      emojiRotation.value = withSequence(
+        withTiming(-8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
+        withTiming(8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 60, easing: Easing.out(Easing.ease) })
+      );
+
+      // Phase 2: Fade in + grow new emoji (emergence)
+      emojiOpacity.value = withDelay(
+        150,
+        withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+      );
+      emojiScale.value = withDelay(
+        150,
+        withSequence(
+          // Grow with overshoot (blossoming)
+          withSpring(1.4, { damping: 6, stiffness: 120 }),
+          // Settle to final size (rooted)
+          withSpring(1, { damping: 10, stiffness: 180 })
+        )
+      );
+    } else {
+      // Regular strength update: subtle pulse to acknowledge change
+      emojiScale.value = withSequence(
+        withTiming(1.08, { duration: 100, easing: Easing.out(Easing.ease) }),
+        withSpring(1, { damping: 15, stiffness: 200 })
+      );
+    }
   }, [strength, level]);
 
   // Accessibility announcement
@@ -189,7 +235,11 @@ export default function HabitStrengthIndicator({
   }));
 
   const emojiStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: emojiScale.value }],
+    opacity: emojiOpacity.value,
+    transform: [
+      { scale: emojiScale.value },
+      { rotate: `${emojiRotation.value}deg` },
+    ],
   }));
 
   // Compact Variant (for habit list)

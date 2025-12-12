@@ -11,7 +11,7 @@
  * - Full accessibility support
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
@@ -21,6 +21,8 @@ import Animated, {
   withSpring,
   withDelay,
   withTiming,
+  withSequence,
+  Easing,
   FadeIn,
   FadeInDown,
 } from 'react-native-reanimated';
@@ -180,20 +182,73 @@ export const HabitStrengthSection = ({
   const radius = (ringSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
+  // Track previous level to detect level changes
+  const previousLevelRef = useRef<string>(level.label);
+  const isInitialMount = useRef(true);
+
   // Animations
   const animatedStrength = useSharedValue(0);
   const emojiScale = useSharedValue(0);
+  const emojiOpacity = useSharedValue(1);
+  const emojiRotation = useSharedValue(0);
 
   useEffect(() => {
     animatedStrength.value = withSpring(clampedStrength, {
       damping: 15,
       stiffness: 80,
     });
-    emojiScale.value = withDelay(
-      300,
-      withSpring(1, { damping: 8, stiffness: 150 })
-    );
-  }, [clampedStrength]);
+
+    // Check if level changed (not just strength value)
+    const levelChanged = previousLevelRef.current !== level.label;
+    previousLevelRef.current = level.label;
+
+    if (isInitialMount.current) {
+      // Initial mount animation (scale from 0)
+      isInitialMount.current = false;
+      emojiScale.value = withDelay(
+        300,
+        withSpring(1, { damping: 8, stiffness: 150 })
+      );
+    } else if (levelChanged) {
+      // 🌱→🌿→🌳 LEVEL-UP ANIMATION: Meaningful growth transition
+      // Phase 1: Fade out + shrink old emoji (transformation begins)
+      emojiOpacity.value = withTiming(0.3, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+      emojiScale.value = withTiming(0.6, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+      // Gentle wobble like a plant swaying
+      emojiRotation.value = withSequence(
+        withTiming(-10, { duration: 80, easing: Easing.inOut(Easing.ease) }),
+        withTiming(10, { duration: 80, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 60, easing: Easing.out(Easing.ease) })
+      );
+
+      // Phase 2: Fade in + grow new emoji (emergence)
+      emojiOpacity.value = withDelay(
+        150,
+        withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+      );
+      emojiScale.value = withDelay(
+        150,
+        withSequence(
+          // Grow with overshoot (blossoming)
+          withSpring(1.5, { damping: 6, stiffness: 120 }),
+          // Settle to final size (rooted)
+          withSpring(1, { damping: 10, stiffness: 180 })
+        )
+      );
+    } else {
+      // Regular strength update: subtle pulse to acknowledge change
+      emojiScale.value = withSequence(
+        withTiming(1.1, { duration: 100, easing: Easing.out(Easing.ease) }),
+        withSpring(1, { damping: 15, stiffness: 200 })
+      );
+    }
+  }, [clampedStrength, level.label]);
 
   const animatedCircleProps = useAnimatedProps(() => {
     const progress = animatedStrength.value / 100;
@@ -203,7 +258,11 @@ export const HabitStrengthSection = ({
   });
 
   const emojiAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: emojiScale.value }],
+    opacity: emojiOpacity.value,
+    transform: [
+      { scale: emojiScale.value },
+      { rotate: `${emojiRotation.value}deg` },
+    ],
   }));
 
   // Trend icon component

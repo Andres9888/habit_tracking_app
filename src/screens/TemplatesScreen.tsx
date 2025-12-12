@@ -300,6 +300,21 @@ export default function TemplatesScreen() {
     }
   }, [previewTemplate]);
 
+  const handlePreviewYoutubeLink = useCallback(async () => {
+    if (!previewTemplate?.youtubeLink) {
+      return;
+    }
+
+    try {
+      const supported = await Linking.canOpenURL(previewTemplate.youtubeLink);
+      if (supported) {
+        await Linking.openURL(previewTemplate.youtubeLink);
+      }
+    } catch (error) {
+      console.error('Failed to open YouTube link', error);
+    }
+  }, [previewTemplate]);
+
   // Render category filter chip
   const renderCategoryChip = useCallback(
     (category: CategoryFilter) => {
@@ -376,6 +391,7 @@ export default function TemplatesScreen() {
         popularityScore={item.popularityScore}
         scientificLink={item.scientificLink}
         scientificReference={item.scientificReference}
+        youtubeLink={item.youtubeLink}
         onImport={() => handleTemplateImport(item._id)}
         onPreview={() => handleTemplatePreview(item)}
       />
@@ -765,6 +781,39 @@ export default function TemplatesScreen() {
               </View>
             </View>
 
+            {/* YouTube Video Link */}
+            {previewTemplate.youtubeLink && (
+              <Pressable
+                accessibilityLabel='Watch video on YouTube'
+                style={styles.youtubeLink}
+                onPress={handlePreviewYoutubeLink}
+              >
+                <Text style={styles.youtubeIcon}>▶️</Text>
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={[
+                      theme.custom.typography.caption,
+                      { color: '#6b7280', fontWeight: '600' },
+                    ]}
+                  >
+                    Watch Video
+                  </Text>
+                  <Text
+                    style={[
+                      theme.custom.typography.bodySmall,
+                      { color: '#DC2626', marginTop: 4, textDecorationLine: 'underline' },
+                    ]}
+                  >
+                    Learn more on YouTube
+                  </Text>
+                </View>
+                <ExternalLink
+                  color='#DC2626'
+                  size={16}
+                />
+              </Pressable>
+            )}
+
             {/* Customization Block */}
             <View style={styles.customizeSection}>
               <Text style={styles.customizeTitle}>Make it yours</Text>
@@ -1004,6 +1053,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 8,
+  },
+  youtubeIcon: {
+    fontSize: 20,
+    marginRight: 12,
+  },
+  youtubeLink: {
+    alignItems: 'center',
+    backgroundColor: '#FEE2E2',
+    borderColor: '#FECACA',
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 12,
+    padding: 16,
   },
   reminderRow: {
     flexDirection: 'row',

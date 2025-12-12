@@ -159,6 +159,9 @@ const applicationTables = {
 
     // "daily", "weekly", "custom"
     scientificReference: v.string(),
+
+    // Optional YouTube video link
+    youtubeLink: v.optional(v.string()),
   }).index('by_category', ['category']),
 
   // Track template usage analytics

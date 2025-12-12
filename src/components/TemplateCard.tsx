@@ -50,6 +50,9 @@ export interface TemplateCardProps {
   /** Optional scientific link */
   scientificLink?: string;
 
+  /** Optional YouTube video link */
+  youtubeLink?: string;
+
   /** Category badge */
   category?: string;
 
@@ -98,6 +101,7 @@ export function TemplateCard({
   iconColor,
   scientificReference,
   scientificLink,
+  youtubeLink,
   category,
   popularityScore,
   isPremium = false,
@@ -309,7 +313,7 @@ export function TemplateCard({
         </Text>
 
         {/* Metadata pills */}
-        {(formattedFrequency || scientificLink || popularityScore) && (
+        {(formattedFrequency || scientificLink || youtubeLink || popularityScore) && (
           <View style={styles.metadataRow}>
             {formattedFrequency && (
               <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
@@ -333,6 +337,19 @@ export function TemplateCard({
                   ]}
                 >
                   🔗 Research
+                </Text>
+              </View>
+            )}
+
+            {youtubeLink && (
+              <View style={[styles.metadataPill, { borderColor: '#FF000030' }]}>
+                <Text
+                  style={[
+                    theme.custom.typography.caption,
+                    styles.metadataText,
+                  ]}
+                >
+                  ▶️ Video
                 </Text>
               </View>
             )}

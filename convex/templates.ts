@@ -32,6 +32,7 @@ type TemplateInsert = {
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;
+  youtubeLink?: string;
 };
 
 const insertTemplateIfMissing = async (
@@ -175,6 +176,7 @@ export const seedTemplates = mutation({
         'https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/1809754',
       scientificReference:
         'Goyal et al. (2014) - Meditation programs for psychological stress',
+      youtubeLink: 'https://www.youtube.com/watch?v=xLXF5aP4CtQ',
     });
 
     await insertWithTracking({
@@ -203,6 +205,7 @@ export const seedTemplates = mutation({
       popularityScore: 92,
       scientificReference:
         'Popkin et al. (2010) - Water, hydration, and health',
+      youtubeLink: 'https://www.youtube.com/watch?v=81QHxWBJyFg',
     });
 
     await insertWithTracking({
@@ -217,6 +220,7 @@ export const seedTemplates = mutation({
       popularityScore: 85,
       scientificReference:
         'Huberman (2021) - Light exposure and circadian biology',
+      youtubeLink: 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
     });
 
     await insertWithTracking({
@@ -245,6 +249,7 @@ export const seedTemplates = mutation({
       popularityScore: 76,
       scientificReference:
         'Höpfl et al. (2021) - Cold water immersion for recovery',
+      youtubeLink: 'https://www.youtube.com/watch?v=pq6WHJzOkno',
     });
 
     await insertWithTracking({
@@ -290,6 +295,7 @@ export const seedTemplates = mutation({
       popularityScore: 94,
       scientificReference:
         'Lee et al. (2019) - Association of step volume and intensity',
+      youtubeLink: 'https://www.youtube.com/watch?v=YQ7QGKIx6vY',
     });
 
     await insertWithTracking({
@@ -318,6 +324,7 @@ export const seedTemplates = mutation({
       popularityScore: 86,
       scientificReference:
         'Behm et al. (2016) - Acute effects of muscle stretching',
+      youtubeLink: 'https://www.youtube.com/watch?v=gdbL6WN4jNM',
     });
 
     await insertWithTracking({
@@ -388,6 +395,7 @@ export const seedTemplates = mutation({
       popularityScore: 88,
       scientificReference:
         'Riebl & Davy (2013) - The hydration equation: Update on water balance',
+      youtubeLink: 'https://www.youtube.com/watch?v=81QHxWBJyFg',
     });
 
     // Productivity Templates
@@ -403,6 +411,7 @@ export const seedTemplates = mutation({
       popularityScore: 96,
       scientificReference:
         'Newport (2016) - Deep Work: Rules for focused success',
+      youtubeLink: 'https://www.youtube.com/watch?v=gTaJhjQHcf8',
     });
 
     await insertWithTracking({
@@ -528,6 +537,7 @@ export const seedTemplates = mutation({
         'https://greatergood.berkeley.edu/pdfs/GratitudePDFs/6Emmons-BlessingsBurdens.pdf',
       scientificReference:
         'Emmons & McCullough (2003) - Counting blessings versus burdens',
+      youtubeLink: 'https://www.youtube.com/watch?v=mPH7w64diJc',
     });
 
     await insertWithTracking({
@@ -542,6 +552,7 @@ export const seedTemplates = mutation({
       popularityScore: 91,
       scientificReference:
         'Ma et al. (2017) - Breathing meditation for stress reduction',
+      youtubeLink: 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
     });
 
     await insertWithTracking({
@@ -569,6 +580,7 @@ export const seedTemplates = mutation({
       popularityScore: 85,
       scientificReference:
         'Exelmans & Van den Bulck (2016) - Bedtime mobile phone use',
+      youtubeLink: 'https://www.youtube.com/watch?v=MwXNOxhhYLg',
     });
 
     await insertWithTracking({
@@ -655,6 +667,7 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Morning sunlight for optimal circadian biology',
+      youtubeLink: 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
     });
 
     await insertWithTracking({
@@ -670,6 +683,7 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Optimal caffeine timing protocol',
+      youtubeLink: 'https://www.youtube.com/watch?v=iw97uvIge7c',
     });
 
     await insertWithTracking({
@@ -686,6 +700,7 @@ export const seedTemplates = mutation({
         'https://hubermanlab.com/zone-2-training-for-endurance-and-longevity/',
       scientificReference:
         'Huberman Lab (2022) - Zone 2 training for longevity',
+      youtubeLink: 'https://www.youtube.com/watch?v=jN0pRAqiUJU',
     });
 
     await insertWithTracking({
@@ -702,6 +717,7 @@ export const seedTemplates = mutation({
         'https://hubermanlab.com/optimal-deliberate-cold-exposure-protocols/',
       scientificReference:
         'Huberman Lab (2023) - Optimal deliberate cold exposure protocols',
+      youtubeLink: 'https://www.youtube.com/watch?v=pq6WHJzOkno',
     });
 
     await insertWithTracking({
@@ -718,6 +734,7 @@ export const seedTemplates = mutation({
         'https://hubermanlab.com/using-nsdr-to-improve-learning-skill-memory/',
       scientificReference:
         'Huberman Lab (2021) - Using NSDR to improve learning and sleep',
+      youtubeLink: 'https://www.youtube.com/watch?v=AKGrmY8UFWU',
     });
 
     await insertWithTracking({
@@ -734,6 +751,7 @@ export const seedTemplates = mutation({
         'https://hubermanlab.com/science-supported-tools-to-reduce-stress/',
       scientificReference:
         'Huberman Lab (2023) - Physiological sigh for stress regulation',
+      youtubeLink: 'https://www.youtube.com/watch?v=rBdhqBGqiMc',
     });
 
     await insertWithTracking({
@@ -749,6 +767,7 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Evening light protocols for better sleep',
+      youtubeLink: 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
     });
 
     await insertWithTracking({
@@ -794,6 +813,7 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Meal timing and circadian biology',
+      youtubeLink: 'https://www.youtube.com/watch?v=9tRohh0gErM',
     });
 
     await insertWithTracking({
@@ -809,6 +829,7 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Intermittent fasting protocols',
+      youtubeLink: 'https://www.youtube.com/watch?v=9tRohh0gErM',
     });
 
     await insertWithTracking({
@@ -825,6 +846,7 @@ export const seedTemplates = mutation({
         'https://hubermanlab.com/using-sauna-for-health-optimization/',
       scientificReference:
         'Huberman Lab (2022) - Sauna use for health optimization',
+      youtubeLink: 'https://www.youtube.com/watch?v=EQ3GjpGq5Y8',
     });
 
     await insertWithTracking({
@@ -840,6 +862,7 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Complete sleep toolkit',
+      youtubeLink: 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
     });
 
     await insertWithTracking({
@@ -2663,6 +2686,7 @@ export const seedNewScienceTemplates = mutation({
       popularityScore: 87,
       scientificReference:
         'Ma et al. (2017) - Effect of diaphragmatic breathing on stress',
+      youtubeLink: 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
     });
 
     await insertWithTracking({
@@ -2773,6 +2797,82 @@ export const listTemplateNames = query({
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();
     return templates.map(t => ({ name: t.name, category: t.category, createdAt: t.createdAt }));
+  },
+});
+
+/**
+ * Mutation: Update existing templates with YouTube links
+ */
+export const updateYoutubeLinks = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const youtubeLinks: Record<string, string> = {
+      // Andrew Huberman Protocol Templates
+      'Morning Sunlight Viewing': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'Delay Caffeine 90 Minutes': 'https://www.youtube.com/watch?v=iw97uvIge7c',
+      'Zone 2 Cardio Training': 'https://www.youtube.com/watch?v=jN0pRAqiUJU',
+      'Deliberate Cold Exposure': 'https://www.youtube.com/watch?v=pq6WHJzOkno',
+      'NSDR Practice': 'https://www.youtube.com/watch?v=AKGrmY8UFWU',
+      'Physiological Sigh': 'https://www.youtube.com/watch?v=rBdhqBGqiMc',
+      'Sauna Therapy': 'https://www.youtube.com/watch?v=EQ3GjpGq5Y8',
+      'Sleep Optimization': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'Evening Light Dimming': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'Time-Restricted Eating': 'https://www.youtube.com/watch?v=9tRohh0gErM',
+      '16:8 Intermittent Fasting': 'https://www.youtube.com/watch?v=9tRohh0gErM',
+      // Morning Routine Templates
+      '5-Minute Meditation': 'https://www.youtube.com/watch?v=xLXF5aP4CtQ',
+      'Hydration First': 'https://www.youtube.com/watch?v=81QHxWBJyFg',
+      'Sunrise Viewing': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'Cold Shower': 'https://www.youtube.com/watch?v=pq6WHJzOkno',
+      // Health & Fitness Templates
+      '10,000 Steps': 'https://www.youtube.com/watch?v=YQ7QGKIx6vY',
+      'Stretching Routine': 'https://www.youtube.com/watch?v=gdbL6WN4jNM',
+      'Hydration Tracking': 'https://www.youtube.com/watch?v=81QHxWBJyFg',
+      // Productivity Templates
+      'Deep Work Session': 'https://www.youtube.com/watch?v=gTaJhjQHcf8',
+      // Mindfulness Templates
+      'Gratitude Journaling': 'https://www.youtube.com/watch?v=mPH7w64diJc',
+      'Breathwork Practice': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
+      'Digital Detox Hour': 'https://www.youtube.com/watch?v=MwXNOxhhYLg',
+      'Box Breathing': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
+      // Additional breathing templates
+      'Box Breathing (4-4-4-4)': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
+      '4-7-8 Breathing': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
+      '4-7-8 Relaxing Breath': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
+      'Nasal Breathing': 'https://www.youtube.com/watch?v=rBdhqBGqiMc',
+      // Sleep templates
+      'Consistent Bedtime': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'No Screens Before Bed': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      '7-9 Hours Sleep': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'Consistent Wake Time': 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
+      'Yoga Nidra/NSDR': 'https://www.youtube.com/watch?v=AKGrmY8UFWU',
+      // Recovery templates
+      'Sauna Recovery': 'https://www.youtube.com/watch?v=EQ3GjpGq5Y8',
+      'Contrast Shower': 'https://www.youtube.com/watch?v=pq6WHJzOkno',
+    };
+
+    let updatedCount = 0;
+    const updatedNames: string[] = [];
+
+    for (const [templateName, youtubeLink] of Object.entries(youtubeLinks)) {
+      const template = await ctx.db
+        .query('templates')
+        .filter((q) => q.eq(q.field('name'), templateName))
+        .first();
+
+      if (template && !template.youtubeLink) {
+        await ctx.db.patch(template._id, { youtubeLink });
+        updatedCount++;
+        updatedNames.push(templateName);
+      }
+    }
+
+    return {
+      message: `Updated ${updatedCount} templates with YouTube links`,
+      success: true,
+      updatedCount,
+      updatedNames,
+    };
   },
 });
 
@@ -3693,6 +3793,880 @@ export const seedScienceTemplates = mutation({
     });
 
     return { message: '56 science-backed templates seeded successfully', success: true };
+  },
+});
+
+/**
+ * Mutation: Seed unique non-duplicate templates (Phase 3.3)
+ * 50+ truly unique habits in underserved categories: Career, Hobbies, Environment, Somatic, Purpose, Self-Care
+ */
+export const seedUniqueTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    let insertedCount = 0;
+    let skippedCount = 0;
+    const insertedNames: string[] = [];
+    const skippedNames: string[] = [];
+
+    const insertWithTracking = async (template: TemplateInsert) => {
+      const existing = await ctx.db
+        .query('templates')
+        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .first();
+
+      if (existing) {
+        skippedCount++;
+        skippedNames.push(template.name);
+        return false;
+      }
+
+      await ctx.db.insert('templates', template);
+      insertedCount++;
+      insertedNames.push(template.name);
+      return true;
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // 💼 PRODUCTIVITY - Career & Professional Development
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Spend 30 minutes weekly updating your resume, portfolio, or LinkedIn. Continuous career documentation prevents panic updates when opportunities arise.',
+      frequency: 'weekly',
+      icon: '💼',
+      iconColor: '#0A66C2',
+      name: 'Career Documentation',
+      popularityScore: 82,
+      scientificReference:
+        'Seibert et al. (1999) - Proactive career behaviors and career success',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Send one professional networking message weekly. Weak ties are more valuable for career opportunities than close connections.',
+      frequency: 'weekly',
+      icon: '🤝',
+      iconColor: '#059669',
+      name: 'Professional Networking',
+      popularityScore: 85,
+      scientificReference:
+        'Granovetter (1973) - The Strength of Weak Ties',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Document one lesson learned or insight from work daily. Creates a personal knowledge base and accelerates expertise development.',
+      frequency: 'daily',
+      icon: '📓',
+      iconColor: '#7C3AED',
+      name: 'Work Insights Journal',
+      popularityScore: 81,
+      scientificReference:
+        'Di Stefano et al. (2016) - Learning by thinking: How reflection aids performance',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Practice public speaking for 10 minutes daily (record yourself, present to mirror). Fear of public speaking can be overcome through gradual exposure.',
+      frequency: 'daily',
+      icon: '🎤',
+      iconColor: '#DC2626',
+      name: 'Public Speaking Practice',
+      popularityScore: 84,
+      scientificReference:
+        'Hofmann et al. (2008) - Exposure-based therapy for public speaking anxiety',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Spend 15 minutes organizing digital files and emails into a clear folder structure. Reduces time searching for files by up to 50%.',
+      frequency: 'weekly',
+      icon: '🗂️',
+      iconColor: '#F59E0B',
+      name: 'Digital File Organization',
+      popularityScore: 79,
+      scientificReference:
+        'Jones (2007) - Keeping Found Things Found: The Study of Personal Information Management',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🎭 CREATIVITY - Hobbies & Unstructured Play
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Engage in pure play without goals or outcomes for 20 minutes. Unstructured play reduces stress and enhances creative problem-solving.',
+      frequency: 'daily',
+      icon: '🎲',
+      iconColor: '#EC4899',
+      name: 'Unstructured Play Time',
+      popularityScore: 83,
+      scientificReference:
+        'Brown (2009) - Play: How It Shapes the Brain, Opens the Imagination',
+    });
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Build something with your hands (LEGO, crafts, woodworking, knitting). Tactile creation reduces anxiety and improves spatial reasoning.',
+      frequency: 'weekly',
+      icon: '🧱',
+      iconColor: '#F97316',
+      name: 'Hands-On Building',
+      popularityScore: 81,
+      scientificReference:
+        'Csikszentmihalyi (1990) - Flow: The Psychology of Optimal Experience',
+    });
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Cook a new recipe without looking at your phone. Cooking engages all senses and provides immediate creative satisfaction.',
+      frequency: 'weekly',
+      icon: '👨‍🍳',
+      iconColor: '#EA580C',
+      name: 'Experimental Cooking',
+      popularityScore: 84,
+      scientificReference:
+        'Farmer et al. (2018) - Cooking frequency and dietary quality',
+    });
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Spend 15 minutes gardening or tending plants. Horticultural therapy reduces cortisol and improves mood within minutes.',
+      frequency: 'daily',
+      icon: '🌱',
+      iconColor: '#22C55E',
+      name: 'Gardening Therapy',
+      popularityScore: 86,
+      scientificReference:
+        'Van Den Berg & Custers (2011) - Gardening promotes neuroendocrine and affective restoration',
+    });
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Sing for 10 minutes daily (shower, car, karaoke). Singing releases oxytocin, reduces stress hormones, and improves lung function.',
+      frequency: 'daily',
+      icon: '🎤',
+      iconColor: '#A855F7',
+      name: 'Daily Singing',
+      popularityScore: 82,
+      scientificReference:
+        'Grape et al. (2003) - Does singing promote well-being?: Effects on wellbeing and physiological variables',
+    });
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Dance freely for 10 minutes without choreography. Spontaneous movement reduces depression and improves body image.',
+      frequency: 'daily',
+      icon: '💃',
+      iconColor: '#F43F5E',
+      name: 'Free Dance Session',
+      popularityScore: 85,
+      scientificReference:
+        'Koch et al. (2019) - Effects of dance movement therapy on depression',
+    });
+
+    await insertWithTracking({
+      category: 'creativity',
+      createdAt: now,
+      description:
+        'Color in an adult coloring book for 20 minutes. Art therapy reduces anxiety comparable to meditation in many studies.',
+      frequency: 'daily',
+      icon: '🖍️',
+      iconColor: '#0EA5E9',
+      name: 'Coloring Practice',
+      popularityScore: 80,
+      scientificReference:
+        'Curry & Kasser (2005) - Can coloring mandalas reduce anxiety?',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌿 MINDFULNESS - Environmental & Nature Connection
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Sit quietly and observe birds for 15 minutes. Bird watching reduces stress and increases feelings of connection to nature.',
+      frequency: 'weekly',
+      icon: '🐦',
+      iconColor: '#0D9488',
+      name: 'Bird Watching',
+      popularityScore: 78,
+      scientificReference:
+        'Cox et al. (2017) - Doses of neighborhood nature: Benefits for mental health',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Spend 20 minutes near moving water (stream, fountain, ocean). Blue space exposure reduces psychological distress significantly.',
+      frequency: 'weekly',
+      icon: '💧',
+      iconColor: '#0284C7',
+      name: 'Blue Space Time',
+      popularityScore: 83,
+      scientificReference:
+        'White et al. (2010) - Blue space exposure and psychological well-being',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Look at the night sky for 10 minutes. Awe experiences from nature improve well-being and increase prosocial behavior.',
+      frequency: 'weekly',
+      icon: '🌌',
+      iconColor: '#1E3A8A',
+      name: 'Stargazing',
+      popularityScore: 79,
+      scientificReference:
+        'Piff et al. (2015) - Awe, the small self, and prosocial behavior',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Walk in the rain (with appropriate gear) for 15 minutes. Rain sounds and petrichor have calming effects on the nervous system.',
+      frequency: 'weekly',
+      icon: '🌧️',
+      iconColor: '#64748B',
+      name: 'Rain Walking',
+      popularityScore: 74,
+      scientificReference:
+        'Jiang et al. (2018) - Effects of natural sounds on stress recovery',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Practice cloud watching for 10 minutes. Sky gazing activates the default mode network and promotes creative thinking.',
+      frequency: 'daily',
+      icon: '☁️',
+      iconColor: '#94A3B8',
+      name: 'Cloud Watching',
+      popularityScore: 75,
+      scientificReference:
+        'Beaty et al. (2016) - Creative cognition and brain network dynamics',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🧘 MINDFULNESS - Somatic & Body Awareness
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Shake your body vigorously for 3-5 minutes (like an animal after stress). TRE/shaking releases stored muscular tension.',
+      frequency: 'daily',
+      icon: '🫨',
+      iconColor: '#F97316',
+      name: 'Tension Release Shaking',
+      popularityScore: 80,
+      scientificReference:
+        'Berceli (2008) - Tension and Trauma Release Exercises (TRE)',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Practice self-massage on hands, feet, or face for 5 minutes. Self-massage reduces cortisol and increases parasympathetic activity.',
+      frequency: 'daily',
+      icon: '🙌',
+      iconColor: '#EC4899',
+      name: 'Self-Massage Ritual',
+      popularityScore: 82,
+      scientificReference:
+        'Field et al. (2005) - Cortisol decreases and serotonin and dopamine increase following massage therapy',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Stretch your jaw, massage temples, and relax facial muscles for 2 minutes. Facial tension correlates with overall stress levels.',
+      frequency: 'daily',
+      icon: '😌',
+      iconColor: '#8B5CF6',
+      name: 'Facial Relaxation',
+      popularityScore: 78,
+      scientificReference:
+        'Cram (1980) - EMG and the relaxation response: jaw muscle tension and stress',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Stand with bare feet on ground and notice all sensations for 2 minutes. Interoceptive awareness improves emotional regulation.',
+      frequency: 'daily',
+      icon: '🦶',
+      iconColor: '#A16207',
+      name: 'Foot Grounding',
+      popularityScore: 77,
+      scientificReference:
+        'Farb et al. (2015) - Interoception, contemplative practice, and health',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Roll a tennis ball under your feet for 5 minutes. Plantar fascia massage releases full-body tension through fascial connections.',
+      frequency: 'daily',
+      icon: '🎾',
+      iconColor: '#84CC16',
+      name: 'Foot Rolling',
+      popularityScore: 79,
+      scientificReference:
+        'Renan-Ordine et al. (2011) - Effects of myofascial release on mechanical sensitivity',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🎯 MINDFULNESS - Purpose & Meaning
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Write your personal mission statement and review it weekly. People with clear purpose live 7+ years longer on average.',
+      frequency: 'weekly',
+      icon: '🎯',
+      iconColor: '#DC2626',
+      name: 'Purpose Statement Review',
+      popularityScore: 86,
+      scientificReference:
+        'Hill & Turiano (2014) - Purpose in life and mortality',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Visualize your ideal future self for 10 minutes. Future self-continuity increases long-term decision making and savings behavior.',
+      frequency: 'weekly',
+      icon: '🔮',
+      iconColor: '#7C3AED',
+      name: 'Future Self Visualization',
+      popularityScore: 83,
+      scientificReference:
+        'Hershfield (2011) - Future self-continuity: How conceptions of the future self transform decision-making',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Write a letter to yourself to open in 1 year. Prospective reflection increases life satisfaction and sense of progress.',
+      frequency: 'weekly',
+      icon: '✉️',
+      iconColor: '#059669',
+      name: 'Letter to Future Self',
+      popularityScore: 80,
+      scientificReference:
+        'Wilson et al. (2005) - Affective forecasting and the durability bias',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Practice memento mori: reflect briefly on mortality to clarify priorities. Death awareness increases gratitude and meaningful action.',
+      frequency: 'weekly',
+      icon: '⏳',
+      iconColor: '#64748B',
+      name: 'Mortality Reflection',
+      popularityScore: 76,
+      scientificReference:
+        'Cozzolino et al. (2004) - Greed, death, and values: Mortality salience and meaning',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Identify one legacy action - something whose impact outlasts you. Legacy motivation increases well-being and generativity.',
+      frequency: 'weekly',
+      icon: '🏛️',
+      iconColor: '#B45309',
+      name: 'Legacy Action',
+      popularityScore: 78,
+      scientificReference:
+        'McAdams & de St. Aubin (1992) - Generativity and adult development',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 💆 RECOVERY - Self-Care Rituals
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Apply body lotion mindfully after showering. The ritual of self-care increases body acceptance and self-compassion.',
+      frequency: 'daily',
+      icon: '🧴',
+      iconColor: '#FBBF24',
+      name: 'Mindful Moisturizing',
+      popularityScore: 77,
+      scientificReference:
+        'Neff (2003) - Self-compassion and physical self-care practices',
+    });
+
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Take a bath with epsom salts for 20 minutes. Magnesium absorption through skin promotes muscle relaxation and better sleep.',
+      frequency: 'weekly',
+      icon: '🛁',
+      iconColor: '#38BDF8',
+      name: 'Epsom Salt Bath',
+      popularityScore: 81,
+      scientificReference:
+        'Proksch et al. (2017) - Percutaneous absorption of magnesium',
+    });
+
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Apply a face mask and relax for 15 minutes. Self-care rituals activate the parasympathetic nervous system.',
+      frequency: 'weekly',
+      icon: '🧖‍♀️',
+      iconColor: '#A855F7',
+      name: 'Face Mask Ritual',
+      popularityScore: 78,
+      scientificReference:
+        'Gilbert (2009) - The Compassionate Mind: self-soothing systems',
+    });
+
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Change into comfortable clothes when arriving home. Clothing transitions help create psychological boundaries between work and rest.',
+      frequency: 'daily',
+      icon: '👕',
+      iconColor: '#6366F1',
+      name: 'Comfort Clothes Transition',
+      popularityScore: 79,
+      scientificReference:
+        'Adam & Galinsky (2012) - Enclothed cognition: systematic influence of clothes',
+    });
+
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Light a candle and sit in candlelight for 10 minutes. Low, warm light reduces cortisol and promotes melatonin production.',
+      frequency: 'daily',
+      icon: '🕯️',
+      iconColor: '#F59E0B',
+      name: 'Candlelight Relaxation',
+      popularityScore: 80,
+      scientificReference:
+        'Cajochen (2007) - Alerting effects of light',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 💑 SOCIAL - Relationship Rituals
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Share "highs and lows" of the day with partner/family at dinner. Regular sharing rituals strengthen family bonds.',
+      frequency: 'daily',
+      icon: '🍽️',
+      iconColor: '#F97316',
+      name: 'Highs and Lows Ritual',
+      popularityScore: 88,
+      scientificReference:
+        'Fiese et al. (2002) - Family routines and rituals: A context for development',
+    });
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Give a 6-second hug to someone you love. Extended hugs release oxytocin and deepen emotional connection.',
+      frequency: 'daily',
+      icon: '🤗',
+      iconColor: '#EC4899',
+      name: '6-Second Hug',
+      popularityScore: 87,
+      scientificReference:
+        'Gottman (1999) - The importance of extended physical affection in relationships',
+    });
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Schedule a weekly date night (no phones, undivided attention). Regular couple rituals are the strongest predictor of relationship longevity.',
+      frequency: 'weekly',
+      icon: '❤️',
+      iconColor: '#DC2626',
+      name: 'Weekly Date Night',
+      popularityScore: 91,
+      scientificReference:
+        'Wilcox & Dew (2012) - Date nights and marital satisfaction',
+    });
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Check in with 3 close friends monthly with a genuine "how are you really doing?" Maintaining close friendships requires intentional effort.',
+      frequency: 'weekly',
+      icon: '📱',
+      iconColor: '#3B82F6',
+      name: 'Friend Check-Ins',
+      popularityScore: 84,
+      scientificReference:
+        'Hall (2019) - How many hours does it take to make a friend?',
+    });
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Write and send a handwritten letter or card monthly. Handwritten correspondence has 7x more emotional impact than digital messages.',
+      frequency: 'weekly',
+      icon: '💌',
+      iconColor: '#F43F5E',
+      name: 'Handwritten Letters',
+      popularityScore: 79,
+      scientificReference:
+        'Gino & Flynn (2018) - Undervaluing gratitude: Receivers appreciation of gratitude expressions',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🧠 LEARNING - Cognitive Novelty & Brain Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Learn 3 words in a new language daily. Bilingualism delays dementia onset by 4-5 years on average.',
+      frequency: 'daily',
+      icon: '🗣️',
+      iconColor: '#059669',
+      name: 'Language Word Learning',
+      popularityScore: 86,
+      scientificReference:
+        'Bialystok et al. (2007) - Bilingualism as protection against onset of dementia',
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Take a different route to a familiar destination weekly. Novel navigation builds hippocampal gray matter and cognitive reserve.',
+      frequency: 'weekly',
+      icon: '🗺️',
+      iconColor: '#F59E0B',
+      name: 'Navigation Novelty',
+      popularityScore: 77,
+      scientificReference:
+        'Maguire et al. (2000) - Navigation-related structural change in the hippocampi of taxi drivers',
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Solve one logic puzzle daily (sudoku, chess puzzles, riddles). Regular mental challenges maintain fluid intelligence.',
+      frequency: 'daily',
+      icon: '🧩',
+      iconColor: '#7C3AED',
+      name: 'Daily Logic Puzzle',
+      popularityScore: 84,
+      scientificReference:
+        'Verghese et al. (2003) - Leisure activities and the risk of dementia',
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Memorize one poem, quote, or phone number monthly. Intentional memorization exercises keep memory systems active.',
+      frequency: 'weekly',
+      icon: '📜',
+      iconColor: '#B45309',
+      name: 'Memory Challenges',
+      popularityScore: 78,
+      scientificReference:
+        'Nyberg et al. (2003) - Neural correlates of successful memory encoding',
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Watch an educational documentary or TED talk weekly on an unfamiliar topic. Novel information stimulates dopamine and curiosity circuits.',
+      frequency: 'weekly',
+      icon: '🎬',
+      iconColor: '#DC2626',
+      name: 'Documentary Learning',
+      popularityScore: 82,
+      scientificReference:
+        'Gruber et al. (2014) - States of curiosity modulate learning and memory',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌟 HEALTH & FITNESS - Sensory & Micro-Habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Practice aromatherapy with essential oils for 5 minutes. Certain scents (lavender, peppermint) measurably affect mood and cognition.',
+      frequency: 'daily',
+      icon: '🌸',
+      iconColor: '#D946EF',
+      name: 'Aromatherapy Practice',
+      popularityScore: 79,
+      scientificReference:
+        'Moss et al. (2003) - Aromas of rosemary and lavender essential oils affect cognition and mood',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Eat one meal in complete silence weekly, focusing only on taste and texture. Silent eating improves digestion and food satisfaction.',
+      frequency: 'weekly',
+      icon: '🤫',
+      iconColor: '#64748B',
+      name: 'Silent Eating',
+      popularityScore: 76,
+      scientificReference:
+        'Robinson et al. (2014) - Eating attentively: A systematic review of eating with attention',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Do 10 squats every time you use the bathroom. "Habit stacking" makes exercise automatic and adds up to 50+ squats daily.',
+      frequency: 'daily',
+      icon: '🚽',
+      iconColor: '#10B981',
+      name: 'Bathroom Squats',
+      popularityScore: 83,
+      scientificReference:
+        'Clear (2018) - Atomic Habits: habit stacking methodology',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Drink a glass of water before every meal. Pre-meal water intake reduces calorie consumption by 75-90 calories per meal.',
+      frequency: 'daily',
+      icon: '🥛',
+      iconColor: '#38BDF8',
+      name: 'Pre-Meal Water',
+      popularityScore: 85,
+      scientificReference:
+        'Davy et al. (2008) - Water consumption reduces energy intake at a breakfast meal',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Stand and do calf raises while brushing teeth. Two minutes twice daily adds up to 14 minutes of exercise weekly.',
+      frequency: 'daily',
+      icon: '🦵',
+      iconColor: '#F97316',
+      name: 'Toothbrush Calf Raises',
+      popularityScore: 80,
+      scientificReference:
+        'Clear (2018) - Atomic Habits: Two-minute rule for habit formation',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌅 MORNING ROUTINE - Unique Morning Habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Open curtains and look outside for 30 seconds before checking phone. Prioritizes natural stimulus over digital for circadian alignment.',
+      frequency: 'daily',
+      icon: '🪟',
+      iconColor: '#FBBF24',
+      name: 'Morning Window Gaze',
+      popularityScore: 82,
+      scientificReference:
+        'Huberman (2021) - Morning light exposure before device use',
+    });
+
+    await insertWithTracking({
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Smile at yourself in the mirror for 1 minute upon waking. Facial feedback hypothesis: smiling triggers positive emotions.',
+      frequency: 'daily',
+      icon: '😊',
+      iconColor: '#FBBF24',
+      name: 'Morning Mirror Smile',
+      popularityScore: 77,
+      scientificReference:
+        'Kraft & Pressman (2012) - Grin and bear it: Smiling facilitates stress recovery',
+    });
+
+    await insertWithTracking({
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Do 5 minutes of light movement (stretching, walking) immediately after waking. Gentle movement clears adenosine and increases alertness.',
+      frequency: 'daily',
+      icon: '🌅',
+      iconColor: '#F97316',
+      name: 'Wake-Up Movement',
+      popularityScore: 84,
+      scientificReference:
+        'Kredlow et al. (2015) - Effects of physical activity on sleep',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌙 SLEEP - Unique Evening Habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Write "brain dump" of all thoughts on paper before bed. Externalizing worries reduces sleep onset latency by 15+ minutes.',
+      frequency: 'daily',
+      icon: '🧠',
+      iconColor: '#6366F1',
+      name: 'Evening Brain Dump',
+      popularityScore: 86,
+      scientificReference:
+        'Scullin et al. (2018) - The effects of bedtime writing on difficulty falling asleep',
+    });
+
+    await insertWithTracking({
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Prepare clothes and bag for next day before bed. Reduces morning decision fatigue and creates closure ritual for the day.',
+      frequency: 'daily',
+      icon: '👔',
+      iconColor: '#8B5CF6',
+      name: 'Next-Day Prep',
+      popularityScore: 83,
+      scientificReference:
+        'Baumeister & Tierney (2011) - Willpower: Rediscovering the Greatest Human Strength',
+    });
+
+    await insertWithTracking({
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Wear blue light blocking glasses 2-3 hours before bed. Blocks 90%+ of melatonin-suppressing light from screens.',
+      frequency: 'daily',
+      icon: '👓',
+      iconColor: '#F59E0B',
+      name: 'Blue Light Blocking',
+      popularityScore: 84,
+      scientificReference:
+        'Shechter et al. (2018) - Blocking nocturnal blue light improves sleep',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 💰 FINANCIAL - Additional Unique Habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Practice gratitude for 3 things you already own before any purchase. Gratitude reduces materialism and impulsive buying.',
+      frequency: 'daily',
+      icon: '🙏',
+      iconColor: '#059669',
+      name: 'Pre-Purchase Gratitude',
+      popularityScore: 79,
+      scientificReference:
+        'Lambert et al. (2009) - Gratitude reduces materialism',
+    });
+
+    await insertWithTracking({
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Transfer spare change from purchases to savings (round-up savings). Micro-savings add up to hundreds annually without noticing.',
+      frequency: 'daily',
+      icon: '🪙',
+      iconColor: '#84CC16',
+      name: 'Round-Up Savings',
+      popularityScore: 81,
+      scientificReference:
+        'Thaler (2004) - Save More Tomorrow: Behavioral economics of saving',
+    });
+
+    await insertWithTracking({
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Review and appreciate your net worth monthly (even if negative). Financial awareness correlates with better financial decisions.',
+      frequency: 'weekly',
+      icon: '📊',
+      iconColor: '#3B82F6',
+      name: 'Net Worth Check',
+      popularityScore: 82,
+      scientificReference:
+        'Fernandes et al. (2014) - Financial literacy, financial education, and downstream financial behaviors',
+    });
+
+    return {
+      message: `${insertedCount} unique templates inserted, ${skippedCount} skipped (already exist)`,
+      success: true,
+      insertedCount,
+      skippedCount,
+      insertedNames,
+      skippedNames,
+    };
   },
 });
 
