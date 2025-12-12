@@ -10,7 +10,6 @@ import { HeroNameInput } from './components/HeroNameInput';
 import { LivePreview } from './components/LivePreview';
 import { StyleSection } from './components/StyleSection';
 import { SimpleReminderSection } from './components/SimpleReminderSection';
-import { PremiumTeaser } from './components/PremiumTeaser';
 import { StickyCreateBar } from './components/StickyCreateBar';
 import { SuccessAnimation } from './components/SuccessAnimation';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
@@ -83,12 +82,6 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
     setSuccessData(null);
   }, []);
 
-  // Handle upgrade press (placeholder)
-  const handleUpgradePress = useCallback(() => {
-    // TODO: Navigate to premium screen
-    triggerSelection();
-  }, [triggerSelection]);
-
   return (
     <>
       <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
@@ -145,9 +138,6 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 onTimePress={() => form.setShowTimePicker(true)}
                 onToggle={form.setRemindersEnabled}
               />
-
-              {/* 6. Premium Teaser (AI Suggestions) */}
-              <PremiumTeaser habitName={form.habitName} onUpgrade={handleUpgradePress} />
             </ScrollView>
 
             {/* Sticky Create Bar */}

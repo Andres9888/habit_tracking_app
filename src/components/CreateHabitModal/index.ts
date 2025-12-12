@@ -10,5 +10,4 @@ export { HeroNameInput } from './components/HeroNameInput';
 export { LivePreview } from './components/LivePreview';
 export { StyleSection } from './components/StyleSection';
 export { SimpleReminderSection } from './components/SimpleReminderSection';
-export { PremiumTeaser } from './components/PremiumTeaser';
 export { SuccessAnimation } from './components/SuccessAnimation';
