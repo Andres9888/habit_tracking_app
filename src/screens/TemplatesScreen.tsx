@@ -24,7 +24,20 @@ import {
   TextInput,
   TouchableOpacity,
   Linking,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
 } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  withTiming,
+  Easing,
+  interpolate,
+  FadeIn,
+  FadeInDown,
+} from 'react-native-reanimated';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Doc, Id } from '../../convex/_generated/dataModel';
@@ -88,8 +101,18 @@ export default function TemplatesScreen() {
   const [customHabitName, setCustomHabitName] = useState('');
   const [selectedReminderTime, setSelectedReminderTime] = useState('');
   const [selectedIconColor, setSelectedIconColor] = useState('');
+  const [showPreviewScrollHint, setShowPreviewScrollHint] = useState(false);
   const listScrollOffset = useRef(0);
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
+  const previewScrollOffset = useRef(0);
+  const previewScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
+  
+  // Animation values for preview modal sections
+  const headerProgress = useSharedValue(0);
+  const descProgress = useSharedValue(0);
+  const scienceProgress = useSharedValue(0);
+  const customizeProgress = useSharedValue(0);
+  const actionsProgress = useSharedValue(0);
 
   // Fetch templates and categories
   const allTemplates = useQuery(api.templates.list, {});
@@ -274,6 +297,92 @@ export default function TemplatesScreen() {
     setShowTopScrollShadow(false);
     setShowBottomScrollShadow(false);
   }, [selectedCategory, filteredTemplates.length]);
+
+  // Trigger entrance animations when preview modal opens
+  useEffect(() => {
+    if (showPreviewModal && previewTemplate) {
+      // Reset animation values
+      headerProgress.value = 0;
+      descProgress.value = 0;
+      scienceProgress.value = 0;
+      customizeProgress.value = 0;
+      actionsProgress.value = 0;
+      previewScrollOffset.current = 0;
+      setShowPreviewScrollHint(true);
+
+      // Staggered entrance animations
+      headerProgress.value = withDelay(50, withSpring(1, { damping: 18, stiffness: 120 }));
+      descProgress.value = withDelay(120, withSpring(1, { damping: 18, stiffness: 120 }));
+      scienceProgress.value = withDelay(190, withSpring(1, { damping: 18, stiffness: 120 }));
+      customizeProgress.value = withDelay(260, withSpring(1, { damping: 18, stiffness: 120 }));
+      actionsProgress.value = withDelay(330, withSpring(1, { damping: 18, stiffness: 120 }));
+    }
+  }, [showPreviewModal, previewTemplate]);
+
+  // Animated styles for preview modal sections
+  const headerAnimStyle = useAnimatedStyle(() => ({
+    opacity: headerProgress.value,
+    transform: [{ translateY: interpolate(headerProgress.value, [0, 1], [20, 0]) }],
+  }));
+
+  const descAnimStyle = useAnimatedStyle(() => ({
+    opacity: descProgress.value,
+    transform: [{ translateY: interpolate(descProgress.value, [0, 1], [15, 0]) }],
+  }));
+
+  const scienceAnimStyle = useAnimatedStyle(() => ({
+    opacity: scienceProgress.value,
+    transform: [{ translateY: interpolate(scienceProgress.value, [0, 1], [15, 0]) }],
+  }));
+
+  const customizeAnimStyle = useAnimatedStyle(() => ({
+    opacity: customizeProgress.value,
+    transform: [{ translateY: interpolate(customizeProgress.value, [0, 1], [15, 0]) }],
+  }));
+
+  const actionsAnimStyle = useAnimatedStyle(() => ({
+    opacity: actionsProgress.value,
+    transform: [{ translateY: interpolate(actionsProgress.value, [0, 1], [10, 0]) }],
+  }));
+
+  // Preview modal scroll handler
+  const handlePreviewScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+      previewScrollOffset.current = contentOffset.y;
+      previewScrollMetrics.current = {
+        contentHeight: contentSize.height,
+        layoutHeight: layoutMeasurement.height,
+      };
+
+      const hasMoreContent = contentSize.height - (contentOffset.y + layoutMeasurement.height) > 20;
+      setShowPreviewScrollHint(hasMoreContent);
+    },
+    []
+  );
+
+  const handlePreviewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      previewScrollMetrics.current = {
+        ...previewScrollMetrics.current,
+        contentHeight: height,
+      };
+      const hasMoreContent =
+        height - (previewScrollOffset.current + previewScrollMetrics.current.layoutHeight) > 20;
+      setShowPreviewScrollHint(hasMoreContent);
+    },
+    []
+  );
+
+  const handlePreviewLayout = useCallback(
+    (event: { nativeEvent: { layout: { height: number } } }) => {
+      previewScrollMetrics.current = {
+        ...previewScrollMetrics.current,
+        layoutHeight: event.nativeEvent.layout.height,
+      };
+    },
+    []
+  );
 
   const previewResearchDomain = useMemo(() => {
     if (!previewTemplate?.scientificLink) return null;
@@ -687,226 +796,279 @@ export default function TemplatesScreen() {
           visible={showPreviewModal}
           onClose={() => setShowPreviewModal(false)}
         >
-          <View style={styles.previewModal}>
-            {/* Template Header */}
-            <View style={styles.previewHeader}>
-              <View
-                style={[
-                  styles.previewIconContainer,
-                  {
-                    backgroundColor: previewTemplate.iconColor + '20',
-                    borderRadius: theme.custom.borderRadius.medium,
-                  },
-                ]}
-              >
-                <Text style={styles.previewIcon}>{previewTemplate.icon}</Text>
-              </View>
-              <Text
-                style={[
-                  theme.custom.typography.heading2,
-                  { color: '#101727', marginTop: 16, fontWeight: '700' },
-                ]}
-              >
-                {previewTemplate.name}
-              </Text>
-              <Text style={styles.previewCategory}>
-                {previewTemplate.category.replace('_', ' ')} ·{' '}
-                {previewTemplate.frequency === 'daily' ? 'Daily' : 'Flexible'}
-              </Text>
-            </View>
-
-            {/* Template Description */}
-            <Text
-              style={[
-                theme.custom.typography.body,
-                { color: '#374151', marginTop: 16 },
-              ]}
+          <View style={styles.previewModalWrapper}>
+            <ScrollView
+              bounces={false}
+              contentContainerStyle={styles.previewScrollContent}
+              keyboardShouldPersistTaps='handled'
+              scrollEventThrottle={16}
+              showsVerticalScrollIndicator={false}
+              style={styles.previewScrollView}
+              onContentSizeChange={handlePreviewContentSizeChange}
+              onLayout={handlePreviewLayout}
+              onScroll={handlePreviewScroll}
             >
-              {previewTemplate.description}
-            </Text>
-
-            {/* Scientific Reference */}
-            <View
-              style={[
-                styles.previewScienceBox,
-                {
-                  backgroundColor: theme.custom.colors.secondary[500] + '10',
-                  borderRadius: theme.custom.borderRadius.small,
-                  marginTop: 24,
-                },
-              ]}
-            >
-              <Text style={styles.scienceIcon}>🔬</Text>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    { color: '#6b7280', fontWeight: '600' },
-                  ]}
-                >
-                  Scientific Backing
-                </Text>
-                <Text
-                  style={[
-                    theme.custom.typography.bodySmall,
-                    { color: '#374151', marginTop: 4 },
-                  ]}
-                >
-                  {previewTemplate.scientificReference}
-                </Text>
-                {previewTemplate.scientificLink && (
-                  <Pressable
-                    accessibilityLabel='Open research link'
-                    style={styles.researchLink}
-                    onPress={handlePreviewResearchLink}
-                  >
-                    <ExternalLink
-                      color={theme.custom.colors.secondary[500]}
-                      size={14}
-                    />
-                    <Text
-                      style={[
-                        theme.custom.typography.caption,
-                        {
-                          color: theme.custom.colors.secondary[500],
-                          marginLeft: 6,
-                          textDecorationLine: 'underline',
-                        },
-                      ]}
-                    >
-                      {previewResearchDomain || 'View research'}
-                    </Text>
-                  </Pressable>
-                )}
-              </View>
-            </View>
-
-            {/* YouTube Video Link */}
-            {previewTemplate.youtubeLink && (
-              <Pressable
-                accessibilityLabel='Watch video on YouTube'
-                style={styles.youtubeLink}
-                onPress={handlePreviewYoutubeLink}
-              >
-                <Text style={styles.youtubeIcon}>▶️</Text>
-                <View style={{ flex: 1 }}>
-                  <Text
+              <View style={styles.previewModal}>
+                {/* Template Header - Animated */}
+                <Animated.View style={[styles.previewHeader, headerAnimStyle]}>
+                  <View
                     style={[
-                      theme.custom.typography.caption,
-                      { color: '#6b7280', fontWeight: '600' },
+                      styles.previewIconContainer,
+                      {
+                        backgroundColor: previewTemplate.iconColor + '20',
+                        borderRadius: theme.custom.borderRadius.medium,
+                      },
                     ]}
                   >
-                    Watch Video
-                  </Text>
+                    <Text style={styles.previewIcon}>{previewTemplate.icon}</Text>
+                  </View>
                   <Text
                     style={[
-                      theme.custom.typography.bodySmall,
-                      { color: '#DC2626', marginTop: 4, textDecorationLine: 'underline' },
+                      theme.custom.typography.heading2,
+                      { color: '#101727', fontWeight: '700', marginTop: 16 },
                     ]}
                   >
-                    Learn more on YouTube
+                    {previewTemplate.name}
                   </Text>
-                </View>
-                <ExternalLink
-                  color='#DC2626'
-                  size={16}
-                />
-              </Pressable>
-            )}
+                  <Text style={styles.previewCategory}>
+                    {previewTemplate.category.replace('_', ' ')} ·{' '}
+                    {previewTemplate.frequency === 'daily' ? 'Daily' : 'Flexible'}
+                  </Text>
+                </Animated.View>
 
-            {/* Customization Block */}
-            <View style={styles.customizeSection}>
-              <Text style={styles.customizeTitle}>Make it yours</Text>
-              <View style={styles.inputWrapper}>
-                <Text style={styles.inputLabel}>Habit name</Text>
-                <TextInput
-                  maxLength={50}
-                  placeholder='Name your habit'
-                  placeholderTextColor='#94a3b8'
-                  style={styles.nameInput}
-                  value={customHabitName}
-                  onChangeText={setCustomHabitName}
-                />
-                <Text style={styles.charCount}>{customHabitName.length}/50</Text>
-              </View>
+                {/* Template Description - Animated */}
+                <Animated.View style={descAnimStyle}>
+                  <Text
+                    style={[
+                      theme.custom.typography.body,
+                      { color: '#374151', marginTop: 20 },
+                    ]}
+                  >
+                    {previewTemplate.description}
+                  </Text>
+                </Animated.View>
 
-              <Text style={styles.inputLabel}>Reminder</Text>
-              <View style={styles.reminderRow}>
-                {REMINDER_OPTIONS.map((option) => {
-                  const isSelected = selectedReminderTime === option;
-                  return (
-                    <Pressable
-                      key={option}
-                      style={[
-                        styles.reminderChip,
-                        isSelected && styles.reminderChipActive,
-                      ]}
-                      onPress={() =>
-                        setSelectedReminderTime((current) =>
-                          current === option ? '' : option
-                        )
-                      }
-                    >
+                {/* Divider */}
+                <View style={styles.sectionDivider} />
+
+                {/* Scientific Reference - Animated */}
+                <Animated.View style={scienceAnimStyle}>
+                  <View
+                    style={[
+                      styles.previewScienceBox,
+                      {
+                        backgroundColor: '#f0fdf4',
+                        borderRadius: theme.custom.borderRadius.small,
+                      },
+                    ]}
+                  >
+                    <Text style={styles.scienceIcon}>🔬</Text>
+                    <View style={{ flex: 1 }}>
                       <Text
                         style={[
-                          styles.reminderChipText,
-                          { color: isSelected ? '#fff' : '#334155' },
+                          theme.custom.typography.caption,
+                          { color: '#166534', fontWeight: '700', letterSpacing: 0.3 },
                         ]}
                       >
-                        {option}
+                        Scientific Backing
                       </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
+                      <Text
+                        style={[
+                          theme.custom.typography.bodySmall,
+                          { color: '#374151', lineHeight: 20, marginTop: 6 },
+                        ]}
+                      >
+                        {previewTemplate.scientificReference}
+                      </Text>
+                      {previewTemplate.scientificLink && (
+                        <Pressable
+                          accessibilityLabel='Open research link'
+                          style={styles.researchLink}
+                          onPress={handlePreviewResearchLink}
+                        >
+                          <ExternalLink
+                            color='#166534'
+                            size={14}
+                          />
+                          <Text
+                            style={[
+                              theme.custom.typography.caption,
+                              {
+                                color: '#166534',
+                                fontWeight: '600',
+                                marginLeft: 6,
+                                textDecorationLine: 'underline',
+                              },
+                            ]}
+                          >
+                            {previewResearchDomain || 'View research'}
+                          </Text>
+                        </Pressable>
+                      )}
+                    </View>
+                  </View>
 
-              <Text style={styles.inputLabel}>Accent color</Text>
-              <View style={styles.colorRow}>
-                {ICON_COLOR_OPTIONS.map((color) => {
-                  const isSelected = selectedIconColor === color;
-                  return (
+                  {/* YouTube Video Link */}
+                  {previewTemplate.youtubeLink && (
                     <Pressable
-                      key={color}
-                      accessibilityLabel={`Pick ${color} accent`}
-                      style={[
-                        styles.colorSwatch,
-                        { backgroundColor: color },
-                        isSelected && styles.colorSwatchActive,
-                      ]}
-                      onPress={() => setSelectedIconColor(color)}
-                    />
-                  );
-                })}
-              </View>
-            </View>
+                      accessibilityLabel='Watch video on YouTube'
+                      style={styles.youtubeLink}
+                      onPress={handlePreviewYoutubeLink}
+                    >
+                      <View style={styles.youtubeIconWrapper}>
+                        <Text style={styles.youtubeIcon}>▶️</Text>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={[
+                            theme.custom.typography.caption,
+                            { color: '#111827', fontWeight: '700' },
+                          ]}
+                        >
+                          Watch Video
+                        </Text>
+                        <Text
+                          style={[
+                            theme.custom.typography.bodySmall,
+                            { color: '#DC2626', marginTop: 2, textDecorationLine: 'underline' },
+                          ]}
+                        >
+                          Learn more on YouTube
+                        </Text>
+                      </View>
+                      <ExternalLink
+                        color='#DC2626'
+                        size={16}
+                      />
+                    </Pressable>
+                  )}
+                </Animated.View>
 
-            {/* Action Buttons */}
-            <View style={styles.previewActions}>
-              <Button
-                fullWidth
-                size='large'
-                variant='primary'
-                loading={importingTemplateId === previewTemplate._id}
-                onPress={() =>
-                  handleTemplateImport(previewTemplate._id, {
-                    iconColor: selectedIconColor || previewTemplate.iconColor,
-                    name: customHabitName || previewTemplate.name,
-                    reminderTime: selectedReminderTime || undefined,
-                  })
-                }
+                {/* Divider */}
+                <View style={styles.sectionDivider} />
+
+                {/* Customization Block - Animated */}
+                <Animated.View style={[styles.customizeSection, customizeAnimStyle]}>
+                  <View style={styles.customizeTitleRow}>
+                    <Text style={styles.customizeTitle}>Make it yours</Text>
+                    <Text style={styles.customizeSubtitle}>Optional</Text>
+                  </View>
+                  
+                  <View style={styles.inputWrapper}>
+                    <Text style={styles.inputLabel}>Habit name</Text>
+                    <TextInput
+                      maxLength={50}
+                      placeholder='Name your habit'
+                      placeholderTextColor='#94a3b8'
+                      style={styles.nameInput}
+                      value={customHabitName}
+                      onChangeText={setCustomHabitName}
+                    />
+                    <Text style={styles.charCount}>{customHabitName.length}/50</Text>
+                  </View>
+
+                  <Text style={styles.inputLabel}>Reminder</Text>
+                  <View style={styles.reminderRow}>
+                    {REMINDER_OPTIONS.map((option) => {
+                      const isSelected = selectedReminderTime === option;
+                      return (
+                        <Pressable
+                          key={option}
+                          accessibilityLabel={`Set reminder for ${option}`}
+                          accessibilityRole='button'
+                          accessibilityState={{ selected: isSelected }}
+                          style={[
+                            styles.reminderChip,
+                            isSelected && styles.reminderChipActive,
+                          ]}
+                          onPress={() =>
+                            setSelectedReminderTime((current) =>
+                              current === option ? '' : option
+                            )
+                          }
+                        >
+                          <Text
+                            style={[
+                              styles.reminderChipText,
+                              { color: isSelected ? '#fff' : '#334155' },
+                            ]}
+                          >
+                            {option}
+                          </Text>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+
+                  <Text style={styles.inputLabel}>Accent color</Text>
+                  <View style={styles.colorRow}>
+                    {ICON_COLOR_OPTIONS.map((color) => {
+                      const isSelected = selectedIconColor === color;
+                      return (
+                        <Pressable
+                          key={color}
+                          accessibilityLabel={`Pick ${color} accent color`}
+                          accessibilityRole='button'
+                          accessibilityState={{ selected: isSelected }}
+                          style={[
+                            styles.colorSwatch,
+                            { backgroundColor: color },
+                            isSelected && styles.colorSwatchActive,
+                          ]}
+                          onPress={() => setSelectedIconColor(color)}
+                        />
+                      );
+                    })}
+                  </View>
+                </Animated.View>
+
+                {/* Action Buttons - Animated */}
+                <Animated.View style={[styles.previewActions, actionsAnimStyle]}>
+                  <Button
+                    fullWidth
+                    loading={importingTemplateId === previewTemplate._id}
+                    size='large'
+                    style={{ backgroundColor: previewTemplate.iconColor }}
+                    variant='primary'
+                    onPress={() =>
+                      handleTemplateImport(previewTemplate._id, {
+                        iconColor: selectedIconColor || previewTemplate.iconColor,
+                        name: customHabitName || previewTemplate.name,
+                        reminderTime: selectedReminderTime || undefined,
+                      })
+                    }
+                  >
+                    Import Template
+                  </Button>
+                  <Button
+                    fullWidth
+                    size='medium'
+                    style={{ marginTop: 12 }}
+                    variant='ghost'
+                    onPress={() => setShowPreviewModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                </Animated.View>
+              </View>
+            </ScrollView>
+
+            {/* Scroll Hint Indicator */}
+            {showPreviewScrollHint && (
+              <LinearGradient
+                colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)', 'rgba(255,255,255,1)']}
+                pointerEvents='none'
+                style={styles.previewScrollHint}
               >
-                Import Template
-              </Button>
-              <Button
-                fullWidth
-                size='medium'
-                style={{ marginTop: 12 }}
-                variant='ghost'
-                onPress={() => setShowPreviewModal(false)}
-              >
-                Cancel
-              </Button>
-            </View>
+                <Animated.View
+                  entering={FadeIn.duration(300)}
+                  style={styles.previewScrollHintChip}
+                >
+                  <ChevronDown color='#6b7280' size={14} strokeWidth={2.5} />
+                  <Text style={styles.previewScrollHintText}>Scroll for more</Text>
+                </Animated.View>
+              </LinearGradient>
+            )}
           </View>
         </Modal>
       )}
@@ -1043,16 +1205,67 @@ const styles = StyleSheet.create({
   previewModal: {
     paddingBottom: 24,
   },
+  previewModalWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  previewScrollContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  previewScrollHint: {
+    alignItems: 'center',
+    bottom: 0,
+    height: 60,
+    justifyContent: 'flex-end',
+    left: 0,
+    paddingBottom: 8,
+    position: 'absolute',
+    right: 0,
+  },
+  previewScrollHintChip: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderRadius: 20,
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  previewScrollHintText: {
+    color: '#6b7280',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  previewScrollView: {
+    maxHeight: '100%',
+  },
   previewScienceBox: {
     alignItems: 'flex-start',
+    borderColor: '#bbf7d0',
+    borderRadius: 14,
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
     padding: 16,
+  },
+  sectionDivider: {
+    backgroundColor: '#e5e7eb',
+    height: 1,
+    marginVertical: 20,
   },
   researchLink: {
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 8,
+  },
+  scienceIcon: {
+    fontSize: 16,
   },
   youtubeIcon: {
     fontSize: 20,
@@ -1207,12 +1420,29 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   customizeSection: {
-    marginTop: 24,
+    marginTop: 4,
+  },
+  customizeSubtitle: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 6,
+    color: '#6b7280',
+    fontSize: 11,
+    fontWeight: '600',
+    overflow: 'hidden',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
   },
   customizeTitle: {
     color: '#0f172a',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
+    letterSpacing: -0.2,
+  },
+  customizeTitleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 4,
   },
   charCount: {
     color: '#94a3b8',

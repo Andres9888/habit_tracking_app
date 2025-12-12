@@ -1,10 +1,11 @@
 import clsx from 'clsx';
-import { Check, Plus } from 'lucide-react-native';
+import { Check, ChevronDown, Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
   FadeInDown,
+  FadeOut,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
@@ -99,6 +100,60 @@ const BASE_CARD_CLASS =
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+// Scroll hint component to indicate more content below the fold
+function ScrollHint({ visible }: { visible: boolean }) {
+  const translateY = useSharedValue(0);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      // Fade in
+      opacity.value = withDelay(600, withTiming(1, { duration: 400 }));
+
+      // Bounce animation
+      translateY.value = withDelay(
+        800,
+        withRepeat(
+          withSequence(
+            withTiming(6, { duration: 600 }),
+            withTiming(0, { duration: 600 })
+          ),
+          -1,
+          true
+        )
+      );
+    } else {
+      opacity.value = withTiming(0, { duration: 200 });
+    }
+
+    return () => {
+      cancelAnimation(translateY);
+      cancelAnimation(opacity);
+    };
+  }, [visible, translateY, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  if (!visible) return null;
+
+  return (
+    <Animated.View
+      entering={FadeInDown.delay(800).springify()}
+      exiting={FadeOut.duration(200)}
+      className='items-center gap-1 pb-2 pt-4'
+      style={animatedStyle}
+    >
+      <Text className='text-[12px] font-medium text-stone-400'>
+        More options below
+      </Text>
+      <ChevronDown color='#94a3b8' size={18} strokeWidth={2} />
+    </Animated.View>
+  );
+}
+
 export function HabitsEmptyState({
   isLoading,
   openCreateHabitScreen,
@@ -109,7 +164,18 @@ export function HabitsEmptyState({
 }: HabitsEmptyStateProps) {
   const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
   const [successHabit, setSuccessHabit] = useState<string | null>(null);
+  const [showScrollHint, setShowScrollHint] = useState(true);
   const { triggerMediumImpact, triggerSuccess, triggerLightImpact } = useHapticFeedback();
+
+  // Auto-dismiss scroll hint after 4 seconds
+  useEffect(() => {
+    if (!isLoading && showScrollHint) {
+      const timer = setTimeout(() => {
+        setShowScrollHint(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, showScrollHint]);
 
   if (isLoading) {
     return (
@@ -179,6 +245,9 @@ export function HabitsEmptyState({
           }}
         />
       )}
+
+      {/* Scroll hint indicator - shows users there's more content below */}
+      <ScrollHint visible={showScrollHint} />
 
       {openTemplatesScreen && <TemplatesPeekCard onPress={openTemplatesScreen} />}
 
@@ -325,7 +394,7 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
   return (
     <Animated.View
       entering={FadeInDown.delay(0).springify().damping(18)}
-      className='relative items-center gap-3 overflow-hidden rounded-3xl border border-amber-200/40 px-6 py-6'
+      className='relative items-center gap-2.5 overflow-hidden rounded-3xl border border-amber-200/40 px-5 py-5'
       style={{ backgroundColor: '#fffbeb' }}
     >
       {/* Animated background glow */}
@@ -356,32 +425,32 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
       </View>
 
       {/* Main content */}
-      <Animated.Text style={waveStyle} className='text-4xl'>
+      <Animated.Text style={waveStyle} className='text-3xl'>
         👋
       </Animated.Text>
-      <View className='items-center gap-1.5'>
-        <Text className='text-[22px] font-bold text-stone-800'>
+      <View className='items-center gap-1'>
+        <Text className='text-[20px] font-bold text-stone-800'>
           {greeting}!
         </Text>
-        <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
+        <Text className='text-center text-[14px] leading-[20px] text-stone-600'>
           Your first streak starts now {periodEmoji}
         </Text>
       </View>
       <Animated.View
-        className='mt-1 flex-row items-center gap-2 rounded-full bg-white/80 px-4 py-2'
+        className='flex-row items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5'
         style={[
           streakStyle,
           {
             shadowColor: '#f59e0b',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.2,
-            shadowRadius: 8,
-            elevation: 4,
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.18,
+            shadowRadius: 6,
+            elevation: 3,
           },
         ]}
       >
-        <Text className='text-lg'>🔥</Text>
-        <Text className='text-[13px] font-semibold text-amber-700'>
+        <Text className='text-base'>🔥</Text>
+        <Text className='text-[12px] font-semibold text-amber-700'>
           0 day streak • Let's change that
         </Text>
       </Animated.View>
