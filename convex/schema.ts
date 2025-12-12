@@ -129,7 +129,12 @@ const applicationTables = {
       v.literal('social'),
       v.literal('financial'),
       v.literal('creativity'),
-      v.literal('sleep')
+      v.literal('sleep'),
+      // New science-backed categories
+      v.literal('longevity'),
+      v.literal('mental_health'),
+      v.literal('recovery'),
+      v.literal('breathing')
     ),
     // For sorting popular templates
     createdAt: v.number(),

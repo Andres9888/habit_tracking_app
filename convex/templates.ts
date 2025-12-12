@@ -5,6 +5,85 @@
 
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import type { Id } from './_generated/dataModel';
+
+type TemplateInsert = {
+  category:
+    | 'andrew_huberman'
+    | 'breathing'
+    | 'creativity'
+    | 'financial'
+    | 'health_fitness'
+    | 'learning'
+    | 'longevity'
+    | 'mental_health'
+    | 'mindfulness'
+    | 'morning_routine'
+    | 'productivity'
+    | 'recovery'
+    | 'sleep'
+    | 'social';
+  createdAt: number;
+  description: string;
+  frequency: string;
+  icon: string;
+  iconColor: string;
+  name: string;
+  popularityScore?: number;
+  scientificLink?: string;
+  scientificReference: string;
+};
+
+const insertTemplateIfMissing = async (
+  ctx: { db: { insert: any; query: any } },
+  template: TemplateInsert
+) => {
+  const existing = await ctx.db
+    .query('templates')
+    .filter((q: any) => q.eq(q.field('name'), template.name))
+    .first();
+
+  if (existing) return;
+
+  await ctx.db.insert('templates', template);
+};
+
+const normalizeTemplateName = (name: string) => name.trim().toLowerCase();
+
+const pickBestTemplate = <
+  T extends {
+    _creationTime: number;
+    createdAt: number;
+    description: string;
+    popularityScore?: number;
+    scientificLink?: string;
+    scientificReference: string;
+  },
+>(
+  templates: T[]
+) => {
+  const scoreTemplate = (template: (typeof templates)[number]) => {
+    const hasScientificLinkScore = template.scientificLink ? 1000 : 0;
+    const popularityScore = template.popularityScore ?? 0;
+    const descriptionScore = Math.min(template.description.length, 500) / 10;
+    const referenceScore = template.scientificReference ? 5 : 0;
+    return hasScientificLinkScore + popularityScore + descriptionScore + referenceScore;
+  };
+
+  return templates.reduce((best, current) => {
+    const bestScore = scoreTemplate(best);
+    const currentScore = scoreTemplate(current);
+    if (currentScore > bestScore) return current;
+
+    if (currentScore < bestScore) return best;
+
+    // Deterministic tie-breakers
+    if (current.createdAt > best.createdAt) return current;
+    if (current.createdAt < best.createdAt) return best;
+    if (current._creationTime > best._creationTime) return current;
+    return best;
+  });
+};
 
 /**
  * Query: List all templates, optionally filtered by category
@@ -22,7 +101,12 @@ export const list = query({
         v.literal('social'),
         v.literal('financial'),
         v.literal('creativity'),
-        v.literal('sleep')
+        v.literal('sleep'),
+        // New science-backed categories
+        v.literal('longevity'),
+        v.literal('mental_health'),
+        v.literal('recovery'),
+        v.literal('breathing')
       )
     ),
   },
@@ -57,9 +141,27 @@ export const seedTemplates = mutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
+    let insertedCount = 0;
+    let skippedCount = 0;
+
+    const insertWithTracking = async (template: TemplateInsert) => {
+      const existing = await ctx.db
+        .query('templates')
+        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .first();
+
+      if (existing) {
+        skippedCount++;
+        return false;
+      }
+
+      await ctx.db.insert('templates', template);
+      insertedCount++;
+      return true;
+    };
 
     // Morning Routine Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -75,7 +177,7 @@ export const seedTemplates = mutation({
         'Goyal et al. (2014) - Meditation programs for psychological stress',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -89,7 +191,7 @@ export const seedTemplates = mutation({
         "Cameron (1992) - The Artist's Way creative recovery program",
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -103,7 +205,7 @@ export const seedTemplates = mutation({
         'Popkin et al. (2010) - Water, hydration, and health',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -117,22 +219,7 @@ export const seedTemplates = mutation({
         'Huberman (2021) - Light exposure and circadian biology',
     });
 
-    await ctx.db.insert('templates', {
-      category: 'morning_routine',
-      createdAt: now,
-      description:
-        'Wait 90 minutes after waking before having caffeine. Supports adenosine clearance and sustained alertness.',
-      frequency: 'daily',
-      icon: '☕',
-      iconColor: '#B45309',
-      name: 'Delay Caffeine 90 Minutes',
-      popularityScore: 82,
-      scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
-      scientificReference:
-        'Huberman Lab (2023) - Caffeine timing for optimal alertness',
-    });
-
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -146,7 +233,7 @@ export const seedTemplates = mutation({
         'Cramer et al. (2016) - Yoga for chronic low back pain',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -160,7 +247,7 @@ export const seedTemplates = mutation({
         'Höpfl et al. (2021) - Cold water immersion for recovery',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -175,7 +262,7 @@ export const seedTemplates = mutation({
     });
 
     // Health & Fitness Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -191,7 +278,7 @@ export const seedTemplates = mutation({
         'Jordan et al. (2013) - High-intensity circuit training',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -205,7 +292,7 @@ export const seedTemplates = mutation({
         'Lee et al. (2019) - Association of step volume and intensity',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -219,7 +306,7 @@ export const seedTemplates = mutation({
         'Westcott (2012) - Resistance training health benefits',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -233,7 +320,7 @@ export const seedTemplates = mutation({
         'Behm et al. (2016) - Acute effects of muscle stretching',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -247,7 +334,7 @@ export const seedTemplates = mutation({
         'Yang et al. (2014) - Added sugar intake and cardiovascular disease',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -261,7 +348,7 @@ export const seedTemplates = mutation({
         'Wolfson & Bleich (2015) - Is cooking at home associated with better diet quality?',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -275,7 +362,7 @@ export const seedTemplates = mutation({
         'Cramer et al. (2014) - Yoga for anxiety and depression',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -289,7 +376,7 @@ export const seedTemplates = mutation({
         'McKeown et al. (2009) - Dietary fiber intake and mortality',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -304,7 +391,7 @@ export const seedTemplates = mutation({
     });
 
     // Productivity Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -318,7 +405,7 @@ export const seedTemplates = mutation({
         'Newport (2016) - Deep Work: Rules for focused success',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -331,7 +418,7 @@ export const seedTemplates = mutation({
       scientificReference: 'Cirillo (2006) - The Pomodoro Technique',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -345,7 +432,7 @@ export const seedTemplates = mutation({
         'Tracy (2007) - Eat That Frog! productivity principle',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -358,7 +445,7 @@ export const seedTemplates = mutation({
       scientificReference: 'Mann (2007) - Inbox Zero email management system',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -371,7 +458,7 @@ export const seedTemplates = mutation({
       scientificReference: 'Baumeister (2011) - Decision fatigue research',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -384,7 +471,7 @@ export const seedTemplates = mutation({
       scientificReference: 'Cal Newport (2016) - Deep Work methodology',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -398,7 +485,7 @@ export const seedTemplates = mutation({
         'Dweck (2006) - Mindset: The New Psychology of Success',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -412,7 +499,7 @@ export const seedTemplates = mutation({
         'McMains & Kastner (2011) - Interactions of top-down and bottom-up mechanisms in human visual cortex',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -427,7 +514,7 @@ export const seedTemplates = mutation({
     });
 
     // Mindfulness Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -443,7 +530,7 @@ export const seedTemplates = mutation({
         'Emmons & McCullough (2003) - Counting blessings versus burdens',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -457,7 +544,7 @@ export const seedTemplates = mutation({
         'Ma et al. (2017) - Breathing meditation for stress reduction',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -470,7 +557,7 @@ export const seedTemplates = mutation({
       scientificReference: 'Kolb (1984) - Experiential learning and reflection',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -484,7 +571,7 @@ export const seedTemplates = mutation({
         'Exelmans & Van den Bulck (2016) - Bedtime mobile phone use',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -498,7 +585,7 @@ export const seedTemplates = mutation({
         'Hansen et al. (2017) - Shinrin-yoku (forest bathing) benefits',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -512,7 +599,7 @@ export const seedTemplates = mutation({
         'Jacobson (1929) - Progressive relaxation technique',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -526,7 +613,7 @@ export const seedTemplates = mutation({
         'Fredrickson et al. (2008) - Open hearts build lives: positive emotions',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -540,7 +627,7 @@ export const seedTemplates = mutation({
         'Lyubomirsky (2008) - The How of Happiness: A Scientific Approach',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -555,7 +642,7 @@ export const seedTemplates = mutation({
     });
 
     // Andrew Huberman Protocol Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -570,7 +657,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Morning sunlight for optimal circadian biology',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -585,7 +672,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Optimal caffeine timing protocol',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -601,7 +688,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2022) - Zone 2 training for longevity',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -617,7 +704,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Optimal deliberate cold exposure protocols',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -633,7 +720,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2021) - Using NSDR to improve learning and sleep',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -649,7 +736,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Physiological sigh for stress regulation',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -664,7 +751,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Evening light protocols for better sleep',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -679,7 +766,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Temperature minimum protocol for sleep',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -694,7 +781,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Morning nutrition for optimal alertness',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -709,7 +796,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Meal timing and circadian biology',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -724,7 +811,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Intermittent fasting protocols',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -740,7 +827,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2022) - Sauna use for health optimization',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -755,7 +842,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Complete sleep toolkit',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -770,7 +857,7 @@ export const seedTemplates = mutation({
         'Huberman Lab (2023) - Darkness and sleep optimization',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'andrew_huberman',
       createdAt: now,
       description:
@@ -786,7 +873,7 @@ export const seedTemplates = mutation({
     });
 
     // Social Habits Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -800,7 +887,7 @@ export const seedTemplates = mutation({
         'Holt-Lunstad et al. (2010) - Social relationships and mortality',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -814,7 +901,7 @@ export const seedTemplates = mutation({
         'Gable et al. (2004) - The benefits of supportive relationships',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -828,7 +915,7 @@ export const seedTemplates = mutation({
         'Gottman (1999) - The Seven Principles for Making Marriage Work',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -842,7 +929,7 @@ export const seedTemplates = mutation({
         'Algoe et al. (2010) - Gratitude and relationship satisfaction',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -856,7 +943,7 @@ export const seedTemplates = mutation({
         'Post (2005) - Altruism, happiness, and health',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -871,7 +958,7 @@ export const seedTemplates = mutation({
     });
 
     // Sleep Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -885,7 +972,7 @@ export const seedTemplates = mutation({
         'Walker (2017) - Why We Sleep: Unlocking the Power of Sleep',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -901,7 +988,7 @@ export const seedTemplates = mutation({
         'Chang et al. (2015) - Evening use of light-emitting eReaders',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -915,7 +1002,7 @@ export const seedTemplates = mutation({
         'Weil (2015) - Breathing: The Master Key to Self-Healing',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -929,7 +1016,7 @@ export const seedTemplates = mutation({
         'Drake et al. (2013) - Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -943,7 +1030,7 @@ export const seedTemplates = mutation({
         'Gooley et al. (2011) - Exposure to room light before bedtime',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -957,7 +1044,7 @@ export const seedTemplates = mutation({
         'Harding et al. (2019) - Systematic review of warm baths and sleep quality',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -973,7 +1060,7 @@ export const seedTemplates = mutation({
         'Hirshkowitz et al. (2015) - National Sleep Foundation sleep duration recommendations',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -988,7 +1075,7 @@ export const seedTemplates = mutation({
     });
 
     // Learning Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1004,7 +1091,7 @@ export const seedTemplates = mutation({
         'Cepeda et al. (2006) - Distributed practice in verbal recall tasks',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1018,7 +1105,7 @@ export const seedTemplates = mutation({
         'Nation (2001) - Learning Vocabulary in Another Language',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1032,7 +1119,7 @@ export const seedTemplates = mutation({
         'Chi et al. (1989) - Self-explanations and learning',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1046,7 +1133,7 @@ export const seedTemplates = mutation({
         'Roediger & Karpicke (2006) - Test-enhanced learning',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1060,7 +1147,7 @@ export const seedTemplates = mutation({
         'Krashen (2004) - The Power of Reading',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1074,7 +1161,7 @@ export const seedTemplates = mutation({
         'Rogowsky et al. (2016) - Matching learning style to instructional method',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1088,7 +1175,7 @@ export const seedTemplates = mutation({
         'Herholz & Zatorre (2012) - Musical training as framework for brain plasticity',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1102,7 +1189,7 @@ export const seedTemplates = mutation({
         'Mueller & Oppenheimer (2014) - The Pen Is Mightier Than the Keyboard',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1116,7 +1203,7 @@ export const seedTemplates = mutation({
         'Mayer (2009) - Multimedia Learning principles',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1131,7 +1218,7 @@ export const seedTemplates = mutation({
     });
 
     // Financial Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1145,7 +1232,7 @@ export const seedTemplates = mutation({
         'Thaler & Sunstein (2008) - Nudge: Improving Decisions About Health, Wealth, and Happiness',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1159,7 +1246,7 @@ export const seedTemplates = mutation({
         'Bach (2004) - The Automatic Millionaire',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1173,7 +1260,7 @@ export const seedTemplates = mutation({
         'Ramsey (2013) - The Total Money Makeover',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1187,7 +1274,7 @@ export const seedTemplates = mutation({
         'Bogle (2007) - The Little Book of Common Sense Investing',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1201,7 +1288,7 @@ export const seedTemplates = mutation({
         'Mischel (2014) - The Marshmallow Test: Mastering Self-Control',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1215,7 +1302,7 @@ export const seedTemplates = mutation({
         'Ramsey (2013) - Small expenses compound over time',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1229,7 +1316,7 @@ export const seedTemplates = mutation({
         'Ariely (2008) - Predictably Irrational subscription traps',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1243,7 +1330,7 @@ export const seedTemplates = mutation({
         'Lusardi & Mitchell (2014) - The Economic Importance of Financial Literacy',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1257,7 +1344,7 @@ export const seedTemplates = mutation({
         'Ramsey (2013) - The power of negotiation',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'financial',
       createdAt: now,
       description:
@@ -1272,7 +1359,7 @@ export const seedTemplates = mutation({
     });
 
     // Creativity Templates
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1286,7 +1373,7 @@ export const seedTemplates = mutation({
         'Elbow (1998) - Writing Without Teachers',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1300,7 +1387,7 @@ export const seedTemplates = mutation({
         'Brown (2014) - The Doodle Revolution',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1314,7 +1401,7 @@ export const seedTemplates = mutation({
         'Altucher (2014) - Becoming an Idea Machine',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1328,7 +1415,7 @@ export const seedTemplates = mutation({
         'Csikszentmihalyi (1996) - Creativity: Flow and the Psychology of Discovery',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1342,7 +1429,7 @@ export const seedTemplates = mutation({
         'Kaufman & Gregoire (2015) - Wired to Create',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1356,7 +1443,7 @@ export const seedTemplates = mutation({
         'Guilford (1967) - The Nature of Human Intelligence',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1370,7 +1457,7 @@ export const seedTemplates = mutation({
         'Johansson (2004) - The Medici Effect',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1384,7 +1471,7 @@ export const seedTemplates = mutation({
         'Leder et al. (2004) - A model of aesthetic appreciation',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1398,7 +1485,7 @@ export const seedTemplates = mutation({
         'Carson (2010) - Your Creative Brain',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'creativity',
       createdAt: now,
       description:
@@ -1412,7 +1499,8 @@ export const seedTemplates = mutation({
         'Rock (2009) - Your Brain at Work: breaking patterns',
     });
 
-    return { message: '114 templates seeded successfully', success: true };
+    const templates = await ctx.db.query('templates').collect();
+    return { message: `${templates.length} templates available`, success: true };
   },
 });
 
@@ -1534,19 +1622,110 @@ export const clearTemplates = mutation({
 });
 
 /**
+ * Mutation: Dedupe templates by name (one-time cleanup)
+ * - Keeps the "best" template per name (based on link/popularity/completeness)
+ * - Re-points templateUsage.templateId to the kept template
+ * - Deletes extra templates
+ */
+export const dedupeTemplates = mutation({
+  args: { dryRun: v.optional(v.boolean()) },
+  handler: async (ctx, args) => {
+    const dryRun = args.dryRun ?? false;
+
+    const allTemplates = await ctx.db.query('templates').collect();
+    type TemplateDoc = (typeof allTemplates)[number];
+    const templatesByName = new Map<string, TemplateDoc[]>();
+
+    for (const template of allTemplates) {
+      const key = normalizeTemplateName(template.name);
+      const existing = templatesByName.get(key);
+      if (!existing) {
+        templatesByName.set(key, [template]);
+        continue;
+      }
+      existing.push(template);
+    }
+
+    const idRemap = new Map<Id<'templates'>, Id<'templates'>>();
+    let duplicateGroups = 0;
+    let duplicateTemplates = 0;
+
+    for (const [, templates] of templatesByName) {
+      if (templates.length <= 1) continue;
+
+      duplicateGroups += 1;
+      duplicateTemplates += templates.length - 1;
+
+      const best = pickBestTemplate<TemplateDoc>(templates);
+      for (const template of templates) {
+        if (template._id === best._id) continue;
+        idRemap.set(template._id, best._id);
+      }
+    }
+
+    const templateUsage = await ctx.db.query('templateUsage').collect();
+    let patchedTemplateUsage = 0;
+
+    if (!dryRun) {
+      for (const usage of templateUsage) {
+        const remapped = idRemap.get(usage.templateId);
+        if (!remapped) continue;
+        await ctx.db.patch(usage._id, { templateId: remapped });
+        patchedTemplateUsage += 1;
+      }
+
+      for (const [oldId] of idRemap) {
+        await ctx.db.delete(oldId);
+      }
+    }
+
+    const templatesAfter = dryRun
+      ? allTemplates.length
+      : (await ctx.db.query('templates').collect()).length;
+
+    return {
+      dryRun,
+      duplicateGroups,
+      duplicateTemplates,
+      patchedTemplateUsage: dryRun ? 0 : patchedTemplateUsage,
+      templatesAfter,
+      templatesBefore: allTemplates.length,
+    };
+  },
+});
+
+/**
  * Mutation: Seed additional science-backed templates (Phase 3.1)
- * 37 new habits covering: Physical Resilience, Cognitive, Nutrition, Digital Wellness, Social
+ * 45 new habits covering: Physical Resilience, Cognitive, Nutrition, Digital Wellness, Social
  */
 export const seedAdditionalTemplates = mutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
+    let insertedCount = 0;
+    let skippedCount = 0;
+
+    const insertWithTracking = async (template: TemplateInsert) => {
+      const existing = await ctx.db
+        .query('templates')
+        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .first();
+
+      if (existing) {
+        skippedCount++;
+        return false;
+      }
+
+      await ctx.db.insert('templates', template);
+      insertedCount++;
+      return true;
+    };
 
     // ═══════════════════════════════════════════════════════════════
     // HEALTH & FITNESS - Physical Resilience & Movement
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1561,7 +1740,7 @@ export const seedAdditionalTemplates = mutation({
         'Dunstan et al. (2012) - Too much sitting: The population health science of sedentary behavior',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1575,7 +1754,7 @@ export const seedAdditionalTemplates = mutation({
         'Carney et al. (2010) - Power posing: Brief nonverbal displays affect neuroendocrine levels',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1590,7 +1769,7 @@ export const seedAdditionalTemplates = mutation({
         'Chevalier et al. (2012) - Earthing: Health implications of reconnecting the human body to the Earth',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1604,7 +1783,7 @@ export const seedAdditionalTemplates = mutation({
         'American Optometric Association - Digital eye strain prevention guidelines',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1618,7 +1797,7 @@ export const seedAdditionalTemplates = mutation({
         'Nestor (2020) - Breath: The New Science of a Lost Art',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1633,7 +1812,7 @@ export const seedAdditionalTemplates = mutation({
         'Attia (2023) - Outlive: The Science and Art of Longevity',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1647,7 +1826,7 @@ export const seedAdditionalTemplates = mutation({
         'Sherrington et al. (2019) - Exercise for preventing falls in older people living in the community',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1662,7 +1841,7 @@ export const seedAdditionalTemplates = mutation({
         'Leong et al. (2015) - Prognostic value of grip strength: findings from the PURE study',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1676,7 +1855,7 @@ export const seedAdditionalTemplates = mutation({
         'Laukkanen et al. (2018) - Cardiovascular and other health benefits of passive heat therapy',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1690,11 +1869,41 @@ export const seedAdditionalTemplates = mutation({
         'McGill (2016) - Back Mechanic: spinal decompression techniques',
     });
 
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Walk for 10 minutes after a meal. Post-meal walking reduces blood sugar spikes and supports metabolic health.',
+      frequency: 'daily',
+      icon: '🚶',
+      iconColor: '#22C55E',
+      name: 'Post-Meal Walk (10 Minutes)',
+      popularityScore: 88,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/27747394/',
+      scientificReference:
+        'DiPietro et al. (2016) - A simple postmeal walk reduces postprandial glucose excursions in type 2 diabetes',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Do 3 short vigorous stair-climb “exercise snacks” during the day. Time-efficient bursts improve cardiorespiratory fitness (VO₂peak).',
+      frequency: 'weekly',
+      icon: '🪜',
+      iconColor: '#EF4444',
+      name: 'Exercise Snacks (Stair Climbs)',
+      popularityScore: 84,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/30649897/',
+      scientificReference:
+        'Jenkins et al. (2019) - Stair climbing “exercise snacks” improve cardiorespiratory fitness in sedentary adults',
+    });
+
     // ═══════════════════════════════════════════════════════════════
     // MINDFULNESS - Cognitive & Mental Health
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -1708,7 +1917,7 @@ export const seedAdditionalTemplates = mutation({
         'Park et al. (2014) - The impact of sustained engagement on cognitive function in older adults',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -1722,7 +1931,7 @@ export const seedAdditionalTemplates = mutation({
         'Borkovec et al. (1990) - Stimulus control treatment for worry and insomnia',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -1736,7 +1945,7 @@ export const seedAdditionalTemplates = mutation({
         'Kabat-Zinn (1990) - Full Catastrophe Living: Using the Wisdom of Your Body and Mind',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -1750,7 +1959,7 @@ export const seedAdditionalTemplates = mutation({
         'Sepah (2019) - The Definitive Guide to Dopamine Fasting 2.0',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'learning',
       createdAt: now,
       description:
@@ -1769,7 +1978,7 @@ export const seedAdditionalTemplates = mutation({
     // SLEEP - Recovery & Rest
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -1783,7 +1992,7 @@ export const seedAdditionalTemplates = mutation({
         'Ackerley et al. (2015) - Positive effects of a weighted blanket on insomnia',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -1797,7 +2006,7 @@ export const seedAdditionalTemplates = mutation({
         'Messineo et al. (2017) - Broadband sound administration improves sleep onset latency',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'sleep',
       createdAt: now,
       description:
@@ -1812,11 +2021,26 @@ export const seedAdditionalTemplates = mutation({
         'Abbasi et al. (2012) - The effect of magnesium supplementation on sleep quality',
     });
 
+    await insertWithTracking({
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Use your bed only for sleep (and intimacy). If you can’t sleep, get up and return only when sleepy. This re-trains your brain to associate bed with sleep.',
+      frequency: 'daily',
+      icon: '🛌',
+      iconColor: '#1E40AF',
+      name: 'Stimulus Control (CBT-I)',
+      popularityScore: 86,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/37496454/',
+      scientificReference:
+        'Bootzin (1972) - Stimulus control treatment for insomnia (core CBT-I component)',
+    });
+
     // ═══════════════════════════════════════════════════════════════
     // HEALTH & FITNESS - Nutrition
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1831,7 +2055,7 @@ export const seedAdditionalTemplates = mutation({
         'McDonald et al. (2018) - American Gut: an open platform for citizen science microbiome research',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1846,7 +2070,7 @@ export const seedAdditionalTemplates = mutation({
         'Wastyk et al. (2021) - Gut-microbiota-targeted diets modulate human immune status (Stanford study)',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1860,7 +2084,7 @@ export const seedAdditionalTemplates = mutation({
         'Dyall (2015) - Long-chain omega-3 fatty acids and the brain: A review of evidence',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1874,7 +2098,7 @@ export const seedAdditionalTemplates = mutation({
         'Imai et al. (2014) - Eating vegetables before carbohydrates improves postprandial glucose',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1888,7 +2112,7 @@ export const seedAdditionalTemplates = mutation({
         'Fujiwara et al. (2005) - Association between dinner-to-bed time and gastro-esophageal reflux disease',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -1902,11 +2126,71 @@ export const seedAdditionalTemplates = mutation({
         'Zhu & Hollis (2014) - Increasing the number of chews before swallowing reduces meal size',
     });
 
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Aim for ~25–30g of high-quality protein per meal. This supports muscle protein synthesis and long-term metabolic health.',
+      frequency: 'daily',
+      icon: '🍗',
+      iconColor: '#F97316',
+      name: 'Protein Per Meal (25–30g)',
+      popularityScore: 85,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/19057193/',
+      scientificReference:
+        'Moore et al. (2009) - Ingested protein dose response of muscle protein synthesis; balanced distribution evidence: Mamerow et al. (2014)',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Floss or use an interdental brush once daily after brushing. Helps reduce gingivitis when added to toothbrushing.',
+      frequency: 'daily',
+      icon: '🦷',
+      iconColor: '#0EA5E9',
+      name: 'Interdental Cleaning',
+      popularityScore: 82,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/22161438/',
+      scientificReference:
+        'Cochrane Review (2011) - Flossing plus toothbrushing reduces gingivitis (DOI: 10.1002/14651858.CD008829.pub2)',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Wash hands with soap at key times (before eating, after bathroom, after transit). Hand hygiene reduces respiratory illness transmission.',
+      frequency: 'daily',
+      icon: '🧼',
+      iconColor: '#10B981',
+      name: 'Hand Hygiene (Key Times)',
+      popularityScore: 83,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/18556606/',
+      scientificReference:
+        'Aiello et al. (2008) - Effect of hand hygiene on infectious disease risk: meta-analysis',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Apply sunscreen to exposed skin (especially face/neck) as part of your morning routine. Daily use lowers skin cancer risk over time.',
+      frequency: 'daily',
+      icon: '🧴',
+      iconColor: '#FBBF24',
+      name: 'Daily Sunscreen',
+      popularityScore: 84,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/21135266/',
+      scientificReference:
+        'Green et al. (2011) - Reduced melanoma incidence with regular sunscreen use: Nambour trial follow-up',
+    });
+
     // ═══════════════════════════════════════════════════════════════
     // PRODUCTIVITY - Environment & Lifestyle
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -1920,7 +2204,7 @@ export const seedAdditionalTemplates = mutation({
         'Lohr et al. (2010) - Interior plants may improve worker productivity',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -1934,7 +2218,7 @@ export const seedAdditionalTemplates = mutation({
         'Saxbe & Repetti (2010) - No place like home: Home tours correlate with cortisol levels',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -1949,7 +2233,7 @@ export const seedAdditionalTemplates = mutation({
         'Allen et al. (2016) - Associations of cognitive function scores with CO2 and ventilation',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'mindfulness',
       createdAt: now,
       description:
@@ -1963,7 +2247,7 @@ export const seedAdditionalTemplates = mutation({
         'Bennett & Lengacher (2009) - Humor and laughter may influence health: Complementary therapies review',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -1981,7 +2265,7 @@ export const seedAdditionalTemplates = mutation({
     // SOCIAL - Connection & Emotional Intelligence
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -1995,7 +2279,7 @@ export const seedAdditionalTemplates = mutation({
         'Rogers (1951) - Client-centered therapy: Its current practice, implications, and theory',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -2009,7 +2293,7 @@ export const seedAdditionalTemplates = mutation({
         'Lyubomirsky et al. (2005) - Pursuing happiness: The architecture of sustainable change',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -2023,7 +2307,7 @@ export const seedAdditionalTemplates = mutation({
         'Helliwell & Huang (2013) - Comparing the happiness effects of real and online friends',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -2037,7 +2321,7 @@ export const seedAdditionalTemplates = mutation({
         'Cloud & Townsend (1992) - Boundaries: When to Say Yes, How to Say No',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'social',
       createdAt: now,
       description:
@@ -2055,7 +2339,7 @@ export const seedAdditionalTemplates = mutation({
     // PRODUCTIVITY - Digital Wellness
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -2069,7 +2353,7 @@ export const seedAdditionalTemplates = mutation({
         'Dwyer et al. (2018) - Smartphone use undermines enjoyment of face-to-face social interactions',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -2084,7 +2368,7 @@ export const seedAdditionalTemplates = mutation({
         'Hunt et al. (2018) - No more FOMO: Limiting social media decreases loneliness and depression',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'productivity',
       createdAt: now,
       description:
@@ -2098,7 +2382,7 @@ export const seedAdditionalTemplates = mutation({
         'Ophir et al. (2009) - Cognitive control in media multitaskers',
     });
 
-    await ctx.db.insert('templates', {
+    await insertWithTracking({
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -2112,7 +2396,1303 @@ export const seedAdditionalTemplates = mutation({
         'Newport (2019) - Digital Minimalism: Choosing a Focused Life in a Noisy World',
     });
 
-    return { message: '37 additional templates seeded successfully', success: true };
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Write one “if-then” plan for tomorrow (e.g., “If it’s 9:00 AM, then I start my hardest task for 25 minutes”). This increases follow-through by automating the first step.',
+      frequency: 'weekly',
+      icon: '🧩',
+      iconColor: '#7C3AED',
+      name: 'If-Then Planning',
+      popularityScore: 83,
+      scientificLink:
+        'https://www.sciencedirect.com/science/article/pii/S0065260106380021',
+      scientificReference:
+        'Gollwitzer & Sheeran (2006) - Implementation intentions and goal achievement (Advances in Experimental Social Psychology)',
+    });
+
+    return { message: '45 additional templates seeded successfully', success: true };
+  },
+});
+
+/**
+ * Mutation: Seed new science-backed templates (Phase 3.2)
+ * Unique habits covering: Dental Health, Bone Health, Hearing Health, Immune Support, Preventive Care, Goal Setting
+ */
+export const seedNewScienceTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    let insertedCount = 0;
+    let skippedCount = 0;
+    const insertedNames: string[] = [];
+    const skippedNames: string[] = [];
+
+    const insertWithTracking = async (template: TemplateInsert) => {
+      const existing = await ctx.db
+        .query('templates')
+        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .first();
+
+      if (existing) {
+        skippedCount++;
+        skippedNames.push(template.name);
+        return false;
+      }
+
+      await ctx.db.insert('templates', template);
+      insertedCount++;
+      insertedNames.push(template.name);
+      return true;
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Dental Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Floss or use interdental brushes daily. Interdental cleaning reduces gum inflammation by 47% and prevents periodontal disease.',
+      frequency: 'daily',
+      icon: '🦷',
+      iconColor: '#FFFFFF',
+      name: 'Daily Flossing',
+      popularityScore: 88,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/38116705/',
+      scientificReference:
+        'SHIP-TREND Study (2024) - Interdental cleaning reduces plaque and bleeding',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Schedule dental checkups every 6 months. Regular professional cleanings prevent gum disease and catch issues early.',
+      frequency: 'weekly',
+      icon: '🦷',
+      iconColor: '#0EA5E9',
+      name: 'Regular Dental Checkups',
+      popularityScore: 85,
+      scientificReference:
+        'American Dental Association - Preventive care recommendations',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Bone Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Track daily calcium intake (1000-1200mg). Adequate calcium prevents osteoporosis and maintains bone density throughout life.',
+      frequency: 'daily',
+      icon: '🦴',
+      iconColor: '#F3F4F6',
+      name: 'Calcium Intake Tracking',
+      popularityScore: 86,
+      scientificLink: 'https://www.hopkinsmedicine.org/health/conditions-and-diseases/osteoporosis',
+      scientificReference:
+        'Hopkins Medicine (2024) - Calcium requirements for bone health',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Perform weight-bearing exercises 3-4x weekly. Walking, jogging, and resistance training stimulate bone formation and prevent bone loss.',
+      frequency: 'weekly',
+      icon: '🏋️',
+      iconColor: '#6366F1',
+      name: 'Bone-Strengthening Exercise',
+      popularityScore: 89,
+      scientificReference:
+        'National Osteoporosis Foundation - Weight-bearing exercise guidelines',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Hearing Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Use ear protection in loud environments (concerts, construction, etc.). Prevents noise-induced hearing loss, which is permanent and cumulative.',
+      frequency: 'daily',
+      icon: '👂',
+      iconColor: '#F59E0B',
+      name: 'Hearing Protection',
+      popularityScore: 84,
+      scientificLink: 'https://www.nidcd.nih.gov/news/2021/noise-induced-hearing-loss-preventable',
+      scientificReference:
+        'NIDCD (2021) - Noise-induced hearing loss is preventable',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Keep audio devices at 60% volume or lower. Listening at safe levels prevents hearing damage from personal devices.',
+      frequency: 'daily',
+      icon: '🎧',
+      iconColor: '#8B5CF6',
+      name: 'Safe Listening Volume',
+      popularityScore: 87,
+      scientificReference:
+        'WHO (2019) - Safe listening devices and systems guidelines',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Immune System Support
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Monitor vitamin D levels and supplement if needed (600-800 IU daily). Vitamin D supports immune function and circadian rhythms.',
+      frequency: 'daily',
+      icon: '☀️',
+      iconColor: '#FBBF24',
+      name: 'Vitamin D Supplementation',
+      popularityScore: 90,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/40218962/',
+      scientificReference:
+        'PubMed (2024) - Vitamin D and circadian regulation of immune genes',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Schedule annual preventive health checkups. Regular screenings catch health issues early when they\'re most treatable.',
+      frequency: 'weekly',
+      icon: '🏥',
+      iconColor: '#EF4444',
+      name: 'Preventive Health Checkups',
+      popularityScore: 92,
+      scientificReference:
+        'CDC - Preventive care guidelines for adults',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Skin Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Apply broad-spectrum SPF 30+ sunscreen daily. Prevents skin cancer, premature aging, and UV damage even on cloudy days.',
+      frequency: 'daily',
+      icon: '🧴',
+      iconColor: '#FDE047',
+      name: 'Daily Sun Protection',
+      popularityScore: 88,
+      scientificReference:
+        'American Academy of Dermatology - Daily sunscreen recommendations',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Joint Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Perform joint mobility exercises daily. Maintains range of motion, prevents stiffness, and reduces injury risk.',
+      frequency: 'daily',
+      icon: '🔄',
+      iconColor: '#10B981',
+      name: 'Joint Mobility Routine',
+      popularityScore: 85,
+      scientificReference:
+        'American College of Sports Medicine - Mobility exercise guidelines',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PRODUCTIVITY - Goal Setting & Review
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Review weekly goals every Sunday. Regular goal review increases achievement rates by 42% and maintains focus.',
+      frequency: 'weekly',
+      icon: '📋',
+      iconColor: '#7C3AED',
+      name: 'Weekly Goal Review',
+      popularityScore: 89,
+      scientificReference:
+        'Locke & Latham (2002) - Goal-setting theory and performance',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Track your energy levels throughout the day. Identifying peak energy times allows you to schedule important work during high-energy windows.',
+      frequency: 'daily',
+      icon: '⚡',
+      iconColor: '#FBBF24',
+      name: 'Energy Level Tracking',
+      popularityScore: 85,
+      scientificReference:
+        'Kühnel et al. (2017) - Daily energy management and work engagement',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // MINDFULNESS - Stress & Recovery
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Practice box breathing (4-4-4-4) when stressed. Activates parasympathetic nervous system and reduces cortisol within minutes.',
+      frequency: 'daily',
+      icon: '📦',
+      iconColor: '#14B8A6',
+      name: 'Box Breathing',
+      popularityScore: 87,
+      scientificReference:
+        'Ma et al. (2017) - Effect of diaphragmatic breathing on stress',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Take a 10-minute technology-free break daily. Unplugged breaks restore attention and reduce mental fatigue.',
+      frequency: 'daily',
+      icon: '🌿',
+      iconColor: '#059669',
+      name: 'Tech-Free Break',
+      popularityScore: 86,
+      scientificReference:
+        'Ward et al. (2017) - Brain drain: The mere presence of smartphones reduces cognitive capacity',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // LEARNING - Memory & Cognitive Enhancement
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Review learned material before sleep. Sleep consolidates memories, making pre-sleep review 20% more effective.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#4338CA',
+      name: 'Pre-Sleep Review',
+      popularityScore: 88,
+      scientificReference:
+        'Rasch & Born (2013) - About sleep\'s role in memory consolidation',
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Teach someone what you learned this week. Teaching others improves your own retention by up to 90% (protégé effect).',
+      frequency: 'weekly',
+      icon: '👨‍🏫',
+      iconColor: '#DC2626',
+      name: 'Weekly Teaching',
+      popularityScore: 90,
+      scientificReference:
+        'Chi et al. (1989) - Self-explanations enhance learning',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SOCIAL - Relationship Building
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Ask one deep question in conversations. Meaningful questions deepen relationships and increase connection satisfaction.',
+      frequency: 'daily',
+      icon: '❓',
+      iconColor: '#8B5CF6',
+      name: 'Deep Questions',
+      popularityScore: 83,
+      scientificReference:
+        'Aron et al. (1997) - The experimental generation of interpersonal closeness',
+    });
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Practice receiving feedback gracefully without defensiveness. Accepting feedback improves relationships and accelerates personal growth.',
+      frequency: 'daily',
+      icon: '💬',
+      iconColor: '#06B6D4',
+      name: 'Receive Feedback Gracefully',
+      popularityScore: 82,
+      scientificReference:
+        'Stone & Heen (2014) - Thanks for the Feedback: The Science and Art of Receiving Feedback',
+    });
+
+    return {
+      message: `${insertedCount} new templates inserted, ${skippedCount} skipped (already exist)`,
+      success: true,
+      insertedCount,
+      skippedCount,
+      insertedNames,
+      skippedNames
+    };
+  },
+});
+
+/**
+ * Query: Check if templates exist and return count
+ */
+export const getTemplateCount = query({
+  args: {},
+  handler: async (ctx) => {
+    const templates = await ctx.db.query('templates').collect();
+    return { count: templates.length, hasTemplates: templates.length > 0 };
+  },
+});
+
+/**
+ * Query: List all template names (for debugging)
+ */
+export const listTemplateNames = query({
+  args: {},
+  handler: async (ctx) => {
+    const templates = await ctx.db.query('templates').collect();
+    return templates.map(t => ({ name: t.name, category: t.category, createdAt: t.createdAt }));
+  },
+});
+
+/**
+ * Mutation: Seed comprehensive science-backed templates (Phase 3.2)
+ * 50+ new habits across NEW categories: Longevity, Mental Health, Recovery, Breathing
+ * Plus additional habits in existing categories based on peer-reviewed research
+ */
+export const seedScienceTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🧬 LONGEVITY - Evidence-based habits for healthspan extension
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'VO2 max is the single strongest predictor of longevity. Train at high intensity 1-2x weekly with intervals that make conversation difficult.',
+      frequency: 'weekly',
+      icon: '🫀',
+      iconColor: '#EF4444',
+      name: 'VO2 Max Training',
+      popularityScore: 95,
+      scientificLink: 'https://peterattiamd.com/outlive/',
+      scientificReference:
+        'Attia (2023) - Outlive: The Science and Art of Longevity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Grip strength is a powerful predictor of all-cause mortality. Train with dead hangs, farmer carries, or grip exercises 3x weekly.',
+      frequency: 'weekly',
+      icon: '✊',
+      iconColor: '#F97316',
+      name: 'Grip Strength Training',
+      popularityScore: 91,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/25953784/',
+      scientificReference:
+        'Leong et al. (2015) - Prognostic value of grip strength: findings from the PURE study',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'The sitting-rising test (sitting on floor and standing without hands) predicts mortality. Practice floor sitting daily to maintain this ability.',
+      frequency: 'daily',
+      icon: '🧘',
+      iconColor: '#8B5CF6',
+      name: 'Floor Sitting Practice',
+      popularityScore: 87,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/23242910/',
+      scientificReference:
+        'Brito et al. (2014) - Ability to sit and rise from the floor as a predictor of all-cause mortality',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Take stairs exclusively instead of elevators. Climbing 7+ floors daily associated with 33% lower all-cause mortality.',
+      frequency: 'daily',
+      icon: '🪜',
+      iconColor: '#059669',
+      name: 'Always Take Stairs',
+      popularityScore: 89,
+      scientificReference:
+        'Boreham et al. (2005) - Stair climbing and cardiovascular disease risk',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Stand on one leg for 10 seconds with eyes open. Inability to do this in older adults predicts doubled mortality risk within 10 years.',
+      frequency: 'daily',
+      icon: '🦩',
+      iconColor: '#EC4899',
+      name: 'Single-Leg Balance Test',
+      popularityScore: 86,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/35729712/',
+      scientificReference:
+        'Araujo et al. (2022) - Successful 10-second one-legged stance performance predicts survival',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Walk at a pace of 3+ mph (brisk walking). Walking speed is a strong predictor of longevity - faster walkers live significantly longer.',
+      frequency: 'daily',
+      icon: '🚶‍♂️',
+      iconColor: '#3B82F6',
+      name: 'Brisk Walking Pace',
+      popularityScore: 93,
+      scientificReference:
+        'Studenski et al. (2011) - Gait speed and survival in older adults',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Maintain muscle mass through resistance training 2-3x weekly. Sarcopenia (muscle loss) accelerates aging and increases mortality.',
+      frequency: 'weekly',
+      icon: '💪',
+      iconColor: '#DC2626',
+      name: 'Muscle Preservation',
+      popularityScore: 94,
+      scientificReference:
+        'Srikanthan & Karlamangla (2014) - Muscle mass index as a predictor of longevity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Practice getting up and down from the ground using different movement patterns. Maintains functional capacity critical for independence.',
+      frequency: 'daily',
+      icon: '⬆️',
+      iconColor: '#7C3AED',
+      name: 'Ground Transitions',
+      popularityScore: 84,
+      scientificReference:
+        'Attia (2023) - Centenarian Decathlon: functional movement goals',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Eat 25-30g protein per meal (especially breakfast). Maintains muscle mass and prevents age-related sarcopenia.',
+      frequency: 'daily',
+      icon: '🥩',
+      iconColor: '#B91C1C',
+      name: 'Protein Per Meal Goal',
+      popularityScore: 90,
+      scientificReference:
+        'Layman et al. (2015) - Dietary protein distribution positively influences 24-h muscle protein synthesis',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Test your resting heart rate weekly. Lower resting HR (50-70 bpm) correlates with longevity and cardiovascular health.',
+      frequency: 'weekly',
+      icon: '❤️',
+      iconColor: '#F43F5E',
+      name: 'Resting Heart Rate Check',
+      popularityScore: 82,
+      scientificReference:
+        'Jensen et al. (2013) - Elevated resting heart rate and mortality',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🧠 MENTAL HEALTH - Evidence-based psychological wellness
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'When struggling, pause and say: "This is a moment of suffering. Suffering is part of life. May I be kind to myself." More effective than self-esteem building.',
+      frequency: 'daily',
+      icon: '💗',
+      iconColor: '#EC4899',
+      name: 'Self-Compassion Break',
+      popularityScore: 93,
+      scientificLink: 'https://self-compassion.org/the-research/',
+      scientificReference:
+        'Neff (2011) - Self-Compassion: The Proven Power of Being Kind to Yourself',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Label thoughts as "I notice I\'m having the thought that..." Creates distance from negative thoughts and reduces their impact.',
+      frequency: 'daily',
+      icon: '🏷️',
+      iconColor: '#6366F1',
+      name: 'Cognitive Defusion',
+      popularityScore: 88,
+      scientificReference:
+        'Hayes (2004) - ACT: Acceptance and Commitment Therapy',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Write for 20 minutes about your deepest feelings regarding a difficult experience. Improves immune function and reduces doctor visits by 50%.',
+      frequency: 'weekly',
+      icon: '📝',
+      iconColor: '#8B5CF6',
+      name: 'Expressive Writing',
+      popularityScore: 91,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/10408300/',
+      scientificReference:
+        'Pennebaker (1997) - Writing about emotional experiences as a therapeutic process',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Do one small task you\'ve been avoiding. Behavioral activation is as effective as antidepressants for mild-moderate depression.',
+      frequency: 'daily',
+      icon: '✅',
+      iconColor: '#10B981',
+      name: 'Behavioral Activation',
+      popularityScore: 90,
+      scientificReference:
+        'Cuijpers et al. (2007) - Behavioral activation treatments of depression: A meta-analysis',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Review your core values weekly. Self-affirmation through values reduces stress response and builds psychological resilience.',
+      frequency: 'weekly',
+      icon: '🎯',
+      iconColor: '#F59E0B',
+      name: 'Values Clarification',
+      popularityScore: 85,
+      scientificReference:
+        'Cohen & Sherman (2014) - The psychology of change: Self-affirmation and social psychological intervention',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Schedule 15-30 minutes to write down all worries, then close the notebook. Containing worry to a specific time reduces generalized anxiety.',
+      frequency: 'daily',
+      icon: '📓',
+      iconColor: '#64748B',
+      name: 'Scheduled Worry Time',
+      popularityScore: 87,
+      scientificReference:
+        'Borkovec et al. (1990) - Stimulus control treatment for worry',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Plan one small pleasurable activity daily. Pleasant activity scheduling is a core component of evidence-based depression treatment.',
+      frequency: 'daily',
+      icon: '🎉',
+      iconColor: '#22C55E',
+      name: 'Pleasant Activity Scheduling',
+      popularityScore: 86,
+      scientificReference:
+        'Lewinsohn (1974) - A behavioral approach to depression',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'When anxious, ask: "What would I tell a friend in this situation?" Perspective-taking reduces emotional intensity and catastrophizing.',
+      frequency: 'daily',
+      icon: '🪞',
+      iconColor: '#0EA5E9',
+      name: 'Self-Distancing',
+      popularityScore: 84,
+      scientificReference:
+        'Kross & Ayduk (2011) - Self-distancing and adaptive self-reflection',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Name your emotions specifically (not just "bad" but "disappointed" or "frustrated"). Specific emotion labeling reduces amygdala activation.',
+      frequency: 'daily',
+      icon: '😶',
+      iconColor: '#A855F7',
+      name: 'Emotion Granularity',
+      popularityScore: 83,
+      scientificReference:
+        'Lieberman et al. (2007) - Putting feelings into words: Affect labeling disrupts amygdala activity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Practice opposite action: when you feel like withdrawing, reach out; when angry, speak gently. Core DBT skill for emotion regulation.',
+      frequency: 'daily',
+      icon: '↔️',
+      iconColor: '#14B8A6',
+      name: 'Opposite Action',
+      popularityScore: 82,
+      scientificReference:
+        'Linehan (2014) - DBT Skills Training Manual: Emotion Regulation',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🔄 RECOVERY - Optimal rest and regeneration
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Wake at the same time every day, including weekends. Consistent wake time is more important than bedtime for circadian stability.',
+      frequency: 'daily',
+      icon: '⏰',
+      iconColor: '#F97316',
+      name: 'Consistent Wake Time',
+      popularityScore: 95,
+      scientificReference:
+        'Roenneberg (2012) - Internal Time: Chronotypes and Social Jet Lag',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'End hot showers with 30-60 seconds of cold water. This contrast therapy reduces sick days by 29% and improves recovery.',
+      frequency: 'daily',
+      icon: '🚿',
+      iconColor: '#38BDF8',
+      name: 'Contrast Shower',
+      popularityScore: 88,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/27631616/',
+      scientificReference:
+        'Buijze et al. (2016) - Cold shower effects on sickness absence',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Sleep under a weighted blanket (8-12% of body weight). Deep pressure stimulation reduces anxiety and improves sleep quality.',
+      frequency: 'daily',
+      icon: '🛋️',
+      iconColor: '#4338CA',
+      name: 'Weighted Blanket Sleep',
+      popularityScore: 84,
+      scientificReference:
+        'Ackerley et al. (2015) - Positive effects of a weighted blanket on insomnia',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Watch the sunset for 10+ minutes when possible. Signals your circadian system that the day is ending, preparing body for sleep.',
+      frequency: 'daily',
+      icon: '🌅',
+      iconColor: '#F59E0B',
+      name: 'Evening Sunset Viewing',
+      popularityScore: 83,
+      scientificReference:
+        'Huberman (2022) - Evening light viewing for circadian regulation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Use foam roller or massage gun for 10-15 minutes. Self-myofascial release improves range of motion and reduces muscle soreness.',
+      frequency: 'daily',
+      icon: '🧴',
+      iconColor: '#7C3AED',
+      name: 'Self-Massage/Foam Rolling',
+      popularityScore: 86,
+      scientificReference:
+        'Cheatham et al. (2015) - Effects of self-myofascial release: A systematic review',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Take a 10-30 minute nap before 3 PM. Short naps improve cognitive function, alertness, and mood without affecting nighttime sleep.',
+      frequency: 'daily',
+      icon: '💤',
+      iconColor: '#6366F1',
+      name: 'Power Nap',
+      popularityScore: 87,
+      scientificReference:
+        'Milner & Cote (2009) - Benefits of napping in healthy adults',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Use pink or white noise while sleeping. Background noise masks disruptions and improves both sleep onset and sleep quality.',
+      frequency: 'daily',
+      icon: '🔊',
+      iconColor: '#94A3B8',
+      name: 'Sleep Sound Machine',
+      popularityScore: 81,
+      scientificReference:
+        'Messineo et al. (2017) - Broadband sound improves sleep onset latency',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Spend 20-30 minutes in infrared sauna or traditional sauna 2-3x weekly. Heat therapy improves cardiovascular health and recovery.',
+      frequency: 'weekly',
+      icon: '🧖',
+      iconColor: '#DC2626',
+      name: 'Sauna Recovery',
+      popularityScore: 85,
+      scientificReference:
+        'Laukkanen et al. (2015) - Sauna bathing and cardiovascular disease risk',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Practice yoga nidra or NSDR (non-sleep deep rest) for 10-20 minutes. Accelerates learning, restores dopamine, and improves sleep.',
+      frequency: 'daily',
+      icon: '🛌',
+      iconColor: '#7DD3FC',
+      name: 'Yoga Nidra/NSDR',
+      popularityScore: 89,
+      scientificReference:
+        'Huberman Lab (2021) - NSDR for learning and recovery',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Take 200-400mg magnesium glycinate or threonate 30-60 minutes before bed. Supports GABA activity and improves sleep quality.',
+      frequency: 'daily',
+      icon: '💊',
+      iconColor: '#10B981',
+      name: 'Evening Magnesium',
+      popularityScore: 88,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/23853635/',
+      scientificReference:
+        'Abbasi et al. (2012) - Magnesium supplementation and sleep quality',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌬️ BREATHING - Respiratory techniques for performance & calm
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Inhale 4 counts, hold 4, exhale 4, hold empty 4. Navy SEAL technique proven to rapidly reduce stress and cortisol levels.',
+      frequency: 'daily',
+      icon: '⬜',
+      iconColor: '#3B82F6',
+      name: 'Box Breathing (4-4-4-4)',
+      popularityScore: 94,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/29616846/',
+      scientificReference:
+        'Zaccaro et al. (2018) - How breath-control can change your life',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Double inhale through nose, long exhale through mouth. The fastest way to calm down - works in 1-3 breaths.',
+      frequency: 'daily',
+      icon: '😮‍💨',
+      iconColor: '#34D399',
+      name: 'Physiological Sigh',
+      popularityScore: 92,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/36630953/',
+      scientificReference:
+        'Balban et al. (2023) - Brief structured respiration practices enhance mood',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Practice breathing through your nose throughout the day. Nasal breathing filters air, produces nitric oxide, and activates parasympathetic system.',
+      frequency: 'daily',
+      icon: '👃',
+      iconColor: '#14B8A6',
+      name: 'Nasal Breathing',
+      popularityScore: 91,
+      scientificReference:
+        'Nestor (2020) - Breath: The New Science of a Lost Art',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Hum for 5 minutes daily (like "om" or any tune). Increases nasal nitric oxide production by 15x, improving sinus health and oxygenation.',
+      frequency: 'daily',
+      icon: '🎵',
+      iconColor: '#8B5CF6',
+      name: 'Daily Humming',
+      popularityScore: 79,
+      scientificReference:
+        'Weitzberg & Lundberg (2002) - Humming greatly increases nasal nitric oxide',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Practice breath holds after exhale to increase CO2 tolerance. Improves exercise capacity, reduces anxiety, and enhances breath control.',
+      frequency: 'daily',
+      icon: '⏱️',
+      iconColor: '#F97316',
+      name: 'CO2 Tolerance Training',
+      popularityScore: 83,
+      scientificReference:
+        'Malshe (2011) - Pranayama and CO2 tolerance',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Inhale 4 counts, hold 7, exhale 8. Activates parasympathetic response and promotes sleep onset.',
+      frequency: 'daily',
+      icon: '😴',
+      iconColor: '#6366F1',
+      name: '4-7-8 Relaxing Breath',
+      popularityScore: 88,
+      scientificReference:
+        'Weil (2015) - Breathing: The Master Key to Self-Healing',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Practice controlled hyperventilation followed by breath retention. Reduces inflammation, improves immune response, and builds mental resilience.',
+      frequency: 'daily',
+      icon: '❄️',
+      iconColor: '#0EA5E9',
+      name: 'Wim Hof Breathing',
+      popularityScore: 85,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/24799686/',
+      scientificReference:
+        'Kox et al. (2014) - Voluntary activation of the innate immune response',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Perform cyclic breathing: rapid inhales followed by passive exhales for 1-3 minutes. Increases alertness and energy without caffeine.',
+      frequency: 'daily',
+      icon: '⚡',
+      iconColor: '#FBBF24',
+      name: 'Energizing Breath (Kapalabhati)',
+      popularityScore: 81,
+      scientificReference:
+        'Telles et al. (2011) - Effect of yoga breathing on cognitive function',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Breathe in a 5.5 second inhale, 5.5 second exhale rhythm (5.5 breaths per minute). The optimal breathing rate for heart rate variability.',
+      frequency: 'daily',
+      icon: '💓',
+      iconColor: '#EC4899',
+      name: 'Resonant Breathing',
+      popularityScore: 86,
+      scientificReference:
+        'Lehrer & Gevirtz (2014) - Heart rate variability biofeedback',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'breathing',
+      createdAt: now,
+      description:
+        'Tape mouth with medical tape during sleep. Prevents mouth breathing, reduces snoring, and improves sleep quality.',
+      frequency: 'daily',
+      icon: '😷',
+      iconColor: '#64748B',
+      name: 'Mouth Taping Sleep',
+      popularityScore: 77,
+      scientificReference:
+        'Nestor (2020) - Mouth breathing vs nasal breathing during sleep',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🏃 Additional HEALTH & FITNESS templates
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Walk for 10-15 minutes after meals. Reduces blood glucose spikes by 22%, improving metabolic health and energy levels.',
+      frequency: 'daily',
+      icon: '🚶',
+      iconColor: '#10B981',
+      name: 'Post-Meal Walk',
+      popularityScore: 93,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/35189634/',
+      scientificReference:
+        'Reynolds et al. (2022) - Post-meal walking reduces glucose excursions',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Practice backward walking for 5-10 minutes. Improves balance, reduces knee pain by 40%, and activates different muscle patterns.',
+      frequency: 'daily',
+      icon: '⬅️',
+      iconColor: '#F59E0B',
+      name: 'Backward Walking',
+      popularityScore: 84,
+      scientificReference:
+        'Cha et al. (2016) - Effects of backward walking on balance and knee pain',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Do brief intense exercise bursts (1-2 min) several times throughout the day. "Exercise snacks" reduce mortality risk 4-5x.',
+      frequency: 'daily',
+      icon: '💥',
+      iconColor: '#EF4444',
+      name: 'Movement Snacks',
+      popularityScore: 88,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/36396264/',
+      scientificReference:
+        'Stamatakis et al. (2022) - Vigorous intermittent lifestyle physical activity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Take 1 tablespoon apple cider vinegar diluted in water before meals. Reduces post-meal blood glucose spikes by up to 34%.',
+      frequency: 'daily',
+      icon: '🍎',
+      iconColor: '#84CC16',
+      name: 'Pre-Meal Vinegar',
+      popularityScore: 82,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/7796781/',
+      scientificReference:
+        'Johnston et al. (2004) - Vinegar improves insulin sensitivity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Cool and reheat starchy foods (potatoes, rice, pasta) before eating. Creates resistant starch that feeds beneficial gut bacteria.',
+      frequency: 'daily',
+      icon: '🥔',
+      iconColor: '#A16207',
+      name: 'Resistant Starch',
+      popularityScore: 78,
+      scientificReference:
+        'Robertson et al. (2005) - Resistant starch improves insulin sensitivity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Distribute protein intake: 20-40g every 3-4 hours rather than one large serving. Optimizes muscle protein synthesis throughout the day.',
+      frequency: 'daily',
+      icon: '🍳',
+      iconColor: '#F97316',
+      name: 'Protein Pacing',
+      popularityScore: 85,
+      scientificReference:
+        'Arciero et al. (2013) - Increased protein intake and meal frequency',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🤝 Additional SOCIAL templates
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'When someone shares good news, respond with enthusiasm, questions, and celebration. Strongest predictor of relationship satisfaction.',
+      frequency: 'daily',
+      icon: '🎊',
+      iconColor: '#22C55E',
+      name: 'Active Constructive Responding',
+      popularityScore: 89,
+      scientificReference:
+        'Gable et al. (2004) - What do you do when things go right?',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Share one honest, vulnerable feeling with someone you trust. Vulnerability builds deeper connection and trust in relationships.',
+      frequency: 'daily',
+      icon: '💭',
+      iconColor: '#8B5CF6',
+      name: 'Vulnerability Practice',
+      popularityScore: 84,
+      scientificReference:
+        'Brown (2012) - Daring Greatly: Vulnerability and courage',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Practice soft eye contact for 3+ seconds during conversations. Increases oxytocin and perceived trustworthiness in both people.',
+      frequency: 'daily',
+      icon: '👀',
+      iconColor: '#06B6D4',
+      name: 'Eye Contact Practice',
+      popularityScore: 81,
+      scientificReference:
+        'Akechi et al. (2013) - Eye contact and oxytocin response',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'social',
+      createdAt: now,
+      description:
+        'Ask open-ended questions and reflect back what you hear without planning your response. Deep listening builds empathy and connection.',
+      frequency: 'daily',
+      icon: '👂',
+      iconColor: '#7C3AED',
+      name: 'Reflective Listening',
+      popularityScore: 86,
+      scientificReference:
+        'Rogers (1951) - Client-centered therapy and active listening',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🧠 Additional PRODUCTIVITY templates
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Work in 90-minute cycles matching your brain\'s ultradian rhythm. Natural focus waxes and wanes in ~90-minute cycles throughout the day.',
+      frequency: 'daily',
+      icon: '🔄',
+      iconColor: '#7C3AED',
+      name: 'Ultradian Work Cycles',
+      popularityScore: 88,
+      scientificReference:
+        'Peretz Lavie (1985) - Ultradian rhythms in cognitive performance',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Keep phone on airplane mode for the first 60 minutes after waking. Protects your attention and prevents reactive morning mode.',
+      frequency: 'daily',
+      icon: '✈️',
+      iconColor: '#0EA5E9',
+      name: 'Airplane Mode Morning',
+      popularityScore: 87,
+      scientificReference:
+        'Newport (2019) - Digital Minimalism: Choosing a Focused Life',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Set phone to grayscale mode. Removing color reduces compulsive phone use by 30% by eliminating color-based reward triggers.',
+      frequency: 'daily',
+      icon: '📱',
+      iconColor: '#64748B',
+      name: 'Grayscale Phone Mode',
+      popularityScore: 82,
+      scientificReference:
+        'Alter (2017) - Irresistible: The Rise of Addictive Technology',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Open windows for 10-15 minutes daily. Fresh air reduces indoor CO2 levels, improving cognitive function by up to 50%.',
+      frequency: 'daily',
+      icon: '🪟',
+      iconColor: '#38BDF8',
+      name: 'Fresh Air Ventilation',
+      popularityScore: 83,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/26502459/',
+      scientificReference:
+        'Allen et al. (2016) - CO2 and ventilation effects on cognitive function',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 📚 Additional LEARNING templates
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Use your non-dominant hand for routine tasks like brushing teeth. Activates underused neural pathways and builds cognitive reserve.',
+      frequency: 'daily',
+      icon: '🤚',
+      iconColor: '#06B6D4',
+      name: 'Non-Dominant Hand Training',
+      popularityScore: 79,
+      scientificReference:
+        'Cohen (2000) - Cross-education and neural plasticity',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Practice Dual N-Back training for 20 minutes. One of the few brain training methods shown to improve fluid intelligence.',
+      frequency: 'daily',
+      icon: '🔢',
+      iconColor: '#7C3AED',
+      name: 'Dual N-Back Training',
+      popularityScore: 80,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/18425231/',
+      scientificReference:
+        'Jaeggi et al. (2008) - Improving fluid intelligence with training on working memory',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Review what you learned today within 24 hours. Same-day review increases retention from 20% to 80%.',
+      frequency: 'daily',
+      icon: '📖',
+      iconColor: '#059669',
+      name: 'Same-Day Review',
+      popularityScore: 91,
+      scientificReference:
+        'Ebbinghaus (1885) - Memory: Forgetting curve and spacing effect',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Interleave practice of different skills rather than blocked practice. Interleaving improves long-term retention and transfer.',
+      frequency: 'daily',
+      icon: '🔀',
+      iconColor: '#F59E0B',
+      name: 'Interleaved Practice',
+      popularityScore: 84,
+      scientificReference:
+        'Rohrer (2012) - Interleaving helps students distinguish among similar concepts',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌅 Additional MORNING ROUTINE templates
+    // ═══════════════════════════════════════════════════════════════
+
+    await ctx.db.insert('templates', {
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Do 30-50 bilateral eye movements (look left-right) upon waking. Activates both brain hemispheres and improves alertness.',
+      frequency: 'daily',
+      icon: '👁️',
+      iconColor: '#3B82F6',
+      name: 'Bilateral Eye Movements',
+      popularityScore: 76,
+      scientificReference:
+        'Shapiro (1989) - EMDR and bilateral stimulation effects',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Write your #1 priority for the day before checking any devices. Protects your agenda from reactive mode.',
+      frequency: 'daily',
+      icon: '1️⃣',
+      iconColor: '#EF4444',
+      name: 'Priority First',
+      popularityScore: 89,
+      scientificReference:
+        'Clear (2018) - Atomic Habits: Implementation intentions',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'morning_routine',
+      createdAt: now,
+      description:
+        'Splash cold water on face immediately after waking. Triggers the mammalian dive reflex, instantly increasing alertness.',
+      frequency: 'daily',
+      icon: '💦',
+      iconColor: '#38BDF8',
+      name: 'Cold Face Splash',
+      popularityScore: 83,
+      scientificReference:
+        'Schaller (2012) - Mammalian dive reflex and autonomic regulation',
+    });
+
+    return { message: '56 science-backed templates seeded successfully', success: true };
   },
 });
 

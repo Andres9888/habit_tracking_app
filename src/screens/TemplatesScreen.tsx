@@ -99,6 +99,12 @@ export default function TemplatesScreen() {
   // Import template mutation
   const importTemplate = useMutation(api.templates.importTemplate);
 
+  // Seed template mutations
+  const seedTemplates = useMutation(api.templates.seedTemplates);
+  const seedAdditionalTemplates = useMutation(api.templates.seedAdditionalTemplates);
+  const seedNewScienceTemplates = useMutation(api.templates.seedNewScienceTemplates);
+  const [isSeeding, setIsSeeding] = useState(false);
+
   const handleSortToggle = useCallback(() => {
     setSortOption((current) => {
       if (current === 'popular') return 'newest';
@@ -416,16 +422,92 @@ export default function TemplatesScreen() {
     );
   }
 
+  // Handle seeding templates
+  const handleSeedTemplates = useCallback(async () => {
+    setIsSeeding(true);
+    try {
+      console.log('Starting to seed templates...');
+
+      // Seed initial templates
+      const result1 = await seedTemplates({});
+      console.log('Seed 1 result:', result1);
+
+      // Seed additional templates
+      const result2 = await seedAdditionalTemplates({});
+      console.log('Seed 2 result:', result2);
+
+      // Seed new science templates
+      const result3 = await seedNewScienceTemplates({});
+      console.log('Seed 3 result:', result3);
+
+      // Check which new templates should exist
+      const expectedNewTemplates = [
+        'Daily Flossing',
+        'Regular Dental Checkups',
+        'Calcium Intake Tracking',
+        'Bone-Strengthening Exercise',
+        'Hearing Protection',
+        'Safe Listening Volume',
+        'Vitamin D Supplementation',
+        'Preventive Health Checkups',
+        'Daily Sun Protection',
+        'Joint Mobility Routine',
+        'Weekly Goal Review',
+        'Energy Level Tracking',
+        'Box Breathing',
+        'Tech-Free Break',
+        'Pre-Sleep Review',
+        'Weekly Teaching',
+        'Deep Questions',
+        'Receive Feedback Gracefully'
+      ];
+
+      console.log('Expected new templates:', expectedNewTemplates);
+
+      // Wait a moment for queries to refresh
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Check templates after refresh (will be checked on next render via allTemplates)
+      const currentTemplateNames = allTemplates?.map(t => t.name) || [];
+      console.log('Current template names:', currentTemplateNames);
+
+      const newTemplatesFound = expectedNewTemplates.filter(name =>
+        currentTemplateNames.includes(name)
+      );
+
+      setToastMessage(
+        `Seeded templates! Found ${newTemplatesFound.length}/${expectedNewTemplates.length} new templates. Total: ${allTemplates?.length || 0}`
+      );
+      setShowToast(true);
+    } catch (error) {
+      console.error('Error seeding templates:', error);
+      setToastMessage(`Error: ${error instanceof Error ? error.message : 'Failed to seed templates'}`);
+      setShowToast(true);
+    } finally {
+      setIsSeeding(false);
+    }
+  }, [seedTemplates, seedAdditionalTemplates, seedNewScienceTemplates, allTemplates]);
+
   // Empty state (no templates)
   if (!allTemplates || allTemplates.length === 0) {
     return (
       <View style={styles.container}>
         <EmptyState
           hideCTA
-          description='Check back soon for science-backed habit templates.'
+          description='Tap the button below to load science-backed habit templates.'
           headline='No Templates Available'
           icon='📚'
         />
+        <View style={{ paddingHorizontal: 24, marginTop: 24 }}>
+          <Button
+            disabled={isSeeding}
+            onPress={handleSeedTemplates}
+            size='large'
+            variant='primary'
+          >
+            {isSeeding ? 'Loading Templates...' : 'Load Templates'}
+          </Button>
+        </View>
       </View>
     );
   }
