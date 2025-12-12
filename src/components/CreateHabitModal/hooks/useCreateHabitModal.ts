@@ -1,8 +1,9 @@
 import { useCallback, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import {
+  cancelHabitReminder,
   ensureNotificationPermissions,
   formatReminderTime,
   scheduleHabitReminder,
@@ -75,13 +76,49 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
 
     let hasReminders = remindersEnabled;
     if (remindersEnabled) {
-      const allowed = await ensureNotificationPermissions();
-      hasReminders = allowed;
-      if (!allowed)
-        Alert.alert('Notifications Disabled', 'Enable notifications in your device settings to receive habit reminders.');
+      if (Platform.OS === 'web') {
+        Alert.alert(
+          'Reminders on Mobile Only',
+          'Local reminder notifications can only be scheduled from the iOS/Android app. Your reminder settings will be saved.'
+        );
+      } else {
+        const allowed = await ensureNotificationPermissions();
+        if (!allowed) {
+          hasReminders = false;
+          Alert.alert(
+            'Notifications Disabled',
+            'Enable notifications in your device settings to receive habit reminders.'
+          );
+        }
+      }
     }
 
     if (isEditMode && habitToEdit) {
+      if (hasReminders) {
+        if (Platform.OS !== 'web') {
+          const scheduled = await scheduleHabitReminder({
+            body: 'Time to check in on your habit progress!',
+            habitId: habitToEdit._id,
+            reminderTime,
+            skipPermissionCheck: true,
+            title: fullHabitName,
+          });
+
+          if (!scheduled) {
+            hasReminders = false;
+            Alert.alert(
+              'Reminder Not Scheduled',
+              'We could not schedule this reminder on this device. Your reminder settings were saved.'
+            );
+            await cancelHabitReminder(habitToEdit._id);
+          }
+        }
+      } else {
+        if (Platform.OS !== 'web') {
+          await cancelHabitReminder(habitToEdit._id);
+        }
+      }
+
       await updateHabit({
         habitId: habitToEdit._id,
         icon: selectedEmoji ?? undefined,
@@ -102,14 +139,21 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
         reminderSound: hasReminders ? reminderSound : undefined,
         reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
       });
-      if (hasReminders && habitId) {
-        await scheduleHabitReminder({
+      if (hasReminders && habitId && Platform.OS !== 'web') {
+        const scheduled = await scheduleHabitReminder({
           body: 'Time to check in on your habit progress!',
           habitId,
           reminderTime,
           skipPermissionCheck: true,
           title: fullHabitName,
         });
+
+        if (!scheduled) {
+          Alert.alert(
+            'Reminder Not Scheduled',
+            'We could not schedule this reminder on this device. Your reminder settings were saved.'
+          );
+        }
       }
     }
 

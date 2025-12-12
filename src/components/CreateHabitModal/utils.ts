@@ -1,4 +1,4 @@
-import { getDefaultReminderTime } from '../../utils/notifications';
+import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/notifications';
 import { HABIT_NAME_REGEX } from './constants';
 
 export interface ParsedHabitName {
@@ -20,11 +20,7 @@ export const parseHabitName = (fullName: string): ParsedHabitName => {
 };
 
 export const parseReminderTime = (timeString?: string): Date => {
-  if (!timeString) return getDefaultReminderTime();
-  const [hours, minutes] = timeString.split(':').map(Number);
-  const date = new Date();
-  date.setHours(hours, minutes, 0, 0);
-  return date;
+  return createDateFromTimeString(timeString, getDefaultReminderTime());
 };
 
 export const buildHabitName = (emoji: string | null, name: string) => {

@@ -65,6 +65,30 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(),
 }));
 
+// Mock expo-notifications (used by reminders)
+jest.mock('expo-notifications', () => ({
+  AndroidImportance: {
+    HIGH: 4,
+  },
+  AuthorizationStatus: {
+    GRANTED: 2,
+  },
+  SchedulableTriggerInputTypes: {
+    DAILY: 'daily',
+    DATE: 'date',
+    MONTHLY: 'monthly',
+    TIME_INTERVAL: 'timeInterval',
+    WEEKLY: 'weekly',
+  },
+  cancelScheduledNotificationAsync: jest.fn(),
+  getAllScheduledNotificationsAsync: jest.fn(async () => []),
+  getPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  requestPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  scheduleNotificationAsync: jest.fn(async () => 'mock-notification-id'),
+  setNotificationChannelAsync: jest.fn(async () => null),
+  setNotificationHandler: jest.fn(),
+}));
+
 // Mock react-native-calendars
 jest.mock('react-native-calendars', () => ({
   Calendar: 'Calendar',

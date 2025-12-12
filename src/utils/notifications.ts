@@ -35,44 +35,77 @@ async function configureAndroidChannel() {
   });
 }
 
-export async function ensureNotificationPermissions(): Promise<boolean> {
-  const currentPermissions = await Notifications.getPermissionsAsync();
+function isNotificationsPermissionGranted(permissions: unknown): boolean {
+  if (!permissions || typeof permissions !== 'object') {
+    return false;
+  }
 
-  if (
-    currentPermissions.granted ||
-    currentPermissions.ios?.status === Notifications.AuthorizationStatus.GRANTED
-  ) {
-    await configureAndroidChannel();
+  const granted = (permissions as { granted?: unknown }).granted;
+  if (granted === true) {
     return true;
   }
 
-  const requestedPermissions = await Notifications.requestPermissionsAsync();
-
-  if (
-    requestedPermissions.granted ||
-    requestedPermissions.ios?.status ===
-      Notifications.AuthorizationStatus.GRANTED
-  ) {
-    await configureAndroidChannel();
+  const status = (permissions as { status?: unknown }).status;
+  if (status === 'granted') {
     return true;
+  }
+
+  const ios = (permissions as { ios?: unknown }).ios;
+  if (ios && typeof ios === 'object') {
+    const iosStatus = (ios as { status?: unknown }).status;
+    // iOS: 0=NOT_DETERMINED, 1=DENIED, 2=AUTHORIZED, 3=PROVISIONAL, 4=EPHEMERAL
+    if (typeof iosStatus === 'number' && iosStatus >= 2) {
+      return true;
+    }
   }
 
   return false;
 }
 
+export async function ensureNotificationPermissions(): Promise<boolean> {
+  if (Platform.OS === 'web') {
+    return false;
+  }
+
+  try {
+    const currentPermissions = await Notifications.getPermissionsAsync();
+
+    if (isNotificationsPermissionGranted(currentPermissions)) {
+      await configureAndroidChannel();
+      return true;
+    }
+
+    const requestedPermissions = await Notifications.requestPermissionsAsync();
+
+    if (isNotificationsPermissionGranted(requestedPermissions)) {
+      await configureAndroidChannel();
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error('ensureNotificationPermissions failed', error);
+    return false;
+  }
+}
+
 export async function cancelHabitReminder(habitId: string): Promise<void> {
-  const scheduledNotifications =
-    await Notifications.getAllScheduledNotificationsAsync();
+  try {
+    const scheduledNotifications =
+      await Notifications.getAllScheduledNotificationsAsync();
 
-  const toCancel = scheduledNotifications.filter(
-    (notification) => notification.content?.data?.habitId === habitId
-  );
+    const toCancel = scheduledNotifications.filter(
+      (notification) => notification.content?.data?.habitId === habitId
+    );
 
-  await Promise.all(
-    toCancel.map((notification) =>
-      Notifications.cancelScheduledNotificationAsync(notification.identifier)
-    )
-  );
+    await Promise.all(
+      toCancel.map((notification) =>
+        Notifications.cancelScheduledNotificationAsync(notification.identifier)
+      )
+    );
+  } catch (error) {
+    console.warn('cancelHabitReminder failed', { error, habitId });
+  }
 }
 
 export function createDateFromTimeString(time?: string, fallback?: Date): Date {
@@ -82,24 +115,51 @@ export function createDateFromTimeString(time?: string, fallback?: Date): Date {
     return base;
   }
 
-  const match = time.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if (!match) {
-    return base;
+  const trimmed = time.trim();
+
+  const amPmMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (amPmMatch) {
+    let hour = Number.parseInt(amPmMatch[1], 10);
+    const minute = Number.parseInt(amPmMatch[2], 10);
+    const period = amPmMatch[3].toUpperCase();
+
+    if (Number.isNaN(hour) || Number.isNaN(minute)) {
+      return base;
+    }
+
+    if (period === 'PM' && hour < 12) {
+      hour += 12;
+    } else if (period === 'AM' && hour === 12) {
+      hour = 0;
+    }
+
+    const result = new Date();
+    result.setHours(hour, minute, 0, 0);
+    return result;
   }
 
-  let hour = Number.parseInt(match[1], 10);
-  const minute = Number.parseInt(match[2], 10);
-  const period = match[3].toUpperCase();
+  const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+  if (twentyFourHourMatch) {
+    const hour = Number.parseInt(twentyFourHourMatch[1], 10);
+    const minute = Number.parseInt(twentyFourHourMatch[2], 10);
 
-  if (period === 'PM' && hour < 12) {
-    hour += 12;
-  } else if (period === 'AM' && hour === 12) {
-    hour = 0;
+    if (
+      Number.isNaN(hour) ||
+      Number.isNaN(minute) ||
+      hour < 0 ||
+      hour > 23 ||
+      minute < 0 ||
+      minute > 59
+    ) {
+      return base;
+    }
+
+    const result = new Date();
+    result.setHours(hour, minute, 0, 0);
+    return result;
   }
 
-  const result = new Date();
-  result.setHours(hour, minute, 0, 0);
-  return result;
+  return base;
 }
 
 export function formatReminderTime(date: Date): string {
@@ -137,32 +197,37 @@ export async function scheduleHabitReminder({
   reminderTime,
   skipPermissionCheck = false,
 }: ScheduleHabitReminderParams): Promise<boolean> {
-  if (skipPermissionCheck) {
-    await configureAndroidChannel();
-  } else {
-    const hasPermission = await ensureNotificationPermissions();
+  try {
+    if (skipPermissionCheck) {
+      await configureAndroidChannel();
+    } else {
+      const hasPermission = await ensureNotificationPermissions();
 
-    if (!hasPermission) {
-      return false;
+      if (!hasPermission) {
+        return false;
+      }
     }
+
+    await cancelHabitReminder(habitId);
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        body,
+        data: { habitId },
+        sound: 'default',
+        title,
+      },
+      trigger: {
+        ...(Platform.OS === 'android' ? { channelId: ANDROID_CHANNEL_ID } : {}),
+        hour: reminderTime.getHours(),
+        minute: reminderTime.getMinutes(),
+        type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      },
+    });
+
+    return true;
+  } catch (error) {
+    console.error('scheduleHabitReminder failed', { error, habitId });
+    return false;
   }
-
-  await cancelHabitReminder(habitId);
-
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      body,
-      data: { habitId },
-      sound: 'default',
-      title,
-    },
-    trigger: {
-      channelId: Platform.OS === 'android' ? ANDROID_CHANNEL_ID : undefined,
-      hour: reminderTime.getHours(),
-      minute: reminderTime.getMinutes(),
-      repeats: true,
-    },
-  });
-
-  return true;
 }
