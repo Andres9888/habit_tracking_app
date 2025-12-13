@@ -64,18 +64,7 @@ const NEW_TEMPLATE_WINDOW_MS = 1000 * 60 * 60 * 24 * 10;
 const REMINDER_OPTIONS = ['7:30 AM', '12:00 PM', '9:00 PM'];
 const ICON_COLOR_OPTIONS = ['#0EA5E9', '#10B981', '#F97316', '#A855F7', '#F43F5E'];
 
-type Category =
-  | 'all'
-  | 'morning_routine'
-  | 'health_fitness'
-  | 'productivity'
-  | 'mindfulness'
-  | 'andrew_huberman'
-  | 'learning'
-  | 'social'
-  | 'financial'
-  | 'creativity'
-  | 'sleep';
+type Category = 'all' | Doc<'templates'>['category'];
 
 interface CategoryFilter {
   id: Category;
@@ -249,13 +238,13 @@ export default function TemplatesScreen() {
 
         if (result.success) {
           setShowToast(true);
-          setToastMessage('Template imported successfully! 🎉');
+          setToastMessage('Habit imported successfully! 🎉');
           setShowPreviewModal(false);
         }
       } catch (error) {
-        console.error('Failed to import template:', error);
+        console.error('Failed to import habit:', error);
         setShowToast(true);
-        setToastMessage('Failed to import template. Please try again.');
+        setToastMessage('Failed to import habit. Please try again.');
       } finally {
         setImportingTemplateId(null);
       }
@@ -703,7 +692,9 @@ export default function TemplatesScreen() {
             onLayout={handleCategoryLayout}
             onScroll={handleCategoryScroll}
           >
-            {categories.map((category) => renderCategoryChip(category))}
+            {categories.map((category) =>
+              renderCategoryChip(category as CategoryFilter)
+            )}
           </ScrollView>
           {/* Subtle animated scroll hint */}
           {showCategoryScrollHint && (
@@ -1036,7 +1027,7 @@ export default function TemplatesScreen() {
                       })
                     }
                   >
-                    Import Template
+                    Import Habit
                   </Button>
                   <Button
                     fullWidth

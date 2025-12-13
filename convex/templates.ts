@@ -2749,7 +2749,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Set a yearly reminder to schedule an eye exam (especially with risk factors). Regular screening helps detect vision-threatening disease early.',
-      frequency: 'weekly',
+      frequency: 'yearly',
       icon: '👁️',
       iconColor: '#0EA5E9',
       name: 'Annual Eye Exam',
@@ -2764,7 +2764,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Set a yearly reminder for a hearing check (especially with loud-noise exposure). Early detection supports prevention and communication health.',
-      frequency: 'weekly',
+      frequency: 'yearly',
       icon: '🦻',
       iconColor: '#8B5CF6',
       name: 'Annual Hearing Test',
@@ -2779,7 +2779,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Do a monthly skin self-exam (ABCDE rule) and note any changing spots. Early detection improves outcomes for skin cancer.',
-      frequency: 'weekly',
+      frequency: 'monthly',
       icon: '🔎',
       iconColor: '#F59E0B',
       name: 'Monthly Skin Self-Exam',
@@ -2794,7 +2794,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Once per year, review recommended vaccines (flu, COVID, Td/Tdap, etc.) with local guidelines or your clinician. Staying up-to-date prevents avoidable illness.',
-      frequency: 'weekly',
+      frequency: 'yearly',
       icon: '💉',
       iconColor: '#10B981',
       name: 'Vaccination Status Review',

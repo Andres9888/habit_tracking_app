@@ -215,7 +215,7 @@ export function TemplateCard({
   return (
     <AnimatedPressable
       accessible
-      accessibilityHint="Tap to preview, or tap import to add to your habits"
+      accessibilityHint="Tap to preview, or tap Import Habit to add to your habits"
       accessibilityLabel={`${name} template. ${description}`}
       accessibilityRole="button"
       style={[
@@ -409,18 +409,18 @@ export function TemplateCard({
         {/* Import Button */}
         <View style={styles.footer}>
           <Button
-            accessibilityLabel={`Import ${name} template`}
+            accessibilityLabel={`Import ${name} habit`}
             disabled={isLocked}
             loading={isImporting}
+            onPress={handleImportPress}
             size="medium"
             style={[
               styles.importButton,
               { backgroundColor: isLocked ? '#9ca3af' : iconColor },
             ]}
             variant="primary"
-            onPress={handleImportPress}
           >
-            {isLocked ? 'Unlock with Pro' : 'Import Template'}
+            {isLocked ? 'Unlock with Pro' : 'Import Habit'}
           </Button>
         </View>
       </View>
