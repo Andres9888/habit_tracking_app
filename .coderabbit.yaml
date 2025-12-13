@@ -14,3 +14,6 @@ reviews:
     - "convex/**"
   auto_review:
     enabled: true
+    # Enable auto-reviews for PRs targeting non-default branches (e.g. dev)
+    base_branches:
+      - "^dev$"
