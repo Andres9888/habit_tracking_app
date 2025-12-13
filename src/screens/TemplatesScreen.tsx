@@ -51,6 +51,7 @@ import EmptyState from '../components/EmptyState';
 import Toast from '../components/Toast';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
+  Check,
   ChevronDown,
   ChevronRight,
   Search,
@@ -60,6 +61,28 @@ import {
   ExternalLink,
 } from 'lucide-react-native';
 
+// Sort options configuration
+type SortOption = 'popular' | 'newest' | 'az';
+
+interface SortOptionConfig {
+  description: string;
+  label: string;
+  value: SortOption;
+}
+
+const SORT_OPTIONS: SortOptionConfig[] = [
+  { description: 'Most imported templates first', label: 'Popular', value: 'popular' },
+  { description: 'Recently added templates first', label: 'Newest', value: 'newest' },
+  { description: 'Alphabetically by name', label: 'A-Z', value: 'az' },
+];
+
+const SORT_LABELS: Record<SortOption, string> = {
+  az: 'A-Z',
+  newest: 'Newest',
+  popular: 'Popular',
+};
+
+const NEW_TEMPLATE_WINDOW_MS = 1000 * 60 * 60 * 24 * 10;
 const REMINDER_OPTIONS = ['7:30 AM', '12:00 PM', '9:00 PM'];
 const ICON_COLOR_OPTIONS = ['#0EA5E9', '#10B981', '#F97316', '#A855F7', '#F43F5E'];
 
@@ -130,6 +153,7 @@ export default function TemplatesScreen() {
   const [selectedIconColor, setSelectedIconColor] = useState('');
   const [showPreviewScrollHint, setShowPreviewScrollHint] = useState(false);
   const [showCategoryScrollHint, setShowCategoryScrollHint] = useState(true);
+  const [showSortOptions, setShowSortOptions] = useState(false);
   const listScrollOffset = useRef(0);
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
   const previewScrollOffset = useRef(0);
@@ -157,12 +181,18 @@ export default function TemplatesScreen() {
   const seedNewScienceTemplates = useMutation(api.templates.seedNewScienceTemplates);
   const [isSeeding, setIsSeeding] = useState(false);
 
-  const handleSortToggle = useCallback(() => {
-    setSortOption((current) => {
-      if (current === 'popular') return 'newest';
-      if (current === 'newest') return 'az';
-      return 'popular';
-    });
+  const handleOpenSortOptions = useCallback(() => {
+    setShowSortOptions(true);
+  }, []);
+
+  const handleCloseSortOptions = useCallback(() => {
+    setShowSortOptions(false);
+  }, []);
+
+  const handleSelectSortOption = useCallback((option: SortOption) => {
+    setSortOption(option);
+    setShowSortOptions(false);
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   const handleResetFilters = useCallback(() => {
@@ -668,15 +698,61 @@ export default function TemplatesScreen() {
           ) : null}
         </View>
         <View style={styles.controlRow}>
-          <Pressable
-            accessibilityLabel='Toggle sort order'
-            accessibilityRole='button'
-            style={styles.controlButton}
-            onPress={handleSortToggle}
-          >
-            <SlidersHorizontal color='#0f172a' size={16} />
-            <Text style={styles.controlButtonText}>Sort: {sortOption === 'popular' ? 'Popular' : sortOption === 'newest' ? 'Newest' : 'A-Z'}</Text>
-          </Pressable>
+          <View style={styles.sortButtonWrapper}>
+            <Pressable
+              accessibilityLabel='Open sort options'
+              accessibilityRole='button'
+              style={[styles.controlButton, showSortOptions && styles.controlButtonActive]}
+              onPress={handleOpenSortOptions}
+            >
+              <SlidersHorizontal color={showSortOptions ? '#fff' : '#0f172a'} size={16} />
+              <Text style={[styles.controlButtonText, showSortOptions && { color: '#fff' }]}>
+                Sort: {SORT_LABELS[sortOption]}
+              </Text>
+              <ChevronDown
+                color={showSortOptions ? '#fff' : '#0f172a'}
+                size={14}
+                style={{ transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }] }}
+              />
+            </Pressable>
+            {/* Inline Dropdown */}
+            {showSortOptions && (
+              <Animated.View
+                entering={FadeIn.duration(150)}
+                style={styles.sortDropdown}
+              >
+                {SORT_OPTIONS.map((option) => {
+                  const isSelected = sortOption === option.value;
+                  return (
+                    <Pressable
+                      key={option.value}
+                      accessible
+                      accessibilityLabel={`Sort by ${option.label}`}
+                      accessibilityRole='button'
+                      accessibilityState={{ selected: isSelected }}
+                      style={[
+                        styles.sortDropdownOption,
+                        isSelected && styles.sortDropdownOptionSelected,
+                      ]}
+                      onPress={() => handleSelectSortOption(option.value)}
+                    >
+                      <Text
+                        style={[
+                          styles.sortDropdownOptionText,
+                          isSelected && styles.sortDropdownOptionTextSelected,
+                        ]}
+                      >
+                        {option.label}
+                      </Text>
+                      {isSelected && (
+                        <Check color='#10B981' size={16} strokeWidth={2.5} />
+                      )}
+                    </Pressable>
+                  );
+                })}
+              </Animated.View>
+            )}
+          </View>
           <Pressable
             accessibilityLabel='Toggle research-only filter'
             accessibilityRole='button'
@@ -1067,6 +1143,14 @@ export default function TemplatesScreen() {
         visible={showToast}
         onDismiss={() => setShowToast(false)}
       />
+
+      {/* Dropdown backdrop - rendered at root level to overlay entire screen */}
+      {showSortOptions && (
+        <Pressable
+          style={styles.dropdownBackdrop}
+          onPress={handleCloseSortOptions}
+        />
+      )}
     </View>
   );
 }
@@ -1358,6 +1442,56 @@ const styles = StyleSheet.create({
   },
   searchSection: {
     paddingHorizontal: 20,
+  },
+  sortButtonWrapper: {
+    position: 'relative',
+    zIndex: 100,
+  },
+  sortDropdown: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e2e8f0',
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 8,
+    left: 0,
+    marginTop: 4,
+    minWidth: 140,
+    overflow: 'hidden',
+    position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    top: '100%',
+    zIndex: 101,
+  },
+  sortDropdownOption: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  sortDropdownOptionSelected: {
+    backgroundColor: '#f0fdf4',
+  },
+  sortDropdownOptionText: {
+    color: '#374151',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  sortDropdownOptionTextSelected: {
+    color: '#059669',
+    fontWeight: '600',
+  },
+  dropdownBackdrop: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 99,
   },
   skeletonBadge: {
     backgroundColor: '#e5e7eb',
