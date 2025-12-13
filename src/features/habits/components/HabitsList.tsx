@@ -398,6 +398,7 @@ export function HabitsList({
     weekDateStrings,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
+    sortHabitsAlphabetically,
     contentPadding,
     handleDragEnd,
     handleArchive,
@@ -412,6 +413,7 @@ export function HabitsList({
   } = list;
 
   const { openSettings, openTemplatesScreen, openQuickActions } = modals;
+  const isReorderingEnabled = !sortHabitsAlphabetically;
 
   // Quick-create habit mutation for instant habit creation
   const createHabit = useMutation(api.habits.create);
@@ -457,6 +459,7 @@ export function HabitsList({
     handleHabitPress,
     handleMorePress: openQuickActions,
     habitCompletionIcon,
+    isReorderingEnabled,
     notifyWeekCompletion,
     reduceMotionPreference,
     weekDateStrings,
@@ -587,7 +590,7 @@ export function HabitsList({
         onDragBegin={handleDragBegin}
         renderItem={renderItem}
         onDragEnd={handleDragEnd}
-        activationDistance={12}
+        activationDistance={isReorderingEnabled ? 12 : 9999}
         contentContainerStyle={{
           paddingBottom: contentPadding.paddingBottom,
           paddingHorizontal: contentPadding.paddingHorizontal,

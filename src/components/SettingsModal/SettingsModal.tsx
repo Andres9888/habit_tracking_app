@@ -24,6 +24,7 @@ interface SettingsModalProps {
   ) => void | Promise<void>;
   onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
+  onChangeSortHabitsAlphabetically?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
@@ -36,6 +37,7 @@ interface SettingsModalProps {
   isCompact?: boolean;
   onOpenHapticTest?: () => void;
   onClose: () => void;
+  sortHabitsAlphabetically?: boolean;
   showCharacterScreen?: boolean;
   visible: boolean;
 }
@@ -48,6 +50,7 @@ export default function SettingsModal({
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
   onChangeHabitCompletionIcon = () => {},
+  onChangeSortHabitsAlphabetically = () => {},
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
   onChangeShowHabitStrengthPercentage = () => {},
@@ -56,6 +59,7 @@ export default function SettingsModal({
   onChangeShowNotesStats = () => {},
   onClose,
   onOpenHapticTest,
+  sortHabitsAlphabetically = false,
   showCharacterScreen = true,
   showWeekCompletionBar = true,
   visible,
@@ -284,6 +288,24 @@ export default function SettingsModal({
               highContrastMode={isHighContrastActive}
               title='Habit Management'
             >
+              <SettingsRow
+                highContrastMode={isHighContrastActive}
+                icon={
+                  <Text
+                    className='text-[12px] font-extrabold uppercase tracking-wide'
+                    style={{ color: isHighContrastActive ? '#000000' : '#92400e' }}
+                  >
+                    A–Z
+                  </Text>
+                }
+                iconBackgroundColor={isHighContrastActive ? '#facc15' : '#fde68a'}
+                label='Sort habits A–Z'
+                type='toggle'
+                value={sortHabitsAlphabetically}
+                onToggle={(value) =>
+                  void onChangeSortHabitsAlphabetically(value)
+                }
+              />
               <SettingsRow
                 highContrastMode={isHighContrastActive}
                 icon={<BookOpen color='#64748b' size={16} />}

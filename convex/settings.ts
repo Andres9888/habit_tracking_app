@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS = {
   reduceMotion: false,
 
   showCalendarView: true,
+  sortHabitsAlphabetically: false,
 
   showCharacterScreen: true,
 
@@ -68,6 +69,9 @@ export const get = query({
       reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
+      sortHabitsAlphabetically:
+        settings?.sortHabitsAlphabetically ??
+        DEFAULT_SETTINGS.sortHabitsAlphabetically,
       showCharacterScreen:
         settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen,
       showConsistency:
@@ -99,6 +103,7 @@ export const get = query({
     highContrastMode: v.boolean(),
     reduceMotion: v.boolean(),
     showCalendarView: v.boolean(),
+    sortHabitsAlphabetically: v.boolean(),
     showCharacterScreen: v.boolean(),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
@@ -127,6 +132,7 @@ export const update = mutation({
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
     showCalendarView: v.boolean(),
+    sortHabitsAlphabetically: v.optional(v.boolean()),
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),

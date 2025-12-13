@@ -16,7 +16,7 @@ export function useHabitsListState(): HabitsListState {
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);
-  const habits = (habitsQuery ?? []) as Habit[];
+  const habitsFromQuery = (habitsQuery ?? []) as Habit[];
   const isHabitsLoading = habitsQuery === undefined;
 
   const [rewardToast, setRewardToast] = useState<RewardToastData | null>(null);
@@ -28,6 +28,25 @@ export function useHabitsListState(): HabitsListState {
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
+  const sortHabitsAlphabetically = settings?.sortHabitsAlphabetically ?? false;
+
+  const habits = useMemo(() => {
+    if (!sortHabitsAlphabetically) {
+      return habitsFromQuery;
+    }
+
+    return [...habitsFromQuery].sort((a, b) => {
+      const aName = a.name.trim().toLowerCase();
+      const bName = b.name.trim().toLowerCase();
+      if (aName < bName) {
+        return -1;
+      }
+      if (aName > bName) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [habitsFromQuery, sortHabitsAlphabetically]);
 
   const FREE_HABIT_LIMIT = 3;
   const habitSlotsUsed = isPremiumUser
@@ -44,6 +63,10 @@ export function useHabitsListState(): HabitsListState {
 
   const handleDragEnd = useCallback(
     async ({ data }: { data: Habit[] }) => {
+      if (sortHabitsAlphabetically) {
+        return;
+      }
+
       try {
         const habitIds = data.map((h) => h._id);
         await reorderHabits({ habitIds });
@@ -51,7 +74,7 @@ export function useHabitsListState(): HabitsListState {
         console.error('Failed to reorder habits:', error);
       }
     },
-    [reorderHabits]
+    [reorderHabits, sortHabitsAlphabetically]
   );
 
   const handleArchive = useCallback(
@@ -114,6 +137,7 @@ export function useHabitsListState(): HabitsListState {
     canNavigateForward,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
+    sortHabitsAlphabetically,
     contentPadding: { paddingHorizontal: 24, paddingTop: 0, paddingBottom: 96 },
     dismissRewardToast,
     handleDragEnd,

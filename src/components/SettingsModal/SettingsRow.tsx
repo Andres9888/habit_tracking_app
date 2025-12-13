@@ -78,6 +78,7 @@ export function SettingsRow({
       {/* Right side content */}
       {type === 'toggle' && (
         <Switch
+          accessibilityLabel={label}
           ios_backgroundColor={colors.switchTrackFalse}
           thumbColor={colors.switchThumb}
           trackColor={{

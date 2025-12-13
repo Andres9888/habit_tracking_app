@@ -14,6 +14,7 @@ interface UseHabitRenderItemArgs {
   handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
   handleHabitPress: (habit: Habit) => void;
   handleMorePress?: (habit: Habit) => void;
+  isReorderingEnabled: boolean;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   highlightHabitId?: Id<'habits'> | null;
   reduceMotionPreference: boolean;
@@ -30,6 +31,7 @@ export function useHabitRenderItem({
   handleArchive,
   handleHabitPress,
   handleMorePress,
+  isReorderingEnabled,
   notifyWeekCompletion,
   highlightHabitId,
   reduceMotionPreference,
@@ -79,7 +81,7 @@ export function useHabitRenderItem({
               weekDateStrings={weekDateStrings}
               weekStatus={weekStatus}
               onArchive={handleArchive}
-              onLongPress={drag}
+              onLongPress={isReorderingEnabled ? drag : undefined}
               onMorePress={handleMorePress}
               onPress={handleHabitPress}
               onWeekComplete={({ completedDate }) =>
@@ -99,6 +101,7 @@ export function useHabitRenderItem({
       handleArchive,
       handleHabitPress,
       handleMorePress,
+      isReorderingEnabled,
       reduceMotionPreference,
       notifyWeekCompletion,
       highlightHabitId,

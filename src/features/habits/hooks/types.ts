@@ -19,6 +19,7 @@ export interface HabitsListState {
   canNavigateForward: boolean;
   showHabitStrengthPercentage: boolean;
   showWeekCompletionBar: boolean;
+  sortHabitsAlphabetically: boolean;
   contentPadding: { paddingHorizontal: number; paddingTop: number; paddingBottom: number };
   dismissRewardToast: () => void;
   habitSlotsUsed: number;

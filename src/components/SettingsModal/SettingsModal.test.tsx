@@ -7,7 +7,7 @@ describe('SettingsModal', () => {
   it('calls onChangeShowWeekCompletionBar when toggled', () => {
     const handleChangeShowWeekCompletionBar = jest.fn();
 
-    const { getAllByA11yRole, getByText } = render(
+    const { getByLabelText, getByText } = render(
       <SettingsModal
         onChangeShowWeekCompletionBar={handleChangeShowWeekCompletionBar}
         onClose={() => {}}
@@ -18,7 +18,7 @@ describe('SettingsModal', () => {
 
     expect(getByText('Daily progress bar')).toBeTruthy();
 
-    const [toggle] = getAllByA11yRole('switch');
+    const toggle = getByLabelText('Daily progress bar');
     fireEvent(toggle, 'valueChange', false);
 
     expect(handleChangeShowWeekCompletionBar).toHaveBeenCalledTimes(1);

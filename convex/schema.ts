@@ -197,6 +197,7 @@ const applicationTables = {
     hasPremium: v.optional(v.boolean()),
 
     showCalendarView: v.boolean(),
+    sortHabitsAlphabetically: v.optional(v.boolean()),
 
     highContrastMode: v.optional(v.boolean()),
 

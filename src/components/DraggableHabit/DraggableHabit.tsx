@@ -321,8 +321,12 @@ export default function DraggableHabit({
       };
 
   const handleLongPress = () => {
+    if (!onLongPress) {
+      return;
+    }
+
     triggerSelection();
-    onLongPress?.(habit);
+    onLongPress(habit);
   };
 
   const handlePressIn = () => {

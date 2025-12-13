@@ -30,6 +30,7 @@ export interface HabitSettings {
   highContrastMode: boolean;
   reduceMotion: boolean;
   showCalendarView: boolean;
+  sortHabitsAlphabetically: boolean;
   showCharacterScreen: boolean;
   showConsistency: boolean;
   showEmojis: boolean;

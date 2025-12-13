@@ -104,8 +104,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onChangeShowWeekCompletionBar={(value) =>
           onSettingsChange({ showWeekCompletionBar: value })
         }
+        onChangeSortHabitsAlphabetically={(value) =>
+          onSettingsChange({ sortHabitsAlphabetically: value })
+        }
         onClose={closeSettings}
         onOpenHapticTest={openHapticTest}
+        sortHabitsAlphabetically={settings?.sortHabitsAlphabetically ?? false}
         showCharacterScreen={settings?.showCharacterScreen ?? true}
         showHabitStrengthPercentage={showHabitStrengthPercentage}
         showNotesStats={settings?.showNotesStats ?? true}

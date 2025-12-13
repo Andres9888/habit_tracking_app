@@ -108,18 +108,17 @@ jest.mock('lucide-react-native', () => {
     };
   };
 
-  return {
-    Activity: createMockIcon('Activity'),
-    Link2: createMockIcon('Link2'),
-    Settings: createMockIcon('Settings'),
-    ChevronLeft: createMockIcon('ChevronLeft'),
-    ChevronRight: createMockIcon('ChevronRight'),
-    X: createMockIcon('X'),
-    Plus: createMockIcon('Plus'),
-    Check: createMockIcon('Check'),
-    Flame: createMockIcon('Flame'),
-    BarChart3: createMockIcon('BarChart3'),
-  };
+  return new Proxy(
+    {},
+    {
+      get: (_target, prop) => {
+        if (prop === '__esModule') {
+          return true;
+        }
+        return createMockIcon(String(prop));
+      },
+    }
+  );
 });
 
 // Mock NativeWind className support in tests
