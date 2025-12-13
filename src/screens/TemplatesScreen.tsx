@@ -30,6 +30,15 @@ import {
 import Animated, {
   FadeIn,
   FadeInDown,
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  withDelay,
+  withSpring,
+  Easing,
+  SlideInRight,
 } from 'react-native-reanimated';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
@@ -43,6 +52,7 @@ import Toast from '../components/Toast';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   ChevronDown,
+  ChevronRight,
   Search,
   SlidersHorizontal,
   Filter,
@@ -73,6 +83,23 @@ interface CategoryFilter {
   label: string;
 }
 
+// Category color mapping for visual differentiation
+const CATEGORY_COLORS: Record<string, { bg: string; bgSelected: string; border: string; text: string }> = {
+  all: { bg: '#EEF2FF', bgSelected: '#6366F1', border: '#C7D2FE', text: '#4338CA' },
+  andrew_huberman: { bg: '#ECFDF5', bgSelected: '#059669', border: '#A7F3D0', text: '#047857' },
+  creativity: { bg: '#FDF2F8', bgSelected: '#EC4899', border: '#FBCFE8', text: '#BE185D' },
+  financial: { bg: '#ECFDF5', bgSelected: '#10B981', border: '#A7F3D0', text: '#059669' },
+  health_fitness: { bg: '#D1FAE5', bgSelected: '#10B981', border: '#6EE7B7', text: '#047857' },
+  learning: { bg: '#F3E8FF', bgSelected: '#8B5CF6', border: '#DDD6FE', text: '#7C3AED' },
+  mindfulness: { bg: '#F5F3FF', bgSelected: '#8B5CF6', border: '#E9D5FF', text: '#7C3AED' },
+  morning_routine: { bg: '#FEF3C7', bgSelected: '#F59E0B', border: '#FDE68A', text: '#D97706' },
+  productivity: { bg: '#DBEAFE', bgSelected: '#3B82F6', border: '#BFDBFE', text: '#2563EB' },
+  sleep: { bg: '#E0E7FF', bgSelected: '#1E3A8A', border: '#C7D2FE', text: '#1E40AF' },
+  social: { bg: '#FFE4E6', bgSelected: '#F43F5E', border: '#FECDD3', text: '#E11D48' },
+};
+
+const DEFAULT_CATEGORY_COLORS = { bg: '#F3F4F6', bgSelected: '#374151', border: '#E5E7EB', text: '#374151' };
+
 export default function TemplatesScreen() {
   const theme = useAppTheme();
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
@@ -94,8 +121,20 @@ export default function TemplatesScreen() {
   const [customHabitName, setCustomHabitName] = useState('');
   const [selectedReminderTime, setSelectedReminderTime] = useState('');
   const [selectedIconColor, setSelectedIconColor] = useState('');
+  const [showPreviewScrollHint, setShowPreviewScrollHint] = useState(false);
+  const [showCategoryScrollHint, setShowCategoryScrollHint] = useState(true);
   const listScrollOffset = useRef(0);
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
+  const previewScrollOffset = useRef(0);
+  const categoryScrollMetrics = useRef({ contentWidth: 0, layoutWidth: 0 });
+  const previewScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
+
+  // Animation values for preview modal sections
+  const headerProgress = useSharedValue(0);
+  const descProgress = useSharedValue(0);
+  const scienceProgress = useSharedValue(0);
+  const customizeProgress = useSharedValue(0);
+  const actionsProgress = useSharedValue(0);
 
   // Fetch templates and categories
   const allTemplates = useQuery(api.templates.list, {});
@@ -322,11 +361,45 @@ export default function TemplatesScreen() {
     }
   }, [previewTemplate]);
 
-  // Render category filter chip
+  // Handle category scroll to show/hide "more" indicator
+  const handleCategoryScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+      categoryScrollMetrics.current = {
+        contentWidth: contentSize.width,
+        layoutWidth: layoutMeasurement.width,
+      };
+      // Hide hint if scrolled more than 30px or near the end
+      const isNearEnd = contentOffset.x + layoutMeasurement.width >= contentSize.width - 30;
+      const hasScrolled = contentOffset.x > 30;
+      setShowCategoryScrollHint(!hasScrolled && !isNearEnd && contentSize.width > layoutMeasurement.width);
+    },
+    []
+  );
+
+  const handleCategoryContentSizeChange = useCallback(
+    (width: number, _height: number) => {
+      categoryScrollMetrics.current.contentWidth = width;
+      // Show hint if content is wider than layout
+      const hasMoreContent = width > categoryScrollMetrics.current.layoutWidth;
+      setShowCategoryScrollHint(hasMoreContent);
+    },
+    []
+  );
+
+  const handleCategoryLayout = useCallback(
+    (event: { nativeEvent: { layout: { width: number } } }) => {
+      categoryScrollMetrics.current.layoutWidth = event.nativeEvent.layout.width;
+    },
+    []
+  );
+
+  // Render category filter chip with color-coded styling
   const renderCategoryChip = useCallback(
     (category: CategoryFilter) => {
       const isSelected = selectedCategory === category.id;
       const count = categoryCounts[category.id] || 0;
+      const colors = CATEGORY_COLORS[category.id] || DEFAULT_CATEGORY_COLORS;
 
       return (
         <Pressable
@@ -338,21 +411,30 @@ export default function TemplatesScreen() {
           style={[
             styles.categoryChip,
             {
-              backgroundColor: isSelected ? '#101828' : '#ffffff',
-              borderWidth: isSelected ? 0 : 1.5,
-              borderColor: isSelected ? 'transparent' : '#e5e7eb',
+              backgroundColor: isSelected ? colors.bgSelected : colors.bg,
+              borderColor: isSelected ? colors.bgSelected : colors.border,
               borderRadius: 20,
+              borderWidth: 1.5,
             },
           ]}
           onPress={() => handleCategoryPress(category.id)}
         >
+          {/* Color dot indicator for quick visual scan when not selected */}
+          {!isSelected && (
+            <View
+              style={[
+                styles.categoryColorDot,
+                { backgroundColor: colors.bgSelected },
+              ]}
+            />
+          )}
           <Text style={styles.categoryIcon}>{category.icon}</Text>
           <Text
             style={[
               theme.custom.typography.bodySmall,
               {
-                color: isSelected ? '#ffffff' : '#101727',
-                fontWeight: isSelected ? '600' : '500',
+                color: isSelected ? '#ffffff' : colors.text,
+                fontWeight: '600',
               },
             ]}
           >
@@ -362,14 +444,16 @@ export default function TemplatesScreen() {
             style={[
               styles.categoryCount,
               {
-                backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : '#f3f4f6',
+                backgroundColor: isSelected
+                  ? 'rgba(255,255,255,0.25)'
+                  : `${colors.bgSelected}20`,
               },
             ]}
           >
             <Text
               style={[
                 styles.categoryCountText,
-                { color: isSelected ? '#fff' : '#4b5563' },
+                { color: isSelected ? '#fff' : colors.text },
               ]}
             >
               {count}
@@ -608,14 +692,38 @@ export default function TemplatesScreen() {
 
       {/* Category Filters */}
       {categories && categories.length > 0 && (
-        <ScrollView
-          horizontal
-          contentContainerStyle={styles.categoriesContainer}
-          showsHorizontalScrollIndicator={false}
-          style={styles.categoriesScroll}
-        >
-          {categories.map((category) => renderCategoryChip(category))}
-        </ScrollView>
+        <View style={styles.categoriesWrapper}>
+          <ScrollView
+            horizontal
+            contentContainerStyle={styles.categoriesContainer}
+            scrollEventThrottle={16}
+            showsHorizontalScrollIndicator={false}
+            style={styles.categoriesScroll}
+            onContentSizeChange={handleCategoryContentSizeChange}
+            onLayout={handleCategoryLayout}
+            onScroll={handleCategoryScroll}
+          >
+            {categories.map((category) => renderCategoryChip(category))}
+          </ScrollView>
+          {/* Subtle animated scroll hint */}
+          {showCategoryScrollHint && (
+            <View pointerEvents='none' style={styles.categoryScrollHintWrapper}>
+              <LinearGradient
+                colors={['rgba(248,247,245,0)', 'rgba(248,247,245,0.95)']}
+                end={{ x: 1, y: 0 }}
+                start={{ x: 0, y: 0 }}
+                style={styles.categoryScrollGradient}
+              />
+              <Animated.View
+                entering={FadeIn.delay(300).duration(400)}
+                style={styles.categoryScrollHintChevrons}
+              >
+                <ChevronRight color='#9CA3AF' size={16} strokeWidth={2} style={{ marginRight: -10 }} />
+                <ChevronRight color='#D1D5DB' size={16} strokeWidth={2} />
+              </Animated.View>
+            </View>
+          )}
+        </View>
       )}
 
       {/* Templates List */}
@@ -961,36 +1069,64 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     gap: 8,
     paddingHorizontal: 20,
+    paddingRight: 50,
     paddingVertical: 12,
   },
   categoriesScroll: {
     flexGrow: 0,
   },
+  categoriesWrapper: {
+    position: 'relative',
+  },
   categoryChip: {
     alignItems: 'center',
+    elevation: 1,
     flexDirection: 'row',
     gap: 6,
     marginRight: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
-    elevation: 1,
   },
-  categoryIcon: {
-    fontSize: 16,
+  categoryColorDot: {
+    borderRadius: 999,
+    height: 6,
+    width: 6,
   },
   categoryCount: {
-    marginLeft: 6,
     borderRadius: 999,
+    marginLeft: 4,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   categoryCountText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
+  },
+  categoryIcon: {
+    fontSize: 16,
+  },
+  categoryScrollGradient: {
+    height: '100%',
+    width: 32,
+  },
+  categoryScrollHintChevrons: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    opacity: 0.7,
+  },
+  categoryScrollHintWrapper: {
+    alignItems: 'center',
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: 8,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   container: {
     flex: 1,
