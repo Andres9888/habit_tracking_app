@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+reviews:
+  # Focus review on specific paths
+  path_filters:
+    - "!src/**"
+    - "!__tests__/**"
+    - "!docs/**"
+    - "!*.md"
+    - "!*.config.*"
+    - "!dist/**"
+    - "!coverage/**"
+    - "!node_modules/**"
+    - "convex/**"
+  auto_review:
+    enabled: true

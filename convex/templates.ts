@@ -2452,13 +2452,14 @@ export const seedNewScienceTemplates = mutation({
     const insertedNames: string[] = [];
     const skippedNames: string[] = [];
 
-    const insertWithTracking = async (template: TemplateInsert) => {
-      const existing = await ctx.db
-        .query('templates')
-        .filter((q: any) => q.eq(q.field('name'), template.name))
-        .first();
+    const existingTemplates = await ctx.db.query('templates').collect();
+    const existingTemplateNameKeys = new Set<string>(
+      existingTemplates.map((t) => normalizeTemplateName(t.name))
+    );
 
-      if (existing) {
+    const insertWithTracking = async (template: TemplateInsert) => {
+      const templateNameKey = normalizeTemplateName(template.name);
+      if (existingTemplateNameKeys.has(templateNameKey)) {
         skippedCount++;
         skippedNames.push(template.name);
         return false;
@@ -2467,6 +2468,7 @@ export const seedNewScienceTemplates = mutation({
       await ctx.db.insert('templates', template);
       insertedCount++;
       insertedNames.push(template.name);
+      existingTemplateNameKeys.add(templateNameKey);
       return true;
     };
 
@@ -2639,6 +2641,205 @@ export const seedNewScienceTemplates = mutation({
     });
 
     // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Nutrition & Metabolic Health
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Build most meals around vegetables, legumes/whole grains, and healthy fats (e.g., olive oil). Mediterranean-style eating is consistently associated with better cardiometabolic outcomes.',
+      frequency: 'daily',
+      icon: '🥗',
+      iconColor: '#10B981',
+      name: 'Mediterranean Plate',
+      popularityScore: 90,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=Estruch+2013+PREDIMED+Mediterranean+diet',
+      scientificReference:
+        'Estruch et al. (2013) - Primary prevention of cardiovascular disease with a Mediterranean diet (PREDIMED)',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Start meals with non-starchy vegetables before higher-starch foods. Food order can reduce post-meal glucose and insulin responses.',
+      frequency: 'daily',
+      icon: '🥦',
+      iconColor: '#22C55E',
+      name: 'Veggies First',
+      popularityScore: 86,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=Shukla+food+order+vegetables+carbohydrate+postprandial+glucose',
+      scientificReference:
+        'Shukla et al. (2015) - Food order and postprandial glucose/insulin responses',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Add beans, lentils, or chickpeas a few times per week. Pulses increase fiber and plant protein, and systematic reviews link them to improved cardiometabolic markers.',
+      frequency: 'weekly',
+      icon: '🫘',
+      iconColor: '#F97316',
+      name: 'Legume Serving',
+      popularityScore: 84,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=non-oilseed+pulses+systematic+review+meta-analysis+glycemic+control',
+      scientificReference:
+        'Sievenpiper et al. (2009) - Non-oilseed pulses and glycemic control: systematic review and meta-analysis',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Eat a small handful of nuts most days. Meta-analyses associate nut intake with lower cardiovascular risk and improved lipid profiles.',
+      frequency: 'daily',
+      icon: '🥜',
+      iconColor: '#A16207',
+      name: 'Daily Nuts Serving',
+      popularityScore: 83,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=nut+consumption+meta-analysis+cardiovascular+mortality',
+      scientificReference:
+        'Aune et al. (2016) - Nut consumption and risk of cardiovascular disease: systematic review and meta-analysis',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Swap one refined-grain item (white bread/rice) for whole grains (oats, brown rice, whole-wheat). Whole-grain intake is linked to lower risk of type 2 diabetes and cardiovascular disease.',
+      frequency: 'daily',
+      icon: '🌾',
+      iconColor: '#CA8A04',
+      name: 'Whole Grain Swap',
+      popularityScore: 82,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=whole+grain+meta-analysis+type+2+diabetes+cardiovascular',
+      scientificReference:
+        'Aune et al. (2016) - Whole grain consumption and risk of cardiovascular disease and type 2 diabetes',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Preventive Screening & Prevention
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Measure blood pressure at home and log it weekly (or as recommended). Self-measured monitoring improves blood pressure control when done consistently.',
+      frequency: 'weekly',
+      icon: '🩺',
+      iconColor: '#EF4444',
+      name: 'Blood Pressure Check',
+      popularityScore: 84,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=self-measured+blood+pressure+monitoring+systematic+review+meta-analysis',
+      scientificReference:
+        'Uhlig et al. (2013) - Self-measured blood pressure monitoring and blood pressure control: systematic review',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Set a yearly reminder to schedule an eye exam (especially with risk factors). Regular screening helps detect vision-threatening disease early.',
+      frequency: 'weekly',
+      icon: '👁️',
+      iconColor: '#0EA5E9',
+      name: 'Annual Eye Exam',
+      popularityScore: 80,
+      scientificLink:
+        'https://www.cdc.gov/visionhealth/basics/keeping-eyes-healthy.html',
+      scientificReference: 'CDC - Vision health and preventive eye care guidance',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Set a yearly reminder for a hearing check (especially with loud-noise exposure). Early detection supports prevention and communication health.',
+      frequency: 'weekly',
+      icon: '🦻',
+      iconColor: '#8B5CF6',
+      name: 'Annual Hearing Test',
+      popularityScore: 79,
+      scientificLink: 'https://www.nidcd.nih.gov/health/hearing',
+      scientificReference:
+        'NIDCD - Hearing health basics and screening considerations',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Do a monthly skin self-exam (ABCDE rule) and note any changing spots. Early detection improves outcomes for skin cancer.',
+      frequency: 'weekly',
+      icon: '🔎',
+      iconColor: '#F59E0B',
+      name: 'Monthly Skin Self-Exam',
+      popularityScore: 81,
+      scientificLink: 'https://www.aad.org/public/diseases/skin-cancer/find/check-skin',
+      scientificReference:
+        'American Academy of Dermatology - Skin self-exam (ABCDE) guidance',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Once per year, review recommended vaccines (flu, COVID, Td/Tdap, etc.) with local guidelines or your clinician. Staying up-to-date prevents avoidable illness.',
+      frequency: 'weekly',
+      icon: '💉',
+      iconColor: '#10B981',
+      name: 'Vaccination Status Review',
+      popularityScore: 82,
+      scientificLink: 'https://www.cdc.gov/vaccines/schedules/',
+      scientificReference: 'CDC - Immunization schedules and vaccine recommendations',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS - Strength & Mobility
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Add short wall-sit holds a few times per week. Evidence suggests isometric training can reduce resting blood pressure.',
+      frequency: 'weekly',
+      icon: '🪑',
+      iconColor: '#6366F1',
+      name: 'Isometric Wall Sit',
+      popularityScore: 83,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=isometric+exercise+training+systematic+review+meta-analysis+blood+pressure',
+      scientificReference:
+        'Carlson et al. (2014) - Isometric exercise training and blood pressure: systematic review and meta-analysis',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Do 5 minutes of mobility (hips/shoulders/ankles) during the day. Micro-bouts of movement help reduce stiffness and break up sedentary time.',
+      frequency: 'daily',
+      icon: '🤸',
+      iconColor: '#14B8A6',
+      name: '5-Minute Mobility Snack',
+      popularityScore: 82,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=interrupting+sitting+light+activity+systematic+review',
+      scientificReference:
+        'Dempsey et al. (2016) - Interrupting prolonged sitting and cardiometabolic health (reviewed evidence)',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
     // PRODUCTIVITY - Goal Setting & Review
     // ═══════════════════════════════════════════════════════════════
 
@@ -2668,6 +2869,58 @@ export const seedNewScienceTemplates = mutation({
       popularityScore: 85,
       scientificReference:
         'Kühnel et al. (2017) - Daily energy management and work engagement',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PRODUCTIVITY - Focus & Cognitive Load
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Pick your top 3 priorities and write them down. Plan-making reduces intrusive thoughts from unfinished goals and improves follow-through.',
+      frequency: 'daily',
+      icon: '🎯',
+      iconColor: '#7C3AED',
+      name: 'Daily Top 3 Priorities',
+      popularityScore: 86,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=Masicampo+Baumeister+2011+plan-making+unfulfilled+goals',
+      scientificReference:
+        'Masicampo & Baumeister (2011) - Plan-making eliminates cognitive effects of unfulfilled goals',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Check email/messages at set times (e.g., 2-3 windows/day) instead of constantly. Reducing interruptions supports focus and lowers stress.',
+      frequency: 'daily',
+      icon: '📨',
+      iconColor: '#0EA5E9',
+      name: 'Batch Check Messages',
+      popularityScore: 84,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=email+checking+frequency+stress+experiment',
+      scientificReference:
+        'Kushlev & Dunn (2015) - Email checking frequency and stress (field experiment)',
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Do a quick 2-minute tidy of one small area (desk, counter). Clutter is associated with increased stress and reduced focus.',
+      frequency: 'daily',
+      icon: '🧹',
+      iconColor: '#F97316',
+      name: 'Two-Minute Tidy',
+      popularityScore: 82,
+      scientificLink:
+        'https://pubmed.ncbi.nlm.nih.gov/?term=Saxbe+Repetti+2010+home+environment+cortisol',
+      scientificReference:
+        'Saxbe & Repetti (2010) - Home environment and cortisol patterns',
     });
 
     // ═══════════════════════════════════════════════════════════════
