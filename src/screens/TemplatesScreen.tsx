@@ -28,13 +28,6 @@ import {
   type NativeSyntheticEvent,
 } from 'react-native';
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSpring,
-  withTiming,
-  Easing,
-  interpolate,
   FadeIn,
   FadeInDown,
 } from 'react-native-reanimated';
@@ -101,18 +94,8 @@ export default function TemplatesScreen() {
   const [customHabitName, setCustomHabitName] = useState('');
   const [selectedReminderTime, setSelectedReminderTime] = useState('');
   const [selectedIconColor, setSelectedIconColor] = useState('');
-  const [showPreviewScrollHint, setShowPreviewScrollHint] = useState(false);
   const listScrollOffset = useRef(0);
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
-  const previewScrollOffset = useRef(0);
-  const previewScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
-
-  // Animation values for preview modal sections
-  const headerProgress = useSharedValue(0);
-  const descProgress = useSharedValue(0);
-  const scienceProgress = useSharedValue(0);
-  const customizeProgress = useSharedValue(0);
-  const actionsProgress = useSharedValue(0);
 
   // Fetch templates and categories
   const allTemplates = useQuery(api.templates.list, {});
@@ -298,91 +281,6 @@ export default function TemplatesScreen() {
     setShowBottomScrollShadow(false);
   }, [selectedCategory, filteredTemplates.length]);
 
-  // Trigger entrance animations when preview modal opens
-  useEffect(() => {
-    if (showPreviewModal && previewTemplate) {
-      // Reset animation values
-      headerProgress.value = 0;
-      descProgress.value = 0;
-      scienceProgress.value = 0;
-      customizeProgress.value = 0;
-      actionsProgress.value = 0;
-      previewScrollOffset.current = 0;
-      setShowPreviewScrollHint(true);
-
-      // Staggered entrance animations
-      headerProgress.value = withDelay(50, withSpring(1, { damping: 18, stiffness: 120 }));
-      descProgress.value = withDelay(120, withSpring(1, { damping: 18, stiffness: 120 }));
-      scienceProgress.value = withDelay(190, withSpring(1, { damping: 18, stiffness: 120 }));
-      customizeProgress.value = withDelay(260, withSpring(1, { damping: 18, stiffness: 120 }));
-      actionsProgress.value = withDelay(330, withSpring(1, { damping: 18, stiffness: 120 }));
-    }
-  }, [showPreviewModal, previewTemplate]);
-
-  // Animated styles for preview modal sections
-  const headerAnimStyle = useAnimatedStyle(() => ({
-    opacity: headerProgress.value,
-    transform: [{ translateY: interpolate(headerProgress.value, [0, 1], [20, 0]) }],
-  }));
-
-  const descAnimStyle = useAnimatedStyle(() => ({
-    opacity: descProgress.value,
-    transform: [{ translateY: interpolate(descProgress.value, [0, 1], [15, 0]) }],
-  }));
-
-  const scienceAnimStyle = useAnimatedStyle(() => ({
-    opacity: scienceProgress.value,
-    transform: [{ translateY: interpolate(scienceProgress.value, [0, 1], [15, 0]) }],
-  }));
-
-  const customizeAnimStyle = useAnimatedStyle(() => ({
-    opacity: customizeProgress.value,
-    transform: [{ translateY: interpolate(customizeProgress.value, [0, 1], [15, 0]) }],
-  }));
-
-  const actionsAnimStyle = useAnimatedStyle(() => ({
-    opacity: actionsProgress.value,
-    transform: [{ translateY: interpolate(actionsProgress.value, [0, 1], [10, 0]) }],
-  }));
-
-  // Preview modal scroll handler
-  const handlePreviewScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
-      previewScrollOffset.current = contentOffset.y;
-      previewScrollMetrics.current = {
-        contentHeight: contentSize.height,
-        layoutHeight: layoutMeasurement.height,
-      };
-
-      const hasMoreContent = contentSize.height - (contentOffset.y + layoutMeasurement.height) > 20;
-      setShowPreviewScrollHint(hasMoreContent);
-    },
-    []
-  );
-
-  const handlePreviewContentSizeChange = useCallback(
-    (_width: number, height: number) => {
-      previewScrollMetrics.current = {
-        ...previewScrollMetrics.current,
-        contentHeight: height,
-      };
-      const hasMoreContent =
-        height - (previewScrollOffset.current + previewScrollMetrics.current.layoutHeight) > 20;
-      setShowPreviewScrollHint(hasMoreContent);
-    },
-    []
-  );
-
-  const handlePreviewLayout = useCallback(
-    (event: { nativeEvent: { layout: { height: number } } }) => {
-      previewScrollMetrics.current = {
-        ...previewScrollMetrics.current,
-        layoutHeight: event.nativeEvent.layout.height,
-      };
-    },
-    []
-  );
 
   const previewResearchDomain = useMemo(() => {
     if (!previewTemplate?.scientificLink) return null;
@@ -796,21 +694,15 @@ export default function TemplatesScreen() {
           visible={showPreviewModal}
           onClose={() => setShowPreviewModal(false)}
         >
-          <View style={styles.previewModalWrapper}>
-            <ScrollView
-              bounces={false}
-              contentContainerStyle={styles.previewScrollContent}
-              keyboardShouldPersistTaps='handled'
-              scrollEventThrottle={16}
-              showsVerticalScrollIndicator={false}
-              style={styles.previewScrollView}
-              onContentSizeChange={handlePreviewContentSizeChange}
-              onLayout={handlePreviewLayout}
-              onScroll={handlePreviewScroll}
-            >
+          <ScrollView
+            bounces={false}
+            contentContainerStyle={styles.previewScrollContent}
+            keyboardShouldPersistTaps='handled'
+            showsVerticalScrollIndicator={false}
+          >
               <View style={styles.previewModal}>
-                {/* Template Header - Animated */}
-                <Animated.View style={[styles.previewHeader, headerAnimStyle]}>
+                {/* Template Header */}
+                <View style={styles.previewHeader}>
                   <View
                     style={[
                       styles.previewIconContainer,
@@ -834,25 +726,23 @@ export default function TemplatesScreen() {
                     {previewTemplate.category.replace('_', ' ')} ·{' '}
                     {previewTemplate.frequency === 'daily' ? 'Daily' : 'Flexible'}
                   </Text>
-                </Animated.View>
+                </View>
 
-                {/* Template Description - Animated */}
-                <Animated.View style={descAnimStyle}>
-                  <Text
-                    style={[
-                      theme.custom.typography.body,
-                      { color: '#374151', marginTop: 20 },
-                    ]}
-                  >
-                    {previewTemplate.description}
-                  </Text>
-                </Animated.View>
+                {/* Template Description */}
+                <Text
+                  style={[
+                    theme.custom.typography.body,
+                    { color: '#374151', marginTop: 20 },
+                  ]}
+                >
+                  {previewTemplate.description}
+                </Text>
 
                 {/* Divider */}
                 <View style={styles.sectionDivider} />
 
-                {/* Scientific Reference - Animated */}
-                <Animated.View style={scienceAnimStyle}>
+                {/* Scientific Reference */}
+                <View>
                   <View
                     style={[
                       styles.previewScienceBox,
@@ -942,13 +832,13 @@ export default function TemplatesScreen() {
                       />
                     </Pressable>
                   )}
-                </Animated.View>
+                </View>
 
                 {/* Divider */}
                 <View style={styles.sectionDivider} />
 
-                {/* Customization Block - Animated */}
-                <Animated.View style={[styles.customizeSection, customizeAnimStyle]}>
+                {/* Customization Block */}
+                <View style={styles.customizeSection}>
                   <View style={styles.customizeTitleRow}>
                     <Text style={styles.customizeTitle}>Make it yours</Text>
                     <Text style={styles.customizeSubtitle}>Optional</Text>
@@ -1020,10 +910,10 @@ export default function TemplatesScreen() {
                       );
                     })}
                   </View>
-                </Animated.View>
+                </View>
 
-                {/* Action Buttons - Animated */}
-                <Animated.View style={[styles.previewActions, actionsAnimStyle]}>
+                {/* Action Buttons */}
+                <View style={styles.previewActions}>
                   <Button
                     fullWidth
                     loading={importingTemplateId === previewTemplate._id}
@@ -1049,27 +939,9 @@ export default function TemplatesScreen() {
                   >
                     Cancel
                   </Button>
-                </Animated.View>
+                </View>
               </View>
             </ScrollView>
-
-            {/* Scroll Hint Indicator */}
-            {showPreviewScrollHint && (
-              <LinearGradient
-                colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)', 'rgba(255,255,255,1)']}
-                pointerEvents='none'
-                style={styles.previewScrollHint}
-              >
-                <Animated.View
-                  entering={FadeIn.duration(300)}
-                  style={styles.previewScrollHintChip}
-                >
-                  <ChevronDown color='#6b7280' size={14} strokeWidth={2.5} />
-                  <Text style={styles.previewScrollHintText}>Scroll for more</Text>
-                </Animated.View>
-              </LinearGradient>
-            )}
-          </View>
         </Modal>
       )}
 
@@ -1205,45 +1077,9 @@ const styles = StyleSheet.create({
   previewModal: {
     paddingBottom: 24,
   },
-  previewModalWrapper: {
-    flex: 1,
-    position: 'relative',
-  },
   previewScrollContent: {
     flexGrow: 1,
     paddingBottom: 20,
-  },
-  previewScrollHint: {
-    alignItems: 'center',
-    bottom: 0,
-    height: 60,
-    justifyContent: 'flex-end',
-    left: 0,
-    paddingBottom: 8,
-    position: 'absolute',
-    right: 0,
-  },
-  previewScrollHintChip: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    borderRadius: 20,
-    flexDirection: 'row',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  previewScrollHintText: {
-    color: '#6b7280',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  previewScrollView: {
-    maxHeight: '100%',
   },
   previewScienceBox: {
     alignItems: 'flex-start',
