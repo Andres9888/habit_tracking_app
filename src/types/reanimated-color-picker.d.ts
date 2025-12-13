@@ -42,3 +42,5 @@ declare module 'reanimated-color-picker' {
 
   export const Swatches: ComponentType<SwatchesProps>;
 }
+
+declare module '*.css';

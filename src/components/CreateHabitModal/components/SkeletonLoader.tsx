@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Animated, View } from 'react-native';
 
+type SkeletonWidth = number | 'auto' | `${number}%`;
+
 interface SkeletonLoaderProps {
-  width?: number | string;
+  width?: SkeletonWidth;
   height?: number;
   borderRadius?: number;
   className?: string;

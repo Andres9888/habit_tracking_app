@@ -25,9 +25,9 @@ type UpdateStrengthResponse = {
   strengthLevel: string;
 };
 
-const assertUpdateStrengthResponse = (
+const assertUpdateStrengthResponse: (
   response: unknown
-): asserts response is UpdateStrengthResponse => {
+) => asserts response is UpdateStrengthResponse = (response: unknown) => {
   if (!response || typeof response !== 'object') {
     throw new Error('Unexpected empty response from updateHabitStrength');
   }

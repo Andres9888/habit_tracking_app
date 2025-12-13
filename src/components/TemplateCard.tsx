@@ -29,14 +29,20 @@ import * as Haptics from 'expo-haptics';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export interface TemplateCardProps {
-  /** Template ID */
-  id: string;
+  /** Animation index for staggered entrance */
+  animationIndex?: number;
 
-  /** Template name */
-  name: string;
+  /** Category badge */
+  category?: string;
 
   /** Template description */
   description: string;
+
+  /** Optional frequency label */
+  frequency?: string;
+
+  /** Does user have access to premium? */
+  hasAccess?: boolean;
 
   /** Template icon/emoji */
   icon: string;
@@ -44,32 +50,17 @@ export interface TemplateCardProps {
   /** Template icon background color */
   iconColor: string;
 
-  /** Scientific reference citation */
-  scientificReference: string;
+  /** Template ID */
+  id: string;
 
-  /** Optional scientific link */
-  scientificLink?: string;
-
-  /** Optional YouTube video link */
-  youtubeLink?: string;
-
-  /** Category badge */
-  category?: string;
-
-  /** Popularity score (optional) */
-  popularityScore?: number;
+  /** Loading flag for import mutation */
+  isImporting?: boolean;
 
   /** Is this a premium template? */
   isPremium?: boolean;
 
-  /** Does user have access to premium? */
-  hasAccess?: boolean;
-
-  /** Is this a new template? */
-  isNew?: boolean;
-
-  /** Optional frequency label */
-  frequency?: string;
+  /** Template name */
+  name: string;
 
   /** On import handler */
   onImport: () => void;
@@ -80,41 +71,46 @@ export interface TemplateCardProps {
   /** On upgrade handler (for premium templates) */
   onUpgrade?: () => void;
 
+  /** Popularity score (optional) */
+  popularityScore?: number;
+
+  /** Optional scientific link */
+  scientificLink?: string;
+
+  /** Scientific reference citation */
+  scientificReference: string;
+
   /** Should preview CTA render */
   showPreviewCTA?: boolean;
 
-  /** Loading flag for import mutation */
-  isImporting?: boolean;
-
-  /** Animation index for staggered entrance */
-  animationIndex?: number;
-
   /** Custom style */
   style?: ViewStyle;
+
+  /** Optional YouTube video link */
+  youtubeLink?: string;
 }
 
 export function TemplateCard({
-  id,
-  name,
+  animationIndex = 0,
+  category,
   description,
+  frequency,
+  hasAccess = true,
   icon,
   iconColor,
-  scientificReference,
-  scientificLink,
-  youtubeLink,
-  category,
-  popularityScore,
+  id,
+  isImporting = false,
   isPremium = false,
-  hasAccess = true,
-  isNew = false,
-  frequency,
+  name,
   onImport,
   onPreview,
   onUpgrade,
+  popularityScore,
+  scientificLink,
+  scientificReference,
   showPreviewCTA = true,
-  isImporting = false,
-  animationIndex = 0,
   style,
+  youtubeLink,
 }: TemplateCardProps) {
   const theme = useAppTheme();
   const isLocked = isPremium && !hasAccess;
@@ -286,18 +282,6 @@ export function TemplateCard({
                 <Text style={styles.inlinePremiumText}>Premium</Text>
               </View>
             )}
-
-            {isNew && (
-              <View style={styles.newBadge}>
-                <Text style={styles.newBadgeText}>New</Text>
-              </View>
-            )}
-
-            {popularityScore && popularityScore >= 90 && (
-              <View style={styles.popularBadge}>
-                <Text style={styles.popularEmoji}>🔥</Text>
-              </View>
-            )}
           </View>
         </View>
 
@@ -362,7 +346,7 @@ export function TemplateCard({
                     styles.metadataText,
                   ]}
                 >
-                  {popularityScore >= 90 ? '🔥 Popular' : '⭐ Trusted'}
+                  {popularityScore >= 90 ? 'Popular' : '⭐ Trusted'}
                 </Text>
               </View>
             )}
@@ -528,23 +512,6 @@ const styles = StyleSheet.create({
   },
   metadataText: {
     color: '#4b5563',
-  },
-  newBadge: {
-    backgroundColor: '#EEF2FF',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  newBadgeText: {
-    color: '#4F46E5',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  popularBadge: {
-    marginLeft: 'auto',
-  },
-  popularEmoji: {
-    fontSize: 18,
   },
   scienceBox: {
     alignItems: 'flex-start',

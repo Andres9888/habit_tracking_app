@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   View,
+  type StyleProp,
   type ViewStyle,
   type TextStyle,
   type PressableProps,
@@ -53,7 +54,7 @@ export interface ButtonProps extends Omit<PressableProps, 'children'> {
   fullWidth?: boolean;
 
   /** Custom styles */
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 
   /** Custom text styles */
   textStyle?: TextStyle;

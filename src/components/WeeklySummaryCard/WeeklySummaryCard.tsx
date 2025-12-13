@@ -21,6 +21,16 @@ interface DayStats {
   total: number;
 }
 
+interface WeeklySummaryStats {
+  bestDay: DayStats | null;
+  bestDayRate: number;
+  completionRate: number;
+  consecutivePerfectDays: number;
+  perfectDays: number;
+  totalCompleted: number;
+  totalPossible: number;
+}
+
 interface WeeklySummaryCardProps {
   /** Stats for each day of the week */
   weekStats: DayStats[];
@@ -53,7 +63,7 @@ export function WeeklySummaryCard({
   const starRotation = useRef(new Animated.Value(0)).current;
 
   // Calculate weekly stats
-  const stats = useMemo(() => {
+  const stats = useMemo<WeeklySummaryStats>(() => {
     const totalCompleted = weekStats.reduce((sum, day) => sum + day.completed, 0);
     const totalPossible = weekStats.reduce((sum, day) => sum + day.total, 0);
     const completionRate = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
@@ -115,6 +125,7 @@ export function WeeklySummaryCard({
   };
 
   const colors = getColors();
+  const bestDayLabel = stats.bestDay ? format(parseISO(stats.bestDay.date), 'EEEE') : null;
 
   // Entrance animation
   useEffect(() => {
@@ -323,7 +334,7 @@ export function WeeklySummaryCard({
           </View>
 
           {/* Best Day */}
-          {stats.bestDay && stats.bestDayRate > 0 && (
+          {bestDayLabel && stats.bestDayRate > 0 && (
             <View
               className='mt-3 flex-row items-center gap-3 rounded-2xl p-3'
               style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
@@ -339,7 +350,7 @@ export function WeeklySummaryCard({
                   Best Day
                 </Text>
                 <Text className='text-[15px] font-bold' style={{ color: colors.text }}>
-                  {format(parseISO(stats.bestDay.date), 'EEEE')}
+                  {bestDayLabel}
                 </Text>
               </View>
               <View className='items-end'>

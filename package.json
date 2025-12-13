@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "convex dev --once && node setup.mjs && npm-run-all --parallel dev:frontend dev:backend",
-    "dev:frontend": "vite --open",
+    "dev:frontend": "npm run expo:start -- --web",
     "dev:backend": "convex dev",
     "mcp": "convex mcp start --project-dir .",
     "mcp:custom": "node convex-mcp-server.js",
@@ -14,7 +14,7 @@
     "expo:start": "./scripts/export-env.sh -- npx expo start",
     "expo:ios": "./scripts/export-env.sh -- npx expo start --ios",
     "expo:android": "./scripts/export-env.sh -- npx expo start --android",
-    "lint": "tsc -p tsconfig.app.json -noEmit --pretty false && convex dev --once && vite build",
+    "lint": "convex codegen --typecheck disable && tsc -p tsconfig.app.json -noEmit --pretty false && ./scripts/export-env.sh -- npx expo export -p web",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css,html,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,css,html,yml,yaml}\"",

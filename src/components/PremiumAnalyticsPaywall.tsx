@@ -107,7 +107,7 @@ export default function PremiumAnalyticsPaywall({
               <View key={index} style={styles.featureItem}>
                 <View style={styles.featureIcon}>
                   <Ionicons
-                    color={colors.primary}
+                    color={colors.primary[500]}
                     name={feature.icon as any}
                     size={24}
                   />
@@ -178,7 +178,7 @@ export default function PremiumAnalyticsPaywall({
 const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primary[500],
     borderRadius: 20,
     flexDirection: 'row',
     paddingHorizontal: spacing.md,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   ctaButton: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primary[500],
     justifyContent: 'center',
     borderRadius: 12,
     paddingVertical: spacing.lg,
@@ -300,14 +300,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   pricingAmount: {
-    color: colors.primary,
+    color: colors.primary[500],
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 36,
   },
   pricingCard: {
     backgroundColor: colors.surface,
-    borderColor: colors.primary,
+    borderColor: colors.primary[500],
     borderRadius: 16,
     borderWidth: 2,
     marginBottom: spacing.lg,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   restoreButtonText: {
-    color: colors.primary,
+    color: colors.primary[500],
     fontSize: 14,
     lineHeight: 20,
     textAlign: 'center',

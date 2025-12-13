@@ -370,7 +370,7 @@ interface HabitsListProps {
   onUpgradeDismiss: () => void;
   onUpgradeIntent: () => void;
   upgradePromptVisible: boolean;
-  weekDates: string[];
+  weekDates: Date[];
   onNextWeek: () => void;
   onPreviousWeek: () => void;
 }

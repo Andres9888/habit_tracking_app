@@ -24,14 +24,14 @@ if [[ "$first_arg" != "--" ]]; then
 fi
 shift
 
-if [[ ! -f "$env_file" ]]; then
-  echo "Environment file '$env_file' not found" >&2
-  exit 1
-fi
-
 if [[ $# -eq 0 ]]; then
   echo "No command provided to execute" >&2
   exit 1
+fi
+
+if [[ ! -f "$env_file" ]]; then
+  echo "Environment file '$env_file' not found; running without it" >&2
+  exec "$@"
 fi
 
 # Export env vars for the command only

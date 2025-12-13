@@ -44,7 +44,7 @@ import {
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
-import type { Id } from '../../../../convex/_generated/dataModel';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 export interface QuickActionsSheetProps {
   /** Habit data */

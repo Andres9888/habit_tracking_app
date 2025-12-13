@@ -25,7 +25,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
 
   // Get date range text (first and last date)
   const firstDate = dates[0];
-  const lastDate = dates.at(-1);
+  const lastDate = dates[dates.length - 1];
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   return (

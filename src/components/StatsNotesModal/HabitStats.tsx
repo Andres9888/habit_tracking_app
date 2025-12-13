@@ -209,6 +209,10 @@ function WeeklyBarChart({
 }: {
   data: Array<{ date: string; completed: boolean }>;
 }) {
+  if (data.length === 0) {
+    return null;
+  }
+
   const chartWidth = 300;
   const chartHeight = 120;
   const barWidth = chartWidth / data.length - 8;
@@ -247,7 +251,7 @@ function WeeklyBarChart({
       </Svg>
       <Text className='mt-2 text-xs text-slate-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data.at(-1).date), 'MMM d')}
+        {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>
     </View>
   );
@@ -259,14 +263,19 @@ function TrendLineChart({
 }: {
   data: Array<{ date: string; completed: boolean }>;
 }) {
+  if (data.length === 0) {
+    return null;
+  }
+
   const chartWidth = 300;
   const chartHeight = 100;
   const pointRadius = 3;
+  const denominator = Math.max(1, data.length - 1);
 
   // Calculate points
   const points = data.map((item, index) => ({
     completed: item.completed,
-    x: (index / (data.length - 1)) * chartWidth,
+    x: (index / denominator) * chartWidth,
     y: item.completed ? 20 : chartHeight - 20,
   }));
 
@@ -331,7 +340,7 @@ function TrendLineChart({
       </Svg>
       <Text className='mt-2 text-xs text-slate-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data.at(-1).date), 'MMM d')}
+        {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>
     </View>
   );

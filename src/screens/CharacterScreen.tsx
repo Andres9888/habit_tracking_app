@@ -20,8 +20,8 @@ interface AttributeCardProps {
   name: string;
   value: number;
   maxValue: number;
-  gradientColors: string[];
-  bgGradient: string[];
+  gradientColors: readonly [string, string];
+  bgGradient: readonly [string, string];
 }
 
 interface StatCardProps {

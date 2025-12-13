@@ -32,19 +32,18 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import { ScrollView, PanGestureHandler } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useAnimatedStyle,
+  type SharedValue,
   useSharedValue,
   useAnimatedScrollHandler,
-  useAnimatedGestureHandler,
   withDelay,
   withRepeat,
   withSequence,
   withSpring,
   withTiming,
-  runOnJS,
   Easing,
   interpolate,
   Extrapolation,
@@ -342,33 +341,7 @@ export default function TemplateScienceModal({
     },
   });
 
-  // Pull-to-dismiss gesture handler
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx: { startY: number }) => {
-      ctx.startY = translateY.value;
-    },
-    onActive: (event, ctx) => {
-      // Only allow downward drag when at top of scroll
-      if (scrollY.value <= 0 && event.translationY > 0) {
-        translateY.value = ctx.startY + event.translationY * 0.5;
-        dismissProgress.value = interpolate(
-          translateY.value,
-          [0, DISMISS_THRESHOLD],
-          [0, 1],
-          Extrapolation.CLAMP
-        );
-      }
-    },
-    onEnd: () => {
-      if (translateY.value > DISMISS_THRESHOLD) {
-        translateY.value = withTiming(SCREEN_HEIGHT, { duration: 300 });
-        runOnJS(handleClose)();
-      } else {
-        translateY.value = withSpring(0, { damping: 20, stiffness: 200 });
-        dismissProgress.value = withSpring(0);
-      }
-    },
-  });
+  // Pull-to-dismiss gesture disabled (Reanimated GestureHandler API removed)
 
   // Animated styles
   const heroAnimatedStyle = useAnimatedStyle(() => ({
@@ -512,7 +485,7 @@ export default function TemplateScienceModal({
   }, [onUseTemplate]);
 
   // Press handlers for button feedback
-  const createPressHandlers = (scaleValue: Animated.SharedValue<number>, scale = 0.95) => ({
+  const createPressHandlers = (scaleValue: SharedValue<number>, scale = 0.95) => ({
     onPressIn: () => {
       scaleValue.value = withSpring(scale, { damping: 15, stiffness: 200 });
     },
@@ -604,12 +577,10 @@ export default function TemplateScienceModal({
       visible={visible}
       onClose={onClose}
     >
-      <PanGestureHandler onGestureEvent={gestureHandler}>
-        <Animated.View style={[styles.container, containerAnimatedStyle]}>
-          {/* Pull-to-dismiss indicator */}
+      <Animated.View style={[styles.container, containerAnimatedStyle]}>
+          {/* Modal indicator */}
           <Animated.View style={[styles.dismissIndicator, dismissIndicatorStyle]}>
             <View style={styles.dismissPill} />
-            <Text style={styles.dismissText}>Release to close</Text>
           </Animated.View>
 
           {/* Header with scroll-based animation */}
@@ -934,7 +905,7 @@ export default function TemplateScienceModal({
           {showConfetti && (
             <View pointerEvents="none" style={styles.confettiContainer}>
               {confettiColors.flatMap((color, colorIndex) =>
-                Array.from({ length: 8 }).map((_, i) => (
+                Array.from({ length: 8 }).map((_value: unknown, i) => (
                   <ConfettiParticle
                     key={`${colorIndex}-${i}`}
                     color={color}
@@ -945,8 +916,7 @@ export default function TemplateScienceModal({
               )}
             </View>
           )}
-        </Animated.View>
-      </PanGestureHandler>
+      </Animated.View>
     </Modal>
   );
 }

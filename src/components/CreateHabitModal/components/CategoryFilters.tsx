@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import type { CategoryFilter } from '../types';
+import type { Category, CategoryFilter } from '../types';
 
 // Category color mapping for visual differentiation
 const CATEGORY_COLORS: Record<string, { bg: string; bgSelected: string; border: string; text: string }> = {
@@ -24,8 +24,8 @@ const DEFAULT_COLORS = { bg: '#F3F4F6', bgSelected: '#374151', border: '#E5E7EB'
 
 interface CategoryFiltersProps {
   categories: CategoryFilter[];
-  onSelect: (category: string) => void;
-  selectedCategory: string;
+  onSelect: (category: Category) => void;
+  selectedCategory: Category;
 }
 
 export const CategoryFilters = ({

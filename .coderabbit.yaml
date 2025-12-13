@@ -1,19 +1,12 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: "en-US"
 reviews:
-  # Focus review on specific paths
+  # Review the whole codebase; ignore build artifacts/dependencies only.
   path_filters:
-    - "!src/**"
-    - "!__tests__/**"
-    - "!docs/**"
-    - "!*.md"
-    - "!*.config.*"
-    - "!dist/**"
     - "!coverage/**"
+    - "!dist/**"
     - "!node_modules/**"
-    - "convex/**"
   auto_review:
     enabled: true
-    # Enable auto-reviews for PRs targeting non-default branches (e.g. dev)
     base_branches:
-      - "^dev$"
+      - ".*"

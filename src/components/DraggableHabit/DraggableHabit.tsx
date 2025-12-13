@@ -5,7 +5,6 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 import { Archive, TrendingUp } from 'lucide-react-native';
-import type { StrengthLevel } from '../HabitStrengthIndicator';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { StrengthProgressBar } from '../StrengthProgressBar';
 import * as Haptics from 'expo-haptics';
@@ -26,7 +25,7 @@ interface Habit {
   archived?: boolean;
   archivedAt?: number;
   strength?: number;
-  strengthLevel?: StrengthLevel;
+  strengthLevel?: string;
   strengthUpdatedAt?: number;
   bestStreak?: number;
 }
@@ -416,7 +415,6 @@ export default function DraggableHabit({
             backgroundColor: 'rgba(248, 113, 113, 0.18)',
             borderRadius: 24,
             opacity: archiveFlash,
-            position: 'absolute',
             ...StyleSheet.absoluteFillObject,
           }}
         />
@@ -428,7 +426,6 @@ export default function DraggableHabit({
             borderRadius: 24,
             borderWidth: 2,
             opacity: highlightGlow,
-            position: 'absolute',
             ...StyleSheet.absoluteFillObject,
           }}
         />
@@ -526,10 +523,10 @@ export default function DraggableHabit({
           {showHabitStrengthPercentage && (
             <View className='mb-3'>
               <StrengthProgressBar
-                showMarkers
+                showDividers
                 showNextLevel={false}
                 showPercentage
-                size="large"
+                size='large'
                 strength={strengthPercent}
               />
             </View>

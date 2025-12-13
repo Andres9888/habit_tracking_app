@@ -134,6 +134,14 @@ export function HabitCard({
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
 
+  // Query current completion status for conditional haptic feedback
+  // Returns true if completed, false if not completed, undefined while loading
+  const completedQuery = useQuery(api.tracking.getCompletionStatus, {
+    date: today,
+    habitId: id,
+  });
+  const completed = completedQuery ?? completedProp;
+
   // Animate strength fill when strength changes
   useEffect(() => {
     strengthFillWidth.value = withSpring(strength, {
@@ -144,17 +152,16 @@ export function HabitCard({
 
   // Sync checkmark animation with query result
   useEffect(() => {
-    if (isCompleted === true) {
+    if (completed) {
       // Show checkmark without animation (already completed)
       checkmarkScale.value = 1;
       checkmarkRotate.value = 360;
-    } else if (isCompleted === false) {
+    } else {
       // Hide checkmark without animation (not completed)
       checkmarkScale.value = 0;
       checkmarkRotate.value = 0;
     }
-    // If undefined (loading), keep current animation state
-  }, [isCompleted]);
+  }, [completed]);
 
   // Get strength color based on current level
   const getStrengthColor = (): string => {
@@ -196,13 +203,6 @@ export function HabitCard({
 
   // Convex mutation for toggling completion
   const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
-
-  // Query current completion status for conditional haptic feedback
-  // Returns true if completed, false if not completed, undefined while loading
-  const isCompleted = useQuery(api.tracking.getCompletionStatus, {
-    date: today,
-    habitId: id,
-  });
 
   // Note: Haptic feedback will be called inline with runOnJS wrapper
   // This pattern is required for Reanimated worklets
@@ -325,14 +325,15 @@ export function HabitCard({
       console.log('🔴 ========================================');
       console.log('🔴 TAP GESTURE FIRED!!!');
       console.log('🔴 Habit:', name);
-      console.log('🔴 isCompleted:', isCompleted);
+      console.log('🔴 completed:', completed);
+      console.log('🔴 completedQuery:', completedQuery);
       console.log('🔴 disabled:', disabled);
       console.log('🔴 isToggling:', isToggling);
       console.log('🔴 Timestamp:', new Date().toISOString());
 
       if (!disabled && !isToggling) {
         console.log('🔴 ✓ Passed disabled/toggling check');
-        console.log('🔴 isCompleted value:', isCompleted);
+        console.log('🔴 completed value:', completed);
 
         // Haptic feedback BEFORE mutation for best UX
         // Different intensity based on current completion state:
@@ -341,7 +342,7 @@ export function HabitCard({
         // - If loading (undefined) → default to Medium
 
         // Directly call haptic with ternary to avoid variable capture issues
-        if (isCompleted === true) {
+        if (completed) {
           // Unchecking - Light haptic + simple animation
           console.log('🔴 Triggering LIGHT haptic (unchecking)');
           runOnJS(() => {

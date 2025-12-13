@@ -68,7 +68,7 @@ export default function WeeklyInsightsCard({
         return { color: colors.success, name: 'trending-up' };
       if (type === 'lost')
         return { color: colors.error, name: 'trending-down' };
-      return { color: colors.warning, name: 'warning' };
+      return { color: colors.warning[500], name: 'warning' };
     };
 
     const icon = getChangeIcon();
@@ -122,7 +122,7 @@ export default function WeeklyInsightsCard({
       >
         <View style={styles.sectionHeader}>
           <View style={styles.sectionHeaderLeft}>
-            <Ionicons color={colors.primary} name='calendar' size={20} />
+            <Ionicons color={colors.primary[500]} name='calendar' size={20} />
             <Text style={styles.sectionTitle}>This Week's Summary</Text>
           </View>
           <Ionicons
@@ -267,10 +267,10 @@ export default function WeeklyInsightsCard({
         >
           <View style={styles.sectionHeader}>
             <View style={styles.sectionHeaderLeft}>
-              <Ionicons color={colors.warning} name='warning' size={20} />
+              <Ionicons color={colors.warning[500]} name='warning' size={20} />
               <Text style={styles.sectionTitle}>Habits at Risk</Text>
               <View style={[styles.badge, { backgroundColor: '#FEF3C7' }]}>
-                <Text style={[styles.badgeText, { color: colors.warning }]}>
+                <Text style={[styles.badgeText, { color: colors.warning[700] }]}>
                   {insights.atRisk.length}
                 </Text>
               </View>
@@ -296,7 +296,7 @@ export default function WeeklyInsightsCard({
                   style={styles.actionButton}
                 >
                   <Ionicons
-                    color={colors.primary}
+                    color={colors.primary[500]}
                     name='notifications'
                     size={16}
                   />
@@ -308,7 +308,7 @@ export default function WeeklyInsightsCard({
                   activeOpacity={0.7}
                   style={styles.actionButton}
                 >
-                  <Ionicons color={colors.primary} name='bulb' size={16} />
+                  <Ionicons color={colors.primary[500]} name='bulb' size={16} />
                   <Text style={styles.actionButtonText}>
                     Review habit difficulty
                   </Text>
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     ...typography.body,
-    color: colors.primary,
+    color: colors.primary[500],
     marginLeft: spacing.sm,
   },
   summaryValue: {

@@ -16,7 +16,6 @@ export default tseslint.config(
       'convex/_generated',
       'postcss.config.js',
       'tailwind.config.js',
-      'vite.config.ts',
       'App.tsx',
       'index.ts',
       '__tests__/**',
@@ -41,7 +40,6 @@ export default tseslint.config(
       },
       parserOptions: {
         project: [
-          './tsconfig.node.json',
           './tsconfig.app.json',
           './convex/tsconfig.json',
         ],
@@ -139,40 +137,4 @@ export default tseslint.config(
       'unicorn/no-array-reverse': 'off', // toReversed() not supported in React Native (ES2023)
     },
   },
-  {
-    files: ['src/main.tsx'],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      prettierConfig,
-    ],
-    plugins: {
-      react: react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      'sort-keys-fix': sortKeysFix,
-    },
-    rules: {
-      'react/jsx-sort-props': [
-        'warn',
-        {
-          callbacksLast: true,
-          shorthandFirst: true,
-          ignoreCase: true,
-          reservedFirst: true,
-        },
-      ],
-    },
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-      parserOptions: {
-        // Disable type-aware linting for this file to avoid TS 'import.meta' diagnostics during lint
-        project: null,
-      },
-    },
-  }
 );

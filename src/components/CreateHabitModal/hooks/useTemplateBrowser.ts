@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ScrollView } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import type { Category, HabitTemplate } from '../types';
+import type { Category, CategoryFilter, HabitTemplate } from '../types';
 import { useKeyboardState } from './useKeyboardState';
 import { useTemplateAnimation } from './useTemplateAnimation';
 import { useTemplateBrowserHandlers } from './useTemplateBrowserHandlers';
@@ -26,7 +26,12 @@ export const useTemplateBrowser = ({ isEditMode, visible, onTemplateSelect }: Us
   const { showTopShadow, showBottomShadow, handleScroll, handleContentSizeChange, handleLayout, resetIndicators } =
     useTemplateScrollIndicators();
   const { filtered, isLoading } = useHabitTemplates(selectedCategory);
-  const categories = useQuery(api.categories.list, {});
+  const categoriesQuery = useQuery(api.categories.list, {});
+  const fallbackCategories: CategoryFilter[] = [
+    { icon: '✨', id: 'all', label: 'All' },
+  ];
+  const categories =
+    (categoriesQuery as CategoryFilter[] | undefined) ?? fallbackCategories;
   const handleCategoryPress = useCallback((category: Category) => setSelectedCategory(category), []);
   const {
     openBrowser,

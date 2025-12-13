@@ -148,16 +148,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       <HabitDetailScreen
         habit={selectedHabit}
         visible={showHabitDetail}
-        isPremium={process.env.EXPO_PUBLIC_ENABLE_PREMIUM === 'true'}
         onClose={closeHabitDetail}
         onArchive={(habitId) => handleArchive(habitId)}
         onDelete={onDeleteHabit}
         onEdit={(habit) => openEditHabit(habit)}
         onPause={(habitId) => openPauseModal(habitId)}
         onOpenCalendar={(habit) => openHabitCalendar(habit)}
-        onUpgrade={() => {
-          console.log('Upgrade to premium');
-        }}
       />
 
       {showShareCard && shareCardData && ShareCardGenerator && (

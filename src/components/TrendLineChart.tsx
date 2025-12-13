@@ -4,18 +4,8 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
-import {
-  VictoryChart,
-  VictoryLine,
-  VictoryAxis,
-  VictoryScatter,
-  VictoryLabel,
-  VictoryContainer,
-  VictoryVoronoiContainer,
-  VictoryTooltip,
-} from 'victory-native';
+import { CartesianChart, Line, Scatter } from 'victory-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -49,6 +39,14 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
     animationProgress.value = withTiming(1, { duration: 500 });
   }, [data]);
 
+  useEffect(() => {
+    if (!data?.length) {
+      setSelectedPoint(null);
+      return;
+    }
+    setSelectedPoint(data[data.length - 1] ?? null);
+  }, [data]);
+
   const containerAnimatedStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(animationProgress.value, [0, 1], [0, 1]),
@@ -66,108 +64,68 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
     );
   }
 
-  // Format data for Victory
-  const chartData = data.map((item, index) => ({
-    label: `${Math.round(item.averageStrength)}%`,
-    originalData: item,
-    x: index,
-    y: item.averageStrength,
+  const chartData = data.map((item, dayIndex) => ({
+    averageStrength: item.averageStrength,
+    date: item.date,
+    dayIndex,
   }));
+  const tickValues = chartData
+    .map((_, index) => index)
+    .filter((index) => index % 7 === 0 || index === chartData.length - 1);
 
-  // Generate x-axis labels (show every 7 days)
-  const xAxisLabels = data.map((item, index) => {
-    if (index % 7 === 0) {
-      const date = new Date(item.date);
-      return `${date.getMonth() + 1}/${date.getDate()}`;
+  const formatXLabel = (label: number) => {
+    const index = Math.round(label);
+    const item = chartData[index];
+    if (!item) {
+      return '';
     }
-    return '';
-  });
+    const date = new Date(item.date);
+    return `${date.getMonth() + 1}/${date.getDate()}`;
+  };
 
   return (
     <Animated.View style={[styles.container, containerAnimatedStyle]}>
-      <VictoryChart
-        containerComponent={
-          <VictoryVoronoiContainer
-            onActivateData={(points) => {
-              if (points && points.length > 0) {
-                const point = points[0];
-                setSelectedPoint(point.originalData);
-                onDataPointPress?.(point.originalData);
-              }
-            }}
-          />
-        }
-        height={chartHeight}
-        padding={{ bottom: 40, left: 50, right: 20, top: 20 }}
-        width={chartWidth}
-      >
-        {/* X Axis */}
-        <VictoryAxis
-          dependentAxis={false}
-          style={{
-            axis: { stroke: colors.border },
-            grid: {
-              opacity: 0.3,
-              stroke: colors.border,
-              strokeDasharray: '2,2',
-            },
-            tickLabels: {
-              angle: -45,
-              fill: colors.text.tertiary,
-              fontSize: 10,
-            },
-          }}
-          tickFormat={(t, i) => xAxisLabels[i] || ''}
-        />
-
-        {/* Y Axis */}
-        <VictoryAxis
-          dependentAxis
-          domain={[0, 100]}
-          style={{
-            axis: { stroke: colors.border },
-            grid: {
-              opacity: 0.3,
-              stroke: colors.border,
-              strokeDasharray: '2,2',
-            },
-            tickLabels: {
-              fill: colors.text.tertiary,
-              fontSize: 10,
-            },
-          }}
-          tickFormat={(t) => `${t}%`}
-        />
-
-        {/* Line */}
-        <VictoryLine
-          animate={{
-            duration: 500,
-            onLoad: { duration: 500 },
-          }}
+      <View style={{ height: chartHeight, width: chartWidth }}>
+        <CartesianChart
           data={chartData}
-          interpolation='catmullRom'
-          style={{
-            data: {
-              stroke: colors.primary,
-              strokeWidth: 2.5,
-            },
+          domain={{ y: [0, 100] }}
+          padding={{ bottom: 40, left: 50, right: 20, top: 20 }}
+          xAxis={{
+            formatXLabel,
+            labelColor: colors.text.tertiary,
+            labelRotate: -45,
+            lineColor: colors.border,
+            tickValues,
           }}
-        />
-
-        {/* Data Points */}
-        <VictoryScatter
-          data={chartData}
-          size={4}
-          style={{
-            data: {
-              fill: colors.primary,
-              stroke: colors.surface,
-              strokeWidth: 2,
+          xKey='dayIndex'
+          yAxis={[
+            {
+              formatYLabel: (value) => `${Math.round(value)}%`,
+              labelColor: colors.text.tertiary,
+              lineColor: colors.border,
+              tickCount: 5,
             },
-          }}
-        />
-      </VictoryChart>
+          ]}
+          yKeys={['averageStrength']}
+        >
+          {({ points }) => (
+            <>
+              <Line
+                color={colors.primary[500]}
+                curveType='catmullRom'
+                points={points.averageStrength}
+                strokeWidth={2.5}
+              />
+              <Scatter
+                color={colors.primary[500]}
+                points={points.averageStrength}
+                radius={4}
+                style='fill'
+              />
+            </>
+          )}
+        </CartesianChart>
+      </View>
 
       {/* Selected Point Detail */}
       {selectedPoint && (
@@ -185,7 +143,7 @@ export default function TrendLineChart({ data, onDataPointPress }: Props) {
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View
-            style={[styles.legendLine, { backgroundColor: colors.primary }]}
+            style={[styles.legendLine, { backgroundColor: colors.primary[500] }]}
           />
           <Text style={styles.legendText}>Average Habit Strength</Text>
         </View>

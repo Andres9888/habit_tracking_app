@@ -1,2 +1,2 @@
 export { StreakIndicator, type StreakIndicatorProps } from './StreakIndicator';
-export default StreakIndicator;
+export { StreakIndicator as default } from './StreakIndicator';

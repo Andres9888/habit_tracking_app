@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   strengthPercentage: {
     ...typography.h3,
-    color: colors.primary,
+    color: colors.primary[500],
     marginBottom: spacing.xs,
   },
 });

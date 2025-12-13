@@ -1,13 +1,13 @@
-import { useCallback } from 'react';
+import { useCallback, type Dispatch, type SetStateAction } from 'react';
 import type { ScrollView } from 'react-native';
 import type { HabitTemplate } from '../types';
 
 interface UseTemplateBrowserHandlersOptions {
   isEditMode: boolean;
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
-  setIsVisible: (value: boolean) => void;
-  setHasScrolledPastHero: (value: boolean) => void;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsVisible: Dispatch<SetStateAction<boolean>>;
+  setHasScrolledPastHero: Dispatch<SetStateAction<boolean>>;
   animateOpen: () => void;
   animateClose: (onFinished?: () => void) => void;
   scrollViewRef: React.RefObject<ScrollView | null>;

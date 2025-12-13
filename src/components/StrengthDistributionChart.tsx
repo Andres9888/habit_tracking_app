@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { VictoryPie, VictoryLabel, VictoryContainer } from 'victory-native';
+import { Pie, PolarChart } from 'victory-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -98,63 +98,39 @@ export default function StrengthDistributionChart({
     );
   }
 
-  // Prepare data for Victory chart
-  const chartData = Object.entries(data)
-    .filter(([key]) => key !== 'total')
-    .map(([key, value]) => ({
-      label: `${(value as StrengthLevel).percentage.toFixed(0)}%`,
-      x: key,
-      y: (value as StrengthLevel).count,
-    }))
-    .filter((item) => item.y > 0); // Only show segments with data
+  const levels: Array<Exclude<keyof StrengthDistributionData, 'total'>> = [
+    'starting',
+    'building',
+    'developing',
+    'strong',
+    'automatic',
+  ];
+
+  const chartData = levels
+    .map((level) => {
+      const levelData = data[level];
+      return {
+        color: LEVEL_COLORS[level],
+        label: `${levelData.percentage.toFixed(0)}%`,
+        level,
+        value: levelData.count,
+      };
+    })
+    .filter((item) => item.value > 0);
 
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.chartContainer, containerAnimatedStyle]}>
-        <VictoryPie
-          animate={{
-            duration: 400,
-            onLoad: { duration: 400 },
-          }}
-          colorScale={chartData.map(
-            (d) => LEVEL_COLORS[d.x as keyof typeof LEVEL_COLORS]
-          )}
-          data={chartData}
-          events={[
-            {
-              eventHandlers: {
-                onPressIn: () => {
-                  return [
-                    {
-                      mutation: (props) => {
-                        if (onSegmentPress) {
-                          onSegmentPress(props.datum.x);
-                        }
-                        return null;
-                      },
-                      target: 'data',
-                    },
-                  ];
-                },
-              },
-              target: 'data',
-            },
-          ]}
-          height={chartSize}
-          innerRadius={chartSize * 0.3}
-          labelComponent={
-            <VictoryLabel
-              style={{
-                fill: colors.text.primary,
-                fontSize: 14,
-                fontWeight: '600',
-              }}
-            />
-          }
-          labelRadius={chartSize * 0.4}
-          padAngle={2}
-          width={chartSize}
-        />
+        <View style={{ height: chartSize, width: chartSize }}>
+          <PolarChart
+            colorKey='color'
+            data={chartData}
+            labelKey='label'
+            valueKey='value'
+          >
+            <Pie.Chart innerRadius={chartSize * 0.3} />
+          </PolarChart>
+        </View>
 
         {/* Center label */}
         <View style={styles.centerLabel}>
@@ -165,35 +141,31 @@ export default function StrengthDistributionChart({
 
       {/* Legend */}
       <View style={styles.legend}>
-        {Object.entries(data)
-          .filter(([key]) => key !== 'total')
-          .filter(([_, value]) => (value as StrengthLevel).count > 0)
-          .map(([key, value]) => {
-            const level = value as StrengthLevel;
+        {levels
+          .filter((level) => data[level].count > 0)
+          .map((level) => {
+            const levelData = data[level];
             return (
               <TouchableOpacity
-                key={key}
+                key={level}
                 activeOpacity={0.7}
                 style={styles.legendItem}
-                onPress={() => onSegmentPress?.(key)}
+                onPress={() => onSegmentPress?.(level)}
               >
                 <View style={styles.legendRow}>
                   <View
                     style={[
                       styles.legendDot,
-                      {
-                        backgroundColor:
-                          LEVEL_COLORS[key as keyof typeof LEVEL_COLORS],
-                      },
+                      { backgroundColor: LEVEL_COLORS[level] },
                     ]}
                   />
-                  <Text style={styles.legendEmoji}>{level.emoji}</Text>
+                  <Text style={styles.legendEmoji}>{levelData.emoji}</Text>
                   <Text style={styles.legendLabel}>
-                    {LEVEL_LABELS[key as keyof typeof LEVEL_LABELS]}
+                    {LEVEL_LABELS[level]}
                   </Text>
                 </View>
                 <Text style={styles.legendValue}>
-                  {level.percentage.toFixed(0)}%
+                  {levelData.percentage.toFixed(0)}%
                 </Text>
               </TouchableOpacity>
             );

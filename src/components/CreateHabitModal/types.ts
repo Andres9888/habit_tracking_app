@@ -15,7 +15,11 @@ export type Category =
   | 'social'
   | 'financial'
   | 'creativity'
-  | 'sleep';
+  | 'sleep'
+  | 'longevity'
+  | 'mental_health'
+  | 'recovery'
+  | 'breathing';
 
 export interface CategoryFilter {
   id: Category;

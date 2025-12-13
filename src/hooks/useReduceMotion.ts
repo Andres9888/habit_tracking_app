@@ -28,7 +28,7 @@ export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => 
     let isMounted = true;
 
     AccessibilityInfo.isReduceMotionEnabled()
-      .then((value) => {
+      .then((value: boolean | null | undefined) => {
         if (isMounted) {
           setSystemReduceMotion(value ?? false);
         }
@@ -42,7 +42,7 @@ export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => 
 
     const subscription = AccessibilityInfo.addEventListener(
       'reduceMotionChanged',
-      (enabled) => {
+      (enabled: boolean | null | undefined) => {
         if (isMounted) {
           setSystemReduceMotion(enabled ?? false);
         }

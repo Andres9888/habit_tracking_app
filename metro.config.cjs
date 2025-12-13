@@ -1,8 +1,30 @@
 const { getDefaultConfig } = require('@expo/metro-config');
 const { withNativeWind } = require('nativewind/metro');
+const fs = require('fs');
+const path = require('path');
 
 // Base Expo config
 const baseConfig = getDefaultConfig(__dirname);
+
+// Ensure NativeWind's react-native-css-interop cache file exists before Metro starts.
+// Metro's file map doesn't always pick up newly-created files inside node_modules during
+// headless bundling (e.g. `expo export`), which can cause:
+// "Failed to get the SHA-1 for: ... react-native-css-interop/.cache/web.css"
+try {
+  const cssInteropCacheDir = path.join(
+    __dirname,
+    'node_modules',
+    'react-native-css-interop',
+    '.cache'
+  );
+  const cssInteropWebCssPath = path.join(cssInteropCacheDir, 'web.css');
+  fs.mkdirSync(cssInteropCacheDir, { recursive: true });
+  if (!fs.existsSync(cssInteropWebCssPath)) {
+    fs.writeFileSync(cssInteropWebCssPath, '');
+  }
+} catch (_error) {
+  // Best-effort: don't fail Metro config load if filesystem is read-only.
+}
 
 // Enable NativeWind CSS/className support on native
 const config = withNativeWind(baseConfig, { input: './global.css' });
@@ -45,7 +67,7 @@ config.server = {
 // Optimize caching
 config.cacheStores = [
   new (require('metro-cache').FileStore)({
-    root: require('path').join(require('os').tmpdir(), 'metro-cache'),
+    root: path.join(require('os').tmpdir(), 'metro-cache'),
   }),
 ];
 

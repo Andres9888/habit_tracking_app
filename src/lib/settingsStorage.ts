@@ -12,12 +12,10 @@ export const getCompactMode = async (): Promise<boolean> => {
     console.warn('Failed to read compact mode from localStorage', error);
   }
 
-  // Fallback to React Native AsyncStorage
+  // Fallback to Expo SecureStore (native only)
   try {
-    const { default: AsyncStorage } = await import(
-      '@react-native-async-storage/async-storage'
-    );
-    const raw = await AsyncStorage.getItem(COMPACT_KEY);
+    const SecureStore = await import('expo-secure-store');
+    const raw = await SecureStore.getItemAsync(COMPACT_KEY);
     if (raw == null) return false;
     return raw === 'true';
   } catch {
@@ -36,12 +34,10 @@ export const setCompactMode = async (value: boolean): Promise<void> => {
     console.warn('Failed to write compact mode to localStorage', error);
   }
 
-  // Fallback to React Native AsyncStorage
+  // Fallback to Expo SecureStore (native only)
   try {
-    const { default: AsyncStorage } = await import(
-      '@react-native-async-storage/async-storage'
-    );
-    await AsyncStorage.setItem(COMPACT_KEY, value ? 'true' : 'false');
+    const SecureStore = await import('expo-secure-store');
+    await SecureStore.setItemAsync(COMPACT_KEY, value ? 'true' : 'false');
   } catch {
     // no-op
   }

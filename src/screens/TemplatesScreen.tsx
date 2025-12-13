@@ -60,11 +60,25 @@ import {
   ExternalLink,
 } from 'lucide-react-native';
 
-const NEW_TEMPLATE_WINDOW_MS = 1000 * 60 * 60 * 24 * 10;
 const REMINDER_OPTIONS = ['7:30 AM', '12:00 PM', '9:00 PM'];
 const ICON_COLOR_OPTIONS = ['#0EA5E9', '#10B981', '#F97316', '#A855F7', '#F43F5E'];
 
-type Category = 'all' | Doc<'templates'>['category'];
+type Category =
+  | 'all'
+  | 'morning_routine'
+  | 'health_fitness'
+  | 'productivity'
+  | 'mindfulness'
+  | 'andrew_huberman'
+  | 'learning'
+  | 'social'
+  | 'financial'
+  | 'creativity'
+  | 'sleep'
+  | 'longevity'
+  | 'mental_health'
+  | 'recovery'
+  | 'breathing';
 
 interface CategoryFilter {
   id: Category;
@@ -76,13 +90,17 @@ interface CategoryFilter {
 const CATEGORY_COLORS: Record<string, { bg: string; bgSelected: string; border: string; text: string }> = {
   all: { bg: '#EEF2FF', bgSelected: '#6366F1', border: '#C7D2FE', text: '#4338CA' },
   andrew_huberman: { bg: '#ECFDF5', bgSelected: '#059669', border: '#A7F3D0', text: '#047857' },
+  breathing: { bg: '#E0F2FE', bgSelected: '#0284C7', border: '#BAE6FD', text: '#0369A1' },
   creativity: { bg: '#FDF2F8', bgSelected: '#EC4899', border: '#FBCFE8', text: '#BE185D' },
   financial: { bg: '#ECFDF5', bgSelected: '#10B981', border: '#A7F3D0', text: '#059669' },
   health_fitness: { bg: '#D1FAE5', bgSelected: '#10B981', border: '#6EE7B7', text: '#047857' },
   learning: { bg: '#F3E8FF', bgSelected: '#8B5CF6', border: '#DDD6FE', text: '#7C3AED' },
+  longevity: { bg: '#FEF3C7', bgSelected: '#D97706', border: '#FDE68A', text: '#B45309' },
+  mental_health: { bg: '#E0E7FF', bgSelected: '#6366F1', border: '#C7D2FE', text: '#4F46E5' },
   mindfulness: { bg: '#F5F3FF', bgSelected: '#8B5CF6', border: '#E9D5FF', text: '#7C3AED' },
   morning_routine: { bg: '#FEF3C7', bgSelected: '#F59E0B', border: '#FDE68A', text: '#D97706' },
   productivity: { bg: '#DBEAFE', bgSelected: '#3B82F6', border: '#BFDBFE', text: '#2563EB' },
+  recovery: { bg: '#FCE7F3', bgSelected: '#EC4899', border: '#FBCFE8', text: '#DB2777' },
   sleep: { bg: '#E0E7FF', bgSelected: '#1E3A8A', border: '#C7D2FE', text: '#1E40AF' },
   social: { bg: '#FFE4E6', bgSelected: '#F43F5E', border: '#FECDD3', text: '#E11D48' },
 };
@@ -238,13 +256,13 @@ export default function TemplatesScreen() {
 
         if (result.success) {
           setShowToast(true);
-          setToastMessage('Habit imported successfully! 🎉');
+          setToastMessage('Template imported successfully! 🎉');
           setShowPreviewModal(false);
         }
       } catch (error) {
-        console.error('Failed to import habit:', error);
+        console.error('Failed to import template:', error);
         setShowToast(true);
-        setToastMessage('Failed to import habit. Please try again.');
+        setToastMessage('Failed to import template. Please try again.');
       } finally {
         setImportingTemplateId(null);
       }
@@ -465,15 +483,14 @@ export default function TemplatesScreen() {
         iconColor={item.iconColor}
         id={item._id}
         isImporting={importingTemplateId === item._id}
-        isNew={Date.now() - item.createdAt < NEW_TEMPLATE_WINDOW_MS}
         isPremium={item.category === 'andrew_huberman'}
         name={item.name}
+        onImport={() => handleTemplateImport(item._id)}
+        onPreview={() => handleTemplatePreview(item)}
         popularityScore={item.popularityScore}
         scientificLink={item.scientificLink}
         scientificReference={item.scientificReference}
         youtubeLink={item.youtubeLink}
-        onImport={() => handleTemplateImport(item._id)}
-        onPreview={() => handleTemplatePreview(item)}
       />
     ),
     [handleTemplateImport, handleTemplatePreview, importingTemplateId]
@@ -692,9 +709,7 @@ export default function TemplatesScreen() {
             onLayout={handleCategoryLayout}
             onScroll={handleCategoryScroll}
           >
-            {categories.map((category) =>
-              renderCategoryChip(category as CategoryFilter)
-            )}
+            {categories.map((category) => renderCategoryChip(category))}
           </ScrollView>
           {/* Subtle animated scroll hint */}
           {showCategoryScrollHint && (
@@ -1027,7 +1042,7 @@ export default function TemplatesScreen() {
                       })
                     }
                   >
-                    Import Habit
+                    Import Template
                   </Button>
                   <Button
                     fullWidth

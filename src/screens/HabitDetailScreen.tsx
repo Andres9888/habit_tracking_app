@@ -28,25 +28,16 @@ import {
   Sparkles,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
+import type { Habit as HabitDoc } from '../features/habits/types';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
 
 // Types
-interface Habit {
-  _id: Id<'habits'>;
-  archived?: boolean;
-  bestStreak?: number;
-  createdAt: number;
-  currentStreak?: number;
-  icon?: string;
-  iconColor?: string;
-  name: string;
-  notes?: string;
-  strength?: number;
+type Habit = HabitDoc & {
   successRate?: number;
   totalCompletions?: number;
   totalMisses?: number;
-}
+};
 
 interface HabitDetailScreenProps {
   habit: Habit | null;

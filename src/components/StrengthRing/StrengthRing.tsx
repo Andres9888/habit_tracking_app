@@ -135,7 +135,7 @@ export function StrengthRing({
   showLevel = false,
   trend,
   weeklyChange,
-}: StrengthRingProps): JSX.Element {
+}: StrengthRingProps) {
   // Clamp strength to 0-100 range
   const clampedStrength = Math.max(0, Math.min(100, strength));
 
@@ -163,8 +163,6 @@ export function StrengthRing({
       damping: 15,
       mass: 1,
       overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 0.01,
       stiffness: 100,
     });
 

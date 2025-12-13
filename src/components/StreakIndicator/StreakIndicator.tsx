@@ -38,13 +38,18 @@ export interface StreakIndicatorProps {
   accessibilityLabel?: string;
 }
 
-const MILESTONE_BADGES = {
-  7: { emoji: '⭐', label: '1 Week Strong', color: '#f59e0b' }, // amber-500
-  30: { emoji: '🏆', label: 'Monthly Champion', color: '#eab308' }, // yellow-500
-  100: { emoji: '💎', label: 'Legendary', color: '#8b5cf6' }, // violet-500
-} as const;
+type Milestone = 7 | 30 | 100;
 
-const MILESTONES = [7, 30, 100] as const;
+const MILESTONES: readonly Milestone[] = [7, 30, 100];
+
+const MILESTONE_BADGES: Record<
+  Milestone,
+  { color: string; emoji: string; label: string }
+> = {
+  7: { color: '#f59e0b', emoji: '⭐', label: '1 Week Strong' }, // amber-500
+  30: { color: '#eab308', emoji: '🏆', label: 'Monthly Champion' }, // yellow-500
+  100: { color: '#8b5cf6', emoji: '💎', label: 'Legendary' }, // violet-500
+};
 
 export function StreakIndicator({
   currentStreak,
@@ -57,7 +62,7 @@ export function StreakIndicator({
   const scale = useSharedValue(1);
 
   // Get the highest milestone reached
-  let currentMilestone: number | null = null;
+  let currentMilestone: Milestone | null = null;
   for (const milestone of MILESTONES) {
     if (currentStreak >= milestone) {
       currentMilestone = milestone;
