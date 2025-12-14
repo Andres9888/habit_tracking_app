@@ -1266,6 +1266,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   listContent: {
+    alignItems: 'center',
     paddingBottom: 24,
   },
   listWrapper: {
