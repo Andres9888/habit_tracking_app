@@ -213,7 +213,9 @@ const applicationTables = {
         v.literal('manual'),
         v.literal('name_asc'),
         v.literal('name_desc'),
+        v.literal('strength_asc'),
         v.literal('strength_desc'),
+        v.literal('streak_asc'),
         v.literal('streak_desc')
       )
     ),

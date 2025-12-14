@@ -375,7 +375,7 @@ export default function DraggableHabit({
   const streakColors = getStreakBadgeColors();
 
   // Get strength as percentage (0-100) from decimal (0-1)
-  const strengthPercent = Math.round((habit.strength ?? 0) * 100);
+  const strengthPercent = (habit.strength ?? 0) * 100;
 
   // Get strength color based on percentage
   const getStrengthColor = () => {

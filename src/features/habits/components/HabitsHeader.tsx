@@ -1,5 +1,6 @@
-import { Clipboard, Plus, Settings } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { ArrowUpDown, Check, Clipboard, Plus, Settings } from 'lucide-react-native';
+import { useState } from 'react';
+import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,10 +16,20 @@ import { useTemplateBadge } from '../hooks/useTemplateBadge';
 import { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';
 import type { HabitSortMode } from '../types';
 
+const SORT_OPTIONS: ReadonlyArray<{ label: string; value: HabitSortMode }> = [
+  { label: 'Custom order', value: 'manual' },
+  { label: 'Name (A–Z)', value: 'name_asc' },
+  { label: 'Name (Z–A)', value: 'name_desc' },
+  { label: 'Strength (low → high)', value: 'strength_asc' },
+  { label: 'Strength (high → low)', value: 'strength_desc' },
+  { label: 'Streaks (low → high)', value: 'streak_asc' },
+  { label: 'Streaks (high → low)', value: 'streak_desc' },
+];
+
 interface HabitsHeaderProps {
   completedToday?: number;
   habitSortMode?: HabitSortMode;
-  onClearHabitSort: () => void;
+  onChangeHabitSortMode: (value: HabitSortMode) => void;
   openCreateHabitScreen: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;
@@ -30,7 +41,7 @@ interface HabitsHeaderProps {
 export function HabitsHeader({
   completedToday = 0,
   habitSortMode = 'manual',
-  onClearHabitSort,
+  onChangeHabitSortMode,
   openCreateHabitScreen,
   openSettings,
   openTemplatesScreen,
@@ -41,6 +52,8 @@ export function HabitsHeader({
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
   const { dismissTooltip, showTooltip } = useTemplateTooltip();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
+
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
   // Animated values for the main "Add Habit" button
   const addButtonScale = useSharedValue(1);
@@ -132,7 +145,13 @@ export function HabitsHeader({
 
   const handleSortPress = () => {
     triggerSelection();
-    onClearHabitSort();
+    setIsSortDropdownOpen(true);
+  };
+
+  const handleSelectSortMode = (value: HabitSortMode) => {
+    triggerSelection();
+    onChangeHabitSortMode(value);
+    setIsSortDropdownOpen(false);
   };
 
   const habitSortLabel =
@@ -140,9 +159,15 @@ export function HabitsHeader({
       ? 'A–Z'
       : habitSortMode === 'name_desc'
         ? 'Z–A'
-        : habitSortMode === 'strength_desc'
-          ? 'Strength'
-          : 'Streaks';
+        : habitSortMode === 'strength_asc'
+          ? 'Strength ↑'
+          : habitSortMode === 'strength_desc'
+            ? 'Strength ↓'
+            : habitSortMode === 'streak_asc'
+              ? 'Streaks ↑'
+              : habitSortMode === 'streak_desc'
+                ? 'Streaks ↓'
+                : 'Sort';
 
   // Calculate completion percentage for accessibility
   const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
@@ -204,23 +229,32 @@ export function HabitsHeader({
           <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
         </Animated.View>
 
-        {habitSortMode !== 'manual' && (
-          <Animated.View style={sortButtonAnimatedStyle}>
-            <Pressable
-              accessibilityHint='Sorting is enabled. Tap to return to custom order.'
-              accessibilityLabel='Sorting enabled'
-              accessibilityRole='button'
-              className='h-9 flex-row items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50/70 px-3'
-              onPress={handleSortPress}
-              onPressIn={handleSortPressIn}
-              onPressOut={handleSortPressOut}
-            >
+        <Animated.View style={sortButtonAnimatedStyle}>
+          <Pressable
+            accessibilityHint='Tap to change habit sort order'
+            accessibilityLabel={habitSortMode === 'manual' ? 'Sort habits' : `Sorted by ${habitSortLabel}`}
+            accessibilityRole='button'
+            className={`h-9 flex-row items-center gap-1.5 rounded-full border px-3 ${
+              habitSortMode === 'manual'
+                ? 'border-stone-200 bg-white/60'
+                : 'border-amber-200 bg-amber-50/70'
+            }`}
+            onPress={handleSortPress}
+            onPressIn={handleSortPressIn}
+            onPressOut={handleSortPressOut}
+          >
+            <ArrowUpDown
+              color={habitSortMode === 'manual' ? '#44403c' : '#92400e'}
+              size={14}
+              strokeWidth={2.25}
+            />
+            {habitSortMode !== 'manual' && (
               <Text className='text-[13px] font-semibold text-amber-800'>
                 {habitSortLabel}
               </Text>
-            </Pressable>
-          </Animated.View>
-        )}
+            )}
+          </Pressable>
+        </Animated.View>
 
         <Animated.View style={settingsButtonAnimatedStyle}>
           <Pressable
@@ -251,6 +285,49 @@ export function HabitsHeader({
           />
         </View>
       )}
+
+      {/* Sort Options Dropdown Modal */}
+      <Modal
+        animationType='fade'
+        transparent
+        visible={isSortDropdownOpen}
+        onRequestClose={() => setIsSortDropdownOpen(false)}
+      >
+        <Pressable
+          className='flex-1 items-center justify-center bg-black/40'
+          onPress={() => setIsSortDropdownOpen(false)}
+        >
+          <Pressable
+            className='mx-6 w-full max-w-xs rounded-2xl bg-white p-2 shadow-xl'
+            onPress={(e) => e.stopPropagation()}
+          >
+            <Text className='px-4 py-3 text-[13px] font-semibold uppercase tracking-wide text-stone-500'>
+              Sort habits by
+            </Text>
+            {SORT_OPTIONS.map(({ label, value }) => (
+              <TouchableOpacity
+                key={value}
+                activeOpacity={0.7}
+                className='flex-row items-center justify-between rounded-xl px-4 py-3 active:bg-stone-100'
+                onPress={() => handleSelectSortMode(value)}
+              >
+                <Text
+                  className={`text-[15px] font-medium ${
+                    habitSortMode === value ? 'text-amber-700' : 'text-stone-800'
+                  }`}
+                >
+                  {label}
+                </Text>
+                {habitSortMode === value && (
+                  <View className='rounded-full bg-amber-600 p-1'>
+                    <Check color='#ffffff' size={12} />
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   );
 }

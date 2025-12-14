@@ -105,10 +105,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onChangeShowWeekCompletionBar={(value) =>
           onSettingsChange({ showWeekCompletionBar: value })
         }
-        habitSortMode={settings?.habitSortMode ?? 'manual'}
-        onChangeHabitSortMode={(value) =>
-          onSettingsChange({ habitSortMode: value })
-        }
         onClose={closeSettings}
         onOpenHapticTest={openHapticTest}
         showCharacterScreen={settings?.showCharacterScreen ?? true}

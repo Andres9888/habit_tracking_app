@@ -57,12 +57,13 @@ export function useHabitsListState(): HabitsListState {
       return sortedHabits;
     }
 
-    if (habitSortMode === 'strength_desc') {
+    if (habitSortMode === 'strength_asc' || habitSortMode === 'strength_desc') {
+      const direction = habitSortMode === 'strength_desc' ? -1 : 1;
       sortedHabits.sort((a, b) => {
         const aStrength = a.strength ?? 0;
         const bStrength = b.strength ?? 0;
         if (aStrength !== bStrength) {
-          return bStrength - aStrength;
+          return (aStrength - bStrength) * direction;
         }
 
         const aName = a.name.trim().toLowerCase();
@@ -82,11 +83,12 @@ export function useHabitsListState(): HabitsListState {
       ])
     );
 
+    const direction = habitSortMode === 'streak_desc' ? -1 : 1;
     sortedHabits.sort((a, b) => {
       const aStreak = streakByHabitId.get(a._id) ?? 0;
       const bStreak = streakByHabitId.get(b._id) ?? 0;
       if (aStreak !== bStreak) {
-        return bStreak - aStreak;
+        return (aStreak - bStreak) * direction;
       }
 
       const aName = a.name.trim().toLowerCase();

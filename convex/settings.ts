@@ -8,7 +8,9 @@ const HABIT_SORT_MODE_OPTIONS = [
   'manual',
   'name_asc',
   'name_desc',
+  'strength_asc',
   'strength_desc',
+  'streak_asc',
   'streak_desc',
 ] as const;
 type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
@@ -68,7 +70,9 @@ const normalizeHabitSortMode = (
     value === 'manual' ||
     value === 'name_asc' ||
     value === 'name_desc' ||
+    value === 'strength_asc' ||
     value === 'strength_desc' ||
+    value === 'streak_asc' ||
     value === 'streak_desc'
   ) {
     return value;
@@ -135,7 +139,9 @@ export const get = query({
       v.literal('manual'),
       v.literal('name_asc'),
       v.literal('name_desc'),
+      v.literal('strength_asc'),
       v.literal('strength_desc'),
+      v.literal('streak_asc'),
       v.literal('streak_desc')
     ),
     habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
@@ -172,7 +178,9 @@ export const update = mutation({
         v.literal('manual'),
         v.literal('name_asc'),
         v.literal('name_desc'),
+        v.literal('strength_asc'),
         v.literal('strength_desc'),
+        v.literal('streak_asc'),
         v.literal('streak_desc')
       )
     ),

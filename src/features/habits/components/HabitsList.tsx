@@ -415,9 +415,9 @@ export function HabitsList({
   const { onSettingsChange, openQuickActions, openSettings, openTemplatesScreen } = modals;
   const isReorderingEnabled = habitSortMode === 'manual';
 
-  const handleClearHabitSort = useCallback(() => {
+  const handleChangeHabitSortMode = useCallback((value: typeof habitSortMode) => {
     void onSettingsChange({
-      habitSortMode: 'manual',
+      habitSortMode: value,
     });
   }, [onSettingsChange]);
 
@@ -521,7 +521,7 @@ export function HabitsList({
           <HabitsHeader
             completedToday={completedToday}
             habitSortMode={habitSortMode}
-            onClearHabitSort={handleClearHabitSort}
+            onChangeHabitSortMode={handleChangeHabitSortMode}
             openCreateHabitScreen={handleAddHabitPress}
             openSettings={openSettings}
             openTemplatesScreen={openTemplatesScreen}
@@ -546,7 +546,7 @@ export function HabitsList({
     },
     [
       handleAddHabitPress,
-      handleClearHabitSort,
+      handleChangeHabitSortMode,
       habitSortMode,
       openSettings,
       openTemplatesScreen,

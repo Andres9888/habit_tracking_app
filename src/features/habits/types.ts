@@ -11,7 +11,9 @@ export type HabitSortMode =
   | 'manual'
   | 'name_asc'
   | 'name_desc'
+  | 'strength_asc'
   | 'strength_desc'
+  | 'streak_asc'
   | 'streak_desc';
 
 export type ShareCardData = {
