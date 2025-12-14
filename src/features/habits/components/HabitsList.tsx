@@ -392,13 +392,13 @@ export function HabitsList({
     celebrationsEnabled,
     freeHabitLimit,
     habits,
+    habitSortMode,
     habitCompletionIcon,
     isHabitsLoading,
     hasReachedHabitLimit,
     weekDateStrings,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
-    sortHabitsAlphabetically,
     contentPadding,
     handleDragEnd,
     handleArchive,
@@ -412,8 +412,14 @@ export function HabitsList({
     isPremiumUser,
   } = list;
 
-  const { openSettings, openTemplatesScreen, openQuickActions } = modals;
-  const isReorderingEnabled = !sortHabitsAlphabetically;
+  const { onSettingsChange, openQuickActions, openSettings, openTemplatesScreen } = modals;
+  const isReorderingEnabled = habitSortMode === 'manual';
+
+  const handleClearHabitSort = useCallback(() => {
+    void onSettingsChange({
+      habitSortMode: 'manual',
+    });
+  }, [onSettingsChange]);
 
   // Quick-create habit mutation for instant habit creation
   const createHabit = useMutation(api.habits.create);
@@ -514,6 +520,8 @@ export function HabitsList({
         <View className='gap-3 pb-2.5 pt-16'>
           <HabitsHeader
             completedToday={completedToday}
+            habitSortMode={habitSortMode}
+            onClearHabitSort={handleClearHabitSort}
             openCreateHabitScreen={handleAddHabitPress}
             openSettings={openSettings}
             openTemplatesScreen={openTemplatesScreen}
@@ -538,6 +546,8 @@ export function HabitsList({
     },
     [
       handleAddHabitPress,
+      handleClearHabitSort,
+      habitSortMode,
       openSettings,
       openTemplatesScreen,
       showWeekCompletionBar,

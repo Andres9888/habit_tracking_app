@@ -35,6 +35,7 @@ import type * as streakUtils from "../streakUtils.js";
 import type * as templates from "../templates.js";
 import type * as testStrength from "../testStrength.js";
 import type * as tracking from "../tracking.js";
+import type * as visionBoard from "../visionBoard.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -67,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   templates: typeof templates;
   testStrength: typeof testStrength;
   tracking: typeof tracking;
+  visionBoard: typeof visionBoard;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

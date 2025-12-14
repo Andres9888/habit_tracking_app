@@ -147,6 +147,105 @@ export function calculateNewStrength(
   }
 }
 
+// ============================================================================
+// MOMENTUM-BASED STRENGTH SIMULATION (day-by-day, including missed days)
+// ============================================================================
+
+function isValidDateKey(dateKey: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(dateKey);
+}
+
+function parseDateKeyToLocalDate(dateKey: string): Date {
+  if (!isValidDateKey(dateKey)) {
+    throw new Error('Invalid date format; expected YYYY-MM-DD');
+  }
+
+  const [yearStr, monthStr, dayStr] = dateKey.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+
+  const parsed = new Date(year, month - 1, day);
+  parsed.setHours(0, 0, 0, 0);
+
+  // Validate we didn't roll the date (e.g. 2025-13-40)
+  if (formatDateKey(parsed) !== dateKey) {
+    throw new Error('Invalid date value; expected YYYY-MM-DD');
+  }
+
+  return parsed;
+}
+
+export function calculateMomentumStrengthSnapshot({
+  habitCreatedAt,
+  throughDate,
+  tracking,
+}: {
+  habitCreatedAt: number;
+  throughDate?: string;
+  tracking: HabitTrackingRecord[];
+}): {
+  daysProcessed: number;
+  strength: number;
+  strength100: number;
+  strengthLevel: StrengthLevel;
+} {
+  const evaluationDateKey = throughDate ?? formatDateKey(startOfDay(new Date()));
+  const evaluationDate = parseDateKeyToLocalDate(evaluationDateKey);
+  const creationDate = startOfDay(new Date(habitCreatedAt));
+
+  if (creationDate.getTime() > evaluationDate.getTime()) {
+    return {
+      daysProcessed: 0,
+      strength: 0,
+      strength100: 0,
+      strengthLevel: getStrengthLevel(0),
+    };
+  }
+
+  const completionDates = new Set(
+    tracking.filter((record) => record.completed).map((record) => record.date)
+  );
+
+  const daysProcessed =
+    Math.floor((evaluationDate.getTime() - creationDate.getTime()) / MS_PER_DAY) +
+    1;
+
+  let strength100 = 0;
+
+  for (
+    let cursor = new Date(creationDate);
+    cursor.getTime() <= evaluationDate.getTime();
+    cursor = addDays(cursor, 1)
+  ) {
+    const dateKey = formatDateKey(cursor);
+    const wasCompleted = completionDates.has(dateKey);
+
+    let completionsLast7Days = 0;
+    for (let offset = 1; offset <= 7; offset++) {
+      const previousKey = formatDateKey(addDays(cursor, -offset));
+      if (completionDates.has(previousKey)) {
+        completionsLast7Days++;
+      }
+    }
+
+    strength100 = calculateNewStrength(
+      strength100,
+      wasCompleted,
+      completionsLast7Days
+    );
+  }
+
+  const strength = strength100 / 100;
+
+  return {
+    daysProcessed,
+    strength,
+    strength100,
+    strengthLevel: getStrengthLevel(strength),
+  };
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
@@ -625,93 +724,31 @@ export const recalculateHabitStrength = mutation({
 
       console.log(`  ▸ Found ${tracking.length} tracking entries`);
 
-      // Build a set of completion dates for efficient lookup
-      const completionDates = new Set(
-        tracking.filter((r) => r.completed).map((r) => r.date)
-      );
-
-      // Determine date range: from habit creation to today
-      const habitCreatedDate = new Date(habit.createdAt);
-      const today = new Date();
-
-      // Get the start date (habit creation, normalized to YYYY-MM-DD)
-      const startDate = new Date(
-        habitCreatedDate.getFullYear(),
-        habitCreatedDate.getMonth(),
-        habitCreatedDate.getDate()
-      );
-
-      // Get the end date (today, normalized to YYYY-MM-DD)
-      const endDate = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-      );
-
-      // Helper to format date as YYYY-MM-DD
-      const formatDateKey = (d: Date): string => {
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      };
-
-      // Helper to count completions in the 7 days before a given date
-      const countRecentCompletions = (beforeDate: Date): number => {
-        let count = 0;
-        for (let i = 1; i <= 7; i++) {
-          const checkDate = new Date(beforeDate);
-          checkDate.setDate(checkDate.getDate() - i);
-          if (completionDates.has(formatDateKey(checkDate))) {
-            count++;
-          }
-        }
-        return count;
-      };
-
-      // Simulate day-by-day progression from habit creation to today
-      let currentStrength = 0; // Start from 0
-      let daysProcessed = 0;
-      const currentDate = new Date(startDate);
-
-      while (currentDate <= endDate) {
-        const dateStr = formatDateKey(currentDate);
-        const wasCompleted = completionDates.has(dateStr);
-        const recentCompletions = countRecentCompletions(currentDate);
-
-        // Apply growth for completions OR decay for misses
-        currentStrength = calculateNewStrength(
-          currentStrength,
-          wasCompleted,
-          recentCompletions
-        );
-
-        daysProcessed++;
-        // Move to next day
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      // Convert to 0-1 scale for storage
-      const finalStrength = currentStrength / 100;
-      const strengthLevel = getStrengthLevel(finalStrength);
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        tracking: tracking.map((entry) => ({
+          completed: entry.completed,
+          date: entry.date,
+        })),
+      });
 
       console.log(
-        `  ✅ Calculated with NEW formula: strength=${currentStrength.toFixed(
+        `  ✅ Calculated with NEW formula: strength=${snapshot.strength100.toFixed(
           1
-        )}%, level=${strengthLevel}, days=${daysProcessed}, completions=${completionDates.size}`
+        )}%, level=${snapshot.strengthLevel}, completions=${tracking.filter((r) => r.completed).length}`
       );
 
       // Update habit with final strength
       await ctx.db.patch(args.habitId, {
-        strength: finalStrength,
-        strengthLevel,
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: Date.now(),
       });
 
       return {
-        daysProcessed,
-        strength: finalStrength,
-        strengthLevel,
+        daysProcessed: snapshot.daysProcessed,
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
       };
     } catch (error) {
       console.error('❌ Error in recalculateHabitStrength:', error);

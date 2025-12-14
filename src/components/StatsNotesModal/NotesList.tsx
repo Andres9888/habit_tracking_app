@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from 'convex/react';
 import { format } from 'date-fns';
 import { Plus, Search, Trash2, Edit3, Eye } from 'lucide-react-native';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   ScrollView,
@@ -21,18 +21,27 @@ import NoteEditor from './NoteEditor';
 import { VisualizationGuide } from '../NotesSection/VisualizationGuide';
 
 interface NotesListProps {
+  hideHabitFilter?: boolean;
+  initialHabitId?: Id<'habits'>;
   onAddNote?: () => void;
 }
 
-export default function NotesList({ onAddNote }: NotesListProps) {
+export default function NotesList({ hideHabitFilter = false, initialHabitId, onAddNote }: NotesListProps) {
   const [searchText, setSearchText] = useState('');
   const [selectedHabitFilter, setSelectedHabitFilter] = useState<
     Id<'habits'> | 'all'
-  >('all');
+  >(initialHabitId ?? 'all');
   const [editingNoteId, setEditingNoteId] = useState<Id<'notes'> | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    if (!initialHabitId) {
+      return;
+    }
+    setSelectedHabitFilter(initialHabitId);
+  }, [initialHabitId]);
 
   const handleOpenVisualizationGuide = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -145,52 +154,54 @@ export default function NotesList({ onAddNote }: NotesListProps) {
       </View>
 
       {/* Filter by habit */}
-      <View className='gap-2'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
-          FILTER BY HABIT
-        </Text>
-        <View className='flex-row flex-wrap gap-2'>
-          <TouchableOpacity
-            accessibilityLabel='Show all notes'
-            accessibilityRole='button'
-            className={`rounded-xl px-3 py-2 ${
-              selectedHabitFilter === 'all' ? 'bg-slate-900' : 'bg-slate-100'
-            }`}
-            onPress={() => setSelectedHabitFilter('all')}
-          >
-            <Text
-              className={`text-sm font-medium ${
-                selectedHabitFilter === 'all' ? 'text-white' : 'text-slate-700'
-              }`}
-            >
-              All
-            </Text>
-          </TouchableOpacity>
-          {habits.map((habit) => (
+      {hideHabitFilter ? null : (
+        <View className='gap-2'>
+          <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+            FILTER BY HABIT
+          </Text>
+          <View className='flex-row flex-wrap gap-2'>
             <TouchableOpacity
-              key={habit._id}
-              accessibilityLabel={`Filter by ${habit.name}`}
+              accessibilityLabel='Show all notes'
               accessibilityRole='button'
               className={`rounded-xl px-3 py-2 ${
-                selectedHabitFilter === habit._id
-                  ? 'bg-slate-900'
-                  : 'bg-slate-100'
+                selectedHabitFilter === 'all' ? 'bg-slate-900' : 'bg-slate-100'
               }`}
-              onPress={() => setSelectedHabitFilter(habit._id)}
+              onPress={() => setSelectedHabitFilter('all')}
             >
               <Text
                 className={`text-sm font-medium ${
-                  selectedHabitFilter === habit._id
-                    ? 'text-white'
-                    : 'text-slate-700'
+                  selectedHabitFilter === 'all' ? 'text-white' : 'text-slate-700'
                 }`}
               >
-                {habit.name}
+                All
               </Text>
             </TouchableOpacity>
-          ))}
+            {habits.map((habit) => (
+              <TouchableOpacity
+                key={habit._id}
+                accessibilityLabel={`Filter by ${habit.name}`}
+                accessibilityRole='button'
+                className={`rounded-xl px-3 py-2 ${
+                  selectedHabitFilter === habit._id
+                    ? 'bg-slate-900'
+                    : 'bg-slate-100'
+                }`}
+                onPress={() => setSelectedHabitFilter(habit._id)}
+              >
+                <Text
+                  className={`text-sm font-medium ${
+                    selectedHabitFilter === habit._id
+                      ? 'text-white'
+                      : 'text-slate-700'
+                  }`}
+                >
+                  {habit.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
+      )}
 
       {/* Visualization Guide Button */}
       <TouchableOpacity

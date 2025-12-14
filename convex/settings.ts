@@ -4,6 +4,15 @@ import { mutation, query } from './_generated/server';
 const DARK_MODE_OPTIONS = ['system', 'light', 'dark'] as const;
 type DarkModePreference = (typeof DARK_MODE_OPTIONS)[number];
 
+const HABIT_SORT_MODE_OPTIONS = [
+  'manual',
+  'name_asc',
+  'name_desc',
+  'strength_desc',
+  'streak_desc',
+] as const;
+type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
+
 const DEFAULT_SETTINGS = {
   // New settings from Figma design
   appIcon: 'default' as const,
@@ -18,8 +27,9 @@ const DEFAULT_SETTINGS = {
 
   reduceMotion: false,
 
+  habitSortMode: 'manual' as HabitSortMode,
+
   showCalendarView: true,
-  sortHabitsAlphabetically: false,
 
   showCharacterScreen: true,
 
@@ -50,6 +60,27 @@ const normalizeDarkMode = (value: unknown): DarkModePreference => {
   return DEFAULT_SETTINGS.darkMode;
 };
 
+const normalizeHabitSortMode = (
+  value: unknown,
+  legacySortHabitsAlphabetically?: unknown
+): HabitSortMode => {
+  if (
+    value === 'manual' ||
+    value === 'name_asc' ||
+    value === 'name_desc' ||
+    value === 'strength_desc' ||
+    value === 'streak_desc'
+  ) {
+    return value;
+  }
+
+  if (legacySortHabitsAlphabetically === true) {
+    return 'name_asc';
+  }
+
+  return DEFAULT_SETTINGS.habitSortMode;
+};
+
 export const get = query({
   args: {},
   handler: async (ctx) => {
@@ -61,6 +92,10 @@ export const get = query({
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       darkMode: normalizeDarkMode(settings?.darkMode),
+      habitSortMode: normalizeHabitSortMode(
+        settings?.habitSortMode,
+        settings?.sortHabitsAlphabetically
+      ),
       habitCompletionIcon:
         settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon,
       hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
@@ -69,9 +104,6 @@ export const get = query({
       reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
-      sortHabitsAlphabetically:
-        settings?.sortHabitsAlphabetically ??
-        DEFAULT_SETTINGS.sortHabitsAlphabetically,
       showCharacterScreen:
         settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen,
       showConsistency:
@@ -99,11 +131,17 @@ export const get = query({
       v.literal('light'),
       v.literal('dark')
     ),
+    habitSortMode: v.union(
+      v.literal('manual'),
+      v.literal('name_asc'),
+      v.literal('name_desc'),
+      v.literal('strength_desc'),
+      v.literal('streak_desc')
+    ),
     habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
     highContrastMode: v.boolean(),
     reduceMotion: v.boolean(),
     showCalendarView: v.boolean(),
-    sortHabitsAlphabetically: v.boolean(),
     showCharacterScreen: v.boolean(),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),
@@ -129,10 +167,18 @@ export const update = mutation({
       v.literal('dark'),
       v.boolean()
     ),
+    habitSortMode: v.optional(
+      v.union(
+        v.literal('manual'),
+        v.literal('name_asc'),
+        v.literal('name_desc'),
+        v.literal('strength_desc'),
+        v.literal('streak_desc')
+      )
+    ),
     highContrastMode: v.optional(v.boolean()),
     reduceMotion: v.optional(v.boolean()),
     showCalendarView: v.boolean(),
-    sortHabitsAlphabetically: v.optional(v.boolean()),
     showCharacterScreen: v.optional(v.boolean()),
     showConsistency: v.boolean(),
     showEmojis: v.boolean(),

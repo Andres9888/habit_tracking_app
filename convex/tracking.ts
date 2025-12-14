@@ -1,6 +1,18 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { calculateNewStrength, getStrengthLevel } from './habitStrength';
+import { calculateMomentumStrengthSnapshot } from './habitStrength';
+
+function getTodayDateKey(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function maxDateKey(a: string, b: string): string {
+  return a > b ? a : b;
+}
 
 /**
  * Toggle completion status for a habit on a specific date.
@@ -80,51 +92,50 @@ export const toggleCompletion = mutation({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    // Get all completion dates for this habit
-    const completionDates = new Set(
-      allTracking.filter((r) => r.completed).map((r) => r.date)
+    const maxTrackingDateKey = allTracking.reduce(
+      (maxKey, record) => maxDateKey(maxKey, record.date),
+      args.date
     );
 
-    // Recalculate strength from scratch based on NUMBER of completions
-    // Simple approach: Each completion adds a fixed amount, each miss subtracts
-    // This ensures toggle ON/OFF always changes by the same amount
-    const STRENGTH_PER_COMPLETION = 3; // 3% per completion (matches GROWTH_RATE * 100 at 0%)
+    const evaluationDateKey = maxDateKey(
+      getTodayDateKey(),
+      maxDateKey(args.date, maxTrackingDateKey)
+    );
 
-    const totalCompletions = completionDates.size;
-
-    // Simple linear calculation: more completions = higher strength
-    // Capped at 100%, minimum 0%
-    const newStrength100 = Math.min(100, Math.max(0, totalCompletions * STRENGTH_PER_COMPLETION));
-
-    // Convert to 0-1 scale for storage
-    const newStrength = newStrength100 / 100;
-
-    const previousStrength = (habit.strength ?? 0) * 100;
-
-    console.log('🔧 [v4] Strength calculation:', {
-      action: newCompletionState ? 'TOGGLE ON' : 'TOGGLE OFF',
-      totalCompletions,
-      previousStrength: `${previousStrength.toFixed(1)}%`,
-      newStrength: `${newStrength100.toFixed(1)}%`,
-      change: `${(newStrength100 - previousStrength).toFixed(2)}%`,
+    const snapshot = calculateMomentumStrengthSnapshot({
+      habitCreatedAt: habit.createdAt,
+      throughDate: evaluationDateKey,
+      tracking: allTracking.map((record) => ({
+        completed: record.completed,
+        date: record.date,
+      })),
     });
 
-    // Update habit with new strength and level
-    const strengthLevel = getStrengthLevel(newStrength);
+    const previousStrength100 = (habit.strength ?? 0) * 100;
+
+    console.log('🔧 Strength calculation (momentum-based):', {
+      action: newCompletionState ? 'TOGGLE ON' : 'TOGGLE OFF',
+      evaluationDateKey,
+      previousStrength: `${previousStrength100.toFixed(1)}%`,
+      newStrength: `${snapshot.strength100.toFixed(1)}%`,
+      change: `${(snapshot.strength100 - previousStrength100).toFixed(2)}%`,
+      daysProcessed: snapshot.daysProcessed,
+    });
+
     await ctx.db.patch(args.habitId, {
-      strength: newStrength,
-      strengthLevel,
+      strength: snapshot.strength,
+      strengthLevel: snapshot.strengthLevel,
       strengthUpdatedAt: Date.now(),
     });
 
-    console.log('🔧 [v4] Updated habit:', {
+    console.log('🔧 Updated habit:', {
       habitName: habit.name,
       date: args.date,
       action: newCompletionState ? 'COMPLETED' : 'UNCOMPLETED',
-      strengthBefore: `${previousStrength.toFixed(1)}%`,
-      strengthAfter: `${newStrength100.toFixed(1)}%`,
-      strengthLevel,
-      totalCompletions,
+      evaluationDateKey,
+      strengthBefore: `${previousStrength100.toFixed(1)}%`,
+      strengthAfter: `${snapshot.strength100.toFixed(1)}%`,
+      strengthLevel: snapshot.strengthLevel,
     });
 
     return newCompletionState;

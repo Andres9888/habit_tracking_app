@@ -82,6 +82,12 @@ const SIZE_CONFIG = {
 // Threshold positions for dividers (excluding 0 and 100)
 const DIVIDER_POSITIONS = [20, 40, 60, 80];
 
+const formatStrengthPercentage = (strength: number): string => {
+  const roundedToTenth = Math.round(strength * 10) / 10;
+  const decimals = Number.isInteger(roundedToTenth) ? 0 : 1;
+  return `${roundedToTenth.toFixed(decimals)}%`;
+};
+
 export const StrengthProgressBar = ({
   showDividers = true,
   showEmoji = true,
@@ -92,6 +98,7 @@ export const StrengthProgressBar = ({
   strength,
 }: StrengthProgressBarProps) => {
   const clampedStrength = Math.max(0, Math.min(100, strength));
+  const strengthLabel = formatStrengthPercentage(clampedStrength);
   const currentLevel = getCurrentLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
   const config = SIZE_CONFIG[size];
@@ -173,7 +180,7 @@ export const StrengthProgressBar = ({
   return (
     <View
       accessible
-      accessibilityLabel={`${Math.round(clampedStrength)}% strength, ${currentLevel.label} level`}
+      accessibilityLabel={`${strengthLabel} strength, ${currentLevel.label} level`}
       accessibilityRole="progressbar"
       style={styles.container}
     >
@@ -247,7 +254,7 @@ export const StrengthProgressBar = ({
               { color: currentLevel.color, fontSize: config.fontSize },
             ]}
           >
-            {Math.round(clampedStrength)}%
+            {strengthLabel}
           </Text>
         )}
 

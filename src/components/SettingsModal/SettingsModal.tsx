@@ -14,17 +14,19 @@ import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
+import type { HabitSortMode } from '../../features/habits/types';
 
 interface SettingsModalProps {
   celebrationsEnabled?: boolean;
   habitCompletionIcon?: 'chain' | 'checkbox';
+  habitSortMode?: HabitSortMode;
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
   onChangeHabitCompletionIcon?: (
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;
   onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
-  onChangeSortHabitsAlphabetically?: (value: boolean) => void | Promise<void>;
+  onChangeHabitSortMode?: (value: HabitSortMode) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
@@ -37,7 +39,6 @@ interface SettingsModalProps {
   isCompact?: boolean;
   onOpenHapticTest?: () => void;
   onClose: () => void;
-  sortHabitsAlphabetically?: boolean;
   showCharacterScreen?: boolean;
   visible: boolean;
 }
@@ -45,12 +46,13 @@ interface SettingsModalProps {
 export default function SettingsModal({
   celebrationsEnabled = true,
   habitCompletionIcon = 'chain',
+  habitSortMode = 'manual',
   isCompact = false,
   isHighContrastActive = false,
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
   onChangeHabitCompletionIcon = () => {},
-  onChangeSortHabitsAlphabetically = () => {},
+  onChangeHabitSortMode = () => {},
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
   onChangeShowHabitStrengthPercentage = () => {},
@@ -59,7 +61,6 @@ export default function SettingsModal({
   onChangeShowNotesStats = () => {},
   onClose,
   onOpenHapticTest,
-  sortHabitsAlphabetically = false,
   showCharacterScreen = true,
   showWeekCompletionBar = true,
   visible,
@@ -79,6 +80,7 @@ export default function SettingsModal({
   } = useSettingsModalLogic({ onClose, visible });
 
   const [isDarkModeOptionsOpen, setIsDarkModeOptionsOpen] = useState(false);
+  const [isHabitSortOptionsOpen, setIsHabitSortOptionsOpen] = useState(false);
 
   const darkModeLabels = {
     system: 'Match System',
@@ -89,6 +91,19 @@ export default function SettingsModal({
   const handleSelectDarkMode = (value: 'system' | 'light' | 'dark') => {
     setDarkModePreference(value);
     setIsDarkModeOptionsOpen(false);
+  };
+
+  const habitSortModeLabels = {
+    manual: 'Custom',
+    name_asc: 'A–Z',
+    name_desc: 'Z–A',
+    strength_desc: 'Strength',
+    streak_desc: 'Streaks',
+  } as const;
+
+  const handleSelectHabitSortMode = (value: HabitSortMode) => {
+    void onChangeHabitSortMode(value);
+    setIsHabitSortOptionsOpen(false);
   };
 
   const colors = isHighContrastActive
@@ -295,17 +310,75 @@ export default function SettingsModal({
                     className='text-[12px] font-extrabold uppercase tracking-wide'
                     style={{ color: isHighContrastActive ? '#000000' : '#92400e' }}
                   >
-                    A–Z
+                    ⇅
                   </Text>
                 }
                 iconBackgroundColor={isHighContrastActive ? '#facc15' : '#fde68a'}
-                label='Sort habits A–Z'
-                type='toggle'
-                value={sortHabitsAlphabetically}
-                onToggle={(value) =>
-                  void onChangeSortHabitsAlphabetically(value)
-                }
+                label='Sort habits'
+                showBorder={!isHabitSortOptionsOpen}
+                type='selection'
+                value={habitSortModeLabels[habitSortMode]}
+                onPress={() => setIsHabitSortOptionsOpen((prev) => !prev)}
               />
+              {isHabitSortOptionsOpen && (
+                <View className='px-4 pt-3'>
+                  <View
+                    className='rounded-2xl border bg-white shadow-sm'
+                    style={{
+                      backgroundColor: colors.selectionBackground,
+                      borderColor: colors.selectionBorder,
+                    }}
+                  >
+                    {(
+                      [
+                        { label: 'Custom order', value: 'manual' },
+                        { label: 'Name (A–Z)', value: 'name_asc' },
+                        { label: 'Name (Z–A)', value: 'name_desc' },
+                        { label: 'Strength (high → low)', value: 'strength_desc' },
+                        { label: 'Streaks (high → low)', value: 'streak_desc' },
+                      ] as const satisfies ReadonlyArray<{
+                        label: string;
+                        value: HabitSortMode;
+                      }>
+                    ).map(({ value, label }, index, array) => (
+                      <TouchableOpacity
+                        key={value}
+                        activeOpacity={0.7}
+                        className={`flex-row items-center justify-between px-4 py-3 ${
+                          index < array.length - 1
+                            ? 'border-b border-gray-100'
+                            : ''
+                        }`}
+                        style={{
+                          borderColor:
+                            index < array.length - 1
+                              ? colors.selectionBorder
+                              : undefined,
+                        }}
+                        onPress={() => handleSelectHabitSortMode(value)}
+                      >
+                        <Text
+                          className='text-[15px] font-medium'
+                          style={{ color: colors.headerText }}
+                        >
+                          {label}
+                        </Text>
+                        {habitSortMode === value && (
+                          <View
+                            className='rounded-full p-1'
+                            style={{ backgroundColor: colors.accent }}
+                          >
+                            <Check
+                              color={isHighContrastActive ? '#000000' : '#fff'}
+                              size={14}
+                            />
+                          </View>
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
               <SettingsRow
                 highContrastMode={isHighContrastActive}
                 icon={<BookOpen color='#64748b' size={16} />}

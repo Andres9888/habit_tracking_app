@@ -38,6 +38,7 @@ import {
   Brain,
   Calendar,
   Edit3,
+  FileText,
   Pause,
   Trash2,
   ChevronRight,
@@ -69,6 +70,9 @@ export interface QuickActionsSheetProps {
 
   /** View habit calendar */
   onViewCalendar?: () => void;
+
+  /** View habit detail page */
+  onViewDetails?: () => void;
 
   /** Edit habit */
   onEdit?: () => void;
@@ -198,6 +202,7 @@ export const QuickActionsSheet = ({
   onMentalBoost,
   onPause,
   onViewCalendar,
+  onViewDetails,
   visible,
 }: QuickActionsSheetProps) => {
   const insets = useSafeAreaInsets();
@@ -308,6 +313,16 @@ export const QuickActionsSheet = ({
               onPress={() => handleAction(onViewCalendar)}
               showChevron
             />
+
+            {onViewDetails ? (
+              <ActionItem
+                icon={<FileText className="text-stone-600" size={20} strokeWidth={2} />}
+                label="View Details"
+                onPress={() => handleAction(onViewDetails)}
+                showChevron
+                subtitle="Stats, why, vision board"
+              />
+            ) : null}
 
             {/* Divider */}
             <View className="my-2 h-px bg-stone-100" />

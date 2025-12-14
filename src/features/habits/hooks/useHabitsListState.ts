@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit, HabitSettings, RewardToastData } from '../types';
+import type { Habit, HabitSettings, HabitSortMode, RewardToastData } from '../types';
 import { logInteraction } from '../../../lib/analytics/interactions';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
@@ -24,38 +24,86 @@ export function useHabitsListState(): HabitsListState {
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'manual';
   const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
-  const sortHabitsAlphabetically = settings?.sortHabitsAlphabetically ?? false;
+
+  const FREE_HABIT_LIMIT = 3;
+
+  const { today, weekDates, weekDateStrings, extendedDateStrings, canNavigateForward, handleNextWeek, handlePreviousWeek } = useHabitsWeekDates();
+  const { getStreak, getHabitStatus } = useHabitsTracking(extendedDateStrings, today);
 
   const habits = useMemo(() => {
-    if (!sortHabitsAlphabetically) {
+    if (habitSortMode === 'manual') {
       return habitsFromQuery;
     }
 
-    return [...habitsFromQuery].sort((a, b) => {
+    const sortedHabits = [...habitsFromQuery];
+
+    if (habitSortMode === 'name_asc' || habitSortMode === 'name_desc') {
+      sortedHabits.sort((a, b) => {
+        const aName = a.name.trim().toLowerCase();
+        const bName = b.name.trim().toLowerCase();
+
+        if (aName === bName) {
+          return 0;
+        }
+
+        const direction = habitSortMode === 'name_asc' ? 1 : -1;
+        return aName < bName ? -1 * direction : 1 * direction;
+      });
+      return sortedHabits;
+    }
+
+    if (habitSortMode === 'strength_desc') {
+      sortedHabits.sort((a, b) => {
+        const aStrength = a.strength ?? 0;
+        const bStrength = b.strength ?? 0;
+        if (aStrength !== bStrength) {
+          return bStrength - aStrength;
+        }
+
+        const aName = a.name.trim().toLowerCase();
+        const bName = b.name.trim().toLowerCase();
+        if (aName === bName) {
+          return 0;
+        }
+        return aName < bName ? -1 : 1;
+      });
+      return sortedHabits;
+    }
+
+    const streakByHabitId = new Map(
+      sortedHabits.map((habit) => [
+        habit._id,
+        habit.currentStreak ?? getStreak(habit._id),
+      ])
+    );
+
+    sortedHabits.sort((a, b) => {
+      const aStreak = streakByHabitId.get(a._id) ?? 0;
+      const bStreak = streakByHabitId.get(b._id) ?? 0;
+      if (aStreak !== bStreak) {
+        return bStreak - aStreak;
+      }
+
       const aName = a.name.trim().toLowerCase();
       const bName = b.name.trim().toLowerCase();
-      if (aName < bName) {
-        return -1;
+      if (aName === bName) {
+        return 0;
       }
-      if (aName > bName) {
-        return 1;
-      }
-      return 0;
+      return aName < bName ? -1 : 1;
     });
-  }, [habitsFromQuery, sortHabitsAlphabetically]);
 
-  const FREE_HABIT_LIMIT = 3;
+    return sortedHabits;
+  }, [getStreak, habitSortMode, habitsFromQuery]);
+
   const habitSlotsUsed = isPremiumUser
     ? habits.length
     : Math.min(habits.length, FREE_HABIT_LIMIT);
   const hasReachedHabitLimit = !isPremiumUser && habits.length >= FREE_HABIT_LIMIT;
-
-  const { today, weekDates, weekDateStrings, extendedDateStrings, canNavigateForward, handleNextWeek, handlePreviousWeek } = useHabitsWeekDates();
-  const { getStreak, getHabitStatus } = useHabitsTracking(extendedDateStrings, today);
 
   const openCreateHabitScreen = useCallback(() => {
     // This will be handled by the parent component
@@ -63,7 +111,7 @@ export function useHabitsListState(): HabitsListState {
 
   const handleDragEnd = useCallback(
     async ({ data }: { data: Habit[] }) => {
-      if (sortHabitsAlphabetically) {
+      if (habitSortMode !== 'manual') {
         return;
       }
 
@@ -74,7 +122,7 @@ export function useHabitsListState(): HabitsListState {
         console.error('Failed to reorder habits:', error);
       }
     },
-    [reorderHabits, sortHabitsAlphabetically]
+    [habitSortMode, reorderHabits]
   );
 
   const handleArchive = useCallback(
@@ -129,6 +177,7 @@ export function useHabitsListState(): HabitsListState {
     celebrationsEnabled,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habits,
+    habitSortMode,
     habitCompletionIcon,
     isHabitsLoading,
     hasReachedHabitLimit,
@@ -137,7 +186,6 @@ export function useHabitsListState(): HabitsListState {
     canNavigateForward,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
-    sortHabitsAlphabetically,
     contentPadding: { paddingHorizontal: 24, paddingTop: 0, paddingBottom: 96 },
     dismissRewardToast,
     handleDragEnd,

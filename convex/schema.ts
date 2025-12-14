@@ -46,6 +46,8 @@ const applicationTables = {
     icon: v.optional(v.string()),
 
     notes: v.optional(v.string()),
+    // Motivation - user-provided reason for building this habit
+    why: v.optional(v.string()),
 
     // Background color for icon
     frequency: v.optional(v.string()),
@@ -104,6 +106,15 @@ const applicationTables = {
     resumedAt: v.optional(v.number()),
     strengthAtPause: v.optional(v.number()),
   }),
+
+  visionBoardItems: defineTable({
+    body: v.optional(v.string()),
+    createdAt: v.number(),
+    habitId: v.id('habits'),
+    title: v.string(),
+    updatedAt: v.number(),
+    userId: v.optional(v.string()),
+  }).index('by_habit', ['habitId']),
 
   notes: defineTable({
     body: v.string(),
@@ -197,6 +208,15 @@ const applicationTables = {
     hasPremium: v.optional(v.boolean()),
 
     showCalendarView: v.boolean(),
+    habitSortMode: v.optional(
+      v.union(
+        v.literal('manual'),
+        v.literal('name_asc'),
+        v.literal('name_desc'),
+        v.literal('strength_desc'),
+        v.literal('streak_desc')
+      )
+    ),
     sortHabitsAlphabetically: v.optional(v.boolean()),
 
     highContrastMode: v.optional(v.boolean()),

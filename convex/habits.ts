@@ -1,7 +1,19 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { getStrengthLevel, calculateNewStrength } from './habitStrength';
+import { calculateMomentumStrengthSnapshot } from './habitStrength';
 import { updateStreak } from "./streakUtils";
+
+function getTodayDateKey(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function maxDateKey(a: string, b: string): string {
+  return a > b ? a : b;
+}
 
 export const create = mutation({
   args: {
@@ -81,6 +93,7 @@ export const update = mutation({
     iconColor: v.optional(v.string()),
     name: v.optional(v.string()),
     notes: v.optional(v.string()),
+    why: v.optional(v.string()),
     preferredTime: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
     reminderSound: v.optional(v.string()),
@@ -349,7 +362,35 @@ export const restore = mutation({
 export const get = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.habitId);
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) return null;
+
+    const tracking = await ctx.db
+      .query('tracking')
+      .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
+      .collect();
+
+    const todayDateKey = getTodayDateKey();
+    const maxTrackingDateKey = tracking.reduce(
+      (maxKey, record) => maxDateKey(maxKey, record.date),
+      todayDateKey
+    );
+    const evaluationDateKey = maxDateKey(todayDateKey, maxTrackingDateKey);
+
+    const snapshot = calculateMomentumStrengthSnapshot({
+      habitCreatedAt: habit.createdAt,
+      throughDate: evaluationDateKey,
+      tracking: tracking.map((record) => ({
+        completed: record.completed,
+        date: record.date,
+      })),
+    });
+
+    return {
+      ...habit,
+      strength: snapshot.strength,
+      strengthLevel: snapshot.strengthLevel,
+    };
   },
   returns: v.union(
     v.null(),
@@ -365,6 +406,7 @@ export const get = query({
       name: v.string(),
       accessibility: v.optional(v.number()),
       notes: v.optional(v.string()),
+      why: v.optional(v.string()),
       accessibilityDecayParam: v.optional(v.number()),
       order: v.optional(v.number()),
       accessibilityGainBehavior: v.optional(v.number()),
@@ -410,7 +452,7 @@ export const list = query({
       .collect();
 
     // Sort by order field (ascending), use _creationTime as fallback
-    return habits.sort((a, b) => {
+    const sortedHabits = habits.sort((a, b) => {
       const aOrder = a.order ?? Infinity;
       const bOrder = b.order ?? Infinity;
       if (aOrder !== bOrder) {
@@ -419,6 +461,39 @@ export const list = query({
       // If orders are equal (or both undefined), sort by creation time
       return a._creationTime - b._creationTime;
     });
+
+    const todayDateKey = getTodayDateKey();
+    const habitsWithComputedStrength: typeof sortedHabits = [];
+
+    for (const habit of sortedHabits) {
+      const tracking = await ctx.db
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
+        .collect();
+
+      const maxTrackingDateKey = tracking.reduce(
+        (maxKey, record) => maxDateKey(maxKey, record.date),
+        todayDateKey
+      );
+      const evaluationDateKey = maxDateKey(todayDateKey, maxTrackingDateKey);
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        throughDate: evaluationDateKey,
+        tracking: tracking.map((record) => ({
+          completed: record.completed,
+          date: record.date,
+        })),
+      });
+
+      habitsWithComputedStrength.push({
+        ...habit,
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
+      });
+    }
+
+    return habitsWithComputedStrength;
   },
   returns: v.array(
     v.object({
@@ -447,6 +522,7 @@ export const list = query({
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
+      why: v.optional(v.string()),
       order: v.optional(v.number()),
       predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
@@ -499,6 +575,7 @@ export const listArchived = query({
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
+      why: v.optional(v.string()),
       order: v.optional(v.number()),
       predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
@@ -553,6 +630,7 @@ export const listPaused = query({
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
+      why: v.optional(v.string()),
       order: v.optional(v.number()),
       paused: v.optional(v.boolean()),
       pausedAt: v.optional(v.number()),
@@ -583,7 +661,12 @@ export const toggleHabit = mutation({
       throw new Error('Invalid date format; expected YYYY-MM-DD');
 
     // Prevent future dates - only allow today or past dates
-    const inputDate = new Date(args.date);
+    const [yearStr, monthStr, dayStr] = args.date.split('-');
+    const inputDate = new Date(
+      Number(yearStr),
+      Number(monthStr) - 1,
+      Number(dayStr)
+    );
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     inputDate.setHours(0, 0, 0, 0);
@@ -620,16 +703,24 @@ export const toggleHabit = mutation({
         .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
         .collect();
 
-      // Count total completions for this habit
-      const totalCompletions = allTracking.filter((r) => r.completed).length;
+      const maxTrackingDateKey = allTracking.reduce(
+        (maxKey, record) => maxDateKey(maxKey, record.date),
+        args.date
+      );
 
-      // SIMPLE strength calculation: each completion = 3%
-      // Toggle ON adds 1 completion → +3%
-      // Toggle OFF removes 1 completion → -3%
-      const STRENGTH_PER_COMPLETION = 0.03; // 3% per completion (stored as 0-1)
-      const newStrength = Math.min(1, Math.max(0, totalCompletions * STRENGTH_PER_COMPLETION));
+      const evaluationDateKey = maxDateKey(
+        getTodayDateKey(),
+        maxDateKey(args.date, maxTrackingDateKey)
+      );
 
-      const strengthLevel = getStrengthLevel(newStrength);
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        throughDate: evaluationDateKey,
+        tracking: allTracking.map((record) => ({
+          completed: record.completed,
+          date: record.date,
+        })),
+      });
 
       // Calculate updated streak using the existing streak logic
       const streakData = updateStreak(
@@ -642,22 +733,25 @@ export const toggleHabit = mutation({
         newCompletedStatus
       );
 
-      console.log('🔧 [SIMPLE] Habit Strength Update:', {
-        action: newCompletedStatus ? 'TOGGLE ON (+3%)' : 'TOGGLE OFF (-3%)',
-        totalCompletions,
-        previousStrength: ((habit.strength ?? 0) * 100).toFixed(1) + '%',
-        newStrength: (newStrength * 100).toFixed(1) + '%',
-        change: ((newStrength - (habit.strength ?? 0)) * 100).toFixed(1) + '%',
-        habitName: habit.name,
+      const previousStrength100 = (habit.strength ?? 0) * 100;
+
+      console.log('🔧 Habit Strength Update (momentum-based):', {
+        action: newCompletedStatus ? 'TOGGLE ON' : 'TOGGLE OFF',
+        change: `${(snapshot.strength100 - previousStrength100).toFixed(2)}%`,
         date: args.date,
+        daysProcessed: snapshot.daysProcessed,
+        evaluationDateKey,
+        habitName: habit.name,
+        newStrength: `${snapshot.strength100.toFixed(1)}%`,
+        previousStrength: `${previousStrength100.toFixed(1)}%`,
       });
 
       await ctx.db.patch(args.habitId, {
         bestStreak: streakData.bestStreak,
         currentStreak: streakData.currentStreak,
         lastCompletedDate: streakData.lastCompletedDate,
-        strength: newStrength,
-        strengthLevel,
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: Date.now(),
       });
     }

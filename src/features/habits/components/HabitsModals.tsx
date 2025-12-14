@@ -59,6 +59,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     confirmPause,
     toggleHabit,
     getStreak,
+    openHabitDetail,
     openHabitCalendar,
     openEditHabit,
     openPauseModal,
@@ -104,12 +105,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onChangeShowWeekCompletionBar={(value) =>
           onSettingsChange({ showWeekCompletionBar: value })
         }
-        onChangeSortHabitsAlphabetically={(value) =>
-          onSettingsChange({ sortHabitsAlphabetically: value })
+        habitSortMode={settings?.habitSortMode ?? 'manual'}
+        onChangeHabitSortMode={(value) =>
+          onSettingsChange({ habitSortMode: value })
         }
         onClose={closeSettings}
         onOpenHapticTest={openHapticTest}
-        sortHabitsAlphabetically={settings?.sortHabitsAlphabetically ?? false}
         showCharacterScreen={settings?.showCharacterScreen ?? true}
         showHabitStrengthPercentage={showHabitStrengthPercentage}
         showNotesStats={settings?.showNotesStats ?? true}
@@ -151,13 +152,14 @@ export function HabitsModals({ state }: HabitsModalsProps) {
 
       <HabitDetailScreen
         habit={selectedHabit}
-        visible={showHabitDetail}
-        onClose={closeHabitDetail}
         onArchive={(habitId) => handleArchive(habitId)}
+        onClose={closeHabitDetail}
         onDelete={onDeleteHabit}
         onEdit={(habit) => openEditHabit(habit)}
         onPause={(habitId) => openPauseModal(habitId)}
         onOpenCalendar={(habit) => openHabitCalendar(habit)}
+        tracking={tracking}
+        visible={showHabitDetail}
       />
 
       {showShareCard && shareCardData && ShareCardGenerator && (
@@ -208,6 +210,11 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onComplete={() => {
           if (quickActionsHabit) {
             toggleHabit({ habitId: quickActionsHabit._id, date: today });
+          }
+        }}
+        onViewDetails={() => {
+          if (quickActionsHabit) {
+            openHabitDetail(quickActionsHabit);
           }
         }}
         onMentalBoost={() => {

@@ -17,7 +17,6 @@ import Animated, {
   withSequence,
   withSpring,
   withTiming,
-  runOnJS,
   Easing,
 } from 'react-native-reanimated';
 import { Check, Circle } from 'lucide-react-native';
@@ -52,7 +51,7 @@ export function QuickCompleteButton({
   const checkRotation = useSharedValue(completedToday ? 0 : -90);
 
   // Convex mutation
-  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
+  const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
   const today = new Date().toISOString().split('T')[0];
 
   // Sync with prop when it changes

@@ -12,6 +12,7 @@
 
 import {
   calculateNewStrength,
+  calculateMomentumStrengthSnapshot,
   GROWTH_RATE,
   BASE_DECAY,
   SHIELD_EFFECTIVENESS,
@@ -340,5 +341,25 @@ describe('Formula Constants', () => {
     expect(GROWTH_RATE).toBe(0.03);
     expect(BASE_DECAY).toBe(0.02);
     expect(SHIELD_EFFECTIVENESS).toBe(0.7);
+  });
+});
+
+describe('calculateMomentumStrengthSnapshot - day-by-day simulation', () => {
+  it('should apply decay on missed days between completions', () => {
+    const habitCreatedAt = new Date(2025, 0, 1).getTime(); // 2025-01-01 local
+    const tracking = [{ completed: true, date: '2025-01-01' }];
+
+    const snapshot = calculateMomentumStrengthSnapshot({
+      habitCreatedAt,
+      throughDate: '2025-01-03',
+      tracking,
+    });
+
+    // Day 1 completion: 0 -> 3.0
+    // Day 2 miss (1/7 shield): 3.0 * (1 - 0.018) = 2.946
+    // Day 3 miss (1/7 shield): 2.946 * (1 - 0.018) ≈ 2.8929
+    expect(snapshot.daysProcessed).toBe(3);
+    expect(snapshot.strength100).toBeLessThan(3);
+    expect(snapshot.strength100).toBeCloseTo(2.8929, 3);
   });
 });

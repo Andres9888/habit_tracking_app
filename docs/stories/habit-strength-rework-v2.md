@@ -1,6 +1,6 @@
 # Product Spec: Habit Strength Rework v2.0
 
-**Status:** Ready for Review
+**Status:** Approved
 **Created:** 2025-12-07
 **Author:** John (PM)
 **Priority:** High

@@ -7,6 +7,13 @@ export type HabitTrackingEntry = Doc<'tracking'>;
 
 export type HabitStatus = 'done' | 'missed' | 'planned';
 
+export type HabitSortMode =
+  | 'manual'
+  | 'name_asc'
+  | 'name_desc'
+  | 'strength_desc'
+  | 'streak_desc';
+
 export type ShareCardData = {
   habitName: string;
   milestoneLevel: MilestoneAchievement['level'];
@@ -27,10 +34,10 @@ export interface HabitSettings {
   hasPremium: boolean;
   habitCompletionIcon: 'chain' | 'checkbox';
   darkMode: 'system' | 'light' | 'dark';
+  habitSortMode: HabitSortMode;
   highContrastMode: boolean;
   reduceMotion: boolean;
   showCalendarView: boolean;
-  sortHabitsAlphabetically: boolean;
   showCharacterScreen: boolean;
   showConsistency: boolean;
   showEmojis: boolean;

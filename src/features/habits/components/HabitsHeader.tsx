@@ -1,4 +1,4 @@
-import { Plus, Settings, Clipboard } from 'lucide-react-native';
+import { Clipboard, Plus, Settings } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -13,25 +13,30 @@ import { NotificationBadge } from '../../../components/NotificationBadge';
 import { useTemplateTooltip } from '../hooks/useTemplateTooltip';
 import { useTemplateBadge } from '../hooks/useTemplateBadge';
 import { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';
+import type { HabitSortMode } from '../types';
 
 interface HabitsHeaderProps {
+  completedToday?: number;
+  habitSortMode?: HabitSortMode;
+  onClearHabitSort: () => void;
   openCreateHabitScreen: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;
-  completedToday?: number;
-  totalHabits?: number;
-  showCompletionSummary?: boolean;
   reduceMotion?: boolean;
+  showCompletionSummary?: boolean;
+  totalHabits?: number;
 }
 
 export function HabitsHeader({
+  completedToday = 0,
+  habitSortMode = 'manual',
+  onClearHabitSort,
   openCreateHabitScreen,
   openSettings,
   openTemplatesScreen,
-  completedToday = 0,
-  totalHabits = 0,
-  showCompletionSummary = true,
   reduceMotion = false,
+  showCompletionSummary = true,
+  totalHabits = 0,
 }: HabitsHeaderProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
   const { dismissTooltip, showTooltip } = useTemplateTooltip();
@@ -43,6 +48,7 @@ export function HabitsHeader({
   // Animated values for icon buttons
   const templatesButtonScale = useSharedValue(1);
   const settingsButtonScale = useSharedValue(1);
+  const sortButtonScale = useSharedValue(1);
 
   const addButtonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: addButtonScale.value }],
@@ -54,6 +60,10 @@ export function HabitsHeader({
 
   const settingsButtonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: settingsButtonScale.value }],
+  }));
+
+  const sortButtonAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: sortButtonScale.value }],
   }));
 
   const handleAddHabitPressIn = () => {
@@ -107,6 +117,32 @@ export function HabitsHeader({
     triggerSelection();
     openSettings();
   };
+
+  const handleSortPressIn = () => {
+    triggerLightImpact();
+    sortButtonScale.value = withTiming(0.9, { duration: 50 });
+  };
+
+  const handleSortPressOut = () => {
+    sortButtonScale.value = withSpring(1, {
+      damping: 15,
+      stiffness: 300,
+    });
+  };
+
+  const handleSortPress = () => {
+    triggerSelection();
+    onClearHabitSort();
+  };
+
+  const habitSortLabel =
+    habitSortMode === 'name_asc'
+      ? 'A–Z'
+      : habitSortMode === 'name_desc'
+        ? 'Z–A'
+        : habitSortMode === 'strength_desc'
+          ? 'Strength'
+          : 'Streaks';
 
   // Calculate completion percentage for accessibility
   const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
@@ -167,6 +203,24 @@ export function HabitsHeader({
           {/* First-time user tooltip */}
           <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
         </Animated.View>
+
+        {habitSortMode !== 'manual' && (
+          <Animated.View style={sortButtonAnimatedStyle}>
+            <Pressable
+              accessibilityHint='Sorting is enabled. Tap to return to custom order.'
+              accessibilityLabel='Sorting enabled'
+              accessibilityRole='button'
+              className='h-9 flex-row items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50/70 px-3'
+              onPress={handleSortPress}
+              onPressIn={handleSortPressIn}
+              onPressOut={handleSortPressOut}
+            >
+              <Text className='text-[13px] font-semibold text-amber-800'>
+                {habitSortLabel}
+              </Text>
+            </Pressable>
+          </Animated.View>
+        )}
 
         <Animated.View style={settingsButtonAnimatedStyle}>
           <Pressable
