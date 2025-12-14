@@ -432,14 +432,13 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 16,
+    marginHorizontal: 20,
     marginVertical: 8,
-    maxWidth: 500,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 3,
-    width: '90%',
   },
   categoryBadge: {
     borderRadius: 8,
