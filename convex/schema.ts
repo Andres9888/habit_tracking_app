@@ -211,6 +211,7 @@ const applicationTables = {
     habitSortMode: v.optional(
       v.union(
         v.literal('manual'),
+        v.literal('day_phase'),
         v.literal('name_asc'),
         v.literal('name_desc'),
         v.literal('strength_asc'),

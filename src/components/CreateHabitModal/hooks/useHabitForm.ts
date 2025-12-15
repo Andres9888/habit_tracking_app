@@ -2,6 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
 import { buildHabitName, parseHabitName, parseReminderTime } from '../utils';
+import {
+  type HubermanPhase,
+  getPhaseFromPreferredTime,
+} from '../../../constants/hubermanPhases';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -36,6 +40,9 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   const [frequency, setFrequency] = useState<string>(
     (habitToEdit as any)?.frequency ?? ''
   );
+  const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
+    getPhaseFromPreferredTime(habitToEdit?.preferredTime)
+  );
 
   const fullHabitName = useMemo(
     () => buildHabitName(selectedEmoji, habitName),
@@ -54,6 +61,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
     setFrequency((habitToEdit as any)?.frequency ?? '');
+    setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));
   }, [habitToEdit, parsed]);
 
   const resetForm = useCallback(() => {
@@ -66,29 +74,32 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setShowTimePicker(false);
     setReminderSound(DEFAULT_SOUND);
     setFrequency('');
+    setDayPhase(null);
   }, []);
 
   return {
+    dayPhase,
+    frequency,
+    fullHabitName,
     habitName,
-    setHabitName,
-    selectedEmoji,
-    setSelectedEmoji,
-    selectedColor,
-    setSelectedColor,
     isColorPickerVisible,
     openColorPicker: () => setColorPickerVisible(true),
     closeColorPicker: () => setColorPickerVisible(false),
-    remindersEnabled,
-    setRemindersEnabled,
-    reminderTime,
-    setReminderTime,
-    showTimePicker,
-    setShowTimePicker,
     reminderSound,
-    setReminderSound,
-    fullHabitName,
+    reminderTime,
+    remindersEnabled,
     resetForm,
-    frequency,
+    selectedColor,
+    selectedEmoji,
+    setDayPhase,
     setFrequency,
+    setHabitName,
+    setReminderSound,
+    setReminderTime,
+    setRemindersEnabled,
+    setSelectedColor,
+    setSelectedEmoji,
+    setShowTimePicker,
+    showTimePicker,
   };
 };

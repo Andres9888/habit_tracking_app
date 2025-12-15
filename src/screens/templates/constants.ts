@@ -120,3 +120,4 @@ export const DEFAULT_CATEGORY_COLORS: CategoryColorTokens = {
   border: '#E5E7EB',
   text: '#374151',
 };
+

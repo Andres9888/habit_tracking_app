@@ -18,6 +18,7 @@ import type { HabitSortMode } from '../types';
 
 const SORT_OPTIONS: ReadonlyArray<{ label: string; value: HabitSortMode }> = [
   { label: 'Custom order', value: 'manual' },
+  { label: 'Day Phase (Push → Pull)', value: 'day_phase' },
   { label: 'Name (A–Z)', value: 'name_asc' },
   { label: 'Name (Z–A)', value: 'name_desc' },
   { label: 'Strength (low → high)', value: 'strength_asc' },
@@ -155,19 +156,21 @@ export function HabitsHeader({
   };
 
   const habitSortLabel =
-    habitSortMode === 'name_asc'
-      ? 'A–Z'
-      : habitSortMode === 'name_desc'
-        ? 'Z–A'
-        : habitSortMode === 'strength_asc'
-          ? 'Strength ↑'
-          : habitSortMode === 'strength_desc'
-            ? 'Strength ↓'
-            : habitSortMode === 'streak_asc'
-              ? 'Streaks ↑'
-              : habitSortMode === 'streak_desc'
-                ? 'Streaks ↓'
-                : 'Sort';
+    habitSortMode === 'day_phase'
+      ? 'Day Phase'
+      : habitSortMode === 'name_asc'
+        ? 'A–Z'
+        : habitSortMode === 'name_desc'
+          ? 'Z–A'
+          : habitSortMode === 'strength_asc'
+            ? 'Strength ↑'
+            : habitSortMode === 'strength_desc'
+              ? 'Strength ↓'
+              : habitSortMode === 'streak_asc'
+                ? 'Streaks ↑'
+                : habitSortMode === 'streak_desc'
+                  ? 'Streaks ↓'
+                  : 'Sort';
 
   // Calculate completion percentage for accessibility
   const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;

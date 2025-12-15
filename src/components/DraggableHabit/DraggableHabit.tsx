@@ -7,6 +7,7 @@ import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 import { Archive, TrendingUp } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { StrengthProgressBar } from '../StrengthProgressBar';
+import { PhaseTag } from '../PhaseTag';
 import * as Haptics from 'expo-haptics';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
@@ -20,6 +21,7 @@ interface Habit {
   icon?: string;
   iconColor?: string;
   order?: number;
+  preferredTime?: string;
   tags?: string[];
   userId?: string;
   archived?: boolean;
@@ -464,17 +466,23 @@ export default function DraggableHabit({
 
               {/* Habit name with better typography */}
               <View className='flex-1'>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                  className='text-[17px] font-bold leading-[22px]'
-                  style={{
-                    color: colors.primaryText,
-                    letterSpacing: -0.3,
-                  }}
-                >
-                  {name || habit.name}
-                </Text>
+                <View className='flex-row items-center gap-2'>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    className='flex-1 text-[17px] font-bold leading-[22px]'
+                    style={{
+                      color: colors.primaryText,
+                      letterSpacing: -0.3,
+                    }}
+                  >
+                    {name || habit.name}
+                  </Text>
+                  {/* Huberman Day Phase Tag */}
+                  {habit.preferredTime && (
+                    <PhaseTag compact preferredTime={habit.preferredTime} />
+                  )}
+                </View>
                 {/* Best streak hint (only if not showing strength bar) */}
                 {bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage && (
                   <Text

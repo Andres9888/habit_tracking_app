@@ -21,6 +21,7 @@ export const create = mutation({
     iconColor: v.optional(v.string()),
     name: v.string(),
     notes: v.optional(v.string()),
+    preferredTime: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
     reminderSound: v.optional(v.string()),
     reminderTime: v.optional(v.string()),
@@ -53,6 +54,9 @@ export const create = mutation({
       notes: args.notes,
 
       order: maxOrder + 1,
+
+      // Huberman day phase timing
+      preferredTime: args.preferredTime,
 
       remindersEnabled: args.remindersEnabled,
 

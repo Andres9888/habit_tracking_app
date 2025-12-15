@@ -9,12 +9,14 @@ export type HabitStatus = 'done' | 'missed' | 'planned';
 
 export type HabitSortMode =
   | 'manual'
+  | 'day_phase'
   | 'name_asc'
   | 'name_desc'
   | 'strength_asc'
   | 'strength_desc'
   | 'streak_asc'
-  | 'streak_desc';
+  | 'streak_desc'
+  | 'day_phase';
 
 export type ShareCardData = {
   habitName: string;

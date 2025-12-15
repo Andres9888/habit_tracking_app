@@ -12,6 +12,7 @@ const HABIT_SORT_MODE_OPTIONS = [
   'strength_desc',
   'streak_asc',
   'streak_desc',
+  'day_phase',
 ] as const;
 type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 
@@ -73,7 +74,8 @@ const normalizeHabitSortMode = (
     value === 'strength_asc' ||
     value === 'strength_desc' ||
     value === 'streak_asc' ||
-    value === 'streak_desc'
+    value === 'streak_desc' ||
+    value === 'day_phase'
   ) {
     return value;
   }
@@ -142,7 +144,8 @@ export const get = query({
       v.literal('strength_asc'),
       v.literal('strength_desc'),
       v.literal('streak_asc'),
-      v.literal('streak_desc')
+      v.literal('streak_desc'),
+      v.literal('day_phase')
     ),
     habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
     highContrastMode: v.boolean(),
@@ -181,7 +184,8 @@ export const update = mutation({
         v.literal('strength_asc'),
         v.literal('strength_desc'),
         v.literal('streak_asc'),
-        v.literal('streak_desc')
+        v.literal('streak_desc'),
+        v.literal('day_phase')
       )
     ),
     highContrastMode: v.optional(v.boolean()),

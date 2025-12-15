@@ -42,6 +42,33 @@ export function useHabitsListState(): HabitsListState {
 
     const sortedHabits = [...habitsFromQuery];
 
+    // Day Phase sorting (Push → Pivot → Pull, then unassigned)
+    if (habitSortMode === 'day_phase') {
+      const phaseOrder: Record<string, number> = {
+        phase1_push: 0,
+        morning: 0, // Legacy mapping
+        phase2_pivot: 1,
+        afternoon: 1, // Legacy mapping
+        phase3_pull: 2,
+        evening: 2, // Legacy mapping
+      };
+
+      sortedHabits.sort((a, b) => {
+        const aPhase = a.preferredTime ? (phaseOrder[a.preferredTime] ?? 99) : 99;
+        const bPhase = b.preferredTime ? (phaseOrder[b.preferredTime] ?? 99) : 99;
+
+        if (aPhase !== bPhase) {
+          return aPhase - bPhase;
+        }
+
+        // Secondary sort by name for habits in same phase
+        const aName = a.name.trim().toLowerCase();
+        const bName = b.name.trim().toLowerCase();
+        return aName.localeCompare(bName);
+      });
+      return sortedHabits;
+    }
+
     if (habitSortMode === 'name_asc' || habitSortMode === 'name_desc') {
       sortedHabits.sort((a, b) => {
         const aName = a.name.trim().toLowerCase();

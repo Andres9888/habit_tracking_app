@@ -12,6 +12,8 @@ import { StyleSection } from './components/StyleSection';
 import { SimpleReminderSection } from './components/SimpleReminderSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
 import { SuccessAnimation } from './components/SuccessAnimation';
+import { PhaseSelector } from './components/PhaseSelector';
+import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../utils/notifications';
 
@@ -138,6 +140,14 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 onTimePress={() => form.setShowTimePicker(true)}
                 onToggle={form.setRemindersEnabled}
               />
+
+              {/* 6. Advanced Options (collapsed by default) */}
+              <CollapsibleAdvancedOptions>
+                <PhaseSelector
+                  selectedPhase={form.dayPhase}
+                  onSelect={form.setDayPhase}
+                />
+              </CollapsibleAdvancedOptions>
             </ScrollView>
 
             {/* Sticky Create Bar */}

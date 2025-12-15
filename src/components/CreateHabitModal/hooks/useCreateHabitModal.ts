@@ -24,20 +24,21 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
   const form = useHabitForm({ habitToEdit });
   const { triggerSuccess } = useHapticFeedback();
   const {
-    setHabitName,
-    setSelectedEmoji,
-    setSelectedColor,
-    setFrequency,
-    habitName,
+    closeColorPicker,
+    dayPhase,
     fullHabitName,
-    remindersEnabled,
+    habitName,
     reminderSound,
     reminderTime,
+    remindersEnabled,
     resetForm,
-    closeColorPicker,
-    setShowTimePicker,
-    selectedEmoji,
     selectedColor,
+    selectedEmoji,
+    setFrequency,
+    setHabitName,
+    setSelectedColor,
+    setSelectedEmoji,
+    setShowTimePicker,
   } = form;
   const createHabit = useMutation(api.habits.create);
   const updateHabit = useMutation(api.habits.update);
@@ -125,6 +126,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
         iconColor: selectedColor,
         name: fullHabitName,
         notes: habitToEdit.notes ?? '',
+        preferredTime: dayPhase ?? undefined,
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? reminderSound : undefined,
         reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
@@ -135,6 +137,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
         iconColor: selectedColor,
         name: fullHabitName,
         notes: '',
+        preferredTime: dayPhase ?? undefined,
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? reminderSound : undefined,
         reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
@@ -165,7 +168,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
     science.close();
     triggerSuccess();
     onClose();
-  }, [createHabit, closeColorPicker, habitToEdit, isEditMode, onClose, reminderSound, reminderTime, remindersEnabled, resetForm, science, selectedColor, selectedEmoji, setShowTimePicker, template, updateHabit, fullHabitName]);
+  }, [createHabit, closeColorPicker, dayPhase, habitToEdit, isEditMode, onClose, reminderSound, reminderTime, remindersEnabled, resetForm, science, selectedColor, selectedEmoji, setShowTimePicker, template, updateHabit, fullHabitName]);
 
   return { isEditMode, form, template, science, handleCreate };
 };
