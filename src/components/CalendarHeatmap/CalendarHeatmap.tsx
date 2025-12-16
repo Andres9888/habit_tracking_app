@@ -1,13 +1,6 @@
 /**
  * CalendarHeatmap Component
- * GitHub-style 30-day completion heatmap
- *
- * Features:
- * - Visual grid showing last 30 days
- * - Color-coded completion status
- * - Today indicator
- * - Staggered entrance animation
- * - Tap for day details
+ * GitHub-style 30-day completion heatmap with intensity levels
  */
 
 import React, { useEffect, useMemo } from 'react';
@@ -19,16 +12,16 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { Calendar } from 'lucide-react-native';
+import { Calendar, Grid3X3 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 export interface DayData {
   completed: boolean;
-  date: string; // YYYY-MM-DD format
+  date: string;
 }
 
 export interface CalendarHeatmapProps {
-  data: DayData[]; // Last 30 days, oldest first
+  data: DayData[];
   onDayPress?: (date: string, completed: boolean) => void;
 }
 
@@ -46,9 +39,8 @@ function DayCell({ completed, date, index, isFuture, isToday, onPress }: DayCell
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    // Staggered animation - cells appear from left to right, top to bottom
-    const delay = index * 15;
-    opacity.value = withDelay(delay, withTiming(1, { duration: 150 }));
+    const delay = index * 12;
+    opacity.value = withDelay(delay, withTiming(1, { duration: 120 }));
     scale.value = withDelay(delay, withSpring(1, { damping: 15, stiffness: 300 }));
   }, [index]);
 
@@ -63,13 +55,12 @@ function DayCell({ completed, date, index, isFuture, isToday, onPress }: DayCell
     onPress?.(date, completed);
   };
 
-  // Determine cell appearance
   const getCellStyle = () => {
-    if (isFuture) return 'bg-stone-100 opacity-40';
-    if (isToday && completed) return 'bg-emerald-500 ring-2 ring-emerald-300 ring-offset-1';
-    if (isToday && !completed) return 'bg-amber-100 ring-2 ring-amber-300 ring-offset-1';
+    if (isFuture) return 'bg-stone-50';
+    if (isToday && completed) return 'bg-emerald-500 shadow-sm shadow-emerald-200';
+    if (isToday && !completed) return 'border-2 border-amber-400 bg-amber-50';
     if (completed) return 'bg-emerald-500';
-    return 'bg-stone-200';
+    return 'bg-stone-100';
   };
 
   return (
@@ -90,27 +81,24 @@ function DayCell({ completed, date, index, isFuture, isToday, onPress }: DayCell
 export function CalendarHeatmap({ data, onDayPress }: CalendarHeatmapProps) {
   const today = new Date().toISOString().split('T')[0];
 
-  // Build grid data - we need 5 weeks (35 cells) to show ~30 days properly
+  // Calculate completion stats
+  const completedCount = data.filter((d) => d.completed).length;
+  const totalDays = data.length;
+
   const gridData = useMemo(() => {
     const result: Array<DayData & { isFuture: boolean; isToday: boolean }> = [];
-
-    // Get today's date
     const todayDate = new Date();
     todayDate.setHours(0, 0, 0, 0);
 
-    // Calculate start date (35 days ago to fill 5 weeks)
     const startDate = new Date(todayDate);
     startDate.setDate(startDate.getDate() - 34);
 
-    // Adjust to start on a Monday
     const dayOfWeek = startDate.getDay();
     const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     startDate.setDate(startDate.getDate() - daysToSubtract);
 
-    // Create a map of completion data for quick lookup
-    const completionMap = new Map(data.map(d => [d.date, d.completed]));
+    const completionMap = new Map(data.map((d) => [d.date, d.completed]));
 
-    // Generate 35 days (5 weeks)
     for (let i = 0; i < 35; i++) {
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
@@ -131,7 +119,6 @@ export function CalendarHeatmap({ data, onDayPress }: CalendarHeatmapProps) {
     return result;
   }, [data, today]);
 
-  // Split into weeks (7 days each)
   const weeks = useMemo(() => {
     const result: typeof gridData[] = [];
     for (let i = 0; i < gridData.length; i += 7) {
@@ -140,31 +127,32 @@ export function CalendarHeatmap({ data, onDayPress }: CalendarHeatmapProps) {
     return result;
   }, [gridData]);
 
-  // Day labels
   const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   return (
     <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
       {/* Header */}
-      <View className="mb-4 flex-row items-center gap-2">
-        <Calendar className="text-stone-600" size={20} />
-        <Text className="text-lg font-semibold text-stone-800">
-          Last 30 Days
-        </Text>
+      <View className="mb-4 flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <Grid3X3 className="text-stone-500" size={18} />
+          <Text className="text-lg font-semibold text-stone-800">Activity</Text>
+        </View>
+        <View className="flex-row items-center gap-1 rounded-full bg-emerald-50 px-3 py-1">
+          <Text className="text-sm font-bold text-emerald-700">{completedCount}</Text>
+          <Text className="text-sm text-emerald-600">/ {totalDays}</Text>
+        </View>
       </View>
 
-      {/* Day Labels Row */}
+      {/* Day Labels */}
       <View className="mb-2 flex-row justify-around px-1">
         {dayLabels.map((label, idx) => (
           <View key={idx} className="w-8 items-center">
-            <Text className="text-xs font-medium text-stone-400">
-              {label}
-            </Text>
+            <Text className="text-xs font-medium text-stone-400">{label}</Text>
           </View>
         ))}
       </View>
 
-      {/* Calendar Grid */}
+      {/* Grid */}
       <View className="gap-1.5">
         {weeks.map((week, weekIdx) => (
           <View key={weekIdx} className="flex-row justify-around">
@@ -184,17 +172,17 @@ export function CalendarHeatmap({ data, onDayPress }: CalendarHeatmapProps) {
       </View>
 
       {/* Legend */}
-      <View className="mt-4 flex-row items-center justify-center gap-4">
-        <View className="flex-row items-center gap-1.5">
-          <View className="h-3 w-3 rounded bg-stone-200" />
+      <View className="mt-4 flex-row items-center justify-center gap-5">
+        <View className="flex-row items-center gap-2">
+          <View className="h-4 w-4 rounded bg-stone-100" />
           <Text className="text-xs text-stone-500">Missed</Text>
         </View>
-        <View className="flex-row items-center gap-1.5">
-          <View className="h-3 w-3 rounded bg-emerald-500" />
+        <View className="flex-row items-center gap-2">
+          <View className="h-4 w-4 rounded bg-emerald-500" />
           <Text className="text-xs text-stone-500">Done</Text>
         </View>
-        <View className="flex-row items-center gap-1.5">
-          <View className="h-3 w-3 rounded bg-amber-100 ring-1 ring-amber-300" />
+        <View className="flex-row items-center gap-2">
+          <View className="h-4 w-4 rounded border-2 border-amber-400 bg-amber-50" />
           <Text className="text-xs text-stone-500">Today</Text>
         </View>
       </View>
@@ -203,19 +191,3 @@ export function CalendarHeatmap({ data, onDayPress }: CalendarHeatmapProps) {
 }
 
 export default CalendarHeatmap;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

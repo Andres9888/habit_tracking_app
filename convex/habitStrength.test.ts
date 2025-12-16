@@ -362,4 +362,23 @@ describe('calculateMomentumStrengthSnapshot - day-by-day simulation', () => {
     expect(snapshot.strength100).toBeLessThan(3);
     expect(snapshot.strength100).toBeCloseTo(2.8929, 3);
   });
+
+  it('should include backfilled tracking dates before habit creation', () => {
+    const habitCreatedAt = new Date(2025, 0, 2).getTime(); // created 2025-01-02 local
+    const tracking = [
+      { completed: true, date: '2025-01-01' },
+      { completed: true, date: '2025-01-02' },
+    ];
+
+    const snapshot = calculateMomentumStrengthSnapshot({
+      habitCreatedAt,
+      throughDate: '2025-01-02',
+      tracking,
+    });
+
+    // Day 1 completion: 0 -> 3.0
+    // Day 2 completion: 3.0 + (100 - 3.0) * 0.03 = 5.91
+    expect(snapshot.daysProcessed).toBe(2);
+    expect(snapshot.strength100).toBeCloseTo(5.91, 2);
+  });
 });

@@ -194,7 +194,28 @@ export function calculateMomentumStrengthSnapshot({
   const evaluationDate = parseDateKeyToLocalDate(evaluationDateKey);
   const creationDate = startOfDay(new Date(habitCreatedAt));
 
-  if (creationDate.getTime() > evaluationDate.getTime()) {
+  const earliestTrackingDateKey = tracking.reduce<string | null>((earliest, record) => {
+    if (!isValidDateKey(record.date)) {
+      return earliest;
+    }
+    if (!earliest) {
+      return record.date;
+    }
+    return record.date < earliest ? record.date : earliest;
+  }, null);
+
+  const earliestTrackingDate = earliestTrackingDateKey
+    ? parseDateKeyToLocalDate(earliestTrackingDateKey)
+    : null;
+
+  // Allow backfilled tracking dates before habit creation to count toward strength.
+  // We start from the earliest known tracking date (if earlier), otherwise the habit's creation date.
+  const simulationStartDate =
+    earliestTrackingDate && earliestTrackingDate.getTime() < creationDate.getTime()
+      ? earliestTrackingDate
+      : creationDate;
+
+  if (simulationStartDate.getTime() > evaluationDate.getTime()) {
     return {
       daysProcessed: 0,
       strength: 0,
@@ -208,13 +229,14 @@ export function calculateMomentumStrengthSnapshot({
   );
 
   const daysProcessed =
-    Math.floor((evaluationDate.getTime() - creationDate.getTime()) / MS_PER_DAY) +
-    1;
+    Math.floor(
+      (evaluationDate.getTime() - simulationStartDate.getTime()) / MS_PER_DAY
+    ) + 1;
 
   let strength100 = 0;
 
   for (
-    let cursor = new Date(creationDate);
+    let cursor = new Date(simulationStartDate);
     cursor.getTime() <= evaluationDate.getTime();
     cursor = addDays(cursor, 1)
   ) {

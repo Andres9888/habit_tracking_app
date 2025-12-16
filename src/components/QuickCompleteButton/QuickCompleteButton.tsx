@@ -1,12 +1,6 @@
 /**
  * QuickCompleteButton Component
- * Primary action button for marking a habit complete from the detail screen
- *
- * Features:
- * - One-tap completion with celebration animation
- * - Toggle state (complete/uncomplete)
- * - Haptic feedback
- * - Accessibility support
+ * Primary action button for marking a habit complete
  */
 
 import React, { useState } from 'react';
@@ -19,7 +13,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { Check, Circle } from 'lucide-react-native';
+import { Check, Zap } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -45,16 +39,13 @@ export function QuickCompleteButton({
   const [isToggling, setIsToggling] = useState(false);
   const [localCompleted, setLocalCompleted] = useState(completedToday);
 
-  // Animation values
   const buttonScale = useSharedValue(1);
   const checkScale = useSharedValue(completedToday ? 1 : 0);
   const checkRotation = useSharedValue(completedToday ? 0 : -90);
 
-  // Convex mutation
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
   const today = new Date().toISOString().split('T')[0];
 
-  // Sync with prop when it changes
   React.useEffect(() => {
     setLocalCompleted(completedToday);
     checkScale.value = completedToday ? 1 : 0;
@@ -67,16 +58,16 @@ export function QuickCompleteButton({
     setIsToggling(true);
 
     // Haptic feedback
-    if (localCompleted) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } else {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    Haptics.impactAsync(
+      localCompleted
+        ? Haptics.ImpactFeedbackStyle.Light
+        : Haptics.ImpactFeedbackStyle.Heavy
+    );
 
-    // Button press animation
+    // Button animation
     buttonScale.value = withSequence(
-      withTiming(0.97, { duration: 50 }),
-      withSpring(1, { damping: 15, stiffness: 200 })
+      withTiming(0.96, { duration: 80 }),
+      withSpring(1, { damping: 12, stiffness: 200 })
     );
 
     // Optimistic update
@@ -84,9 +75,8 @@ export function QuickCompleteButton({
     setLocalCompleted(!wasCompleted);
 
     if (!wasCompleted) {
-      // Completing - animate checkmark in
       checkScale.value = withSequence(
-        withSpring(1.2, { damping: 8, stiffness: 200 }),
+        withSpring(1.3, { damping: 6, stiffness: 200 }),
         withSpring(1, { damping: 10, stiffness: 180 })
       );
       checkRotation.value = withTiming(0, {
@@ -95,7 +85,6 @@ export function QuickCompleteButton({
       });
       onComplete?.();
     } else {
-      // Uncompleting - animate checkmark out
       checkScale.value = withTiming(0, { duration: 150 });
       checkRotation.value = withTiming(-90, { duration: 150 });
       onUncomplete?.();
@@ -104,7 +93,6 @@ export function QuickCompleteButton({
     try {
       await toggleCompletionMutation({ date: today, habitId });
     } catch (error) {
-      // Revert on error
       setLocalCompleted(wasCompleted);
       checkScale.value = wasCompleted ? 1 : 0;
       checkRotation.value = wasCompleted ? 0 : -90;
@@ -114,7 +102,6 @@ export function QuickCompleteButton({
     }
   };
 
-  // Animated styles
   const buttonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: buttonScale.value }],
   }));
@@ -129,61 +116,48 @@ export function QuickCompleteButton({
 
   return (
     <AnimatedPressable
-      accessibilityHint={localCompleted ? 'Double tap to mark as not complete' : 'Double tap to mark as complete'}
-      accessibilityLabel={localCompleted ? `${habitName} completed today. Tap to undo.` : `Mark ${habitName} complete for today`}
+      accessibilityHint={
+        localCompleted
+          ? 'Double tap to mark as not complete'
+          : 'Double tap to mark as complete'
+      }
+      accessibilityLabel={
+        localCompleted
+          ? `${habitName} completed today. Tap to undo.`
+          : `Mark ${habitName} complete for today`
+      }
       accessibilityRole="button"
       accessibilityState={{ checked: localCompleted }}
       className={`
-        flex-row items-center justify-center gap-3 rounded-2xl px-6 py-4
+        flex-row items-center justify-center gap-3 rounded-2xl px-6 py-5
         ${localCompleted
           ? 'border-2 border-emerald-200 bg-emerald-50'
-          : 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25'
+          : 'bg-emerald-500 shadow-lg shadow-emerald-500/30'
         }
       `}
       disabled={isToggling}
       onPress={handlePress}
       style={buttonAnimatedStyle}
     >
-      <View className="relative h-6 w-6 items-center justify-center">
+      <View className="relative h-7 w-7 items-center justify-center">
         {localCompleted ? (
           <Animated.View style={checkAnimatedStyle}>
-            <Check
-              className="text-emerald-600"
-              size={24}
-              strokeWidth={3}
-            />
+            <Check className="text-emerald-600" size={28} strokeWidth={3} />
           </Animated.View>
         ) : (
-          <Circle
-            className="text-white/80"
-            size={22}
-            strokeWidth={2}
-          />
+          <Zap className="text-white" fill="white" size={24} />
         )}
       </View>
 
       <Text
-        className={`text-base font-semibold ${
+        className={`text-lg font-bold ${
           localCompleted ? 'text-emerald-700' : 'text-white'
         }`}
       >
-        {localCompleted ? 'Completed Today ✓' : 'Mark Complete for Today'}
+        {localCompleted ? 'Done for Today' : 'Complete Today'}
       </Text>
     </AnimatedPressable>
   );
 }
 
 export default QuickCompleteButton;
-
-
-
-
-
-
-
-
-
-
-
-
-

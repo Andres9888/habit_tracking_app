@@ -1,13 +1,6 @@
 /**
  * StatsGrid Component
- * Displays key habit statistics in a 2x2 grid layout
- *
- * Features:
- * - Total completions
- * - Success rate percentage
- * - Current streak
- * - Days since tracking started
- * - Animated count-up on mount
+ * Displays key habit statistics with visual polish
  */
 
 import React, { useEffect } from 'react';
@@ -18,14 +11,8 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
-  FadeIn,
 } from 'react-native-reanimated';
-import {
-  CheckCircle2,
-  TrendingUp,
-  Flame,
-  Calendar
-} from 'lucide-react-native';
+import { CheckCircle2, TrendingUp, Flame, Calendar, BarChart3 } from 'lucide-react-native';
 
 export interface StatsGridProps {
   currentStreak: number;
@@ -35,20 +22,32 @@ export interface StatsGridProps {
 }
 
 interface StatCardProps {
+  bgColor: string;
   delay: number;
   icon: React.ReactNode;
+  iconBgColor: string;
   label: string;
   suffix?: string;
   value: number | string;
+  valueColor: string;
 }
 
-function StatCard({ delay, icon, label, suffix, value }: StatCardProps) {
-  const scale = useSharedValue(0.8);
+function StatCard({
+  bgColor,
+  delay,
+  icon,
+  iconBgColor,
+  label,
+  suffix,
+  value,
+  valueColor,
+}: StatCardProps) {
+  const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    opacity.value = withDelay(delay, withTiming(1, { duration: 300 }));
-    scale.value = withDelay(delay, withSpring(1, { damping: 12, stiffness: 200 }));
+    opacity.value = withDelay(delay, withTiming(1, { duration: 200 }));
+    scale.value = withDelay(delay, withSpring(1, { damping: 12, stiffness: 180 }));
   }, [delay]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -58,16 +57,17 @@ function StatCard({ delay, icon, label, suffix, value }: StatCardProps) {
 
   return (
     <Animated.View
-      className="flex-1 items-center justify-center rounded-xl border border-stone-100 bg-white p-4"
+      className={`flex-1 rounded-xl p-4 ${bgColor}`}
       style={animatedStyle}
     >
-      <View className="mb-2">{icon}</View>
-      <Text className="text-2xl font-bold text-stone-900">
-        {value}{suffix}
+      <View className={`mb-3 h-10 w-10 items-center justify-center rounded-full ${iconBgColor}`}>
+        {icon}
+      </View>
+      <Text className={`text-3xl font-bold ${valueColor}`}>
+        {value}
+        {suffix && <Text className="text-xl">{suffix}</Text>}
       </Text>
-      <Text className="mt-1 text-xs font-medium text-stone-500">
-        {label}
-      </Text>
+      <Text className="mt-1 text-xs font-medium text-stone-500">{label}</Text>
     </Animated.View>
   );
 }
@@ -78,49 +78,59 @@ export function StatsGrid({
   successRate,
   totalCompletions,
 }: StatsGridProps) {
-  // Ensure successRate is displayed nicely
   const displayRate = Math.round(successRate);
 
   return (
     <View className="rounded-2xl bg-white/90 p-4 shadow-sm shadow-stone-200/50">
-      <View className="mb-3 flex-row items-center gap-2">
-        <TrendingUp className="text-stone-600" size={20} />
-        <Text className="text-lg font-semibold text-stone-800">
-          Statistics
-        </Text>
+      {/* Header */}
+      <View className="mb-4 flex-row items-center justify-center gap-2">
+        <BarChart3 className="text-stone-500" size={18} />
+        <Text className="text-lg font-semibold text-stone-800">Statistics</Text>
       </View>
 
       <View className="gap-3">
         {/* Top Row */}
         <View className="flex-row gap-3">
           <StatCard
+            bgColor="bg-emerald-50"
             delay={0}
-            icon={<CheckCircle2 className="text-emerald-500" size={24} />}
-            label="Total Done"
+            icon={<CheckCircle2 className="text-emerald-600" size={20} />}
+            iconBgColor="bg-emerald-100"
+            label="Completed"
             value={totalCompletions}
+            valueColor="text-emerald-700"
           />
           <StatCard
-            delay={100}
-            icon={<TrendingUp className="text-blue-500" size={24} />}
+            bgColor="bg-blue-50"
+            delay={80}
+            icon={<TrendingUp className="text-blue-600" size={20} />}
+            iconBgColor="bg-blue-100"
             label="Success Rate"
             suffix="%"
             value={displayRate}
+            valueColor="text-blue-700"
           />
         </View>
 
         {/* Bottom Row */}
         <View className="flex-row gap-3">
           <StatCard
-            delay={200}
-            icon={<Flame className="text-amber-500" fill="#f59e0b" size={24} />}
+            bgColor="bg-amber-50"
+            delay={160}
+            icon={<Flame className="text-amber-600" fill="#d97706" size={20} />}
+            iconBgColor="bg-amber-100"
             label="Current Streak"
             value={currentStreak}
+            valueColor="text-amber-700"
           />
           <StatCard
-            delay={300}
-            icon={<Calendar className="text-violet-500" size={24} />}
+            bgColor="bg-violet-50"
+            delay={240}
+            icon={<Calendar className="text-violet-600" size={20} />}
+            iconBgColor="bg-violet-100"
             label="Days Tracking"
             value={daysTracking}
+            valueColor="text-violet-700"
           />
         </View>
       </View>
@@ -129,19 +139,3 @@ export function StatsGrid({
 }
 
 export default StatsGrid;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -83,9 +83,7 @@ const SIZE_CONFIG = {
 const DIVIDER_POSITIONS = [20, 40, 60, 80];
 
 const formatStrengthPercentage = (strength: number): string => {
-  const roundedToTenth = Math.round(strength * 10) / 10;
-  const decimals = Number.isInteger(roundedToTenth) ? 0 : 1;
-  return `${roundedToTenth.toFixed(decimals)}%`;
+  return `${Math.round(strength)}%`;
 };
 
 export const StrengthProgressBar = ({
@@ -175,7 +173,7 @@ export const StrengthProgressBar = ({
     ],
   }));
 
-  const pointsToNext = nextLevel ? nextLevel.threshold - clampedStrength : 0;
+  const pointsToNext = nextLevel ? Math.round(nextLevel.threshold - clampedStrength) : 0;
 
   return (
     <View

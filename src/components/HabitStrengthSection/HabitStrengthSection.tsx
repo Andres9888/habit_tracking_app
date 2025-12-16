@@ -32,9 +32,7 @@ import * as Haptics from 'expo-haptics';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const formatStrengthPercentage = (strength: number): string => {
-  const roundedToTenth = Math.round(strength * 10) / 10;
-  const decimals = Number.isInteger(roundedToTenth) ? 0 : 1;
-  return `${roundedToTenth.toFixed(decimals)}%`;
+  return `${Math.round(strength)}%`;
 };
 
 export interface HabitStrengthSectionProps {
@@ -397,7 +395,7 @@ export const HabitStrengthSection = ({
 
           {nextLevel && (
             <Text className="mt-3 text-xs text-stone-400">
-              {nextLevel.minThreshold - clampedStrength}% to {nextLevel.emoji} {nextLevel.label}
+              {Math.round(nextLevel.minThreshold - clampedStrength)}% to {nextLevel.emoji} {nextLevel.label}
             </Text>
           )}
         </View>
