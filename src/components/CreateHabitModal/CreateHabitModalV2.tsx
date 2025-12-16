@@ -1,4 +1,3 @@
-import { useCallback, useState } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
@@ -11,7 +10,6 @@ import { LivePreview } from './components/LivePreview';
 import { StyleSection } from './components/StyleSection';
 import { SimpleReminderSection } from './components/SimpleReminderSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
-import { SuccessAnimation } from './components/SuccessAnimation';
 import { PhaseSelector } from './components/PhaseSelector';
 import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
@@ -51,42 +49,11 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
   const { triggerSelection } = useHapticFeedback();
 
-  // Success animation state
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [successData, setSuccessData] = useState<{
-    color: string;
-    emoji: string | null;
-    name: string;
-  } | null>(null);
-
   // Get suggested emojis based on habit name
   const suggestedEmojis = getSuggestedEmojis(form.habitName);
 
-  // Handle create with success animation
-  const handleCreateWithAnimation = useCallback(async () => {
-    // Store data for success animation
-    setSuccessData({
-      color: form.selectedColor,
-      emoji: form.selectedEmoji,
-      name: form.habitName,
-    });
-
-    // Trigger the actual create
-    await handleCreate();
-
-    // Show success animation
-    setShowSuccess(true);
-  }, [form.habitName, form.selectedColor, form.selectedEmoji, handleCreate]);
-
-  // Handle success animation complete
-  const handleSuccessComplete = useCallback(() => {
-    setShowSuccess(false);
-    setSuccessData(null);
-  }, []);
-
   return (
-    <>
-      <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
+    <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
         <View className="flex-1 bg-black/50">
           <View className="mt-12 flex-1 overflow-hidden rounded-t-3xl bg-slate-50 shadow-2xl">
             {/* Header */}
@@ -94,7 +61,7 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
               habitName={form.habitName}
               isEditMode={isEditMode}
               onClose={onClose}
-              onSave={handleCreateWithAnimation}
+              onSave={handleCreate}
             />
 
             {/* Scrollable Content */}
@@ -153,7 +120,7 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
             {/* Sticky Create Bar */}
             <StickyCreateBar
               disabled={!form.habitName.trim().length}
-              onPress={handleCreateWithAnimation}
+              onPress={handleCreate}
             />
 
             {/* Time Picker */}
@@ -183,18 +150,6 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
           onClose={form.closeColorPicker}
           onSelect={form.setSelectedColor}
         />
-      </Modal>
-
-      {/* Success Animation */}
-      {successData && (
-        <SuccessAnimation
-          habitName={successData.name}
-          selectedColor={successData.color}
-          selectedEmoji={successData.emoji}
-          visible={showSuccess}
-          onComplete={handleSuccessComplete}
-        />
-      )}
-    </>
+    </Modal>
   );
 }

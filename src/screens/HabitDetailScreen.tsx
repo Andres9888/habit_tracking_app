@@ -578,7 +578,7 @@ export default function HabitDetailScreen({
     const cueTime = cueTimeDraft.trim();
 
     if (cueAfterBehavior.length > 100) {
-      Alert.alert('Too long', 'Keep your trigger under 100 characters.', [{ text: 'OK' }]);
+      Alert.alert('Too long', 'Keep your cue under 100 characters.', [{ text: 'OK' }]);
       return;
     }
 
@@ -756,17 +756,22 @@ export default function HabitDetailScreen({
             {/* Content */}
             {habit.why ? (
               <View className="items-center rounded-xl border border-stone-100 bg-stone-50/50 p-4">
-                {/* Quote marks for emphasis */}
-                <Text className="text-center text-base italic leading-relaxed text-stone-700">
-                  "{habit.why}"
+                {/* Identity Framing */}
+                <Text className="mb-2 text-xs font-medium uppercase tracking-wider text-stone-400">
+                  I am becoming someone who...
                 </Text>
+
+                {/* The Why Statement */}
+                <Text className="text-center text-base font-medium leading-relaxed text-stone-700">
+                  {habit.why}
+                </Text>
+
                 <Text className="mt-3 text-xs text-stone-400">
                   Tap to edit
                 </Text>
               </View>
             ) : (
               <View className="items-center rounded-xl bg-stone-50 py-6">
-                <Compass className="mb-2 text-stone-300" size={28} />
                 <Text className="text-center text-sm text-stone-500">
                   What's the deeper reason?
                 </Text>
@@ -779,33 +784,33 @@ export default function HabitDetailScreen({
 
           {/* Cue Section - Implementation Intention */}
           <Pressable
-            accessibilityLabel={hasCue ? 'Edit your trigger' : 'Add a trigger'}
+            accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
             accessibilityRole="button"
-            className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
+            className="rounded-2xl bg-amber-50/80 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
             onPress={handleOpenCueEditor}
           >
             {/* Header */}
             <View className="mb-3 flex-row items-center justify-center gap-2">
-              <Target className="text-stone-500" size={18} />
-              <Text className="text-lg font-semibold text-stone-800">
-                Your Trigger
+              <Target className="text-amber-600" size={18} />
+              <Text className="text-lg font-semibold text-amber-900">
+                Your Cue
               </Text>
             </View>
 
             {/* Content */}
             {hasCue ? (
-              <View className="items-center rounded-xl border border-stone-100 bg-stone-50/50 p-4">
+              <View className="items-center rounded-xl border border-amber-200/60 bg-white/80 p-4">
                 {/* Full Implementation Intention Sentence */}
                 {habitCueAfterBehavior ? (
                   <View className="items-center">
-                    <Text className="text-center text-base leading-relaxed text-stone-700">
+                    <Text className="text-center text-base leading-relaxed text-stone-600">
                       After I{' '}
-                      <Text className="font-semibold text-stone-800">
+                      <Text className="font-semibold text-amber-700">
                         {habitCueAfterBehavior}
                       </Text>
                       ,
                     </Text>
-                    <Text className="mt-1 text-center text-base leading-relaxed text-stone-700">
+                    <Text className="mt-1 text-center text-base leading-relaxed text-stone-600">
                       I will{' '}
                       <Text className="font-semibold text-stone-800">
                         {habit.name}
@@ -814,33 +819,32 @@ export default function HabitDetailScreen({
                   </View>
                 ) : null}
                 {(habitCueLocation || habitCueTime) ? (
-                  <View className="mt-3 flex-row flex-wrap items-center justify-center gap-3 border-t border-stone-100 pt-3">
+                  <View className="mt-3 flex-row flex-wrap items-center justify-center gap-2 border-t border-amber-100 pt-3">
                     {habitCueLocation ? (
-                      <View className="flex-row items-center gap-1.5 rounded-full bg-stone-100 px-2.5 py-1">
-                        <MapPin className="text-stone-400" size={12} />
-                        <Text className="text-xs font-medium text-stone-500">{habitCueLocation}</Text>
+                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
+                        <MapPin className="text-amber-500" size={12} />
+                        <Text className="text-xs font-medium text-amber-700">{habitCueLocation}</Text>
                       </View>
                     ) : null}
                     {habitCueTime ? (
-                      <View className="flex-row items-center gap-1.5 rounded-full bg-stone-100 px-2.5 py-1">
-                        <Clock className="text-stone-400" size={12} />
-                        <Text className="text-xs font-medium text-stone-500">{habitCueTime}</Text>
+                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
+                        <Clock className="text-amber-500" size={12} />
+                        <Text className="text-xs font-medium text-amber-700">{habitCueTime}</Text>
                       </View>
                     ) : null}
                   </View>
                 ) : null}
-                <Text className="mt-3 text-xs text-stone-400">
+                <Text className="mt-3 text-xs text-amber-600/70">
                   Tap to edit
                 </Text>
               </View>
             ) : (
-              <View className="items-center rounded-xl bg-stone-50 py-6">
-                <Target className="mb-2 text-stone-300" size={28} />
+              <View className="items-center rounded-xl bg-white/60 py-6">
                 <Text className="text-center text-sm text-stone-500">
                   When will you do this?
                 </Text>
                 <Text className="mt-1 text-center text-xs text-stone-400">
-                  Tap to add your trigger
+                  Tap to set your cue
                 </Text>
               </View>
             )}
@@ -1283,7 +1287,12 @@ export default function HabitDetailScreen({
           >
             {/* Description */}
             <Text className="mb-4 text-sm text-stone-500">
-              The deeper reason behind this habit. What future are you building?
+              Your why is the deeper reason that pulls you forward when the path gets hard.
+            </Text>
+
+            {/* Identity Framing Label */}
+            <Text className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
+              I am becoming someone who...
             </Text>
 
             {/* Input */}
@@ -1292,7 +1301,7 @@ export default function HabitDetailScreen({
               accessibilityLabel="Why you are doing this habit"
               className="min-h-[120px] rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
               maxLength={200}
-              placeholder="So I can be healthy for my kids..."
+              placeholder="is healthy and present for my kids..."
               placeholderTextColor="#a8a29e"
               textAlignVertical="top"
               value={whyDraft}
@@ -1332,15 +1341,15 @@ export default function HabitDetailScreen({
 
             {/* Templates */}
             <Text className="mb-3 text-xs font-semibold uppercase tracking-widest text-stone-500">
-              Templates
+              Inspiration
             </Text>
             <View className="gap-2">
               {[
-                'So I can be fully present for my family',
-                'I am someone who keeps promises to myself',
-                'To prove to myself I can follow through',
-                'Because I deserve to feel strong and healthy',
-                'So my future self will thank me',
+                'is fully present for my family',
+                'keeps promises to myself',
+                'proves I can follow through',
+                'deserves to feel strong and healthy',
+                'makes my future self proud',
               ].map((template) => (
                 <Pressable
                   key={template}
@@ -1352,7 +1361,10 @@ export default function HabitDetailScreen({
                     setWhyDraft(template);
                   }}
                 >
-                  <Text className="text-sm italic text-stone-700">"{template}"</Text>
+                  <Text className="text-sm text-stone-700">
+                    <Text className="font-medium text-stone-500">I am someone who </Text>
+                    {template}
+                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -1602,7 +1614,7 @@ export default function HabitDetailScreen({
               <View className="rounded-full bg-amber-100 p-1.5">
                 <Target className="text-amber-600" size={18} />
               </View>
-              <Text className="text-lg font-bold text-stone-900">Set Your Trigger</Text>
+              <Text className="text-lg font-bold text-stone-900">Set Your Cue</Text>
             </View>
             <Pressable
               accessibilityLabel="Close cue editor"
@@ -1678,7 +1690,7 @@ export default function HabitDetailScreen({
               After I...
             </Text>
             <TextInput
-              accessibilityLabel="After I (trigger behavior)"
+              accessibilityLabel="After I (cue behavior)"
               className="rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
               maxLength={100}
               placeholder="pour my morning coffee"
@@ -1755,7 +1767,7 @@ export default function HabitDetailScreen({
                 className="mt-6 items-center rounded-xl border border-red-200 bg-red-50 py-3 active:bg-red-100"
                 onPress={handleClearCue}
               >
-                <Text className="text-sm font-medium text-red-600">Clear Trigger</Text>
+                <Text className="text-sm font-medium text-red-600">Clear Cue</Text>
               </Pressable>
             ) : null}
           </ScrollView>
@@ -1768,7 +1780,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800"
               onPress={handleSaveCue}
             >
-              <Text className="text-base font-semibold text-white">Save Trigger</Text>
+              <Text className="text-base font-semibold text-white">Save Cue</Text>
             </Pressable>
           </View>
         </View>
@@ -1962,7 +1974,7 @@ export default function HabitDetailScreen({
       {/* Success Toast */}
       <Toast
         duration={3000}
-        message="Trigger saved! You're 2-3x more likely to follow through 🎯"
+        message="Cue saved! You're 2-3x more likely to follow through 🎯"
         variant="success"
         visible={cueToastVisible}
         onDismiss={() => setCueToastVisible(false)}
