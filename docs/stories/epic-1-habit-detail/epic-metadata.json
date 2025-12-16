@@ -6,7 +6,7 @@
   "timeline": "Week 2",
   "status": "not_started",
   "progress": 0,
-  "storiesTotal": 5,
+  "storiesTotal": 7,
   "storiesCompleted": 0,
   "priority": "high",
   "owner": "Jane",
@@ -36,9 +36,23 @@
       "id": "1.9.4",
       "title": "Habit Detail Manage Actions + Safety",
       "status": "todo"
+    },
+    {
+      "id": "1.9.5",
+      "title": "Habit Cue & Implementation Intention",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.6",
+      "title": "Affirmations & Positive Self-Talk",
+      "status": "todo"
     }
   ],
   "createdAt": "2025-12-14",
   "updatedAt": "2025-12-14"
 }
+
+
+
+
 

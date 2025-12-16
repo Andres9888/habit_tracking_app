@@ -529,9 +529,11 @@ function QuickStartButton({
       accessibilityRole='button'
       className='items-center justify-center gap-2 rounded-2xl border px-3 py-4 shadow-sm'
       disabled={isCreating || isSuccess}
-      entering={FadeInDown.delay(120 + index * 50)
+      entering={FadeInDown.delay(200 + index * 100)
         .springify()
-        .damping(14)}
+        .damping(12)
+        .mass(0.8)
+        .stiffness(100)}
       style={[animatedStyle, containerStyle]}
       onPress={handlePress}
       onPressIn={() => {

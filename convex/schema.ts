@@ -9,6 +9,22 @@ const applicationTables = {
     title: v.string(),
   }).index('by_category', ['category']),
 
+  // Affirmations - Positive self-talk cards (Steele, 1988; Hatzigeorgiadis, 2011)
+  affirmations: defineTable({
+    createdAt: v.number(),
+    habitId: v.id('habits'),
+    text: v.string(),
+    type: v.optional(
+      v.union(
+        v.literal('identity'), // "I am someone who..."
+        v.literal('motivational'), // "I can do hard things"
+        v.literal('instructional') // "Progress, not perfection"
+      )
+    ),
+    updatedAt: v.number(),
+    userId: v.optional(v.string()),
+  }).index('by_habit', ['habitId']),
+
   habits: defineTable({
     // Memory Accessibility System (Tobias, 2009; Zhang et al., 2021)
     // Memory accessibility (0-1), starts at 1.0
@@ -30,6 +46,15 @@ const applicationTables = {
     consecutiveDays: v.optional(v.number()),
 
     createdAt: v.number(),
+
+    // Cue - Implementation Intention (Gollwitzer, 1999: 2-3x follow-through)
+    // "After I pour my morning coffee"
+    cueAfterBehavior: v.optional(v.string()),
+    // "Kitchen"
+    cueLocation: v.optional(v.string()),
+    // "7:00 AM" or "Morning"
+    cueTime: v.optional(v.string()),
+
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)

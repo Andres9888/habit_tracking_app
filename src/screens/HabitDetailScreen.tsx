@@ -36,6 +36,12 @@ import {
   Eye,
   Brain,
   Sparkles,
+  Target,
+  MapPin,
+  Clock,
+  MessageCircle,
+  Plus,
+  Star,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
@@ -217,23 +223,44 @@ export default function HabitDetailScreen({
   const [visionBoardBodyDraft, setVisionBoardBodyDraft] = useState('');
   const [visionBoardEditingId, setVisionBoardEditingId] = useState<Id<'visionBoardItems'> | null>(null);
   const [visionBoardTitleDraft, setVisionBoardTitleDraft] = useState('');
+  // Cue state
+  const [isCueEditorOpen, setIsCueEditorOpen] = useState(false);
+  const [cueAfterBehaviorDraft, setCueAfterBehaviorDraft] = useState('');
+  const [cueLocationDraft, setCueLocationDraft] = useState('');
+  const [cueTimeDraft, setCueTimeDraft] = useState('');
+  // Affirmations state
+  const [isAffirmationEditorOpen, setIsAffirmationEditorOpen] = useState(false);
+  const [isAffirmationsListOpen, setIsAffirmationsListOpen] = useState(false);
+  const [affirmationTextDraft, setAffirmationTextDraft] = useState('');
+  const [affirmationTypeDraft, setAffirmationTypeDraft] = useState<'identity' | 'motivational' | 'instructional' | undefined>(undefined);
+  const [affirmationEditingId, setAffirmationEditingId] = useState<Id<'affirmations'> | null>(null);
 
   type VisionBoardItem = Doc<'visionBoardItems'>;
+  type Affirmation = Doc<'affirmations'>;
 
   const updateHabit = useMutation(api.habits.update);
   const createVisionBoardItem = useMutation(api.visionBoard.create);
   const removeVisionBoardItem = useMutation(api.visionBoard.remove);
   const updateVisionBoardItem = useMutation(api.visionBoard.update);
+  const createAffirmation = useMutation(api.affirmations.create);
+  const updateAffirmation = useMutation(api.affirmations.update);
+  const removeAffirmation = useMutation(api.affirmations.remove);
 
   const habitCreatedAt = habit?.createdAt;
   const habitId = habit?._id;
   const habitStrength = habit?.strength ?? 0;
   const habitWhy = habit?.why;
+  const habitCueAfterBehavior = habit?.cueAfterBehavior;
+  const habitCueLocation = habit?.cueLocation;
+  const habitCueTime = habit?.cueTime;
+  const hasCue = Boolean(habitCueAfterBehavior || habitCueLocation || habitCueTime);
 
   const habitNotes =
     useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];
   const visionBoardItems =
     useQuery(api.visionBoard.listByHabit, visible && habitId ? { habitId } : 'skip') ?? [];
+  const affirmations =
+    useQuery(api.affirmations.listByHabit, visible && habitId ? { habitId } : 'skip') ?? [];
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -307,6 +334,12 @@ export default function HabitDetailScreen({
   useEffect(() => {
     setWhyDraft(habitWhy ?? '');
   }, [habitId, habitWhy]);
+
+  useEffect(() => {
+    setCueAfterBehaviorDraft(habitCueAfterBehavior ?? '');
+    setCueLocationDraft(habitCueLocation ?? '');
+    setCueTimeDraft(habitCueTime ?? '');
+  }, [habitId, habitCueAfterBehavior, habitCueLocation, habitCueTime]);
 
   useEffect(() => {
     setOptimisticTodayCompleted(null);
@@ -446,8 +479,8 @@ export default function HabitDetailScreen({
 
   const handleSaveWhy = async () => {
     const nextWhy = whyDraft.trim();
-    if (nextWhy.length > 120) {
-      Alert.alert('Too long', 'Keep your why under 120 characters.', [{ text: 'OK' }]);
+    if (nextWhy.length > 200) {
+      Alert.alert('Too long', 'Keep your North Star under 200 characters.', [{ text: 'OK' }]);
       return;
     }
 
@@ -531,6 +564,110 @@ export default function HabitDetailScreen({
     );
   };
 
+  // Cue handlers
+  const handleOpenCueEditor = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setIsCueEditorOpen(true);
+  };
+
+  const handleSaveCue = async () => {
+    const cueAfterBehavior = cueAfterBehaviorDraft.trim();
+    const cueLocation = cueLocationDraft.trim();
+    const cueTime = cueTimeDraft.trim();
+
+    if (cueAfterBehavior.length > 100) {
+      Alert.alert('Too long', 'Keep your trigger under 100 characters.', [{ text: 'OK' }]);
+      return;
+    }
+
+    try {
+      await updateHabit({
+        cueAfterBehavior: cueAfterBehavior ? cueAfterBehavior : undefined,
+        cueLocation: cueLocation ? cueLocation : undefined,
+        cueTime: cueTime ? cueTime : undefined,
+        habitId: habit._id,
+      });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setIsCueEditorOpen(false);
+    } catch (error) {
+      console.error('Failed to update cue:', error);
+      Alert.alert('Could not save', 'Please try again.', [{ text: 'OK' }]);
+    }
+  };
+
+  // Affirmation handlers
+  const handleOpenAffirmationEditor = (item?: Affirmation) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setAffirmationEditingId(item?._id ?? null);
+    setAffirmationTextDraft(item?.text ?? '');
+    setAffirmationTypeDraft(item?.type ?? undefined);
+    setIsAffirmationEditorOpen(true);
+  };
+
+  const handleSaveAffirmation = async () => {
+    const text = affirmationTextDraft.trim();
+
+    if (!text) {
+      Alert.alert('Required', 'Write an affirmation.', [{ text: 'OK' }]);
+      return;
+    }
+
+    if (text.length > 200) {
+      Alert.alert('Too long', 'Keep your affirmation under 200 characters.', [{ text: 'OK' }]);
+      return;
+    }
+
+    try {
+      if (affirmationEditingId) {
+        await updateAffirmation({
+          id: affirmationEditingId,
+          text,
+          type: affirmationTypeDraft,
+        });
+      } else {
+        if (affirmations.length >= 10) {
+          Alert.alert('Limit reached', 'Maximum 10 affirmations per habit. Remove one to add another.', [{ text: 'OK' }]);
+          return;
+        }
+        await createAffirmation({
+          habitId: habit._id,
+          text,
+          type: affirmationTypeDraft,
+        });
+      }
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setIsAffirmationEditorOpen(false);
+      setAffirmationEditingId(null);
+      setAffirmationTextDraft('');
+      setAffirmationTypeDraft(undefined);
+    } catch (error) {
+      console.error('Failed to save affirmation:', error);
+      Alert.alert('Could not save', 'Please try again.', [{ text: 'OK' }]);
+    }
+  };
+
+  const handleConfirmDeleteAffirmation = (item: Affirmation) => {
+    Alert.alert(
+      'Delete affirmation?',
+      `"${item.text.slice(0, 50)}${item.text.length > 50 ? '...' : ''}" will be removed.`,
+      [
+        { style: 'cancel', text: 'Cancel' },
+        {
+          style: 'destructive',
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              await removeAffirmation({ id: item._id });
+            } catch (error) {
+              console.error('Failed to delete affirmation:', error);
+              Alert.alert('Could not delete', 'Please try again.', [{ text: 'OK' }]);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <Modal
       disableBackdropClose={false}
@@ -576,25 +713,92 @@ export default function HabitDetailScreen({
           {/* Hero Section */}
           <HeroSection habit={habit} />
 
-          {/* Why (always visible) */}
+          {/* Why Section */}
           <Pressable
-            accessibilityLabel={habit.why ? 'Edit why' : 'Add your why'}
+            accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
             accessibilityRole="button"
             className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
             onPress={handleOpenWhyEditor}
           >
-            <Text className="text-xs font-semibold uppercase tracking-[2px] text-stone-500">
-              WHY
-            </Text>
-            <Text
-              className={clsx(
-                'mt-2 text-base leading-6',
-                habit.why ? 'text-stone-800' : 'text-stone-400'
-              )}
-              numberOfLines={2}
-            >
-              {habit.why ? habit.why : 'Add why you’re doing this habit'}
-            </Text>
+            {/* Header */}
+            <View className="mb-3 flex-row items-center justify-center gap-2">
+              <Star className="text-stone-500" size={18} />
+              <Text className="text-lg font-semibold text-stone-800">
+                Your Why
+              </Text>
+            </View>
+
+            {/* Content */}
+            {habit.why ? (
+              <View className="items-center rounded-xl border border-stone-100 bg-stone-50/50 p-4">
+                <Text className="text-center text-base leading-relaxed text-stone-700">
+                  {habit.why}
+                </Text>
+              </View>
+            ) : (
+              <View className="items-center rounded-xl bg-stone-50 py-6">
+                <Star className="mb-2 text-stone-300" size={28} />
+                <Text className="text-center text-sm text-stone-500">
+                  What's driving you?
+                </Text>
+                <Text className="mt-1 text-center text-xs text-stone-400">
+                  Tap to add your deeper reason
+                </Text>
+              </View>
+            )}
+          </Pressable>
+
+          {/* Cue Section */}
+          <Pressable
+            accessibilityLabel={hasCue ? 'Edit your trigger' : 'Add a trigger'}
+            accessibilityRole="button"
+            className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
+            onPress={handleOpenCueEditor}
+          >
+            {/* Header */}
+            <View className="mb-3 flex-row items-center justify-center gap-2">
+              <Target className="text-stone-500" size={18} />
+              <Text className="text-lg font-semibold text-stone-800">
+                Your Trigger
+              </Text>
+            </View>
+
+            {/* Content */}
+            {hasCue ? (
+              <View className="items-center rounded-xl border border-stone-100 bg-stone-50/50 p-4">
+                {habitCueAfterBehavior ? (
+                  <Text className="text-center text-base leading-relaxed text-stone-700">
+                    After I {habitCueAfterBehavior}
+                  </Text>
+                ) : null}
+                {(habitCueLocation || habitCueTime) ? (
+                  <View className="mt-2 flex-row flex-wrap items-center justify-center gap-3">
+                    {habitCueLocation ? (
+                      <View className="flex-row items-center gap-1">
+                        <MapPin className="text-stone-400" size={14} />
+                        <Text className="text-sm text-stone-500">{habitCueLocation}</Text>
+                      </View>
+                    ) : null}
+                    {habitCueTime ? (
+                      <View className="flex-row items-center gap-1">
+                        <Clock className="text-stone-400" size={14} />
+                        <Text className="text-sm text-stone-500">{habitCueTime}</Text>
+                      </View>
+                    ) : null}
+                  </View>
+                ) : null}
+              </View>
+            ) : (
+              <View className="items-center rounded-xl bg-stone-50 py-6">
+                <Target className="mb-2 text-stone-300" size={28} />
+                <Text className="text-center text-sm text-stone-500">
+                  When will you do this?
+                </Text>
+                <Text className="mt-1 text-center text-xs text-stone-400">
+                  Tap to add your trigger
+                </Text>
+              </View>
+            )}
           </Pressable>
 
           {/* Primary Action (Quick Complete) */}
@@ -763,6 +967,72 @@ export default function HabitDetailScreen({
                 )}
               </View>
 
+              {/* Affirmations Preview */}
+              <View className="mb-5 rounded-2xl border border-violet-100 bg-white/80 p-4">
+                <View className="mb-3 flex-row items-center justify-between">
+                  <View className="flex-row items-center gap-2">
+                    <MessageCircle className="text-violet-500" size={16} />
+                    <Text className="text-base font-semibold text-stone-800">
+                      Affirmations
+                    </Text>
+                  </View>
+                  <Pressable
+                    accessibilityLabel="Add affirmation"
+                    accessibilityRole="button"
+                    className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+                    onPress={() => handleOpenAffirmationEditor()}
+                  >
+                    <Text className="text-xs font-semibold text-white">
+                      Add
+                    </Text>
+                  </Pressable>
+                </View>
+
+                {affirmations.length === 0 ? (
+                  <Text className="text-sm text-stone-500">
+                    Add positive self-talk to counter doubt on hard days.
+                  </Text>
+                ) : (
+                  <View className="gap-3">
+                    {affirmations.slice(0, 2).map((item) => (
+                      <Pressable
+                        key={item._id}
+                        accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
+                        accessibilityRole="button"
+                        className="rounded-xl bg-gradient-to-r from-violet-50 to-indigo-50 p-4 active:opacity-80"
+                        onLongPress={() => handleConfirmDeleteAffirmation(item)}
+                        onPress={() => handleOpenAffirmationEditor(item)}
+                      >
+                        <Text className="text-sm italic leading-5 text-stone-700">
+                          "{item.text}"
+                        </Text>
+                        {item.type ? (
+                          <View className="mt-2 flex-row">
+                            <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                              <Text className="text-xs text-violet-700">
+                                {item.type}
+                              </Text>
+                            </View>
+                          </View>
+                        ) : null}
+                      </Pressable>
+                    ))}
+                    {affirmations.length > 2 ? (
+                      <Pressable
+                        accessibilityLabel="View all affirmations"
+                        accessibilityRole="button"
+                        className="items-center rounded-xl border border-stone-200 bg-white py-3 active:bg-stone-50"
+                        onPress={() => setIsAffirmationsListOpen(true)}
+                      >
+                        <Text className="text-sm font-semibold text-stone-700">
+                          View all ({affirmations.length})
+                        </Text>
+                      </Pressable>
+                    ) : null}
+                  </View>
+                )}
+              </View>
+
               <Text className="mb-4 text-sm text-violet-700">
                 Science-backed techniques from Andrew Huberman to strengthen your motivation.
               </Text>
@@ -920,18 +1190,20 @@ export default function HabitDetailScreen({
           </View>
           <View className="flex-1 gap-4 px-5 pt-4" style={{ paddingBottom: insets.bottom + 16 }}>
             <Text className="text-sm text-stone-500">
-              Keep it short. This should pull you forward on hard days.
+              The deeper reason behind this habit. What future are you building?
             </Text>
             <TextInput
+              multiline
               accessibilityLabel="Why you are doing this habit"
-              className="rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
-              maxLength={120}
-              placeholder="Because I want to…"
+              className="min-h-[120px] rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
+              maxLength={200}
+              placeholder="So I can be healthy for my kids..."
               placeholderTextColor="#a8a29e"
+              textAlignVertical="top"
               value={whyDraft}
               onChangeText={setWhyDraft}
             />
-            <Text className="text-xs text-stone-400">{whyDraft.length} / 120</Text>
+            <Text className="text-xs text-stone-400">{whyDraft.length} / 200</Text>
             <Pressable
               accessibilityLabel="Save why"
               accessibilityRole="button"
@@ -1155,6 +1427,298 @@ export default function HabitDetailScreen({
               onClose={handleCloseVisualizationExercise}
               onSave={handleSaveVisualization}
             />
+          </View>
+        </View>
+      </RNModal>
+
+      {/* Cue Editor Modal */}
+      <RNModal
+        animationType="slide"
+        visible={isCueEditorOpen}
+        onRequestClose={() => setIsCueEditorOpen(false)}
+      >
+        <View className="flex-1 bg-white" style={{ paddingTop: insets.top + 16 }}>
+          <View className="flex-row items-center justify-between border-b border-stone-100 px-5 pb-4">
+            <View className="flex-row items-center gap-2">
+              <Target className="text-amber-600" size={20} />
+              <Text className="text-lg font-bold text-stone-900">Your Cue</Text>
+            </View>
+            <Pressable
+              accessibilityLabel="Close cue editor"
+              accessibilityRole="button"
+              className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
+              onPress={() => setIsCueEditorOpen(false)}
+            >
+              <X className="text-stone-600" size={22} />
+            </Pressable>
+          </View>
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <Text className="mb-2 text-sm text-stone-500">
+              Implementation intentions increase follow-through by 2-3x. Link your habit to an existing behavior.
+            </Text>
+
+            <Text className="mb-2 mt-6 text-xs font-semibold uppercase tracking-[2px] text-stone-500">
+              After I...
+            </Text>
+            <TextInput
+              accessibilityLabel="After I (trigger behavior)"
+              className="rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
+              maxLength={100}
+              placeholder="pour my morning coffee"
+              placeholderTextColor="#a8a29e"
+              value={cueAfterBehaviorDraft}
+              onChangeText={setCueAfterBehaviorDraft}
+            />
+            <Text className="mt-1 text-xs text-stone-400">{cueAfterBehaviorDraft.length} / 100</Text>
+
+            <View className="mt-4 rounded-xl bg-amber-50 p-3">
+              <Text className="mb-2 text-xs font-semibold text-amber-800">Suggestions:</Text>
+              <View className="flex-row flex-wrap gap-2">
+                {[
+                  'pour my morning coffee',
+                  'brush my teeth',
+                  'sit down at my desk',
+                  'finish lunch',
+                  'get home from work',
+                ].map((suggestion) => (
+                  <Pressable
+                    key={suggestion}
+                    accessibilityLabel={`Use suggestion: ${suggestion}`}
+                    accessibilityRole="button"
+                    className="rounded-full bg-white px-3 py-1.5 active:bg-amber-100"
+                    onPress={() => setCueAfterBehaviorDraft(suggestion)}
+                  >
+                    <Text className="text-xs text-stone-700">{suggestion}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+
+            <Text className="mb-2 mt-6 text-xs font-semibold uppercase tracking-[2px] text-stone-500">
+              Location (optional)
+            </Text>
+            <TextInput
+              accessibilityLabel="Location"
+              className="rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
+              maxLength={50}
+              placeholder="Kitchen, Gym, Office..."
+              placeholderTextColor="#a8a29e"
+              value={cueLocationDraft}
+              onChangeText={setCueLocationDraft}
+            />
+
+            <Text className="mb-2 mt-6 text-xs font-semibold uppercase tracking-[2px] text-stone-500">
+              Time (optional)
+            </Text>
+            <TextInput
+              accessibilityLabel="Time"
+              className="rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
+              maxLength={20}
+              placeholder="7:00 AM or Morning"
+              placeholderTextColor="#a8a29e"
+              value={cueTimeDraft}
+              onChangeText={setCueTimeDraft}
+            />
+          </ScrollView>
+          <View className="px-5 pb-5" style={{ paddingBottom: insets.bottom + 16 }}>
+            <Pressable
+              accessibilityLabel="Save cue"
+              accessibilityRole="button"
+              className="items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800"
+              onPress={handleSaveCue}
+            >
+              <Text className="text-base font-semibold text-white">Save</Text>
+            </Pressable>
+          </View>
+        </View>
+      </RNModal>
+
+      {/* Affirmations List Modal */}
+      <RNModal
+        animationType="slide"
+        visible={isAffirmationsListOpen}
+        onRequestClose={() => setIsAffirmationsListOpen(false)}
+      >
+        <View className="flex-1 bg-white" style={{ paddingTop: insets.top + 16 }}>
+          <View className="flex-row items-center justify-between border-b border-stone-100 px-5 pb-4">
+            <Text className="text-lg font-bold text-stone-900">Affirmations</Text>
+            <Pressable
+              accessibilityLabel="Close affirmations"
+              accessibilityRole="button"
+              className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
+              onPress={() => setIsAffirmationsListOpen(false)}
+            >
+              <X className="text-stone-600" size={22} />
+            </Pressable>
+          </View>
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 20 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="mb-4 flex-row items-center justify-between">
+              <Text className="text-sm text-stone-500">
+                {affirmations.length}/10 affirmations
+              </Text>
+              <Pressable
+                accessibilityLabel="Add affirmation"
+                accessibilityRole="button"
+                className="rounded-full bg-violet-600 px-4 py-2 active:bg-violet-700"
+                onPress={() => handleOpenAffirmationEditor()}
+              >
+                <Text className="text-sm font-semibold text-white">Add</Text>
+              </Pressable>
+            </View>
+
+            <View className="gap-3">
+              {affirmations.map((item) => (
+                <Pressable
+                  key={item._id}
+                  accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
+                  accessibilityRole="button"
+                  className="rounded-2xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4 active:opacity-80"
+                  onLongPress={() => handleConfirmDeleteAffirmation(item)}
+                  onPress={() => handleOpenAffirmationEditor(item)}
+                >
+                  <Text className="text-base italic leading-6 text-stone-800">
+                    "{item.text}"
+                  </Text>
+                  {item.type ? (
+                    <View className="mt-3 flex-row">
+                      <View className="rounded-full bg-violet-100 px-2.5 py-1">
+                        <Text className="text-xs font-medium text-violet-700">
+                          {item.type}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : null}
+                  <Text className="mt-3 text-xs text-stone-400">
+                    Long press to delete
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </RNModal>
+
+      {/* Affirmation Editor Modal */}
+      <RNModal
+        animationType="slide"
+        visible={isAffirmationEditorOpen}
+        onRequestClose={() => setIsAffirmationEditorOpen(false)}
+      >
+        <View className="flex-1 bg-white" style={{ paddingTop: insets.top + 16 }}>
+          <View className="flex-row items-center justify-between border-b border-stone-100 px-5 pb-4">
+            <Text className="text-lg font-bold text-stone-900">
+              {affirmationEditingId ? 'Edit Affirmation' : 'New Affirmation'}
+            </Text>
+            <Pressable
+              accessibilityLabel="Close affirmation editor"
+              accessibilityRole="button"
+              className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
+              onPress={() => setIsAffirmationEditorOpen(false)}
+            >
+              <X className="text-stone-600" size={22} />
+            </Pressable>
+          </View>
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <Text className="mb-4 text-sm text-stone-500">
+              Write a positive statement to counter self-doubt on hard days.
+            </Text>
+
+            <TextInput
+              multiline
+              accessibilityLabel="Affirmation text"
+              className="min-h-[100px] rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
+              maxLength={200}
+              placeholder="I am someone who takes care of my body..."
+              placeholderTextColor="#a8a29e"
+              textAlignVertical="top"
+              value={affirmationTextDraft}
+              onChangeText={setAffirmationTextDraft}
+            />
+            <Text className="mt-1 text-xs text-stone-400">{affirmationTextDraft.length} / 200</Text>
+
+            <Text className="mb-3 mt-6 text-xs font-semibold uppercase tracking-[2px] text-stone-500">
+              Type (optional)
+            </Text>
+            <View className="flex-row flex-wrap gap-2">
+              {(['identity', 'motivational', 'instructional'] as const).map((type) => (
+                <Pressable
+                  key={type}
+                  accessibilityLabel={`Select type: ${type}`}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: affirmationTypeDraft === type }}
+                  className={clsx(
+                    'rounded-full px-4 py-2',
+                    affirmationTypeDraft === type
+                      ? 'bg-violet-600'
+                      : 'bg-stone-100 active:bg-stone-200'
+                  )}
+                  onPress={() =>
+                    setAffirmationTypeDraft(
+                      affirmationTypeDraft === type ? undefined : type
+                    )
+                  }
+                >
+                  <Text
+                    className={clsx(
+                      'text-sm font-medium',
+                      affirmationTypeDraft === type ? 'text-white' : 'text-stone-700'
+                    )}
+                  >
+                    {type}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <View className="mt-6 rounded-xl bg-violet-50 p-3">
+              <Text className="mb-2 text-xs font-semibold text-violet-800">Templates:</Text>
+              <View className="gap-2">
+                {[
+                  { text: 'I am someone who keeps promises to myself', type: 'identity' as const },
+                  { text: 'I can do hard things', type: 'motivational' as const },
+                  { text: 'Progress, not perfection', type: 'instructional' as const },
+                  { text: 'Showing up imperfectly beats not showing up', type: 'motivational' as const },
+                ].map((template) => (
+                  <Pressable
+                    key={template.text}
+                    accessibilityLabel={`Use template: ${template.text}`}
+                    accessibilityRole="button"
+                    className="rounded-xl bg-white p-3 active:bg-violet-100"
+                    onPress={() => {
+                      setAffirmationTextDraft(template.text);
+                      setAffirmationTypeDraft(template.type);
+                    }}
+                  >
+                    <Text className="text-sm italic text-stone-700">"{template.text}"</Text>
+                    <Text className="mt-1 text-xs text-violet-600">{template.type}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+          </ScrollView>
+          <View className="px-5 pb-5" style={{ paddingBottom: insets.bottom + 16 }}>
+            <Pressable
+              accessibilityLabel="Save affirmation"
+              accessibilityRole="button"
+              className="items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800"
+              onPress={handleSaveAffirmation}
+            >
+              <Text className="text-base font-semibold text-white">Save</Text>
+            </Pressable>
           </View>
         </View>
       </RNModal>
