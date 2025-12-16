@@ -13,7 +13,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => (
       className='flex-row items-center justify-center rounded-full bg-[#f4f4f4] px-4 py-2'
       onPress={onClose}
     >
-      <Text className='mr-2 text-sm font-semibold text-[#1a1a1a]'>Hide templates</Text>
+      <Text className='mr-2 text-sm font-semibold text-[#1a1a1a]'>Hide habits</Text>
       <ChevronDown color='#1a1a1a' size={16} />
     </TouchableOpacity>
   </View>

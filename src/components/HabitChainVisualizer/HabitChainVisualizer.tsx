@@ -40,12 +40,15 @@ const DayConnector: React.FC<DayConnectorProps> = ({
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
   const shimmerPosition = useRef(new Animated.Value(0)).current;
 
-  // Strength-based evolution values
+  // Strength-based evolution values - faster progression for early reward
+  // Milestones: Day 3, 5, 7, 14, 21
   const getStrengthConfig = (streak: number) => {
-    if (streak >= 30) return { height: 3, maxOpacity: 0.8, useAccent: true, shimmerSpeed: 1200 };
-    if (streak >= 14) return { height: 2.5, maxOpacity: 0.65, useAccent: true, shimmerSpeed: 1500 };
-    if (streak >= 7) return { height: 2, maxOpacity: 0.5, useAccent: false, shimmerSpeed: 2000 };
-    return { height: 1.5, maxOpacity: 0.35, useAccent: false, shimmerSpeed: 0 }; // No shimmer for early streaks
+    if (streak >= 21) return { height: 3, maxOpacity: 0.85, useAccent: true, shimmerSpeed: 1000 };
+    if (streak >= 14) return { height: 2.7, maxOpacity: 0.75, useAccent: true, shimmerSpeed: 1200 };
+    if (streak >= 7) return { height: 2.4, maxOpacity: 0.65, useAccent: true, shimmerSpeed: 1500 };
+    if (streak >= 5) return { height: 2.1, maxOpacity: 0.55, useAccent: false, shimmerSpeed: 2000 };
+    if (streak >= 3) return { height: 1.8, maxOpacity: 0.45, useAccent: false, shimmerSpeed: 0 };
+    return { height: 1.5, maxOpacity: 0.35, useAccent: false, shimmerSpeed: 0 };
   };
 
   const strengthConfig = getStrengthConfig(currentStreak);

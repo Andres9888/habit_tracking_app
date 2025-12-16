@@ -476,7 +476,7 @@ export default function TemplatesScreen() {
               { color: '#101727', fontWeight: '700' },
             ]}
           >
-            Templates
+            Import Habits
           </Text>
           <Text
             style={[
@@ -510,8 +510,8 @@ export default function TemplatesScreen() {
       <View style={styles.container}>
         <EmptyState
           hideCTA
-          description='Tap the button below to load science-backed habit templates.'
-          headline='No Templates Available'
+          description='Tap the button below to load science-backed habits.'
+          headline='No Habits Available'
           icon='📚'
         />
         <View style={{ paddingHorizontal: 24, marginTop: 24 }}>
@@ -521,7 +521,7 @@ export default function TemplatesScreen() {
             size='large'
             variant='primary'
           >
-            {isSeeding ? 'Loading Templates...' : 'Load Templates'}
+            {isSeeding ? 'Loading Habits...' : 'Load Habits'}
           </Button>
         </View>
       </View>
@@ -538,7 +538,7 @@ export default function TemplatesScreen() {
             { color: '#101727', fontWeight: '700' },
           ]}
         >
-          Templates
+          Import Habits
         </Text>
         <Text
           style={[
@@ -693,7 +693,7 @@ export default function TemplatesScreen() {
                 <EmptyState
                   hideCTA
                   description='Try adjusting filters or search keywords to uncover more science-backed routines.'
-                  headline='No templates match your filters'
+                  headline='No habits match your filters'
                   icon='🔍'
                 />
                 {hasActiveFilters && (
@@ -743,7 +743,7 @@ export default function TemplatesScreen() {
                   { color: '#374151' },
                 ]}
               >
-                Scroll for more templates
+                Scroll for more habits
               </Text>
             </View>
           </LinearGradient>

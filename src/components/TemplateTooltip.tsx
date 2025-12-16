@@ -38,7 +38,7 @@ export const TemplateTooltip = ({
         <View className='mb-2 flex-row items-center gap-2'>
           <Sparkles color='#60A5FA' size={18} strokeWidth={2} />
           <Text className='text-[15px] font-semibold text-white'>
-            Discover Templates
+            Import Habits
           </Text>
         </View>
 

@@ -33,7 +33,7 @@ export const TemplateListShadows = ({ showTop, showBottom }: TemplateListShadows
       >
         <View className='mb-1 flex-row items-center rounded-full bg-[rgba(26,26,26,0.08)] px-3 py-1.5'>
           <ChevronDown color='#1a1a1a' size={16} />
-          <Text className='ml-1.5 text-xs font-semibold text-[#1a1a1a]'>Scroll for more templates</Text>
+          <Text className='ml-1.5 text-xs font-semibold text-[#1a1a1a]'>Scroll for more habits</Text>
         </View>
       </LinearGradient>
     )}

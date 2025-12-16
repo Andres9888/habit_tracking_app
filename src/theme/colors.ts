@@ -43,11 +43,10 @@ export const colors = {
 
   // Background & Surfaces
   light: {
-    background: '#f8f5f1',
-    // Warm beige background
-    card: '#FFFFFF',
-    // Pure white
-    surface: '#f8f5f1', // Card with shadow
+    background: '#f8f5f1', // Warm beige background
+    card: '#ffffff', // Pure white cards for contrast
+    surface: '#ffffff', // White surface for elevated elements
+    surfaceMuted: '#fafaf9', // stone-50 for subtle sections
   },
 
   // Primary Colors (Growth & Progress)

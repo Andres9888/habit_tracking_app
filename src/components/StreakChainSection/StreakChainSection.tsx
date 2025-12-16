@@ -24,15 +24,17 @@ export interface StreakChainSectionProps {
   todayCompleted: boolean;
 }
 
-// Simplified tiers
+// Faster progression tiers - early wins matter!
+// Milestones: Day 3, 5, 7, 14, 21, 30+
 const TIERS = [
   { days: 0, icon: '', textColor: 'text-stone-700', barColor: 'bg-stone-400' },
   { days: 3, icon: '💪', textColor: 'text-orange-600', barColor: 'bg-orange-500' },
+  { days: 5, icon: '⚡', textColor: 'text-amber-600', barColor: 'bg-amber-500' },
   { days: 7, icon: '🔥', textColor: 'text-red-600', barColor: 'bg-red-500' },
-  { days: 14, icon: '⭐', textColor: 'text-amber-600', barColor: 'bg-amber-500' },
-  { days: 30, icon: '👑', textColor: 'text-purple-600', barColor: 'bg-purple-500' },
-  { days: 60, icon: '💎', textColor: 'text-blue-600', barColor: 'bg-blue-500' },
-  { days: 100, icon: '🌟', textColor: 'text-pink-600', barColor: 'bg-pink-500' },
+  { days: 14, icon: '⭐', textColor: 'text-yellow-600', barColor: 'bg-yellow-500' },
+  { days: 21, icon: '👑', textColor: 'text-purple-600', barColor: 'bg-purple-500' },
+  { days: 30, icon: '💎', textColor: 'text-blue-600', barColor: 'bg-blue-500' },
+  { days: 60, icon: '🌟', textColor: 'text-pink-600', barColor: 'bg-pink-500' },
 ];
 
 const getTierInfo = (streak: number) => {

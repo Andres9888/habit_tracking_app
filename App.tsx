@@ -9,7 +9,7 @@ import {
   useQuery,
 } from 'convex/react';
 import { addDays, format } from 'date-fns';
-import { Plus, Settings, Search, Bell, Wifi } from 'lucide-react-native';
+import { Plus, Settings } from 'lucide-react-native';
 import {
   useCallback,
   useEffect,
@@ -111,13 +111,13 @@ function HabitsApp() {
             accentText: appTheme.custom.colors.text.inverse,
             background: appTheme.custom.colors.light.background,
             border: appTheme.custom.colors.border,
-            icon: appTheme.custom.colors.text.primary,
+            icon: appTheme.custom.colors.text.secondary, // Softer icon color
             inputBackground: appTheme.custom.colors.light.card,
             inputPlaceholder: appTheme.custom.colors.text.tertiary,
             primaryText: appTheme.custom.colors.text.primary,
             secondaryText: appTheme.custom.colors.text.secondary,
             surface: appTheme.custom.colors.light.surface,
-            surfaceMuted: appTheme.custom.colors.light.surface,
+            surfaceMuted: '#f5f5f4', // stone-100 for subtle backgrounds
           },
     [highContrastMode, appTheme]
   );
@@ -269,60 +269,41 @@ function HabitsApp() {
         contentContainerStyle={{ backgroundColor: theme.background }}
       >
         <View className='mx-auto w-full max-w-[375px] px-4 pb-24 pt-4'>
-          {/* Header Section */}
-          <View className='mb-4 flex-row items-center justify-between'>
-            {/* Time and Habits Button */}
-            <View className='flex-row items-center gap-4'>
+          {/* Header Section - Clean & Focused */}
+          <View className='mb-5 flex-row items-center justify-between'>
+            {/* App Title */}
+            <View className='flex-row items-center gap-3'>
+              <Text className='text-2xl'>🌱</Text>
               <Text
-                className='text-[20px] font-bold leading-[28px]'
+                className='text-[22px] font-bold tracking-tight'
                 style={{ color: theme.primaryText }}
               >
-                {format(new Date(), 'H:mm')}
+                Daily Habits
               </Text>
-              <View
-                className='flex-row items-center gap-2 rounded-full px-4 py-2'
-                style={{ backgroundColor: theme.accent }}
-              >
-                <Plus color={theme.accentText} size={12} strokeWidth={2} />
-                <Text
-                  className='text-[14px] font-semibold'
-                  style={{ color: theme.accentText }}
-                >
-                  Habits
-                </Text>
-              </View>
             </View>
 
-            {/* Right Icons */}
-            <View className='flex-row items-center gap-4'>
-              <Search color={theme.icon} size={14} strokeWidth={2} />
-              <Bell color={theme.icon} size={20} strokeWidth={2} />
-              <Wifi color={theme.icon} size={18} strokeWidth={2} />
-
-              {/* TEMPORARY: Haptic Test Button (DEV ONLY) */}
+            {/* Action Icons */}
+            <View className='flex-row items-center gap-2'>
+              {/* DEV ONLY: Haptic Test */}
               {__DEV__ && (
                 <Pressable
                   accessibilityLabel='Open haptic test'
                   accessibilityRole='button'
-                  className='h-8 w-8 items-center justify-center rounded-full'
+                  className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
                   onPress={() => setShowHapticTest(true)}
-                  style={{ backgroundColor: '#ff6b6b' }}
                 >
-                  <Text
-                    style={{ color: '#fff', fontSize: 12, fontWeight: 'bold' }}
-                  >
-                    H
-                  </Text>
+                  <Text className='text-xs font-bold text-stone-500'>H</Text>
                 </Pressable>
               )}
 
               <Pressable
                 accessibilityLabel='Open settings'
                 accessibilityRole='button'
-                className='h-8 w-8 items-center justify-center rounded-full'
+                className='h-10 w-10 items-center justify-center rounded-full'
+                style={{ backgroundColor: theme.surfaceMuted }}
                 onPress={() => setIsSettingsOpen(true)}
               >
-                <Settings color={theme.icon} size={20} />
+                <Settings color={theme.icon} size={20} strokeWidth={1.8} />
               </Pressable>
             </View>
           </View>
@@ -337,65 +318,66 @@ function HabitsApp() {
 
           {isAdding && (
             <View
-              className='mb-8 rounded-3xl border p-5'
+              className='mb-6 overflow-hidden rounded-2xl border'
               style={{
-                backgroundColor: theme.surfaceMuted,
-                borderColor: theme.border,
+                backgroundColor: '#ffffff',
+                borderColor: '#e7e5e4', // stone-200
+                // Elevated card shadow
+                shadowColor: '#78716c',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 3,
               }}
             >
-              <View className='gap-4'>
-                <View className='gap-2'>
-                  <Text
-                    className='text-[11px] font-semibold tracking-[3px]'
-                    style={{ color: theme.secondaryText }}
-                  >
-                    NEW HABIT
-                  </Text>
-                  <TextInput
-                    autoFocus
-                    className='w-full rounded-3xl border px-5 py-3 text-sm font-medium'
-                    placeholder='Name your habit'
-                    placeholderTextColor={theme.inputPlaceholder}
-                    value={newHabitName}
-                    onChangeText={setNewHabitName}
-                    style={{
-                      backgroundColor: theme.inputBackground,
-                      borderColor: theme.border,
-                      color: theme.primaryText,
-                    }}
-                  />
-                </View>
-                <View className='flex-row items-center justify-end gap-3'>
-                  <Pressable
-                    accessibilityRole='button'
-                    className='py-2'
-                    onPress={handleToggleForm}
-                  >
+              <View className='p-5'>
+                <View className='gap-4'>
+                  <View className='gap-2'>
                     <Text
-                      className='text-[11px] font-semibold tracking-[3px]'
-                      style={{ color: theme.secondaryText }}
+                      className='text-xs font-semibold uppercase tracking-widest'
+                      style={{ color: '#78716c' }} // stone-500
                     >
-                      CANCEL
+                      New Habit
                     </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole='button'
-                    className={`rounded-3xl px-5 py-2 ${!canSubmit ? 'opacity-40' : ''}`}
-                    disabled={!canSubmit}
-                    onPress={handleSubmit}
-                    style={{
-                      backgroundColor: theme.accent,
-                      borderColor: theme.accent,
-                      borderWidth: 1,
-                    }}
-                  >
-                    <Text
-                      className='text-[11px] font-semibold tracking-[3px]'
-                      style={{ color: theme.accentText }}
+                    <TextInput
+                      autoFocus
+                      className='w-full rounded-xl px-4 py-3.5 text-base font-medium'
+                      placeholder='What habit do you want to build?'
+                      placeholderTextColor='#a8a29e' // stone-400
+                      value={newHabitName}
+                      onChangeText={setNewHabitName}
+                      style={{
+                        backgroundColor: '#fafaf9', // stone-50
+                        borderColor: '#e7e5e4', // stone-200
+                        borderWidth: 1,
+                        color: '#1c1917', // stone-900
+                      }}
+                    />
+                  </View>
+                  <View className='flex-row items-center justify-end gap-3'>
+                    <Pressable
+                      accessibilityRole='button'
+                      className='rounded-lg px-4 py-2.5 active:bg-stone-100'
+                      onPress={handleToggleForm}
                     >
-                      ADD
-                    </Text>
-                  </Pressable>
+                      <Text className='text-sm font-semibold text-stone-500'>
+                        Cancel
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole='button'
+                      className={`rounded-xl px-5 py-2.5 ${!canSubmit ? 'opacity-40' : 'active:opacity-90'}`}
+                      disabled={!canSubmit}
+                      onPress={handleSubmit}
+                      style={{
+                        backgroundColor: '#1c1917', // stone-900
+                      }}
+                    >
+                      <Text className='text-sm font-semibold text-white'>
+                        Add Habit
+                      </Text>
+                    </Pressable>
+                  </View>
                 </View>
               </View>
             </View>
@@ -461,7 +443,7 @@ function HabitsApp() {
           isHighContrastActive={highContrastMode}
         />
       </ScrollView>
-      {/* Centered Floating Action Button */}
+      {/* Centered Floating Action Button - Distinguished from habit cards */}
       <View
         pointerEvents='box-none'
         className='absolute bottom-8 left-0 right-0 items-center'
@@ -474,16 +456,20 @@ function HabitsApp() {
           accessibilityRole='button'
           className='h-16 w-16 items-center justify-center rounded-full'
           style={{
-            backgroundColor: theme.accent,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
+            backgroundColor: highContrastMode ? '#facc15' : '#1c1917', // stone-900 for strong contrast
+            shadowColor: '#1c1917',
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
             elevation: 8,
           }}
           onPress={handleToggleForm}
         >
-          <Plus color={theme.accentText} size={28} strokeWidth={2.5} />
+          <Plus
+            color={highContrastMode ? '#000000' : '#ffffff'}
+            size={28}
+            strokeWidth={2.5}
+          />
         </Pressable>
       </View>
     </View>

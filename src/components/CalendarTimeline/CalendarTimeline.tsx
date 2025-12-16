@@ -184,21 +184,29 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         secondaryText: '#facc15',
       }
     : {
-        currentDayBackground: '#1c1917', // stone-900
+        currentDayBackground: '#1c1917', // stone-900 for strong today indicator
         currentDayText: '#ffffff',
         dayBackground: '#ffffff',
         dayBorder: 'transparent',
-        dayText: '#44403c', // stone-700
-        icon: '#44403c', // stone-700
+        dayText: '#57534e', // stone-600 - slightly softer for past dates
+        icon: '#78716c', // stone-500 - softer icons
         primaryText: '#1c1917', // stone-900
         secondaryText: '#a8a29e', // stone-400 - warmer
       };
 
   return (
     <View
-      className='mb-0 rounded-2xl pb-3 pt-1'
+      className='mb-4 rounded-2xl px-3 pb-3 pt-2'
       style={{
-        backgroundColor: highContrastMode ? 'transparent' : '#fafaf9', // stone-50
+        backgroundColor: highContrastMode ? 'transparent' : '#ffffff',
+        borderColor: highContrastMode ? 'transparent' : '#f5f5f4', // stone-100
+        borderWidth: highContrastMode ? 0 : 1,
+        // Subtle shadow for elevation
+        shadowColor: '#78716c',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
+        elevation: 1,
       }}
     >
       {/* Week Navigation Header */}
@@ -266,20 +274,30 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
 
               {/* Date number with rounded box */}
               <View
-                className='h-9 w-9 items-center justify-center rounded-[11px]'
+                className='h-9 w-9 items-center justify-center rounded-xl'
                 style={{
                   backgroundColor: isCurrentDay
-                    ? '#fffbeb' // amber-50 subtle glow for today
+                    ? '#fffbeb' // amber-50 - warm gold glow
                     : colors.dayBackground,
-                  borderColor: isCurrentDay ? '#f59e0b' : (highContrastMode ? colors.dayBorder : 'transparent'), // amber-500 for today
+                  borderColor: isCurrentDay
+                    ? '#f59e0b' // amber-500 - gold border for today
+                    : (highContrastMode ? colors.dayBorder : 'transparent'),
                   borderWidth: isCurrentDay ? 2 : (highContrastMode && !isCurrentDay ? 2 : 0),
+                  // Warm shadow for today
+                  ...(isCurrentDay && {
+                    shadowColor: '#f59e0b',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 4,
+                    elevation: 2,
+                  }),
                 }}
               >
                 <Text
-                  className='text-center text-[16px] font-semibold leading-[20px]'
+                  className='text-center text-[16px] leading-[20px]'
                   style={{
                     color: isCurrentDay
-                      ? '#b45309' // amber-700 for emphasis
+                      ? '#b45309' // amber-700 - rich gold text
                       : isUpcoming
                         ? '#d6d3d1' // stone-300 for future dates
                         : colors.dayText,

@@ -314,8 +314,8 @@ export default function DraggableHabit({
         strengthBackground: '#10b981',
       }
     : {
-        border: '#fafaf9', // stone-50
-        cardBackground: '#fafaf9', // Warm stone-50 for cozy feel
+        border: '#f5f5f4', // stone-100 - subtle border
+        cardBackground: '#ffffff', // Pure white for better contrast against beige bg
         iconContainer: undefined as string | undefined,
         primaryText: '#1c1917', // stone-900
         streakText: '#c2410c', // orange-700 for richer streak
@@ -403,15 +403,15 @@ export default function DraggableHabit({
         style={{
           backgroundColor: colors.cardBackground,
           borderColor: colors.border,
-          borderWidth: highContrastMode ? 2 : 0,
+          borderWidth: highContrastMode ? 2 : 1,
           opacity: fade,
           transform: [{ translateY }, { scale: cardScale }],
-          // Premium elevated shadow
-          shadowColor: '#44403c', // stone-700
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-          elevation: 4, // Android
+          // Refined shadow for white cards on beige background
+          shadowColor: '#78716c', // stone-500 for warmer shadow
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.06,
+          shadowRadius: 12,
+          elevation: 3, // Android
         }}
       >
         {/* Archive flash overlay */}

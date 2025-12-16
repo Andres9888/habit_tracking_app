@@ -71,7 +71,7 @@ export const RewardCelebrationToast = ({
   const premiumCTA = useMemo(() => {
     if (!streak || streak < 7) {
       return {
-        text: 'Get Premium Templates',
+        text: 'Get Premium Habits',
         benefit: 'Science-backed habits from experts'
       };
     }

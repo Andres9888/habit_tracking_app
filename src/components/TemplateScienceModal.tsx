@@ -587,7 +587,7 @@ export default function TemplateScienceModal({
           <Animated.View style={[styles.header, headerAnimatedStyle]}>
             <AnimatedPressable
               accessibilityHint="Double tap to close this modal"
-              accessibilityLabel='Close template details'
+              accessibilityLabel='Close habit details'
               accessibilityRole='button'
               style={[styles.closeButton, closeButtonAnimatedStyle]}
               onPress={handleClose}
@@ -889,15 +889,15 @@ export default function TemplateScienceModal({
               >
                 Use This Template
               </Button>
-              <AnimatedPressable
-                accessibilityLabel='Go back to templates list'
-                accessibilityRole='button'
-                style={[styles.backButton, backButtonAnimatedStyle]}
-                onPress={handleClose}
-                {...createPressHandlers(backButtonScale, 0.95)}
-              >
-                <Text style={styles.backButtonText}>Back to Templates</Text>
-              </AnimatedPressable>
+            <AnimatedPressable
+              accessibilityLabel='Go back to import habits list'
+              accessibilityRole='button'
+              style={[styles.backButton, backButtonAnimatedStyle]}
+              onPress={handleClose}
+              {...createPressHandlers(backButtonScale, 0.95)}
+            >
+              <Text style={styles.backButtonText}>Back to Import Habits</Text>
+            </AnimatedPressable>
             </Animated.View>
           </LinearGradient>
 

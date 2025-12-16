@@ -212,8 +212,8 @@ export function HabitsHeader({
         <Animated.View style={templatesButtonAnimatedStyle}>
           <View style={{ position: 'relative' }}>
             <Pressable
-              accessibilityHint='Browse science-backed habit templates'
-              accessibilityLabel='Templates'
+              accessibilityHint='Browse science-backed habits to import'
+              accessibilityLabel='Import Habits'
               accessibilityRole='button'
               className='h-9 flex-row items-center gap-1.5 rounded-full border border-stone-200 bg-white/60 px-3'
               onPress={handleTemplatesPress}
@@ -221,7 +221,7 @@ export function HabitsHeader({
               onPressOut={handleTemplatesPressOut}
             >
               <Clipboard color='#44403c' size={16} strokeWidth={2.25} />
-              <Text className='text-[13px] font-medium text-stone-700'>Templates</Text>
+              <Text className='text-[13px] font-medium text-stone-700'>Import Habits</Text>
             </Pressable>
 
             {/* Smart notification badge */}

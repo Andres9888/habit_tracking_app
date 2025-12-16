@@ -16,7 +16,7 @@ export const TemplateReminderPrompt = ({
   return (
     <View className='absolute left-6 right-6' pointerEvents='box-none' style={{ bottom: bottomOffset }}>
       <TouchableOpacity
-        accessibilityLabel='Browse curated habit templates'
+        accessibilityLabel='Browse curated habits'
         accessibilityRole='button'
         activeOpacity={0.92}
         className='rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] px-4 py-3 shadow-lg shadow-black/10'

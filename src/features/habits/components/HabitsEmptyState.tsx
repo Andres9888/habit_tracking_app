@@ -96,7 +96,7 @@ const COLORS = {
 };
 
 const BASE_CARD_CLASS =
-  'w-full rounded-3xl border border-[#e0e7ff] bg-white px-5 py-5 shadow-[0px_16px_44px_rgba(15,23,42,0.08)]';
+  'w-full rounded-2xl border border-stone-200 bg-white px-5 py-5';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -394,8 +394,15 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
   return (
     <Animated.View
       entering={FadeInDown.delay(0).springify().damping(18)}
-      className='relative items-center gap-2.5 overflow-hidden rounded-3xl border border-amber-200/40 px-5 py-5'
-      style={{ backgroundColor: '#fffbeb' }}
+      className='relative items-center gap-2.5 overflow-hidden rounded-2xl border border-amber-200 px-5 py-5'
+      style={{
+        backgroundColor: '#fffbeb', // amber-50
+        shadowColor: '#f59e0b',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 2,
+      }}
     >
       {/* Animated background glow */}
       <Animated.View
@@ -483,8 +490,8 @@ function QuickStartButton({
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }, { rotate: `${rotation.value}deg` }],
-    backgroundColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#ffffff', '#f0f9ff', '#dcfce7']),
-    borderColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#e3e7ef', '#bfdbfe', '#86efac']),
+    backgroundColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#ffffff', '#fafaf9', '#dcfce7']),
+    borderColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#e7e5e4', '#d6d3d1', '#86efac']),
   }));
 
   const checkmarkStyle = useAnimatedStyle(() => ({
@@ -619,22 +626,27 @@ function QuickWinCard({
   return (
     <Animated.View
       entering={FadeInDown.delay(80).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'border-amber-200/50 bg-gradient-to-br from-amber-50/80 to-orange-50/40')}
+      className={clsx(BASE_CARD_CLASS)}
+      style={{
+        shadowColor: '#78716c',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 3,
+      }}
     >
       <View className='mb-1 gap-2'>
-        <View className='flex-row items-center justify-between'>
-          <Text className='text-[18px] font-bold leading-[24px] text-stone-800'>
-            Tap one you can do now
-          </Text>
-          {!isShuffled && (
-            <View className='rounded-full bg-amber-100/80 px-2.5 py-1'>
-              <Text className='text-[11px] font-semibold text-amber-700'>{periodLabel}</Text>
-            </View>
-          )}
-        </View>
+        <Text className='text-[18px] font-bold leading-[24px] text-stone-800'>
+          Tap one you can do now
+        </Text>
         <Text className='text-[14px] leading-[20px] text-stone-600'>
           Start small—you can always customize later.
         </Text>
+        {!isShuffled && (
+          <View className='mt-1 self-center rounded-full bg-amber-100/80 px-3 py-1.5'>
+            <Text className='text-[12px] font-semibold text-amber-700'>{periodLabel}</Text>
+          </View>
+        )}
       </View>
       <View className='mt-4 flex-row flex-wrap justify-between gap-y-3'>
         {suggestions.map((habit, index) => (
@@ -760,25 +772,25 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
   const bgProgress = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pressScale.value }],
-    backgroundColor: interpolateColor(bgProgress.value, [0, 1], ['#ffffff', '#f5f3ff']),
+    backgroundColor: interpolateColor(bgProgress.value, [0, 1], ['#ffffff', '#fafaf9']),
   }));
   const { triggerLightImpact, triggerSelection } = useHapticFeedback();
 
   return (
     <AnimatedPressable
       accessibilityHint='Preview expert-designed habit journeys'
-      accessibilityLabel='Explore templates'
+      accessibilityLabel='Import habits'
       accessibilityRole='button'
       entering={FadeInDown.delay(200).springify().damping(18)}
-      className={clsx(BASE_CARD_CLASS, 'gap-4 border-indigo-200')}
+      className={clsx(BASE_CARD_CLASS, 'gap-4')}
       style={[
         animatedStyle,
         {
-          shadowColor: '#4f46e5',
+          shadowColor: '#78716c',
           shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
+          shadowOpacity: 0.08,
           shadowRadius: 12,
-          elevation: 4,
+          elevation: 3,
         }
       ]}
       onPress={() => {
@@ -798,24 +810,24 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
       <View className='gap-1.5'>
         <View className='flex-row items-center gap-2'>
           <Text className='text-lg'>🧪</Text>
-          <Text className='text-[18px] font-bold text-indigo-700'>Skip the guesswork</Text>
+          <Text className='text-lg font-bold text-stone-800'>Skip the guesswork</Text>
         </View>
-        <Text className='text-[14px] leading-[20px] text-stone-600'>
+        <Text className='text-sm leading-5 text-stone-500'>
           Science-backed routines designed by habit researchers.
         </Text>
       </View>
       <View
-        className='rounded-full px-6 py-3.5'
+        className='rounded-xl px-6 py-3.5'
         style={{
-          backgroundColor: '#4f46e5',
-          shadowColor: '#4f46e5',
+          backgroundColor: '#10b981', // emerald-500 - brand color
+          shadowColor: '#10b981',
           shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.35,
+          shadowOpacity: 0.25,
           shadowRadius: 8,
-          elevation: 6,
+          elevation: 4,
         }}
       >
-        <Text className='text-center text-[15px] font-bold tracking-wide text-white'>Explore templates →</Text>
+        <Text className='text-center text-[15px] font-bold tracking-wide text-white'>Import habits →</Text>
       </View>
     </AnimatedPressable>
   );

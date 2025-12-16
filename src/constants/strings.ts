@@ -15,7 +15,7 @@ export const STRINGS = {
     templateHeroTitle: 'Start from Template',
     templateHeroSubtitle: 'Browse curated routines and auto‑fill details.',
     templatePrompt: 'Prefer a ready-made routine?',
-    templateCTA: 'Browse curated templates',
+    templateCTA: 'Browse curated habits',
     save: 'Save',
     close: 'Close',
   },
