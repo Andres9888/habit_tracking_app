@@ -215,13 +215,12 @@ export function HabitsHeader({
               accessibilityHint='Browse science-backed habits to import'
               accessibilityLabel='Import Habits'
               accessibilityRole='button'
-              className='h-9 flex-row items-center gap-1.5 rounded-full border border-stone-200 bg-white/60 px-3'
+              className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
               onPress={handleTemplatesPress}
               onPressIn={handleTemplatesPressIn}
               onPressOut={handleTemplatesPressOut}
             >
-              <Clipboard color='#44403c' size={16} strokeWidth={2.25} />
-              <Text className='text-[13px] font-medium text-stone-700'>Import Habits</Text>
+              <Clipboard color='#44403c' size={18} strokeWidth={2.25} />
             </Pressable>
 
             {/* Smart notification badge */}
@@ -237,10 +236,10 @@ export function HabitsHeader({
             accessibilityHint='Tap to change habit sort order'
             accessibilityLabel={habitSortMode === 'manual' ? 'Sort habits' : `Sorted by ${habitSortLabel}`}
             accessibilityRole='button'
-            className={`h-9 flex-row items-center gap-1.5 rounded-full border px-3 ${
+            className={`h-9 flex-row items-center gap-1.5 rounded-full border ${
               habitSortMode === 'manual'
-                ? 'border-stone-200 bg-white/60'
-                : 'border-amber-200 bg-amber-50/70'
+                ? 'w-9 justify-center border-stone-200 bg-white/60'
+                : 'border-amber-200 bg-amber-50/70 px-3'
             }`}
             onPress={handleSortPress}
             onPressIn={handleSortPressIn}
@@ -248,7 +247,7 @@ export function HabitsHeader({
           >
             <ArrowUpDown
               color={habitSortMode === 'manual' ? '#44403c' : '#92400e'}
-              size={14}
+              size={16}
               strokeWidth={2.25}
             />
             {habitSortMode !== 'manual' && (
