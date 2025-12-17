@@ -115,4 +115,3 @@ This story implements the **Stats** block immediately below Quick Complete:
 
 
 
-

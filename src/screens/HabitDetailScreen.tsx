@@ -19,9 +19,7 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { CalendarHeatmap } from '../components/CalendarHeatmap/CalendarHeatmap';
 import { StatsGrid } from '../components/StatsGrid/StatsGrid';
-import { NotesSection } from '../components/NotesSection/NotesSection';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -910,17 +908,6 @@ export default function HabitDetailScreen({
             />
           ) : null}
 
-          <CalendarHeatmap
-            data={lastThirtyDays}
-            onDayPress={(date, completed) => {
-              Alert.alert(
-                date,
-                completed ? 'Completed ✅' : 'Not completed',
-                [{ text: 'OK' }]
-              );
-            }}
-          />
-
           <StatsGrid
             currentStreak={habit.currentStreak ?? 0}
             daysTracking={daysTracking}
@@ -1145,14 +1132,6 @@ export default function HabitDetailScreen({
               </View>
             </Animated.View>
           ) : null}
-
-          {/* Notes (preview → drill-in) */}
-          <NotesSection
-            onAddNote={() => setIsNotesEditorOpen(true)}
-            onViewAllNotes={habitNotes.length > 1 ? () => setIsNotesListOpen(true) : undefined}
-            recentNote={recentNote}
-            totalNotes={habitNotes.length}
-          />
 
           {/* Manage Habit */}
           <Pressable

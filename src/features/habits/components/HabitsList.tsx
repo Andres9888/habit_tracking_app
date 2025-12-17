@@ -459,19 +459,19 @@ export function HabitsList({
 
   const renderItem = useHabitRenderItem({
     celebrationsEnabled,
+    completionIcon: habitCompletionIcon,
     getHabitStatus,
     getStreak,
     handleArchive,
     handleHabitPress,
     handleMorePress: openQuickActions,
-    habitCompletionIcon,
+    highlightHabitId: justCreatedHabitId,
     isReorderingEnabled,
     notifyWeekCompletion,
     reduceMotionPreference,
-    weekDateStrings,
     showHabitStrengthPercentage,
     toggleHabit,
-    highlightHabitId: justCreatedHabitId,
+    weekDateStrings,
   });
 
   const { triggerSelection } = useHapticFeedback({

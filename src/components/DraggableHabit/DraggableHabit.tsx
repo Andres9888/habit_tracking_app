@@ -34,46 +34,50 @@ interface Habit {
 
 interface DraggableHabitProps {
   celebrationsEnabled: boolean;
+  completionIcon?: 'chain' | 'checkbox';
+  dayShape?: 'circle' | 'square';
   habit: Habit;
-  habitCompletionIcon?: 'chain' | 'checkbox';
   highContrastMode?: boolean;
   isCompactMode?: boolean;
-  showHabitStrengthPercentage?: boolean;
-  streak: number;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
-  weekDateStrings: string[];
-  weekStatus: HabitStatus[];
+  isConnectedToPreviousWeek?: boolean;
+  isJustCreated?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   onMorePress?: (habit: Habit) => void;
   onPress?: (habit: Habit) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
-  reduceMotionPreference: boolean;
-  isJustCreated?: boolean;
   previousStreak?: number; // For detecting new personal records
-  isConnectedToPreviousWeek?: boolean;
+  reduceMotionPreference: boolean;
+  showConnectors?: boolean;
+  showHabitStrengthPercentage?: boolean;
+  streak: number;
+  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
+  weekDateStrings: string[];
+  weekStatus: HabitStatus[];
 }
 
 export default function DraggableHabit({
   celebrationsEnabled,
+  completionIcon = 'chain',
+  dayShape = 'square',
   habit,
-  habitCompletionIcon = 'chain',
   highContrastMode = false,
   isCompactMode: _isCompactMode = false,
-  showHabitStrengthPercentage = false,
-  streak,
-  toggleHabit,
-  weekDateStrings,
-  weekStatus,
+  isConnectedToPreviousWeek = false,
+  isJustCreated = false,
   onArchive,
   onLongPress,
   onMorePress,
   onPress,
   onWeekComplete,
-  reduceMotionPreference,
-  isJustCreated = false,
   previousStreak,
-  isConnectedToPreviousWeek = false,
+  reduceMotionPreference,
+  showConnectors = true,
+  showHabitStrengthPercentage = false,
+  streak,
+  toggleHabit,
+  weekDateStrings,
+  weekStatus,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
@@ -557,18 +561,20 @@ export default function DraggableHabit({
           <HabitChainVisualizer
             accentColor={accentColor}
             celebrationsEnabled={celebrationsEnabled}
+            completionIcon={completionIcon}
             currentStreak={streak}
             habitId={habit._id}
-            habitCompletionIcon={habitCompletionIcon}
             highContrastMode={highContrastMode}
+            isConnectedToPreviousWeek={isConnectedToPreviousWeek}
+            onToggle={toggleHabit}
             onWeekComplete={({ completedDate }) =>
               onWeekComplete?.({ completedDate, habit })
             }
             reduceMotionPreference={reduceMotionPreference}
+            shape={dayShape}
+            showConnectors={showConnectors}
             weekDateStrings={weekDateStrings}
             weekStatus={weekStatus}
-            onToggle={toggleHabit}
-            isConnectedToPreviousWeek={isConnectedToPreviousWeek}
           />
 
           {/* Completion reward indicator - enhanced */}

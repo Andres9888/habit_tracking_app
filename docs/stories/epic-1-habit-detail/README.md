@@ -100,4 +100,3 @@ This layout implements the **complete habit loop** from behavioral science:
 **Last Updated:** 2025-12-14
 
 
-

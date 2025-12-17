@@ -1,11 +1,18 @@
 import type { ComponentType } from 'react';
 import { Alert, Modal, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
 import CreateHabitModal from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../screens/HabitDetailScreen';
+import CustomModal from '../../../components/Modal';
 import PauseHabitModal from '../../../components/PauseHabitModal';
 import SettingsModal from '../../../components/SettingsModal';
 import HapticTest from '../../../components/HapticTest';
@@ -15,12 +22,37 @@ import { VisualizationExercise } from '../../../components/VisualizationExercise
 import type { ShareCardData } from '../types';
 import type { HabitsModalsState } from '../hooks/useHabitsApp';
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 interface HabitsModalsProps {
   state: HabitsModalsState;
 }
 
 export function HabitsModals({ state }: HabitsModalsProps) {
   const insets = useSafeAreaInsets();
+
+  // Animation values for close button press feedback
+  const templatesCloseScale = useSharedValue(1);
+  const visualizationCloseScale = useSharedValue(1);
+
+  const templatesCloseAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: templatesCloseScale.value }],
+  }));
+
+  const visualizationCloseAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: visualizationCloseScale.value }],
+  }));
+
+  const handleTemplatesClose = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    state.closeTemplatesScreen();
+  };
+
+  const handleVisualizationClose = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    state.closeVisualizationExercise();
+  };
+
   const {
     celebrationsEnabled,
     settings,
@@ -173,23 +205,32 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onConfirm={confirmPause}
       />
 
-      <Modal
-        animationType='slide'
+      <CustomModal
+        variant='fullScreen'
         visible={showTemplatesScreen}
-        onRequestClose={closeTemplatesScreen}
+        onClose={handleTemplatesClose}
       >
-        <View className='flex-1'>
+        <View className='flex-1' style={{ paddingTop: insets.top }}>
           <TemplatesScreen />
-          <View className='absolute right-4 top-12'>
-            <Pressable
+          <View className='absolute right-4' style={{ top: insets.top + 8 }}>
+            <AnimatedPressable
+              accessibilityLabel='Close templates'
+              accessibilityRole='button'
               className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'
-              onPress={closeTemplatesScreen}
+              style={templatesCloseAnimatedStyle}
+              onPress={handleTemplatesClose}
+              onPressIn={() => {
+                templatesCloseScale.value = withSpring(0.9, { damping: 15, stiffness: 200 });
+              }}
+              onPressOut={() => {
+                templatesCloseScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              }}
             >
-              <Text style={{ fontSize: 20, fontWeight: '600' }}>×</Text>
-            </Pressable>
+              <X color='#57534e' size={22} />
+            </AnimatedPressable>
           </View>
         </View>
-      </Modal>
+      </CustomModal>
 
       {/* Quick Actions Sheet */}
       <QuickActionsSheet
@@ -252,10 +293,10 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       />
 
       {/* Visualization Exercise Modal (Mental Boost) */}
-      <Modal
-        animationType='slide'
+      <CustomModal
+        variant='fullScreen'
         visible={showVisualizationExercise}
-        onRequestClose={closeVisualizationExercise}
+        onClose={handleVisualizationClose}
       >
         <View className='flex-1 bg-white' style={{ paddingTop: insets.top + 16 }}>
           {/* Header */}
@@ -263,14 +304,21 @@ export function HabitsModals({ state }: HabitsModalsProps) {
             <Text className='text-lg font-bold text-stone-900'>
               Mental Boost
             </Text>
-            <Pressable
+            <AnimatedPressable
               accessibilityLabel='Close mental boost'
               accessibilityRole='button'
-              className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
-              onPress={closeVisualizationExercise}
+              className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
+              style={visualizationCloseAnimatedStyle}
+              onPress={handleVisualizationClose}
+              onPressIn={() => {
+                visualizationCloseScale.value = withSpring(0.9, { damping: 15, stiffness: 200 });
+              }}
+              onPressOut={() => {
+                visualizationCloseScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              }}
             >
               <X color='#57534e' size={22} />
-            </Pressable>
+            </AnimatedPressable>
           </View>
 
           {/* Exercise Content */}
@@ -280,7 +328,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
           >
             <VisualizationExercise
               habitName={selectedHabit?.name ?? ''}
-              onClose={closeVisualizationExercise}
+              onClose={handleVisualizationClose}
               onSave={(data) => {
                 console.log('Visualization saved:', data);
                 Alert.alert(
@@ -292,7 +340,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
             />
           </View>
         </View>
-      </Modal>
+      </CustomModal>
     </>
   );
 }

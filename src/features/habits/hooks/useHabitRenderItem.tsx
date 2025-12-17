@@ -8,16 +8,18 @@ import type { Habit, HabitStatus } from '../types';
 
 interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;
+  completionIcon: 'chain' | 'checkbox';
+  dayShape?: 'circle' | 'square';
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
-  habitCompletionIcon: 'chain' | 'checkbox';
   handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
   handleHabitPress: (habit: Habit) => void;
   handleMorePress?: (habit: Habit) => void;
+  highlightHabitId?: Id<'habits'> | null;
   isReorderingEnabled: boolean;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
-  highlightHabitId?: Id<'habits'> | null;
   reduceMotionPreference: boolean;
+  showConnectors?: boolean;
   showHabitStrengthPercentage: boolean;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
   weekDateStrings: string[];
@@ -25,16 +27,18 @@ interface UseHabitRenderItemArgs {
 
 export function useHabitRenderItem({
   celebrationsEnabled,
+  completionIcon,
+  dayShape = 'square',
   getHabitStatus,
   getStreak,
-  habitCompletionIcon,
   handleArchive,
   handleHabitPress,
   handleMorePress,
+  highlightHabitId,
   isReorderingEnabled,
   notifyWeekCompletion,
-  highlightHabitId,
   reduceMotionPreference,
+  showConnectors = true,
   showHabitStrengthPercentage,
   toggleHabit,
   weekDateStrings,
@@ -71,15 +75,11 @@ export function useHabitRenderItem({
           >
             <DraggableHabit
               celebrationsEnabled={celebrationsEnabled}
-              habitCompletionIcon={habitCompletionIcon}
+              completionIcon={completionIcon}
+              dayShape={dayShape}
               habit={item}
               isConnectedToPreviousWeek={isConnectedToPreviousWeek}
               isJustCreated={highlightHabitId === item._id}
-              showHabitStrengthPercentage={showHabitStrengthPercentage}
-              streak={streak}
-              toggleHabit={toggleHabit}
-              weekDateStrings={weekDateStrings}
-              weekStatus={weekStatus}
               onArchive={handleArchive}
               onLongPress={isReorderingEnabled ? drag : undefined}
               onMorePress={handleMorePress}
@@ -88,6 +88,12 @@ export function useHabitRenderItem({
                 notifyWeekCompletion({ completedDate, habit: item })
               }
               reduceMotionPreference={reduceMotionPreference}
+              showConnectors={showConnectors}
+              showHabitStrengthPercentage={showHabitStrengthPercentage}
+              streak={streak}
+              toggleHabit={toggleHabit}
+              weekDateStrings={weekDateStrings}
+              weekStatus={weekStatus}
             />
           </View>
         </ScaleDecorator>
@@ -95,16 +101,18 @@ export function useHabitRenderItem({
     },
     [
       celebrationsEnabled,
+      completionIcon,
+      dayShape,
       getHabitStatus,
       getStreak,
-      habitCompletionIcon,
       handleArchive,
       handleHabitPress,
       handleMorePress,
-      isReorderingEnabled,
-      reduceMotionPreference,
-      notifyWeekCompletion,
       highlightHabitId,
+      isReorderingEnabled,
+      notifyWeekCompletion,
+      reduceMotionPreference,
+      showConnectors,
       showHabitStrengthPercentage,
       toggleHabit,
       weekDateStrings,
