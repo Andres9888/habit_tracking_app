@@ -175,6 +175,12 @@ export function HabitsHeader({
   // Calculate completion percentage for accessibility
   const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
+  // Smart Empty State - hide header completely when user has no habits
+  // Let HabitsEmptyState component handle the full onboarding experience
+  if (totalHabits === 0) {
+    return null;
+  }
+
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
