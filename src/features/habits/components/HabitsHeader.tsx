@@ -175,6 +175,29 @@ export function HabitsHeader({
   // Calculate completion percentage for accessibility
   const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
+  // Smart Empty State Header - shown when user has no habits
+  if (totalHabits === 0) {
+    return (
+      <View className='flex-row items-center justify-between'>
+        {/* Settings button on the right */}
+        <View className='flex-1' />
+        <Animated.View style={settingsButtonAnimatedStyle}>
+          <Pressable
+            accessibilityLabel='Open settings'
+            accessibilityRole='button'
+            className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
+            onPress={handleSettingsPress}
+            onPressIn={handleSettingsPressIn}
+            onPressOut={handleSettingsPressOut}
+          >
+            <Settings color='#44403c' size={20} strokeWidth={2.25} />
+          </Pressable>
+        </Animated.View>
+      </View>
+    );
+  }
+
+  // Regular header when user has habits
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
@@ -274,7 +297,7 @@ export function HabitsHeader({
       </View>
 
       {/* Daily Momentum Meter */}
-      {showCompletionSummary && totalHabits > 0 && (
+      {showCompletionSummary && (
         <View
           accessibilityRole='text'
           accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}
