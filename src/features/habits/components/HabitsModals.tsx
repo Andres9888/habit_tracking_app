@@ -120,8 +120,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     <>
       <SettingsModal
         celebrationsEnabled={celebrationsEnabled}
+        dayShape={settings?.dayShape ?? 'square'}
         habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
         isHighContrastActive={settings?.highContrastMode ?? false}
+        onChangeDayShape={(value) =>
+          onSettingsChange({ dayShape: value })
+        }
         onChangeHabitCompletionIcon={(value) =>
           onSettingsChange({ habitCompletionIcon: value })
         }

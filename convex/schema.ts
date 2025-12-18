@@ -227,6 +227,7 @@ const applicationTables = {
     ),
     // New settings from Figma design
     appIcon: v.optional(v.string()),
+    dayShape: v.optional(v.union(v.literal('circle'), v.literal('square'))),
     habitCompletionIcon: v.optional(
       v.union(v.literal('chain'), v.literal('checkbox'))
     ),

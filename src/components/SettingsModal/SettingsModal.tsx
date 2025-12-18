@@ -4,6 +4,7 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
+  Circle,
   Moon,
   Send,
   Smartphone,
@@ -17,7 +18,9 @@ import { useSettingsModalLogic } from './SettingsModal.hooks';
 
 interface SettingsModalProps {
   celebrationsEnabled?: boolean;
+  dayShape?: 'circle' | 'square';
   habitCompletionIcon?: 'chain' | 'checkbox';
+  onChangeDayShape?: (value: 'circle' | 'square') => void | Promise<void>;
   onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;
   onChangeHabitCompletionIcon?: (
     value: 'chain' | 'checkbox'
@@ -42,11 +45,13 @@ interface SettingsModalProps {
 
 export default function SettingsModal({
   celebrationsEnabled = true,
+  dayShape = 'square',
   habitCompletionIcon = 'chain',
   isCompact = false,
   isHighContrastActive = false,
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
+  onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
@@ -263,6 +268,17 @@ export default function SettingsModal({
                 value={habitCompletionIcon === 'checkbox'}
                 onToggle={(value) =>
                   void onChangeHabitCompletionIcon(value ? 'checkbox' : 'chain')
+                }
+              />
+              <SettingsRow
+                highContrastMode={isHighContrastActive}
+                icon={<Circle color='#8b5cf6' size={16} />}
+                iconBackgroundColor='#ddd6fe'
+                label='Use circles for habit days'
+                type='toggle'
+                value={dayShape === 'circle'}
+                onToggle={(value) =>
+                  void onChangeDayShape(value ? 'circle' : 'square')
                 }
               />
               <SettingsRow

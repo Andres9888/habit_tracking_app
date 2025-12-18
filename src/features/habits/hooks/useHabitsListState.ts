@@ -24,6 +24,7 @@ export function useHabitsListState(): HabitsListState {
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const dayShape = settings?.dayShape ?? 'square';
   const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'manual';
   const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
   const reduceMotionPreference = settings?.reduceMotion ?? false;
@@ -204,6 +205,7 @@ export function useHabitsListState(): HabitsListState {
 
   return {
     celebrationsEnabled,
+    dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habits,
     habitSortMode,
