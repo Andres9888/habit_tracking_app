@@ -413,7 +413,7 @@ export function HabitsList({
   } = list;
 
   const { onSettingsChange, openQuickActions, openSettings, openTemplatesScreen } = modals;
-  const isReorderingEnabled = habitSortMode === 'manual';
+  const isReorderingEnabled = habitSortMode === 'drag_drop';
 
   const handleChangeHabitSortMode = useCallback((value: typeof habitSortMode) => {
     void onSettingsChange({

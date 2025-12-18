@@ -235,7 +235,7 @@ const applicationTables = {
     showCalendarView: v.boolean(),
     habitSortMode: v.optional(
       v.union(
-        v.literal('manual'),
+        v.literal('drag_drop'),
         v.literal('day_phase'),
         v.literal('name_asc'),
         v.literal('name_desc'),

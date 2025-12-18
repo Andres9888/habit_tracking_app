@@ -5,7 +5,7 @@ const DARK_MODE_OPTIONS = ['system', 'light', 'dark'] as const;
 type DarkModePreference = (typeof DARK_MODE_OPTIONS)[number];
 
 const HABIT_SORT_MODE_OPTIONS = [
-  'manual',
+  'drag_drop',
   'name_asc',
   'name_desc',
   'strength_asc',
@@ -30,7 +30,7 @@ const DEFAULT_SETTINGS = {
 
   reduceMotion: false,
 
-  habitSortMode: 'manual' as HabitSortMode,
+  habitSortMode: 'drag_drop' as HabitSortMode,
 
   showCalendarView: true,
 
@@ -68,7 +68,7 @@ const normalizeHabitSortMode = (
   legacySortHabitsAlphabetically?: unknown
 ): HabitSortMode => {
   if (
-    value === 'manual' ||
+    value === 'drag_drop' ||
     value === 'name_asc' ||
     value === 'name_desc' ||
     value === 'strength_asc' ||
@@ -78,6 +78,11 @@ const normalizeHabitSortMode = (
     value === 'day_phase'
   ) {
     return value;
+  }
+
+  // Handle legacy 'manual' value for backward compatibility
+  if (value === 'manual') {
+    return 'drag_drop';
   }
 
   if (legacySortHabitsAlphabetically === true) {
@@ -138,7 +143,7 @@ export const get = query({
       v.literal('dark')
     ),
     habitSortMode: v.union(
-      v.literal('manual'),
+      v.literal('drag_drop'),
       v.literal('name_asc'),
       v.literal('name_desc'),
       v.literal('strength_asc'),
@@ -178,7 +183,7 @@ export const update = mutation({
     ),
     habitSortMode: v.optional(
       v.union(
-        v.literal('manual'),
+        v.literal('drag_drop'),
         v.literal('name_asc'),
         v.literal('name_desc'),
         v.literal('strength_asc'),

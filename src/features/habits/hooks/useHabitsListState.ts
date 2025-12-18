@@ -24,7 +24,7 @@ export function useHabitsListState(): HabitsListState {
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
-  const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'manual';
+  const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'drag_drop';
   const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
@@ -36,7 +36,7 @@ export function useHabitsListState(): HabitsListState {
   const { getStreak, getHabitStatus } = useHabitsTracking(extendedDateStrings, today);
 
   const habits = useMemo(() => {
-    if (habitSortMode === 'manual') {
+    if (habitSortMode === 'drag_drop') {
       return habitsFromQuery;
     }
 
@@ -140,7 +140,7 @@ export function useHabitsListState(): HabitsListState {
 
   const handleDragEnd = useCallback(
     async ({ data }: { data: Habit[] }) => {
-      if (habitSortMode !== 'manual') {
+      if (habitSortMode !== 'drag_drop') {
         return;
       }
 

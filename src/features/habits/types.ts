@@ -8,7 +8,7 @@ export type HabitTrackingEntry = Doc<'tracking'>;
 export type HabitStatus = 'done' | 'missed' | 'planned';
 
 export type HabitSortMode =
-  | 'manual'
+  | 'drag_drop'
   | 'day_phase'
   | 'name_asc'
   | 'name_desc'

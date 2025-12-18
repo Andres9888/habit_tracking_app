@@ -17,7 +17,7 @@ import { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';
 import type { HabitSortMode } from '../types';
 
 const SORT_OPTIONS: ReadonlyArray<{ label: string; value: HabitSortMode }> = [
-  { label: 'Custom order', value: 'manual' },
+  { label: 'Drag and drop', value: 'drag_drop' },
   { label: 'Day Phase (Push → Pull)', value: 'day_phase' },
   { label: 'Name (A–Z)', value: 'name_asc' },
   { label: 'Name (Z–A)', value: 'name_desc' },
@@ -41,7 +41,7 @@ interface HabitsHeaderProps {
 
 export function HabitsHeader({
   completedToday = 0,
-  habitSortMode = 'manual',
+  habitSortMode = 'drag_drop',
   onChangeHabitSortMode,
   openCreateHabitScreen,
   openSettings,
@@ -241,10 +241,10 @@ export function HabitsHeader({
         <Animated.View style={sortButtonAnimatedStyle}>
           <Pressable
             accessibilityHint='Tap to change habit sort order'
-            accessibilityLabel={habitSortMode === 'manual' ? 'Sort habits' : `Sorted by ${habitSortLabel}`}
+            accessibilityLabel={habitSortMode === 'drag_drop' ? 'Sort habits' : `Sorted by ${habitSortLabel}`}
             accessibilityRole='button'
             className={`h-9 flex-row items-center gap-1.5 rounded-full border ${
-              habitSortMode === 'manual'
+              habitSortMode === 'drag_drop'
                 ? 'w-9 justify-center border-stone-200 bg-white/60'
                 : 'border-amber-200 bg-amber-50/70 px-3'
             }`}
@@ -253,11 +253,11 @@ export function HabitsHeader({
             onPressOut={handleSortPressOut}
           >
             <ArrowUpDown
-              color={habitSortMode === 'manual' ? '#44403c' : '#92400e'}
+              color={habitSortMode === 'drag_drop' ? '#44403c' : '#92400e'}
               size={16}
               strokeWidth={2.25}
             />
-            {habitSortMode !== 'manual' && (
+            {habitSortMode !== 'drag_drop' && (
               <Text className='text-[13px] font-semibold text-amber-800'>
                 {habitSortLabel}
               </Text>
