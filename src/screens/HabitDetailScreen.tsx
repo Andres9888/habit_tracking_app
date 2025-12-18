@@ -769,13 +769,24 @@ export default function HabitDetailScreen({
                 </Text>
               </View>
             ) : (
-              <View className="items-center rounded-xl bg-stone-50 py-6">
-                <Text className="text-center text-sm text-stone-500">
-                  What's the deeper reason?
+              <View className="items-center rounded-xl bg-stone-50 px-4 py-6">
+                {/* Hook Quote */}
+                <Text className="mb-3 text-center text-base font-medium italic text-stone-600">
+                  "Your WHY is the fire that keeps burning when motivation fades."
                 </Text>
-                <Text className="mt-1 text-center text-xs text-stone-400">
-                  Tap to add your motivation
+
+                {/* Value Proposition */}
+                <Text className="mb-4 text-center text-xs text-stone-400">
+                  People with a clear why are 3× more likely to stick with their habits
                 </Text>
+
+                {/* CTA */}
+                <View className="flex-row items-center gap-1">
+                  <Text className="text-sm font-semibold text-stone-700">
+                    Discover yours
+                  </Text>
+                  <ChevronRight className="text-stone-500" size={16} />
+                </View>
               </View>
             )}
           </Pressable>
