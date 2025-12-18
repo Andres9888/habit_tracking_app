@@ -1,0 +1,287 @@
+# Product Requirements Document: Drag-and-Drop Habit Reordering
+
+## Overview
+This PRD defines the requirements for implementing and enhancing drag-and-drop functionality for habit reordering in the habit tracking application. The feature allows users to manually organize their habits by dragging them into their preferred order, providing a personalized and intuitive way to prioritize routines.
+
+## Background
+The application currently has basic drag-and-drop infrastructure in place:
+- Frontend uses `react-native-draggable-flatlist` library
+- Backend has `reorderHabits` mutation that updates habit `order` field
+- Database schema includes optional `order` field on habits
+- UI conditionally enables drag-and-drop when `habitSortMode === 'drag_drop'`
+
+However, the feature needs enhancement to ensure robust functionality, excellent UX, and proper handling of edge cases.
+
+## Goals
+1. Provide smooth, intuitive drag-and-drop reordering of habits
+2. Persist habit order reliably across sessions and devices
+3. Handle edge cases gracefully (new habits, deletions, archived habits)
+4. Deliver excellent user experience with visual feedback and haptics
+5. Ensure accessibility for all users
+6. Maintain performance with large habit lists
+
+## User Stories
+
+### Core Functionality
+1. **As a user**, I want to drag habits to reorder them, so I can prioritize my most important routines
+2. **As a user**, I want my habit order to persist when I close and reopen the app, so my organization is maintained
+3. **As a user**, I want drag-and-drop to work smoothly without lag, even with many habits
+4. **As a user**, I want visual feedback when dragging a habit, so I know what I'm moving
+5. **As a user**, I want haptic feedback when starting a drag, so I get tactile confirmation
+
+### Edge Cases
+6. **As a user**, when I create a new habit, I want it to appear at the end of my list, so I can decide where to place it
+7. **As a user**, when I archive a habit, I want it removed from the list without affecting other habits' order
+8. **As a user**, when I delete a habit, I want remaining habits to maintain their relative order
+9. **As a user**, if reordering fails due to network issues, I want to see an error message and have the option to retry
+
+### User Experience
+10. **As a user**, I want the drag handle to be clearly visible and easy to grab
+11. **As a user**, I want to see a preview of where the habit will be placed while dragging
+12. **As a user**, I want the list to smoothly animate when habits reorder
+13. **As a user**, I want drag-and-drop disabled when viewing sorted lists (by name, strength, etc.), so I don't accidentally change order
+
+### Accessibility
+14. **As a user with motor impairments**, I want alternative ways to reorder habits (e.g., up/down buttons)
+15. **As a user using screen readers**, I want drag-and-drop to be announced properly
+16. **As a user**, I want to be able to disable drag-and-drop if I prefer other sorting methods
+
+## Technical Requirements
+
+### Frontend Requirements
+
+#### Component Architecture
+- Use `react-native-draggable-flatlist` for drag-and-drop functionality
+- Maintain `DraggableHabit` component for individual habit items
+- Ensure `HabitsList` component properly integrates drag-and-drop
+- Support conditional enabling/disabling based on `habitSortMode`
+
+#### Visual Feedback
+- Show drag handle icon (e.g., grip dots) when drag-and-drop is enabled
+- Provide visual indication when habit is being dragged (e.g., opacity change, elevation)
+- Show drop zone indicators during drag operation
+- Animate list reordering smoothly using React Native Reanimated
+
+#### Haptic Feedback
+- Trigger haptic feedback on drag start (`handleDragBegin`)
+- Use appropriate haptic type (selection/impact) based on platform
+- Respect user's `reduceMotion` preference
+
+#### State Management
+- Handle drag end events and extract new order from `DraggableFlatList`
+- Call `reorderHabits` mutation with array of habit IDs in new order
+- Implement optimistic UI updates for immediate feedback
+- Handle error states and rollback on failure
+
+#### Performance
+- Optimize re-renders during drag operations
+- Use `React.memo` for habit items to prevent unnecessary updates
+- Implement proper key extraction for list items
+- Handle large lists efficiently (50+ habits)
+
+#### Accessibility
+- Add proper accessibility labels for drag handles
+- Support alternative reordering methods (up/down buttons in settings)
+- Announce drag operations to screen readers
+- Ensure keyboard navigation works when drag-and-drop is disabled
+
+### Backend Requirements
+
+#### Database Schema
+- Maintain `order` field on habits table (optional number)
+- Ensure `order` field is indexed for efficient sorting queries
+- Handle null/undefined order values gracefully
+
+#### API Endpoints
+
+**reorderHabits Mutation**
+- Accept array of habit IDs in new order
+- Validate all habit IDs exist and belong to user
+- Update `order` field for each habit based on array index
+- Handle concurrent updates gracefully
+- Return success/error status
+- Log operations for debugging
+
+**list Query**
+- Sort habits by `order` field (ascending) when `habitSortMode === 'drag_drop'`
+- Use `_creationTime` as fallback for habits without order
+- Ensure consistent ordering across queries
+
+**create Mutation**
+- Assign new habits an order value (max existing order + 1)
+- Handle case where no habits exist (start at 0)
+
+**archive/delete Mutations**
+- Do not modify order of remaining habits
+- Allow gaps in order sequence (acceptable for performance)
+
+#### Error Handling
+- Validate input (non-empty array, valid IDs)
+- Handle missing habits gracefully
+- Provide meaningful error messages
+- Support retry logic
+
+#### Performance
+- Batch order updates efficiently
+- Minimize database queries
+- Consider transaction support for atomic updates
+
+### Edge Cases
+
+#### New Habits
+- New habits should be assigned order = max(existing orders) + 1
+- If no habits exist, start at order = 0
+- New habits appear at end of list initially
+
+#### Deleted Habits
+- When habit is deleted, do not reorder remaining habits
+- Gaps in order sequence are acceptable
+- Order values can be sparse (0, 5, 10, 15, etc.)
+
+#### Archived Habits
+- Archived habits should be excluded from drag-and-drop list
+- Order values of archived habits should be preserved
+- If habit is unarchived, it should appear at end of list (or maintain original order)
+
+#### Concurrent Updates
+- Handle multiple devices updating order simultaneously
+- Last write wins (acceptable for this use case)
+- Consider optimistic locking if conflicts become problematic
+
+#### Network Failures
+- Show error message to user
+- Provide retry button
+- Rollback optimistic UI update on failure
+- Queue update for retry when connection restored
+
+#### Empty/Initial State
+- Handle empty habit list gracefully
+- Initialize order values for existing habits without order
+- Migration script to assign order to existing habits
+
+## User Experience Flow
+
+### Happy Path
+1. User opens app and sees habits list
+2. User long-presses on a habit card
+3. Haptic feedback triggers
+4. Habit card becomes draggable with visual feedback
+5. User drags habit to new position
+6. Other habits animate to make space
+7. User releases habit at new position
+8. List animates to final state
+9. Order is saved to backend
+10. Success is confirmed (optimistic update)
+
+### Error Path
+1. User drags habit to new position
+2. Order is saved optimistically in UI
+3. Network request fails
+4. Error message appears
+5. List reverts to previous order
+6. User can retry operation
+
+## Acceptance Criteria
+
+### Functional
+- [ ] Users can drag habits to reorder them
+- [ ] Habit order persists across app sessions
+- [ ] New habits appear at end of list
+- [ ] Archived habits are excluded from reordering
+- [ ] Drag-and-drop only works when `habitSortMode === 'drag_drop'`
+- [ ] Other sort modes disable drag-and-drop
+- [ ] Order updates are saved to backend
+- [ ] Error handling works correctly
+
+### Performance
+- [ ] Drag operations are smooth (60fps)
+- [ ] List handles 50+ habits without lag
+- [ ] Backend updates complete in <500ms
+- [ ] No memory leaks during drag operations
+
+### UX
+- [ ] Visual feedback during drag is clear
+- [ ] Haptic feedback triggers appropriately
+- [ ] Animations are smooth and natural
+- [ ] Drag handle is easily accessible
+- [ ] Error messages are user-friendly
+
+### Accessibility
+- [ ] Screen readers announce drag operations
+- [ ] Keyboard navigation works when drag disabled
+- [ ] Alternative reordering methods available
+- [ ] Respects reduce motion preferences
+
+### Testing
+- [ ] Unit tests for drag handlers
+- [ ] Integration tests for reorder mutation
+- [ ] E2E tests for drag-and-drop flow
+- [ ] Edge case tests (empty list, network failure, etc.)
+- [ ] Performance tests with large lists
+
+## Implementation Phases
+
+### Phase 1: Core Functionality (MVP)
+- Ensure drag-and-drop works with existing infrastructure
+- Fix any bugs in current implementation
+- Add proper error handling
+- Basic visual feedback
+
+### Phase 2: UX Enhancements
+- Improve visual feedback (drag handle, animations)
+- Add haptic feedback
+- Optimize animations
+- Polish drag interactions
+
+### Phase 3: Edge Cases & Robustness
+- Handle new habit creation
+- Handle archived/deleted habits
+- Network failure handling
+- Concurrent update handling
+- Migration for existing habits
+
+### Phase 4: Accessibility & Polish
+- Screen reader support
+- Alternative reordering methods
+- Keyboard navigation
+- Performance optimization
+- Comprehensive testing
+
+## Success Metrics
+- 90%+ of users with drag-and-drop enabled successfully reorder habits
+- <1% error rate on reorder operations
+- Average reorder operation completes in <500ms
+- User satisfaction score >4.5/5 for drag-and-drop feature
+
+## Out of Scope
+- Drag-and-drop between different lists (e.g., active to archived)
+- Multi-select and bulk reordering
+- Custom drag handles per habit type
+- Drag-and-drop on web platform (mobile-first)
+- Undo/redo for reordering operations
+
+## Dependencies
+- `react-native-draggable-flatlist` library (already installed)
+- `react-native-reanimated` for animations (already installed)
+- `react-native-gesture-handler` for gestures (already installed)
+- Convex backend for persistence
+- Existing habit schema and mutations
+
+## Risks & Mitigations
+- **Risk**: Performance issues with large lists
+  - **Mitigation**: Implement virtualization, optimize re-renders, test with 50+ habits
+- **Risk**: Network failures causing data loss
+  - **Mitigation**: Implement optimistic updates with rollback, retry logic, error messages
+- **Risk**: Concurrent updates causing conflicts
+  - **Mitigation**: Last-write-wins approach, consider optimistic locking if needed
+- **Risk**: Accessibility concerns
+  - **Mitigation**: Provide alternative reordering methods, thorough screen reader testing
+
+## Future Enhancements
+- Undo/redo for reordering
+- Drag-and-drop between lists (active/archived)
+- Multi-select bulk reordering
+- Custom drag handles
+- Web platform support
+- Animation preferences (spring vs linear)
+- Order presets (morning routine, evening routine)
