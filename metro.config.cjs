@@ -49,6 +49,7 @@ config.resolver = {
     /\/\.claude\/.*/,
     /\/design-mockups\/.*/,
     /\/HabitHome-FigmaCode\/.*/,
+    /\/worktrees\/.*/,
   ],
 };
 

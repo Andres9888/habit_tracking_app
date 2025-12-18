@@ -19,8 +19,8 @@ import {
 } from '../../utils/emojiData';
 
 interface EmojiPickerProps {
-  onSelect: (emoji: string) => void;
   onClose: () => void;
+  onSelect: (emoji: string | null) => void;
   selectedEmoji?: string | null;
   visible: boolean;
 }
@@ -251,7 +251,7 @@ export const EmojiPicker = memo(
                   selectedEmoji === null ? 'bg-[#1a1a1a]' : 'bg-gray-100'
                 }`}
                 onPress={() => {
-                  onSelect(null as any);
+                  onSelect(null);
                   onClose();
                 }}
               >

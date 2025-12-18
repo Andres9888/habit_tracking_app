@@ -42,6 +42,7 @@ import TemplateCard from '../components/TemplateCard';
 import Toast from '../components/Toast';
 import { useAppTheme } from '../theme';
 
+import TemplatePreviewModal from './templates/TemplatePreviewModal';
 import {
   CATEGORY_COLORS,
   DEFAULT_CATEGORY_COLORS,
@@ -60,6 +61,9 @@ export default function TemplatesScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('popular');
   const [researchOnly, setResearchOnly] = useState(false);
+  const [previewTemplate, setPreviewTemplate] =
+    useState<Doc<'templates'> | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showTopScrollShadow, setShowTopScrollShadow] = useState(false);
@@ -238,6 +242,12 @@ export default function TemplatesScreen() {
     []
   );
 
+  // Handle template preview
+  const handleTemplatePreview = useCallback((template: Doc<'templates'>) => {
+    setPreviewTemplate(template);
+    setShowPreviewModal(true);
+  }, []);
+
   // Handle template import
   const handleTemplateImport = useCallback(
     async (
@@ -258,6 +268,7 @@ export default function TemplatesScreen() {
         if (result.success) {
           setShowToast(true);
           setToastMessage('Imported habit successfully');
+          setShowPreviewModal(false);
         }
       } catch (error) {
         console.error('Failed to import template:', error);
@@ -444,13 +455,14 @@ export default function TemplatesScreen() {
         isPremium={item.category === 'andrew_huberman'}
         name={item.name}
         onImport={() => handleTemplateImport(item._id)}
+        onPreview={() => handleTemplatePreview(item)}
         popularityScore={item.popularityScore}
         scientificLink={item.scientificLink}
         scientificReference={item.scientificReference}
         youtubeLink={item.youtubeLink}
       />
     ),
-    [handleTemplateImport, importingTemplateId]
+    [handleTemplateImport, handleTemplatePreview, importingTemplateId]
   );
 
   // Loading state with skeletons
@@ -737,6 +749,14 @@ export default function TemplatesScreen() {
           </LinearGradient>
         )}
       </View>
+
+      <TemplatePreviewModal
+        importingTemplateId={importingTemplateId}
+        onClose={() => setShowPreviewModal(false)}
+        onImport={handleTemplateImport}
+        template={previewTemplate}
+        visible={showPreviewModal}
+      />
 
       {/* Success Toast */}
       <Toast

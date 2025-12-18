@@ -3,6 +3,7 @@ import { Animated, Pressable, ScrollView, Text, View } from 'react-native';
 import { Palette } from 'lucide-react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { EmojiPicker } from '../../EmojiPicker/EmojiPicker';
 
 interface StyleSectionProps {
   colors: string[];
@@ -85,12 +86,23 @@ export const StyleSection = ({
   suggestedEmojis = [],
 }: StyleSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
-  const [showAllEmojis, setShowAllEmojis] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  // Combine suggested emojis (first) with default emojis
-  const displayEmojis = showAllEmojis
-    ? emojis
-    : [...new Set([...suggestedEmojis, ...emojis])].slice(0, 8);
+  // Show suggested emojis first, then default emojis (limited to 8 for quick access)
+  const displayEmojis = [...new Set([...suggestedEmojis, ...emojis])].slice(0, 8);
+
+  const handleOpenEmojiPicker = useCallback(() => {
+    triggerSelection();
+    setShowEmojiPicker(true);
+  }, [triggerSelection]);
+
+  const handleEmojiSelect = useCallback(
+    (emoji: string | null) => {
+      onSelectEmoji(emoji);
+      setShowEmojiPicker(false);
+    },
+    [onSelectEmoji]
+  );
 
   return (
     <View className="mb-6 rounded-2xl bg-white p-4">
@@ -145,21 +157,24 @@ export const StyleSection = ({
             </AnimatedButton>
           ))}
 
-          {/* More button */}
-          {!showAllEmojis && (
-            <Pressable
-              accessibilityLabel="Show more emojis"
-              className="h-12 items-center justify-center rounded-xl bg-slate-100 px-4"
-              onPress={() => {
-                triggerSelection();
-                setShowAllEmojis(true);
-              }}
-            >
-              <Text className="text-sm font-medium text-slate-600">More</Text>
-            </Pressable>
-          )}
+          {/* More button - opens full emoji picker */}
+          <Pressable
+            accessibilityLabel="Browse all emojis"
+            className="h-12 items-center justify-center rounded-xl bg-slate-100 px-4"
+            onPress={handleOpenEmojiPicker}
+          >
+            <Text className="text-sm font-medium text-slate-600">More</Text>
+          </Pressable>
         </ScrollView>
       </View>
+
+      {/* Full Emoji Picker Modal */}
+      <EmojiPicker
+        selectedEmoji={selectedEmoji}
+        visible={showEmojiPicker}
+        onClose={() => setShowEmojiPicker(false)}
+        onSelect={handleEmojiSelect}
+      />
 
       {/* Color Picker */}
       <View>
