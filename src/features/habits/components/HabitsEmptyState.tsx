@@ -435,12 +435,15 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
       <Animated.Text style={waveStyle} className='text-3xl'>
         👋
       </Animated.Text>
-      <View className='items-center gap-1'>
+      <View className='items-center gap-1.5'>
         <Text className='text-[20px] font-bold text-stone-800'>
           {greeting}!
         </Text>
-        <Text className='text-center text-[14px] leading-[20px] text-stone-600'>
-          Your first streak starts now {periodEmoji}
+        <Text className='text-center text-[15px] font-medium leading-[22px] text-stone-700'>
+          Small habits lead to big changes
+        </Text>
+        <Text className='text-center text-[13px] leading-[18px] text-stone-500'>
+          Your first streak starts with one tap {periodEmoji}
         </Text>
       </View>
       <Animated.View
@@ -458,7 +461,7 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
       >
         <Text className='text-base'>🔥</Text>
         <Text className='text-[12px] font-semibold text-amber-700'>
-          0 day streak • Let's change that
+          Day 1 begins now
         </Text>
       </Animated.View>
     </Animated.View>
