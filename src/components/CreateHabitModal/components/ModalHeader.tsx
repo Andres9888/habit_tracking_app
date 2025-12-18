@@ -24,7 +24,7 @@ export const ModalHeader = ({ isEditMode, habitName, onClose, onSave }: ModalHea
       >
         <X color='#44403c' size={24} strokeWidth={2} />
       </TouchableOpacity>
-      <Text className='text-[20px] font-bold text-stone-900'>
+      <Text className='text-[22px] font-semibold text-stone-900'>
         {isEditMode ? 'Edit Habit' : STRINGS.CREATE_HABIT.title}
       </Text>
       <Animated.View style={{ transform: [{ scale: saveScale }] }}>

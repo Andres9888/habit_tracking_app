@@ -222,7 +222,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         </Pressable>
 
         <Text
-          className='text-[16px] font-semibold leading-[24px]'
+          className='text-[17px] font-semibold leading-[22px]'
           style={{ color: colors.primaryText }}
         >
           {dateRangeText}
@@ -294,7 +294,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                 }}
               >
                 <Text
-                  className='text-center text-[16px] leading-[20px]'
+                  className='text-center text-[17px] leading-[22px]'
                   style={{
                     color: isCurrentDay
                       ? '#b45309' // amber-700 - rich gold text

@@ -50,7 +50,7 @@ export default function SignInScreen() {
 
         <View className='gap-6'>
           <View className='gap-2'>
-            <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+            <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
               EMAIL
             </Text>
             <TextInput
@@ -66,7 +66,7 @@ export default function SignInScreen() {
           </View>
 
           <View className='gap-2'>
-            <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+            <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
               PASSWORD
             </Text>
             <TextInput

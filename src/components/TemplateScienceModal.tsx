@@ -68,6 +68,14 @@ import type { Doc } from '../../convex/_generated/dataModel';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
+// Helper to convert hex to rgba for valid color interpolation in Reanimated
+const hexToRgba = (hex: string, alpha: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+};
+
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DISMISS_THRESHOLD = 150;
 
@@ -201,14 +209,17 @@ const AnimatedBorderBox = ({
     );
   }, []);
 
+  // Pre-compute the rgba color for valid Reanimated color interpolation
+  const activeColor = hexToRgba(baseColor, 0.25);
+
   const animatedBorderStyle = useAnimatedStyle(() => {
-    const borderColor = interpolate(
+    const borderColorValue = interpolate(
       borderProgress.value,
       [0, 0.25, 0.5, 0.75, 1],
       [0, 1, 0, 1, 0]
     );
     return {
-      borderColor: borderColor > 0.5 ? `${baseColor}40` : '#E5E7EB',
+      borderColor: borderColorValue > 0.5 ? activeColor : '#E5E7EB',
     };
   });
 

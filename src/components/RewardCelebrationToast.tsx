@@ -105,7 +105,7 @@ export const RewardCelebrationToast = ({
     >
       <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
         <Text className='text-[17px] font-bold leading-[24px] text-[#101727]'>{title}</Text>
-        <Text className='mt-2 text-[14px] leading-[20px] text-[#334155]'>{message}</Text>
+        <Text className='mt-2 text-[15px] leading-[20px] text-[#334155]'>{message}</Text>
 
         {/* Premium value prop */}
         <View className='mt-3 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 p-3' style={{ backgroundColor: '#faf5ff' }}>
@@ -122,7 +122,7 @@ export const RewardCelebrationToast = ({
               onSecondaryAction();
             }}
           >
-            <Text className='text-[14px] font-semibold leading-[20px] text-[#475467]'>Share</Text>
+            <Text className='text-[15px] font-semibold leading-[20px] text-[#475467]'>Share</Text>
           </Pressable>
           <Pressable
             accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
@@ -134,7 +134,7 @@ export const RewardCelebrationToast = ({
               onPrimaryAction();
             }}
           >
-            <Text className='text-[14px] font-semibold leading-[20px] text-white'>{premiumCTA.text}</Text>
+            <Text className='text-[15px] font-semibold leading-[20px] text-white'>{premiumCTA.text}</Text>
           </Pressable>
         </View>
 
@@ -146,7 +146,7 @@ export const RewardCelebrationToast = ({
             onDismiss();
           }}
         >
-          <Text className='text-[11px] font-semibold uppercase leading-[16px] tracking-wider text-[#64748b]'>Not now</Text>
+          <Text className='text-[10px] font-medium uppercase leading-[12px] tracking-wider text-[#64748b]'>Not now</Text>
         </Pressable>
       </View>
     </AnimatedContainer>

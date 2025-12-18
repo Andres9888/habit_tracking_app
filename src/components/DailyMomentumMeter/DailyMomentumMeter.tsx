@@ -162,7 +162,7 @@ export function DailyMomentumMeter({
           />
         </View>
         <Text
-          className='text-[12px] font-bold tabular-nums'
+          className='text-[13px] font-bold tabular-nums'
           style={{ color: colors.text, minWidth: 32, textAlign: 'right' }}
         >
           {percentage}%

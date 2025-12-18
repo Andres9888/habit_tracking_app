@@ -104,11 +104,11 @@ export const HabitPreview = ({
             </Animated.View>
             <View className='flex-1'>
               {habitName ? (
-                <Text className='text-[20px] font-semibold text-[#1a1a1a]'>
+                <Text className='text-[22px] font-semibold text-[#1a1a1a]'>
                   {habitName}
                 </Text>
               ) : (
-                <Text className='text-[20px] font-semibold text-[#94a3b8]'>
+                <Text className='text-[22px] font-semibold text-[#94a3b8]'>
                   {STRINGS.CREATE_HABIT.namePlaceholder}
                 </Text>
               )}

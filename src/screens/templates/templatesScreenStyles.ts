@@ -38,11 +38,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   categoryCountText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
   },
   categoryIcon: {
-    fontSize: 16,
+    fontSize: 17,
   },
   categoryScrollGradient: {
     height: '100%',
@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f8f7f5',
+    backgroundColor: '#f8f5f1',
   },
   controlButton: {
     alignItems: 'center',
@@ -122,7 +122,7 @@ export const styles = StyleSheet.create({
     borderColor: '#e2e8f0',
     borderRadius: 12,
     borderWidth: 1,
-    fontSize: 16,
+    fontSize: 17,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -172,10 +172,10 @@ export const styles = StyleSheet.create({
     marginTop: 8,
   },
   scienceIcon: {
-    fontSize: 16,
+    fontSize: 17,
   },
   youtubeIcon: {
-    fontSize: 18,
+    fontSize: 17,
   },
   youtubeIconWrapper: {
     alignItems: 'center',
@@ -266,7 +266,7 @@ export const styles = StyleSheet.create({
     elevation: 2,
   },
   scrollHintText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
     marginLeft: 8,
   },
@@ -323,7 +323,7 @@ export const styles = StyleSheet.create({
   },
   sortDropdownOptionText: {
     color: '#374151',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
   },
   sortDropdownOptionTextSelected: {
@@ -390,8 +390,8 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
     borderRadius: 6,
     color: '#6b7280',
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 10,
+    fontWeight: '500',
     overflow: 'hidden',
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -415,6 +415,7 @@ export const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+
 
 
 

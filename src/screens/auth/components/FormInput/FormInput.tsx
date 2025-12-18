@@ -8,7 +8,7 @@ interface FormInputProps extends TextInputProps {
 export function FormInput({ label, ...props }: FormInputProps) {
   return (
     <View className='gap-2'>
-      <Text className='text-[11px] font-semibold tracking-[3px] text-slate-500'>
+      <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
         {label}
       </Text>
       <TextInput

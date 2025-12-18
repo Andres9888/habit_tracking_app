@@ -490,7 +490,7 @@ export default function DraggableHabit({
                 {/* Best streak hint (only if not showing strength bar) */}
                 {bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage && (
                   <Text
-                    className='mt-0.5 text-[12px] font-medium'
+                    className='mt-0.5 text-[13px] font-medium'
                     style={{ color: '#a8a29e' }} // stone-400
                   >
                     Best: {bestStreak} days
@@ -506,7 +506,7 @@ export default function DraggableHabit({
                 className='ml-3 h-10 w-10 items-center justify-center rounded-full bg-black/5'
                 onPress={() => onMorePress(habit)}
               >
-                <Text className='text-[20px] leading-[20px]' style={{ color: colors.primaryText }}>
+                <Text className='text-[22px] leading-[22px]' style={{ color: colors.primaryText }}>
                   ⋯
                 </Text>
               </Pressable>
@@ -585,14 +585,14 @@ export default function DraggableHabit({
                 backgroundColor: `${accentColor}15`, // 15% opacity accent color
               }}
             >
-              <Text className='text-[12px]'>✨</Text>
+              <Text className='text-[10px]'>✨</Text>
               <Text
-                className='text-[12px] font-bold uppercase tracking-wider'
+                className='text-[10px] font-medium uppercase tracking-wider'
                 style={{ color: accentColor }}
               >
                 Perfect Week
               </Text>
-              <Text className='text-[12px]'>✨</Text>
+              <Text className='text-[10px]'>✨</Text>
             </View>
           )}
         </View>

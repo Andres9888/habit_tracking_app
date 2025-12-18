@@ -185,7 +185,7 @@ export default function HabitEditScreen({
           >
             <ChevronLeft color='#1a1a1a' size={20} strokeWidth={2} />
           </TouchableOpacity>
-          <Text className='text-[18px] font-semibold text-[#1a1a1a]'>
+          <Text className='text-[17px] font-semibold text-[#1a1a1a]'>
             Edit Habit
           </Text>
           <TouchableOpacity
@@ -209,7 +209,7 @@ export default function HabitEditScreen({
               >
                 <Text className='text-[36px]'>{selectedEmoji}</Text>
               </View>
-              <Text className='text-[18px] font-semibold text-[#1a1a1a]'>
+              <Text className='text-[17px] font-semibold text-[#1a1a1a]'>
                 Choose Icon
               </Text>
             </View>

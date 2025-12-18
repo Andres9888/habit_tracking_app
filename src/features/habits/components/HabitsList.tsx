@@ -142,7 +142,7 @@ function MonetizationHero({
       style={{ backgroundColor: '#1c1917', shadowColor: '#78350f', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.18, shadowRadius: 28, elevation: 12 }}
     >
       <View className='gap-2'>
-        <Text className='text-[11px] font-bold uppercase tracking-[4px] text-[#a5b4fc]'>
+        <Text className='text-[10px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
           Level up
         </Text>
         <Text className='text-[26px] font-bold leading-[32px] tracking-tight text-white'>
@@ -184,7 +184,7 @@ function MonetizationHero({
 
       <View className='gap-2 pt-2'>
         <View className='flex-row items-center justify-between'>
-          <Text className='text-[11px] font-bold uppercase tracking-[1px] text-[#94a3b8]'>
+          <Text className='text-[10px] font-medium uppercase tracking-[1px] text-[#94a3b8]'>
             Habit slots used
           </Text>
           <Text className='text-[13px] font-bold tabular-nums text-white'>
@@ -202,7 +202,7 @@ function MonetizationHero({
           />
         </View>
 
-        <Text className='text-[12px] font-medium text-[#fbbf24]'>
+        <Text className='text-[13px] font-medium text-[#fbbf24]'>
           {hasReachedHabitLimit
             ? 'You\'re making great progress! Upgrade to track every area of your life.'
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
@@ -215,13 +215,13 @@ function MonetizationHero({
 function PremiumBenefitsRow() {
   return (
     <View className='gap-4 rounded-3xl border border-amber-100/60 bg-white/90 p-5 shadow-[0px_16px_44px_rgba(120,90,50,0.06)]'>
-      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-amber-700'>
+      <Text className='text-[10px] font-medium uppercase tracking-[4px] text-amber-700'>
         Why members upgrade
       </Text>
       <View className='gap-3'>
         {PREMIUM_BENEFITS.map((benefit) => (
           <View className='gap-1' key={benefit.title}>
-            <Text className='text-[14px] font-semibold text-stone-800'>
+            <Text className='text-[15px] font-semibold text-stone-800'>
               {benefit.title}
             </Text>
             <Text className='text-[13px] leading-[18px] text-stone-600'>
@@ -237,10 +237,10 @@ function PremiumBenefitsRow() {
 function SocialProofCard() {
   return (
     <View className='gap-3 rounded-3xl border border-stone-200 bg-stone-50/80 p-5'>
-      <Text className='text-[11px] font-bold uppercase tracking-[4px] text-stone-700'>
+      <Text className='text-[10px] font-medium uppercase tracking-[4px] text-stone-700'>
         Proven momentum
       </Text>
-      <Text className='text-[14px] font-normal leading-[22px] text-stone-800'>
+      <Text className='text-[15px] font-normal leading-[22px] text-stone-800'>
         "{SOCIAL_PROOF.quote}"
       </Text>
       <Text className='text-[13px] font-semibold text-stone-500'>
@@ -289,7 +289,7 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
       <View className='items-center gap-2'>
         <Text className='text-[24px]'>✨</Text>
         <View className='gap-1'>
-          <Text className='text-center text-[16px] font-semibold text-stone-800'>
+          <Text className='text-center text-[17px] font-semibold text-stone-800'>
             Want to add more habits?
           </Text>
           <Text className='text-center text-[13px] leading-[18px] text-stone-600'>
@@ -303,7 +303,7 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
         className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
         onPress={onUpgradePress}
       >
-        <Text className='text-[14px] font-semibold text-white'>✨ Upgrade to Premium</Text>
+        <Text className='text-[15px] font-semibold text-white'>✨ Upgrade to Premium</Text>
       </Pressable>
     </Animated.View>
   );
@@ -333,7 +333,7 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
           </View>
-          <Text className='text-center text-[20px] font-bold text-stone-900'>
+          <Text className='text-center text-[22px] font-semibold text-stone-900'>
             You're on a roll! Ready for more?
           </Text>
           <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
@@ -353,7 +353,7 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
             onPress={onClose}
           >
-            <Text className='text-[14px] font-semibold text-stone-500'>Keep 3 habits free</Text>
+            <Text className='text-[15px] font-semibold text-stone-500'>Keep 3 habits free</Text>
           </Pressable>
         </View>
       </View>

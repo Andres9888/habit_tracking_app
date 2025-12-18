@@ -22,6 +22,14 @@ import * as Haptics from 'expo-haptics';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+// Helper to convert hex to rgba for valid color interpolation
+const hexToRgba = (hex: string, alpha: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+};
+
 // Category color mapping
 export const CATEGORY_COLORS: Record<string, { primary: string; gradient: [string, string] }> = {
   all: {
@@ -139,12 +147,12 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#ffffff', 'transparent']
+      ['#ffffff', 'rgba(255,255,255,0)']
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#e5e7eb', 'transparent']
+      ['#e5e7eb', 'rgba(229,231,235,0)']
     ),
     borderWidth: 1.5 * (1 - selectionProgress.value),
   }));
@@ -161,11 +169,14 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
     ),
   }));
 
+  // Convert hex to rgba for valid color interpolation
+  const primaryRgba = hexToRgba(colors.primary, 0.15);
+
   const countBgStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [`${colors.primary}15`, 'rgba(255,255,255,0.25)']
+      [primaryRgba, 'rgba(255,255,255,0.25)']
     ),
   }));
 
@@ -221,7 +232,7 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
         <Animated.View
           style={[
             styles.iconWrapper,
-            !isSelected && { backgroundColor: `${colors.primary}12` },
+            !isSelected && { backgroundColor: hexToRgba(colors.primary, 0.07) },
           ]}
         >
           <Text style={styles.icon}>{icon}</Text>

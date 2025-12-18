@@ -41,7 +41,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           <ChevronLeft color='#101727' size={16} strokeWidth={2.25} />
         </Pressable>
 
-        <Text className='text-[14px] leading-5 tracking-[-0.15px] text-[#4a5565]'>
+        <Text className='text-[15px] leading-5 tracking-[-0.15px] text-[#4a5565]'>
           {dateRangeText}
         </Text>
 
@@ -78,7 +78,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
               accessibilityRole='text'
               className='flex-1 items-center gap-2'
             >
-              <Text className='text-center text-[11px] font-normal uppercase leading-[16.5px] tracking-[0.34px] text-[#6a7282]'>
+              <Text className='text-center text-[10px] font-medium uppercase leading-[12px] tracking-[0.34px] text-[#6a7282]'>
                 {weekday}
               </Text>
               <View

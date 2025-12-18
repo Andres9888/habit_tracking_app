@@ -146,7 +146,7 @@ function ScrollHint({ visible }: { visible: boolean }) {
       className='items-center gap-1 pb-2 pt-4'
       style={animatedStyle}
     >
-      <Text className='text-[12px] font-medium text-stone-400'>
+      <Text className='text-[13px] font-medium text-stone-400'>
         More options below
       </Text>
       <ChevronDown color='#94a3b8' size={18} strokeWidth={2} />
@@ -189,7 +189,7 @@ export function HabitsEmptyState({
         <View className='items-center gap-2'>
           <Animated.Text
             entering={FadeInDown.delay(200).springify()}
-            className='text-[16px] font-semibold text-stone-700'
+            className='text-[17px] font-semibold text-stone-700'
           >
             Preparing your habit garden
           </Animated.Text>
@@ -436,7 +436,7 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
         👋
       </Animated.Text>
       <View className='items-center gap-1.5'>
-        <Text className='text-[20px] font-bold text-stone-800'>
+        <Text className='text-[22px] font-semibold tracking-tight text-stone-800'>
           {greeting}!
         </Text>
         <Text className='text-center text-[15px] font-medium leading-[22px] text-stone-700'>
@@ -460,7 +460,7 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
         ]}
       >
         <Text className='text-base'>🔥</Text>
-        <Text className='text-[12px] font-semibold text-amber-700'>
+        <Text className='text-[10px] font-medium tracking-wide text-amber-700'>
           Day 1 begins now
         </Text>
       </Animated.View>
@@ -563,19 +563,19 @@ function QuickStartButton({
           <View className='mb-1.5 h-9 w-9 items-center justify-center rounded-full bg-[#16a34a]'>
             <Check color='#ffffff' size={22} strokeWidth={2.8} />
           </View>
-          <Text className='text-[12px] font-bold text-[#15803d]'>Added!</Text>
+          <Text className='text-[10px] font-semibold text-[#15803d]'>Added!</Text>
         </Animated.View>
       ) : isCreating ? (
         <View className='items-center justify-center gap-1.5'>
           <ActivityIndicator color='#6d28d9' size='small' />
-          <Text className='text-[11px] font-semibold text-[#6d28d9]'>Creating...</Text>
+          <Text className='text-[10px] font-medium text-[#6d28d9]'>Creating...</Text>
         </View>
       ) : (
         <Animated.View className='items-center gap-2' style={contentStyle}>
           <Text className='text-[28px]'>{habit.emoji}</Text>
           <View className='items-center gap-0.5'>
             <Text className='text-center text-[13px] font-semibold text-stone-800'>{habit.name}</Text>
-            <Text className='text-[11px] font-medium text-stone-500'>{habit.duration}</Text>
+            <Text className='text-[10px] font-medium text-stone-500'>{habit.duration}</Text>
             {habit.timeHint && (
               <Text className='text-[10px] font-medium text-amber-600 mt-0.5'>{habit.timeHint}</Text>
             )}
@@ -639,15 +639,15 @@ function QuickWinCard({
       }}
     >
       <View className='mb-1 gap-2'>
-        <Text className='text-[18px] font-bold leading-[24px] text-stone-800'>
+        <Text className='text-[17px] font-semibold leading-[22px] text-stone-800'>
           Tap one you can do now
         </Text>
-        <Text className='text-[14px] leading-[20px] text-stone-600'>
+        <Text className='text-[15px] leading-[20px] text-stone-600'>
           Start small—you can always customize later.
         </Text>
         {!isShuffled && (
           <View className='mt-1 self-center rounded-full bg-amber-100/80 px-3 py-1.5'>
-            <Text className='text-[12px] font-semibold text-amber-700'>{periodLabel}</Text>
+            <Text className='text-[10px] font-medium tracking-wide text-amber-700'>{periodLabel}</Text>
           </View>
         )}
       </View>
@@ -669,7 +669,7 @@ function QuickWinCard({
         className='mt-3 self-center rounded-full px-4 py-1.5 active:bg-amber-100/60'
         onPress={shuffleSuggestions}
       >
-        <Animated.Text className='text-[12px] font-semibold text-amber-700' style={shuffleButtonStyle}>
+        <Animated.Text className='text-[13px] font-semibold text-amber-700' style={shuffleButtonStyle}>
           Show me different ideas ↻
         </Animated.Text>
       </Pressable>
@@ -755,8 +755,8 @@ function CustomHabitCard({ onPress, onNeedHelpQuiz }: { onPress: () => void; onN
         <Plus color='#ffffff' size={28} strokeWidth={2.8} />
       </Animated.View>
       <View className='flex-1 gap-1.5'>
-        <Text className='text-[18px] font-bold text-stone-800'>Build something just for you</Text>
-        <Text className='text-[14px] leading-[20px] text-stone-600'>
+        <Text className='text-[17px] font-semibold text-stone-800'>Build something just for you</Text>
+        <Text className='text-[15px] leading-[20px] text-stone-600'>
           Name it, schedule it, make it yours.
         </Text>
         <View className='mt-0.5 flex-row items-center gap-2'>

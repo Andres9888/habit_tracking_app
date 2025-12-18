@@ -258,7 +258,7 @@ export function WeeklySummaryCard({
           </View>
           {onViewDetails && (
             <View className='flex-row items-center gap-1'>
-              <Text className='text-[12px] font-medium' style={{ color: colors.accent }}>
+              <Text className='text-[13px] font-medium' style={{ color: colors.accent }}>
                 Details
               </Text>
               <ChevronRight color={colors.accent} size={14} />
@@ -286,7 +286,7 @@ export function WeeklySummaryCard({
 
           {/* Message */}
           <Text
-            className='mb-4 text-[16px] font-semibold'
+            className='mb-4 text-[17px] font-semibold'
             style={{ color: colors.text }}
           >
             {message.text}
@@ -301,14 +301,14 @@ export function WeeklySummaryCard({
             >
               <View className='mb-1 flex-row items-center gap-1.5'>
                 <Trophy color={colors.accent} size={14} />
-                <Text className='text-[11px] font-semibold uppercase' style={{ color: colors.accent }}>
+                <Text className='text-[10px] font-medium uppercase' style={{ color: colors.accent }}>
                   Completed
                 </Text>
               </View>
-              <Text className='text-[20px] font-bold' style={{ color: colors.text }}>
+              <Text className='text-[22px] font-bold' style={{ color: colors.text }}>
                 {stats.totalCompleted}
               </Text>
-              <Text className='text-[11px] font-medium text-stone-500'>
+              <Text className='text-[10px] font-medium text-stone-500'>
                 of {stats.totalPossible} habits
               </Text>
             </View>
@@ -320,14 +320,14 @@ export function WeeklySummaryCard({
             >
               <View className='mb-1 flex-row items-center gap-1.5'>
                 <Sparkles color={colors.accent} size={14} />
-                <Text className='text-[11px] font-semibold uppercase' style={{ color: colors.accent }}>
+                <Text className='text-[10px] font-medium uppercase' style={{ color: colors.accent }}>
                   Perfect Days
                 </Text>
               </View>
-              <Text className='text-[20px] font-bold' style={{ color: colors.text }}>
+              <Text className='text-[22px] font-bold' style={{ color: colors.text }}>
                 {stats.perfectDays}
               </Text>
-              <Text className='text-[11px] font-medium text-stone-500'>
+              <Text className='text-[10px] font-medium text-stone-500'>
                 100% completion
               </Text>
             </View>
@@ -346,7 +346,7 @@ export function WeeklySummaryCard({
                 <Calendar color={colors.accent} size={18} />
               </View>
               <View className='flex-1'>
-                <Text className='text-[12px] font-semibold uppercase' style={{ color: colors.accent }}>
+                <Text className='text-[10px] font-medium uppercase' style={{ color: colors.accent }}>
                   Best Day
                 </Text>
                 <Text className='text-[15px] font-bold' style={{ color: colors.text }}>
@@ -354,10 +354,10 @@ export function WeeklySummaryCard({
                 </Text>
               </View>
               <View className='items-end'>
-                <Text className='text-[18px] font-bold' style={{ color: colors.text }}>
+                <Text className='text-[17px] font-bold' style={{ color: colors.text }}>
                   {stats.bestDayRate}%
                 </Text>
-                <Text className='text-[11px] font-medium text-stone-500'>
+                <Text className='text-[10px] font-medium text-stone-500'>
                   completion
                 </Text>
               </View>
@@ -367,7 +367,7 @@ export function WeeklySummaryCard({
           {/* Streak highlight (if significant) */}
           {currentStreak >= 3 && (
             <View className='mt-3 flex-row items-center justify-center gap-2 rounded-full py-2' style={{ backgroundColor: '#fef3c7' }}>
-              <Text className='text-[14px]'>🔥</Text>
+              <Text className='text-[15px]'>🔥</Text>
               <Text className='text-[13px] font-bold' style={{ color: '#b45309' }}>
                 {currentStreak} day streak! Keep it going!
               </Text>

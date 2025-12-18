@@ -69,7 +69,7 @@ export function SettingsRow({
 
       {/* Label */}
       <Text
-        className='flex-1 text-[16px] font-semibold'
+        className='flex-1 text-[17px] font-semibold'
         style={{ color: colors.label }}
       >
         {label}
@@ -93,7 +93,7 @@ export function SettingsRow({
       {type === 'selection' && (
         <View className='flex-row items-center gap-1'>
           <Text
-            className='text-[16px] font-medium'
+            className='text-[17px] font-medium'
             style={{ color: colors.value }}
           >
             {value as string}

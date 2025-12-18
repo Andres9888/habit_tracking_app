@@ -29,7 +29,7 @@ export function CalendarLegend() {
       {LEGEND_ITEMS.map(({ indicatorClassName, label, textClassName }) => (
         <View key={label} className='flex-row items-center gap-1.5'>
           <View className={`h-2.5 w-2.5 rounded-full ${indicatorClassName}`} />
-          <Text className={`text-[11px] font-medium ${textClassName}`}>
+          <Text className={`text-[10px] font-medium ${textClassName}`}>
             {label}
           </Text>
         </View>

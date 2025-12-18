@@ -143,7 +143,7 @@ export const EmojiPicker = memo(
           <View className='mt-16 flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'>
             {/* Header */}
             <View className='flex-row items-center justify-between border-b border-gray-200 px-4 pb-3 pt-4'>
-              <Text className='text-[20px] font-bold text-[#1a1a1a]'>
+              <Text className='text-[22px] font-semibold text-[#1a1a1a]'>
                 Choose an Icon
               </Text>
               <TouchableOpacity

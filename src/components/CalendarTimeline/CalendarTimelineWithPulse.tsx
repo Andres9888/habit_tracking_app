@@ -203,7 +203,7 @@ const CalendarTimelineWithPulse: React.FC<CalendarTimelineProps> = ({
         </AnimatedPressable>
 
         <Text
-          className='text-[16px] font-semibold leading-[24px]'
+          className='text-[17px] font-semibold leading-[22px]'
           style={{ color: colors.primaryText }}
         >
           {dateRangeText}
@@ -263,7 +263,7 @@ const CalendarTimelineWithPulse: React.FC<CalendarTimelineProps> = ({
                 }}
               >
                 <Text
-                  className='text-center text-[16px] font-semibold leading-[20px]'
+                  className='text-center text-[17px] font-semibold leading-[22px]'
                   style={{
                     color: isCurrentDay
                       ? '#1a1a1a'

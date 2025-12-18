@@ -148,7 +148,7 @@ export default function SettingsModal({
         >
           <View className='mb-4 flex-row items-center justify-between'>
             <Text
-              className='text-[20px] font-bold leading-[28px] text-foreground'
+              className='text-[22px] font-semibold leading-[28px] text-foreground'
               style={{ color: colors.headerText }}
             >
               {format(new Date(), 'H:mm')}
@@ -334,7 +334,7 @@ export default function SettingsModal({
           {/* Footer */}
           <View className='items-center pb-8 pt-4'>
             <Text
-              className='text-center text-[14px] leading-[20px]'
+              className='text-center text-[13px] leading-[18px]'
               style={{ color: colors.versionText }}
             >
               Habit Tracker v1.0.0
