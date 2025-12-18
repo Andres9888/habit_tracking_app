@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
 
   catTheme: true,
+  dayShape: 'square' as const,
   habitCompletionIcon: 'chain' as const,
   hasPremium: false,
 
@@ -98,6 +99,7 @@ export const get = query({
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       darkMode: normalizeDarkMode(settings?.darkMode),
+      dayShape: settings?.dayShape ?? DEFAULT_SETTINGS.dayShape,
       habitSortMode: normalizeHabitSortMode(
         settings?.habitSortMode,
         settings?.sortHabitsAlphabetically
@@ -131,6 +133,7 @@ export const get = query({
   returns: v.object({
     appIcon: v.string(),
     catTheme: v.boolean(),
+    dayShape: v.union(v.literal('circle'), v.literal('square')),
     hasPremium: v.boolean(),
     darkMode: v.union(
       v.literal('system'),
@@ -166,6 +169,7 @@ export const update = mutation({
   args: {
     appIcon: v.optional(v.string()),
     catTheme: v.boolean(),
+    dayShape: v.optional(v.union(v.literal('circle'), v.literal('square'))),
     habitCompletionIcon: v.optional(
       v.union(v.literal('chain'), v.literal('checkbox'))
     ),

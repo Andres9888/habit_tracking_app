@@ -9,6 +9,7 @@ export interface LastUpdatedHabit {
 
 export interface HabitsListState {
   celebrationsEnabled: boolean;
+  dayShape: HabitSettings['dayShape'];
   freeHabitLimit: number;
   habits: Habit[];
   habitSortMode: HabitSortMode;
