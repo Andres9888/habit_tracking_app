@@ -390,7 +390,6 @@ export function HabitsList({
 }: HabitsListProps) {
   const {
     celebrationsEnabled,
-    dayShape,
     freeHabitLimit,
     habits,
     habitSortMode,
@@ -461,7 +460,6 @@ export function HabitsList({
   const renderItem = useHabitRenderItem({
     celebrationsEnabled,
     completionIcon: habitCompletionIcon,
-    dayShape,
     getHabitStatus,
     getStreak,
     handleArchive,

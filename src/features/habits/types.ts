@@ -35,7 +35,6 @@ export interface RewardToastData {
 export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;
-  dayShape: 'circle' | 'square';
   hasPremium: boolean;
   habitCompletionIcon: 'chain' | 'checkbox';
   darkMode: 'system' | 'light' | 'dark';
