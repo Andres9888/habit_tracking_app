@@ -58,6 +58,9 @@ tmp/
 temp/
 .claude/coderabbit-review.json
 
+# Claude Flow
+.claude-flow/
+
 dev-debug.log
 # Dependency directories
 # Editor directories and files
