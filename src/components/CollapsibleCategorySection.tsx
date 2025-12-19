@@ -36,6 +36,10 @@ export interface CollapsibleCategorySectionProps {
   onToggle: () => void;
   /** Template tap callback */
   onTemplatePress: (template: Doc<'templates'>) => void;
+  /** Import template callback */
+  onImport: (template: Doc<'templates'>) => void;
+  /** Currently importing template ID */
+  importingTemplateId?: string | null;
 }
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -48,6 +52,8 @@ export function CollapsibleCategorySection({
   isExpanded,
   onToggle,
   onTemplatePress,
+  onImport,
+  importingTemplateId,
 }: CollapsibleCategorySectionProps) {
   const colors = CATEGORY_COLORS[categoryId] || DEFAULT_CATEGORY_COLORS;
   const headerScale = useSharedValue(1);
@@ -149,6 +155,8 @@ export function CollapsibleCategorySection({
                 hasResearch={Boolean(template.scientificLink)}
                 scientificReference={template.scientificReference}
                 onPress={() => onTemplatePress(template)}
+                onImport={() => onImport(template)}
+                isImporting={importingTemplateId === template._id}
               />
             ))}
           </ScrollView>

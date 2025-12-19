@@ -683,6 +683,8 @@ export default function TemplatesScreen() {
                     isExpanded={expandedCategories.has(category.id)}
                     onToggle={() => handleToggleCategory(category.id)}
                     onTemplatePress={handleTemplatePreview}
+                    onImport={(template) => handleTemplateImport(template._id)}
+                    importingTemplateId={importingTemplateId}
                   />
                 );
               })}
@@ -701,6 +703,8 @@ export default function TemplatesScreen() {
                 hasResearch={Boolean(template.scientificLink)}
                 scientificReference={template.scientificReference}
                 onPress={() => handleTemplatePreview(template)}
+                onImport={() => handleTemplateImport(template._id)}
+                isImporting={importingTemplateId === template._id}
               />
             ))}
           </View>

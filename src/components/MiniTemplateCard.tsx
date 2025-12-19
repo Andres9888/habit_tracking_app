@@ -4,12 +4,13 @@
  */
 
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -29,8 +30,12 @@ export interface MiniTemplateCardProps {
   hasResearch?: boolean;
   /** Scientific reference text */
   scientificReference?: string;
-  /** Tap handler */
+  /** Tap handler for preview */
   onPress: () => void;
+  /** Import handler */
+  onImport?: () => void;
+  /** Is currently importing */
+  isImporting?: boolean;
 }
 
 export function MiniTemplateCard({
@@ -42,6 +47,8 @@ export function MiniTemplateCard({
   hasResearch,
   scientificReference,
   onPress,
+  onImport,
+  isImporting,
 }: MiniTemplateCardProps) {
   const pressScale = useSharedValue(1);
 
@@ -60,6 +67,12 @@ export function MiniTemplateCard({
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
+  };
+
+  const handleImport = () => {
+    if (isImporting || !onImport) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onImport();
   };
 
   return (
@@ -90,6 +103,24 @@ export function MiniTemplateCard({
             </Text>
           )}
         </View>
+        {/* Import button */}
+        {onImport && (
+          <Pressable
+            accessible
+            accessibilityLabel={`Add ${name} habit`}
+            accessibilityRole="button"
+            disabled={isImporting}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            style={[styles.importButton, { backgroundColor: iconColor }]}
+            onPress={handleImport}
+          >
+            {isImporting ? (
+              <ActivityIndicator color="#fff" size={14} />
+            ) : (
+              <Plus color="#fff" size={16} strokeWidth={3} />
+            )}
+          </Pressable>
+        )}
       </View>
 
       {/* Description */}
@@ -143,6 +174,14 @@ const styles = StyleSheet.create({
   },
   headerContent: {
     flex: 1,
+  },
+  importButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
   },
   iconContainer: {
     width: 36,
