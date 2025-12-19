@@ -4,7 +4,6 @@ import {
   Pressable,
   StyleSheet,
   View,
-  ScrollView,
   Text,
   TextInput,
   FlatList,
@@ -25,6 +24,7 @@ import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
 import { getAllEmojis } from '../../utils/emojiData';
 import { searchEmojisByKeyword, suggestEmojisForHabitName } from '../../utils/emojiKeywords';
 import { addRecentEmoji, getRecentEmojis } from '../../utils/recentEmojis';
+import { CategoryPills } from './CategoryPills';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
@@ -72,36 +72,6 @@ const EmojiCell = memo(
 );
 
 EmojiCell.displayName = 'EmojiCell';
-
-// Category pill component
-const CategoryPill = memo(
-  ({
-    icon,
-    name,
-    isSelected,
-    onPress,
-  }: {
-    icon: string;
-    name: string;
-    isSelected: boolean;
-    onPress: () => void;
-  }) => (
-    <Pressable
-      accessibilityLabel={`Filter by ${name} category`}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isSelected }}
-      style={[styles.categoryPill, isSelected && styles.categoryPillActive]}
-      onPress={onPress}
-    >
-      <Text style={styles.categoryPillIcon}>{icon}</Text>
-      <Text style={[styles.categoryPillText, isSelected && styles.categoryPillTextActive]}>
-        {name}
-      </Text>
-    </Pressable>
-  )
-);
-
-CategoryPill.displayName = 'CategoryPill';
 
 export const EmojiPickerSheet = memo(
   ({ visible, habitName, selectedEmoji, onSelect, onClose }: EmojiPickerSheetProps) => {
@@ -382,22 +352,10 @@ export const EmojiPickerSheet = memo(
 
             {/* Category Pills */}
             {!searchQuery && (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.categoriesContent}
-                style={styles.categoriesScroll}
-              >
-                {HABIT_CATEGORIES.map((category) => (
-                  <CategoryPill
-                    key={category.id}
-                    icon={category.icon}
-                    name={category.name}
-                    isSelected={selectedCategory === category.id}
-                    onPress={() => handleCategorySelect(category.id)}
-                  />
-                ))}
-              </ScrollView>
+              <CategoryPills
+                selectedCategory={selectedCategory}
+                onCategorySelect={handleCategorySelect}
+              />
             )}
 
             {/* Emoji Grid */}
@@ -528,42 +486,6 @@ const styles = StyleSheet.create({
   suggestionsGrid: {
     flexDirection: 'row',
     gap: 8,
-  },
-  categoriesScroll: {
-    flexGrow: 0,
-    marginBottom: 12,
-  },
-  categoriesContent: {
-    paddingHorizontal: 20,
-    gap: 8,
-  },
-  categoryPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 9999,
-    backgroundColor: '#f3f4f6',
-  },
-  categoryPillActive: {
-    backgroundColor: '#1a1a1a',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  categoryPillIcon: {
-    fontSize: 14,
-  },
-  categoryPillText: {
-    marginLeft: 4,
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
-  },
-  categoryPillTextActive: {
-    color: '#ffffff',
   },
   emojiGridContainer: {
     flex: 1,

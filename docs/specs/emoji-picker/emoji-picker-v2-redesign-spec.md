@@ -300,9 +300,12 @@ const suggestedEmojis = useMemo(() => {
 ### Phase 4: Search & Categories (Priority: Medium)
 - [x] **T4.1** Add search bar with focus states
   - *Completed: Added animated focus ring using react-native-reanimated with 200ms focus/150ms blur transitions. Blue border (#3b82f6) and shadow on focus, search icon color changes to blue when focused.*
-- [ ] **T4.2** Create CategoryPills horizontal scroll
-- [ ] **T4.3** Implement category selection with active state
-- [ ] **T4.4** Filter emojis by category
+- [x] **T4.2** Create CategoryPills horizontal scroll
+  - *Completed: Extracted CategoryPills.tsx component with horizontal ScrollView, hidden scrollbar, press animation (scale 0.95), and full accessibility support (tab role, selected state).*
+- [x] **T4.3** Implement category selection with active state
+  - *Completed: CategoryPill component with active state styling (dark #1a1a1a background, white text, shadow-md). Selection state managed via selectedCategory prop.*
+- [x] **T4.4** Filter emojis by category
+  - *Completed: displayedEmojis memo in EmojiPickerSheet.tsx filters by selectedCategory using HABIT_CATEGORIES data. Returns category emojis or all emojis based on selection.*
 
 ### Phase 5: Emoji Grid (Priority: Medium)
 - [ ] **T5.1** Create EmojiGrid with 6-column layout
@@ -342,3 +345,4 @@ const suggestedEmojis = useMemo(() => {
 | 2025-12-19 | Initial V2 spec created | UX Expert |
 | 2025-12-19 | Phase 3 tasks (T3.1-T3.4) marked complete - AI Suggestions already fully implemented inline in EmojiPickerSheet.tsx with tests passing | Claude |
 | 2025-12-19 | T4.1 - Added animated search bar focus states with blue ring and icon color change | Claude |
+| 2025-12-19 | Phase 4 complete (T4.2-T4.4) - Extracted CategoryPills.tsx component with horizontal scroll, active state styling, press animation, and category filtering logic | Claude |
