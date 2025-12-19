@@ -278,10 +278,14 @@ const suggestedEmojis = useMemo(() => {
   - *Completed: 48x48 icon preview, "Icon" label, subtitle text, ChevronRight icon, slate-50 background*
 
 ### Phase 2: Bottom Sheet Structure (Priority: High)
-- [ ] **T2.1** Create EmojiPickerSheet component with bottom sheet animation
-- [ ] **T2.2** Implement drag handle and gesture dismissal
-- [ ] **T2.3** Add backdrop overlay with tap-to-close
-- [ ] **T2.4** Implement slide-up/down animations
+- [x] **T2.1** Create EmojiPickerSheet component with bottom sheet animation
+  - *Completed: Created `src/components/EmojiPickerV2/EmojiPickerSheet.tsx` with 70% screen height, rounded corners (32px), and react-native-reanimated spring animations*
+- [x] **T2.2** Implement drag handle and gesture dismissal
+  - *Completed: Added drag handle (40x4px with gray-300 background) with PanGesture from react-native-gesture-handler for swipe-to-dismiss (25% threshold or 500+ velocity)*
+- [x] **T2.3** Add backdrop overlay with tap-to-close
+  - *Completed: Implemented backdrop with 40% opacity black overlay, tap-to-close via Pressable, and animated opacity transitions*
+- [x] **T2.4** Implement slide-up/down animations
+  - *Completed: Used react-native-reanimated withSpring (damping: 20, stiffness: 200) for smooth slide animations on open/close*
 
 ### Phase 3: AI Suggestions (Priority: High)
 - [ ] **T3.1** Create AISuggestions component
