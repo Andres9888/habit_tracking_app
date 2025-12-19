@@ -17,6 +17,7 @@ import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
 import { HabitStrengthSection } from '../components/HabitStrengthSection';
+import { InsightsSection } from '../components/InsightsSection';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { StatsGrid } from '../components/StatsGrid/StatsGrid';
@@ -41,6 +42,7 @@ import {
   MessageCircle,
   Plus,
   Compass,
+  BarChart3,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
@@ -212,6 +214,7 @@ export default function HabitDetailScreen({
   const [isMotivationExpanded, setIsMotivationExpanded] = useState(false);
   const [isManageExpanded, setIsManageExpanded] = useState(false);
   const [isStrengthExpanded, setIsStrengthExpanded] = useState(false);
+  const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
   const [isWhyEditorOpen, setIsWhyEditorOpen] = useState(false);
   const [whyDraft, setWhyDraft] = useState('');
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
@@ -925,6 +928,38 @@ export default function HabitDetailScreen({
             successRate={successRate}
             totalCompletions={totalCompletions}
           />
+
+          {/* Insights Section */}
+          <Pressable
+            accessibilityLabel={isInsightsExpanded ? 'Collapse insights section' : 'Expand insights section'}
+            accessibilityRole="button"
+            className="flex-row items-center justify-between rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
+            onPress={() => setIsInsightsExpanded((previous) => !previous)}
+          >
+            <View className="flex-row items-center gap-2">
+              <BarChart3 className="text-stone-500" size={20} />
+              <View>
+                <Text className="text-lg font-semibold text-stone-800">
+                  Insights
+                </Text>
+                <Text className="text-xs text-stone-500">
+                  Patterns & personal bests
+                </Text>
+              </View>
+            </View>
+            <ChevronRight
+              className={clsx('text-stone-400', isInsightsExpanded && 'rotate-90')}
+              size={20}
+            />
+          </Pressable>
+
+          {isInsightsExpanded ? (
+            <InsightsSection
+              habitId={habit._id}
+              tracking={tracking}
+              habitCreatedAt={habitCreatedAt}
+            />
+          ) : null}
 
           {/* Motivation Section */}
           <Pressable
