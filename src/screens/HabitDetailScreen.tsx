@@ -781,7 +781,7 @@ export default function HabitDetailScreen({
             }}
           >
             {/* Background Aesthetic */}
-            <View className="absolute inset-0 bg-gradient-to-br from-rose-50/30 via-white to-orange-50/30" />
+            <View className="absolute inset-0 bg-gradient-to-br from-rose-50/30 via-white to-orange-50/30" pointerEvents="none" />
 
             <View className="p-5">
               {/* Header */}
@@ -845,7 +845,7 @@ export default function HabitDetailScreen({
             onPress={handleOpenIdentityEditor}
           >
             {/* Background Aesthetic */}
-            <View className="absolute inset-0 bg-gradient-to-br from-violet-50/40 via-white to-indigo-50/40" />
+            <View className="absolute inset-0 bg-gradient-to-br from-violet-50/40 via-white to-indigo-50/40" pointerEvents="none" />
 
             <View className="p-5">
               {/* Header */}
