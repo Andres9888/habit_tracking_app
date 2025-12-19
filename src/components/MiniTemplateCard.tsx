@@ -21,10 +21,14 @@ export interface MiniTemplateCardProps {
   iconColor: string;
   /** Template name */
   name: string;
+  /** Template description */
+  description?: string;
   /** Short description or frequency */
   subtitle?: string;
   /** Has scientific backing */
   hasResearch?: boolean;
+  /** Scientific reference text */
+  scientificReference?: string;
   /** Tap handler */
   onPress: () => void;
 }
@@ -33,8 +37,10 @@ export function MiniTemplateCard({
   icon,
   iconColor,
   name,
+  description,
   subtitle,
   hasResearch,
+  scientificReference,
   onPress,
 }: MiniTemplateCardProps) {
   const pressScale = useSharedValue(1);
@@ -69,27 +75,37 @@ export function MiniTemplateCard({
       {/* Left accent */}
       <View style={[styles.accent, { backgroundColor: iconColor }]} />
 
-      {/* Icon */}
-      <View style={[styles.iconContainer, { backgroundColor: `${iconColor}20` }]}>
-        <Text style={styles.icon}>{icon}</Text>
-      </View>
-
-      {/* Content */}
-      <View style={styles.content}>
-        <Text numberOfLines={1} style={styles.name}>
-          {name}
-        </Text>
-        {subtitle && (
-          <Text numberOfLines={1} style={styles.subtitle}>
-            {subtitle}
+      {/* Header row with icon and name */}
+      <View style={styles.headerRow}>
+        <View style={[styles.iconContainer, { backgroundColor: `${iconColor}20` }]}>
+          <Text style={styles.icon}>{icon}</Text>
+        </View>
+        <View style={styles.headerContent}>
+          <Text numberOfLines={1} style={styles.name}>
+            {name}
           </Text>
-        )}
+          {subtitle && (
+            <Text numberOfLines={1} style={styles.subtitle}>
+              {subtitle}
+            </Text>
+          )}
+        </View>
       </View>
 
-      {/* Research indicator */}
+      {/* Description */}
+      {description && (
+        <Text numberOfLines={2} style={styles.description}>
+          {description}
+        </Text>
+      )}
+
+      {/* Research badge */}
       {hasResearch && (
-        <View style={styles.researchBadge}>
+        <View style={[styles.researchBadge, { backgroundColor: `${iconColor}15` }]}>
           <Text style={styles.researchIcon}>🔬</Text>
+          <Text numberOfLines={1} style={[styles.researchText, { color: iconColor }]}>
+            {scientificReference ? scientificReference.split(' ').slice(0, 3).join(' ') + '...' : 'Research-backed'}
+          </Text>
         </View>
       )}
     </AnimatedPressable>
@@ -98,59 +114,79 @@ export function MiniTemplateCard({
 
 const styles = StyleSheet.create({
   card: {
-    width: 160,
-    borderRadius: 12,
+    width: 200,
+    borderRadius: 14,
     overflow: 'hidden',
     marginRight: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    paddingLeft: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    paddingLeft: 18,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
   },
   accent: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: 3,
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
+    width: 4,
+    borderTopLeftRadius: 14,
+    borderBottomLeftRadius: 14,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  headerContent: {
+    flex: 1,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
   },
   icon: {
-    fontSize: 20,
-  },
-  content: {
-    flex: 1,
+    fontSize: 18,
   },
   name: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#101727',
-    marginBottom: 2,
+    marginBottom: 1,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: 11,
+    fontWeight: '500',
     color: '#6b7280',
   },
+  description: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#4b5563',
+    marginBottom: 10,
+  },
   researchBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
   },
   researchIcon: {
-    fontSize: 12,
+    fontSize: 10,
+  },
+  researchText: {
+    fontSize: 10,
+    fontWeight: '600',
   },
 });
 

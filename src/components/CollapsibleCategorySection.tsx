@@ -184,8 +184,10 @@ export function CollapsibleCategorySection({
                 icon={template.icon}
                 iconColor={template.iconColor}
                 name={template.name}
+                description={template.description}
                 subtitle={frequencyLabels[template.frequency] || template.frequency}
                 hasResearch={Boolean(template.scientificLink)}
+                scientificReference={template.scientificReference}
                 onPress={() => onTemplatePress(template)}
               />
             ))}
@@ -271,7 +273,8 @@ const styles = StyleSheet.create({
   },
   moreCard: {
     width: 80,
-    borderRadius: 12,
+    minHeight: 120,
+    borderRadius: 14,
     borderWidth: 1.5,
     borderStyle: 'dashed',
     alignItems: 'center',
