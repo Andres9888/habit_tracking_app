@@ -102,6 +102,7 @@ export const update = mutation({
     name: v.optional(v.string()),
     notes: v.optional(v.string()),
     why: v.optional(v.string()),
+    identity: v.optional(v.string()),
     preferredTime: v.optional(v.string()),
     remindersEnabled: v.optional(v.boolean()),
     reminderSound: v.optional(v.string()),

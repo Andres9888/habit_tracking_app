@@ -43,6 +43,8 @@ import {
   Plus,
   Compass,
   BarChart3,
+  User,
+  Heart,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
@@ -217,6 +219,8 @@ export default function HabitDetailScreen({
   const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
   const [isWhyEditorOpen, setIsWhyEditorOpen] = useState(false);
   const [whyDraft, setWhyDraft] = useState('');
+  const [isIdentityEditorOpen, setIsIdentityEditorOpen] = useState(false);
+  const [identityDraft, setIdentityDraft] = useState('');
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
   const [isNotesListOpen, setIsNotesListOpen] = useState(false);
   const [isVisionBoardEditorOpen, setIsVisionBoardEditorOpen] = useState(false);
@@ -253,6 +257,7 @@ export default function HabitDetailScreen({
   const habitId = habit?._id;
   const habitStrength = habit?.strength ?? 0;
   const habitWhy = habit?.why;
+  const habitIdentity = habit?.identity;
   const habitCueAfterBehavior = habit?.cueAfterBehavior;
   const habitCueLocation = habit?.cueLocation;
   const habitCueTime = habit?.cueTime;
@@ -337,6 +342,10 @@ export default function HabitDetailScreen({
   useEffect(() => {
     setWhyDraft(habitWhy ?? '');
   }, [habitId, habitWhy]);
+
+  useEffect(() => {
+    setIdentityDraft(habitIdentity ?? '');
+  }, [habitId, habitIdentity]);
 
   useEffect(() => {
     setCueAfterBehaviorDraft(habitCueAfterBehavior ?? '');
@@ -483,7 +492,7 @@ export default function HabitDetailScreen({
   const handleSaveWhy = async () => {
     const nextWhy = whyDraft.trim();
     if (nextWhy.length > 200) {
-      Alert.alert('Too long', 'Keep your North Star under 200 characters.', [{ text: 'OK' }]);
+      Alert.alert('Too long', 'Keep your purpose under 200 characters.', [{ text: 'OK' }]);
       return;
     }
 
@@ -495,6 +504,31 @@ export default function HabitDetailScreen({
       setIsWhyEditorOpen(false);
     } catch (error) {
       console.error('Failed to update why:', error);
+      Alert.alert('Could not save', 'Please try again.', [{ text: 'OK' }]);
+    }
+  };
+
+  const handleOpenIdentityEditor = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setIsIdentityEditorOpen(true);
+  };
+
+  const handleSaveIdentity = async () => {
+    const nextIdentity = identityDraft.trim();
+    if (nextIdentity.length > 100) {
+      Alert.alert('Too long', 'Keep your identity under 100 characters.', [{ text: 'OK' }]);
+      return;
+    }
+
+    try {
+      await updateHabit({
+        habitId: habit._id,
+        identity: nextIdentity ? nextIdentity : undefined,
+      });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setIsIdentityEditorOpen(false);
+    } catch (error) {
+      console.error('Failed to update identity:', error);
       Alert.alert('Could not save', 'Please try again.', [{ text: 'OK' }]);
     }
   };
@@ -740,58 +774,140 @@ export default function HabitDetailScreen({
           <Pressable
             accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
             accessibilityRole="button"
-            className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
+            className="overflow-hidden rounded-2xl bg-white shadow-sm shadow-stone-200/50 active:opacity-90"
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               handleOpenWhyEditor();
             }}
           >
-            {/* Header */}
-            <View className="mb-3 flex-row items-center justify-center gap-2">
-              <Compass className="text-stone-500" size={18} />
-              <Text className="text-lg font-semibold text-stone-800">
-                Your Why
-              </Text>
-            </View>
+            {/* Background Aesthetic */}
+            <View className="absolute inset-0 bg-gradient-to-br from-rose-50/30 via-white to-orange-50/30" />
 
-            {/* Content */}
-            {habit.why ? (
-              <View className="items-center rounded-xl border border-stone-100 bg-stone-50/50 p-4">
-                {/* Identity Framing */}
-                <Text className="mb-2 text-xs font-medium uppercase tracking-wider text-stone-400">
-                  I am becoming someone who...
-                </Text>
-
-                {/* The Why Statement */}
-                <Text className="text-center text-base font-medium leading-relaxed text-stone-700">
-                  {habit.why}
-                </Text>
-
-                <Text className="mt-3 text-xs text-stone-400">
-                  Tap to edit
-                </Text>
-              </View>
-            ) : (
-              <View className="items-center rounded-xl bg-stone-50 px-4 py-6">
-                {/* Hook Quote */}
-                <Text className="mb-3 text-center text-base font-medium italic text-stone-600">
-                  "Your WHY is the fire that keeps burning when motivation fades."
-                </Text>
-
-                {/* Value Proposition */}
-                <Text className="mb-4 text-center text-xs text-stone-400">
-                  People with a clear why are 3× more likely to stick with their habits
-                </Text>
-
-                {/* CTA */}
-                <View className="flex-row items-center gap-1">
-                  <Text className="text-sm font-semibold text-stone-700">
-                    Discover yours
+            <View className="p-5">
+              {/* Header */}
+              <View className="mb-4 flex-row items-center justify-between">
+                <View className="flex-row items-center gap-2">
+                  <View className="h-8 w-8 items-center justify-center rounded-lg bg-rose-100">
+                    <Heart className="text-rose-500" size={16} strokeWidth={2.5} />
+                  </View>
+                  <Text className="text-lg font-bold text-stone-800">
+                    Your Why
                   </Text>
-                  <ChevronRight className="text-stone-500" size={16} />
                 </View>
+                <Text className="text-[10px] font-semibold uppercase tracking-wider text-rose-400">
+                  Purpose
+                </Text>
               </View>
-            )}
+
+              {/* Content */}
+              {habit.why ? (
+                <View className="items-center">
+                  {/* Label */}
+                  <View className="mb-2 rounded-full bg-rose-50 px-3 py-1">
+                    <Text className="text-[10px] font-bold uppercase tracking-widest text-rose-500">
+                      I do this because...
+                    </Text>
+                  </View>
+
+                  {/* The Why Statement */}
+                  <Text className="px-2 text-center text-base font-medium leading-relaxed text-stone-700">
+                    {habit.why}
+                  </Text>
+
+                  <Text className="mt-3 text-[10px] font-medium text-stone-400">
+                    Tap to edit
+                  </Text>
+                </View>
+              ) : (
+                <View className="items-center rounded-xl bg-stone-50/50 px-4 py-5">
+                  <Text className="mb-2 text-center text-sm text-stone-500">
+                    What's driving you to build this habit?
+                  </Text>
+                  <Text className="mb-3 text-center text-xs italic text-stone-400">
+                    "To be healthy for my kids" • "To feel confident"
+                  </Text>
+                  <View className="flex-row items-center gap-1">
+                    <Plus className="text-rose-500" size={14} />
+                    <Text className="text-sm font-semibold text-rose-600">
+                      Add your reason
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+          </Pressable>
+
+          {/* Identity Section - Who You Are Becoming */}
+          <Pressable
+            accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
+            accessibilityRole="button"
+            className="overflow-hidden rounded-2xl bg-white shadow-sm shadow-stone-200/50 active:opacity-90"
+            onPress={handleOpenIdentityEditor}
+          >
+            {/* Background Aesthetic */}
+            <View className="absolute inset-0 bg-gradient-to-br from-violet-50/40 via-white to-indigo-50/40" />
+
+            <View className="p-5">
+              {/* Header */}
+              <View className="mb-4 flex-row items-center justify-between">
+                <View className="flex-row items-center gap-2">
+                  <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
+                    <User className="text-violet-600" size={16} strokeWidth={2.5} />
+                  </View>
+                  <Text className="text-lg font-bold text-stone-800">
+                    Your Identity
+                  </Text>
+                </View>
+                <Sparkles className="text-violet-400" size={16} />
+              </View>
+
+              {/* Content */}
+              {habitIdentity ? (
+                <View className="items-center">
+                  {/* Label */}
+                  <View className="mb-2 rounded-full bg-violet-50 px-3 py-1">
+                    <Text className="text-[10px] font-bold uppercase tracking-widest text-violet-500">
+                      I am...
+                    </Text>
+                  </View>
+
+                  {/* The Identity Statement */}
+                  <Text className="px-2 text-center text-lg font-semibold leading-relaxed text-stone-800">
+                    "{habitIdentity}"
+                  </Text>
+
+                  <View className="mt-4 h-[1px] w-12 bg-violet-100" />
+                  <Text className="mt-2 text-[10px] font-medium text-stone-400">
+                    Tap to refine your identity
+                  </Text>
+                </View>
+              ) : (
+                <View className="items-center rounded-xl bg-violet-50/30 px-4 py-5">
+                  {/* Science Badge */}
+                  <View className="mb-3 flex-row items-center gap-2 rounded-full bg-violet-100/50 px-3 py-1.5">
+                    <Brain className="text-violet-500" size={12} />
+                    <Text className="text-[10px] font-semibold text-violet-600">
+                      MOST POWERFUL FOR LONG-TERM SUCCESS
+                    </Text>
+                  </View>
+
+                  <Text className="mb-2 text-center text-sm font-medium text-stone-600">
+                    Who are you becoming?
+                  </Text>
+                  <Text className="mb-4 text-center text-xs italic text-stone-400">
+                    "I am a healthy person" • "I am a reader"
+                  </Text>
+
+                  {/* CTA */}
+                  <View className="flex-row items-center gap-2 rounded-full bg-violet-600 px-5 py-2.5 shadow-sm active:bg-violet-700">
+                    <Text className="text-sm font-bold text-white">
+                      Define Your Identity
+                    </Text>
+                    <ChevronRight className="text-white" size={14} strokeWidth={3} />
+                  </View>
+                </View>
+              )}
+            </View>
           </Pressable>
 
           {/* Cue Section - Implementation Intention */}
@@ -1290,10 +1406,15 @@ export default function HabitDetailScreen({
         visible={isWhyEditorOpen}
         onRequestClose={() => setIsWhyEditorOpen(false)}
       >
-        <View className="flex-1 bg-white" style={{ paddingTop: insets.top + 16 }}>
+        <View className="flex-1 bg-stone-50" style={{ paddingTop: insets.top + 16 }}>
           {/* Header */}
-          <View className="flex-row items-center justify-between border-b border-stone-100 px-5 pb-4">
-            <Text className="text-lg font-bold text-stone-900">Your Why</Text>
+          <View className="flex-row items-center justify-between border-b border-stone-100 bg-white px-5 pb-4">
+            <View className="flex-row items-center gap-2">
+              <View className="rounded-full bg-rose-100 p-1.5">
+                <Heart className="text-rose-500" size={18} />
+              </View>
+              <Text className="text-lg font-bold text-stone-900">Your Why</Text>
+            </View>
             <Pressable
               accessibilityLabel="Close why editor"
               accessibilityRole="button"
@@ -1310,92 +1431,67 @@ export default function HabitDetailScreen({
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            {/* Description */}
-            <Text className="mb-4 text-sm text-stone-500">
-              Your why is the deeper reason that pulls you forward when the path gets hard.
+            {/* Context */}
+            <Text className="mb-6 text-center text-sm text-stone-500">
+              Your why is the deeper reason that keeps you going when motivation fades.
             </Text>
 
-            {/* Identity Framing Label */}
-            <Text className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
-              I am becoming someone who...
+            {/* Framing Label */}
+            <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
+              I do this because...
             </Text>
 
             {/* Input */}
-            <TextInput
-              multiline
-              accessibilityLabel="Why you are doing this habit"
-              className="min-h-[120px] rounded-2xl border border-stone-200 bg-white px-4 py-3 text-base text-stone-900"
-              maxLength={200}
-              placeholder="is healthy and present for my kids..."
-              placeholderTextColor="#a8a29e"
-              textAlignVertical="top"
-              value={whyDraft}
-              onChangeText={setWhyDraft}
-            />
-            <View className="mt-1 flex-row items-center justify-between">
-              <Text className="text-xs text-stone-400">{whyDraft.length} / 200</Text>
-              {whyDraft.length > 0 && (
-                <Pressable
-                  accessibilityLabel="Clear text"
-                  accessibilityRole="button"
-                  className="rounded-full px-2 py-1 active:bg-stone-100"
-                  onPress={() => setWhyDraft('')}
-                >
-                  <Text className="text-xs text-stone-500">Clear</Text>
-                </Pressable>
-              )}
-            </View>
-
-            {/* Guiding Questions */}
-            <View className="mb-4 mt-6 rounded-2xl bg-stone-50 p-4">
-              <Text className="mb-3 text-sm font-semibold text-stone-700">
-                Dig Deeper — Ask Yourself:
-              </Text>
-              <View className="gap-2">
-                <Text className="text-sm text-stone-600">
-                  • Who will benefit when you succeed?
-                </Text>
-                <Text className="text-sm text-stone-600">
-                  • How will your life be different in 1 year?
-                </Text>
-                <Text className="text-sm text-stone-600">
-                  • What kind of person are you becoming?
-                </Text>
+            <View className="relative">
+              <TextInput
+                multiline
+                accessibilityLabel="Why you are doing this habit"
+                className="min-h-[120px] rounded-2xl border-2 border-rose-100 bg-white px-5 py-4 text-base text-stone-800 shadow-sm"
+                maxLength={200}
+                placeholder="I want to be healthy for my kids..."
+                placeholderTextColor="#a8a29e"
+                textAlignVertical="top"
+                value={whyDraft}
+                onChangeText={setWhyDraft}
+              />
+              <View className="absolute bottom-4 right-4">
+                <View className="rounded-full bg-stone-100 px-2 py-1">
+                  <Text className="text-[10px] font-bold text-stone-400">{whyDraft.length} / 200</Text>
+                </View>
               </View>
             </View>
 
             {/* Templates */}
-            <Text className="mb-3 text-xs font-semibold uppercase tracking-widest text-stone-500">
-              Inspiration
-            </Text>
-            <View className="gap-2">
-              {[
-                'is fully present for my family',
-                'keeps promises to myself',
-                'proves I can follow through',
-                'deserves to feel strong and healthy',
-                'makes my future self proud',
-              ].map((template) => (
-                <Pressable
-                  key={template}
-                  accessibilityLabel={`Use template: ${template}`}
-                  accessibilityRole="button"
-                  className="rounded-xl border border-stone-100 bg-stone-50 px-4 py-3 active:bg-stone-100"
-                  onPress={() => {
-                    Haptics.selectionAsync();
-                    setWhyDraft(template);
-                  }}
-                >
-                  <Text className="text-sm text-stone-700">
-                    <Text className="font-medium text-stone-500">I am someone who </Text>
-                    {template}
-                  </Text>
-                </Pressable>
-              ))}
+            <View className="mt-8">
+              <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
+                Inspiration:
+              </Text>
+              <View className="gap-2">
+                {[
+                  { text: 'To be healthy and present for my family', icon: '👨‍👩‍👧' },
+                  { text: 'To prove to myself I can follow through', icon: '💪' },
+                  { text: 'To feel more confident and energized', icon: '⚡' },
+                  { text: 'To build a better future for myself', icon: '🌟' },
+                ].map((template) => (
+                  <Pressable
+                    key={template.text}
+                    accessibilityLabel={`Use template: ${template.text}`}
+                    accessibilityRole="button"
+                    className="flex-row items-center gap-3 rounded-xl border border-stone-100 bg-white px-4 py-3 active:bg-rose-50"
+                    onPress={() => {
+                      Haptics.selectionAsync();
+                      setWhyDraft(template.text);
+                    }}
+                  >
+                    <Text className="text-lg">{template.icon}</Text>
+                    <Text className="flex-1 text-sm text-stone-700">{template.text}</Text>
+                  </Pressable>
+                ))}
+              </View>
             </View>
           </ScrollView>
 
-          {/* Save Button - Fixed at bottom */}
+          {/* Save Button */}
           <View
             className="border-t border-stone-100 bg-white px-5 pt-4"
             style={{ paddingBottom: insets.bottom + 16 }}
@@ -1403,10 +1499,137 @@ export default function HabitDetailScreen({
             <Pressable
               accessibilityLabel="Save why"
               accessibilityRole="button"
-              className="items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800"
+              className="items-center rounded-2xl bg-rose-500 py-4 active:bg-rose-600"
               onPress={handleSaveWhy}
             >
-              <Text className="text-base font-semibold text-white">Save</Text>
+              <Text className="text-base font-bold text-white">Save My Why</Text>
+            </Pressable>
+          </View>
+        </View>
+      </RNModal>
+
+      {/* Identity Editor Modal */}
+      <RNModal
+        animationType="slide"
+        visible={isIdentityEditorOpen}
+        onRequestClose={() => setIsIdentityEditorOpen(false)}
+      >
+        <View className="flex-1 bg-stone-50" style={{ paddingTop: insets.top + 16 }}>
+          {/* Header */}
+          <View className="flex-row items-center justify-between border-b border-stone-100 bg-white px-5 pb-4">
+            <View className="flex-row items-center gap-2">
+              <View className="rounded-full bg-violet-100 p-1.5">
+                <User className="text-violet-600" size={18} />
+              </View>
+              <Text className="text-lg font-bold text-stone-900">Your Identity</Text>
+            </View>
+            <Pressable
+              accessibilityLabel="Close identity editor"
+              accessibilityRole="button"
+              className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
+              onPress={() => setIsIdentityEditorOpen(false)}
+            >
+              <X className="text-stone-600" size={22} />
+            </Pressable>
+          </View>
+
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Science Context Card */}
+            <View className="mb-6 rounded-2xl bg-violet-600 p-5 shadow-lg shadow-violet-200">
+              <View className="mb-2 flex-row items-center gap-2">
+                <Brain className="text-violet-200" size={16} />
+                <Text className="text-xs font-bold uppercase tracking-widest text-violet-100">
+                  The Power of Identity
+                </Text>
+              </View>
+              <Text className="text-sm leading-relaxed text-white">
+                When you see yourself as "a healthy person" instead of "someone trying to be healthy," the habit becomes automatic. Identity is the strongest driver of behavior.
+              </Text>
+            </View>
+
+            {/* Framing Label */}
+            <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
+              I am...
+            </Text>
+
+            {/* Input */}
+            <View className="relative">
+              <TextInput
+                accessibilityLabel="Your identity statement"
+                className="rounded-2xl border-2 border-violet-100 bg-white px-5 py-4 text-lg font-semibold text-stone-800 shadow-sm"
+                maxLength={100}
+                placeholder="a healthy person"
+                placeholderTextColor="#a8a29e"
+                value={identityDraft}
+                onChangeText={setIdentityDraft}
+              />
+              <View className="absolute right-4 top-1/2 -translate-y-1/2">
+                <View className="rounded-full bg-stone-100 px-2 py-1">
+                  <Text className="text-[10px] font-bold text-stone-400">{identityDraft.length} / 100</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Templates */}
+            <View className="mt-8">
+              <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
+                Identity Examples:
+              </Text>
+              <View className="gap-2">
+                {[
+                  { text: 'a healthy person', icon: '💚' },
+                  { text: 'someone who keeps promises to myself', icon: '🤝' },
+                  { text: 'a reader', icon: '📚' },
+                  { text: 'an early riser', icon: '🌅' },
+                  { text: 'someone who takes care of my body', icon: '🏃' },
+                  { text: 'a lifelong learner', icon: '🧠' },
+                ].map((template) => (
+                  <Pressable
+                    key={template.text}
+                    accessibilityLabel={`Use template: ${template.text}`}
+                    accessibilityRole="button"
+                    className="flex-row items-center gap-3 rounded-xl border border-stone-100 bg-white px-4 py-3 active:bg-violet-50"
+                    onPress={() => {
+                      Haptics.selectionAsync();
+                      setIdentityDraft(template.text);
+                    }}
+                  >
+                    <Text className="text-lg">{template.icon}</Text>
+                    <View className="flex-1">
+                      <Text className="text-xs text-violet-500">I am...</Text>
+                      <Text className="text-sm font-medium text-stone-700">{template.text}</Text>
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+
+            {/* Tip */}
+            <View className="mt-6 flex-row items-start gap-2 rounded-xl bg-violet-50 p-4">
+              <Sparkles className="mt-0.5 text-violet-500" size={14} />
+              <Text className="flex-1 text-xs leading-relaxed text-violet-700">
+                <Text className="font-bold">Pro tip:</Text> Say "I am..." instead of "I want to be...". Present tense identity statements are more powerful for behavior change.
+              </Text>
+            </View>
+          </ScrollView>
+
+          {/* Save Button */}
+          <View
+            className="border-t border-stone-100 bg-white px-5 pt-4"
+            style={{ paddingBottom: insets.bottom + 16 }}
+          >
+            <Pressable
+              accessibilityLabel="Save identity"
+              accessibilityRole="button"
+              className="items-center rounded-2xl bg-violet-600 py-4 shadow-lg shadow-violet-100 active:bg-violet-700"
+              onPress={handleSaveIdentity}
+            >
+              <Text className="text-base font-bold text-white">Claim My Identity</Text>
             </Pressable>
           </View>
         </View>
