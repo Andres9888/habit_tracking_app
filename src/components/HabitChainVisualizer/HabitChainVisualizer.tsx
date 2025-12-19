@@ -172,7 +172,6 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
   const breathingPulse = useRef(new Animated.Value(1)).current;
-  const todayGlow = useRef(new Animated.Value(0.3)).current;
 
   // Combine scale values using Animated.multiply to avoid multiple scale transforms
   // which can cause the second to override the first in some React Native versions
@@ -246,36 +245,6 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps -- breathingPulse is a stable ref from useRef
   }, [completed, isToday]);
 
-  // Subtle golden glow animation for today's habit box
-  useEffect(() => {
-    if (isToday) {
-      const glowAnimation = Animated.loop(
-        Animated.sequence([
-          Animated.timing(todayGlow, {
-            duration: 2400,
-            easing: Easing.inOut(Easing.sin),
-            toValue: 0.45,
-            useNativeDriver: false,
-          }),
-          Animated.timing(todayGlow, {
-            duration: 2400,
-            easing: Easing.inOut(Easing.sin),
-            toValue: 0.2,
-            useNativeDriver: false,
-          }),
-        ])
-      );
-      glowAnimation.start();
-
-      return () => {
-        glowAnimation.stop();
-      };
-    } else {
-      todayGlow.setValue(0);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- todayGlow is a stable ref from useRef
-  }, [isToday]);
-
   const backgroundColor = completed ? accentColor : highContrastMode ? '#000000' : '#f5f5f5';
   const borderColor = highContrastMode ? '#facc15' : '#6b7280';
 
@@ -332,11 +301,8 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
               elevation: 4,
               shadowColor: goldenGlowColor,
               shadowOffset: { height: 0, width: 0 },
-              shadowOpacity: todayGlow,
-              shadowRadius: todayGlow.interpolate({
-                inputRange: [0.2, 0.45],
-                outputRange: [6, 10],
-              }),
+              shadowOpacity: 0.35,
+              shadowRadius: 8,
             }
           : undefined
       }
