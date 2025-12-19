@@ -509,6 +509,7 @@ export default function HabitDetailScreen({
   };
 
   const handleOpenIdentityEditor = () => {
+    console.log('🔵 handleOpenIdentityEditor called');
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsIdentityEditorOpen(true);
   };
