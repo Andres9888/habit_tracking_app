@@ -115,9 +115,12 @@ export function MiniTemplateCard({
             onPress={handleImport}
           >
             {isImporting ? (
-              <ActivityIndicator color="#fff" size={14} />
+              <ActivityIndicator color="#fff" size={12} />
             ) : (
-              <Plus color="#fff" size={16} strokeWidth={3} />
+              <>
+                <Plus color="#fff" size={14} strokeWidth={3} />
+                <Text style={styles.importButtonText}>Add</Text>
+              </>
             )}
           </Pressable>
         )}
@@ -176,12 +179,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   importButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
     marginLeft: 8,
+  },
+  importButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
   },
   iconContainer: {
     width: 36,
