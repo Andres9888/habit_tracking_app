@@ -298,7 +298,8 @@ const suggestedEmojis = useMemo(() => {
   - *Completed: Header with Sparkles icon (16px, amber #f59e0b) and "Perfect for '[habitName]'" text (14px semibold, #b45309)*
 
 ### Phase 4: Search & Categories (Priority: Medium)
-- [ ] **T4.1** Add search bar with focus states
+- [x] **T4.1** Add search bar with focus states
+  - *Completed: Added animated focus ring using react-native-reanimated with 200ms focus/150ms blur transitions. Blue border (#3b82f6) and shadow on focus, search icon color changes to blue when focused.*
 - [ ] **T4.2** Create CategoryPills horizontal scroll
 - [ ] **T4.3** Implement category selection with active state
 - [ ] **T4.4** Filter emojis by category
@@ -340,3 +341,4 @@ const suggestedEmojis = useMemo(() => {
 |------|--------|--------|
 | 2025-12-19 | Initial V2 spec created | UX Expert |
 | 2025-12-19 | Phase 3 tasks (T3.1-T3.4) marked complete - AI Suggestions already fully implemented inline in EmojiPickerSheet.tsx with tests passing | Claude |
+| 2025-12-19 | T4.1 - Added animated search bar focus states with blue ring and icon color change | Claude |

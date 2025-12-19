@@ -116,6 +116,8 @@ export const EmojiPickerSheet = memo(
     const [selectedCategory, setSelectedCategory] = useState<string>('fitness');
     const [recentEmojis, setRecentEmojis] = useState<string[]>([]);
     const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
+    const searchFocusAnim = useSharedValue(0);
 
     // Compute suggested emojis based on habit name
     const suggestedEmojis = useMemo(() => {
@@ -255,6 +257,26 @@ export const EmojiPickerSheet = memo(
       closeSheet();
     }, [onSelect, closeSheet]);
 
+    // Search bar focus handlers
+    const handleSearchFocus = useCallback(() => {
+      setIsSearchFocused(true);
+      searchFocusAnim.value = withTiming(1, { duration: 200 });
+    }, [searchFocusAnim]);
+
+    const handleSearchBlur = useCallback(() => {
+      setIsSearchFocused(false);
+      searchFocusAnim.value = withTiming(0, { duration: 150 });
+    }, [searchFocusAnim]);
+
+    // Animated search bar style for focus ring
+    const searchBarAnimatedStyle = useAnimatedStyle(() => ({
+      shadowColor: '#3b82f6',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: interpolate(searchFocusAnim.value, [0, 1], [0, 0.2], Extrapolation.CLAMP),
+      shadowRadius: interpolate(searchFocusAnim.value, [0, 1], [0, 6], Extrapolation.CLAMP),
+      borderColor: interpolate(searchFocusAnim.value, [0, 1], [0, 1], Extrapolation.CLAMP) === 1 ? '#3b82f6' : '#e5e7eb',
+    }));
+
     const renderEmojiRow = useCallback(
       ({ item }: { item: string[] }) => (
         <View style={styles.emojiRow}>
@@ -309,8 +331,8 @@ export const EmojiPickerSheet = memo(
 
             {/* Search Bar */}
             <View style={styles.searchContainer}>
-              <View style={styles.searchBar}>
-                <Search color="#9ca3af" size={20} />
+              <Animated.View style={[styles.searchBar, searchBarAnimatedStyle]}>
+                <Search color={isSearchFocused ? '#3b82f6' : '#9ca3af'} size={20} />
                 <TextInput
                   accessibilityLabel="Search emojis"
                   accessibilityHint="Type keywords to search for emojis"
@@ -319,6 +341,8 @@ export const EmojiPickerSheet = memo(
                   placeholderTextColor="#9ca3af"
                   value={searchQuery}
                   onChangeText={setSearchQuery}
+                  onFocus={handleSearchFocus}
+                  onBlur={handleSearchBlur}
                   returnKeyType="search"
                 />
                 {searchQuery.length > 0 && (
@@ -330,7 +354,7 @@ export const EmojiPickerSheet = memo(
                     <X color="#9ca3af" size={18} />
                   </Pressable>
                 )}
-              </View>
+              </Animated.View>
             </View>
 
             {/* AI Suggestions Section */}
