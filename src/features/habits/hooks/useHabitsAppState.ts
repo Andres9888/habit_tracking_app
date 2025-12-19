@@ -70,6 +70,35 @@ export function useHabitsAppState() {
     });
   }, [milestone]);
 
+  // Keep habit state snapshots in sync with the habits array when it updates
+  // This ensures that when a habit is edited, the modals/screens show the updated data
+  useEffect(() => {
+    if (selectedHabit) {
+      const updated = habits.find(h => h._id === selectedHabit._id);
+      if (updated && updated !== selectedHabit) {
+        setSelectedHabit(updated);
+      }
+    }
+  }, [habits, selectedHabit]);
+
+  useEffect(() => {
+    if (habitToEdit) {
+      const updated = habits.find(h => h._id === habitToEdit._id);
+      if (updated && updated !== habitToEdit) {
+        setHabitToEdit(updated);
+      }
+    }
+  }, [habits, habitToEdit]);
+
+  useEffect(() => {
+    if (habitToPause) {
+      const updated = habits.find(h => h._id === habitToPause._id);
+      if (updated && updated !== habitToPause) {
+        setHabitToPause(updated);
+      }
+    }
+  }, [habits, habitToPause]);
+
   const prevStrengthsRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {

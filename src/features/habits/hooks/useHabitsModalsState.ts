@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -47,6 +47,44 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const { tracking, getStreak } = useHabitsTracking(extendedDateStrings, today);
+
+  // Keep habit state snapshots in sync with the habits array when it updates
+  // This ensures that when a habit is edited, the modals/screens show the updated data
+  useEffect(() => {
+    if (selectedHabit) {
+      const updated = habits.find(h => h._id === selectedHabit._id);
+      if (updated && updated !== selectedHabit) {
+        setSelectedHabit(updated);
+      }
+    }
+  }, [habits, selectedHabit]);
+
+  useEffect(() => {
+    if (habitToEdit) {
+      const updated = habits.find(h => h._id === habitToEdit._id);
+      if (updated && updated !== habitToEdit) {
+        setHabitToEdit(updated);
+      }
+    }
+  }, [habits, habitToEdit]);
+
+  useEffect(() => {
+    if (habitToPause) {
+      const updated = habits.find(h => h._id === habitToPause._id);
+      if (updated && updated !== habitToPause) {
+        setHabitToPause(updated);
+      }
+    }
+  }, [habits, habitToPause]);
+
+  useEffect(() => {
+    if (quickActionsHabit) {
+      const updated = habits.find(h => h._id === quickActionsHabit._id);
+      if (updated && updated !== quickActionsHabit) {
+        setQuickActionsHabit(updated);
+      }
+    }
+  }, [habits, quickActionsHabit]);
 
   const confirmPause = useCallback(async () => {
     if (!habitToPause) return;
