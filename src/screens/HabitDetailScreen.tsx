@@ -915,68 +915,87 @@ export default function HabitDetailScreen({
           <Pressable
             accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
             accessibilityRole="button"
-            className="rounded-2xl bg-amber-50/80 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
+            className="overflow-hidden rounded-2xl bg-white shadow-sm shadow-stone-200/50 active:opacity-90"
             onPress={handleOpenCueEditor}
           >
-            {/* Header */}
-            <View className="mb-3 flex-row items-center justify-center gap-2">
-              <Target className="text-amber-600" size={18} />
-              <Text className="text-lg font-semibold text-amber-900">
-                Your Cue
-              </Text>
-            </View>
+            {/* Background Aesthetic */}
+            <View className="absolute inset-0 bg-gradient-to-br from-amber-50/40 via-white to-orange-50/30" pointerEvents="none" />
 
-            {/* Content */}
-            {hasCue ? (
-              <View className="items-center rounded-xl border border-amber-200/60 bg-white/80 p-4">
-                {/* Full Implementation Intention Sentence */}
-                {habitCueAfterBehavior ? (
-                  <View className="items-center">
-                    <Text className="text-center text-base leading-relaxed text-stone-600">
-                      After I{' '}
-                      <Text className="font-semibold text-amber-700">
-                        {habitCueAfterBehavior}
-                      </Text>
-                      ,
+            <View className="p-5">
+              {/* Header */}
+              <View className="mb-4 flex-row items-center justify-between">
+                <View className="flex-row items-center gap-2">
+                  <View className="h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
+                    <Target className="text-amber-600" size={16} strokeWidth={2.5} />
+                  </View>
+                  <Text className="text-lg font-bold text-stone-800">
+                    Your Cue
+                  </Text>
+                </View>
+                <Text className="text-[10px] font-semibold uppercase tracking-wider text-amber-500">
+                  Trigger
+                </Text>
+              </View>
+
+              {/* Content */}
+              {hasCue ? (
+                <View className="items-center">
+                  {/* Label */}
+                  <View className="mb-2 rounded-full bg-amber-50 px-3 py-1">
+                    <Text className="text-[10px] font-bold uppercase tracking-widest text-amber-600">
+                      After I...
                     </Text>
-                    <Text className="mt-1 text-center text-base leading-relaxed text-stone-600">
-                      I will{' '}
+                  </View>
+
+                  {/* The Cue Statement */}
+                  {habitCueAfterBehavior ? (
+                    <Text className="px-2 text-center text-base font-medium leading-relaxed text-stone-700">
+                      {habitCueAfterBehavior}, I will{' '}
                       <Text className="font-semibold text-stone-800">
                         {habit.name}
                       </Text>
                     </Text>
+                  ) : null}
+
+                  {/* Location & Time Badges */}
+                  {(habitCueLocation || habitCueTime) ? (
+                    <View className="mt-3 flex-row flex-wrap items-center justify-center gap-2">
+                      {habitCueLocation ? (
+                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
+                          <MapPin className="text-amber-500" size={12} />
+                          <Text className="text-xs font-medium text-amber-700">{habitCueLocation}</Text>
+                        </View>
+                      ) : null}
+                      {habitCueTime ? (
+                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
+                          <Clock className="text-amber-500" size={12} />
+                          <Text className="text-xs font-medium text-amber-700">{habitCueTime}</Text>
+                        </View>
+                      ) : null}
+                    </View>
+                  ) : null}
+
+                  <Text className="mt-3 text-[10px] font-medium text-stone-400">
+                    Tap to edit
+                  </Text>
+                </View>
+              ) : (
+                <View className="items-center rounded-xl bg-stone-50/50 px-4 py-5">
+                  <Text className="mb-2 text-center text-sm text-stone-500">
+                    When and where will you do this?
+                  </Text>
+                  <Text className="mb-3 text-center text-xs italic text-stone-400">
+                    "After my morning coffee" • "When I get to the gym"
+                  </Text>
+                  <View className="flex-row items-center gap-1">
+                    <Plus className="text-amber-500" size={14} />
+                    <Text className="text-sm font-semibold text-amber-600">
+                      Set your trigger
+                    </Text>
                   </View>
-                ) : null}
-                {(habitCueLocation || habitCueTime) ? (
-                  <View className="mt-3 flex-row flex-wrap items-center justify-center gap-2 border-t border-amber-100 pt-3">
-                    {habitCueLocation ? (
-                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
-                        <MapPin className="text-amber-500" size={12} />
-                        <Text className="text-xs font-medium text-amber-700">{habitCueLocation}</Text>
-                      </View>
-                    ) : null}
-                    {habitCueTime ? (
-                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
-                        <Clock className="text-amber-500" size={12} />
-                        <Text className="text-xs font-medium text-amber-700">{habitCueTime}</Text>
-                      </View>
-                    ) : null}
-                  </View>
-                ) : null}
-                <Text className="mt-3 text-xs text-amber-600/70">
-                  Tap to edit
-                </Text>
-              </View>
-            ) : (
-              <View className="items-center rounded-xl bg-white/60 py-6">
-                <Text className="text-center text-sm text-stone-500">
-                  When will you do this?
-                </Text>
-                <Text className="mt-1 text-center text-xs text-stone-400">
-                  Tap to set your cue
-                </Text>
-              </View>
-            )}
+                </View>
+              )}
+            </View>
           </Pressable>
 
           {/* Primary Action (Quick Complete) */}
