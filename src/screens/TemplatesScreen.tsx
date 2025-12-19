@@ -672,14 +672,13 @@ export default function TemplatesScreen() {
         </Pressable>
       </View>
 
-      {/* Scrollable content */}
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.browseContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {browseTab === 'categories' ? (
-          /* Collapsible Category Sections */
+      {/* Scrollable content - Categories tab */}
+      {browseTab === 'categories' && (
+        <ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={styles.browseContent}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.categorySections}>
             {categories
               ?.filter((cat) => cat.id !== 'all')
@@ -703,32 +702,41 @@ export default function TemplatesScreen() {
                 );
               })}
           </View>
-        ) : (
-          /* View All - full-size template cards */
-          <View style={styles.allTemplatesList}>
-            {allTemplates?.map((template) => (
-              <TemplateCard
-                key={template._id}
-                animationIndex={0}
-                category={template.category}
-                description={template.description}
-                frequency={template.frequency}
-                icon={template.icon}
-                iconColor={template.iconColor}
-                id={template._id}
-                isImporting={importingTemplateId === template._id}
-                name={template.name}
-                onImport={() => handleTemplateImport(template._id)}
-                onPreview={() => handleTemplatePreview(template)}
-                popularityScore={template.popularityScore}
-                scientificLink={template.scientificLink}
-                scientificReference={template.scientificReference}
-                youtubeLink={template.youtubeLink}
-              />
-            ))}
-          </View>
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
+
+      {/* View All tab - FlatList for performance */}
+      {browseTab === 'all' && (
+        <FlatList
+          data={allTemplates}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.allTemplatesList}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          windowSize={5}
+          renderItem={({ item: template }) => (
+            <TemplateCard
+              key={template._id}
+              animationIndex={0}
+              category={template.category}
+              description={template.description}
+              frequency={template.frequency}
+              icon={template.icon}
+              iconColor={template.iconColor}
+              id={template._id}
+              isImporting={importingTemplateId === template._id}
+              name={template.name}
+              onImport={() => handleTemplateImport(template._id)}
+              onPreview={() => handleTemplatePreview(template)}
+              popularityScore={template.popularityScore}
+              scientificLink={template.scientificLink}
+              scientificReference={template.scientificReference}
+              youtubeLink={template.youtubeLink}
+            />
+          )}
+        />
+      )}
 
       <TemplatePreviewModal
         importingTemplateId={importingTemplateId}
