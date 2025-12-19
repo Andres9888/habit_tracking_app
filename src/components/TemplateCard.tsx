@@ -115,14 +115,16 @@ export function TemplateCard({
   const theme = useAppTheme();
   const isLocked = isPremium && !hasAccess;
 
-  // Animation values
-  const cardOpacity = useSharedValue(0);
-  const cardTranslateY = useSharedValue(20);
+  // Animation values - skip entrance animation if animationIndex is 0
+  const skipAnimation = animationIndex === 0;
+  const cardOpacity = useSharedValue(skipAnimation ? 1 : 0);
+  const cardTranslateY = useSharedValue(skipAnimation ? 0 : 20);
   const pressScale = useSharedValue(1);
   const shadowOpacity = useSharedValue(0.06);
 
-  // Entrance animation
+  // Entrance animation (only if animationIndex > 0)
   useEffect(() => {
+    if (skipAnimation) return;
     const delay = animationIndex * 80;
     cardOpacity.value = withDelay(
       delay,
@@ -132,7 +134,7 @@ export function TemplateCard({
       delay,
       withSpring(0, { damping: 18, stiffness: 120 })
     );
-  }, [animationIndex]);
+  }, [animationIndex, skipAnimation]);
 
   const frequencyLabels: Record<string, string> = {
     custom: 'Custom',

@@ -706,10 +706,10 @@ export default function TemplatesScreen() {
         ) : (
           /* View All - full-size template cards */
           <View style={styles.allTemplatesList}>
-            {allTemplates?.map((template, index) => (
+            {allTemplates?.map((template) => (
               <TemplateCard
                 key={template._id}
-                animationIndex={index}
+                animationIndex={0}
                 category={template.category}
                 description={template.description}
                 frequency={template.frequency}
