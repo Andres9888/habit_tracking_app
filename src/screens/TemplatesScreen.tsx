@@ -644,6 +644,9 @@ export default function TemplatesScreen() {
           <Text style={[styles.tabText, browseTab === 'categories' && styles.tabTextActive]}>
             Categories
           </Text>
+          <Text style={[styles.tabCount, browseTab === 'categories' && styles.tabCountActive]}>
+            {categories?.filter((c) => c.id !== 'all').length || 0}
+          </Text>
         </Pressable>
         <Pressable
           style={[styles.tab, browseTab === 'all' && styles.tabActive]}
@@ -654,6 +657,9 @@ export default function TemplatesScreen() {
         >
           <Text style={[styles.tabText, browseTab === 'all' && styles.tabTextActive]}>
             View All
+          </Text>
+          <Text style={[styles.tabCount, browseTab === 'all' && styles.tabCountActive]}>
+            {allTemplates?.length || 0}
           </Text>
         </Pressable>
       </View>

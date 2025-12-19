@@ -14,10 +14,10 @@ export const styles = StyleSheet.create({
     color: '#374151',
   },
   browseContent: {
-    paddingBottom: 32,
+    paddingBottom: 40,
   },
   categorySections: {
-    paddingTop: 8,
+    paddingTop: 4,
   },
   categoryHeaderRow: {
     flexDirection: 'row',
@@ -127,9 +127,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   header: {
-    paddingBottom: 16,
+    paddingBottom: 12,
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 56,
   },
   inputLabel: {
     color: '#475467',
@@ -449,16 +449,18 @@ export const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
     marginHorizontal: 20,
-    marginTop: 16,
-    marginBottom: 8,
+    marginTop: 14,
+    marginBottom: 12,
     backgroundColor: '#f1f5f9',
     borderRadius: 12,
     padding: 4,
   },
   tab: {
     flex: 1,
+    flexDirection: 'row',
     paddingVertical: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 10,
   },
   tabActive: {
@@ -475,6 +477,15 @@ export const styles = StyleSheet.create({
     color: '#64748b',
   },
   tabTextActive: {
+    color: '#0f172a',
+  },
+  tabCount: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#94a3b8',
+    marginLeft: 6,
+  },
+  tabCountActive: {
     color: '#0f172a',
   },
   // All templates grid (for MiniTemplateCard)

@@ -100,35 +100,36 @@ export function CollapsibleCategorySection({
         <Animated.View
           style={[
             styles.header,
-            { backgroundColor: isExpanded ? colors.bg : 'transparent' },
+            {
+              backgroundColor: isExpanded ? colors.bg : 'transparent',
+              borderLeftColor: isExpanded ? colors.bgSelected : 'transparent',
+            },
             headerAnimatedStyle,
           ]}
         >
+          {/* Icon with colored background */}
+          <View style={[styles.iconBadge, { backgroundColor: `${colors.bgSelected}20` }]}>
+            <Text style={styles.icon}>{icon}</Text>
+          </View>
+
+          {/* Label and count */}
+          <View style={styles.labelContainer}>
+            <Text style={[styles.label, { color: isExpanded ? colors.bgSelected : '#374151' }]}>
+              {label}
+            </Text>
+            <Text style={[styles.countText, { color: '#6b7280' }]}>
+              {templates.length} {templates.length === 1 ? 'habit' : 'habits'}
+            </Text>
+          </View>
+
           {/* Chevron */}
-          <Animated.View style={chevronAnimatedStyle}>
+          <Animated.View style={[styles.chevronContainer, chevronAnimatedStyle]}>
             <ChevronDown
-              color={colors.text}
+              color={isExpanded ? colors.bgSelected : '#9ca3af'}
               size={20}
               strokeWidth={2.5}
             />
           </Animated.View>
-
-          {/* Icon */}
-          <View style={[styles.iconBadge, { backgroundColor: `${colors.bgSelected}15` }]}>
-            <Text style={styles.icon}>{icon}</Text>
-          </View>
-
-          {/* Label */}
-          <Text style={[styles.label, { color: colors.text }]}>
-            {label}
-          </Text>
-
-          {/* Count */}
-          <View style={[styles.countBadge, { backgroundColor: `${colors.bgSelected}20` }]}>
-            <Text style={[styles.countText, { color: colors.text }]}>
-              {templates.length}
-            </Text>
-          </View>
         </Animated.View>
       </Pressable>
 
@@ -143,6 +144,9 @@ export function CollapsibleCategorySection({
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.templatesScroll}
+            decelerationRate="fast"
+            snapToInterval={232}
+            snapToAlignment="start"
           >
             {templates.map((template) => (
               <MiniTemplateCard
@@ -168,7 +172,7 @@ export function CollapsibleCategorySection({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 4,
+    marginBottom: 8,
   },
   header: {
     flexDirection: 'row',
@@ -176,39 +180,44 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginHorizontal: 12,
-    borderRadius: 12,
-    gap: 10,
+    borderRadius: 14,
+    borderLeftWidth: 4,
+    gap: 12,
   },
   iconBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   icon: {
-    fontSize: 16,
+    fontSize: 18,
+  },
+  labelContainer: {
+    flex: 1,
   },
   label: {
     fontSize: 16,
     fontWeight: '700',
-    flex: 1,
-  },
-  countBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 999,
   },
   countText: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  chevronContainer: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     marginTop: 8,
   },
   templatesScroll: {
     paddingHorizontal: 16,
-    paddingBottom: 8,
+    paddingBottom: 12,
     gap: 12,
   },
 });
