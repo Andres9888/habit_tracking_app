@@ -690,21 +690,26 @@ export default function TemplatesScreen() {
               })}
           </View>
         ) : (
-          /* View All - flat list of all templates */
-          <View style={styles.allTemplatesGrid}>
-            {allTemplates?.map((template) => (
-              <MiniTemplateCard
+          /* View All - full-size template cards */
+          <View style={styles.allTemplatesList}>
+            {allTemplates?.map((template, index) => (
+              <TemplateCard
                 key={template._id}
+                animationIndex={index}
+                category={template.category}
+                description={template.description}
+                frequency={template.frequency}
                 icon={template.icon}
                 iconColor={template.iconColor}
-                name={template.name}
-                description={template.description}
-                subtitle={template.frequency === 'daily' ? 'Daily' : template.frequency === 'weekly' ? 'Weekly' : 'Custom'}
-                hasResearch={Boolean(template.scientificLink)}
-                scientificReference={template.scientificReference}
-                onPress={() => handleTemplatePreview(template)}
-                onImport={() => handleTemplateImport(template._id)}
+                id={template._id}
                 isImporting={importingTemplateId === template._id}
+                name={template.name}
+                onImport={() => handleTemplateImport(template._id)}
+                onPreview={() => handleTemplatePreview(template)}
+                popularityScore={template.popularityScore}
+                scientificLink={template.scientificLink}
+                scientificReference={template.scientificReference}
+                youtubeLink={template.youtubeLink}
               />
             ))}
           </View>

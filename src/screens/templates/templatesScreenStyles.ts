@@ -477,10 +477,14 @@ export const styles = StyleSheet.create({
   tabTextActive: {
     color: '#0f172a',
   },
-  // All templates grid
+  // All templates grid (for MiniTemplateCard)
   allTemplatesGrid: {
     paddingHorizontal: 16,
     gap: 12,
+  },
+  // All templates list (for full TemplateCard)
+  allTemplatesList: {
+    paddingBottom: 16,
   },
 });
 
