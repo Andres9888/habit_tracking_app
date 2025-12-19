@@ -37,16 +37,24 @@ jest.mock('react-native-gesture-handler', () => {
 // Mock reanimated with proper Animated component
 jest.mock('react-native-reanimated', () => {
   const RealReact = jest.requireActual('react');
-  const RealView = jest.requireActual('react-native').View;
+  const { View, Pressable } = jest.requireActual('react-native');
 
   const AnimatedView = RealReact.forwardRef(
-    (props: Record<string, unknown>, ref: React.Ref<typeof RealView>) =>
-      RealReact.createElement(RealView, { ...props, ref })
+    (props: Record<string, unknown>, ref: React.Ref<typeof View>) =>
+      RealReact.createElement(View, { ...props, ref })
   );
   AnimatedView.displayName = 'AnimatedView';
 
   const Animated = {
     View: AnimatedView,
+    createAnimatedComponent: (Component: React.ComponentType<unknown>) => {
+      const AnimatedComponent = RealReact.forwardRef(
+        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
+          RealReact.createElement(Component, { ...props, ref })
+      );
+      AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
+      return AnimatedComponent;
+    },
   };
 
   return {
@@ -56,6 +64,7 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedStyle: () => ({}),
     withSpring: (toValue: number) => toValue,
     withTiming: (toValue: number) => toValue,
+    withSequence: (..._animations: unknown[]) => 0,
     runOnJS: (fn: () => void) => fn,
     interpolate: (value: number, inputRange: number[], outputRange: number[]) => outputRange[0],
     Extrapolation: { CLAMP: 'clamp' },

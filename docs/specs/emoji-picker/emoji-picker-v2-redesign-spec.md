@@ -308,10 +308,14 @@ const suggestedEmojis = useMemo(() => {
   - *Completed: displayedEmojis memo in EmojiPickerSheet.tsx filters by selectedCategory using HABIT_CATEGORIES data. Returns category emojis or all emojis based on selection.*
 
 ### Phase 5: Emoji Grid (Priority: Medium)
-- [ ] **T5.1** Create EmojiGrid with 6-column layout
-- [ ] **T5.2** Implement virtualized scrolling (FlatList)
-- [ ] **T5.3** Add press animations and selection state
-- [ ] **T5.4** Add category header labels
+- [x] **T5.1** Create EmojiGrid with 6-column layout
+  - *Completed: Extracted `src/components/EmojiPickerV2/EmojiGrid.tsx` with 6-column responsive grid, EMOJIS_PER_ROW=6, placeholder cells for incomplete rows, and proper aspectRatio: 1 cells*
+- [x] **T5.2** Implement virtualized scrolling (FlatList)
+  - *Completed: FlatList with initialNumToRender=10, maxToRenderPerBatch=10, windowSize=5, removeClippedSubviews=true, getItemLayout for optimized scrolling, and maintainVisibleContentPosition*
+- [x] **T5.3** Add press animations and selection state
+  - *Completed: EmojiCell uses react-native-reanimated with scale animation (0.92 on press, 1.05→1 bounce on release), AnimatedPressable, and accessibilityState={{ selected }} for selection*
+- [x] **T5.4** Add category header labels
+  - *Completed: categoryHeader View with categoryHeaderText style (12px, 600 weight, gray-500, 0.5 letterSpacing), conditional rendering via showCategoryHeader prop*
 
 ### Phase 6: Polish & Integration (Priority: Low)
 - [ ] **T6.1** Add "No icon" button at bottom
@@ -346,3 +350,4 @@ const suggestedEmojis = useMemo(() => {
 | 2025-12-19 | Phase 3 tasks (T3.1-T3.4) marked complete - AI Suggestions already fully implemented inline in EmojiPickerSheet.tsx with tests passing | Claude |
 | 2025-12-19 | T4.1 - Added animated search bar focus states with blue ring and icon color change | Claude |
 | 2025-12-19 | Phase 4 complete (T4.2-T4.4) - Extracted CategoryPills.tsx component with horizontal scroll, active state styling, press animation, and category filtering logic | Claude |
+| 2025-12-19 | Phase 5 complete (T5.1-T5.4) - Extracted EmojiGrid.tsx with 6-column virtualized FlatList, press animations (scale 0.92→1.05→1), selection state, category headers, and comprehensive tests | Claude |

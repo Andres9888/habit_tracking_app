@@ -6,7 +6,6 @@ import {
   View,
   Text,
   TextInput,
-  FlatList,
 } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -14,6 +13,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
+  withSequence,
   runOnJS,
   interpolate,
   Extrapolation,
@@ -25,10 +25,10 @@ import { getAllEmojis } from '../../utils/emojiData';
 import { searchEmojisByKeyword, suggestEmojisForHabitName } from '../../utils/emojiKeywords';
 import { addRecentEmoji, getRecentEmojis } from '../../utils/recentEmojis';
 import { CategoryPills } from './CategoryPills';
+import { EmojiGrid } from './EmojiGrid';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
-const EMOJIS_PER_ROW = 6;
 
 interface EmojiPickerSheetProps {
   visible: boolean;
@@ -38,40 +38,58 @@ interface EmojiPickerSheetProps {
   onClose: () => void;
 }
 
-// Memoized emoji cell component
-const EmojiCell = memo(
+// Animated Pressable wrapper for press animations
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+// Memoized emoji cell component with press animation (for AI suggestions)
+const SuggestionEmojiCell = memo(
   ({
     emoji,
     isSelected,
     onPress,
-    size = 'normal',
   }: {
     emoji: string;
     isSelected: boolean;
     onPress: () => void;
-    size?: 'normal' | 'large';
   }) => {
-    const cellSize = size === 'large' ? 56 : undefined;
-    const fontSize = size === 'large' ? 32 : 28;
+    const scale = useSharedValue(1);
+
+    const handlePressIn = useCallback(() => {
+      scale.value = withTiming(0.92, { duration: 50 });
+    }, [scale]);
+
+    const handlePressOut = useCallback(() => {
+      scale.value = withSequence(
+        withTiming(1.05, { duration: 80 }),
+        withTiming(1, { duration: 100 })
+      );
+    }, [scale]);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+    }));
 
     return (
-      <Pressable
-        accessibilityLabel={`Select ${emoji} emoji`}
+      <AnimatedPressable
+        accessibilityLabel={`Suggested emoji ${emoji}`}
         accessibilityRole="button"
+        accessibilityState={{ selected: isSelected }}
         style={[
-          styles.emojiCell,
+          styles.suggestionEmojiCell,
           isSelected && styles.emojiCellSelected,
-          cellSize ? { width: cellSize, height: cellSize } : undefined,
+          animatedStyle,
         ]}
         onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
-        <Text style={{ fontSize }}>{emoji}</Text>
-      </Pressable>
+        <Text style={styles.suggestionEmojiText}>{emoji}</Text>
+      </AnimatedPressable>
     );
   }
 );
 
-EmojiCell.displayName = 'EmojiCell';
+SuggestionEmojiCell.displayName = 'SuggestionEmojiCell';
 
 export const EmojiPickerSheet = memo(
   ({ visible, habitName, selectedEmoji, onSelect, onClose }: EmojiPickerSheetProps) => {
@@ -127,15 +145,6 @@ export const EmojiPickerSheet = memo(
       const category = HABIT_CATEGORIES.find((cat) => cat.id === selectedCategory);
       return category?.emojis ?? [];
     }, [selectedCategory, debouncedQuery, allEmojis]);
-
-    // Group emojis into rows
-    const emojiRows = useMemo(() => {
-      const rows: string[][] = [];
-      for (let i = 0; i < displayedEmojis.length; i += EMOJIS_PER_ROW) {
-        rows.push(displayedEmojis.slice(i, i + EMOJIS_PER_ROW));
-      }
-      return rows;
-    }, [displayedEmojis]);
 
     // Load recent emojis on mount
     useEffect(() => {
@@ -247,23 +256,6 @@ export const EmojiPickerSheet = memo(
       borderColor: interpolate(searchFocusAnim.value, [0, 1], [0, 1], Extrapolation.CLAMP) === 1 ? '#3b82f6' : '#e5e7eb',
     }));
 
-    const renderEmojiRow = useCallback(
-      ({ item }: { item: string[] }) => (
-        <View style={styles.emojiRow}>
-          {item.map((emoji) => (
-            <View key={emoji} style={styles.emojiCellWrapper}>
-              <EmojiCell
-                emoji={emoji}
-                isSelected={selectedEmoji === emoji}
-                onPress={() => handleEmojiSelect(emoji)}
-              />
-            </View>
-          ))}
-        </View>
-      ),
-      [selectedEmoji, handleEmojiSelect]
-    );
-
     // Get current category name for header
     const currentCategoryName = useMemo(() => {
       const category = HABIT_CATEGORIES.find((cat) => cat.id === selectedCategory);
@@ -338,12 +330,11 @@ export const EmojiPickerSheet = memo(
                 </View>
                 <View style={styles.suggestionsGrid}>
                   {suggestedEmojis.map((emoji) => (
-                    <EmojiCell
+                    <SuggestionEmojiCell
                       key={`suggested-${emoji}`}
                       emoji={emoji}
                       isSelected={selectedEmoji === emoji}
                       onPress={() => handleEmojiSelect(emoji)}
-                      size="large"
                     />
                   ))}
                 </View>
@@ -359,37 +350,13 @@ export const EmojiPickerSheet = memo(
             )}
 
             {/* Emoji Grid */}
-            <View style={styles.emojiGridContainer}>
-              {displayedEmojis.length === 0 ? (
-                <View style={styles.emptyState}>
-                  <Search color="#9ca3af" size={48} />
-                  <Text style={styles.emptyStateTitle}>No emojis found</Text>
-                  <Text style={styles.emptyStateSubtitle}>
-                    Try a different search term
-                  </Text>
-                </View>
-              ) : (
-                <>
-                  {/* Category Header */}
-                  {!searchQuery && (
-                    <View style={styles.categoryHeader}>
-                      <Text style={styles.categoryHeaderText}>{currentCategoryName}</Text>
-                    </View>
-                  )}
-                  <FlatList
-                    data={emojiRows}
-                    keyExtractor={(_, index) => `row-${index}`}
-                    renderItem={renderEmojiRow}
-                    showsVerticalScrollIndicator={true}
-                    contentContainerStyle={styles.emojiGridContent}
-                    initialNumToRender={10}
-                    maxToRenderPerBatch={10}
-                    windowSize={5}
-                    removeClippedSubviews={true}
-                  />
-                </>
-              )}
-            </View>
+            <EmojiGrid
+              emojis={displayedEmojis}
+              selectedEmoji={selectedEmoji}
+              onEmojiSelect={handleEmojiSelect}
+              categoryName={!searchQuery ? currentCategoryName : undefined}
+              showCategoryHeader={!searchQuery}
+            />
 
             {/* No Icon Button */}
             <View style={styles.noIconContainer}>
@@ -487,61 +454,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  emojiGridContainer: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  categoryHeader: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-  },
-  categoryHeaderText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6b7280',
-    letterSpacing: 0.5,
-  },
-  emojiGridContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 16,
-  },
-  emojiRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  emojiCellWrapper: {
-    flex: 1,
-    aspectRatio: 1,
-  },
-  emojiCell: {
-    flex: 1,
+  suggestionEmojiCell: {
+    width: 56,
+    height: 56,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f9fafb',
-    borderRadius: 12,
-    minHeight: 44,
-    minWidth: 44,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+  },
+  suggestionEmojiText: {
+    fontSize: 32,
   },
   emojiCellSelected: {
     backgroundColor: '#dbeafe',
     borderWidth: 2,
     borderColor: '#3b82f6',
-  },
-  emptyState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyStateTitle: {
-    marginTop: 12,
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1a1a1a',
-  },
-  emptyStateSubtitle: {
-    marginTop: 4,
-    fontSize: 14,
-    color: '#9ca3af',
   },
   noIconContainer: {
     paddingHorizontal: 20,
