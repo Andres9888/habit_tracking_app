@@ -445,6 +445,43 @@ export const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'right',
   },
+  // Tab bar styles
+  tabBar: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 16,
+    marginBottom: 8,
+    backgroundColor: '#f1f5f9',
+    borderRadius: 12,
+    padding: 4,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  tabActive: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#64748b',
+  },
+  tabTextActive: {
+    color: '#0f172a',
+  },
+  // All templates grid
+  allTemplatesGrid: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
 });
 
 

@@ -39,6 +39,7 @@ import type { Doc, Id } from '../../convex/_generated/dataModel';
 import Button from '../components/Button/Button';
 import CollapsibleCategorySection from '../components/CollapsibleCategorySection';
 import EmptyState from '../components/EmptyState';
+import MiniTemplateCard from '../components/MiniTemplateCard';
 import TemplateCard from '../components/TemplateCard';
 import Toast from '../components/Toast';
 import { useAppTheme } from '../theme';
@@ -57,6 +58,9 @@ import { styles } from './templates/templatesScreenStyles';
 // View modes for the screen
 type ViewMode = 'browse' | 'category' | 'search';
 
+// Tab options for main view
+type BrowseTab = 'categories' | 'all';
+
 export default function TemplatesScreen() {
   const theme = useAppTheme();
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
@@ -64,6 +68,7 @@ export default function TemplatesScreen() {
 
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>('browse');
+  const [browseTab, setBrowseTab] = useState<BrowseTab>('categories');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     new Set(['morning_routine', 'health_fitness']) // Default expanded
@@ -627,34 +632,79 @@ export default function TemplatesScreen() {
         </View>
       </View>
 
+      {/* Tab bar */}
+      <View style={styles.tabBar}>
+        <Pressable
+          style={[styles.tab, browseTab === 'categories' && styles.tabActive]}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setBrowseTab('categories');
+          }}
+        >
+          <Text style={[styles.tabText, browseTab === 'categories' && styles.tabTextActive]}>
+            Categories
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.tab, browseTab === 'all' && styles.tabActive]}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setBrowseTab('all');
+          }}
+        >
+          <Text style={[styles.tabText, browseTab === 'all' && styles.tabTextActive]}>
+            View All
+          </Text>
+        </Pressable>
+      </View>
+
       {/* Scrollable content */}
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={styles.browseContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Collapsible Category Sections */}
-        <View style={styles.categorySections}>
-          {categories
-            ?.filter((cat) => cat.id !== 'all')
-            .map((category) => {
-              const templates = templatesByCategory.get(category.id) || [];
-              if (templates.length === 0) return null;
+        {browseTab === 'categories' ? (
+          /* Collapsible Category Sections */
+          <View style={styles.categorySections}>
+            {categories
+              ?.filter((cat) => cat.id !== 'all')
+              .map((category) => {
+                const templates = templatesByCategory.get(category.id) || [];
+                if (templates.length === 0) return null;
 
-              return (
-                <CollapsibleCategorySection
-                  key={category.id}
-                  categoryId={category.id}
-                  label={category.label}
-                  icon={category.icon}
-                  templates={templates}
-                  isExpanded={expandedCategories.has(category.id)}
-                  onToggle={() => handleToggleCategory(category.id)}
-                  onTemplatePress={handleTemplatePreview}
-                />
-              );
-            })}
-        </View>
+                return (
+                  <CollapsibleCategorySection
+                    key={category.id}
+                    categoryId={category.id}
+                    label={category.label}
+                    icon={category.icon}
+                    templates={templates}
+                    isExpanded={expandedCategories.has(category.id)}
+                    onToggle={() => handleToggleCategory(category.id)}
+                    onTemplatePress={handleTemplatePreview}
+                  />
+                );
+              })}
+          </View>
+        ) : (
+          /* View All - flat list of all templates */
+          <View style={styles.allTemplatesGrid}>
+            {allTemplates?.map((template) => (
+              <MiniTemplateCard
+                key={template._id}
+                icon={template.icon}
+                iconColor={template.iconColor}
+                name={template.name}
+                description={template.description}
+                subtitle={template.frequency === 'daily' ? 'Daily' : template.frequency === 'weekly' ? 'Weekly' : 'Custom'}
+                hasResearch={Boolean(template.scientificLink)}
+                scientificReference={template.scientificReference}
+                onPress={() => handleTemplatePreview(template)}
+              />
+            ))}
+          </View>
+        )}
       </ScrollView>
 
       <TemplatePreviewModal
