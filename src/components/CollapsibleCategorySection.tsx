@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -126,14 +126,18 @@ export function CollapsibleCategorySection({
         </Animated.View>
       </Pressable>
 
-      {/* Expandable content - shows ALL templates in vertical list */}
+      {/* Expandable content - horizontal scrolling list */}
       {isExpanded && (
         <Animated.View
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(150)}
           style={styles.content}
         >
-          <View style={styles.templatesList}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.templatesScroll}
+          >
             {templates.map((template) => (
               <MiniTemplateCard
                 key={template._id}
@@ -147,7 +151,7 @@ export function CollapsibleCategorySection({
                 onPress={() => onTemplatePress(template)}
               />
             ))}
-          </View>
+          </ScrollView>
         </Animated.View>
       )}
     </AnimatedView>
@@ -193,11 +197,11 @@ const styles = StyleSheet.create({
   },
   content: {
     marginTop: 8,
-    paddingHorizontal: 16,
   },
-  templatesList: {
-    gap: 10,
+  templatesScroll: {
+    paddingHorizontal: 16,
     paddingBottom: 8,
+    gap: 12,
   },
 });
 
