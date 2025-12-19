@@ -1,88 +1,55 @@
-import { Animated, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useRef } from 'react';
+import { useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
-import { Motion } from '../../../constants/motion';
+import { EmojiPickerSheet } from '../../EmojiPickerV2';
 
 interface EmojiPickerProps {
-  emojis: string[];
+  emojis?: string[]; // kept for backwards compatibility but not used
   selectedEmoji: string | null;
   onSelect: (emoji: string | null) => void;
+  habitName?: string;
 }
 
-export const EmojiPicker = ({ emojis, selectedEmoji, onSelect }: EmojiPickerProps) => {
+export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <View className='mb-6'>
       <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
         {STRINGS.CREATE_HABIT.iconLabel}
       </Text>
-      <ScrollView
-        horizontal
-        className='flex-row'
-        contentContainerClassName='gap-3'
-        showsHorizontalScrollIndicator={false}
+      <Pressable
+        accessibilityLabel='Choose icon'
+        accessibilityRole='button'
+        className='flex-row items-center gap-3 rounded-xl bg-white p-4'
+        onPress={() => {
+          triggerSelection();
+          setIsModalVisible(true);
+        }}
       >
-        <AnimatedTouchable
-          accessibilityLabel='No icon'
-          accessibilityRole='button'
-          className='h-12 items-center justify-center rounded-xl bg-white px-3'
-          style={{ borderColor: '#1a1a1a', borderWidth: selectedEmoji === null ? 2 : 0 }}
-          onPress={() => {
-            triggerSelection();
-            onSelect(null);
-          }}
+        <View
+          className='h-12 w-12 items-center justify-center rounded-xl bg-gray-100'
         >
-          <Text className='text-xs font-medium text-[#8a8a8a]'>None</Text>
-        </AnimatedTouchable>
-        {emojis.map((emoji) => (
-          <AnimatedTouchable
-            key={emoji}
-            accessibilityLabel={`Select ${emoji} icon`}
-            accessibilityRole='button'
-            className='h-12 w-12 items-center justify-center rounded-xl bg-white'
-            style={{ borderColor: '#1a1a1a', borderWidth: selectedEmoji === emoji ? 2 : 0 }}
-            onPress={() => {
-              triggerSelection();
-              onSelect(emoji);
-            }}
-          >
-            <Text className='text-2xl'>{emoji}</Text>
-          </AnimatedTouchable>
-        ))}
-      </ScrollView>
-    </View>
-  );
-};
+          <Text className='text-2xl'>{selectedEmoji || '➕'}</Text>
+        </View>
+        <Text className='flex-1 text-base text-[#1a1a1a]'>
+          {selectedEmoji ? 'Change icon' : 'Choose an icon'}
+        </Text>
+        <Text className='text-sm text-[#3B82F6]'>Edit</Text>
+      </Pressable>
 
-// Local helper adds press-in scale animation
-const AnimatedTouchable = ({ children, onPress, style, ...rest }: any) => {
-  const scale = useRef(new Animated.Value(1)).current;
-  return (
-    <Animated.View style={[{ transform: [{ scale }] }]}>
-      <TouchableOpacity
-        {...rest}
-        style={style}
-        onPressIn={() => {
-          Animated.timing(scale, {
-            duration: Motion.duration.fast,
-            easing: Motion.easing.inEase,
-            toValue: 0.96,
-            useNativeDriver: true,
-          }).start();
+      <EmojiPickerSheet
+        visible={isModalVisible}
+        selectedEmoji={selectedEmoji}
+        habitName={habitName || ''}
+        onSelect={(emoji) => {
+          onSelect(emoji);
+          triggerSelection();
         }}
-        onPressOut={() => {
-          Animated.timing(scale, {
-            duration: Motion.duration.base,
-            easing: Motion.easing.outEase,
-            toValue: 1,
-            useNativeDriver: true,
-          }).start();
-        }}
-        onPress={onPress}
-      >
-        {children}
-      </TouchableOpacity>
-    </Animated.View>
+        onClose={() => setIsModalVisible(false)}
+      />
+    </View>
   );
 };

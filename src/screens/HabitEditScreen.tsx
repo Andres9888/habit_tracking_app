@@ -22,7 +22,7 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../utils/notifications';
-import { EmojiPicker } from '../components/EmojiPicker';
+import { EmojiPickerSheet } from '../components/EmojiPickerV2';
 
 interface HabitEditScreenProps {
   visible: boolean;
@@ -447,14 +447,17 @@ export default function HabitEditScreen({
         </View>
       </View>
 
-      <EmojiPicker
+      <EmojiPickerSheet
         visible={isEmojiPickerVisible}
         selectedEmoji={selectedEmoji}
+        habitName={habitName}
         onSelect={(emoji) => {
-          setSelectedEmoji(emoji);
-          // Optionally cycle through colors when selecting emoji
-          const randomColorIndex = Math.floor(Math.random() * EMOJI_COLORS.length);
-          setSelectedColor(EMOJI_COLORS[randomColorIndex]);
+          if (emoji !== null) {
+            setSelectedEmoji(emoji);
+            // Optionally cycle through colors when selecting emoji
+            const randomColorIndex = Math.floor(Math.random() * EMOJI_COLORS.length);
+            setSelectedColor(EMOJI_COLORS[randomColorIndex]);
+          }
         }}
         onClose={() => setIsEmojiPickerVisible(false)}
       />

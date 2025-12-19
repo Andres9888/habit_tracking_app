@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
-import { Animated, Pressable, ScrollView, Text, View } from 'react-native';
-import { Palette } from 'lucide-react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
+import { ChevronRight, Palette } from 'lucide-react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
-import { EmojiPicker } from '../../EmojiPicker/EmojiPicker';
+import { EmojiPickerSheet } from '../../EmojiPickerV2';
 
 interface StyleSectionProps {
   colors: string[];
@@ -14,9 +14,10 @@ interface StyleSectionProps {
   selectedColor: string;
   selectedEmoji: string | null;
   suggestedEmojis?: string[];
+  habitName?: string;
 }
 
-// Animated touchable for emoji/color buttons
+// Animated touchable for color buttons
 interface AnimatedButtonProps {
   accessibilityLabel: string;
   children: React.ReactNode;
@@ -77,19 +78,16 @@ const AnimatedButton = ({
 
 export const StyleSection = ({
   colors,
-  emojis,
   onCustomColorPress,
   onSelectColor,
   onSelectEmoji,
   selectedColor,
   selectedEmoji,
-  suggestedEmojis = [],
+  habitName,
 }: StyleSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
-  // Show suggested emojis first, then default emojis (limited to 8 for quick access)
-  const displayEmojis = [...new Set([...suggestedEmojis, ...emojis])].slice(0, 8);
+  const iconRowScale = useRef(new Animated.Value(1)).current;
 
   const handleOpenEmojiPicker = useCallback(() => {
     triggerSelection();
@@ -104,72 +102,60 @@ export const StyleSection = ({
     [onSelectEmoji]
   );
 
+  const handleIconRowPressIn = useCallback(() => {
+    Animated.timing(iconRowScale, {
+      duration: 100,
+      toValue: 0.98,
+      useNativeDriver: true,
+    }).start();
+  }, [iconRowScale]);
+
+  const handleIconRowPressOut = useCallback(() => {
+    Animated.spring(iconRowScale, {
+      toValue: 1,
+      damping: 15,
+      stiffness: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [iconRowScale]);
+
   return (
     <View className="mb-6 rounded-2xl bg-white p-4">
       <Text className="mb-4 text-base font-bold text-slate-800">🎨 Style it</Text>
 
-      {/* Emoji Picker */}
-      <View className="mb-5">
-        <Text className="mb-3 text-sm font-semibold text-slate-600">Icon</Text>
-        <ScrollView
-          contentContainerStyle={{ alignItems: 'center', gap: 10 }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
+      {/* Icon Picker - Tappable Row */}
+      <Animated.View style={{ transform: [{ scale: iconRowScale }] }}>
+        <Pressable
+          accessibilityLabel="Choose icon for habit"
+          accessibilityRole="button"
+          accessibilityHint="Opens emoji picker"
+          className="mb-5 flex-row items-center justify-between rounded-xl bg-slate-50 p-3"
+          onPress={handleOpenEmojiPicker}
+          onPressIn={handleIconRowPressIn}
+          onPressOut={handleIconRowPressOut}
         >
-          {/* None option */}
-          <AnimatedButton
-            accessibilityLabel="No icon"
-            isSelected={selectedEmoji === null}
-            onPress={() => onSelectEmoji(null)}
-            style={{
-              alignItems: 'center',
-              backgroundColor: selectedEmoji === null ? '#f1f5f9' : '#ffffff',
-              borderColor: selectedEmoji === null ? '#3b82f6' : '#e2e8f0',
-              borderRadius: 12,
-              borderWidth: selectedEmoji === null ? 2 : 1,
-              height: 48,
-              justifyContent: 'center',
-              paddingHorizontal: 12,
-            }}
-          >
-            <Text className="text-xs font-medium text-slate-500">None</Text>
-          </AnimatedButton>
-
-          {/* Emoji options */}
-          {displayEmojis.map((emoji) => (
-            <AnimatedButton
-              key={emoji}
-              accessibilityLabel={`Select ${emoji} icon`}
-              isSelected={selectedEmoji === emoji}
-              onPress={() => onSelectEmoji(emoji)}
-              style={{
-                alignItems: 'center',
-                backgroundColor: selectedEmoji === emoji ? '#f1f5f9' : '#ffffff',
-                borderColor: selectedEmoji === emoji ? '#3b82f6' : '#e2e8f0',
-                borderRadius: 12,
-                borderWidth: selectedEmoji === emoji ? 2 : 1,
-                height: 48,
-                justifyContent: 'center',
-                width: 48,
-              }}
+          <View className="flex-row items-center gap-3">
+            {/* Icon Preview */}
+            <View
+              className="h-12 w-12 items-center justify-center rounded-xl"
+              style={{ backgroundColor: selectedColor + '20' }}
             >
-              <Text className="text-2xl">{emoji}</Text>
-            </AnimatedButton>
-          ))}
+              <Text className="text-2xl">{selectedEmoji || '➕'}</Text>
+            </View>
+            <View>
+              <Text className="text-base font-medium text-slate-800">Icon</Text>
+              <Text className="text-xs text-slate-500">
+                {selectedEmoji ? 'Tap to change' : 'Choose an icon'}
+              </Text>
+            </View>
+          </View>
+          <ChevronRight color="#94a3b8" size={20} />
+        </Pressable>
+      </Animated.View>
 
-          {/* More button - opens full emoji picker */}
-          <Pressable
-            accessibilityLabel="Browse all emojis"
-            className="h-12 items-center justify-center rounded-xl bg-slate-100 px-4"
-            onPress={handleOpenEmojiPicker}
-          >
-            <Text className="text-sm font-medium text-slate-600">More</Text>
-          </Pressable>
-        </ScrollView>
-      </View>
-
-      {/* Full Emoji Picker Modal */}
-      <EmojiPicker
+      {/* Full Emoji Picker Modal (V2) */}
+      <EmojiPickerSheet
+        habitName={habitName || ''}
         selectedEmoji={selectedEmoji}
         visible={showEmojiPicker}
         onClose={() => setShowEmojiPicker(false)}
