@@ -1,6 +1,8 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  AccessibilityInfo,
   Animated,
+  findNodeHandle,
   FlatList,
   Modal,
   Pressable,
@@ -21,6 +23,8 @@ interface EmojiPickerProps {
   onSelect: (emoji: string | null) => void;
   selectedEmoji?: string | null;
   visible: boolean;
+  /** Ref to the trigger element for focus management on modal close */
+  triggerRef?: React.RefObject<View>;
 }
 
 const EMOJIS_PER_ROW = 7;
@@ -166,12 +170,22 @@ const RecentEmojiItem = memo(
 RecentEmojiItem.displayName = 'RecentEmojiItem';
 
 export const EmojiPicker = memo(
-  ({ onClose, onSelect, selectedEmoji, visible }: EmojiPickerProps) => {
+  ({ onClose, onSelect, selectedEmoji, visible, triggerRef }: EmojiPickerProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('fitness');
     const [searchQuery, setSearchQuery] = useState('');
     const [recentEmojis, setRecentEmojis] = useState<string[]>([]);
     const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [debouncedQuery, setDebouncedQuery] = useState('');
+
+    // Focus management: return focus to trigger on close
+    const returnFocusToTrigger = useCallback(() => {
+      if (triggerRef?.current) {
+        const reactTag = findNodeHandle(triggerRef.current);
+        if (reactTag) {
+          AccessibilityInfo.setAccessibilityFocus(reactTag);
+        }
+      }
+    }, [triggerRef]);
 
     // Load recent emojis on mount
     useEffect(() => {
@@ -213,14 +227,21 @@ export const EmojiPicker = memo(
       return category?.emojis ?? [];
     }, [selectedCategory, debouncedQuery, allEmojis]);
 
+    // Wrapper for onClose that returns focus to trigger
+    const handleClose = useCallback(() => {
+      onClose();
+      // Small delay to ensure modal animation completes before focus shift
+      setTimeout(returnFocusToTrigger, 100);
+    }, [onClose, returnFocusToTrigger]);
+
     const handleEmojiSelect = useCallback(
       async (emoji: string) => {
         // Add to recent emojis
         await addRecentEmoji(emoji);
         onSelect(emoji);
-        onClose();
+        handleClose();
       },
-      [onSelect, onClose]
+      [onSelect, handleClose]
     );
 
     const handleCategorySelect = useCallback((categoryId: string) => {
@@ -272,7 +293,7 @@ export const EmojiPicker = memo(
         animationType='slide'
         transparent
         visible={visible}
-        onRequestClose={onClose}
+        onRequestClose={handleClose}
       >
         <View className='flex-1 bg-black/50'>
           <View
@@ -288,7 +309,7 @@ export const EmojiPicker = memo(
                 accessibilityLabel='Close emoji picker'
                 accessibilityRole='button'
                 className='h-10 w-10 items-center justify-center rounded-full bg-gray-200'
-                onPress={onClose}
+                onPress={handleClose}
               >
                 <X color='#1a1a1a' size={20} strokeWidth={2} />
               </TouchableOpacity>
@@ -442,7 +463,7 @@ export const EmojiPicker = memo(
                 }`}
                 onPress={() => {
                   onSelect(null);
-                  onClose();
+                  handleClose();
                 }}
               >
                 <Text

@@ -10,8 +10,9 @@
  * - Accessibility labels
  */
 
-import React from 'react';
+import React, { createRef } from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { AccessibilityInfo, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { EmojiPicker } from '../EmojiPicker';
 
@@ -289,6 +290,28 @@ describe('EmojiPicker - Story 2.8', () => {
       const { getAllByRole } = render(<EmojiPicker {...defaultProps} />);
       const buttons = getAllByRole('button');
       expect(buttons.length).toBeGreaterThan(0);
+    });
+
+    it('should return focus to trigger element on close', async () => {
+      const mockSetAccessibilityFocus = jest.spyOn(AccessibilityInfo, 'setAccessibilityFocus');
+      const triggerRef = createRef<View>();
+
+      const { getByLabelText } = render(
+        <>
+          <View ref={triggerRef} accessible accessibilityLabel="Trigger button" />
+          <EmojiPicker {...defaultProps} triggerRef={triggerRef} />
+        </>
+      );
+
+      const closeButton = getByLabelText('Close emoji picker');
+      fireEvent.press(closeButton);
+
+      // Wait for the focus return timeout (100ms)
+      await waitFor(() => {
+        expect(mockOnClose).toHaveBeenCalled();
+      });
+
+      mockSetAccessibilityFocus.mockRestore();
     });
   });
 

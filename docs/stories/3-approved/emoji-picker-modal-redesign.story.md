@@ -73,7 +73,7 @@ The current emoji picker modal has overwhelming generic categories (925+ emojis 
 - [x] Category chips announce selection state
 - [x] Search input has proper placeholder and label
 - [x] "No Icon" button clearly labeled
-- [ ] Focus management returns to trigger on modal close
+- [x] Focus management returns to trigger on modal close
 
 ---
 
@@ -277,13 +277,18 @@ export function searchEmojis(query: string): string[]
 - `src/components/EmojiPicker/EmojiPicker.tsx` - Complete redesign with all new features
 
 ### Tests Created
-- `src/components/EmojiPicker/tests/EmojiPicker.test.tsx` - 35 passing tests
+- `src/components/EmojiPicker/tests/EmojiPicker.test.tsx` - 36 passing tests
 - `src/utils/__tests__/recentEmojis.test.ts` - 13 passing tests
 - `src/utils/__tests__/emojiKeywords.test.ts` - 20 passing tests
 
 ### Remaining Work
 - Task 5 (Auto-Suggest Emojis) - Low priority, deferred
-- AC5 focus management on modal close - Minor enhancement, deferred
+
+### Focus Management Implementation (2025-12-19)
+- Added optional `triggerRef` prop to EmojiPicker for focus management
+- Implemented `returnFocusToTrigger` callback using `AccessibilityInfo.setAccessibilityFocus`
+- Updated all modal close handlers to return focus via `handleClose` wrapper
+- Added test case for focus management behavior (36 total tests passing)
 
 ---
 
@@ -293,3 +298,4 @@ export function searchEmojis(query: string): string[]
 |------|--------|--------|
 | 2025-12-19 | Split from emoji-picker-redesign.story.md | PM |
 | 2025-12-19 | Implemented Tasks 1-4, all acceptance criteria complete except focus management | MAESTRO |
+| 2025-12-19 | Implemented AC5 focus management - returns focus to trigger on modal close | MAESTRO |
