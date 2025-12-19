@@ -1,5 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  InteractionManager,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ColorPicker, {
   BrightnessSlider,
   Panel1,
@@ -17,6 +24,39 @@ interface ColorPickerSheetProps {
   onClose: () => void;
 }
 
+/**
+ * Simple throttle function for color picker updates
+ * Limits how often the callback fires during continuous drag
+ */
+function useThrottle(callback: (hex: string) => void, delay: number) {
+  const lastCall = useRef(0);
+  const lastArg = useRef<string | null>(null);
+  const timeoutId = useRef<NodeJS.Timeout | null>(null);
+
+  return useMemo(() => {
+    return (hex: string) => {
+      const now = Date.now();
+      lastArg.current = hex;
+
+      // If enough time has passed, call immediately
+      if (now - lastCall.current >= delay) {
+        lastCall.current = now;
+        callback(hex);
+      } else if (!timeoutId.current) {
+        // Schedule trailing call
+        const remaining = delay - (now - lastCall.current);
+        timeoutId.current = setTimeout(() => {
+          lastCall.current = Date.now();
+          if (lastArg.current !== null) {
+            callback(lastArg.current);
+          }
+          timeoutId.current = null;
+        }, remaining);
+      }
+    };
+  }, [callback, delay]);
+}
+
 export function ColorPickerSheet({
   visible,
   value,
@@ -25,16 +65,46 @@ export function ColorPickerSheet({
   onClose,
 }: ColorPickerSheetProps) {
   const [currentColor, setCurrentColor] = useState(value);
+  // Lazy mount state - delays picker render until modal animation completes
+  // This prevents jank during the modal slide animation
+  const [isPickerReady, setIsPickerReady] = useState(false);
 
   useEffect(() => {
     if (visible) {
       setCurrentColor(value);
+      // Wait for modal animation to complete before mounting the heavy picker
+      const handle = InteractionManager.runAfterInteractions(() => {
+        setIsPickerReady(true);
+      });
+      return () => {
+        handle.cancel();
+        setIsPickerReady(false);
+      };
+    } else {
+      setIsPickerReady(false);
     }
   }, [value, visible]);
 
-  const handleColorChange = (color: ColorPickerValue) => {
+  // Throttled color change handler - limits updates to every 100ms during drag
+  // This prevents the app from freezing due to continuous reanimated updates
+  const updateColor = useCallback((hex: string) => {
+    setCurrentColor(hex);
+  }, []);
+
+  const throttledSetColor = useThrottle(updateColor, 100);
+
+  const handleColorChange = useCallback(
+    (color: ColorPickerValue) => {
+      throttledSetColor(color.hex);
+    },
+    [throttledSetColor]
+  );
+
+  // Called when user lifts finger (touch end) - ensures final color is set
+  // This is the definitive value after dragging
+  const handleColorComplete = useCallback((color: ColorPickerValue) => {
     setCurrentColor(color.hex);
-  };
+  }, []);
 
   const handleDone = () => {
     onSelect(currentColor);
@@ -68,26 +138,40 @@ export function ColorPickerSheet({
             </TouchableOpacity>
           </View>
 
-          <ColorPicker
-            style={{ width: '100%' }}
-            value={currentColor}
-            onChange={handleColorChange}
-          >
-            <Preview
-              style={{ borderRadius: 16, height: 64, marginBottom: 16 }}
-            />
-            <PreviewText style={{ marginBottom: 16 }} />
-            <Panel1
-              style={{ borderRadius: 16, height: 220, marginBottom: 16 }}
-            />
-            <BrightnessSlider style={{ marginBottom: 16 }} />
-            <Swatches
-              colors={presetColors}
-              style={{ marginBottom: 8 }}
-              swatchStyle={{ borderRadius: 24, height: 44, width: 44 }}
-              onSelect={(color: string) => setCurrentColor(color)}
-            />
-          </ColorPicker>
+          {isPickerReady ? (
+            <ColorPicker
+              style={{ width: '100%' }}
+              value={currentColor}
+              onChange={handleColorChange}
+              onComplete={handleColorComplete}
+            >
+              <Preview
+                style={{ borderRadius: 16, height: 64, marginBottom: 16 }}
+              />
+              <PreviewText style={{ marginBottom: 16 }} />
+              <Panel1
+                style={{ borderRadius: 16, height: 220, marginBottom: 16 }}
+              />
+              <BrightnessSlider style={{ marginBottom: 16 }} />
+              <Swatches
+                colors={presetColors}
+                style={{ marginBottom: 8 }}
+                swatchStyle={{ borderRadius: 24, height: 44, width: 44 }}
+                onSelect={(color: string) => setCurrentColor(color)}
+              />
+            </ColorPicker>
+          ) : (
+            // Loading state while picker initializes after modal animation
+            <View
+              className='items-center justify-center'
+              style={{ height: 400 }}
+            >
+              <ActivityIndicator color='#1a1a1a' size='large' />
+              <Text className='mt-4 text-sm text-slate-500'>
+                Loading color picker...
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </Modal>
