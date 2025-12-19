@@ -289,25 +289,11 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const isCircle = shape === 'circle';
   const borderRadius = isCircle ? 20 : 9;
 
-  // Warm golden glow color for today's habit (softer amber)
-  const goldenGlowColor = '#FBBF24'; // amber-400 - warmer, softer
+  // Warm golden highlight color for today's habit
+  const goldenHighlightColor = '#FBBF24'; // amber-400
 
   return (
-    <Animated.View
-      style={
-        isToday
-          ? {
-              borderRadius: borderRadius + 3,
-              elevation: 4,
-              shadowColor: goldenGlowColor,
-              shadowOffset: { height: 0, width: 0 },
-              shadowOpacity: 0.35,
-              shadowRadius: 8,
-            }
-          : undefined
-      }
-    >
-      <AnimatedPressable
+    <AnimatedPressable
         accessibilityHint={accessibilityHint}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
