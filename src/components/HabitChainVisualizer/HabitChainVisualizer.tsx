@@ -172,7 +172,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
   const breathingPulse = useRef(new Animated.Value(1)).current;
-  const todayGlow = useRef(new Animated.Value(0.6)).current;
+  const todayGlow = useRef(new Animated.Value(0.3)).current;
 
   // Combine scale values using Animated.multiply to avoid multiple scale transforms
   // which can cause the second to override the first in some React Native versions
@@ -246,21 +246,21 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps -- breathingPulse is a stable ref from useRef
   }, [completed, isToday]);
 
-  // Golden glow animation for today's habit box
+  // Subtle golden glow animation for today's habit box
   useEffect(() => {
     if (isToday) {
       const glowAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(todayGlow, {
-            duration: 1800,
-            easing: Easing.inOut(Easing.ease),
-            toValue: 1,
+            duration: 2400,
+            easing: Easing.inOut(Easing.sin),
+            toValue: 0.45,
             useNativeDriver: false,
           }),
           Animated.timing(todayGlow, {
-            duration: 1800,
-            easing: Easing.inOut(Easing.ease),
-            toValue: 0.5,
+            duration: 2400,
+            easing: Easing.inOut(Easing.sin),
+            toValue: 0.2,
             useNativeDriver: false,
           }),
         ])
@@ -320,22 +320,22 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const isCircle = shape === 'circle';
   const borderRadius = isCircle ? 20 : 9;
 
-  // Golden glow color for today's habit
-  const goldenGlowColor = '#F59E0B'; // amber-500
+  // Warm golden glow color for today's habit (softer amber)
+  const goldenGlowColor = '#FBBF24'; // amber-400 - warmer, softer
 
   return (
     <Animated.View
       style={
         isToday
           ? {
-              borderRadius: borderRadius + 4,
-              elevation: 8,
+              borderRadius: borderRadius + 3,
+              elevation: 4,
               shadowColor: goldenGlowColor,
               shadowOffset: { height: 0, width: 0 },
               shadowOpacity: todayGlow,
               shadowRadius: todayGlow.interpolate({
-                inputRange: [0.5, 1],
-                outputRange: [8, 14],
+                inputRange: [0.2, 0.45],
+                outputRange: [6, 10],
               }),
             }
           : undefined
