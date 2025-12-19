@@ -114,10 +114,8 @@ export function MiniTemplateCard({
 
 const styles = StyleSheet.create({
   card: {
-    width: 200,
     borderRadius: 14,
     overflow: 'hidden',
-    marginRight: 12,
     paddingVertical: 14,
     paddingHorizontal: 14,
     paddingLeft: 18,

@@ -184,13 +184,6 @@ export default function TemplatesScreen() {
     });
   }, []);
 
-  // Handle "See all" for a category
-  const handleSeeAllCategory = useCallback((categoryId: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setSelectedCategory(categoryId as Category);
-    setViewMode('category');
-  }, []);
-
   // Back to browse mode
   const handleBackToBrowse = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -658,7 +651,6 @@ export default function TemplatesScreen() {
                   isExpanded={expandedCategories.has(category.id)}
                   onToggle={() => handleToggleCategory(category.id)}
                   onTemplatePress={handleTemplatePreview}
-                  onSeeAll={() => handleSeeAllCategory(category.id)}
                 />
               );
             })}
