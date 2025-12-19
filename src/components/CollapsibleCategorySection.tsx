@@ -144,9 +144,6 @@ export function CollapsibleCategorySection({
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.templatesScroll}
-            decelerationRate="fast"
-            snapToInterval={232}
-            snapToAlignment="start"
           >
             {templates.map((template) => (
               <MiniTemplateCard
@@ -216,9 +213,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   templatesScroll: {
-    paddingHorizontal: 16,
+    paddingLeft: 16,
+    paddingRight: 8,
     paddingBottom: 12,
-    gap: 12,
   },
 });
 

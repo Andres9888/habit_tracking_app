@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   card: {
     width: 220,
     minHeight: 140,
+    marginRight: 12,
     borderRadius: 16,
     overflow: 'hidden',
     paddingVertical: 14,

@@ -635,6 +635,10 @@ export default function TemplatesScreen() {
       {/* Tab bar */}
       <View style={styles.tabBar}>
         <Pressable
+          accessible
+          accessibilityLabel={`Categories tab, ${categories?.filter((c) => c.id !== 'all').length || 0} categories`}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: browseTab === 'categories' }}
           style={[styles.tab, browseTab === 'categories' && styles.tabActive]}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -649,6 +653,10 @@ export default function TemplatesScreen() {
           </Text>
         </Pressable>
         <Pressable
+          accessible
+          accessibilityLabel={`View All tab, ${allTemplates?.length || 0} templates`}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: browseTab === 'all' }}
           style={[styles.tab, browseTab === 'all' && styles.tabActive]}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
