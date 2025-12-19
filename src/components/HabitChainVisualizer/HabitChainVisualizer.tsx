@@ -172,6 +172,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
   const breathingPulse = useRef(new Animated.Value(1)).current;
+  const todayGlow = useRef(new Animated.Value(0.6)).current;
 
   // Combine scale values using Animated.multiply to avoid multiple scale transforms
   // which can cause the second to override the first in some React Native versions
@@ -245,6 +246,36 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps -- breathingPulse is a stable ref from useRef
   }, [completed, isToday]);
 
+  // Golden glow animation for today's habit box
+  useEffect(() => {
+    if (isToday) {
+      const glowAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(todayGlow, {
+            duration: 1800,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 1,
+            useNativeDriver: false,
+          }),
+          Animated.timing(todayGlow, {
+            duration: 1800,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 0.5,
+            useNativeDriver: false,
+          }),
+        ])
+      );
+      glowAnimation.start();
+
+      return () => {
+        glowAnimation.stop();
+      };
+    } else {
+      todayGlow.setValue(0);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- todayGlow is a stable ref from useRef
+  }, [isToday]);
+
   const backgroundColor = completed ? accentColor : highContrastMode ? '#000000' : '#f5f5f5';
   const borderColor = highContrastMode ? '#facc15' : '#6b7280';
 
@@ -289,54 +320,75 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const isCircle = shape === 'circle';
   const borderRadius = isCircle ? 20 : 9;
 
+  // Golden glow color for today's habit
+  const goldenGlowColor = '#F59E0B'; // amber-500
+
   return (
-    <AnimatedPressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      className={clsx('h-9 w-9 items-center justify-center', !completed && 'border-2')}
-      disabled={disabled}
-      onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      style={{
-        backgroundColor,
-        borderColor: completed ? accentColor : borderColor,
-        borderRadius,
-        borderWidth: completed ? 0 : 2,
-        opacity: disabled ? 0.5 : 1,
-        transform: [{ scale: combinedScale }],
-        ...(completed &&
-          !highContrastMode && {
-            elevation: 2,
-            shadowColor: accentColor,
-            shadowOffset: { height: 0, width: 0 },
-            shadowOpacity: 0.3,
-            shadowRadius: 5,
-          }),
-      }}
-    >
-      <Animated.View
-        style={{
-          opacity: completion,
-          transform: [
-            {
-              scale: completion.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.5, 1],
+    <Animated.View
+      style={
+        isToday
+          ? {
+              borderRadius: borderRadius + 4,
+              elevation: 8,
+              shadowColor: goldenGlowColor,
+              shadowOffset: { height: 0, width: 0 },
+              shadowOpacity: todayGlow,
+              shadowRadius: todayGlow.interpolate({
+                inputRange: [0.5, 1],
+                outputRange: [8, 14],
               }),
-            },
-          ],
+            }
+          : undefined
+      }
+    >
+      <AnimatedPressable
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        accessibilityState={{ disabled }}
+        className={clsx('h-9 w-9 items-center justify-center', !completed && 'border-2')}
+        disabled={disabled}
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={{
+          backgroundColor,
+          borderColor: completed ? accentColor : isToday ? goldenGlowColor : borderColor,
+          borderRadius,
+          borderWidth: completed ? 0 : 2,
+          opacity: disabled ? 0.5 : 1,
+          transform: [{ scale: combinedScale }],
+          ...(completed &&
+            !highContrastMode && {
+              elevation: 2,
+              shadowColor: isToday ? goldenGlowColor : accentColor,
+              shadowOffset: { height: 0, width: 0 },
+              shadowOpacity: 0.3,
+              shadowRadius: 5,
+            }),
         }}
       >
-        {completionIcon === 'checkbox' ? (
-          <Check color="#ffffff" size={18} strokeWidth={2.25} />
-        ) : (
-          <ChainLinkIcon color="#ffffff" size={18} variant="stroke" />
-        )}
-      </Animated.View>
-    </AnimatedPressable>
+        <Animated.View
+          style={{
+            opacity: completion,
+            transform: [
+              {
+                scale: completion.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.5, 1],
+                }),
+              },
+            ],
+          }}
+        >
+          {completionIcon === 'checkbox' ? (
+            <Check color="#ffffff" size={18} strokeWidth={2.25} />
+          ) : (
+            <ChainLinkIcon color="#ffffff" size={18} variant="stroke" />
+          )}
+        </Animated.View>
+      </AnimatedPressable>
+    </Animated.View>
   );
 };
 
