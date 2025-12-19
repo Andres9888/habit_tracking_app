@@ -39,7 +39,6 @@ import type { Doc, Id } from '../../convex/_generated/dataModel';
 import Button from '../components/Button/Button';
 import CollapsibleCategorySection from '../components/CollapsibleCategorySection';
 import EmptyState from '../components/EmptyState';
-import FeaturedHeroSection from '../components/FeaturedHeroSection';
 import TemplateCard from '../components/TemplateCard';
 import Toast from '../components/Toast';
 import { useAppTheme } from '../theme';
@@ -121,14 +120,6 @@ export default function TemplatesScreen() {
     });
 
     return grouped;
-  }, [allTemplates]);
-
-  // Featured templates (top 3-5 most popular across all categories)
-  const featuredTemplates = useMemo(() => {
-    if (!allTemplates) return [];
-    return [...allTemplates]
-      .sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0))
-      .slice(0, 5);
   }, [allTemplates]);
 
   // Category counts
@@ -284,12 +275,6 @@ export default function TemplatesScreen() {
     }
   }, [seedTemplates, seedAdditionalTemplates, seedNewScienceTemplates]);
 
-  const handleFeaturedAction = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    // Expand morning routine and scroll to it
-    setExpandedCategories((prev) => new Set([...prev, 'morning_routine']));
-    // Could navigate to a starter pack modal in the future
-  }, []);
 
   // Scroll shadow handling for category view
   const updateListScrollShadows = useCallback(() => {
@@ -655,15 +640,6 @@ export default function TemplatesScreen() {
         contentContainerStyle={styles.browseContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Featured Hero Section */}
-        <FeaturedHeroSection
-          templates={featuredTemplates}
-          title="Starter Pack"
-          subtitle="Most popular habits to kickstart your journey"
-          onAction={handleFeaturedAction}
-          onTemplatePress={handleTemplatePreview}
-        />
-
         {/* Collapsible Category Sections */}
         <View style={styles.categorySections}>
           {categories
