@@ -1,6 +1,37 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  // New browse mode styles
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 12,
+  },
+  backButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#374151',
+  },
+  browseContent: {
+    paddingBottom: 32,
+  },
+  categorySections: {
+    paddingTop: 8,
+  },
+  categoryHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  categoryHeaderIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // Legacy category chip styles (kept for reference)
   categoriesContainer: {
     gap: 8,
     paddingHorizontal: 20,

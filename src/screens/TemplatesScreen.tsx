@@ -3,8 +3,7 @@
  * Based on UX Specification Section 2.1 (Templates Tab) & Section 9.2
  *
  * Purpose: Browse and import science-backed habit templates
- * Features: Category filtering, template cards, import flow, search (future)
- * Categories: Morning Routine, Health & Fitness, Productivity, Mindfulness
+ * Features: Collapsible category sections, featured hero, search, import flow
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -26,18 +25,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {
   Check,
   ChevronDown,
-  ChevronRight,
   Filter,
   Search,
   SlidersHorizontal,
   X,
+  ArrowLeft,
 } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 
 import { api } from '../../convex/_generated/api';
 import type { Doc, Id } from '../../convex/_generated/dataModel';
 
 import Button from '../components/Button/Button';
+import CollapsibleCategorySection from '../components/CollapsibleCategorySection';
 import EmptyState from '../components/EmptyState';
+import FeaturedHeroSection from '../components/FeaturedHeroSection';
 import TemplateCard from '../components/TemplateCard';
 import Toast from '../components/Toast';
 import { useAppTheme } from '../theme';
@@ -49,32 +51,42 @@ import {
   SORT_LABELS,
   SORT_OPTIONS,
   type Category,
-  type CategoryFilter,
   type SortOption,
 } from './templates/constants';
 import { styles } from './templates/templatesScreenStyles';
 
+// View modes for the screen
+type ViewMode = 'browse' | 'category' | 'search';
+
 export default function TemplatesScreen() {
   const theme = useAppTheme();
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // View state
+  const [viewMode, setViewMode] = useState<ViewMode>('browse');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set(['morning_routine', 'health_fitness']) // Default expanded
+  );
+
+  // Search & filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('popular');
   const [researchOnly, setResearchOnly] = useState(false);
-  const [previewTemplate, setPreviewTemplate] =
-    useState<Doc<'templates'> | null>(null);
+
+  // Modal & UI state
+  const [previewTemplate, setPreviewTemplate] = useState<Doc<'templates'> | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showTopScrollShadow, setShowTopScrollShadow] = useState(false);
   const [showBottomScrollShadow, setShowBottomScrollShadow] = useState(false);
-  const [importingTemplateId, setImportingTemplateId] =
-    useState<Id<'templates'> | null>(null);
-  const [showCategoryScrollHint, setShowCategoryScrollHint] = useState(true);
+  const [importingTemplateId, setImportingTemplateId] = useState<Id<'templates'> | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
+
   const listScrollOffset = useRef(0);
   const listScrollMetrics = useRef({ contentHeight: 0, layoutHeight: 0 });
-  const categoryScrollMetrics = useRef({ contentWidth: 0, layoutWidth: 0 });
 
   // Fetch templates and categories
   const allTemplates = useQuery(api.templates.list, {});
@@ -90,112 +102,47 @@ export default function TemplatesScreen() {
   const seedNewScienceTemplates = useMutation(api.templates.seedNewScienceTemplates);
   const [isSeeding, setIsSeeding] = useState(false);
 
-  const handleSeedTemplates = useCallback(async () => {
-    setIsSeeding(true);
-    try {
-      console.log('Starting to seed templates...');
+  // Group templates by category
+  const templatesByCategory = useMemo(() => {
+    if (!allTemplates) return new Map<string, Doc<'templates'>[]>();
 
-      // Seed initial templates
-      const result1 = await seedTemplates({});
-      console.log('Seed 1 result:', result1);
+    const grouped = new Map<string, Doc<'templates'>[]>();
+    allTemplates.forEach((template) => {
+      const existing = grouped.get(template.category) || [];
+      grouped.set(template.category, [...existing, template]);
+    });
 
-      // Seed additional templates
-      const result2 = await seedAdditionalTemplates({});
-      console.log('Seed 2 result:', result2);
-
-      // Seed new science templates
-      const result3 = await seedNewScienceTemplates({});
-      console.log('Seed 3 result:', result3);
-
-      // Check which new templates should exist
-      const expectedNewTemplates = [
-        'Daily Flossing',
-        'Regular Dental Checkups',
-        'Calcium Intake Tracking',
-        'Bone-Strengthening Exercise',
-        'Hearing Protection',
-        'Safe Listening Volume',
-        'Vitamin D Supplementation',
-        'Preventive Health Checkups',
-        'Daily Sun Protection',
-        'Joint Mobility Routine',
-        'Weekly Goal Review',
-        'Energy Level Tracking',
-        'Box Breathing',
-        'Tech-Free Break',
-        'Pre-Sleep Review',
-        'Weekly Teaching',
-        'Deep Questions',
-        'Receive Feedback Gracefully',
-      ];
-
-      console.log('Expected new templates:', expectedNewTemplates);
-
-      // Wait a moment for queries to refresh
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Check templates after refresh (will be checked on next render via allTemplates)
-      const currentTemplateNames = allTemplates?.map((t) => t.name) || [];
-      console.log('Current template names:', currentTemplateNames);
-
-      const newTemplatesFound = expectedNewTemplates.filter((name) =>
-        currentTemplateNames.includes(name)
+    // Sort templates within each category by popularity
+    grouped.forEach((templates, category) => {
+      grouped.set(
+        category,
+        templates.sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0))
       );
+    });
 
-      setToastMessage(
-        `Seeded templates! Found ${newTemplatesFound.length}/${expectedNewTemplates.length} new templates. Total: ${allTemplates?.length || 0}`
-      );
-      setShowToast(true);
-    } catch (error) {
-      console.error('Error seeding templates:', error);
-      setToastMessage(
-        `Error: ${error instanceof Error ? error.message : 'Failed to seed templates'}`
-      );
-      setShowToast(true);
-    } finally {
-      setIsSeeding(false);
-    }
-  }, [
-    allTemplates,
-    seedAdditionalTemplates,
-    seedNewScienceTemplates,
-    seedTemplates,
-  ]);
+    return grouped;
+  }, [allTemplates]);
 
-  const handleOpenSortOptions = useCallback(() => {
-    setShowSortOptions(true);
-  }, []);
+  // Featured templates (top 3-5 most popular across all categories)
+  const featuredTemplates = useMemo(() => {
+    if (!allTemplates) return [];
+    return [...allTemplates]
+      .sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0))
+      .slice(0, 5);
+  }, [allTemplates]);
 
-  const handleCloseSortOptions = useCallback(() => {
-    setShowSortOptions(false);
-  }, []);
-
-  const handleSelectSortOption = useCallback((option: SortOption) => {
-    setSortOption(option);
-    setShowSortOptions(false);
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
-
-  const handleResetFilters = useCallback(() => {
-    setSelectedCategory('all');
-    setSearchQuery('');
-    setResearchOnly(false);
-    setSortOption('popular');
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
-
+  // Category counts
   const categoryCounts = useMemo(() => {
     if (!allTemplates) return {} as Record<Category, number>;
 
     return allTemplates.reduce((acc, template) => {
       acc.all = (acc.all || 0) + 1;
-      acc[template.category as Category] =
-        (acc[template.category as Category] || 0) + 1;
+      acc[template.category as Category] = (acc[template.category as Category] || 0) + 1;
       return acc;
     }, {} as Record<Category, number>);
   }, [allTemplates]);
 
-  // Filter templates by category, query, and toggles
+  // Filter templates for search/category view
   const filteredTemplates = useMemo(() => {
     if (!allTemplates) return [];
 
@@ -218,10 +165,7 @@ export default function TemplatesScreen() {
       );
     }
 
-    const sorter: Record<
-      SortOption,
-      (a: Doc<'templates'>, b: Doc<'templates'>) => number
-    > = {
+    const sorter: Record<SortOption, (a: Doc<'templates'>, b: Doc<'templates'>) => number> = {
       az: (a, b) => a.name.localeCompare(b.name),
       newest: (a, b) => b.createdAt - a.createdAt,
       popular: (a, b) => (b.popularityScore || 0) - (a.popularityScore || 0),
@@ -230,17 +174,39 @@ export default function TemplatesScreen() {
     return data.sort(sorter[sortOption]);
   }, [allTemplates, selectedCategory, researchOnly, searchQuery, sortOption]);
 
-  const hasActiveFilters =
-    selectedCategory !== 'all' || Boolean(searchQuery.trim()) || researchOnly;
+  // Determine if we're in search mode
+  const isSearching = searchQuery.trim().length > 0;
+  const effectiveViewMode = isSearching ? 'search' : viewMode;
 
-  // Handle category filter tap
-  const handleCategoryPress = useCallback(
-    (category: Category) => {
-      setSelectedCategory(category);
-      flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-    },
-    []
-  );
+  const hasActiveFilters = selectedCategory !== 'all' || Boolean(searchQuery.trim()) || researchOnly;
+
+  // Toggle category expansion
+  const handleToggleCategory = useCallback((categoryId: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) {
+        next.delete(categoryId);
+      } else {
+        next.add(categoryId);
+      }
+      return next;
+    });
+  }, []);
+
+  // Handle "See all" for a category
+  const handleSeeAllCategory = useCallback((categoryId: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setSelectedCategory(categoryId as Category);
+    setViewMode('category');
+  }, []);
+
+  // Back to browse mode
+  const handleBackToBrowse = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setSelectedCategory('all');
+    setViewMode('browse');
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  }, []);
 
   // Handle template preview
   const handleTemplatePreview = useCallback((template: Doc<'templates'>) => {
@@ -260,10 +226,7 @@ export default function TemplatesScreen() {
     ) => {
       try {
         setImportingTemplateId(templateId);
-        const result = await importTemplate({
-          customizations,
-          templateId,
-        });
+        const result = await importTemplate({ customizations, templateId });
 
         if (result.success) {
           setShowToast(true);
@@ -281,6 +244,54 @@ export default function TemplatesScreen() {
     [importTemplate]
   );
 
+  const handleOpenSortOptions = useCallback(() => {
+    setShowSortOptions(true);
+  }, []);
+
+  const handleCloseSortOptions = useCallback(() => {
+    setShowSortOptions(false);
+  }, []);
+
+  const handleSelectSortOption = useCallback((option: SortOption) => {
+    setSortOption(option);
+    setShowSortOptions(false);
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    setSelectedCategory('all');
+    setSearchQuery('');
+    setResearchOnly(false);
+    setSortOption('popular');
+    setViewMode('browse');
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  }, []);
+
+  const handleSeedTemplates = useCallback(async () => {
+    setIsSeeding(true);
+    try {
+      await seedTemplates({});
+      await seedAdditionalTemplates({});
+      await seedNewScienceTemplates({});
+      setToastMessage('Templates loaded successfully!');
+      setShowToast(true);
+    } catch (error) {
+      console.error('Error seeding templates:', error);
+      setToastMessage('Failed to load templates.');
+      setShowToast(true);
+    } finally {
+      setIsSeeding(false);
+    }
+  }, [seedTemplates, seedAdditionalTemplates, seedNewScienceTemplates]);
+
+  const handleFeaturedAction = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // Expand morning routine and scroll to it
+    setExpandedCategories((prev) => new Set([...prev, 'morning_routine']));
+    // Could navigate to a starter pack modal in the future
+  }, []);
+
+  // Scroll shadow handling for category view
   const updateListScrollShadows = useCallback(() => {
     const { layoutHeight, contentHeight } = listScrollMetrics.current;
     const offsetY = listScrollOffset.current;
@@ -307,10 +318,7 @@ export default function TemplatesScreen() {
 
   const handleListContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      listScrollMetrics.current = {
-        ...listScrollMetrics.current,
-        contentHeight: height,
-      };
+      listScrollMetrics.current = { ...listScrollMetrics.current, contentHeight: height };
       updateListScrollShadows();
     },
     [updateListScrollShadows]
@@ -327,121 +335,15 @@ export default function TemplatesScreen() {
     [updateListScrollShadows]
   );
 
+  // Reset scroll shadows on view changes
   useEffect(() => {
     listScrollOffset.current = 0;
-    listScrollMetrics.current = {
-      ...listScrollMetrics.current,
-      contentHeight: 0,
-    };
+    listScrollMetrics.current = { ...listScrollMetrics.current, contentHeight: 0 };
     setShowTopScrollShadow(false);
     setShowBottomScrollShadow(false);
-  }, [selectedCategory, filteredTemplates.length]);
+  }, [selectedCategory, filteredTemplates.length, viewMode]);
 
-  // Handle category scroll to show/hide "more" indicator
-  const handleCategoryScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-      categoryScrollMetrics.current = {
-        contentWidth: contentSize.width,
-        layoutWidth: layoutMeasurement.width,
-      };
-      // Hide hint if scrolled more than 30px or near the end
-      const isNearEnd = contentOffset.x + layoutMeasurement.width >= contentSize.width - 30;
-      const hasScrolled = contentOffset.x > 30;
-      setShowCategoryScrollHint(!hasScrolled && !isNearEnd && contentSize.width > layoutMeasurement.width);
-    },
-    []
-  );
-
-  const handleCategoryContentSizeChange = useCallback(
-    (width: number, _height: number) => {
-      categoryScrollMetrics.current.contentWidth = width;
-      // Show hint if content is wider than layout
-      const hasMoreContent = width > categoryScrollMetrics.current.layoutWidth;
-      setShowCategoryScrollHint(hasMoreContent);
-    },
-    []
-  );
-
-  const handleCategoryLayout = useCallback(
-    (event: LayoutChangeEvent) => {
-      categoryScrollMetrics.current.layoutWidth = event.nativeEvent.layout.width;
-    },
-    []
-  );
-
-  // Render category filter chip with color-coded styling
-  const renderCategoryChip = useCallback(
-    (category: CategoryFilter) => {
-      const isSelected = selectedCategory === category.id;
-      const count = categoryCounts[category.id] || 0;
-      const colors = CATEGORY_COLORS[category.id] || DEFAULT_CATEGORY_COLORS;
-
-      return (
-        <Pressable
-          key={category.id}
-          accessible
-          accessibilityLabel={`Filter by ${category.label}`}
-          accessibilityRole='button'
-          accessibilityState={{ selected: isSelected }}
-          style={[
-            styles.categoryChip,
-            {
-              backgroundColor: isSelected ? colors.bgSelected : colors.bg,
-              borderColor: isSelected ? colors.bgSelected : colors.border,
-              borderRadius: 20,
-              borderWidth: 1.5,
-            },
-          ]}
-          onPress={() => handleCategoryPress(category.id)}
-        >
-          {/* Color dot indicator for quick visual scan when not selected */}
-          {!isSelected && (
-            <View
-              style={[
-                styles.categoryColorDot,
-                { backgroundColor: colors.bgSelected },
-              ]}
-            />
-          )}
-          <Text style={styles.categoryIcon}>{category.icon}</Text>
-          <Text
-            style={[
-              theme.custom.typography.bodySmall,
-              {
-                color: isSelected ? '#ffffff' : colors.text,
-                fontWeight: '600',
-              },
-            ]}
-          >
-            {category.label}
-          </Text>
-          <View
-            style={[
-              styles.categoryCount,
-              {
-                backgroundColor: isSelected
-                  ? 'rgba(255,255,255,0.25)'
-                  : `${colors.bgSelected}20`,
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.categoryCountText,
-                { color: isSelected ? '#fff' : colors.text },
-              ]}
-            >
-              {count}
-            </Text>
-          </View>
-        </Pressable>
-      );
-    },
-    [selectedCategory, theme, handleCategoryPress, categoryCounts]
-  );
-
-  // Render template card
+  // Render template card for FlatList
   const renderTemplateCard = useCallback(
     ({ item }: { item: Doc<'templates'> }) => (
       <TemplateCard
@@ -465,25 +367,21 @@ export default function TemplatesScreen() {
     [handleTemplateImport, handleTemplatePreview, importingTemplateId]
   );
 
-  // Loading state with skeletons
+  // Get category label for header
+  const getCategoryLabel = (categoryId: string): string => {
+    const category = categories?.find((c) => c.id === categoryId);
+    return category?.label || categoryId;
+  };
+
+  // Loading state
   if (isLoading) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text
-            style={[
-              theme.custom.typography.heading1,
-              { color: '#101727', fontWeight: '700' },
-            ]}
-          >
+          <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
             Import Habits
           </Text>
-          <Text
-            style={[
-              theme.custom.typography.bodySmall,
-              { color: '#6b7280', marginTop: 4 },
-            ]}
-          >
+          <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 4 }]}>
             Science-backed habits to get you started
           </Text>
         </View>
@@ -510,16 +408,16 @@ export default function TemplatesScreen() {
       <View style={styles.container}>
         <EmptyState
           hideCTA
-          description='Tap the button below to load science-backed habits.'
-          headline='No Habits Available'
-          icon='📚'
+          description="Tap the button below to load science-backed habits."
+          headline="No Habits Available"
+          icon="📚"
         />
         <View style={{ paddingHorizontal: 24, marginTop: 24 }}>
           <Button
             disabled={isSeeding}
             onPress={handleSeedTemplates}
-            size='large'
-            variant='primary'
+            size="large"
+            variant="primary"
           >
             {isSeeding ? 'Loading Habits...' : 'Load Habits'}
           </Button>
@@ -528,227 +426,268 @@ export default function TemplatesScreen() {
     );
   }
 
+  // Category view (showing all templates in one category)
+  if (effectiveViewMode === 'category' || effectiveViewMode === 'search') {
+    const colors = CATEGORY_COLORS[selectedCategory] || DEFAULT_CATEGORY_COLORS;
+    const categoryIcon = categories?.find((c) => c.id === selectedCategory)?.icon || '📌';
+
+    return (
+      <View style={styles.container}>
+        {/* Header with back button */}
+        <View style={styles.header}>
+          {effectiveViewMode === 'category' && (
+            <Pressable
+              accessible
+              accessibilityLabel="Go back to browse"
+              accessibilityRole="button"
+              style={styles.backButton}
+              onPress={handleBackToBrowse}
+            >
+              <ArrowLeft color="#374151" size={20} strokeWidth={2.5} />
+              <Text style={styles.backButtonText}>Back</Text>
+            </Pressable>
+          )}
+          <View style={styles.categoryHeaderRow}>
+            {effectiveViewMode === 'category' && (
+              <View style={[styles.categoryHeaderIcon, { backgroundColor: colors.bg }]}>
+                <Text style={{ fontSize: 24 }}>{categoryIcon}</Text>
+              </View>
+            )}
+            <View>
+              <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
+                {effectiveViewMode === 'search' ? 'Search Results' : getCategoryLabel(selectedCategory)}
+              </Text>
+              <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 2 }]}>
+                {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Search bar (always visible) */}
+        <View style={styles.searchSection}>
+          <View style={styles.searchBar}>
+            <Search color="#94a3b8" size={18} strokeWidth={2.25} />
+            <TextInput
+              placeholder="Search habits or science keywords"
+              placeholderTextColor="#94a3b8"
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+            {searchQuery ? (
+              <TouchableOpacity accessibilityLabel="Clear search" onPress={() => setSearchQuery('')}>
+                <X color="#94a3b8" size={18} strokeWidth={2.25} />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+
+          {/* Controls row */}
+          <View style={styles.controlRow}>
+            <View style={styles.sortButtonWrapper}>
+              <Pressable
+                accessibilityLabel="Open sort options"
+                accessibilityRole="button"
+                style={[styles.controlButton, showSortOptions && styles.controlButtonActive]}
+                onPress={handleOpenSortOptions}
+              >
+                <SlidersHorizontal color={showSortOptions ? '#fff' : '#0f172a'} size={16} />
+                <Text style={[styles.controlButtonText, showSortOptions && { color: '#fff' }]}>
+                  {SORT_LABELS[sortOption]}
+                </Text>
+                <ChevronDown
+                  color={showSortOptions ? '#fff' : '#0f172a'}
+                  size={14}
+                  style={{ transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }] }}
+                />
+              </Pressable>
+              {showSortOptions && (
+                <Animated.View entering={FadeIn.duration(150)} style={styles.sortDropdown}>
+                  {SORT_OPTIONS.map((option) => {
+                    const isSelected = sortOption === option.value;
+                    return (
+                      <Pressable
+                        key={option.value}
+                        accessible
+                        accessibilityLabel={`Sort by ${option.label}`}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: isSelected }}
+                        style={[styles.sortDropdownOption, isSelected && styles.sortDropdownOptionSelected]}
+                        onPress={() => handleSelectSortOption(option.value)}
+                      >
+                        <Text
+                          style={[
+                            styles.sortDropdownOptionText,
+                            isSelected && styles.sortDropdownOptionTextSelected,
+                          ]}
+                        >
+                          {option.label}
+                        </Text>
+                        {isSelected && <Check color="#10B981" size={16} strokeWidth={2.5} />}
+                      </Pressable>
+                    );
+                  })}
+                </Animated.View>
+              )}
+            </View>
+            <Pressable
+              accessibilityLabel="Toggle research-only filter"
+              accessibilityRole="button"
+              style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
+              onPress={() => setResearchOnly((prev) => !prev)}
+            >
+              <Filter color={researchOnly ? '#fff' : '#0f172a'} size={16} />
+              <Text style={[styles.controlButtonText, { color: researchOnly ? '#fff' : '#0f172a' }]}>
+                Research
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Templates list */}
+        <View style={styles.listWrapper}>
+          <FlatList
+            ref={flatListRef}
+            contentContainerStyle={styles.listContent}
+            data={filteredTemplates}
+            keyExtractor={(item) => item._id}
+            ListEmptyComponent={
+              filteredTemplates.length === 0 ? (
+                <View style={styles.emptyStateWrapper}>
+                  <EmptyState
+                    hideCTA
+                    description="Try adjusting filters or search keywords."
+                    headline="No habits match your filters"
+                    icon="🔍"
+                  />
+                  {hasActiveFilters && (
+                    <Button size="medium" style={{ marginTop: 16 }} variant="secondary" onPress={handleResetFilters}>
+                      Reset filters
+                    </Button>
+                  )}
+                </View>
+              ) : null
+            }
+            renderItem={renderTemplateCard}
+            scrollEventThrottle={16}
+            showsVerticalScrollIndicator={false}
+            onContentSizeChange={handleListContentSizeChange}
+            onLayout={handleListLayout}
+            onScroll={handleListScroll}
+          />
+          {showTopScrollShadow && (
+            <LinearGradient
+              colors={['rgba(248,247,245,0.96)', 'rgba(248,247,245,0)']}
+              pointerEvents="none"
+              style={styles.scrollFadeTop}
+            />
+          )}
+          {showBottomScrollShadow && (
+            <LinearGradient
+              colors={['rgba(248,247,245,0)', 'rgba(248,247,245,0.95)']}
+              pointerEvents="none"
+              style={styles.scrollFadeBottom}
+            >
+              <View style={[styles.scrollHintChip, { backgroundColor: 'rgba(255, 255, 255, 0.9)' }]}>
+                <ChevronDown color="#374151" size={16} strokeWidth={2.25} />
+                <Text style={[styles.scrollHintText, { color: '#374151' }]}>Scroll for more</Text>
+              </View>
+            </LinearGradient>
+          )}
+        </View>
+
+        <TemplatePreviewModal
+          importingTemplateId={importingTemplateId}
+          onClose={() => setShowPreviewModal(false)}
+          onImport={handleTemplateImport}
+          template={previewTemplate}
+          visible={showPreviewModal}
+        />
+
+        <Toast
+          duration={3000}
+          message={toastMessage}
+          variant={toastMessage.includes('Failed') ? 'error' : 'success'}
+          visible={showToast}
+          onDismiss={() => setShowToast(false)}
+        />
+
+        {showSortOptions && <Pressable style={styles.dropdownBackdrop} onPress={handleCloseSortOptions} />}
+      </View>
+    );
+  }
+
+  // Browse mode (main view with collapsible categories)
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text
-          style={[
-            theme.custom.typography.heading1,
-            { color: '#101727', fontWeight: '700' },
-          ]}
-        >
+        <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
           Import Habits
         </Text>
-        <Text
-          style={[
-            theme.custom.typography.bodySmall,
-            { color: '#6b7280', marginTop: 4 },
-          ]}
-        >
+        <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 4 }]}>
           Science-backed habits to get you started
         </Text>
       </View>
 
-      {/* Search + Controls */}
+      {/* Search bar */}
       <View style={styles.searchSection}>
         <View style={styles.searchBar}>
-          <Search color='#94a3b8' size={18} strokeWidth={2.25} />
+          <Search color="#94a3b8" size={18} strokeWidth={2.25} />
           <TextInput
-            placeholder='Search habits or science keywords'
-            placeholderTextColor='#94a3b8'
+            placeholder="Search habits..."
+            placeholderTextColor="#94a3b8"
             style={styles.searchInput}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
           {searchQuery ? (
-            <TouchableOpacity
-              accessibilityLabel='Clear search'
-              onPress={() => setSearchQuery('')}
-            >
-              <X color='#94a3b8' size={18} strokeWidth={2.25} />
+            <TouchableOpacity accessibilityLabel="Clear search" onPress={() => setSearchQuery('')}>
+              <X color="#94a3b8" size={18} strokeWidth={2.25} />
             </TouchableOpacity>
           ) : null}
         </View>
-        <View style={styles.controlRow}>
-          <View style={styles.sortButtonWrapper}>
-            <Pressable
-              accessibilityLabel='Open sort options'
-              accessibilityRole='button'
-              style={[styles.controlButton, showSortOptions && styles.controlButtonActive]}
-              onPress={handleOpenSortOptions}
-            >
-              <SlidersHorizontal color={showSortOptions ? '#fff' : '#0f172a'} size={16} />
-              <Text style={[styles.controlButtonText, showSortOptions && { color: '#fff' }]}>
-                Sort: {SORT_LABELS[sortOption]}
-              </Text>
-              <ChevronDown
-                color={showSortOptions ? '#fff' : '#0f172a'}
-                size={14}
-                style={{ transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }] }}
-              />
-            </Pressable>
-            {/* Inline Dropdown */}
-            {showSortOptions && (
-              <Animated.View
-                entering={FadeIn.duration(150)}
-                style={styles.sortDropdown}
-              >
-                {SORT_OPTIONS.map((option) => {
-                  const isSelected = sortOption === option.value;
-                  return (
-                    <Pressable
-                      key={option.value}
-                      accessible
-                      accessibilityLabel={`Sort by ${option.label}`}
-                      accessibilityRole='button'
-                      accessibilityState={{ selected: isSelected }}
-                      style={[
-                        styles.sortDropdownOption,
-                        isSelected && styles.sortDropdownOptionSelected,
-                      ]}
-                      onPress={() => handleSelectSortOption(option.value)}
-                    >
-                      <Text
-                        style={[
-                          styles.sortDropdownOptionText,
-                          isSelected && styles.sortDropdownOptionTextSelected,
-                        ]}
-                      >
-                        {option.label}
-                      </Text>
-                      {isSelected && (
-                        <Check color='#10B981' size={16} strokeWidth={2.5} />
-                      )}
-                    </Pressable>
-                  );
-                })}
-              </Animated.View>
-            )}
-          </View>
-          <Pressable
-            accessibilityLabel='Toggle research-only filter'
-            accessibilityRole='button'
-            style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
-            onPress={() => setResearchOnly((prev) => !prev)}
-          >
-            <Filter color={researchOnly ? '#fff' : '#0f172a'} size={16} />
-            <Text
-              style={[
-                styles.controlButtonText,
-                { color: researchOnly ? '#fff' : '#0f172a' },
-              ]}
-            >
-              Research only
-            </Text>
-          </Pressable>
-        </View>
       </View>
 
-      {/* Category Filters */}
-      {categories && categories.length > 0 && (
-        <View style={styles.categoriesWrapper}>
-          <ScrollView
-            horizontal
-            contentContainerStyle={styles.categoriesContainer}
-            scrollEventThrottle={16}
-            showsHorizontalScrollIndicator={false}
-            style={styles.categoriesScroll}
-            onContentSizeChange={handleCategoryContentSizeChange}
-            onLayout={handleCategoryLayout}
-            onScroll={handleCategoryScroll}
-          >
-            {categories.map((category) => renderCategoryChip(category))}
-          </ScrollView>
-          {/* Subtle animated scroll hint */}
-          {showCategoryScrollHint && (
-            <View pointerEvents='none' style={styles.categoryScrollHintWrapper}>
-              <LinearGradient
-                colors={['rgba(248,247,245,0)', 'rgba(248,247,245,0.95)']}
-                end={{ x: 1, y: 0 }}
-                start={{ x: 0, y: 0 }}
-                style={styles.categoryScrollGradient}
-              />
-              <Animated.View
-                entering={FadeIn.delay(300).duration(400)}
-                style={styles.categoryScrollHintChevrons}
-              >
-                <ChevronRight color='#9CA3AF' size={16} strokeWidth={2} style={{ marginRight: -10 }} />
-                <ChevronRight color='#D1D5DB' size={16} strokeWidth={2} />
-              </Animated.View>
-            </View>
-          )}
-        </View>
-      )}
-
-      {/* Templates List */}
-      <View style={styles.listWrapper}>
-        <FlatList
-          contentContainerStyle={styles.listContent}
-          data={filteredTemplates}
-          keyExtractor={(item) => item._id}
-          ListEmptyComponent={
-            filteredTemplates.length === 0 ? (
-              <View style={styles.emptyStateWrapper}>
-                <EmptyState
-                  hideCTA
-                  description='Try adjusting filters or search keywords to uncover more science-backed routines.'
-                  headline='No habits match your filters'
-                  icon='🔍'
-                />
-                {hasActiveFilters && (
-                  <Button
-                    size='medium'
-                    style={{ marginTop: 16 }}
-                    variant='secondary'
-                    onPress={handleResetFilters}
-                  >
-                    Reset filters
-                  </Button>
-                )}
-              </View>
-            ) : null
-          }
-          ref={flatListRef}
-          renderItem={renderTemplateCard}
-          scrollEventThrottle={16}
-          showsVerticalScrollIndicator={false}
-          onContentSizeChange={handleListContentSizeChange}
-          onLayout={handleListLayout}
-          onScroll={handleListScroll}
+      {/* Scrollable content */}
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.browseContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Featured Hero Section */}
+        <FeaturedHeroSection
+          templates={featuredTemplates}
+          title="Starter Pack"
+          subtitle="Most popular habits to kickstart your journey"
+          onAction={handleFeaturedAction}
+          onTemplatePress={handleTemplatePreview}
         />
-        {showTopScrollShadow && (
-          <LinearGradient
-            colors={['rgba(255,255,255,0.96)', 'rgba(255,255,255,0)']}
-            pointerEvents='none'
-            style={styles.scrollFadeTop}
-          />
-        )}
-        {showBottomScrollShadow && (
-          <LinearGradient
-            colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)']}
-            pointerEvents='none'
-            style={styles.scrollFadeBottom}
-          >
-            <View
-              style={[
-                styles.scrollHintChip,
-                { backgroundColor: 'rgba(255, 255, 255, 0.9)' },
-              ]}
-            >
-              <ChevronDown color='#374151' size={16} strokeWidth={2.25} />
-              <Text
-                style={[
-                  styles.scrollHintText,
-                  { color: '#374151' },
-                ]}
-              >
-                Scroll for more habits
-              </Text>
-            </View>
-          </LinearGradient>
-        )}
-      </View>
+
+        {/* Collapsible Category Sections */}
+        <View style={styles.categorySections}>
+          {categories
+            ?.filter((cat) => cat.id !== 'all')
+            .map((category) => {
+              const templates = templatesByCategory.get(category.id) || [];
+              if (templates.length === 0) return null;
+
+              return (
+                <CollapsibleCategorySection
+                  key={category.id}
+                  categoryId={category.id}
+                  label={category.label}
+                  icon={category.icon}
+                  templates={templates}
+                  isExpanded={expandedCategories.has(category.id)}
+                  onToggle={() => handleToggleCategory(category.id)}
+                  onTemplatePress={handleTemplatePreview}
+                  onSeeAll={() => handleSeeAllCategory(category.id)}
+                />
+              );
+            })}
+        </View>
+      </ScrollView>
 
       <TemplatePreviewModal
         importingTemplateId={importingTemplateId}
@@ -758,7 +697,6 @@ export default function TemplatesScreen() {
         visible={showPreviewModal}
       />
 
-      {/* Success Toast */}
       <Toast
         duration={3000}
         message={toastMessage}
@@ -766,14 +704,6 @@ export default function TemplatesScreen() {
         visible={showToast}
         onDismiss={() => setShowToast(false)}
       />
-
-      {/* Dropdown backdrop - rendered at root level to overlay entire screen */}
-      {showSortOptions && (
-        <Pressable
-          style={styles.dropdownBackdrop}
-          onPress={handleCloseSortOptions}
-        />
-      )}
     </View>
   );
 }
