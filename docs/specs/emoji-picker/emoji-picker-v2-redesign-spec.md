@@ -318,8 +318,10 @@ const suggestedEmojis = useMemo(() => {
   - *Completed: categoryHeader View with categoryHeaderText style (12px, 600 weight, gray-500, 0.5 letterSpacing), conditional rendering via showCategoryHeader prop*
 
 ### Phase 6: Polish & Integration (Priority: Low)
-- [ ] **T6.1** Add "No icon" button at bottom
-- [ ] **T6.2** Ensure accessibility labels complete
+- [x] **T6.1** Add "No icon" button at bottom
+  - *Completed: Implemented at EmojiPickerSheet.tsx lines 361-371 with proper styling (48px height, #f3f4f6 background, 12px border-radius) and handler at lines 234-237 that calls onSelect(null)*
+- [x] **T6.2** Ensure accessibility labels complete
+  - *Completed: Full audit passed - Bottom sheet (accessibilityViewIsModal), Drag handle ("Drag to dismiss"), Search ("Search emojis"), Suggestions ("Suggested emoji [emoji]"), Categories (tab role + selected state), Emoji cells ("Select [emoji] emoji" + button role), No icon button, and backdrop tap-to-close all have proper accessibility attributes*
 - [ ] **T6.3** Test on iOS and Android
 - [ ] **T6.4** Clean up old EmojiPicker component references
 
@@ -351,3 +353,4 @@ const suggestedEmojis = useMemo(() => {
 | 2025-12-19 | T4.1 - Added animated search bar focus states with blue ring and icon color change | Claude |
 | 2025-12-19 | Phase 4 complete (T4.2-T4.4) - Extracted CategoryPills.tsx component with horizontal scroll, active state styling, press animation, and category filtering logic | Claude |
 | 2025-12-19 | Phase 5 complete (T5.1-T5.4) - Extracted EmojiGrid.tsx with 6-column virtualized FlatList, press animations (scale 0.92→1.05→1), selection state, category headers, and comprehensive tests | Claude |
+| 2025-12-19 | T6.1, T6.2 complete - "No icon" button already implemented, full accessibility audit passed with all required labels and roles in place | Claude |
