@@ -15,7 +15,7 @@ import {
 import { Search, X } from 'lucide-react-native';
 import { getAllEmojis } from '../../utils/emojiData';
 import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
-import { searchEmojisByKeyword } from '../../utils/emojiKeywords';
+import { searchEmojisByKeyword, suggestEmojisForHabitName } from '../../utils/emojiKeywords';
 import { addRecentEmoji, getRecentEmojis } from '../../utils/recentEmojis';
 
 interface EmojiPickerProps {
@@ -25,6 +25,8 @@ interface EmojiPickerProps {
   visible: boolean;
   /** Ref to the trigger element for focus management on modal close */
   triggerRef?: React.RefObject<View>;
+  /** Optional habit name to generate emoji suggestions */
+  habitName?: string;
 }
 
 const EMOJIS_PER_ROW = 7;
@@ -99,16 +101,18 @@ const EmojiItem = memo(
 
 EmojiItem.displayName = 'EmojiItem';
 
-// Recently used emoji item with selection indicator
-const RecentEmojiItem = memo(
+// Emoji item for Recently Used and Suggested sections with selection indicator
+const QuickAccessEmojiItem = memo(
   ({
     emoji,
     isSelected,
     onPress,
+    accessibilityLabelSuffix = '',
   }: {
     emoji: string;
     isSelected: boolean;
     onPress: () => void;
+    accessibilityLabelSuffix?: string;
   }) => {
     const scaleAnim = useRef(new Animated.Value(isSelected ? 1.1 : 1)).current;
 
@@ -130,9 +134,13 @@ const RecentEmojiItem = memo(
       }).start();
     }, [scaleAnim, isSelected]);
 
+    const accessibilityLabel = accessibilityLabelSuffix
+      ? `Select ${emoji} emoji ${accessibilityLabelSuffix}`
+      : `Select ${emoji} emoji`;
+
     return (
       <Pressable
-        accessibilityLabel={`Select ${emoji} emoji from recently used`}
+        accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
         onPress={onPress}
         onPressIn={handlePressIn}
@@ -167,15 +175,24 @@ const RecentEmojiItem = memo(
   }
 );
 
-RecentEmojiItem.displayName = 'RecentEmojiItem';
+QuickAccessEmojiItem.displayName = 'QuickAccessEmojiItem';
+
+// Alias for backward compatibility in tests
+const RecentEmojiItem = QuickAccessEmojiItem;
 
 export const EmojiPicker = memo(
-  ({ onClose, onSelect, selectedEmoji, visible, triggerRef }: EmojiPickerProps) => {
+  ({ onClose, onSelect, selectedEmoji, visible, triggerRef, habitName }: EmojiPickerProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('fitness');
     const [searchQuery, setSearchQuery] = useState('');
     const [recentEmojis, setRecentEmojis] = useState<string[]>([]);
     const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [debouncedQuery, setDebouncedQuery] = useState('');
+
+    // Compute suggested emojis based on habit name
+    const suggestedEmojis = useMemo(() => {
+      if (!habitName?.trim()) return [];
+      return suggestEmojisForHabitName(habitName, 5);
+    }, [habitName]);
 
     // Focus management: return focus to trigger on close
     const returnFocusToTrigger = useCallback(() => {
@@ -341,6 +358,30 @@ export const EmojiPicker = memo(
               </View>
             </View>
 
+            {/* Suggested Emojis Section - based on habit name */}
+            {!searchQuery && suggestedEmojis.length > 0 && (
+              <View className='px-4 pb-2'>
+                <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500'>
+                  Suggested for "{habitName}"
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 8 }}
+                >
+                  {suggestedEmojis.map((emoji) => (
+                    <QuickAccessEmojiItem
+                      key={`suggested-${emoji}`}
+                      emoji={emoji}
+                      isSelected={selectedEmoji === emoji}
+                      onPress={() => handleEmojiSelect(emoji)}
+                      accessibilityLabelSuffix='from suggestions'
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
             {/* Recently Used Section */}
             {!searchQuery && recentEmojis.length > 0 && (
               <View className='px-4 pb-2'>
@@ -353,11 +394,12 @@ export const EmojiPicker = memo(
                   contentContainerStyle={{ gap: 8 }}
                 >
                   {recentEmojis.map((emoji) => (
-                    <RecentEmojiItem
+                    <QuickAccessEmojiItem
                       key={emoji}
                       emoji={emoji}
                       isSelected={selectedEmoji === emoji}
                       onPress={() => handleEmojiSelect(emoji)}
+                      accessibilityLabelSuffix='from recently used'
                     />
                   ))}
                 </ScrollView>

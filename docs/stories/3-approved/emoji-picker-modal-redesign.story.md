@@ -237,10 +237,10 @@ export function searchEmojis(query: string): string[]
 
 ### Task 5: Auto-Suggest Emojis (Priority: Low)
 
-- [ ] **T5.1** Create emoji suggestion function based on habit name keywords
-- [ ] **T5.2** Map common habit words to relevant emojis (e.g., "Meditate" → 🧘, "Run" → 🏃, "Read" → 📚)
-- [ ] **T5.3** Show suggested emojis section when habit name is entered
-- [ ] **T5.4** Pre-select best match emoji automatically (optional)
+- [x] **T5.1** Create emoji suggestion function based on habit name keywords
+- [x] **T5.2** Map common habit words to relevant emojis (e.g., "Meditate" → 🧘, "Run" → 🏃, "Read" → 📚)
+- [x] **T5.3** Show suggested emojis section when habit name is entered
+- [ ] **T5.4** Pre-select best match emoji automatically (optional) - Deferred as truly optional enhancement
 
 ---
 
@@ -282,13 +282,22 @@ export function searchEmojis(query: string): string[]
 - `src/utils/__tests__/emojiKeywords.test.ts` - 20 passing tests
 
 ### Remaining Work
-- Task 5 (Auto-Suggest Emojis) - Low priority, deferred
+- T5.4 (Pre-select best match emoji automatically) - Optional enhancement, deferred
 
 ### Focus Management Implementation (2025-12-19)
 - Added optional `triggerRef` prop to EmojiPicker for focus management
 - Implemented `returnFocusToTrigger` callback using `AccessibilityInfo.setAccessibilityFocus`
 - Updated all modal close handlers to return focus via `handleClose` wrapper
 - Added test case for focus management behavior (36 total tests passing)
+
+### Auto-Suggest Emojis Implementation (2025-12-19)
+- Added `HABIT_NAME_EMOJI_MAP` with 100+ common habit word → emoji mappings in `src/utils/emojiKeywords.ts`
+- Implemented `suggestEmojisForHabitName()` function with scoring algorithm for best matches
+- Implemented `getBestEmojiForHabitName()` helper function for single emoji suggestions
+- Added `habitName` prop to EmojiPicker component
+- Added "Suggested for [habit name]" section that appears above Recently Used when habit name matches keywords
+- Updated accessibility labels to distinguish "from suggestions" vs "from recently used"
+- Added 24 new tests for suggestion functionality (emojiKeywords: 44 total, EmojiPicker: 46 total)
 
 ---
 
@@ -299,3 +308,4 @@ export function searchEmojis(query: string): string[]
 | 2025-12-19 | Split from emoji-picker-redesign.story.md | PM |
 | 2025-12-19 | Implemented Tasks 1-4, all acceptance criteria complete except focus management | MAESTRO |
 | 2025-12-19 | Implemented AC5 focus management - returns focus to trigger on modal close | MAESTRO |
+| 2025-12-19 | Implemented Task 5 (T5.1-T5.3): Auto-suggest emojis based on habit name keywords | MAESTRO |

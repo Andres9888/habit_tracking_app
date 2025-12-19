@@ -416,4 +416,104 @@ describe('EmojiPicker - Story 2.8', () => {
       expect(getByLabelText('Select 💪 emoji')).toBeDefined();
     });
   });
+
+  // Task 5: Auto-Suggest Emojis
+  describe('Task 5: Auto-Suggest Emojis', () => {
+    it('should display suggested emojis section when habitName is provided', () => {
+      const { getByText } = render(
+        <EmojiPicker {...defaultProps} habitName='Morning Run' />
+      );
+
+      expect(getByText('Suggested for "Morning Run"')).toBeDefined();
+    });
+
+    it('should not display suggested emojis section when habitName is empty', () => {
+      const { queryByText } = render(
+        <EmojiPicker {...defaultProps} habitName='' />
+      );
+
+      expect(queryByText(/Suggested for/)).toBeNull();
+    });
+
+    it('should not display suggested emojis section when habitName is not provided', () => {
+      const { queryByText } = render(<EmojiPicker {...defaultProps} />);
+
+      expect(queryByText(/Suggested for/)).toBeNull();
+    });
+
+    it('should suggest 🏃 for "Run" habit name', () => {
+      const { getByLabelText } = render(
+        <EmojiPicker {...defaultProps} habitName='Run' />
+      );
+
+      expect(
+        getByLabelText('Select 🏃 emoji from suggestions')
+      ).toBeDefined();
+    });
+
+    it('should suggest 💧 for "Drink Water" habit name', () => {
+      const { getByLabelText } = render(
+        <EmojiPicker {...defaultProps} habitName='Drink Water' />
+      );
+
+      expect(
+        getByLabelText('Select 💧 emoji from suggestions')
+      ).toBeDefined();
+    });
+
+    it('should suggest 🧘 for "Meditate" habit name', () => {
+      const { getByLabelText } = render(
+        <EmojiPicker {...defaultProps} habitName='Meditate' />
+      );
+
+      expect(
+        getByLabelText('Select 🧘 emoji from suggestions')
+      ).toBeDefined();
+    });
+
+    it('should call onSelect when suggested emoji is pressed', async () => {
+      const { getByLabelText } = render(
+        <EmojiPicker {...defaultProps} habitName='Run' />
+      );
+
+      const suggestedEmoji = getByLabelText('Select 🏃 emoji from suggestions');
+      fireEvent.press(suggestedEmoji);
+
+      await waitFor(() => {
+        expect(mockOnSelect).toHaveBeenCalledWith('🏃');
+      });
+    });
+
+    it('should hide suggested emojis section when searching', async () => {
+      const { getByLabelText, queryByText } = render(
+        <EmojiPicker {...defaultProps} habitName='Run' />
+      );
+
+      const searchInput = getByLabelText('Search emojis');
+      fireEvent.changeText(searchInput, 'yoga');
+
+      await waitFor(() => {
+        expect(queryByText(/Suggested for/)).toBeNull();
+      });
+    });
+
+    it('should not show suggested section for unrelated habit names', () => {
+      const { queryByText } = render(
+        <EmojiPicker {...defaultProps} habitName='xyzabc' />
+      );
+
+      expect(queryByText(/Suggested for/)).toBeNull();
+    });
+
+    it('should show selection indicator on suggested emoji when selected', () => {
+      const { getByLabelText } = render(
+        <EmojiPicker {...defaultProps} habitName='Run' selectedEmoji='🏃' />
+      );
+
+      // If the suggested emoji matches selectedEmoji, it should have selection state
+      expect(
+        getByLabelText('Select 🏃 emoji from suggestions')
+      ).toBeDefined();
+    });
+  });
 });

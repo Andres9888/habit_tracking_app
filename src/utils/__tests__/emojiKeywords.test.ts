@@ -1,9 +1,15 @@
 /**
  * Emoji Keywords Utility Tests
- * Story 2.8: Emoji Picker Modal Redesign - AC3
+ * Story 2.8: Emoji Picker Modal Redesign - AC3 & Task 5 (Auto-Suggest)
  */
 
-import { EMOJI_KEYWORDS, searchEmojisByKeyword } from '../emojiKeywords';
+import {
+  EMOJI_KEYWORDS,
+  HABIT_NAME_EMOJI_MAP,
+  searchEmojisByKeyword,
+  suggestEmojisForHabitName,
+  getBestEmojiForHabitName,
+} from '../emojiKeywords';
 
 describe('emojiKeywords', () => {
   describe('EMOJI_KEYWORDS', () => {
@@ -127,6 +133,136 @@ describe('emojiKeywords', () => {
         const result = searchEmojisByKeyword('sleep', mockAllEmojis);
         expect(result).toContain('😴');
       });
+    });
+  });
+
+  // Task 5: Auto-Suggest Emojis Tests
+  describe('HABIT_NAME_EMOJI_MAP', () => {
+    it('should have mappings for common fitness habits', () => {
+      expect(HABIT_NAME_EMOJI_MAP['run']).toContain('🏃');
+      expect(HABIT_NAME_EMOJI_MAP['workout']).toContain('💪');
+      expect(HABIT_NAME_EMOJI_MAP['yoga']).toContain('🧘');
+      expect(HABIT_NAME_EMOJI_MAP['gym']).toContain('🏋️');
+    });
+
+    it('should have mappings for learning habits', () => {
+      expect(HABIT_NAME_EMOJI_MAP['read']).toContain('📖');
+      expect(HABIT_NAME_EMOJI_MAP['study']).toContain('📚');
+      expect(HABIT_NAME_EMOJI_MAP['journal']).toContain('📓');
+    });
+
+    it('should have mappings for health habits', () => {
+      expect(HABIT_NAME_EMOJI_MAP['water']).toContain('💧');
+      expect(HABIT_NAME_EMOJI_MAP['sleep']).toContain('😴');
+      expect(HABIT_NAME_EMOJI_MAP['meditate']).toContain('🧘');
+    });
+
+    it('should have multiple emoji options for each word', () => {
+      expect(HABIT_NAME_EMOJI_MAP['run'].length).toBeGreaterThanOrEqual(2);
+      expect(HABIT_NAME_EMOJI_MAP['water'].length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  describe('suggestEmojisForHabitName', () => {
+    it('should return empty array for empty input', () => {
+      expect(suggestEmojisForHabitName('')).toEqual([]);
+      expect(suggestEmojisForHabitName('   ')).toEqual([]);
+    });
+
+    it('should suggest 🏃 for "Morning Run"', () => {
+      const result = suggestEmojisForHabitName('Morning Run');
+      expect(result).toContain('🏃');
+      expect(result[0]).toBe('🏃'); // Should be first/best match
+    });
+
+    it('should suggest 💧 for "Drink Water"', () => {
+      const result = suggestEmojisForHabitName('Drink Water');
+      expect(result).toContain('💧');
+    });
+
+    it('should suggest 🧘 for "Meditate"', () => {
+      const result = suggestEmojisForHabitName('Meditate');
+      expect(result).toContain('🧘');
+    });
+
+    it('should suggest 📖 for "Read 30 minutes"', () => {
+      const result = suggestEmojisForHabitName('Read 30 minutes');
+      expect(result).toContain('📖');
+    });
+
+    it('should suggest 😴 for "Go to sleep early"', () => {
+      const result = suggestEmojisForHabitName('Go to sleep early');
+      expect(result).toContain('😴');
+    });
+
+    it('should handle multiple relevant words', () => {
+      const result = suggestEmojisForHabitName('Morning Run and Stretch');
+      expect(result).toContain('🏃');
+      expect(result).toContain('🧘');
+    });
+
+    it('should respect maxSuggestions limit', () => {
+      const result = suggestEmojisForHabitName('Daily workout exercise gym', 3);
+      expect(result.length).toBeLessThanOrEqual(3);
+    });
+
+    it('should handle numbers and special characters gracefully', () => {
+      const result = suggestEmojisForHabitName('30-min run!!!');
+      expect(result).toContain('🏃');
+    });
+
+    it('should be case insensitive', () => {
+      const result1 = suggestEmojisForHabitName('RUN');
+      const result2 = suggestEmojisForHabitName('run');
+      expect(result1).toEqual(result2);
+    });
+
+    it('should return empty for unrelated words', () => {
+      const result = suggestEmojisForHabitName('xyz abc def');
+      expect(result).toEqual([]);
+    });
+
+    it('should suggest 💼 for work-related habits', () => {
+      const result = suggestEmojisForHabitName('Check work emails');
+      expect(result).toContain('📧');
+    });
+
+    it('should suggest 🍳 for cooking habits', () => {
+      const result = suggestEmojisForHabitName('Cook breakfast');
+      expect(result).toContain('🍳');
+    });
+
+    it('should prioritize exact matches over partial', () => {
+      const result = suggestEmojisForHabitName('run');
+      // 🏃 should be prioritized as it's the first emoji for exact "run" match
+      expect(result[0]).toBe('🏃');
+    });
+  });
+
+  describe('getBestEmojiForHabitName', () => {
+    it('should return null for empty input', () => {
+      expect(getBestEmojiForHabitName('')).toBeNull();
+      expect(getBestEmojiForHabitName('   ')).toBeNull();
+    });
+
+    it('should return 🏃 for "Run"', () => {
+      expect(getBestEmojiForHabitName('Run')).toBe('🏃');
+    });
+
+    it('should return 💧 for "Drink Water"', () => {
+      expect(getBestEmojiForHabitName('Drink Water')).toBe('💧');
+    });
+
+    it('should return null for unmatched habits', () => {
+      expect(getBestEmojiForHabitName('xyz')).toBeNull();
+    });
+
+    it('should return 🧘 for "Meditate"', () => {
+      expect(getBestEmojiForHabitName('Meditate')).toBe('🧘');
+    });
+
+    it('should return 📖 for "Read a book"', () => {
+      expect(getBestEmojiForHabitName('Read a book')).toBe('📖');
     });
   });
 });
