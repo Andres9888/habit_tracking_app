@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
-import { ChevronRight, Palette } from 'lucide-react-native';
+import { ChevronRight } from 'lucide-react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { EmojiPickerSheet } from '../../EmojiPickerV2';
@@ -8,7 +8,6 @@ import { EmojiPickerSheet } from '../../EmojiPickerV2';
 interface StyleSectionProps {
   colors: string[];
   emojis: string[];
-  onCustomColorPress: () => void;
   onSelectColor: (color: string) => void;
   onSelectEmoji: (emoji: string | null) => void;
   selectedColor: string;
@@ -101,7 +100,6 @@ const AnimatedButton = ({
 
 export const StyleSection = ({
   colors,
-  onCustomColorPress,
   onSelectColor,
   onSelectEmoji,
   selectedColor,
@@ -189,8 +187,8 @@ export const StyleSection = ({
       <View>
         <Text className="mb-3 text-sm font-semibold text-slate-600">Color</Text>
 
-        {/* Basic Colors */}
-        <View className="mb-4 flex-row flex-wrap gap-3">
+        {/* All Colors - 2 rows */}
+        <View className="flex-row flex-wrap gap-3">
           {colors.map((color) => (
             <AnimatedButton
               key={color}
@@ -214,32 +212,6 @@ export const StyleSection = ({
             </AnimatedButton>
           ))}
         </View>
-
-        {/* Custom Color Button */}
-        <Pressable
-          accessibilityLabel="Choose custom color"
-          accessibilityRole="button"
-          className="flex-row items-center justify-between rounded-xl bg-slate-50 px-4 py-3"
-          onPress={() => {
-            triggerSelection();
-            onCustomColorPress();
-          }}
-        >
-          <View className="flex-row items-center">
-            <Palette color="#475569" size={18} />
-            <Text className="ml-3 text-sm font-medium text-slate-700">Custom color</Text>
-          </View>
-          <View
-            className="h-6 w-6 rounded-full border-2 border-white"
-            style={{
-              backgroundColor: selectedColor,
-              shadowColor: '#000',
-              shadowOffset: { height: 1, width: 0 },
-              shadowOpacity: 0.2,
-              shadowRadius: 2,
-            }}
-          />
-        </Pressable>
       </View>
     </View>
   );

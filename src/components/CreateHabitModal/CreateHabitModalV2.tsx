@@ -1,6 +1,5 @@
 import { Modal, ScrollView, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { ColorPickerSheet } from './ColorPickerSheet';
 import { COLORS, EMOJIS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
@@ -95,7 +94,6 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 selectedColor={form.selectedColor}
                 selectedEmoji={form.selectedEmoji}
                 suggestedEmojis={suggestedEmojis}
-                onCustomColorPress={form.openColorPicker}
                 onSelectColor={form.setSelectedColor}
                 onSelectEmoji={form.setSelectedEmoji}
               />
@@ -143,13 +141,6 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
           </View>
         </View>
 
-        {/* Color Picker Sheet - Custom color only, presets are in StyleSection */}
-        <ColorPickerSheet
-          value={form.selectedColor}
-          visible={form.isColorPickerVisible}
-          onClose={form.closeColorPicker}
-          onSelect={form.setSelectedColor}
-        />
     </Modal>
   );
 }
