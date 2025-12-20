@@ -293,20 +293,40 @@ export default function DraggableHabit({
         style={{ transform: [{ translateX: trans }] }}
       >
         <LinearGradient
-          colors={['#f59e0b', '#d97706']}
+          colors={['#fbbf24', '#f59e0b']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className='h-full w-[100px] items-center justify-center rounded-r-2xl'
+          style={{
+            height: '100%',
+            width: 100,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderTopRightRadius: 24,
+            borderBottomRightRadius: 24,
+          }}
         >
           <Animated.View
             style={{
               transform: [{ scale: iconScale }],
               opacity: iconOpacity,
+              backgroundColor: 'rgba(255, 255, 255, 0.25)',
+              borderRadius: 12,
+              padding: 10,
             }}
           >
-            <Package color='white' size={24} strokeWidth={2} />
+            <Package color='white' size={22} strokeWidth={2.5} />
           </Animated.View>
-          <Text className='mt-1 text-xs font-semibold text-white'>Archive</Text>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 11,
+              fontWeight: '600',
+              marginTop: 6,
+              letterSpacing: 0.3,
+            }}
+          >
+            Archive
+          </Text>
         </LinearGradient>
       </Animated.View>
     );

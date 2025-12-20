@@ -107,21 +107,21 @@ export default function TemplatesScreen() {
       return;
     }
 
-    // Parallel entrance: everything animates together as one unit
-    // No stagger delays - modal slide provides all the motion needed
+    // Instant content - modal slide IS the animation
+    // No translateY animation - just fast opacity fade
+    // The modal sliding up provides all the motion needed
 
-    // All elements animate in parallel with the same timing
-    headerTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
-    headerOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
+    headerTranslateY.value = 0; // No animation
+    headerOpacity.value = withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) });
 
-    searchOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
-    searchTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
+    searchTranslateY.value = 0; // No animation
+    searchOpacity.value = withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) });
 
-    tabBarOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
-    tabBarTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
+    tabBarTranslateY.value = 0; // No animation
+    tabBarOpacity.value = withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) });
 
-    contentOpacity.value = withTiming(1, { duration: 180, easing: Easing.out(Easing.cubic) });
-    contentTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
+    contentTranslateY.value = 0; // No animation
+    contentOpacity.value = withTiming(1, { duration: 100, easing: Easing.out(Easing.cubic) });
   }, [reducedMotion]);
 
   // Animated styles for screen sections

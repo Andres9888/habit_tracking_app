@@ -165,7 +165,7 @@ export function ArchiveUndoToast({
           <View style={styles.content}>
             {/* Icon */}
             <View style={styles.iconContainer}>
-              <Package color='#f59e0b' size={18} strokeWidth={2} />
+              <Package color='#b45309' size={18} strokeWidth={2} />
             </View>
 
             {/* Message */}
@@ -184,7 +184,7 @@ export function ArchiveUndoToast({
               ]}
               onPress={handleUndo}
             >
-              <Undo2 color='#f59e0b' size={14} strokeWidth={2.5} />
+              <Undo2 color='#b45309' size={14} strokeWidth={2.5} />
               <Text style={styles.undoText}>UNDO</Text>
             </Pressable>
           </View>
@@ -202,9 +202,9 @@ export function ArchiveUndoToast({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    left: 16,
+    left: 20,
     position: 'absolute',
-    right: 16,
+    right: 20,
     zIndex: 9999,
   },
   content: {
@@ -216,69 +216,67 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   habitName: {
-    color: '#ffffff',
+    color: '#1c1917', // stone-900 - matches app text
     fontWeight: '600',
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: '#fef3c7', // amber-100 - warm and matches swipe
     borderRadius: 10,
-    height: 32,
+    height: 36,
     justifyContent: 'center',
-    width: 32,
+    width: 36,
   },
   message: {
     flex: 1,
     fontSize: 14,
   },
   messageText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#78716c', // stone-500 - warm gray
   },
   progressBar: {
-    backgroundColor: '#f59e0b',
+    backgroundColor: '#d97706', // amber-600 - slightly deeper
     height: '100%',
   },
   progressContainer: {
-    backgroundColor: 'rgba(245, 158, 11, 0.2)',
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 14,
+    backgroundColor: '#fef3c7', // amber-100
+    borderBottomLeftRadius: 22,
+    borderBottomRightRadius: 22,
     height: 3,
     overflow: 'hidden',
     width: '100%',
   },
   toast: {
-    backgroundColor: '#1f2937',
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-    borderRadius: 16,
+    backgroundColor: '#ffffff', // white - matches habit cards
+    borderColor: '#f5f5f4', // stone-100 - matches card borders
+    borderRadius: 24, // matches card rounded-3xl
     borderWidth: 1,
     maxWidth: 400,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
+    shadowColor: '#78716c', // stone-500 - warm shadow
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
     width: '100%',
     elevation: 8,
   },
   undoButton: {
     alignItems: 'center',
-    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-    borderRadius: 8,
-    borderWidth: 1,
+    backgroundColor: '#fef3c7', // amber-100
+    borderRadius: 10,
     flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   undoButtonPressed: {
-    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+    backgroundColor: '#fde68a', // amber-200
   },
   undoText: {
-    color: '#f59e0b',
-    fontSize: 12,
+    color: '#b45309', // amber-700 - richer contrast
+    fontSize: 13,
     fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
 });
 

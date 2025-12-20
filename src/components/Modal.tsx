@@ -67,10 +67,11 @@ const GESTURE_SPRING_CONFIG = {
   mass: 0.8,
 };
 
-// Fast spring for bottom sheet - iOS-like snap
+// Fast spring for bottom sheet - iOS-like instant snap
 const BOTTOM_SHEET_SPRING_CONFIG = {
-  damping: 28,
-  stiffness: 500,
+  damping: 32,
+  stiffness: 700,
+  overshootClamping: true,
 };
 
 export type ModalVariant = 'bottomSheet' | 'fullScreen' | 'centerAlert';
@@ -157,7 +158,7 @@ export function Modal({
       // Backdrop fade in
       backdropOpacityValue.value = useReducedAnimation
         ? backdropOpacity
-        : withTiming(backdropOpacity, { duration: 250, easing: Easing.out(Easing.cubic) });
+        : withTiming(backdropOpacity, { duration: 120, easing: Easing.out(Easing.cubic) });
 
       switch (variant) {
         case 'bottomSheet': {
