@@ -4,7 +4,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { TrendingUp, Package } from 'lucide-react-native';
+import { TrendingUp, Archive } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { StrengthProgressBar } from '../StrengthProgressBar';
 import { PhaseTag } from '../PhaseTag';
@@ -286,37 +286,45 @@ export default function DraggableHabit({
       outputRange: [1, 0.85, 0.6],
     });
 
-    // Apple-style: solid background extends edge-to-edge, card slides over it
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#f59e0b', // amber-500 solid
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+      <Animated.View
+        className='flex-row items-center justify-end'
+        style={{ transform: [{ translateX: trans }] }}
       >
-        <Animated.View
+        <View
           style={{
+            height: '100%',
+            width: 100,
             alignItems: 'center',
             justifyContent: 'center',
-            opacity: iconOpacity,
-            transform: [{ scale: iconScale }],
+            backgroundColor: '#f59e0b', // amber-500
+            borderTopRightRadius: 24,
+            borderBottomRightRadius: 24,
           }}
         >
-          <Package color='white' size={24} strokeWidth={2} />
-          <Text
+          <Animated.View
             style={{
-              color: 'white',
-              fontSize: 12,
-              fontWeight: '600',
-              marginTop: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: iconOpacity,
+              transform: [{ scale: iconScale }],
             }}
           >
-            Archive
-          </Text>
-        </Animated.View>
-      </View>
+            <Archive color='white' size={22} strokeWidth={2} />
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 11,
+                fontWeight: '600',
+                marginTop: 4,
+                letterSpacing: 0.2,
+              }}
+            >
+              Archive
+            </Text>
+          </Animated.View>
+        </View>
+      </Animated.View>
     );
   };
 

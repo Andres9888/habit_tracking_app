@@ -20,7 +20,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Package, Undo2 } from 'lucide-react-native';
+import { Archive, Undo2 } from 'lucide-react-native';
 
 export interface ArchiveUndoToastProps {
   /** Toast visibility */
@@ -165,7 +165,7 @@ export function ArchiveUndoToast({
           <View style={styles.content}>
             {/* Icon */}
             <View style={styles.iconContainer}>
-              <Package color='#b45309' size={18} strokeWidth={2} />
+              <Archive color='#b45309' size={18} strokeWidth={2} />
             </View>
 
             {/* Message */}
