@@ -1040,8 +1040,6 @@ export default function HabitDetailScreen({
 
           {isStrengthExpanded ? (
             <HabitStrengthSection
-              currentStreak={habit.currentStreak ?? 0}
-              daysTracking={daysTracking}
               onInfoPress={() => {
                 Alert.alert(
                   'What is Habit Strength?',
@@ -1054,7 +1052,6 @@ export default function HabitDetailScreen({
                 );
               }}
               strength={strengthPercent}
-              successRate={successRate}
             />
           ) : null}
 

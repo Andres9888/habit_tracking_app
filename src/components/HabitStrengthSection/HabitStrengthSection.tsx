@@ -3,11 +3,12 @@
  * Comprehensive habit strength display for the detail view
  *
  * Features:
- * - Large visual progress ring with level-based coloring
+ * - Visual progress ring (96px) with level-based coloring
  * - Level emoji and label (🌱 Starting → ⚡ Automatic)
  * - Trend indicator showing weekly change
- * - Breakdown of what builds strength
+ * - Level journey progress visualization
  * - Actionable tips for improvement
+ * - Gradient background (teal/emerald theme)
  * - Full accessibility support
  */
 
@@ -23,7 +24,6 @@ import Animated, {
   withTiming,
   withSequence,
   Easing,
-  FadeIn,
   FadeInDown,
 } from 'react-native-reanimated';
 import { TrendingUp, TrendingDown, Minus, Info, Zap } from 'lucide-react-native';
@@ -40,12 +40,6 @@ export interface HabitStrengthSectionProps {
   strength: number;
   /** Weekly change in strength (positive = improving, negative = declining) */
   weeklyChange?: number;
-  /** Current streak count */
-  currentStreak?: number;
-  /** Days since habit was created */
-  daysTracking?: number;
-  /** Success rate percentage */
-  successRate?: number;
   /** Callback when info button is pressed */
   onInfoPress?: () => void;
 }
@@ -130,59 +124,18 @@ const getNextLevel = (strength: number): LevelConfig | null => {
   return STRENGTH_LEVELS.automatic;
 };
 
-interface StrengthBreakdownItemProps {
-  color: string;
-  delay: number;
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}
-
-const StrengthBreakdownItem = ({ color, delay, icon, label, value }: StrengthBreakdownItemProps) => {
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(10);
-
-  useEffect(() => {
-    opacity.value = withDelay(delay, withTiming(1, { duration: 300 }));
-    translateY.value = withDelay(delay, withSpring(0, { damping: 15 }));
-  }, [delay]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
-
-  return (
-    <Animated.View
-      className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3"
-      style={animatedStyle}
-    >
-      <View className="flex-row items-center gap-3">
-        {icon}
-        <Text className="text-sm font-medium text-stone-600">{label}</Text>
-      </View>
-      <Text className="text-sm font-bold" style={{ color }}>
-        {value}
-      </Text>
-    </Animated.View>
-  );
-};
-
 export const HabitStrengthSection = ({
   strength,
   weeklyChange = 0,
-  currentStreak = 0,
-  daysTracking = 0,
-  successRate = 0,
   onInfoPress,
 }: HabitStrengthSectionProps) => {
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const level = getStrengthLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
 
-  // Ring dimensions
-  const ringSize = 120;
-  const strokeWidth = 10;
+  // Ring dimensions - reduced from 120px to 96px for better balance
+  const ringSize = 96;
+  const strokeWidth = 8;
   const radius = (ringSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -307,27 +260,31 @@ export const HabitStrengthSection = ({
   const center = ringSize / 2;
 
   return (
-    <Animated.View
-      className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50"
-      entering={FadeInDown.delay(200).springify()}
-    >
-      {/* Header */}
-      <View className="mb-5 flex-row items-center justify-between">
-        <View className="flex-row items-center gap-2">
-          <Zap className="text-amber-500" fill="#fbbf24" size={22} />
-          <Text className="text-lg font-semibold text-stone-800">
-            Habit Strength
-          </Text>
+    <View className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50">
+      {/* Gradient Background */}
+      <View className="absolute inset-0 bg-gradient-to-br from-teal-50/30 via-white to-emerald-50/30" />
+
+      <Animated.View
+        className="p-5"
+        entering={FadeInDown.delay(200).springify()}
+      >
+        {/* Header with icon container pattern */}
+        <View className="mb-4 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <View className="h-8 w-8 items-center justify-center rounded-lg bg-teal-100">
+              <Zap className="text-teal-500" size={16} />
+            </View>
+            <Text className="text-lg font-bold text-stone-800">Strength</Text>
+          </View>
+          <Pressable
+            accessibilityLabel="Learn about habit strength"
+            accessibilityRole="button"
+            className="h-8 w-8 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
+            onPress={handleInfoPress}
+          >
+            <Info className="text-stone-500" size={18} />
+          </Pressable>
         </View>
-        <Pressable
-          accessibilityLabel="Learn about habit strength"
-          accessibilityRole="button"
-          className="h-8 w-8 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
-          onPress={handleInfoPress}
-        >
-          <Info className="text-stone-500" size={18} />
-        </Pressable>
-      </View>
 
       {/* Main Ring + Stats */}
       <View className="mb-5 flex-row items-center justify-between">
@@ -361,15 +318,15 @@ export const HabitStrengthSection = ({
               />
             </Svg>
 
-            {/* Center content */}
+            {/* Center content - adjusted sizes for 96px ring */}
             <View
               className="absolute items-center justify-center"
               style={{ width: ringSize, height: ringSize }}
             >
-              <Animated.Text className="text-3xl" style={emojiAnimatedStyle}>
+              <Animated.Text className="text-2xl" style={emojiAnimatedStyle}>
                 {level.emoji}
               </Animated.Text>
-              <Text className="text-2xl font-bold text-stone-900">
+              <Text className="text-xl font-bold text-stone-900">
                 {formatStrengthPercentage(clampedStrength)}
               </Text>
             </View>
@@ -401,49 +358,45 @@ export const HabitStrengthSection = ({
         </View>
       </View>
 
-      {/* Divider */}
-      <View className="mb-4 h-px bg-stone-100" />
+        {/* Tip - moved above level progress */}
+        <View
+          className="mb-4 flex-row items-start gap-2 rounded-xl p-3"
+          style={{ backgroundColor: level.colorLight }}
+        >
+          <Text className="text-base">💡</Text>
+          <Text className="flex-1 text-sm" style={{ color: level.color }}>
+            {level.tip}
+          </Text>
+        </View>
 
-      {/* What builds strength */}
-      <Text className="mb-3 text-sm font-semibold text-stone-700">
-        What builds strength:
-      </Text>
-
-      <View className="gap-2">
-        <StrengthBreakdownItem
-          color={level.color}
-          delay={100}
-          icon={<Text className="text-base">🔥</Text>}
-          label="Current Streak"
-          value={`${currentStreak} days`}
-        />
-        <StrengthBreakdownItem
-          color={level.color}
-          delay={200}
-          icon={<Text className="text-base">📊</Text>}
-          label="Success Rate"
-          value={`${Math.round(successRate)}%`}
-        />
-        <StrengthBreakdownItem
-          color={level.color}
-          delay={300}
-          icon={<Text className="text-base">📅</Text>}
-          label="Days Tracking"
-          value={`${daysTracking} days`}
-        />
-      </View>
-
-      {/* Tip */}
-      <View
-        className="mt-4 flex-row items-start gap-2 rounded-xl p-3"
-        style={{ backgroundColor: level.colorLight }}
-      >
-        <Text className="text-base">💡</Text>
-        <Text className="flex-1 text-sm" style={{ color: level.color }}>
-          {level.tip}
-        </Text>
-      </View>
-    </Animated.View>
+        {/* Level Journey Progress */}
+        <View className="rounded-xl bg-gradient-to-r from-teal-50 to-emerald-50 p-3">
+          <View className="mb-2 flex-row items-center justify-between">
+            <Text className="text-xs font-medium text-stone-600">
+              {nextLevel ? `Progress to ${nextLevel.emoji} ${nextLevel.label}` : 'Maximum Level Reached!'}
+            </Text>
+            {nextLevel && (
+              <Text className="text-xs font-bold text-teal-600">
+                {Math.round(nextLevel.minThreshold - clampedStrength)}% to go
+              </Text>
+            )}
+          </View>
+          <View className="h-2 overflow-hidden rounded-full bg-stone-100">
+            <View
+              className="h-full rounded-full bg-gradient-to-r from-teal-400 to-emerald-400"
+              style={{ width: `${clampedStrength}%` }}
+            />
+          </View>
+          <View className="mt-2 flex-row justify-between">
+            {['🌱', '🌿', '🌳', '💪', '⚡'].map((emoji, i) => (
+              <Text key={i} className="text-[10px]">
+                {emoji}
+              </Text>
+            ))}
+          </View>
+        </View>
+      </Animated.View>
+    </View>
   );
 };
 
