@@ -567,10 +567,20 @@ enableLayoutAnimations(true, false); // Disable layout animations if causing iss
 ## Implementation Phases (Updated)
 
 ### Phase 5: Screen Transition Polish
-- [ ] Configure native stack animation for Templates screen
-- [ ] Add header entrance animation with slide-down
-- [ ] Add content fade-up with delay
-- [ ] Consider shared element if navigating from specific button
+- [x] Configure native stack animation for Templates screen
+  - **Completed**: The app uses a CustomModal with `fullScreen` variant (not React Navigation stack) which already has Apple-like entrance animations built-in (scale 0.94→1, opacity fade, translateY 60→0 with spring physics). The Modal component (`src/components/Modal.tsx`) uses `APPLE_SPRING_CONFIG` for organic, iOS sheet-like presentation.
+- [x] Add header entrance animation with slide-down
+  - **Completed**: Added choreographed screen entrance to `TemplatesScreen.tsx`. Header now slides down (from -20 to 0 translateY) with spring animation using `ENTRANCE_SPRING_CONFIG` (damping: 18, stiffness: 120). Uses `useSharedValue` and `useAnimatedStyle` for UI-thread performance.
+- [x] Add content fade-up with delay
+  - **Completed**: Implemented staggered entrance choreography:
+    - Header: Immediate slide-down + fade-in (300ms)
+    - Search bar: 80ms delay, fades up from +15 translateY
+    - Tab bar: 140ms delay, fades up from +15 translateY
+    - Content area: 200ms delay, fades up from +20 translateY
+    - All animations use `withSpring` for organic feel and `withTiming` with `Easing.out(Easing.cubic)` for opacity
+    - Respects reduced motion accessibility setting via `useReduceMotion()` hook
+- [x] Consider shared element if navigating from specific button
+  - **Evaluated but not implemented**: Shared element transitions would require installing `react-native-shared-element` and significant architecture changes. The existing Modal animation combined with the new choreographed entrance already provides a premium, polished experience. The current implementation achieves the goal of making the screen transition feel polished without the added complexity.
 
 ### Phase 6: Performance Optimization
 - [ ] Profile animations with Flipper Performance monitor

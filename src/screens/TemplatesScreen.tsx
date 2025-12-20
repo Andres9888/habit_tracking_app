@@ -19,7 +19,16 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
+import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useMutation, useQuery } from 'convex/react';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -61,10 +70,81 @@ type ViewMode = 'browse' | 'category' | 'search';
 // Tab options for main view
 type BrowseTab = 'categories' | 'all';
 
+// Screen entrance animation spring config
+const ENTRANCE_SPRING_CONFIG = {
+  damping: 18,
+  stiffness: 120,
+};
+
 export default function TemplatesScreen() {
   const theme = useAppTheme();
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const reducedMotion = useReduceMotion();
+
+  // Screen entrance animation values
+  const headerTranslateY = useSharedValue(-20);
+  const headerOpacity = useSharedValue(0);
+  const searchOpacity = useSharedValue(0);
+  const searchTranslateY = useSharedValue(15);
+  const tabBarOpacity = useSharedValue(0);
+  const tabBarTranslateY = useSharedValue(15);
+  const contentOpacity = useSharedValue(0);
+  const contentTranslateY = useSharedValue(20);
+
+  // Trigger choreographed entrance animation on mount
+  useEffect(() => {
+    if (reducedMotion) {
+      // Instant appearance for reduced motion
+      headerTranslateY.value = 0;
+      headerOpacity.value = 1;
+      searchOpacity.value = 1;
+      searchTranslateY.value = 0;
+      tabBarOpacity.value = 1;
+      tabBarTranslateY.value = 0;
+      contentOpacity.value = 1;
+      contentTranslateY.value = 0;
+      return;
+    }
+
+    // Choreographed entrance: header → search → tabs → content
+    // Header slides down
+    headerTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
+    headerOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.cubic) });
+
+    // Search bar fades up with 80ms delay
+    searchOpacity.value = withDelay(80, withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) }));
+    searchTranslateY.value = withDelay(80, withSpring(0, ENTRANCE_SPRING_CONFIG));
+
+    // Tab bar fades up with 140ms delay
+    tabBarOpacity.value = withDelay(140, withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) }));
+    tabBarTranslateY.value = withDelay(140, withSpring(0, ENTRANCE_SPRING_CONFIG));
+
+    // Content fades up with 200ms delay
+    contentOpacity.value = withDelay(200, withTiming(1, { duration: 300, easing: Easing.out(Easing.cubic) }));
+    contentTranslateY.value = withDelay(200, withSpring(0, ENTRANCE_SPRING_CONFIG));
+  }, [reducedMotion]);
+
+  // Animated styles for screen sections
+  const headerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: headerTranslateY.value }],
+    opacity: headerOpacity.value,
+  }));
+
+  const searchAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: searchTranslateY.value }],
+    opacity: searchOpacity.value,
+  }));
+
+  const tabBarAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: tabBarTranslateY.value }],
+    opacity: tabBarOpacity.value,
+  }));
+
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: contentTranslateY.value }],
+    opacity: contentOpacity.value,
+  }));
 
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>('browse');
@@ -603,18 +683,18 @@ export default function TemplatesScreen() {
   // Browse mode (main view with collapsible categories)
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+      {/* Header - slides down on entrance */}
+      <Animated.View style={[styles.header, headerAnimatedStyle]}>
         <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
           Import Habits
         </Text>
         <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 4 }]}>
           Science-backed habits to get you started
         </Text>
-      </View>
+      </Animated.View>
 
-      {/* Search bar */}
-      <View style={styles.searchSection}>
+      {/* Search bar - fades up with delay */}
+      <Animated.View style={[styles.searchSection, searchAnimatedStyle]}>
         <View style={styles.searchBar}>
           <Search color="#94a3b8" size={18} strokeWidth={2.25} />
           <TextInput
@@ -630,10 +710,10 @@ export default function TemplatesScreen() {
             </TouchableOpacity>
           ) : null}
         </View>
-      </View>
+      </Animated.View>
 
-      {/* Tab bar */}
-      <View style={styles.tabBar}>
+      {/* Tab bar - fades up with delay */}
+      <Animated.View style={[styles.tabBar, tabBarAnimatedStyle]}>
         <Pressable
           accessible
           accessibilityLabel={`Categories tab, ${categories?.filter((c) => c.id !== 'all').length || 0} categories`}
@@ -670,11 +750,12 @@ export default function TemplatesScreen() {
             {allTemplates?.length || 0}
           </Text>
         </Pressable>
-      </View>
+      </Animated.View>
 
-      {/* Scrollable content - Categories tab */}
+      {/* Scrollable content - Categories tab - fades up with delay */}
       {browseTab === 'categories' && (
-        <ScrollView
+        <Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
+          <ScrollView
           ref={scrollViewRef}
           contentContainerStyle={styles.browseContent}
           showsVerticalScrollIndicator={false}
@@ -705,11 +786,13 @@ export default function TemplatesScreen() {
               })}
           </View>
         </ScrollView>
+        </Animated.View>
       )}
 
-      {/* View All tab - FlatList for performance */}
+      {/* View All tab - FlatList for performance - fades up with delay */}
       {browseTab === 'all' && (
-        <FlatList
+        <Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
+          <FlatList
           data={allTemplates}
           keyExtractor={(item) => item._id}
           contentContainerStyle={styles.allTemplatesList}
@@ -739,6 +822,7 @@ export default function TemplatesScreen() {
             />
           )}
         />
+        </Animated.View>
       )}
 
       <TemplatePreviewModal
