@@ -295,11 +295,21 @@ The breakdown section shows:
 
 ### Tasks
 
-- [ ] **STATS-1**: Add totalCompletions and successRate props to InsightsSection
-- [ ] **STATS-2**: Create "Journey Stats" row in InsightsSection
-- [ ] **STATS-3**: Remove StatsGrid from HabitDetailScreen imports
-- [ ] **STATS-4**: Mark StatsGrid.tsx as deprecated with comment
-- [ ] **STATS-5**: Update HabitDetailScreen to pass new props to InsightsSection
+- [x] **STATS-1**: Add totalCompletions and successRate props to InsightsSection
+  - Added totalCompletions, successRate, and daysTracking props to InsightsSectionProps interface
+  - Added CheckCircle2 and Percent icon imports
+- [x] **STATS-2**: Create "Journey Stats" row in InsightsSection
+  - Created "Your Journey" section with three stat cards: completed, success rate, days tracking
+  - Used icon container pattern (h-8 w-8 rounded-lg bg-violet-100) for header
+  - Cards use rounded-full icons and centered layout with emerald/blue/violet color theming
+- [x] **STATS-3**: Remove StatsGrid from HabitDetailScreen imports
+  - Removed StatsGrid import from HabitDetailScreen.tsx
+  - Removed StatsGrid component usage from the JSX
+- [x] **STATS-4**: Mark StatsGrid.tsx as deprecated with comment
+  - Added JSDoc @deprecated comment to file header explaining migration to InsightsSection
+  - Added @deprecated annotation to StatsGrid function export
+- [x] **STATS-5**: Update HabitDetailScreen to pass new props to InsightsSection
+  - Updated InsightsSection usage to include totalCompletions, successRate, and daysTracking props
 
 ---
 

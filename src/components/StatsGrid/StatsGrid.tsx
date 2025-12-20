@@ -1,6 +1,11 @@
 /**
  * StatsGrid Component
  * Displays key habit statistics with visual polish
+ *
+ * @deprecated This component has been replaced by the "Journey Stats" section
+ * in InsightsSection. All metrics (totalCompletions, successRate, daysTracking)
+ * are now displayed there. This component is kept for reference but should not
+ * be used in new code.
  */
 
 import React, { useEffect } from 'react';
@@ -72,6 +77,7 @@ function StatCard({
   );
 }
 
+/** @deprecated Use InsightsSection for metrics display */
 export function StatsGrid({
   currentStreak,
   daysTracking,

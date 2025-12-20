@@ -20,7 +20,6 @@ import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import { InsightsSection } from '../components/InsightsSection';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { StatsGrid } from '../components/StatsGrid/StatsGrid';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -1055,13 +1054,6 @@ export default function HabitDetailScreen({
             />
           ) : null}
 
-          <StatsGrid
-            currentStreak={habit.currentStreak ?? 0}
-            daysTracking={daysTracking}
-            successRate={successRate}
-            totalCompletions={totalCompletions}
-          />
-
           {/* Insights Section */}
           <Pressable
             accessibilityLabel={isInsightsExpanded ? 'Collapse insights section' : 'Expand insights section'}
@@ -1091,6 +1083,9 @@ export default function HabitDetailScreen({
               habitId={habit._id}
               tracking={tracking}
               habitCreatedAt={habitCreatedAt}
+              totalCompletions={totalCompletions}
+              successRate={successRate}
+              daysTracking={daysTracking}
             />
           ) : null}
 
