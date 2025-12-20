@@ -1,4 +1,5 @@
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRef } from 'react';
 import STRINGS from '../../../constants/strings';
 import { Motion } from '../../../constants/motion';
@@ -12,10 +13,11 @@ interface ModalHeaderProps {
 }
 
 export const ModalHeader = ({ isEditMode, habitName, onClose, onSave }: ModalHeaderProps) => {
+  const insets = useSafeAreaInsets();
   const canSave = habitName.trim().length > 0;
   const saveScale = useRef(new Animated.Value(1)).current;
   return (
-    <View className='flex-row items-center justify-between px-4 pb-4 pt-4'>
+    <View className='flex-row items-center justify-between px-4 pb-4' style={{ paddingTop: Math.max(insets.top + 8, 16) }}>
       <TouchableOpacity
         accessibilityLabel={STRINGS.CREATE_HABIT.close}
         accessibilityRole='button'
