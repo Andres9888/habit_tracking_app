@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home → Templates Transition: Before vs After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1c1917 !important; }
+
+    /* Phone Frame */
+    .phone-frame {
+      width: 280px;
+      height: 560px;
+      background: #fafaf9;
+      border-radius: 40px;
+      border: 8px solid #292524;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #292524;
+      border-radius: 0 0 20px 20px;
+      z-index: 100;
+    }
+
+    .phone-content {
+      height: 100%;
+      padding-top: 36px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animation Stages */
+    .stage {
+      position: absolute;
+      inset: 0;
+      padding-top: 36px;
+    }
+
+    /* Before Animation - Bouncy Bottom Sheet */
+    @keyframes beforeBackdrop {
+      0% { opacity: 0; }
+      100% { opacity: 0.6; }
+    }
+
+    @keyframes beforeSlideUp {
+      0% {
+        transform: translateY(100%);
+      }
+      40% {
+        transform: translateY(-8%); /* Overshoot - bouncy */
+      }
+      60% {
+        transform: translateY(3%); /* Bounce back */
+      }
+      80% {
+        transform: translateY(-1%); /* Small overshoot */
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes beforeContentStagger1 {
+      0%, 20% { opacity: 0; transform: translateY(15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes beforeContentStagger2 {
+      0%, 35% { opacity: 0; transform: translateY(15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes beforeContentStagger3 {
+      0%, 50% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* After Animation - Apple-like Smooth */
+    @keyframes afterBackdrop {
+      0% { opacity: 0; }
+      100% { opacity: 0.5; }
+    }
+
+    @keyframes afterSlideUp {
+      0% {
+        transform: translateY(60px) scale(0.94);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes afterContentStagger1 {
+      0%, 8% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes afterContentStagger2 {
+      0%, 16% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes afterContentStagger3 {
+      0%, 24% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Before Demo */
+    .before-demo .backdrop {
+      animation: beforeBackdrop 0.2s ease-out forwards;
+      animation-delay: 0.5s;
+      opacity: 0;
+    }
+
+    .before-demo .modal-sheet {
+      animation: beforeSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation-delay: 0.5s;
+      transform: translateY(100%);
+    }
+
+    .before-demo .content-1 {
+      animation: beforeContentStagger1 0.4s ease-out forwards;
+      animation-delay: 0.58s;
+      opacity: 0;
+    }
+
+    .before-demo .content-2 {
+      animation: beforeContentStagger2 0.4s ease-out forwards;
+      animation-delay: 0.64s;
+      opacity: 0;
+    }
+
+    .before-demo .content-3 {
+      animation: beforeContentStagger3 0.4s ease-out forwards;
+      animation-delay: 0.7s;
+      opacity: 0;
+    }
+
+    /* After Demo */
+    .after-demo .backdrop {
+      animation: afterBackdrop 0.25s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+      animation-delay: 0.5s;
+      opacity: 0;
+    }
+
+    .after-demo .modal-sheet {
+      animation: afterSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 0.5s;
+      transform: translateY(60px) scale(0.94);
+      opacity: 0;
+    }
+
+    .after-demo .content-1 {
+      animation: afterContentStagger1 0.3s ease-out forwards;
+      animation-delay: 0.54s;
+      opacity: 0;
+    }
+
+    .after-demo .content-2 {
+      animation: afterContentStagger2 0.3s ease-out forwards;
+      animation-delay: 0.58s;
+      opacity: 0;
+    }
+
+    .after-demo .content-3 {
+      animation: afterContentStagger3 0.3s ease-out forwards;
+      animation-delay: 0.62s;
+      opacity: 0;
+    }
+
+    /* Replay button */
+    .replay-btn {
+      transition: all 0.2s ease;
+    }
+    .replay-btn:hover {
+      transform: scale(1.05);
+    }
+    .replay-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Problem indicators */
+    .problem-indicator {
+      position: absolute;
+      background: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 200;
+    }
+
+    .improvement-indicator {
+      position: absolute;
+      background: #22c55e;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 200;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-3xl font-bold text-white mb-2">Home → Templates Transition</h1>
+    <p class="text-stone-400 text-lg">Animation Comparison: Before vs After</p>
+  </div>
+
+  <!-- Comparison Container -->
+  <div class="flex flex-wrap justify-center gap-16 mb-12">
+
+    <!-- BEFORE -->
+    <div class="flex flex-col items-center">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-400 text-2xl">✗</span>
+        <h2 class="text-xl font-semibold text-white">Before</h2>
+      </div>
+
+      <div class="phone-frame before-demo" id="before-phone">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+
+          <!-- Home Screen (Background) -->
+          <div class="stage bg-stone-50 p-4">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">🌱</span>
+                <span class="text-lg font-bold text-stone-900">Daily Habits</span>
+              </div>
+              <div class="w-8 h-8 bg-stone-100 rounded-full flex items-center justify-center">
+                <span class="text-stone-500 text-xs">⚙</span>
+              </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="flex gap-1 mb-4">
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Mon</div>
+                <div class="text-xs font-medium text-stone-600">16</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Tue</div>
+                <div class="text-xs font-medium text-stone-600">17</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-900">
+                <div class="text-[10px] text-stone-400">Wed</div>
+                <div class="text-xs font-bold text-white">18</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Thu</div>
+                <div class="text-xs font-medium text-stone-600">19</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Fri</div>
+                <div class="text-xs font-medium text-stone-600">20</div>
+              </div>
+            </div>
+
+            <!-- Habits -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-xl p-3 border border-stone-200 flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">💪</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-stone-900">Exercise</div>
+                  <div class="text-[10px] text-stone-400">🔥 12 day streak</div>
+                </div>
+                <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                  <span class="text-white text-[10px]">✓</span>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-3 border border-stone-200 flex items-center gap-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">🧘</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-stone-900">Meditate</div>
+                  <div class="text-[10px] text-stone-400">🔥 5 day streak</div>
+                </div>
+                <div class="w-5 h-5 rounded-full border-2 border-stone-300"></div>
+              </div>
+              <div class="bg-white rounded-xl p-3 border border-stone-200 flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">📖</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-stone-900">Read</div>
+                  <div class="text-[10px] text-stone-400">🔥 3 day streak</div>
+                </div>
+                <div class="w-5 h-5 rounded-full border-2 border-stone-300"></div>
+              </div>
+            </div>
+
+            <!-- FAB -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+              <div class="w-14 h-14 bg-stone-900 rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-white text-2xl">+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Backdrop -->
+          <div class="backdrop absolute inset-0 bg-black" style="padding-top: 36px;"></div>
+
+          <!-- Modal Sheet -->
+          <div class="modal-sheet absolute inset-x-0 bottom-0 bg-white rounded-t-2xl" style="height: 75%;">
+            <!-- Pull Indicator -->
+            <div class="flex justify-center py-3">
+              <div class="w-10 h-1 bg-stone-300 rounded-full"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="px-4">
+              <div class="content-1 mb-4">
+                <h3 class="text-lg font-bold text-stone-900">Browse Templates</h3>
+                <p class="text-xs text-stone-500">Science-backed habits to get started</p>
+              </div>
+
+              <div class="content-2 flex gap-2 mb-4">
+                <div class="px-3 py-1.5 bg-stone-900 rounded-full">
+                  <span class="text-[10px] text-white font-medium">✨ All</span>
+                </div>
+                <div class="px-3 py-1.5 bg-stone-100 rounded-full">
+                  <span class="text-[10px] text-stone-600 font-medium">🌅 Morning</span>
+                </div>
+                <div class="px-3 py-1.5 bg-stone-100 rounded-full">
+                  <span class="text-[10px] text-stone-600 font-medium">💪 Health</span>
+                </div>
+              </div>
+
+              <div class="content-3 space-y-2">
+                <div class="bg-stone-50 rounded-xl p-3 border border-stone-200">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🌅</span>
+                    <div>
+                      <div class="text-sm font-medium text-stone-900">Morning Routine</div>
+                      <div class="text-[10px] text-stone-500">Wake up energized</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-stone-50 rounded-xl p-3 border border-stone-200">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">💧</span>
+                    <div>
+                      <div class="text-sm font-medium text-stone-900">Hydration</div>
+                      <div class="text-[10px] text-stone-500">8 glasses daily</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Problem Indicators -->
+            <div class="problem-indicator" style="top: 8px; right: 8px;">Bouncy overshoot</div>
+            <div class="problem-indicator" style="top: 80px; left: 8px;">Slow stagger (200ms)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Replay Button -->
+      <button onclick="replayBefore()" class="replay-btn mt-4 px-4 py-2 bg-stone-700 hover:bg-stone-600 text-white rounded-lg text-sm font-medium flex items-center gap-2">
+        <span>↻</span> Replay
+      </button>
+
+      <!-- Issues List -->
+      <div class="mt-4 text-left max-w-[280px]">
+        <div class="text-red-400 text-sm font-semibold mb-2">Issues:</div>
+        <ul class="text-stone-400 text-xs space-y-1">
+          <li>• Bouncy spring overshoots (damping: 15)</li>
+          <li>• Slow content stagger (80/140/200ms)</li>
+          <li>• Abrupt backdrop fade (200ms)</li>
+          <li>• No spatial connection to FAB</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="flex flex-col items-center">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-green-400 text-2xl">✓</span>
+        <h2 class="text-xl font-semibold text-white">After</h2>
+      </div>
+
+      <div class="phone-frame after-demo" id="after-phone">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+
+          <!-- Home Screen (Background) -->
+          <div class="stage bg-stone-50 p-4">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">🌱</span>
+                <span class="text-lg font-bold text-stone-900">Daily Habits</span>
+              </div>
+              <div class="w-8 h-8 bg-stone-100 rounded-full flex items-center justify-center">
+                <span class="text-stone-500 text-xs">⚙</span>
+              </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="flex gap-1 mb-4">
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Mon</div>
+                <div class="text-xs font-medium text-stone-600">16</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Tue</div>
+                <div class="text-xs font-medium text-stone-600">17</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-900">
+                <div class="text-[10px] text-stone-400">Wed</div>
+                <div class="text-xs font-bold text-white">18</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Thu</div>
+                <div class="text-xs font-medium text-stone-600">19</div>
+              </div>
+              <div class="flex-1 text-center py-2 rounded-lg bg-stone-100">
+                <div class="text-[10px] text-stone-400">Fri</div>
+                <div class="text-xs font-medium text-stone-600">20</div>
+              </div>
+            </div>
+
+            <!-- Habits -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-xl p-3 border border-stone-200 flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">💪</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-stone-900">Exercise</div>
+                  <div class="text-[10px] text-stone-400">🔥 12 day streak</div>
+                </div>
+                <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                  <span class="text-white text-[10px]">✓</span>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-3 border border-stone-200 flex items-center gap-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">🧘</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-stone-900">Meditate</div>
+                  <div class="text-[10px] text-stone-400">🔥 5 day streak</div>
+                </div>
+                <div class="w-5 h-5 rounded-full border-2 border-stone-300"></div>
+              </div>
+              <div class="bg-white rounded-xl p-3 border border-stone-200 flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">📖</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-stone-900">Read</div>
+                  <div class="text-[10px] text-stone-400">🔥 3 day streak</div>
+                </div>
+                <div class="w-5 h-5 rounded-full border-2 border-stone-300"></div>
+              </div>
+            </div>
+
+            <!-- FAB -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+              <div class="w-14 h-14 bg-stone-900 rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-white text-2xl">+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Backdrop -->
+          <div class="backdrop absolute inset-0 bg-black" style="padding-top: 36px;"></div>
+
+          <!-- Modal Sheet - Apple-like -->
+          <div class="modal-sheet absolute inset-x-0 bottom-0 bg-white rounded-t-xl" style="height: 75%;">
+            <!-- Pull Indicator -->
+            <div class="flex justify-center py-3">
+              <div class="w-10 h-1 bg-stone-300 rounded-full"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="px-4">
+              <div class="content-1 mb-4">
+                <h3 class="text-lg font-bold text-stone-900">Browse Templates</h3>
+                <p class="text-xs text-stone-500">Science-backed habits to get started</p>
+              </div>
+
+              <div class="content-2 flex gap-2 mb-4">
+                <div class="px-3 py-1.5 bg-stone-900 rounded-full">
+                  <span class="text-[10px] text-white font-medium">✨ All</span>
+                </div>
+                <div class="px-3 py-1.5 bg-stone-100 rounded-full">
+                  <span class="text-[10px] text-stone-600 font-medium">🌅 Morning</span>
+                </div>
+                <div class="px-3 py-1.5 bg-stone-100 rounded-full">
+                  <span class="text-[10px] text-stone-600 font-medium">💪 Health</span>
+                </div>
+              </div>
+
+              <div class="content-3 space-y-2">
+                <div class="bg-stone-50 rounded-xl p-3 border border-stone-200">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🌅</span>
+                    <div>
+                      <div class="text-sm font-medium text-stone-900">Morning Routine</div>
+                      <div class="text-[10px] text-stone-500">Wake up energized</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-stone-50 rounded-xl p-3 border border-stone-200">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">💧</span>
+                    <div>
+                      <div class="text-sm font-medium text-stone-900">Hydration</div>
+                      <div class="text-[10px] text-stone-500">8 glasses daily</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Improvement Indicators -->
+            <div class="improvement-indicator" style="top: 8px; right: 8px;">Smooth scale+fade</div>
+            <div class="improvement-indicator" style="top: 80px; left: 8px;">Fast stagger (40ms)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Replay Button -->
+      <button onclick="replayAfter()" class="replay-btn mt-4 px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-medium flex items-center gap-2">
+        <span>↻</span> Replay
+      </button>
+
+      <!-- Improvements List -->
+      <div class="mt-4 text-left max-w-[280px]">
+        <div class="text-green-400 text-sm font-semibold mb-2">Improvements:</div>
+        <ul class="text-stone-400 text-xs space-y-1">
+          <li>• Apple-like spring (damping: 24, stiffness: 380)</li>
+          <li>• Fast content stagger (40/80/120ms)</li>
+          <li>• Scale + opacity + translateY combined</li>
+          <li>• Smooth cubic-bezier easing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technical Comparison Table -->
+  <div class="max-w-3xl mx-auto bg-stone-800 rounded-2xl p-6 mb-8">
+    <h3 class="text-lg font-bold text-white mb-4 text-center">Technical Comparison</h3>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-stone-400 border-b border-stone-700">
+          <th class="text-left py-2">Property</th>
+          <th class="text-center py-2 text-red-400">Before</th>
+          <th class="text-center py-2 text-green-400">After</th>
+        </tr>
+      </thead>
+      <tbody class="text-stone-300">
+        <tr class="border-b border-stone-700/50">
+          <td class="py-2">Spring Damping</td>
+          <td class="text-center text-red-300">15</td>
+          <td class="text-center text-green-300">24</td>
+        </tr>
+        <tr class="border-b border-stone-700/50">
+          <td class="py-2">Spring Stiffness</td>
+          <td class="text-center text-red-300">150</td>
+          <td class="text-center text-green-300">380</td>
+        </tr>
+        <tr class="border-b border-stone-700/50">
+          <td class="py-2">Content Stagger</td>
+          <td class="text-center text-red-300">80 / 140 / 200ms</td>
+          <td class="text-center text-green-300">40 / 80 / 120ms</td>
+        </tr>
+        <tr class="border-b border-stone-700/50">
+          <td class="py-2">Animation Type</td>
+          <td class="text-center text-red-300">translateY only</td>
+          <td class="text-center text-green-300">scale + opacity + translateY</td>
+        </tr>
+        <tr class="border-b border-stone-700/50">
+          <td class="py-2">Overshoot</td>
+          <td class="text-center text-red-300">Visible bounce</td>
+          <td class="text-center text-green-300">None (clamped)</td>
+        </tr>
+        <tr>
+          <td class="py-2">Feel</td>
+          <td class="text-center text-red-300">Bouncy / Jarring</td>
+          <td class="text-center text-green-300">Organic / Apple-like</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Animation Curve Visualization -->
+  <div class="max-w-3xl mx-auto text-center">
+    <p class="text-stone-500 text-sm">
+      The "After" animation uses iOS-style combined transforms (scale 0.94→1, translateY 60→0, opacity 0→1)
+      with higher damping to eliminate the bounce effect while maintaining organic feel.
+    </p>
+  </div>
+
+  <script>
+    function replayBefore() {
+      const phone = document.getElementById('before-phone');
+      phone.classList.remove('before-demo');
+      void phone.offsetWidth; // Force reflow
+      phone.classList.add('before-demo');
+    }
+
+    function replayAfter() {
+      const phone = document.getElementById('after-phone');
+      phone.classList.remove('after-demo');
+      void phone.offsetWidth; // Force reflow
+      phone.classList.add('after-demo');
+    }
+
+    // Auto-replay both every 5 seconds
+    setInterval(() => {
+      replayBefore();
+      replayAfter();
+    }, 5000);
+  </script>
+</body>
+</html>
