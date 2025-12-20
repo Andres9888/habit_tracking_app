@@ -67,10 +67,10 @@ const GESTURE_SPRING_CONFIG = {
   mass: 0.8,
 };
 
-// Fast spring for bottom sheet - iOS-like instant snap
+// Smooth spring for bottom sheet - matches native slide (~280ms)
 const BOTTOM_SHEET_SPRING_CONFIG = {
-  damping: 32,
-  stiffness: 700,
+  damping: 22,
+  stiffness: 340,
   overshootClamping: true,
 };
 
@@ -158,7 +158,7 @@ export function Modal({
       // Backdrop fade in
       backdropOpacityValue.value = useReducedAnimation
         ? backdropOpacity
-        : withTiming(backdropOpacity, { duration: 120, easing: Easing.out(Easing.cubic) });
+        : withTiming(backdropOpacity, { duration: 200, easing: Easing.out(Easing.cubic) });
 
       switch (variant) {
         case 'bottomSheet': {

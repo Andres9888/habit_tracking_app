@@ -107,21 +107,20 @@ export default function TemplatesScreen() {
       return;
     }
 
-    // Instant content - modal slide IS the animation
-    // No translateY animation - just fast opacity fade
-    // The modal sliding up provides all the motion needed
+    // Content fades in with modal - no separate translateY animation
+    // Modal slide provides the motion, content just becomes visible
 
-    headerTranslateY.value = 0; // No animation
-    headerOpacity.value = withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) });
+    headerTranslateY.value = 0;
+    headerOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
 
-    searchTranslateY.value = 0; // No animation
-    searchOpacity.value = withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) });
+    searchTranslateY.value = 0;
+    searchOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
 
-    tabBarTranslateY.value = 0; // No animation
-    tabBarOpacity.value = withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) });
+    tabBarTranslateY.value = 0;
+    tabBarOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
 
-    contentTranslateY.value = 0; // No animation
-    contentOpacity.value = withTiming(1, { duration: 100, easing: Easing.out(Easing.cubic) });
+    contentTranslateY.value = 0;
+    contentOpacity.value = withTiming(1, { duration: 180, easing: Easing.out(Easing.cubic) });
   }, [reducedMotion]);
 
   // Animated styles for screen sections
