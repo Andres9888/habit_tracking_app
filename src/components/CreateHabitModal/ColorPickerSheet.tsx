@@ -12,14 +12,12 @@ import ColorPicker, {
   HueSlider,
   Preview,
   SaturationSlider,
-  Swatches,
 } from 'reanimated-color-picker';
 import type { ColorPickerValue } from 'reanimated-color-picker';
 
 interface ColorPickerSheetProps {
   visible: boolean;
   value: string;
-  presetColors: string[];
   onSelect: (color: string) => void;
   onClose: () => void;
 }
@@ -60,7 +58,6 @@ function useThrottle(callback: (hex: string) => void, delay: number) {
 export function ColorPickerSheet({
   visible,
   value,
-  presetColors,
   onSelect,
   onClose,
 }: ColorPickerSheetProps) {
@@ -157,14 +154,8 @@ export function ColorPickerSheet({
                 thumbShape='pill'
               />
               <BrightnessSlider
-                style={{ borderRadius: 12, height: 32, marginBottom: 16 }}
+                style={{ borderRadius: 12, height: 32, marginBottom: 8 }}
                 thumbShape='pill'
-              />
-              <Swatches
-                colors={presetColors}
-                style={{ marginBottom: 8 }}
-                swatchStyle={{ borderRadius: 24, height: 44, width: 44 }}
-                onSelect={(color: string) => setCurrentColor(color)}
               />
             </ColorPicker>
           ) : (

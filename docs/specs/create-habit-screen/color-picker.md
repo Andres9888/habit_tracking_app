@@ -270,8 +270,13 @@ Switch to a lighter-weight library:
   - **STATUS**: Already implemented in Phase 1 (T1.3) - uses `InteractionManager.runAfterInteractions` with `isPickerReady` state to show loading spinner during modal animation
 
 ### Phase 3: Optimize Preset Selection
-- [ ] T3.1: Move preset swatches to main StyleSection (no modal needed)
-- [ ] T3.2: Only open ColorPickerSheet for custom colors
+- [x] T3.1: Move preset swatches to main StyleSection (no modal needed)
+  - **COMPLETED**: Verified that preset colors were ALREADY inline in StyleSection (lines 170-193), providing instant color selection without any modal. Removed duplicate `Swatches` component from ColorPickerSheet since the modal should only handle custom colors via HSB sliders. Users can now:
+    1. Tap any preset color directly on the main screen → instant selection (no modal)
+    2. Tap "Custom color" → opens ColorPickerSheet with HSB sliders only
+  - Removed `presetColors` prop from ColorPickerSheet interface since it's no longer needed
+- [x] T3.2: Only open ColorPickerSheet for custom colors
+  - **COMPLETED**: This was already the case - ColorPickerSheet only opens when user taps "Custom color" button. Preset colors are selected directly in StyleSection without any modal.
 - [ ] T3.3: Add subtle animation when color is selected
 - [ ] T3.4: Remember last custom color in AsyncStorage
 

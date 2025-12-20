@@ -91,6 +91,7 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
               <StyleSection
                 colors={COLORS}
                 emojis={EMOJIS}
+                habitName={form.habitName}
                 selectedColor={form.selectedColor}
                 selectedEmoji={form.selectedEmoji}
                 suggestedEmojis={suggestedEmojis}
@@ -142,9 +143,8 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
           </View>
         </View>
 
-        {/* Color Picker Sheet */}
+        {/* Color Picker Sheet - Custom color only, presets are in StyleSection */}
         <ColorPickerSheet
-          presetColors={COLORS}
           value={form.selectedColor}
           visible={form.isColorPickerVisible}
           onClose={form.closeColorPicker}

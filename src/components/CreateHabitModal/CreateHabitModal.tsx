@@ -2,7 +2,7 @@ import { Modal, ScrollView, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
-import { COLORS, EMOJIS } from './constants';
+import { COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
@@ -59,8 +59,13 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               selectedPhase={form.dayPhase}
               onSelect={form.setDayPhase}
             />
+            {/* Emoji Picker - uses the new modal picker */}
+            <EmojiPicker
+              selectedEmoji={form.selectedEmoji}
+              onSelect={form.setSelectedEmoji}
+              habitName={form.habitName}
+            />
             <CollapsibleAdvancedOptions>
-              <EmojiPicker emojis={EMOJIS} selectedEmoji={form.selectedEmoji} onSelect={form.setSelectedEmoji} />
               <ColorPickerSection
                 colors={COLORS}
                 selectedColor={form.selectedColor}
@@ -104,7 +109,6 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
         </View>
       </View>
       <ColorPickerSheet
-        presetColors={COLORS}
         value={form.selectedColor}
         visible={form.isColorPickerVisible}
         onClose={form.closeColorPicker}
