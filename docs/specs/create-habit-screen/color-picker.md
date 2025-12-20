@@ -279,7 +279,16 @@ Switch to a lighter-weight library:
   - **COMPLETED**: This was already the case - ColorPickerSheet only opens when user taps "Custom color" button. Preset colors are selected directly in StyleSection without any modal.
 - [x] T3.3: Add subtle animation when color is selected
   - **COMPLETED**: Added a "pop" animation effect to `AnimatedButton` in `StyleSection.tsx` that triggers when a color becomes selected. The animation uses `Animated.sequence` with a quick scale-up to 1.15 followed by a spring settle back to 1.0 (damping: 12, stiffness: 180). Uses a `wasSelected` ref to track state changes and only animate when transitioning from unselected to selected state. Works alongside existing haptic feedback for a satisfying selection experience.
-- [ ] T3.4: Remember last custom color in AsyncStorage
+- [x] T3.4: Remember last custom color in AsyncStorage
+  - **COMPLETED**: Created `src/utils/lastCustomColor.ts` utility module with:
+    - `getLastCustomColor()` - Retrieves stored custom color from AsyncStorage
+    - `saveLastCustomColor(color)` - Saves custom color (validates hex format, converts to uppercase)
+    - `clearLastCustomColor()` - Clears stored color
+  - Updated `ColorPickerSheet.tsx` to:
+    - Load last custom color when modal opens (falls back to current color if none saved)
+    - Save selected custom color to AsyncStorage when user taps "Done"
+  - Created comprehensive test suite with 14 tests covering all edge cases
+  - User flow: When opening custom color picker, it starts with their last selected custom color instead of a preset
 
 ### Phase 4: Polish
 - [ ] T4.1: Add haptic feedback on color selection

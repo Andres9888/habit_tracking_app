@@ -14,6 +14,7 @@ import ColorPicker, {
   SaturationSlider,
 } from 'reanimated-color-picker';
 import type { ColorPickerValue } from 'reanimated-color-picker';
+import { getLastCustomColor, saveLastCustomColor } from '../../utils/lastCustomColor';
 
 interface ColorPickerSheetProps {
   visible: boolean;
@@ -68,7 +69,13 @@ export function ColorPickerSheet({
 
   useEffect(() => {
     if (visible) {
-      setCurrentColor(value);
+      // Load last custom color if available, otherwise use the passed value
+      const loadInitialColor = async () => {
+        const lastCustom = await getLastCustomColor();
+        setCurrentColor(lastCustom ?? value);
+      };
+      loadInitialColor();
+
       // Wait for modal animation to complete before mounting the heavy picker
       const handle = InteractionManager.runAfterInteractions(() => {
         setIsPickerReady(true);
@@ -105,6 +112,8 @@ export function ColorPickerSheet({
 
   const handleDone = () => {
     onSelect(currentColor);
+    // Save the custom color for future use
+    saveLastCustomColor(currentColor);
     onClose();
   };
 
