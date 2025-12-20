@@ -15,6 +15,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, {
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -152,7 +153,13 @@ export function TemplateCard({
       delay,
       withSpring(0, { damping: 18, stiffness: 120 })
     );
-  }, [animationIndex, skipAnimation]);
+
+    // Cleanup animations on unmount
+    return () => {
+      cancelAnimation(cardOpacity);
+      cancelAnimation(cardTranslateY);
+    };
+  }, [animationIndex, skipAnimation, cardOpacity, cardTranslateY]);
 
   // Success glow animation when imported
   useEffect(() => {
@@ -170,6 +177,12 @@ export function TemplateCard({
       checkmarkScale.value = 0;
       successGlow.value = 0;
     }
+
+    // Cleanup animations on unmount
+    return () => {
+      cancelAnimation(checkmarkScale);
+      cancelAnimation(successGlow);
+    };
   }, [isImported, checkmarkScale, successGlow, reducedMotion]);
 
   const frequencyLabels: Record<string, string> = {
