@@ -5,7 +5,18 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated, { FadeInDown, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  SlideInRight,
+  SlideOutLeft,
+  SlideInLeft,
+  SlideOutRight,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  runOnJS,
+} from 'react-native-reanimated';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { format, addMonths, subMonths, isSameMonth } from 'date-fns';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -29,6 +40,10 @@ export interface CalendarHeatmapProps {
   onDayPress?: (date: string, completed: boolean) => void;
 }
 
+// Swipe configuration
+const SWIPE_THRESHOLD = 50; // Minimum distance to trigger navigation
+const SWIPE_VELOCITY_THRESHOLD = 300; // Minimum velocity to trigger navigation
+
 export function CalendarHeatmap({
   habitId,
   completedDates,
@@ -37,7 +52,11 @@ export function CalendarHeatmap({
   onDayPress,
 }: CalendarHeatmapProps) {
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right'>('left');
   const today = useMemo(() => new Date(), []);
+
+  // Shared value for tracking horizontal translation during swipe
+  const translateX = useSharedValue(0);
 
   const isCurrentMonth = useMemo(
     () => isSameMonth(currentMonth, today),
@@ -45,14 +64,56 @@ export function CalendarHeatmap({
   );
 
   const goToPreviousMonth = useCallback(() => {
+    setSwipeDirection('right');
     setCurrentMonth((prev) => subMonths(prev, 1));
   }, []);
 
   const goToNextMonth = useCallback(() => {
     if (!isCurrentMonth) {
+      setSwipeDirection('left');
       setCurrentMonth((prev) => addMonths(prev, 1));
     }
   }, [isCurrentMonth]);
+
+  // Pan gesture for horizontal swipe navigation
+  const panGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .activeOffsetX([-15, 15]) // Activate only for horizontal swipes
+        .failOffsetY([-15, 15]) // Fail if vertical movement is detected (allow scrolling)
+        .onUpdate((event) => {
+          // Constrain translation for visual feedback
+          const maxTranslation = 100;
+          translateX.value = Math.max(
+            -maxTranslation,
+            Math.min(maxTranslation, event.translationX)
+          );
+        })
+        .onEnd((event) => {
+          const shouldNavigate =
+            Math.abs(event.translationX) > SWIPE_THRESHOLD ||
+            Math.abs(event.velocityX) > SWIPE_VELOCITY_THRESHOLD;
+
+          if (shouldNavigate) {
+            if (event.translationX > 0) {
+              // Swiped right → go to previous month
+              runOnJS(goToPreviousMonth)();
+            } else if (event.translationX < 0 && !isCurrentMonth) {
+              // Swiped left → go to next month (only if not current month)
+              runOnJS(goToNextMonth)();
+            }
+          }
+
+          // Reset translation with spring animation
+          translateX.value = withSpring(0, { damping: 15, stiffness: 150 });
+        }),
+    [isCurrentMonth, goToPreviousMonth, goToNextMonth, translateX]
+  );
+
+  // Animated style for swipe feedback
+  const swipeAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value * 0.3 }], // Subtle parallax effect
+  }));
 
   // Generate grid for current month view
   const grid = useMemo(() => {
@@ -128,26 +189,38 @@ export function CalendarHeatmap({
           ))}
         </View>
 
-        {/* Calendar Grid */}
-        <Animated.View
-          key={currentMonth.toISOString()}
-          entering={SlideInRight.duration(200)}
-          exiting={SlideOutLeft.duration(200)}
-        >
-          {grid.map((week, weekIndex) => (
-            <View key={weekIndex} className="flex-row gap-1 mb-1">
-              {week.map((day, dayIndex) => (
-                <DayCell
-                  key={day.date || `empty-${weekIndex}-${dayIndex}`}
-                  day={day}
-                  index={weekIndex * 7 + dayIndex}
-                  habitColor={habitColor}
-                  onPress={onDayPress}
-                />
+        {/* Calendar Grid with Swipe Gesture */}
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={swipeAnimatedStyle}>
+            <Animated.View
+              key={currentMonth.toISOString()}
+              entering={
+                swipeDirection === 'left'
+                  ? SlideInRight.duration(200)
+                  : SlideInLeft.duration(200)
+              }
+              exiting={
+                swipeDirection === 'left'
+                  ? SlideOutLeft.duration(200)
+                  : SlideOutRight.duration(200)
+              }
+            >
+              {grid.map((week, weekIndex) => (
+                <View key={weekIndex} className="flex-row gap-1 mb-1">
+                  {week.map((day, dayIndex) => (
+                    <DayCell
+                      key={day.date || `empty-${weekIndex}-${dayIndex}`}
+                      day={day}
+                      index={weekIndex * 7 + dayIndex}
+                      habitColor={habitColor}
+                      onPress={onDayPress}
+                    />
+                  ))}
+                </View>
               ))}
-            </View>
-          ))}
-        </Animated.View>
+            </Animated.View>
+          </Animated.View>
+        </GestureDetector>
 
         {/* Summary Stats Footer */}
         <View className="mt-4 flex-row items-center justify-center gap-4">

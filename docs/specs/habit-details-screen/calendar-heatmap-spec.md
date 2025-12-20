@@ -367,7 +367,13 @@ Below the calendar grid, show contextual stats:
   - ✅ Already implemented: SlideInRight/SlideOutLeft on calendar grid with key={currentMonth.toISOString()}
 - [x] **HEATMAP-11**: Implement cell press feedback
   - ✅ Already implemented: Spring-based scale animation (0.9 on pressIn, 1 on pressOut) with damping: 15
-- [ ] **HEATMAP-12**: Add swipe gesture for month navigation (optional)
+- [x] **HEATMAP-12**: Add swipe gesture for month navigation (optional)
+  - ✅ Implemented horizontal pan gesture using react-native-gesture-handler's Gesture.Pan()
+  - ✅ Swipe right → previous month, swipe left → next month (blocked at current month)
+  - ✅ Configurable thresholds: SWIPE_THRESHOLD=50px, SWIPE_VELOCITY_THRESHOLD=300
+  - ✅ Direction-aware animations: SlideInRight/SlideOutLeft vs SlideInLeft/SlideOutRight
+  - ✅ Subtle parallax feedback during swipe (0.3x translation factor)
+  - ✅ Spring animation (damping: 15, stiffness: 150) for snap-back effect
 
 ### Phase 4: Accessibility & Testing
 - [ ] **HEATMAP-13**: Add accessibility labels and hints
