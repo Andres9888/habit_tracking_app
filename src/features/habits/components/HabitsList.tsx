@@ -466,7 +466,6 @@ export function HabitsList({
     getStreak,
     handleArchive,
     handleHabitPress,
-    handleMorePress: openQuickActions,
     highlightHabitId: justCreatedHabitId,
     isReorderingEnabled,
     notifyWeekCompletion,

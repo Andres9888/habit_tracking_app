@@ -43,7 +43,6 @@ interface DraggableHabitProps {
   isJustCreated?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
-  onMorePress?: (habit: Habit) => void;
   onPress?: (habit: Habit) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   previousStreak?: number; // For detecting new personal records
@@ -67,7 +66,6 @@ export default function DraggableHabit({
   isJustCreated = false,
   onArchive,
   onLongPress,
-  onMorePress,
   onPress,
   onWeekComplete,
   previousStreak,
@@ -498,19 +496,6 @@ export default function DraggableHabit({
                 )}
               </View>
             </View>
-            {onMorePress && (
-              <Pressable
-                accessibilityHint='Open habit actions'
-                accessibilityLabel='Open habit actions'
-                accessibilityRole='button'
-                className='ml-3 h-10 w-10 items-center justify-center rounded-full bg-black/5'
-                onPress={() => onMorePress(habit)}
-              >
-                <Text className='text-[22px] leading-[22px]' style={{ color: colors.primaryText }}>
-                  ⋯
-                </Text>
-              </Pressable>
-            )}
           </View>
 
           {/* New Personal Record celebration badge */}
