@@ -50,30 +50,44 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
     transform: [{ scale: scale.value }],
   }));
 
+  // Staggered animation delay for all cell types
+  const staggerDelay = index * 10;
+
   // Empty padding cell
   if (day.date === null) {
-    return <View className="flex-1 aspect-square" />;
+    return (
+      <Animated.View
+        entering={FadeIn.delay(staggerDelay).duration(200)}
+        className="flex-1 aspect-square"
+      />
+    );
   }
 
   // Before habit creation - don't render or show very dimmed
   if (day.isBeforeCreation) {
     return (
-      <View className="flex-1 aspect-square items-center justify-center">
+      <Animated.View
+        entering={FadeIn.delay(staggerDelay).duration(200)}
+        className="flex-1 aspect-square items-center justify-center"
+      >
         <View className="h-9 w-9 items-center justify-center rounded-lg bg-stone-50">
           <Text className="text-xs text-stone-300">{day.dayOfMonth}</Text>
         </View>
-      </View>
+      </Animated.View>
     );
   }
 
   // Future date
   if (day.isFuture) {
     return (
-      <View className="flex-1 aspect-square items-center justify-center">
+      <Animated.View
+        entering={FadeIn.delay(staggerDelay).duration(200)}
+        className="flex-1 aspect-square items-center justify-center"
+      >
         <View className="h-9 w-9 items-center justify-center rounded-lg border border-dashed border-stone-200 bg-stone-50">
           <Text className="text-xs text-stone-300">{day.dayOfMonth}</Text>
         </View>
-      </View>
+      </Animated.View>
     );
   }
 
@@ -99,7 +113,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
 
   return (
     <AnimatedPressable
-      entering={FadeIn.delay(index * 10).duration(200)}
+      entering={FadeIn.delay(staggerDelay).duration(200)}
       style={animatedStyle}
       className="flex-1 aspect-square items-center justify-center"
       onPressIn={handlePressIn}

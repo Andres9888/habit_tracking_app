@@ -360,9 +360,13 @@ Below the calendar grid, show contextual stats:
   - ✅ Shows completion count and success rate percentage for current month
 
 ### Phase 3: Polish
-- [ ] **HEATMAP-9**: Add staggered entry animations for cells
-- [ ] **HEATMAP-10**: Add month transition animations
-- [ ] **HEATMAP-11**: Implement cell press feedback
+- [x] **HEATMAP-9**: Add staggered entry animations for cells
+  - ✅ Added FadeIn.delay(staggerDelay).duration(200) to ALL cell types (empty, before-creation, future, active)
+  - ✅ Consistent staggerDelay variable (index * 10ms) applied across all DayCell render paths
+- [x] **HEATMAP-10**: Add month transition animations
+  - ✅ Already implemented: SlideInRight/SlideOutLeft on calendar grid with key={currentMonth.toISOString()}
+- [x] **HEATMAP-11**: Implement cell press feedback
+  - ✅ Already implemented: Spring-based scale animation (0.9 on pressIn, 1 on pressOut) with damping: 15
 - [ ] **HEATMAP-12**: Add swipe gesture for month navigation (optional)
 
 ### Phase 4: Accessibility & Testing
