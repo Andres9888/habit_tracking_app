@@ -208,12 +208,22 @@ This would standardize safe area handling across all modal headers.
 **Priority:** P2 - Medium
 **Estimate:** 20 min
 **File:** `src/components/ArchivedHabitsModal/ArchivedHabitsModal.tsx`
+**Status:** ✅ COMPLETED (2025-12-20)
 
 **Acceptance Criteria:**
-- [ ] Replace text arrow (←) with `ChevronLeft` from lucide-react-native
-- [ ] Replace text close (✕) with `X` from lucide-react-native
-- [ ] Soften button backgrounds (slightly more rounded, subtle shadow)
-- [ ] Optional: Add subtle blur/gradient header background
+- [x] Replace text arrow (←) with `ChevronLeft` from lucide-react-native
+- [x] Replace text close (✕) with `X` from lucide-react-native
+- [x] Soften button backgrounds (slightly more rounded, subtle shadow)
+- [x] Optional: Add subtle blur/gradient header background
+
+**Implementation Notes (Completed):**
+- Added import for `BlurView` from `expo-blur` and `ChevronLeft`, `X` from `lucide-react-native`
+- Replaced text arrow `←` with `<ChevronLeft color='#475569' size={24} strokeWidth={2} />`
+- Replaced text close `✕` with `<X color='#64748b' size={22} strokeWidth={2} />`
+- Buttons now use `rounded-2xl` and `h-11 w-11` for a slightly larger, softer appearance
+- Added subtle shadow to both buttons (`shadowOpacity: 0.05, shadowRadius: 3`)
+- Wrapped header in `BlurView` with `intensity={20}` and `tint='light'` for subtle glassmorphism effect
+- Button backgrounds changed to `bg-slate-100/80` for semi-transparency that works with blur
 
 ---
 
@@ -266,7 +276,7 @@ This would standardize safe area handling across all modal headers.
 | 2.5 | Fix SignInScreen safe area | P2 | 10m | ✅ DONE |
 | 2.6 | Fix StatsNotesModal safe area | P2 | 10m | ✅ DONE |
 | 2.7 | Create reusable SafeHeader component | P2 | 20m | ✅ DONE |
-| 3 | Header Visual Design | P2 | 20m | TODO |
+| 3 | Header Visual Design | P2 | 20m | ✅ DONE |
 | 4 | Card Entrance Animations | P2 | 30m | TODO |
 | 5 | Empty State Warmth | P3 | 15m | TODO |
 | 6 | Restore Action Feedback | P3 | 20m | TODO |
@@ -320,3 +330,4 @@ Before marking complete:
 | 2025-12-20 | 1.4 | Completed Task 2.5: Fixed SignInScreen safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-[60px]` with dynamic `paddingTop: insets.top + 16`. | Claude |
 | 2025-12-20 | 1.5 | Completed Task 2.6: Fixed StatsNotesModal safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-16` with dynamic `paddingTop: insets.top + 8`. All identified safe area issues now fixed. | Claude |
 | 2025-12-20 | 1.6 | Completed Task 2.7: Created reusable `SafeHeader` component at `src/components/SafeHeader/SafeHeader.tsx`. Component wraps children with dynamic safe area padding, supporting `additionalPadding`, `minPadding`, `style`, and `className` props. Includes TypeScript interface and proper exports. | Claude |
+| 2025-12-20 | 1.7 | Completed Task 3: Improved ArchivedHabitsModal header visual design. Replaced text arrow/close with `ChevronLeft` and `X` lucide icons. Added subtle blur background (`BlurView intensity=20`), softer button styling (rounded-2xl, shadows), and semi-transparent backgrounds. | Claude |

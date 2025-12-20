@@ -1,6 +1,8 @@
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChevronLeft, X } from 'lucide-react-native';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 
 interface ArchivedHabitsModalProps {
@@ -53,30 +55,52 @@ export default function ArchivedHabitsModal({
 
   return (
     <>
-      {/* Header - dynamic padding for Dynamic Island/notch */}
-      <View style={{ paddingTop: insets.top + 8 }}>
-        <View className='mb-4 flex-row items-center justify-between'>
-        <TouchableOpacity
-          accessibilityLabel='Back to settings'
-          accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full bg-slate-100'
-          onPress={onBack}
-        >
-          <Text className='text-xl text-slate-600'>←</Text>
-        </TouchableOpacity>
-        <Text className='flex-1 text-center text-xl font-bold text-slate-900'>
-          Archived Habits
-        </Text>
-        <TouchableOpacity
-          accessibilityLabel='Close'
-          accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full bg-slate-100'
-          onPress={onClose}
-        >
-          <Text className='text-lg text-slate-500'>✕</Text>
-        </TouchableOpacity>
+      {/* Header - dynamic padding for Dynamic Island/notch with subtle blur */}
+      <BlurView
+        intensity={20}
+        tint='light'
+        style={{
+          paddingTop: insets.top + 8,
+          paddingHorizontal: 0,
+          paddingBottom: 8,
+        }}
+      >
+        <View className='mb-2 flex-row items-center justify-between'>
+          <TouchableOpacity
+            accessibilityLabel='Back to settings'
+            accessibilityRole='button'
+            className='h-11 w-11 items-center justify-center rounded-2xl bg-slate-100/80'
+            onPress={onBack}
+            style={{
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.05,
+              shadowRadius: 3,
+              elevation: 1,
+            }}
+          >
+            <ChevronLeft color='#475569' size={24} strokeWidth={2} />
+          </TouchableOpacity>
+          <Text className='flex-1 text-center text-xl font-bold text-slate-900'>
+            Archived Habits
+          </Text>
+          <TouchableOpacity
+            accessibilityLabel='Close'
+            accessibilityRole='button'
+            className='h-11 w-11 items-center justify-center rounded-2xl bg-slate-100/80'
+            onPress={onClose}
+            style={{
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.05,
+              shadowRadius: 3,
+              elevation: 1,
+            }}
+          >
+            <X color='#64748b' size={22} strokeWidth={2} />
+          </TouchableOpacity>
         </View>
-      </View>
+      </BlurView>
 
       {/* Stats Summary Bar */}
       {archivedHabits.length > 0 && (
