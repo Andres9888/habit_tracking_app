@@ -382,13 +382,27 @@ Use uppercase tracking labels for visual hierarchy:
 
 ### Tasks
 
-- [ ] **INSIGHTS-1**: Add gradient background layer matching violet/blue theme
-- [ ] **INSIGHTS-2**: Update all headers to use icon container pattern
-- [ ] **INSIGHTS-3**: Add totalCompletions and successRate props
-- [ ] **INSIGHTS-4**: Add "Journey Stats" row at top
-- [ ] **INSIGHTS-5**: Replace streak records leaderboard with compact top-3 medals
-- [ ] **INSIGHTS-6**: Add uppercase tracking section labels
-- [ ] **INSIGHTS-7**: Remove StreakRecordRow component (simplify to medal cards)
+- [x] **INSIGHTS-1**: Add gradient background layer matching violet/blue theme
+  - Added `overflow-hidden` wrapper with absolute positioned gradient background using `from-violet-50/30 via-white to-blue-50/30` to all four sections (Journey Stats, Best Days, Streak Records, Monthly Trend)
+  - Also updated the "not enough data" empty state to use the same gradient pattern
+- [x] **INSIGHTS-2**: Update all headers to use icon container pattern
+  - Updated all section headers with h-8 w-8 rounded-lg bg-violet-100 icon containers
+  - Changed icon colors to text-violet-500 and reduced size from 18 to 16
+  - Changed font-semibold to font-bold across all headers
+- [x] **INSIGHTS-3**: Add totalCompletions and successRate props
+  - Props were already added in previous implementation (STATS-1), verified interface includes totalCompletions, successRate, daysTracking
+- [x] **INSIGHTS-4**: Add "Journey Stats" row at top
+  - "Your Journey" section was already implemented in previous work (STATS-2), now updated with gradient background and section label
+- [x] **INSIGHTS-5**: Replace streak records leaderboard with compact top-3 medals
+  - Replaced StreakRecordRow-based leaderboard with compact inline medal cards (🥇🥈🥉)
+  - Cards show days count with amber/stone/orange color theming
+  - Added "NOW" badge for current streak inline within medal card
+- [x] **INSIGHTS-6**: Add uppercase tracking section labels
+  - Added `text-[10px] font-bold uppercase tracking-widest text-violet-500` section labels
+  - Labels: "Overall Progress", "Performance by Day", "Top Performances", "Month Comparison"
+- [x] **INSIGHTS-7**: Remove StreakRecordRow component (simplify to medal cards)
+  - Deleted StreakRecordRow function component entirely
+  - Removed unused `Flame` import and `formatDateShort` helper function
 
 ---
 

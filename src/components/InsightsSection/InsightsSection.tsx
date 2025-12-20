@@ -19,7 +19,6 @@ import {
   TrendingUp,
   TrendingDown,
   Calendar,
-  Flame,
   AlertTriangle,
   CheckCircle2,
   Percent,
@@ -256,14 +255,6 @@ function calculateTrendComparison(tracking: HabitTrackingEntry[]): {
   };
 }
 
-/**
- * Format date for display
- */
-function formatDateShort(dateStr: string): string {
-  const date = new Date(dateStr);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${months[date.getMonth()]} ${date.getDate()}`;
-}
 
 /**
  * Day Bar Component
@@ -333,75 +324,6 @@ function DayBar({
   );
 }
 
-/**
- * Streak Record Row Component
- */
-function StreakRecordRow({
-  record,
-  rank,
-  index,
-}: {
-  record: StreakRecord;
-  rank: number;
-  index: number;
-}) {
-  const opacity = useSharedValue(0);
-  const translateX = useSharedValue(-20);
-
-  useEffect(() => {
-    opacity.value = withDelay(index * 80, withTiming(1, { duration: 200 }));
-    translateX.value = withDelay(index * 80, withSpring(0, { damping: 15 }));
-  }, [index]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateX: translateX.value }],
-  }));
-
-  const getMedal = () => {
-    if (rank === 1) return '🥇';
-    if (rank === 2) return '🥈';
-    if (rank === 3) return '🥉';
-    return `${rank}.`;
-  };
-
-  return (
-    <Animated.View
-      className={`flex-row items-center justify-between rounded-xl px-3 py-2.5 ${
-        record.isCurrent
-          ? 'border border-amber-200 bg-amber-50'
-          : 'border border-stone-100 bg-stone-50/50'
-      }`}
-      style={animatedStyle}
-    >
-      <View className="flex-row items-center gap-2.5">
-        <Text className="w-6 text-center text-base">{getMedal()}</Text>
-        <View>
-          <View className="flex-row items-center gap-1.5">
-            <Text
-              className={`text-base font-bold ${
-                record.isCurrent ? 'text-amber-700' : 'text-stone-800'
-              }`}
-            >
-              {record.days} days
-            </Text>
-            {record.isCurrent && (
-              <Flame className="text-amber-500" fill="#f59e0b" size={14} />
-            )}
-          </View>
-          <Text className="text-xs text-stone-400">
-            {formatDateShort(record.startDate)} - {formatDateShort(record.endDate)}
-          </Text>
-        </View>
-      </View>
-      {record.isCurrent && (
-        <View className="rounded-full bg-amber-100 px-2 py-0.5">
-          <Text className="text-[10px] font-semibold text-amber-700">NOW</Text>
-        </View>
-      )}
-    </Animated.View>
-  );
-}
 
 /**
  * Main InsightsSection Component
@@ -480,21 +402,26 @@ export function InsightsSection({
   if (!hasEnoughData) {
     return (
       <Animated.View
-        className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50"
+        className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50"
         entering={FadeInDown.delay(100).springify()}
       >
-        <View className="flex-row items-center justify-center gap-2 mb-3">
-          <BarChart3 className="text-stone-400" size={18} />
-          <Text className="text-lg font-semibold text-stone-400">Insights</Text>
-        </View>
-        <View className="items-center rounded-xl bg-stone-50 py-6">
-          <Calendar className="mb-2 text-stone-300" size={28} />
-          <Text className="text-center text-sm text-stone-500">
-            Keep tracking for insights
-          </Text>
-          <Text className="mt-1 text-center text-xs text-stone-400">
-            {7 - tracking.length} more days needed
-          </Text>
+        <View className="absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30" />
+        <View className="p-5">
+          <View className="mb-3 flex-row items-center justify-center gap-2">
+            <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
+              <BarChart3 className="text-violet-400" size={16} />
+            </View>
+            <Text className="text-lg font-bold text-stone-400">Insights</Text>
+          </View>
+          <View className="items-center rounded-xl bg-white/60 py-6">
+            <Calendar className="mb-2 text-stone-300" size={28} />
+            <Text className="text-center text-sm text-stone-500">
+              Keep tracking for insights
+            </Text>
+            <Text className="mt-1 text-center text-xs text-stone-400">
+              {7 - tracking.length} more days needed
+            </Text>
+          </View>
         </View>
       </Animated.View>
     );
@@ -506,13 +433,18 @@ export function InsightsSection({
       entering={FadeInDown.delay(100).springify()}
     >
       {/* Journey Stats Section */}
-      <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-        <View className="mb-4 flex-row items-center justify-center gap-2">
-          <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
-            <BarChart3 className="text-violet-500" size={16} />
+      <View className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50">
+        <View className="absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30" />
+        <View className="p-5">
+          <View className="mb-4 flex-row items-center justify-center gap-2">
+            <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
+              <BarChart3 className="text-violet-500" size={16} />
+            </View>
+            <Text className="text-lg font-bold text-stone-800">Your Journey</Text>
           </View>
-          <Text className="text-lg font-bold text-stone-800">Your Journey</Text>
-        </View>
+          <Text className="mb-3 text-center text-[10px] font-bold uppercase tracking-widest text-violet-500">
+            Overall Progress
+          </Text>
 
         <View className="flex-row gap-3">
           <View className="flex-1 items-center rounded-xl border border-emerald-100 bg-white/60 p-3">
@@ -537,14 +469,22 @@ export function InsightsSection({
             <Text className="text-[10px] text-stone-500">days tracking</Text>
           </View>
         </View>
+        </View>
       </View>
 
       {/* Best Days Section */}
-      <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-        <View className="mb-4 flex-row items-center justify-center gap-2">
-          <Calendar className="text-stone-500" size={18} />
-          <Text className="text-lg font-semibold text-stone-800">Your Best Days</Text>
-        </View>
+      <View className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50">
+        <View className="absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30" />
+        <View className="p-5">
+          <View className="mb-4 flex-row items-center justify-center gap-2">
+            <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
+              <Calendar className="text-violet-500" size={16} />
+            </View>
+            <Text className="text-lg font-bold text-stone-800">Best Days</Text>
+          </View>
+          <Text className="mb-3 text-center text-[10px] font-bold uppercase tracking-widest text-violet-500">
+            Performance by Day
+          </Text>
 
         {/* Bar Chart */}
         <View className="mb-4 flex-row items-end justify-between px-1">
@@ -583,101 +523,115 @@ export function InsightsSection({
             </View>
           )}
         </View>
+        </View>
       </View>
 
       {/* Streak Records Section */}
       {streakRecords.length > 0 && (
-        <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-          <View className="mb-4 flex-row items-center justify-center gap-2">
-            <Trophy className="text-stone-500" size={18} />
-            <Text className="text-lg font-semibold text-stone-800">Streak Records</Text>
-          </View>
-
-          <View className="gap-2">
-            {streakRecords.map((record, index) => (
-              <StreakRecordRow
-                key={`${record.startDate}-${record.days}`}
-                record={record}
-                rank={index + 1}
-                index={index}
-              />
-            ))}
-          </View>
-
-          {/* Motivation Message */}
-          {streakRecords.length > 0 && currentStreak > 0 && (
-            <View className="mt-3">
-              {(() => {
-                const currentRank = streakRecords.findIndex((r) => r.isCurrent) + 1;
-                const nextRecord = streakRecords[currentRank - 2]; // Record above current
-                if (nextRecord && !streakRecords[currentRank - 1]?.isCurrent) {
-                  const daysNeeded = nextRecord.days - currentStreak + 1;
-                  if (daysNeeded > 0 && daysNeeded <= 30) {
-                    return (
-                      <View className="flex-row items-center justify-center gap-1.5 rounded-lg bg-violet-50 py-2">
-                        <Text className="text-xs text-violet-600">
-                          <Text className="font-bold">{daysNeeded}</Text> more days to beat #{currentRank - 1}!
-                        </Text>
-                      </View>
-                    );
-                  }
-                }
-                return null;
-              })()}
+        <View className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50">
+          <View className="absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30" />
+          <View className="p-5">
+            <View className="mb-4 flex-row items-center justify-center gap-2">
+              <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
+                <Trophy className="text-violet-500" size={16} />
+              </View>
+              <Text className="text-lg font-bold text-stone-800">Streak Records</Text>
             </View>
-          )}
+            <Text className="mb-3 text-center text-[10px] font-bold uppercase tracking-widest text-violet-500">
+              Top Performances
+            </Text>
+
+            {/* Compact Top 3 Medals */}
+            <View className="flex-row gap-2">
+              {streakRecords.slice(0, 3).map((record, i) => (
+                <View
+                  key={`${record.startDate}-${record.days}`}
+                  className={`flex-1 items-center rounded-xl p-2.5 ${
+                    i === 0 ? 'border border-amber-200 bg-amber-50' :
+                    i === 1 ? 'border border-stone-200 bg-stone-50' :
+                    'border border-orange-200 bg-orange-50'
+                  }`}
+                >
+                  <Text className="mb-0.5 text-base">{['🥇', '🥈', '🥉'][i]}</Text>
+                  <Text className={`text-lg font-bold ${
+                    i === 0 ? 'text-amber-700' :
+                    i === 1 ? 'text-stone-700' :
+                    'text-orange-700'
+                  }`}>{record.days}</Text>
+                  <Text className={`text-[9px] ${
+                    i === 0 ? 'text-amber-500' :
+                    i === 1 ? 'text-stone-500' :
+                    'text-orange-500'
+                  }`}>days</Text>
+                  {record.isCurrent && (
+                    <View className="mt-1 rounded-full bg-amber-100 px-1.5 py-0.5">
+                      <Text className="text-[8px] font-semibold text-amber-700">NOW</Text>
+                    </View>
+                  )}
+                </View>
+              ))}
+            </View>
+          </View>
         </View>
       )}
 
       {/* Trend Comparison Section */}
-      <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-        <View className="mb-4 flex-row items-center justify-center gap-2">
-          {trend.change >= 0 ? (
-            <TrendingUp className="text-emerald-500" size={18} />
-          ) : (
-            <TrendingDown className="text-red-500" size={18} />
-          )}
-          <Text className="text-lg font-semibold text-stone-800">Monthly Trend</Text>
-        </View>
-
-        <View className="flex-row gap-3">
-          <View className="flex-1 rounded-xl border border-stone-100 bg-stone-50/50 p-4">
-            <Text className="mb-1 text-xs text-stone-400">This Month</Text>
-            <Text className="text-3xl font-bold text-stone-800">{trend.thisMonth}%</Text>
+      <View className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50">
+        <View className="absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30" />
+        <View className="p-5">
+          <View className="mb-4 flex-row items-center justify-center gap-2">
+            <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
+              {trend.change >= 0 ? (
+                <TrendingUp className="text-violet-500" size={16} />
+              ) : (
+                <TrendingDown className="text-violet-500" size={16} />
+              )}
+            </View>
+            <Text className="text-lg font-bold text-stone-800">Monthly Trend</Text>
           </View>
-          <View className="flex-1 rounded-xl border border-stone-100 bg-stone-50/50 p-4">
-            <Text className="mb-1 text-xs text-stone-400">Last Month</Text>
-            <Text className="text-3xl font-bold text-stone-500">{trend.lastMonth}%</Text>
-          </View>
-        </View>
+          <Text className="mb-3 text-center text-[10px] font-bold uppercase tracking-widest text-violet-500">
+            Month Comparison
+          </Text>
 
-        {/* Change Badge */}
-        <View
-          className={`mt-3 flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 ${
-            trend.change > 0
-              ? 'bg-emerald-50'
-              : trend.change < 0
-                ? 'bg-red-50'
-                : 'bg-stone-50'
-          }`}
-        >
-          {trend.change > 0 ? (
-            <>
-              <TrendingUp className="text-emerald-500" size={16} />
-              <Text className="text-sm font-semibold text-emerald-600">
-                +{trend.change}% improvement
-              </Text>
-            </>
-          ) : trend.change < 0 ? (
-            <>
-              <TrendingDown className="text-red-500" size={16} />
-              <Text className="text-sm font-semibold text-red-600">
-                {trend.change}% from last month
-              </Text>
-            </>
-          ) : (
-            <Text className="text-sm font-medium text-stone-500">Same as last month</Text>
-          )}
+          <View className="flex-row gap-3">
+            <View className="flex-1 rounded-xl border border-stone-100 bg-white/60 p-4">
+              <Text className="mb-1 text-xs text-stone-400">This Month</Text>
+              <Text className="text-3xl font-bold text-stone-800">{trend.thisMonth}%</Text>
+            </View>
+            <View className="flex-1 rounded-xl border border-stone-100 bg-white/60 p-4">
+              <Text className="mb-1 text-xs text-stone-400">Last Month</Text>
+              <Text className="text-3xl font-bold text-stone-500">{trend.lastMonth}%</Text>
+            </View>
+          </View>
+
+          {/* Change Badge */}
+          <View
+            className={`mt-3 flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 ${
+              trend.change > 0
+                ? 'bg-emerald-50'
+                : trend.change < 0
+                  ? 'bg-red-50'
+                  : 'bg-stone-50'
+            }`}
+          >
+            {trend.change > 0 ? (
+              <>
+                <TrendingUp className="text-emerald-500" size={16} />
+                <Text className="text-sm font-semibold text-emerald-600">
+                  +{trend.change}% improvement
+                </Text>
+              </>
+            ) : trend.change < 0 ? (
+              <>
+                <TrendingDown className="text-red-500" size={16} />
+                <Text className="text-sm font-semibold text-red-600">
+                  {trend.change}% from last month
+                </Text>
+              </>
+            ) : (
+              <Text className="text-sm font-medium text-stone-500">Same as last month</Text>
+            )}
+          </View>
         </View>
       </View>
     </Animated.View>
