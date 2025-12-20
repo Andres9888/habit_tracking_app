@@ -229,7 +229,8 @@ useEffect(() => {
 
 ### Phase 2: Gesture Optimization
 - [x] Add `delayPressIn={50}` to MiniTemplateCard Pressable
-- [ ] Evaluate replacing ScrollView with FlatList for horizontal scroll
+- [x] Evaluate replacing ScrollView with FlatList for horizontal scroll
+  - **Evaluation Result (2025-12-19):** After analysis, keeping ScrollView is the correct choice for this use case. FlatList provides virtualization benefits for large lists (50+ items), but each category typically contains only 3-10 templates. The current ScrollView implementation with `nestedScrollEnabled`, `directionalLockEnabled`, `scrollEventThrottle={16}`, and `decelerationRate="fast"` provides optimal gesture handling without the overhead of virtualization. FlatList would introduce unnecessary complexity and potential performance issues for these small lists. The horizontal scroll bug fixes in Phase 1 should resolve the gesture conflicts adequately.
 - [ ] Test with slow 3G network simulation to verify loading behavior
 
 ### Phase 3: Animation Timing
