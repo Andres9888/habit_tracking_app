@@ -21,6 +21,7 @@ import Animated, {
   withDelay,
   Easing,
 } from 'react-native-reanimated';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface StrengthProgressBarProps {
   /** Strength value (0-100) */
@@ -100,25 +101,65 @@ export const StrengthProgressBar = ({
   const currentLevel = getCurrentLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
   const config = SIZE_CONFIG[size];
+  const reduceMotion = useReduceMotion();
 
   // Track previous level to detect actual level changes
   const previousLevelRef = useRef<string>(currentLevel.label);
+  // Track previous strength to detect transitions to low values
+  const previousStrengthRef = useRef<number>(clampedStrength);
+  // Track if this is the first render to skip animations on mount
+  const isFirstRenderRef = useRef(true);
+
 
   // Animation values
-  const progressWidth = useSharedValue(0);
+  const progressWidth = useSharedValue(clampedStrength);
   const emojiScale = useSharedValue(1);
   const emojiOpacity = useSharedValue(1);
   const emojiRotation = useSharedValue(0);
 
   useEffect(() => {
-    progressWidth.value = withSpring(clampedStrength, {
-      damping: 15,
-      stiffness: 100,
-    });
+    // Skip animation on first render - just set the value directly
+    if (isFirstRenderRef.current) {
+      isFirstRenderRef.current = false;
+      progressWidth.value = clampedStrength;
+      previousStrengthRef.current = clampedStrength;
+      return;
+    }
+
+    const previousStrength = previousStrengthRef.current;
+    previousStrengthRef.current = clampedStrength;
+
+    // Determine if we're transitioning to a low/empty value
+    // Use smooth timing instead of spring to avoid overshoot/bounce effect
+    const isEmptyingTransition = clampedStrength <= 5 && previousStrength > clampedStrength;
+
+    // Animate progress bar changes
+    if (reduceMotion) {
+      // Respect accessibility: no animation, immediate value change
+      progressWidth.value = clampedStrength;
+    } else if (isEmptyingTransition) {
+      // When emptying (going to 0 or very low), use smooth timing instead of spring
+      // This prevents the bar from appearing to "fill" due to spring overshoot
+      progressWidth.value = withTiming(clampedStrength, {
+        duration: 400,
+        easing: Easing.out(Easing.cubic),
+      });
+    } else {
+      // Normal spring animation for other transitions (increasing or normal decreasing)
+      progressWidth.value = withSpring(clampedStrength, {
+        damping: 15,
+        stiffness: 100,
+      });
+    }
 
     // Detect if level actually changed (meaningful transition)
     const levelChanged = previousLevelRef.current !== currentLevel.label;
     previousLevelRef.current = currentLevel.label;
+
+    // Skip emoji animations if reduce motion is enabled
+    if (reduceMotion) {
+      return;
+    }
 
     if (levelChanged) {
       // 🌱→🌿→🌳 LEVEL-UP ANIMATION: Meaningful growth transition
@@ -159,7 +200,7 @@ export const StrengthProgressBar = ({
         withSpring(1, { damping: 15, stiffness: 200 })
       );
     }
-  }, [clampedStrength, currentLevel.label]);
+  }, [clampedStrength, currentLevel.label, reduceMotion]);
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,
