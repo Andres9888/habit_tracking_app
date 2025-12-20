@@ -142,8 +142,12 @@ export function CollapsibleCategorySection({
         >
           <ScrollView
             horizontal
+            nestedScrollEnabled={true}
+            directionalLockEnabled={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.templatesScroll}
+            scrollEventThrottle={16}
+            decelerationRate="fast"
           >
             {templates.map((template) => (
               <MiniTemplateCard

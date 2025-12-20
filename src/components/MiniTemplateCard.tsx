@@ -80,6 +80,7 @@ export function MiniTemplateCard({
       accessible
       accessibilityLabel={`${name} template`}
       accessibilityRole="button"
+      delayPressIn={50}
       style={[styles.card, { backgroundColor: `${iconColor}08` }, animatedStyle]}
       onPress={handlePress}
       onPressIn={handlePressIn}

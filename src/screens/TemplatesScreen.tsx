@@ -678,6 +678,8 @@ export default function TemplatesScreen() {
           ref={scrollViewRef}
           contentContainerStyle={styles.browseContent}
           showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          directionalLockEnabled={true}
         >
           <View style={styles.categorySections}>
             {categories
