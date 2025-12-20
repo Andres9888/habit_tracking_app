@@ -1,5 +1,6 @@
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 
 interface ArchivedHabitsModalProps {
@@ -46,13 +47,15 @@ export default function ArchivedHabitsModal({
   onClose,
   onBack,
 }: ArchivedHabitsModalProps) {
+  const insets = useSafeAreaInsets();
   const { archivedHabits, handleRestore, handlePermanentDelete } =
     useArchivedHabitsModalLogic();
 
   return (
     <>
-      {/* Header - extra top padding for Dynamic Island */}
-      <View className='mb-4 mt-4 flex-row items-center justify-between'>
+      {/* Header - dynamic padding for Dynamic Island/notch */}
+      <View style={{ paddingTop: insets.top + 8 }}>
+        <View className='mb-4 flex-row items-center justify-between'>
         <TouchableOpacity
           accessibilityLabel='Back to settings'
           accessibilityRole='button'
@@ -72,6 +75,7 @@ export default function ArchivedHabitsModal({
         >
           <Text className='text-lg text-slate-500'>✕</Text>
         </TouchableOpacity>
+        </View>
       </View>
 
       {/* Stats Summary Bar */}

@@ -102,12 +102,20 @@ const insets = useSafeAreaInsets();
 **Priority:** P0 - Blocker
 **Estimate:** 15 min
 **File:** `src/components/ArchivedHabitsModal/ArchivedHabitsModal.tsx`
+**Status:** ✅ COMPLETED (2025-12-20)
 
 **Acceptance Criteria:**
-- [ ] Import `useSafeAreaInsets` from `react-native-safe-area-context`
-- [ ] Apply `insets.top` padding to header container
+- [x] Import `useSafeAreaInsets` from `react-native-safe-area-context`
+- [x] Apply `insets.top` padding to header container
 - [ ] Back button sits comfortably below Dynamic Island on all iPhone models
 - [ ] Test on iPhone 14 Pro (Dynamic Island) and iPhone SE (no notch)
+
+**Implementation Notes (Completed):**
+- Added import for `useSafeAreaInsets` from `react-native-safe-area-context` (line 3)
+- Added `const insets = useSafeAreaInsets();` inside component (line 50)
+- Wrapped header in `<View style={{ paddingTop: insets.top + 8 }}>` for dynamic safe area padding
+- Follows the same pattern as `ArchiveUndoToast.tsx` which uses `insets.bottom + 16`
+- Manual device testing pending (iPhone 14 Pro for Dynamic Island, iPhone SE for no notch)
 
 **Implementation Notes:**
 ```tsx
@@ -196,7 +204,7 @@ const insets = useSafeAreaInsets();
 
 | # | Task | Priority | Est. | Status |
 |---|------|----------|------|--------|
-| 1 | Fix Safe Area Compliance | P0 | 15m | TODO |
+| 1 | Fix Safe Area Compliance | P0 | 15m | ✅ DONE |
 | 2 | Audit Other Screens | P1 | 30m | TODO |
 | 3 | Header Visual Design | P2 | 20m | TODO |
 | 4 | Card Entrance Animations | P2 | 30m | TODO |
