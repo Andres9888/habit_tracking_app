@@ -27,21 +27,35 @@ Set up Clerk Dashboard with OAuth providers and email/password authentication.
   - `habit-tracker://` (production deep link)
 - [ ] Copy Publishable Key and Secret Key
 
+**BLOCKED - Manual Setup Required:**
+This task requires manual configuration in the Clerk Dashboard (dashboard.clerk.com) and cannot be automated. A human must complete the following:
+1. Create Clerk account and application
+2. Configure OAuth providers with external credentials (Google Cloud, Apple Developer)
+3. Set up JWT templates
+4. Copy API keys to local environment
+
 ---
 
 #### Task 2: Install dependencies and configure environment
 **Priority:** High | **Points:** 1 | **Dependencies:** Task 1
+**Status:** Partially Complete (2025-12-20)
 
 **Description:**
 Install Clerk Expo SDK and configure environment variables.
 
 **Acceptance Criteria:**
-- [ ] Install `@clerk/clerk-expo@^2.5.0`
-- [ ] Install `expo-auth-session@~6.2.1`
-- [ ] Install `expo-web-browser@~15.0.1`
-- [ ] Add `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` to `.env.local`
-- [ ] Add `scheme: "habit-tracker"` to `app.json`
-- [ ] Verify `expo-secure-store` already installed
+- [x] Install `@clerk/clerk-expo@^2.5.0` *(v2.15.4 already installed)*
+- [x] Install `expo-auth-session@~6.2.1` *(v7.0.9 already installed)*
+- [x] Install `expo-web-browser@~15.0.1` *(v15.0.9 already installed)*
+- [ ] Add `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` to `.env.local` *(BLOCKED: requires Task 1)*
+- [x] Add `scheme: "habit-tracker"` to `app.json`
+- [x] Verify `expo-secure-store` already installed *(v15.0.7 installed)*
+
+**Implementation Notes:**
+- All npm dependencies are already installed with compatible versions
+- Deep link scheme added to app.json
+- Environment variable placeholder exists in .env.example
+- BLOCKED: Cannot add Clerk publishable key until Task 1 (Clerk Dashboard setup) is complete
 
 ---
 
