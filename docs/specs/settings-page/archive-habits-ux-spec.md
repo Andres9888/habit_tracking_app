@@ -265,7 +265,7 @@ This would standardize safe area handling across all modal headers.
 | 2.4 | Fix SettingsModal safe area | P1 | 10m | ✅ DONE |
 | 2.5 | Fix SignInScreen safe area | P2 | 10m | ✅ DONE |
 | 2.6 | Fix StatsNotesModal safe area | P2 | 10m | ✅ DONE |
-| 2.7 | Create reusable SafeHeader component | P2 | 20m | TODO |
+| 2.7 | Create reusable SafeHeader component | P2 | 20m | ✅ DONE |
 | 3 | Header Visual Design | P2 | 20m | TODO |
 | 4 | Card Entrance Animations | P2 | 30m | TODO |
 | 5 | Empty State Warmth | P3 | 15m | TODO |
@@ -306,6 +306,7 @@ Before marking complete:
 - `src/components/ArchivedHabitsModal/ArchivedHabitsModal.hooks.ts`
 - `src/components/ArchiveUndoToast/ArchiveUndoToast.tsx`
 - `src/components/DraggableHabit/DraggableHabit.tsx`
+- `src/components/SafeHeader/SafeHeader.tsx` ← NEW (Task 2.7)
 - `src/theme/spacing.ts`
 
 ### Version History
@@ -318,3 +319,4 @@ Before marking complete:
 | 2025-12-20 | 1.3 | Completed Task 2.4: Fixed SettingsModal safe area. Added `useSafeAreaInsets` import and dynamic `paddingTop: insets.top + 8` replacing fixed `pt-12`. | Claude |
 | 2025-12-20 | 1.4 | Completed Task 2.5: Fixed SignInScreen safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-[60px]` with dynamic `paddingTop: insets.top + 16`. | Claude |
 | 2025-12-20 | 1.5 | Completed Task 2.6: Fixed StatsNotesModal safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-16` with dynamic `paddingTop: insets.top + 8`. All identified safe area issues now fixed. | Claude |
+| 2025-12-20 | 1.6 | Completed Task 2.7: Created reusable `SafeHeader` component at `src/components/SafeHeader/SafeHeader.tsx`. Component wraps children with dynamic safe area padding, supporting `additionalPadding`, `minPadding`, `style`, and `className` props. Includes TypeScript interface and proper exports. | Claude |
