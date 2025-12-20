@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import ColorPicker, {
   BrightnessSlider,
-  Panel1,
+  HueSlider,
   Preview,
-  PreviewText,
+  SaturationSlider,
   Swatches,
 } from 'reanimated-color-picker';
 import type { ColorPickerValue } from 'reanimated-color-picker';
@@ -146,13 +146,20 @@ export function ColorPickerSheet({
               onComplete={handleColorComplete}
             >
               <Preview
-                style={{ borderRadius: 16, height: 64, marginBottom: 16 }}
+                style={{ borderRadius: 12, height: 40, marginBottom: 16 }}
               />
-              <PreviewText style={{ marginBottom: 16 }} />
-              <Panel1
-                style={{ borderRadius: 16, height: 220, marginBottom: 16 }}
+              <HueSlider
+                style={{ borderRadius: 12, height: 32, marginBottom: 12 }}
+                thumbShape='pill'
               />
-              <BrightnessSlider style={{ marginBottom: 16 }} />
+              <SaturationSlider
+                style={{ borderRadius: 12, height: 32, marginBottom: 12 }}
+                thumbShape='pill'
+              />
+              <BrightnessSlider
+                style={{ borderRadius: 12, height: 32, marginBottom: 16 }}
+                thumbShape='pill'
+              />
               <Swatches
                 colors={presetColors}
                 style={{ marginBottom: 8 }}
