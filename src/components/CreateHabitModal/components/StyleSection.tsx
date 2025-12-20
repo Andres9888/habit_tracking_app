@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { ChevronRight, Palette } from 'lucide-react-native';
 import { Motion } from '../../../constants/motion';
@@ -34,7 +34,30 @@ const AnimatedButton = ({
   style,
 }: AnimatedButtonProps) => {
   const scale = useRef(new Animated.Value(1)).current;
+  const wasSelected = useRef(isSelected);
   const { triggerSelection } = useHapticFeedback();
+
+  // Trigger selection "pop" animation when this color becomes selected
+  useEffect(() => {
+    if (isSelected && !wasSelected.current) {
+      // Animate: quick scale up then settle back
+      Animated.sequence([
+        Animated.timing(scale, {
+          duration: Motion.duration.fast,
+          easing: Motion.easing.outEase,
+          toValue: 1.15,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scale, {
+          toValue: 1,
+          damping: 12,
+          stiffness: 180,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+    wasSelected.current = isSelected;
+  }, [isSelected, scale]);
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {

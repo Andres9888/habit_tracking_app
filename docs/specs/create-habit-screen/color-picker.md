@@ -277,7 +277,8 @@ Switch to a lighter-weight library:
   - Removed `presetColors` prop from ColorPickerSheet interface since it's no longer needed
 - [x] T3.2: Only open ColorPickerSheet for custom colors
   - **COMPLETED**: This was already the case - ColorPickerSheet only opens when user taps "Custom color" button. Preset colors are selected directly in StyleSection without any modal.
-- [ ] T3.3: Add subtle animation when color is selected
+- [x] T3.3: Add subtle animation when color is selected
+  - **COMPLETED**: Added a "pop" animation effect to `AnimatedButton` in `StyleSection.tsx` that triggers when a color becomes selected. The animation uses `Animated.sequence` with a quick scale-up to 1.15 followed by a spring settle back to 1.0 (damping: 12, stiffness: 180). Uses a `wasSelected` ref to track state changes and only animate when transitioning from unselected to selected state. Works alongside existing haptic feedback for a satisfying selection experience.
 - [ ] T3.4: Remember last custom color in AsyncStorage
 
 ### Phase 4: Polish
