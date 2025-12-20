@@ -219,6 +219,20 @@ const applicationTables = {
     userId: v.optional(v.string()),
   }).index('by_habit_and_date', ['habitId', 'date']),
 
+  // Users table for Clerk authentication integration
+  // Note: Fields are optional for backwards compatibility with existing anonymous users
+  users: defineTable({
+    clerkId: v.optional(v.string()), // Clerk user ID (subject from JWT)
+    email: v.optional(v.string()),
+    name: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+    createdAt: v.optional(v.number()),
+    lastLoginAt: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()), // Legacy field for anonymous users
+  })
+    .index('by_clerk_id', ['clerkId'])
+    .index('by_email', ['email']),
+
   userSettings: defineTable({
     catTheme: v.boolean(),
     darkMode: v.optional(
