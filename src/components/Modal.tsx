@@ -67,11 +67,11 @@ const GESTURE_SPRING_CONFIG = {
   mass: 0.8,
 };
 
-// Smooth spring for bottom sheet - matches native slide (~280ms)
+// Organic spring for bottom sheet - subtle life, not mechanical
 const BOTTOM_SHEET_SPRING_CONFIG = {
-  damping: 22,
-  stiffness: 340,
-  overshootClamping: true,
+  damping: 26,
+  stiffness: 300,
+  // No overshootClamping - tiny overshoot gives organic feel
 };
 
 export type ModalVariant = 'bottomSheet' | 'fullScreen' | 'centerAlert';

@@ -4,8 +4,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { Archive, TrendingUp, Package } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { TrendingUp, Package } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { StrengthProgressBar } from '../StrengthProgressBar';
 import { PhaseTag } from '../PhaseTag';
@@ -287,48 +286,37 @@ export default function DraggableHabit({
       outputRange: [1, 0.85, 0.6],
     });
 
+    // Apple-style: solid background extends edge-to-edge, card slides over it
     return (
-      <Animated.View
-        className='flex-row items-center justify-end'
-        style={{ transform: [{ translateX: trans }] }}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#f59e0b', // amber-500 solid
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
-        <LinearGradient
-          colors={['#fbbf24', '#f59e0b']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+        <Animated.View
           style={{
-            height: '100%',
-            width: 100,
             alignItems: 'center',
             justifyContent: 'center',
-            borderTopRightRadius: 24,
-            borderBottomRightRadius: 24,
+            opacity: iconOpacity,
+            transform: [{ scale: iconScale }],
           }}
         >
-          <Animated.View
-            style={{
-              transform: [{ scale: iconScale }],
-              opacity: iconOpacity,
-              backgroundColor: 'rgba(255, 255, 255, 0.25)',
-              borderRadius: 12,
-              padding: 10,
-            }}
-          >
-            <Package color='white' size={22} strokeWidth={2.5} />
-          </Animated.View>
+          <Package color='white' size={24} strokeWidth={2} />
           <Text
             style={{
               color: 'white',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: '600',
-              marginTop: 6,
-              letterSpacing: 0.3,
+              marginTop: 4,
             }}
           >
             Archive
           </Text>
-        </LinearGradient>
-      </Animated.View>
+        </Animated.View>
+      </View>
     );
   };
 

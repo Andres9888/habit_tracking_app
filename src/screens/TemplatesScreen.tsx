@@ -107,20 +107,20 @@ export default function TemplatesScreen() {
       return;
     }
 
-    // Content fades in with modal - no separate translateY animation
-    // Modal slide provides the motion, content just becomes visible
+    // Content is instant - modal slide IS the animation
+    // No separate content animation, just like native iOS sheets
 
     headerTranslateY.value = 0;
-    headerOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
+    headerOpacity.value = 1;
 
     searchTranslateY.value = 0;
-    searchOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
+    searchOpacity.value = 1;
 
     tabBarTranslateY.value = 0;
-    tabBarOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
+    tabBarOpacity.value = 1;
 
     contentTranslateY.value = 0;
-    contentOpacity.value = withTiming(1, { duration: 180, easing: Easing.out(Easing.cubic) });
+    contentOpacity.value = 1;
   }, [reducedMotion]);
 
   // Animated styles for screen sections
