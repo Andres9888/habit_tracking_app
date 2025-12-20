@@ -133,7 +133,7 @@ function ConnectorLine({ active, index }: { active: boolean; index: number }) {
 
   return (
     <Animated.View
-      className={`absolute top-5 h-1 rounded-full ${active ? 'bg-emerald-300' : 'bg-stone-200'}`}
+      className={`absolute top-5 h-1.5 rounded-full ${active ? 'bg-emerald-300' : 'bg-stone-200'}`}
       style={[{ left: '55%', right: '-55%' }, animatedStyle]}
     />
   );
@@ -187,18 +187,18 @@ export function StreakChainSection({
   }, []);
 
   return (
-    <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
+    <View className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50">
+      {/* Gradient Background */}
+      <View className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-white to-amber-50/30" />
+
+      <View className="p-5">
       {/* Header */}
-      <View className="mb-3 flex-row items-center justify-center gap-2">
-        <Flame
-          className={currentStreak >= 3 ? 'text-orange-500' : 'text-stone-400'}
-          fill={currentStreak >= 3 ? '#f97316' : 'transparent'}
-          size={20}
-        />
-        <Text className="text-lg font-semibold text-stone-800">Streak</Text>
-        {current.icon ? (
-          <Text className="text-lg">{current.icon}</Text>
-        ) : null}
+      <View className="mb-4 flex-row items-center justify-center gap-2">
+        <View className="h-8 w-8 items-center justify-center rounded-lg bg-orange-100">
+          <Flame className="text-orange-500" size={16} />
+        </View>
+        <Text className="text-lg font-bold text-stone-800">Streak</Text>
+        {current.icon ? <Text className="text-lg">{current.icon}</Text> : null}
       </View>
 
       {/* Big Number */}
@@ -214,6 +214,14 @@ export function StreakChainSection({
       {/* Progress to Next Tier */}
       {next && (
         <View className="mb-4 px-2">
+          <View className="mb-1.5 flex-row items-center justify-between">
+            <Text className="text-xs font-medium text-stone-600">
+              Progress to {next.icon} Day {next.days}
+            </Text>
+            <Text className="text-xs font-bold text-orange-600">
+              {daysToNext} {daysToNext === 1 ? 'day' : 'days'}
+            </Text>
+          </View>
           <View className="h-2 overflow-hidden rounded-full bg-stone-100">
             <Animated.View
               className={`h-full rounded-full ${next.barColor}`}
@@ -250,20 +258,21 @@ export function StreakChainSection({
           className={`flex-row items-center justify-center gap-2 rounded-xl py-2.5 ${
             isNewRecord
               ? 'border border-amber-200 bg-amber-50'
-              : 'border border-stone-100 bg-stone-50/50'
+              : 'border border-amber-200 bg-amber-50'
           }`}
         >
-          <Trophy
-            className={isNewRecord ? 'text-amber-500' : 'text-stone-400'}
-            fill={isNewRecord ? '#fbbf24' : 'transparent'}
-            size={16}
-          />
+          <Trophy className="text-amber-500" size={16} />
           {isNewRecord ? (
             <Text className="text-sm font-semibold text-amber-700">New Best! 🎉</Text>
           ) : (
-            <Text className="text-sm text-stone-500">
-              Best: <Text className="font-bold text-stone-700">{bestStreak}</Text>
-            </Text>
+            <>
+              <Text className="text-sm text-stone-600">
+                Best: <Text className="font-bold text-amber-700">{bestStreak}</Text>
+              </Text>
+              <Text className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
+                {bestStreak - currentStreak} to beat!
+              </Text>
+            </>
           )}
         </View>
       )}
@@ -276,6 +285,7 @@ export function StreakChainSection({
           </Text>
         </View>
       )}
+      </View>
     </View>
   );
 }

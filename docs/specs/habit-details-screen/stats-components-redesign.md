@@ -125,11 +125,16 @@ This spec details improvements for each stats component while maintaining the un
 
 ### Tasks
 
-- [ ] **STREAK-1**: Add gradient background layer matching orange/amber theme
-- [ ] **STREAK-2**: Update header to use icon container pattern (h-8 w-8 rounded-lg bg-orange-100)
-- [ ] **STREAK-3**: Add tier context label above progress bar
-- [ ] **STREAK-4**: Add "X to beat!" badge when not at new record
-- [ ] **STREAK-5**: Increase connector line visibility (h-1 → h-1.5)
+- [x] **STREAK-1**: Add gradient background layer matching orange/amber theme
+  - Added `overflow-hidden` wrapper with absolute positioned gradient background using `from-orange-50/30 via-white to-amber-50/30`
+- [x] **STREAK-2**: Update header to use icon container pattern (h-8 w-8 rounded-lg bg-orange-100)
+  - Updated header with icon container pattern, changed font-semibold to font-bold, mb-3 to mb-4
+- [x] **STREAK-3**: Add tier context label above progress bar
+  - Added flex-row with "Progress to {icon} Day {days}" label and "{daysToNext} day(s)" count
+- [x] **STREAK-4**: Add "X to beat!" badge when not at new record
+  - Added pill badge showing "{bestStreak - currentStreak} to beat!" in amber-100/amber-700 styling
+- [x] **STREAK-5**: Increase connector line visibility (h-1 → h-1.5)
+  - Updated ConnectorLine component from h-1 to h-1.5
 
 ---
 
