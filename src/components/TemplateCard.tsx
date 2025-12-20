@@ -21,8 +21,11 @@ import Animated, {
   withDelay,
   withTiming,
   Easing,
+  FadeInUp,
+  FadeIn,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../theme';
+import { useReduceMotion } from '../hooks/useReduceMotion';
 import Button from './Button/Button';
 import * as Haptics from 'expo-haptics';
 
@@ -34,6 +37,9 @@ export interface TemplateCardProps {
 
   /** Category badge */
   category?: string;
+
+  /** Enable scroll reveal animation (cards animate in when entering viewport) */
+  enableScrollReveal?: boolean;
 
   /** Template description */
   description: string;
@@ -94,6 +100,7 @@ export function TemplateCard({
   animationIndex = 0,
   category,
   description,
+  enableScrollReveal = false,
   frequency,
   hasAccess = true,
   icon,
@@ -113,6 +120,7 @@ export function TemplateCard({
   youtubeLink,
 }: TemplateCardProps) {
   const theme = useAppTheme();
+  const reducedMotion = useReduceMotion();
   const isLocked = isPremium && !hasAccess;
 
   // Animation values - skip entrance animation if animationIndex is 0
@@ -210,7 +218,18 @@ export function TemplateCard({
   // Generate tinted background color (3% opacity of accent)
   const tintedBackground = `${iconColor}08`;
 
-  return (
+  // Scroll reveal animation - slides up and fades in when entering viewport
+  // Using FadeInUp for a subtle, smooth entrance as cards scroll into view
+  const scrollRevealAnimation = reducedMotion
+    ? FadeIn.duration(0) // Instant appearance for reduced motion
+    : FadeInUp
+        .duration(350)
+        .springify()
+        .damping(18)
+        .stiffness(120);
+
+  // Wrap card in animated container for scroll reveal
+  const cardContent = (
     <AnimatedPressable
       accessible
       accessibilityHint="Tap to preview, or tap Import Habit to add to your habits"
@@ -412,6 +431,17 @@ export function TemplateCard({
       </View>
     </AnimatedPressable>
   );
+
+  // Return with scroll reveal wrapper if enabled
+  if (enableScrollReveal) {
+    return (
+      <Animated.View entering={scrollRevealAnimation}>
+        {cardContent}
+      </Animated.View>
+    );
+  }
+
+  return cardContent;
 }
 
 const styles = StyleSheet.create({

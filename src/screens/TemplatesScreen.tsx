@@ -723,6 +723,7 @@ export default function TemplatesScreen() {
               animationIndex={0}
               category={template.category}
               description={template.description}
+              enableScrollReveal={true}
               frequency={template.frequency}
               icon={template.icon}
               iconColor={template.iconColor}

@@ -301,7 +301,8 @@ const iconBounce = useAnimatedStyle(() => ({
 ### Phase 3: Visual Polish
 - [x] Add shimmer effect to Research badge
   - **Completed**: Added animated shimmer overlay to MiniTemplateCard's research badge using expo-linear-gradient. The shimmer moves horizontally (from -120 to 120 translateX) in a 2-second infinite loop with linear easing. Uses AnimatedLinearGradient with colors transitioning through transparent→iconColor(20%)→transparent for a subtle glass-like highlight. Animation properly respects reduced motion settings and includes cleanup with `cancelAnimation()` on unmount.
-- [ ] Add scroll reveal animation for cards entering viewport
+- [x] Add scroll reveal animation for cards entering viewport
+  - **Completed**: Added `enableScrollReveal` prop to TemplateCard component (default: false). When enabled, cards animate in with `FadeInUp` spring animation (350ms duration, damping: 18, stiffness: 120) as they enter the FlatList viewport. This leverages Reanimated's entering animation which triggers when components mount during FlatList's virtualized rendering. Enabled for "View All" tab in TemplatesScreen. Respects reduced motion accessibility setting with instant appearance fallback via `FadeIn.duration(0)`.
 - [ ] Add glow effect on successful import
 
 ### Phase 4: Performance & Accessibility
