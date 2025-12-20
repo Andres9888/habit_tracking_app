@@ -3,15 +3,22 @@
  * Compact template card for horizontal scrolling previews within category sections
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
+  cancelAnimation,
+  Easing,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
+  withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
-import { Plus } from 'lucide-react-native';
+import { Check, Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { useReduceMotion } from '../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -36,6 +43,8 @@ export interface MiniTemplateCardProps {
   onImport?: () => void;
   /** Is currently importing */
   isImporting?: boolean;
+  /** Has been successfully imported */
+  isImported?: boolean;
 }
 
 export function MiniTemplateCard({
@@ -49,19 +58,97 @@ export function MiniTemplateCard({
   onPress,
   onImport,
   isImporting,
+  isImported,
 }: MiniTemplateCardProps) {
-  const pressScale = useSharedValue(1);
+  const reducedMotion = useReduceMotion();
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pressScale.value }],
+  // Card press animations
+  const pressScale = useSharedValue(1);
+  const pressRotation = useSharedValue(0);
+  const shadowElevation = useSharedValue(3);
+
+  // Import button pulse animation
+  const buttonPulse = useSharedValue(1);
+
+  // Success checkmark animation
+  const checkmarkScale = useSharedValue(0);
+  const successGlow = useSharedValue(0);
+
+  // Subtle pulse animation for import button (draws attention)
+  useEffect(() => {
+    if (reducedMotion || isImporting || isImported || !onImport) return;
+
+    buttonPulse.value = withRepeat(
+      withSequence(
+        withTiming(1.03, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1, // infinite
+      true
+    );
+
+    return () => {
+      cancelAnimation(buttonPulse);
+    };
+  }, [buttonPulse, reducedMotion, isImporting, isImported, onImport]);
+
+  // Success animation when imported
+  useEffect(() => {
+    if (isImported) {
+      // Animate checkmark appearing
+      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
+      // Animate glow effect
+      successGlow.value = withSequence(
+        withTiming(0.6, { duration: 200 }),
+        withTiming(0, { duration: 800 })
+      );
+      // Stop pulse
+      cancelAnimation(buttonPulse);
+      buttonPulse.value = 1;
+    } else {
+      checkmarkScale.value = 0;
+      successGlow.value = 0;
+    }
+  }, [isImported, checkmarkScale, successGlow, buttonPulse]);
+
+  const animatedCardStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: pressScale.value },
+      { rotate: `${pressRotation.value}deg` },
+    ],
+    shadowOpacity: interpolate(shadowElevation.value, [3, 8], [0.08, 0.15]),
+    elevation: shadowElevation.value,
+  }));
+
+  const importButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: buttonPulse.value }],
+  }));
+
+  const checkmarkStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: checkmarkScale.value }],
+    opacity: checkmarkScale.value,
+  }));
+
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: successGlow.value,
   }));
 
   const handlePressIn = () => {
-    pressScale.value = withSpring(0.96, { damping: 15, stiffness: 200 });
+    if (reducedMotion) {
+      pressScale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+    } else {
+      pressScale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+      shadowElevation.value = withTiming(8, { duration: 100 });
+      pressRotation.value = withSpring(-0.5, { damping: 20, stiffness: 400 });
+    }
   };
 
   const handlePressOut = () => {
-    pressScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+    pressScale.value = withSpring(1, { damping: 12, stiffness: 200 });
+    if (!reducedMotion) {
+      shadowElevation.value = withTiming(3, { duration: 150 });
+      pressRotation.value = withSpring(0, { damping: 15, stiffness: 300 });
+    }
   };
 
   const handlePress = () => {
@@ -70,7 +157,7 @@ export function MiniTemplateCard({
   };
 
   const handleImport = () => {
-    if (isImporting || !onImport) return;
+    if (isImporting || isImported || !onImport) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     onImport();
   };
@@ -81,13 +168,23 @@ export function MiniTemplateCard({
       accessibilityLabel={`${name} template`}
       accessibilityRole="button"
       delayPressIn={50}
-      style={[styles.card, { backgroundColor: `${iconColor}08` }, animatedStyle]}
+      style={[styles.card, { backgroundColor: `${iconColor}08` }, animatedCardStyle]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
+      {/* Success glow overlay */}
+      <Animated.View
+        style={[
+          styles.glowOverlay,
+          { backgroundColor: '#22c55e' },
+          glowStyle,
+        ]}
+        pointerEvents="none"
+      />
+
       {/* Left accent */}
-      <View style={[styles.accent, { backgroundColor: iconColor }]} />
+      <View style={[styles.accent, { backgroundColor: isImported ? '#22c55e' : iconColor }]} />
 
       {/* Header row with icon and name */}
       <View style={styles.headerRow}>
@@ -106,24 +203,34 @@ export function MiniTemplateCard({
         </View>
         {/* Import button */}
         {onImport && (
-          <Pressable
-            accessible
-            accessibilityLabel={`Add ${name} habit`}
-            accessibilityRole="button"
-            disabled={isImporting}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            style={[styles.importButton, { backgroundColor: iconColor }]}
-            onPress={handleImport}
-          >
-            {isImporting ? (
-              <ActivityIndicator color="#fff" size={12} />
-            ) : (
-              <>
-                <Plus color="#fff" size={14} strokeWidth={3} />
-                <Text style={styles.importButtonText}>Add</Text>
-              </>
-            )}
-          </Pressable>
+          <Animated.View style={importButtonStyle}>
+            <Pressable
+              accessible
+              accessibilityLabel={isImported ? `${name} added` : `Add ${name} habit`}
+              accessibilityRole="button"
+              disabled={isImporting || isImported}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={[
+                styles.importButton,
+                { backgroundColor: isImported ? '#22c55e' : iconColor },
+              ]}
+              onPress={handleImport}
+            >
+              {isImporting ? (
+                <ActivityIndicator color="#fff" size={12} />
+              ) : isImported ? (
+                <Animated.View style={[styles.checkmarkContainer, checkmarkStyle]}>
+                  <Check color="#fff" size={14} strokeWidth={3} />
+                  <Text style={styles.importButtonText}>Added</Text>
+                </Animated.View>
+              ) : (
+                <>
+                  <Plus color="#fff" size={14} strokeWidth={3} />
+                  <Text style={styles.importButtonText}>Add</Text>
+                </>
+              )}
+            </Pressable>
+          </Animated.View>
         )}
       </View>
 
@@ -163,6 +270,14 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 3,
   },
+  glowOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 16,
+  },
   accent: {
     position: 'absolute',
     left: 0,
@@ -195,6 +310,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     fontWeight: '700',
+  },
+  checkmarkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   iconContainer: {
     width: 36,

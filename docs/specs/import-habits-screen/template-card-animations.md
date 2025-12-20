@@ -285,9 +285,18 @@ const iconBounce = useAnimatedStyle(() => ({
   - **Completed**: Added `SlideOutLeft` with staggered delays (30ms per card, capped at 200ms) and 150ms duration for quick, non-distracting collapse animation.
 
 ### Phase 2: Card Interaction Enhancement
-- [ ] Add rotation + shadow lift to press feedback
-- [ ] Add subtle idle pulse to Import button
-- [ ] Add success checkmark animation after import
+- [x] Add rotation + shadow lift to press feedback
+  - **Completed**: Enhanced press feedback with scale (0.97), subtle rotation (-0.5deg tilt), and dynamic shadow elevation (3→8). Uses `withSpring` for snappy, tactile feel. Respects reduced motion accessibility setting by only applying scale when reduced motion is enabled.
+- [x] Add subtle idle pulse to Import button
+  - **Completed**: Added continuous breathing animation (1→1.03 scale) with 1500ms duration using `Easing.inOut(Easing.ease)`. Animation automatically stops when importing/imported, and properly cleans up on unmount with `cancelAnimation()`.
+- [x] Add success checkmark animation after import
+  - **Completed**: Added new `isImported` prop with full success state animation:
+    - Checkmark icon appears with spring animation (damping: 8, stiffness: 150)
+    - Green success glow overlay flashes (0→0.6→0 opacity over 1s)
+    - Button changes to green (#22c55e) with "Added" label and Check icon
+    - Left accent bar also changes to green
+    - Pulse animation stops on success
+    - All animations respect reduced motion settings
 
 ### Phase 3: Visual Polish
 - [ ] Add shimmer effect to Research badge
