@@ -6,6 +6,7 @@ import { HabitsList } from './components/HabitsList';
 import { HabitsModals } from './components/HabitsModals';
 import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
+import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { logInteraction } from '../../lib/analytics/interactions';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -95,6 +96,15 @@ export function HabitsApp() {
 
         <WebToaster />
         <HabitsModals state={modals} />
+
+        {/* Archive Undo Toast */}
+        <ArchiveUndoToast
+          visible={list.archiveUndoVisible}
+          habitName={list.archiveUndoHabitName}
+          duration={5000}
+          onDismiss={list.dismissArchiveUndo}
+          onUndo={list.handleArchiveUndo}
+        />
       </View>
     </GestureHandlerRootView>
   );
