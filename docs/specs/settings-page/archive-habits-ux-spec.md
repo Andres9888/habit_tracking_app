@@ -170,7 +170,7 @@ const insets = useSafeAreaInsets();
 | File | Issue | Priority | Follow-up Task |
 |------|-------|----------|----------------|
 | `src/components/PausedHabitsModal/PausedHabitsModal.tsx` | ✅ FIXED (2025-12-20): Added `useSafeAreaInsets` import, wrapped header with dynamic `paddingTop: insets.top + 8`. Same pattern as ArchivedHabitsModal fix. | P0 | Task 2.1 ✅ |
-| `src/screens/HabitEditScreen.tsx` | Uses fixed `pt-12` for header instead of dynamic insets. Back button at top. | P1 | Task 2.2 |
+| `src/screens/HabitEditScreen.tsx` | ✅ FIXED (2025-12-20): Added `useSafeAreaInsets` import, added `const insets = useSafeAreaInsets();` in component, replaced `pt-12` with `style={{ paddingTop: insets.top + 8 }}`. Same pattern as other fixes. | P1 | Task 2.2 ✅ |
 | `src/components/CreateHabitModal/components/ModalHeader.tsx` | Uses fixed `pt-4` for header. Close/Save buttons at top. Parent modal uses `mt-12` which may be insufficient. | P1 | Task 2.3 |
 | `src/components/SettingsModal/SettingsModal.tsx` | Uses fixed `pt-12` for header. Back button visible at top. | P1 | Task 2.4 |
 | `src/screens/auth/SignInScreen.tsx` | Uses fixed `pt-[60px]` - may be okay but not dynamic. | P2 | Task 2.5 |
@@ -260,7 +260,7 @@ This would standardize safe area handling across all modal headers.
 | 1 | Fix Safe Area Compliance | P0 | 15m | ✅ DONE |
 | 2 | Audit Other Screens | P1 | 30m | ✅ DONE |
 | 2.1 | Fix PausedHabitsModal safe area | P0 | 10m | ✅ DONE |
-| 2.2 | Fix HabitEditScreen safe area | P1 | 10m | TODO |
+| 2.2 | Fix HabitEditScreen safe area | P1 | 10m | ✅ DONE |
 | 2.3 | Fix CreateHabitModal header safe area | P1 | 10m | TODO |
 | 2.4 | Fix SettingsModal safe area | P1 | 10m | TODO |
 | 2.5 | Fix SignInScreen safe area | P2 | 10m | TODO |

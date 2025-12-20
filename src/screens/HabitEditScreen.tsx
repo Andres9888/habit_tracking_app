@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, Trash2, ChevronDown } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
@@ -54,6 +55,8 @@ export default function HabitEditScreen({
   habitId,
   onClose,
 }: HabitEditScreenProps) {
+  const insets = useSafeAreaInsets();
+
   // Get habit data
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
   const stats = useQuery(api.habits.getStats, habitId ? { habitId } : 'skip');
@@ -176,7 +179,7 @@ export default function HabitEditScreen({
     >
       <View className='flex-1 bg-[#f8f5f1]'>
         {/* Header */}
-        <View className='flex-row items-center justify-between px-4 pb-4 pt-12'>
+        <View className='flex-row items-center justify-between px-4 pb-4' style={{ paddingTop: insets.top + 8 }}>
           <TouchableOpacity
             accessibilityLabel='Back'
             accessibilityRole='button'
