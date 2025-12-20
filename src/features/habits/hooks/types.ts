@@ -26,6 +26,10 @@ export interface HabitsListState {
   habitSlotsUsed: number;
   handleDragEnd: (event: { data: Habit[] }) => Promise<void>;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
+  handleArchiveUndo: () => Promise<void>;
+  dismissArchiveUndo: () => void;
+  archiveUndoVisible: boolean;
+  archiveUndoHabitName: string;
   handleHabitPress: (habit: Habit) => void;
   handleNextWeek: () => void;
   handlePreviousWeek: () => void;

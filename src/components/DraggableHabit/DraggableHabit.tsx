@@ -4,7 +4,8 @@ import { Swipeable } from 'react-native-gesture-handler';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { Archive, TrendingUp } from 'lucide-react-native';
+import { Archive, TrendingUp, Package } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { StrengthProgressBar } from '../StrengthProgressBar';
 import { PhaseTag } from '../PhaseTag';
@@ -272,21 +273,49 @@ export default function DraggableHabit({
       outputRange: [0, 100],
     });
 
+    // Progressive icon scale based on swipe progress (0.8 → 1.1)
+    const iconScale = dragX.interpolate({
+      extrapolate: 'clamp',
+      inputRange: [-100, -60, -30, 0],
+      outputRange: [1.1, 1.0, 0.85, 0.8],
+    });
+
+    // Progressive opacity for icon (0.6 → 1.0)
+    const iconOpacity = dragX.interpolate({
+      extrapolate: 'clamp',
+      inputRange: [-100, -40, 0],
+      outputRange: [1, 0.85, 0.6],
+    });
+
     return (
       <Animated.View
         className='flex-row items-center justify-end'
         style={{ transform: [{ translateX: trans }] }}
       >
-        <View className='h-full w-[100px] items-center justify-center rounded-r-2xl bg-red-500'>
-          <Archive color='white' size={24} />
+        <LinearGradient
+          colors={['#f59e0b', '#d97706']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          className='h-full w-[100px] items-center justify-center rounded-r-2xl'
+        >
+          <Animated.View
+            style={{
+              transform: [{ scale: iconScale }],
+              opacity: iconOpacity,
+            }}
+          >
+            <Package color='white' size={24} strokeWidth={2} />
+          </Animated.View>
           <Text className='mt-1 text-xs font-semibold text-white'>Archive</Text>
-        </View>
+        </LinearGradient>
       </Animated.View>
     );
   };
 
   const handleSwipeableOpen = () => {
-    triggerWarning();
+    // Success haptic instead of warning - archive is organizational, not destructive
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
     Animated.sequence([
       Animated.timing(archiveFlash, {
         duration: 120,
@@ -416,11 +445,11 @@ export default function DraggableHabit({
           elevation: 3, // Android
         }}
       >
-        {/* Archive flash overlay */}
+        {/* Archive flash overlay - amber for organizational action */}
         <Animated.View
           pointerEvents='none'
           style={{
-            backgroundColor: 'rgba(248, 113, 113, 0.18)',
+            backgroundColor: 'rgba(245, 158, 11, 0.18)',
             borderRadius: 24,
             opacity: archiveFlash,
             ...StyleSheet.absoluteFillObject,

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -8,12 +8,26 @@ import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
 import type { HabitsListState } from './types';
 
+interface ArchiveUndoState {
+  visible: boolean;
+  habitId: Id<'habits'> | null;
+  habitName: string;
+}
+
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] = useState(true);
 
   const toggleHabitMutation = useMutation(api.habits.toggleHabit);
-  const archiveHabit = useMutation(api.habits.archive);
+  const archiveHabitMutation = useMutation(api.habits.archive);
+  const unarchiveHabitMutation = useMutation(api.habits.unarchive);
   const reorderHabits = useMutation(api.habits.reorderHabits);
+
+  // Archive undo toast state
+  const [archiveUndo, setArchiveUndo] = useState<ArchiveUndoState>({
+    visible: false,
+    habitId: null,
+    habitName: '',
+  });
 
   const habitsQuery = useQuery(api.habits.list);
   const habitsFromQuery = (habitsQuery ?? []) as Habit[];
@@ -157,10 +171,41 @@ export function useHabitsListState(): HabitsListState {
 
   const handleArchive = useCallback(
     async (habitId: Id<'habits'>) => {
-      await archiveHabit({ habitId });
+      // Find the habit name before archiving (for undo toast)
+      const habit = habits.find((h) => h._id === habitId);
+      const habitName = habit?.name ?? 'Habit';
+
+      await archiveHabitMutation({ habitId });
+
+      // Show undo toast
+      setArchiveUndo({
+        visible: true,
+        habitId,
+        habitName,
+      });
+
+      logInteraction('habit_archived', {
+        habitId,
+        habitName,
+      });
     },
-    [archiveHabit]
+    [archiveHabitMutation, habits]
   );
+
+  const handleArchiveUndo = useCallback(async () => {
+    if (archiveUndo.habitId) {
+      await unarchiveHabitMutation({ habitId: archiveUndo.habitId });
+      logInteraction('habit_archive_undone', {
+        habitId: archiveUndo.habitId,
+        habitName: archiveUndo.habitName,
+      });
+    }
+    setArchiveUndo({ visible: false, habitId: null, habitName: '' });
+  }, [archiveUndo.habitId, archiveUndo.habitName, unarchiveHabitMutation]);
+
+  const dismissArchiveUndo = useCallback(() => {
+    setArchiveUndo({ visible: false, habitId: null, habitName: '' });
+  }, []);
 
   const handleHabitPress = useCallback((habit: Habit) => {
     // This will be handled by the parent component
@@ -221,6 +266,10 @@ export function useHabitsListState(): HabitsListState {
     dismissRewardToast,
     handleDragEnd,
     handleArchive,
+    handleArchiveUndo,
+    dismissArchiveUndo,
+    archiveUndoVisible: archiveUndo.visible,
+    archiveUndoHabitName: archiveUndo.habitName,
     handleHabitPress,
     handleNextWeek,
     handlePreviousWeek,
