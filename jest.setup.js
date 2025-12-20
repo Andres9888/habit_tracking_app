@@ -22,11 +22,43 @@ jest.mock('expo-status-bar', () => ({
 // Mock react-native-gesture-handler
 jest.mock('react-native-gesture-handler', () => {
   const View = require('react-native').View;
+
+  // Mock gesture builder for Gesture.Pan() etc.
+  const createMockGesture = () => ({
+    activeOffsetX: jest.fn().mockReturnThis(),
+    activeOffsetY: jest.fn().mockReturnThis(),
+    failOffsetX: jest.fn().mockReturnThis(),
+    failOffsetY: jest.fn().mockReturnThis(),
+    onBegin: jest.fn().mockReturnThis(),
+    onStart: jest.fn().mockReturnThis(),
+    onUpdate: jest.fn().mockReturnThis(),
+    onEnd: jest.fn().mockReturnThis(),
+    onFinalize: jest.fn().mockReturnThis(),
+    enabled: jest.fn().mockReturnThis(),
+    minDistance: jest.fn().mockReturnThis(),
+    minVelocity: jest.fn().mockReturnThis(),
+    runOnJS: jest.fn().mockReturnThis(),
+    withRef: jest.fn().mockReturnThis(),
+  });
+
   return {
     Swipeable: View,
     GestureHandlerRootView: View,
     PanGestureHandler: View,
+    TapGestureHandler: View,
     State: {},
+    Gesture: {
+      Pan: () => createMockGesture(),
+      Tap: () => createMockGesture(),
+      LongPress: () => createMockGesture(),
+      Pinch: () => createMockGesture(),
+      Rotation: () => createMockGesture(),
+      Fling: () => createMockGesture(),
+      Race: (...gestures) => createMockGesture(),
+      Simultaneous: (...gestures) => createMockGesture(),
+      Exclusive: (...gestures) => createMockGesture(),
+    },
+    GestureDetector: ({ children }) => children,
   };
 });
 
