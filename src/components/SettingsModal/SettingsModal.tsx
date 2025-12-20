@@ -8,6 +8,7 @@ import {
 } from 'lucide-react-native';
 import React from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
@@ -67,6 +68,7 @@ export default function SettingsModal({
     setView,
     handleClose,
   } = useSettingsModalLogic({ onClose, visible });
+  const insets = useSafeAreaInsets();
 
   const colors = isHighContrastActive
     ? {
@@ -115,8 +117,8 @@ export default function SettingsModal({
       >
         {/* Header with status bar simulation */}
         <View
-          className='bg-background px-4 pb-4 pt-12'
-          style={{ backgroundColor: colors.background }}
+          className='bg-background px-4 pb-4'
+          style={{ backgroundColor: colors.background, paddingTop: insets.top + 8 }}
         >
           <View className='mb-4 flex-row items-center justify-between'>
             <Text
