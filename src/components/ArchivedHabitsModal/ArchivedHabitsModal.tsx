@@ -51,8 +51,8 @@ export default function ArchivedHabitsModal({
 
   return (
     <>
-      {/* Header */}
-      <View className='mb-4 flex-row items-center justify-between'>
+      {/* Header - extra top padding for Dynamic Island */}
+      <View className='mb-4 mt-4 flex-row items-center justify-between'>
         <TouchableOpacity
           accessibilityLabel='Back to settings'
           accessibilityRole='button'
