@@ -70,10 +70,10 @@ type ViewMode = 'browse' | 'category' | 'search';
 // Tab options for main view
 type BrowseTab = 'categories' | 'all';
 
-// Screen entrance animation spring config - snappier for content reveal
+// Screen entrance animation spring config - fast parallel reveal
 const ENTRANCE_SPRING_CONFIG = {
-  damping: 20,
-  stiffness: 180,
+  damping: 24,
+  stiffness: 400,
 };
 
 export default function TemplatesScreen() {
@@ -107,24 +107,21 @@ export default function TemplatesScreen() {
       return;
     }
 
-    // Choreographed entrance: header → search → tabs → content
-    // Faster stagger timing for snappier feel (40/80/120ms vs 80/140/200ms)
+    // Parallel entrance: everything animates together as one unit
+    // No stagger delays - modal slide provides all the motion needed
 
-    // Header slides down immediately
+    // All elements animate in parallel with the same timing
     headerTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
-    headerOpacity.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.cubic) });
+    headerOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
 
-    // Search bar fades up with 40ms delay
-    searchOpacity.value = withDelay(40, withTiming(1, { duration: 220, easing: Easing.out(Easing.cubic) }));
-    searchTranslateY.value = withDelay(40, withSpring(0, ENTRANCE_SPRING_CONFIG));
+    searchOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
+    searchTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
 
-    // Tab bar fades up with 80ms delay
-    tabBarOpacity.value = withDelay(80, withTiming(1, { duration: 220, easing: Easing.out(Easing.cubic) }));
-    tabBarTranslateY.value = withDelay(80, withSpring(0, ENTRANCE_SPRING_CONFIG));
+    tabBarOpacity.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.cubic) });
+    tabBarTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
 
-    // Content fades up with 120ms delay
-    contentOpacity.value = withDelay(120, withTiming(1, { duration: 250, easing: Easing.out(Easing.cubic) }));
-    contentTranslateY.value = withDelay(120, withSpring(0, ENTRANCE_SPRING_CONFIG));
+    contentOpacity.value = withTiming(1, { duration: 180, easing: Easing.out(Easing.cubic) });
+    contentTranslateY.value = withSpring(0, ENTRANCE_SPRING_CONFIG);
   }, [reducedMotion]);
 
   // Animated styles for screen sections

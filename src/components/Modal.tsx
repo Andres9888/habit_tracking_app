@@ -67,11 +67,10 @@ const GESTURE_SPRING_CONFIG = {
   mass: 0.8,
 };
 
-// Refined spring for bottom sheet - smoother, less bouncy
+// Fast spring for bottom sheet - iOS-like snap
 const BOTTOM_SHEET_SPRING_CONFIG = {
-  damping: 22,
-  stiffness: 280,
-  mass: 0.9,
+  damping: 28,
+  stiffness: 500,
 };
 
 export type ModalVariant = 'bottomSheet' | 'fullScreen' | 'centerAlert';
