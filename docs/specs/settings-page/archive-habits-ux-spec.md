@@ -137,17 +137,70 @@ const insets = useSafeAreaInsets();
 #### Task 2: Audit Other Screens for Safe Area Issues
 **Priority:** P1 - High
 **Estimate:** 30 min
+**Status:** ✅ COMPLETED (2025-12-20)
 
 **Acceptance Criteria:**
-- [ ] Grep codebase for screens/modals without safe area handling
-- [ ] Document all affected files
-- [ ] Create follow-up tasks for each affected screen
-- [ ] Consider creating a reusable `<SafeHeader>` component
+- [x] Grep codebase for screens/modals without safe area handling
+- [x] Document all affected files
+- [x] Create follow-up tasks for each affected screen
+- [x] Consider creating a reusable `<SafeHeader>` component
 
 **Files to check:**
 - All files in `src/screens/`
 - All modal components
 - Any component with a back/close button at top
+
+**Audit Results (Completed 2025-12-20):**
+
+**Files WITH proper safe area handling (13 files):**
+- `src/components/ArchivedHabitsModal/ArchivedHabitsModal.tsx` ✅ (fixed previously)
+- `src/screens/HabitDetailScreen.tsx` ✅ (uses `useSafeAreaInsets`)
+- `src/components/ArchiveUndoToast/ArchiveUndoToast.tsx` ✅
+- `src/components/Modal.tsx` ✅ (uses `useSafeAreaInsets` for bottom padding)
+- `src/components/Toast.tsx` ✅
+- `src/components/StatsNotesModal/NotesList.tsx` ✅
+- `src/components/QuickActionsSheet/QuickActionsSheet.tsx` ✅
+- `src/components/CreateHabitModal/components/StickyCreateBar.tsx` ✅
+- `src/features/habits/components/HabitsModals.tsx` ✅
+- `src/theme/spacing.ts` ✅
+- `src/components/HabitCalendarModal.tsx` ✅ (uses `SafeAreaView` wrapper)
+
+**Files WITHOUT safe area handling (NEED FIXING):**
+
+| File | Issue | Priority | Follow-up Task |
+|------|-------|----------|----------------|
+| `src/components/PausedHabitsModal/PausedHabitsModal.tsx` | Header with back/close buttons has NO safe area handling. Same structure as ArchivedHabitsModal before fix. | P0 | Task 2.1 |
+| `src/screens/HabitEditScreen.tsx` | Uses fixed `pt-12` for header instead of dynamic insets. Back button at top. | P1 | Task 2.2 |
+| `src/components/CreateHabitModal/components/ModalHeader.tsx` | Uses fixed `pt-4` for header. Close/Save buttons at top. Parent modal uses `mt-12` which may be insufficient. | P1 | Task 2.3 |
+| `src/components/SettingsModal/SettingsModal.tsx` | Uses fixed `pt-12` for header. Back button visible at top. | P1 | Task 2.4 |
+| `src/screens/auth/SignInScreen.tsx` | Uses fixed `pt-[60px]` - may be okay but not dynamic. | P2 | Task 2.5 |
+| `src/components/StatsNotesModal/StatsNotesModal.tsx` | Uses fixed `pt-16` for container. Close button in header. | P2 | Task 2.6 |
+
+**Recommendation: Create Reusable `<SafeHeader>` Component**
+
+To prevent this recurring issue, recommend creating a reusable header component:
+
+```tsx
+// src/components/SafeHeader/SafeHeader.tsx
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+interface SafeHeaderProps {
+  children: React.ReactNode;
+  additionalPadding?: number; // default: 8
+}
+
+export function SafeHeader({ children, additionalPadding = 8 }: SafeHeaderProps) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={{ paddingTop: insets.top + additionalPadding }}>
+      {children}
+    </View>
+  );
+}
+```
+
+This would standardize safe area handling across all modal headers.
 
 ---
 
@@ -205,13 +258,20 @@ const insets = useSafeAreaInsets();
 | # | Task | Priority | Est. | Status |
 |---|------|----------|------|--------|
 | 1 | Fix Safe Area Compliance | P0 | 15m | ✅ DONE |
-| 2 | Audit Other Screens | P1 | 30m | TODO |
+| 2 | Audit Other Screens | P1 | 30m | ✅ DONE |
+| 2.1 | Fix PausedHabitsModal safe area | P0 | 10m | TODO |
+| 2.2 | Fix HabitEditScreen safe area | P1 | 10m | TODO |
+| 2.3 | Fix CreateHabitModal header safe area | P1 | 10m | TODO |
+| 2.4 | Fix SettingsModal safe area | P1 | 10m | TODO |
+| 2.5 | Fix SignInScreen safe area | P2 | 10m | TODO |
+| 2.6 | Fix StatsNotesModal safe area | P2 | 10m | TODO |
+| 2.7 | Create reusable SafeHeader component | P2 | 20m | TODO |
 | 3 | Header Visual Design | P2 | 20m | TODO |
 | 4 | Card Entrance Animations | P2 | 30m | TODO |
 | 5 | Empty State Warmth | P3 | 15m | TODO |
 | 6 | Restore Action Feedback | P3 | 20m | TODO |
 
-**Total Estimated Time:** ~2 hours
+**Total Estimated Time:** ~3 hours (includes new safe area fix tasks)
 
 ---
 
@@ -253,3 +313,4 @@ Before marking complete:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-12-20 | 1.0 | Initial specification | Jane |
+| 2025-12-20 | 1.1 | Completed Task 2: Safe area audit. Identified 6 files needing fixes. Added subtasks 2.1-2.7. Recommended SafeHeader component. | Claude |
