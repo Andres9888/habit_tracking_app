@@ -131,3 +131,40 @@ export function calculateMonthStats(
  * Day of week labels
  */
 export const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+/**
+ * Full day of week names for accessibility
+ */
+export const DAY_NAMES_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+/**
+ * Format a date string for accessibility (e.g., "Saturday, December 20, 2025")
+ */
+export function formatDateForAccessibility(dateStr: string): string {
+  const date = parseISO(dateStr);
+  return format(date, 'EEEE, MMMM d, yyyy');
+}
+
+/**
+ * Generate accessibility label for a calendar day
+ */
+export function getDayAccessibilityLabel(day: CalendarDay): string {
+  if (day.date === null) {
+    return 'Empty cell';
+  }
+
+  const formattedDate = formatDateForAccessibility(day.date);
+
+  if (day.isBeforeCreation) {
+    return `${formattedDate}. Before habit tracking started`;
+  }
+
+  if (day.isFuture) {
+    return `${formattedDate}. Future date`;
+  }
+
+  const completionStatus = day.completed ? 'Completed' : 'Not completed';
+  const todayIndicator = day.isToday ? 'Today, ' : '';
+
+  return `${todayIndicator}${formattedDate}. ${completionStatus}`;
+}

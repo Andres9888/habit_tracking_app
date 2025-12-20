@@ -376,7 +376,17 @@ Below the calendar grid, show contextual stats:
   - ✅ Spring animation (damping: 15, stiffness: 150) for snap-back effect
 
 ### Phase 4: Accessibility & Testing
-- [ ] **HEATMAP-13**: Add accessibility labels and hints
+- [x] **HEATMAP-13**: Add accessibility labels and hints
+  - ✅ Added `getDayAccessibilityLabel()` and `formatDateForAccessibility()` utilities to utils.ts
+  - ✅ All DayCell types (empty, before-creation, future, interactive) now have proper accessibility attributes
+  - ✅ Interactive cells use human-readable date format (e.g., "Saturday, December 20, 2025. Completed")
+  - ✅ Non-interactive cells use accessibilityRole="text" with descriptive labels
+  - ✅ CalendarHeatmap container has accessibilityLabel="Habit activity calendar"
+  - ✅ Header uses accessibilityRole="header" with month context
+  - ✅ Month navigation buttons have dynamic labels (e.g., "Go to November 2025")
+  - ✅ Day-of-week labels have full names (e.g., "Sunday" instead of "S") for screen readers
+  - ✅ Summary stats footer uses accessibilityRole="summary" with full stats context
+  - ✅ Used importantForAccessibility="no-hide-descendants" to prevent duplicate readings
 - [ ] **HEATMAP-14**: Test with VoiceOver/TalkBack
 - [ ] **HEATMAP-15**: Add unit tests for grid generation
 

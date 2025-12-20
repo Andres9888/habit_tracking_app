@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import type { CalendarDay } from './utils';
+import { getDayAccessibilityLabel } from './utils';
 
 export interface DayCellProps {
   day: CalendarDay;
@@ -53,12 +54,18 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
   // Staggered animation delay for all cell types
   const staggerDelay = index * 10;
 
+  // Get accessibility label
+  const accessibilityLabel = getDayAccessibilityLabel(day);
+
   // Empty padding cell
   if (day.date === null) {
     return (
       <Animated.View
         entering={FadeIn.delay(staggerDelay).duration(200)}
         className="flex-1 aspect-square"
+        accessible={true}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="text"
       />
     );
   }
@@ -69,9 +76,14 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
       <Animated.View
         entering={FadeIn.delay(staggerDelay).duration(200)}
         className="flex-1 aspect-square items-center justify-center"
+        accessible={true}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="text"
       >
         <View className="h-9 w-9 items-center justify-center rounded-lg bg-stone-50">
-          <Text className="text-xs text-stone-300">{day.dayOfMonth}</Text>
+          <Text className="text-xs text-stone-300" importantForAccessibility="no-hide-descendants">
+            {day.dayOfMonth}
+          </Text>
         </View>
       </Animated.View>
     );
@@ -83,9 +95,14 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
       <Animated.View
         entering={FadeIn.delay(staggerDelay).duration(200)}
         className="flex-1 aspect-square items-center justify-center"
+        accessible={true}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="text"
       >
         <View className="h-9 w-9 items-center justify-center rounded-lg border border-dashed border-stone-200 bg-stone-50">
-          <Text className="text-xs text-stone-300">{day.dayOfMonth}</Text>
+          <Text className="text-xs text-stone-300" importantForAccessibility="no-hide-descendants">
+            {day.dayOfMonth}
+          </Text>
         </View>
       </Animated.View>
     );
@@ -121,8 +138,8 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
       onPress={handlePress}
       accessible={true}
       accessibilityRole="button"
-      accessibilityLabel={`${day.date}. ${day.completed ? 'Completed' : 'Not completed'}`}
-      accessibilityHint={day.isToday ? 'Today' : undefined}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={day.isToday ? 'Today' : 'Tap to view details'}
       accessibilityState={{ selected: day.completed }}
     >
       <View

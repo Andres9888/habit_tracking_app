@@ -21,7 +21,7 @@ import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { format, addMonths, subMonths, isSameMonth } from 'date-fns';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { DayCell } from './DayCell';
-import { generateMonthGrid, calculateMonthStats, DAY_LABELS } from './utils';
+import { generateMonthGrid, calculateMonthStats, DAY_LABELS, DAY_NAMES_FULL } from './utils';
 
 export interface CalendarHeatmapProps {
   /** Habit ID for context */
@@ -134,42 +134,69 @@ export function CalendarHeatmap({
     );
   }, [grid, currentMonth]);
 
+  // Generate accessibility summary for the current month
+  const monthAccessibilitySummary = useMemo(() => {
+    const monthName = format(currentMonth, 'MMMM yyyy');
+    return `Activity calendar for ${monthName}. ${stats.completions} ${stats.completions === 1 ? 'day' : 'days'} completed, ${Math.round(stats.successRate)}% success rate.`;
+  }, [currentMonth, stats]);
+
   return (
     <Animated.View
       className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50"
       entering={FadeInDown.delay(200).springify()}
+      accessible={true}
+      accessibilityRole="none"
+      accessibilityLabel="Habit activity calendar"
     >
       {/* Gradient Background */}
       <View className="absolute inset-0 bg-gradient-to-br from-emerald-50/30 via-white to-teal-50/30" />
 
       <View className="p-5">
         {/* Header with month navigation */}
-        <View className="flex-row items-center justify-between mb-4">
-          <View className="flex-row items-center gap-2">
+        <View
+          className="flex-row items-center justify-between mb-4"
+          accessible={true}
+          accessibilityRole="header"
+          accessibilityLabel={`Activity for ${format(currentMonth, 'MMMM yyyy')}`}
+        >
+          <View className="flex-row items-center gap-2" importantForAccessibility="no-hide-descendants">
             <View className="h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
               <Calendar className="text-emerald-500" size={16} />
             </View>
             <Text className="text-lg font-bold text-stone-800">Activity</Text>
           </View>
 
-          <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center gap-2" accessibilityRole="toolbar" accessibilityLabel="Month navigation">
             <Pressable
               onPress={goToPreviousMonth}
               className="p-1.5 rounded-lg active:bg-stone-100"
-              accessibilityLabel="Previous month"
+              accessible={true}
+              accessibilityLabel={`Go to ${format(subMonths(currentMonth, 1), 'MMMM yyyy')}`}
               accessibilityRole="button"
+              accessibilityHint="Navigate to previous month"
             >
               <ChevronLeft className="text-stone-400" size={20} />
             </Pressable>
-            <Text className="text-sm font-medium text-stone-600 min-w-[80px] text-center">
+            <Text
+              className="text-sm font-medium text-stone-600 min-w-[80px] text-center"
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel={format(currentMonth, 'MMMM yyyy')}
+            >
               {format(currentMonth, 'MMM yyyy')}
             </Text>
             <Pressable
               onPress={goToNextMonth}
               disabled={isCurrentMonth}
               className="p-1.5 rounded-lg active:bg-stone-100"
-              accessibilityLabel="Next month"
+              accessible={true}
+              accessibilityLabel={
+                isCurrentMonth
+                  ? 'Cannot go to future months'
+                  : `Go to ${format(addMonths(currentMonth, 1), 'MMMM yyyy')}`
+              }
               accessibilityRole="button"
+              accessibilityHint={isCurrentMonth ? undefined : 'Navigate to next month'}
               accessibilityState={{ disabled: isCurrentMonth }}
             >
               <ChevronRight
@@ -181,10 +208,23 @@ export function CalendarHeatmap({
         </View>
 
         {/* Day of week labels */}
-        <View className="flex-row mb-2">
+        <View
+          className="flex-row mb-2"
+          accessible={true}
+          accessibilityRole="none"
+          accessibilityLabel="Days of the week: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"
+        >
           {DAY_LABELS.map((label, index) => (
-            <View key={index} className="flex-1 items-center">
-              <Text className="text-xs font-medium text-stone-400">{label}</Text>
+            <View
+              key={index}
+              className="flex-1 items-center"
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel={DAY_NAMES_FULL[index]}
+            >
+              <Text className="text-xs font-medium text-stone-400" importantForAccessibility="no-hide-descendants">
+                {label}
+              </Text>
             </View>
           ))}
         </View>
@@ -223,8 +263,13 @@ export function CalendarHeatmap({
         </GestureDetector>
 
         {/* Summary Stats Footer */}
-        <View className="mt-4 flex-row items-center justify-center gap-4">
-          <View className="flex-row items-center gap-1.5">
+        <View
+          className="mt-4 flex-row items-center justify-center gap-4"
+          accessible={true}
+          accessibilityRole="summary"
+          accessibilityLabel={monthAccessibilitySummary}
+        >
+          <View className="flex-row items-center gap-1.5" importantForAccessibility="no-hide-descendants">
             <View
               className="h-3 w-3 rounded-sm"
               style={{ backgroundColor: habitColor || '#10b981' }}
@@ -234,9 +279,9 @@ export function CalendarHeatmap({
             </Text>
           </View>
 
-          <Text className="text-stone-300">•</Text>
+          <Text className="text-stone-300" importantForAccessibility="no-hide-descendants">•</Text>
 
-          <Text className="text-xs font-medium text-emerald-600">
+          <Text className="text-xs font-medium text-emerald-600" importantForAccessibility="no-hide-descendants">
             {Math.round(stats.successRate)}% this month
           </Text>
         </View>
