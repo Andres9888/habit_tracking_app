@@ -5,11 +5,8 @@ import {
   Check,
   ChevronLeft,
   Circle,
-  Moon,
-  Send,
-  Smartphone,
 } from 'lucide-react-native';
-import { useState } from 'react';
+import React from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsRow } from './SettingsRow';
@@ -69,28 +66,7 @@ export default function SettingsModal({
     view,
     setView,
     handleClose,
-    darkModePreference,
-    setDarkModePreference,
-    reduceMotion,
-    setReduceMotion,
-    highContrastMode,
-    setHighContrastMode,
-    useDyslexicFont,
-    setUseDyslexicFont,
   } = useSettingsModalLogic({ onClose, visible });
-
-  const [isDarkModeOptionsOpen, setIsDarkModeOptionsOpen] = useState(false);
-
-  const darkModeLabels = {
-    system: 'Match System',
-    light: 'Light Mode',
-    dark: 'Dark Mode',
-  } as const;
-
-  const handleSelectDarkMode = (value: 'system' | 'light' | 'dark') => {
-    setDarkModePreference(value);
-    setIsDarkModeOptionsOpen(false);
-  };
 
   const colors = isHighContrastActive
     ? {
@@ -101,8 +77,6 @@ export default function SettingsModal({
         headerText: '#ffffff',
         icon: '#facc15',
         mutedText: '#facc15',
-        selectionBackground: '#161616',
-        selectionBorder: '#2f2f2f',
         versionText: '#facc15',
       }
     : {
@@ -113,8 +87,6 @@ export default function SettingsModal({
         headerText: '#1a1a1a',
         icon: '#1a1a1a',
         mutedText: '#8a8a8a',
-        selectionBackground: '#ffffff',
-        selectionBorder: '#f1f5f9',
         versionText: '#6b7280',
       };
 
@@ -188,70 +160,6 @@ export default function SettingsModal({
             >
               <SettingsRow
                 highContrastMode={isHighContrastActive}
-                icon={<Moon color='#f97316' size={16} />}
-                iconBackgroundColor='#fed7aa'
-                label='Dark Mode'
-                showBorder={!isDarkModeOptionsOpen}
-                type='selection'
-                value={darkModeLabels[darkModePreference]}
-                onPress={() => setIsDarkModeOptionsOpen((prev) => !prev)}
-              />
-              {isDarkModeOptionsOpen && (
-                <View className='px-4 pt-3'>
-                  <View
-                    className='rounded-2xl border bg-white shadow-sm'
-                    style={{
-                      backgroundColor: colors.selectionBackground,
-                      borderColor: colors.selectionBorder,
-                    }}
-                  >
-                    {(
-                      [
-                        { label: 'Match System', value: 'system' },
-                        { label: 'Light Mode', value: 'light' },
-                        { label: 'Dark Mode', value: 'dark' },
-                      ] as const
-                    ).map(({ value, label }, index, array) => (
-                      <TouchableOpacity
-                        key={value}
-                        activeOpacity={0.7}
-                        className={`flex-row items-center justify-between px-4 py-3 ${
-                          index < array.length - 1
-                            ? 'border-b border-gray-100'
-                            : ''
-                        }`}
-                        style={{
-                          borderColor:
-                            index < array.length - 1
-                              ? colors.selectionBorder
-                              : undefined,
-                        }}
-                        onPress={() => handleSelectDarkMode(value)}
-                      >
-                        <Text
-                          className='text-[15px] font-medium'
-                          style={{ color: colors.headerText }}
-                        >
-                          {label}
-                        </Text>
-                        {darkModePreference === value && (
-                          <View
-                            className='rounded-full p-1'
-                            style={{ backgroundColor: colors.accent }}
-                          >
-                            <Check
-                              color={isHighContrastActive ? '#000000' : '#fff'}
-                              size={14}
-                            />
-                          </View>
-                        )}
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-              )}
-              <SettingsRow
-                highContrastMode={isHighContrastActive}
                 icon={<Activity color='#16a34a' size={16} />}
                 iconBackgroundColor='#bbf7d0'
                 label='Daily progress bar'
@@ -275,24 +183,12 @@ export default function SettingsModal({
                 icon={<Circle color='#8b5cf6' size={16} />}
                 iconBackgroundColor='#ddd6fe'
                 label='Use circles for habit days'
+                showBorder={false}
                 type='toggle'
                 value={dayShape === 'circle'}
                 onToggle={(value) =>
                   void onChangeDayShape(value ? 'circle' : 'square')
                 }
-              />
-              <SettingsRow
-                highContrastMode={isHighContrastActive}
-                icon={<Smartphone color='#3b82f6' size={16} />}
-                iconBackgroundColor='#bfdbfe'
-                label='App Icon'
-                showBorder={false}
-                type='selection'
-                value='Default'
-                onPress={() => {
-                  // TODO: Navigate to app icon selector
-                  console.log('Navigate to app icon selector');
-                }}
               />
             </SettingsSection>
             {/* Habit Management */}
@@ -308,25 +204,6 @@ export default function SettingsModal({
                 showBorder={false}
                 type='navigation'
                 onPress={() => setView('archived')}
-              />
-            </SettingsSection>
-
-            {/* Contact */}
-            <SettingsSection
-              highContrastMode={isHighContrastActive}
-              title='Contact'
-            >
-              <SettingsRow
-                highContrastMode={isHighContrastActive}
-                icon={<Send color='#6b7280' size={16} />}
-                iconBackgroundColor='#e5e7eb'
-                label='Contact Us'
-                showBorder={false}
-                type='navigation'
-                onPress={() => {
-                  // TODO: Navigate to contact form
-                  console.log('Navigate to contact form');
-                }}
               />
             </SettingsSection>
           </View>

@@ -11,7 +11,6 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export const SETTINGS_CONFIG: SettingConfig[] = [
-  { ariaLabel: 'Toggle dark theme', key: 'darkMode', label: 'Dark Theme' },
   { ariaLabel: 'Toggle show streaks', key: 'showStreaks', label: 'Show Streaks' },
   {
     ariaLabel: 'Toggle show consistency',
