@@ -280,11 +280,28 @@ This would standardize safe area handling across all modal headers.
 #### Task 6: Enhance Restore Action Feedback
 **Priority:** P3 - Low
 **Estimate:** 20 min
+**Status:** ✅ COMPLETED (2025-12-20)
 
 **Acceptance Criteria:**
-- [ ] Add haptic feedback on restore tap
-- [ ] Card animates out smoothly when restored
-- [ ] Success feedback (brief toast or animation)
+- [x] Add haptic feedback on restore tap
+- [x] Card animates out smoothly when restored
+- [x] Success feedback (brief toast or animation)
+
+**Implementation Notes (Completed):**
+- Enhanced haptic feedback in `ArchivedHabitsModal.hooks.ts`:
+  - Light haptic on initial tap (already existed)
+  - Added success haptic (`Haptics.NotificationFeedbackType.Success`) after successful restore
+  - Error haptic on failure (already existed)
+- Added smooth exit animation to `AnimatedHabitCard` in `ArchivedHabitsModal.tsx`:
+  - Card slides right with fade out after restore (300ms, `Easing.out(Easing.cubic)`)
+  - Scale reduces slightly to 0.95 during exit for depth effect
+  - Respects `useReduceMotion` accessibility setting for instant removal
+- Added visual success feedback:
+  - Button transforms from "RESTORE" → "RESTORING..." → "RESTORED!" with animated checkmark
+  - Green emerald color scheme for success state
+  - Animated checkmark icon with spring animation (bounces in)
+  - 400ms delay to show success state before card animates out
+- Delete button disabled during restore operation to prevent conflicts
 
 ---
 
@@ -304,7 +321,7 @@ This would standardize safe area handling across all modal headers.
 | 3 | Header Visual Design | P2 | 20m | ✅ DONE |
 | 4 | Card Entrance Animations | P2 | 30m | ✅ DONE |
 | 5 | Empty State Warmth | P3 | 15m | ✅ DONE |
-| 6 | Restore Action Feedback | P3 | 20m | TODO |
+| 6 | Restore Action Feedback | P3 | 20m | ✅ DONE |
 
 **Total Estimated Time:** ~3 hours (includes new safe area fix tasks)
 
@@ -358,3 +375,4 @@ Before marking complete:
 | 2025-12-20 | 1.7 | Completed Task 3: Improved ArchivedHabitsModal header visual design. Replaced text arrow/close with `ChevronLeft` and `X` lucide icons. Added subtle blur background (`BlurView intensity=20`), softer button styling (rounded-2xl, shadows), and semi-transparent backgrounds. | Claude |
 | 2025-12-20 | 1.8 | Completed Task 4: Added staggered card entrance animations. Created `AnimatedHabitCard` component with fade+slide-up animation (300ms duration, 50ms stagger). Uses `react-native-reanimated` with spring physics. Respects `useReduceMotion` accessibility setting for instant appearance when reduced motion enabled. | Claude |
 | 2025-12-20 | 1.9 | Completed Task 5: Improved empty state warmth. Changed "All Clear!" to "Your Habits Are Thriving!", replaced 📦 with 🌱 seedling emoji, updated to emerald color scheme, rewrote copy to be more encouraging. Added bottom safe area padding to ScrollView. | Claude |
+| 2025-12-20 | 2.0 | Completed Task 6: Enhanced restore action feedback. Added success haptic after restore, smooth card exit animation (slide right + fade + scale), visual button state feedback (RESTORE → RESTORING... → RESTORED! with animated checkmark). Respects reduced motion. All spec tasks now complete. | Claude |

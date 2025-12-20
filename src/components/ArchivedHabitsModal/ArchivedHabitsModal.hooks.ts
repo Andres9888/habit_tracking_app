@@ -9,11 +9,14 @@ export const useArchivedHabitsModalLogic = () => {
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
 
-  const handleRestore = async (habitId: Id<'habits'>, habitName: string) => {
+  const handleRestore = async (habitId: Id<'habits'>, habitName: string): Promise<boolean> => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
       await unarchiveHabit({ habitId });
+      // Success haptic feedback after restore completes
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      return true;
     } catch (error) {
       console.error('Failed to restore habit:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -21,6 +24,7 @@ export const useArchivedHabitsModalLogic = () => {
         'Error',
         `Failed to restore "${habitName}". Please try again.`
       );
+      return false;
     }
   };
 

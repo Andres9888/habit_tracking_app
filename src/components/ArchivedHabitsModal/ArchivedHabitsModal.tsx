@@ -1,15 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, X } from 'lucide-react-native';
+import { ChevronLeft, X, Check } from 'lucide-react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withDelay,
   withSpring,
   withTiming,
+  withSequence,
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
@@ -61,6 +62,9 @@ const getRelativeTime = (timestamp: number): string => {
 const CARD_ANIMATION_DURATION = 300; // 300ms per card
 const CARD_ANIMATION_STAGGER = 50; // 50ms stagger between cards
 
+// Exit animation constants
+const EXIT_ANIMATION_DURATION = 300;
+
 // Animated habit card component
 interface AnimatedHabitCardProps {
   habit: {
@@ -76,7 +80,7 @@ interface AnimatedHabitCardProps {
   };
   index: number;
   reducedMotion: boolean;
-  onRestore: (id: Id<'habits'>, name: string) => void;
+  onRestore: (id: Id<'habits'>, name: string) => Promise<boolean>;
   onDelete: (id: Id<'habits'>, name: string) => void;
 }
 
@@ -87,8 +91,14 @@ function AnimatedHabitCard({
   onRestore,
   onDelete,
 }: AnimatedHabitCardProps) {
+  const [isRestoring, setIsRestoring] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const cardOpacity = useSharedValue(reducedMotion ? 1 : 0);
   const cardTranslateY = useSharedValue(reducedMotion ? 0 : 20);
+  const cardTranslateX = useSharedValue(0);
+  const cardScale = useSharedValue(1);
+  const successScale = useSharedValue(0);
 
   useEffect(() => {
     if (reducedMotion) {
@@ -115,9 +125,61 @@ function AnimatedHabitCard({
     };
   }, [index, reducedMotion, cardOpacity, cardTranslateY]);
 
+  // Handle restore with exit animation
+  const handleRestorePress = useCallback(async () => {
+    if (isRestoring) return;
+
+    setIsRestoring(true);
+
+    // Call restore and check success
+    const success = await onRestore(habit._id, habit.name);
+
+    if (success) {
+      setShowSuccess(true);
+
+      // Show success checkmark animation
+      successScale.value = withSequence(
+        withSpring(1.2, { damping: 10, stiffness: 200 }),
+        withSpring(1, { damping: 15, stiffness: 150 })
+      );
+
+      // Exit animation after brief success display
+      setTimeout(() => {
+        if (reducedMotion) {
+          // Instant removal for reduced motion
+          cardOpacity.value = 0;
+        } else {
+          // Smooth slide out to right with fade
+          cardTranslateX.value = withTiming(100, {
+            duration: EXIT_ANIMATION_DURATION,
+            easing: Easing.out(Easing.cubic)
+          });
+          cardOpacity.value = withTiming(0, {
+            duration: EXIT_ANIMATION_DURATION,
+            easing: Easing.out(Easing.cubic)
+          });
+          cardScale.value = withTiming(0.95, {
+            duration: EXIT_ANIMATION_DURATION,
+            easing: Easing.out(Easing.cubic)
+          });
+        }
+      }, 400); // Show success state for 400ms before animating out
+    } else {
+      setIsRestoring(false);
+    }
+  }, [habit._id, habit.name, isRestoring, onRestore, reducedMotion, cardOpacity, cardTranslateX, cardScale, successScale]);
+
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
-    transform: [{ translateY: cardTranslateY.value }],
+    transform: [
+      { translateY: cardTranslateY.value },
+      { translateX: cardTranslateX.value },
+      { scale: cardScale.value },
+    ],
+  }));
+
+  const successIconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: successScale.value }],
   }));
 
   const strength = (habit.strength ?? 0) * 100;
@@ -219,18 +281,41 @@ function AnimatedHabitCard({
             <TouchableOpacity
               accessibilityLabel={`Restore ${habit.name}`}
               accessibilityRole='button'
-              className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-blue-500 py-2.5'
-              onPress={() => onRestore(habit._id, habit.name)}
+              disabled={isRestoring}
+              className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 py-2.5 ${
+                showSuccess
+                  ? 'border-emerald-500 bg-emerald-50'
+                  : isRestoring
+                    ? 'border-blue-300 opacity-70'
+                    : 'border-blue-500'
+              }`}
+              onPress={handleRestorePress}
             >
-              <Text className='text-blue-500'>↩</Text>
-              <Text className='text-xs font-bold tracking-wide text-blue-500'>
-                RESTORE
-              </Text>
+              {showSuccess ? (
+                <Animated.View style={successIconStyle} className='flex-row items-center gap-2'>
+                  <View className='h-5 w-5 items-center justify-center rounded-full bg-emerald-500'>
+                    <Check color='#ffffff' size={14} strokeWidth={3} />
+                  </View>
+                  <Text className='text-xs font-bold tracking-wide text-emerald-600'>
+                    RESTORED!
+                  </Text>
+                </Animated.View>
+              ) : (
+                <>
+                  <Text className={isRestoring ? 'text-blue-300' : 'text-blue-500'}>↩</Text>
+                  <Text className={`text-xs font-bold tracking-wide ${isRestoring ? 'text-blue-300' : 'text-blue-500'}`}>
+                    {isRestoring ? 'RESTORING...' : 'RESTORE'}
+                  </Text>
+                </>
+              )}
             </TouchableOpacity>
             <TouchableOpacity
               accessibilityLabel={`Permanently delete ${habit.name}`}
               accessibilityRole='button'
-              className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-red-400 py-2.5'
+              disabled={isRestoring}
+              className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-red-400 py-2.5 ${
+                isRestoring ? 'opacity-50' : ''
+              }`}
               onPress={() => onDelete(habit._id, habit.name)}
             >
               <Text className='text-red-400'>🗑</Text>
