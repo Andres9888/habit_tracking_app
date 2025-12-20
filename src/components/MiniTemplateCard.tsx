@@ -16,11 +16,13 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Check, Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export interface MiniTemplateCardProps {
   /** Template icon/emoji */
@@ -73,6 +75,24 @@ export function MiniTemplateCard({
   // Success checkmark animation
   const checkmarkScale = useSharedValue(0);
   const successGlow = useSharedValue(0);
+
+  // Research badge shimmer animation
+  const shimmerTranslate = useSharedValue(-120);
+
+  // Shimmer animation for research badge (subtle attention-getter)
+  useEffect(() => {
+    if (reducedMotion || !hasResearch) return;
+
+    shimmerTranslate.value = withRepeat(
+      withTiming(120, { duration: 2000, easing: Easing.linear }),
+      -1, // infinite
+      false // don't reverse, reset to start
+    );
+
+    return () => {
+      cancelAnimation(shimmerTranslate);
+    };
+  }, [shimmerTranslate, reducedMotion, hasResearch]);
 
   // Subtle pulse animation for import button (draws attention)
   useEffect(() => {
@@ -131,6 +151,10 @@ export function MiniTemplateCard({
 
   const glowStyle = useAnimatedStyle(() => ({
     opacity: successGlow.value,
+  }));
+
+  const shimmerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shimmerTranslate.value }],
   }));
 
   const handlePressIn = () => {
@@ -241,9 +265,18 @@ export function MiniTemplateCard({
         </Text>
       )}
 
-      {/* Research badge */}
+      {/* Research badge with shimmer effect */}
       {hasResearch && (
         <View style={[styles.researchBadge, { backgroundColor: `${iconColor}15` }]}>
+          {/* Shimmer overlay */}
+          {!reducedMotion && (
+            <AnimatedLinearGradient
+              colors={['transparent', `${iconColor}20`, 'transparent']}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={[styles.shimmerOverlay, shimmerStyle]}
+            />
+          )}
           <Text style={styles.researchIcon}>🔬</Text>
           <Text numberOfLines={1} style={[styles.researchText, { color: iconColor }]}>
             {scientificReference ? scientificReference.split(' ').slice(0, 3).join(' ') + '...' : 'Research-backed'}
@@ -352,6 +385,15 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 6,
     alignSelf: 'flex-start',
+    overflow: 'hidden', // Required for shimmer to be clipped within badge bounds
+    position: 'relative', // Required for shimmer absolute positioning
+  },
+  shimmerOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 60, // Width of the shimmer highlight
+    left: 0,
   },
   researchIcon: {
     fontSize: 10,

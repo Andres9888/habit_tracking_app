@@ -299,7 +299,8 @@ const iconBounce = useAnimatedStyle(() => ({
     - All animations respect reduced motion settings
 
 ### Phase 3: Visual Polish
-- [ ] Add shimmer effect to Research badge
+- [x] Add shimmer effect to Research badge
+  - **Completed**: Added animated shimmer overlay to MiniTemplateCard's research badge using expo-linear-gradient. The shimmer moves horizontally (from -120 to 120 translateX) in a 2-second infinite loop with linear easing. Uses AnimatedLinearGradient with colors transitioning through transparent→iconColor(20%)→transparent for a subtle glass-like highlight. Animation properly respects reduced motion settings and includes cleanup with `cancelAnimation()` on unmount.
 - [ ] Add scroll reveal animation for cards entering viewport
 - [ ] Add glow effect on successful import
 
