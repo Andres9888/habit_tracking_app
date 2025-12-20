@@ -20,10 +20,12 @@ import Animated, {
   withSpring,
   withDelay,
   withTiming,
+  withSequence,
   Easing,
   FadeInUp,
   FadeIn,
 } from 'react-native-reanimated';
+import { Check } from 'lucide-react-native';
 import { useAppTheme } from '../theme';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import Button from './Button/Button';
@@ -58,6 +60,9 @@ export interface TemplateCardProps {
 
   /** Template ID */
   id: string;
+
+  /** Has been successfully imported */
+  isImported?: boolean;
 
   /** Loading flag for import mutation */
   isImporting?: boolean;
@@ -106,6 +111,7 @@ export function TemplateCard({
   icon,
   iconColor,
   id,
+  isImported = false,
   isImporting = false,
   isPremium = false,
   name,
@@ -130,6 +136,10 @@ export function TemplateCard({
   const pressScale = useSharedValue(1);
   const shadowOpacity = useSharedValue(0.06);
 
+  // Success glow animation
+  const successGlow = useSharedValue(0);
+  const checkmarkScale = useSharedValue(0);
+
   // Entrance animation (only if animationIndex > 0)
   useEffect(() => {
     if (skipAnimation) return;
@@ -143,6 +153,24 @@ export function TemplateCard({
       withSpring(0, { damping: 18, stiffness: 120 })
     );
   }, [animationIndex, skipAnimation]);
+
+  // Success glow animation when imported
+  useEffect(() => {
+    if (isImported) {
+      // Animate checkmark appearing
+      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
+      // Animate glow effect - flash green then fade out
+      if (!reducedMotion) {
+        successGlow.value = withSequence(
+          withTiming(0.6, { duration: 200 }),
+          withTiming(0, { duration: 800 })
+        );
+      }
+    } else {
+      checkmarkScale.value = 0;
+      successGlow.value = 0;
+    }
+  }, [isImported, checkmarkScale, successGlow, reducedMotion]);
 
   const frequencyLabels: Record<string, string> = {
     custom: 'Custom',
@@ -182,6 +210,15 @@ export function TemplateCard({
 
   const shadowStyle = useAnimatedStyle(() => ({
     shadowOpacity: shadowOpacity.value,
+  }));
+
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: successGlow.value,
+  }));
+
+  const checkmarkStyle = useAnimatedStyle(() => ({
+    opacity: checkmarkScale.value,
+    transform: [{ scale: checkmarkScale.value }],
   }));
 
   const handlePressIn = () => {
@@ -249,8 +286,18 @@ export function TemplateCard({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      {/* Left accent bar */}
-      <View style={[styles.accentBar, { backgroundColor: iconColor }]} />
+      {/* Success glow overlay */}
+      <Animated.View
+        style={[
+          styles.glowOverlay,
+          { backgroundColor: '#22c55e' },
+          glowStyle,
+        ]}
+        pointerEvents="none"
+      />
+
+      {/* Left accent bar - green when imported */}
+      <View style={[styles.accentBar, { backgroundColor: isImported ? '#22c55e' : iconColor }]} />
 
       {/* Card Content */}
       <View style={styles.content}>
@@ -413,20 +460,27 @@ export function TemplateCard({
 
         {/* Import Button */}
         <View style={styles.footer}>
-          <Button
-            accessibilityLabel={`Import ${name} habit`}
-            disabled={isLocked}
-            loading={isImporting}
-            onPress={handleImportPress}
-            size="medium"
-            style={[
-              styles.importButton,
-              { backgroundColor: isLocked ? '#9ca3af' : iconColor },
-            ]}
-            variant="primary"
-          >
-            {isLocked ? 'Unlock with Pro' : 'Import Habit'}
-          </Button>
+          {isImported ? (
+            <Animated.View style={[styles.successButton, checkmarkStyle]}>
+              <Check color="#fff" size={18} strokeWidth={3} />
+              <Text style={styles.successButtonText}>Added to Habits</Text>
+            </Animated.View>
+          ) : (
+            <Button
+              accessibilityLabel={`Import ${name} habit`}
+              disabled={isLocked}
+              loading={isImporting}
+              onPress={handleImportPress}
+              size="medium"
+              style={[
+                styles.importButton,
+                { backgroundColor: isLocked ? '#9ca3af' : iconColor },
+              ]}
+              variant="primary"
+            >
+              {isLocked ? 'Unlock with Pro' : 'Import Habit'}
+            </Button>
+          )}
         </View>
       </View>
     </AnimatedPressable>
@@ -484,6 +538,14 @@ const styles = StyleSheet.create({
   footer: {
     gap: 8,
     marginTop: 16,
+  },
+  glowOverlay: {
+    borderRadius: 16,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   header: {
     alignItems: 'center',
@@ -556,6 +618,22 @@ const styles = StyleSheet.create({
   },
   scienceIcon: {
     fontSize: 14,
+  },
+  successButton: {
+    alignItems: 'center',
+    backgroundColor: '#22c55e',
+    borderRadius: 12,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    width: '100%',
+  },
+  successButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 

@@ -303,7 +303,15 @@ const iconBounce = useAnimatedStyle(() => ({
   - **Completed**: Added animated shimmer overlay to MiniTemplateCard's research badge using expo-linear-gradient. The shimmer moves horizontally (from -120 to 120 translateX) in a 2-second infinite loop with linear easing. Uses AnimatedLinearGradient with colors transitioning through transparent→iconColor(20%)→transparent for a subtle glass-like highlight. Animation properly respects reduced motion settings and includes cleanup with `cancelAnimation()` on unmount.
 - [x] Add scroll reveal animation for cards entering viewport
   - **Completed**: Added `enableScrollReveal` prop to TemplateCard component (default: false). When enabled, cards animate in with `FadeInUp` spring animation (350ms duration, damping: 18, stiffness: 120) as they enter the FlatList viewport. This leverages Reanimated's entering animation which triggers when components mount during FlatList's virtualized rendering. Enabled for "View All" tab in TemplatesScreen. Respects reduced motion accessibility setting with instant appearance fallback via `FadeIn.duration(0)`.
-- [ ] Add glow effect on successful import
+- [x] Add glow effect on successful import
+  - **Completed**: Added success glow animation to TemplateCard for consistency with MiniTemplateCard. Implementation includes:
+    - New `isImported` prop to TemplateCard component (default: false)
+    - Green success glow overlay that flashes (0→0.6→0 opacity over 1s) when imported
+    - Left accent bar changes to green (#22c55e) when imported
+    - Import button transforms to green "Added to Habits" button with animated checkmark
+    - Checkmark appears with spring animation (damping: 8, stiffness: 150)
+    - All animations respect reduced motion settings
+    - Uses `withSequence` for glow flash effect, `withSpring` for checkmark entrance
 
 ### Phase 4: Performance & Accessibility
 - [ ] Test animations with `useReducedMotion` hook
