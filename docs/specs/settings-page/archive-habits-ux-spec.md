@@ -174,7 +174,7 @@ const insets = useSafeAreaInsets();
 | `src/components/CreateHabitModal/components/ModalHeader.tsx` | ✅ FIXED (2025-12-20): Added `useSafeAreaInsets` import, replaced `pt-4` with `style={{ paddingTop: Math.max(insets.top + 8, 16) }}`. Removed fixed `mt-12` from parent modal for dynamic safe area handling. | P1 | Task 2.3 ✅ |
 | `src/components/SettingsModal/SettingsModal.tsx` | ✅ FIXED (2025-12-20): Added `useSafeAreaInsets` import, added `const insets = useSafeAreaInsets();` in component, replaced `pt-12` with `style={{ paddingTop: insets.top + 8 }}`. Same pattern as other fixes. | P1 | Task 2.4 ✅ |
 | `src/screens/auth/SignInScreen.tsx` | ✅ FIXED (2025-12-20): Added `useSafeAreaInsets` import, added `const insets = useSafeAreaInsets();` in component, replaced `pt-[60px]` with `style={{ paddingTop: insets.top + 16 }}`. Same pattern as other fixes. | P2 | Task 2.5 ✅ |
-| `src/components/StatsNotesModal/StatsNotesModal.tsx` | Uses fixed `pt-16` for container. Close button in header. | P2 | Task 2.6 |
+| `src/components/StatsNotesModal/StatsNotesModal.tsx` | ✅ FIXED (2025-12-20): Added `useSafeAreaInsets` import, replaced fixed `pt-16` with dynamic `paddingTop: insets.top + 8`. Same pattern as other fixes. | P2 | Task 2.6 ✅ |
 
 **Recommendation: Create Reusable `<SafeHeader>` Component**
 
@@ -264,7 +264,7 @@ This would standardize safe area handling across all modal headers.
 | 2.3 | Fix CreateHabitModal header safe area | P1 | 10m | ✅ DONE |
 | 2.4 | Fix SettingsModal safe area | P1 | 10m | ✅ DONE |
 | 2.5 | Fix SignInScreen safe area | P2 | 10m | ✅ DONE |
-| 2.6 | Fix StatsNotesModal safe area | P2 | 10m | TODO |
+| 2.6 | Fix StatsNotesModal safe area | P2 | 10m | ✅ DONE |
 | 2.7 | Create reusable SafeHeader component | P2 | 20m | TODO |
 | 3 | Header Visual Design | P2 | 20m | TODO |
 | 4 | Card Entrance Animations | P2 | 30m | TODO |
@@ -317,3 +317,4 @@ Before marking complete:
 | 2025-12-20 | 1.2 | Completed Task 2.3: Fixed CreateHabitModal header safe area. Added `useSafeAreaInsets` to ModalHeader.tsx with dynamic paddingTop. Removed fixed `mt-12` from parent modal. | Claude |
 | 2025-12-20 | 1.3 | Completed Task 2.4: Fixed SettingsModal safe area. Added `useSafeAreaInsets` import and dynamic `paddingTop: insets.top + 8` replacing fixed `pt-12`. | Claude |
 | 2025-12-20 | 1.4 | Completed Task 2.5: Fixed SignInScreen safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-[60px]` with dynamic `paddingTop: insets.top + 16`. | Claude |
+| 2025-12-20 | 1.5 | Completed Task 2.6: Fixed StatsNotesModal safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-16` with dynamic `paddingTop: insets.top + 8`. All identified safe area issues now fixed. | Claude |

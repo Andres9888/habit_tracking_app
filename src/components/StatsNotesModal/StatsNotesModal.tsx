@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 
@@ -15,6 +16,7 @@ export default function StatsNotesModal({
   onClose,
 }: StatsNotesModalProps) {
   const [activeTab, setActiveTab] = useState<TabType>('stats');
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal
@@ -28,7 +30,7 @@ export default function StatsNotesModal({
         className='flex-1 bg-black/50'
         onPress={onClose}
       >
-        <View className='flex-1 p-5 pt-16'>
+        <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <TouchableOpacity
             activeOpacity={1}
             className='android:elevation-5 flex-1 rounded-[20px] bg-white shadow-lg'
