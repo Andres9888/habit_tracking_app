@@ -1,9 +1,11 @@
 import { useSignIn } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
+  const insets = useSafeAreaInsets();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
@@ -40,7 +42,7 @@ export default function SignInScreen() {
 
   return (
     <View className='flex-1 bg-white'>
-      <View className='flex-1 px-6 pt-[60px]'>
+      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
         <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
           Welcome Back
         </Text>
