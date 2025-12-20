@@ -394,7 +394,13 @@ Below the calendar grid, show contextual stats:
   - ✅ Updated jest.setup.js with proper Gesture mock for react-native-gesture-handler
   - ✅ Documented manual VoiceOver/TalkBack testing checklist in test file for developer verification
   - Note: Full manual testing with actual screen readers requires running on iOS/Android devices
-- [ ] **HEATMAP-15**: Add unit tests for grid generation
+- [x] **HEATMAP-15**: Add unit tests for grid generation
+  - ✅ Created comprehensive test suite at `src/components/CalendarHeatmap/__tests__/utils.test.ts`
+  - ✅ 72 tests covering `generateMonthGrid()`: basic grid structure, date formats, completed dates, today detection, future dates, habitCreatedAt handling, dayOfMonth property, edge cases
+  - ✅ Tests for `calculateMonthStats()`: basic calculations, excluded days (null, future, before-creation), success rate calculations, multi-week grids, integration with generateMonthGrid
+  - ✅ Tests for `DAY_LABELS` and `DAY_NAMES_FULL` constants: length, order, values, index correspondence
+  - ✅ Tests for `formatDateForAccessibility()` and `getDayAccessibilityLabel()`: format validation, all month names, state priorities
+  - ✅ All 96 CalendarHeatmap tests passing (72 utils + 24 accessibility)
 
 ---
 
