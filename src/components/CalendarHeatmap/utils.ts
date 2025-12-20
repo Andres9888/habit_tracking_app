@@ -1,0 +1,133 @@
+/**
+ * CalendarHeatmap Utilities
+ * Grid generation and date helpers
+ */
+
+import { format, startOfMonth, endOfMonth, getDay, getDaysInMonth, isSameDay, isAfter, isBefore, parseISO } from 'date-fns';
+
+/**
+ * Represents a single day in the calendar grid
+ */
+export interface CalendarDay {
+  /** Date string in YYYY-MM-DD format, null for padding cells */
+  date: string | null;
+  /** Day of month (1-31) */
+  dayOfMonth: number | null;
+  /** Whether the habit was completed on this day */
+  completed: boolean;
+  /** Whether this is today */
+  isToday: boolean;
+  /** Whether this is a future date */
+  isFuture: boolean;
+  /** Whether this date is before the habit was created */
+  isBeforeCreation: boolean;
+}
+
+/**
+ * Generates a calendar grid for a given month
+ * Returns an array of weeks, each containing 7 days (Sunday to Saturday)
+ */
+export function generateMonthGrid(
+  year: number,
+  month: number, // 0-indexed (0 = January)
+  completedDates: Set<string>,
+  habitCreatedAt?: number
+): CalendarDay[][] {
+  const today = new Date();
+  const todayStr = format(today, 'yyyy-MM-dd');
+
+  const firstDay = startOfMonth(new Date(year, month));
+  const lastDay = endOfMonth(new Date(year, month));
+  const startPadding = getDay(firstDay); // 0 = Sunday
+  const daysInMonth = getDaysInMonth(firstDay);
+
+  const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
+
+  const grid: CalendarDay[][] = [];
+  let currentWeek: CalendarDay[] = [];
+
+  // Add padding for days before the 1st of the month
+  for (let i = 0; i < startPadding; i++) {
+    currentWeek.push({
+      date: null,
+      dayOfMonth: null,
+      completed: false,
+      isToday: false,
+      isFuture: false,
+      isBeforeCreation: false,
+    });
+  }
+
+  // Add actual days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const isToday = dateStr === todayStr;
+    const isFuture = isAfter(date, today) && !isToday;
+    const isBeforeCreation = habitCreatedDate ? isBefore(date, habitCreatedDate) && !isSameDay(date, habitCreatedDate) : false;
+
+    currentWeek.push({
+      date: dateStr,
+      dayOfMonth: day,
+      completed: completedDates.has(dateStr),
+      isToday,
+      isFuture,
+      isBeforeCreation,
+    });
+
+    if (currentWeek.length === 7) {
+      grid.push(currentWeek);
+      currentWeek = [];
+    }
+  }
+
+  // Pad final week with empty cells
+  if (currentWeek.length > 0) {
+    while (currentWeek.length < 7) {
+      currentWeek.push({
+        date: null,
+        dayOfMonth: null,
+        completed: false,
+        isToday: false,
+        isFuture: false,
+        isBeforeCreation: false,
+      });
+    }
+    grid.push(currentWeek);
+  }
+
+  return grid;
+}
+
+/**
+ * Calculate month summary statistics
+ */
+export function calculateMonthStats(
+  grid: CalendarDay[][],
+  month: number,
+  year: number
+): { completions: number; eligibleDays: number; successRate: number } {
+  const today = new Date();
+  let completions = 0;
+  let eligibleDays = 0;
+
+  for (const week of grid) {
+    for (const day of week) {
+      if (day.date && !day.isBeforeCreation && !day.isFuture) {
+        eligibleDays++;
+        if (day.completed) {
+          completions++;
+        }
+      }
+    }
+  }
+
+  const successRate = eligibleDays > 0 ? (completions / eligibleDays) * 100 : 0;
+
+  return { completions, eligibleDays, successRate };
+}
+
+/**
+ * Day of week labels
+ */
+export const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];

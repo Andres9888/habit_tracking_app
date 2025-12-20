@@ -18,7 +18,6 @@ import { VisualizationGuide } from '../components/NotesSection/VisualizationGuid
 import { VisualizationExercise } from '../components/VisualizationExercise';
 import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import { InsightsSection } from '../components/InsightsSection';
-import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
@@ -224,7 +223,6 @@ export default function HabitDetailScreen({
   const [isNotesListOpen, setIsNotesListOpen] = useState(false);
   const [isVisionBoardEditorOpen, setIsVisionBoardEditorOpen] = useState(false);
   const [isVisionBoardListOpen, setIsVisionBoardListOpen] = useState(false);
-  const [optimisticTodayCompleted, setOptimisticTodayCompleted] = useState<boolean | null>(null);
   const [visionBoardBodyDraft, setVisionBoardBodyDraft] = useState('');
   const [visionBoardEditingId, setVisionBoardEditingId] = useState<Id<'visionBoardItems'> | null>(null);
   const [visionBoardTitleDraft, setVisionBoardTitleDraft] = useState('');
@@ -283,8 +281,7 @@ export default function HabitDetailScreen({
     );
   }, [habitId, tracking]);
 
-  const completedTodayFromBackend = completedDates.has(today);
-  const isCompletedToday = optimisticTodayCompleted ?? completedTodayFromBackend;
+  const isCompletedToday = completedDates.has(today);
 
   const daysTracking = habitCreatedAt
     ? Math.max(0, Math.floor((Date.now() - habitCreatedAt) / (1000 * 60 * 60 * 24)))
@@ -351,24 +348,6 @@ export default function HabitDetailScreen({
     setCueLocationDraft(habitCueLocation ?? '');
     setCueTimeDraft(habitCueTime ?? '');
   }, [habitId, habitCueAfterBehavior, habitCueLocation, habitCueTime]);
-
-  useEffect(() => {
-    setOptimisticTodayCompleted(null);
-  }, [habitId]);
-
-  useEffect(() => {
-    if (optimisticTodayCompleted === null) {
-      return;
-    }
-
-    if (completedTodayFromBackend === optimisticTodayCompleted) {
-      setOptimisticTodayCompleted(null);
-      return;
-    }
-
-    const timeout = setTimeout(() => setOptimisticTodayCompleted(null), 1200);
-    return () => clearTimeout(timeout);
-  }, [completedTodayFromBackend, optimisticTodayCompleted]);
 
   if (!habit) {
     return null;
@@ -996,20 +975,6 @@ export default function HabitDetailScreen({
               )}
             </View>
           </Pressable>
-
-          {/* Primary Action (Quick Complete) */}
-          <Animated.View
-            className="rounded-2xl bg-white/90 p-4 shadow-sm shadow-stone-200/50"
-            entering={FadeInDown.delay(150).springify()}
-          >
-            <QuickCompleteButton
-              completedToday={isCompletedToday}
-              habitId={habit._id}
-              habitName={habit.name}
-              onComplete={() => setOptimisticTodayCompleted(true)}
-              onUncomplete={() => setOptimisticTodayCompleted(false)}
-            />
-          </Animated.View>
 
           {/* Progress (Stats) */}
           <StreakChainSection
