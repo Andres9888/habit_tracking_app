@@ -67,10 +67,11 @@ const GESTURE_SPRING_CONFIG = {
   mass: 0.8,
 };
 
-// Standard spring for bottom sheet (unchanged)
-const STANDARD_SPRING_CONFIG = {
-  damping: 15,
-  stiffness: 150,
+// Refined spring for bottom sheet - smoother, less bouncy
+const BOTTOM_SHEET_SPRING_CONFIG = {
+  damping: 22,
+  stiffness: 280,
+  mass: 0.9,
 };
 
 export type ModalVariant = 'bottomSheet' | 'fullScreen' | 'centerAlert';
@@ -163,14 +164,24 @@ export function Modal({
         case 'bottomSheet': {
           translateY.value = useReducedAnimation
             ? 0
-            : withSpring(0, STANDARD_SPRING_CONFIG);
+            : withSpring(0, BOTTOM_SHEET_SPRING_CONFIG, (finished) => {
+                // Haptic feedback when animation completes
+                if (finished) {
+                  runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+                }
+              });
           break;
         }
         case 'fullScreen': {
           // Apple-like entrance: scale up + fade in + slide up
           fullScreenProgress.value = useReducedAnimation
             ? 1
-            : withSpring(1, APPLE_SPRING_CONFIG);
+            : withSpring(1, APPLE_SPRING_CONFIG, (finished) => {
+                // Haptic feedback when animation completes
+                if (finished) {
+                  runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+                }
+              });
           fullScreenGestureY.value = 0;
           break;
         }
@@ -194,7 +205,7 @@ export function Modal({
         case 'bottomSheet': {
           translateY.value = useReducedAnimation
             ? SCREEN_HEIGHT
-            : withSpring(SCREEN_HEIGHT, STANDARD_SPRING_CONFIG);
+            : withSpring(SCREEN_HEIGHT, BOTTOM_SHEET_SPRING_CONFIG);
           break;
         }
         case 'fullScreen': {
@@ -227,11 +238,11 @@ export function Modal({
     })
     .onEnd((event) => {
       if (event.translationY > DISMISS_THRESHOLD || event.velocityY > VELOCITY_THRESHOLD) {
-        translateY.value = withSpring(SCREEN_HEIGHT, STANDARD_SPRING_CONFIG);
+        translateY.value = withSpring(SCREEN_HEIGHT, BOTTOM_SHEET_SPRING_CONFIG);
         runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
         runOnJS(onClose)();
       } else {
-        translateY.value = withSpring(0, STANDARD_SPRING_CONFIG);
+        translateY.value = withSpring(0, BOTTOM_SHEET_SPRING_CONFIG);
       }
     });
 
