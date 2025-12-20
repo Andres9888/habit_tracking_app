@@ -231,12 +231,24 @@ This would standardize safe area handling across all modal headers.
 **Priority:** P2 - Medium
 **Estimate:** 30 min
 **File:** `src/components/ArchivedHabitsModal/ArchivedHabitsModal.tsx`
+**Status:** ✅ COMPLETED (2025-12-20)
 
 **Acceptance Criteria:**
-- [ ] Cards animate in with staggered fade + slide up
-- [ ] Use `react-native-reanimated` (already in project)
-- [ ] Animation timing: 300ms per card, 50ms stagger
-- [ ] Respect `reduceMotion` accessibility setting
+- [x] Cards animate in with staggered fade + slide up
+- [x] Use `react-native-reanimated` (already in project)
+- [x] Animation timing: 300ms per card, 50ms stagger
+- [x] Respect `reduceMotion` accessibility setting
+
+**Implementation Notes (Completed):**
+- Created new `AnimatedHabitCard` component with staggered entrance animations
+- Added imports for `react-native-reanimated` (useSharedValue, useAnimatedStyle, withDelay, withSpring, withTiming, Easing, cancelAnimation)
+- Animation constants: `CARD_ANIMATION_DURATION = 300` (300ms) and `CARD_ANIMATION_STAGGER = 50` (50ms delay between cards)
+- Animation uses `withDelay` for staggering with index-based calculation: `index * CARD_ANIMATION_STAGGER`
+- Opacity animates from 0 to 1 with `withTiming` using `Easing.out(Easing.cubic)` for smooth easing
+- TranslateY animates from 20 to 0 using `withSpring` with `damping: 18, stiffness: 120` for natural spring physics
+- Integrated `useReduceMotion` hook to respect accessibility settings - when enabled, cards appear instantly without animation
+- Cleanup function cancels animations on unmount to prevent memory leaks
+- Follows same animation pattern as `TemplateCard.tsx` for consistency across the app
 
 ---
 
@@ -277,7 +289,7 @@ This would standardize safe area handling across all modal headers.
 | 2.6 | Fix StatsNotesModal safe area | P2 | 10m | ✅ DONE |
 | 2.7 | Create reusable SafeHeader component | P2 | 20m | ✅ DONE |
 | 3 | Header Visual Design | P2 | 20m | ✅ DONE |
-| 4 | Card Entrance Animations | P2 | 30m | TODO |
+| 4 | Card Entrance Animations | P2 | 30m | ✅ DONE |
 | 5 | Empty State Warmth | P3 | 15m | TODO |
 | 6 | Restore Action Feedback | P3 | 20m | TODO |
 
@@ -331,3 +343,4 @@ Before marking complete:
 | 2025-12-20 | 1.5 | Completed Task 2.6: Fixed StatsNotesModal safe area. Added `useSafeAreaInsets` import, replaced fixed `pt-16` with dynamic `paddingTop: insets.top + 8`. All identified safe area issues now fixed. | Claude |
 | 2025-12-20 | 1.6 | Completed Task 2.7: Created reusable `SafeHeader` component at `src/components/SafeHeader/SafeHeader.tsx`. Component wraps children with dynamic safe area padding, supporting `additionalPadding`, `minPadding`, `style`, and `className` props. Includes TypeScript interface and proper exports. | Claude |
 | 2025-12-20 | 1.7 | Completed Task 3: Improved ArchivedHabitsModal header visual design. Replaced text arrow/close with `ChevronLeft` and `X` lucide icons. Added subtle blur background (`BlurView intensity=20`), softer button styling (rounded-2xl, shadows), and semi-transparent backgrounds. | Claude |
+| 2025-12-20 | 1.8 | Completed Task 4: Added staggered card entrance animations. Created `AnimatedHabitCard` component with fade+slide-up animation (300ms duration, 50ms stagger). Uses `react-native-reanimated` with spring physics. Respects `useReduceMotion` accessibility setting for instant appearance when reduced motion enabled. | Claude |

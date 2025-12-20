@@ -1,9 +1,21 @@
+import { useEffect } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, X } from 'lucide-react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withDelay,
+  withSpring,
+  withTiming,
+  Easing,
+  cancelAnimation,
+} from 'react-native-reanimated';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 interface ArchivedHabitsModalProps {
   onClose: () => void;
@@ -45,11 +57,200 @@ const getRelativeTime = (timestamp: number): string => {
   return `${months} month${months > 1 ? 's' : ''} ago`;
 };
 
+// Animation constants
+const CARD_ANIMATION_DURATION = 300; // 300ms per card
+const CARD_ANIMATION_STAGGER = 50; // 50ms stagger between cards
+
+// Animated habit card component
+interface AnimatedHabitCardProps {
+  habit: {
+    _id: Id<'habits'>;
+    name: string;
+    icon?: string;
+    iconColor?: string;
+    strength?: number;
+    currentStreak?: number;
+    totalCompletions?: number;
+    archivedAt?: number;
+    _creationTime: number;
+  };
+  index: number;
+  reducedMotion: boolean;
+  onRestore: (id: Id<'habits'>, name: string) => void;
+  onDelete: (id: Id<'habits'>, name: string) => void;
+}
+
+function AnimatedHabitCard({
+  habit,
+  index,
+  reducedMotion,
+  onRestore,
+  onDelete,
+}: AnimatedHabitCardProps) {
+  const cardOpacity = useSharedValue(reducedMotion ? 1 : 0);
+  const cardTranslateY = useSharedValue(reducedMotion ? 0 : 20);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      // Instant appearance for reduced motion
+      cardOpacity.value = 1;
+      cardTranslateY.value = 0;
+      return;
+    }
+
+    const delay = index * CARD_ANIMATION_STAGGER;
+
+    cardOpacity.value = withDelay(
+      delay,
+      withTiming(1, { duration: CARD_ANIMATION_DURATION, easing: Easing.out(Easing.cubic) })
+    );
+    cardTranslateY.value = withDelay(
+      delay,
+      withSpring(0, { damping: 18, stiffness: 120 })
+    );
+
+    return () => {
+      cancelAnimation(cardOpacity);
+      cancelAnimation(cardTranslateY);
+    };
+  }, [index, reducedMotion, cardOpacity, cardTranslateY]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: cardOpacity.value,
+    transform: [{ translateY: cardTranslateY.value }],
+  }));
+
+  const strength = (habit.strength ?? 0) * 100;
+  const strengthInfo = getStrengthInfo(strength);
+  const gradientColor = getStrengthGradientColor(strength);
+  const archiveDate = habit.archivedAt || habit._creationTime;
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <View
+        className='overflow-hidden rounded-2xl border border-slate-200 bg-white'
+        style={{
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
+          elevation: 2,
+        }}
+      >
+        {/* Strength Fill Background */}
+        <View className='absolute inset-0' style={{ width: `${Math.min(strength, 100)}%` }}>
+          <LinearGradient
+            colors={[`${gradientColor}20`, `${gradientColor}08`, `${gradientColor}00`]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={{ flex: 1 }}
+          />
+        </View>
+
+        <View className='relative p-4'>
+          {/* Top Row: Icon, Name, Archive Date */}
+          <View className='mb-3 flex-row items-start'>
+            <View className='flex-row items-center gap-3'>
+              {/* Color Accent Bar + Icon */}
+              <View className='relative'>
+                <View
+                  className='absolute bottom-0 left-0 top-0 w-1 rounded-full'
+                  style={{ backgroundColor: habit.iconColor || '#6366F1' }}
+                />
+                <Text className='pl-3 text-2xl'>{habit.icon || '📝'}</Text>
+              </View>
+              <View className='flex-1'>
+                <Text className='text-base font-semibold text-slate-900'>
+                  {habit.name}
+                </Text>
+                <View className='mt-0.5 flex-row items-center gap-1'>
+                  <Text className='text-xs text-slate-400'>
+                    Archived {new Date(archiveDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </Text>
+                  <Text className='text-slate-300'>•</Text>
+                  <Text className='text-xs text-slate-400'>
+                    {getRelativeTime(archiveDate)}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Stats Row */}
+          <View className='mb-3 flex-row flex-wrap gap-2'>
+            {/* Strength Badge */}
+            <View className={`flex-row items-center gap-1.5 rounded-lg px-2.5 py-1 ${strengthInfo.bgColor}`}>
+              <Text className='text-sm'>{strengthInfo.emoji}</Text>
+              <Text className={`text-xs font-semibold ${strengthInfo.textColor}`}>
+                {Math.round(strength)}% {strengthInfo.label}
+              </Text>
+            </View>
+
+            {/* Streak Badge */}
+            {(habit.currentStreak ?? 0) > 0 ? (
+              <View className='flex-row items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1'>
+                <Text className='text-sm'>🔥</Text>
+                <Text className='text-xs font-semibold text-amber-700'>
+                  {habit.currentStreak} day streak
+                </Text>
+              </View>
+            ) : (
+              <View className='flex-row items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1'>
+                <Text className='text-sm'>🔥</Text>
+                <Text className='text-xs font-semibold text-slate-500'>
+                  No streak
+                </Text>
+              </View>
+            )}
+
+            {/* Total Completions Badge */}
+            {(habit.totalCompletions ?? 0) > 0 && (
+              <View className='flex-row items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1'>
+                <Text className='text-xs font-bold text-blue-600'>✓</Text>
+                <Text className='text-xs font-semibold text-blue-700'>
+                  {habit.totalCompletions} total
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Action Buttons */}
+          <View className='flex-row gap-2'>
+            <TouchableOpacity
+              accessibilityLabel={`Restore ${habit.name}`}
+              accessibilityRole='button'
+              className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-blue-500 py-2.5'
+              onPress={() => onRestore(habit._id, habit.name)}
+            >
+              <Text className='text-blue-500'>↩</Text>
+              <Text className='text-xs font-bold tracking-wide text-blue-500'>
+                RESTORE
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              accessibilityLabel={`Permanently delete ${habit.name}`}
+              accessibilityRole='button'
+              className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-red-400 py-2.5'
+              onPress={() => onDelete(habit._id, habit.name)}
+            >
+              <Text className='text-red-400'>🗑</Text>
+              <Text className='text-xs font-bold tracking-wide text-red-400'>
+                DELETE
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Animated.View>
+  );
+}
+
 export default function ArchivedHabitsModal({
   onClose,
   onBack,
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
+  const reducedMotion = useReduceMotion();
   const { archivedHabits, handleRestore, handlePermanentDelete } =
     useArchivedHabitsModalLogic();
 
@@ -155,132 +356,18 @@ export default function ArchivedHabitsModal({
             </View>
           </View>
         ) : (
-          /* Habit Cards */
+          /* Habit Cards with staggered entrance animations */
           <View className='gap-3 pb-6'>
-            {archivedHabits.map((habit) => {
-              const strength = (habit.strength ?? 0) * 100;
-              const strengthInfo = getStrengthInfo(strength);
-              const gradientColor = getStrengthGradientColor(strength);
-              const archiveDate = habit.archivedAt || habit._creationTime;
-
-              return (
-                <View
-                  key={habit._id}
-                  className='overflow-hidden rounded-2xl border border-slate-200 bg-white'
-                  style={{
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.05,
-                    shadowRadius: 8,
-                    elevation: 2,
-                  }}
-                >
-                  {/* Strength Fill Background */}
-                  <View className='absolute inset-0' style={{ width: `${Math.min(strength, 100)}%` }}>
-                    <LinearGradient
-                      colors={[`${gradientColor}20`, `${gradientColor}08`, `${gradientColor}00`]}
-                      start={{ x: 0, y: 0.5 }}
-                      end={{ x: 1, y: 0.5 }}
-                      style={{ flex: 1 }}
-                    />
-                  </View>
-
-                  <View className='relative p-4'>
-                    {/* Top Row: Icon, Name, Archive Date */}
-                    <View className='mb-3 flex-row items-start'>
-                      <View className='flex-row items-center gap-3'>
-                        {/* Color Accent Bar + Icon */}
-                        <View className='relative'>
-                          <View
-                            className='absolute bottom-0 left-0 top-0 w-1 rounded-full'
-                            style={{ backgroundColor: habit.iconColor || '#6366F1' }}
-                          />
-                          <Text className='pl-3 text-2xl'>{habit.icon || '📝'}</Text>
-                        </View>
-                        <View className='flex-1'>
-                          <Text className='text-base font-semibold text-slate-900'>
-                            {habit.name}
-                          </Text>
-                          <View className='mt-0.5 flex-row items-center gap-1'>
-                            <Text className='text-xs text-slate-400'>
-                              Archived {new Date(archiveDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                            </Text>
-                            <Text className='text-slate-300'>•</Text>
-                            <Text className='text-xs text-slate-400'>
-                              {getRelativeTime(archiveDate)}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-
-                    {/* Stats Row */}
-                    <View className='mb-3 flex-row flex-wrap gap-2'>
-                      {/* Strength Badge */}
-                      <View className={`flex-row items-center gap-1.5 rounded-lg px-2.5 py-1 ${strengthInfo.bgColor}`}>
-                        <Text className='text-sm'>{strengthInfo.emoji}</Text>
-                        <Text className={`text-xs font-semibold ${strengthInfo.textColor}`}>
-                          {Math.round(strength)}% {strengthInfo.label}
-                        </Text>
-                      </View>
-
-                      {/* Streak Badge */}
-                      {(habit.currentStreak ?? 0) > 0 ? (
-                        <View className='flex-row items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1'>
-                          <Text className='text-sm'>🔥</Text>
-                          <Text className='text-xs font-semibold text-amber-700'>
-                            {habit.currentStreak} day streak
-                          </Text>
-                        </View>
-                      ) : (
-                        <View className='flex-row items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1'>
-                          <Text className='text-sm'>🔥</Text>
-                          <Text className='text-xs font-semibold text-slate-500'>
-                            No streak
-                          </Text>
-                        </View>
-                      )}
-
-                      {/* Total Completions Badge */}
-                      {(habit.totalCompletions ?? 0) > 0 && (
-                        <View className='flex-row items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1'>
-                          <Text className='text-xs font-bold text-blue-600'>✓</Text>
-                          <Text className='text-xs font-semibold text-blue-700'>
-                            {habit.totalCompletions} total
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-
-                    {/* Action Buttons */}
-                    <View className='flex-row gap-2'>
-                      <TouchableOpacity
-                        accessibilityLabel={`Restore ${habit.name}`}
-                        accessibilityRole='button'
-                        className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-blue-500 py-2.5'
-                        onPress={() => handleRestore(habit._id, habit.name)}
-                      >
-                        <Text className='text-blue-500'>↩</Text>
-                        <Text className='text-xs font-bold tracking-wide text-blue-500'>
-                          RESTORE
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        accessibilityLabel={`Permanently delete ${habit.name}`}
-                        accessibilityRole='button'
-                        className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-red-400 py-2.5'
-                        onPress={() => handlePermanentDelete(habit._id, habit.name)}
-                      >
-                        <Text className='text-red-400'>🗑</Text>
-                        <Text className='text-xs font-bold tracking-wide text-red-400'>
-                          DELETE
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              );
-            })}
+            {archivedHabits.map((habit, index) => (
+              <AnimatedHabitCard
+                key={habit._id}
+                habit={habit}
+                index={index}
+                reducedMotion={reducedMotion}
+                onRestore={handleRestore}
+                onDelete={handlePermanentDelete}
+              />
+            ))}
           </View>
         )}
       </ScrollView>
