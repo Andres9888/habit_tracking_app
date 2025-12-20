@@ -10,8 +10,11 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
+  withSequence,
   FadeIn,
   FadeOut,
+  SlideInRight,
+  SlideOutLeft,
   Layout,
 } from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
@@ -20,6 +23,7 @@ import * as Haptics from 'expo-haptics';
 import type { Doc } from '../../convex/_generated/dataModel';
 import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLORS } from '../screens/templates/constants';
 import MiniTemplateCard from './MiniTemplateCard';
+import { useReduceMotion } from '../hooks/useReduceMotion';
 
 export interface CollapsibleCategorySectionProps {
   /** Category ID */
@@ -44,6 +48,11 @@ export interface CollapsibleCategorySectionProps {
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
+/** Stagger delay between each card animation in ms */
+const CARD_STAGGER_DELAY = 50;
+/** Maximum stagger delay to prevent long wait times for large categories */
+const MAX_STAGGER_DELAY = 400;
+
 export function CollapsibleCategorySection({
   categoryId,
   label,
@@ -57,6 +66,9 @@ export function CollapsibleCategorySection({
 }: CollapsibleCategorySectionProps) {
   const colors = CATEGORY_COLORS[categoryId] || DEFAULT_CATEGORY_COLORS;
   const headerScale = useSharedValue(1);
+  const iconBounce = useSharedValue(0);
+  const iconScale = useSharedValue(1);
+  const reducedMotion = useReduceMotion();
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: headerScale.value }],
@@ -65,6 +77,17 @@ export function CollapsibleCategorySection({
   const chevronAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: withTiming(isExpanded ? '0deg' : '-90deg', { duration: 200 }) }],
   }));
+
+  // Icon bounce animation when expanding
+  const iconAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [
+        { translateY: iconBounce.value },
+        { scale: iconScale.value },
+      ],
+    };
+  });
 
   const handleHeaderPressIn = () => {
     headerScale.value = withSpring(0.98, { damping: 15, stiffness: 200 });
@@ -76,6 +99,21 @@ export function CollapsibleCategorySection({
 
   const handleHeaderPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    // Trigger icon bounce when expanding (not collapsing)
+    if (!isExpanded && !reducedMotion) {
+      // Bounce up and settle
+      iconBounce.value = withSequence(
+        withSpring(-4, { damping: 8, stiffness: 300 }),
+        withSpring(0, { damping: 12, stiffness: 200 })
+      );
+      // Scale up slightly and settle
+      iconScale.value = withSequence(
+        withSpring(1.15, { damping: 8, stiffness: 300 }),
+        withSpring(1, { damping: 10, stiffness: 200 })
+      );
+    }
+
     onToggle();
   };
 
@@ -107,10 +145,10 @@ export function CollapsibleCategorySection({
             headerAnimatedStyle,
           ]}
         >
-          {/* Icon with colored background */}
-          <View style={[styles.iconBadge, { backgroundColor: `${colors.bgSelected}20` }]}>
+          {/* Icon with colored background and bounce animation */}
+          <Animated.View style={[styles.iconBadge, { backgroundColor: `${colors.bgSelected}20` }, iconAnimatedStyle]}>
             <Text style={styles.icon}>{icon}</Text>
-          </View>
+          </Animated.View>
 
           {/* Label and count */}
           <View style={styles.labelContainer}>
@@ -136,8 +174,8 @@ export function CollapsibleCategorySection({
       {/* Expandable content - horizontal scrolling list */}
       {isExpanded && (
         <Animated.View
-          entering={FadeIn.duration(200)}
-          exiting={FadeOut.duration(150)}
+          entering={FadeIn.duration(150)}
+          exiting={FadeOut.duration(100)}
           style={styles.content}
         >
           <ScrollView
@@ -149,21 +187,45 @@ export function CollapsibleCategorySection({
             scrollEventThrottle={16}
             decelerationRate="fast"
           >
-            {templates.map((template) => (
-              <MiniTemplateCard
-                key={template._id}
-                icon={template.icon}
-                iconColor={template.iconColor}
-                name={template.name}
-                description={template.description}
-                subtitle={frequencyLabels[template.frequency] || template.frequency}
-                hasResearch={Boolean(template.scientificLink)}
-                scientificReference={template.scientificReference}
-                onPress={() => onTemplatePress(template)}
-                onImport={() => onImport(template)}
-                isImporting={importingTemplateId === template._id}
-              />
-            ))}
+            {templates.map((template, index) => {
+              // Calculate stagger delay with a cap for large categories
+              const staggerDelay = Math.min(index * CARD_STAGGER_DELAY, MAX_STAGGER_DELAY);
+
+              // Create appropriate entering animation based on reduced motion preference
+              const enteringAnimation = reducedMotion
+                ? FadeIn.duration(0)
+                : SlideInRight.delay(staggerDelay)
+                    .springify()
+                    .damping(18)
+                    .stiffness(120);
+
+              // Create appropriate exiting animation
+              const exitingAnimation = reducedMotion
+                ? FadeOut.duration(0)
+                : SlideOutLeft.delay(Math.min(index * 30, 200))
+                    .duration(150);
+
+              return (
+                <Animated.View
+                  key={template._id}
+                  entering={enteringAnimation}
+                  exiting={exitingAnimation}
+                >
+                  <MiniTemplateCard
+                    icon={template.icon}
+                    iconColor={template.iconColor}
+                    name={template.name}
+                    description={template.description}
+                    subtitle={frequencyLabels[template.frequency] || template.frequency}
+                    hasResearch={Boolean(template.scientificLink)}
+                    scientificReference={template.scientificReference}
+                    onPress={() => onTemplatePress(template)}
+                    onImport={() => onImport(template)}
+                    isImporting={importingTemplateId === template._id}
+                  />
+                </Animated.View>
+              );
+            })}
           </ScrollView>
         </Animated.View>
       )}
