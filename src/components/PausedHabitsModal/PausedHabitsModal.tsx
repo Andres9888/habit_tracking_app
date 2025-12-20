@@ -5,6 +5,7 @@
  */
 
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
 
 interface PausedHabitsModalProps {
@@ -16,11 +17,14 @@ export default function PausedHabitsModal({
   onClose,
   onBack,
 }: PausedHabitsModalProps) {
+  const insets = useSafeAreaInsets();
   const { pausedHabits, handleResume } = usePausedHabitsModalLogic();
 
   return (
     <>
-      <View className='mb-6 flex-row items-center justify-between'>
+      {/* Header - dynamic padding for Dynamic Island/notch */}
+      <View style={{ paddingTop: insets.top + 8 }}>
+        <View className='mb-6 flex-row items-center justify-between'>
         <TouchableOpacity
           accessibilityLabel='Back to settings'
           accessibilityRole='button'
@@ -40,6 +44,7 @@ export default function PausedHabitsModal({
         >
           <Text className='text-lg font-semibold text-slate-500'>✕</Text>
         </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView className='p-5'>
