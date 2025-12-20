@@ -348,9 +348,16 @@ Below the calendar grid, show contextual stats:
   - ✅ Disabled forward navigation when at current month
 
 ### Phase 2: Integration
-- [ ] **HEATMAP-6**: Add CalendarHeatmap to HabitDetailScreen
-- [ ] **HEATMAP-7**: Wire up completedDates from tracking data
-- [ ] **HEATMAP-8**: Add summary stats footer
+- [x] **HEATMAP-6**: Add CalendarHeatmap to HabitDetailScreen
+  - ✅ Added CalendarHeatmap import and component to HabitDetailScreen
+  - ✅ Placed after StreakChainSection and before HabitStrengthSection per spec
+  - ✅ Wired up habitId, completedDates, habitCreatedAt, and habitColor props
+- [x] **HEATMAP-7**: Wire up completedDates from tracking data
+  - ✅ Leveraged existing `completedDates` Set computed from tracking data in HabitDetailScreen
+  - ✅ Already filters tracking entries by habitId and completion status
+- [x] **HEATMAP-8**: Add summary stats footer
+  - ✅ Summary stats footer already built into CalendarHeatmap component
+  - ✅ Shows completion count and success rate percentage for current month
 
 ### Phase 3: Polish
 - [ ] **HEATMAP-9**: Add staggered entry animations for cells

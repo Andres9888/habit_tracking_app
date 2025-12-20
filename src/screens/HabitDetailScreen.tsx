@@ -19,6 +19,7 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import { InsightsSection } from '../components/InsightsSection';
 import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
+import { CalendarHeatmap } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -982,6 +983,17 @@ export default function HabitDetailScreen({
             currentStreak={habit.currentStreak ?? 0}
             lastSevenDays={lastSevenDays}
             todayCompleted={isCompletedToday}
+          />
+
+          {/* Calendar Heatmap */}
+          <CalendarHeatmap
+            habitId={habit._id}
+            completedDates={completedDates}
+            habitCreatedAt={habitCreatedAt}
+            habitColor={habit.iconColor}
+            onDayPress={(date, completed) => {
+              // Future: Could open day detail or allow editing past dates
+            }}
           />
 
           <Pressable
