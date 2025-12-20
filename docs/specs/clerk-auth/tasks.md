@@ -243,4 +243,22 @@ Task 6, 7, 8, 9 → Task 10 (E2E testing)
 
 ---
 
+## Blocking Status (2025-12-20)
+
+**All remaining tasks are BLOCKED** pending Task 1 (Clerk Dashboard setup).
+
+Task 1 requires manual human intervention at dashboard.clerk.com to:
+1. Create Clerk account and application
+2. Configure OAuth providers (Google Cloud, Apple Developer credentials)
+3. Set up JWT template named `convex` with audience `convex`
+4. Copy Publishable Key to `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` in `.env.local`
+5. Copy Secret Key for Convex environment setup
+
+Once Task 1 is complete, the following can proceed:
+- Task 2 (remaining item: add env variable)
+- Task 4 (configure Convex JWT validation)
+- Then Task 5+ in sequence
+
+---
+
 _Generated from tech-spec.md | Ready for implementation_
