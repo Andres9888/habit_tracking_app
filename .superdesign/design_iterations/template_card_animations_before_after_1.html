@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template Card Animations - Before & After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #1a1a2e;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .phone-frame {
+      width: 375px;
+      height: 720px;
+      background: #f8f7f5;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #1a1a2e;
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    .screen-content {
+      padding: 60px 0 20px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    /* Category Section */
+    .category-section {
+      margin-bottom: 8px;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      margin: 0 12px;
+      border-radius: 14px;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .category-header.expanded {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .category-header:not(.expanded) {
+      border-left: 4px solid transparent;
+    }
+
+    .icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .icon-badge.bounce {
+      animation: iconBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes iconBounce {
+      0% { transform: scale(1) translateY(0); }
+      40% { transform: scale(1.15) translateY(-4px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    .category-label {
+      flex: 1;
+    }
+
+    .category-label h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #374151;
+      margin: 0;
+    }
+
+    .category-label.expanded h3 {
+      color: #b45309;
+    }
+
+    .category-label p {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 2px 0 0;
+    }
+
+    .chevron {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .chevron.expanded {
+      transform: rotate(0deg);
+    }
+
+    .chevron:not(.expanded) {
+      transform: rotate(-90deg);
+    }
+
+    /* Templates Scroll Container */
+    .templates-scroll {
+      display: flex;
+      gap: 12px;
+      padding: 8px 16px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .templates-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Mini Template Card - BEFORE (Basic) */
+    .mini-card-before {
+      min-width: 220px;
+      min-height: 140px;
+      background: rgba(245, 158, 11, 0.03);
+      border-radius: 16px;
+      padding: 14px 14px 14px 18px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.15s;
+    }
+
+    .mini-card-before:active {
+      transform: scale(0.96);
+    }
+
+    /* Mini Template Card - AFTER (Enhanced) */
+    .mini-card-after {
+      min-width: 220px;
+      min-height: 140px;
+      background: rgba(245, 158, 11, 0.03);
+      border-radius: 16px;
+      padding: 14px 14px 14px 18px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.15s ease;
+      opacity: 0;
+      transform: translateX(30px);
+    }
+
+    .mini-card-after.animate-in {
+      animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .mini-card-after:nth-child(1).animate-in { animation-delay: 0ms; }
+    .mini-card-after:nth-child(2).animate-in { animation-delay: 50ms; }
+    .mini-card-after:nth-child(3).animate-in { animation-delay: 100ms; }
+    .mini-card-after:nth-child(4).animate-in { animation-delay: 150ms; }
+
+    @keyframes slideInRight {
+      0% {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .mini-card-after:active {
+      transform: scale(0.97) rotate(-0.5deg);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .mini-card-after.success {
+      animation: successGlow 0.6s ease-out;
+    }
+
+    @keyframes successGlow {
+      0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+      50% { box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+      100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+    }
+
+    /* Card Accent */
+    .card-accent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 16px 0 0 16px;
+    }
+
+    /* Card Header */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card-title {
+      flex: 1;
+    }
+
+    .card-title h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #101727;
+      margin: 0 0 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-title span {
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b7280;
+    }
+
+    /* Import Button - BEFORE */
+    .import-btn-before {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .import-btn-before:active {
+      transform: scale(0.95);
+    }
+
+    /* Import Button - AFTER (with pulse) */
+    .import-btn-after {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      animation: subtlePulse 3s ease-in-out infinite;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .import-btn-after:active {
+      animation: none;
+      transform: scale(0.9);
+    }
+
+    .import-btn-after.success {
+      animation: none;
+      background: #10b981 !important;
+    }
+
+    .import-btn-after.success::after {
+      content: '✓';
+      animation: checkmarkPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes checkmarkPop {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+
+    /* Card Description */
+    .card-description {
+      font-size: 13px;
+      line-height: 18px;
+      color: #4b5563;
+      margin-bottom: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Research Badge - BEFORE */
+    .research-badge-before {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* Research Badge - AFTER (with shimmer) */
+    .research-badge-after {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .research-badge-after::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      animation: shimmer 2s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Section Labels */
+    .section-label {
+      text-align: center;
+      padding: 16px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section-label.before {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+    }
+
+    .section-label.after {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    /* Demo Controls */
+    .demo-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .demo-btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .demo-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .demo-btn.primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+    }
+
+    .demo-btn.secondary {
+      background: white;
+      color: #374151;
+    }
+
+    /* Comparison Container */
+    .comparison-container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .comparison-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .comparison-label {
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .comparison-label .badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .comparison-label .badge.current {
+      background: #374151;
+    }
+
+    .comparison-label .badge.new {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    /* Animation Legend */
+    .animation-legend {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .legend-title {
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .legend-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .legend-text {
+      color: white;
+      font-size: 13px;
+    }
+
+    .legend-text strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .legend-text span {
+      opacity: 0.7;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <div class="comparison-container">
+    <!-- BEFORE -->
+    <div class="comparison-side">
+      <div class="comparison-label">
+        Before
+        <span class="badge current">Current</span>
+      </div>
+      <div class="phone-frame">
+        <div class="screen-content">
+          <!-- Header -->
+          <div style="padding: 0 20px 16px;">
+            <h1 style="font-size: 28px; font-weight: 700; color: #101727; margin: 0;">Import Habits</h1>
+            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0;">Science-backed habits to get you started</p>
+          </div>
+
+          <!-- Search Bar -->
+          <div style="padding: 0 20px 16px;">
+            <div style="background: white; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+              <span style="color: #94a3b8;">🔍</span>
+              <span style="color: #94a3b8; font-size: 15px;">Search habits...</span>
+            </div>
+          </div>
+
+          <!-- Category: Morning Routine (Expanded) -->
+          <div class="category-section">
+            <div class="category-header expanded" onclick="toggleBefore(this)">
+              <div class="icon-badge" style="background: rgba(245, 158, 11, 0.12);">
+                ☀️
+              </div>
+              <div class="category-label expanded">
+                <h3>Morning Routine</h3>
+                <p>5 habits</p>
+              </div>
+              <div class="chevron expanded">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Cards Container (BEFORE - no stagger, basic animations) -->
+            <div class="templates-scroll" id="before-cards">
+              <!-- Card 1 -->
+              <div class="mini-card-before">
+                <div class="card-accent" style="background: #f59e0b;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(245, 158, 11, 0.2);">💧</div>
+                  <div class="card-title">
+                    <h4>Drink Water</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-before" style="background: #f59e0b;">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">Start your day with a glass of water to boost metabolism</p>
+                <div class="research-badge-before" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                  🔬 Research-backed
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="mini-card-before">
+                <div class="card-accent" style="background: #f59e0b;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(245, 158, 11, 0.2);">🧘</div>
+                  <div class="card-title">
+                    <h4>Morning Stretch</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-before" style="background: #f59e0b;">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">5-minute stretching routine to wake up your body</p>
+                <div class="research-badge-before" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                  🔬 Huberman Lab
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="mini-card-before">
+                <div class="card-accent" style="background: #f59e0b;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(245, 158, 11, 0.2);">☀️</div>
+                  <div class="card-title">
+                    <h4>Sunlight Exposure</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-before" style="background: #f59e0b;">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">Get 10 min of morning sunlight for circadian health</p>
+                <div class="research-badge-before" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                  🔬 Research-backed
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category: Health & Fitness (Collapsed) -->
+          <div class="category-section">
+            <div class="category-header">
+              <div class="icon-badge" style="background: rgba(16, 185, 129, 0.12);">
+                💪
+              </div>
+              <div class="category-label">
+                <h3>Health & Fitness</h3>
+                <p>8 habits</p>
+              </div>
+              <div class="chevron">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category: Mindfulness (Collapsed) -->
+          <div class="category-section">
+            <div class="category-header">
+              <div class="icon-badge" style="background: rgba(139, 92, 246, 0.12);">
+                🧠
+              </div>
+              <div class="category-label">
+                <h3>Mindfulness</h3>
+                <p>4 habits</p>
+              </div>
+              <div class="chevron">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="comparison-side">
+      <div class="comparison-label">
+        After
+        <span class="badge new">Enhanced</span>
+      </div>
+      <div class="phone-frame">
+        <div class="screen-content">
+          <!-- Header -->
+          <div style="padding: 0 20px 16px;">
+            <h1 style="font-size: 28px; font-weight: 700; color: #101727; margin: 0;">Import Habits</h1>
+            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0;">Science-backed habits to get you started</p>
+          </div>
+
+          <!-- Search Bar -->
+          <div style="padding: 0 20px 16px;">
+            <div style="background: white; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+              <span style="color: #94a3b8;">🔍</span>
+              <span style="color: #94a3b8; font-size: 15px;">Search habits...</span>
+            </div>
+          </div>
+
+          <!-- Category: Morning Routine (Expanded with Enhanced Animations) -->
+          <div class="category-section">
+            <div class="category-header expanded" onclick="toggleAfter(this)" id="after-header">
+              <div class="icon-badge" style="background: rgba(245, 158, 11, 0.12);" id="after-icon">
+                ☀️
+              </div>
+              <div class="category-label expanded">
+                <h3>Morning Routine</h3>
+                <p>5 habits</p>
+              </div>
+              <div class="chevron expanded">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Cards Container (AFTER - staggered entrance, enhanced animations) -->
+            <div class="templates-scroll" id="after-cards">
+              <!-- Card 1 -->
+              <div class="mini-card-after animate-in">
+                <div class="card-accent" style="background: #f59e0b;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(245, 158, 11, 0.2);">💧</div>
+                  <div class="card-title">
+                    <h4>Drink Water</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-after" style="background: #f59e0b;" onclick="simulateImport(this)">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">Start your day with a glass of water to boost metabolism</p>
+                <div class="research-badge-after" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                  🔬 Research-backed
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="mini-card-after animate-in">
+                <div class="card-accent" style="background: #f59e0b;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(245, 158, 11, 0.2);">🧘</div>
+                  <div class="card-title">
+                    <h4>Morning Stretch</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-after" style="background: #f59e0b;" onclick="simulateImport(this)">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">5-minute stretching routine to wake up your body</p>
+                <div class="research-badge-after" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                  🔬 Huberman Lab
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="mini-card-after animate-in">
+                <div class="card-accent" style="background: #f59e0b;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(245, 158, 11, 0.2);">☀️</div>
+                  <div class="card-title">
+                    <h4>Sunlight Exposure</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-after" style="background: #f59e0b;" onclick="simulateImport(this)">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">Get 10 min of morning sunlight for circadian health</p>
+                <div class="research-badge-after" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                  🔬 Research-backed
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category: Health & Fitness (Collapsed) -->
+          <div class="category-section">
+            <div class="category-header" onclick="expandHealthCategory(this)">
+              <div class="icon-badge" style="background: rgba(16, 185, 129, 0.12);">
+                💪
+              </div>
+              <div class="category-label">
+                <h3>Health & Fitness</h3>
+                <p>8 habits</p>
+              </div>
+              <div class="chevron">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="templates-scroll" id="health-cards" style="display: none;">
+              <div class="mini-card-after">
+                <div class="card-accent" style="background: #10b981;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(16, 185, 129, 0.2);">🏃</div>
+                  <div class="card-title">
+                    <h4>Daily Walk</h4>
+                    <span>Daily</span>
+                  </div>
+                  <button class="import-btn-after" style="background: #10b981;" onclick="simulateImport(this)">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">30-minute walk for cardiovascular health</p>
+              </div>
+              <div class="mini-card-after">
+                <div class="card-accent" style="background: #10b981;"></div>
+                <div class="card-header">
+                  <div class="card-icon" style="background: rgba(16, 185, 129, 0.2);">💪</div>
+                  <div class="card-title">
+                    <h4>Strength Training</h4>
+                    <span>3x/week</span>
+                  </div>
+                  <button class="import-btn-after" style="background: #10b981;" onclick="simulateImport(this)">
+                    <span>+</span> Add
+                  </button>
+                </div>
+                <p class="card-description">Resistance training for muscle health</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category: Mindfulness (Collapsed) -->
+          <div class="category-section">
+            <div class="category-header">
+              <div class="icon-badge" style="background: rgba(139, 92, 246, 0.12);">
+                🧠
+              </div>
+              <div class="category-label">
+                <h3>Mindfulness</h3>
+                <p>4 habits</p>
+              </div>
+              <div class="chevron">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animation Legend -->
+  <div class="animation-legend">
+    <div class="legend-title">Animation Enhancements</div>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <div class="legend-icon" style="background: rgba(245, 158, 11, 0.2);">→</div>
+        <div class="legend-text">
+          <strong>Staggered Entrance</strong>
+          <span>Cards slide in with 50ms delay each</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: rgba(16, 185, 129, 0.2);">↕</div>
+        <div class="legend-text">
+          <strong>Icon Bounce</strong>
+          <span>Category icon bounces on expand</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: rgba(139, 92, 246, 0.2);">↻</div>
+        <div class="legend-text">
+          <strong>Press Rotation</strong>
+          <span>Subtle tilt + shadow on press</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: rgba(236, 72, 153, 0.2);">◐</div>
+        <div class="legend-text">
+          <strong>Button Pulse</strong>
+          <span>Import button breathes subtly</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: rgba(16, 185, 129, 0.2);">✓</div>
+        <div class="legend-text">
+          <strong>Success Glow</strong>
+          <span>Card glows green on import</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: rgba(59, 130, 246, 0.2);">✨</div>
+        <div class="legend-text">
+          <strong>Badge Shimmer</strong>
+          <span>Research badge has subtle shimmer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo Controls -->
+  <div class="demo-controls">
+    <button class="demo-btn secondary" onclick="replayAnimations()">
+      ↻ Replay Animations
+    </button>
+    <button class="demo-btn primary" onclick="expandHealthCategory(document.querySelector('#health-cards').previousElementSibling)">
+      Expand Health Category
+    </button>
+  </div>
+
+  <script>
+    function replayAnimations() {
+      // Reset and replay the staggered entrance
+      const cards = document.querySelectorAll('#after-cards .mini-card-after');
+      cards.forEach(card => {
+        card.classList.remove('animate-in');
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(30px)';
+      });
+
+      // Trigger icon bounce
+      const icon = document.getElementById('after-icon');
+      icon.classList.remove('bounce');
+
+      setTimeout(() => {
+        icon.classList.add('bounce');
+        cards.forEach(card => {
+          card.classList.add('animate-in');
+        });
+      }, 100);
+    }
+
+    function simulateImport(btn) {
+      const card = btn.closest('.mini-card-after');
+      btn.classList.add('success');
+      btn.innerHTML = '✓ Added';
+      card.classList.add('success');
+
+      setTimeout(() => {
+        card.classList.remove('success');
+      }, 600);
+    }
+
+    function expandHealthCategory(header) {
+      const cardsContainer = document.getElementById('health-cards');
+      const icon = header.querySelector('.icon-badge');
+      const chevron = header.querySelector('.chevron');
+      const label = header.querySelector('.category-label');
+
+      if (cardsContainer.style.display === 'none') {
+        // Expand
+        header.classList.add('expanded');
+        header.style.background = 'rgba(16, 185, 129, 0.1)';
+        header.style.borderLeftColor = '#10b981';
+        label.classList.add('expanded');
+        label.querySelector('h3').style.color = '#059669';
+        chevron.classList.add('expanded');
+        chevron.querySelector('svg').style.stroke = '#059669';
+
+        cardsContainer.style.display = 'flex';
+
+        // Trigger icon bounce
+        icon.classList.add('bounce');
+        setTimeout(() => icon.classList.remove('bounce'), 400);
+
+        // Animate cards
+        const cards = cardsContainer.querySelectorAll('.mini-card-after');
+        cards.forEach((card, i) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateX(30px)';
+          setTimeout(() => {
+            card.style.transition = 'opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateX(0)';
+          }, i * 50);
+        });
+      } else {
+        // Collapse
+        header.classList.remove('expanded');
+        header.style.background = '';
+        header.style.borderLeftColor = 'transparent';
+        label.classList.remove('expanded');
+        label.querySelector('h3').style.color = '#374151';
+        chevron.classList.remove('expanded');
+        chevron.querySelector('svg').style.stroke = '#9ca3af';
+        cardsContainer.style.display = 'none';
+      }
+    }
+
+    // Initial animation on load
+    setTimeout(replayAnimations, 500);
+  </script>
+</body>
+</html>

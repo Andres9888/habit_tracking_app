@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Picker - Before & After Comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f0f0f !important; }
+
+    .phone-frame {
+      width: 375px;
+      height: 750px;
+      background: #f8f5f1;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      border: 8px solid #1a1a1a;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .tap-hint { animation: pulse 2s ease-in-out infinite; }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+    }
+    .glow-effect { animation: glow 2s ease-in-out infinite; }
+
+    .emoji-preview-after {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .emoji-preview-after:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+    .emoji-preview-after:active {
+      transform: scale(0.95);
+    }
+
+    .problem-badge {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 1px solid #f87171;
+    }
+    .success-badge {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 1px solid #4ade80;
+    }
+
+    .arrow-indicator {
+      color: #6b7280;
+      font-size: 48px;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+
+  <!-- Title -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-white mb-2">Emoji Picker UX Redesign</h1>
+    <p class="text-gray-400">Before & After Comparison</p>
+  </div>
+
+  <!-- Comparison Container -->
+  <div class="flex items-center justify-center gap-8 flex-wrap">
+
+    <!-- ==================== BEFORE ==================== -->
+    <div class="text-center">
+      <div class="flex items-center gap-2 justify-center mb-4">
+        <span class="text-red-400 text-2xl">✗</span>
+        <h2 class="text-xl font-semibold text-white">BEFORE</h2>
+      </div>
+      <p class="text-gray-500 text-sm mb-4 max-w-[375px]">Users don't realize the emoji is tappable</p>
+
+      <div class="phone-frame">
+        <!-- Status bar -->
+        <div class="h-11 bg-[#f8f5f1] flex items-center justify-center">
+          <div class="w-32 h-6 bg-black rounded-full"></div>
+        </div>
+
+        <!-- Header -->
+        <div class="bg-[#f8f5f1] px-4 py-3 flex items-center justify-between border-b border-gray-200">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+              <i data-lucide="chevron-left" class="w-5 h-5 text-[#1a1a1a]"></i>
+            </div>
+            <span class="text-lg font-semibold text-[#1a1a1a]">Edit Habit</span>
+          </div>
+          <button class="text-red-500 text-sm font-medium">Delete</button>
+        </div>
+
+        <!-- Content -->
+        <div class="p-4 bg-[#f8f5f1]">
+          <!-- Icon Section - BEFORE -->
+          <div class="bg-white rounded-2xl p-6 mb-4 shadow-sm">
+            <!-- Static emoji - not obviously tappable -->
+            <div class="flex flex-col items-center mb-6">
+              <div class="w-20 h-20 rounded-2xl bg-blue-100 flex items-center justify-center mb-3">
+                <span class="text-4xl">💪</span>
+              </div>
+              <span class="text-[17px] font-semibold text-[#1a1a1a]">Choose Icon</span>
+            </div>
+
+            <!-- Separate button users must find -->
+            <button class="w-full flex items-center justify-between rounded-xl bg-gray-50 p-4 border border-gray-100">
+              <span class="text-base font-medium text-[#1a1a1a]">Browse Icons</span>
+              <span class="text-sm text-blue-500 font-medium">Change</span>
+            </button>
+          </div>
+
+          <!-- Problem Callouts -->
+          <div class="problem-badge rounded-xl p-4 space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-red-500 mt-0.5">✗</span>
+              <div>
+                <p class="text-sm font-medium text-red-700">Emoji looks static</p>
+                <p class="text-xs text-red-600">No visual cue that it's interactive</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-red-500 mt-0.5">✗</span>
+              <div>
+                <p class="text-sm font-medium text-red-700">Hidden action button</p>
+                <p class="text-xs text-red-600">Users must discover "Browse Icons"</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-red-500 mt-0.5">✗</span>
+              <div>
+                <p class="text-sm font-medium text-red-700">Two tap targets</p>
+                <p class="text-xs text-red-600">Confusing which one to use</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Name -->
+          <div class="bg-white rounded-2xl p-4 mt-4 shadow-sm">
+            <label class="text-base font-semibold text-[#1a1a1a] mb-2 block">Habit Name</label>
+            <div class="w-full h-12 rounded-xl bg-gray-50 px-4 flex items-center text-base text-[#1a1a1a] border border-gray-100">
+              Exercise
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-indicator hidden lg:block">→</div>
+
+    <!-- ==================== AFTER ==================== -->
+    <div class="text-center">
+      <div class="flex items-center gap-2 justify-center mb-4">
+        <span class="text-green-400 text-2xl">✓</span>
+        <h2 class="text-xl font-semibold text-white">AFTER</h2>
+      </div>
+      <p class="text-gray-500 text-sm mb-4 max-w-[375px]">Clear affordance with edit badge + helper text</p>
+
+      <div class="phone-frame">
+        <!-- Status bar -->
+        <div class="h-11 bg-[#f8f5f1] flex items-center justify-center">
+          <div class="w-32 h-6 bg-black rounded-full"></div>
+        </div>
+
+        <!-- Header -->
+        <div class="bg-[#f8f5f1] px-4 py-3 flex items-center justify-between border-b border-gray-200">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+              <i data-lucide="chevron-left" class="w-5 h-5 text-[#1a1a1a]"></i>
+            </div>
+            <span class="text-lg font-semibold text-[#1a1a1a]">Edit Habit</span>
+          </div>
+          <button class="text-red-500 text-sm font-medium">Delete</button>
+        </div>
+
+        <!-- Content -->
+        <div class="p-4 bg-[#f8f5f1]">
+          <!-- Icon Section - AFTER (Improved) -->
+          <div class="bg-white rounded-2xl p-6 mb-4 shadow-sm">
+            <div class="flex flex-col items-center">
+              <!-- Tappable emoji with visual cues -->
+              <div class="emoji-preview-after relative glow-effect" onclick="alert('Opens emoji picker!')">
+                <div class="w-24 h-24 rounded-2xl bg-blue-100 flex items-center justify-center">
+                  <span class="text-5xl">💪</span>
+                </div>
+                <!-- Edit badge -->
+                <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-[#1a1a1a] rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                  <i data-lucide="pencil" class="w-4 h-4 text-white"></i>
+                </div>
+              </div>
+              <!-- Helper text -->
+              <span class="tap-hint text-sm text-gray-500 mt-4 font-medium">Tap to change icon</span>
+            </div>
+          </div>
+
+          <!-- Success Callouts -->
+          <div class="success-badge rounded-xl p-4 space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-green-600 mt-0.5">✓</span>
+              <div>
+                <p class="text-sm font-medium text-green-800">Edit badge shows interactivity</p>
+                <p class="text-xs text-green-700">Pencil icon signals "tap to edit"</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-green-600 mt-0.5">✓</span>
+              <div>
+                <p class="text-sm font-medium text-green-800">Helper text guides users</p>
+                <p class="text-xs text-green-700">Pulsing animation draws attention</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-green-600 mt-0.5">✓</span>
+              <div>
+                <p class="text-sm font-medium text-green-800">Single clear tap target</p>
+                <p class="text-xs text-green-700">No confusion about what to press</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Name -->
+          <div class="bg-white rounded-2xl p-4 mt-4 shadow-sm">
+            <label class="text-base font-semibold text-[#1a1a1a] mb-2 block">Habit Name</label>
+            <div class="w-full h-12 rounded-xl bg-gray-50 px-4 flex items-center text-base text-[#1a1a1a] border border-gray-100">
+              Exercise
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emoji Picker Modal Comparison -->
+  <div class="mt-16 text-center">
+    <h2 class="text-2xl font-bold text-white mb-2">Emoji Picker Modal</h2>
+    <p class="text-gray-400 mb-8">Redesigned with habit-focused categories</p>
+  </div>
+
+  <div class="flex items-start justify-center gap-8 flex-wrap">
+
+    <!-- BEFORE: Picker -->
+    <div class="text-center">
+      <div class="flex items-center gap-2 justify-center mb-4">
+        <span class="text-red-400 text-2xl">✗</span>
+        <h2 class="text-xl font-semibold text-white">BEFORE</h2>
+      </div>
+
+      <div class="phone-frame">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-[#f8f5f1] rounded-t-3xl" style="height: 85%">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200">
+            <h3 class="text-xl font-semibold text-[#1a1a1a]">Choose an Icon</h3>
+            <button class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+              <i data-lucide="x" class="w-5 h-5 text-[#1a1a1a]"></i>
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="px-4 py-3">
+            <div class="flex items-center gap-2 bg-white rounded-xl px-3 py-3">
+              <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
+              <span class="text-gray-400">Search emojis...</span>
+            </div>
+          </div>
+
+          <!-- OLD Category Tabs - Too many, generic -->
+          <div class="px-4 py-2 border-b border-gray-200 overflow-x-auto">
+            <div class="flex gap-2" style="min-width: 600px;">
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#1a1a1a] text-sm font-medium text-white">
+                <span>⭐</span> Popular
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium">
+                <span>🌐</span> All
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium">
+                <span>😀</span> Smileys
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium">
+                <span>👋</span> Gestures
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium">
+                <span>👤</span> People
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium">
+                <span>🎯</span> Activities
+              </button>
+            </div>
+          </div>
+
+          <!-- Generic emoji grid -->
+          <div class="p-4 bg-white overflow-y-auto" style="height: 280px;">
+            <div class="grid grid-cols-8 gap-1">
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">⭐</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">❤️</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">😀</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🎉</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🔥</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">✨</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">💯</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">👍</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">😊</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🙌</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">💪</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🎯</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">📚</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🏃</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🧘</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">💧</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🍎</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">😴</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">📝</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">💼</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🎨</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🎵</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">📖</div>
+              <div class="w-10 h-10 flex items-center justify-center text-2xl">🏠</div>
+            </div>
+          </div>
+
+          <!-- Problem area -->
+          <div class="p-3 bg-red-50 border-t border-red-200">
+            <p class="text-xs text-red-600 text-center">❌ Generic categories not suited for habits</p>
+            <p class="text-xs text-red-600 text-center">❌ No "Recently Used" section</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER: Picker -->
+    <div class="text-center">
+      <div class="flex items-center gap-2 justify-center mb-4">
+        <span class="text-green-400 text-2xl">✓</span>
+        <h2 class="text-xl font-semibold text-white">AFTER</h2>
+      </div>
+
+      <div class="phone-frame">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-[#f8f5f1] rounded-t-3xl" style="height: 85%">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200">
+            <h3 class="text-xl font-semibold text-[#1a1a1a]">Choose Icon</h3>
+            <button class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+              <i data-lucide="x" class="w-5 h-5 text-[#1a1a1a]"></i>
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="px-4 py-3">
+            <div class="flex items-center gap-2 bg-white rounded-xl px-3 py-3 shadow-sm">
+              <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
+              <span class="text-gray-400">Search "run", "water", "sleep"...</span>
+            </div>
+          </div>
+
+          <!-- NEW: Recently Used -->
+          <div class="px-4 py-2">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Recently Used</p>
+            <div class="flex gap-2">
+              <div class="w-11 h-11 rounded-xl bg-blue-50 border-2 border-blue-500 flex items-center justify-center shadow-sm">
+                <span class="text-2xl">💪</span>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                <span class="text-2xl">🧘</span>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                <span class="text-2xl">📚</span>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                <span class="text-2xl">💧</span>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                <span class="text-2xl">🏃</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- NEW: Habit-focused categories -->
+          <div class="px-4 py-3 border-b border-gray-200">
+            <div class="flex gap-2 overflow-x-auto pb-1">
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#1a1a1a] text-sm font-medium text-white shadow-sm">
+                <span>💪</span> Fitness
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium shadow-sm">
+                <span>📚</span> Learning
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium shadow-sm">
+                <span>🧘</span> Wellness
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium shadow-sm">
+                <span>🍎</span> Health
+              </button>
+              <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-sm font-medium shadow-sm">
+                <span>💼</span> Work
+              </button>
+            </div>
+          </div>
+
+          <!-- Emoji Grid - larger targets -->
+          <div class="p-4 bg-white overflow-y-auto" style="height: 220px;">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">💪 Fitness</p>
+            <div class="grid grid-cols-7 gap-2">
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">💪</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🏃</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🚴</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🏋️</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🏊</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🧘</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🚶</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🤸</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">⚽</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🏀</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🎾</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🏈</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🥊</div>
+              <div class="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-2xl hover:bg-gray-100 cursor-pointer transition-all">🎯</div>
+            </div>
+          </div>
+
+          <!-- Success footer -->
+          <div class="p-3 bg-green-50 border-t border-green-200">
+            <p class="text-xs text-green-700 text-center">✓ Habit-focused categories • Recently used • Larger tap targets</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="mt-16 max-w-2xl mx-auto">
+    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+      <h3 class="text-lg font-semibold text-white mb-4">Key Improvements</h3>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="space-y-2">
+          <p class="text-gray-400 font-medium">Affordance</p>
+          <p class="text-gray-300">• Edit badge on emoji</p>
+          <p class="text-gray-300">• "Tap to change" hint</p>
+          <p class="text-gray-300">• Press animation</p>
+        </div>
+        <div class="space-y-2">
+          <p class="text-gray-400 font-medium">Picker UX</p>
+          <p class="text-gray-300">• Recently Used section</p>
+          <p class="text-gray-300">• Habit categories</p>
+          <p class="text-gray-300">• 44px tap targets</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

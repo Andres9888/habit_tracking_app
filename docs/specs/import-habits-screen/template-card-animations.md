@@ -399,9 +399,194 @@ Reference animations from:
 
 ---
 
+## Known Issues (Post-Implementation)
+
+### Issue 1: Screen Transition Animation Needs Improvement
+
+**Status**: 🔴 Not Started
+
+**Problem**: The transition from Home/Habit List screen to the Templates/Import Habits screen lacks a polished entrance animation. The screen appears abruptly without a smooth transition.
+
+**Current Behavior**:
+- Navigation to TemplatesScreen is instant with no transition
+- No shared element transitions between screens
+- Header and content appear simultaneously without choreography
+
+**Proposed Solutions**:
+
+#### Option A: Native Stack Transition (Recommended)
+Configure React Navigation's native stack with custom animation:
+```tsx
+// In navigation config
+<Stack.Screen
+  name="Templates"
+  component={TemplatesScreen}
+  options={{
+    animation: 'slide_from_right', // or 'fade_from_bottom'
+    animationDuration: 300,
+  }}
+/>
+```
+
+#### Option B: Custom Screen Entrance Animation
+Add choreographed entrance to TemplatesScreen:
+```tsx
+// Header slides down, content fades up with stagger
+const headerTranslateY = useSharedValue(-20);
+const contentOpacity = useSharedValue(0);
+
+useEffect(() => {
+  headerTranslateY.value = withSpring(0, { damping: 18, stiffness: 120 });
+  contentOpacity.value = withDelay(100, withTiming(1, { duration: 300 }));
+}, []);
+```
+
+#### Option C: Shared Element Transition
+If navigating from a "Browse Templates" button, animate that element:
+```tsx
+// Using react-native-shared-element or Reanimated 3 shared transitions
+<SharedElement id="templates-header">
+  <Text>Import Habits</Text>
+</SharedElement>
+```
+
+**Files to Modify**:
+- `src/navigation/` - Stack navigator configuration
+- `src/screens/TemplatesScreen.tsx` - Screen entrance animation
+- Potentially parent screen if using shared element
+
+---
+
+### Issue 2: Animation Lag/Jank
+
+**Status**: 🔴 Not Started
+
+**Problem**: The implemented animations are correct but experiencing lag/jank, especially on:
+- Category expansion with staggered card entrance
+- Multiple simultaneous animations
+- Lower-end devices
+
+**Symptoms**:
+- Frame drops during card stagger animations
+- Choppy icon bounce animation
+- Shimmer effect may cause performance issues
+- Press feedback feels delayed
+
+**Root Cause Analysis**:
+
+1. **Too Many Simultaneous Animations**
+   - Icon bounce + staggered cards + fade all start together
+   - Each card has its own `SlideInRight` animation instance
+
+2. **Shimmer Animation Overhead**
+   - Infinite `withRepeat` on every research badge
+   - LinearGradient re-renders on every frame
+
+3. **Spring Configuration Too Complex**
+   - High stiffness values cause more calculation per frame
+   - Multiple spring animations competing
+
+4. **JS Thread Blocking**
+   - Some animation callbacks may run on JS thread
+   - Layout calculations during animation
+
+**Proposed Optimizations**:
+
+#### Priority 1: Reduce Animation Complexity
+```tsx
+// Simplify spring configs - lower stiffness = fewer calculations
+const OPTIMIZED_SPRING = { damping: 20, stiffness: 100 }; // was 120-300
+
+// Reduce stagger - fewer concurrent animations
+const CARD_STAGGER_DELAY = 80; // was 50ms - gives more breathing room
+```
+
+#### Priority 2: Defer Non-Critical Animations
+```tsx
+// Start shimmer after cards are visible
+useEffect(() => {
+  const timer = setTimeout(() => {
+    if (!reducedMotion && hasResearch) {
+      shimmerTranslate.value = withRepeat(...);
+    }
+  }, 500); // Delay shimmer start
+  return () => clearTimeout(timer);
+}, []);
+```
+
+#### Priority 3: Use `useDerivedValue` for Computed Styles
+```tsx
+// Instead of multiple useAnimatedStyle calls
+const cardTransform = useDerivedValue(() => ({
+  scale: pressScale.value,
+  rotation: pressRotation.value,
+}));
+```
+
+#### Priority 4: Reduce Shimmer Frequency
+```tsx
+// Slower shimmer = less GPU work
+shimmerTranslate.value = withRepeat(
+  withTiming(120, { duration: 3000 }), // was 2000ms
+  -1,
+  false
+);
+```
+
+#### Priority 5: Batch Animation Starts with InteractionManager
+```tsx
+import { InteractionManager } from 'react-native';
+
+// Wait for navigation/gestures to complete
+InteractionManager.runAfterInteractions(() => {
+  // Start animations here
+});
+```
+
+#### Priority 6: Profile with Reanimated Performance Tools
+```tsx
+// Add to debug performance
+import { enableLayoutAnimations } from 'react-native-reanimated';
+enableLayoutAnimations(true, false); // Disable layout animations if causing issues
+```
+
+**Testing Checklist**:
+- [ ] Profile with Flipper/React DevTools Performance tab
+- [ ] Test on low-end Android device (2GB RAM)
+- [ ] Measure frame rate during category expansion
+- [ ] Compare before/after optimization changes
+- [ ] Verify animations still look correct after optimization
+
+**Files to Modify**:
+- `src/components/CollapsibleCategorySection.tsx` - Stagger timing, spring config
+- `src/components/MiniTemplateCard.tsx` - Shimmer timing, press feedback
+- `src/components/TemplateCard.tsx` - Entrance animation timing
+
+---
+
+## Implementation Phases (Updated)
+
+### Phase 5: Screen Transition Polish
+- [ ] Configure native stack animation for Templates screen
+- [ ] Add header entrance animation with slide-down
+- [ ] Add content fade-up with delay
+- [ ] Consider shared element if navigating from specific button
+
+### Phase 6: Performance Optimization
+- [ ] Profile animations with Flipper Performance monitor
+- [ ] Reduce spring stiffness values across all animations
+- [ ] Increase stagger delay from 50ms to 80ms
+- [ ] Defer shimmer start by 500ms after mount
+- [ ] Use InteractionManager for animation batching
+- [ ] Test on low-end device after each change
+
+---
+
 ## Open Questions
 
 1. Should cards that were just imported animate out of the list, or stay with a "Added" state?
 2. Should we add sound effects for import success (optional, with toggle)?
 3. Maximum stagger delay for categories with 10+ templates?
 4. Should the shimmer on research badge be permanent or one-time on scroll-into-view?
+5. **NEW**: Should we disable shimmer entirely on low-end devices?
+6. **NEW**: What's the target frame rate during animations? (60fps ideal, 30fps minimum)

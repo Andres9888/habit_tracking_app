@@ -526,12 +526,109 @@
             "status": "pending"
           }
         ]
+      },
+      {
+        "id": 3,
+        "title": "Fix StrengthProgressBar Empty Animation Bug",
+        "description": "Remove the fill/bounce animation that occurs when the strength value drops to 0%. The spring animation causes visual overshoot making the bar appear to fill before emptying.",
+        "details": "In StrengthProgressBar.tsx, the progressWidth animation uses withSpring() with damping:15 and stiffness:100. When transitioning to 0%, this causes the bar to visually 'bounce' and appear to fill before emptying. Replace spring with timing animation when transitioning to low values (<=5%). See spec: docs/specs/habit-card-screen/strength-progress-bar-empty-animation-fix.md",
+        "testStrategy": "Build strength to 20%+, then skip days to decay to 0%. Verify bar animates smoothly down without bouncing or filling. Test normal animations still work when strength increases. Verify reduce motion accessibility setting is respected.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Enhance Template Card Animations in Import Habits Screen",
+        "description": "Add polished, delightful animations to template cards including staggered entrances, improved press feedback, and success celebrations",
+        "details": "Implement comprehensive animation improvements for the Import Habits screen: 1) Add staggered SlideInRight entrance for MiniTemplateCards when category expands (50ms delay per card), 2) Add icon bounce animation on category header expansion, 3) Enhance press feedback with rotation + shadow lift effect, 4) Add subtle idle pulse animation to Import button, 5) Add success checkmark animation after import with glow effect, 6) Add shimmer effect to Research badge, 7) Ensure all animations respect useReducedMotion accessibility settings. Files to modify: src/components/CollapsibleCategorySection.tsx, src/components/MiniTemplateCard.tsx, src/components/TemplateCard.tsx. Reference spec: docs/specs/import-habits-screen/template-card-animations.md",
+        "testStrategy": "Test staggered animations with 10+ templates per category. Verify press feedback feels tactile and responsive. Test import success animation completes smoothly. Validate all animations disabled when useReducedMotion returns true. Test performance on low-end devices. Verify no layout shifts during animations.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "4.1",
+            "title": "Add Staggered SlideInRight Entrance to MiniTemplateCards",
+            "description": "Animate cards sliding in from right with 50ms stagger delay when category expands",
+            "details": "Wrap each MiniTemplateCard in Animated.View with entering={SlideInRight.delay(index * 50).springify().damping(18)}. Modify CollapsibleCategorySection.tsx to pass index to each card and add the entrance animation.",
+            "status": "pending"
+          },
+          {
+            "id": "4.2",
+            "title": "Add Icon Bounce on Category Header Expansion",
+            "description": "Make category icon bounce when section expands",
+            "details": "Add useAnimatedStyle for icon with translateY and scale animations. When isExpanded changes to true, animate icon with translateY: -3 and scale: 1.1 using spring animation.",
+            "status": "pending"
+          },
+          {
+            "id": "4.3",
+            "title": "Enhance Press Feedback with Rotation and Shadow",
+            "description": "Add subtle rotation and shadow lift to card press feedback",
+            "details": "Update handlePressIn/Out in MiniTemplateCard to include rotation (-0.5deg) and shadow elevation changes. Use withSpring for natural feel.",
+            "status": "pending"
+          },
+          {
+            "id": "4.4",
+            "title": "Add Subtle Idle Pulse to Import Button",
+            "description": "Import button breathes with subtle scale animation",
+            "details": "Add withRepeat withSequence animation cycling scale between 1 and 1.02 over 3 seconds. Ensure animation cancels properly on unmount.",
+            "status": "pending"
+          },
+          {
+            "id": "4.5",
+            "title": "Add Success Animation After Import",
+            "description": "Show checkmark and glow effect when template is imported",
+            "details": "After successful import, animate checkmark appearing with scale spring, add brief glow effect to card border using opacity animation. Consider transitioning button text from 'Add' to checkmark icon.",
+            "status": "pending"
+          },
+          {
+            "id": "4.6",
+            "title": "Add Shimmer Effect to Research Badge",
+            "description": "Subtle shimmer animation on research badge to draw attention",
+            "details": "Create shimmer overlay using LinearGradient with translateX animation. Cycle every 2 seconds with linear easing.",
+            "status": "pending"
+          },
+          {
+            "id": "4.7",
+            "title": "Add useReducedMotion Accessibility Support",
+            "description": "Disable or simplify animations when reduced motion is enabled",
+            "details": "Import useReducedMotion from react-native-reanimated. Conditionally use simpler/no animations when reducedMotion is true. Apply to all new animations in this task.",
+            "status": "done"
+          },
+          {
+            "id": "4.8",
+            "title": "Add Screen Transition Animation from Home to Templates",
+            "description": "Improve the navigation transition from Home/Habit List to Templates screen",
+            "details": "Configure React Navigation native stack with custom animation (slide_from_right or fade_from_bottom). Optionally add choreographed entrance with header slide-down and content fade-up with stagger. Consider shared element transition if navigating from specific button. Files: src/navigation/, src/screens/TemplatesScreen.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "4.9",
+            "title": "Fix Animation Lag and Performance Issues",
+            "description": "Optimize animations to reduce lag and jank during category expansion",
+            "details": "Profile with Flipper/React DevTools. Reduce spring stiffness (from 120-300 to ~100). Increase stagger delay from 50ms to 80ms. Defer shimmer start by 500ms. Use InteractionManager for animation batching. Slower shimmer (3000ms vs 2000ms). Test on low-end Android device. Files: CollapsibleCategorySection.tsx, MiniTemplateCard.tsx, TemplateCard.tsx",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Remove Three Dots Menu Button from Habit Card",
+        "description": "Temporarily remove the incomplete three-dots menu button (⋯) from habit cards until the full quick actions feature is implemented.",
+        "details": "In DraggableHabit.tsx, remove the Pressable button (lines 501-513) that displays the horizontal ellipsis. Remove the onMorePress prop from the component interface. Clean up any parent components passing onMorePress. Users can still access actions via long press and swipe left. See spec: docs/specs/habit-card-screen/remove-three-dots-menu-button.md",
+        "testStrategy": "Verify three-dots button no longer visible on habit cards. Test long press still opens quick actions menu. Test swipe left still reveals edit/delete buttons. Verify no layout shifts after removal. Check TypeScript compilation passes.",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-10-10T00:00:00.000Z",
-      "updated": "2025-10-28T00:00:00.000Z",
-      "taskCount": 2,
+      "updated": "2025-12-19T00:00:00.000Z",
+      "taskCount": 5,
       "completedCount": 0,
       "description": "Tasks for mvp-ios context"
     }

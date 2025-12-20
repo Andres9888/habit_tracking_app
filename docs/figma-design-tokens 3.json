@@ -1,0 +1,528 @@
+{
+  "$schema": "https://figma.com/community/plugin/888356646278934516",
+  "name": "Habit Tracker Design Tokens",
+  "version": "1.0.0",
+  "description": "Design tokens for science-backed habit tracking app",
+
+  "colors": {
+    "brand": {
+      "primary": {
+        "400": {
+          "value": "#34D399",
+          "type": "color",
+          "description": "Lighter primary, hover states"
+        },
+        "500": {
+          "value": "#10B981",
+          "type": "color",
+          "description": "Main brand color - Emerald green"
+        },
+        "600": {
+          "value": "#059669",
+          "type": "color",
+          "description": "Darker primary, pressed states"
+        },
+        "700": {
+          "value": "#047857",
+          "type": "color",
+          "description": "Very dark, high contrast text"
+        }
+      },
+      "secondary": {
+        "400": {
+          "value": "#60A5FA",
+          "type": "color",
+          "description": "Lighter secondary, info states"
+        },
+        "500": {
+          "value": "#3B82F6",
+          "type": "color",
+          "description": "Science/analytics theme"
+        },
+        "600": {
+          "value": "#2563EB",
+          "type": "color",
+          "description": "Darker secondary, pressed"
+        }
+      }
+    },
+    "semantic": {
+      "success": {
+        "value": "#10B981",
+        "type": "color"
+      },
+      "warning": {
+        "value": "#F59E0B",
+        "type": "color",
+        "description": "Amber - habits at risk"
+      },
+      "error": {
+        "value": "#EF4444",
+        "type": "color",
+        "description": "Red - errors, delete"
+      },
+      "info": {
+        "value": "#3B82F6",
+        "type": "color"
+      }
+    },
+    "gray": {
+      "50": {
+        "value": "#F9FAFB",
+        "type": "color"
+      },
+      "100": {
+        "value": "#F3F4F6",
+        "type": "color"
+      },
+      "200": {
+        "value": "#E5E7EB",
+        "type": "color"
+      },
+      "300": {
+        "value": "#D1D5DB",
+        "type": "color"
+      },
+      "400": {
+        "value": "#9CA3AF",
+        "type": "color"
+      },
+      "500": {
+        "value": "#6B7280",
+        "type": "color"
+      },
+      "600": {
+        "value": "#4B5563",
+        "type": "color"
+      },
+      "700": {
+        "value": "#374151",
+        "type": "color"
+      },
+      "800": {
+        "value": "#1F2937",
+        "type": "color"
+      },
+      "900": {
+        "value": "#111827",
+        "type": "color"
+      }
+    },
+    "strength": {
+      "starting": {
+        "value": "#86EFAC",
+        "type": "color",
+        "description": "0-20% strength level"
+      },
+      "building": {
+        "value": "#10B981",
+        "type": "color",
+        "description": "20-40% strength level"
+      },
+      "developing": {
+        "value": "#059669",
+        "type": "color",
+        "description": "40-60% strength level"
+      },
+      "strong": {
+        "value": "#047857",
+        "type": "color",
+        "description": "60-80% strength level"
+      },
+      "automatic": {
+        "value": "#065F46",
+        "type": "color",
+        "description": "80-100% strength level"
+      }
+    },
+    "surface": {
+      "background": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "card": {
+        "value": "#F9FAFB",
+        "type": "color"
+      },
+      "modal": {
+        "value": "#FFFFFF",
+        "type": "color"
+      }
+    }
+  },
+
+  "typography": {
+    "fontFamily": {
+      "primary": {
+        "value": "SF Pro",
+        "type": "fontFamily"
+      },
+      "mono": {
+        "value": "SF Mono",
+        "type": "fontFamily"
+      }
+    },
+    "fontSize": {
+      "display-large": {
+        "value": "34pt",
+        "type": "fontSize"
+      },
+      "h1": {
+        "value": "28pt",
+        "type": "fontSize"
+      },
+      "h2": {
+        "value": "22pt",
+        "type": "fontSize"
+      },
+      "h3": {
+        "value": "17pt",
+        "type": "fontSize"
+      },
+      "body": {
+        "value": "17pt",
+        "type": "fontSize"
+      },
+      "body-small": {
+        "value": "15pt",
+        "type": "fontSize"
+      },
+      "caption": {
+        "value": "13pt",
+        "type": "fontSize"
+      },
+      "button": {
+        "value": "17pt",
+        "type": "fontSize"
+      },
+      "tab-label": {
+        "value": "10pt",
+        "type": "fontSize"
+      }
+    },
+    "fontWeight": {
+      "regular": {
+        "value": "400",
+        "type": "fontWeight"
+      },
+      "medium": {
+        "value": "500",
+        "type": "fontWeight"
+      },
+      "semibold": {
+        "value": "600",
+        "type": "fontWeight"
+      },
+      "bold": {
+        "value": "700",
+        "type": "fontWeight"
+      }
+    },
+    "lineHeight": {
+      "display-large": {
+        "value": "41pt",
+        "type": "lineHeight"
+      },
+      "h1": {
+        "value": "34pt",
+        "type": "lineHeight"
+      },
+      "h2": {
+        "value": "28pt",
+        "type": "lineHeight"
+      },
+      "h3": {
+        "value": "22pt",
+        "type": "lineHeight"
+      },
+      "body": {
+        "value": "22pt",
+        "type": "lineHeight"
+      },
+      "body-small": {
+        "value": "20pt",
+        "type": "lineHeight"
+      },
+      "caption": {
+        "value": "18pt",
+        "type": "lineHeight"
+      }
+    },
+    "letterSpacing": {
+      "display-large": {
+        "value": "0.37pt",
+        "type": "letterSpacing"
+      },
+      "h1": {
+        "value": "0.36pt",
+        "type": "letterSpacing"
+      },
+      "h2": {
+        "value": "0.35pt",
+        "type": "letterSpacing"
+      },
+      "h3": {
+        "value": "-0.41pt",
+        "type": "letterSpacing"
+      },
+      "body": {
+        "value": "-0.41pt",
+        "type": "letterSpacing"
+      },
+      "body-small": {
+        "value": "-0.24pt",
+        "type": "letterSpacing"
+      },
+      "caption": {
+        "value": "-0.08pt",
+        "type": "letterSpacing"
+      },
+      "tab-label": {
+        "value": "0.12pt",
+        "type": "letterSpacing"
+      }
+    }
+  },
+
+  "spacing": {
+    "xs": {
+      "value": "4pt",
+      "type": "spacing",
+      "description": "Tight spacing, icon padding"
+    },
+    "sm": {
+      "value": "8pt",
+      "type": "spacing",
+      "description": "Compact spacing within components"
+    },
+    "md": {
+      "value": "12pt",
+      "type": "spacing",
+      "description": "Component internal spacing"
+    },
+    "base": {
+      "value": "16pt",
+      "type": "spacing",
+      "description": "Standard spacing - most common"
+    },
+    "lg": {
+      "value": "24pt",
+      "type": "spacing",
+      "description": "Section spacing"
+    },
+    "xl": {
+      "value": "32pt",
+      "type": "spacing",
+      "description": "Screen margins, major sections"
+    },
+    "2xl": {
+      "value": "48pt",
+      "type": "spacing",
+      "description": "Large vertical spacing"
+    },
+    "3xl": {
+      "value": "64pt",
+      "type": "spacing",
+      "description": "Page sections"
+    }
+  },
+
+  "borderRadius": {
+    "sm": {
+      "value": "8pt",
+      "type": "borderRadius",
+      "description": "Buttons, tags"
+    },
+    "md": {
+      "value": "12pt",
+      "type": "borderRadius",
+      "description": "Cards, inputs"
+    },
+    "lg": {
+      "value": "16pt",
+      "type": "borderRadius",
+      "description": "Modals, sheets"
+    },
+    "xl": {
+      "value": "20pt",
+      "type": "borderRadius",
+      "description": "Full screen modals - top corners"
+    },
+    "full": {
+      "value": "50%",
+      "type": "borderRadius",
+      "description": "Circular - avatars, icon buttons"
+    }
+  },
+
+  "shadow": {
+    "card": {
+      "value": {
+        "x": "0",
+        "y": "2",
+        "blur": "8",
+        "spread": "0",
+        "color": "rgba(0, 0, 0, 0.1)"
+      },
+      "type": "boxShadow"
+    },
+    "modal": {
+      "value": {
+        "x": "0",
+        "y": "4",
+        "blur": "16",
+        "spread": "0",
+        "color": "rgba(0, 0, 0, 0.12)"
+      },
+      "type": "boxShadow"
+    },
+    "fab": {
+      "value": {
+        "x": "0",
+        "y": "6",
+        "blur": "12",
+        "spread": "0",
+        "color": "rgba(0, 0, 0, 0.15)"
+      },
+      "type": "boxShadow",
+      "description": "Floating Action Button"
+    }
+  },
+
+  "animation": {
+    "spring": {
+      "damping": {
+        "value": "15",
+        "type": "number",
+        "description": "Spring damping parameter"
+      },
+      "stiffness": {
+        "value": "150",
+        "type": "number",
+        "description": "Spring stiffness parameter"
+      },
+      "mass": {
+        "value": "1",
+        "type": "number",
+        "description": "Spring mass parameter"
+      }
+    },
+    "duration": {
+      "quick": {
+        "value": "200ms",
+        "type": "duration",
+        "description": "Button presses, taps, toggles"
+      },
+      "standard": {
+        "value": "300ms",
+        "type": "duration",
+        "description": "Modals, navigation, state changes"
+      },
+      "long": {
+        "value": "600ms",
+        "type": "duration",
+        "description": "Celebrations, milestones"
+      }
+    }
+  },
+
+  "component": {
+    "habitCard": {
+      "height": {
+        "small": {
+          "value": "68pt",
+          "type": "sizing"
+        },
+        "standard": {
+          "value": "72pt",
+          "type": "sizing"
+        },
+        "large": {
+          "value": "76pt",
+          "type": "sizing"
+        }
+      },
+      "padding": {
+        "value": "16pt",
+        "type": "spacing"
+      },
+      "iconSize": {
+        "value": "32pt",
+        "type": "sizing"
+      },
+      "accentBarWidth": {
+        "value": "4pt",
+        "type": "sizing"
+      }
+    },
+    "button": {
+      "height": {
+        "small": {
+          "value": "32pt",
+          "type": "sizing"
+        },
+        "medium": {
+          "value": "44pt",
+          "type": "sizing"
+        },
+        "large": {
+          "value": "56pt",
+          "type": "sizing"
+        }
+      },
+      "paddingHorizontal": {
+        "value": "16pt",
+        "type": "spacing"
+      },
+      "paddingVertical": {
+        "value": "12pt",
+        "type": "spacing"
+      },
+      "minWidth": {
+        "value": "120pt",
+        "type": "sizing"
+      }
+    },
+    "input": {
+      "height": {
+        "value": "44pt",
+        "type": "sizing"
+      },
+      "padding": {
+        "value": "12pt",
+        "type": "spacing"
+      },
+      "borderWidth": {
+        "default": {
+          "value": "1pt",
+          "type": "borderWidth"
+        },
+        "focused": {
+          "value": "2pt",
+          "type": "borderWidth"
+        }
+      }
+    },
+    "modal": {
+      "padding": {
+        "value": "24pt",
+        "type": "spacing"
+      },
+      "backdropOpacity": {
+        "value": "0.6",
+        "type": "opacity"
+      }
+    },
+    "tabBar": {
+      "height": {
+        "value": "49pt",
+        "type": "sizing",
+        "description": "Plus safe area bottom inset"
+      },
+      "iconSize": {
+        "value": "28pt",
+        "type": "sizing"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect } from 'react';
 import {
   Dimensions,
+  Modal,
   Pressable,
   StyleSheet,
   View,
@@ -262,116 +263,122 @@ export const EmojiPickerSheet = memo(
       return category ? `${category.icon} ${category.name.toUpperCase()}` : '';
     }, [selectedCategory]);
 
-    if (!visible) return null;
-
     return (
-      <View style={styles.container} pointerEvents="box-none">
-        {/* Backdrop overlay with tap-to-close */}
-        <Pressable
-          accessibilityLabel="Close emoji picker"
-          accessibilityRole="button"
-          style={StyleSheet.absoluteFill}
-          onPress={closeSheet}
-        >
-          <Animated.View style={[styles.backdrop, backdropAnimatedStyle]} />
-        </Pressable>
-
-        {/* Bottom Sheet */}
-        <GestureDetector gesture={gesture}>
-          <Animated.View
-            accessibilityViewIsModal={true}
-            style={[styles.sheet, sheetAnimatedStyle]}
+      <Modal
+        visible={visible}
+        transparent
+        animationType="none"
+        statusBarTranslucent
+        onRequestClose={closeSheet}
+      >
+        <View style={styles.container} pointerEvents="box-none">
+          {/* Backdrop overlay with tap-to-close */}
+          <Pressable
+            accessibilityLabel="Close emoji picker"
+            accessibilityRole="button"
+            style={StyleSheet.absoluteFill}
+            onPress={closeSheet}
           >
-            {/* Drag Handle */}
-            <View
-              style={styles.handleContainer}
-              accessibilityLabel="Drag to dismiss"
-              accessibilityRole="adjustable"
+            <Animated.View style={[styles.backdrop, backdropAnimatedStyle]} />
+          </Pressable>
+
+          {/* Bottom Sheet */}
+          <GestureDetector gesture={gesture}>
+            <Animated.View
+              accessibilityViewIsModal={true}
+              style={[styles.sheet, sheetAnimatedStyle]}
             >
-              <View style={styles.handle} />
-            </View>
-
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-              <Animated.View style={[styles.searchBar, searchBarAnimatedStyle]}>
-                <Search color={isSearchFocused ? '#3b82f6' : '#9ca3af'} size={20} />
-                <TextInput
-                  accessibilityLabel="Search emojis"
-                  accessibilityHint="Type keywords to search for emojis"
-                  style={styles.searchInput}
-                  placeholder="Search or type habit name..."
-                  placeholderTextColor="#9ca3af"
-                  value={searchQuery}
-                  onChangeText={setSearchQuery}
-                  onFocus={handleSearchFocus}
-                  onBlur={handleSearchBlur}
-                  returnKeyType="search"
-                />
-                {searchQuery.length > 0 && (
-                  <Pressable
-                    accessibilityLabel="Clear search"
-                    accessibilityRole="button"
-                    onPress={handleClearSearch}
-                  >
-                    <X color="#9ca3af" size={18} />
-                  </Pressable>
-                )}
-              </Animated.View>
-            </View>
-
-            {/* AI Suggestions Section */}
-            {!searchQuery && suggestedEmojis.length > 0 && (
-              <View style={styles.suggestionsContainer}>
-                <View style={styles.suggestionsHeader}>
-                  <Sparkles color="#f59e0b" size={16} />
-                  <Text style={styles.suggestionsHeaderText}>
-                    Perfect for "{habitName}"
-                  </Text>
-                </View>
-                <View style={styles.suggestionsGrid}>
-                  {suggestedEmojis.map((emoji) => (
-                    <SuggestionEmojiCell
-                      key={`suggested-${emoji}`}
-                      emoji={emoji}
-                      isSelected={selectedEmoji === emoji}
-                      onPress={() => handleEmojiSelect(emoji)}
-                    />
-                  ))}
-                </View>
-              </View>
-            )}
-
-            {/* Category Pills */}
-            {!searchQuery && (
-              <CategoryPills
-                selectedCategory={selectedCategory}
-                onCategorySelect={handleCategorySelect}
-              />
-            )}
-
-            {/* Emoji Grid */}
-            <EmojiGrid
-              emojis={displayedEmojis}
-              selectedEmoji={selectedEmoji}
-              onEmojiSelect={handleEmojiSelect}
-              categoryName={!searchQuery ? currentCategoryName : undefined}
-              showCategoryHeader={!searchQuery}
-            />
-
-            {/* No Icon Button */}
-            <View style={styles.noIconContainer}>
-              <Pressable
-                accessibilityLabel="Select no icon for this habit"
-                accessibilityRole="button"
-                style={styles.noIconButton}
-                onPress={handleNoIcon}
+              {/* Drag Handle */}
+              <View
+                style={styles.handleContainer}
+                accessibilityLabel="Drag to dismiss"
+                accessibilityRole="adjustable"
               >
-                <Text style={styles.noIconText}>No icon</Text>
-              </Pressable>
-            </View>
-          </Animated.View>
-        </GestureDetector>
-      </View>
+                <View style={styles.handle} />
+              </View>
+
+              {/* Search Bar */}
+              <View style={styles.searchContainer}>
+                <Animated.View style={[styles.searchBar, searchBarAnimatedStyle]}>
+                  <Search color={isSearchFocused ? '#3b82f6' : '#9ca3af'} size={20} />
+                  <TextInput
+                    accessibilityLabel="Search emojis"
+                    accessibilityHint="Type keywords to search for emojis"
+                    style={styles.searchInput}
+                    placeholder="Search or type habit name..."
+                    placeholderTextColor="#9ca3af"
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    onFocus={handleSearchFocus}
+                    onBlur={handleSearchBlur}
+                    returnKeyType="search"
+                  />
+                  {searchQuery.length > 0 && (
+                    <Pressable
+                      accessibilityLabel="Clear search"
+                      accessibilityRole="button"
+                      onPress={handleClearSearch}
+                    >
+                      <X color="#9ca3af" size={18} />
+                    </Pressable>
+                  )}
+                </Animated.View>
+              </View>
+
+              {/* AI Suggestions Section */}
+              {!searchQuery && suggestedEmojis.length > 0 && (
+                <View style={styles.suggestionsContainer}>
+                  <View style={styles.suggestionsHeader}>
+                    <Sparkles color="#f59e0b" size={16} />
+                    <Text style={styles.suggestionsHeaderText}>
+                      Perfect for "{habitName}"
+                    </Text>
+                  </View>
+                  <View style={styles.suggestionsGrid}>
+                    {suggestedEmojis.map((emoji) => (
+                      <SuggestionEmojiCell
+                        key={`suggested-${emoji}`}
+                        emoji={emoji}
+                        isSelected={selectedEmoji === emoji}
+                        onPress={() => handleEmojiSelect(emoji)}
+                      />
+                    ))}
+                  </View>
+                </View>
+              )}
+
+              {/* Category Pills */}
+              {!searchQuery && (
+                <CategoryPills
+                  selectedCategory={selectedCategory}
+                  onCategorySelect={handleCategorySelect}
+                />
+              )}
+
+              {/* Emoji Grid */}
+              <EmojiGrid
+                emojis={displayedEmojis}
+                selectedEmoji={selectedEmoji}
+                onEmojiSelect={handleEmojiSelect}
+                categoryName={!searchQuery ? currentCategoryName : undefined}
+                showCategoryHeader={!searchQuery}
+              />
+
+              {/* No Icon Button */}
+              <View style={styles.noIconContainer}>
+                <Pressable
+                  accessibilityLabel="Select no icon for this habit"
+                  accessibilityRole="button"
+                  style={styles.noIconButton}
+                  onPress={handleNoIcon}
+                >
+                  <Text style={styles.noIconText}>No icon</Text>
+                </Pressable>
+              </View>
+            </Animated.View>
+          </GestureDetector>
+        </View>
+      </Modal>
     );
   }
 );
