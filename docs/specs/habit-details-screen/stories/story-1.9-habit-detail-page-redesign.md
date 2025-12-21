@@ -207,7 +207,7 @@ Follow-up stories add content to each tab:
 - [x] Design matches mockup (`.superdesign/design_iterations/habit_details_tabbed_1.html`) ✅
 - [x] No major regressions in Habit Detail screen ✅
 - [x] Smooth 60fps animations on tab switch ✅ (using react-native-reanimated spring animations)
-- [ ] Works on both iOS and Android (requires manual testing)
+- [ ] Works on both iOS and Android (requires manual testing) ⚠️ **MANUAL QA REQUIRED** - This task requires human testing on physical devices or simulators. Cannot be completed by automated agents.
 
 ## Implementation Notes (2025-12-20)
 
