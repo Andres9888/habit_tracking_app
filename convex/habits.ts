@@ -17,6 +17,10 @@ function maxDateKey(a: string, b: string): string {
 
 export const create = mutation({
   args: {
+    // Cue - Implementation Intention (Gollwitzer, 1999: 2-3x follow-through)
+    cueAfterBehavior: v.optional(v.string()),
+    cueLocation: v.optional(v.string()),
+    cueTime: v.optional(v.string()),
     icon: v.optional(v.string()),
     iconColor: v.optional(v.string()),
     name: v.string(),
@@ -40,6 +44,10 @@ export const create = mutation({
     return await ctx.db.insert('habits', {
       bestStreak: 0,
       createdAt: Date.now(),
+      // Cue - Implementation Intention (Story 1.9.5)
+      cueAfterBehavior: args.cueAfterBehavior,
+      cueLocation: args.cueLocation,
+      cueTime: args.cueTime,
       // Initialize streak tracking fields (Story 1.3)
       currentStreak: 0,
 
@@ -533,6 +541,7 @@ export const list = query({
       habitGainParam: v.optional(v.number()),
       icon: v.optional(v.string()),
       iconColor: v.optional(v.string()),
+      identity: v.optional(v.string()),
       lastCompletedDate: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
@@ -589,6 +598,7 @@ export const listArchived = query({
       habitGainParam: v.optional(v.number()),
       icon: v.optional(v.string()),
       iconColor: v.optional(v.string()),
+      identity: v.optional(v.string()),
       lastCompletedDate: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
@@ -645,9 +655,10 @@ export const listPaused = query({
       habitDecayParam: v.optional(v.number()),
       habitGainParam: v.optional(v.number()),
       icon: v.optional(v.string()),
+      iconColor: v.optional(v.string()),
+      identity: v.optional(v.string()),
       accessibilityAtPause: v.optional(v.number()),
       lastCompletedDate: v.optional(v.string()),
-      iconColor: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       name: v.string(),
       notes: v.optional(v.string()),
