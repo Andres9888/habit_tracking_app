@@ -173,7 +173,13 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Values:** Numbers count from 0 to target value with per-frame updates via `useDerivedValue` + `runOnJS`
   - **Accessibility:** Respects `reduceMotion` preference - values set immediately when enabled
   - **Implementation:** Modified `src/components/QuickStatsStrip/QuickStatsStrip.tsx:138-232`
-- [ ] T1.5: Add strength ring fill animation
+- [x] T1.5: Add strength ring fill animation
+  - **Completed:** Added animated ring fill and percentage counting on screen load
+  - **Ring Animation:** 1000ms duration with `Easing.out(Easing.cubic)` for smooth deceleration
+  - **Percentage Text:** AnimatedPercentageText component using `useDerivedValue` + `runOnJS` pattern, counts up in sync with ring fill
+  - **Start:** Ring and percentage both start from 0 on initial mount
+  - **Accessibility:** Respects `reduceMotion` preference - values set immediately when enabled, skipping animation
+  - **Implementation:** Added `AnimatedPercentageText` sub-component and modified animation logic in `src/components/HabitStrengthSection/HabitStrengthSection.tsx:129-204`
 
 ### Phase 2: Tab Navigation (1-2 hours)
 - [ ] T2.1: Convert tab bar to pill/segment control style

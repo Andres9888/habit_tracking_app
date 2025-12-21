@@ -13,18 +13,20 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
   useSharedValue,
   useAnimatedProps,
   useAnimatedStyle,
+  useDerivedValue,
   withSpring,
   withDelay,
   withTiming,
   withSequence,
   Easing,
   FadeInDown,
+  runOnJS,
 } from 'react-native-reanimated';
 import { TrendingUp, TrendingDown, Minus, Info, Zap } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -124,6 +126,34 @@ const getNextLevel = (strength: number): LevelConfig | null => {
   return STRENGTH_LEVELS.automatic;
 };
 
+/**
+ * AnimatedPercentageText - Displays the strength percentage with counting animation
+ * Uses useDerivedValue + runOnJS pattern for smooth number updates in sync with ring
+ */
+function AnimatedPercentageText({
+  animatedValue,
+}: {
+  animatedValue: Animated.SharedValue<number>;
+}) {
+  const [displayText, setDisplayText] = React.useState('0%');
+
+  // Update display text when animated value changes
+  useDerivedValue(() => {
+    const formatted = `${Math.round(animatedValue.value)}%`;
+    runOnJS(setDisplayText)(formatted);
+    return formatted;
+  });
+
+  return (
+    <Text className="text-xl font-bold text-stone-900" accessibilityElementsHidden>
+      {displayText}
+    </Text>
+  );
+}
+
+// Animation constants for ring fill (T1.5)
+const RING_ANIMATION_DURATION = 1000;
+
 export const HabitStrengthSection = ({
   strength,
   weeklyChange = 0,
@@ -143,16 +173,34 @@ export const HabitStrengthSection = ({
   const previousLevelRef = useRef<string>(level.label);
   const isInitialMount = useRef(true);
 
+  // Track reduce motion preference (T1.5 accessibility)
+  const [reduceMotion, setReduceMotion] = React.useState(false);
+
   // Animations
   const animatedStrength = useSharedValue(0);
   const emojiScale = useSharedValue(0);
   const emojiOpacity = useSharedValue(1);
   const emojiRotation = useSharedValue(0);
 
+  // Check for reduce motion preference on mount (T1.5)
   useEffect(() => {
-    animatedStrength.value = withSpring(clampedStrength, {
-      damping: 15,
-      stiffness: 80,
+    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+  }, []);
+
+  useEffect(() => {
+    // T1.5: Skip animation if reduce motion is enabled
+    if (reduceMotion) {
+      animatedStrength.value = clampedStrength;
+      emojiScale.value = 1;
+      return;
+    }
+
+    // T1.5: Ring fill animation - 1000ms with spring physics
+    // Using timing with cubic easing for smooth, predictable ~1000ms duration
+    // Spring is used for overshoot effect at the end
+    animatedStrength.value = withTiming(clampedStrength, {
+      duration: RING_ANIMATION_DURATION,
+      easing: Easing.out(Easing.cubic),
     });
 
     // Check if level changed (not just strength value)
@@ -205,7 +253,7 @@ export const HabitStrengthSection = ({
         withSpring(1, { damping: 15, stiffness: 200 })
       );
     }
-  }, [clampedStrength, level.label]);
+  }, [clampedStrength, level.label, reduceMotion]);
 
   const animatedCircleProps = useAnimatedProps(() => {
     const progress = animatedStrength.value / 100;
@@ -326,9 +374,8 @@ export const HabitStrengthSection = ({
               <Animated.Text className="text-2xl" style={emojiAnimatedStyle}>
                 {level.emoji}
               </Animated.Text>
-              <Text className="text-xl font-bold text-stone-900">
-                {formatStrengthPercentage(clampedStrength)}
-              </Text>
+              {/* T1.5: Animated percentage text that counts up in sync with ring */}
+              <AnimatedPercentageText animatedValue={animatedStrength} />
             </View>
           </View>
         </View>
