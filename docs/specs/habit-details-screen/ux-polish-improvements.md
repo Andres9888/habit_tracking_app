@@ -204,7 +204,14 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Implementation:** Already complete as part of T2.1 (tab tap) and T2.2 (swipe gesture)
 
 ### Phase 3: Micro-interactions (1-2 hours)
-- [ ] T3.1: Add today indicator pulse in calendar
+- [x] T3.1: Add today indicator pulse in calendar
+  - **Completed:** Added subtle pulse animation to "today" cell in CalendarHeatmap when habit is not completed
+  - **Animation:** Infinite pulse ring expanding from 1.0→1.3 scale with 0→0.6→0 opacity over 1200ms cycle
+  - **Timing:** 500ms delay after cell fade-in, then repeating pulse animation using `withRepeat`
+  - **Visual:** Amber-colored border ring (`border-amber-400`) expands outward and fades
+  - **Behavior:** Stops pulsing automatically once habit is completed (`shouldPulse = day.isToday && !day.completed`)
+  - **Accessibility:** Respects `reduceMotion` preference - animation is skipped when enabled
+  - **Implementation:** Modified `src/components/CalendarHeatmap/DayCell.tsx:37-106, 199-206`
 - [ ] T3.2: Implement contextual streak messages
 - [ ] T3.3: Make motivation cards fully tappable
 - [ ] T3.4: Add next reminder relative time display

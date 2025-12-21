@@ -3,18 +3,24 @@
  * Individual day cell in the calendar heatmap
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+  cancelAnimation,
   FadeIn,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import type { CalendarDay } from './utils';
 import { getDayAccessibilityLabel } from './utils';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface DayCellProps {
   day: CalendarDay;
@@ -30,6 +36,49 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
   const scale = useSharedValue(1);
+  const pulseScale = useSharedValue(1);
+  const pulseOpacity = useSharedValue(0);
+  const reduceMotion = useReduceMotion();
+
+  // Today pulse animation - draws attention to complete action
+  // Stops pulsing once completed
+  const shouldPulse = day.isToday && !day.completed && !reduceMotion;
+
+  useEffect(() => {
+    if (!shouldPulse) {
+      // Reset pulse values when not pulsing
+      pulseScale.value = 1;
+      pulseOpacity.value = 0;
+      return;
+    }
+
+    // Subtle pulse animation: scale ring outward with fading opacity
+    // Creates a "breathing" glow effect around today's cell
+    const pulseAnimation = withSequence(
+      withTiming(1.3, { duration: 1000, easing: Easing.out(Easing.ease) }),
+      withTiming(1.3, { duration: 200 }), // Hold briefly
+    );
+
+    const opacityAnimation = withSequence(
+      withTiming(0.6, { duration: 400, easing: Easing.out(Easing.ease) }),
+      withTiming(0, { duration: 800, easing: Easing.in(Easing.ease) }),
+    );
+
+    // Start with a delay to let the cell fade in first
+    pulseScale.value = withDelay(
+      500,
+      withRepeat(pulseAnimation, -1, false) // Infinite repeat
+    );
+    pulseOpacity.value = withDelay(
+      500,
+      withRepeat(opacityAnimation, -1, false)
+    );
+
+    return () => {
+      cancelAnimation(pulseScale);
+      cancelAnimation(pulseOpacity);
+    };
+  }, [shouldPulse, pulseScale, pulseOpacity]);
 
   const handlePressIn = () => {
     if (day.date && !day.isFuture && !day.isBeforeCreation) {
@@ -49,6 +98,11 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+  }));
+
+  const pulseRingStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulseScale.value }],
+    opacity: pulseOpacity.value,
   }));
 
   // Staggered animation delay for all cell types
@@ -142,6 +196,14 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
       accessibilityHint={day.isToday ? 'Today' : 'Tap to view details'}
       accessibilityState={{ selected: day.completed }}
     >
+      {/* Pulse ring for today's incomplete cell - draws attention to complete action */}
+      {shouldPulse && (
+        <Animated.View
+          style={pulseRingStyle}
+          className="absolute h-9 w-9 rounded-lg border-2 border-amber-400"
+          pointerEvents="none"
+        />
+      )}
       <View
         className={`h-9 w-9 items-center justify-center rounded-lg ${getCellStyle()}`}
         style={day.completed ? { backgroundColor: completedBgColor } : undefined}
