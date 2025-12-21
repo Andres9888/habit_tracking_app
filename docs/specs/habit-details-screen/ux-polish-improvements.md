@@ -183,7 +183,8 @@ Polish improvements to enhance the Habit Details screen user experience with ani
 ### Phase 4: Polish (1 hour)
 - [x] T4.1: Add vision board full-screen preview
   - *Already implemented in VisionBoardPreview.tsx: Full-screen modal with swipe-down to dismiss, swipe left/right navigation between cards, pan gesture with dismiss threshold (150px), velocity-based detection (500px/s), scale/opacity animations during drag, edit button, dot indicators, and haptic feedback. Since vision board items are text-based (title/body only - no image field in schema), pinch-to-zoom is not applicable. The existing implementation provides a polished full-screen preview experience for text cards.*
-- [ ] T4.2: Implement affirmation shuffle
+- [x] T4.2: Implement affirmation shuffle
+  - *Implemented in HabitDetailScreen.tsx: AffirmationsSection component (lines 442-564) with shuffle button in header. Uses shuffledAffirmationIndex state to track displayed affirmation and affirmationFlipAnim shared value for card flip animation. handleShuffleAffirmation (lines 1643-1667) triggers: (1) light haptic feedback, (2) 300ms flip animation (rotateY 0→90°→0° with opacity fade) using withSequence, (3) random index selection mid-flip. Shows single affirmation with counter badge (e.g., "2/5"), shuffle button only visible when >1 affirmation exists. Respects existing AnimatedPressableCard for edit/delete interactions.*
 - [ ] T4.3: Create danger zone section styling
 - [ ] T4.4: Respect reduce motion accessibility setting
 

@@ -14,7 +14,7 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
@@ -56,6 +56,7 @@ import {
   Heart,
   Check,
   Zap,
+  Shuffle,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
@@ -435,6 +436,135 @@ function AnimatedPressableCard({
 }
 
 /**
+ * T4.2: Affirmations Section with Shuffle Feature
+ * Shows a single affirmation with card flip animation on shuffle
+ */
+function AffirmationsSection({
+  affirmations,
+  affirmationFlipAnim,
+  shuffledAffirmationIndex,
+  onShuffleAffirmation,
+  onOpenAffirmationEditor,
+  onConfirmDeleteAffirmation,
+  onSetAffirmationsListOpen,
+}: {
+  affirmations: Doc<'affirmations'>[];
+  affirmationFlipAnim: SharedValue<number>;
+  shuffledAffirmationIndex: number;
+  onShuffleAffirmation: () => void;
+  onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
+  onConfirmDeleteAffirmation: (item: Doc<'affirmations'>) => void;
+  onSetAffirmationsListOpen: (open: boolean) => void;
+}) {
+  // Get the current affirmation to display based on shuffled index
+  const safeIndex = affirmations.length > 0
+    ? shuffledAffirmationIndex % affirmations.length
+    : 0;
+  const currentAffirmation = affirmations[safeIndex];
+
+  // Animated style for card flip effect
+  const flipAnimatedStyle = useAnimatedStyle(() => {
+    const rotateY = interpolate(
+      affirmationFlipAnim.value,
+      [0, 1],
+      [0, 90],
+      Extrapolation.CLAMP
+    );
+    const opacity = interpolate(
+      affirmationFlipAnim.value,
+      [0, 0.5, 1],
+      [1, 0.5, 0],
+      Extrapolation.CLAMP
+    );
+    return {
+      transform: [{ perspective: 1000 }, { rotateY: `${rotateY}deg` }],
+      opacity,
+    };
+  });
+
+  return (
+    <SectionCard>
+      <View className="mb-3 flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <MessageCircle className="text-stone-500" size={18} />
+          <Text className="font-semibold text-stone-800">Affirmations</Text>
+          {affirmations.length > 0 && (
+            <View className="rounded-full bg-stone-100 px-1.5 py-0.5">
+              <Text className="text-[10px] font-medium text-stone-500">
+                {safeIndex + 1}/{affirmations.length}
+              </Text>
+            </View>
+          )}
+        </View>
+        <View className="flex-row items-center gap-2">
+          {/* Shuffle button - only show when more than 1 affirmation */}
+          {affirmations.length > 1 && (
+            <Pressable
+              accessibilityLabel="Shuffle affirmation"
+              accessibilityRole="button"
+              className="rounded-full bg-stone-100 p-2 active:bg-stone-200"
+              onPress={onShuffleAffirmation}
+            >
+              <Shuffle className="text-stone-600" size={16} />
+            </Pressable>
+          )}
+          <Pressable
+            accessibilityLabel="Add affirmation"
+            accessibilityRole="button"
+            className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+            onPress={() => onOpenAffirmationEditor()}
+          >
+            <Text className="text-xs font-semibold text-white">+ Add</Text>
+          </Pressable>
+        </View>
+      </View>
+      {affirmations.length === 0 ? (
+        <View className="items-center rounded-xl bg-stone-50 py-6">
+          <MessageCircle className="mb-2 text-stone-300" size={28} />
+          <Text className="text-center text-sm text-stone-500">
+            What do you tell yourself?
+          </Text>
+        </View>
+      ) : (
+        <View className="gap-3">
+          {/* Single affirmation card with flip animation */}
+          <Animated.View style={flipAnimatedStyle}>
+            <AnimatedPressableCard
+              accessibilityLabel={`Edit affirmation: ${currentAffirmation?.text.slice(0, 30)}`}
+              className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
+              onLongPress={() => currentAffirmation && onConfirmDeleteAffirmation(currentAffirmation)}
+              onPress={() => onOpenAffirmationEditor(currentAffirmation)}
+            >
+              <Text className="text-sm leading-5 text-stone-700">"{currentAffirmation?.text}"</Text>
+              {currentAffirmation?.type && (
+                <View className="mt-2">
+                  <View className="self-start rounded-full bg-violet-100 px-2 py-0.5">
+                    <Text className="text-xs text-violet-600">{currentAffirmation.type}</Text>
+                  </View>
+                </View>
+              )}
+            </AnimatedPressableCard>
+          </Animated.View>
+          {/* View all link - show when more than 1 affirmation */}
+          {affirmations.length > 1 && (
+            <Pressable
+              accessibilityLabel="View all affirmations"
+              accessibilityRole="button"
+              className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
+              onPress={() => onSetAffirmationsListOpen(true)}
+            >
+              <Text className="text-sm font-medium text-stone-600">
+                View all ({affirmations.length})
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+    </SectionCard>
+  );
+}
+
+/**
  * Progress Tab Content
  */
 function ProgressTabContent({
@@ -563,6 +693,7 @@ function ProgressTabContent({
  */
 function MotivationTabContent({
   affirmations,
+  affirmationFlipAnim,
   habit,
   habitCueAfterBehavior,
   habitCueLocation,
@@ -575,6 +706,7 @@ function MotivationTabContent({
   onOpenAffirmationEditor,
   onOpenCueEditor,
   onOpenIdentityEditor,
+  onShuffleAffirmation,
   onOpenVisualizationExercise,
   onOpenVisualizationGuide,
   onOpenVisionBoardEditor,
@@ -585,9 +717,11 @@ function MotivationTabContent({
   onSetAffirmationsListOpen,
   onSetVisionBoardListOpen,
   onViewAllNotes,
+  shuffledAffirmationIndex,
   visionBoardItems,
 }: {
   affirmations: Doc<'affirmations'>[];
+  affirmationFlipAnim: SharedValue<number>;
   habit: Habit;
   habitCueAfterBehavior: string | undefined;
   habitCueLocation: string | undefined;
@@ -600,6 +734,7 @@ function MotivationTabContent({
   onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
   onOpenCueEditor: () => void;
   onOpenIdentityEditor: () => void;
+  onShuffleAffirmation: () => void;
   onOpenVisualizationExercise: () => void;
   onOpenVisualizationGuide: () => void;
   onOpenVisionBoardEditor: (item?: Doc<'visionBoardItems'>) => void;
@@ -610,6 +745,7 @@ function MotivationTabContent({
   onSetAffirmationsListOpen: (open: boolean) => void;
   onSetVisionBoardListOpen: (open: boolean) => void;
   onViewAllNotes: () => void;
+  shuffledAffirmationIndex: number;
   visionBoardItems: Doc<'visionBoardItems'>[];
 }) {
   return (
@@ -768,64 +904,16 @@ function MotivationTabContent({
         )}
       </SectionCard>
 
-      {/* Affirmations Section */}
-      <SectionCard>
-        <View className="mb-3 flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
-            <MessageCircle className="text-stone-500" size={18} />
-            <Text className="font-semibold text-stone-800">Affirmations</Text>
-          </View>
-          <Pressable
-            accessibilityLabel="Add affirmation"
-            accessibilityRole="button"
-            className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
-            onPress={() => onOpenAffirmationEditor()}
-          >
-            <Text className="text-xs font-semibold text-white">+ Add</Text>
-          </Pressable>
-        </View>
-        {affirmations.length === 0 ? (
-          <View className="items-center rounded-xl bg-stone-50 py-6">
-            <MessageCircle className="mb-2 text-stone-300" size={28} />
-            <Text className="text-center text-sm text-stone-500">
-              What do you tell yourself?
-            </Text>
-          </View>
-        ) : (
-          <View className="gap-3">
-            {affirmations.slice(0, 2).map((item) => (
-              <AnimatedPressableCard
-                key={item._id}
-                accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
-                className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
-                onLongPress={() => onConfirmDeleteAffirmation(item)}
-                onPress={() => onOpenAffirmationEditor(item)}
-              >
-                <Text className="text-sm leading-5 text-stone-700">"{item.text}"</Text>
-                {item.type && (
-                  <View className="mt-2">
-                    <View className="self-start rounded-full bg-violet-100 px-2 py-0.5">
-                      <Text className="text-xs text-violet-600">{item.type}</Text>
-                    </View>
-                  </View>
-                )}
-              </AnimatedPressableCard>
-            ))}
-            {affirmations.length > 2 && (
-              <Pressable
-                accessibilityLabel="View all affirmations"
-                accessibilityRole="button"
-                className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
-                onPress={() => onSetAffirmationsListOpen(true)}
-              >
-                <Text className="text-sm font-medium text-stone-600">
-                  View all ({affirmations.length})
-                </Text>
-              </Pressable>
-            )}
-          </View>
-        )}
-      </SectionCard>
+      {/* Affirmations Section - T4.2: Shuffle feature */}
+      <AffirmationsSection
+        affirmations={affirmations}
+        affirmationFlipAnim={affirmationFlipAnim}
+        shuffledAffirmationIndex={shuffledAffirmationIndex}
+        onShuffleAffirmation={onShuffleAffirmation}
+        onOpenAffirmationEditor={onOpenAffirmationEditor}
+        onConfirmDeleteAffirmation={onConfirmDeleteAffirmation}
+        onSetAffirmationsListOpen={onSetAffirmationsListOpen}
+      />
 
       {/* Mental Exercises Section */}
       <SectionCard>
@@ -1138,6 +1226,9 @@ export default function HabitDetailScreen({
   const [affirmationTextDraft, setAffirmationTextDraft] = useState('');
   const [affirmationTypeDraft, setAffirmationTypeDraft] = useState<'identity' | 'motivational' | 'instructional' | undefined>(undefined);
   const [affirmationEditingId, setAffirmationEditingId] = useState<Id<'affirmations'> | null>(null);
+  // T4.2: Affirmation shuffle - tracks which affirmation to show
+  const [shuffledAffirmationIndex, setShuffledAffirmationIndex] = useState(0);
+  const affirmationFlipAnim = useSharedValue(0);
 
   // Delete undo toast state (T3.5: Swipe-to-delete)
   const [pendingDelete, setPendingDelete] = useState(false);
@@ -1636,6 +1727,32 @@ export default function HabitDetailScreen({
     );
   };
 
+  // T4.2: Affirmation shuffle handler with card flip animation
+  const handleShuffleAffirmation = useCallback(() => {
+    if (affirmations.length <= 1) return;
+
+    // Light haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    // Trigger flip animation: flip out (0 -> 1), then flip in (1 -> 0)
+    affirmationFlipAnim.value = withSequence(
+      withTiming(1, { duration: 150, easing: Easing.in(Easing.ease) }),
+      withTiming(0, { duration: 150, easing: Easing.out(Easing.ease) })
+    );
+
+    // Change the index mid-flip (after 150ms)
+    setTimeout(() => {
+      setShuffledAffirmationIndex((prev) => {
+        // Pick a random different index
+        let newIndex: number;
+        do {
+          newIndex = Math.floor(Math.random() * affirmations.length);
+        } while (newIndex === prev && affirmations.length > 1);
+        return newIndex;
+      });
+    }, 150);
+  }, [affirmations.length, affirmationFlipAnim]);
+
   const handleStatPress = (statType: 'streak' | 'strength' | 'success') => {
     // Navigate to appropriate section or show detail
     if (statType === 'streak' || statType === 'success') {
@@ -1768,6 +1885,7 @@ export default function HabitDetailScreen({
               >
                 <MotivationTabContent
                   affirmations={affirmations}
+                  affirmationFlipAnim={affirmationFlipAnim}
                   habit={habit}
                   habitCueAfterBehavior={habitCueAfterBehavior}
                   habitCueLocation={habitCueLocation}
@@ -1780,6 +1898,7 @@ export default function HabitDetailScreen({
                   onOpenAffirmationEditor={handleOpenAffirmationEditor}
                   onOpenCueEditor={handleOpenCueEditor}
                   onOpenIdentityEditor={handleOpenIdentityEditor}
+                  onShuffleAffirmation={handleShuffleAffirmation}
                   onOpenVisualizationExercise={handleOpenVisualizationExercise}
                   onOpenVisualizationGuide={handleOpenVisualizationGuide}
                   onOpenVisionBoardEditor={handleOpenVisionBoardEditor}
@@ -1790,6 +1909,7 @@ export default function HabitDetailScreen({
                   onSetAffirmationsListOpen={setIsAffirmationsListOpen}
                   onSetVisionBoardListOpen={setIsVisionBoardListOpen}
                   onViewAllNotes={handleOpenNotesList}
+                  shuffledAffirmationIndex={shuffledAffirmationIndex}
                   visionBoardItems={visionBoardItems}
                 />
               </ScrollView>
