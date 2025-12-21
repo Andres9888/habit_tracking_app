@@ -12,6 +12,7 @@ import { X } from 'lucide-react-native';
 import CreateHabitModal from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../screens/HabitDetailScreen';
+import HabitEditScreen from '../../../screens/HabitEditScreen';
 import CustomModal from '../../../components/Modal';
 import PauseHabitModal from '../../../components/PauseHabitModal';
 import SettingsModal from '../../../components/SettingsModal';
@@ -58,8 +59,10 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     settings,
     showSettings,
     showCreateHabit,
+    showEditScreen,
     showHabitCalendar,
     showHabitDetail,
+    habitDetailInitialTab,
     showHapticTest,
     showShareCard,
     showPauseModal,
@@ -77,6 +80,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     openHapticTest,
     closeHapticTest,
     closeCreateHabit,
+    closeEditScreen,
     closeHabitCalendar,
     closeHabitDetail,
     closeShareCard,
@@ -183,21 +187,50 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         onOpenMotivationTab={() => {
           // Navigate to HabitDetail's Motivation tab for advanced features
           if (selectedHabit) {
-            openHabitDetail(selectedHabit);
+            closeHabitCalendar();
+            openHabitDetail(selectedHabit, 'motivation');
           }
         }}
       />
 
       <HabitDetailScreen
         habit={selectedHabit}
+        initialTab={habitDetailInitialTab}
         onArchive={(habitId) => handleArchive(habitId)}
         onClose={closeHabitDetail}
         onDelete={onDeleteHabit}
-        onEdit={(habit) => openEditHabit(habit)}
+        onEdit={(habit) => {
+          closeHabitDetail();
+          openEditHabit(habit);
+        }}
         onPause={(habitId) => openPauseModal(habitId)}
         onOpenCalendar={(habit) => openHabitCalendar(habit)}
         tracking={tracking}
         visible={showHabitDetail}
+      />
+
+      <HabitEditScreen
+        habitId={habitToEdit?._id ?? null}
+        visible={showEditScreen}
+        onClose={closeEditScreen}
+        onOpenCueEditor={() => {
+          closeEditScreen();
+          if (habitToEdit) {
+            openHabitDetail(habitToEdit, 'motivation');
+          }
+        }}
+        onOpenAffirmationsEditor={() => {
+          closeEditScreen();
+          if (habitToEdit) {
+            openHabitDetail(habitToEdit, 'motivation');
+          }
+        }}
+        onOpenVisionBoard={() => {
+          closeEditScreen();
+          if (habitToEdit) {
+            openHabitDetail(habitToEdit, 'motivation');
+          }
+        }}
       />
 
       {showShareCard && shareCardData && ShareCardGenerator && (

@@ -297,11 +297,15 @@ export default function HabitEditScreen({
     setSelectedColor(color);
   }, [triggerSelection]);
 
-  if (!visible || !habitId) return null;
+  if (!visible || !habitId) {
+    console.log('[HabitEditScreen] Not rendering - visible:', visible, 'habitId:', habitId);
+    return null;
+  }
+
+  console.log('[HabitEditScreen] Rendering with habitId:', habitId);
 
   return (
     <Modal
-      transparent
       animationType='slide'
       visible={visible}
       onRequestClose={onClose}

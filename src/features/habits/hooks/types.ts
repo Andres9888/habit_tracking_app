@@ -49,8 +49,10 @@ export interface HabitsModalsState {
   settings: HabitSettings | undefined;
   showSettings: boolean;
   showCreateHabit: boolean;
+  showEditScreen: boolean;
   showHabitCalendar: boolean;
   showHabitDetail: boolean;
+  habitDetailInitialTab: 'progress' | 'motivation' | 'manage';
   showHapticTest: boolean;
   showShareCard: boolean;
   showPauseModal: boolean;
@@ -71,6 +73,7 @@ export interface HabitsModalsState {
   onChangeCelebrationsEnabled: (value: boolean) => Promise<void>;
   setShowHabitStrengthPercentage: (value: boolean) => void;
   closeCreateHabit: () => void;
+  closeEditScreen: () => void;
   closeHabitCalendar: () => void;
   closeHabitDetail: () => void;
   closeShareCard: () => void;
@@ -79,7 +82,7 @@ export interface HabitsModalsState {
   closeHapticTest: () => void;
   openTemplatesScreen: () => void;
   closeTemplatesScreen: () => void;
-  openHabitDetail: (habit: Habit) => void;
+  openHabitDetail: (habit: Habit, initialTab?: 'progress' | 'motivation' | 'manage') => void;
   openHabitCalendar: (habit: Habit) => void;
   openPauseModal: (habitId: Id<'habits'>) => void;
   openEditHabit: (habit: Habit | null) => void;

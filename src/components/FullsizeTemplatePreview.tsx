@@ -114,19 +114,19 @@ export default function FullsizeTemplatePreview({
   const importButtonScale = useSharedValue(1);
   const customizeButtonScale = useSharedValue(1);
 
-  // Choreographed reveal animation values
-  const titleOpacity = useSharedValue(0);
-  const titleTranslateY = useSharedValue(20);
-  const pillsOpacity = useSharedValue(0);
-  const pillsTranslateY = useSharedValue(15);
-  const descriptionOpacity = useSharedValue(0);
-  const descriptionTranslateY = useSharedValue(15);
-  const scienceBoxOpacity = useSharedValue(0);
-  const scienceBoxTranslateY = useSharedValue(20);
-  const scienceBoxScale = useSharedValue(0.95);
-  const footerOpacity = useSharedValue(0);
-  const footerTranslateY = useSharedValue(30);
-  const closeButtonOpacity = useSharedValue(0);
+  // Choreographed reveal animation values - initialized to visible (1) so content shows immediately
+  const titleOpacity = useSharedValue(1);
+  const titleTranslateY = useSharedValue(0);
+  const pillsOpacity = useSharedValue(1);
+  const pillsTranslateY = useSharedValue(0);
+  const descriptionOpacity = useSharedValue(1);
+  const descriptionTranslateY = useSharedValue(0);
+  const scienceBoxOpacity = useSharedValue(1);
+  const scienceBoxTranslateY = useSharedValue(0);
+  const scienceBoxScale = useSharedValue(1);
+  const footerOpacity = useSharedValue(1);
+  const footerTranslateY = useSharedValue(0);
+  const closeButtonOpacity = useSharedValue(1);
 
   // Success animation values
   const successGlow = useSharedValue(0);
@@ -144,24 +144,13 @@ export default function FullsizeTemplatePreview({
   // Animation entrance with choreographed reveal
   useEffect(() => {
     if (visible && template) {
-      // Reset all values
+      // Reset all values first
       backdropOpacity.value = 0;
       contentTranslateY.value = 100;
       contentOpacity.value = 0;
       iconScale.value = 0.8;
       successGlow.value = 0;
       checkmarkScale.value = 0;
-      titleOpacity.value = 0;
-      titleTranslateY.value = 20;
-      pillsOpacity.value = 0;
-      pillsTranslateY.value = 15;
-      descriptionOpacity.value = 0;
-      descriptionTranslateY.value = 15;
-      scienceBoxOpacity.value = 0;
-      scienceBoxTranslateY.value = 20;
-      scienceBoxScale.value = 0.95;
-      footerOpacity.value = 0;
-      footerTranslateY.value = 30;
       closeButtonOpacity.value = 0;
 
       if (reducedMotion) {
@@ -183,6 +172,20 @@ export default function FullsizeTemplatePreview({
         footerTranslateY.value = 0;
         closeButtonOpacity.value = 1;
       } else {
+        // Show content sections immediately (no staggered opacity for content)
+        // This ensures content is visible while only transforms are animated
+        titleOpacity.value = 1;
+        titleTranslateY.value = 0;
+        pillsOpacity.value = 1;
+        pillsTranslateY.value = 0;
+        descriptionOpacity.value = 1;
+        descriptionTranslateY.value = 0;
+        scienceBoxOpacity.value = 1;
+        scienceBoxTranslateY.value = 0;
+        scienceBoxScale.value = 1;
+        footerOpacity.value = 1;
+        footerTranslateY.value = 0;
+
         // Phase 1: Backdrop fade in (0-200ms)
         backdropOpacity.value = withTiming(0.5, { duration: 200 });
 
@@ -206,60 +209,6 @@ export default function FullsizeTemplatePreview({
         iconGlowScale.value = withDelay(
           250,
           withSpring(1.15, { damping: 10, stiffness: 80 })
-        );
-
-        // Phase 5: Title reveal (delay 220ms)
-        titleOpacity.value = withDelay(
-          220,
-          withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) })
-        );
-        titleTranslateY.value = withDelay(
-          220,
-          withSpring(0, { damping: 18, stiffness: 200 })
-        );
-
-        // Phase 6: Metadata pills reveal (delay 300ms)
-        pillsOpacity.value = withDelay(
-          300,
-          withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) })
-        );
-        pillsTranslateY.value = withDelay(
-          300,
-          withSpring(0, { damping: 18, stiffness: 200 })
-        );
-
-        // Phase 7: Description reveal (delay 380ms)
-        descriptionOpacity.value = withDelay(
-          380,
-          withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) })
-        );
-        descriptionTranslateY.value = withDelay(
-          380,
-          withSpring(0, { damping: 18, stiffness: 200 })
-        );
-
-        // Phase 8: Science box reveal (delay 460ms)
-        scienceBoxOpacity.value = withDelay(
-          460,
-          withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) })
-        );
-        scienceBoxTranslateY.value = withDelay(
-          460,
-          withSpring(0, { damping: 16, stiffness: 180 })
-        );
-        scienceBoxScale.value = withDelay(
-          460,
-          withSpring(1, { damping: 14, stiffness: 150 })
-        );
-
-        // Phase 9: Footer reveal (delay 540ms)
-        footerOpacity.value = withDelay(
-          540,
-          withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) })
-        );
-        footerTranslateY.value = withDelay(
-          540,
-          withSpring(0, { damping: 16, stiffness: 180 })
         );
       }
     }
@@ -588,42 +537,36 @@ export default function FullsizeTemplatePreview({
                 {template.name}
               </Animated.Text>
 
-              {/* Metadata Pills Row with choreographed animation */}
-              <Animated.View style={pillsAnimatedStyle}>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.pillsContainer}
-                >
-                  {/* Frequency Pill */}
-                  <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
-                    <Clock color={iconColor} size={14} strokeWidth={2} />
-                    <Text style={[styles.metadataPillText, { color: iconColor }]}>
-                      {formattedFrequency}
-                    </Text>
-                  </View>
+              {/* Metadata Pills Row */}
+              <View style={styles.pillsRow}>
+                {/* Frequency Pill */}
+                <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
+                  <Clock color={iconColor} size={14} strokeWidth={2} />
+                  <Text style={[styles.metadataPillText, { color: iconColor }]}>
+                    {formattedFrequency}
+                  </Text>
+                </View>
 
-                  {/* Category Pill */}
-                  <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
-                    <Sparkles color={iconColor} size={14} strokeWidth={2} />
-                    <Text style={[styles.metadataPillText, { color: iconColor }]}>
-                      {formattedCategory}
-                    </Text>
-                  </View>
+                {/* Category Pill */}
+                <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
+                  <Sparkles color={iconColor} size={14} strokeWidth={2} />
+                  <Text style={[styles.metadataPillText, { color: iconColor }]}>
+                    {formattedCategory}
+                  </Text>
+                </View>
 
-                  {/* Duration Pill (estimated) */}
-                  <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
-                    <Text style={[styles.metadataPillText, { color: iconColor }]}>
-                      ⏱️ 5-10 min
-                    </Text>
-                  </View>
-                </ScrollView>
-              </Animated.View>
+                {/* Duration Pill (estimated) */}
+                <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
+                  <Text style={[styles.metadataPillText, { color: iconColor }]}>
+                    ⏱️ 5-10 min
+                  </Text>
+                </View>
+              </View>
             </View>
           </LinearGradient>
 
-          {/* Description with choreographed animation */}
-          <Animated.View style={[styles.descriptionSection, descriptionAnimatedStyle]}>
+          {/* Description */}
+          <View style={styles.descriptionSection}>
             <Text
               style={[
                 styles.descriptionText,
@@ -632,10 +575,10 @@ export default function FullsizeTemplatePreview({
             >
               {template.description}
             </Text>
-          </Animated.View>
+          </View>
 
-          {/* Science Box with choreographed animation */}
-          <Animated.View style={[styles.scienceBox, scienceBoxAnimatedStyle]}>
+          {/* Science Box */}
+          <View style={styles.scienceBox}>
             <View style={styles.scienceHeader}>
               <Text style={styles.scienceIcon}>🔬</Text>
               <Text
@@ -671,14 +614,14 @@ export default function FullsizeTemplatePreview({
                 <Text style={styles.researchLinkText}>Read Research</Text>
               </AnimatedPressable>
             )}
-          </Animated.View>
+          </View>
 
           {/* Bottom spacer for footer */}
           <View style={styles.bottomSpacer} />
         </ScrollView>
 
-        {/* Footer with dual CTA and choreographed animation */}
-        <Animated.View style={[styles.footerGradientWrapper, footerAnimatedStyle]}>
+        {/* Footer with dual CTA */}
+        <View style={styles.footerGradientWrapper}>
           <LinearGradient
             colors={['rgba(250, 250, 249, 0)', 'rgba(250, 250, 249, 1)', 'rgba(250, 250, 249, 1)']}
             style={styles.footerGradient}
@@ -739,7 +682,7 @@ export default function FullsizeTemplatePreview({
             )}
             </View>
           </LinearGradient>
-        </Animated.View>
+        </View>
 
         {/* Confetti Animation - Only when imported and reduce motion is disabled */}
         {isImported && !reducedMotion && (
@@ -831,8 +774,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
-  pillsContainer: {
+  pillsRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     gap: 10,
     paddingHorizontal: 4,
   },

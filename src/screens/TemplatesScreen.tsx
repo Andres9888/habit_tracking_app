@@ -286,12 +286,11 @@ export default function TemplatesScreen() {
 
   // Handle customize from fullsize preview
   const handleCustomizeFromPreview = useCallback((template: Doc<'templates'>) => {
+    // Set template and open customize modal immediately
+    // Both modals can handle their own visibility
+    setPreviewTemplate(template);
+    setShowCustomizeModal(true);
     setShowFullsizePreview(false);
-    // Small delay to allow fullsize modal to close before opening customize
-    setTimeout(() => {
-      setPreviewTemplate(template);
-      setShowCustomizeModal(true);
-    }, 150);
   }, []);
 
   // Handle direct import from fullsize preview
