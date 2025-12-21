@@ -62,6 +62,9 @@ import type { Doc } from '../../convex/_generated/dataModel';
 import type { Habit as HabitDoc, HabitTrackingEntry } from '../features/habits/types';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
+import { SwipeableActionButton } from '../components/SwipeableActionButton';
+import { DeleteUndoToast } from '../components/DeleteUndoToast';
+import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 
 // Types
 type Habit = HabitDoc & {
@@ -828,6 +831,8 @@ function ManageTabContent({
   onOpenNotesList,
   onOpenNotesEditor,
   onPause,
+  onSwipeDelete,
+  onSwipeArchive,
 }: {
   habit: Habit;
   habitNotes: Doc<'notes'>[];
@@ -837,6 +842,10 @@ function ManageTabContent({
   onOpenNotesList: () => void;
   onOpenNotesEditor: () => void;
   onPause: () => void;
+  /** Swipe action for delete - triggers undo toast flow */
+  onSwipeDelete?: () => void;
+  /** Swipe action for archive - triggers undo toast flow */
+  onSwipeArchive?: () => void;
 }) {
   // Real-time relative time for next reminder (T3.4)
   // Update every minute for accurate display
@@ -938,20 +947,35 @@ function ManageTabContent({
         onPress={onPause}
       />
 
-      {/* Archive */}
-      <ActionButton
+      {/* Danger Zone Label */}
+      <Text className="mt-2 px-1 text-xs font-semibold uppercase tracking-wider text-red-500/80">
+        Danger Zone
+      </Text>
+
+      {/* Archive - Swipeable */}
+      <SwipeableActionButton
         icon={Archive}
         label="Archive"
         subtitle="Hide from active habits"
         onPress={onArchive}
+        onSwipeAction={onSwipeArchive}
+        swipeEnabled={!!onSwipeArchive}
+        swipeIcon={Archive}
+        swipeLabel="Archive"
+        swipeVariant="warning"
       />
 
-      {/* Delete */}
-      <ActionButton
+      {/* Delete - Swipeable */}
+      <SwipeableActionButton
         icon={Trash2}
         label="Delete Habit"
         subtitle="Permanently remove this habit"
         onPress={onDelete}
+        onSwipeAction={onSwipeDelete}
+        swipeEnabled={!!onSwipeDelete}
+        swipeIcon={Trash2}
+        swipeLabel="Delete"
+        swipeVariant="destructive"
         variant="destructive"
       />
     </View>
@@ -1056,6 +1080,10 @@ export default function HabitDetailScreen({
   const [affirmationTextDraft, setAffirmationTextDraft] = useState('');
   const [affirmationTypeDraft, setAffirmationTypeDraft] = useState<'identity' | 'motivational' | 'instructional' | undefined>(undefined);
   const [affirmationEditingId, setAffirmationEditingId] = useState<Id<'affirmations'> | null>(null);
+
+  // Delete undo toast state (T3.5: Swipe-to-delete)
+  const [pendingDelete, setPendingDelete] = useState(false);
+  const [pendingArchive, setPendingArchive] = useState(false);
 
   type VisionBoardItem = Doc<'visionBoardItems'>;
   type Affirmation = Doc<'affirmations'>;
@@ -1216,6 +1244,42 @@ export default function HabitDetailScreen({
       ]
     );
   };
+
+  // T3.5: Swipe-to-delete handlers
+  // These trigger the undo toast flow instead of immediate Alert
+  const handleSwipeDelete = useCallback(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setPendingDelete(true);
+  }, []);
+
+  const handleSwipeArchive = useCallback(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setPendingArchive(true);
+  }, []);
+
+  // Handle delete confirmation (timer expired)
+  const handleConfirmDelete = useCallback(() => {
+    setPendingDelete(false);
+    onDelete?.(habit._id);
+    onClose();
+  }, [habit._id, onDelete, onClose]);
+
+  // Handle archive confirmation (timer expired)
+  const handleConfirmArchive = useCallback(() => {
+    setPendingArchive(false);
+    onArchive?.(habit._id);
+    onClose();
+  }, [habit._id, onArchive, onClose]);
+
+  // Handle undo delete
+  const handleUndoDelete = useCallback(() => {
+    setPendingDelete(false);
+  }, []);
+
+  // Handle undo archive
+  const handleUndoArchive = useCallback(() => {
+    setPendingArchive(false);
+  }, []);
 
   const handleOpenCalendar = () => {
     onOpenCalendar?.(habit);
@@ -1677,6 +1741,8 @@ export default function HabitDetailScreen({
                   onOpenNotesList={() => setIsNotesListOpen(true)}
                   onOpenNotesEditor={() => setIsNotesEditorOpen(true)}
                   onPause={handlePause}
+                  onSwipeDelete={handleSwipeDelete}
+                  onSwipeArchive={handleSwipeArchive}
                 />
               </ScrollView>
             )}
@@ -2503,6 +2569,25 @@ export default function HabitDetailScreen({
         variant="success"
         visible={cueToastVisible}
         onDismiss={() => setCueToastVisible(false)}
+      />
+
+      {/* Delete Undo Toast (T3.5: Swipe-to-delete) */}
+      <DeleteUndoToast
+        visible={pendingDelete}
+        itemName={habit.name}
+        duration={5000}
+        onDismiss={() => setPendingDelete(false)}
+        onUndo={handleUndoDelete}
+        onConfirm={handleConfirmDelete}
+      />
+
+      {/* Archive Undo Toast (T3.5: Swipe-to-archive) */}
+      <ArchiveUndoToast
+        visible={pendingArchive}
+        habitName={habit.name}
+        duration={5000}
+        onDismiss={handleConfirmArchive}
+        onUndo={handleUndoArchive}
       />
     </Modal>
   );

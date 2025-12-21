@@ -242,7 +242,22 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Implementation:**
     - Added `getNextReminderRelativeTime()` function in `src/utils/notifications.ts:183-236`
     - Modified `ManageTabContent` in `src/screens/HabitDetailScreen.tsx:841-876`
-- [ ] T3.5: Implement swipe-to-delete for manage actions
+- [x] T3.5: Implement swipe-to-delete for manage actions
+  - **Completed:** Added swipe-to-delete and swipe-to-archive functionality in ManageTabContent
+  - **Components Created:**
+    - `SwipeableActionButton` - Swipeable wrapper for action buttons with reveal animation
+    - `DeleteUndoToast` - Red-themed undo toast with 5-second countdown timer
+  - **Features:**
+    - Swipe left reveals action (red for delete, amber for archive) with progressive icon animation
+    - Full swipe or tap on revealed action triggers undo toast flow
+    - 5-second countdown with visual progress bar before action executes
+    - Undo button cancels pending action immediately
+    - Swipe toast down to dismiss and undo
+    - Haptic feedback: Warning notification on swipe, Light impact on button tap
+  - **Danger Zone:** Added "Danger Zone" label to group Archive and Delete actions
+  - **Accessibility:** Labels include swipe hint for enabled actions, removes hint when disabled
+  - **Tests:** Added comprehensive test suites for both new components (17 tests passing)
+  - **Implementation:** Modified `src/screens/HabitDetailScreen.tsx:824-982` (ManageTabContent) and lines 1247-1281 (swipe handlers)
 
 ### Phase 4: Polish (1 hour)
 - [ ] T4.1: Add vision board full-screen preview
