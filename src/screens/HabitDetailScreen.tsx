@@ -1404,12 +1404,7 @@ export default function HabitDetailScreen({
     setCueTimeDraft(habitCueTime ?? '');
   }, [habitId, habitCueAfterBehavior, habitCueLocation, habitCueTime]);
 
-  // Reset tab when modal closes/opens
-  useEffect(() => {
-    if (visible) {
-      setActiveTab('progress');
-    }
-  }, [visible]);
+  // Note: Tab reset is handled by the useEffect at line 1225 using initialTab
 
   // T3.5: Swipe-to-delete handlers (must be before early return to maintain hook order)
   // These trigger the undo toast flow instead of immediate Alert
