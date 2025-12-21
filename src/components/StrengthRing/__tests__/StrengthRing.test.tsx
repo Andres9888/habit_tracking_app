@@ -58,35 +58,44 @@ describe('StrengthRing Component', () => {
   });
 
   describe('Level-Based Colors (AC9)', () => {
-    it('should use green-300 (#86efac) for starting level (0-29%)', () => {
+    // Updated thresholds: <20: Starting, 20-39: Building, 40-59: Developing, 60-79: Strong, 80+: Automatic
+    it('should use lime-600 for starting level (0-19%)', () => {
       const { root } = render(<StrengthRing strength={15} />);
       expect(root).toBeTruthy();
       // Color logic is tested in the getLevelInfo function
     });
 
-    it('should use green-400 (#4ade80) for building level (30-59%)', () => {
-      const { root } = render(<StrengthRing strength={45} />);
+    it('should use green-600 for building level (20-39%)', () => {
+      const { root } = render(<StrengthRing strength={30} />);
       expect(root).toBeTruthy();
     });
 
-    it('should use green-500 (#22c55e) for strong level (60-84%)', () => {
+    it('should use teal-600 for developing level (40-59%)', () => {
+      const { root } = render(<StrengthRing strength={50} />);
+      expect(root).toBeTruthy();
+    });
+
+    it('should use cyan-600 for strong level (60-79%)', () => {
       const { root } = render(<StrengthRing strength={70} />);
       expect(root).toBeTruthy();
     });
 
-    it('should use green-700 (#15803d) for automatic level (85-100%)', () => {
+    it('should use emerald-600 for automatic level (80-100%)', () => {
       const { root } = render(<StrengthRing strength={90} />);
       expect(root).toBeTruthy();
     });
 
     it('should change color at threshold boundaries', () => {
+      // Updated thresholds: 0-19: starting, 20-39: building, 40-59: developing, 60-79: strong, 80+: automatic
       const thresholds = [
-        { strength: 29, level: 'starting' },
-        { strength: 30, level: 'building' },
-        { strength: 59, level: 'building' },
+        { strength: 19, level: 'starting' },
+        { strength: 20, level: 'building' },
+        { strength: 39, level: 'building' },
+        { strength: 40, level: 'developing' },
+        { strength: 59, level: 'developing' },
         { strength: 60, level: 'strong' },
-        { strength: 84, level: 'strong' },
-        { strength: 85, level: 'automatic' },
+        { strength: 79, level: 'strong' },
+        { strength: 80, level: 'automatic' },
       ];
 
       for (const threshold of thresholds) {
@@ -113,14 +122,16 @@ describe('StrengthRing Component', () => {
     it('should hide level label by default', () => {
       const { queryByText } = render(<StrengthRing strength={50} />);
       // Level label should not be visible without showLevel prop
-      expect(queryByText(/Building/i)).toBeNull();
+      expect(queryByText(/Developing/i)).toBeNull();
     });
 
     it('should show level label when showLevel is true', () => {
       const { getByText } = render(
         <StrengthRing strength={50} showLevel={true} />
       );
-      expect(getByText(/Building 🌿/i)).toBeTruthy();
+      // strength=50 is in Developing level (<20: Starting, 20-39: Building, 40-59: Developing)
+      expect(getByText(/Developing/i)).toBeTruthy();
+      expect(getByText(/🌳/)).toBeTruthy();
     });
 
     it('should show both percentage and level when both props are true', () => {
@@ -128,7 +139,9 @@ describe('StrengthRing Component', () => {
         <StrengthRing strength={50} showPercentage={true} showLevel={true} />
       );
       expect(getByText('50%')).toBeTruthy();
-      expect(getByText(/Building 🌿/i)).toBeTruthy();
+      // strength=50 is in Developing level
+      expect(getByText(/Developing/i)).toBeTruthy();
+      expect(getByText(/🌳/)).toBeTruthy();
     });
   });
 
@@ -139,24 +152,27 @@ describe('StrengthRing Component', () => {
     });
 
     it('should have accessibility label with strength and level', () => {
-      const { getByA11yLabel } = render(<StrengthRing strength={45} />);
+      const { getByLabelText } = render(<StrengthRing strength={45} />);
       // Label format: "X% strength, LevelName level emoji"
-      expect(getByA11yLabel(/45% strength, Building level 🌿/)).toBeTruthy();
+      // 45% is in Developing level (40-59)
+      expect(getByLabelText(/45% strength, Developing level 🌳/)).toBeTruthy();
     });
 
     it('should announce correct level for different strengths', () => {
+      // Updated thresholds: <20: Starting, 20-39: Building, 40-59: Developing, 60-79: Strong, 80+: Automatic
       const testCases = [
         { strength: 15, expectedLabel: /15% strength, Starting level 🌱/ },
-        { strength: 45, expectedLabel: /45% strength, Building level 🌿/ },
+        { strength: 30, expectedLabel: /30% strength, Building level 🌿/ },
+        { strength: 50, expectedLabel: /50% strength, Developing level 🌳/ },
         { strength: 70, expectedLabel: /70% strength, Strong level 💪/ },
         { strength: 90, expectedLabel: /90% strength, Automatic level ⚡/ },
       ];
 
       for (const testCase of testCases) {
-        const { getByA11yLabel } = render(
+        const { getByLabelText } = render(
           <StrengthRing strength={testCase.strength} />
         );
-        expect(getByA11yLabel(testCase.expectedLabel)).toBeTruthy();
+        expect(getByLabelText(testCase.expectedLabel)).toBeTruthy();
       }
     });
 
@@ -240,7 +256,8 @@ describe('StrengthRing Component', () => {
     });
 
     it('should handle strength at exact threshold boundaries', () => {
-      const boundaries = [0, 30, 60, 85, 100];
+      // Updated thresholds: 0, 20, 40, 60, 80, 100
+      const boundaries = [0, 20, 40, 60, 80, 100];
 
       for (const boundary of boundaries) {
         const { root } = render(<StrengthRing strength={boundary} />);
@@ -272,11 +289,13 @@ describe('StrengthRing Component', () => {
     });
 
     it('should use all level emojis correctly', () => {
+      // Updated thresholds: <20: Starting 🌱, 20-39: Building 🌿, 40-59: Developing 🌳, 60-79: Strong 💪, 80+: Automatic ⚡
       const levels = [
-        { strength: 15, emoji: '🌱' },
-        { strength: 45, emoji: '🌿' },
-        { strength: 70, emoji: '💪' },
-        { strength: 90, emoji: '⚡' },
+        { strength: 15, emoji: '🌱' },  // Starting
+        { strength: 30, emoji: '🌿' },  // Building
+        { strength: 50, emoji: '🌳' },  // Developing
+        { strength: 70, emoji: '💪' },  // Strong
+        { strength: 90, emoji: '⚡' },  // Automatic
       ];
 
       for (const level of levels) {
