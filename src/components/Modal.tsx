@@ -42,17 +42,6 @@ import * as Haptics from 'expo-haptics';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// Apple-like spring configuration - iOS sheet presentation style
-// High stiffness + moderate damping = snappy but organic feel
-const APPLE_SPRING_CONFIG = {
-  damping: 24,
-  stiffness: 380,
-  mass: 1,
-  overshootClamping: false,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
-};
-
 // Organic spring config for fullScreen modals - slower, more natural feel
 // Lower stiffness + higher damping + heavier mass = ~400-500ms duration, organic momentum
 const FULLSCREEN_ORGANIC_SPRING = {
