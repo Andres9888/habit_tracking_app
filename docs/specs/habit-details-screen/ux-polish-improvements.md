@@ -173,7 +173,8 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - *Already implemented in DayCell.tsx:43-81: Pulse animation (scale 1→1.3, opacity 0.6→0) triggers when day.isToday && !day.completed && !reduceMotion. Uses withRepeat for infinite animation, respects reduce motion accessibility setting, stops pulsing once habit is completed*
 - [x] T3.2: Implement contextual streak messages
   - *Already implemented in StreakChainSection.tsx:148-260: getContextualMessage() generates context-aware messages based on current streak, best streak, and today's completion status. ContextualMessage component displays with fade+slide animation, color-coded backgrounds (record=amber, celebrate=emerald, motivation=violet, start=orange), delayed entrance after chain animation. Messages include: new record celebrations, record-breaking motivation (X days to beat your record), milestone celebrations (3/7/14/21/30 days), and general encouragement.*
-- [ ] T3.3: Make motivation cards fully tappable
+- [x] T3.3: Make motivation cards fully tappable
+  - *Implemented AnimatedPressableCard component in HabitDetailScreen.tsx:387-434 with scale 0.98 press animation (100ms ease-in, spring release with damping:15, stiffness:200). Applied to Vision Board cards (lines 739, 2111) and Affirmation cards (lines 797, 2512) in both preview and full list views. Cards already had full tap targets via Pressable wrapper; enhancement adds polished scale animation matching SectionCard behavior.*
 - [ ] T3.4: Add next reminder relative time display
 - [ ] T3.5: Implement swipe-to-delete for manage actions
 

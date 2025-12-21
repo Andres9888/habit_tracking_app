@@ -381,6 +381,60 @@ function SectionCard({
 }
 
 /**
+ * Animated Pressable Card Component
+ * Used for individual motivation cards (vision board, affirmations) with scale 0.98 press animation
+ */
+function AnimatedPressableCard({
+  children,
+  className,
+  onPress,
+  onLongPress,
+  accessibilityLabel,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  onPress: () => void;
+  onLongPress?: () => void;
+  accessibilityLabel?: string;
+}) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    'worklet';
+    scale.value = withTiming(0.98, { duration: 100 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    'worklet';
+    scale.value = withSpring(1, { damping: 15, stiffness: 200 });
+  }, [scale]);
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        className={className}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        onPressIn={() => {
+          handlePressIn();
+        }}
+        onPressOut={() => {
+          handlePressOut();
+        }}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+/**
  * Progress Tab Content
  */
 function ProgressTabContent({
@@ -682,11 +736,10 @@ function MotivationTabContent({
         ) : (
           <View className="gap-3">
             {visionBoardItems.slice(0, 2).map((item, index) => (
-              <Pressable
+              <AnimatedPressableCard
                 key={item._id}
                 accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
-                accessibilityRole="button"
-                className="rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
+                className="rounded-xl border border-stone-100 bg-stone-50/50 p-4"
                 onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
                 onPress={() => onOpenVisionBoardPreview(index)}
               >
@@ -697,7 +750,7 @@ function MotivationTabContent({
                   </Text>
                 )}
                 <Text className="mt-2 text-xs text-stone-400">Tap to preview</Text>
-              </Pressable>
+              </AnimatedPressableCard>
             ))}
             {visionBoardItems.length > 2 && (
               <Pressable
@@ -741,11 +794,10 @@ function MotivationTabContent({
         ) : (
           <View className="gap-3">
             {affirmations.slice(0, 2).map((item) => (
-              <Pressable
+              <AnimatedPressableCard
                 key={item._id}
                 accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
-                accessibilityRole="button"
-                className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4 active:opacity-80"
+                className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
                 onLongPress={() => onConfirmDeleteAffirmation(item)}
                 onPress={() => onOpenAffirmationEditor(item)}
               >
@@ -757,7 +809,7 @@ function MotivationTabContent({
                     </View>
                   </View>
                 )}
-              </Pressable>
+              </AnimatedPressableCard>
             ))}
             {affirmations.length > 2 && (
               <Pressable
@@ -2056,11 +2108,10 @@ export default function HabitDetailScreen({
             </View>
             <View className="gap-3">
               {visionBoardItems.map((item, index) => (
-                <Pressable
+                <AnimatedPressableCard
                   key={item._id}
                   accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
-                  accessibilityRole="button"
-                  className="rounded-2xl border border-stone-100 bg-stone-50 p-4 active:opacity-80"
+                  className="rounded-2xl border border-stone-100 bg-stone-50 p-4"
                   onLongPress={() => handleConfirmDeleteVisionBoardItem(item)}
                   onPress={() => {
                     setIsVisionBoardListOpen(false);
@@ -2072,7 +2123,7 @@ export default function HabitDetailScreen({
                     <Text className="mt-2 text-sm leading-6 text-stone-600">{item.body}</Text>
                   )}
                   <Text className="mt-3 text-xs text-stone-400">Tap to preview • Long press to delete</Text>
-                </Pressable>
+                </AnimatedPressableCard>
               ))}
             </View>
           </ScrollView>
@@ -2458,11 +2509,10 @@ export default function HabitDetailScreen({
             </View>
             <View className="gap-3">
               {affirmations.map((item) => (
-                <Pressable
+                <AnimatedPressableCard
                   key={item._id}
                   accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
-                  accessibilityRole="button"
-                  className="rounded-2xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4 active:opacity-80"
+                  className="rounded-2xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
                   onLongPress={() => handleConfirmDeleteAffirmation(item)}
                   onPress={() => handleOpenAffirmationEditor(item)}
                 >
@@ -2475,7 +2525,7 @@ export default function HabitDetailScreen({
                     </View>
                   )}
                   <Text className="mt-3 text-xs text-stone-400">Long press to delete</Text>
-                </Pressable>
+                </AnimatedPressableCard>
               ))}
             </View>
           </ScrollView>
