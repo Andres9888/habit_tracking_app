@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Alert,
+  Animated,
   Modal,
+  Pressable,
   ScrollView,
   Switch,
   Text,
@@ -10,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, Trash2, ChevronDown } from 'lucide-react-native';
+import { ChevronLeft, ChevronDown, Check, Trash2 } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -24,6 +26,9 @@ import {
   scheduleHabitReminder,
 } from '../utils/notifications';
 import { EmojiPickerSheet } from '../components/EmojiPickerV2';
+import { COLORS } from '../components/CreateHabitModal/constants';
+import { Motion } from '../constants/motion';
+import useHapticFeedback from '../hooks/useHapticFeedback';
 
 interface HabitEditScreenProps {
   visible: boolean;
@@ -31,24 +36,99 @@ interface HabitEditScreenProps {
   onClose: () => void;
 }
 
-const EMOJI_COLORS = [
-  '#DBEAFE', // blue-100
-  '#FFEDD5', // orange-100
-  '#DCFCE7', // green-100
-  '#F3E8FF', // purple-100
-  '#FCE7F3', // pink-100
-  '#FEF3C7', // yellow-100
-  '#E0E7FF', // indigo-100
-  '#CCFBF1', // teal-100
-  '#FEE2E2', // red-100
-  '#F3F4F6', // gray-100
-];
-
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const TIMES = ['morning', 'afternoon', 'evening'];
 const TIME_ICONS = ['☀️', '☁️', '🌙'];
 
 const GOAL_UNITS = ['minutes', 'hours', 'times', 'pages', 'reps'];
+
+// Animated color button component for color picker
+interface AnimatedColorButtonProps {
+  color: string;
+  isSelected: boolean;
+  onPress: () => void;
+}
+
+const AnimatedColorButton = ({
+  color,
+  isSelected,
+  onPress,
+}: AnimatedColorButtonProps) => {
+  const scale = useRef(new Animated.Value(1)).current;
+  const wasSelected = useRef(isSelected);
+
+  useEffect(() => {
+    if (isSelected && !wasSelected.current) {
+      Animated.sequence([
+        Animated.timing(scale, {
+          duration: Motion.duration.fast,
+          easing: Motion.easing.outEase,
+          toValue: 1.15,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scale, {
+          toValue: 1,
+          damping: 12,
+          stiffness: 180,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+    wasSelected.current = isSelected;
+  }, [isSelected, scale]);
+
+  const handlePressIn = useCallback(() => {
+    Animated.timing(scale, {
+      duration: Motion.duration.fast,
+      easing: Motion.easing.inEase,
+      toValue: 0.9,
+      useNativeDriver: true,
+    }).start();
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    Animated.timing(scale, {
+      duration: Motion.duration.base,
+      easing: Motion.easing.outEase,
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [scale]);
+
+  // Check if color is very light (needs visible border)
+  const isLightColor = color.toUpperCase() === '#FFFFFF' || color.toUpperCase() === '#FFF';
+
+  return (
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <Pressable
+        accessibilityLabel={`Select color ${color}`}
+        accessibilityRole="button"
+        accessibilityState={{ selected: isSelected }}
+        style={{
+          alignItems: 'center',
+          backgroundColor: color,
+          borderColor: isSelected ? '#1e293b' : (isLightColor ? '#e2e8f0' : 'transparent'),
+          borderRadius: 20,
+          borderWidth: isSelected ? 3 : (isLightColor ? 1 : 0),
+          height: 40,
+          justifyContent: 'center',
+          width: 40,
+        }}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+      >
+        {isSelected && (
+          <Check
+            color={isLightColor || ['#EAB308', '#FBBF24', '#4ADE80', '#FB923C'].includes(color) ? '#1e293b' : '#FFFFFF'}
+            size={16}
+            strokeWidth={3}
+          />
+        )}
+      </Pressable>
+    </Animated.View>
+  );
+};
 
 export default function HabitEditScreen({
   visible,
@@ -56,6 +136,7 @@ export default function HabitEditScreen({
   onClose,
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
+  const { triggerSelection } = useHapticFeedback();
 
   // Get habit data
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
@@ -168,6 +249,11 @@ export default function HabitEditScreen({
     );
   };
 
+  const handleColorSelect = useCallback((color: string) => {
+    triggerSelection();
+    setSelectedColor(color);
+  }, [triggerSelection]);
+
   if (!visible || !habitId) return null;
 
   return (
@@ -202,33 +288,56 @@ export default function HabitEditScreen({
         </View>
 
         <ScrollView className='flex-1 px-4' showsVerticalScrollIndicator={false}>
-          {/* Icon Selection Section */}
-          <View className='mb-4 rounded-2xl bg-white p-6'>
+          {/* Icon & Style Section */}
+          <View className='mb-4 rounded-2xl bg-white p-4'>
+            <Text className='mb-4 text-base font-bold text-slate-800'>🎨 Style it</Text>
+
             {/* Large Icon Preview */}
-            <View className='mb-6 items-center'>
+            <View className='mb-5 items-center'>
               <View
                 className='mb-3 h-20 w-20 items-center justify-center rounded-2xl'
                 style={{ backgroundColor: selectedColor }}
               >
                 <Text className='text-[36px]'>{selectedEmoji}</Text>
               </View>
-              <Text className='text-[17px] font-semibold text-[#1a1a1a]'>
-                Choose Icon
-              </Text>
             </View>
 
             {/* Icon Selector Button */}
             <TouchableOpacity
               accessibilityLabel='Choose icon'
               accessibilityRole='button'
-              className='flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
+              className='mb-5 flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
               onPress={() => setIsEmojiPickerVisible(true)}
             >
-              <Text className='text-base font-medium text-[#1a1a1a]'>
-                Browse Icons
-              </Text>
+              <View className='flex-row items-center gap-3'>
+                <View
+                  className='h-12 w-12 items-center justify-center rounded-xl'
+                  style={{ backgroundColor: selectedColor + '33' }}
+                >
+                  <Text className='text-2xl'>{selectedEmoji}</Text>
+                </View>
+                <View>
+                  <Text className='text-base font-medium text-slate-800'>Icon</Text>
+                  <Text className='text-xs text-slate-500'>Tap to change</Text>
+                </View>
+              </View>
               <Text className='text-sm text-[#3B82F6]'>Change</Text>
             </TouchableOpacity>
+
+            {/* Color Picker */}
+            <View>
+              <Text className='mb-3 text-sm font-semibold text-slate-600'>Color</Text>
+              <View className='flex-row flex-wrap gap-3'>
+                {COLORS.map((color) => (
+                  <AnimatedColorButton
+                    key={color}
+                    color={color}
+                    isSelected={selectedColor === color}
+                    onPress={() => handleColorSelect(color)}
+                  />
+                ))}
+              </View>
+            </View>
           </View>
 
           {/* Habit Name Section */}
@@ -457,9 +566,7 @@ export default function HabitEditScreen({
         onSelect={(emoji) => {
           if (emoji !== null) {
             setSelectedEmoji(emoji);
-            // Optionally cycle through colors when selecting emoji
-            const randomColorIndex = Math.floor(Math.random() * EMOJI_COLORS.length);
-            setSelectedColor(EMOJI_COLORS[randomColorIndex]);
+            // Color is now explicitly controlled via color picker - no random assignment
           }
         }}
         onClose={() => setIsEmojiPickerVisible(false)}
