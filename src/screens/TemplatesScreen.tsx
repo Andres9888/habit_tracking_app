@@ -54,6 +54,7 @@ import Toast from '../components/Toast';
 import { useAppTheme } from '../theme';
 
 import TemplatePreviewModal from './templates/TemplatePreviewModal';
+import FullsizeTemplatePreview from '../components/FullsizeTemplatePreview';
 import {
   CATEGORY_COLORS,
   DEFAULT_CATEGORY_COLORS,
@@ -159,7 +160,9 @@ export default function TemplatesScreen() {
 
   // Modal & UI state
   const [previewTemplate, setPreviewTemplate] = useState<Doc<'templates'> | null>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showFullsizePreview, setShowFullsizePreview] = useState(false);
+  const [showCustomizeModal, setShowCustomizeModal] = useState(false);
+  const [importedTemplateIds, setImportedTemplateIds] = useState<Set<string>>(new Set());
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showTopScrollShadow, setShowTopScrollShadow] = useState(false);
@@ -275,13 +278,54 @@ export default function TemplatesScreen() {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
-  // Handle template preview
+  // Handle template preview - opens fullsize preview first
   const handleTemplatePreview = useCallback((template: Doc<'templates'>) => {
     setPreviewTemplate(template);
-    setShowPreviewModal(true);
+    setShowFullsizePreview(true);
   }, []);
 
-  // Handle template import
+  // Handle customize from fullsize preview
+  const handleCustomizeFromPreview = useCallback((template: Doc<'templates'>) => {
+    setShowFullsizePreview(false);
+    // Small delay to allow fullsize modal to close before opening customize
+    setTimeout(() => {
+      setPreviewTemplate(template);
+      setShowCustomizeModal(true);
+    }, 150);
+  }, []);
+
+  // Handle direct import from fullsize preview
+  const handleDirectImport = useCallback(
+    async (templateId: Id<'templates'>) => {
+      try {
+        setImportingTemplateId(templateId);
+        const result = await importTemplate({ customizations: undefined, templateId });
+
+        if (result.success) {
+          // Mark as imported for success animation
+          setImportedTemplateIds((prev) => new Set(prev).add(templateId));
+
+          // Show success toast
+          setShowToast(true);
+          setToastMessage('Imported habit successfully');
+
+          // Close modal after a short delay to show success animation
+          setTimeout(() => {
+            setShowFullsizePreview(false);
+          }, 1000);
+        }
+      } catch (error) {
+        console.error('Failed to import template:', error);
+        setShowToast(true);
+        setToastMessage('Failed to import template. Please try again.');
+      } finally {
+        setImportingTemplateId(null);
+      }
+    },
+    [importTemplate]
+  );
+
+  // Handle template import (from customize modal)
   const handleTemplateImport = useCallback(
     async (
       templateId: Id<'templates'>,
@@ -296,9 +340,11 @@ export default function TemplatesScreen() {
         const result = await importTemplate({ customizations, templateId });
 
         if (result.success) {
+          // Mark as imported
+          setImportedTemplateIds((prev) => new Set(prev).add(templateId));
           setShowToast(true);
           setToastMessage('Imported habit successfully');
-          setShowPreviewModal(false);
+          setShowCustomizeModal(false);
         }
       } catch (error) {
         console.error('Failed to import template:', error);
@@ -657,12 +703,22 @@ export default function TemplatesScreen() {
           )}
         </View>
 
+        <FullsizeTemplatePreview
+          isImporting={importingTemplateId === previewTemplate?._id}
+          isImported={previewTemplate ? importedTemplateIds.has(previewTemplate._id) : false}
+          onClose={() => setShowFullsizePreview(false)}
+          onCustomize={handleCustomizeFromPreview}
+          onImport={handleDirectImport}
+          template={previewTemplate}
+          visible={showFullsizePreview}
+        />
+
         <TemplatePreviewModal
           importingTemplateId={importingTemplateId}
-          onClose={() => setShowPreviewModal(false)}
+          onClose={() => setShowCustomizeModal(false)}
           onImport={handleTemplateImport}
           template={previewTemplate}
-          visible={showPreviewModal}
+          visible={showCustomizeModal}
         />
 
         <Toast
@@ -823,12 +879,22 @@ export default function TemplatesScreen() {
         </Animated.View>
       )}
 
+      <FullsizeTemplatePreview
+        isImporting={importingTemplateId === previewTemplate?._id}
+        isImported={previewTemplate ? importedTemplateIds.has(previewTemplate._id) : false}
+        onClose={() => setShowFullsizePreview(false)}
+        onCustomize={handleCustomizeFromPreview}
+        onImport={handleDirectImport}
+        template={previewTemplate}
+        visible={showFullsizePreview}
+      />
+
       <TemplatePreviewModal
         importingTemplateId={importingTemplateId}
-        onClose={() => setShowPreviewModal(false)}
+        onClose={() => setShowCustomizeModal(false)}
         onImport={handleTemplateImport}
         template={previewTemplate}
-        visible={showPreviewModal}
+        visible={showCustomizeModal}
       />
 
       <Toast
