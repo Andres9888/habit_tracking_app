@@ -217,8 +217,15 @@ Add a **fullsize template preview modal** that:
   - Improved haptic feedback using Haptics.notificationAsync for success type
   - All animations respect reduced motion accessibility setting
 
-- [ ] **Task 3.3**: Add reduced motion support
+- [x] **Task 3.3**: Add reduced motion support
   - Instant transitions for accessibility
+  - **Completed**: Implemented comprehensive reduced motion support:
+    - All entrance animations instantly set to final values (no transitions)
+    - Success state animations instantly appear (no glow pulse/bounce/confetti)
+    - Button press handlers use instant scale changes instead of spring animations
+    - Haptic feedback disabled for all interactions (close, import, customize, research link)
+    - Uses `useReduceMotion` hook which queries system accessibility settings
+    - Confetti cannon conditionally skipped when reduced motion is enabled
 
 ### Phase 4: Testing & QA
 - [ ] **Task 4.1**: Manual testing on iOS/Android

@@ -8,8 +8,13 @@
  * - Metadata pills row (frequency, category, duration)
  * - Science box with expandable research link
  * - Dual CTA footer (Import + Customize)
- * - Smooth entrance/exit animations
- * - Reduced motion support
+ * - Smooth entrance/exit animations with choreographed reveal
+ * - Success state with confetti and animated checkmark
+ * - Full reduced motion accessibility support:
+ *   - Instant transitions for all entrance animations
+ *   - Instant success state appearance (no glow/bounce/confetti)
+ *   - Disabled haptic feedback
+ *   - Instant button press feedback (no spring animations)
  *
  * Based on: template-fullsize-preview-spec.md
  */
@@ -428,40 +433,57 @@ export default function FullsizeTemplatePreview({
   }));
 
   // Press handlers for button feedback
+  // Skips animation for users with reduced motion enabled
   const createPressHandlers = (scaleValue: SharedValue<number>, scale = 0.96) => ({
     onPressIn: () => {
-      scaleValue.value = withSpring(scale, { damping: 15, stiffness: 200 });
+      if (reducedMotion) {
+        scaleValue.value = scale;
+      } else {
+        scaleValue.value = withSpring(scale, { damping: 15, stiffness: 200 });
+      }
     },
     onPressOut: () => {
-      scaleValue.value = withSpring(1, { damping: 15, stiffness: 200 });
+      if (reducedMotion) {
+        scaleValue.value = 1;
+      } else {
+        scaleValue.value = withSpring(1, { damping: 15, stiffness: 200 });
+      }
     },
   });
 
   const handleClose = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     onClose();
-  }, [onClose]);
+  }, [onClose, reducedMotion]);
 
   const handleImport = useCallback(() => {
     if (!template || isImporting || isImported) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
     onImport(template._id);
-  }, [template, isImporting, isImported, onImport]);
+  }, [template, isImporting, isImported, onImport, reducedMotion]);
 
   const handleCustomize = useCallback(() => {
     if (!template) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     onCustomize(template);
-  }, [template, onCustomize]);
+  }, [template, onCustomize, reducedMotion]);
 
   const handleResearchPress = useCallback(async () => {
     if (!template?.scientificLink) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     const canOpen = await Linking.canOpenURL(template.scientificLink);
     if (canOpen) {
       await Linking.openURL(template.scientificLink);
     }
-  }, [template?.scientificLink]);
+  }, [template?.scientificLink, reducedMotion]);
 
   if (!template) return null;
 
