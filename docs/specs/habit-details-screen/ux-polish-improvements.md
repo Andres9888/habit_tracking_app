@@ -3,7 +3,7 @@
 **Related Story:** `docs/specs/habit-details-screen/stories/story-1.9-habit-detail-page-redesign.md`
 **Design Mockup:** `.superdesign/design_iterations/habit_details_tabbed_1.html`
 **Priority:** Medium
-**Status:** 🟢 Phase 2 COMPLETE - Phase 3 Ready
+**Status:** 🟢 Phase 3 COMPLETE - Phase 4 Ready
 **Estimated Effort:** 4-6 hours
 
 ---
@@ -177,7 +177,8 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - *Implemented AnimatedPressableCard component in HabitDetailScreen.tsx:387-434 with scale 0.98 press animation (100ms ease-in, spring release with damping:15, stiffness:200). Applied to Vision Board cards (lines 739, 2111) and Affirmation cards (lines 797, 2512) in both preview and full list views. Cards already had full tap targets via Pressable wrapper; enhancement adds polished scale animation matching SectionCard behavior.*
 - [x] T3.4: Add next reminder relative time display
   - *Already implemented in HabitDetailScreen.tsx:906-924 and notifications.ts:187-236: Uses tick state that updates every 60 seconds for real-time display. getNextReminderRelativeTime() formats relative times like "In 8 hours", "In 45 minutes", "Tomorrow at 7am". Comprehensive test coverage in notifications.test.ts*
-- [ ] T3.5: Implement swipe-to-delete for manage actions
+- [x] T3.5: Implement swipe-to-delete for manage actions
+  - *Already implemented in HabitDetailScreen.tsx and SwipeableActionButton.tsx: Archive and Delete buttons use SwipeableActionButton component with swipe-left gesture revealing amber (archive) or red (delete) action area. Uses react-native-gesture-handler Swipeable with rightThreshold=60, progressive icon scale animation (0.8→1.15), haptic feedback on swipe. Full swipe triggers 5-second undo toast (DeleteUndoToast/ArchiveUndoToast) with visual countdown progress bar, UNDO button, and swipe-to-dismiss. Timer expiry confirms action.*
 
 ### Phase 4: Polish (1 hour)
 - [ ] T4.1: Add vision board full-screen preview
