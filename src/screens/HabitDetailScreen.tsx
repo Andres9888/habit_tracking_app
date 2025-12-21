@@ -310,6 +310,7 @@ function ActionButton({
 
 /**
  * Section Card Component for consistent styling
+ * Includes animated press state (scale 0.98) for tappable cards
  */
 function SectionCard({
   children,
@@ -322,19 +323,43 @@ function SectionCard({
   onPress?: () => void;
   accessibilityLabel?: string;
 }) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    'worklet';
+    scale.value = withTiming(0.98, { duration: 100 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    'worklet';
+    scale.value = withSpring(1, { damping: 15, stiffness: 200 });
+  }, [scale]);
+
   if (onPress) {
     return (
-      <Pressable
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        className={clsx(
-          'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50 active:opacity-90',
-          className
-        )}
-        onPress={onPress}
-      >
-        {children}
-      </Pressable>
+      <Animated.View style={animatedStyle}>
+        <Pressable
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="button"
+          className={clsx(
+            'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+            className
+          )}
+          onPress={onPress}
+          onPressIn={() => {
+            handlePressIn();
+          }}
+          onPressOut={() => {
+            handlePressOut();
+          }}
+        >
+          {children}
+        </Pressable>
+      </Animated.View>
     );
   }
 
@@ -548,7 +573,6 @@ function MotivationTabContent({
               </Text>
             )}
           </View>
-          <Edit3 className="text-stone-400" size={16} />
         </View>
       </SectionCard>
 
@@ -577,7 +601,6 @@ function MotivationTabContent({
               </Text>
             )}
           </View>
-          <Edit3 className="text-stone-400" size={16} />
         </View>
       </SectionCard>
 
@@ -623,7 +646,6 @@ function MotivationTabContent({
               </Text>
             )}
           </View>
-          <Edit3 className="text-stone-400" size={16} />
         </View>
       </SectionCard>
 

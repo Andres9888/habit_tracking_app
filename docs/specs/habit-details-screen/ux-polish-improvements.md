@@ -225,7 +225,13 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Animation:** Fade-in + spring translateY after chain animation completes (345ms delay)
   - **Visual Design:** Color-coded message types (record/celebrate/motivation/start) with gradient backgrounds
   - **Implementation:** Added `getContextualMessage()` function and `ContextualMessage` component in `src/components/StreakChainSection/StreakChainSection.tsx:142-259`
-- [ ] T3.3: Make motivation cards fully tappable
+- [x] T3.3: Make motivation cards fully tappable
+  - **Completed:** Enhanced SectionCard component with animated press state and removed edit icons from motivation cards
+  - **Press State Animation:** Added scale animation (1.0 → 0.98) on press using `useSharedValue` and `withTiming`/`withSpring` from react-native-reanimated
+  - **Animation Timing:** 100ms scale down on press-in, spring animation (damping=15, stiffness=200) for scale up on press-out
+  - **Edit Icon Removal:** Removed Edit3 icons from "Your Why", "Your Identity", and "Your Cue" sections - entire cards are now the tap target
+  - **UX Improvement:** Cards feel more responsive and touchable; cleaner visual design without redundant edit indicators
+  - **Implementation:** Modified `SectionCard` component in `src/screens/HabitDetailScreen.tsx:315-376`
 - [ ] T3.4: Add next reminder relative time display
 - [ ] T3.5: Implement swipe-to-delete for manage actions
 
