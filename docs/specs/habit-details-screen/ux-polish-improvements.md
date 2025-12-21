@@ -182,7 +182,12 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Implementation:** Added `AnimatedPercentageText` sub-component and modified animation logic in `src/components/HabitStrengthSection/HabitStrengthSection.tsx:129-204`
 
 ### Phase 2: Tab Navigation (1-2 hours)
-- [ ] T2.1: Convert tab bar to pill/segment control style
+- [x] T2.1: Convert tab bar to pill/segment control style
+  - **Completed:** Converted HabitDetailTabs from underline-style to pill/segment control style
+  - **Visual Design:** Gray background container (`bg-stone-100 rounded-xl`) with sliding violet pill indicator (`bg-violet-600 rounded-lg`)
+  - **Active tab:** White text on violet pill background; Inactive tabs: Gray text on transparent background
+  - **Animation:** Smooth spring animation (damping=18, stiffness=180, mass=0.8) with dynamic width calculation based on container layout
+  - **Implementation:** Modified `src/components/HabitDetailTabs/HabitDetailTabs.tsx`
 - [ ] T2.2: Implement swipe gesture for tab switching
 - [ ] T2.3: Add haptic feedback to tab interactions
 
