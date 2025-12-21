@@ -36,9 +36,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Note:** Using 16 colors from shared COLORS constant (2 rows) to match CreateHabitModal exactly.
 
 ### AC2: Icon/Emoji Selection
-- [ ] Large icon preview at top (current implementation - keep)
-- [ ] "Browse Icons" opens `EmojiPickerSheet` (current - keep)
-- [ ] Color selection is explicit (separate from emoji)
+- [x] Large icon preview at top (current implementation - keep)
+- [x] "Browse Icons" opens `EmojiPickerSheet` (current - keep)
+- [x] Color selection is explicit (separate from emoji)
+
+**Note:** All AC2 items already implemented. Large 80x80 icon preview at lines 295-303, EmojiPickerSheet integration at lines 562-573, and explicit color picker separate from emoji selection (lines 327-340). Random color assignment on emoji change was removed per T1 completion.
 
 ### AC3: Improved Visual Hierarchy
 - [ ] Group related settings into clear card sections
