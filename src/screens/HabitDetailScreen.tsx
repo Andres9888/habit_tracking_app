@@ -14,7 +14,8 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
@@ -942,6 +943,46 @@ export default function HabitDetailScreen({
   const motivationScrollRef = useRef<ScrollView>(null);
   const manageScrollRef = useRef<ScrollView>(null);
 
+  // Tab order for swipe navigation
+  const TABS: TabType[] = ['progress', 'motivation', 'manage'];
+
+  // Swipe gesture handler for tab switching (T2.2)
+  const handleSwipeTab = useCallback((direction: 'left' | 'right') => {
+    const currentIndex = TABS.indexOf(activeTab);
+    if (direction === 'left' && currentIndex < TABS.length - 1) {
+      // Swipe left = go to next tab
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      setActiveTab(TABS[currentIndex + 1]);
+    } else if (direction === 'right' && currentIndex > 0) {
+      // Swipe right = go to previous tab
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      setActiveTab(TABS[currentIndex - 1]);
+    }
+  }, [activeTab, setActiveTab]);
+
+  // Pan gesture for horizontal swipe detection
+  // Uses velocity-based detection (not just distance) as per spec
+  const tabSwipeGesture = Gesture.Pan()
+    .activeOffsetX([-20, 20]) // Only activate after 20px horizontal movement
+    .failOffsetY([-15, 15]) // Fail if vertical movement exceeds 15px (allow scrolling)
+    .onEnd((event) => {
+      'worklet';
+      const { velocityX, translationX } = event;
+      // Velocity-based detection: require minimum velocity for swipe
+      // Also consider translation for slower but deliberate swipes
+      const VELOCITY_THRESHOLD = 500; // pixels per second
+      const TRANSLATION_THRESHOLD = 80; // pixels
+
+      const isSwipeByVelocity = Math.abs(velocityX) > VELOCITY_THRESHOLD;
+      const isSwipeByDistance = Math.abs(translationX) > TRANSLATION_THRESHOLD;
+
+      if (isSwipeByVelocity || isSwipeByDistance) {
+        // Determine direction: negative velocityX = swipe left, positive = swipe right
+        const direction = velocityX < 0 || (velocityX === 0 && translationX < 0) ? 'left' : 'right';
+        runOnJS(handleSwipeTab)(direction);
+      }
+    });
+
   // Modal states
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
   const [showVisualizationExercise, setShowVisualizationExercise] = useState(false);
@@ -1507,90 +1548,92 @@ export default function HabitDetailScreen({
         {/* Tab Bar (sticky) */}
         <HabitDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Tab Content Area */}
-        <View className="flex-1">
-          {activeTab === 'progress' && (
-            <ScrollView
-              ref={progressScrollRef}
-              bounces
-              className="flex-1"
-              contentContainerClassName="gap-4 p-4 pb-8"
-              showsVerticalScrollIndicator={false}
-            >
-              <ProgressTabContent
-                bestStreak={habit.bestStreak ?? 0}
-                completedDates={completedDates}
-                currentStreak={habit.currentStreak ?? 0}
-                daysTracking={daysTracking}
-                habit={habit}
-                habitCreatedAt={habitCreatedAt}
-                isCompletedToday={isCompletedToday}
-                lastSevenDays={lastSevenDays}
-                strengthPercent={strengthPercent}
-                successRate={successRate}
-                totalCompletions={totalCompletions}
-                tracking={tracking}
-              />
-            </ScrollView>
-          )}
+        {/* Tab Content Area - Wrapped in GestureDetector for swipe navigation (T2.2) */}
+        <GestureDetector gesture={tabSwipeGesture}>
+          <View className="flex-1">
+            {activeTab === 'progress' && (
+              <ScrollView
+                ref={progressScrollRef}
+                bounces
+                className="flex-1"
+                contentContainerClassName="gap-4 p-4 pb-8"
+                showsVerticalScrollIndicator={false}
+              >
+                <ProgressTabContent
+                  bestStreak={habit.bestStreak ?? 0}
+                  completedDates={completedDates}
+                  currentStreak={habit.currentStreak ?? 0}
+                  daysTracking={daysTracking}
+                  habit={habit}
+                  habitCreatedAt={habitCreatedAt}
+                  isCompletedToday={isCompletedToday}
+                  lastSevenDays={lastSevenDays}
+                  strengthPercent={strengthPercent}
+                  successRate={successRate}
+                  totalCompletions={totalCompletions}
+                  tracking={tracking}
+                />
+              </ScrollView>
+            )}
 
-          {activeTab === 'motivation' && (
-            <ScrollView
-              ref={motivationScrollRef}
-              bounces
-              className="flex-1"
-              contentContainerClassName="gap-4 p-4 pb-8"
-              showsVerticalScrollIndicator={false}
-            >
-              <MotivationTabContent
-                affirmations={affirmations}
-                habit={habit}
-                habitCueAfterBehavior={habitCueAfterBehavior}
-                habitCueLocation={habitCueLocation}
-                habitCueTime={habitCueTime}
-                habitIdentity={habitIdentity}
-                habitNotes={habitNotes}
-                hasCue={hasCue}
-                onAddNote={handleOpenNotesEditor}
-                onEditNote={handleEditNote}
-                onOpenAffirmationEditor={handleOpenAffirmationEditor}
-                onOpenCueEditor={handleOpenCueEditor}
-                onOpenIdentityEditor={handleOpenIdentityEditor}
-                onOpenVisualizationExercise={handleOpenVisualizationExercise}
-                onOpenVisualizationGuide={handleOpenVisualizationGuide}
-                onOpenVisionBoardEditor={handleOpenVisionBoardEditor}
-                onOpenWhyEditor={handleOpenWhyEditor}
-                onConfirmDeleteAffirmation={handleConfirmDeleteAffirmation}
-                onConfirmDeleteVisionBoardItem={handleConfirmDeleteVisionBoardItem}
-                onSetAffirmationsListOpen={setIsAffirmationsListOpen}
-                onSetVisionBoardListOpen={setIsVisionBoardListOpen}
-                onViewAllNotes={handleOpenNotesList}
-                visionBoardItems={visionBoardItems}
-              />
-            </ScrollView>
-          )}
+            {activeTab === 'motivation' && (
+              <ScrollView
+                ref={motivationScrollRef}
+                bounces
+                className="flex-1"
+                contentContainerClassName="gap-4 p-4 pb-8"
+                showsVerticalScrollIndicator={false}
+              >
+                <MotivationTabContent
+                  affirmations={affirmations}
+                  habit={habit}
+                  habitCueAfterBehavior={habitCueAfterBehavior}
+                  habitCueLocation={habitCueLocation}
+                  habitCueTime={habitCueTime}
+                  habitIdentity={habitIdentity}
+                  habitNotes={habitNotes}
+                  hasCue={hasCue}
+                  onAddNote={handleOpenNotesEditor}
+                  onEditNote={handleEditNote}
+                  onOpenAffirmationEditor={handleOpenAffirmationEditor}
+                  onOpenCueEditor={handleOpenCueEditor}
+                  onOpenIdentityEditor={handleOpenIdentityEditor}
+                  onOpenVisualizationExercise={handleOpenVisualizationExercise}
+                  onOpenVisualizationGuide={handleOpenVisualizationGuide}
+                  onOpenVisionBoardEditor={handleOpenVisionBoardEditor}
+                  onOpenWhyEditor={handleOpenWhyEditor}
+                  onConfirmDeleteAffirmation={handleConfirmDeleteAffirmation}
+                  onConfirmDeleteVisionBoardItem={handleConfirmDeleteVisionBoardItem}
+                  onSetAffirmationsListOpen={setIsAffirmationsListOpen}
+                  onSetVisionBoardListOpen={setIsVisionBoardListOpen}
+                  onViewAllNotes={handleOpenNotesList}
+                  visionBoardItems={visionBoardItems}
+                />
+              </ScrollView>
+            )}
 
-          {activeTab === 'manage' && (
-            <ScrollView
-              ref={manageScrollRef}
-              bounces
-              className="flex-1"
-              contentContainerClassName="gap-4 p-4 pb-8"
-              showsVerticalScrollIndicator={false}
-            >
-              <ManageTabContent
-                habit={habit}
-                habitNotes={habitNotes}
-                onArchive={handleArchive}
-                onDelete={handleDelete}
-                onOpenCalendar={handleOpenCalendar}
-                onOpenNotesList={() => setIsNotesListOpen(true)}
-                onOpenNotesEditor={() => setIsNotesEditorOpen(true)}
-                onPause={handlePause}
-              />
-            </ScrollView>
-          )}
-        </View>
+            {activeTab === 'manage' && (
+              <ScrollView
+                ref={manageScrollRef}
+                bounces
+                className="flex-1"
+                contentContainerClassName="gap-4 p-4 pb-8"
+                showsVerticalScrollIndicator={false}
+              >
+                <ManageTabContent
+                  habit={habit}
+                  habitNotes={habitNotes}
+                  onArchive={handleArchive}
+                  onDelete={handleDelete}
+                  onOpenCalendar={handleOpenCalendar}
+                  onOpenNotesList={() => setIsNotesListOpen(true)}
+                  onOpenNotesEditor={() => setIsNotesEditorOpen(true)}
+                  onPause={handlePause}
+                />
+              </ScrollView>
+            )}
+          </View>
+        </GestureDetector>
       </View>
 
       {/* Visualization Guide Modal */}

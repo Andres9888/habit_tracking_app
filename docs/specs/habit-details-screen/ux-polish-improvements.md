@@ -188,7 +188,14 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Active tab:** White text on violet pill background; Inactive tabs: Gray text on transparent background
   - **Animation:** Smooth spring animation (damping=18, stiffness=180, mass=0.8) with dynamic width calculation based on container layout
   - **Implementation:** Modified `src/components/HabitDetailTabs/HabitDetailTabs.tsx`
-- [ ] T2.2: Implement swipe gesture for tab switching
+- [x] T2.2: Implement swipe gesture for tab switching
+  - **Completed:** Added horizontal swipe gesture detection for tab switching using react-native-gesture-handler
+  - **Gesture Handler:** `Gesture.Pan()` with `activeOffsetX([-20, 20])` and `failOffsetY([-15, 15])` to distinguish horizontal swipes from vertical scrolling
+  - **Velocity-based detection:** Uses both velocity threshold (500 px/s) and translation threshold (80 px) as specified in requirements
+  - **Haptic Feedback:** Triggers light haptic impact on successful tab switch (same as tab tap)
+  - **Direction:** Swipe left = next tab, Swipe right = previous tab
+  - **Boundary handling:** Swipes at first/last tabs are ignored (no wrap-around)
+  - **Implementation:** Modified `src/screens/HabitDetailScreen.tsx:949-984` (gesture handler) and `1551-1636` (GestureDetector wrapper)
 - [ ] T2.3: Add haptic feedback to tab interactions
 
 ### Phase 3: Micro-interactions (1-2 hours)
