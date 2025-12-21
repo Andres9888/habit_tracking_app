@@ -80,14 +80,16 @@ interface HabitDetailScreenProps {
 }
 
 /**
- * Hero Section - Icon, Name, Description (sticky portion)
+ * Hero Section - Icon, Name, Description, Why Teaser (sticky portion)
  */
 function HeroSection({
   habit,
   isCompletedToday,
+  onWhyPress,
 }: {
   habit: Habit;
   isCompletedToday: boolean;
+  onWhyPress?: () => void;
 }) {
   return (
     <View className="items-center pb-4">
@@ -114,6 +116,23 @@ function HeroSection({
           {habit.notes}
         </Text>
       ) : null}
+
+      {/* Why Teaser - shown in Hero as preview (Story 1.9.2 AC 1b) */}
+      <Pressable
+        accessibilityLabel={habit.why ? `Your why: ${habit.why}. Tap to edit.` : 'Add your why'}
+        accessibilityRole="button"
+        className="mt-3 flex-row items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1.5 active:bg-rose-100"
+        onPress={onWhyPress}
+      >
+        <Heart className="text-rose-400" size={14} />
+        {habit.why ? (
+          <Text className="max-w-[240px] text-xs text-rose-600" numberOfLines={1}>
+            {habit.why.length > 50 ? `${habit.why.slice(0, 50)}...` : habit.why}
+          </Text>
+        ) : (
+          <Text className="text-xs italic text-rose-400">Add your why</Text>
+        )}
+      </Pressable>
     </View>
   );
 }
@@ -1322,7 +1341,7 @@ export default function HabitDetailScreen({
 
         {/* Hero Section (sticky) */}
         <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
-          <HeroSection habit={habit} isCompletedToday={isCompletedToday} />
+          <HeroSection habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} />
 
           {/* Quick Complete Button */}
           <View className="mb-4">
