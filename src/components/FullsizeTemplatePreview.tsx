@@ -14,7 +14,7 @@
  * Based on: template-fullsize-preview-spec.md
  */
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -32,14 +32,17 @@ import Animated, {
   withDelay,
   withSequence,
   withTiming,
+  withRepeat,
   Easing,
   interpolate,
+  runOnJS,
   type SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X, ExternalLink, Clock, Sparkles, Check } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 import Modal from './Modal';
 import Button from './Button/Button';
@@ -47,7 +50,17 @@ import { useAppTheme } from '../theme';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import type { Doc, Id } from '../../convex/_generated/dataModel';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+/** Confetti colors - celebratory green variants matching success theme */
+const CONFETTI_COLORS = [
+  '#86EFAC', // Light green
+  '#34D399', // Primary 400
+  '#22c55e', // Success green (matching button)
+  '#10B981', // Primary 500
+  '#059669', // Primary 600
+  '#F59E0B', // Gold accent
+];
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -83,6 +96,7 @@ export default function FullsizeTemplatePreview({
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
+  const confettiRef = useRef<ConfettiCannon>(null);
 
   // Animation values - Base entrance
   const backdropOpacity = useSharedValue(0);
@@ -111,7 +125,11 @@ export default function FullsizeTemplatePreview({
 
   // Success animation values
   const successGlow = useSharedValue(0);
+  const successGlowScale = useSharedValue(1);
   const checkmarkScale = useSharedValue(0);
+  const checkmarkRotation = useSharedValue(-30);
+  const successButtonGlow = useSharedValue(0);
+  const successIconBounce = useSharedValue(0);
 
   // Ensure iconColor is valid
   const iconColor = template?.iconColor && template.iconColor.trim() !== ''
@@ -242,23 +260,87 @@ export default function FullsizeTemplatePreview({
     }
   }, [visible, template, reducedMotion]);
 
+  // Trigger haptic feedback on success (called from animation callback)
+  const triggerSuccessHaptic = useCallback(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  }, []);
+
+  // Trigger confetti on success
+  const triggerConfetti = useCallback(() => {
+    if (confettiRef.current && !reducedMotion) {
+      confettiRef.current.start();
+    }
+  }, [reducedMotion]);
+
   // Success animation when imported
   useEffect(() => {
     if (isImported) {
-      // Animate checkmark appearing
-      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
-      // Animate glow effect - pulse green
-      if (!reducedMotion) {
+      if (reducedMotion) {
+        // Instant appearance for reduced motion users
+        checkmarkScale.value = 1;
+        checkmarkRotation.value = 0;
+        successGlow.value = 0.4;
+        successGlowScale.value = 1;
+        successButtonGlow.value = 0;
+        successIconBounce.value = 0;
+      } else {
+        // Phase 1: Initial haptic and confetti (0ms)
+        triggerSuccessHaptic();
+        triggerConfetti();
+
+        // Phase 2: Full-screen green pulse effect (0-200ms)
         successGlow.value = withSequence(
-          withTiming(0.6, { duration: 200 }),
-          withTiming(0, { duration: 800 })
+          withTiming(0.5, { duration: 150, easing: Easing.out(Easing.ease) }),
+          withTiming(0.2, { duration: 300, easing: Easing.inOut(Easing.ease) }),
+          withTiming(0, { duration: 500, easing: Easing.out(Easing.ease) })
+        );
+
+        // Phase 3: Glow scale pulse outward (0-400ms)
+        successGlowScale.value = withSequence(
+          withTiming(1.3, { duration: 200, easing: Easing.out(Easing.ease) }),
+          withTiming(1, { duration: 400, easing: Easing.inOut(Easing.ease) })
+        );
+
+        // Phase 4: Checkmark bounce in with rotation (100ms delay)
+        checkmarkScale.value = withDelay(
+          100,
+          withSpring(1, { damping: 6, stiffness: 180, mass: 0.8 })
+        );
+        checkmarkRotation.value = withDelay(
+          100,
+          withSpring(0, { damping: 10, stiffness: 150 })
+        );
+
+        // Phase 5: Success button pulsing glow (200ms delay, repeats 2x)
+        successButtonGlow.value = withDelay(
+          200,
+          withSequence(
+            withTiming(1, { duration: 200 }),
+            withTiming(0.3, { duration: 300 }),
+            withTiming(0.8, { duration: 200 }),
+            withTiming(0.4, { duration: 400 })
+          )
+        );
+
+        // Phase 6: Icon subtle bounce (300ms delay)
+        successIconBounce.value = withDelay(
+          300,
+          withSequence(
+            withSpring(-3, { damping: 8, stiffness: 300 }),
+            withSpring(0, { damping: 12, stiffness: 200 })
+          )
         );
       }
     } else {
+      // Reset all success animations
       checkmarkScale.value = 0;
+      checkmarkRotation.value = -30;
       successGlow.value = 0;
+      successGlowScale.value = 1;
+      successButtonGlow.value = 0;
+      successIconBounce.value = 0;
     }
-  }, [isImported, reducedMotion]);
+  }, [isImported, reducedMotion, triggerSuccessHaptic, triggerConfetti]);
 
   // Animated styles
   const backdropStyle = useAnimatedStyle(() => ({
@@ -326,11 +408,23 @@ export default function FullsizeTemplatePreview({
 
   const successGlowStyle = useAnimatedStyle(() => ({
     opacity: successGlow.value,
+    transform: [{ scale: successGlowScale.value }],
   }));
 
   const checkmarkAnimatedStyle = useAnimatedStyle(() => ({
     opacity: checkmarkScale.value,
-    transform: [{ scale: checkmarkScale.value }],
+    transform: [
+      { scale: checkmarkScale.value },
+      { rotate: `${checkmarkRotation.value}deg` },
+    ],
+  }));
+
+  const successButtonGlowStyle = useAnimatedStyle(() => ({
+    opacity: successButtonGlow.value,
+  }));
+
+  const successIconBounceStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: successIconBounce.value }],
   }));
 
   // Press handlers for button feedback
@@ -570,10 +664,22 @@ export default function FullsizeTemplatePreview({
             <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 20) }]}>
             {/* Primary CTA: Import This Habit */}
             {isImported ? (
-              <Animated.View style={[styles.successButton, checkmarkAnimatedStyle]}>
-                <Check color="#fff" size={20} strokeWidth={3} />
-                <Text style={styles.successButtonText}>Added!</Text>
-              </Animated.View>
+              <View style={styles.successButtonWrapper}>
+                {/* Pulsing glow behind success button */}
+                <Animated.View
+                  style={[
+                    styles.successButtonGlow,
+                    successButtonGlowStyle,
+                  ]}
+                  pointerEvents="none"
+                />
+                <Animated.View style={[styles.successButton, checkmarkAnimatedStyle]}>
+                  <Animated.View style={successIconBounceStyle}>
+                    <Check color="#fff" size={22} strokeWidth={3} />
+                  </Animated.View>
+                  <Text style={styles.successButtonText}>Added!</Text>
+                </Animated.View>
+              </View>
             ) : (
               <AnimatedPressable
                 accessible
@@ -612,6 +718,22 @@ export default function FullsizeTemplatePreview({
             </View>
           </LinearGradient>
         </Animated.View>
+
+        {/* Confetti Animation - Only when imported and reduce motion is disabled */}
+        {isImported && !reducedMotion && (
+          <View style={styles.confettiContainer} pointerEvents="none">
+            <ConfettiCannon
+              ref={confettiRef}
+              fadeOut
+              autoStart={false}
+              colors={CONFETTI_COLORS}
+              count={60}
+              explosionSpeed={250}
+              fallSpeed={2500}
+              origin={{ x: SCREEN_WIDTH / 2, y: SCREEN_HEIGHT * 0.4 }}
+            />
+          </View>
+        )}
       </Animated.View>
     </Modal>
   );
@@ -802,17 +924,34 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
   },
+  successButtonWrapper: {
+    position: 'relative',
+  },
+  successButtonGlow: {
+    position: 'absolute',
+    top: -8,
+    left: -8,
+    right: -8,
+    bottom: -8,
+    borderRadius: 24,
+    backgroundColor: '#22c55e',
+    shadowColor: '#22c55e',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
+    elevation: 8,
+  },
   successButton: {
     alignItems: 'center',
     backgroundColor: '#22c55e',
     borderRadius: 16,
     flexDirection: 'row',
-    gap: 8,
+    gap: 10,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: '#15803d',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 4,
   },
@@ -829,5 +968,13 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     fontSize: 15,
     fontWeight: '600',
+  },
+  confettiContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
   },
 });
