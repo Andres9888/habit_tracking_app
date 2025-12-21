@@ -50,10 +50,12 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Note:** Implemented SectionCard component with emoji icon + title pattern. Grouped into: Identity (Style + Name), Schedule (Frequency + Days + Time), Reminders, Goals, Stats. Using gap-4 (16px) between section cards and mb-4 (16px) between section groups.
 
 ### AC4: Safe Delete Flow
-- [ ] Move delete action to bottom "Danger Zone" section
-- [ ] Require confirmation dialog before delete
-- [ ] Show habit name in confirmation ("Delete 'Exercise'?")
-- [ ] Cancel and Delete buttons (Delete in red)
+- [x] Move delete action to bottom "Danger Zone" section
+- [x] Require confirmation dialog before delete
+- [x] Show habit name in confirmation ("Delete 'Exercise'?")
+- [x] Cancel and Delete buttons (Delete in red)
+
+**Note:** Implemented Danger Zone section with red styling, warning icon (AlertTriangle), and explanatory text. Delete triggers a centered confirmation modal showing the habit name with Cancel (gray) and Delete (red) buttons. Removed trash icon from header, replaced with empty spacer for layout balance.
 
 ### AC5: Working Goal Unit Picker
 - [ ] Tapping unit dropdown opens selection modal
@@ -90,10 +92,12 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Completion Notes (T2):** Created SectionCard component with title and optional icon props. Reorganized UI into 5 logical section groups: Identity (Style + Name cards), Schedule (combined Frequency, Days, Preferred Time), Reminders, Goals, and Stats. Each section uses consistent "emoji title" header pattern (e.g., "🎨 Style it", "📅 Schedule"). Applied gap-4 (16px) between cards within groups and mb-4 (16px) between section groups for visual separation.
 
 ### T3: Relocate Delete Action (AC: 4)
-- [ ] Remove trash icon from header
-- [ ] Add "Danger Zone" section at bottom
-- [ ] Implement confirmation dialog with habit name
-- [ ] Style delete button as destructive (red)
+- [x] Remove trash icon from header
+- [x] Add "Danger Zone" section at bottom
+- [x] Implement confirmation dialog with habit name
+- [x] Style delete button as destructive (red)
+
+**Completion Notes (T3):** Removed Trash2 icon from header, replaced with empty View spacer for layout balance. Added Danger Zone section at bottom with red-50 background, red-200 border, AlertTriangle warning icon, explanatory text about permanent deletion, and red Delete Habit button. Implemented confirmation modal with fade animation showing habit name in title ("Delete '{habitName}'?"), warning text, and Cancel (gray) / Delete (red) button pair. All accessibility labels preserved.
 
 ### T4: Goal Unit Picker (AC: 5)
 - [ ] Create simple bottom sheet or inline picker

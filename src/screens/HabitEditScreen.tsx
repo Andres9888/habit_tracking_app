@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, ChevronDown, Check, Trash2 } from 'lucide-react-native';
+import { ChevronLeft, ChevronDown, Check, AlertTriangle } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -172,6 +172,7 @@ export default function HabitEditScreen({
   const [goalValue, setGoalValue] = useState('30');
   const [goalUnit, setGoalUnit] = useState('minutes');
   const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const updateHabit = useMutation(api.habits.update);
   const removeHabit = useMutation(api.habits.remove);
@@ -293,14 +294,8 @@ export default function HabitEditScreen({
           <Text className='text-[17px] font-semibold text-[#1a1a1a]'>
             Edit Habit
           </Text>
-          <TouchableOpacity
-            accessibilityLabel='Delete'
-            accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full'
-            onPress={handleDelete}
-          >
-            <Trash2 color='#ef4444' size={20} strokeWidth={2} />
-          </TouchableOpacity>
+          {/* Empty spacer for layout balance - delete moved to Danger Zone */}
+          <View className='h-10 w-10' />
         </View>
 
         <ScrollView className='flex-1 px-4' showsVerticalScrollIndicator={false}>
@@ -546,6 +541,31 @@ export default function HabitEditScreen({
               </View>
             </SectionCard>
           </View>
+
+          {/* Section: Danger Zone */}
+          <View className="gap-4 mb-6">
+            <View className="rounded-2xl bg-red-50 border border-red-200 p-4">
+              <View className="flex-row items-center gap-2 mb-4">
+                <AlertTriangle color="#ef4444" size={18} strokeWidth={2} />
+                <Text className="text-base font-bold text-red-600">
+                  Danger Zone
+                </Text>
+              </View>
+              <Text className="text-sm text-red-600/70 mb-4">
+                Once you delete a habit, all associated data including streaks and history will be permanently removed.
+              </Text>
+              <TouchableOpacity
+                accessibilityLabel="Delete habit"
+                accessibilityRole="button"
+                className="h-12 items-center justify-center rounded-xl bg-red-500"
+                onPress={() => setShowDeleteConfirmation(true)}
+              >
+                <Text className="text-base font-semibold text-white">
+                  Delete Habit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </ScrollView>
 
         {showTimePicker && (
@@ -596,6 +616,55 @@ export default function HabitEditScreen({
         }}
         onClose={() => setIsEmojiPickerVisible(false)}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Modal
+        transparent
+        animationType="fade"
+        visible={showDeleteConfirmation}
+        onRequestClose={() => setShowDeleteConfirmation(false)}
+      >
+        <View className="flex-1 items-center justify-center bg-black/50">
+          <View className="mx-6 w-full max-w-sm rounded-2xl bg-white p-6">
+            <View className="mb-4 items-center">
+              <View className="mb-3 h-14 w-14 items-center justify-center rounded-full bg-red-100">
+                <AlertTriangle color="#ef4444" size={28} strokeWidth={2} />
+              </View>
+              <Text className="text-lg font-bold text-slate-800">
+                Delete '{habitName || 'this habit'}'?
+              </Text>
+            </View>
+            <Text className="mb-6 text-center text-sm text-slate-500">
+              This action cannot be undone. All your progress, streaks, and history for this habit will be permanently deleted.
+            </Text>
+            <View className="flex-row gap-3">
+              <TouchableOpacity
+                accessibilityLabel="Cancel delete"
+                accessibilityRole="button"
+                className="flex-1 h-12 items-center justify-center rounded-xl bg-gray-100"
+                onPress={() => setShowDeleteConfirmation(false)}
+              >
+                <Text className="text-base font-semibold text-slate-700">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                accessibilityLabel="Confirm delete"
+                accessibilityRole="button"
+                className="flex-1 h-12 items-center justify-center rounded-xl bg-red-500"
+                onPress={() => {
+                  setShowDeleteConfirmation(false);
+                  handleDelete();
+                }}
+              >
+                <Text className="text-base font-semibold text-white">
+                  Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </Modal>
   );
 }
