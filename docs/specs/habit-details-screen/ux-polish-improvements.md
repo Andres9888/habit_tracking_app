@@ -159,7 +159,13 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Animation:** 400ms delay after icon bounce, then 200ms fade-in + spring scale animation (damping=10, stiffness=200, mass=0.6)
   - **Positioning:** Centered below habit name, styled with orange-amber gradient background
   - **Implementation:** Modified `HeroSection` component in `src/screens/HabitDetailScreen.tsx:88-153`
-- [ ] T1.3: Create confetti animation for completion
+- [x] T1.3: Create confetti animation for completion
+  - **Completed:** Added confetti burst animation to QuickCompleteButton when completing a habit
+  - **Animation:** 12 colorful particles burst outward from button center using spring physics (damping=12, stiffness=200, mass=0.5)
+  - **Colors:** Emerald/green theme (#10B981, #34D399, #6EE7B7, #059669) with amber/gold accents (#F59E0B, #FBBF24)
+  - **Duration:** ~700ms total (staggered particle animations + fade out)
+  - **Accessibility:** Respects `reduceMotion` preference - animation is skipped when enabled
+  - **Implementation:** Added `ConfettiBurst` sub-component in `src/components/QuickCompleteButton/QuickCompleteButton.tsx:62-153`
 - [ ] T1.4: Implement stats number counting animation
 - [ ] T1.5: Add strength ring fill animation
 
