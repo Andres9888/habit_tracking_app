@@ -169,7 +169,8 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - *Implemented in HabitDetailTabs.tsx:132 (tap) and HabitDetailScreen.tsx:1030,1034 (swipe): Light haptic on both tap and swipe triggers using Haptics.impactAsync(ImpactFeedbackStyle.Light)*
 
 ### Phase 3: Micro-interactions (1-2 hours)
-- [ ] T3.1: Add today indicator pulse in calendar
+- [x] T3.1: Add today indicator pulse in calendar
+  - *Already implemented in DayCell.tsx:43-81: Pulse animation (scale 1→1.3, opacity 0.6→0) triggers when day.isToday && !day.completed && !reduceMotion. Uses withRepeat for infinite animation, respects reduce motion accessibility setting, stops pulsing once habit is completed*
 - [ ] T3.2: Implement contextual streak messages
 - [ ] T3.3: Make motivation cards fully tappable
 - [ ] T3.4: Add next reminder relative time display
