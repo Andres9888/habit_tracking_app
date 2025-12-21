@@ -86,10 +86,12 @@ interface HabitDetailScreenProps {
  * Hero Section - Icon, Name, Description, Why Teaser (sticky portion)
  */
 function HeroSection({
+  currentStreak,
   habit,
   isCompletedToday,
   onWhyPress,
 }: {
+  currentStreak: number;
   habit: Habit;
   isCompletedToday: boolean;
   onWhyPress?: () => void;
@@ -97,6 +99,11 @@ function HeroSection({
   // Icon bounce animation on load (T1.1)
   const iconScale = useSharedValue(0.8);
   const iconTranslateY = useSharedValue(-10);
+
+  // Streak badge animation on load (T1.2)
+  const showStreakBadge = currentStreak >= 7;
+  const badgeScale = useSharedValue(0);
+  const badgeOpacity = useSharedValue(0);
 
   useEffect(() => {
     // Trigger spring bounce animation when component mounts
@@ -110,7 +117,20 @@ function HeroSection({
       stiffness: 150,
       mass: 0.8,
     });
-  }, []);
+
+    // Streak badge entrance animation (delayed after icon bounce) (T1.2)
+    if (showStreakBadge) {
+      // Delay badge animation to appear after icon settles
+      setTimeout(() => {
+        badgeOpacity.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) });
+        badgeScale.value = withSpring(1, {
+          damping: 10,
+          stiffness: 200,
+          mass: 0.6,
+        });
+      }, 400);
+    }
+  }, [showStreakBadge]);
 
   const iconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -118,6 +138,19 @@ function HeroSection({
       { translateY: iconTranslateY.value },
     ],
   }));
+
+  // Streak badge animated style (T1.2)
+  const badgeAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: badgeOpacity.value,
+    transform: [{ scale: badgeScale.value }],
+  }));
+
+  // Get streak badge text based on streak length (T1.2)
+  const getStreakBadgeText = (streak: number): string => {
+    if (streak >= 30) return `🌟 ${streak} day streak!`;
+    if (streak >= 14) return `🔥 ${streak} day streak!`;
+    return `⚡ ${streak} day streak!`;
+  };
 
   return (
     <View className="items-center pb-4">
@@ -140,6 +173,19 @@ function HeroSection({
       <Text className="text-xl font-bold text-stone-900">
         {habit.name}
       </Text>
+
+      {/* Streak Badge - shown when streak > 7 days (T1.2) */}
+      {showStreakBadge && (
+        <Animated.View
+          accessibilityLabel={`${currentStreak} day streak`}
+          className="mt-2 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 px-3 py-1"
+          style={badgeAnimatedStyle}
+        >
+          <Text className="text-xs font-semibold text-orange-600">
+            {getStreakBadgeText(currentStreak)}
+          </Text>
+        </Animated.View>
+      )}
 
       {/* Notes/Description */}
       {habit.notes ? (
@@ -1436,7 +1482,7 @@ export default function HabitDetailScreen({
 
         {/* Hero Section (sticky) */}
         <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
-          <HeroSection habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} />
+          <HeroSection currentStreak={habit.currentStreak ?? 0} habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} />
 
           {/* Quick Complete Button */}
           <View className="mb-4">

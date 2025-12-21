@@ -153,7 +153,12 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Completed:** Added spring bounce animation to HeroSection icon using `useSharedValue` and `withSpring` from react-native-reanimated
   - **Animation:** 600ms spring animation with damping=8, stiffness=150, mass=0.8, starting from scale 0.8 and translateY -10
   - **Implementation:** Modified `HeroSection` component in `src/screens/HabitDetailScreen.tsx:97-137`
-- [ ] T1.2: Add streak badge with animated entrance
+- [x] T1.2: Add streak badge with animated entrance
+  - **Completed:** Added celebratory streak badge when streak >= 7 days with animated entrance (fade + scale)
+  - **Badge text:** "⚡ X day streak!" (7-13 days), "🔥 X day streak!" (14-29 days), "🌟 X day streak!" (30+ days)
+  - **Animation:** 400ms delay after icon bounce, then 200ms fade-in + spring scale animation (damping=10, stiffness=200, mass=0.6)
+  - **Positioning:** Centered below habit name, styled with orange-amber gradient background
+  - **Implementation:** Modified `HeroSection` component in `src/screens/HabitDetailScreen.tsx:88-153`
 - [ ] T1.3: Create confetti animation for completion
 - [ ] T1.4: Implement stats number counting animation
 - [ ] T1.5: Add strength ring fill animation
