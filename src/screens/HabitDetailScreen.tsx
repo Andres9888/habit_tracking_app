@@ -57,6 +57,7 @@ import {
   Check,
   Zap,
   Shuffle,
+  AlertTriangle,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
@@ -377,6 +378,35 @@ function SectionCard({
       )}
     >
       {children}
+    </View>
+  );
+}
+
+/**
+ * Danger Zone Section Component (T4.3)
+ * Groups destructive actions with red-tinted styling
+ */
+function DangerZoneSection({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <View className="mt-4">
+      {/* Red-tinted section header */}
+      <View className="mb-3 flex-row items-center gap-2 px-1">
+        <View className="h-5 w-5 items-center justify-center rounded-md bg-red-100">
+          <AlertTriangle className="text-red-500" size={12} />
+        </View>
+        <Text className="text-xs font-semibold uppercase tracking-wider text-red-500">
+          Danger Zone
+        </Text>
+      </View>
+
+      {/* Red-tinted card container */}
+      <View className="overflow-hidden rounded-2xl border border-red-200/50 bg-red-50/30">
+        {children}
+      </View>
     </View>
   );
 }
@@ -1091,37 +1121,38 @@ function ManageTabContent({
         onPress={onPause}
       />
 
-      {/* Danger Zone Label */}
-      <Text className="mt-2 px-1 text-xs font-semibold uppercase tracking-wider text-red-500/80">
-        Danger Zone
-      </Text>
+      {/* Danger Zone Section (T4.3) */}
+      <DangerZoneSection>
+        {/* Archive - Swipeable */}
+        <SwipeableActionButton
+          icon={Archive}
+          label="Archive"
+          subtitle="Hide from active habits"
+          onPress={onArchive}
+          onSwipeAction={onSwipeArchive}
+          swipeEnabled={!!onSwipeArchive}
+          swipeIcon={Archive}
+          swipeLabel="Archive"
+          swipeVariant="warning"
+        />
 
-      {/* Archive - Swipeable */}
-      <SwipeableActionButton
-        icon={Archive}
-        label="Archive"
-        subtitle="Hide from active habits"
-        onPress={onArchive}
-        onSwipeAction={onSwipeArchive}
-        swipeEnabled={!!onSwipeArchive}
-        swipeIcon={Archive}
-        swipeLabel="Archive"
-        swipeVariant="warning"
-      />
+        {/* Subtle divider between destructive actions */}
+        <View className="mx-4 h-px bg-red-200/40" />
 
-      {/* Delete - Swipeable */}
-      <SwipeableActionButton
-        icon={Trash2}
-        label="Delete Habit"
-        subtitle="Permanently remove this habit"
-        onPress={onDelete}
-        onSwipeAction={onSwipeDelete}
-        swipeEnabled={!!onSwipeDelete}
-        swipeIcon={Trash2}
-        swipeLabel="Delete"
-        swipeVariant="destructive"
-        variant="destructive"
-      />
+        {/* Delete - Swipeable */}
+        <SwipeableActionButton
+          icon={Trash2}
+          label="Delete Habit"
+          subtitle="Permanently remove this habit"
+          onPress={onDelete}
+          onSwipeAction={onSwipeDelete}
+          swipeEnabled={!!onSwipeDelete}
+          swipeIcon={Trash2}
+          swipeLabel="Delete"
+          swipeVariant="destructive"
+          variant="destructive"
+        />
+      </DangerZoneSection>
     </View>
   );
 }
