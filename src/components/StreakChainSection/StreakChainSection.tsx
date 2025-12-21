@@ -14,6 +14,7 @@ import Animated, {
   withSpring,
   withTiming,
   Easing,
+  cancelAnimation,
 } from 'react-native-reanimated';
 import { Flame, Trophy, Check, Zap } from 'lucide-react-native';
 
@@ -83,7 +84,14 @@ function DayCircle({ completed, index, isToday, label, todayCompleted }: DayCirc
         false
       );
     }
-  }, [index, isToday, todayCompleted]);
+
+    // Cleanup animations on unmount
+    return () => {
+      cancelAnimation(scale);
+      cancelAnimation(opacity);
+      cancelAnimation(pulse);
+    };
+  }, [index, isToday, todayCompleted, scale, opacity, pulse]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -125,7 +133,11 @@ function ConnectorLine({ active, index }: { active: boolean; index: number }) {
 
   useEffect(() => {
     scaleX.value = withDelay(index * 35 + 15, withSpring(1, { damping: 15 }));
-  }, [index]);
+
+    return () => {
+      cancelAnimation(scaleX);
+    };
+  }, [index, scaleX]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scaleX: scaleX.value }],
@@ -226,7 +238,12 @@ function ContextualMessage({ currentStreak, bestStreak, todayCompleted }: Contex
     const delay = 7 * 35 + 100;
     opacity.value = withDelay(delay, withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) }));
     translateY.value = withDelay(delay, withSpring(0, { damping: 15, stiffness: 150 }));
-  }, [currentStreak, bestStreak, todayCompleted]);
+
+    return () => {
+      cancelAnimation(opacity);
+      cancelAnimation(translateY);
+    };
+  }, [currentStreak, bestStreak, todayCompleted, opacity, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

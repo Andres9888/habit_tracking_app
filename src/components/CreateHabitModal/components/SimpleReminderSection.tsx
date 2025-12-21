@@ -11,6 +11,7 @@ interface SimpleReminderSectionProps {
   onToggle: (value: boolean) => void;
   reminderTime: Date;
   remindersEnabled: boolean;
+  disabled?: boolean;
 }
 
 interface QuickTimeButtonProps {
@@ -106,12 +107,17 @@ export const SimpleReminderSection = ({
   onToggle,
   reminderTime,
   remindersEnabled,
+  disabled = false,
 }: SimpleReminderSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
   const presets = buildQuickPresets();
 
   return (
-    <View className="mb-6 rounded-2xl bg-white p-4">
+    <View
+      className="mb-6 rounded-2xl bg-white p-4"
+      style={{ opacity: disabled ? 0.4 : 1 }}
+      pointerEvents={disabled ? 'none' : 'auto'}
+    >
       {/* Header with toggle */}
       <Pressable
         accessibilityLabel={remindersEnabled ? 'Disable reminders' : 'Enable reminders'}

@@ -1,11 +1,14 @@
-import { Modal, ScrollView, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Keyboard, Modal, ScrollView, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS, EMOJIS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
+import { useKeyboardState } from './hooks/useKeyboardState';
 import { ModalHeader } from './components/ModalHeader';
-import { HeroNameInput } from './components/HeroNameInput';
-import { LivePreview } from './components/LivePreview';
+import { InlineEmojiInput } from './components/InlineEmojiInput';
+import { SuggestionChips, type SuggestionChip } from './components/SuggestionChips';
+import { AISuggestionChips } from './components/AISuggestionChips';
 import { StyleSection } from './components/StyleSection';
 import { SimpleReminderSection } from './components/SimpleReminderSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
@@ -13,6 +16,7 @@ import { PhaseSelector } from './components/PhaseSelector';
 import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../utils/notifications';
+import { EmojiPickerSheet } from '../EmojiPickerV2';
 
 // Smart emoji suggestions based on habit name
 const getSuggestedEmojis = (habitName: string): string[] => {
@@ -43,52 +47,141 @@ const getSuggestedEmojis = (habitName: string): string[] => {
   return [];
 };
 
+// Debounce hook for auto-scroll
+const useDebounce = <T,>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 export default function CreateHabitModalV2(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
   const { triggerSelection } = useHapticFeedback();
+  const { isKeyboardVisible } = useKeyboardState();
+
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  // Debounced habit name for auto-scroll trigger
+  const debouncedHabitName = useDebounce(form.habitName, 300);
 
   // Get suggested emojis based on habit name
   const suggestedEmojis = getSuggestedEmojis(form.habitName);
+
+  // Progressive disclosure: sections disabled until name entered
+  const isSectionsEnabled = form.habitName.trim().length >= 1;
+
+  // Show suggestion chips when input is empty or has less than 3 chars
+  const showSuggestionChips = form.habitName.trim().length < 3;
+
+  // Show AI suggestions when typing (3+ chars)
+  const showAISuggestions = form.habitName.trim().length >= 3;
+
+  // Auto-scroll to Style section when user types valid name (5+ chars)
+  useEffect(() => {
+    if (debouncedHabitName.length >= 5 && isKeyboardVisible && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 100, animated: true });
+    }
+  }, [debouncedHabitName, isKeyboardVisible]);
+
+  // Handle suggestion chip selection
+  const handleSuggestionSelect = useCallback((chip: SuggestionChip) => {
+    form.setHabitName(chip.name);
+    form.setSelectedEmoji(chip.emoji);
+    form.setSelectedColor(chip.color);
+    triggerSelection();
+    Keyboard.dismiss();
+  }, [form, triggerSelection]);
+
+  // Handle AI suggestion append
+  const handleAIAppend = useCallback((suggestion: string) => {
+    const currentName = form.habitName.trim();
+    const separator = currentName.endsWith(' ') ? '' : ' ';
+    form.setHabitName(`${currentName}${separator}${suggestion}`);
+  }, [form]);
+
+  // Handle emoji picker open
+  const handleEmojiPress = useCallback(() => {
+    setShowEmojiPicker(true);
+  }, []);
+
+  // Handle emoji selection
+  const handleEmojiSelect = useCallback((emoji: string | null) => {
+    form.setSelectedEmoji(emoji);
+    setShowEmojiPicker(false);
+  }, [form]);
+
+  // Handle input focus
+  const handleInputFocus = useCallback(() => {
+    // Could track focus state if needed
+  }, []);
+
+  // Handle keyboard dismiss
+  const handleDismissKeyboard = useCallback(() => {
+    Keyboard.dismiss();
+  }, []);
 
   return (
     <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
         <View className="flex-1 bg-black/50">
           <View className="mt-12 flex-1 overflow-hidden rounded-t-3xl bg-slate-50 shadow-2xl">
-            {/* Header */}
+            {/* Header with keyboard-aware Done button */}
             <ModalHeader
               habitName={form.habitName}
               isEditMode={isEditMode}
+              isKeyboardVisible={isKeyboardVisible}
               onClose={onClose}
+              onDismissKeyboard={handleDismissKeyboard}
               onSave={handleCreate}
             />
 
             {/* Scrollable Content */}
             <ScrollView
+              ref={scrollViewRef}
               className="flex-1 px-4"
               contentContainerStyle={{ paddingBottom: 160, paddingTop: 16 }}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
-              {/* 1. Hero Name Input (FIRST!) */}
-              <HeroNameInput
+              {/* 1. Inline Emoji + Name Input */}
+              <InlineEmojiInput
                 autoFocus={visible && !isEditMode}
+                color={form.selectedColor}
+                emoji={form.selectedEmoji}
                 value={form.habitName}
                 onChange={form.setHabitName}
+                onEmojiPress={handleEmojiPress}
+                onFocus={handleInputFocus}
               />
 
-              {/* 2. Live Preview */}
-              <LivePreview
-                frequencyLabel={form.frequency}
-                habitName={form.habitName}
-                reminderTime={form.remindersEnabled ? formatReminderTime(form.reminderTime) : undefined}
-                selectedColor={form.selectedColor}
-                selectedEmoji={form.selectedEmoji}
+              {/* 2. Suggestion Chips (visible when input empty or short) */}
+              <SuggestionChips
+                visible={showSuggestionChips}
+                onSelect={handleSuggestionSelect}
               />
 
-              {/* 4. Style Section (Emoji + Color - visible, not collapsed) */}
+              {/* 3. AI Suggestion Chips (visible when typing 3+ chars) */}
+              <AISuggestionChips
+                input={form.habitName}
+                visible={showAISuggestions}
+                onAppend={handleAIAppend}
+              />
+
+              {/* 4. Style Section (Emoji + Color) - muted until name entered */}
               <StyleSection
                 colors={COLORS}
+                disabled={!isSectionsEnabled}
                 emojis={EMOJIS}
                 habitName={form.habitName}
                 selectedColor={form.selectedColor}
@@ -98,8 +191,9 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 onSelectEmoji={form.setSelectedEmoji}
               />
 
-              {/* 5. Reminder Section (simplified) */}
+              {/* 5. Reminder Section - muted until name entered */}
               <SimpleReminderSection
+                disabled={!isSectionsEnabled}
                 reminderTime={form.reminderTime}
                 remindersEnabled={form.remindersEnabled}
                 onQuickTimeSelect={form.setReminderTime}
@@ -138,6 +232,15 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 }}
               />
             )}
+
+            {/* Full Emoji Picker Modal */}
+            <EmojiPickerSheet
+              habitName={form.habitName}
+              selectedEmoji={form.selectedEmoji}
+              visible={showEmojiPicker}
+              onClose={() => setShowEmojiPicker(false)}
+              onSelect={handleEmojiSelect}
+            />
           </View>
         </View>
 

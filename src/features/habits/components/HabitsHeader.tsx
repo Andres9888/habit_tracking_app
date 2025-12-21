@@ -1,4 +1,4 @@
-import { ArrowUpDown, Check, Clipboard, Plus, Settings } from 'lucide-react-native';
+import { ArrowUpDown, Check, Lightbulb, Plus, Settings } from 'lucide-react-native';
 import { useState } from 'react';
 import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
@@ -219,15 +219,15 @@ export function HabitsHeader({
         <Animated.View style={templatesButtonAnimatedStyle}>
           <View style={{ position: 'relative' }}>
             <Pressable
-              accessibilityHint='Browse science-backed habits to import'
-              accessibilityLabel='Import Habits'
+              accessibilityHint='Discover science-backed habits to add'
+              accessibilityLabel='Discover Habits'
               accessibilityRole='button'
               className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
               onPress={handleTemplatesPress}
               onPressIn={handleTemplatesPressIn}
               onPressOut={handleTemplatesPressOut}
             >
-              <Clipboard color='#44403c' size={18} strokeWidth={2.25} />
+              <Lightbulb color='#f59e0b' size={18} strokeWidth={2.25} />
             </Pressable>
 
             {/* Smart notification badge */}

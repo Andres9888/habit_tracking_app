@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { Animated, Pressable, Text, View, Keyboard } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
@@ -14,6 +14,7 @@ interface StyleSectionProps {
   selectedEmoji: string | null;
   suggestedEmojis?: string[];
   habitName?: string;
+  disabled?: boolean;
 }
 
 // Animated touchable for color buttons
@@ -105,15 +106,24 @@ export const StyleSection = ({
   selectedColor,
   selectedEmoji,
   habitName,
+  disabled = false,
 }: StyleSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const iconRowScale = useRef(new Animated.Value(1)).current;
 
   const handleOpenEmojiPicker = useCallback(() => {
+    if (disabled) return;
     triggerSelection();
+    Keyboard.dismiss();
     setShowEmojiPicker(true);
-  }, [triggerSelection]);
+  }, [triggerSelection, disabled]);
+
+  const handleColorSelect = useCallback((color: string) => {
+    if (disabled) return;
+    Keyboard.dismiss(); // Dismiss keyboard when tapping color
+    onSelectColor(color);
+  }, [onSelectColor, disabled]);
 
   const handleEmojiSelect = useCallback(
     (emoji: string | null) => {
@@ -140,8 +150,18 @@ export const StyleSection = ({
     }).start();
   }, [iconRowScale]);
 
+  // Split colors into rows of 8 for 3-row layout
+  const colorRows = [];
+  for (let i = 0; i < colors.length; i += 8) {
+    colorRows.push(colors.slice(i, i + 8));
+  }
+
   return (
-    <View className="mb-6 rounded-2xl bg-white p-4">
+    <Animated.View
+      className="mb-6 rounded-2xl bg-white p-4"
+      style={{ opacity: disabled ? 0.4 : 1 }}
+      pointerEvents={disabled ? 'none' : 'auto'}
+    >
       <Text className="mb-4 text-base font-bold text-slate-800">🎨 Style it</Text>
 
       {/* Icon Picker - Tappable Row */}
@@ -151,6 +171,7 @@ export const StyleSection = ({
           accessibilityRole="button"
           accessibilityHint="Opens emoji picker"
           className="mb-5 flex-row items-center justify-between rounded-xl bg-slate-50 p-3"
+          disabled={disabled}
           onPress={handleOpenEmojiPicker}
           onPressIn={handleIconRowPressIn}
           onPressOut={handleIconRowPressOut}
@@ -183,37 +204,41 @@ export const StyleSection = ({
         onSelect={handleEmojiSelect}
       />
 
-      {/* Color Picker */}
+      {/* Color Picker - 24 colors in 3 rows of 8 */}
       <View>
         <Text className="mb-3 text-sm font-semibold text-slate-600">Color</Text>
 
-        {/* All Colors - 2 rows */}
-        <View className="flex-row flex-wrap gap-3">
-          {colors.map((color) => (
-            <AnimatedButton
-              key={color}
-              accessibilityLabel={`Select color ${color}`}
-              isSelected={selectedColor === color}
-              onPress={() => onSelectColor(color)}
-              style={{
-                alignItems: 'center',
-                backgroundColor: color,
-                borderColor: selectedColor === color ? '#1e293b' : 'transparent',
-                borderRadius: 20,
-                borderWidth: selectedColor === color ? 3 : 0,
-                height: 40,
-                justifyContent: 'center',
-                width: 40,
-              }}
-            >
-              {selectedColor === color && (
-                <Text className="text-xs font-bold text-white">✓</Text>
-              )}
-            </AnimatedButton>
-          ))}
-        </View>
+        {colorRows.map((row, rowIndex) => (
+          <View
+            key={`color-row-${rowIndex}`}
+            className="flex-row justify-between mb-2"
+          >
+            {row.map((color) => (
+              <AnimatedButton
+                key={color}
+                accessibilityLabel={`Select color ${color}`}
+                isSelected={selectedColor === color}
+                onPress={() => handleColorSelect(color)}
+                style={{
+                  alignItems: 'center',
+                  backgroundColor: color,
+                  borderColor: selectedColor === color ? '#1e293b' : 'transparent',
+                  borderRadius: 18,
+                  borderWidth: selectedColor === color ? 3 : 0,
+                  height: 36,
+                  justifyContent: 'center',
+                  width: 36,
+                }}
+              >
+                {selectedColor === color && (
+                  <Text className="text-xs font-bold text-white">✓</Text>
+                )}
+              </AnimatedButton>
+            ))}
+          </View>
+        ))}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -173,7 +173,6 @@ export default function FullsizeTemplatePreview({
         closeButtonOpacity.value = 1;
       } else {
         // Show content sections immediately (no staggered opacity for content)
-        // This ensures content is visible while only transforms are animated
         titleOpacity.value = 1;
         titleTranslateY.value = 0;
         pillsOpacity.value = 1;
@@ -186,29 +185,48 @@ export default function FullsizeTemplatePreview({
         footerOpacity.value = 1;
         footerTranslateY.value = 0;
 
-        // Phase 1: Backdrop fade in (0-200ms)
-        backdropOpacity.value = withTiming(0.5, { duration: 200 });
+        // Apple-like organic entrance animation
+        // Phase 1: Backdrop fade in (smooth 350ms)
+        backdropOpacity.value = withTiming(0.5, {
+          duration: 350,
+          easing: Easing.out(Easing.cubic)
+        });
 
-        // Phase 2: Content container slide up + fade (starts at 0ms, 300ms duration)
-        contentTranslateY.value = withSpring(0, { damping: 22, stiffness: 300 });
-        contentOpacity.value = withTiming(1, { duration: 300 });
+        // Phase 2: Content slides up with organic spring (iOS sheet style)
+        // Lower stiffness = slower, more organic feel
+        contentTranslateY.value = withSpring(0, {
+          damping: 28,      // Higher damping = less bounce
+          stiffness: 180,   // Lower stiffness = slower, more organic
+          mass: 1.2,        // Slightly heavier = more momentum
+        });
+        contentOpacity.value = withTiming(1, {
+          duration: 400,
+          easing: Easing.out(Easing.cubic)
+        });
 
-        // Phase 3: Close button fade in (delay 100ms)
+        // Phase 3: Close button fades in (delay 200ms)
         closeButtonOpacity.value = withDelay(
-          100,
-          withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+          200,
+          withTiming(1, { duration: 300, easing: Easing.out(Easing.cubic) })
         );
 
-        // Phase 4: Icon scale bounce (delay 150ms)
+        // Phase 4: Icon scales up with gentle bounce (delay 250ms)
         iconScale.value = withDelay(
-          150,
-          withSpring(1, { damping: 12, stiffness: 150 })
+          250,
+          withSpring(1, {
+            damping: 14,     // Medium damping for subtle bounce
+            stiffness: 120,  // Lower stiffness = gentler
+            mass: 0.9,
+          })
         );
 
-        // Icon glow pulse animation (delay 250ms)
+        // Phase 5: Icon glow pulses outward (delay 400ms)
         iconGlowScale.value = withDelay(
-          250,
-          withSpring(1.15, { damping: 10, stiffness: 80 })
+          400,
+          withSpring(1.12, {
+            damping: 12,
+            stiffness: 60,   // Very low = slow, organic pulse
+          })
         );
       }
     }

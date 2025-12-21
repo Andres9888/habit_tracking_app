@@ -1336,7 +1336,7 @@ export default function HabitDetailScreen({
   const affirmations =
     useQuery(api.affirmations.listByHabit, visible && habitId ? { habitId } : 'skip') ?? [];
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const completedDates = useMemo(() => {
     if (!habitId) {
@@ -1352,32 +1352,38 @@ export default function HabitDetailScreen({
 
   const isCompletedToday = completedDates.has(today);
 
-  const daysTracking = habitCreatedAt
-    ? Math.max(0, Math.floor((Date.now() - habitCreatedAt) / (1000 * 60 * 60 * 24)))
-    : 0;
+  const daysTracking = useMemo(() => {
+    return habitCreatedAt
+      ? Math.max(0, Math.floor((Date.now() - habitCreatedAt) / (1000 * 60 * 60 * 24)))
+      : 0;
+  }, [habitCreatedAt]);
 
-  const totalCompletions = completedDates.size;
-  const strengthPercent = Math.max(0, Math.min(100, habitStrength * 100));
+  const totalCompletions = useMemo(() => completedDates.size, [completedDates]);
+  const strengthPercent = useMemo(() => Math.max(0, Math.min(100, habitStrength * 100)), [habitStrength]);
 
-  const lastSevenDays = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (6 - index));
-    const dateKey = date.toISOString().split('T')[0];
-    if (dateKey === today) {
-      return isCompletedToday;
-    }
-    return completedDates.has(dateKey);
-  });
+  const lastSevenDays = useMemo(() => {
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - index));
+      const dateKey = date.toISOString().split('T')[0];
+      if (dateKey === today) {
+        return isCompletedToday;
+      }
+      return completedDates.has(dateKey);
+    });
+  }, [today, isCompletedToday, completedDates]);
 
-  const lastThirtyDays = Array.from({ length: 30 }, (_, index) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (29 - index));
-    const dateKey = date.toISOString().split('T')[0];
-    return {
-      completed: dateKey === today ? isCompletedToday : completedDates.has(dateKey),
-      date: dateKey,
-    };
-  });
+  const lastThirtyDays = useMemo(() => {
+    return Array.from({ length: 30 }, (_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (29 - index));
+      const dateKey = date.toISOString().split('T')[0];
+      return {
+        completed: dateKey === today ? isCompletedToday : completedDates.has(dateKey),
+        date: dateKey,
+      };
+    });
+  }, [today, isCompletedToday, completedDates]);
 
   const successRate = useMemo(() => {
     const completedLastThirty = lastThirtyDays.filter((day) => day.completed).length;
@@ -1405,11 +1411,92 @@ export default function HabitDetailScreen({
     }
   }, [visible]);
 
+  // T3.5: Swipe-to-delete handlers (must be before early return to maintain hook order)
+  // These trigger the undo toast flow instead of immediate Alert
+  const handleSwipeDelete = useCallback(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setPendingDelete(true);
+  }, []);
+
+  const handleSwipeArchive = useCallback(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setPendingArchive(true);
+  }, []);
+
+  // Handle delete confirmation (timer expired)
+  const handleConfirmDelete = useCallback(() => {
+    setPendingDelete(false);
+    if (habit) {
+      onDelete?.(habit._id);
+      onClose();
+    }
+  }, [habit, onDelete, onClose]);
+
+  // Handle archive confirmation (timer expired)
+  const handleConfirmArchive = useCallback(() => {
+    setPendingArchive(false);
+    if (habit) {
+      onArchive?.(habit._id);
+      onClose();
+    }
+  }, [habit, onArchive, onClose]);
+
+  // Handle undo delete
+  const handleUndoDelete = useCallback(() => {
+    setPendingDelete(false);
+  }, []);
+
+  // Handle undo archive
+  const handleUndoArchive = useCallback(() => {
+    setPendingArchive(false);
+  }, []);
+
+  // T4.2: Affirmation shuffle handler with card flip animation
+  // Respects reduce motion accessibility setting (T4.4)
+  const handleShuffleAffirmation = useCallback(() => {
+    if (affirmations.length <= 1) return;
+
+    // Light haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    // Skip animation if reduce motion is enabled
+    if (reduceMotion) {
+      // Just change the index immediately without animation
+      setShuffledAffirmationIndex((prev) => {
+        let newIndex: number;
+        do {
+          newIndex = Math.floor(Math.random() * affirmations.length);
+        } while (newIndex === prev && affirmations.length > 1);
+        return newIndex;
+      });
+      return;
+    }
+
+    // Trigger flip animation: flip out (0 -> 1), then flip in (1 -> 0)
+    affirmationFlipAnim.value = withSequence(
+      withTiming(1, { duration: 150, easing: Easing.in(Easing.ease) }),
+      withTiming(0, { duration: 150, easing: Easing.out(Easing.ease) })
+    );
+
+    // Change the index mid-flip (after 150ms)
+    setTimeout(() => {
+      setShuffledAffirmationIndex((prev) => {
+        // Pick a random different index
+        let newIndex: number;
+        do {
+          newIndex = Math.floor(Math.random() * affirmations.length);
+        } while (newIndex === prev && affirmations.length > 1);
+        return newIndex;
+      });
+    }, 150);
+  }, [affirmations.length, affirmationFlipAnim, reduceMotion]);
+
+  // Early return after all hooks
   if (!habit) {
     return null;
   }
 
-  // Handler functions
+  // Handler functions (non-hook functions can be after early return)
   const handleEdit = () => {
     onEdit?.(habit);
   };
@@ -1467,42 +1554,6 @@ export default function HabitDetailScreen({
       ]
     );
   };
-
-  // T3.5: Swipe-to-delete handlers
-  // These trigger the undo toast flow instead of immediate Alert
-  const handleSwipeDelete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    setPendingDelete(true);
-  }, []);
-
-  const handleSwipeArchive = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    setPendingArchive(true);
-  }, []);
-
-  // Handle delete confirmation (timer expired)
-  const handleConfirmDelete = useCallback(() => {
-    setPendingDelete(false);
-    onDelete?.(habit._id);
-    onClose();
-  }, [habit._id, onDelete, onClose]);
-
-  // Handle archive confirmation (timer expired)
-  const handleConfirmArchive = useCallback(() => {
-    setPendingArchive(false);
-    onArchive?.(habit._id);
-    onClose();
-  }, [habit._id, onArchive, onClose]);
-
-  // Handle undo delete
-  const handleUndoDelete = useCallback(() => {
-    setPendingDelete(false);
-  }, []);
-
-  // Handle undo archive
-  const handleUndoArchive = useCallback(() => {
-    setPendingArchive(false);
-  }, []);
 
   const handleOpenCalendar = () => {
     onOpenCalendar?.(habit);
@@ -1800,46 +1851,6 @@ export default function HabitDetailScreen({
       ]
     );
   };
-
-  // T4.2: Affirmation shuffle handler with card flip animation
-  // Respects reduce motion accessibility setting (T4.4)
-  const handleShuffleAffirmation = useCallback(() => {
-    if (affirmations.length <= 1) return;
-
-    // Light haptic feedback
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    // Skip animation if reduce motion is enabled
-    if (reduceMotion) {
-      // Just change the index immediately without animation
-      setShuffledAffirmationIndex((prev) => {
-        let newIndex: number;
-        do {
-          newIndex = Math.floor(Math.random() * affirmations.length);
-        } while (newIndex === prev && affirmations.length > 1);
-        return newIndex;
-      });
-      return;
-    }
-
-    // Trigger flip animation: flip out (0 -> 1), then flip in (1 -> 0)
-    affirmationFlipAnim.value = withSequence(
-      withTiming(1, { duration: 150, easing: Easing.in(Easing.ease) }),
-      withTiming(0, { duration: 150, easing: Easing.out(Easing.ease) })
-    );
-
-    // Change the index mid-flip (after 150ms)
-    setTimeout(() => {
-      setShuffledAffirmationIndex((prev) => {
-        // Pick a random different index
-        let newIndex: number;
-        do {
-          newIndex = Math.floor(Math.random() * affirmations.length);
-        } while (newIndex === prev && affirmations.length > 1);
-        return newIndex;
-      });
-    }, 150);
-  }, [affirmations.length, affirmationFlipAnim, reduceMotion]);
 
   const handleStatPress = (statType: 'streak' | 'strength' | 'success') => {
     // Navigate to appropriate section or show detail
