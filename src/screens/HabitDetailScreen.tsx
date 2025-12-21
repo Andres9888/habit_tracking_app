@@ -26,6 +26,7 @@ import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
 import { HabitDetailTabs, type TabType } from '../components/HabitDetailTabs';
+import { HabitNotesSection } from '../components/HabitNotesSection';
 import { QuickStatsStrip } from '../components/QuickStatsStrip';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { format, parseISO } from 'date-fns';
@@ -401,7 +402,10 @@ function MotivationTabContent({
   habitCueLocation,
   habitCueTime,
   habitIdentity,
+  habitNotes,
   hasCue,
+  onAddNote,
+  onEditNote,
   onOpenAffirmationEditor,
   onOpenCueEditor,
   onOpenIdentityEditor,
@@ -413,6 +417,7 @@ function MotivationTabContent({
   onConfirmDeleteVisionBoardItem,
   onSetAffirmationsListOpen,
   onSetVisionBoardListOpen,
+  onViewAllNotes,
   visionBoardItems,
 }: {
   affirmations: Doc<'affirmations'>[];
@@ -421,7 +426,10 @@ function MotivationTabContent({
   habitCueLocation: string | undefined;
   habitCueTime: string | undefined;
   habitIdentity: string | undefined;
+  habitNotes: Doc<'notes'>[];
   hasCue: boolean;
+  onAddNote: () => void;
+  onEditNote: (note: Doc<'notes'>) => void;
   onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
   onOpenCueEditor: () => void;
   onOpenIdentityEditor: () => void;
@@ -433,6 +441,7 @@ function MotivationTabContent({
   onConfirmDeleteVisionBoardItem: (item: Doc<'visionBoardItems'>) => void;
   onSetAffirmationsListOpen: (open: boolean) => void;
   onSetVisionBoardListOpen: (open: boolean) => void;
+  onViewAllNotes: () => void;
   visionBoardItems: Doc<'visionBoardItems'>[];
 }) {
   return (
@@ -690,6 +699,14 @@ function MotivationTabContent({
           </Pressable>
         </View>
       </SectionCard>
+
+      {/* Notes Section - Story 1.9.3 */}
+      <HabitNotesSection
+        notes={habitNotes}
+        onAddNote={onAddNote}
+        onEditNote={onEditNote}
+        onViewAll={onViewAllNotes}
+      />
     </View>
   );
 }
@@ -836,6 +853,7 @@ export default function HabitDetailScreen({
   const [identityDraft, setIdentityDraft] = useState('');
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
   const [isNotesListOpen, setIsNotesListOpen] = useState(false);
+  const [editingNoteId, setEditingNoteId] = useState<Id<'notes'> | null>(null);
   const [isVisionBoardEditorOpen, setIsVisionBoardEditorOpen] = useState(false);
   const [isVisionBoardListOpen, setIsVisionBoardListOpen] = useState(false);
   const [visionBoardBodyDraft, setVisionBoardBodyDraft] = useState('');
@@ -1306,6 +1324,31 @@ export default function HabitDetailScreen({
     }
   };
 
+  // Notes handlers - Story 1.9.3
+  const handleOpenNotesEditor = () => {
+    setEditingNoteId(null);
+    setIsNotesEditorOpen(true);
+  };
+
+  const handleOpenNotesList = () => {
+    setIsNotesListOpen(true);
+  };
+
+  const handleEditNote = (note: Doc<'notes'>) => {
+    setEditingNoteId(note._id);
+    setIsNotesEditorOpen(true);
+  };
+
+  const handleCloseNotesEditor = () => {
+    setEditingNoteId(null);
+    setIsNotesEditorOpen(false);
+  };
+
+  // Get the note being edited
+  const editingNote = editingNoteId
+    ? habitNotes.find((n) => n._id === editingNoteId)
+    : null;
+
   return (
     <Modal
       disableBackdropClose={false}
@@ -1408,7 +1451,10 @@ export default function HabitDetailScreen({
                 habitCueLocation={habitCueLocation}
                 habitCueTime={habitCueTime}
                 habitIdentity={habitIdentity}
+                habitNotes={habitNotes}
                 hasCue={hasCue}
+                onAddNote={handleOpenNotesEditor}
+                onEditNote={handleEditNote}
                 onOpenAffirmationEditor={handleOpenAffirmationEditor}
                 onOpenCueEditor={handleOpenCueEditor}
                 onOpenIdentityEditor={handleOpenIdentityEditor}
@@ -1420,6 +1466,7 @@ export default function HabitDetailScreen({
                 onConfirmDeleteVisionBoardItem={handleConfirmDeleteVisionBoardItem}
                 onSetAffirmationsListOpen={setIsAffirmationsListOpen}
                 onSetVisionBoardListOpen={setIsVisionBoardListOpen}
+                onViewAllNotes={handleOpenNotesList}
                 visionBoardItems={visionBoardItems}
               />
             </ScrollView>
@@ -1841,16 +1888,18 @@ export default function HabitDetailScreen({
       <RNModal
         animationType="slide"
         visible={isNotesEditorOpen}
-        onRequestClose={() => setIsNotesEditorOpen(false)}
+        onRequestClose={handleCloseNotesEditor}
       >
         <View className="flex-1 bg-white" style={{ paddingTop: insets.top + 16 }}>
           <View className="flex-row items-center justify-between border-b border-stone-100 px-5 pb-4">
-            <Text className="text-lg font-bold text-stone-900">New Note</Text>
+            <Text className="text-lg font-bold text-stone-900">
+              {editingNote ? 'Edit Note' : 'New Note'}
+            </Text>
             <Pressable
               accessibilityLabel="Close note editor"
               accessibilityRole="button"
               className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
-              onPress={() => setIsNotesEditorOpen(false)}
+              onPress={handleCloseNotesEditor}
             >
               <X className="text-stone-600" size={22} />
             </Pressable>
@@ -1861,9 +1910,12 @@ export default function HabitDetailScreen({
             showsVerticalScrollIndicator={false}
           >
             <NoteEditor
-              initialHabitId={habit._id}
-              onCancel={() => setIsNotesEditorOpen(false)}
-              onSave={() => setIsNotesEditorOpen(false)}
+              initialBody={editingNote?.body}
+              initialDate={editingNote?.date}
+              initialHabitId={editingNote?.habitId ?? habit._id}
+              noteId={editingNote?._id}
+              onCancel={handleCloseNotesEditor}
+              onSave={handleCloseNotesEditor}
             />
           </ScrollView>
         </View>
