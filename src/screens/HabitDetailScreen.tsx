@@ -68,6 +68,7 @@ import { SwipeableActionButton } from '../components/SwipeableActionButton';
 import { DeleteUndoToast } from '../components/DeleteUndoToast';
 import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
+import { useReduceMotion } from '../hooks/useReduceMotion';
 
 // Types
 type Habit = HabitDoc & {
@@ -98,22 +99,38 @@ function HeroSection({
   habit,
   isCompletedToday,
   onWhyPress,
+  reduceMotion = false,
 }: {
   currentStreak: number;
   habit: Habit;
   isCompletedToday: boolean;
   onWhyPress?: () => void;
+  reduceMotion?: boolean;
 }) {
   // Icon bounce animation on load (T1.1)
-  const iconScale = useSharedValue(0.8);
-  const iconTranslateY = useSharedValue(-10);
+  // Start at final values if reduce motion is enabled
+  const iconScale = useSharedValue(reduceMotion ? 1 : 0.8);
+  const iconTranslateY = useSharedValue(reduceMotion ? 0 : -10);
 
   // Streak badge animation on load (T1.2)
   const showStreakBadge = currentStreak >= 7;
-  const badgeScale = useSharedValue(0);
-  const badgeOpacity = useSharedValue(0);
+  // Start badge at final values if reduce motion is enabled
+  const badgeScale = useSharedValue(reduceMotion && showStreakBadge ? 1 : 0);
+  const badgeOpacity = useSharedValue(reduceMotion && showStreakBadge ? 1 : 0);
 
   useEffect(() => {
+    // Skip animations if reduce motion is enabled
+    if (reduceMotion) {
+      // Set final values immediately without animation
+      iconScale.value = 1;
+      iconTranslateY.value = 0;
+      if (showStreakBadge) {
+        badgeScale.value = 1;
+        badgeOpacity.value = 1;
+      }
+      return;
+    }
+
     // Trigger spring bounce animation when component mounts
     iconScale.value = withSpring(1, {
       damping: 8,
@@ -138,7 +155,7 @@ function HeroSection({
         });
       }, 400);
     }
-  }, [showStreakBadge]);
+  }, [showStreakBadge, reduceMotion]);
 
   const iconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -414,6 +431,7 @@ function DangerZoneSection({
 /**
  * Animated Pressable Card Component
  * Used for individual motivation cards (vision board, affirmations) with scale 0.98 press animation
+ * Respects reduce motion accessibility setting
  */
 function AnimatedPressableCard({
   children,
@@ -421,12 +439,14 @@ function AnimatedPressableCard({
   onPress,
   onLongPress,
   accessibilityLabel,
+  reduceMotion = false,
 }: {
   children: React.ReactNode;
   className?: string;
   onPress: () => void;
   onLongPress?: () => void;
   accessibilityLabel?: string;
+  reduceMotion?: boolean;
 }) {
   const scale = useSharedValue(1);
 
@@ -436,13 +456,17 @@ function AnimatedPressableCard({
 
   const handlePressIn = useCallback(() => {
     'worklet';
+    // Skip animation if reduce motion is enabled
+    if (reduceMotion) return;
     scale.value = withTiming(0.98, { duration: 100 });
-  }, [scale]);
+  }, [scale, reduceMotion]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
+    // Skip animation if reduce motion is enabled
+    if (reduceMotion) return;
     scale.value = withSpring(1, { damping: 15, stiffness: 200 });
-  }, [scale]);
+  }, [scale, reduceMotion]);
 
   return (
     <Animated.View style={animatedStyle}>
@@ -468,6 +492,7 @@ function AnimatedPressableCard({
 /**
  * T4.2: Affirmations Section with Shuffle Feature
  * Shows a single affirmation with card flip animation on shuffle
+ * Respects reduce motion accessibility setting
  */
 function AffirmationsSection({
   affirmations,
@@ -477,6 +502,7 @@ function AffirmationsSection({
   onOpenAffirmationEditor,
   onConfirmDeleteAffirmation,
   onSetAffirmationsListOpen,
+  reduceMotion = false,
 }: {
   affirmations: Doc<'affirmations'>[];
   affirmationFlipAnim: SharedValue<number>;
@@ -485,6 +511,7 @@ function AffirmationsSection({
   onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
   onConfirmDeleteAffirmation: (item: Doc<'affirmations'>) => void;
   onSetAffirmationsListOpen: (open: boolean) => void;
+  reduceMotion?: boolean;
 }) {
   // Get the current affirmation to display based on shuffled index
   const safeIndex = affirmations.length > 0
@@ -493,7 +520,15 @@ function AffirmationsSection({
   const currentAffirmation = affirmations[safeIndex];
 
   // Animated style for card flip effect
+  // Skip animation if reduce motion is enabled
   const flipAnimatedStyle = useAnimatedStyle(() => {
+    // No animation transform when reduce motion is enabled
+    if (reduceMotion) {
+      return {
+        transform: [{ perspective: 1000 }, { rotateY: '0deg' }],
+        opacity: 1,
+      };
+    }
     const rotateY = interpolate(
       affirmationFlipAnim.value,
       [0, 1],
@@ -564,6 +599,7 @@ function AffirmationsSection({
               className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
               onLongPress={() => currentAffirmation && onConfirmDeleteAffirmation(currentAffirmation)}
               onPress={() => onOpenAffirmationEditor(currentAffirmation)}
+              reduceMotion={reduceMotion}
             >
               <Text className="text-sm leading-5 text-stone-700">"{currentAffirmation?.text}"</Text>
               {currentAffirmation?.type && (
@@ -749,6 +785,7 @@ function MotivationTabContent({
   onViewAllNotes,
   shuffledAffirmationIndex,
   visionBoardItems,
+  reduceMotion = false,
 }: {
   affirmations: Doc<'affirmations'>[];
   affirmationFlipAnim: SharedValue<number>;
@@ -777,6 +814,7 @@ function MotivationTabContent({
   onViewAllNotes: () => void;
   shuffledAffirmationIndex: number;
   visionBoardItems: Doc<'visionBoardItems'>[];
+  reduceMotion?: boolean;
 }) {
   return (
     <View className="gap-4">
@@ -908,6 +946,7 @@ function MotivationTabContent({
                 className="rounded-xl border border-stone-100 bg-stone-50/50 p-4"
                 onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
                 onPress={() => onOpenVisionBoardPreview(index)}
+                reduceMotion={reduceMotion}
               >
                 <Text className="text-sm font-semibold text-stone-800">{item.title}</Text>
                 {item.body && (
@@ -943,6 +982,7 @@ function MotivationTabContent({
         onOpenAffirmationEditor={onOpenAffirmationEditor}
         onConfirmDeleteAffirmation={onConfirmDeleteAffirmation}
         onSetAffirmationsListOpen={onSetAffirmationsListOpen}
+        reduceMotion={reduceMotion}
       />
 
       {/* Mental Exercises Section */}
@@ -1174,6 +1214,9 @@ export default function HabitDetailScreen({
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
   const safeTop = insets.top || 44;
+
+  // Reduce motion accessibility setting (T4.4)
+  const reduceMotion = useReduceMotion();
 
   // Tab state - use initialTab when provided
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
@@ -1759,11 +1802,25 @@ export default function HabitDetailScreen({
   };
 
   // T4.2: Affirmation shuffle handler with card flip animation
+  // Respects reduce motion accessibility setting (T4.4)
   const handleShuffleAffirmation = useCallback(() => {
     if (affirmations.length <= 1) return;
 
     // Light haptic feedback
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    // Skip animation if reduce motion is enabled
+    if (reduceMotion) {
+      // Just change the index immediately without animation
+      setShuffledAffirmationIndex((prev) => {
+        let newIndex: number;
+        do {
+          newIndex = Math.floor(Math.random() * affirmations.length);
+        } while (newIndex === prev && affirmations.length > 1);
+        return newIndex;
+      });
+      return;
+    }
 
     // Trigger flip animation: flip out (0 -> 1), then flip in (1 -> 0)
     affirmationFlipAnim.value = withSequence(
@@ -1782,7 +1839,7 @@ export default function HabitDetailScreen({
         return newIndex;
       });
     }, 150);
-  }, [affirmations.length, affirmationFlipAnim]);
+  }, [affirmations.length, affirmationFlipAnim, reduceMotion]);
 
   const handleStatPress = (statType: 'streak' | 'strength' | 'success') => {
     // Navigate to appropriate section or show detail
@@ -1853,7 +1910,7 @@ export default function HabitDetailScreen({
 
         {/* Hero Section (sticky) */}
         <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
-          <HeroSection currentStreak={habit.currentStreak ?? 0} habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} />
+          <HeroSection currentStreak={habit.currentStreak ?? 0} habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} reduceMotion={reduceMotion} />
 
           {/* Quick Complete Button */}
           <View className="mb-4">
@@ -1942,6 +1999,7 @@ export default function HabitDetailScreen({
                   onViewAllNotes={handleOpenNotesList}
                   shuffledAffirmationIndex={shuffledAffirmationIndex}
                   visionBoardItems={visionBoardItems}
+                  reduceMotion={reduceMotion}
                 />
               </ScrollView>
             )}
@@ -2268,6 +2326,7 @@ export default function HabitDetailScreen({
                     setIsVisionBoardListOpen(false);
                     handleOpenVisionBoardPreview(index);
                   }}
+                  reduceMotion={reduceMotion}
                 >
                   <Text className="text-base font-semibold text-stone-900">{item.title}</Text>
                   {item.body && (
@@ -2666,6 +2725,7 @@ export default function HabitDetailScreen({
                   className="rounded-2xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
                   onLongPress={() => handleConfirmDeleteAffirmation(item)}
                   onPress={() => handleOpenAffirmationEditor(item)}
+                  reduceMotion={reduceMotion}
                 >
                   <Text className="text-base italic leading-6 text-stone-800">"{item.text}"</Text>
                   {item.type && (
