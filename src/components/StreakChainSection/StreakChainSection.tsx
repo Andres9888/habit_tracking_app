@@ -27,14 +27,14 @@ export interface StreakChainSectionProps {
 // Faster progression tiers - early wins matter!
 // Milestones: Day 3, 5, 7, 14, 21, 30+
 const TIERS = [
-  { days: 0, icon: '', textColor: 'text-stone-700', barColor: 'bg-stone-400' },
-  { days: 3, icon: '💪', textColor: 'text-orange-600', barColor: 'bg-orange-500' },
-  { days: 5, icon: '⚡', textColor: 'text-amber-600', barColor: 'bg-amber-500' },
-  { days: 7, icon: '🔥', textColor: 'text-red-600', barColor: 'bg-red-500' },
-  { days: 14, icon: '⭐', textColor: 'text-yellow-600', barColor: 'bg-yellow-500' },
-  { days: 21, icon: '👑', textColor: 'text-purple-600', barColor: 'bg-purple-500' },
-  { days: 30, icon: '💎', textColor: 'text-blue-600', barColor: 'bg-blue-500' },
-  { days: 60, icon: '🌟', textColor: 'text-pink-600', barColor: 'bg-pink-500' },
+  { barColor: 'bg-stone-400', days: 0, icon: '', textColor: 'text-stone-700' },
+  { barColor: 'bg-orange-500', days: 3, icon: '💪', textColor: 'text-orange-600' },
+  { barColor: 'bg-amber-500', days: 5, icon: '⚡', textColor: 'text-amber-600' },
+  { barColor: 'bg-red-500', days: 7, icon: '🔥', textColor: 'text-red-600' },
+  { barColor: 'bg-yellow-500', days: 14, icon: '⭐', textColor: 'text-yellow-600' },
+  { barColor: 'bg-purple-500', days: 21, icon: '👑', textColor: 'text-purple-600' },
+  { barColor: 'bg-blue-500', days: 30, icon: '💎', textColor: 'text-blue-600' },
+  { barColor: 'bg-pink-500', days: 60, icon: '🌟', textColor: 'text-pink-600' },
 ];
 
 const getTierInfo = (streak: number) => {
@@ -52,7 +52,7 @@ const getTierInfo = (streak: number) => {
   const daysToNext = next ? next.days - streak : 0;
   const progress = next ? (streak - current.days) / (next.days - current.days) : 1;
 
-  return { current, next, daysToNext, progress };
+  return { current, daysToNext, next, progress };
 };
 
 interface DayCircleProps {
@@ -106,7 +106,7 @@ function DayCircle({ completed, index, isToday, label, todayCompleted }: DayCirc
         {completed ? (
           <Check className="text-white" size={20} strokeWidth={3} />
         ) : isToday ? (
-          <Zap className="text-amber-500" size={18} fill="#f59e0b" />
+          <Zap className="text-amber-500" fill="#f59e0b" size={18} />
         ) : null}
       </View>
       <Text
@@ -136,6 +136,126 @@ function ConnectorLine({ active, index }: { active: boolean; index: number }) {
       className={`absolute top-5 h-1.5 rounded-full ${active ? 'bg-emerald-300' : 'bg-stone-200'}`}
       style={[{ left: '55%', right: '-55%' }, animatedStyle]}
     />
+  );
+}
+
+interface ContextualMessageProps {
+  currentStreak: number;
+  bestStreak: number;
+  todayCompleted: boolean;
+}
+
+function getContextualMessage(
+  currentStreak: number,
+  bestStreak: number,
+  todayCompleted: boolean
+): { message: string; emoji: string; type: 'record' | 'motivation' | 'start' | 'celebrate' } {
+  // New record achieved
+  if (currentStreak > 0 && currentStreak > bestStreak) {
+    return { emoji: '🎉', message: 'New personal record!', type: 'record' };
+  }
+
+  // Just tied the record
+  if (currentStreak > 0 && currentStreak === bestStreak && bestStreak > 1) {
+    return { emoji: '🏆', message: 'You matched your best! Keep going!', type: 'celebrate' };
+  }
+
+  // Zero streak - encourage starting
+  if (currentStreak === 0) {
+    if (todayCompleted) {
+      return { emoji: '🚀', message: 'Great start! Day 1 begins!', type: 'start' };
+    }
+    return { emoji: '⚡', message: 'Start a new streak today!', type: 'start' };
+  }
+
+  // Has a record to beat - show progress
+  const daysToRecord = bestStreak - currentStreak;
+  if (daysToRecord > 0 && daysToRecord <= 3) {
+    return {
+      emoji: '🔥',
+      message: `${daysToRecord} more ${daysToRecord === 1 ? 'day' : 'days'} to beat your record!`,
+      type: 'motivation',
+    };
+  }
+
+  if (daysToRecord > 3 && daysToRecord <= 7) {
+    return { emoji: '💪', message: `Keep going! ${daysToRecord} days to your best!`, type: 'motivation' };
+  }
+
+  // General motivation based on streak milestones
+  if (currentStreak === 1) {
+    return { emoji: '🌱', message: 'Day 1 complete! Build that momentum!', type: 'motivation' };
+  }
+
+  if (currentStreak === 3) {
+    return { emoji: '💪', message: '3 days strong! Habit forming!', type: 'celebrate' };
+  }
+
+  if (currentStreak === 7) {
+    return { emoji: '🔥', message: 'A full week! You\'re on fire!', type: 'celebrate' };
+  }
+
+  if (currentStreak === 14) {
+    return { emoji: '⭐', message: 'Two weeks! Incredible consistency!', type: 'celebrate' };
+  }
+
+  if (currentStreak === 21) {
+    return { emoji: '👑', message: 'Three weeks! Habit is forming!', type: 'celebrate' };
+  }
+
+  if (currentStreak === 30) {
+    return { emoji: '💎', message: 'One month! Legendary streak!', type: 'celebrate' };
+  }
+
+  // Default motivation based on distance to record
+  if (daysToRecord > 7) {
+    return { emoji: '🔗', message: `Keep the chain going!`, type: 'motivation' };
+  }
+
+  return { emoji: '✨', message: 'Great progress! Keep it up!', type: 'motivation' };
+}
+
+function ContextualMessage({ currentStreak, bestStreak, todayCompleted }: ContextualMessageProps) {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(8);
+
+  const { message, emoji, type } = getContextualMessage(currentStreak, bestStreak, todayCompleted);
+
+  useEffect(() => {
+    // Animate in after the chain animation completes (7 days * 35ms + buffer)
+    const delay = 7 * 35 + 100;
+    opacity.value = withDelay(delay, withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) }));
+    translateY.value = withDelay(delay, withSpring(0, { damping: 15, stiffness: 150 }));
+  }, [currentStreak, bestStreak, todayCompleted]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  // Different background colors based on message type
+  const bgColor = {
+    celebrate: 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200',
+    motivation: 'bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200',
+    record: 'bg-gradient-to-r from-amber-100 to-yellow-100 border-amber-200',
+    start: 'bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200',
+  }[type];
+
+  const textColor = {
+    celebrate: 'text-emerald-700',
+    motivation: 'text-violet-700',
+    record: 'text-amber-700',
+    start: 'text-orange-700',
+  }[type];
+
+  return (
+    <Animated.View
+      className={`mb-4 flex-row items-center justify-center gap-2 rounded-xl border px-4 py-2.5 ${bgColor}`}
+      style={animatedStyle}
+    >
+      <Text className="text-base">{emoji}</Text>
+      <Text className={`text-sm font-semibold ${textColor}`}>{message}</Text>
+    </Animated.View>
   );
 }
 
@@ -170,7 +290,7 @@ export function StreakChainSection({
   }));
 
   // Build chain
-  const days = [...Array(7 - lastSevenDays.length).fill(false), ...lastSevenDays];
+  const days = [...Array.from({length: 7 - lastSevenDays.length}).fill(false), ...lastSevenDays];
   const chainData = days.map((completed, idx) => ({ completed, isToday: idx === 6 }));
   chainData[6].completed = todayCompleted;
 
@@ -252,36 +372,19 @@ export function StreakChainSection({
         ))}
       </View>
 
-      {/* Best Streak */}
-      {bestStreak > 0 && (
-        <View
-          className={`flex-row items-center justify-center gap-2 rounded-xl py-2.5 ${
-            isNewRecord
-              ? 'border border-amber-200 bg-amber-50'
-              : 'border border-amber-200 bg-amber-50'
-          }`}
-        >
-          <Trophy className="text-amber-500" size={16} />
-          {isNewRecord ? (
-            <Text className="text-sm font-semibold text-amber-700">New Best! 🎉</Text>
-          ) : (
-            <>
-              <Text className="text-sm text-stone-600">
-                Best: <Text className="font-bold text-amber-700">{bestStreak}</Text>
-              </Text>
-              <Text className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
-                {bestStreak - currentStreak} to beat!
-              </Text>
-            </>
-          )}
-        </View>
-      )}
+      {/* Contextual Streak Message */}
+      <ContextualMessage
+        bestStreak={bestStreak}
+        currentStreak={currentStreak}
+        todayCompleted={todayCompleted}
+      />
 
-      {/* Zero State */}
-      {currentStreak === 0 && !todayCompleted && (
-        <View className="items-center rounded-xl border border-stone-100 bg-stone-50/50 py-3">
-          <Text className="text-sm text-stone-500">
-            Complete today to start ⚡
+      {/* Best Streak Badge */}
+      {bestStreak > 0 && !isNewRecord && currentStreak > 0 && (
+        <View className="flex-row items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 py-2.5">
+          <Trophy className="text-amber-500" size={16} />
+          <Text className="text-sm text-stone-600">
+            Best: <Text className="font-bold text-amber-700">{bestStreak}</Text>
           </Text>
         </View>
       )}

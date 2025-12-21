@@ -212,7 +212,19 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Behavior:** Stops pulsing automatically once habit is completed (`shouldPulse = day.isToday && !day.completed`)
   - **Accessibility:** Respects `reduceMotion` preference - animation is skipped when enabled
   - **Implementation:** Modified `src/components/CalendarHeatmap/DayCell.tsx:37-106, 199-206`
-- [ ] T3.2: Implement contextual streak messages
+- [x] T3.2: Implement contextual streak messages
+  - **Completed:** Added animated contextual message component below the 7-day streak chain
+  - **Message Logic:** Dynamic messages based on streak state:
+    - New record: "New personal record! 🎉" (amber gradient background)
+    - Tied record: "You matched your best! Keep going! 🏆" (emerald gradient)
+    - Zero streak: "Start a new streak today! ⚡" (orange gradient)
+    - Close to record (1-3 days): "X more days to beat your record! 🔥" (violet gradient)
+    - Close to record (4-7 days): "Keep going! X days to your best! 💪" (violet gradient)
+    - Milestone celebrations: Day 1, 3, 7, 14, 21, 30 with custom messages and emojis
+    - Default: "Keep the chain going! 🔗" or "Great progress! Keep it up! ✨"
+  - **Animation:** Fade-in + spring translateY after chain animation completes (345ms delay)
+  - **Visual Design:** Color-coded message types (record/celebrate/motivation/start) with gradient backgrounds
+  - **Implementation:** Added `getContextualMessage()` function and `ContextualMessage` component in `src/components/StreakChainSection/StreakChainSection.tsx:142-259`
 - [ ] T3.3: Make motivation cards fully tappable
 - [ ] T3.4: Add next reminder relative time display
 - [ ] T3.5: Implement swipe-to-delete for manage actions
