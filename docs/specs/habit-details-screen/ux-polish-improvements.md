@@ -232,7 +232,16 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Edit Icon Removal:** Removed Edit3 icons from "Your Why", "Your Identity", and "Your Cue" sections - entire cards are now the tap target
   - **UX Improvement:** Cards feel more responsive and touchable; cleaner visual design without redundant edit indicators
   - **Implementation:** Modified `SectionCard` component in `src/screens/HabitDetailScreen.tsx:315-376`
-- [ ] T3.4: Add next reminder relative time display
+- [x] T3.4: Add next reminder relative time display
+  - **Completed:** Added relative time display for next reminder in ManageTabContent
+  - **Display Logic:** Shows "In X hours", "In Xh Ym", "In X minutes", or "Tomorrow at Xam/pm" based on time until next reminder
+  - **Real-time Updates:** Uses `useEffect` with setInterval to update display every minute
+  - **Styling:** Enabled reminders show blue text (`text-blue-600 font-medium`), disabled shows gray (`text-stone-500`)
+  - **Accessibility:** Properly handles both 12-hour ("2:00 PM") and 24-hour ("14:00") time formats
+  - **Testing:** Added comprehensive unit tests in `src/utils/__tests__/notifications.test.ts` (23 tests passing)
+  - **Implementation:**
+    - Added `getNextReminderRelativeTime()` function in `src/utils/notifications.ts:183-236`
+    - Modified `ManageTabContent` in `src/screens/HabitDetailScreen.tsx:841-876`
 - [ ] T3.5: Implement swipe-to-delete for manage actions
 
 ### Phase 4: Polish (1 hour)

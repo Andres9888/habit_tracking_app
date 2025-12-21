@@ -31,6 +31,7 @@ import { HabitNotesSection } from '../components/HabitNotesSection';
 import { QuickStatsStrip } from '../components/QuickStatsStrip';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { format, parseISO } from 'date-fns';
+import { getNextReminderRelativeTime } from '../utils/notifications';
 import {
   X,
   Edit3,
@@ -837,6 +838,26 @@ function ManageTabContent({
   onOpenNotesEditor: () => void;
   onPause: () => void;
 }) {
+  // Real-time relative time for next reminder (T3.4)
+  // Update every minute for accurate display
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!habit.remindersEnabled || !habit.reminderTime) return;
+    const interval = setInterval(() => {
+      setTick(t => t + 1);
+    }, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, [habit.remindersEnabled, habit.reminderTime]);
+
+  // Get relative time display for next reminder
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const nextReminderText = useMemo(() => {
+    if (!habit.remindersEnabled || !habit.reminderTime) {
+      return 'Not set';
+    }
+    return getNextReminderRelativeTime(habit.reminderTime) || habit.reminderTime;
+  }, [habit.remindersEnabled, habit.reminderTime, tick]); // tick triggers recalculation every minute
+
   return (
     <View className="gap-4">
       {/* Reminders */}
@@ -848,7 +869,12 @@ function ManageTabContent({
             </View>
             <View>
               <Text className="font-semibold text-stone-800">Reminders</Text>
-              <Text className="text-sm text-stone-500">Not set</Text>
+              <Text className={clsx(
+                "text-sm",
+                habit.remindersEnabled ? "text-blue-600 font-medium" : "text-stone-500"
+              )}>
+                {nextReminderText}
+              </Text>
             </View>
           </View>
           <ChevronRight className="text-stone-400" size={20} />
