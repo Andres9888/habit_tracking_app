@@ -189,8 +189,19 @@ Add a **fullsize template preview modal** that:
   - **Completed**: MiniTemplateCard already calls onPress which triggers handleTemplatePreview → FullsizeTemplatePreview
 
 ### Phase 3: Polish & Animation
-- [ ] **Task 3.1**: Add entrance animations
+- [x] **Task 3.1**: Add entrance animations
   - Choreographed reveal (backdrop → content → icon)
+  - **Completed**: Implemented full 9-phase choreographed reveal sequence:
+    - Phase 1 (0ms): Backdrop fade in
+    - Phase 2 (0ms): Content slide up + fade
+    - Phase 3 (100ms): Close button fade in
+    - Phase 4 (150ms): Icon scale bounce with glow
+    - Phase 5 (220ms): Title reveal with slide-up
+    - Phase 6 (300ms): Metadata pills reveal
+    - Phase 7 (380ms): Description reveal
+    - Phase 8 (460ms): Science box reveal with scale
+    - Phase 9 (540ms): Footer CTA buttons reveal
+  - Added spring animations with proper damping for natural feel
 
 - [ ] **Task 3.2**: Add success state animations
   - Green pulse, checkmark, confetti optional

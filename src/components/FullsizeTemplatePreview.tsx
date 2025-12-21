@@ -84,7 +84,7 @@ export default function FullsizeTemplatePreview({
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
 
-  // Animation values
+  // Animation values - Base entrance
   const backdropOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(100);
   const contentOpacity = useSharedValue(0);
@@ -95,6 +95,20 @@ export default function FullsizeTemplatePreview({
   const importButtonScale = useSharedValue(1);
   const customizeButtonScale = useSharedValue(1);
 
+  // Choreographed reveal animation values
+  const titleOpacity = useSharedValue(0);
+  const titleTranslateY = useSharedValue(20);
+  const pillsOpacity = useSharedValue(0);
+  const pillsTranslateY = useSharedValue(15);
+  const descriptionOpacity = useSharedValue(0);
+  const descriptionTranslateY = useSharedValue(15);
+  const scienceBoxOpacity = useSharedValue(0);
+  const scienceBoxTranslateY = useSharedValue(20);
+  const scienceBoxScale = useSharedValue(0.95);
+  const footerOpacity = useSharedValue(0);
+  const footerTranslateY = useSharedValue(30);
+  const closeButtonOpacity = useSharedValue(0);
+
   // Success animation values
   const successGlow = useSharedValue(0);
   const checkmarkScale = useSharedValue(0);
@@ -104,40 +118,125 @@ export default function FullsizeTemplatePreview({
     ? template.iconColor
     : DEFAULT_ICON_COLOR;
 
-  // Animation entrance
+  // Animation entrance with choreographed reveal
   useEffect(() => {
     if (visible && template) {
-      // Reset values
+      // Reset all values
       backdropOpacity.value = 0;
       contentTranslateY.value = 100;
       contentOpacity.value = 0;
       iconScale.value = 0.8;
       successGlow.value = 0;
       checkmarkScale.value = 0;
+      titleOpacity.value = 0;
+      titleTranslateY.value = 20;
+      pillsOpacity.value = 0;
+      pillsTranslateY.value = 15;
+      descriptionOpacity.value = 0;
+      descriptionTranslateY.value = 15;
+      scienceBoxOpacity.value = 0;
+      scienceBoxTranslateY.value = 20;
+      scienceBoxScale.value = 0.95;
+      footerOpacity.value = 0;
+      footerTranslateY.value = 30;
+      closeButtonOpacity.value = 0;
 
       if (reducedMotion) {
+        // Instant transitions for reduced motion users
         backdropOpacity.value = 0.5;
         contentTranslateY.value = 0;
         contentOpacity.value = 1;
         iconScale.value = 1;
+        titleOpacity.value = 1;
+        titleTranslateY.value = 0;
+        pillsOpacity.value = 1;
+        pillsTranslateY.value = 0;
+        descriptionOpacity.value = 1;
+        descriptionTranslateY.value = 0;
+        scienceBoxOpacity.value = 1;
+        scienceBoxTranslateY.value = 0;
+        scienceBoxScale.value = 1;
+        footerOpacity.value = 1;
+        footerTranslateY.value = 0;
+        closeButtonOpacity.value = 1;
       } else {
-        // Backdrop fade in (200ms)
+        // Phase 1: Backdrop fade in (0-200ms)
         backdropOpacity.value = withTiming(0.5, { duration: 200 });
 
-        // Content slide up + fade (300ms, spring damping 22)
+        // Phase 2: Content container slide up + fade (starts at 0ms, 300ms duration)
         contentTranslateY.value = withSpring(0, { damping: 22, stiffness: 300 });
         contentOpacity.value = withTiming(1, { duration: 300 });
 
-        // Icon scale bounce (delay 100ms)
-        iconScale.value = withDelay(
+        // Phase 3: Close button fade in (delay 100ms)
+        closeButtonOpacity.value = withDelay(
           100,
+          withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+        );
+
+        // Phase 4: Icon scale bounce (delay 150ms)
+        iconScale.value = withDelay(
+          150,
           withSpring(1, { damping: 12, stiffness: 150 })
         );
 
-        // Icon glow pulse animation (continuous)
+        // Icon glow pulse animation (delay 250ms)
         iconGlowScale.value = withDelay(
-          200,
+          250,
           withSpring(1.15, { damping: 10, stiffness: 80 })
+        );
+
+        // Phase 5: Title reveal (delay 220ms)
+        titleOpacity.value = withDelay(
+          220,
+          withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) })
+        );
+        titleTranslateY.value = withDelay(
+          220,
+          withSpring(0, { damping: 18, stiffness: 200 })
+        );
+
+        // Phase 6: Metadata pills reveal (delay 300ms)
+        pillsOpacity.value = withDelay(
+          300,
+          withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) })
+        );
+        pillsTranslateY.value = withDelay(
+          300,
+          withSpring(0, { damping: 18, stiffness: 200 })
+        );
+
+        // Phase 7: Description reveal (delay 380ms)
+        descriptionOpacity.value = withDelay(
+          380,
+          withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) })
+        );
+        descriptionTranslateY.value = withDelay(
+          380,
+          withSpring(0, { damping: 18, stiffness: 200 })
+        );
+
+        // Phase 8: Science box reveal (delay 460ms)
+        scienceBoxOpacity.value = withDelay(
+          460,
+          withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) })
+        );
+        scienceBoxTranslateY.value = withDelay(
+          460,
+          withSpring(0, { damping: 16, stiffness: 180 })
+        );
+        scienceBoxScale.value = withDelay(
+          460,
+          withSpring(1, { damping: 14, stiffness: 150 })
+        );
+
+        // Phase 9: Footer reveal (delay 540ms)
+        footerOpacity.value = withDelay(
+          540,
+          withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) })
+        );
+        footerTranslateY.value = withDelay(
+          540,
+          withSpring(0, { damping: 16, stiffness: 180 })
         );
       }
     }
@@ -190,6 +289,39 @@ export default function FullsizeTemplatePreview({
 
   const customizeButtonStyle = useAnimatedStyle(() => ({
     transform: [{ scale: customizeButtonScale.value }],
+  }));
+
+  // Choreographed reveal animated styles
+  const titleAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: titleOpacity.value,
+    transform: [{ translateY: titleTranslateY.value }],
+  }));
+
+  const pillsAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: pillsOpacity.value,
+    transform: [{ translateY: pillsTranslateY.value }],
+  }));
+
+  const descriptionAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: descriptionOpacity.value,
+    transform: [{ translateY: descriptionTranslateY.value }],
+  }));
+
+  const scienceBoxAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: scienceBoxOpacity.value,
+    transform: [
+      { translateY: scienceBoxTranslateY.value },
+      { scale: scienceBoxScale.value },
+    ],
+  }));
+
+  const footerAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: footerOpacity.value,
+    transform: [{ translateY: footerTranslateY.value }],
+  }));
+
+  const closeButtonAnimatedOpacityStyle = useAnimatedStyle(() => ({
+    opacity: closeButtonOpacity.value,
   }));
 
   const successGlowStyle = useAnimatedStyle(() => ({
@@ -284,7 +416,7 @@ export default function FullsizeTemplatePreview({
         />
 
         {/* Header with close button */}
-        <View style={[styles.header, { paddingTop: insets.top > 0 ? insets.top : 12 }]}>
+        <Animated.View style={[styles.header, { paddingTop: insets.top > 0 ? insets.top : 12 }, closeButtonAnimatedOpacityStyle]}>
           <AnimatedPressable
             accessible
             accessibilityLabel="Close preview"
@@ -296,7 +428,7 @@ export default function FullsizeTemplatePreview({
           >
             <X color="#374151" size={22} strokeWidth={2.5} />
           </AnimatedPressable>
-        </View>
+        </Animated.View>
 
         {/* Scrollable Content */}
         <ScrollView
@@ -329,50 +461,53 @@ export default function FullsizeTemplatePreview({
                 </View>
               </Animated.View>
 
-              {/* Title */}
-              <Text
+              {/* Title with choreographed animation */}
+              <Animated.Text
                 style={[
                   styles.templateName,
                   { fontFamily: theme.custom.fontFamilies.primary.text },
+                  titleAnimatedStyle,
                 ]}
               >
                 {template.name}
-              </Text>
+              </Animated.Text>
 
-              {/* Metadata Pills Row */}
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.pillsContainer}
-              >
-                {/* Frequency Pill */}
-                <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
-                  <Clock color={iconColor} size={14} strokeWidth={2} />
-                  <Text style={[styles.metadataPillText, { color: iconColor }]}>
-                    {formattedFrequency}
-                  </Text>
-                </View>
+              {/* Metadata Pills Row with choreographed animation */}
+              <Animated.View style={pillsAnimatedStyle}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.pillsContainer}
+                >
+                  {/* Frequency Pill */}
+                  <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
+                    <Clock color={iconColor} size={14} strokeWidth={2} />
+                    <Text style={[styles.metadataPillText, { color: iconColor }]}>
+                      {formattedFrequency}
+                    </Text>
+                  </View>
 
-                {/* Category Pill */}
-                <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
-                  <Sparkles color={iconColor} size={14} strokeWidth={2} />
-                  <Text style={[styles.metadataPillText, { color: iconColor }]}>
-                    {formattedCategory}
-                  </Text>
-                </View>
+                  {/* Category Pill */}
+                  <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
+                    <Sparkles color={iconColor} size={14} strokeWidth={2} />
+                    <Text style={[styles.metadataPillText, { color: iconColor }]}>
+                      {formattedCategory}
+                    </Text>
+                  </View>
 
-                {/* Duration Pill (estimated) */}
-                <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
-                  <Text style={[styles.metadataPillText, { color: iconColor }]}>
-                    ⏱️ 5-10 min
-                  </Text>
-                </View>
-              </ScrollView>
+                  {/* Duration Pill (estimated) */}
+                  <View style={[styles.metadataPill, { backgroundColor: `${iconColor}10`, borderColor: `${iconColor}20` }]}>
+                    <Text style={[styles.metadataPillText, { color: iconColor }]}>
+                      ⏱️ 5-10 min
+                    </Text>
+                  </View>
+                </ScrollView>
+              </Animated.View>
             </View>
           </LinearGradient>
 
-          {/* Description */}
-          <View style={styles.descriptionSection}>
+          {/* Description with choreographed animation */}
+          <Animated.View style={[styles.descriptionSection, descriptionAnimatedStyle]}>
             <Text
               style={[
                 styles.descriptionText,
@@ -381,10 +516,10 @@ export default function FullsizeTemplatePreview({
             >
               {template.description}
             </Text>
-          </View>
+          </Animated.View>
 
-          {/* Science Box */}
-          <View style={styles.scienceBox}>
+          {/* Science Box with choreographed animation */}
+          <Animated.View style={[styles.scienceBox, scienceBoxAnimatedStyle]}>
             <View style={styles.scienceHeader}>
               <Text style={styles.scienceIcon}>🔬</Text>
               <Text
@@ -420,18 +555,19 @@ export default function FullsizeTemplatePreview({
                 <Text style={styles.researchLinkText}>Read Research</Text>
               </AnimatedPressable>
             )}
-          </View>
+          </Animated.View>
 
           {/* Bottom spacer for footer */}
           <View style={styles.bottomSpacer} />
         </ScrollView>
 
-        {/* Footer with dual CTA */}
-        <LinearGradient
-          colors={['rgba(250, 250, 249, 0)', 'rgba(250, 250, 249, 1)', 'rgba(250, 250, 249, 1)']}
-          style={styles.footerGradient}
-        >
-          <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+        {/* Footer with dual CTA and choreographed animation */}
+        <Animated.View style={[styles.footerGradientWrapper, footerAnimatedStyle]}>
+          <LinearGradient
+            colors={['rgba(250, 250, 249, 0)', 'rgba(250, 250, 249, 1)', 'rgba(250, 250, 249, 1)']}
+            style={styles.footerGradient}
+          >
+            <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 20) }]}>
             {/* Primary CTA: Import This Habit */}
             {isImported ? (
               <Animated.View style={[styles.successButton, checkmarkAnimatedStyle]}>
@@ -473,8 +609,9 @@ export default function FullsizeTemplatePreview({
                 <Text style={styles.customizeLinkText}>Customize First →</Text>
               </AnimatedPressable>
             )}
-          </View>
-        </LinearGradient>
+            </View>
+          </LinearGradient>
+        </Animated.View>
       </Animated.View>
     </Modal>
   );
@@ -635,12 +772,14 @@ const styles = StyleSheet.create({
   bottomSpacer: {
     height: 140,
   },
-  footerGradient: {
+  footerGradientWrapper: {
     bottom: 0,
     left: 0,
-    paddingTop: 24,
     position: 'absolute',
     right: 0,
+  },
+  footerGradient: {
+    paddingTop: 24,
   },
   footer: {
     gap: 12,
