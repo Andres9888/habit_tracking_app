@@ -1,18 +1,20 @@
 /**
  * HabitDetailScreen Component
- * Habit Detail Page - Simplified
+ * Tabbed Habit Detail Page with Quick Complete
  *
  * Features:
- * - Hero section with icon, name, and description
- * - Manage habit actions
+ * - Hero section with icon, name, and Quick Complete button (sticky)
+ * - Quick Stats Strip (streak, strength, success rate)
+ * - Tabbed navigation (Progress, Motivation, Manage)
+ * - Tab content with scroll position preservation
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput } from 'react-native';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, Animated as RNAnimated, LayoutChangeEvent } from 'react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation } from 'react-native-reanimated';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
@@ -23,6 +25,9 @@ import { CalendarHeatmap } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
+import { HabitDetailTabs, type TabType } from '../components/HabitDetailTabs';
+import { QuickStatsStrip } from '../components/QuickStatsStrip';
+import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { format, parseISO } from 'date-fns';
 import {
   X,
@@ -40,10 +45,14 @@ import {
   Clock,
   MessageCircle,
   Plus,
-  Compass,
+  Bell,
+  CalendarDays,
+  StickyNote,
   BarChart3,
   User,
   Heart,
+  Check,
+  Zap,
 } from 'lucide-react-native';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
@@ -71,18 +80,21 @@ interface HabitDetailScreenProps {
 }
 
 /**
- * Hero Section - Icon, Name, Notes
+ * Hero Section - Icon, Name, Description (sticky portion)
  */
-function HeroSection({ habit }: { habit: Habit }) {
+function HeroSection({
+  habit,
+  isCompletedToday,
+}: {
+  habit: Habit;
+  isCompletedToday: boolean;
+}) {
   return (
-    <Animated.View
-      className="items-center rounded-2xl bg-white/90 py-6 shadow-sm shadow-stone-200/50"
-      entering={FadeInDown.delay(100).springify()}
-    >
+    <View className="items-center pb-4">
       {/* Icon */}
       {habit.icon && (
         <View
-          className="mb-3 h-16 w-16 items-center justify-center rounded-2xl shadow-sm"
+          className="mb-3 h-20 w-20 items-center justify-center rounded-2xl shadow-lg"
           style={{
             backgroundColor: habit.iconColor || '#fef3c7',
           }}
@@ -92,22 +104,22 @@ function HeroSection({ habit }: { habit: Habit }) {
       )}
 
       {/* Name */}
-      <Text className="text-2xl font-bold text-stone-900">
+      <Text className="text-xl font-bold text-stone-900">
         {habit.name}
       </Text>
 
       {/* Notes/Description */}
       {habit.notes ? (
-        <Text className="mt-1 px-6 text-center text-base text-stone-500">
+        <Text className="mt-1 px-6 text-center text-sm text-stone-500">
           {habit.notes}
         </Text>
       ) : null}
-    </Animated.View>
+    </View>
   );
 }
 
 /**
- * Action Button Component
+ * Action Button Component for Manage Tab
  */
 function ActionButton({
   icon: Icon,
@@ -144,7 +156,7 @@ function ActionButton({
     >
       <View
         className={clsx(
-          'h-9 w-9 items-center justify-center rounded-lg',
+          'h-10 w-10 items-center justify-center rounded-xl',
           isBoost && 'bg-gradient-to-br from-violet-500 to-indigo-600',
           isDestructive && 'bg-red-100',
           !isBoost && !isDestructive && 'bg-stone-100'
@@ -156,7 +168,7 @@ function ActionButton({
             isBoost && 'text-white',
             !isDestructive && !isBoost && 'text-stone-600'
           )}
-          size={18}
+          size={20}
           strokeWidth={2.25}
         />
       </View>
@@ -195,6 +207,583 @@ function ActionButton({
 }
 
 /**
+ * Section Card Component for consistent styling
+ */
+function SectionCard({
+  children,
+  className,
+  onPress,
+  accessibilityLabel,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  onPress?: () => void;
+  accessibilityLabel?: string;
+}) {
+  if (onPress) {
+    return (
+      <Pressable
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        className={clsx(
+          'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50 active:opacity-90',
+          className
+        )}
+        onPress={onPress}
+      >
+        {children}
+      </Pressable>
+    );
+  }
+
+  return (
+    <View
+      className={clsx(
+        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        className
+      )}
+    >
+      {children}
+    </View>
+  );
+}
+
+/**
+ * Progress Tab Content
+ */
+function ProgressTabContent({
+  bestStreak,
+  completedDates,
+  currentStreak,
+  daysTracking,
+  habit,
+  habitCreatedAt,
+  isCompletedToday,
+  lastSevenDays,
+  strengthPercent,
+  successRate,
+  totalCompletions,
+  tracking,
+}: {
+  bestStreak: number;
+  completedDates: Set<string>;
+  currentStreak: number;
+  daysTracking: number;
+  habit: Habit;
+  habitCreatedAt: number | undefined;
+  isCompletedToday: boolean;
+  lastSevenDays: boolean[];
+  strengthPercent: number;
+  successRate: number;
+  totalCompletions: number;
+  tracking: HabitTrackingEntry[];
+}) {
+  const [isStrengthExpanded, setIsStrengthExpanded] = useState(false);
+  const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
+
+  return (
+    <View className="gap-4">
+      {/* Streak Chain Section */}
+      <StreakChainSection
+        bestStreak={bestStreak}
+        currentStreak={currentStreak}
+        lastSevenDays={lastSevenDays}
+        todayCompleted={isCompletedToday}
+      />
+
+      {/* Calendar Heatmap */}
+      <CalendarHeatmap
+        habitId={habit._id}
+        completedDates={completedDates}
+        habitCreatedAt={habitCreatedAt}
+        habitColor={habit.iconColor}
+        onDayPress={(date, completed) => {
+          // Future: Could open day detail or allow editing past dates
+        }}
+      />
+
+      {/* Habit Strength Section */}
+      <SectionCard
+        accessibilityLabel={isStrengthExpanded ? 'Collapse habit strength section' : 'Expand habit strength section'}
+        onPress={() => setIsStrengthExpanded((prev) => !prev)}
+      >
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="text-lg font-semibold text-stone-800">Habit Strength</Text>
+            <Text className="text-sm text-stone-500">
+              {Math.round(strengthPercent)}% · {habit.strengthLevel ?? 'starting'}
+            </Text>
+          </View>
+          <ChevronRight
+            className={clsx('text-stone-400', isStrengthExpanded && 'rotate-90')}
+            size={20}
+          />
+        </View>
+      </SectionCard>
+
+      {isStrengthExpanded && (
+        <HabitStrengthSection
+          onInfoPress={() => {
+            Alert.alert(
+              'What is Habit Strength?',
+              'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
+              '🔥 Current Streak - Consecutive days completed\n\n' +
+              '📊 Success Rate - % of days you\'ve completed\n\n' +
+              '📅 Consistency - How regular your habit is\n\n' +
+              'The stronger your habit, the easier it becomes to maintain!',
+              [{ text: 'Got it' }]
+            );
+          }}
+          strength={strengthPercent}
+        />
+      )}
+
+      {/* Insights Section */}
+      <SectionCard
+        accessibilityLabel={isInsightsExpanded ? 'Collapse insights section' : 'Expand insights section'}
+        onPress={() => setIsInsightsExpanded((prev) => !prev)}
+      >
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <BarChart3 className="text-stone-500" size={20} />
+            <View>
+              <Text className="text-lg font-semibold text-stone-800">Insights</Text>
+              <Text className="text-xs text-stone-500">Patterns & personal bests</Text>
+            </View>
+          </View>
+          <ChevronRight
+            className={clsx('text-stone-400', isInsightsExpanded && 'rotate-90')}
+            size={20}
+          />
+        </View>
+      </SectionCard>
+
+      {isInsightsExpanded && (
+        <InsightsSection
+          habitId={habit._id}
+          tracking={tracking}
+          habitCreatedAt={habitCreatedAt}
+          totalCompletions={totalCompletions}
+          successRate={successRate}
+          daysTracking={daysTracking}
+        />
+      )}
+    </View>
+  );
+}
+
+/**
+ * Motivation Tab Content
+ */
+function MotivationTabContent({
+  affirmations,
+  habit,
+  habitCueAfterBehavior,
+  habitCueLocation,
+  habitCueTime,
+  habitIdentity,
+  hasCue,
+  onOpenAffirmationEditor,
+  onOpenCueEditor,
+  onOpenIdentityEditor,
+  onOpenVisualizationExercise,
+  onOpenVisualizationGuide,
+  onOpenVisionBoardEditor,
+  onOpenWhyEditor,
+  onConfirmDeleteAffirmation,
+  onConfirmDeleteVisionBoardItem,
+  onSetAffirmationsListOpen,
+  onSetVisionBoardListOpen,
+  visionBoardItems,
+}: {
+  affirmations: Doc<'affirmations'>[];
+  habit: Habit;
+  habitCueAfterBehavior: string | undefined;
+  habitCueLocation: string | undefined;
+  habitCueTime: string | undefined;
+  habitIdentity: string | undefined;
+  hasCue: boolean;
+  onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
+  onOpenCueEditor: () => void;
+  onOpenIdentityEditor: () => void;
+  onOpenVisualizationExercise: () => void;
+  onOpenVisualizationGuide: () => void;
+  onOpenVisionBoardEditor: (item?: Doc<'visionBoardItems'>) => void;
+  onOpenWhyEditor: () => void;
+  onConfirmDeleteAffirmation: (item: Doc<'affirmations'>) => void;
+  onConfirmDeleteVisionBoardItem: (item: Doc<'visionBoardItems'>) => void;
+  onSetAffirmationsListOpen: (open: boolean) => void;
+  onSetVisionBoardListOpen: (open: boolean) => void;
+  visionBoardItems: Doc<'visionBoardItems'>[];
+}) {
+  return (
+    <View className="gap-4">
+      {/* Your Why Section */}
+      <SectionCard
+        accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
+        onPress={onOpenWhyEditor}
+        className="border-l-4 border-rose-400"
+      >
+        <View className="flex-row items-start gap-3">
+          <View className="h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
+            <Heart className="text-rose-500" size={20} />
+          </View>
+          <View className="flex-1">
+            <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
+            {habit.why ? (
+              <Text className="text-sm text-stone-600">"{habit.why}"</Text>
+            ) : (
+              <Text className="text-sm italic text-stone-400">
+                What's driving you to build this habit?
+              </Text>
+            )}
+          </View>
+          <Edit3 className="text-stone-400" size={16} />
+        </View>
+      </SectionCard>
+
+      {/* Your Identity Section */}
+      <SectionCard
+        accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
+        onPress={onOpenIdentityEditor}
+        className="border-l-4 border-violet-400"
+      >
+        <View className="flex-row items-start gap-3">
+          <View className="h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+            <Sparkles className="text-violet-500" size={20} />
+          </View>
+          <View className="flex-1">
+            <View className="mb-1 flex-row items-center gap-2">
+              <Text className="font-semibold text-stone-800">Your Identity</Text>
+              <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
+              </View>
+            </View>
+            {habitIdentity ? (
+              <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
+            ) : (
+              <Text className="text-sm italic text-stone-400">
+                Who are you becoming?
+              </Text>
+            )}
+          </View>
+          <Edit3 className="text-stone-400" size={16} />
+        </View>
+      </SectionCard>
+
+      {/* Your Cue Section */}
+      <SectionCard
+        accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
+        onPress={onOpenCueEditor}
+        className="border-l-4 border-amber-400"
+      >
+        <View className="flex-row items-start gap-3">
+          <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+            <Target className="text-amber-500" size={20} />
+          </View>
+          <View className="flex-1">
+            <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
+            {hasCue ? (
+              <>
+                {habitCueAfterBehavior && (
+                  <Text className="text-sm text-stone-600">
+                    After I {habitCueAfterBehavior}, I will {habit.name}
+                  </Text>
+                )}
+                {(habitCueLocation || habitCueTime) && (
+                  <View className="mt-2 flex-row flex-wrap gap-2">
+                    {habitCueLocation && (
+                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
+                        <MapPin className="text-amber-500" size={12} />
+                        <Text className="text-xs text-amber-700">{habitCueLocation}</Text>
+                      </View>
+                    )}
+                    {habitCueTime && (
+                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
+                        <Clock className="text-amber-500" size={12} />
+                        <Text className="text-xs text-amber-700">{habitCueTime}</Text>
+                      </View>
+                    )}
+                  </View>
+                )}
+              </>
+            ) : (
+              <Text className="text-sm italic text-stone-400">
+                When and where will you do this?
+              </Text>
+            )}
+          </View>
+          <Edit3 className="text-stone-400" size={16} />
+        </View>
+      </SectionCard>
+
+      {/* Vision Board Section */}
+      <SectionCard>
+        <View className="mb-3 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <Eye className="text-stone-500" size={18} />
+            <Text className="font-semibold text-stone-800">Vision Board</Text>
+          </View>
+          <Pressable
+            accessibilityLabel="Add vision board card"
+            accessibilityRole="button"
+            className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+            onPress={() => onOpenVisionBoardEditor()}
+          >
+            <Text className="text-xs font-semibold text-white">+ Add</Text>
+          </Pressable>
+        </View>
+        {visionBoardItems.length === 0 ? (
+          <View className="items-center rounded-xl bg-stone-50 py-6">
+            <Eye className="mb-2 text-stone-300" size={28} />
+            <Text className="text-center text-sm text-stone-500">
+              What are you building toward?
+            </Text>
+          </View>
+        ) : (
+          <View className="gap-3">
+            {visionBoardItems.slice(0, 2).map((item) => (
+              <Pressable
+                key={item._id}
+                accessibilityLabel={`Open vision card ${item.title}`}
+                accessibilityRole="button"
+                className="rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
+                onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
+                onPress={() => onOpenVisionBoardEditor(item)}
+              >
+                <Text className="text-sm font-semibold text-stone-800">{item.title}</Text>
+                {item.body && (
+                  <Text className="mt-1 text-sm leading-5 text-stone-600" numberOfLines={3}>
+                    {item.body}
+                  </Text>
+                )}
+              </Pressable>
+            ))}
+            {visionBoardItems.length > 2 && (
+              <Pressable
+                accessibilityLabel="View all vision board cards"
+                accessibilityRole="button"
+                className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
+                onPress={() => onSetVisionBoardListOpen(true)}
+              >
+                <Text className="text-sm font-medium text-stone-600">
+                  View all ({visionBoardItems.length})
+                </Text>
+              </Pressable>
+            )}
+          </View>
+        )}
+      </SectionCard>
+
+      {/* Affirmations Section */}
+      <SectionCard>
+        <View className="mb-3 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <MessageCircle className="text-stone-500" size={18} />
+            <Text className="font-semibold text-stone-800">Affirmations</Text>
+          </View>
+          <Pressable
+            accessibilityLabel="Add affirmation"
+            accessibilityRole="button"
+            className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+            onPress={() => onOpenAffirmationEditor()}
+          >
+            <Text className="text-xs font-semibold text-white">+ Add</Text>
+          </Pressable>
+        </View>
+        {affirmations.length === 0 ? (
+          <View className="items-center rounded-xl bg-stone-50 py-6">
+            <MessageCircle className="mb-2 text-stone-300" size={28} />
+            <Text className="text-center text-sm text-stone-500">
+              What do you tell yourself?
+            </Text>
+          </View>
+        ) : (
+          <View className="gap-3">
+            {affirmations.slice(0, 2).map((item) => (
+              <Pressable
+                key={item._id}
+                accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
+                accessibilityRole="button"
+                className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4 active:opacity-80"
+                onLongPress={() => onConfirmDeleteAffirmation(item)}
+                onPress={() => onOpenAffirmationEditor(item)}
+              >
+                <Text className="text-sm leading-5 text-stone-700">"{item.text}"</Text>
+                {item.type && (
+                  <View className="mt-2">
+                    <View className="self-start rounded-full bg-violet-100 px-2 py-0.5">
+                      <Text className="text-xs text-violet-600">{item.type}</Text>
+                    </View>
+                  </View>
+                )}
+              </Pressable>
+            ))}
+            {affirmations.length > 2 && (
+              <Pressable
+                accessibilityLabel="View all affirmations"
+                accessibilityRole="button"
+                className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
+                onPress={() => onSetAffirmationsListOpen(true)}
+              >
+                <Text className="text-sm font-medium text-stone-600">
+                  View all ({affirmations.length})
+                </Text>
+              </Pressable>
+            )}
+          </View>
+        )}
+      </SectionCard>
+
+      {/* Mental Exercises Section */}
+      <SectionCard>
+        <View className="mb-3 flex-row items-center gap-2">
+          <Brain className="text-stone-500" size={18} />
+          <Text className="font-semibold text-stone-800">Mental Exercises</Text>
+        </View>
+        <Text className="mb-4 text-sm text-stone-500">
+          Science-backed techniques to strengthen your resolve.
+        </Text>
+        <View className="gap-3">
+          <Pressable
+            accessibilityLabel="Open mental contrasting exercise"
+            accessibilityRole="button"
+            className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-cyan-50 to-teal-50 p-4 active:opacity-80"
+            onPress={onOpenVisualizationExercise}
+          >
+            <View className="flex-row items-center gap-3">
+              <Text className="text-xl">🎯</Text>
+              <Text className="text-sm font-medium text-stone-700">Mental Contrasting</Text>
+            </View>
+            <ChevronRight className="text-stone-400" size={18} />
+          </Pressable>
+          <Pressable
+            accessibilityLabel="Open visualization guide"
+            accessibilityRole="button"
+            className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-indigo-50 to-blue-50 p-4 active:opacity-80"
+            onPress={onOpenVisualizationGuide}
+          >
+            <View className="flex-row items-center gap-3">
+              <Text className="text-xl">✨</Text>
+              <Text className="text-sm font-medium text-stone-700">Visualization Guide</Text>
+            </View>
+            <ChevronRight className="text-stone-400" size={18} />
+          </Pressable>
+        </View>
+      </SectionCard>
+    </View>
+  );
+}
+
+/**
+ * Manage Tab Content
+ */
+function ManageTabContent({
+  habit,
+  habitNotes,
+  onArchive,
+  onDelete,
+  onOpenCalendar,
+  onOpenNotesList,
+  onOpenNotesEditor,
+  onPause,
+}: {
+  habit: Habit;
+  habitNotes: Doc<'notes'>[];
+  onArchive: () => void;
+  onDelete: () => void;
+  onOpenCalendar: () => void;
+  onOpenNotesList: () => void;
+  onOpenNotesEditor: () => void;
+  onPause: () => void;
+}) {
+  return (
+    <View className="gap-4">
+      {/* Reminders */}
+      <SectionCard>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
+              <Bell className="text-blue-500" size={20} />
+            </View>
+            <View>
+              <Text className="font-semibold text-stone-800">Reminders</Text>
+              <Text className="text-sm text-stone-500">Not set</Text>
+            </View>
+          </View>
+          <ChevronRight className="text-stone-400" size={20} />
+        </View>
+      </SectionCard>
+
+      {/* Frequency */}
+      <SectionCard>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-purple-100">
+              <CalendarDays className="text-purple-500" size={20} />
+            </View>
+            <View>
+              <Text className="font-semibold text-stone-800">Frequency</Text>
+              <Text className="text-sm text-stone-500">Every day</Text>
+            </View>
+          </View>
+          <ChevronRight className="text-stone-400" size={20} />
+        </View>
+      </SectionCard>
+
+      {/* Notes */}
+      <SectionCard
+        accessibilityLabel="View notes"
+        onPress={onOpenNotesList}
+      >
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+              <StickyNote className="text-amber-500" size={20} />
+            </View>
+            <View>
+              <Text className="font-semibold text-stone-800">Notes</Text>
+              <Text className="text-sm text-stone-500">
+                {habitNotes.length} journal {habitNotes.length === 1 ? 'entry' : 'entries'}
+              </Text>
+            </View>
+          </View>
+          <ChevronRight className="text-stone-400" size={20} />
+        </View>
+      </SectionCard>
+
+      {/* Divider */}
+      <View className="mx-4 h-px bg-stone-200" />
+
+      {/* Pause Habit */}
+      <ActionButton
+        icon={Pause}
+        label="Pause Habit"
+        subtitle="Take a break without losing progress"
+        onPress={onPause}
+      />
+
+      {/* Archive */}
+      <ActionButton
+        icon={Archive}
+        label="Archive"
+        subtitle="Hide from active habits"
+        onPress={onArchive}
+      />
+
+      {/* Delete */}
+      <ActionButton
+        icon={Trash2}
+        label="Delete Habit"
+        subtitle="Permanently remove this habit"
+        onPress={onDelete}
+        variant="destructive"
+      />
+    </View>
+  );
+}
+
+/**
  * Main HabitDetailScreen Component
  */
 export default function HabitDetailScreen({
@@ -210,12 +799,18 @@ export default function HabitDetailScreen({
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
   const safeTop = insets.top || 44;
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState<TabType>('progress');
+
+  // Scroll refs for each tab to preserve position
+  const progressScrollRef = useRef<ScrollView>(null);
+  const motivationScrollRef = useRef<ScrollView>(null);
+  const manageScrollRef = useRef<ScrollView>(null);
+
+  // Modal states
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
   const [showVisualizationExercise, setShowVisualizationExercise] = useState(false);
-  const [isMotivationExpanded, setIsMotivationExpanded] = useState(false);
-  const [isManageExpanded, setIsManageExpanded] = useState(false);
-  const [isStrengthExpanded, setIsStrengthExpanded] = useState(false);
-  const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
   const [isWhyEditorOpen, setIsWhyEditorOpen] = useState(false);
   const [whyDraft, setWhyDraft] = useState('');
   const [isIdentityEditorOpen, setIsIdentityEditorOpen] = useState(false);
@@ -227,13 +822,11 @@ export default function HabitDetailScreen({
   const [visionBoardBodyDraft, setVisionBoardBodyDraft] = useState('');
   const [visionBoardEditingId, setVisionBoardEditingId] = useState<Id<'visionBoardItems'> | null>(null);
   const [visionBoardTitleDraft, setVisionBoardTitleDraft] = useState('');
-  // Cue state
   const [isCueEditorOpen, setIsCueEditorOpen] = useState(false);
   const [cueAfterBehaviorDraft, setCueAfterBehaviorDraft] = useState('');
   const [cueLocationDraft, setCueLocationDraft] = useState('');
   const [cueTimeDraft, setCueTimeDraft] = useState('');
   const [cueToastVisible, setCueToastVisible] = useState(false);
-  // Affirmations state
   const [isAffirmationEditorOpen, setIsAffirmationEditorOpen] = useState(false);
   const [isAffirmationsListOpen, setIsAffirmationsListOpen] = useState(false);
   const [affirmationTextDraft, setAffirmationTextDraft] = useState('');
@@ -316,26 +909,6 @@ export default function HabitDetailScreen({
     return (completedLastThirty / 30) * 100;
   }, [lastThirtyDays]);
 
-  const recentNote = useMemo(() => {
-    const latest = habitNotes[0];
-    if (!latest) {
-      return undefined;
-    }
-
-    const formatted = (() => {
-      try {
-        return format(parseISO(latest.date), 'MMM d, yyyy');
-      } catch {
-        return latest.date;
-      }
-    })();
-
-    return {
-      body: latest.body,
-      date: formatted,
-    };
-  }, [habitNotes]);
-
   useEffect(() => {
     setWhyDraft(habitWhy ?? '');
   }, [habitId, habitWhy]);
@@ -350,11 +923,18 @@ export default function HabitDetailScreen({
     setCueTimeDraft(habitCueTime ?? '');
   }, [habitId, habitCueAfterBehavior, habitCueLocation, habitCueTime]);
 
+  // Reset tab when modal closes/opens
+  useEffect(() => {
+    if (visible) {
+      setActiveTab('progress');
+    }
+  }, [visible]);
+
   if (!habit) {
     return null;
   }
 
-  // Action handlers
+  // Handler functions
   const handleEdit = () => {
     onEdit?.(habit);
   };
@@ -439,7 +1019,7 @@ export default function HabitDetailScreen({
   };
 
   const handleSaveVisualization = (data: { habitName: string; positiveVisualization: string; negativeVisualization: string; timestamp: number }) => {
-    const body = `Success:\n${data.positiveVisualization}\n\nIf I don’t follow through:\n${data.negativeVisualization}`;
+    const body = `Success:\n${data.positiveVisualization}\n\nIf I don't follow through:\n${data.negativeVisualization}`;
 
     createVisionBoardItem({
       body,
@@ -455,11 +1035,7 @@ export default function HabitDetailScreen({
       })
       .catch((error) => {
         console.error('Failed to save visualization:', error);
-        Alert.alert(
-          'Could not save',
-          'Please try again.',
-          [{ text: 'OK' }]
-        );
+        Alert.alert('Could not save', 'Please try again.', [{ text: 'OK' }]);
       });
   };
 
@@ -488,7 +1064,6 @@ export default function HabitDetailScreen({
   };
 
   const handleOpenIdentityEditor = () => {
-    console.log('🔵 handleOpenIdentityEditor called');
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsIdentityEditorOpen(true);
   };
@@ -581,7 +1156,6 @@ export default function HabitDetailScreen({
     );
   };
 
-  // Cue handlers
   const handleOpenCueEditor = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsCueEditorOpen(true);
@@ -632,7 +1206,6 @@ export default function HabitDetailScreen({
     }
   };
 
-  // Affirmation handlers
   const handleOpenAffirmationEditor = (item?: Affirmation) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setAffirmationEditingId(item?._id ?? null);
@@ -705,6 +1278,15 @@ export default function HabitDetailScreen({
     );
   };
 
+  const handleStatPress = (statType: 'streak' | 'strength' | 'success') => {
+    // Navigate to appropriate section or show detail
+    if (statType === 'streak' || statType === 'success') {
+      setActiveTab('progress');
+    } else if (statType === 'strength') {
+      setActiveTab('progress');
+    }
+  };
+
   return (
     <Modal
       disableBackdropClose={false}
@@ -717,8 +1299,8 @@ export default function HabitDetailScreen({
         className="flex-1 bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100"
         style={{ paddingTop: safeTop }}
       >
-        {/* Navigation Bar */}
-        <View className="flex-row items-center justify-between px-5 pb-3">
+        {/* Header - Close and Edit buttons */}
+        <View className="flex-row items-center justify-between px-4 pb-2">
           <Pressable
             accessibilityLabel="Close"
             accessibilityRole="button"
@@ -738,605 +1320,113 @@ export default function HabitDetailScreen({
           </Pressable>
         </View>
 
-        {/* Scrollable Content */}
-        <ScrollView
-          bounces
-          className="flex-1"
-          contentContainerClassName="gap-4 px-5 pb-8"
-          nestedScrollEnabled
-          scrollEnabled
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Hero Section */}
-          <HeroSection habit={habit} />
+        {/* Hero Section (sticky) */}
+        <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
+          <HeroSection habit={habit} isCompletedToday={isCompletedToday} />
 
-          {/* Why Section */}
-          <Pressable
-            accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
-            accessibilityRole="button"
-            className="overflow-hidden rounded-2xl bg-white shadow-sm shadow-stone-200/50 active:opacity-90"
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              handleOpenWhyEditor();
-            }}
-          >
-            {/* Background Aesthetic */}
-            <View className="absolute inset-0 bg-gradient-to-br from-rose-50/30 via-white to-orange-50/30" pointerEvents="none" />
-
-            <View className="p-5">
-              {/* Header */}
-              <View className="mb-4 flex-row items-center justify-between">
-                <View className="flex-row items-center gap-2">
-                  <View className="h-8 w-8 items-center justify-center rounded-lg bg-rose-100">
-                    <Heart className="text-rose-500" size={16} strokeWidth={2.5} />
-                  </View>
-                  <Text className="text-lg font-bold text-stone-800">
-                    Your Why
-                  </Text>
-                </View>
-                <Text className="text-[10px] font-semibold uppercase tracking-wider text-rose-400">
-                  Purpose
-                </Text>
-              </View>
-
-              {/* Content */}
-              {habit.why ? (
-                <View className="items-center">
-                  {/* Label */}
-                  <View className="mb-2 rounded-full bg-rose-50 px-3 py-1">
-                    <Text className="text-[10px] font-bold uppercase tracking-widest text-rose-500">
-                      I do this because...
-                    </Text>
-                  </View>
-
-                  {/* The Why Statement */}
-                  <Text className="px-2 text-center text-base font-medium leading-relaxed text-stone-700">
-                    {habit.why}
-                  </Text>
-
-                  <Text className="mt-3 text-[10px] font-medium text-stone-400">
-                    Tap to edit
-                  </Text>
-                </View>
-              ) : (
-                <View className="items-center rounded-xl bg-stone-50/50 px-4 py-5">
-                  <Text className="mb-2 text-center text-sm text-stone-500">
-                    What's driving you to build this habit?
-                  </Text>
-                  <Text className="mb-3 text-center text-xs italic text-stone-400">
-                    "To be healthy for my kids" • "To feel confident"
-                  </Text>
-                  <View className="flex-row items-center gap-1">
-                    <Plus className="text-rose-500" size={14} />
-                    <Text className="text-sm font-semibold text-rose-600">
-                      Add your reason
-                    </Text>
-                  </View>
-                </View>
-              )}
-            </View>
-          </Pressable>
-
-          {/* Identity Section - Who You Are Becoming */}
-          <Pressable
-            accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
-            accessibilityRole="button"
-            className="overflow-hidden rounded-2xl bg-white shadow-sm shadow-stone-200/50 active:opacity-90"
-            onPress={handleOpenIdentityEditor}
-          >
-            {/* Background Aesthetic */}
-            <View className="absolute inset-0 bg-gradient-to-br from-violet-50/40 via-white to-indigo-50/40" pointerEvents="none" />
-
-            <View className="p-5">
-              {/* Header */}
-              <View className="mb-4 flex-row items-center justify-between">
-                <View className="flex-row items-center gap-2">
-                  <View className="h-8 w-8 items-center justify-center rounded-lg bg-violet-100">
-                    <User className="text-violet-600" size={16} strokeWidth={2.5} />
-                  </View>
-                  <Text className="text-lg font-bold text-stone-800">
-                    Your Identity
-                  </Text>
-                </View>
-                <Sparkles className="text-violet-400" size={16} />
-              </View>
-
-              {/* Content */}
-              {habitIdentity ? (
-                <View className="items-center">
-                  {/* Label */}
-                  <View className="mb-2 rounded-full bg-violet-50 px-3 py-1">
-                    <Text className="text-[10px] font-bold uppercase tracking-widest text-violet-500">
-                      I am...
-                    </Text>
-                  </View>
-
-                  {/* The Identity Statement */}
-                  <Text className="px-2 text-center text-lg font-semibold leading-relaxed text-stone-800">
-                    "{habitIdentity}"
-                  </Text>
-
-                  <View className="mt-4 h-[1px] w-12 bg-violet-100" />
-                  <Text className="mt-2 text-[10px] font-medium text-stone-400">
-                    Tap to refine your identity
-                  </Text>
-                </View>
-              ) : (
-                <View className="items-center rounded-xl bg-violet-50/30 px-4 py-5">
-                  {/* Science Badge */}
-                  <View className="mb-3 flex-row items-center gap-2 rounded-full bg-violet-100/50 px-3 py-1.5">
-                    <Brain className="text-violet-500" size={12} />
-                    <Text className="text-[10px] font-semibold text-violet-600">
-                      MOST POWERFUL FOR LONG-TERM SUCCESS
-                    </Text>
-                  </View>
-
-                  <Text className="mb-2 text-center text-sm font-medium text-stone-600">
-                    Who are you becoming?
-                  </Text>
-                  <Text className="mb-4 text-center text-xs italic text-stone-400">
-                    "I am a healthy person" • "I am a reader"
-                  </Text>
-
-                  {/* CTA */}
-                  <View className="flex-row items-center gap-2 rounded-full bg-violet-600 px-5 py-2.5 shadow-sm active:bg-violet-700">
-                    <Text className="text-sm font-bold text-white">
-                      Define Your Identity
-                    </Text>
-                    <ChevronRight className="text-white" size={14} strokeWidth={3} />
-                  </View>
-                </View>
-              )}
-            </View>
-          </Pressable>
-
-          {/* Cue Section - Implementation Intention */}
-          <Pressable
-            accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
-            accessibilityRole="button"
-            className="overflow-hidden rounded-2xl bg-white shadow-sm shadow-stone-200/50 active:opacity-90"
-            onPress={handleOpenCueEditor}
-          >
-            {/* Background Aesthetic */}
-            <View className="absolute inset-0 bg-gradient-to-br from-amber-50/40 via-white to-orange-50/30" pointerEvents="none" />
-
-            <View className="p-5">
-              {/* Header */}
-              <View className="mb-4 flex-row items-center justify-between">
-                <View className="flex-row items-center gap-2">
-                  <View className="h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
-                    <Target className="text-amber-600" size={16} strokeWidth={2.5} />
-                  </View>
-                  <Text className="text-lg font-bold text-stone-800">
-                    Your Cue
-                  </Text>
-                </View>
-                <Text className="text-[10px] font-semibold uppercase tracking-wider text-amber-500">
-                  Trigger
-                </Text>
-              </View>
-
-              {/* Content */}
-              {hasCue ? (
-                <View className="items-center">
-                  {/* Label */}
-                  <View className="mb-2 rounded-full bg-amber-50 px-3 py-1">
-                    <Text className="text-[10px] font-bold uppercase tracking-widest text-amber-600">
-                      After I...
-                    </Text>
-                  </View>
-
-                  {/* The Cue Statement */}
-                  {habitCueAfterBehavior ? (
-                    <Text className="px-2 text-center text-base font-medium leading-relaxed text-stone-700">
-                      {habitCueAfterBehavior}, I will{' '}
-                      <Text className="font-semibold text-stone-800">
-                        {habit.name}
-                      </Text>
-                    </Text>
-                  ) : null}
-
-                  {/* Location & Time Badges */}
-                  {(habitCueLocation || habitCueTime) ? (
-                    <View className="mt-3 flex-row flex-wrap items-center justify-center gap-2">
-                      {habitCueLocation ? (
-                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
-                          <MapPin className="text-amber-500" size={12} />
-                          <Text className="text-xs font-medium text-amber-700">{habitCueLocation}</Text>
-                        </View>
-                      ) : null}
-                      {habitCueTime ? (
-                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
-                          <Clock className="text-amber-500" size={12} />
-                          <Text className="text-xs font-medium text-amber-700">{habitCueTime}</Text>
-                        </View>
-                      ) : null}
-                    </View>
-                  ) : null}
-
-                  <Text className="mt-3 text-[10px] font-medium text-stone-400">
-                    Tap to edit
-                  </Text>
-                </View>
-              ) : (
-                <View className="items-center rounded-xl bg-stone-50/50 px-4 py-5">
-                  <Text className="mb-2 text-center text-sm text-stone-500">
-                    When and where will you do this?
-                  </Text>
-                  <Text className="mb-3 text-center text-xs italic text-stone-400">
-                    "After my morning coffee" • "When I get to the gym"
-                  </Text>
-                  <View className="flex-row items-center gap-1">
-                    <Plus className="text-amber-500" size={14} />
-                    <Text className="text-sm font-semibold text-amber-600">
-                      Set your trigger
-                    </Text>
-                  </View>
-                </View>
-              )}
-            </View>
-          </Pressable>
-
-          {/* Progress (Stats) */}
-          <StreakChainSection
-            bestStreak={habit.bestStreak ?? 0}
-            currentStreak={habit.currentStreak ?? 0}
-            lastSevenDays={lastSevenDays}
-            todayCompleted={isCompletedToday}
-          />
-
-          {/* Calendar Heatmap */}
-          <CalendarHeatmap
-            habitId={habit._id}
-            completedDates={completedDates}
-            habitCreatedAt={habitCreatedAt}
-            habitColor={habit.iconColor}
-            onDayPress={(date, completed) => {
-              // Future: Could open day detail or allow editing past dates
-            }}
-          />
-
-          <Pressable
-            accessibilityLabel={isStrengthExpanded ? 'Collapse habit strength section' : 'Expand habit strength section'}
-            accessibilityRole="button"
-            className="flex-row items-center justify-between rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
-            onPress={() => setIsStrengthExpanded((previous) => !previous)}
-          >
-            <View>
-              <Text className="text-lg font-semibold text-stone-800">Habit Strength</Text>
-              <Text className="text-sm text-stone-500">
-                {Math.round(strengthPercent)}% · {habit.strengthLevel ?? 'starting'}
-              </Text>
-            </View>
-            <ChevronRight
-              className={clsx('text-stone-400', isStrengthExpanded && 'rotate-90')}
-              size={20}
-            />
-          </Pressable>
-
-          {isStrengthExpanded ? (
-            <HabitStrengthSection
-              onInfoPress={() => {
-                Alert.alert(
-                  'What is Habit Strength?',
-                  'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
-                  '🔥 Current Streak - Consecutive days completed\n\n' +
-                  '📊 Success Rate - % of days you\'ve completed\n\n' +
-                  '📅 Consistency - How regular your habit is\n\n' +
-                  'The stronger your habit, the easier it becomes to maintain!',
-                  [{ text: 'Got it' }]
-                );
-              }}
-              strength={strengthPercent}
-            />
-          ) : null}
-
-          {/* Insights Section */}
-          <Pressable
-            accessibilityLabel={isInsightsExpanded ? 'Collapse insights section' : 'Expand insights section'}
-            accessibilityRole="button"
-            className="flex-row items-center justify-between rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
-            onPress={() => setIsInsightsExpanded((previous) => !previous)}
-          >
-            <View className="flex-row items-center gap-2">
-              <BarChart3 className="text-stone-500" size={20} />
-              <View>
-                <Text className="text-lg font-semibold text-stone-800">
-                  Insights
-                </Text>
-                <Text className="text-xs text-stone-500">
-                  Patterns & personal bests
-                </Text>
-              </View>
-            </View>
-            <ChevronRight
-              className={clsx('text-stone-400', isInsightsExpanded && 'rotate-90')}
-              size={20}
-            />
-          </Pressable>
-
-          {isInsightsExpanded ? (
-            <InsightsSection
+          {/* Quick Complete Button */}
+          <View className="mb-4">
+            <QuickCompleteButton
+              completedToday={isCompletedToday}
               habitId={habit._id}
-              tracking={tracking}
-              habitCreatedAt={habitCreatedAt}
-              totalCompletions={totalCompletions}
+              habitName={habit.name}
+            />
+          </View>
+
+          {/* Quick Stats Strip */}
+          <View className="mb-4">
+            <QuickStatsStrip
+              currentStreak={habit.currentStreak ?? 0}
+              habitStrength={habitStrength}
               successRate={successRate}
-              daysTracking={daysTracking}
+              onStatPress={handleStatPress}
             />
-          ) : null}
+          </View>
+        </View>
 
-          {/* Motivation Section */}
-          <Pressable
-            accessibilityLabel={isMotivationExpanded ? 'Collapse motivation section' : 'Expand motivation section'}
-            accessibilityRole="button"
-            className="flex-row items-center justify-between rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
-            onPress={() => setIsMotivationExpanded((previous) => !previous)}
-          >
-            <View className="flex-row items-center gap-2">
-              <Sparkles className="text-stone-500" size={20} />
-              <View>
-                <Text className="text-lg font-semibold text-stone-800">
-                  Motivation
-                </Text>
-                <Text className="text-xs text-stone-500">
-                  Vision board, affirmations & exercises
-                </Text>
-              </View>
-            </View>
-            <ChevronRight
-              className={clsx('text-stone-400', isMotivationExpanded && 'rotate-90')}
-              size={20}
-            />
-          </Pressable>
+        {/* Tab Bar (sticky) */}
+        <HabitDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-          {isMotivationExpanded ? (
-            <Animated.View
-              className="gap-4"
-              entering={FadeInDown.delay(100).springify()}
+        {/* Tab Content Area */}
+        <View className="flex-1">
+          {activeTab === 'progress' && (
+            <ScrollView
+              ref={progressScrollRef}
+              bounces
+              className="flex-1"
+              contentContainerClassName="gap-4 p-4 pb-8"
+              showsVerticalScrollIndicator={false}
             >
-              {/* Vision Board */}
-              <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-                <View className="mb-3 flex-row items-center justify-between">
-                  <View className="flex-row items-center gap-2">
-                    <Eye className="text-stone-500" size={18} />
-                    <Text className="text-lg font-semibold text-stone-800">
-                      Vision Board
-                    </Text>
-                  </View>
-                  <Pressable
-                    accessibilityLabel="Add vision board card"
-                    accessibilityRole="button"
-                    className="rounded-full bg-stone-900 px-3 py-1.5 active:bg-stone-800"
-                    onPress={() => handleOpenVisionBoardEditor()}
-                  >
-                    <Text className="text-xs font-semibold text-white">
-                      Add
-                    </Text>
-                  </Pressable>
-                </View>
+              <ProgressTabContent
+                bestStreak={habit.bestStreak ?? 0}
+                completedDates={completedDates}
+                currentStreak={habit.currentStreak ?? 0}
+                daysTracking={daysTracking}
+                habit={habit}
+                habitCreatedAt={habitCreatedAt}
+                isCompletedToday={isCompletedToday}
+                lastSevenDays={lastSevenDays}
+                strengthPercent={strengthPercent}
+                successRate={successRate}
+                totalCompletions={totalCompletions}
+                tracking={tracking}
+              />
+            </ScrollView>
+          )}
 
-                {visionBoardItems.length === 0 ? (
-                  <View className="items-center rounded-xl bg-stone-50 py-6">
-                    <Eye className="mb-2 text-stone-300" size={28} />
-                    <Text className="text-center text-sm text-stone-500">
-                      What are you building toward?
-                    </Text>
-                    <Text className="mt-1 text-center text-xs text-stone-400">
-                      Tap Add to visualize your goal
-                    </Text>
-                  </View>
-                ) : (
-                  <View className="gap-3">
-                    {visionBoardItems.slice(0, 2).map((item) => (
-                      <Pressable
-                        key={item._id}
-                        accessibilityLabel={`Open vision card ${item.title}`}
-                        accessibilityRole="button"
-                        className="rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
-                        onLongPress={() => handleConfirmDeleteVisionBoardItem(item)}
-                        onPress={() => handleOpenVisionBoardEditor(item)}
-                      >
-                        <Text className="text-sm font-semibold text-stone-800">
-                          {item.title}
-                        </Text>
-                        {item.body ? (
-                          <Text className="mt-1 text-sm leading-5 text-stone-600" numberOfLines={3}>
-                            {item.body}
-                          </Text>
-                        ) : null}
-                      </Pressable>
-                    ))}
-                    {visionBoardItems.length > 2 ? (
-                      <Pressable
-                        accessibilityLabel="View all vision board cards"
-                        accessibilityRole="button"
-                        className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
-                        onPress={() => setIsVisionBoardListOpen(true)}
-                      >
-                        <Text className="text-sm font-medium text-stone-600">
-                          View all ({visionBoardItems.length})
-                        </Text>
-                      </Pressable>
-                    ) : null}
-                  </View>
-                )}
-              </View>
-
-              {/* Affirmations */}
-              <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-                <View className="mb-3 flex-row items-center justify-between">
-                  <View className="flex-row items-center gap-2">
-                    <MessageCircle className="text-stone-500" size={18} />
-                    <Text className="text-lg font-semibold text-stone-800">
-                      Affirmations
-                    </Text>
-                  </View>
-                  <Pressable
-                    accessibilityLabel="Add affirmation"
-                    accessibilityRole="button"
-                    className="rounded-full bg-stone-900 px-3 py-1.5 active:bg-stone-800"
-                    onPress={() => handleOpenAffirmationEditor()}
-                  >
-                    <Text className="text-xs font-semibold text-white">
-                      Add
-                    </Text>
-                  </Pressable>
-                </View>
-
-                {affirmations.length === 0 ? (
-                  <View className="items-center rounded-xl bg-stone-50 py-6">
-                    <MessageCircle className="mb-2 text-stone-300" size={28} />
-                    <Text className="text-center text-sm text-stone-500">
-                      What do you tell yourself?
-                    </Text>
-                    <Text className="mt-1 text-center text-xs text-stone-400">
-                      Tap Add for positive self-talk
-                    </Text>
-                  </View>
-                ) : (
-                  <View className="gap-3">
-                    {affirmations.slice(0, 2).map((item) => (
-                      <Pressable
-                        key={item._id}
-                        accessibilityLabel={`Edit affirmation: ${item.text.slice(0, 30)}`}
-                        accessibilityRole="button"
-                        className="rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
-                        onLongPress={() => handleConfirmDeleteAffirmation(item)}
-                        onPress={() => handleOpenAffirmationEditor(item)}
-                      >
-                        <Text className="text-sm leading-5 text-stone-700">
-                          "{item.text}"
-                        </Text>
-                        {item.type ? (
-                          <View className="mt-2 flex-row">
-                            <View className="rounded-full bg-stone-100 px-2 py-0.5">
-                              <Text className="text-xs text-stone-600">
-                                {item.type}
-                              </Text>
-                            </View>
-                          </View>
-                        ) : null}
-                      </Pressable>
-                    ))}
-                    {affirmations.length > 2 ? (
-                      <Pressable
-                        accessibilityLabel="View all affirmations"
-                        accessibilityRole="button"
-                        className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
-                        onPress={() => setIsAffirmationsListOpen(true)}
-                      >
-                        <Text className="text-sm font-medium text-stone-600">
-                          View all ({affirmations.length})
-                        </Text>
-                      </Pressable>
-                    ) : null}
-                  </View>
-                )}
-              </View>
-
-              {/* Mental Exercises */}
-              <View className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50">
-                <View className="mb-3 flex-row items-center gap-2">
-                  <Brain className="text-stone-500" size={18} />
-                  <Text className="text-lg font-semibold text-stone-800">
-                    Mental Exercises
-                  </Text>
-                </View>
-                <Text className="mb-4 text-sm text-stone-500">
-                  Science-backed techniques to strengthen your resolve.
-                </Text>
-                <View className="gap-3">
-                  <Pressable
-                    accessibilityLabel="Open mental contrasting exercise"
-                    accessibilityRole="button"
-                    className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
-                    onPress={handleOpenVisualizationExercise}
-                  >
-                    <View>
-                      <Text className="text-sm font-semibold text-stone-800">
-                        Mental Contrasting
-                      </Text>
-                      <Text className="text-xs text-stone-500">
-                        Visualize success & obstacles
-                      </Text>
-                    </View>
-                    <ChevronRight className="text-stone-400" size={18} />
-                  </Pressable>
-                  <Pressable
-                    accessibilityLabel="Open visualization guide"
-                    accessibilityRole="button"
-                    className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
-                    onPress={handleOpenVisualizationGuide}
-                  >
-                    <View>
-                      <Text className="text-sm font-semibold text-stone-800">
-                        Visualization Guide
-                      </Text>
-                      <Text className="text-xs text-stone-500">
-                        Goal achievement techniques
-                      </Text>
-                    </View>
-                    <ChevronRight className="text-stone-400" size={18} />
-                  </Pressable>
-                </View>
-              </View>
-            </Animated.View>
-          ) : null}
-
-          {/* Manage Habit */}
-          <Pressable
-            accessibilityLabel={isManageExpanded ? 'Collapse manage habit section' : 'Expand manage habit section'}
-            accessibilityRole="button"
-            className="flex-row items-center justify-between rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50 active:opacity-80"
-            onPress={() => setIsManageExpanded((previous) => !previous)}
-          >
-            <View>
-              <Text className="text-lg font-semibold text-stone-800">
-                Manage Habit
-              </Text>
-              <Text className="text-sm text-stone-500">
-                Pause, archive, or delete
-              </Text>
-            </View>
-            <ChevronRight
-              className={clsx('text-stone-400', isManageExpanded && 'rotate-90')}
-              size={20}
-            />
-          </Pressable>
-
-          {isManageExpanded ? (
-            <Animated.View
-              className="rounded-2xl bg-white/90 p-5 shadow-sm shadow-stone-200/50"
-              entering={FadeInDown.delay(300).springify()}
+          {activeTab === 'motivation' && (
+            <ScrollView
+              ref={motivationScrollRef}
+              bounces
+              className="flex-1"
+              contentContainerClassName="gap-4 p-4 pb-8"
+              showsVerticalScrollIndicator={false}
             >
-              <View className="gap-3">
-                <ActionButton
-                  icon={Calendar}
-                  label="View Full Calendar"
-                  onPress={handleOpenCalendar}
-                  showChevron
-                />
-                <ActionButton
-                  icon={Pause}
-                  label="Pause Habit"
-                  onPress={handlePause}
-                />
-                <ActionButton
-                  icon={Archive}
-                  label="Archive"
-                  onPress={handleArchive}
-                />
-                <ActionButton
-                  icon={Trash2}
-                  label="Delete"
-                  onPress={handleDelete}
-                  variant="destructive"
-                />
-              </View>
-            </Animated.View>
-          ) : null}
-        </ScrollView>
+              <MotivationTabContent
+                affirmations={affirmations}
+                habit={habit}
+                habitCueAfterBehavior={habitCueAfterBehavior}
+                habitCueLocation={habitCueLocation}
+                habitCueTime={habitCueTime}
+                habitIdentity={habitIdentity}
+                hasCue={hasCue}
+                onOpenAffirmationEditor={handleOpenAffirmationEditor}
+                onOpenCueEditor={handleOpenCueEditor}
+                onOpenIdentityEditor={handleOpenIdentityEditor}
+                onOpenVisualizationExercise={handleOpenVisualizationExercise}
+                onOpenVisualizationGuide={handleOpenVisualizationGuide}
+                onOpenVisionBoardEditor={handleOpenVisionBoardEditor}
+                onOpenWhyEditor={handleOpenWhyEditor}
+                onConfirmDeleteAffirmation={handleConfirmDeleteAffirmation}
+                onConfirmDeleteVisionBoardItem={handleConfirmDeleteVisionBoardItem}
+                onSetAffirmationsListOpen={setIsAffirmationsListOpen}
+                onSetVisionBoardListOpen={setIsVisionBoardListOpen}
+                visionBoardItems={visionBoardItems}
+              />
+            </ScrollView>
+          )}
+
+          {activeTab === 'manage' && (
+            <ScrollView
+              ref={manageScrollRef}
+              bounces
+              className="flex-1"
+              contentContainerClassName="gap-4 p-4 pb-8"
+              showsVerticalScrollIndicator={false}
+            >
+              <ManageTabContent
+                habit={habit}
+                habitNotes={habitNotes}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+                onOpenCalendar={handleOpenCalendar}
+                onOpenNotesList={() => setIsNotesListOpen(true)}
+                onOpenNotesEditor={() => setIsNotesEditorOpen(true)}
+                onPause={handlePause}
+              />
+            </ScrollView>
+          )}
+        </View>
       </View>
 
       {/* Visualization Guide Modal */}
@@ -1346,7 +1436,6 @@ export default function HabitDetailScreen({
         onRequestClose={handleCloseVisualizationGuide}
       >
         <View className="flex-1 bg-white">
-          {/* Header */}
           <Animated.View
             className="flex-row items-center justify-between border-b border-stone-100 bg-white px-5 pb-4"
             entering={FadeIn.delay(100)}
@@ -1357,12 +1446,8 @@ export default function HabitDetailScreen({
                 <Eye className="text-white" size={20} />
               </View>
               <View>
-                <Text className="text-lg font-bold text-stone-900">
-                  Visualization Guide
-                </Text>
-                <Text className="text-xs text-stone-500">
-                  Science-backed goal techniques
-                </Text>
+                <Text className="text-lg font-bold text-stone-900">Visualization Guide</Text>
+                <Text className="text-xs text-stone-500">Science-backed goal techniques</Text>
               </View>
             </View>
             <Pressable
@@ -1374,17 +1459,12 @@ export default function HabitDetailScreen({
               <X className="text-stone-600" size={22} />
             </Pressable>
           </Animated.View>
-
-          {/* Scrollable Content */}
           <ScrollView
             className="flex-1"
             contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 20 }}
             showsVerticalScrollIndicator={false}
           >
-            <VisualizationGuide
-              habitName={habit.name}
-              onClose={handleCloseVisualizationGuide}
-            />
+            <VisualizationGuide habitName={habit.name} onClose={handleCloseVisualizationGuide} />
           </ScrollView>
         </View>
       </RNModal>
@@ -1396,7 +1476,6 @@ export default function HabitDetailScreen({
         onRequestClose={() => setIsWhyEditorOpen(false)}
       >
         <View className="flex-1 bg-stone-50" style={{ paddingTop: insets.top + 16 }}>
-          {/* Header */}
           <View className="flex-row items-center justify-between border-b border-stone-100 bg-white px-5 pb-4">
             <View className="flex-row items-center gap-2">
               <View className="rounded-full bg-rose-100 p-1.5">
@@ -1413,24 +1492,18 @@ export default function HabitDetailScreen({
               <X className="text-stone-600" size={22} />
             </Pressable>
           </View>
-
           <ScrollView
             className="flex-1"
             contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            {/* Context */}
             <Text className="mb-6 text-center text-sm text-stone-500">
               Your why is the deeper reason that keeps you going when motivation fades.
             </Text>
-
-            {/* Framing Label */}
             <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
               I do this because...
             </Text>
-
-            {/* Input */}
             <View className="relative">
               <TextInput
                 multiline
@@ -1449,8 +1522,6 @@ export default function HabitDetailScreen({
                 </View>
               </View>
             </View>
-
-            {/* Templates */}
             <View className="mt-8">
               <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
                 Inspiration:
@@ -1479,8 +1550,6 @@ export default function HabitDetailScreen({
               </View>
             </View>
           </ScrollView>
-
-          {/* Save Button */}
           <View
             className="border-t border-stone-100 bg-white px-5 pt-4"
             style={{ paddingBottom: insets.bottom + 16 }}
@@ -1504,7 +1573,6 @@ export default function HabitDetailScreen({
         onRequestClose={() => setIsIdentityEditorOpen(false)}
       >
         <View className="flex-1 bg-stone-50" style={{ paddingTop: insets.top + 16 }}>
-          {/* Header */}
           <View className="flex-row items-center justify-between border-b border-stone-100 bg-white px-5 pb-4">
             <View className="flex-row items-center gap-2">
               <View className="rounded-full bg-violet-100 p-1.5">
@@ -1521,14 +1589,12 @@ export default function HabitDetailScreen({
               <X className="text-stone-600" size={22} />
             </Pressable>
           </View>
-
           <ScrollView
             className="flex-1"
             contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            {/* Science Context Card */}
             <View className="mb-6 rounded-2xl bg-violet-600 p-5 shadow-lg shadow-violet-200">
               <View className="mb-2 flex-row items-center gap-2">
                 <Brain className="text-violet-200" size={16} />
@@ -1540,13 +1606,9 @@ export default function HabitDetailScreen({
                 When you see yourself as "a healthy person" instead of "someone trying to be healthy," the habit becomes automatic. Identity is the strongest driver of behavior.
               </Text>
             </View>
-
-            {/* Framing Label */}
             <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
               I am...
             </Text>
-
-            {/* Input */}
             <View className="relative">
               <TextInput
                 accessibilityLabel="Your identity statement"
@@ -1563,8 +1625,6 @@ export default function HabitDetailScreen({
                 </View>
               </View>
             </View>
-
-            {/* Templates */}
             <View className="mt-8">
               <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
                 Identity Examples:
@@ -1597,8 +1657,6 @@ export default function HabitDetailScreen({
                 ))}
               </View>
             </View>
-
-            {/* Tip */}
             <View className="mt-6 flex-row items-start gap-2 rounded-xl bg-violet-50 p-4">
               <Sparkles className="mt-0.5 text-violet-500" size={14} />
               <Text className="flex-1 text-xs leading-relaxed text-violet-700">
@@ -1606,8 +1664,6 @@ export default function HabitDetailScreen({
               </Text>
             </View>
           </ScrollView>
-
-          {/* Save Button */}
           <View
             className="border-t border-stone-100 bg-white px-5 pt-4"
             style={{ paddingBottom: insets.bottom + 16 }}
@@ -1648,9 +1704,7 @@ export default function HabitDetailScreen({
             showsVerticalScrollIndicator={false}
           >
             <View className="mb-4 flex-row items-center justify-between">
-              <Text className="text-sm text-stone-500">
-                {visionBoardItems.length}/6 cards
-              </Text>
+              <Text className="text-sm text-stone-500">{visionBoardItems.length}/6 cards</Text>
               <Pressable
                 accessibilityLabel="Add vision board card"
                 accessibilityRole="button"
@@ -1660,7 +1714,6 @@ export default function HabitDetailScreen({
                 <Text className="text-sm font-semibold text-white">Add</Text>
               </Pressable>
             </View>
-
             <View className="gap-3">
               {visionBoardItems.map((item) => (
                 <Pressable
@@ -1671,17 +1724,11 @@ export default function HabitDetailScreen({
                   onLongPress={() => handleConfirmDeleteVisionBoardItem(item)}
                   onPress={() => handleOpenVisionBoardEditor(item)}
                 >
-                  <Text className="text-base font-semibold text-stone-900">
-                    {item.title}
-                  </Text>
-                  {item.body ? (
-                    <Text className="mt-2 text-sm leading-6 text-stone-600">
-                      {item.body}
-                    </Text>
-                  ) : null}
-                  <Text className="mt-3 text-xs text-stone-400">
-                    Long press to delete
-                  </Text>
+                  <Text className="text-base font-semibold text-stone-900">{item.title}</Text>
+                  {item.body && (
+                    <Text className="mt-2 text-sm leading-6 text-stone-600">{item.body}</Text>
+                  )}
+                  <Text className="mt-3 text-xs text-stone-400">Long press to delete</Text>
                 </Pressable>
               ))}
             </View>
@@ -1810,11 +1857,8 @@ export default function HabitDetailScreen({
         onRequestClose={handleCloseVisualizationExercise}
       >
         <View className="flex-1 bg-white" style={{ paddingTop: insets.top + 16 }}>
-          {/* Header */}
           <View className="flex-row items-center justify-between border-b border-stone-100 px-5 pb-4">
-            <Text className="text-lg font-bold text-stone-900">
-              Mental Contrasting
-            </Text>
+            <Text className="text-lg font-bold text-stone-900">Mental Contrasting</Text>
             <Pressable
               accessibilityLabel="Close visualization exercise"
               accessibilityRole="button"
@@ -1824,8 +1868,6 @@ export default function HabitDetailScreen({
               <X className="text-stone-600" size={22} />
             </Pressable>
           </View>
-
-          {/* Exercise Content */}
           <View
             className="flex-1 px-5 pt-4"
             style={{ paddingBottom: insets.bottom + 16 }}
@@ -1862,7 +1904,6 @@ export default function HabitDetailScreen({
               <X className="text-stone-600" size={22} />
             </Pressable>
           </View>
-
           <ScrollView
             className="flex-1"
             contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
@@ -1889,26 +1930,24 @@ export default function HabitDetailScreen({
                   </Text>
                   <Text className="mt-1 text-center text-base leading-relaxed text-stone-600">
                     I will{' '}
-                    <Text className="font-semibold text-stone-800">
-                      {habit.name}
-                    </Text>
+                    <Text className="font-semibold text-stone-800">{habit.name}</Text>
                   </Text>
-                  {(cueLocationDraft.trim() || cueTimeDraft.trim()) ? (
+                  {(cueLocationDraft.trim() || cueTimeDraft.trim()) && (
                     <View className="mt-2 flex-row flex-wrap items-center justify-center gap-2">
-                      {cueLocationDraft.trim() ? (
+                      {cueLocationDraft.trim() && (
                         <View className="flex-row items-center gap-1 rounded-full bg-stone-50 px-2 py-0.5">
                           <MapPin className="text-stone-400" size={10} />
                           <Text className="text-xs text-stone-500">{cueLocationDraft.trim()}</Text>
                         </View>
-                      ) : null}
-                      {cueTimeDraft.trim() ? (
+                      )}
+                      {cueTimeDraft.trim() && (
                         <View className="flex-row items-center gap-1 rounded-full bg-stone-50 px-2 py-0.5">
                           <Clock className="text-stone-400" size={10} />
                           <Text className="text-xs text-stone-500">{cueTimeDraft.trim()}</Text>
                         </View>
-                      ) : null}
+                      )}
                     </View>
-                  ) : null}
+                  )}
                 </View>
               </View>
             </Animated.View>
@@ -1939,7 +1978,7 @@ export default function HabitDetailScreen({
 
             {/* Suggestions */}
             <View className="mt-4 rounded-xl bg-amber-50/70 p-3">
-              <Text className="mb-2 text-xs font-semibold text-amber-800">💡 Suggestions:</Text>
+              <Text className="mb-2 text-xs font-semibold text-amber-800">Suggestions:</Text>
               <View className="flex-row flex-wrap gap-2">
                 {[
                   'pour my morning coffee',
@@ -1997,7 +2036,7 @@ export default function HabitDetailScreen({
             />
 
             {/* Clear Cue Button */}
-            {hasCue ? (
+            {hasCue && (
               <Pressable
                 accessibilityLabel="Clear cue"
                 accessibilityRole="button"
@@ -2006,11 +2045,14 @@ export default function HabitDetailScreen({
               >
                 <Text className="text-sm font-medium text-red-600">Clear Cue</Text>
               </Pressable>
-            ) : null}
+            )}
           </ScrollView>
 
           {/* Save Button */}
-          <View className="border-t border-stone-100 bg-white px-5 pb-5 pt-4" style={{ paddingBottom: insets.bottom + 16 }}>
+          <View
+            className="border-t border-stone-100 bg-white px-5 pb-5 pt-4"
+            style={{ paddingBottom: insets.bottom + 16 }}
+          >
             <Pressable
               accessibilityLabel="Save cue"
               accessibilityRole="button"
@@ -2047,9 +2089,7 @@ export default function HabitDetailScreen({
             showsVerticalScrollIndicator={false}
           >
             <View className="mb-4 flex-row items-center justify-between">
-              <Text className="text-sm text-stone-500">
-                {affirmations.length}/10 affirmations
-              </Text>
+              <Text className="text-sm text-stone-500">{affirmations.length}/10 affirmations</Text>
               <Pressable
                 accessibilityLabel="Add affirmation"
                 accessibilityRole="button"
@@ -2059,7 +2099,6 @@ export default function HabitDetailScreen({
                 <Text className="text-sm font-semibold text-white">Add</Text>
               </Pressable>
             </View>
-
             <View className="gap-3">
               {affirmations.map((item) => (
                 <Pressable
@@ -2070,21 +2109,15 @@ export default function HabitDetailScreen({
                   onLongPress={() => handleConfirmDeleteAffirmation(item)}
                   onPress={() => handleOpenAffirmationEditor(item)}
                 >
-                  <Text className="text-base italic leading-6 text-stone-800">
-                    "{item.text}"
-                  </Text>
-                  {item.type ? (
-                    <View className="mt-3 flex-row">
-                      <View className="rounded-full bg-violet-100 px-2.5 py-1">
-                        <Text className="text-xs font-medium text-violet-700">
-                          {item.type}
-                        </Text>
+                  <Text className="text-base italic leading-6 text-stone-800">"{item.text}"</Text>
+                  {item.type && (
+                    <View className="mt-3">
+                      <View className="self-start rounded-full bg-violet-100 px-2.5 py-1">
+                        <Text className="text-xs font-medium text-violet-700">{item.type}</Text>
                       </View>
                     </View>
-                  ) : null}
-                  <Text className="mt-3 text-xs text-stone-400">
-                    Long press to delete
-                  </Text>
+                  )}
+                  <Text className="mt-3 text-xs text-stone-400">Long press to delete</Text>
                 </Pressable>
               ))}
             </View>
@@ -2121,7 +2154,6 @@ export default function HabitDetailScreen({
             <Text className="mb-4 text-sm text-stone-500">
               Write a positive statement to counter self-doubt on hard days.
             </Text>
-
             <TextInput
               multiline
               accessibilityLabel="Affirmation text"
@@ -2134,7 +2166,6 @@ export default function HabitDetailScreen({
               onChangeText={setAffirmationTextDraft}
             />
             <Text className="mt-1 text-xs text-stone-400">{affirmationTextDraft.length} / 200</Text>
-
             <Text className="mb-3 mt-6 text-xs font-semibold uppercase tracking-[2px] text-stone-500">
               Type (optional)
             </Text>
@@ -2152,9 +2183,7 @@ export default function HabitDetailScreen({
                       : 'bg-stone-100 active:bg-stone-200'
                   )}
                   onPress={() =>
-                    setAffirmationTypeDraft(
-                      affirmationTypeDraft === type ? undefined : type
-                    )
+                    setAffirmationTypeDraft(affirmationTypeDraft === type ? undefined : type)
                   }
                 >
                   <Text
@@ -2168,7 +2197,6 @@ export default function HabitDetailScreen({
                 </Pressable>
               ))}
             </View>
-
             <View className="mt-6 rounded-xl bg-violet-50 p-3">
               <Text className="mb-2 text-xs font-semibold text-violet-800">Templates:</Text>
               <View className="gap-2">
