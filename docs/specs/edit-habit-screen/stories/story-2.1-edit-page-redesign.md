@@ -58,9 +58,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Note:** Implemented Danger Zone section with red styling, warning icon (AlertTriangle), and explanatory text. Delete triggers a centered confirmation modal showing the habit name with Cancel (gray) and Delete (red) buttons. Removed trash icon from header, replaced with empty spacer for layout balance.
 
 ### AC5: Working Goal Unit Picker
-- [ ] Tapping unit dropdown opens selection modal
-- [ ] Options: minutes, hours, times, pages, reps, steps, glasses
-- [ ] Selected unit persists on save
+- [x] Tapping unit dropdown opens selection modal
+- [x] Options: minutes, hours, times, pages, reps, steps, glasses
+- [x] Selected unit persists on save
+
+**Note:** Implemented bottom sheet modal with 7 unit options (minutes, hours, times, pages, reps, steps, glasses). Each option displays an icon + label. Tapping the unit dropdown triggers haptic feedback and opens the modal. Selected unit shows blue highlight border, checkmark indicator, and blue text. Selection persists via existing updateHabit mutation goalUnit field.
 
 ### AC6: Archive Option
 - [ ] Add "Archive Habit" option in Manage section
@@ -100,9 +102,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Completion Notes (T3):** Removed Trash2 icon from header, replaced with empty View spacer for layout balance. Added Danger Zone section at bottom with red-50 background, red-200 border, AlertTriangle warning icon, explanatory text about permanent deletion, and red Delete Habit button. Implemented confirmation modal with fade animation showing habit name in title ("Delete '{habitName}'?"), warning text, and Cancel (gray) / Delete (red) button pair. All accessibility labels preserved.
 
 ### T4: Goal Unit Picker (AC: 5)
-- [ ] Create simple bottom sheet or inline picker
-- [ ] Wire up unit selection state
-- [ ] Ensure unit persists through save
+- [x] Create simple bottom sheet or inline picker
+- [x] Wire up unit selection state
+- [x] Ensure unit persists through save
+
+**Completion Notes (T4):** Expanded GOAL_UNITS constant to include 7 options with value/label/icon structure. Converted static dropdown View to TouchableOpacity that opens a slide-up bottom sheet modal. Modal uses Pressable overlay for tap-to-dismiss, handle bar for sheet affordance, and lists all units with icon + label. Selected unit shows blue border, blue background tint, and checkmark. Haptic feedback on selection. Unit persists via existing goalUnit field in updateHabit mutation (line 260).
 
 ### T5: Archive Habit Feature (AC: 6)
 - [ ] Add "Archive" button in Manage section

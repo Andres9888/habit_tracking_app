@@ -40,7 +40,15 @@ const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const TIMES = ['morning', 'afternoon', 'evening'];
 const TIME_ICONS = ['☀️', '☁️', '🌙'];
 
-const GOAL_UNITS = ['minutes', 'hours', 'times', 'pages', 'reps'];
+const GOAL_UNITS = [
+  { value: 'minutes', label: 'Minutes', icon: '⏱️' },
+  { value: 'hours', label: 'Hours', icon: '🕐' },
+  { value: 'times', label: 'Times', icon: '🔄' },
+  { value: 'pages', label: 'Pages', icon: '📖' },
+  { value: 'reps', label: 'Reps', icon: '💪' },
+  { value: 'steps', label: 'Steps', icon: '👟' },
+  { value: 'glasses', label: 'Glasses', icon: '🥛' },
+];
 
 // SectionCard component for consistent visual hierarchy
 interface SectionCardProps {
@@ -173,6 +181,7 @@ export default function HabitEditScreen({
   const [goalUnit, setGoalUnit] = useState('minutes');
   const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showUnitPicker, setShowUnitPicker] = useState(false);
 
   const updateHabit = useMutation(api.habits.update);
   const removeHabit = useMutation(api.habits.remove);
@@ -506,12 +515,20 @@ export default function HabitEditScreen({
                     value={goalValue}
                     onChangeText={setGoalValue}
                   />
-                  <View className='h-12 w-28 flex-row items-center rounded-xl bg-gray-50 px-3'>
-                    <Text className='flex-1 text-base text-[#1a1a1a]'>
+                  <TouchableOpacity
+                    accessibilityLabel={`Select goal unit, currently ${goalUnit}`}
+                    accessibilityRole='button'
+                    className='h-12 w-28 flex-row items-center rounded-xl bg-gray-50 px-3'
+                    onPress={() => {
+                      triggerSelection();
+                      setShowUnitPicker(true);
+                    }}
+                  >
+                    <Text className='flex-1 text-base text-[#1a1a1a] capitalize'>
                       {goalUnit}
                     </Text>
-                    <ChevronDown color='#8a8a8a' size={20} />
-                  </View>
+                    <ChevronDown color='#3B82F6' size={20} />
+                  </TouchableOpacity>
                 </View>
               </View>
             </SectionCard>
@@ -664,6 +681,77 @@ export default function HabitEditScreen({
             </View>
           </View>
         </View>
+      </Modal>
+
+      {/* Goal Unit Picker Modal */}
+      <Modal
+        transparent
+        animationType="slide"
+        visible={showUnitPicker}
+        onRequestClose={() => setShowUnitPicker(false)}
+      >
+        <Pressable
+          className="flex-1 justify-end bg-black/50"
+          onPress={() => setShowUnitPicker(false)}
+        >
+          <Pressable
+            className="rounded-t-3xl bg-white"
+            onPress={(e) => e.stopPropagation()}
+          >
+            {/* Handle bar */}
+            <View className="items-center py-3">
+              <View className="h-1 w-10 rounded-full bg-gray-300" />
+            </View>
+
+            {/* Header */}
+            <View className="flex-row items-center justify-between px-6 pb-4">
+              <Text className="text-lg font-bold text-slate-800">
+                Select Unit
+              </Text>
+              <TouchableOpacity
+                accessibilityLabel="Close unit picker"
+                accessibilityRole="button"
+                onPress={() => setShowUnitPicker(false)}
+              >
+                <Text className="text-base font-semibold text-blue-500">
+                  Done
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Unit Options */}
+            <View className="px-4 pb-8">
+              {GOAL_UNITS.map((unit) => (
+                <TouchableOpacity
+                  key={unit.value}
+                  accessibilityLabel={`Select ${unit.label} as goal unit`}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: goalUnit === unit.value }}
+                  className={`mb-2 flex-row items-center justify-between rounded-xl px-4 py-4 ${
+                    goalUnit === unit.value ? 'bg-blue-50 border-2 border-blue-500' : 'bg-gray-50'
+                  }`}
+                  onPress={() => {
+                    triggerSelection();
+                    setGoalUnit(unit.value);
+                    setShowUnitPicker(false);
+                  }}
+                >
+                  <View className="flex-row items-center gap-3">
+                    <Text className="text-xl">{unit.icon}</Text>
+                    <Text className={`text-base font-medium ${
+                      goalUnit === unit.value ? 'text-blue-600' : 'text-slate-800'
+                    }`}>
+                      {unit.label}
+                    </Text>
+                  </View>
+                  {goalUnit === unit.value && (
+                    <Check color="#3B82F6" size={20} strokeWidth={3} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </Pressable>
+        </Pressable>
       </Modal>
     </Modal>
   );
