@@ -159,9 +159,14 @@ function ActionButton({
   const isDestructive = variant === 'destructive';
   const isBoost = variant === 'boost';
 
+  // Build accessible label with context
+  const accessibleLabel = subtitle
+    ? `${label}. ${subtitle}${isDestructive ? '. This is a destructive action.' : ''}`
+    : `${label}${isDestructive ? '. This is a destructive action.' : ''}`;
+
   return (
     <Pressable
-      accessibilityLabel={label}
+      accessibilityLabel={accessibleLabel}
       accessibilityRole="button"
       className={clsx(
         'flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70',
@@ -787,6 +792,15 @@ function ManageTabContent({
           <ChevronRight className="text-stone-400" size={20} />
         </View>
       </SectionCard>
+
+      {/* View Full Calendar */}
+      <ActionButton
+        icon={Calendar}
+        label="View Full Calendar"
+        subtitle="See your complete habit history"
+        onPress={onOpenCalendar}
+        showChevron
+      />
 
       {/* Divider */}
       <View className="mx-4 h-px bg-stone-200" />
