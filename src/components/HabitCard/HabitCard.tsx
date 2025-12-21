@@ -39,6 +39,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useAppTheme } from '../../theme';
+import { Springs } from '../../constants/motion';
 import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import { StrengthProgressBar } from '../StrengthProgressBar/StrengthProgressBar';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
@@ -209,21 +210,23 @@ export function HabitCard({
 
   // ========================================
   // ENHANCED COMPLETION ANIMATION (Part B: Micro-Transitions)
+  // Using Springs.bouncy for playful celebration animations
   // ========================================
   const triggerCompletionCelebration = () => {
     'worklet';
 
     // Phase 1: Card bounce (100-400ms)
     cardScale.value = withSequence(
-      withSpring(1.05, { damping: 10, stiffness: 200 }),
-      withSpring(1.0, { damping: 12, stiffness: 180 })
+      withSpring(1.05, Springs.bouncy),
+      withSpring(1.0, Springs.button)
     );
 
     // Phase 2: Checkmark animation (0-400ms)
     // Scale: 0 → 1.2 → 1.0 (elastic spring)
+    // Using Springs.bouncy for the playful entrance
     checkmarkScale.value = withSequence(
-      withSpring(1.2, { damping: 8, stiffness: 200 }),
-      withSpring(1.0, { damping: 10, stiffness: 180 })
+      withSpring(1.2, Springs.bouncy),
+      withSpring(1.0, Springs.button)
     );
 
     // Rotation: 0 → 360deg
@@ -304,22 +307,17 @@ export function HabitCard({
     });
 
   // Tap gesture handler with enhanced press feedback
+  // Using Springs.button for consistent press feedback across the app
   const tapGesture = Gesture.Tap()
     .onBegin(() => {
       console.log('🔴 TAP GESTURE BEGIN');
       // Enhanced press state - more noticeable scale down
-      cardScale.value = withSpring(0.96, {
-        damping: 12,
-        stiffness: 200,
-      });
+      cardScale.value = withSpring(0.96, Springs.button);
     })
     .onFinalize(() => {
       console.log('🔴 TAP GESTURE FINALIZE');
       // Smooth spring back with slight bounce
-      cardScale.value = withSpring(1, {
-        damping: 10,
-        stiffness: 180,
-      });
+      cardScale.value = withSpring(1, Springs.button);
     })
     .onEnd(() => {
       console.log('🔴 ========================================');

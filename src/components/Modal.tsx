@@ -38,16 +38,18 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '../theme';
+import { Springs } from '../constants/motion';
 import * as Haptics from 'expo-haptics';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// Organic spring config for fullScreen modals - slower, more natural feel
-// Lower stiffness + higher damping + heavier mass = ~400-500ms duration, organic momentum
+// Use standardized Springs from motion.ts for consistency across the app
+// See: docs/specs/animation-consistency-audit.md for guidelines
+
+// Organic spring config for fullScreen modals - using Springs.sheet as base
+// with additional precision settings for modal-specific behavior
 const FULLSCREEN_ORGANIC_SPRING = {
-  damping: 32, // More controlled, less bounce
-  stiffness: 180, // Much slower than default
-  mass: 1.3, // Heavier = more momentum
+  ...Springs.sheet,
   overshootClamping: false,
   restDisplacementThreshold: 0.01,
   restSpeedThreshold: 0.01,
@@ -67,7 +69,7 @@ const GESTURE_SPRING_CONFIG = {
   mass: 0.8,
 };
 
-// Organic spring for bottom sheet - subtle life, not mechanical
+// Organic spring for bottom sheet - based on Springs.button with adjusted stiffness
 const BOTTOM_SHEET_SPRING_CONFIG = {
   damping: 26,
   stiffness: 300,

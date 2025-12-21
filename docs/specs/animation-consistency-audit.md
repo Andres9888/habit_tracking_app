@@ -210,8 +210,11 @@ Add standardized spring configs for app-wide consistency.
   - **Completed**: Added `Springs` export with standardized configs: `sheet`, `gentle`, `button`, `bouncy`, `micro`, `pulse`.
 - [x] Document usage guidelines
   - **Completed**: JSDoc comments added to Springs object with usage recommendations.
-- [ ] Gradually migrate components to use Springs
-  - **Future work**: Components can be migrated to use `Springs` from motion.ts for consistency. This is optional as current implementations already use equivalent values.
+- [x] Gradually migrate components to use Springs
+  - **Completed**: Migrated key components to use `Springs` constants:
+    - **Modal.tsx**: Now uses `Springs.sheet` for fullScreen organic spring
+    - **FullsizeTemplatePreview.tsx**: Now uses `Springs.gentle` (content reveals), `Springs.micro` (icon scale), `Springs.pulse` (glow effect), and `Springs.button` (press feedback)
+    - **HabitCard.tsx**: Now uses `Springs.button` (tap gesture) and `Springs.bouncy` (completion celebration)
 
 ---
 
@@ -237,7 +240,13 @@ Add standardized spring configs for app-wide consistency.
 
 ## Changelog
 
-### December 21, 2024
+### December 21, 2024 (Phase 2 Complete)
+- Migrated Modal.tsx to use `Springs.sheet` from motion.ts
+- Migrated FullsizeTemplatePreview.tsx to use `Springs.gentle`, `Springs.micro`, `Springs.pulse`, and `Springs.button`
+- Migrated HabitCard.tsx to use `Springs.button` and `Springs.bouncy`
+- All animation consistency audit tasks now complete
+
+### December 21, 2024 (Phase 1 Complete)
 - Removed unused `APPLE_SPRING_CONFIG` dead code from Modal.tsx
 - Added `Springs` object to motion.ts with standardized spring configurations
 - Updated audit document to reflect current implementation state

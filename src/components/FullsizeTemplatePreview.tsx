@@ -52,6 +52,7 @@ import ConfettiCannon from 'react-native-confetti-cannon';
 import Modal from './Modal';
 import Button from './Button/Button';
 import { useAppTheme } from '../theme';
+import { Springs } from '../constants/motion';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import type { Doc, Id } from '../../convex/_generated/dataModel';
 
@@ -193,12 +194,8 @@ export default function FullsizeTemplatePreview({
         });
 
         // Phase 2: Content slides up with organic spring (iOS sheet style)
-        // Lower stiffness = slower, more organic feel
-        contentTranslateY.value = withSpring(0, {
-          damping: 28,      // Higher damping = less bounce
-          stiffness: 180,   // Lower stiffness = slower, more organic
-          mass: 1.2,        // Slightly heavier = more momentum
-        });
+        // Using Springs.gentle for content reveals
+        contentTranslateY.value = withSpring(0, Springs.gentle);
         contentOpacity.value = withTiming(1, {
           duration: 400,
           easing: Easing.out(Easing.cubic)
@@ -211,22 +208,17 @@ export default function FullsizeTemplatePreview({
         );
 
         // Phase 4: Icon scales up with gentle bounce (delay 250ms)
+        // Using Springs.micro for subtle micro-interactions
         iconScale.value = withDelay(
           250,
-          withSpring(1, {
-            damping: 14,     // Medium damping for subtle bounce
-            stiffness: 120,  // Lower stiffness = gentler
-            mass: 0.9,
-          })
+          withSpring(1, Springs.micro)
         );
 
         // Phase 5: Icon glow pulses outward (delay 400ms)
+        // Using Springs.pulse for slow, organic glow effect
         iconGlowScale.value = withDelay(
           400,
-          withSpring(1.12, {
-            damping: 12,
-            stiffness: 60,   // Very low = slow, organic pulse
-          })
+          withSpring(1.12, Springs.pulse)
         );
       }
     }
@@ -401,19 +393,20 @@ export default function FullsizeTemplatePreview({
 
   // Press handlers for button feedback
   // Skips animation for users with reduced motion enabled
+  // Using Springs.button for consistent press feedback across the app
   const createPressHandlers = (scaleValue: SharedValue<number>, scale = 0.96) => ({
     onPressIn: () => {
       if (reducedMotion) {
         scaleValue.value = scale;
       } else {
-        scaleValue.value = withSpring(scale, { damping: 15, stiffness: 200 });
+        scaleValue.value = withSpring(scale, Springs.button);
       }
     },
     onPressOut: () => {
       if (reducedMotion) {
         scaleValue.value = 1;
       } else {
-        scaleValue.value = withSpring(1, { damping: 15, stiffness: 200 });
+        scaleValue.value = withSpring(1, Springs.button);
       }
     },
   });
