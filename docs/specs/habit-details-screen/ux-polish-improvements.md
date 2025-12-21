@@ -166,7 +166,13 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Duration:** ~700ms total (staggered particle animations + fade out)
   - **Accessibility:** Respects `reduceMotion` preference - animation is skipped when enabled
   - **Implementation:** Added `ConfettiBurst` sub-component in `src/components/QuickCompleteButton/QuickCompleteButton.tsx:62-153`
-- [ ] T1.4: Implement stats number counting animation
+- [x] T1.4: Implement stats number counting animation
+  - **Completed:** Added animated counting effect to QuickStatsStrip component
+  - **Animation:** 800ms duration with `Easing.out(Easing.cubic)` for smooth deceleration
+  - **Stagger:** 100ms delay between each stat (streak → strength → success)
+  - **Values:** Numbers count from 0 to target value with per-frame updates via `useDerivedValue` + `runOnJS`
+  - **Accessibility:** Respects `reduceMotion` preference - values set immediately when enabled
+  - **Implementation:** Modified `src/components/QuickStatsStrip/QuickStatsStrip.tsx:138-232`
 - [ ] T1.5: Add strength ring fill animation
 
 ### Phase 2: Tab Navigation (1-2 hours)
