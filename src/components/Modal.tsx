@@ -53,6 +53,17 @@ const APPLE_SPRING_CONFIG = {
   restSpeedThreshold: 0.01,
 };
 
+// Organic spring config for fullScreen modals - slower, more natural feel
+// Lower stiffness + higher damping + heavier mass = ~400-500ms duration, organic momentum
+const FULLSCREEN_ORGANIC_SPRING = {
+  damping: 32, // More controlled, less bounce
+  stiffness: 180, // Much slower than default
+  mass: 1.3, // Heavier = more momentum
+  overshootClamping: false,
+  restDisplacementThreshold: 0.01,
+  restSpeedThreshold: 0.01,
+};
+
 // Exit spring - slightly faster for dismissal
 const EXIT_SPRING_CONFIG = {
   damping: 26,
@@ -155,13 +166,12 @@ export function Modal({
     const useReducedAnimation = reduceMotion && respectReduceMotion;
 
     if (visible) {
-      // Backdrop fade in
-      backdropOpacityValue.value = useReducedAnimation
-        ? backdropOpacity
-        : withTiming(backdropOpacity, { duration: 200, easing: Easing.out(Easing.cubic) });
-
       switch (variant) {
         case 'bottomSheet': {
+          // Backdrop fade in - 200ms for bottom sheet
+          backdropOpacityValue.value = useReducedAnimation
+            ? backdropOpacity
+            : withTiming(backdropOpacity, { duration: 200, easing: Easing.out(Easing.cubic) });
           translateY.value = useReducedAnimation
             ? 0
             : withSpring(0, BOTTOM_SHEET_SPRING_CONFIG, (finished) => {
@@ -173,10 +183,15 @@ export function Modal({
           break;
         }
         case 'fullScreen': {
+          // Backdrop fade in - 400ms for fullScreen to match slower organic spring
+          backdropOpacityValue.value = useReducedAnimation
+            ? backdropOpacity
+            : withTiming(backdropOpacity, { duration: 400, easing: Easing.out(Easing.cubic) });
           // Apple-like entrance: scale up + fade in + slide up
+          // Uses FULLSCREEN_ORGANIC_SPRING for slower, more natural feel (~400-500ms)
           fullScreenProgress.value = useReducedAnimation
             ? 1
-            : withSpring(1, APPLE_SPRING_CONFIG, (finished) => {
+            : withSpring(1, FULLSCREEN_ORGANIC_SPRING, (finished) => {
                 // Haptic feedback when animation completes
                 if (finished) {
                   runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
@@ -186,6 +201,10 @@ export function Modal({
           break;
         }
         case 'centerAlert': {
+          // Backdrop fade in - 200ms for center alert
+          backdropOpacityValue.value = useReducedAnimation
+            ? backdropOpacity
+            : withTiming(backdropOpacity, { duration: 200, easing: Easing.out(Easing.cubic) });
           alertOpacity.value = useReducedAnimation
             ? 1
             : withTiming(1, { duration: 200, easing: Easing.out(Easing.cubic) });
@@ -196,19 +215,22 @@ export function Modal({
         }
       }
     } else {
-      // Exit animations
-      backdropOpacityValue.value = useReducedAnimation
-        ? 0
-        : withTiming(0, { duration: 200, easing: Easing.in(Easing.cubic) });
-
+      // Exit animations - backdrop fade per variant
       switch (variant) {
         case 'bottomSheet': {
+          backdropOpacityValue.value = useReducedAnimation
+            ? 0
+            : withTiming(0, { duration: 200, easing: Easing.in(Easing.cubic) });
           translateY.value = useReducedAnimation
             ? SCREEN_HEIGHT
             : withSpring(SCREEN_HEIGHT, BOTTOM_SHEET_SPRING_CONFIG);
           break;
         }
         case 'fullScreen': {
+          // Slower backdrop fade for fullScreen exit (300ms - slightly faster than entrance)
+          backdropOpacityValue.value = useReducedAnimation
+            ? 0
+            : withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) });
           // Apple-like exit: scale down + fade out + slide down
           fullScreenProgress.value = useReducedAnimation
             ? 0
@@ -216,6 +238,9 @@ export function Modal({
           break;
         }
         case 'centerAlert': {
+          backdropOpacityValue.value = useReducedAnimation
+            ? 0
+            : withTiming(0, { duration: 200, easing: Easing.in(Easing.cubic) });
           alertOpacity.value = useReducedAnimation
             ? 0
             : withTiming(0, { duration: 150 });
@@ -297,11 +322,11 @@ export function Modal({
       Extrapolation.CLAMP
     );
 
-    // TranslateY: starts at 60, ends at 0 (slides up)
+    // TranslateY: starts at 80, ends at 0 (slides up) - more dramatic slide for organic feel
     const translateYValue = interpolate(
       fullScreenProgress.value,
       [0, 1],
-      [60, 0],
+      [80, 0],
       Extrapolation.CLAMP
     );
 
