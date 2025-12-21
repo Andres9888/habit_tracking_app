@@ -43,9 +43,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Note:** All AC2 items already implemented. Large 80x80 icon preview at lines 295-303, EmojiPickerSheet integration at lines 562-573, and explicit color picker separate from emoji selection (lines 327-340). Random color assignment on emoji change was removed per T1 completion.
 
 ### AC3: Improved Visual Hierarchy
-- [ ] Group related settings into clear card sections
-- [ ] Section headers with consistent typography
-- [ ] Proper spacing between sections (16px gap)
+- [x] Group related settings into clear card sections
+- [x] Section headers with consistent typography
+- [x] Proper spacing between sections (16px gap)
+
+**Note:** Implemented SectionCard component with emoji icon + title pattern. Grouped into: Identity (Style + Name), Schedule (Frequency + Days + Time), Reminders, Goals, Stats. Using gap-4 (16px) between section cards and mb-4 (16px) between section groups.
 
 ### AC4: Safe Delete Flow
 - [ ] Move delete action to bottom "Danger Zone" section
@@ -81,9 +83,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Completion Notes (T1):** Implemented 16-color picker with animated selection, haptic feedback, and checkmark indicators. Light colors display gray checkmark for contrast. White color shows subtle border. Removed random color assignment on emoji change.
 
 ### T2: Improve Section Layout (AC: 3)
-- [ ] Create consistent `SectionCard` component or use shared styling
-- [ ] Group into: Identity, Schedule, Reminders, Goals, Advanced, Manage
-- [ ] Apply 16px gap between sections
+- [x] Create consistent `SectionCard` component or use shared styling
+- [x] Group into: Identity, Schedule, Reminders, Goals, Advanced, Manage
+- [x] Apply 16px gap between sections
+
+**Completion Notes (T2):** Created SectionCard component with title and optional icon props. Reorganized UI into 5 logical section groups: Identity (Style + Name cards), Schedule (combined Frequency, Days, Preferred Time), Reminders, Goals, and Stats. Each section uses consistent "emoji title" header pattern (e.g., "🎨 Style it", "📅 Schedule"). Applied gap-4 (16px) between cards within groups and mb-4 (16px) between section groups for visual separation.
 
 ### T3: Relocate Delete Action (AC: 4)
 - [ ] Remove trash icon from header

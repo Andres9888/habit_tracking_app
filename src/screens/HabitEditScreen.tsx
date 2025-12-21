@@ -42,6 +42,22 @@ const TIME_ICONS = ['☀️', '☁️', '🌙'];
 
 const GOAL_UNITS = ['minutes', 'hours', 'times', 'pages', 'reps'];
 
+// SectionCard component for consistent visual hierarchy
+interface SectionCardProps {
+  title: string;
+  icon?: string;
+  children: React.ReactNode;
+}
+
+const SectionCard = ({ title, icon, children }: SectionCardProps) => (
+  <View className="rounded-2xl bg-white p-4">
+    <Text className="mb-4 text-base font-bold text-slate-800">
+      {icon ? `${icon} ${title}` : title}
+    </Text>
+    {children}
+  </View>
+);
+
 // Animated color button component for color picker
 interface AnimatedColorButtonProps {
   color: string;
@@ -288,238 +304,247 @@ export default function HabitEditScreen({
         </View>
 
         <ScrollView className='flex-1 px-4' showsVerticalScrollIndicator={false}>
-          {/* Icon & Style Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <Text className='mb-4 text-base font-bold text-slate-800'>🎨 Style it</Text>
-
-            {/* Large Icon Preview */}
-            <View className='mb-5 items-center'>
-              <View
-                className='mb-3 h-20 w-20 items-center justify-center rounded-2xl'
-                style={{ backgroundColor: selectedColor }}
-              >
-                <Text className='text-[36px]'>{selectedEmoji}</Text>
-              </View>
-            </View>
-
-            {/* Icon Selector Button */}
-            <TouchableOpacity
-              accessibilityLabel='Choose icon'
-              accessibilityRole='button'
-              className='mb-5 flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
-              onPress={() => setIsEmojiPickerVisible(true)}
-            >
-              <View className='flex-row items-center gap-3'>
+          {/* Section: Identity - Icon, Color, and Name */}
+          <View className="gap-4 mb-4">
+            <SectionCard title="Style it" icon="🎨">
+              {/* Large Icon Preview */}
+              <View className='mb-5 items-center'>
                 <View
-                  className='h-12 w-12 items-center justify-center rounded-xl'
-                  style={{ backgroundColor: selectedColor + '33' }}
+                  className='mb-3 h-20 w-20 items-center justify-center rounded-2xl'
+                  style={{ backgroundColor: selectedColor }}
                 >
-                  <Text className='text-2xl'>{selectedEmoji}</Text>
-                </View>
-                <View>
-                  <Text className='text-base font-medium text-slate-800'>Icon</Text>
-                  <Text className='text-xs text-slate-500'>Tap to change</Text>
+                  <Text className='text-[36px]'>{selectedEmoji}</Text>
                 </View>
               </View>
-              <Text className='text-sm text-[#3B82F6]'>Change</Text>
-            </TouchableOpacity>
 
-            {/* Color Picker */}
-            <View>
-              <Text className='mb-3 text-sm font-semibold text-slate-600'>Color</Text>
-              <View className='flex-row flex-wrap gap-3'>
-                {COLORS.map((color) => (
-                  <AnimatedColorButton
-                    key={color}
-                    color={color}
-                    isSelected={selectedColor === color}
-                    onPress={() => handleColorSelect(color)}
-                  />
-                ))}
+              {/* Icon Selector Button */}
+              <TouchableOpacity
+                accessibilityLabel='Choose icon'
+                accessibilityRole='button'
+                className='mb-5 flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
+                onPress={() => setIsEmojiPickerVisible(true)}
+              >
+                <View className='flex-row items-center gap-3'>
+                  <View
+                    className='h-12 w-12 items-center justify-center rounded-xl'
+                    style={{ backgroundColor: selectedColor + '33' }}
+                  >
+                    <Text className='text-2xl'>{selectedEmoji}</Text>
+                  </View>
+                  <View>
+                    <Text className='text-base font-medium text-slate-800'>Icon</Text>
+                    <Text className='text-xs text-slate-500'>Tap to change</Text>
+                  </View>
+                </View>
+                <Text className='text-sm text-[#3B82F6]'>Change</Text>
+              </TouchableOpacity>
+
+              {/* Color Picker */}
+              <View>
+                <Text className='mb-3 text-sm font-semibold text-slate-600'>Color</Text>
+                <View className='flex-row flex-wrap gap-3'>
+                  {COLORS.map((color) => (
+                    <AnimatedColorButton
+                      key={color}
+                      color={color}
+                      isSelected={selectedColor === color}
+                      onPress={() => handleColorSelect(color)}
+                    />
+                  ))}
+                </View>
               </View>
-            </View>
-          </View>
+            </SectionCard>
 
-          {/* Habit Name Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <Text className='mb-2 text-base font-semibold text-[#1a1a1a]'>
-              Habit Name
-            </Text>
-            <TextInput
-              className='h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
-              placeholder='e.g., Read 10 minutes'
-              placeholderTextColor='#adaebc'
-              value={habitName}
-              onChangeText={setHabitName}
-            />
-          </View>
-
-          {/* Frequency Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
-              Frequency
-            </Text>
-            <View className='flex-row gap-3'>
-              {(['daily', 'weekly', 'custom'] as const).map((freq) => (
-                <TouchableOpacity
-                  key={freq}
-                  className={`flex-1 h-12 items-center justify-center rounded-xl ${
-                    frequency === freq ? 'bg-blue-500' : 'bg-gray-100'
-                  }`}
-                  onPress={() => setFrequency(freq)}
-                >
-                  <Text
-                    className={`text-base font-medium capitalize ${
-                      frequency === freq ? 'text-white' : 'text-[#1a1a1a]'
-                    }`}
-                  >
-                    {freq}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          {/* Days of Week Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
-              Days of Week
-            </Text>
-            <View className='flex-row justify-between'>
-              {DAYS.map((day, index) => (
-                <TouchableOpacity
-                  key={index}
-                  className={`h-10 w-10 items-center justify-center rounded-xl ${
-                    selectedDays.includes(index) ? 'bg-blue-500' : 'bg-gray-100'
-                  }`}
-                  onPress={() => toggleDay(index)}
-                >
-                  <Text
-                    className={`text-base font-semibold ${
-                      selectedDays.includes(index) ? 'text-white' : 'text-[#1a1a1a]'
-                    }`}
-                  >
-                    {day}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          {/* Preferred Time Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
-              Preferred Time
-            </Text>
-            <View className='flex-row gap-3'>
-              {TIMES.map((time, index) => (
-                <TouchableOpacity
-                  key={time}
-                  className={`flex-1 h-17 items-center justify-center rounded-xl ${
-                    preferredTime === time ? 'bg-blue-500' : 'bg-gray-100'
-                  }`}
-                  onPress={() => setPreferredTime(time as any)}
-                >
-                  <Text className='text-xl mb-1'>{TIME_ICONS[index]}</Text>
-                  <Text
-                    className={`text-sm font-medium capitalize ${
-                      preferredTime === time ? 'text-white' : 'text-[#1a1a1a]'
-                    }`}
-                  >
-                    {time}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          {/* Reminders Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <View className='mb-4 flex-row items-center justify-between'>
-              <Text className='text-base font-semibold text-[#1a1a1a]'>
-                Reminders
-              </Text>
-              <Switch
-                value={remindersEnabled}
-                onValueChange={setRemindersEnabled}
-                trackColor={{ false: '#D1D5DB', true: '#3B82F6' }}
-                thumbColor='#FFFFFF'
-                ios_backgroundColor='#D1D5DB'
+            <SectionCard title="Name" icon="✏️">
+              <TextInput
+                className='h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
+                placeholder='e.g., Read 10 minutes'
+                placeholderTextColor='#adaebc'
+                value={habitName}
+                onChangeText={setHabitName}
               />
-            </View>
+            </SectionCard>
+          </View>
 
-            {remindersEnabled && (
-              <>
-                <TouchableOpacity
-                  className='mb-3 flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
-                  onPress={() => setShowTimePicker(true)}
-                >
-                  <Text className='text-base font-medium text-[#1a1a1a]'>
-                    Reminder Time
-                  </Text>
-                  <Text className='text-base font-semibold text-blue-500'>
-                    {formatReminderTime(reminderTime)}
-                  </Text>
-                </TouchableOpacity>
+          {/* Section: Schedule - Frequency, Days, Time of Day */}
+          <View className="gap-4 mb-4">
+            <SectionCard title="Schedule" icon="📅">
+              {/* Frequency */}
+              <View className='mb-5'>
+                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                  Frequency
+                </Text>
+                <View className='flex-row gap-3'>
+                  {(['daily', 'weekly', 'custom'] as const).map((freq) => (
+                    <TouchableOpacity
+                      key={freq}
+                      className={`flex-1 h-12 items-center justify-center rounded-xl ${
+                        frequency === freq ? 'bg-blue-500' : 'bg-gray-100'
+                      }`}
+                      onPress={() => setFrequency(freq)}
+                    >
+                      <Text
+                        className={`text-base font-medium capitalize ${
+                          frequency === freq ? 'text-white' : 'text-[#1a1a1a]'
+                        }`}
+                      >
+                        {freq}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
 
-                <View className='flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'>
-                  <Text className='text-base font-medium text-[#1a1a1a]'>
-                    Sound
-                  </Text>
-                  <TouchableOpacity>
-                    <Text className='text-base font-semibold text-blue-500 capitalize'>
-                      {reminderSound}
+              {/* Days of Week */}
+              <View className='mb-5'>
+                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                  Days of Week
+                </Text>
+                <View className='flex-row justify-between'>
+                  {DAYS.map((day, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      className={`h-10 w-10 items-center justify-center rounded-xl ${
+                        selectedDays.includes(index) ? 'bg-blue-500' : 'bg-gray-100'
+                      }`}
+                      onPress={() => toggleDay(index)}
+                    >
+                      <Text
+                        className={`text-base font-semibold ${
+                          selectedDays.includes(index) ? 'text-white' : 'text-[#1a1a1a]'
+                        }`}
+                      >
+                        {day}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Preferred Time */}
+              <View>
+                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                  Preferred Time
+                </Text>
+                <View className='flex-row gap-3'>
+                  {TIMES.map((time, index) => (
+                    <TouchableOpacity
+                      key={time}
+                      className={`flex-1 h-17 items-center justify-center rounded-xl ${
+                        preferredTime === time ? 'bg-blue-500' : 'bg-gray-100'
+                      }`}
+                      onPress={() => setPreferredTime(time as any)}
+                    >
+                      <Text className='text-xl mb-1'>{TIME_ICONS[index]}</Text>
+                      <Text
+                        className={`text-sm font-medium capitalize ${
+                          preferredTime === time ? 'text-white' : 'text-[#1a1a1a]'
+                        }`}
+                      >
+                        {time}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </SectionCard>
+          </View>
+
+          {/* Section: Reminders */}
+          <View className="gap-4 mb-4">
+            <SectionCard title="Reminders" icon="🔔">
+              <View className='-mt-2 flex-row items-center justify-between'>
+                <Text className='text-sm font-semibold text-slate-600'>
+                  Enable Reminders
+                </Text>
+                <Switch
+                  value={remindersEnabled}
+                  onValueChange={setRemindersEnabled}
+                  trackColor={{ false: '#D1D5DB', true: '#3B82F6' }}
+                  thumbColor='#FFFFFF'
+                  ios_backgroundColor='#D1D5DB'
+                />
+              </View>
+
+              {remindersEnabled && (
+                <View className='mt-4'>
+                  <TouchableOpacity
+                    className='mb-3 flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
+                    onPress={() => setShowTimePicker(true)}
+                  >
+                    <Text className='text-base font-medium text-[#1a1a1a]'>
+                      Reminder Time
+                    </Text>
+                    <Text className='text-base font-semibold text-blue-500'>
+                      {formatReminderTime(reminderTime)}
                     </Text>
                   </TouchableOpacity>
+
+                  <View className='flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'>
+                    <Text className='text-base font-medium text-[#1a1a1a]'>
+                      Sound
+                    </Text>
+                    <TouchableOpacity>
+                      <Text className='text-base font-semibold text-blue-500 capitalize'>
+                        {reminderSound}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </>
-            )}
+              )}
+            </SectionCard>
           </View>
 
-          {/* Goal Section */}
-          <View className='mb-4 rounded-2xl bg-white p-4'>
-            <Text className='mb-2 text-base font-semibold text-[#1a1a1a]'>
-              Goal (Optional)
-            </Text>
-            <View className='flex-row gap-3'>
-              <TextInput
-                className='flex-1 h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
-                placeholder='30'
-                placeholderTextColor='#adaebc'
-                keyboardType='numeric'
-                value={goalValue}
-                onChangeText={setGoalValue}
-              />
-              <View className='h-12 w-28 flex-row items-center rounded-xl bg-gray-50 px-3'>
-                <Text className='flex-1 text-base text-[#1a1a1a]'>
-                  {goalUnit}
+          {/* Section: Goals */}
+          <View className="gap-4 mb-4">
+            <SectionCard title="Goals" icon="🎯">
+              <View className='-mt-2'>
+                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                  Daily Goal (Optional)
                 </Text>
-                <ChevronDown color='#8a8a8a' size={20} />
+                <View className='flex-row gap-3'>
+                  <TextInput
+                    className='flex-1 h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
+                    placeholder='30'
+                    placeholderTextColor='#adaebc'
+                    keyboardType='numeric'
+                    value={goalValue}
+                    onChangeText={setGoalValue}
+                  />
+                  <View className='h-12 w-28 flex-row items-center rounded-xl bg-gray-50 px-3'>
+                    <Text className='flex-1 text-base text-[#1a1a1a]'>
+                      {goalUnit}
+                    </Text>
+                    <ChevronDown color='#8a8a8a' size={20} />
+                  </View>
+                </View>
               </View>
-            </View>
+            </SectionCard>
           </View>
 
-          {/* Current Streak Section */}
-          <View className='mb-6 rounded-2xl bg-white p-4'>
-            <View className='flex-row items-center justify-between'>
-              <View className='flex-row items-center gap-3'>
-                <View className='h-12 w-12 items-center justify-center rounded-xl bg-orange-100'>
-                  <Text className='text-xl'>🔥</Text>
+          {/* Section: Stats */}
+          <View className="gap-4 mb-6">
+            <SectionCard title="Stats" icon="📊">
+              <View className='-mt-2 flex-row items-center justify-between'>
+                <View className='flex-row items-center gap-3'>
+                  <View className='h-12 w-12 items-center justify-center rounded-xl bg-orange-100'>
+                    <Text className='text-xl'>🔥</Text>
+                  </View>
+                  <View>
+                    <Text className='text-base font-semibold text-[#1a1a1a]'>
+                      Current Streak
+                    </Text>
+                    <Text className='text-sm text-[#8a8a8a]'>Keep it going!</Text>
+                  </View>
                 </View>
-                <View>
-                  <Text className='text-base font-semibold text-[#1a1a1a]'>
-                    Current Streak
+                <View className='items-end'>
+                  <Text className='text-2xl font-bold text-orange-500'>
+                    {stats?.streak || 0}
                   </Text>
-                  <Text className='text-sm text-[#8a8a8a]'>Keep it going!</Text>
+                  <Text className='text-sm text-[#8a8a8a]'>days</Text>
                 </View>
               </View>
-              <View className='items-end'>
-                <Text className='text-2xl font-bold text-orange-500'>
-                  {stats?.streak || 0}
-                </Text>
-                <Text className='text-sm text-[#8a8a8a]'>days</Text>
-              </View>
-            </View>
+            </SectionCard>
           </View>
         </ScrollView>
 
