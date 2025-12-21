@@ -196,7 +196,12 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Direction:** Swipe left = next tab, Swipe right = previous tab
   - **Boundary handling:** Swipes at first/last tabs are ignored (no wrap-around)
   - **Implementation:** Modified `src/screens/HabitDetailScreen.tsx:949-984` (gesture handler) and `1551-1636` (GestureDetector wrapper)
-- [ ] T2.3: Add haptic feedback to tab interactions
+- [x] T2.3: Add haptic feedback to tab interactions
+  - **Completed:** Haptic feedback already implemented in previous tasks (T2.1 and T2.2)
+  - **Tab Tap:** Light haptic impact triggered in `HabitDetailTabs.tsx:132` via `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)`
+  - **Tab Swipe:** Light haptic impact triggered in `HabitDetailScreen.tsx:954,958` via `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)`
+  - **Both methods:** Use consistent `ImpactFeedbackStyle.Light` as specified in requirements
+  - **Implementation:** Already complete as part of T2.1 (tab tap) and T2.2 (swipe gesture)
 
 ### Phase 3: Micro-interactions (1-2 hours)
 - [ ] T3.1: Add today indicator pulse in calendar
