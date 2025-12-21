@@ -65,9 +65,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Note:** Implemented bottom sheet modal with 7 unit options (minutes, hours, times, pages, reps, steps, glasses). Each option displays an icon + label. Tapping the unit dropdown triggers haptic feedback and opens the modal. Selected unit shows blue highlight border, checkmark indicator, and blue text. Selection persists via existing updateHabit mutation goalUnit field.
 
 ### AC6: Archive Option
-- [ ] Add "Archive Habit" option in Manage section
-- [ ] Archive confirmation dialog
-- [ ] Archived habits hidden from home but data preserved
+- [x] Add "Archive Habit" option in Manage section
+- [x] Archive confirmation dialog
+- [x] Archived habits hidden from home but data preserved
+
+**Note:** Implemented Manage section with amber-styled Archive button featuring Archive icon, explanatory subtitle ("Hide from home, keep your data"). Added fade-in confirmation modal with habit name in title, descriptive text about data preservation, and Cancel (gray) / Archive (amber) button pair. Calls existing `api.habits.archive` mutation and navigates back on completion.
 
 ### AC7: Link to Advanced Features
 - [ ] "Edit Cue & Intention" row → navigates to cue editor
@@ -109,10 +111,12 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Completion Notes (T4):** Expanded GOAL_UNITS constant to include 7 options with value/label/icon structure. Converted static dropdown View to TouchableOpacity that opens a slide-up bottom sheet modal. Modal uses Pressable overlay for tap-to-dismiss, handle bar for sheet affordance, and lists all units with icon + label. Selected unit shows blue border, blue background tint, and checkmark. Haptic feedback on selection. Unit persists via existing goalUnit field in updateHabit mutation (line 260).
 
 ### T5: Archive Habit Feature (AC: 6)
-- [ ] Add "Archive" button in Manage section
-- [ ] Implement archive confirmation dialog
-- [ ] Call `archiveHabit` mutation (if exists, or create)
-- [ ] Navigate back to home on archive
+- [x] Add "Archive" button in Manage section
+- [x] Implement archive confirmation dialog
+- [x] Call `archiveHabit` mutation (if exists, or create)
+- [x] Navigate back to home on archive
+
+**Completion Notes (T5):** Added Manage section with SectionCard component above Danger Zone. Archive button uses amber color scheme (bg-amber-50, border-amber-200) with Archive lucide icon and explanatory subtitle. Confirmation modal displays habit name, explains data preservation, with Cancel (gray) and Archive (amber) buttons. Uses existing `api.habits.archive` mutation (already existed in convex/habits.ts). Includes haptic feedback on button press. Modal closes and navigates back on archive completion.
 
 ### T6: Advanced Feature Links (AC: 7)
 - [ ] Add navigation rows for Cue, Affirmations, Vision Board

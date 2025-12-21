@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, ChevronDown, Check, AlertTriangle } from 'lucide-react-native';
+import { ChevronLeft, ChevronDown, Check, AlertTriangle, Archive } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -181,10 +181,12 @@ export default function HabitEditScreen({
   const [goalUnit, setGoalUnit] = useState('minutes');
   const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showArchiveConfirmation, setShowArchiveConfirmation] = useState(false);
   const [showUnitPicker, setShowUnitPicker] = useState(false);
 
   const updateHabit = useMutation(api.habits.update);
   const removeHabit = useMutation(api.habits.remove);
+  const archiveHabit = useMutation(api.habits.archive);
 
   // Initialize state from habit data
   useEffect(() => {
@@ -266,6 +268,12 @@ export default function HabitEditScreen({
   const handleDelete = async () => {
     if (!habitId) return;
     await removeHabit({ habitId });
+    onClose();
+  };
+
+  const handleArchive = async () => {
+    if (!habitId) return;
+    await archiveHabit({ habitId });
     onClose();
   };
 
@@ -559,6 +567,31 @@ export default function HabitEditScreen({
             </SectionCard>
           </View>
 
+          {/* Section: Manage */}
+          <View className="gap-4 mb-4">
+            <SectionCard title="Manage" icon="⚙️">
+              <TouchableOpacity
+                accessibilityLabel="Archive habit"
+                accessibilityRole="button"
+                className="flex-row items-center justify-between rounded-xl bg-amber-50 border border-amber-200 px-4 py-4"
+                onPress={() => {
+                  triggerSelection();
+                  setShowArchiveConfirmation(true);
+                }}
+              >
+                <View className="flex-row items-center gap-3">
+                  <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+                    <Archive color="#d97706" size={20} strokeWidth={2} />
+                  </View>
+                  <View>
+                    <Text className="text-base font-semibold text-amber-800">Archive Habit</Text>
+                    <Text className="text-xs text-amber-600">Hide from home, keep your data</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </SectionCard>
+          </View>
+
           {/* Section: Danger Zone */}
           <View className="gap-4 mb-6">
             <View className="rounded-2xl bg-red-50 border border-red-200 p-4">
@@ -676,6 +709,55 @@ export default function HabitEditScreen({
               >
                 <Text className="text-base font-semibold text-white">
                   Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Archive Confirmation Dialog */}
+      <Modal
+        transparent
+        animationType="fade"
+        visible={showArchiveConfirmation}
+        onRequestClose={() => setShowArchiveConfirmation(false)}
+      >
+        <View className="flex-1 items-center justify-center bg-black/50">
+          <View className="mx-6 w-full max-w-sm rounded-2xl bg-white p-6">
+            <View className="mb-4 items-center">
+              <View className="mb-3 h-14 w-14 items-center justify-center rounded-full bg-amber-100">
+                <Archive color="#d97706" size={28} strokeWidth={2} />
+              </View>
+              <Text className="text-lg font-bold text-slate-800">
+                Archive '{habitName || 'this habit'}'?
+              </Text>
+            </View>
+            <Text className="mb-6 text-center text-sm text-slate-500">
+              This habit will be hidden from your home screen but all your progress, streaks, and history will be preserved. You can restore it anytime from Settings.
+            </Text>
+            <View className="flex-row gap-3">
+              <TouchableOpacity
+                accessibilityLabel="Cancel archive"
+                accessibilityRole="button"
+                className="flex-1 h-12 items-center justify-center rounded-xl bg-gray-100"
+                onPress={() => setShowArchiveConfirmation(false)}
+              >
+                <Text className="text-base font-semibold text-slate-700">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                accessibilityLabel="Confirm archive"
+                accessibilityRole="button"
+                className="flex-1 h-12 items-center justify-center rounded-xl bg-amber-500"
+                onPress={() => {
+                  setShowArchiveConfirmation(false);
+                  handleArchive();
+                }}
+              >
+                <Text className="text-base font-semibold text-white">
+                  Archive
                 </Text>
               </TouchableOpacity>
             </View>
