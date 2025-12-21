@@ -313,7 +313,10 @@ export default function HabitEditScreen({
             accessibilityLabel='Back'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full'
-            onPress={onClose}
+            onPress={() => {
+              triggerSelection();
+              onClose();
+            }}
           >
             <ChevronLeft color='#1a1a1a' size={20} strokeWidth={2} />
           </TouchableOpacity>
@@ -343,7 +346,10 @@ export default function HabitEditScreen({
                 accessibilityLabel='Choose icon'
                 accessibilityRole='button'
                 className='mb-5 flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
-                onPress={() => setIsEmojiPickerVisible(true)}
+                onPress={() => {
+                  triggerSelection();
+                  setIsEmojiPickerVisible(true);
+                }}
               >
                 <View className='flex-row items-center gap-3'>
                   <View
@@ -383,6 +389,10 @@ export default function HabitEditScreen({
                 placeholderTextColor='#adaebc'
                 value={habitName}
                 onChangeText={setHabitName}
+                returnKeyType='done'
+                blurOnSubmit={true}
+                autoCapitalize='sentences'
+                autoCorrect={true}
               />
             </SectionCard>
           </View>
@@ -402,7 +412,10 @@ export default function HabitEditScreen({
                       className={`flex-1 h-12 items-center justify-center rounded-xl ${
                         frequency === freq ? 'bg-blue-500' : 'bg-gray-100'
                       }`}
-                      onPress={() => setFrequency(freq)}
+                      onPress={() => {
+                        triggerSelection();
+                        setFrequency(freq);
+                      }}
                     >
                       <Text
                         className={`text-base font-medium capitalize ${
@@ -428,7 +441,10 @@ export default function HabitEditScreen({
                       className={`h-10 w-10 items-center justify-center rounded-xl ${
                         selectedDays.includes(index) ? 'bg-blue-500' : 'bg-gray-100'
                       }`}
-                      onPress={() => toggleDay(index)}
+                      onPress={() => {
+                        triggerSelection();
+                        toggleDay(index);
+                      }}
                     >
                       <Text
                         className={`text-base font-semibold ${
@@ -454,7 +470,10 @@ export default function HabitEditScreen({
                       className={`flex-1 h-17 items-center justify-center rounded-xl ${
                         preferredTime === time ? 'bg-blue-500' : 'bg-gray-100'
                       }`}
-                      onPress={() => setPreferredTime(time as any)}
+                      onPress={() => {
+                        triggerSelection();
+                        setPreferredTime(time as any);
+                      }}
                     >
                       <Text className='text-xl mb-1'>{TIME_ICONS[index]}</Text>
                       <Text
@@ -480,7 +499,10 @@ export default function HabitEditScreen({
                 </Text>
                 <Switch
                   value={remindersEnabled}
-                  onValueChange={setRemindersEnabled}
+                  onValueChange={(value) => {
+                    triggerSelection();
+                    setRemindersEnabled(value);
+                  }}
                   trackColor={{ false: '#D1D5DB', true: '#3B82F6' }}
                   thumbColor='#FFFFFF'
                   ios_backgroundColor='#D1D5DB'
@@ -491,7 +513,10 @@ export default function HabitEditScreen({
                 <View className='mt-4'>
                   <TouchableOpacity
                     className='mb-3 flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
-                    onPress={() => setShowTimePicker(true)}
+                    onPress={() => {
+                      triggerSelection();
+                      setShowTimePicker(true);
+                    }}
                   >
                     <Text className='text-base font-medium text-[#1a1a1a]'>
                       Reminder Time
@@ -501,16 +526,20 @@ export default function HabitEditScreen({
                     </Text>
                   </TouchableOpacity>
 
-                  <View className='flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'>
+                  <TouchableOpacity
+                    className='flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
+                    onPress={() => {
+                      triggerSelection();
+                      // Sound picker would be implemented here
+                    }}
+                  >
                     <Text className='text-base font-medium text-[#1a1a1a]'>
                       Sound
                     </Text>
-                    <TouchableOpacity>
-                      <Text className='text-base font-semibold text-blue-500 capitalize'>
-                        {reminderSound}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                    <Text className='text-base font-semibold text-blue-500 capitalize'>
+                      {reminderSound}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )}
             </SectionCard>
@@ -531,6 +560,8 @@ export default function HabitEditScreen({
                     keyboardType='numeric'
                     value={goalValue}
                     onChangeText={setGoalValue}
+                    returnKeyType='done'
+                    blurOnSubmit={true}
                   />
                   <TouchableOpacity
                     accessibilityLabel={`Select goal unit, currently ${goalUnit}`}
@@ -698,7 +729,10 @@ export default function HabitEditScreen({
                 accessibilityLabel="Delete habit"
                 accessibilityRole="button"
                 className="h-12 items-center justify-center rounded-xl bg-red-500"
-                onPress={() => setShowDeleteConfirmation(true)}
+                onPress={() => {
+                  triggerSelection();
+                  setShowDeleteConfirmation(true);
+                }}
               >
                 <Text className="text-base font-semibold text-white">
                   Delete Habit
@@ -727,7 +761,10 @@ export default function HabitEditScreen({
         <View className='flex-row gap-3 px-4 pb-8 pt-4 bg-[#f8f5f1]'>
           <TouchableOpacity
             className='flex-1 h-14 items-center justify-center rounded-2xl bg-gray-200'
-            onPress={onClose}
+            onPress={() => {
+              triggerSelection();
+              onClose();
+            }}
           >
             <Text className='text-base font-semibold text-[#1a1a1a]'>
               Cancel
@@ -735,7 +772,10 @@ export default function HabitEditScreen({
           </TouchableOpacity>
           <TouchableOpacity
             className='flex-1 h-14 items-center justify-center rounded-2xl bg-[#1a1a1a]'
-            onPress={handleSave}
+            onPress={() => {
+              triggerSelection();
+              handleSave();
+            }}
           >
             <Text className='text-base font-semibold text-white'>
               Save Changes
@@ -782,7 +822,10 @@ export default function HabitEditScreen({
                 accessibilityLabel="Cancel delete"
                 accessibilityRole="button"
                 className="flex-1 h-12 items-center justify-center rounded-xl bg-gray-100"
-                onPress={() => setShowDeleteConfirmation(false)}
+                onPress={() => {
+                  triggerSelection();
+                  setShowDeleteConfirmation(false);
+                }}
               >
                 <Text className="text-base font-semibold text-slate-700">
                   Cancel
@@ -793,6 +836,7 @@ export default function HabitEditScreen({
                 accessibilityRole="button"
                 className="flex-1 h-12 items-center justify-center rounded-xl bg-red-500"
                 onPress={() => {
+                  triggerSelection();
                   setShowDeleteConfirmation(false);
                   handleDelete();
                 }}
@@ -831,7 +875,10 @@ export default function HabitEditScreen({
                 accessibilityLabel="Cancel archive"
                 accessibilityRole="button"
                 className="flex-1 h-12 items-center justify-center rounded-xl bg-gray-100"
-                onPress={() => setShowArchiveConfirmation(false)}
+                onPress={() => {
+                  triggerSelection();
+                  setShowArchiveConfirmation(false);
+                }}
               >
                 <Text className="text-base font-semibold text-slate-700">
                   Cancel
@@ -842,6 +889,7 @@ export default function HabitEditScreen({
                 accessibilityRole="button"
                 className="flex-1 h-12 items-center justify-center rounded-xl bg-amber-500"
                 onPress={() => {
+                  triggerSelection();
                   setShowArchiveConfirmation(false);
                   handleArchive();
                 }}
@@ -883,7 +931,10 @@ export default function HabitEditScreen({
               <TouchableOpacity
                 accessibilityLabel="Close unit picker"
                 accessibilityRole="button"
-                onPress={() => setShowUnitPicker(false)}
+                onPress={() => {
+                  triggerSelection();
+                  setShowUnitPicker(false);
+                }}
               >
                 <Text className="text-base font-semibold text-blue-500">
                   Done
