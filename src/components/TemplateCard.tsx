@@ -102,6 +102,9 @@ export interface TemplateCardProps {
   youtubeLink?: string;
 }
 
+/** Default fallback color when iconColor is missing or invalid */
+const DEFAULT_ICON_COLOR = '#6b7280';
+
 export function TemplateCard({
   animationIndex = 0,
   category,
@@ -110,7 +113,7 @@ export function TemplateCard({
   frequency,
   hasAccess = true,
   icon,
-  iconColor,
+  iconColor: iconColorProp,
   id,
   isImported = false,
   isImporting = false,
@@ -129,6 +132,9 @@ export function TemplateCard({
   const theme = useAppTheme();
   const reducedMotion = useReduceMotion();
   const isLocked = isPremium && !hasAccess;
+
+  // Ensure iconColor is valid - fallback to neutral gray if missing or empty
+  const iconColor = iconColorProp && iconColorProp.trim() !== '' ? iconColorProp : DEFAULT_ICON_COLOR;
 
   // Animation values - skip entrance animation if animationIndex is 0
   const skipAnimation = animationIndex === 0;

@@ -2,7 +2,15 @@
 
 ## Goal
 
-Remove the freezing custom color picker and expand preset colors to 16 curated options. No modal needed.
+Remove the freezing custom color picker and expand preset colors to 24 curated options in 3 rows. No modal needed.
+
+---
+
+## Design Mockup
+
+**High-fidelity mockup**: `.superdesign/design_iterations/color_picker_phase1_1.html`
+
+Open in browser: `open .superdesign/design_iterations/color_picker_phase1_1.html`
 
 ---
 
@@ -31,13 +39,15 @@ Remove the freezing custom color picker and expand preset colors to 16 curated o
 ┌─────────────────────────────────────┐
 │  Color                              │
 │                                     │
-│  🔴 🟠 🟡 🟢 🔵 🟣 💗 ⚫            │  ← Row 1: 8 colors
+│  🔴 🟠 🟡 🟢 🔵 🟣 💗 ⚫            │  ← Row 1: Vibrant
 │                                     │
-│  🩵 🩷 🧡 💚 💜 🤎 🖤 🤍            │  ← Row 2: 8 colors
+│  🩵 🧡 💚 💜 🩷 🤎 🖤 🌊            │  ← Row 2: Alternative
+│                                     │
+│  🌸 🍑 🌿 💎 🪻 🩶 🤍 🌻            │  ← Row 3: Soft/Pastel
 │                                     │
 └─────────────────────────────────────┘
 
-   ✅ No modal, no freezing, 16 curated colors
+   ✅ No modal, no freezing, 24 curated colors in 3 rows
 ```
 
 ---
@@ -47,7 +57,7 @@ Remove the freezing custom color picker and expand preset colors to 16 curated o
 ### T1: Expand Color Palette
 **File:** `src/components/CreateHabitModal/constants.ts`
 
-Update `COLORS` array to 16 curated colors:
+Update `COLORS` array to 24 curated colors (3 rows of 8):
 
 ```typescript
 export const COLORS = [
@@ -61,15 +71,25 @@ export const COLORS = [
   '#EC4899', // Pink
   '#1E293B', // Slate (dark)
 
-  // Row 2: Softer/alternative tones
+  // Row 2: Alternative vibrant tones
   '#06B6D4', // Cyan
-  '#F472B6', // Light Pink
   '#FB923C', // Light Orange
   '#4ADE80', // Light Green
   '#A78BFA', // Light Purple
+  '#F472B6', // Light Pink
   '#78716C', // Stone (neutral)
+  '#0F172A', // Dark Navy
   '#0EA5E9', // Sky Blue
-  '#FBBF24', // Amber
+
+  // Row 3: Soft/Pastel tones
+  '#FCA5A5', // Soft Red
+  '#FDBA74', // Soft Orange / Peach
+  '#86EFAC', // Soft Green / Mint
+  '#7DD3FC', // Soft Blue
+  '#C4B5FD', // Soft Purple / Lavender
+  '#A8A29E', // Warm Gray
+  '#FFFFFF', // White
+  '#FBBF24', // Amber / Gold
 ];
 ```
 
@@ -80,35 +100,9 @@ export const COLORS = [
 
 Changes:
 1. Remove "Custom color" button and `onCustomColorPress` prop
-2. Display colors in 2 rows (wrap after 8)
-3. Keep existing selection animation and haptic feedback
-
-**Before:**
-```tsx
-{/* Basic Colors */}
-<View className="mb-4 flex-row flex-wrap gap-3">
-  {colors.map((color) => (
-    // ... color buttons
-  ))}
-</View>
-
-{/* Custom Color Button */}
-<Pressable onPress={onCustomColorPress}>
-  ...
-</Pressable>
-```
-
-**After:**
-```tsx
-{/* All Colors - 2 rows */}
-<View className="flex-row flex-wrap gap-3">
-  {colors.map((color) => (
-    // ... color buttons (unchanged)
-  ))}
-</View>
-
-{/* No custom color button */}
-```
+2. Display colors in 3 rows (8 per row, flex-wrap)
+3. Keep existing circle style, selection animation, and haptic feedback
+4. Add border for white color visibility
 
 ---
 
@@ -118,26 +112,7 @@ Changes:
 Changes:
 1. Remove `ColorPickerSheet` import
 2. Remove `ColorPickerSheet` component from render
-3. Remove `openColorPicker` / `closeColorPicker` from form hook usage (or keep but don't use)
-
-**Before:**
-```tsx
-import { ColorPickerSheet } from './ColorPickerSheet';
-
-// In render:
-<ColorPickerSheet
-  presetColors={COLORS}
-  value={form.selectedColor}
-  visible={form.isColorPickerVisible}
-  onClose={form.closeColorPicker}
-  onSelect={form.setSelectedColor}
-/>
-```
-
-**After:**
-```tsx
-// No ColorPickerSheet import or render
-```
+3. Remove `openColorPicker` / `closeColorPicker` usage
 
 ---
 
@@ -217,8 +192,8 @@ Remove `onCustomColorPress` prop:
 
 | File | Change |
 |------|--------|
-| `src/components/CreateHabitModal/constants.ts` | Expand COLORS to 16 |
-| `src/components/CreateHabitModal/components/StyleSection.tsx` | Remove custom color button, update props |
+| `src/components/CreateHabitModal/constants.ts` | Expand COLORS to 24 |
+| `src/components/CreateHabitModal/components/StyleSection.tsx` | Remove custom color button, update props, 3-row layout |
 | `src/components/CreateHabitModal/CreateHabitModalV2.tsx` | Remove ColorPickerSheet |
 
 ---
@@ -232,12 +207,13 @@ Remove `onCustomColorPress` prop:
 
 ## Testing Checklist
 
-- [ ] All 16 colors display in 2 rows
+- [ ] All 24 colors display in 3 rows
 - [ ] Color selection works with haptic feedback
 - [ ] Selection animation works (scale pop)
 - [ ] No freezing when selecting colors
 - [ ] Selected color shows checkmark
 - [ ] Selected color applies to habit preview
+- [ ] White color has visible border
 - [ ] No TypeScript errors
 - [ ] No console warnings
 
@@ -246,6 +222,6 @@ Remove `onCustomColorPress` prop:
 ## Success Metrics
 
 - Zero freezing
-- All 16 colors selectable
+- All 24 colors selectable
 - Smooth selection animation
 - Haptic feedback on tap

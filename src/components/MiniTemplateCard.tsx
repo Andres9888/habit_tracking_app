@@ -49,9 +49,12 @@ export interface MiniTemplateCardProps {
   isImported?: boolean;
 }
 
+/** Default fallback color when iconColor is missing or invalid */
+const DEFAULT_ICON_COLOR = '#6b7280';
+
 export function MiniTemplateCard({
   icon,
-  iconColor,
+  iconColor: iconColorProp,
   name,
   description,
   subtitle,
@@ -63,6 +66,9 @@ export function MiniTemplateCard({
   isImported,
 }: MiniTemplateCardProps) {
   const reducedMotion = useReduceMotion();
+
+  // Ensure iconColor is valid - fallback to neutral gray if missing or empty
+  const iconColor = iconColorProp && iconColorProp.trim() !== '' ? iconColorProp : DEFAULT_ICON_COLOR;
 
   // Card press animations
   const pressScale = useSharedValue(1);
@@ -271,7 +277,7 @@ export function MiniTemplateCard({
           {/* Shimmer overlay */}
           {!reducedMotion && (
             <AnimatedLinearGradient
-              colors={['transparent', `${iconColor}20`, 'transparent']}
+              colors={['#00000000', `${iconColor}20`, '#00000000']}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
               style={[styles.shimmerOverlay, shimmerStyle]}

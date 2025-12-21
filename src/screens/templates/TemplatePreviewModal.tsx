@@ -20,10 +20,19 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { Clock, X } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button/Button';
 import { useAppTheme } from '../../theme';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+
+/** Default fallback color when iconColor is missing or invalid */
+const DEFAULT_ICON_COLOR = '#6b7280';
+
+/** Ensure color is valid, fallback to default if empty/undefined */
+const safeColor = (color: string | undefined): string => {
+  return color && color.trim() !== '' ? color : DEFAULT_ICON_COLOR;
+};
 
 interface TemplatePreviewModalProps {
   importingTemplateId: Id<'templates'> | null;
@@ -48,8 +57,9 @@ export default function TemplatePreviewModal({
   visible,
 }: TemplatePreviewModalProps) {
   const theme = useAppTheme();
+  const insets = useSafeAreaInsets();
   const [customName, setCustomName] = useState('');
-  const [customColor, setCustomColor] = useState('');
+  const [customColor, setCustomColor] = useState(DEFAULT_ICON_COLOR);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminderTime, setReminderTime] = useState(new Date());
 
@@ -57,7 +67,7 @@ export default function TemplatePreviewModal({
   useEffect(() => {
     if (template) {
       setCustomName(template.name);
-      setCustomColor(template.iconColor);
+      setCustomColor(safeColor(template.iconColor));
       setReminderTime(new Date());
     }
   }, [template]);
@@ -123,6 +133,7 @@ export default function TemplatePreviewModal({
         </View>
 
         <ScrollView
+          contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           style={styles.content}
@@ -277,7 +288,7 @@ export default function TemplatePreviewModal({
         </ScrollView>
 
         {/* Footer */}
-        <View style={styles.footer}>
+        <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
           <Button
             disabled={!customName.trim() || isImporting}
             fullWidth
@@ -327,11 +338,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   container: {
-    maxHeight: '90%',
+    flex: 1,
   },
   content: {
-    flex: 1,
-    paddingBottom: 16,
+    flexGrow: 1,
+    flexShrink: 1,
   },
   footer: {
     paddingTop: 16,
@@ -405,6 +416,10 @@ const styles = StyleSheet.create({
   previewContainer: {
     alignItems: 'center',
     marginBottom: 24,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 16,
   },
   section: {
     marginBottom: 20,
