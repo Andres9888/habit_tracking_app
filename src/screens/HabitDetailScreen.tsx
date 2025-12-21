@@ -65,6 +65,7 @@ import { clsx } from 'clsx';
 import { SwipeableActionButton } from '../components/SwipeableActionButton';
 import { DeleteUndoToast } from '../components/DeleteUndoToast';
 import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
+import { VisionBoardPreview } from '../components/VisionBoardPreview';
 
 // Types
 type Habit = HabitDoc & {
@@ -523,6 +524,7 @@ function MotivationTabContent({
   onOpenVisualizationExercise,
   onOpenVisualizationGuide,
   onOpenVisionBoardEditor,
+  onOpenVisionBoardPreview,
   onOpenWhyEditor,
   onConfirmDeleteAffirmation,
   onConfirmDeleteVisionBoardItem,
@@ -547,6 +549,7 @@ function MotivationTabContent({
   onOpenVisualizationExercise: () => void;
   onOpenVisualizationGuide: () => void;
   onOpenVisionBoardEditor: (item?: Doc<'visionBoardItems'>) => void;
+  onOpenVisionBoardPreview: (index: number) => void;
   onOpenWhyEditor: () => void;
   onConfirmDeleteAffirmation: (item: Doc<'affirmations'>) => void;
   onConfirmDeleteVisionBoardItem: (item: Doc<'visionBoardItems'>) => void;
@@ -678,14 +681,14 @@ function MotivationTabContent({
           </View>
         ) : (
           <View className="gap-3">
-            {visionBoardItems.slice(0, 2).map((item) => (
+            {visionBoardItems.slice(0, 2).map((item, index) => (
               <Pressable
                 key={item._id}
-                accessibilityLabel={`Open vision card ${item.title}`}
+                accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
                 accessibilityRole="button"
                 className="rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:opacity-80"
                 onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
-                onPress={() => onOpenVisionBoardEditor(item)}
+                onPress={() => onOpenVisionBoardPreview(index)}
               >
                 <Text className="text-sm font-semibold text-stone-800">{item.title}</Text>
                 {item.body && (
@@ -693,6 +696,7 @@ function MotivationTabContent({
                     {item.body}
                   </Text>
                 )}
+                <Text className="mt-2 text-xs text-stone-400">Tap to preview</Text>
               </Pressable>
             ))}
             {visionBoardItems.length > 2 && (
@@ -1067,6 +1071,8 @@ export default function HabitDetailScreen({
   const [editingNoteId, setEditingNoteId] = useState<Id<'notes'> | null>(null);
   const [isVisionBoardEditorOpen, setIsVisionBoardEditorOpen] = useState(false);
   const [isVisionBoardListOpen, setIsVisionBoardListOpen] = useState(false);
+  const [isVisionBoardPreviewOpen, setIsVisionBoardPreviewOpen] = useState(false);
+  const [visionBoardPreviewIndex, setVisionBoardPreviewIndex] = useState(0);
   const [visionBoardBodyDraft, setVisionBoardBodyDraft] = useState('');
   const [visionBoardEditingId, setVisionBoardEditingId] = useState<Id<'visionBoardItems'> | null>(null);
   const [visionBoardTitleDraft, setVisionBoardTitleDraft] = useState('');
@@ -1382,6 +1388,18 @@ export default function HabitDetailScreen({
     setVisionBoardTitleDraft(item?.title ?? '');
     setVisionBoardBodyDraft(item?.body ?? '');
     setIsVisionBoardEditorOpen(true);
+  };
+
+  const handleOpenVisionBoardPreview = (index: number) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setVisionBoardPreviewIndex(index);
+    setIsVisionBoardPreviewOpen(true);
+  };
+
+  const handleEditFromPreview = (item: VisionBoardItem) => {
+    // Close preview and open editor
+    setIsVisionBoardPreviewOpen(false);
+    handleOpenVisionBoardEditor(item);
   };
 
   const handleSaveVisionBoardItem = async () => {
@@ -1713,6 +1731,7 @@ export default function HabitDetailScreen({
                   onOpenVisualizationExercise={handleOpenVisualizationExercise}
                   onOpenVisualizationGuide={handleOpenVisualizationGuide}
                   onOpenVisionBoardEditor={handleOpenVisionBoardEditor}
+                  onOpenVisionBoardPreview={handleOpenVisionBoardPreview}
                   onOpenWhyEditor={handleOpenWhyEditor}
                   onConfirmDeleteAffirmation={handleConfirmDeleteAffirmation}
                   onConfirmDeleteVisionBoardItem={handleConfirmDeleteVisionBoardItem}
@@ -2036,20 +2055,23 @@ export default function HabitDetailScreen({
               </Pressable>
             </View>
             <View className="gap-3">
-              {visionBoardItems.map((item) => (
+              {visionBoardItems.map((item, index) => (
                 <Pressable
                   key={item._id}
-                  accessibilityLabel={`Open vision card ${item.title}`}
+                  accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
                   accessibilityRole="button"
                   className="rounded-2xl border border-stone-100 bg-stone-50 p-4 active:opacity-80"
                   onLongPress={() => handleConfirmDeleteVisionBoardItem(item)}
-                  onPress={() => handleOpenVisionBoardEditor(item)}
+                  onPress={() => {
+                    setIsVisionBoardListOpen(false);
+                    handleOpenVisionBoardPreview(index);
+                  }}
                 >
                   <Text className="text-base font-semibold text-stone-900">{item.title}</Text>
                   {item.body && (
                     <Text className="mt-2 text-sm leading-6 text-stone-600">{item.body}</Text>
                   )}
-                  <Text className="mt-3 text-xs text-stone-400">Long press to delete</Text>
+                  <Text className="mt-3 text-xs text-stone-400">Tap to preview • Long press to delete</Text>
                 </Pressable>
               ))}
             </View>
@@ -2110,6 +2132,15 @@ export default function HabitDetailScreen({
           </View>
         </View>
       </RNModal>
+
+      {/* Vision Board Full-Screen Preview (T4.1) */}
+      <VisionBoardPreview
+        initialIndex={visionBoardPreviewIndex}
+        items={visionBoardItems}
+        visible={isVisionBoardPreviewOpen}
+        onClose={() => setIsVisionBoardPreviewOpen(false)}
+        onEdit={handleEditFromPreview}
+      />
 
       {/* Notes List Modal */}
       <RNModal

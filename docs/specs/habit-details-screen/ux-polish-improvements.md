@@ -260,7 +260,32 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - **Implementation:** Modified `src/screens/HabitDetailScreen.tsx:824-982` (ManageTabContent) and lines 1247-1281 (swipe handlers)
 
 ### Phase 4: Polish (1 hour)
-- [ ] T4.1: Add vision board full-screen preview
+- [x] T4.1: Add vision board full-screen preview
+  - **Completed:** Implemented full-screen preview modal for vision board cards with gestures
+  - **Features:**
+    - Swipe down to dismiss modal with velocity-based detection (150px threshold or 500 px/s velocity)
+    - Swipe left/right to navigate between cards (80px threshold or 500 px/s velocity)
+    - Navigation arrows with disabled state for first/last items
+    - Dot indicator showing current position in the list
+    - Edit button to open editor from preview (closes preview, opens editor)
+    - Counter display ("1 of 3")
+    - Dark overlay background (90% opacity) with blur effect
+    - Animated scale/opacity on swipe with spring physics
+    - Haptic feedback on all interactions (Light impact)
+    - Created date display at bottom of card
+  - **Accessibility:** Respects `reduceMotion` preference - animations are skipped when enabled
+  - **Testing:** Added comprehensive test suite with 12 tests covering navigation, gestures, and interactions
+  - **Implementation:**
+    - Created `src/components/VisionBoardPreview/VisionBoardPreview.tsx` - main preview component
+    - Created `src/components/VisionBoardPreview/index.ts` - barrel export
+    - Created `src/components/VisionBoardPreview/__tests__/VisionBoardPreview.test.tsx` - test suite
+    - Modified `src/screens/HabitDetailScreen.tsx`:
+      - Added state: `isVisionBoardPreviewOpen`, `visionBoardPreviewIndex`
+      - Added handlers: `handleOpenVisionBoardPreview`, `handleEditFromPreview`
+      - Updated `MotivationTabContent` to accept `onOpenVisionBoardPreview` prop
+      - Updated vision board card tap behavior to open preview instead of editor
+      - Updated Vision Board List Modal cards to open preview
+      - Added VisionBoardPreview modal component
 - [ ] T4.2: Implement affirmation shuffle
 - [ ] T4.3: Create danger zone section styling
 - [ ] T4.4: Respect reduce motion accessibility setting
