@@ -70,6 +70,8 @@ type Habit = HabitDoc & {
 
 interface HabitDetailScreenProps {
   habit: Habit | null;
+  /** Initial tab to show when opening (defaults to 'progress') */
+  initialTab?: TabType;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
@@ -92,18 +94,46 @@ function HeroSection({
   isCompletedToday: boolean;
   onWhyPress?: () => void;
 }) {
+  // Icon bounce animation on load (T1.1)
+  const iconScale = useSharedValue(0.8);
+  const iconTranslateY = useSharedValue(-10);
+
+  useEffect(() => {
+    // Trigger spring bounce animation when component mounts
+    iconScale.value = withSpring(1, {
+      damping: 8,
+      stiffness: 150,
+      mass: 0.8,
+    });
+    iconTranslateY.value = withSpring(0, {
+      damping: 8,
+      stiffness: 150,
+      mass: 0.8,
+    });
+  }, []);
+
+  const iconAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: iconScale.value },
+      { translateY: iconTranslateY.value },
+    ],
+  }));
+
   return (
     <View className="items-center pb-4">
-      {/* Icon */}
+      {/* Icon with bounce animation on load */}
       {habit.icon && (
-        <View
+        <Animated.View
           className="mb-3 h-20 w-20 items-center justify-center rounded-2xl shadow-lg"
-          style={{
-            backgroundColor: habit.iconColor || '#fef3c7',
-          }}
+          style={[
+            {
+              backgroundColor: habit.iconColor || '#fef3c7',
+            },
+            iconAnimatedStyle,
+          ]}
         >
           <Text className="text-4xl">{habit.icon}</Text>
-        </View>
+        </Animated.View>
       )}
 
       {/* Name */}
@@ -838,6 +868,7 @@ function ManageTabContent({
  */
 export default function HabitDetailScreen({
   habit,
+  initialTab = 'progress',
   onArchive,
   onClose,
   onDelete,
@@ -850,8 +881,15 @@ export default function HabitDetailScreen({
   const insets = useSafeAreaInsets();
   const safeTop = insets.top || 44;
 
-  // Tab state
-  const [activeTab, setActiveTab] = useState<TabType>('progress');
+  // Tab state - use initialTab when provided
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
+
+  // Reset to initialTab when modal opens with a different tab
+  useEffect(() => {
+    if (visible) {
+      setActiveTab(initialTab);
+    }
+  }, [visible, initialTab]);
 
   // Scroll refs for each tab to preserve position
   const progressScrollRef = useRef<ScrollView>(null);
