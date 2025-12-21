@@ -53,6 +53,8 @@ interface HabitCalendarModalProps {
     completed: boolean;
   }>;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
+  /** Optional callback to navigate to HabitDetail's Motivation tab for advanced features */
+  onOpenMotivationTab?: () => void;
 }
 
 export default function HabitCalendarModal({
@@ -62,6 +64,7 @@ export default function HabitCalendarModal({
   streak,
   tracking,
   toggleHabit,
+  onOpenMotivationTab,
 }: HabitCalendarModalProps) {
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [calendarView, setCalendarView] = useState<CalendarView>('month');
@@ -106,6 +109,14 @@ export default function HabitCalendarModal({
   const handleQuickLogPress = () => {
     if (isTodayCompleted) return;
     toggleHabit({ habitId: habit._id, date: todayDateString });
+  };
+
+  // Handler for navigating to advanced features (Cue, Affirmations, Vision Board)
+  // This closes the edit screen, closes this modal, and opens HabitDetail's Motivation tab
+  const handleOpenAdvancedFeatures = () => {
+    setShowEditScreen(false);
+    onClose();
+    onOpenMotivationTab?.();
   };
 
   return (
@@ -284,6 +295,9 @@ export default function HabitCalendarModal({
         habitId={habit._id}
         visible={showEditScreen}
         onClose={handleCloseEdit}
+        onOpenCueEditor={onOpenMotivationTab ? handleOpenAdvancedFeatures : undefined}
+        onOpenAffirmationsEditor={onOpenMotivationTab ? handleOpenAdvancedFeatures : undefined}
+        onOpenVisionBoard={onOpenMotivationTab ? handleOpenAdvancedFeatures : undefined}
       />
     </Modal>
   );

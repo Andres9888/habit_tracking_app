@@ -180,6 +180,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         toggleHabit={toggleHabit}
         visible={showHabitCalendar}
         onClose={closeHabitCalendar}
+        onOpenMotivationTab={() => {
+          // Navigate to HabitDetail's Motivation tab for advanced features
+          if (selectedHabit) {
+            openHabitDetail(selectedHabit);
+          }
+        }}
       />
 
       <HabitDetailScreen

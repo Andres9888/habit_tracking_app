@@ -72,9 +72,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Note:** Implemented Manage section with amber-styled Archive button featuring Archive icon, explanatory subtitle ("Hide from home, keep your data"). Added fade-in confirmation modal with habit name in title, descriptive text about data preservation, and Cancel (gray) / Archive (amber) button pair. Calls existing `api.habits.archive` mutation and navigates back on completion.
 
 ### AC7: Link to Advanced Features
-- [ ] "Edit Cue & Intention" row → navigates to cue editor
-- [ ] "Edit Affirmations" row → navigates to affirmations editor
-- [ ] "View Why & Vision Board" row → navigates to motivation section
+- [x] "Edit Cue & Intention" row → navigates to cue editor
+- [x] "Edit Affirmations" row → navigates to affirmations editor
+- [x] "View Why & Vision Board" row → navigates to motivation section
+
+**Note:** Implemented Advanced section with three navigation rows (Cue & Intention, Affirmations, Vision Board). Each row has consistent styling with icon, title, subtitle, and chevron-right indicator. Navigation is handled via callback props that close the edit screen and calendar modal, then open HabitDetailScreen with the Motivation tab selected where these editors are available.
 
 ---
 
@@ -119,9 +121,11 @@ The current `HabitEditScreen` has several UX issues compared to the modern `Crea
 **Completion Notes (T5):** Added Manage section with SectionCard component above Danger Zone. Archive button uses amber color scheme (bg-amber-50, border-amber-200) with Archive lucide icon and explanatory subtitle. Confirmation modal displays habit name, explains data preservation, with Cancel (gray) and Archive (amber) buttons. Uses existing `api.habits.archive` mutation (already existed in convex/habits.ts). Includes haptic feedback on button press. Modal closes and navigates back on archive completion.
 
 ### T6: Advanced Feature Links (AC: 7)
-- [ ] Add navigation rows for Cue, Affirmations, Vision Board
-- [ ] Wire up navigation to respective screens/modals
-- [ ] Show chevron-right indicator
+- [x] Add navigation rows for Cue, Affirmations, Vision Board
+- [x] Wire up navigation to respective screens/modals
+- [x] Show chevron-right indicator
+
+**Completion Notes (T6):** Added Advanced section (with ✨ icon) containing three navigation rows. Each row features: icon in colored background (amber for Cue, violet for Affirmations, rose for Vision Board), title, subtitle, and chevron-right indicator. Added `onOpenCueEditor`, `onOpenAffirmationsEditor`, and `onOpenVisionBoard` callback props to HabitEditScreen. Added `onOpenMotivationTab` prop to HabitCalendarModal that closes both modals and opens HabitDetailScreen. Wired up callbacks in HabitsModals.tsx to navigate user to HabitDetail's Motivation tab where these editors are accessible.
 
 ### T7: Polish & Testing
 - [ ] Verify all interactions have haptic feedback

@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, ChevronDown, Check, AlertTriangle, Archive } from 'lucide-react-native';
+import { ChevronLeft, ChevronDown, ChevronRight, Check, AlertTriangle, Archive, MapPin, MessageCircle, Eye } from 'lucide-react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -34,6 +34,12 @@ interface HabitEditScreenProps {
   visible: boolean;
   habitId: Id<'habits'> | null;
   onClose: () => void;
+  /** Optional callback to navigate to Cue & Intention editor */
+  onOpenCueEditor?: () => void;
+  /** Optional callback to navigate to Affirmations editor */
+  onOpenAffirmationsEditor?: () => void;
+  /** Optional callback to navigate to Vision Board */
+  onOpenVisionBoard?: () => void;
 }
 
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -158,6 +164,9 @@ export default function HabitEditScreen({
   visible,
   habitId,
   onClose,
+  onOpenCueEditor,
+  onOpenAffirmationsEditor,
+  onOpenVisionBoard,
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const { triggerSelection } = useHapticFeedback();
@@ -566,6 +575,87 @@ export default function HabitEditScreen({
               </View>
             </SectionCard>
           </View>
+
+          {/* Section: Advanced Features */}
+          {(onOpenCueEditor || onOpenAffirmationsEditor || onOpenVisionBoard) && (
+            <View className="gap-4 mb-4">
+              <SectionCard title="Advanced" icon="✨">
+                <View className="-mt-2 gap-2">
+                  {/* Edit Cue & Intention */}
+                  {onOpenCueEditor && (
+                    <TouchableOpacity
+                      accessibilityLabel="Edit cue and intention"
+                      accessibilityRole="button"
+                      className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+                      onPress={() => {
+                        triggerSelection();
+                        onOpenCueEditor();
+                      }}
+                    >
+                      <View className="flex-row items-center gap-3">
+                        <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+                          <MapPin color="#d97706" size={20} strokeWidth={2} />
+                        </View>
+                        <View>
+                          <Text className="text-base font-medium text-slate-800">Edit Cue & Intention</Text>
+                          <Text className="text-xs text-slate-500">Set when and where to do this habit</Text>
+                        </View>
+                      </View>
+                      <ChevronRight color="#94a3b8" size={20} strokeWidth={2} />
+                    </TouchableOpacity>
+                  )}
+
+                  {/* Edit Affirmations */}
+                  {onOpenAffirmationsEditor && (
+                    <TouchableOpacity
+                      accessibilityLabel="Edit affirmations"
+                      accessibilityRole="button"
+                      className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+                      onPress={() => {
+                        triggerSelection();
+                        onOpenAffirmationsEditor();
+                      }}
+                    >
+                      <View className="flex-row items-center gap-3">
+                        <View className="h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+                          <MessageCircle color="#7c3aed" size={20} strokeWidth={2} />
+                        </View>
+                        <View>
+                          <Text className="text-base font-medium text-slate-800">Edit Affirmations</Text>
+                          <Text className="text-xs text-slate-500">Positive self-talk for motivation</Text>
+                        </View>
+                      </View>
+                      <ChevronRight color="#94a3b8" size={20} strokeWidth={2} />
+                    </TouchableOpacity>
+                  )}
+
+                  {/* View Why & Vision Board */}
+                  {onOpenVisionBoard && (
+                    <TouchableOpacity
+                      accessibilityLabel="View why and vision board"
+                      accessibilityRole="button"
+                      className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+                      onPress={() => {
+                        triggerSelection();
+                        onOpenVisionBoard();
+                      }}
+                    >
+                      <View className="flex-row items-center gap-3">
+                        <View className="h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
+                          <Eye color="#e11d48" size={20} strokeWidth={2} />
+                        </View>
+                        <View>
+                          <Text className="text-base font-medium text-slate-800">View Why & Vision Board</Text>
+                          <Text className="text-xs text-slate-500">Your motivation and goals</Text>
+                        </View>
+                      </View>
+                      <ChevronRight color="#94a3b8" size={20} strokeWidth={2} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </SectionCard>
+            </View>
+          )}
 
           {/* Section: Manage */}
           <View className="gap-4 mb-4">
