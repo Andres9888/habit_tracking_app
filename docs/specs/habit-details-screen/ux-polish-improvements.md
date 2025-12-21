@@ -171,7 +171,8 @@ Polish improvements to enhance the Habit Details screen user experience with ani
 ### Phase 3: Micro-interactions (1-2 hours)
 - [x] T3.1: Add today indicator pulse in calendar
   - *Already implemented in DayCell.tsx:43-81: Pulse animation (scale 1→1.3, opacity 0.6→0) triggers when day.isToday && !day.completed && !reduceMotion. Uses withRepeat for infinite animation, respects reduce motion accessibility setting, stops pulsing once habit is completed*
-- [ ] T3.2: Implement contextual streak messages
+- [x] T3.2: Implement contextual streak messages
+  - *Already implemented in StreakChainSection.tsx:148-260: getContextualMessage() generates context-aware messages based on current streak, best streak, and today's completion status. ContextualMessage component displays with fade+slide animation, color-coded backgrounds (record=amber, celebrate=emerald, motivation=violet, start=orange), delayed entrance after chain animation. Messages include: new record celebrations, record-breaking motivation (X days to beat your record), milestone celebrations (3/7/14/21/30 days), and general encouragement.*
 - [ ] T3.3: Make motivation cards fully tappable
 - [ ] T3.4: Add next reminder relative time display
 - [ ] T3.5: Implement swipe-to-delete for manage actions
