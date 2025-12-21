@@ -3,7 +3,7 @@
 **Related Story:** `docs/specs/habit-details-screen/stories/story-1.9-habit-detail-page-redesign.md`
 **Design Mockup:** `.superdesign/design_iterations/habit_details_tabbed_1.html`
 **Priority:** Medium
-**Status:** 🟢 Phase 3 COMPLETE - Phase 4 Ready
+**Status:** 🟢 Phase 4 IN PROGRESS
 **Estimated Effort:** 4-6 hours
 
 ---
@@ -181,7 +181,8 @@ Polish improvements to enhance the Habit Details screen user experience with ani
   - *Already implemented in HabitDetailScreen.tsx and SwipeableActionButton.tsx: Archive and Delete buttons use SwipeableActionButton component with swipe-left gesture revealing amber (archive) or red (delete) action area. Uses react-native-gesture-handler Swipeable with rightThreshold=60, progressive icon scale animation (0.8→1.15), haptic feedback on swipe. Full swipe triggers 5-second undo toast (DeleteUndoToast/ArchiveUndoToast) with visual countdown progress bar, UNDO button, and swipe-to-dismiss. Timer expiry confirms action.*
 
 ### Phase 4: Polish (1 hour)
-- [ ] T4.1: Add vision board full-screen preview
+- [x] T4.1: Add vision board full-screen preview
+  - *Already implemented in VisionBoardPreview.tsx: Full-screen modal with swipe-down to dismiss, swipe left/right navigation between cards, pan gesture with dismiss threshold (150px), velocity-based detection (500px/s), scale/opacity animations during drag, edit button, dot indicators, and haptic feedback. Since vision board items are text-based (title/body only - no image field in schema), pinch-to-zoom is not applicable. The existing implementation provides a polished full-screen preview experience for text cards.*
 - [ ] T4.2: Implement affirmation shuffle
 - [ ] T4.3: Create danger zone section styling
 - [ ] T4.4: Respect reduce motion accessibility setting
