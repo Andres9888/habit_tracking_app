@@ -16,10 +16,7 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-  Dimensions,
 } from 'react-native';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { Clock, X } from 'lucide-react-native';
@@ -111,13 +108,13 @@ export default function TemplatePreviewModal({
   return (
     <Modal
       disableBackdropClose={isImporting}
-      variant='bottomSheet'
+      variant='fullScreen'
       visible={visible}
       onClose={handleClose}
     >
       <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Header with close button - top-right positioning */}
+        <View style={[styles.header, { paddingTop: insets.top > 0 ? insets.top : 12 }]}>
           <Text
             style={[
               styles.headerTitle,
@@ -127,11 +124,14 @@ export default function TemplatePreviewModal({
             Customize Habit
           </Text>
           <Pressable
+            accessible
+            accessibilityLabel="Close customize modal"
+            accessibilityRole="button"
             disabled={isImporting}
             style={styles.closeButton}
             onPress={handleClose}
           >
-            <X color='#6B7280' size={20} strokeWidth={2.5} />
+            <X color='#374151' size={22} strokeWidth={2.5} />
           </Pressable>
         </View>
 
@@ -140,6 +140,7 @@ export default function TemplatePreviewModal({
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           style={styles.content}
+          bounces={true}
         >
           {/* Template Preview */}
           <View style={styles.previewContainer}>
@@ -328,7 +329,12 @@ export default function TemplatePreviewModal({
 
 const styles = StyleSheet.create({
   closeButton: {
-    padding: 4,
+    alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
   },
   colorOption: {
     borderRadius: 20,
@@ -341,21 +347,23 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   container: {
+    backgroundColor: '#FAFAF9',
     flex: 1,
-    maxHeight: SCREEN_HEIGHT * 0.85,
   },
   content: {
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
   },
   footer: {
+    paddingHorizontal: 20,
     paddingTop: 16,
   },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    paddingBottom: 8,
+    paddingHorizontal: 16,
+    zIndex: 10,
   },
   headerTitle: {
     color: '#111827',
@@ -423,7 +431,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 16,
+    paddingBottom: 24,
+    paddingHorizontal: 20,
   },
   section: {
     marginBottom: 20,
