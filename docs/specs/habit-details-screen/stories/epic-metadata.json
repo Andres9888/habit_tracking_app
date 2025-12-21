@@ -1,0 +1,57 @@
+{
+  "epicId": "1.5",
+  "name": "Habit Detail Screen",
+  "screenTitle": "Habit Details Page (Progress Deep Dive)",
+  "shortTitle": "Habit Details",
+  "timeline": "Week 2",
+  "status": "not_started",
+  "progress": 0,
+  "storiesTotal": 7,
+  "storiesCompleted": 0,
+  "priority": "high",
+  "owner": "Jane",
+  "goal": "Turn the Habit Detail Screen into the best place to complete, understand progress, stay motivated, reflect, and manage a habit",
+  "stories": [
+    {
+      "id": "1.9",
+      "title": "Habit Detail Layout + Quick Complete",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.1",
+      "title": "Habit Detail Stats Module (Strength/Streak/Calendar)",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.2",
+      "title": "Habit Detail Why + Vision Board (Motivation)",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.3",
+      "title": "Habit Detail Notes Module",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.4",
+      "title": "Habit Detail Manage Actions + Safety",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.5",
+      "title": "Habit Cue & Implementation Intention",
+      "status": "todo"
+    },
+    {
+      "id": "1.9.6",
+      "title": "Affirmations & Positive Self-Talk",
+      "status": "todo"
+    }
+  ],
+  "createdAt": "2025-12-14",
+  "updatedAt": "2025-12-14"
+}
+
+
+
+

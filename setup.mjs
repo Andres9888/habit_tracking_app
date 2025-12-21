@@ -26,6 +26,7 @@ if (runOnceWorkflow && config.SETUP_SCRIPT_RAN !== undefined) {
 
 const result = spawnSync("npx", ["@convex-dev/auth", "--skip-git-check"], {
   stdio: "inherit",
+  shell: true,
 });
 
 if (runOnceWorkflow) {

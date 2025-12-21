@@ -16,7 +16,10 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
+  Dimensions,
 } from 'react-native';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { Clock, X } from 'lucide-react-native';
@@ -339,6 +342,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    maxHeight: SCREEN_HEIGHT * 0.85,
   },
   content: {
     flexGrow: 1,

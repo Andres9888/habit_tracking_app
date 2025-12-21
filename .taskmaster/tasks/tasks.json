@@ -623,12 +623,59 @@
         "dependencies": [],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Fix Template Preview Modal Sizing - Content Not Fully Visible",
+        "description": "The TemplatePreviewModal appears too small when clicking a template card, preventing users from seeing all content (preview, customization options, import button) without excessive scrolling.",
+        "details": "The modal has conflicting maxHeight constraints (container: 90%, bottomSheet: 0.9 * SCREEN_HEIGHT) that limit the visible area. Fix by: 1) Remove maxHeight: '90%' from container style, 2) Add flexGrow: 1 to content style, 3) Add contentContainerStyle with flexGrow: 1 to ScrollView, 4) Apply safe area insets to footer, 5) Consider fullScreen variant fallback for small devices (< 700pt). See spec: docs/specs/import-habits-screen/template-preview-modal-sizing.md",
+        "testStrategy": "Test on iPhone SE (small), iPhone 14 (standard), iPhone 15 Pro Max (large). Verify all content visible without excessive scrolling. Verify import button not cut off. Test keyboard avoidance when name input focused. Verify safe area handling for home indicator.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "6.1",
+            "title": "Remove container maxHeight constraint",
+            "description": "Remove maxHeight: '90%' from container style in TemplatePreviewModal.tsx",
+            "details": "The container style at line 337-339 has maxHeight: '90%' which conflicts with the Modal's bottomSheet maxHeight. Remove it or replace with flex: 1.",
+            "status": "pending"
+          },
+          {
+            "id": "6.2",
+            "title": "Fix ScrollView expansion",
+            "description": "Add flexGrow: 1 to content style and contentContainerStyle to ScrollView",
+            "details": "Ensure the ScrollView properly expands to fill available space. Add contentContainerStyle={{ flexGrow: 1 }} to the ScrollView component.",
+            "status": "pending"
+          },
+          {
+            "id": "6.3",
+            "title": "Add safe area handling to footer",
+            "description": "Import useSafeAreaInsets and apply bottom inset to footer padding",
+            "details": "Use useSafeAreaInsets from react-native-safe-area-context. Apply Math.max(insets.bottom, 16) as paddingBottom to the footer style.",
+            "status": "pending"
+          },
+          {
+            "id": "6.4",
+            "title": "Test on multiple device sizes",
+            "description": "Verify modal sizing on small, medium, and large screens",
+            "details": "Test on iPhone SE (667pt), iPhone 14 (844pt), iPhone 15 Pro Max (932pt). All content should be visible with minimal scrolling on standard devices.",
+            "status": "pending"
+          },
+          {
+            "id": "6.5",
+            "title": "Implement fullScreen fallback for small devices",
+            "description": "Use fullScreen variant instead of bottomSheet on screens < 700pt height",
+            "details": "Check Dimensions.get('window').height and conditionally use variant='fullScreen' for small devices to ensure all content is accessible.",
+            "status": "pending"
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-10-10T00:00:00.000Z",
       "updated": "2025-12-19T00:00:00.000Z",
-      "taskCount": 5,
+      "taskCount": 6,
       "completedCount": 0,
       "description": "Tasks for mvp-ios context"
     }
