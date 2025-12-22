@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, Modal, ScrollView, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { COLORS, EMOJIS } from './constants';
+import { COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { useKeyboardState } from './hooks/useKeyboardState';
@@ -178,17 +178,12 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 onAppend={handleAIAppend}
               />
 
-              {/* 4. Style Section (Emoji + Color) - muted until name entered */}
+              {/* 4. Style Section (Color only - emoji is in input prefix) */}
               <StyleSection
                 colors={COLORS}
                 disabled={!isSectionsEnabled}
-                emojis={EMOJIS}
-                habitName={form.habitName}
                 selectedColor={form.selectedColor}
-                selectedEmoji={form.selectedEmoji}
-                suggestedEmojis={suggestedEmojis}
                 onSelectColor={form.setSelectedColor}
-                onSelectEmoji={form.setSelectedEmoji}
               />
 
               {/* 5. Reminder Section - muted until name entered */}

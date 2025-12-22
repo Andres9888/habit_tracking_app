@@ -153,15 +153,18 @@ export const InlineEmojiInput = ({
 
   return (
     <View className="mb-4">
-      {/* Hero Label */}
-      <Text className="mb-3 text-xl font-bold text-slate-800">
-        What habit do you want to build?
-      </Text>
-
-      {/* Inline Emoji + Input Row */}
-      <View className="flex-row items-start gap-3">
-        {/* Emoji Box - 64px, tappable */}
-        <Animated.View style={{ transform: [{ scale: emojiBoxScale }] }}>
+      {/* Input Container with Emoji Prefix */}
+      <View className="relative">
+        {/* Emoji Prefix - inside input, left side */}
+        <Animated.View
+          className="absolute left-3 top-1/2 z-10"
+          style={{
+            transform: [
+              { translateY: -20 }, // Center vertically (half of 40px height)
+              { scale: emojiBoxScale }
+            ]
+          }}
+        >
           <Pressable
             accessibilityLabel="Choose habit icon"
             accessibilityRole="button"
@@ -171,15 +174,15 @@ export const InlineEmojiInput = ({
             onPressOut={handleEmojiBoxPressOut}
           >
             <Animated.View
-              className="h-16 w-16 items-center justify-center rounded-2xl"
+              className="h-10 w-10 items-center justify-center rounded-xl"
               style={{
-                backgroundColor: color,
+                backgroundColor: isDefaultEmoji ? '#f1f5f9' : `${color}30`,
                 transform: [{ scale: emojiScale }],
               }}
             >
               <Text
-                className="text-3xl"
-                style={{ opacity: isDefaultEmoji ? 0.5 : 1 }}
+                className="text-xl"
+                style={{ opacity: isDefaultEmoji ? 0.4 : 1 }}
               >
                 {displayEmoji}
               </Text>
@@ -187,57 +190,53 @@ export const InlineEmojiInput = ({
           </Pressable>
         </Animated.View>
 
-        {/* Input Container */}
-        <View className="flex-1">
-          <View className="relative">
-            <TextInput
-              ref={inputRef}
-              accessibilityHint="Enter the name of your new habit"
-              accessibilityLabel="Habit name input"
-              autoFocus={autoFocus}
-              blurOnSubmit
-              className="h-16 rounded-2xl bg-white px-4 pr-14 text-lg font-medium text-slate-800 shadow-sm"
-              maxLength={MAX_LENGTH}
-              placeholder="e.g., Read for 10 min"
-              placeholderTextColor="#94a3b8"
-              returnKeyType="done"
-              style={{
-                borderColor: value.length > 0 ? '#3b82f6' : '#e2e8f0',
-                borderWidth: value.length > 0 ? 2 : 1,
-              }}
-              value={value}
-              onChangeText={onChange}
-              onFocus={onFocus}
-            />
+        {/* Input Field with left padding for emoji */}
+        <TextInput
+          ref={inputRef}
+          accessibilityHint="Enter the name of your new habit"
+          accessibilityLabel="Habit name input"
+          autoFocus={autoFocus}
+          blurOnSubmit
+          className="h-14 rounded-2xl bg-white pl-16 pr-14 text-base font-medium text-slate-800 shadow-sm"
+          maxLength={MAX_LENGTH}
+          placeholder="What habit to build?"
+          placeholderTextColor="#94a3b8"
+          returnKeyType="done"
+          style={{
+            borderColor: value.length > 0 ? '#10b981' : '#e2e8f0',
+            borderWidth: value.length > 0 ? 2 : 1,
+          }}
+          value={value}
+          onChangeText={onChange}
+          onFocus={onFocus}
+        />
 
-            {/* Character Count */}
-            <View className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Text
-                className={`text-xs font-medium ${
-                  isNearLimit ? 'text-amber-500' : 'text-slate-400'
-                }`}
-              >
-                {charCount}/{MAX_LENGTH}
-              </Text>
-            </View>
-          </View>
-
-          {/* Validation Feedback - right-aligned under input */}
-          {validation && (
-            <Animated.View
-              className="mt-2"
-              style={{
-                opacity: validationOpacity,
-                transform: [{ translateY: validationTranslateY }],
-              }}
-            >
-              <Text className={`text-sm font-medium ${getValidationColor()}`}>
-                {validation.message}
-              </Text>
-            </Animated.View>
-          )}
+        {/* Character Count - right side */}
+        <View className="absolute right-3 top-1/2 -translate-y-1/2">
+          <Text
+            className={`text-xs font-medium ${
+              isNearLimit ? 'text-amber-500' : 'text-slate-400'
+            }`}
+          >
+            {charCount}/{MAX_LENGTH}
+          </Text>
         </View>
       </View>
+
+      {/* Validation Feedback */}
+      {validation && (
+        <Animated.View
+          className="mt-2 px-1"
+          style={{
+            opacity: validationOpacity,
+            transform: [{ translateY: validationTranslateY }],
+          }}
+        >
+          <Text className={`text-sm font-medium ${getValidationColor()}`}>
+            {validation.message}
+          </Text>
+        </Animated.View>
+      )}
     </View>
   );
 };

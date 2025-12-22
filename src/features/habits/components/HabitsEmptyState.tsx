@@ -64,14 +64,14 @@ const TEMPLATE_PREVIEWS = [
   { title: 'Focus Flow', tagline: 'Deep work ritual' },
 ];
 
-// Design System Constants
+// Design System Constants - Using Stone palette for consistency with homepage
 const COLORS = {
-  // Text
+  // Text - Stone palette (warmer tones matching beige background #f8f5f1)
   text: {
-    primary: '#0f172a',
-    secondary: '#475569',
-    tertiary: '#64748b',
-    muted: '#94a3b8',
+    primary: '#1c1917',   // stone-900
+    secondary: '#57534e', // stone-600
+    tertiary: '#78716c',  // stone-500
+    muted: '#a8a29e',     // stone-400
   },
   // Accents
   accent: {
@@ -82,16 +82,16 @@ const COLORS = {
     indigo: '#4f46e5',
     indigoLight: '#e0e7ff',
   },
-  // Surfaces
+  // Surfaces - Stone palette
   surface: {
     primary: '#ffffff',
-    secondary: '#f8fafc',
+    secondary: '#fafaf9', // stone-50
     warm: '#fffbeb',
   },
-  // Borders
+  // Borders - Stone palette
   border: {
-    light: '#e2e8f0',
-    medium: '#cbd5e1',
+    light: '#e7e5e4',   // stone-200
+    medium: '#d6d3d1',  // stone-300
   },
 };
 
@@ -149,7 +149,7 @@ function ScrollHint({ visible }: { visible: boolean }) {
       <Text className='text-[13px] font-medium text-stone-400'>
         More options below
       </Text>
-      <ChevronDown color='#94a3b8' size={18} strokeWidth={2} />
+      <ChevronDown color='#a8a29e' size={18} strokeWidth={2} />
     </Animated.View>
   );
 }

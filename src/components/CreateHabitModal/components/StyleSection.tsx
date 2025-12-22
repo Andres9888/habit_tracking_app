@@ -1,19 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Pressable, Text, View, Keyboard } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
-import { EmojiPickerSheet } from '../../EmojiPickerV2';
 
 interface StyleSectionProps {
   colors: string[];
-  emojis: string[];
   onSelectColor: (color: string) => void;
-  onSelectEmoji: (emoji: string | null) => void;
   selectedColor: string;
-  selectedEmoji: string | null;
-  suggestedEmojis?: string[];
-  habitName?: string;
   disabled?: boolean;
 }
 
@@ -102,53 +95,14 @@ const AnimatedButton = ({
 export const StyleSection = ({
   colors,
   onSelectColor,
-  onSelectEmoji,
   selectedColor,
-  selectedEmoji,
-  habitName,
   disabled = false,
 }: StyleSectionProps) => {
-  const { triggerSelection } = useHapticFeedback();
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const iconRowScale = useRef(new Animated.Value(1)).current;
-
-  const handleOpenEmojiPicker = useCallback(() => {
-    if (disabled) return;
-    triggerSelection();
-    Keyboard.dismiss();
-    setShowEmojiPicker(true);
-  }, [triggerSelection, disabled]);
-
   const handleColorSelect = useCallback((color: string) => {
     if (disabled) return;
     Keyboard.dismiss(); // Dismiss keyboard when tapping color
     onSelectColor(color);
   }, [onSelectColor, disabled]);
-
-  const handleEmojiSelect = useCallback(
-    (emoji: string | null) => {
-      onSelectEmoji(emoji);
-      setShowEmojiPicker(false);
-    },
-    [onSelectEmoji]
-  );
-
-  const handleIconRowPressIn = useCallback(() => {
-    Animated.timing(iconRowScale, {
-      duration: 100,
-      toValue: 0.98,
-      useNativeDriver: true,
-    }).start();
-  }, [iconRowScale]);
-
-  const handleIconRowPressOut = useCallback(() => {
-    Animated.spring(iconRowScale, {
-      toValue: 1,
-      damping: 15,
-      stiffness: 200,
-      useNativeDriver: true,
-    }).start();
-  }, [iconRowScale]);
 
   // Split colors into rows of 8 for 3-row layout
   const colorRows = [];
@@ -162,52 +116,10 @@ export const StyleSection = ({
       style={{ opacity: disabled ? 0.4 : 1 }}
       pointerEvents={disabled ? 'none' : 'auto'}
     >
-      <Text className="mb-4 text-base font-bold text-slate-800">🎨 Style it</Text>
-
-      {/* Icon Picker - Tappable Row */}
-      <Animated.View style={{ transform: [{ scale: iconRowScale }] }}>
-        <Pressable
-          accessibilityLabel="Choose icon for habit"
-          accessibilityRole="button"
-          accessibilityHint="Opens emoji picker"
-          className="mb-5 flex-row items-center justify-between rounded-xl bg-slate-50 p-3"
-          disabled={disabled}
-          onPress={handleOpenEmojiPicker}
-          onPressIn={handleIconRowPressIn}
-          onPressOut={handleIconRowPressOut}
-        >
-          <View className="flex-row items-center gap-3">
-            {/* Icon Preview */}
-            <View
-              className="h-12 w-12 items-center justify-center rounded-xl"
-              style={{ backgroundColor: selectedColor + '20' }}
-            >
-              <Text className="text-2xl">{selectedEmoji || '➕'}</Text>
-            </View>
-            <View>
-              <Text className="text-base font-medium text-slate-800">Icon</Text>
-              <Text className="text-xs text-slate-500">
-                {selectedEmoji ? 'Tap to change' : 'Choose an icon'}
-              </Text>
-            </View>
-          </View>
-          <ChevronRight color="#94a3b8" size={20} />
-        </Pressable>
-      </Animated.View>
-
-      {/* Full Emoji Picker Modal (V2) */}
-      <EmojiPickerSheet
-        habitName={habitName || ''}
-        selectedEmoji={selectedEmoji}
-        visible={showEmojiPicker}
-        onClose={() => setShowEmojiPicker(false)}
-        onSelect={handleEmojiSelect}
-      />
+      <Text className="mb-3 text-sm font-bold text-slate-800">Color</Text>
 
       {/* Color Picker - 24 colors in 3 rows of 8 */}
       <View>
-        <Text className="mb-3 text-sm font-semibold text-slate-600">Color</Text>
-
         {colorRows.map((row, rowIndex) => (
           <View
             key={`color-row-${rowIndex}`}

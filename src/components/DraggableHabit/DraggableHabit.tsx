@@ -448,15 +448,20 @@ export default function DraggableHabit({
       <Animated.View
         className='overflow-hidden rounded-3xl'
         style={{
-          backgroundColor: colors.cardBackground,
-          borderColor: colors.border,
+          // Celebratory green tint for perfect week, otherwise default white
+          backgroundColor: isWeekComplete && !highContrastMode
+            ? 'rgba(220, 252, 231, 0.3)' // emerald-50 with 30% opacity
+            : colors.cardBackground,
+          borderColor: isWeekComplete && !highContrastMode
+            ? '#86efac' // emerald-300 for completed habits
+            : colors.border,
           borderWidth: highContrastMode ? 2 : 1,
           opacity: fade,
           transform: [{ translateY }, { scale: cardScale }],
-          // Refined shadow for white cards on beige background
-          shadowColor: '#78716c', // stone-500 for warmer shadow
+          // Enhanced shadow for perfect week
+          shadowColor: isWeekComplete ? '#10b981' : '#78716c', // emerald-500 or stone-500
           shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.06,
+          shadowOpacity: isWeekComplete ? 0.12 : 0.06,
           shadowRadius: 12,
           elevation: 3, // Android
         }}
@@ -577,12 +582,12 @@ export default function DraggableHabit({
               />
             </View>
           )}
-          {/* Fallback divider when strength is hidden */}
+          {/* Fallback divider when strength is hidden - using stone-100 for consistency */}
           {!showHabitStrengthPercentage && (
             <View
-              className='mb-3 h-[1px]'
+              className='mb-3 h-[1.5px] rounded-full'
               style={{
-                backgroundColor: 'rgba(120, 113, 108, 0.08)',
+                backgroundColor: '#f5f5f4', // stone-100
               }}
             />
           )}
