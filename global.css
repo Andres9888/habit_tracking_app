@@ -46,35 +46,7 @@
     --radius: 0.5rem;
   }
 
-  .dark {
-    --background: 240 6% 7%;
-    --foreground: 0 0% 96%;
-
-    --card: 240 6% 9%;
-    --card-foreground: 0 0% 96%;
-
-    --popover: 240 6% 9%;
-    --popover-foreground: 0 0% 96%;
-
-    --primary: 0 0% 96%;
-    --primary-foreground: 240 5% 10%;
-
-    --secondary: 240 5% 12%;
-    --secondary-foreground: 0 0% 96%;
-
-    --muted: 240 5% 18%;
-    --muted-foreground: 0 0% 72%;
-
-    --accent: 240 5% 14%;
-    --accent-foreground: 0 0% 96%;
-
-    --destructive: 4 72% 52%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 240 4% 18%;
-    --input: 240 4% 18%;
-    --ring: 0 0% 80%;
-  }
+  /* Dark mode removed - app is light-mode only */
 }
 
 @layer base {

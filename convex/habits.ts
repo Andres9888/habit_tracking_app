@@ -1,7 +1,7 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { calculateMomentumStrengthSnapshot } from './habitStrength';
-import { updateStreak } from "./streakUtils";
+import { calculateStreakFromHistory } from "./streakUtils";
 
 function getTodayDateKey(): string {
   const now = new Date();
@@ -754,15 +754,10 @@ export const toggleHabit = mutation({
         })),
       });
 
-      // Calculate updated streak using the existing streak logic
-      const streakData = updateStreak(
-        {
-          bestStreak: habit.bestStreak,
-          currentStreak: habit.currentStreak,
-          lastCompletedDate: habit.lastCompletedDate,
-        },
-        args.date,
-        newCompletedStatus
+      // Calculate streak from full tracking history (supports backfills)
+      const streakData = calculateStreakFromHistory(
+        allTracking.map((t) => ({ date: t.date, completed: t.completed })),
+        evaluationDateKey
       );
 
       const previousStrength100 = (habit.strength ?? 0) * 100;

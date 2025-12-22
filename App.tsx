@@ -1,6 +1,10 @@
 // NativeWind global styles
 import './global.css';
 
+// Force light mode - disable system dark mode detection
+import { colorScheme } from 'nativewind';
+colorScheme.set('light');
+
 import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo';
 import {
   ConvexProvider,

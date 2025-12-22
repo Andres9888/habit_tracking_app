@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Why Editor - Improved UX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #1c1917 !important;
+      min-height: 100vh;
+    }
+
+    /* iOS-style spring animations */
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .modal-container {
+      animation: slideUp 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .template-card {
+      animation: scaleIn 0.3s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+    }
+
+    .template-card:nth-child(1) { animation-delay: 0.1s; }
+    .template-card:nth-child(2) { animation-delay: 0.15s; }
+    .template-card:nth-child(3) { animation-delay: 0.2s; }
+    .template-card:nth-child(4) { animation-delay: 0.25s; }
+
+    .heart-pulse {
+      animation: pulseHeart 2s ease-in-out infinite;
+    }
+
+    /* Custom scrollbar */
+    .scroll-container::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    /* Input focus state */
+    .why-input:focus {
+      border-color: #f43f5e !important;
+      box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+      outline: none;
+    }
+
+    .why-input::placeholder {
+      color: #a8a29e;
+    }
+
+    /* Button press state */
+    .press-scale {
+      transition: transform 0.15s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .press-scale:active {
+      transform: scale(0.96);
+    }
+
+    /* Keyboard simulation */
+    .keyboard {
+      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .keyboard.hidden {
+      transform: translateY(100%);
+    }
+
+    /* Done button fade */
+    .done-btn {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .done-btn.hidden {
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+
+    /* Character counter colors */
+    .char-count {
+      transition: color 0.2s ease;
+    }
+
+    .char-count.warning {
+      color: #f59e0b;
+    }
+
+    .char-count.limit {
+      color: #ef4444;
+    }
+
+    /* Save button states */
+    .save-btn {
+      transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .save-btn:disabled {
+      opacity: 0.5;
+      transform: scale(0.98);
+    }
+
+    .save-btn:not(:disabled):active {
+      transform: scale(0.97);
+      background: #e11d48;
+    }
+
+    /* Template selection */
+    .template-card.selected {
+      border-color: #f43f5e;
+      background: #fff1f2;
+    }
+
+    /* Sticky footer with keyboard */
+    .sticky-footer {
+      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Phone Frame -->
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="relative w-[390px] h-[844px] bg-stone-900 rounded-[50px] overflow-hidden shadow-2xl border-[8px] border-stone-800">
+      <!-- Status Bar -->
+      <div class="h-12 bg-stone-50 flex items-center justify-between px-8 pt-2">
+        <span class="text-sm font-semibold text-stone-900">9:41</span>
+        <div class="flex items-center gap-1">
+          <div class="flex gap-0.5">
+            <div class="w-1 h-2 bg-stone-900 rounded-sm"></div>
+            <div class="w-1 h-2.5 bg-stone-900 rounded-sm"></div>
+            <div class="w-1 h-3 bg-stone-900 rounded-sm"></div>
+            <div class="w-1 h-3.5 bg-stone-900 rounded-sm"></div>
+          </div>
+          <span class="text-sm font-semibold text-stone-900 ml-1">100%</span>
+        </div>
+      </div>
+
+      <!-- Modal Container -->
+      <div class="modal-container flex flex-col h-[calc(100%-48px)] bg-stone-50">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-4 bg-white border-b border-stone-100">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-full bg-rose-100 flex items-center justify-center heart-pulse">
+              <i data-lucide="heart" class="w-[18px] h-[18px] text-rose-500" fill="currentColor"></i>
+            </div>
+            <span class="text-lg font-bold text-stone-900">Your Why</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Done Button (visible when keyboard is open) -->
+            <button id="doneBtn" class="done-btn hidden px-4 py-2 rounded-full bg-rose-500 text-white text-sm font-semibold press-scale">
+              Done
+            </button>
+
+            <!-- Close Button -->
+            <button class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center press-scale hover:bg-stone-200">
+              <i data-lucide="x" class="w-5 h-5 text-stone-600"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div id="scrollContent" class="scroll-container flex-1 overflow-y-auto px-5 pt-5 pb-24">
+
+          <!-- Intro Text (collapsible) -->
+          <p id="introText" class="text-sm text-stone-500 text-center mb-6 transition-all duration-300">
+            Your why is the deeper reason that keeps you going when motivation fades.
+          </p>
+
+          <!-- Input Section -->
+          <div class="mb-6">
+            <label class="block text-[10px] font-bold uppercase tracking-[2px] text-stone-400 mb-2">
+              I do this because...
+            </label>
+
+            <div class="relative">
+              <textarea
+                id="whyInput"
+                class="why-input w-full min-h-[120px] px-5 py-4 bg-white rounded-2xl border-2 border-rose-100 text-base text-stone-800 resize-none shadow-sm"
+                placeholder="I want to be healthy for my kids..."
+                maxlength="200"
+              ></textarea>
+            </div>
+
+            <!-- Character Counter (outside input) -->
+            <div class="flex justify-end mt-2 px-1">
+              <span id="charCount" class="char-count text-xs font-semibold text-stone-400">
+                0 / 200
+              </span>
+            </div>
+          </div>
+
+          <!-- Inspiration Section -->
+          <div class="mb-6">
+            <label class="block text-[10px] font-bold uppercase tracking-[2px] text-stone-400 mb-4">
+              💡 Inspiration
+            </label>
+
+            <div class="space-y-2">
+              <!-- Template 1 -->
+              <button class="template-card w-full flex items-center gap-3 px-4 py-3.5 bg-white rounded-xl border border-stone-100 press-scale hover:bg-rose-50 hover:border-rose-200 transition-colors text-left">
+                <span class="text-xl">👨‍👩‍👧</span>
+                <span class="flex-1 text-sm text-stone-700 font-medium">To be healthy and present for my family</span>
+              </button>
+
+              <!-- Template 2 -->
+              <button class="template-card w-full flex items-center gap-3 px-4 py-3.5 bg-white rounded-xl border border-stone-100 press-scale hover:bg-rose-50 hover:border-rose-200 transition-colors text-left">
+                <span class="text-xl">💪</span>
+                <span class="flex-1 text-sm text-stone-700 font-medium">To prove to myself I can follow through</span>
+              </button>
+
+              <!-- Template 3 -->
+              <button class="template-card w-full flex items-center gap-3 px-4 py-3.5 bg-white rounded-xl border border-stone-100 press-scale hover:bg-rose-50 hover:border-rose-200 transition-colors text-left">
+                <span class="text-xl">⚡</span>
+                <span class="flex-1 text-sm text-stone-700 font-medium">To feel more confident and energized</span>
+              </button>
+
+              <!-- Template 4 -->
+              <button class="template-card w-full flex items-center gap-3 px-4 py-3.5 bg-white rounded-xl border border-stone-100 press-scale hover:bg-rose-50 hover:border-rose-200 transition-colors text-left">
+                <span class="text-xl">🌟</span>
+                <span class="flex-1 text-sm text-stone-700 font-medium">To build a better future for myself</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sticky Save Button -->
+        <div id="stickyFooter" class="sticky-footer absolute bottom-0 left-0 right-0 px-5 pt-4 pb-8 bg-white border-t border-stone-100">
+          <button id="saveBtn" class="save-btn w-full py-4 bg-rose-500 text-white text-base font-bold rounded-2xl flex items-center justify-center gap-2">
+            <i data-lucide="heart" class="w-5 h-5" fill="currentColor"></i>
+            Save My Why
+          </button>
+        </div>
+
+        <!-- Simulated Keyboard -->
+        <div id="keyboard" class="keyboard hidden absolute bottom-0 left-0 right-0 h-[280px] bg-stone-200 border-t border-stone-300">
+          <div class="grid grid-cols-10 gap-1 p-1.5 pt-2">
+            <!-- Row 1 -->
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">q</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">w</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">e</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">r</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">t</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">y</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">u</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">i</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">o</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">p</div>
+            <!-- Row 2 -->
+            <div class="col-start-1 col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium ml-4">a</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">s</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">d</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">f</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">g</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">h</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">j</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">k</div>
+            <div class="col-span-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium mr-4">l</div>
+          </div>
+          <!-- Bottom row -->
+          <div class="flex items-center justify-center gap-1 px-1.5 mt-1">
+            <div class="w-12 h-11 bg-stone-300 rounded-md shadow-sm flex items-center justify-center">
+              <i data-lucide="arrow-up" class="w-5 h-5"></i>
+            </div>
+            <div class="flex-1 flex gap-1">
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">z</div>
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">x</div>
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">c</div>
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">v</div>
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">b</div>
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">n</div>
+              <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-lg font-medium">m</div>
+            </div>
+            <div class="w-12 h-11 bg-stone-300 rounded-md shadow-sm flex items-center justify-center">
+              <i data-lucide="delete" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <!-- Space bar row -->
+          <div class="flex items-center justify-center gap-2 px-1.5 mt-1">
+            <div class="w-20 h-11 bg-stone-300 rounded-md shadow-sm flex items-center justify-center text-sm font-medium">123</div>
+            <div class="flex-1 h-11 bg-white rounded-md shadow-sm flex items-center justify-center text-sm font-medium">space</div>
+            <div class="w-20 h-11 bg-stone-300 rounded-md shadow-sm flex items-center justify-center text-sm font-medium">return</div>
+          </div>
+          <!-- Home indicator -->
+          <div class="flex justify-center pt-4 pb-2">
+            <div class="w-32 h-1 bg-stone-900 rounded-full opacity-30"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Panel -->
+  <div class="fixed bottom-4 left-4 bg-white rounded-2xl shadow-xl p-4 space-y-3 z-50">
+    <h3 class="text-sm font-bold text-stone-700 mb-2">🎮 Demo Controls</h3>
+    <button id="toggleKeyboard" class="w-full px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg text-sm font-medium text-stone-700 transition-colors">
+      Toggle Keyboard
+    </button>
+    <button id="fillTemplate" class="w-full px-4 py-2 bg-rose-100 hover:bg-rose-200 rounded-lg text-sm font-medium text-rose-700 transition-colors">
+      Fill Template
+    </button>
+    <button id="clearInput" class="w-full px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg text-sm font-medium text-stone-700 transition-colors">
+      Clear Input
+    </button>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // DOM Elements
+    const keyboard = document.getElementById('keyboard');
+    const doneBtn = document.getElementById('doneBtn');
+    const whyInput = document.getElementById('whyInput');
+    const charCount = document.getElementById('charCount');
+    const introText = document.getElementById('introText');
+    const stickyFooter = document.getElementById('stickyFooter');
+    const scrollContent = document.getElementById('scrollContent');
+    const templateCards = document.querySelectorAll('.template-card');
+    const saveBtn = document.getElementById('saveBtn');
+
+    let isKeyboardVisible = false;
+
+    // Toggle keyboard visibility
+    function toggleKeyboard(show) {
+      isKeyboardVisible = show;
+
+      if (show) {
+        keyboard.classList.remove('hidden');
+        doneBtn.classList.remove('hidden');
+        introText.style.maxHeight = '0';
+        introText.style.opacity = '0';
+        introText.style.marginBottom = '0';
+        stickyFooter.style.transform = 'translateY(-280px)';
+        scrollContent.style.paddingBottom = '320px';
+
+        // Scroll to keep input visible
+        setTimeout(() => {
+          whyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      } else {
+        keyboard.classList.add('hidden');
+        doneBtn.classList.add('hidden');
+        introText.style.maxHeight = '100px';
+        introText.style.opacity = '1';
+        introText.style.marginBottom = '1.5rem';
+        stickyFooter.style.transform = 'translateY(0)';
+        scrollContent.style.paddingBottom = '96px';
+      }
+    }
+
+    // Update character count
+    function updateCharCount() {
+      const count = whyInput.value.length;
+      charCount.textContent = `${count} / 200`;
+
+      charCount.classList.remove('warning', 'limit');
+      if (count >= 200) {
+        charCount.classList.add('limit');
+      } else if (count >= 160) {
+        charCount.classList.add('warning');
+      }
+
+      // Update save button state
+      saveBtn.disabled = count === 0;
+    }
+
+    // Event Listeners
+    whyInput.addEventListener('focus', () => toggleKeyboard(true));
+    whyInput.addEventListener('input', updateCharCount);
+
+    doneBtn.addEventListener('click', () => {
+      toggleKeyboard(false);
+      whyInput.blur();
+    });
+
+    // Template card selection
+    templateCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const text = card.querySelector('span:last-child').textContent;
+        whyInput.value = text;
+        updateCharCount();
+
+        // Visual feedback
+        templateCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+
+        // Dismiss keyboard after selection
+        toggleKeyboard(false);
+      });
+    });
+
+    // Demo controls
+    document.getElementById('toggleKeyboard').addEventListener('click', () => {
+      toggleKeyboard(!isKeyboardVisible);
+      if (isKeyboardVisible) {
+        whyInput.focus();
+      }
+    });
+
+    document.getElementById('fillTemplate').addEventListener('click', () => {
+      whyInput.value = 'To be the best version of myself and inspire others around me';
+      updateCharCount();
+    });
+
+    document.getElementById('clearInput').addEventListener('click', () => {
+      whyInput.value = '';
+      updateCharCount();
+      templateCards.forEach(c => c.classList.remove('selected'));
+    });
+
+    // Save button click
+    saveBtn.addEventListener('click', () => {
+      if (whyInput.value.trim()) {
+        alert('✅ Your Why saved!\n\n"' + whyInput.value + '"');
+      }
+    });
+
+    // Initialize
+    updateCharCount();
+  </script>
+</body>
+</html>

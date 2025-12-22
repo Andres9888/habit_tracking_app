@@ -34,7 +34,7 @@ export function SegmentedControl<T extends string>({
             className={cn(
               'rounded-md px-3 py-1.5 text-sm transition-colors',
               active
-                ? 'bg-card text-slate-900 shadow dark:text-slate-100'
+                ? 'bg-card text-slate-900 shadow'
                 : 'text-slate-600 hover:text-slate-800'
             )}
             role='tab'
