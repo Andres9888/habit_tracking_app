@@ -55,8 +55,19 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   useEffect(() => {
     if (selectedHabit) {
       const updated = habits.find(h => h._id === selectedHabit._id);
-      if (updated && updated !== selectedHabit) {
-        setSelectedHabit(updated);
+      if (updated) {
+        // Check if any key fields changed, not just reference
+        const streakChanged = updated.currentStreak !== selectedHabit.currentStreak;
+        const strengthChanged = updated.strength !== selectedHabit.strength;
+        if (streakChanged || strengthChanged || updated !== selectedHabit) {
+          console.log('🔄 Syncing selectedHabit:', {
+            habitName: updated.name,
+            oldStreak: selectedHabit.currentStreak,
+            newStreak: updated.currentStreak,
+            streakChanged,
+          });
+          setSelectedHabit(updated);
+        }
       }
     }
   }, [habits, selectedHabit]);

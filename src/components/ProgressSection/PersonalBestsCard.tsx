@@ -19,9 +19,8 @@ import Animated, {
   withSequence,
   withTiming,
   Easing,
-  FadeIn,
 } from 'react-native-reanimated';
-import { Trophy, AlertTriangle, ChevronRight, Flame } from 'lucide-react-native';
+import { Trophy, AlertTriangle, ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 import type { PersonalBestsCardProps } from './types';
@@ -87,7 +86,8 @@ export function PersonalBestsCard({
 
   const top3Records = streakRecords.slice(0, 3);
   const hasRecords = top3Records.length > 0;
-  const showBestWorst = bestDay && worstDay && worstDay.rate < bestDay.rate;
+  // Always show best/worst cards if both exist
+  const showBestWorst = bestDay !== null && worstDay !== null;
 
   return (
     <View
@@ -102,59 +102,35 @@ export function PersonalBestsCard({
       <View className="p-4">
         {/* Header */}
         <View className="mb-3 flex-row items-center gap-2">
-          <View className="h-7 w-7 items-center justify-center rounded-lg bg-amber-100">
-            <Trophy className="text-amber-500" size={14} />
+          <View className="h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
+            <Trophy className="text-amber-500" size={16} />
           </View>
-          <Text className="text-sm font-semibold text-stone-600">Personal Bests</Text>
+          <Text className="text-base font-semibold text-stone-800">Personal Bests</Text>
         </View>
 
-        {/* Current streak highlight (if active) */}
-        {currentStreak > 0 && (
-          <Animated.View
-            className="mb-3 flex-row items-center justify-between rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-3"
-            entering={FadeIn.delay(200)}
-          >
-            <View className="flex-row items-center gap-2">
-              <View className="relative">
-                <Animated.View
-                  className="absolute -inset-1 rounded-full bg-amber-400"
-                  style={pulseAnimatedStyle}
-                />
-                <Flame className="relative text-amber-500" size={20} />
-              </View>
-              <View>
-                <Text className="text-xs text-amber-600">Current Streak</Text>
-                <Text className="text-lg font-bold text-amber-700">{currentStreak} days</Text>
-              </View>
-            </View>
-            <View className="rounded-full bg-amber-100 px-2 py-1">
-              <Text className="text-xs font-semibold text-amber-700">NOW 🔥</Text>
-            </View>
-          </Animated.View>
-        )}
-
-        {/* Medal row (top 3 streaks) */}
+        {/* Medal row (top 3 streaks) - matches mockup layout */}
         {hasRecords && (
-          <View className="mb-3 flex-row gap-2">
+          <View className="mb-4 flex-row gap-2">
             {top3Records.map((record, i) => {
               const colors = MEDAL_COLORS[i];
-              const isCurrentRecord = record.isCurrent && currentStreak === record.days;
+              const isCurrentRecord = record.isCurrent || (currentStreak > 0 && record.days === currentStreak);
 
               return (
-                <View
+                <Animated.View
                   key={`${record.startDate}-${record.days}`}
                   className={`flex-1 items-center rounded-xl border p-2.5 ${colors.bg} ${colors.border}`}
+                  style={isCurrentRecord ? pulseAnimatedStyle : undefined}
                   accessibilityLabel={`${i === 0 ? 'First' : i === 1 ? 'Second' : 'Third'} best streak: ${record.days} days${isCurrentRecord ? ', current streak' : ''}`}
                 >
                   <Text className="mb-0.5 text-base">{MEDALS[i]}</Text>
                   <Text className={`text-lg font-bold ${colors.text}`}>{record.days}</Text>
                   <Text className={`text-[9px] ${colors.subtext}`}>days</Text>
                   {isCurrentRecord && (
-                    <View className="mt-1 rounded-full bg-amber-100 px-1.5 py-0.5">
-                      <Text className="text-[8px] font-semibold text-amber-700">NOW</Text>
+                    <View className="mt-1 rounded-full bg-orange-100 px-1.5 py-0.5">
+                      <Text className="text-[8px] font-semibold text-orange-700">NOW 🔥</Text>
                     </View>
                   )}
-                </View>
+                </Animated.View>
               );
             })}
             {/* Fill empty slots if less than 3 records */}

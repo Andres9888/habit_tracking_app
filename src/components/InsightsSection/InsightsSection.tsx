@@ -367,31 +367,38 @@ export function InsightsSection({
   );
 
   // Get current streak from tracking for streak records
+  // Uses UTC-normalized date utilities to match calculateStreakRecords
   const currentStreak = useMemo(() => {
-    const today = new Date();
     const completedDates = new Set(
       tracking.filter((t) => t.completed).map((t) => t.date)
     );
 
-    let streak = 0;
-    const current = new Date(today);
+    if (completedDates.size === 0) return 0;
 
-    // Check if today is completed
-    const todayStr = current.toISOString().split('T')[0];
+    let streak = 0;
+    const todayStr = getTodayString();
+
+    // Start from today or yesterday if today not completed
+    let checkDate = todayStr;
     if (!completedDates.has(todayStr)) {
-      // Check yesterday
-      current.setDate(current.getDate() - 1);
+      // Get yesterday using proper date math
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      checkDate = formatDateString(yesterday);
     }
 
-    while (true) {
-      const dateStr = current.toISOString().split('T')[0];
-      if (completedDates.has(dateStr)) {
+    // Count consecutive days backwards
+    while (streak < 400) {
+      if (completedDates.has(checkDate)) {
         streak++;
-        current.setDate(current.getDate() - 1);
+        // Go to previous day
+        const [year, month, day] = checkDate.split('-').map(Number);
+        const prevDate = new Date(year, month - 1, day);
+        prevDate.setDate(prevDate.getDate() - 1);
+        checkDate = formatDateString(prevDate);
       } else {
         break;
       }
-      if (streak > 400) break; // Safety limit
     }
 
     return streak;

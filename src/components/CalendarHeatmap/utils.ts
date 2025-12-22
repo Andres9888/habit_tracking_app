@@ -168,3 +168,67 @@ export function getDayAccessibilityLabel(day: CalendarDay): string {
 
   return `${todayIndicator}${formattedDate}. ${completionStatus}`;
 }
+
+/**
+ * Day-of-week statistics interface
+ */
+export interface DayOfWeekStat {
+  day: string;
+  rate: number;
+  count: number;
+  total: number;
+}
+
+/**
+ * Calculate completion rate by day of week
+ */
+export function calculateDayOfWeekStats(
+  completedDates: Set<string>,
+  habitCreatedAt?: number
+): DayOfWeekStat[] {
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const stats = Array(7).fill(0).map((_, i) => ({
+    day: dayNames[i],
+    count: 0,
+    total: 0,
+    rate: 0,
+  }));
+
+  const startDate = habitCreatedAt ? new Date(habitCreatedAt) : new Date();
+  const endDate = new Date();
+
+  // Iterate through each day from habit creation to today
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const dayOfWeek = d.getDay();
+    const dateStr = format(d, 'yyyy-MM-dd');
+
+    stats[dayOfWeek].total++;
+    if (completedDates.has(dateStr)) {
+      stats[dayOfWeek].count++;
+    }
+  }
+
+  // Calculate rates
+  stats.forEach(stat => {
+    stat.rate = stat.total > 0 ? Math.round((stat.count / stat.total) * 100) : 0;
+  });
+
+  return stats;
+}
+
+/**
+ * Detect weakest day pattern
+ * Returns the day that's significantly below average (>20% gap)
+ */
+export function detectWeakDay(
+  dayStats: DayOfWeekStat[]
+): { day: string; rate: number } | null {
+  const avgRate = dayStats.reduce((sum, s) => sum + s.rate, 0) / 7;
+
+  // Find day that's >20% below average
+  const weak = dayStats
+    .filter(s => s.rate < avgRate - 20)
+    .sort((a, b) => a.rate - b.rate)[0];
+
+  return weak ? { day: weak.day, rate: weak.rate } : null;
+}

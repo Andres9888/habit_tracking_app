@@ -22,7 +22,7 @@ const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
     return 'light';
   }
 
-  return 'system';
+  return 'light'; // Default to light - dark mode not yet implemented
 };
 
 export const useSettingsModalLogic = ({
@@ -39,7 +39,7 @@ export const useSettingsModalLogic = ({
 
   // Local state for settings
   const [darkModePreference, setDarkModeState] =
-    useState<DarkModePreference>('system');
+    useState<DarkModePreference>('light');
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [highContrastMode, setHighContrastModeState] = useState(false);
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);

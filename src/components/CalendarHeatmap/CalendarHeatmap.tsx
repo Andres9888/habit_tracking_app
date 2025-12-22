@@ -1,48 +1,22 @@
 /**
  * CalendarHeatmap Component
- * GitHub-style calendar heatmap for habit tracking visualization
+ * Monthly calendar heatmap for habit tracking visualization with insights
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated, {
-  FadeInDown,
-  SlideInRight,
-  SlideOutLeft,
-  SlideInLeft,
-  SlideOutRight,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  runOnJS,
-} from 'react-native-reanimated';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { format, addMonths, subMonths, isSameMonth } from 'date-fns';
-import type { Id } from '../../../convex/_generated/dataModel';
-import { DayCell } from './DayCell';
-import { generateMonthGrid, calculateMonthStats, DAY_LABELS, DAY_NAMES_FULL } from './utils';
-
-export interface CalendarHeatmapProps {
-  /** Habit ID for context */
-  habitId: Id<'habits'>;
-
-  /** Set of completed dates in YYYY-MM-DD format */
-  completedDates: Set<string>;
-
-  /** Date habit was created (to show tracking start) */
-  habitCreatedAt?: number;
-
-  /** Habit's accent color (hex) for theming cells */
-  habitColor?: string;
-
-  /** Callback when a day cell is tapped */
-  onDayPress?: (date: string, completed: boolean) => void;
-}
-
-// Swipe configuration
-const SWIPE_THRESHOLD = 50; // Minimum distance to trigger navigation
-const SWIPE_VELOCITY_THRESHOLD = 300; // Minimum velocity to trigger navigation
+import type { CalendarHeatmapProps } from './types';
+import { CalendarGrid } from './CalendarGrid';
+import { InsightCard } from './InsightCard';
+import {
+  generateMonthGrid,
+  calculateMonthStats,
+  calculateDayOfWeekStats,
+  detectWeakDay,
+} from './utils';
 
 export function CalendarHeatmap({
   habitId,
@@ -54,9 +28,6 @@ export function CalendarHeatmap({
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right'>('left');
   const today = useMemo(() => new Date(), []);
-
-  // Shared value for tracking horizontal translation during swipe
-  const translateX = useSharedValue(0);
 
   const isCurrentMonth = useMemo(
     () => isSameMonth(currentMonth, today),
@@ -74,46 +45,6 @@ export function CalendarHeatmap({
       setCurrentMonth((prev) => addMonths(prev, 1));
     }
   }, [isCurrentMonth]);
-
-  // Pan gesture for horizontal swipe navigation
-  const panGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .activeOffsetX([-15, 15]) // Activate only for horizontal swipes
-        .failOffsetY([-15, 15]) // Fail if vertical movement is detected (allow scrolling)
-        .onUpdate((event) => {
-          // Constrain translation for visual feedback
-          const maxTranslation = 100;
-          translateX.value = Math.max(
-            -maxTranslation,
-            Math.min(maxTranslation, event.translationX)
-          );
-        })
-        .onEnd((event) => {
-          const shouldNavigate =
-            Math.abs(event.translationX) > SWIPE_THRESHOLD ||
-            Math.abs(event.velocityX) > SWIPE_VELOCITY_THRESHOLD;
-
-          if (shouldNavigate) {
-            if (event.translationX > 0) {
-              // Swiped right → go to previous month
-              runOnJS(goToPreviousMonth)();
-            } else if (event.translationX < 0 && !isCurrentMonth) {
-              // Swiped left → go to next month (only if not current month)
-              runOnJS(goToNextMonth)();
-            }
-          }
-
-          // Reset translation with spring animation
-          translateX.value = withSpring(0, { damping: 15, stiffness: 150 });
-        }),
-    [isCurrentMonth, goToPreviousMonth, goToNextMonth, translateX]
-  );
-
-  // Animated style for swipe feedback
-  const swipeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value * 0.3 }], // Subtle parallax effect
-  }));
 
   // Generate grid for current month view
   const grid = useMemo(() => {
@@ -133,6 +64,16 @@ export function CalendarHeatmap({
       currentMonth.getFullYear()
     );
   }, [grid, currentMonth]);
+
+  // Calculate day-of-week statistics for insights
+  const dayOfWeekStats = useMemo(() => {
+    return calculateDayOfWeekStats(completedDates, habitCreatedAt);
+  }, [completedDates, habitCreatedAt]);
+
+  // Detect weakest day pattern
+  const weakestDay = useMemo(() => {
+    return detectWeakDay(dayOfWeekStats);
+  }, [dayOfWeekStats]);
 
   // Generate accessibility summary for the current month
   const monthAccessibilitySummary = useMemo(() => {
@@ -207,60 +148,17 @@ export function CalendarHeatmap({
           </View>
         </View>
 
-        {/* Day of week labels */}
-        <View
-          className="flex-row mb-2"
-          accessible={true}
-          accessibilityRole="none"
-          accessibilityLabel="Days of the week: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"
-        >
-          {DAY_LABELS.map((label, index) => (
-            <View
-              key={index}
-              className="flex-1 items-center"
-              accessible={true}
-              accessibilityRole="text"
-              accessibilityLabel={DAY_NAMES_FULL[index]}
-            >
-              <Text className="text-xs font-medium text-stone-400" importantForAccessibility="no-hide-descendants">
-                {label}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Calendar Grid with Swipe Gesture */}
-        <GestureDetector gesture={panGesture}>
-          <Animated.View style={swipeAnimatedStyle}>
-            <Animated.View
-              key={currentMonth.toISOString()}
-              entering={
-                swipeDirection === 'left'
-                  ? SlideInRight.duration(200)
-                  : SlideInLeft.duration(200)
-              }
-              exiting={
-                swipeDirection === 'left'
-                  ? SlideOutLeft.duration(200)
-                  : SlideOutRight.duration(200)
-              }
-            >
-              {grid.map((week, weekIndex) => (
-                <View key={weekIndex} className="flex-row gap-1 mb-1">
-                  {week.map((day, dayIndex) => (
-                    <DayCell
-                      key={day.date || `empty-${weekIndex}-${dayIndex}`}
-                      day={day}
-                      index={weekIndex * 7 + dayIndex}
-                      habitColor={habitColor}
-                      onPress={onDayPress}
-                    />
-                  ))}
-                </View>
-              ))}
-            </Animated.View>
-          </Animated.View>
-        </GestureDetector>
+        {/* Calendar Grid */}
+        <CalendarGrid
+          grid={grid}
+          currentMonth={currentMonth}
+          swipeDirection={swipeDirection}
+          habitColor={habitColor}
+          onDayPress={onDayPress}
+          onSwipeRight={goToPreviousMonth}
+          onSwipeLeft={goToNextMonth}
+          isCurrentMonth={isCurrentMonth}
+        />
 
         {/* Summary Stats Footer */}
         <View
@@ -285,6 +183,24 @@ export function CalendarHeatmap({
             {Math.round(stats.successRate)}% this month
           </Text>
         </View>
+
+        {/* Insight Card - Pattern Detection */}
+        <InsightCard
+          dayOfWeekStats={dayOfWeekStats}
+          weakestDay={weakestDay}
+          onSetReminder={(day) => {
+            // TODO: Implement reminder functionality
+            console.log('Set reminder for', day);
+          }}
+          onSeeTips={(day) => {
+            // TODO: Implement tips modal
+            console.log('Show tips for', day);
+          }}
+          onDismiss={() => {
+            // TODO: Implement dismiss functionality (AsyncStorage)
+            console.log('Dismiss insight card');
+          }}
+        />
       </View>
     </Animated.View>
   );

@@ -24,7 +24,8 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 // import { HabitStrengthSection } from '../components/HabitStrengthSection';
 // import { InsightsSection } from '../components/InsightsSection';
 import { ProgressSection } from '../components/ProgressSection';
-import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
+// REMOVED: StreakChainSection - redundant with Personal Bests card
+// import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { CalendarHeatmap } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
@@ -33,6 +34,7 @@ import { HabitDetailTabs, type TabType } from '../components/HabitDetailTabs';
 import { HabitNotesSection } from '../components/HabitNotesSection';
 import { QuickStatsStrip } from '../components/QuickStatsStrip';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
+import { HeaderCompleteToggle } from '../components/HeaderCompleteToggle';
 import { format, parseISO } from 'date-fns';
 import { getNextReminderRelativeTime } from '../utils/notifications';
 import {
@@ -910,37 +912,21 @@ function AffirmationsSection({
  * Progress Tab Content
  */
 function ProgressTabContent({
-  bestStreak,
   completedDates,
-  currentStreak,
   habit,
   habitCreatedAt,
-  isCompletedToday,
-  lastSevenDays,
   strengthPercent,
   tracking,
 }: {
-  bestStreak: number;
   completedDates: Set<string>;
-  currentStreak: number;
   habit: Habit;
   habitCreatedAt: number | undefined;
-  isCompletedToday: boolean;
-  lastSevenDays: boolean[];
   strengthPercent: number;
   tracking: HabitTrackingEntry[];
 }) {
   return (
     <View className="gap-4">
-      {/* Streak Chain Section */}
-      <StreakChainSection
-        bestStreak={bestStreak}
-        currentStreak={currentStreak}
-        lastSevenDays={lastSevenDays}
-        todayCompleted={isCompletedToday}
-      />
-
-      {/* Calendar Heatmap */}
+      {/* Calendar Heatmap - visual history of completions */}
       <CalendarHeatmap
         habitId={habit._id}
         completedDates={completedDates}
@@ -951,7 +937,7 @@ function ProgressTabContent({
         }}
       />
 
-      {/* Consolidated Progress Section - replaces old collapsible HabitStrengthSection and InsightsSection */}
+      {/* Consolidated Progress Section - 3 always-visible cards */}
       <ProgressSection
         tracking={tracking}
         habitCreatedAt={habitCreatedAt}
@@ -1722,6 +1708,17 @@ export default function HabitDetailScreen({
   const habitCueTime = habit?.cueTime;
   const hasCue = Boolean(habitCueAfterBehavior || habitCueLocation || habitCueTime);
 
+  // Debug: Log when habit prop updates
+  useEffect(() => {
+    if (habit) {
+      console.log('🔢 HabitDetailScreen habit updated:', {
+        name: habit.name,
+        currentStreak: habit.currentStreak,
+        timestamp: Date.now(),
+      });
+    }
+  }, [habit, habit?.currentStreak]);
+
   const habitNotes =
     useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];
   const visionBoardItems =
@@ -2297,28 +2294,28 @@ export default function HabitDetailScreen({
             <X className="text-stone-700" size={24} strokeWidth={2.25} />
           </Pressable>
 
-          <Pressable
-            accessibilityLabel="Edit habit"
-            accessibilityRole="button"
-            className="h-11 w-11 items-center justify-center rounded-full bg-white/95 shadow-sm shadow-stone-200/50 active:bg-stone-50"
-            onPress={handleEdit}
-          >
-            <Edit3 className="text-stone-700" size={20} strokeWidth={2.25} />
-          </Pressable>
+          <View className="flex-row items-center gap-2">
+            {/* Header Complete Toggle */}
+            <HeaderCompleteToggle
+              completedToday={isCompletedToday}
+              habitId={habit._id}
+              habitName={habit.name}
+            />
+
+            <Pressable
+              accessibilityLabel="Edit habit"
+              accessibilityRole="button"
+              className="h-11 w-11 items-center justify-center rounded-full bg-white/95 shadow-sm shadow-stone-200/50 active:bg-stone-50"
+              onPress={handleEdit}
+            >
+              <Edit3 className="text-stone-700" size={20} strokeWidth={2.25} />
+            </Pressable>
+          </View>
         </View>
 
         {/* Hero Section (sticky) */}
         <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
           <HeroSection currentStreak={habit.currentStreak ?? 0} habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} reduceMotion={reduceMotion} />
-
-          {/* Quick Complete Button */}
-          <View className="mb-4">
-            <QuickCompleteButton
-              completedToday={isCompletedToday}
-              habitId={habit._id}
-              habitName={habit.name}
-            />
-          </View>
 
           {/* Quick Stats Strip */}
           <View className="mb-4">
@@ -2347,13 +2344,9 @@ export default function HabitDetailScreen({
                 showsVerticalScrollIndicator={false}
               >
                 <ProgressTabContent
-                  bestStreak={habit.bestStreak ?? 0}
                   completedDates={completedDates}
-                  currentStreak={habit.currentStreak ?? 0}
                   habit={habit}
                   habitCreatedAt={habitCreatedAt}
-                  isCompletedToday={isCompletedToday}
-                  lastSevenDays={lastSevenDays}
                   strengthPercent={strengthPercent}
                   tracking={tracking}
                 />

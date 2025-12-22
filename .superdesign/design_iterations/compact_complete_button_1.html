@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compact Complete Button Options</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1c1917 !important; }
+    .phone-frame {
+      width: 375px;
+      height: 700px;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center gap-8 p-8 flex-wrap">
+
+  <!-- OPTION A: Current (for reference) -->
+  <div class="flex flex-col items-center gap-4">
+    <h3 class="text-white font-semibold text-sm uppercase tracking-wide">Current Design</h3>
+    <div class="phone-frame flex flex-col">
+      <!-- Status bar -->
+      <div class="h-12 bg-stone-50 flex items-center justify-between px-6">
+        <span class="text-xs font-medium text-stone-500">9:41</span>
+        <div class="flex gap-1">
+          <div class="w-4 h-2 bg-stone-400 rounded-sm"></div>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="px-4 py-2 flex items-center justify-between bg-stone-50">
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-stone-600"></i>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="edit-3" class="w-4 h-4 text-stone-600"></i>
+        </div>
+      </div>
+
+      <!-- Hero Section -->
+      <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4 pt-2 pb-4">
+        <!-- Icon -->
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center shadow-lg mb-2">
+            <span class="text-3xl">🏃</span>
+          </div>
+          <h1 class="text-lg font-bold text-stone-900">Morning Run</h1>
+          <div class="mt-1 px-2.5 py-0.5 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full">
+            <span class="text-xs font-semibold text-orange-600">🔥 14 day streak!</span>
+          </div>
+          <div class="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 rounded-full">
+            <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span class="text-xs text-rose-600">To feel energized all day</span>
+          </div>
+        </div>
+
+        <!-- CURRENT: Full-size button (completed state) -->
+        <div class="mt-4">
+          <button class="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50">
+            <i data-lucide="check" class="w-6 h-6 text-emerald-600" style="stroke-width: 3"></i>
+            <span class="text-lg font-bold text-emerald-700">Done for Today</span>
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="mt-4 flex gap-2">
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Streak</p>
+            <p class="text-base font-bold text-stone-900">14 days</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Strength</p>
+            <p class="text-base font-bold text-stone-900">72%</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Success</p>
+            <p class="text-base font-bold text-stone-900">85%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex border-b border-stone-200 bg-white">
+        <button class="flex-1 py-3 text-sm font-semibold text-emerald-600 border-b-2 border-emerald-500">Progress</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Motivation</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Manage</button>
+      </div>
+
+      <!-- Content preview -->
+      <div class="flex-1 bg-stone-50 p-4 overflow-hidden">
+        <div class="bg-white rounded-xl p-3 border border-stone-200">
+          <p class="text-xs font-medium text-stone-500 mb-2">This Week</p>
+          <div class="flex gap-1">
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="text-stone-400 text-xs max-w-[200px] text-center">Button takes ~64px height when completed</p>
+  </div>
+
+  <!-- OPTION B: Compact pill when completed -->
+  <div class="flex flex-col items-center gap-4">
+    <h3 class="text-emerald-400 font-semibold text-sm uppercase tracking-wide">Option A: Compact Pill</h3>
+    <div class="phone-frame flex flex-col">
+      <!-- Status bar -->
+      <div class="h-12 bg-stone-50 flex items-center justify-between px-6">
+        <span class="text-xs font-medium text-stone-500">9:41</span>
+        <div class="flex gap-1">
+          <div class="w-4 h-2 bg-stone-400 rounded-sm"></div>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="px-4 py-2 flex items-center justify-between bg-stone-50">
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-stone-600"></i>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="edit-3" class="w-4 h-4 text-stone-600"></i>
+        </div>
+      </div>
+
+      <!-- Hero Section -->
+      <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4 pt-2 pb-4">
+        <!-- Icon -->
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center shadow-lg mb-2">
+            <span class="text-3xl">🏃</span>
+          </div>
+          <h1 class="text-lg font-bold text-stone-900">Morning Run</h1>
+          <div class="mt-1 px-2.5 py-0.5 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full">
+            <span class="text-xs font-semibold text-orange-600">🔥 14 day streak!</span>
+          </div>
+          <div class="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 rounded-full">
+            <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span class="text-xs text-rose-600">To feel energized all day</span>
+          </div>
+        </div>
+
+        <!-- OPTION A: Compact inline pill when completed -->
+        <div class="mt-3 flex justify-center">
+          <button class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 transition-colors">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
+            <span class="text-sm font-semibold text-emerald-700">Done</span>
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="mt-3 flex gap-2">
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Streak</p>
+            <p class="text-base font-bold text-stone-900">14 days</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Strength</p>
+            <p class="text-base font-bold text-stone-900">72%</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Success</p>
+            <p class="text-base font-bold text-stone-900">85%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex border-b border-stone-200 bg-white">
+        <button class="flex-1 py-3 text-sm font-semibold text-emerald-600 border-b-2 border-emerald-500">Progress</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Motivation</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Manage</button>
+      </div>
+
+      <!-- Content preview - MORE VISIBLE -->
+      <div class="flex-1 bg-stone-50 p-4 overflow-hidden">
+        <div class="bg-white rounded-xl p-3 border border-stone-200 mb-3">
+          <p class="text-xs font-medium text-stone-500 mb-2">This Week</p>
+          <div class="flex gap-1">
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-stone-200">
+          <p class="text-xs font-medium text-stone-500 mb-2">Calendar</p>
+          <div class="grid grid-cols-7 gap-1">
+            <div class="h-6 bg-emerald-100 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-emerald-200 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-stone-100 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="text-emerald-400 text-xs max-w-[200px] text-center">Saves ~24px, shows "Done" state clearly</p>
+  </div>
+
+  <!-- OPTION C: Integrated into stats strip -->
+  <div class="flex flex-col items-center gap-4">
+    <h3 class="text-amber-400 font-semibold text-sm uppercase tracking-wide">Option B: In Stats Strip</h3>
+    <div class="phone-frame flex flex-col">
+      <!-- Status bar -->
+      <div class="h-12 bg-stone-50 flex items-center justify-between px-6">
+        <span class="text-xs font-medium text-stone-500">9:41</span>
+        <div class="flex gap-1">
+          <div class="w-4 h-2 bg-stone-400 rounded-sm"></div>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="px-4 py-2 flex items-center justify-between bg-stone-50">
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-stone-600"></i>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="edit-3" class="w-4 h-4 text-stone-600"></i>
+        </div>
+      </div>
+
+      <!-- Hero Section -->
+      <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4 pt-2 pb-4">
+        <!-- Icon -->
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center shadow-lg mb-2">
+            <span class="text-3xl">🏃</span>
+          </div>
+          <h1 class="text-lg font-bold text-stone-900">Morning Run</h1>
+          <div class="mt-1 px-2.5 py-0.5 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full">
+            <span class="text-xs font-semibold text-orange-600">🔥 14 day streak!</span>
+          </div>
+          <div class="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 rounded-full">
+            <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span class="text-xs text-rose-600">To feel energized all day</span>
+          </div>
+        </div>
+
+        <!-- OPTION B: Stats with integrated completion status -->
+        <div class="mt-4 flex gap-2">
+          <!-- Today's status as first "stat" -->
+          <button class="flex-1 bg-emerald-50 rounded-xl px-3 py-2.5 border-2 border-emerald-200">
+            <p class="text-xs text-emerald-600">Today</p>
+            <div class="flex items-center gap-1">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+              <p class="text-base font-bold text-emerald-700">Done</p>
+            </div>
+          </button>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Streak</p>
+            <p class="text-base font-bold text-stone-900">14</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Strength</p>
+            <p class="text-base font-bold text-stone-900">72%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex border-b border-stone-200 bg-white">
+        <button class="flex-1 py-3 text-sm font-semibold text-emerald-600 border-b-2 border-emerald-500">Progress</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Motivation</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Manage</button>
+      </div>
+
+      <!-- Content preview - EVEN MORE VISIBLE -->
+      <div class="flex-1 bg-stone-50 p-4 overflow-hidden">
+        <div class="bg-white rounded-xl p-3 border border-stone-200 mb-3">
+          <p class="text-xs font-medium text-stone-500 mb-2">This Week</p>
+          <div class="flex gap-1">
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-stone-200 mb-3">
+          <p class="text-xs font-medium text-stone-500 mb-2">Calendar Heatmap</p>
+          <div class="grid grid-cols-7 gap-1">
+            <div class="h-6 bg-emerald-100 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-emerald-200 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-stone-100 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-stone-200">
+          <p class="text-xs font-medium text-stone-500">Insights</p>
+          <p class="text-sm text-stone-700 mt-1">Best streak: 21 days</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-amber-400 text-xs max-w-[200px] text-center">Saves ~48px, merges with stats row</p>
+  </div>
+
+  <!-- OPTION D: Icon only when completed -->
+  <div class="flex flex-col items-center gap-4">
+    <h3 class="text-violet-400 font-semibold text-sm uppercase tracking-wide">Option C: Icon in Header</h3>
+    <div class="phone-frame flex flex-col">
+      <!-- Status bar -->
+      <div class="h-12 bg-stone-50 flex items-center justify-between px-6">
+        <span class="text-xs font-medium text-stone-500">9:41</span>
+        <div class="flex gap-1">
+          <div class="w-4 h-2 bg-stone-400 rounded-sm"></div>
+        </div>
+      </div>
+
+      <!-- Header with completion toggle -->
+      <div class="px-4 py-2 flex items-center justify-between bg-stone-50">
+        <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-stone-600"></i>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Completion toggle in header -->
+          <button class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
+            <i data-lucide="check" class="w-5 h-5 text-white" style="stroke-width: 3"></i>
+          </button>
+          <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+            <i data-lucide="edit-3" class="w-4 h-4 text-stone-600"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Section - NO button -->
+      <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4 pt-2 pb-4">
+        <!-- Icon -->
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center shadow-lg mb-2">
+            <span class="text-3xl">🏃</span>
+          </div>
+          <h1 class="text-lg font-bold text-stone-900">Morning Run</h1>
+          <div class="mt-1 px-2.5 py-0.5 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full">
+            <span class="text-xs font-semibold text-orange-600">🔥 14 day streak!</span>
+          </div>
+          <div class="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 rounded-full">
+            <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span class="text-xs text-rose-600">To feel energized all day</span>
+          </div>
+        </div>
+
+        <!-- Quick Stats only -->
+        <div class="mt-4 flex gap-2">
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Streak</p>
+            <p class="text-base font-bold text-stone-900">14 days</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Strength</p>
+            <p class="text-base font-bold text-stone-900">72%</p>
+          </div>
+          <div class="flex-1 bg-white/80 rounded-xl px-3 py-2.5 border border-stone-200">
+            <p class="text-xs text-stone-500">Success</p>
+            <p class="text-base font-bold text-stone-900">85%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex border-b border-stone-200 bg-white">
+        <button class="flex-1 py-3 text-sm font-semibold text-emerald-600 border-b-2 border-emerald-500">Progress</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Motivation</button>
+        <button class="flex-1 py-3 text-sm font-medium text-stone-400">Manage</button>
+      </div>
+
+      <!-- Content preview - MAXIMUM SPACE -->
+      <div class="flex-1 bg-stone-50 p-4 overflow-hidden">
+        <div class="bg-white rounded-xl p-3 border border-stone-200 mb-3">
+          <p class="text-xs font-medium text-stone-500 mb-2">This Week</p>
+          <div class="flex gap-1">
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-emerald-500 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+            <div class="flex-1 h-8 bg-stone-200 rounded"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-stone-200 mb-3">
+          <p class="text-xs font-medium text-stone-500 mb-2">Calendar Heatmap</p>
+          <div class="grid grid-cols-7 gap-1">
+            <div class="h-6 bg-emerald-100 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-emerald-200 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+            <div class="h-6 bg-stone-100 rounded"></div>
+            <div class="h-6 bg-emerald-500 rounded"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-stone-200 mb-3">
+          <p class="text-xs font-medium text-stone-500">Personal Bests</p>
+          <p class="text-sm text-stone-700 mt-1">Best streak: 21 days</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-stone-200">
+          <p class="text-xs font-medium text-stone-500">Insights</p>
+          <p class="text-sm text-stone-700 mt-1">You're most consistent on weekdays!</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-violet-400 text-xs max-w-[200px] text-center">Saves ~64px, always accessible in header</p>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

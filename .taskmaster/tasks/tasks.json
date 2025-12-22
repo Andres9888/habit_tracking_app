@@ -447,12 +447,92 @@
             "status": "pending"
           }
         ]
+      },
+      {
+        "id": 27,
+        "title": "Bug Fix: Disable Dark Mode Temporarily",
+        "description": "Remove dark mode toggle and force light mode until dark mode is properly implemented",
+        "details": "Dark mode is partially implemented but not working correctly. When users toggle it, the setting saves but the app doesn't switch themes, causing confusion.\n\nSOLUTION:\n1. Remove dark mode toggle from SettingsModal.tsx\n2. Remove dark mode toggle from SettingsDialog.tsx\n3. Remove document.classList.toggle('dark') logic from SettingsDialog.hooks.ts\n4. Change default darkMode from 'system' to 'light' in SettingsDialog.config.ts\n5. Change default darkMode from 'system' to 'light' in convex/settings.ts\n\nSPEC: docs/specs/settings/disable-dark-mode-temporarily.md",
+        "testStrategy": "Verify dark mode toggle is not visible in settings, app always shows light mode, no 'dark' class on document.documentElement, new users default to light mode",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "27.1",
+            "title": "Remove dark mode toggle from SettingsModal",
+            "description": "Remove the dark mode toggle UI section from SettingsModal.tsx",
+            "details": "Find and remove the dark mode toggle switch/button from the native settings modal component.",
+            "status": "pending"
+          },
+          {
+            "id": "27.2",
+            "title": "Remove dark mode toggle from SettingsDialog",
+            "description": "Remove the dark mode toggle UI section from SettingsDialog.tsx",
+            "details": "Find and remove the dark mode toggle switch/button from the web settings dialog component.",
+            "status": "pending"
+          },
+          {
+            "id": "27.3",
+            "title": "Remove dark mode CSS class toggling",
+            "description": "Remove document.classList.toggle('dark') logic from SettingsDialog.hooks.ts",
+            "details": "Remove the useEffect that toggles the 'dark' class on document.documentElement based on darkMode setting.",
+            "status": "pending"
+          },
+          {
+            "id": "27.4",
+            "title": "Update default settings to light mode",
+            "description": "Change default darkMode from 'system' to 'light' in config files",
+            "details": "Update DEFAULT_SETTINGS in SettingsDialog.config.ts and convex/settings.ts to use 'light' instead of 'system'.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "title": "Bug Fix: Personal Bests Calculation Shows Wrong Streak Values",
+        "description": "Fix incorrect streak values in Personal Bests card (e.g., showing '104 days' when actual best is 5 days)",
+        "details": "ROOT CAUSE: The ProgressSection/utils.ts has a DUPLICATE calculateStreakRecords() function that still uses the buggy Math.round() and toISOString() logic, separate from the fixed version in InsightsSection.tsx.\n\nThe bugs:\n1. toISOString() converts to UTC, shifting dates incorrectly\n2. Math.round() instead of Math.floor() causes off-by-one errors\n3. Date parsing without 'T00:00:00' suffix causes timezone issues\n4. This makes separate streaks merge into one giant phantom streak\n\nSOLUTION:\n1. Import {differenceInDays, getTodayString, formatDateString} from '../../utils/dateUtils'\n2. Replace all toISOString().split('T')[0] calls with formatDateString() or getTodayString()\n3. Replace Math.round() date diff with differenceInDays() utility\n\nSPEC: docs/specs/habit-details-screen/personal-bests-calculation-bug-fix.md",
+        "testStrategy": "Verify 5-day streak shows '5' not '104', verify multiple separate streaks counted correctly, test timezone edge cases, compare values between InsightsSection and ProgressSection",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "28.1",
+            "title": "Import dateUtils in ProgressSection/utils.ts",
+            "description": "Add import for differenceInDays, getTodayString, formatDateString from ../../utils/dateUtils",
+            "details": "Add the import statement at the top of the file.",
+            "status": "pending"
+          },
+          {
+            "id": "28.2",
+            "title": "Fix calculateCurrentStreak function",
+            "description": "Replace toISOString().split('T')[0] with formatDateString() and getTodayString()",
+            "details": "Lines 80-108: Replace timezone-buggy date string generation with UTC-normalized utilities.",
+            "status": "pending"
+          },
+          {
+            "id": "28.3",
+            "title": "Fix calculateStreakRecords function",
+            "description": "Replace Math.round date diff with differenceInDays() and fix date string generation",
+            "details": "Lines 117-203: Replace Math.round() calculation with differenceInDays(), replace all toISOString calls with proper utilities.",
+            "status": "pending"
+          },
+          {
+            "id": "28.4",
+            "title": "Fix calculateDayOfWeekStats and calculateTrendComparison",
+            "description": "Replace toISOString().split('T')[0] with formatDateString() in remaining functions",
+            "details": "These functions also use the buggy date string pattern and need updating for consistency.",
+            "status": "pending"
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-09-30T20:13:31.582Z",
-      "updated": "2025-12-22T02:45:00.000Z",
-      "taskCount": 26,
+      "updated": "2025-12-22T07:35:00.000Z",
+      "taskCount": 28,
       "completedCount": 0,
       "description": "Tasks for post-mvp context"
     }

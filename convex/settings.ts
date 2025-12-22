@@ -25,7 +25,7 @@ const DEFAULT_SETTINGS = {
   habitCompletionIcon: 'chain' as const,
   hasPremium: false,
 
-  darkMode: 'system' as DarkModePreference,
+  darkMode: 'light' as DarkModePreference, // Forced to light - dark mode not yet implemented
 
   highContrastMode: false,
 

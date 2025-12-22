@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import {
   Activity,
   BookOpen,
@@ -115,20 +114,11 @@ export default function SettingsModal({
         className='flex-1 bg-background'
         style={{ backgroundColor: colors.background }}
       >
-        {/* Header with status bar simulation */}
+        {/* Header */}
         <View
           className='bg-background px-4 pb-4'
           style={{ backgroundColor: colors.background, paddingTop: insets.top + 8 }}
         >
-          <View className='mb-4 flex-row items-center justify-between'>
-            <Text
-              className='text-[22px] font-semibold leading-[28px] text-foreground'
-              style={{ color: colors.headerText }}
-            >
-              {format(new Date(), 'H:mm')}
-            </Text>
-          </View>
-
           {/* Settings Title */}
           <View className='flex-row items-center justify-between'>
             <TouchableOpacity

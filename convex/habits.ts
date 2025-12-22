@@ -448,6 +448,7 @@ export const get = query({
       goalUnit: v.optional(v.string()),
       icon: v.optional(v.string()),
       iconColor: v.optional(v.string()),
+      identity: v.optional(v.string()),
       lastPredictionAt: v.optional(v.number()),
       predictedCompletionProb: v.optional(v.number()),
       preferredTime: v.optional(v.string()),
@@ -619,6 +620,37 @@ export const listArchived = query({
       userId: v.optional(v.string()),
     })
   ),
+});
+
+// Delete all archived habits and their tracking data
+export const deleteAllArchived = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const archivedHabits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('archived'), true))
+      .collect();
+
+    let deletedCount = 0;
+    for (const habit of archivedHabits) {
+      // Delete all tracking data for this habit
+      const trackingRecords = await ctx.db
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
+        .collect();
+
+      for (const record of trackingRecords) {
+        await ctx.db.delete(record._id);
+      }
+
+      // Delete the habit
+      await ctx.db.delete(habit._id);
+      deletedCount++;
+    }
+
+    return { deletedCount };
+  },
+  returns: v.object({ deletedCount: v.number() }),
 });
 
 export const listPaused = query({
