@@ -266,9 +266,11 @@ fi
 
 ### Task 2.1: Fix reanimated-color-picker Imports
 
-- [ ] Update ColorPickerSheet.tsx import statements
-- [ ] Remove invalid BrightnessSlider props
-- [ ] Verify file compiles without errors
+- [x] Update ColorPickerSheet.tsx import statements
+- [x] Remove invalid BrightnessSlider props
+- [x] Verify file compiles without errors
+
+**Completed:** Fixed ColorPickerSheet TypeScript errors by using direct subpath imports for HueSlider and SaturationSlider, and removing the unsupported `thumbShape` prop from BrightnessSlider. TypeScript errors reduced from 11 to 8 (3 errors fixed).
 
 **File:** `src/components/CreateHabitModal/ColorPickerSheet.tsx`
 
