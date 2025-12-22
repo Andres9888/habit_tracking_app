@@ -416,15 +416,17 @@ const [viewMode, setViewMode] = useState<'traditional' | 'github'>('github');
 
 ### Phase 2: Update DayCell
 
-- [ ] **GITHUB-2.1** Remove date number display
-  - Remove date prop from DayCellProps
-  - Remove Text component showing 1-31
-  - Reduce cell size to 20px × 20px
+- [x] **GITHUB-2.1** Remove date number display
+  - Remove date prop from DayCellProps ✅
+  - Remove Text component showing 1-31 ✅
+  - Reduce cell size to 20px × 20px ✅
+  - **Implementation notes:** Removed all date number displays from DayCell. Updated cell sizes from 45px/h-9 w-9 to 20px/h-5 w-5. Updated border radius from rounded-lg to rounded-sm. Removed unused Text import. Updated cell styling for all states (before creation, future, completed, today, empty). Check icon size reduced from 16px to 10px for better fit in smaller cells.
 
-- [ ] **GITHUB-2.2** Implement streak-based color intensity
-  - Use `calculateStreakPosition` to get streak day
-  - Map to color: 1-6 → emerald-300, 7-13 → 400, 14-29 → 500, 30+ → 600
-  - Keep today and future states
+- [x] **GITHUB-2.2** Implement streak-based color intensity
+  - Use `calculateStreakPosition` to get streak day ✅
+  - Map to color: 1-6 → emerald-300, 7-13 → 400, 14-29 → 500, 30+ → 600 ✅
+  - Keep today and future states ✅
+  - **Implementation notes:** Added `completedDates` and `habitCreatedAt` props to DayCellProps interface. Implemented `getStreakColor()` function that calculates streak position and returns appropriate emerald color based on streak length (emerald-300 for 1-6 days, emerald-400 for 7-13, emerald-500 for 14-29, emerald-600 for 30+ days). Supports custom habit colors. Updated CalendarGrid and CalendarHeatmap to pass these props through the component tree. Fixed all test files to include new required props and account for removed date number displays.
 
 ### Phase 3: Rewrite CalendarGrid
 

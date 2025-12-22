@@ -43,6 +43,12 @@ export interface CalendarGridProps {
 
   /** Whether forward navigation is disabled (current month) */
   isCurrentMonth?: boolean;
+
+  /** Set of completed dates for streak calculation */
+  completedDates: Set<string>;
+
+  /** Habit creation timestamp for streak calculation */
+  habitCreatedAt?: number;
 }
 
 // Swipe configuration
@@ -58,6 +64,8 @@ export function CalendarGrid({
   onSwipeRight,
   onSwipeLeft,
   isCurrentMonth = false,
+  completedDates,
+  habitCreatedAt,
 }: CalendarGridProps) {
   const reduceMotion = useReduceMotion();
 
@@ -157,6 +165,8 @@ export function CalendarGrid({
                     index={weekIndex * 7 + dayIndex}
                     habitColor={habitColor}
                     onPress={onDayPress}
+                    completedDates={completedDates}
+                    habitCreatedAt={habitCreatedAt}
                   />
                 ))}
               </View>

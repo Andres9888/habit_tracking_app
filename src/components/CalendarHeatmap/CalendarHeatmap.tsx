@@ -227,6 +227,8 @@ export function CalendarHeatmap({
           onSwipeRight={goToPreviousMonth}
           onSwipeLeft={goToNextMonth}
           isCurrentMonth={isCurrentMonth}
+          completedDates={completedDates}
+          habitCreatedAt={habitCreatedAt}
         />
 
         {/* Summary Stats Footer */}

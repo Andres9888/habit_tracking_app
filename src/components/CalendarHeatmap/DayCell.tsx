@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -19,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import type { CalendarDay } from './utils';
-import { getDayAccessibilityLabel } from './utils';
+import { getDayAccessibilityLabel, calculateStreakPosition } from './utils';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface DayCellProps {
@@ -30,11 +30,15 @@ export interface DayCellProps {
   habitColor?: string;
   /** Callback when cell is pressed */
   onPress?: (date: string, completed: boolean) => void;
+  /** Set of completed dates for streak calculation */
+  completedDates: Set<string>;
+  /** Habit creation timestamp for streak calculation */
+  habitCreatedAt?: number;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
+export function DayCell({ day, index, habitColor, onPress, completedDates, habitCreatedAt }: DayCellProps) {
   const scale = useSharedValue(1);
   const pulseScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0);
@@ -137,11 +141,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="text"
       >
-        <View className="h-9 w-9 items-center justify-center rounded-lg bg-stone-50">
-          <Text className="text-xs text-stone-300" importantForAccessibility="no-hide-descendants">
-            {day.dayOfMonth}
-          </Text>
-        </View>
+        <View className="h-5 w-5 items-center justify-center rounded-sm bg-stone-50" />
       </Animated.View>
     );
   }
@@ -156,14 +156,31 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="text"
       >
-        <View className="h-9 w-9 items-center justify-center rounded-lg border border-dashed border-stone-200 bg-stone-50">
-          <Text className="text-xs text-stone-300" importantForAccessibility="no-hide-descendants">
-            {day.dayOfMonth}
-          </Text>
-        </View>
+        <View className="h-5 w-5 items-center justify-center rounded-sm border border-dashed border-stone-200 bg-stone-50" />
       </Animated.View>
     );
   }
+
+  // Calculate streak position for color intensity
+  const streakPosition = day.date && day.completed
+    ? calculateStreakPosition(day.date, completedDates, habitCreatedAt)
+    : 0;
+
+  // Get color based on streak position
+  const getStreakColor = (): string => {
+    if (!day.completed) return '';
+
+    // If custom habit color is provided, use it as base and adjust opacity
+    if (habitColor) {
+      return habitColor;
+    }
+
+    // GitHub-style intensity based on streak position
+    if (streakPosition >= 30) return '#059669'; // emerald-600 - legendary!
+    if (streakPosition >= 14) return '#10b981'; // emerald-500 - strong habit
+    if (streakPosition >= 7) return '#34d399';  // emerald-400 - week+ streak
+    return '#6ee7b7'; // emerald-300 - recent completion (1-6 days)
+  };
 
   // Determine cell styling based on state
   const getCellStyle = () => {
@@ -183,7 +200,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
     return 'bg-stone-100';
   };
 
-  const completedBgColor = habitColor || '#10b981'; // emerald-500 default
+  const completedBgColor = getStreakColor();
 
   return (
     <AnimatedPressable
@@ -203,25 +220,15 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
       {shouldPulse && (
         <Animated.View
           style={pulseRingStyle}
-          className="absolute h-9 w-9 rounded-lg border-2 border-amber-400"
+          className="absolute h-5 w-5 rounded-sm border-2 border-amber-400"
           pointerEvents="none"
         />
       )}
       <View
-        className={`h-9 w-9 items-center justify-center rounded-lg ${getCellStyle()}`}
+        className={`h-5 w-5 items-center justify-center rounded-sm ${getCellStyle()}`}
         style={day.completed ? { backgroundColor: completedBgColor } : undefined}
       >
-        {day.completed ? (
-          <Check className="text-white" size={16} strokeWidth={3} />
-        ) : (
-          <Text
-            className={`text-xs font-medium ${
-              day.isToday ? 'text-amber-600' : 'text-stone-400'
-            }`}
-          >
-            {day.dayOfMonth}
-          </Text>
-        )}
+        {day.completed && <Check className="text-white" size={10} strokeWidth={3} />}
       </View>
     </AnimatedPressable>
   );

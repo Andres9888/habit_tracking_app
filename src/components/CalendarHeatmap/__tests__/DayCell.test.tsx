@@ -15,9 +15,17 @@ jest.mock('../../../hooks/useReduceMotion', () => ({
 
 describe('DayCell', () => {
   const mockOnPress = jest.fn();
+  const mockCompletedDates = new Set<string>();
+  const mockHabitCreatedAt = new Date('2025-01-01').getTime();
+
+  // Helper to add a completed date for testing
+  const addCompletedDate = (date: string) => {
+    mockCompletedDates.add(date);
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockCompletedDates.clear();
   });
 
   describe('Empty padding cell', () => {
@@ -32,7 +40,7 @@ describe('DayCell', () => {
       };
 
       const { queryByText, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       expect(queryByText(/\d+/)).toBeNull();
@@ -50,7 +58,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText('Empty cell');
@@ -69,11 +77,10 @@ describe('DayCell', () => {
         isBeforeCreation: true,
       };
 
-      const { getByText, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+      const { getByLabelText } = render(
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
-      expect(getByText('1')).toBeTruthy();
       expect(getByLabelText(/January 1, 2025.*Before habit tracking started/)).toBeTruthy();
     });
 
@@ -88,7 +95,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/January 1, 2025.*Before habit tracking started/);
@@ -107,11 +114,10 @@ describe('DayCell', () => {
         isBeforeCreation: false,
       };
 
-      const { getByText, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+      const { getByLabelText } = render(
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
-      expect(getByText('31')).toBeTruthy();
       expect(getByLabelText(/December 31, 2025.*Future date/)).toBeTruthy();
     });
 
@@ -126,7 +132,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/.*December 31, 2025.*Future date/);
@@ -144,9 +150,10 @@ describe('DayCell', () => {
         isFuture: false,
         isBeforeCreation: false,
       };
+      addCompletedDate('2025-12-15');
 
       const { queryByText, getByTestId, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       // Should show checkmark instead of date number
@@ -164,9 +171,10 @@ describe('DayCell', () => {
         isFuture: false,
         isBeforeCreation: false,
       };
+      addCompletedDate('2025-12-15');
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 15, 2025.*Completed/);
@@ -184,9 +192,10 @@ describe('DayCell', () => {
         isFuture: false,
         isBeforeCreation: false,
       };
+      addCompletedDate('2025-12-15');
 
       const { getByTestId } = render(
-        <DayCell day={day} index={0} habitColor="#ff0000" onPress={mockOnPress} />
+        <DayCell day={day} index={0} habitColor="#ff0000" onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const checkIcon = getByTestId('lucide-icon-Check');
@@ -203,9 +212,10 @@ describe('DayCell', () => {
         isFuture: false,
         isBeforeCreation: false,
       };
+      addCompletedDate('2025-12-15');
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 15, 2025.*Completed/);
@@ -223,9 +233,10 @@ describe('DayCell', () => {
         isFuture: false,
         isBeforeCreation: false,
       };
+      addCompletedDate('2025-12-22');
 
       const { queryByText, getByTestId, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       expect(queryByText('22')).toBeNull();
@@ -242,9 +253,10 @@ describe('DayCell', () => {
         isFuture: false,
         isBeforeCreation: false,
       };
+      addCompletedDate('2025-12-22');
 
       const { queryByTestId } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       // Pulse ring should not be present when completed
@@ -264,11 +276,10 @@ describe('DayCell', () => {
         isBeforeCreation: false,
       };
 
-      const { getByText, queryByTestId, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+      const { queryByTestId, getByLabelText } = render(
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
-      expect(getByText('22')).toBeTruthy();
       expect(queryByTestId('lucide-icon-Check')).toBeNull();
       expect(getByLabelText(/December 22, 2025.*Not completed.*Today/)).toBeTruthy();
     });
@@ -284,7 +295,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 22, 2025.*Not completed.*Today/);
@@ -304,7 +315,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 22, 2025.*Not completed.*Today/);
@@ -323,11 +334,10 @@ describe('DayCell', () => {
         isBeforeCreation: false,
       };
 
-      const { getByText, queryByTestId, getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+      const { queryByTestId, getByLabelText } = render(
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
-      expect(getByText('10')).toBeTruthy();
       expect(queryByTestId('lucide-icon-Check')).toBeNull();
       expect(getByLabelText(/December 10, 2025.*Not completed/)).toBeTruthy();
     });
@@ -343,7 +353,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 10, 2025.*Not completed/);
@@ -365,7 +375,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 15, 2025/);
@@ -386,7 +396,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/.*December 31, 2025.*Future date/);
@@ -406,7 +416,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/.*January 1, 2025.*Before habit tracking started/);
@@ -425,7 +435,7 @@ describe('DayCell', () => {
         isBeforeCreation: false,
       };
 
-      const { getByLabelText } = render(<DayCell day={day} index={0} />);
+      const { getByLabelText } = render(<DayCell day={day} index={0} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />);
 
       const cell = getByLabelText(/December 15, 2025/);
       // Should not throw
@@ -444,10 +454,10 @@ describe('DayCell', () => {
         isBeforeCreation: false,
       };
 
-      const { rerender } = render(<DayCell day={day} index={0} />);
+      const { rerender } = render(<DayCell day={day} index={0} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />);
       // With index 0, delay should be 0
 
-      rerender(<DayCell day={day} index={10} />);
+      rerender(<DayCell day={day} index={10} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />);
       // With index 10, delay should be 100ms (10 * 10)
       // Animation behavior is tested implicitly through rendering
     });
@@ -465,7 +475,7 @@ describe('DayCell', () => {
         isBeforeCreation: false,
       };
 
-      const { queryByTestId } = render(<DayCell day={day} index={0} />);
+      const { queryByTestId } = render(<DayCell day={day} index={0} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />);
 
       // Pulse animation should not run when reduceMotion is true
       expect(queryByTestId('pulse-ring')).toBeNull();
@@ -486,7 +496,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 15, 2025/);
@@ -504,7 +514,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={completedDay} index={0} onPress={mockOnPress} />
+        <DayCell day={completedDay} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       // Should include date, completion status
@@ -523,7 +533,7 @@ describe('DayCell', () => {
       };
 
       const { getByLabelText } = render(
-        <DayCell day={day} index={0} onPress={mockOnPress} />
+        <DayCell day={day} index={0} onPress={mockOnPress} completedDates={mockCompletedDates} habitCreatedAt={mockHabitCreatedAt} />
       );
 
       const cell = getByLabelText(/December 15, 2025/);
