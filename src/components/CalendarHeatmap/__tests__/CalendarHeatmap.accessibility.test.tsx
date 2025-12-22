@@ -261,11 +261,11 @@ describe('CalendarHeatmap Accessibility', () => {
     });
   });
 
-  describe('Month navigation accessibility', () => {
+  describe('GitHub-style 3-month layout accessibility', () => {
     const emptyDates = new Set<string>();
 
-    it('previous month button has descriptive accessibility label', () => {
-      const { getAllByRole } = render(
+    it('header indicates 3-month view', () => {
+      const { getByLabelText } = render(
         <TestWrapper>
           <CalendarHeatmap
             habitId={mockHabitId}
@@ -273,16 +273,12 @@ describe('CalendarHeatmap Accessibility', () => {
           />
         </TestWrapper>
       );
-      const buttons = getAllByRole('button');
-      const prevButton = buttons.find((b) =>
-        b.props.accessibilityLabel?.includes('Go to')
-      );
-      expect(prevButton).toBeTruthy();
-      expect(prevButton?.props.accessibilityHint).toBe('Navigate to previous month');
+      // GitHub-style shows 3 months of history instead of navigation
+      expect(getByLabelText(/Activity calendar showing 3 months/)).toBeTruthy();
     });
 
-    it('next month button indicates when disabled', () => {
-      const { getAllByRole } = render(
+    it('does not have month navigation buttons', () => {
+      const { queryAllByRole } = render(
         <TestWrapper>
           <CalendarHeatmap
             habitId={mockHabitId}
@@ -290,17 +286,18 @@ describe('CalendarHeatmap Accessibility', () => {
           />
         </TestWrapper>
       );
-      const buttons = getAllByRole('button');
-      const nextButton = buttons.find((b) =>
-        b.props.accessibilityLabel?.includes('Cannot go to future')
+      const buttons = queryAllByRole('button');
+      // GitHub-style uses horizontal scroll, not month navigation buttons
+      // Only day cells should be buttons
+      const navButtons = buttons.filter((b) =>
+        b.props.accessibilityLabel?.includes('Go to') ||
+        b.props.accessibilityLabel?.includes('Cannot go to')
       );
-      // When at current month, should indicate can't go forward
-      expect(nextButton).toBeTruthy();
-      expect(nextButton?.props.accessibilityState?.disabled).toBe(true);
+      expect(navButtons.length).toBe(0);
     });
 
-    it('month label has full month name in accessibility label', () => {
-      const { getAllByLabelText } = render(
+    it('shows abbreviated month labels for 3-month period', () => {
+      const { getByText } = render(
         <TestWrapper>
           <CalendarHeatmap
             habitId={mockHabitId}
@@ -309,10 +306,9 @@ describe('CalendarHeatmap Accessibility', () => {
         </TestWrapper>
       );
       const now = new Date();
-      const monthLabel = format(now, 'MMMM yyyy');
-      // Multiple elements may have the month in their labels (header, month text)
-      const elementsWithMonth = getAllByLabelText(new RegExp(monthLabel));
-      expect(elementsWithMonth.length).toBeGreaterThan(0);
+      const currentMonth = format(now, 'MMM'); // Abbreviated month (e.g., "Dec")
+      // At least the current month should be visible
+      expect(getByText(currentMonth)).toBeTruthy();
     });
   });
 
@@ -365,8 +361,8 @@ describe('CalendarHeatmap Accessibility', () => {
         </TestWrapper>
       );
       const summary = getByRole('summary');
-      // Summary should contain: month name, completion count, and success rate
-      expect(summary.props.accessibilityLabel).toMatch(/Activity calendar for/);
+      // Summary should contain: 3-month history, completion count, and success rate
+      expect(summary.props.accessibilityLabel).toMatch(/Activity calendar showing 3 months/);
       expect(summary.props.accessibilityLabel).toMatch(/\d+ day/);
       expect(summary.props.accessibilityLabel).toMatch(/\d+% success rate/);
     });
