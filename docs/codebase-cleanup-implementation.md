@@ -314,12 +314,12 @@ import ColorPicker, {
 ```
 
 **Implementation:**
-- [ ] Open `src/components/CreateHabitModal/ColorPickerSheet.tsx`
-- [ ] Update import statement (lines 11-16)
-- [ ] Remove `thumbShape` prop (line ~329)
-- [ ] Save file
-- [ ] Run `tsc -p tsconfig.app.json --noEmit` to verify
-- [ ] Commit with message: "Fix ColorPickerSheet import/prop errors (TS2614, TS2769)"
+- [x] Open `src/components/CreateHabitModal/ColorPickerSheet.tsx`
+- [x] Update import statement (lines 11-16)
+- [x] Remove `thumbShape` prop (line ~329)
+- [x] Save file
+- [x] Run `tsc -p tsconfig.app.json --noEmit` to verify
+- [x] Commit with message: "Fix ColorPickerSheet import/prop errors (TS2614, TS2769)"
 
 ### Task 2.2: Fix SharedValue Import
 
