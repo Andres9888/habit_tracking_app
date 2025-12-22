@@ -41,7 +41,9 @@ const CalendarTimelineDebug: React.FC<CalendarTimelineProps> = ({
 
   const firstDate = dates[0];
   const lastDate = dates.at(-1);
-  const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
+  const dateRangeText = lastDate
+    ? `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`
+    : format(firstDate, 'MMM d');
 
   const colors = highContrastMode
     ? {
