@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import ColorPicker, {
   BrightnessSlider,
-  HueSlider,
   Preview,
-  SaturationSlider,
 } from 'reanimated-color-picker';
+import { HueSlider } from 'reanimated-color-picker/lib/typescript/components/Sliders/Hue/HueSlider';
+import { SaturationSlider } from 'reanimated-color-picker/lib/typescript/components/Sliders/HSB/SaturationSlider';
 import type { ColorPickerValue } from 'reanimated-color-picker';
 import { getLastCustomColor, saveLastCustomColor } from '../../utils/lastCustomColor';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
@@ -326,7 +326,6 @@ export function ColorPickerSheet({
               >
                 <BrightnessSlider
                   style={{ borderRadius: 12, height: 32, marginBottom: 8 }}
-                  thumbShape='pill'
                 />
               </View>
             </ColorPicker>
