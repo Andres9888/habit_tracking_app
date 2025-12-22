@@ -465,16 +465,18 @@ checked={localSettings[setting.key] as boolean}
 **File:** `src/screens/HabitDetailScreen.tsx`
 
 **Implementation:**
-- [ ] Open `src/screens/HabitDetailScreen.tsx`
-- [ ] Search for `isWhyEditorOpen` in useEffect dependency array
-- [ ] Note the line number of this useEffect (~1608)
-- [ ] Search for `useState(false)` declarations with isWhyEditorOpen
-- [ ] Cut the useState declaration
-- [ ] Paste it BEFORE the useEffect that uses it
-- [ ] Ensure proper grouping with other state declarations
-- [ ] Save file
-- [ ] Run `tsc -p tsconfig.app.json --noEmit` to verify
-- [ ] Commit with message: "Fix variable hoisting error in HabitDetailScreen (TS2448, TS2454)"
+- [x] Open `src/screens/HabitDetailScreen.tsx`
+- [x] Search for `isWhyEditorOpen` in useEffect dependency array
+- [x] Note the line number of this useEffect (~1608)
+- [x] Search for `useState(false)` declarations with isWhyEditorOpen
+- [x] Cut the useState declaration
+- [x] Paste it BEFORE the useEffect that uses it
+- [x] Ensure proper grouping with other state declarations
+- [x] Save file
+- [x] Run `tsc -p tsconfig.app.json --noEmit` to verify
+- [x] Commit with message: "Fix variable hoisting error in HabitDetailScreen (TS2448, TS2454)"
+
+**Verification:** The `isWhyEditorOpen` state is now declared on line 1569, which is before the useEffect on line 1611 that depends on it. TypeScript hoisting errors (TS2448, TS2454) have been resolved. Current TS error count: 3 remaining (in other files).
 
 ### Task 2.7: Remove Invalid AnimatedPressable Props
 
