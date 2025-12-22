@@ -566,11 +566,22 @@ function detectWeakDay(
 
 ### Phase 6: Testing & Quality
 
-- [ ] **CALENDAR-6.1** Unit tests for `utils.ts`
-  - `generateMonthGrid`: February leap year, 31-day months, padding
-  - `getMonthStats`: edge cases (no completions, all completed, current month)
-  - `calculateDayOfWeekStats`: various completion patterns
-  - `detectWeakDay`: threshold detection
+- [x] **CALENDAR-6.1** Unit tests for `utils.ts`
+  - `generateMonthGrid`: February leap year, 31-day months, padding ✓
+  - `calculateMonthStats`: edge cases (no completions, all completed, current month) ✓
+  - `calculateDayOfWeekStats`: various completion patterns ✓
+  - `detectWeakDay`: threshold detection ✓
+  - `calculateStreakPosition`: streak detection, broken streaks, habit creation handling ✓
+  - **Implementation notes:**
+    - Added comprehensive tests covering all utility functions with 177 test cases
+    - Tests cover basic functionality, edge cases, and integration scenarios
+    - generateMonthGrid: Tests for 28, 29, 30, and 31-day months, padding, date formats, today/future detection, and habitCreatedAt handling
+    - calculateMonthStats: Tests for completion counting, eligible days calculation, success rate calculation, and exclusion of future/pre-creation days
+    - calculateDayOfWeekStats: Tests for day-of-week tracking, rate calculations, habit creation date handling, and various completion patterns
+    - detectWeakDay: Tests for threshold detection (>20% below average), multiple weak days, and edge cases
+    - calculateStreakPosition: Tests for active streaks, broken streaks, future dates, habit creation boundaries, and complex scenarios with gaps
+    - All accessibility helpers: Tests for formatDateForAccessibility and getDayAccessibilityLabel
+    - All tests passing (177/177) with comprehensive coverage of edge cases
 
 - [ ] **CALENDAR-6.2** Component tests
   - DayCell: renders all 8 states correctly

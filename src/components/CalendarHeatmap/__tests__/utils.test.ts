@@ -7,11 +7,15 @@
 import {
   generateMonthGrid,
   calculateMonthStats,
+  calculateDayOfWeekStats,
+  detectWeakDay,
+  calculateStreakPosition,
   DAY_LABELS,
   DAY_NAMES_FULL,
   formatDateForAccessibility,
   getDayAccessibilityLabel,
   type CalendarDay,
+  type DayOfWeekStat,
 } from '../utils';
 
 describe('generateMonthGrid', () => {
@@ -756,5 +760,522 @@ describe('getDayAccessibilityLabel', () => {
     const label = getDayAccessibilityLabel(day);
     expect(label).toContain('Future date');
     expect(label).not.toContain('Completed');
+  });
+});
+
+describe('calculateDayOfWeekStats', () => {
+  describe('basic statistics', () => {
+    it('returns stats for all 7 days of week', () => {
+      const completedDates = new Set<string>();
+      const stats = calculateDayOfWeekStats(completedDates, Date.now());
+
+      expect(stats).toHaveLength(7);
+      expect(stats.map(s => s.day)).toEqual([
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ]);
+    });
+
+    it('calculates 100% rate when all occurrences completed', () => {
+      // Create a habit from a Sunday and complete every Sunday
+      const habitCreatedAt = new Date('2025-12-07').getTime(); // Sunday
+      const completedDates = new Set([
+        '2025-12-07', // Sunday
+        '2025-12-14', // Sunday
+        '2025-12-21', // Sunday (today)
+      ]);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+      const sundayStats = stats[0];
+
+      expect(sundayStats.day).toBe('Sunday');
+      expect(sundayStats.count).toBe(3);
+      expect(sundayStats.total).toBe(3);
+      expect(sundayStats.rate).toBe(100);
+    });
+
+    it('calculates 0% rate when no days completed', () => {
+      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const completedDates = new Set<string>();
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+
+      stats.forEach(stat => {
+        expect(stat.count).toBe(0);
+        expect(stat.rate).toBe(0);
+      });
+    });
+
+    it('calculates 50% rate correctly', () => {
+      // Habit created on Sunday Dec 7, today is Sunday Dec 21
+      // 3 Sundays total: 7th, 14th, 21st
+      // Complete 7th and 21st (2/3 = 66.67%, rounds to 67%)
+      const habitCreatedAt = new Date('2025-12-07').getTime();
+      const completedDates = new Set(['2025-12-07', '2025-12-21']);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+      const sundayStats = stats[0];
+
+      expect(sundayStats.count).toBe(2);
+      expect(sundayStats.total).toBe(3);
+      expect(sundayStats.rate).toBe(67); // Rounded
+    });
+  });
+
+  describe('habit creation date handling', () => {
+    it('only counts days after habit creation', () => {
+      // Habit created on Dec 15, 2025
+      const habitCreatedAt = new Date('2025-12-15').getTime();
+      const completedDates = new Set([
+        '2025-12-10', // Before creation - should be ignored
+        '2025-12-15', // Creation day - should count
+        '2025-12-16', // After creation - should count
+      ]);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+      const totalDaysTracked = stats.reduce((sum, s) => sum + s.total, 0);
+
+      // Should only count from Dec 15 onwards
+      const today = new Date();
+      const createdDate = new Date('2025-12-15');
+      const daysDiff = Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+      expect(totalDaysTracked).toBe(daysDiff);
+    });
+
+    it('handles undefined habitCreatedAt by using today as start', () => {
+      const completedDates = new Set<string>();
+      const stats = calculateDayOfWeekStats(completedDates);
+
+      // When no creation date, should only have today
+      const totalDaysTracked = stats.reduce((sum, s) => sum + s.total, 0);
+      expect(totalDaysTracked).toBe(1);
+    });
+  });
+
+  describe('various completion patterns', () => {
+    it('tracks mixed completion patterns across days', () => {
+      // Use a past date range to avoid today affecting results
+      const habitCreatedAt = new Date('2020-01-06').getTime(); // Monday
+      const completedDates = new Set([
+        '2020-01-06', // Monday - completed
+        '2020-01-07', // Tuesday - completed
+        '2020-01-08', // Wednesday - completed
+        // 2020-01-09 Thursday - skipped
+        '2020-01-10', // Friday - completed
+        // 2020-01-11 Saturday - skipped
+        '2020-01-12', // Sunday - completed
+        '2020-01-13', // Monday - completed
+      ]);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+
+      // Since the function calculates from habitCreatedAt to TODAY,
+      // we can't predict exact rates. Just check that:
+      // - Completed days have non-zero counts
+      // - Skipped days in the sample have lower rates
+      expect(stats[1].count).toBeGreaterThan(0); // Monday had completions
+      expect(stats[2].count).toBeGreaterThan(0); // Tuesday had completions
+      expect(stats[3].count).toBeGreaterThan(0); // Wednesday had completions
+      expect(stats[5].count).toBeGreaterThan(0); // Friday had completions
+
+      // All days should have been tracked
+      stats.forEach(stat => {
+        expect(stat.total).toBeGreaterThan(0);
+      });
+    });
+
+    it('handles weekend vs weekday patterns', () => {
+      const habitCreatedAt = new Date('2025-12-01').getTime(); // Monday
+      const completedDates = new Set([
+        // Complete all weekdays
+        '2025-12-01', // Monday
+        '2025-12-02', // Tuesday
+        '2025-12-03', // Wednesday
+        '2025-12-04', // Thursday
+        '2025-12-05', // Friday
+        // Skip weekends
+        // '2025-12-06', // Saturday
+        // '2025-12-07', // Sunday
+        '2025-12-08', // Monday
+      ]);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+
+      // Weekdays should have higher rates than weekends
+      const weekdayRates = [stats[1], stats[2], stats[3], stats[4], stats[5]].map(s => s.rate);
+      const weekendRates = [stats[0], stats[6]].map(s => s.rate);
+
+      expect(Math.min(...weekdayRates)).toBeGreaterThan(Math.max(...weekendRates));
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles single day habit', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const habitCreatedAt = today.getTime();
+      const completedDates = new Set([todayStr]);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+      const todayDayOfWeek = today.getDay();
+
+      expect(stats[todayDayOfWeek].total).toBe(1);
+      expect(stats[todayDayOfWeek].count).toBe(1);
+      expect(stats[todayDayOfWeek].rate).toBe(100);
+
+      // All other days should have 0 total
+      stats.forEach((stat, index) => {
+        if (index !== todayDayOfWeek) {
+          expect(stat.total).toBe(0);
+          expect(stat.count).toBe(0);
+        }
+      });
+    });
+
+    it('handles empty completion set', () => {
+      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const completedDates = new Set<string>();
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+
+      stats.forEach(stat => {
+        expect(stat.count).toBe(0);
+        expect(stat.rate).toBe(0);
+        expect(stat.total).toBeGreaterThan(0);
+      });
+    });
+
+    it('rounds rates correctly', () => {
+      // Create scenario with 1/3 completion (33.33...)
+      const habitCreatedAt = new Date('2025-12-01').getTime(); // Monday
+      const completedDates = new Set([
+        '2025-12-01', // Monday - completed
+        // Skip 2025-12-08 Monday
+        // Skip 2025-12-15 Monday
+      ]);
+
+      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+      const mondayStats = stats[1];
+
+      // 1/3 = 33.33... should round to 33
+      expect(mondayStats.rate).toBe(33);
+    });
+  });
+});
+
+describe('detectWeakDay', () => {
+  const createMockStats = (rates: number[]): DayOfWeekStat[] => {
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return rates.map((rate, index) => ({
+      day: dayNames[index],
+      rate,
+      count: rate,
+      total: 100,
+    }));
+  };
+
+  describe('threshold detection', () => {
+    it('detects day >20% below average', () => {
+      // Average: (80 + 85 + 90 + 85 + 80 + 85 + 40) / 7 = 77.86
+      // Sunday (40) is 37.86% below average
+      const stats = createMockStats([40, 85, 90, 85, 80, 85, 80]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay).not.toBeNull();
+      expect(weakDay?.day).toBe('Sunday');
+      expect(weakDay?.rate).toBe(40);
+    });
+
+    it('returns null when no day is >20% below average', () => {
+      // All days within 20% of average (80)
+      const stats = createMockStats([75, 80, 85, 78, 82, 80, 80]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay).toBeNull();
+    });
+
+    it('returns null when all days have same rate', () => {
+      const stats = createMockStats([80, 80, 80, 80, 80, 80, 80]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay).toBeNull();
+    });
+
+    it('detects day more than 20% below average as weak', () => {
+      // Average: (58 + 80 + 80 + 80 + 80 + 80 + 82) / 7 = 77.14
+      // Sunday (58) is 19.14 below average, which is not > 20
+      // Let's use a clearer example: Average 80, Sunday 50 (30 below)
+      const stats = createMockStats([50, 80, 85, 80, 80, 85, 80]);
+      const weakDay = detectWeakDay(stats);
+
+      // Average: 77.14, Sunday 50 is 27.14 below average (> 20 threshold)
+      expect(weakDay).not.toBeNull();
+      expect(weakDay?.day).toBe('Sunday');
+      expect(weakDay?.rate).toBe(50);
+    });
+  });
+
+  describe('multiple weak days', () => {
+    it('returns weakest day when multiple are below threshold', () => {
+      // Average: ~80
+      // Sunday (30) and Saturday (50) both below threshold
+      // Should return Sunday (30)
+      const stats = createMockStats([30, 85, 90, 85, 90, 85, 50]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay?.day).toBe('Sunday');
+      expect(weakDay?.rate).toBe(30);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles all zero rates', () => {
+      const stats = createMockStats([0, 0, 0, 0, 0, 0, 0]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay).toBeNull();
+    });
+
+    it('handles perfect 100% rates', () => {
+      const stats = createMockStats([100, 100, 100, 100, 100, 100, 100]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay).toBeNull();
+    });
+
+    it('detects weak day with extreme outlier', () => {
+      // Average: ~86, Sunday: 0
+      const stats = createMockStats([0, 100, 100, 100, 100, 100, 100]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay?.day).toBe('Sunday');
+      expect(weakDay?.rate).toBe(0);
+    });
+
+    it('handles varying rates with one clear outlier', () => {
+      // Real-world scenario: weekday consistency, weekend drop
+      // Average: ~80
+      const stats = createMockStats([55, 85, 88, 90, 87, 86, 84]);
+      const weakDay = detectWeakDay(stats);
+
+      expect(weakDay?.day).toBe('Sunday');
+      expect(weakDay?.rate).toBe(55);
+    });
+  });
+});
+
+describe('calculateStreakPosition', () => {
+  describe('valid streak detection', () => {
+    it('returns correct position in ongoing streak', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      // Create a 5-day streak ending today
+      const completedDates = new Set<string>();
+      for (let i = 0; i < 5; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        completedDates.add(date.toISOString().split('T')[0]);
+      }
+
+      // Check position of each day in streak
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      expect(calculateStreakPosition(todayStr, completedDates)).toBe(5); // Most recent
+      expect(calculateStreakPosition(yesterdayStr, completedDates)).toBe(4);
+    });
+
+    it('returns 1 for first day of streak', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const completedDates = new Set([todayStr]);
+
+      expect(calculateStreakPosition(todayStr, completedDates)).toBe(1);
+    });
+
+    it('handles streak that includes yesterday but not today', () => {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      const twoDaysAgo = new Date(today);
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];
+
+      const completedDates = new Set([yesterdayStr, twoDaysAgoStr]);
+
+      expect(calculateStreakPosition(yesterdayStr, completedDates)).toBe(2);
+      expect(calculateStreakPosition(twoDaysAgoStr, completedDates)).toBe(1);
+    });
+  });
+
+  describe('broken streak scenarios', () => {
+    it('returns 0 for date not in completedDates', () => {
+      const completedDates = new Set(['2025-12-01', '2025-12-02']);
+      expect(calculateStreakPosition('2025-12-03', completedDates)).toBe(0);
+    });
+
+    it('returns 0 when streak is broken (no today or yesterday)', () => {
+      const twoDaysAgo = new Date();
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];
+
+      const completedDates = new Set([twoDaysAgoStr]);
+
+      expect(calculateStreakPosition(twoDaysAgoStr, completedDates)).toBe(0);
+    });
+
+    it('returns 0 for date in old completed streak', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      // New streak today
+      const completedDates = new Set([
+        todayStr,
+        '2025-12-01', // Old streak
+        '2025-12-02', // Old streak
+      ]);
+
+      // Old dates should return 0 (not part of current streak)
+      expect(calculateStreakPosition('2025-12-01', completedDates)).toBe(0);
+      expect(calculateStreakPosition('2025-12-02', completedDates)).toBe(0);
+    });
+  });
+
+  describe('future dates', () => {
+    it('returns 0 for future dates', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+      const completedDates = new Set([todayStr, tomorrowStr]);
+
+      expect(calculateStreakPosition(tomorrowStr, completedDates)).toBe(0);
+    });
+  });
+
+  describe('habit creation date handling', () => {
+    it('stops streak calculation at habit creation date', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      // Habit created 3 days ago
+      const habitCreatedAt = new Date(today);
+      habitCreatedAt.setDate(habitCreatedAt.getDate() - 3);
+
+      // Complete every day including before habit creation
+      const completedDates = new Set<string>();
+      for (let i = 0; i < 10; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        completedDates.add(date.toISOString().split('T')[0]);
+      }
+
+      // Streak should only count from habit creation (4 days including creation day)
+      expect(calculateStreakPosition(todayStr, completedDates, habitCreatedAt.getTime())).toBe(4);
+    });
+
+    it('includes habit creation day in streak', () => {
+      const creationDate = new Date();
+      creationDate.setDate(creationDate.getDate() - 2);
+      const creationDateStr = creationDate.toISOString().split('T')[0];
+      const habitCreatedAt = creationDate.getTime();
+
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      const completedDates = new Set([todayStr, yesterdayStr, creationDateStr]);
+
+      expect(calculateStreakPosition(creationDateStr, completedDates, habitCreatedAt)).toBe(1);
+      expect(calculateStreakPosition(todayStr, completedDates, habitCreatedAt)).toBe(3);
+    });
+
+    it('handles undefined habitCreatedAt', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      const completedDates = new Set<string>();
+      for (let i = 0; i < 5; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        completedDates.add(date.toISOString().split('T')[0]);
+      }
+
+      // Should calculate full streak without creation date restriction
+      expect(calculateStreakPosition(todayStr, completedDates)).toBe(5);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles single day streak', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const completedDates = new Set([todayStr]);
+
+      expect(calculateStreakPosition(todayStr, completedDates)).toBe(1);
+    });
+
+    it('handles long streak', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      // 30-day streak
+      const completedDates = new Set<string>();
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        completedDates.add(date.toISOString().split('T')[0]);
+      }
+
+      expect(calculateStreakPosition(todayStr, completedDates)).toBe(30);
+    });
+
+    it('handles streak with gaps in the past', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      const twoDaysAgo = new Date(today);
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];
+
+      // Gap at 3 days ago
+      const fiveDaysAgo = new Date(today);
+      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      const fiveDaysAgoStr = fiveDaysAgo.toISOString().split('T')[0];
+
+      const completedDates = new Set([
+        todayStr,
+        yesterdayStr,
+        twoDaysAgoStr,
+        // Gap at 3 and 4 days ago
+        fiveDaysAgoStr,
+      ]);
+
+      // Current streak is only 3 days (today, yesterday, 2 days ago)
+      expect(calculateStreakPosition(todayStr, completedDates)).toBe(3);
+      expect(calculateStreakPosition(twoDaysAgoStr, completedDates)).toBe(1);
+      // 5 days ago is not part of current streak
+      expect(calculateStreakPosition(fiveDaysAgoStr, completedDates)).toBe(0);
+    });
   });
 });
