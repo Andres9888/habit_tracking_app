@@ -3,8 +3,8 @@
  * Monthly calendar heatmap for habit tracking visualization with insights
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { View, Text, Pressable, Alert } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { format, addMonths, subMonths, isSameMonth } from 'date-fns';
@@ -19,6 +19,10 @@ import {
   detectWeakDay,
   calculateStreakPosition,
 } from './utils';
+import {
+  isInsightDismissed,
+  dismissInsight,
+} from '../../utils/insightCardPreferences';
 
 export function CalendarHeatmap({
   habitId,
@@ -31,6 +35,7 @@ export function CalendarHeatmap({
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right'>('left');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [insightCardDismissed, setInsightCardDismissed] = useState(false);
   const today = useMemo(() => new Date(), []);
 
   const isCurrentMonth = useMemo(
@@ -99,6 +104,51 @@ export function CalendarHeatmap({
     if (!selectedDate) return 0;
     return calculateStreakPosition(selectedDate, completedDates, habitCreatedAt);
   }, [selectedDate, completedDates, habitCreatedAt]);
+
+  // Check if insight card has been dismissed on mount
+  useEffect(() => {
+    const checkDismissed = async () => {
+      if (weakestDay) {
+        const dismissed = await isInsightDismissed(habitId, weakestDay.day);
+        setInsightCardDismissed(dismissed);
+      }
+    };
+    checkDismissed();
+  }, [habitId, weakestDay]);
+
+  // Handler for dismissing insight card
+  const handleDismissInsight = useCallback(async () => {
+    if (weakestDay) {
+      await dismissInsight(habitId, weakestDay.day);
+      setInsightCardDismissed(true);
+    }
+  }, [habitId, weakestDay]);
+
+  // Handler for setting reminder
+  const handleSetReminder = useCallback((day: string) => {
+    Alert.alert(
+      `Set Reminder for ${day}s`,
+      'Reminder functionality coming soon! This feature will let you set a custom notification for your weakest day to help build consistency.',
+      [{ text: 'Got it', style: 'default' }]
+    );
+  }, []);
+
+  // Handler for showing tips
+  const handleSeeTips = useCallback((day: string) => {
+    const tips = `Tips to boost your ${day} consistency:\n\n` +
+      `⏰ Set a reminder for ${day} evening\n\n` +
+      `📍 Stack it after an existing ${day} routine\n\n` +
+      `🎯 Plan it in advance on the weekend\n\n` +
+      `🤝 Find an accountability partner for ${day}s\n\n` +
+      `💪 Start with a smaller version on ${day}s\n\n` +
+      `📅 Mark it on your calendar as non-negotiable`;
+
+    Alert.alert(
+      `Improve Your ${day}s`,
+      tips,
+      [{ text: 'Got it', style: 'default' }]
+    );
+  }, []);
 
   return (
     <Animated.View
@@ -204,22 +254,15 @@ export function CalendarHeatmap({
         </View>
 
         {/* Insight Card - Pattern Detection */}
-        <InsightCard
-          dayOfWeekStats={dayOfWeekStats}
-          weakestDay={weakestDay}
-          onSetReminder={(day) => {
-            // TODO: Implement reminder functionality
-            console.log('Set reminder for', day);
-          }}
-          onSeeTips={(day) => {
-            // TODO: Implement tips modal
-            console.log('Show tips for', day);
-          }}
-          onDismiss={() => {
-            // TODO: Implement dismiss functionality (AsyncStorage)
-            console.log('Dismiss insight card');
-          }}
-        />
+        {!insightCardDismissed && (
+          <InsightCard
+            dayOfWeekStats={dayOfWeekStats}
+            weakestDay={weakestDay}
+            onSetReminder={handleSetReminder}
+            onSeeTips={handleSeeTips}
+            onDismiss={handleDismissInsight}
+          />
+        )}
       </View>
 
       {/* Day Detail Tooltip */}

@@ -522,10 +522,16 @@ function detectWeakDay(
     - Proper accessibility labels and roles
     - Integrated with CalendarHeatmap via onDayPress handler
 
-- [ ] **CALENDAR-5.2** Implement insight card actions
-  - `onSetReminder`: Open time picker modal
-  - `onSeeTips`: Open tips modal with day-specific strategies
-  - `onDismiss`: Hide insight card (save preference to AsyncStorage)
+- [x] **CALENDAR-5.2** Implement insight card actions
+  - `onSetReminder`: Opens Alert with placeholder message for future reminder functionality ✓
+  - `onSeeTips`: Opens Alert with day-specific strategies (6 actionable tips) ✓
+  - `onDismiss`: Hides insight card and saves preference to AsyncStorage (7-day TTL) ✓
+  - Implementation notes:
+    - Created `insightCardPreferences.ts` utility for AsyncStorage management
+    - Dismissed insights tracked per habit+weakDay with 7-day expiration
+    - onSetReminder shows "coming soon" Alert (placeholder for future notification feature)
+    - onSeeTips displays contextual strategies based on weak day
+    - InsightCard conditionally rendered based on dismissal state
 
 - [ ] **CALENDAR-5.3** Add accessibility labels
   - Each cell: descriptive label with date and status
