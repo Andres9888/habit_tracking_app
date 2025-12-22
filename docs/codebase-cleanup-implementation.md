@@ -157,9 +157,11 @@ echo "Files with no canonical: $(wc -l < docs/specs/duplicates-no-canonical.txt 
 
 ### Task 1.3: Delete Duplicate Files
 
-- [ ] Delete all numbered duplicate files
-- [ ] Verify deletions with git status
-- [ ] Count deleted files
+- [x] Delete all numbered duplicate files
+- [x] Verify deletions with git status
+- [x] Count deleted files
+
+**Completed:** Successfully deleted 133 duplicate files from src/ and worktrees/ directories. Git shows 167 deletions (includes duplicates in .cursor/rules and docs/). Zero remaining duplicate files with " 2.*", " 3.*", or " 4.*" patterns.
 
 ```bash
 # Delete duplicates (after review confirms they're safe)
