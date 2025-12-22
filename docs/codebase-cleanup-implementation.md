@@ -323,9 +323,11 @@ import ColorPicker, {
 
 ### Task 2.2: Fix SharedValue Import
 
-- [ ] Update HabitStrengthSection.tsx to import SharedValue directly
-- [ ] Change type annotation from Animated.SharedValue to SharedValue
-- [ ] Verify file compiles
+- [x] Update HabitStrengthSection.tsx to import SharedValue directly
+- [x] Change type annotation from Animated.SharedValue to SharedValue
+- [x] Verify file compiles
+
+**Completed:** Fixed SharedValue namespace import by adding `SharedValue` to the imports from 'react-native-reanimated' and updating the type annotation on line 137. TypeScript errors reduced from 8 to 7.
 
 **File:** `src/components/HabitStrengthSection/HabitStrengthSection.tsx`
 
@@ -350,12 +352,12 @@ const someValue: SharedValue<number>
 ```
 
 **Implementation:**
-- [ ] Open `src/components/HabitStrengthSection/HabitStrengthSection.tsx`
-- [ ] Add `SharedValue` to imports from 'react-native-reanimated'
-- [ ] Replace `Animated.SharedValue<T>` with `SharedValue<T>` (line ~136)
-- [ ] Save file
-- [ ] Run `tsc -p tsconfig.app.json --noEmit` to verify
-- [ ] Commit with message: "Fix SharedValue namespace import (TS2694)"
+- [x] Open `src/components/HabitStrengthSection/HabitStrengthSection.tsx`
+- [x] Add `SharedValue` to imports from 'react-native-reanimated'
+- [x] Replace `Animated.SharedValue<T>` with `SharedValue<T>` (line ~136)
+- [x] Save file
+- [x] Run `tsc -p tsconfig.app.json --noEmit` to verify
+- [x] Commit with message: "Fix SharedValue namespace import (TS2694)"
 
 ### Task 2.3: Add Date Type Guards
 
