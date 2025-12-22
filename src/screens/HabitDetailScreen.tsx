@@ -10,7 +10,7 @@
  */
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, Animated as RNAnimated, LayoutChangeEvent } from 'react-native';
+import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, Animated as RNAnimated, LayoutChangeEvent, Keyboard } from 'react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -71,6 +71,7 @@ import { DeleteUndoToast } from '../components/DeleteUndoToast';
 import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
+import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
 
 // Types
 type Habit = HabitDoc & {
@@ -1598,6 +1599,16 @@ export default function HabitDetailScreen({
   // Reduce motion accessibility setting (T4.4)
   const reduceMotion = useReduceMotion();
 
+  // Keyboard state for Why Editor modal
+  const { isKeyboardVisible, keyboardHeight } = useKeyboardState();
+
+  // Animated values for Why Editor intro text collapse
+  const whyEditorIntroOpacity = useRef(new RNAnimated.Value(1)).current;
+  const whyEditorIntroHeight = useRef(new RNAnimated.Value(60)).current;
+
+  // ScrollView ref for Why Editor auto-scroll
+  const whyEditorScrollRef = useRef<ScrollView>(null);
+
   // Tab state - use initialTab when provided
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
@@ -1632,6 +1643,24 @@ export default function HabitDetailScreen({
       setHasVisitedMotivation(initialTab === 'motivation');
     }
   }, [visible, initialTab]);
+
+  // Animate Why Editor intro text when keyboard visibility changes (T4)
+  useEffect(() => {
+    if (isWhyEditorOpen) {
+      RNAnimated.parallel([
+        RNAnimated.timing(whyEditorIntroOpacity, {
+          toValue: isKeyboardVisible ? 0 : 1,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        RNAnimated.timing(whyEditorIntroHeight, {
+          toValue: isKeyboardVisible ? 0 : 60,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    }
+  }, [isKeyboardVisible, isWhyEditorOpen, whyEditorIntroOpacity, whyEditorIntroHeight]);
 
   // Scroll refs for each tab to preserve position
   const progressScrollRef = useRef<ScrollView>(null);
@@ -2497,28 +2526,45 @@ export default function HabitDetailScreen({
               </View>
               <Text className="text-lg font-bold text-stone-900">Your Why</Text>
             </View>
-            <Pressable
-              accessibilityLabel="Close why editor"
-              accessibilityRole="button"
-              className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
-              onPress={() => setIsWhyEditorOpen(false)}
-            >
-              <X className="text-stone-600" size={22} />
-            </Pressable>
+            <View className="flex-row items-center gap-2">
+              {/* Done button - only visible when keyboard is open (T2) */}
+              {isKeyboardVisible && (
+                <Pressable
+                  accessibilityLabel="Done editing"
+                  accessibilityRole="button"
+                  className="rounded-full bg-rose-500 px-4 py-2 active:bg-rose-600"
+                  onPress={() => Keyboard.dismiss()}
+                >
+                  <Text className="text-sm font-semibold text-white">Done</Text>
+                </Pressable>
+              )}
+              <Pressable
+                accessibilityLabel="Close why editor"
+                accessibilityRole="button"
+                className="h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200"
+                onPress={() => setIsWhyEditorOpen(false)}
+              >
+                <X className="text-stone-600" size={22} />
+              </Pressable>
+            </View>
           </View>
           <ScrollView
+            ref={whyEditorScrollRef}
             className="flex-1"
             contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 100 }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <Text className="mb-6 text-center text-sm text-stone-500">
-              Your why is the deeper reason that keeps you going when motivation fades.
-            </Text>
+            {/* Intro text - collapses when keyboard is visible (T4) */}
+            <RNAnimated.View style={{ opacity: whyEditorIntroOpacity, maxHeight: whyEditorIntroHeight, overflow: 'hidden' }}>
+              <Text className="mb-6 text-center text-sm text-stone-500">
+                Your why is the deeper reason that keeps you going when motivation fades.
+              </Text>
+            </RNAnimated.View>
             <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
               I do this because...
             </Text>
-            <View className="relative">
+            <View>
               <TextInput
                 multiline
                 accessibilityLabel="Why you are doing this habit"
@@ -2529,14 +2575,21 @@ export default function HabitDetailScreen({
                 textAlignVertical="top"
                 value={whyDraft}
                 onChangeText={setWhyDraft}
+                onFocus={() => {
+                  // Auto-scroll to keep input visible (T5)
+                  setTimeout(() => {
+                    whyEditorScrollRef.current?.scrollTo({ y: 60, animated: true });
+                  }, 100);
+                }}
               />
-              <View className="absolute bottom-4 right-4">
-                <View className="rounded-full bg-stone-100 px-2 py-1">
-                  <Text className="text-[10px] font-bold text-stone-400">{whyDraft.length} / 200</Text>
-                </View>
+              {/* Character counter - positioned outside input (T3) */}
+              <View className="mt-2 flex-row justify-end px-1">
+                <Text className={`text-xs font-semibold ${whyDraft.length >= 200 ? 'text-rose-500' : whyDraft.length >= 180 ? 'text-amber-500' : 'text-stone-400'}`}>
+                  {whyDraft.length} / 200
+                </Text>
               </View>
             </View>
-            <View className="mt-8">
+            <View className="mt-6">
               <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
                 Inspiration:
               </Text>
@@ -2564,9 +2617,13 @@ export default function HabitDetailScreen({
               </View>
             </View>
           </ScrollView>
-          <View
+          {/* Footer - adjusts position when keyboard is visible (T6) */}
+          <RNAnimated.View
             className="border-t border-stone-100 bg-white px-5 pt-4"
-            style={{ paddingBottom: insets.bottom + 16 }}
+            style={{
+              paddingBottom: insets.bottom + 16,
+              marginBottom: isKeyboardVisible ? keyboardHeight : 0,
+            }}
           >
             <Pressable
               accessibilityLabel="Save why"
@@ -2576,7 +2633,7 @@ export default function HabitDetailScreen({
             >
               <Text className="text-base font-bold text-white">Save My Why</Text>
             </Pressable>
-          </View>
+          </RNAnimated.View>
         </View>
       </RNModal>
 
