@@ -76,12 +76,18 @@ Refactor the frontend to use the same `differenceInDays()` logic from `streakUti
 
 ## Acceptance Criteria
 
-- [ ] Streak records display matches the actual completion history
-- [ ] Frontend and backend streak calculations produce identical results
-- [ ] No off-by-one errors in streak counting
-- [ ] Date calculations work correctly across all timezones
-- [ ] Current streak indicator correctly identifies the active streak
-- [ ] Existing tests pass and new tests cover edge cases
+- [x] Streak records display matches the actual completion history
+  - **COMPLETED**: Refactored `calculateStreakRecords()` in InsightsSection.tsx to use consistent UTC-based date calculations
+- [x] Frontend and backend streak calculations produce identical results
+  - **COMPLETED**: Created `src/utils/dateUtils.ts` with `differenceInDays()` that uses UTC midnight normalization, matching backend logic
+- [x] No off-by-one errors in streak counting
+  - **COMPLETED**: Using UTC dates avoids DST/timezone issues that caused Math.round vs Math.floor discrepancies
+- [x] Date calculations work correctly across all timezones
+  - **COMPLETED**: All date comparisons now use `parseToUTCMidnight()` to normalize dates to UTC before comparison
+- [x] Current streak indicator correctly identifies the active streak
+  - **COMPLETED**: Updated isCurrent check to use `differenceInDays()` with proper UTC comparison
+- [x] Existing tests pass and new tests cover edge cases
+  - **COMPLETED**: Added 23 new tests in `src/utils/__tests__/dateUtils.test.ts` covering edge cases (DST transitions, leap years, timezone handling)
 
 ## Test Cases
 

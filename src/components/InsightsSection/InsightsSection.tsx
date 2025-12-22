@@ -25,6 +25,11 @@ import {
 } from 'lucide-react-native';
 import type { HabitTrackingEntry } from '../../features/habits/types';
 import type { Id } from '../../../convex/_generated/dataModel';
+import {
+  differenceInDays,
+  getTodayString,
+  formatDateString,
+} from '../../utils/dateUtils';
 
 export interface InsightsSectionProps {
   habitId: Id<'habits'>;
@@ -112,6 +117,8 @@ function calculateDayOfWeekStats(
 
 /**
  * Calculate all streak records from tracking data
+ * Uses consistent date calculation with Math.floor and midnight normalization
+ * to match backend (convex/streakUtils.ts) logic
  */
 function calculateStreakRecords(
   tracking: HabitTrackingEntry[],
@@ -119,7 +126,7 @@ function calculateStreakRecords(
 ): StreakRecord[] {
   if (tracking.length === 0) return [];
 
-  // Get all completed dates sorted
+  // Get all completed dates sorted (ascending)
   const completedDates = tracking
     .filter((t) => t.completed)
     .map((t) => t.date)
@@ -130,42 +137,42 @@ function calculateStreakRecords(
   const streaks: StreakRecord[] = [];
   let streakStart = completedDates[0];
   let streakDays = 1;
-  let prevDate = new Date(completedDates[0]);
+  let prevDateStr = completedDates[0];
 
   for (let i = 1; i < completedDates.length; i++) {
-    const currDate = new Date(completedDates[i]);
-    const diffDays = Math.round(
-      (currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    const currDateStr = completedDates[i];
+    // Use consistent differenceInDays utility (Math.floor + midnight normalization)
+    const diffDays = differenceInDays(currDateStr, prevDateStr);
 
     if (diffDays === 1) {
       // Consecutive day
       streakDays++;
     } else if (diffDays > 1) {
-      // Gap found, save previous streak if > 1 day
+      // Gap found, save previous streak if >= 2 days
       if (streakDays >= 2) {
         streaks.push({
           days: streakDays,
           startDate: streakStart,
-          endDate: completedDates[i - 1],
+          endDate: prevDateStr,
           isCurrent: false,
         });
       }
       // Start new streak
-      streakStart = completedDates[i];
+      streakStart = currDateStr;
       streakDays = 1;
     }
-    // If diffDays === 0, same day entry, skip
+    // If diffDays === 0, same day entry (shouldn't happen with unique dates), skip
 
-    prevDate = currDate;
+    prevDateStr = currDateStr;
   }
 
   // Don't forget the last streak
   if (streakDays >= 2) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayString();
     const lastDate = completedDates[completedDates.length - 1];
-    const isCurrent = lastDate === today ||
-      (new Date(today).getTime() - new Date(lastDate).getTime()) <= 24 * 60 * 60 * 1000;
+    // Check if last date is today or yesterday (streak is still active)
+    const daysSinceLastCompletion = differenceInDays(today, lastDate);
+    const isCurrent = daysSinceLastCompletion <= 1;
 
     streaks.push({
       days: streakDays,
@@ -178,17 +185,17 @@ function calculateStreakRecords(
   // Sort by days descending
   streaks.sort((a, b) => b.days - a.days);
 
-  // Mark the current streak if it exists
+  // Mark the current streak if it exists but wasn't captured
   if (currentStreak > 0) {
     const currentIdx = streaks.findIndex((s) => s.isCurrent);
     if (currentIdx === -1 && currentStreak >= 2) {
       // Current streak not in list, add it
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayString();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - currentStreak + 1);
       streaks.push({
         days: currentStreak,
-        startDate: startDate.toISOString().split('T')[0],
+        startDate: formatDateString(startDate),
         endDate: today,
         isCurrent: true,
       });
