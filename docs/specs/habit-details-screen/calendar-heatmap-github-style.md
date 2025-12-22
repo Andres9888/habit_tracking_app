@@ -400,19 +400,19 @@ const [viewMode, setViewMode] = useState<'traditional' | 'github'>('github');
   - Return weeks as columns (7 days each) ✅
   - Return month labels with week indices ✅
   - Handle partial weeks at start/end ✅
-  - **Implementation notes:** Created `generateHorizontalGrid()` that generates ~13 weeks of data (90 days back from current date), starting on Sunday and organizing days into week columns. Each week has 7 days (Sun-Sat). Month labels track where each month starts in the week array. Added comprehensive tests covering all edge cases.
+  - **Implementation notes:** Created `generateHorizontalGrid()` that generates ~13 weeks of data (90 days back from current date), starting on Sunday and organizing days into week columns. Each week has 7 days (Sun-Sat). Month labels track where each month starts in the week array. Added comprehensive tests covering all edge cases. All 210 tests pass.
 
 - [x] **GITHUB-1.2** Add `calculateStreakPosition` utility
   - Calculate position in current streak (1, 2, 3...) ✅
   - Used for color intensity (1-6, 7-13, 14-29, 30+) ✅
   - Handle broken streaks ✅
-  - **Implementation notes:** This utility already existed in utils.ts (lines 240-303). It calculates the position of a date within the current active streak by walking backwards from today/yesterday and stops at gaps or habit creation date.
+  - **Implementation notes:** This utility already existed in utils.ts (lines 240-303). It calculates the position of a date within the current active streak by walking backwards from today/yesterday and stops at gaps or habit creation date. Comprehensive test suite included.
 
 - [x] **GITHUB-1.3** Update `calculateMonthStats` to `calculate3MonthStats`
   - Calculate stats for 3-month period ✅
   - Return completion count, total days, percentage ✅
   - Calculate trend vs previous 3 months (deferred for later phase)
-  - **Implementation notes:** Created `calculate3MonthStats()` that takes the horizontal grid weeks and calculates completions, eligible days, and success rate for the entire 3-month period. Excludes future days, pre-creation days, and null padding cells.
+  - **Implementation notes:** Created `calculate3MonthStats()` that takes the horizontal grid weeks and calculates completions, eligible days, and success rate for the entire 3-month period. Excludes future days, pre-creation days, and null padding cells. Fully tested.
 
 ### Phase 2: Update DayCell
 
