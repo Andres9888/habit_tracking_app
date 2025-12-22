@@ -407,12 +407,52 @@
         "dependencies": [],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Bug Fix: Streak Records Calculation Inconsistency",
+        "description": "Fix incorrect streak record values in habit details screen (e.g., showing '104 days' and '5 days' incorrectly)",
+        "details": "ROOT CAUSE: The frontend calculateStreakRecords() function in InsightsSection.tsx uses Math.round() without time normalization, while the backend streakUtils.ts uses Math.floor() with proper midnight normalization. This causes off-by-one errors and timezone-dependent miscalculations.\n\nSOLUTION:\n1. Refactor calculateStreakRecords() in src/components/InsightsSection/InsightsSection.tsx (lines 116-200)\n2. Replace Math.round() with Math.floor() for date difference calculation (lines 137-139)\n3. Normalize dates to midnight using setHours(0, 0, 0, 0) before comparison\n4. Append 'T00:00:00' to date strings when creating Date objects for consistent timezone handling\n5. Match the backend differenceInDays() function pattern from convex/streakUtils.ts (lines 12-22)\n\nSPEC: docs/specs/habit-details-screen/streak-records-calculation-bug-fix.md",
+        "testStrategy": "Test single continuous streak displays correctly, verify separate streaks show as distinct records, test timezone edge cases (completion at 11:59 PM), verify current streak matches record when applicable, test backfill scenarios, compare frontend and backend calculations for consistency",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "26.1",
+            "title": "Add differenceInDays utility function to InsightsSection",
+            "description": "Create a local differenceInDays function matching the backend logic in streakUtils.ts",
+            "details": "Add function that normalizes dates to midnight using setHours(0, 0, 0, 0), calculates millisecond difference, and uses Math.floor() instead of Math.round(). This ensures consistent date calculations.",
+            "status": "pending"
+          },
+          {
+            "id": "26.2",
+            "title": "Refactor calculateStreakRecords date parsing",
+            "description": "Update date string parsing to use 'T00:00:00' suffix for consistent timezone handling",
+            "details": "Change 'new Date(completedDates[i])' to 'new Date(completedDates[i] + 'T00:00:00')' to ensure consistent date creation across timezones.",
+            "status": "pending"
+          },
+          {
+            "id": "26.3",
+            "title": "Replace inline date diff calculation with utility function",
+            "description": "Replace Math.round() calculation on lines 137-139 with call to differenceInDays utility",
+            "details": "Replace 'const diffDays = Math.round((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24))' with 'const diffDays = differenceInDays(currDate, prevDate)'",
+            "status": "pending"
+          },
+          {
+            "id": "26.4",
+            "title": "Test streak records with various data patterns",
+            "description": "Verify fix works correctly with single streaks, multiple streaks, and edge cases",
+            "details": "Manual testing: verify 10-day continuous streak shows '10 days', verify separate streaks (5 days gap 3 days) show correctly, test completion at day boundaries, verify current streak indicator works.",
+            "status": "pending"
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-09-30T20:13:31.582Z",
-      "updated": "2025-09-30T20:13:31.582Z",
-      "taskCount": 25,
+      "updated": "2025-12-22T02:45:00.000Z",
+      "taskCount": 26,
       "completedCount": 0,
       "description": "Tasks for post-mvp context"
     }
@@ -670,12 +710,66 @@
             "status": "pending"
           }
         ]
+      },
+      {
+        "id": 7,
+        "title": "Why Editor Keyboard UX Improvements",
+        "description": "Fix keyboard blocking issues in the Why Editor Modal and improve the editing experience to match CreateHabitModalV2 patterns",
+        "details": "The Why Editor Modal in HabitDetailScreen.tsx has UX issues: keyboard blocks input, no Done button, character counter overlays text, intro text wastes space when keyboard is visible. Refactor to use useKeyboardState hook, add keyboard-aware Done button, relocate counter outside input, collapse intro on keyboard show, add auto-scroll and footer adaptation. See spec: docs/specs/habit-details-screen/why-editor-keyboard-ux-improvements.md and mockup: .superdesign/design_iterations/why_editor_improved_1.html",
+        "testStrategy": "Test on iOS simulator and Android emulator for keyboard behavior. Verify input remains visible when keyboard opens. Test Done button appearance/dismissal. Verify character counter is visible and changes color at limits. Test animations are smooth. Verify accessibility labels on new elements.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "7.1",
+            "title": "Add Keyboard State Management",
+            "description": "Import and use useKeyboardState hook from CreateHabitModal in HabitDetailScreen.tsx",
+            "details": "Import useKeyboardState from '../components/CreateHabitModal/hooks/useKeyboardState'. Call hook inside component to get isKeyboardVisible and keyboardHeight. These will be used by other subtasks.",
+            "status": "pending"
+          },
+          {
+            "id": "7.2",
+            "title": "Add Done Button to Header (Keyboard-Aware)",
+            "description": "Add a Done button next to close button that appears only when keyboard is visible",
+            "details": "Add Pressable with 'Done' text styled as rose-500 button. Show/hide based on isKeyboardVisible using opacity/scale animation. onPress should call Keyboard.dismiss(). Position between title and X button in header row (lines ~2303-2318).",
+            "status": "pending"
+          },
+          {
+            "id": "7.3",
+            "title": "Move Character Counter Outside Input",
+            "description": "Relocate the 0/200 counter from inside TextInput overlay to below it",
+            "details": "Remove the absolute positioned View inside TextInput (lines ~2343-2347). Add new View after TextInput with flex-row justify-end mt-2. Counter should change color: stone-400 (normal), amber-500 (160-179), rose-500 (180+).",
+            "status": "pending"
+          },
+          {
+            "id": "7.4",
+            "title": "Collapse Intro Text When Keyboard Visible",
+            "description": "Animate the intro paragraph to hide when keyboard opens",
+            "details": "Wrap intro Text (line ~2325-2327) in Animated.View. Create introOpacity and introHeight animated values. Use useEffect to animate them based on isKeyboardVisible. Duration 200ms, easing ease-out. Note: height animation can't use native driver.",
+            "status": "pending"
+          },
+          {
+            "id": "7.5",
+            "title": "Add Auto-Scroll on Input Focus",
+            "description": "Scroll content to keep TextInput visible when focused",
+            "details": "Add ref to ScrollView in Why Editor modal. On TextInput focus or when keyboard becomes visible, call scrollViewRef.current.scrollTo({ y: 50, animated: true }) to ensure input stays visible above keyboard.",
+            "status": "pending"
+          },
+          {
+            "id": "7.6",
+            "title": "Adjust Footer Position with Keyboard",
+            "description": "Move the Save My Why button up when keyboard appears",
+            "details": "Use Animated.View for footer (lines ~2377-2389). Animate transform translateY based on keyboardHeight. When keyboard visible, translateY should be -keyboardHeight. Smooth animation with spring or timing (200ms).",
+            "status": "pending"
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-10-10T00:00:00.000Z",
-      "updated": "2025-12-19T00:00:00.000Z",
-      "taskCount": 6,
+      "updated": "2025-12-22T00:00:00.000Z",
+      "taskCount": 7,
       "completedCount": 0,
       "description": "Tasks for mvp-ios context"
     }
