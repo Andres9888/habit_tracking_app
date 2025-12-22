@@ -8,7 +8,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { CalendarHeatmap } from '../CalendarHeatmap';
 
 // Mock utilities
-jest.mock('../../utils/insightCardPreferences', () => ({
+jest.mock('../../../utils/insightCardPreferences', () => ({
   isInsightDismissed: jest.fn(() => Promise.resolve(false)),
   dismissInsight: jest.fn(() => Promise.resolve()),
 }));
