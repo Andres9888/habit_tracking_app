@@ -24,7 +24,7 @@ export const PhaseTag = ({
 }: PhaseTagProps) => {
   // Resolve phase from either direct value or legacy preferredTime
   const resolvedPhase = phase ?? getPhaseFromPreferredTime(preferredTime);
-  const phaseInfo = getPhaseInfo(resolvedPhase);
+  const phaseInfo = getPhaseInfo(resolvedPhase ?? undefined);
 
   if (!phaseInfo) return null;
 
