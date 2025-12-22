@@ -434,3 +434,80 @@ export function calculate3MonthStats(
 
   return { completions, eligibleDays, successRate };
 }
+
+/**
+ * Calculate trend percentage comparing current 3 months vs previous 3 months
+ * Returns positive for improvement, negative for decline, null if insufficient data
+ */
+export function calculate3MonthTrend(
+  completedDates: Set<string>,
+  habitCreatedAt?: number,
+  currentDate: Date = new Date()
+): number | null {
+  const today = currentDate;
+
+  // Calculate current 3-month period success rate
+  const current3MonthsStart = new Date(today);
+  current3MonthsStart.setDate(current3MonthsStart.getDate() - 90);
+
+  let currentCompletions = 0;
+  let currentEligibleDays = 0;
+
+  // Calculate previous 3-month period success rate (days 91-180 ago)
+  const previous3MonthsStart = new Date(today);
+  previous3MonthsStart.setDate(previous3MonthsStart.getDate() - 180);
+  const previous3MonthsEnd = new Date(today);
+  previous3MonthsEnd.setDate(previous3MonthsEnd.getDate() - 91);
+
+  let previousCompletions = 0;
+  let previousEligibleDays = 0;
+
+  const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
+
+  // Count for current period (last 90 days)
+  for (let d = new Date(current3MonthsStart); d <= today; d.setDate(d.getDate() + 1)) {
+    const dateStr = format(d, 'yyyy-MM-dd');
+    const isAfterCreation = !habitCreatedDate || d >= habitCreatedDate;
+    const isNotFuture = d <= today;
+
+    if (isAfterCreation && isNotFuture) {
+      currentEligibleDays++;
+      if (completedDates.has(dateStr)) {
+        currentCompletions++;
+      }
+    }
+  }
+
+  // Count for previous period (days 91-180 ago)
+  for (let d = new Date(previous3MonthsStart); d <= previous3MonthsEnd; d.setDate(d.getDate() + 1)) {
+    const dateStr = format(d, 'yyyy-MM-dd');
+    const isAfterCreation = !habitCreatedDate || d >= habitCreatedDate;
+
+    if (isAfterCreation) {
+      previousEligibleDays++;
+      if (completedDates.has(dateStr)) {
+        previousCompletions++;
+      }
+    }
+  }
+
+  // Need at least 30 days of data in previous period for meaningful comparison
+  if (previousEligibleDays < 30) {
+    return null;
+  }
+
+  const currentRate = currentEligibleDays > 0 ? (currentCompletions / currentEligibleDays) * 100 : 0;
+  const previousRate = previousEligibleDays > 0 ? (previousCompletions / previousEligibleDays) * 100 : 0;
+
+  // Calculate percentage change
+  if (previousRate === 0 && currentRate === 0) {
+    return null; // No change, both zero
+  }
+
+  if (previousRate === 0) {
+    return 100; // Started from nothing
+  }
+
+  const trend = ((currentRate - previousRate) / previousRate) * 100;
+  return Math.round(trend);
+}

@@ -4,11 +4,13 @@
  * Tests for grid generation, month stats calculation, and helper utilities.
  */
 
+import { format } from 'date-fns';
 import {
   generateMonthGrid,
   calculateMonthStats,
   generateHorizontalGrid,
   calculate3MonthStats,
+  calculate3MonthTrend,
   calculateDayOfWeekStats,
   detectWeakDay,
   calculateStreakPosition,
@@ -1704,6 +1706,158 @@ describe('calculate3MonthStats', () => {
       expect(stats.eligibleDays).toBeGreaterThan(80);
       expect(stats.successRate).toBeGreaterThan(0);
       expect(stats.successRate).toBeLessThan(10); // 5 out of ~90 days
+    });
+  });
+});
+
+describe('calculate3MonthTrend', () => {
+  describe('Trend calculation', () => {
+    it('should return positive trend when current period is better', () => {
+      const completedDates = new Set<string>();
+      const currentDate = new Date('2024-03-15');
+
+      // Previous 3 months (90-180 days ago): 50% completion (45/90)
+      for (let i = 180; i > 90; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 2 === 0) {
+          // Every other day
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      // Current 3 months (0-90 days ago): 75% completion (~68/90)
+      for (let i = 90; i >= 0; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 4 !== 0) {
+          // 3 out of 4 days
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      expect(trend).toBeGreaterThan(0);
+      expect(trend).toBeGreaterThanOrEqual(45);
+      expect(trend).toBeLessThanOrEqual(55); // Approximately 50% improvement
+    });
+
+    it('should return negative trend when current period is worse', () => {
+      const completedDates = new Set<string>();
+      const currentDate = new Date('2024-03-15');
+
+      // Previous 3 months: 80% completion
+      for (let i = 180; i > 90; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 5 !== 0) {
+          // 4 out of 5 days
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      // Current 3 months: 40% completion
+      for (let i = 90; i >= 0; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 5 < 2) {
+          // 2 out of 5 days
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      expect(trend).toBeLessThan(0);
+      expect(trend).toBeLessThanOrEqual(-45);
+      expect(trend).toBeGreaterThanOrEqual(-55); // Approximately 50% decline
+    });
+
+    it('should return null when insufficient previous data (less than 30 days)', () => {
+      const completedDates = new Set<string>();
+      const currentDate = new Date('2024-03-15');
+      const habitCreatedAt = currentDate.getTime() - 60 * 24 * 60 * 60 * 1000; // 60 days ago
+
+      // Only 60 days of data total, not enough for previous period
+      for (let i = 60; i >= 0; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 2 === 0) {
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      const trend = calculate3MonthTrend(completedDates, habitCreatedAt, currentDate);
+      expect(trend).toBeNull();
+    });
+
+    it('should return null when both periods have 0% completion', () => {
+      const completedDates = new Set<string>();
+      // No completions at all
+
+      const trend = calculate3MonthTrend(completedDates);
+      expect(trend).toBeNull();
+    });
+
+    it('should return 100% when starting from 0%', () => {
+      const completedDates = new Set<string>();
+      const currentDate = new Date('2024-03-15');
+
+      // Previous 3 months: 0% completion (none)
+      // (no dates added for previous period)
+
+      // Current 3 months: some completion
+      for (let i = 90; i >= 0; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 2 === 0) {
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      expect(trend).toBe(100);
+    });
+
+    it('should respect habitCreatedAt date', () => {
+      const completedDates = new Set<string>();
+      const currentDate = new Date('2024-03-15');
+      const habitCreatedAt = currentDate.getTime() - 100 * 24 * 60 * 60 * 1000; // 100 days ago
+
+      // Add completions only after creation date
+      for (let i = 100; i >= 0; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        if (i % 2 === 0) {
+          completedDates.add(format(date, 'yyyy-MM-dd'));
+        }
+      }
+
+      const trend = calculate3MonthTrend(completedDates, habitCreatedAt, currentDate);
+      // Should return null because not enough previous period data (only 10 days before current 3-month period)
+      expect(trend).toBeNull();
+    });
+  });
+
+  describe('Edge cases', () => {
+    it('should handle empty completedDates set', () => {
+      const completedDates = new Set<string>();
+      const trend = calculate3MonthTrend(completedDates);
+      expect(trend).toBeNull();
+    });
+
+    it('should calculate correctly with 100% completion in both periods', () => {
+      const completedDates = new Set<string>();
+      const currentDate = new Date('2024-03-15');
+
+      // Both periods: 100% completion
+      for (let i = 180; i >= 0; i--) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        completedDates.add(format(date, 'yyyy-MM-dd'));
+      }
+
+      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      expect(trend).toBe(0); // No change
     });
   });
 });

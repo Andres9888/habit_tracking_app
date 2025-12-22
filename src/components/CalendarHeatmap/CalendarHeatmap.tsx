@@ -6,7 +6,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, Text, Alert } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Calendar } from 'lucide-react-native';
+import { Calendar, TrendingUp, TrendingDown } from 'lucide-react-native';
 import type { CalendarHeatmapProps } from './types';
 import { CalendarGrid } from './CalendarGrid';
 import { InsightCard } from './InsightCard';
@@ -14,6 +14,7 @@ import { DayDetailTooltip } from './DayDetailTooltip';
 import {
   generateHorizontalGrid,
   calculate3MonthStats,
+  calculate3MonthTrend,
   calculateDayOfWeekStats,
   detectWeakDay,
   calculateStreakPosition,
@@ -44,6 +45,11 @@ export function CalendarHeatmap({
   const stats = useMemo(() => {
     return calculate3MonthStats(weeks);
   }, [weeks]);
+
+  // Calculate trend vs previous 3 months
+  const trend = useMemo(() => {
+    return calculate3MonthTrend(completedDates, habitCreatedAt);
+  }, [completedDates, habitCreatedAt]);
 
   // Calculate day-of-week statistics for insights
   const dayOfWeekStats = useMemo(() => {
@@ -146,7 +152,25 @@ export function CalendarHeatmap({
             <Text className="text-lg font-bold text-stone-800">Activity</Text>
           </View>
 
-          {/* Optional: Trend badge could go here in future */}
+          {/* Trend badge - only show if we have trend data */}
+          {trend !== null && (
+            <View
+              className={`flex-row items-center gap-1 px-2.5 py-1 rounded-full ${
+                trend >= 0 ? 'bg-emerald-100' : 'bg-amber-100'
+              }`}
+              accessible={true}
+              accessibilityLabel={`Trend: ${trend >= 0 ? 'up' : 'down'} ${Math.abs(trend)} percent compared to previous 3 months`}
+            >
+              {trend >= 0 ? (
+                <TrendingUp className="text-emerald-600" size={14} />
+              ) : (
+                <TrendingDown className="text-amber-600" size={14} />
+              )}
+              <Text className={`text-xs font-semibold ${trend >= 0 ? 'text-emerald-700' : 'text-amber-700'}`}>
+                {trend >= 0 ? '+' : ''}{trend}%
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Calendar Grid */}
