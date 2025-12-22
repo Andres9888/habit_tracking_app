@@ -400,6 +400,69 @@ function SectionCard({
 }
 
 /**
+ * AnimatedSection Component for Motivation Tab
+ * Wraps sections with staggered slide-up entrance animations
+ * Respects reduceMotion preference and only animates on first tab visit
+ *
+ * @param index - Section index (0-5) for stagger delay calculation
+ * @param shouldAnimate - Whether to run entrance animation (first visit only)
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function AnimatedSection({
+  children,
+  index,
+  shouldAnimate,
+  reduceMotion = false,
+}: {
+  children: React.ReactNode;
+  index: number;
+  shouldAnimate: boolean;
+  reduceMotion?: boolean;
+}) {
+  const STAGGER_DELAY = 80; // 80ms between sections per spec
+  const INITIAL_TRANSLATE_Y = 24; // Starting Y offset per spec
+
+  // Start at final values if not animating or reduce motion enabled
+  const translateY = useSharedValue(shouldAnimate && !reduceMotion ? INITIAL_TRANSLATE_Y : 0);
+  const opacity = useSharedValue(shouldAnimate && !reduceMotion ? 0 : 1);
+
+  useEffect(() => {
+    // Skip if not animating or reduce motion is enabled
+    if (!shouldAnimate || reduceMotion) {
+      translateY.value = 0;
+      opacity.value = 1;
+      return;
+    }
+
+    // Apply staggered entrance animation with Springs.gentle
+    const delay = index * STAGGER_DELAY;
+
+    // Delay the animation based on section index
+    const timeout = setTimeout(() => {
+      translateY.value = withSpring(0, {
+        damping: 28,    // Springs.gentle
+        stiffness: 180, // Springs.gentle
+        mass: 1.2,      // Springs.gentle - slight overshoot
+      });
+      opacity.value = withTiming(1, { duration: 300 });
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [shouldAnimate, reduceMotion, index, translateY, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.View style={animatedStyle}>
+      {children}
+    </Animated.View>
+  );
+}
+
+/**
  * Danger Zone Section Component (T4.3)
  * Groups destructive actions with red-tinted styling
  */
@@ -756,6 +819,7 @@ function ProgressTabContent({
 
 /**
  * Motivation Tab Content
+ * Features staggered entrance animations on first tab visit (T1)
  */
 function MotivationTabContent({
   affirmations,
@@ -786,6 +850,7 @@ function MotivationTabContent({
   shuffledAffirmationIndex,
   visionBoardItems,
   reduceMotion = false,
+  shouldAnimate = false,
 }: {
   affirmations: Doc<'affirmations'>[];
   affirmationFlipAnim: SharedValue<number>;
@@ -815,220 +880,236 @@ function MotivationTabContent({
   shuffledAffirmationIndex: number;
   visionBoardItems: Doc<'visionBoardItems'>[];
   reduceMotion?: boolean;
+  /** Whether to animate entrance (first tab visit only) */
+  shouldAnimate?: boolean;
 }) {
   return (
     <View className="gap-4">
-      {/* Your Why Section */}
-      <SectionCard
-        accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
-        onPress={onOpenWhyEditor}
-        className="border-l-4 border-rose-400"
-      >
-        <View className="flex-row items-start gap-3">
-          <View className="h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
-            <Heart className="text-rose-500" size={20} />
-          </View>
-          <View className="flex-1">
-            <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
-            {habit.why ? (
-              <Text className="text-sm text-stone-600">"{habit.why}"</Text>
-            ) : (
-              <Text className="text-sm italic text-stone-400">
-                What's driving you to build this habit?
-              </Text>
-            )}
-          </View>
-        </View>
-      </SectionCard>
-
-      {/* Your Identity Section */}
-      <SectionCard
-        accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
-        onPress={onOpenIdentityEditor}
-        className="border-l-4 border-violet-400"
-      >
-        <View className="flex-row items-start gap-3">
-          <View className="h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
-            <Sparkles className="text-violet-500" size={20} />
-          </View>
-          <View className="flex-1">
-            <View className="mb-1 flex-row items-center gap-2">
-              <Text className="font-semibold text-stone-800">Your Identity</Text>
-              <View className="rounded-full bg-violet-100 px-2 py-0.5">
-                <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
-              </View>
+      {/* Your Why Section - Index 0 */}
+      <AnimatedSection index={0} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard
+          accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
+          onPress={onOpenWhyEditor}
+          className="border-l-4 border-rose-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
+              <Heart className="text-rose-500" size={20} />
             </View>
-            {habitIdentity ? (
-              <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
-            ) : (
-              <Text className="text-sm italic text-stone-400">
-                Who are you becoming?
-              </Text>
-            )}
-          </View>
-        </View>
-      </SectionCard>
-
-      {/* Your Cue Section */}
-      <SectionCard
-        accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
-        onPress={onOpenCueEditor}
-        className="border-l-4 border-amber-400"
-      >
-        <View className="flex-row items-start gap-3">
-          <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
-            <Target className="text-amber-500" size={20} />
-          </View>
-          <View className="flex-1">
-            <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
-            {hasCue ? (
-              <>
-                {habitCueAfterBehavior && (
-                  <Text className="text-sm text-stone-600">
-                    After I {habitCueAfterBehavior}, I will {habit.name}
-                  </Text>
-                )}
-                {(habitCueLocation || habitCueTime) && (
-                  <View className="mt-2 flex-row flex-wrap gap-2">
-                    {habitCueLocation && (
-                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
-                        <MapPin className="text-amber-500" size={12} />
-                        <Text className="text-xs text-amber-700">{habitCueLocation}</Text>
-                      </View>
-                    )}
-                    {habitCueTime && (
-                      <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
-                        <Clock className="text-amber-500" size={12} />
-                        <Text className="text-xs text-amber-700">{habitCueTime}</Text>
-                      </View>
-                    )}
-                  </View>
-                )}
-              </>
-            ) : (
-              <Text className="text-sm italic text-stone-400">
-                When and where will you do this?
-              </Text>
-            )}
-          </View>
-        </View>
-      </SectionCard>
-
-      {/* Vision Board Section */}
-      <SectionCard>
-        <View className="mb-3 flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
-            <Eye className="text-stone-500" size={18} />
-            <Text className="font-semibold text-stone-800">Vision Board</Text>
-          </View>
-          <Pressable
-            accessibilityLabel="Add vision board card"
-            accessibilityRole="button"
-            className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
-            onPress={() => onOpenVisionBoardEditor()}
-          >
-            <Text className="text-xs font-semibold text-white">+ Add</Text>
-          </Pressable>
-        </View>
-        {visionBoardItems.length === 0 ? (
-          <View className="items-center rounded-xl bg-stone-50 py-6">
-            <Eye className="mb-2 text-stone-300" size={28} />
-            <Text className="text-center text-sm text-stone-500">
-              What are you building toward?
-            </Text>
-          </View>
-        ) : (
-          <View className="gap-3">
-            {visionBoardItems.slice(0, 2).map((item, index) => (
-              <AnimatedPressableCard
-                key={item._id}
-                accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
-                className="rounded-xl border border-stone-100 bg-stone-50/50 p-4"
-                onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
-                onPress={() => onOpenVisionBoardPreview(index)}
-                reduceMotion={reduceMotion}
-              >
-                <Text className="text-sm font-semibold text-stone-800">{item.title}</Text>
-                {item.body && (
-                  <Text className="mt-1 text-sm leading-5 text-stone-600" numberOfLines={3}>
-                    {item.body}
-                  </Text>
-                )}
-                <Text className="mt-2 text-xs text-stone-400">Tap to preview</Text>
-              </AnimatedPressableCard>
-            ))}
-            {visionBoardItems.length > 2 && (
-              <Pressable
-                accessibilityLabel="View all vision board cards"
-                accessibilityRole="button"
-                className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
-                onPress={() => onSetVisionBoardListOpen(true)}
-              >
-                <Text className="text-sm font-medium text-stone-600">
-                  View all ({visionBoardItems.length})
+            <View className="flex-1">
+              <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
+              {habit.why ? (
+                <Text className="text-sm text-stone-600">"{habit.why}"</Text>
+              ) : (
+                <Text className="text-sm italic text-stone-400">
+                  What's driving you to build this habit?
                 </Text>
-              </Pressable>
-            )}
+              )}
+            </View>
           </View>
-        )}
-      </SectionCard>
+        </SectionCard>
+      </AnimatedSection>
 
-      {/* Affirmations Section - T4.2: Shuffle feature */}
-      <AffirmationsSection
-        affirmations={affirmations}
-        affirmationFlipAnim={affirmationFlipAnim}
-        shuffledAffirmationIndex={shuffledAffirmationIndex}
-        onShuffleAffirmation={onShuffleAffirmation}
-        onOpenAffirmationEditor={onOpenAffirmationEditor}
-        onConfirmDeleteAffirmation={onConfirmDeleteAffirmation}
-        onSetAffirmationsListOpen={onSetAffirmationsListOpen}
-        reduceMotion={reduceMotion}
-      />
-
-      {/* Mental Exercises Section */}
-      <SectionCard>
-        <View className="mb-3 flex-row items-center gap-2">
-          <Brain className="text-stone-500" size={18} />
-          <Text className="font-semibold text-stone-800">Mental Exercises</Text>
-        </View>
-        <Text className="mb-4 text-sm text-stone-500">
-          Science-backed techniques to strengthen your resolve.
-        </Text>
-        <View className="gap-3">
-          <Pressable
-            accessibilityLabel="Open mental contrasting exercise"
-            accessibilityRole="button"
-            className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-cyan-50 to-teal-50 p-4 active:opacity-80"
-            onPress={onOpenVisualizationExercise}
-          >
-            <View className="flex-row items-center gap-3">
-              <Text className="text-xl">🎯</Text>
-              <Text className="text-sm font-medium text-stone-700">Mental Contrasting</Text>
+      {/* Your Identity Section - Index 1 */}
+      <AnimatedSection index={1} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard
+          accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
+          onPress={onOpenIdentityEditor}
+          className="border-l-4 border-violet-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+              <Sparkles className="text-violet-500" size={20} />
             </View>
-            <ChevronRight className="text-stone-400" size={18} />
-          </Pressable>
-          <Pressable
-            accessibilityLabel="Open visualization guide"
-            accessibilityRole="button"
-            className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-indigo-50 to-blue-50 p-4 active:opacity-80"
-            onPress={onOpenVisualizationGuide}
-          >
-            <View className="flex-row items-center gap-3">
-              <Text className="text-xl">✨</Text>
-              <Text className="text-sm font-medium text-stone-700">Visualization Guide</Text>
+            <View className="flex-1">
+              <View className="mb-1 flex-row items-center gap-2">
+                <Text className="font-semibold text-stone-800">Your Identity</Text>
+                <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                  <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
+                </View>
+              </View>
+              {habitIdentity ? (
+                <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
+              ) : (
+                <Text className="text-sm italic text-stone-400">
+                  Who are you becoming?
+                </Text>
+              )}
             </View>
-            <ChevronRight className="text-stone-400" size={18} />
-          </Pressable>
-        </View>
-      </SectionCard>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
 
-      {/* Notes Section - Story 1.9.3 */}
-      <HabitNotesSection
-        notes={habitNotes}
-        onAddNote={onAddNote}
-        onEditNote={onEditNote}
-        onViewAll={onViewAllNotes}
-      />
+      {/* Your Cue Section - Index 2 */}
+      <AnimatedSection index={2} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard
+          accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
+          onPress={onOpenCueEditor}
+          className="border-l-4 border-amber-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+              <Target className="text-amber-500" size={20} />
+            </View>
+            <View className="flex-1">
+              <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
+              {hasCue ? (
+                <>
+                  {habitCueAfterBehavior && (
+                    <Text className="text-sm text-stone-600">
+                      After I {habitCueAfterBehavior}, I will {habit.name}
+                    </Text>
+                  )}
+                  {(habitCueLocation || habitCueTime) && (
+                    <View className="mt-2 flex-row flex-wrap gap-2">
+                      {habitCueLocation && (
+                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
+                          <MapPin className="text-amber-500" size={12} />
+                          <Text className="text-xs text-amber-700">{habitCueLocation}</Text>
+                        </View>
+                      )}
+                      {habitCueTime && (
+                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
+                          <Clock className="text-amber-500" size={12} />
+                          <Text className="text-xs text-amber-700">{habitCueTime}</Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </>
+              ) : (
+                <Text className="text-sm italic text-stone-400">
+                  When and where will you do this?
+                </Text>
+              )}
+            </View>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Vision Board Section - Index 3 */}
+      <AnimatedSection index={3} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard>
+          <View className="mb-3 flex-row items-center justify-between">
+            <View className="flex-row items-center gap-2">
+              <Eye className="text-stone-500" size={18} />
+              <Text className="font-semibold text-stone-800">Vision Board</Text>
+            </View>
+            <Pressable
+              accessibilityLabel="Add vision board card"
+              accessibilityRole="button"
+              className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+              onPress={() => onOpenVisionBoardEditor()}
+            >
+              <Text className="text-xs font-semibold text-white">+ Add</Text>
+            </Pressable>
+          </View>
+          {visionBoardItems.length === 0 ? (
+            <View className="items-center rounded-xl bg-stone-50 py-6">
+              <Eye className="mb-2 text-stone-300" size={28} />
+              <Text className="text-center text-sm text-stone-500">
+                What are you building toward?
+              </Text>
+            </View>
+          ) : (
+            <View className="gap-3">
+              {visionBoardItems.slice(0, 2).map((item, index) => (
+                <AnimatedPressableCard
+                  key={item._id}
+                  accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
+                  className="rounded-xl border border-stone-100 bg-stone-50/50 p-4"
+                  onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
+                  onPress={() => onOpenVisionBoardPreview(index)}
+                  reduceMotion={reduceMotion}
+                >
+                  <Text className="text-sm font-semibold text-stone-800">{item.title}</Text>
+                  {item.body && (
+                    <Text className="mt-1 text-sm leading-5 text-stone-600" numberOfLines={3}>
+                      {item.body}
+                    </Text>
+                  )}
+                  <Text className="mt-2 text-xs text-stone-400">Tap to preview</Text>
+                </AnimatedPressableCard>
+              ))}
+              {visionBoardItems.length > 2 && (
+                <Pressable
+                  accessibilityLabel="View all vision board cards"
+                  accessibilityRole="button"
+                  className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
+                  onPress={() => onSetVisionBoardListOpen(true)}
+                >
+                  <Text className="text-sm font-medium text-stone-600">
+                    View all ({visionBoardItems.length})
+                  </Text>
+                </Pressable>
+              )}
+            </View>
+          )}
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Affirmations Section - Index 4 - T4.2: Shuffle feature */}
+      <AnimatedSection index={4} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <AffirmationsSection
+          affirmations={affirmations}
+          affirmationFlipAnim={affirmationFlipAnim}
+          shuffledAffirmationIndex={shuffledAffirmationIndex}
+          onShuffleAffirmation={onShuffleAffirmation}
+          onOpenAffirmationEditor={onOpenAffirmationEditor}
+          onConfirmDeleteAffirmation={onConfirmDeleteAffirmation}
+          onSetAffirmationsListOpen={onSetAffirmationsListOpen}
+          reduceMotion={reduceMotion}
+        />
+      </AnimatedSection>
+
+      {/* Mental Exercises Section - Index 5 */}
+      <AnimatedSection index={5} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard>
+          <View className="mb-3 flex-row items-center gap-2">
+            <Brain className="text-stone-500" size={18} />
+            <Text className="font-semibold text-stone-800">Mental Exercises</Text>
+          </View>
+          <Text className="mb-4 text-sm text-stone-500">
+            Science-backed techniques to strengthen your resolve.
+          </Text>
+          <View className="gap-3">
+            <Pressable
+              accessibilityLabel="Open mental contrasting exercise"
+              accessibilityRole="button"
+              className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-cyan-50 to-teal-50 p-4 active:opacity-80"
+              onPress={onOpenVisualizationExercise}
+            >
+              <View className="flex-row items-center gap-3">
+                <Text className="text-xl">🎯</Text>
+                <Text className="text-sm font-medium text-stone-700">Mental Contrasting</Text>
+              </View>
+              <ChevronRight className="text-stone-400" size={18} />
+            </Pressable>
+            <Pressable
+              accessibilityLabel="Open visualization guide"
+              accessibilityRole="button"
+              className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-indigo-50 to-blue-50 p-4 active:opacity-80"
+              onPress={onOpenVisualizationGuide}
+            >
+              <View className="flex-row items-center gap-3">
+                <Text className="text-xl">✨</Text>
+                <Text className="text-sm font-medium text-stone-700">Visualization Guide</Text>
+              </View>
+              <ChevronRight className="text-stone-400" size={18} />
+            </Pressable>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Notes Section - Index 6 - Story 1.9.3 */}
+      <AnimatedSection index={6} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <HabitNotesSection
+          notes={habitNotes}
+          onAddNote={onAddNote}
+          onEditNote={onEditNote}
+          onViewAll={onViewAllNotes}
+        />
+      </AnimatedSection>
     </View>
   );
 }
@@ -1221,10 +1302,35 @@ export default function HabitDetailScreen({
   // Tab state - use initialTab when provided
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
+  // Animation key - increments when modal opens to trigger animations
+  const [statsAnimationKey, setStatsAnimationKey] = useState(0);
+
+  // Track if Motivation tab has been visited (T1.5: only animate on first visit)
+  const [hasVisitedMotivation, setHasVisitedMotivation] = useState(
+    initialTab === 'motivation' // If starting on Motivation, mark as visited
+  );
+
+  // Determine if Motivation tab should animate (first visit only)
+  const shouldAnimateMotivation = activeTab === 'motivation' && !hasVisitedMotivation;
+
+  // Mark Motivation tab as visited when first switched to (T1.5)
+  useEffect(() => {
+    if (activeTab === 'motivation' && !hasVisitedMotivation) {
+      // Delay marking as visited to allow animation to trigger
+      const timeout = setTimeout(() => {
+        setHasVisitedMotivation(true);
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [activeTab, hasVisitedMotivation]);
+
   // Reset to initialTab when modal opens with a different tab
   useEffect(() => {
     if (visible) {
       setActiveTab(initialTab);
+      setStatsAnimationKey(prev => prev + 1); // Trigger stats animation
+      // Reset Motivation visited state when modal reopens (T1.5)
+      setHasVisitedMotivation(initialTab === 'motivation');
     }
   }, [visible, initialTab]);
 
@@ -1930,6 +2036,7 @@ export default function HabitDetailScreen({
           {/* Quick Stats Strip */}
           <View className="mb-4">
             <QuickStatsStrip
+              animationKey={statsAnimationKey}
               currentStreak={habit.currentStreak ?? 0}
               habitStrength={habitStrength}
               successRate={successRate}
@@ -2006,6 +2113,7 @@ export default function HabitDetailScreen({
                   shuffledAffirmationIndex={shuffledAffirmationIndex}
                   visionBoardItems={visionBoardItems}
                   reduceMotion={reduceMotion}
+                  shouldAnimate={shouldAnimateMotivation}
                 />
               </ScrollView>
             )}
