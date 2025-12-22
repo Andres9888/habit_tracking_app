@@ -183,3 +183,88 @@ jest.mock('clsx', () => {
     return args.flat().filter(Boolean).join(' ').trim();
   };
 });
+
+// Mock react-native-reanimated
+jest.mock('react-native-reanimated', () => {
+  const React = require('react');
+  const { View, Text, ScrollView, Pressable } = require('react-native');
+
+  // Create passthrough Animated components
+  const AnimatedView = View;
+  const AnimatedText = Text;
+  const AnimatedScrollView = ScrollView;
+
+  // For createAnimatedComponent
+  const createAnimatedComponent = (Component) => {
+    return Component;
+  };
+
+  return {
+    __esModule: true,
+    default: {
+      View: AnimatedView,
+      Text: AnimatedText,
+      ScrollView: AnimatedScrollView,
+      createAnimatedComponent,
+    },
+
+    // Also export as named
+    View: AnimatedView,
+    Text: AnimatedText,
+    ScrollView: AnimatedScrollView,
+    createAnimatedComponent,
+
+    // Animation functions
+    useSharedValue: (initial) => ({ value: initial }),
+    useAnimatedStyle: (cb) => {
+      const style = cb();
+      return style || {};
+    },
+    withTiming: (value) => value,
+    withSpring: (value) => value,
+    withDelay: (delay, value) => value,
+    withRepeat: (value) => value,
+    withSequence: (...values) => values[values.length - 1],
+    cancelAnimation: jest.fn(),
+    Easing: {
+      linear: (t) => t,
+      ease: (t) => t,
+      quad: (t) => t,
+      cubic: (t) => t,
+      in: (easing) => easing,
+      out: (easing) => easing,
+      inOut: (easing) => easing,
+    },
+
+    // Entering/Exiting animations
+    FadeIn: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      springify: jest.fn().mockReturnThis(),
+    },
+    FadeInDown: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      springify: jest.fn().mockReturnThis(),
+    },
+    FadeOut: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+    },
+    SlideInRight: {
+      duration: jest.fn().mockReturnThis(),
+    },
+    SlideOutLeft: {
+      duration: jest.fn().mockReturnThis(),
+    },
+    SlideInLeft: {
+      duration: jest.fn().mockReturnThis(),
+    },
+    SlideOutRight: {
+      duration: jest.fn().mockReturnThis(),
+    },
+
+    // runOnJS
+    runOnJS: (fn) => fn,
+  };
+});
