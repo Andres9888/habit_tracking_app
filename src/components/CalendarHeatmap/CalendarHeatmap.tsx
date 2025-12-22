@@ -11,11 +11,13 @@ import { format, addMonths, subMonths, isSameMonth } from 'date-fns';
 import type { CalendarHeatmapProps } from './types';
 import { CalendarGrid } from './CalendarGrid';
 import { InsightCard } from './InsightCard';
+import { DayDetailTooltip } from './DayDetailTooltip';
 import {
   generateMonthGrid,
   calculateMonthStats,
   calculateDayOfWeekStats,
   detectWeakDay,
+  calculateStreakPosition,
 } from './utils';
 
 export function CalendarHeatmap({
@@ -27,6 +29,8 @@ export function CalendarHeatmap({
 }: CalendarHeatmapProps) {
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right'>('left');
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
   const today = useMemo(() => new Date(), []);
 
   const isCurrentMonth = useMemo(
@@ -80,6 +84,21 @@ export function CalendarHeatmap({
     const monthName = format(currentMonth, 'MMMM yyyy');
     return `Activity calendar for ${monthName}. ${stats.completions} ${stats.completions === 1 ? 'day' : 'days'} completed, ${Math.round(stats.successRate)}% success rate.`;
   }, [currentMonth, stats]);
+
+  // Handle day press - show tooltip with details
+  const handleDayPress = useCallback((date: string, completed: boolean) => {
+    setSelectedDate(date);
+    setShowTooltip(true);
+
+    // Also call parent handler if provided
+    onDayPress?.(date, completed);
+  }, [onDayPress]);
+
+  // Calculate streak position for selected date
+  const streakPosition = useMemo(() => {
+    if (!selectedDate) return 0;
+    return calculateStreakPosition(selectedDate, completedDates, habitCreatedAt);
+  }, [selectedDate, completedDates, habitCreatedAt]);
 
   return (
     <Animated.View
@@ -154,7 +173,7 @@ export function CalendarHeatmap({
           currentMonth={currentMonth}
           swipeDirection={swipeDirection}
           habitColor={habitColor}
-          onDayPress={onDayPress}
+          onDayPress={handleDayPress}
           onSwipeRight={goToPreviousMonth}
           onSwipeLeft={goToNextMonth}
           isCurrentMonth={isCurrentMonth}
@@ -202,6 +221,16 @@ export function CalendarHeatmap({
           }}
         />
       </View>
+
+      {/* Day Detail Tooltip */}
+      <DayDetailTooltip
+        visible={showTooltip}
+        date={selectedDate}
+        completed={selectedDate ? completedDates.has(selectedDate) : false}
+        streakPosition={streakPosition}
+        onClose={() => setShowTooltip(false)}
+        habitColor={habitColor}
+      />
     </Animated.View>
   );
 }

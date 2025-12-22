@@ -510,10 +510,17 @@ function detectWeakDay(
 
 ### Phase 5: Polish & Interactions
 
-- [ ] **CALENDAR-5.1** Implement cell tap handler (optional for V1)
-  - Show tooltip with date details
-  - Display streak context ("Day 12 of your streak")
-  - Future: Allow editing past dates
+- [x] **CALENDAR-5.1** Implement cell tap handler (optional for V1)
+  - Show tooltip with date details ✓
+  - Display streak context ("Day 12 of your streak") ✓
+  - Future: Allow editing past dates (placeholder message added)
+  - Note: Implemented DayDetailTooltip modal component with:
+    - Date display with formatted date string
+    - Completion status with visual indicator
+    - Streak position calculation and display
+    - Placeholder for future editing functionality
+    - Proper accessibility labels and roles
+    - Integrated with CalendarHeatmap via onDayPress handler
 
 - [ ] **CALENDAR-5.2** Implement insight card actions
   - `onSetReminder`: Open time picker modal

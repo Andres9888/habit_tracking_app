@@ -232,3 +232,72 @@ export function detectWeakDay(
 
   return weak ? { day: weak.day, rate: weak.rate } : null;
 }
+
+/**
+ * Calculate the position of a date within the current streak
+ * Returns 0 if the date is not part of the current streak
+ */
+export function calculateStreakPosition(
+  targetDate: string,
+  completedDates: Set<string>,
+  habitCreatedAt?: number
+): number {
+  const target = parseISO(targetDate);
+  const today = new Date();
+
+  // If target date is not completed, it's not in the streak
+  if (!completedDates.has(targetDate)) {
+    return 0;
+  }
+
+  // If target is in the future, it's not in the streak
+  if (isAfter(target, today)) {
+    return 0;
+  }
+
+  // Find the current streak by working backwards from today
+  const todayStr = format(today, 'yyyy-MM-dd');
+  let currentStreakDates: string[] = [];
+
+  // Check if we have a valid streak (completed today or yesterday)
+  const yesterdayStr = format(new Date(today.getTime() - 24 * 60 * 60 * 1000), 'yyyy-MM-dd');
+
+  if (!completedDates.has(todayStr) && !completedDates.has(yesterdayStr)) {
+    // No active streak
+    return 0;
+  }
+
+  // Start from the most recent completion (today or yesterday)
+  let checkDate = completedDates.has(todayStr) ? todayStr : yesterdayStr;
+  currentStreakDates.push(checkDate);
+
+  // Walk backwards to build the streak
+  let checkDateObj = parseISO(checkDate);
+
+  while (true) {
+    // Go back one day
+    const prevDateObj = new Date(checkDateObj.getTime() - 24 * 60 * 60 * 1000);
+    const prevDateStr = format(prevDateObj, 'yyyy-MM-dd');
+
+    // Check if habit was created yet
+    if (habitCreatedAt) {
+      const createdDate = new Date(habitCreatedAt);
+      if (isBefore(prevDateObj, createdDate) && !isSameDay(prevDateObj, createdDate)) {
+        break;
+      }
+    }
+
+    // Check if previous day was completed
+    if (completedDates.has(prevDateStr)) {
+      currentStreakDates.unshift(prevDateStr); // Add to beginning
+      checkDateObj = prevDateObj;
+    } else {
+      // Streak broken
+      break;
+    }
+  }
+
+  // Find the target date's position in the streak (1-indexed)
+  const position = currentStreakDates.indexOf(targetDate);
+  return position >= 0 ? position + 1 : 0;
+}

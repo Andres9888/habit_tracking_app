@@ -6,6 +6,7 @@ export { CalendarHeatmap } from './CalendarHeatmap';
 export { CalendarGrid } from './CalendarGrid';
 export { DayCell } from './DayCell';
 export { InsightCard } from './InsightCard';
+export { DayDetailTooltip } from './DayDetailTooltip';
 
 export type {
   CalendarHeatmapProps,
@@ -21,6 +22,7 @@ export {
   calculateMonthStats,
   calculateDayOfWeekStats,
   detectWeakDay,
+  calculateStreakPosition,
   formatDateForAccessibility,
   getDayAccessibilityLabel,
   DAY_LABELS,
