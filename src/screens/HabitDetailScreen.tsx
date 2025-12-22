@@ -58,7 +58,9 @@ import {
   Zap,
   Shuffle,
   AlertTriangle,
+  Lightbulb,
 } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
 import type { Habit as HabitDoc, HabitTrackingEntry } from '../features/habits/types';
@@ -554,6 +556,86 @@ function CompletionCheckmark({
 }
 
 /**
+ * PulsingIcon Component for Empty State Icons (T3.1)
+ * Wraps icons with subtle opacity + scale pulse animation
+ *
+ * Design spec (T3 Improved Empty States):
+ * - Opacity: 0.5 → 1 → 0.5 (2000ms loop)
+ * - Scale: 1 → 1.05 → 1 (synced with opacity)
+ * - Only animates when reduceMotion is false
+ *
+ * @param children - The icon element to wrap
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function PulsingIcon({
+  children,
+  reduceMotion = false,
+}: {
+  children: React.ReactNode;
+  reduceMotion?: boolean;
+}) {
+  const opacity = useSharedValue(1);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      opacity.value = 1;
+      scale.value = 1;
+      return;
+    }
+
+    // Create infinite pulse animation
+    const pulseOpacity = () => {
+      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
+        if (finished) {
+          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
+            if (finished2) {
+              runOnJS(pulseOpacity)();
+            }
+          });
+        }
+      });
+    };
+
+    const pulseScale = () => {
+      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
+        if (finished) {
+          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
+            if (finished2) {
+              runOnJS(pulseScale)();
+            }
+          });
+        }
+      });
+    };
+
+    pulseOpacity();
+    pulseScale();
+
+    return () => {
+      // Cleanup - reset to default values
+      opacity.value = 1;
+      scale.value = 1;
+    };
+  }, [reduceMotion, opacity, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  if (reduceMotion) {
+    return <>{children}</>;
+  }
+
+  return (
+    <Animated.View style={animatedStyle}>
+      {children}
+    </Animated.View>
+  );
+}
+
+/**
  * Danger Zone Section Component (T4.3)
  * Groups destructive actions with red-tinted styling
  */
@@ -738,12 +820,23 @@ function AffirmationsSection({
         </View>
       </View>
       {affirmations.length === 0 ? (
-        <View className="items-center rounded-xl bg-stone-50 py-6">
-          <MessageCircle className="mb-2 text-stone-300" size={28} />
+        <LinearGradient
+          colors={['#ecfdf5', '#d1fae5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          className="items-center rounded-xl py-6"
+        >
+          <PulsingIcon reduceMotion={reduceMotion}>
+            <MessageCircle className="mb-2 text-emerald-300" size={28} />
+          </PulsingIcon>
           <Text className="text-center text-sm text-stone-500">
             What do you tell yourself?
           </Text>
-        </View>
+          <View className="mt-2 flex-row items-center gap-1">
+            <Plus className="text-emerald-600" size={12} />
+            <Text className="text-xs font-medium text-emerald-600">Add affirmation</Text>
+          </View>
+        </LinearGradient>
       ) : (
         <View className="gap-3">
           {/* Single affirmation card with flip animation */}
@@ -985,7 +1078,13 @@ function MotivationTabContent({
         >
           <View className="flex-row items-start gap-3">
             <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
-              <Heart className="text-rose-500" size={20} />
+              {habit.why ? (
+                <Heart className="text-rose-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Heart className="text-rose-500" size={20} />
+                </PulsingIcon>
+              )}
               <CompletionCheckmark
                 isVisible={!!habit.why}
                 sectionIndex={0}
@@ -994,13 +1093,24 @@ function MotivationTabContent({
               />
             </View>
             <View className="flex-1">
-              <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
               {habit.why ? (
-                <Text className="text-sm text-stone-600">"{habit.why}"</Text>
+                <>
+                  <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
+                  <Text className="text-sm text-stone-600">"{habit.why}"</Text>
+                </>
               ) : (
-                <Text className="text-sm italic text-stone-400">
-                  What's driving you to build this habit?
-                </Text>
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <Text className="font-semibold text-stone-800">Your Why</Text>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-rose-600" size={12} />
+                      <Text className="text-xs font-medium text-rose-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Define your deeper motivation
+                  </Text>
+                </>
               )}
             </View>
           </View>
@@ -1016,7 +1126,13 @@ function MotivationTabContent({
         >
           <View className="flex-row items-start gap-3">
             <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
-              <Sparkles className="text-violet-500" size={20} />
+              {habitIdentity ? (
+                <Sparkles className="text-violet-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Sparkles className="text-violet-500" size={20} />
+                </PulsingIcon>
+              )}
               <CompletionCheckmark
                 isVisible={!!habitIdentity}
                 sectionIndex={1}
@@ -1025,18 +1141,34 @@ function MotivationTabContent({
               />
             </View>
             <View className="flex-1">
-              <View className="mb-1 flex-row items-center gap-2">
-                <Text className="font-semibold text-stone-800">Your Identity</Text>
-                <View className="rounded-full bg-violet-100 px-2 py-0.5">
-                  <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
-                </View>
-              </View>
               {habitIdentity ? (
-                <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
+                <>
+                  <View className="mb-1 flex-row items-center gap-2">
+                    <Text className="font-semibold text-stone-800">Your Identity</Text>
+                    <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                      <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
+                </>
               ) : (
-                <Text className="text-sm italic text-stone-400">
-                  Who are you becoming?
-                </Text>
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <View className="flex-row items-center gap-2">
+                      <Text className="font-semibold text-stone-800">Your Identity</Text>
+                      <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                        <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
+                      </View>
+                    </View>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-violet-600" size={12} />
+                      <Text className="text-xs font-medium text-violet-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Who are you becoming?
+                  </Text>
+                </>
               )}
             </View>
           </View>
@@ -1052,7 +1184,13 @@ function MotivationTabContent({
         >
           <View className="flex-row items-start gap-3">
             <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
-              <Target className="text-amber-500" size={20} />
+              {hasCue ? (
+                <Target className="text-amber-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Target className="text-amber-500" size={20} />
+                </PulsingIcon>
+              )}
               <CompletionCheckmark
                 isVisible={hasCue}
                 sectionIndex={2}
@@ -1061,9 +1199,9 @@ function MotivationTabContent({
               />
             </View>
             <View className="flex-1">
-              <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
               {hasCue ? (
                 <>
+                  <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
                   {habitCueAfterBehavior && (
                     <Text className="text-sm text-stone-600">
                       After I {habitCueAfterBehavior}, I will {habit.name}
@@ -1087,9 +1225,25 @@ function MotivationTabContent({
                   )}
                 </>
               ) : (
-                <Text className="text-sm italic text-stone-400">
-                  When and where will you do this?
-                </Text>
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <Text className="font-semibold text-stone-800">Your Cue</Text>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-amber-600" size={12} />
+                      <Text className="text-xs font-medium text-amber-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Link this habit to an existing routine
+                  </Text>
+                  {/* T3.2: Helpful tip for empty Cue section */}
+                  <View className="mt-2 flex-row items-center gap-1.5 rounded-lg bg-amber-50 px-2 py-1.5">
+                    <Lightbulb className="text-amber-600" size={12} />
+                    <Text className="flex-1 text-xs text-amber-700">
+                      Habits with cues are 2x more likely to stick
+                    </Text>
+                  </View>
+                </>
               )}
             </View>
           </View>
@@ -1114,12 +1268,23 @@ function MotivationTabContent({
             </Pressable>
           </View>
           {visionBoardItems.length === 0 ? (
-            <View className="items-center rounded-xl bg-stone-50 py-6">
-              <Eye className="mb-2 text-stone-300" size={28} />
+            <LinearGradient
+              colors={['#faf5ff', '#f3e8ff']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="items-center rounded-xl py-6"
+            >
+              <PulsingIcon reduceMotion={reduceMotion}>
+                <Eye className="mb-2 text-violet-300" size={28} />
+              </PulsingIcon>
               <Text className="text-center text-sm text-stone-500">
                 What are you building toward?
               </Text>
-            </View>
+              <View className="mt-2 flex-row items-center gap-1">
+                <Plus className="text-violet-600" size={12} />
+                <Text className="text-xs font-medium text-violet-600">Add a vision</Text>
+              </View>
+            </LinearGradient>
           ) : (
             <View className="gap-3">
               {visionBoardItems.slice(0, 2).map((item, index) => (

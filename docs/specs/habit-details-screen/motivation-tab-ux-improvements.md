@@ -33,10 +33,15 @@ See: `.superdesign/design_iterations/motivation_tab_ux_1.html`
   - **Completed**: `BASE_CHECKMARK_DELAY = 600` plus staggered delay based on section index (0/80/160ms)
 
 ### T3: Improved Empty States
-- [ ] T3.1: Add subtle pulse animation to empty section icons
-- [ ] T3.2: Add helpful tip text for empty Cue section ("Habits with cues are 2x more likely to stick")
-- [ ] T3.3: Add "Set up" action hint with plus icon for empty sections
-- [ ] T3.4: Use gradient backgrounds for empty state containers (subtle shimmer optional)
+- [x] T3.1: Add subtle pulse animation to empty section icons
+  - **Completed**: Created `PulsingIcon` component in `HabitDetailScreen.tsx:558-636` with opacity (0.5→1) and scale (1→1.05) pulse animation using 2000ms loop
+  - Applied to Your Why, Your Identity, Your Cue icons when sections are empty, Vision Board and Affirmations empty state icons
+- [x] T3.2: Add helpful tip text for empty Cue section ("Habits with cues are 2x more likely to stick")
+  - **Completed**: Added Lightbulb icon + tip text in amber-colored badge: "Habits with cues are 2x more likely to stick" at `HabitDetailScreen.tsx:1228-1234`
+- [x] T3.3: Add "Set up" action hint with plus icon for empty sections
+  - **Completed**: Added "Set up" hints with Plus icon to Your Why (rose-600), Your Identity (violet-600), Your Cue (amber-600), Vision Board ("Add a vision" in violet-600), and Affirmations ("Add affirmation" in emerald-600)
+- [x] T3.4: Use gradient backgrounds for empty state containers (subtle shimmer optional)
+  - **Completed**: Added LinearGradient backgrounds to Vision Board empty state (#faf5ff → #f3e8ff, violet gradient) and Affirmations empty state (#ecfdf5 → #d1fae5, emerald gradient)
 
 ### T4: Section Card Press Feedback
 - [ ] T4.1: Add scale animation on press (0.98) using `Springs.button`
