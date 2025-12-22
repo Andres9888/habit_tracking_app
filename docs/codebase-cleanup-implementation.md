@@ -480,9 +480,11 @@ checked={localSettings[setting.key] as boolean}
 
 ### Task 2.7: Remove Invalid AnimatedPressable Props
 
-- [ ] Find AnimatedPressable with delayPressIn prop
-- [ ] Either remove prop OR wrap with regular Pressable
-- [ ] Choose approach based on importance of delayPressIn
+- [x] Find AnimatedPressable with delayPressIn prop
+- [x] Either remove prop OR wrap with regular Pressable
+- [x] Choose approach based on importance of delayPressIn
+
+**Completed:** Removed unsupported `delayPressIn` prop from AnimatedPressable component. TypeScript errors reduced from 3 to 2.
 
 **File:** `src/components/MiniTemplateCard.tsx`
 
@@ -527,13 +529,15 @@ checked={localSettings[setting.key] as boolean}
 ```
 
 **Implementation:**
-- [ ] Open `src/components/MiniTemplateCard.tsx`
-- [ ] Find AnimatedPressable with delayPressIn (around line 200)
-- [ ] Choose Option 1 (remove prop) or Option 2 (wrap)
-- [ ] Apply fix
-- [ ] Save file
-- [ ] Run `tsc -p tsconfig.app.json --noEmit` to verify
-- [ ] Commit with message: "Remove invalid AnimatedPressable delayPressIn prop (TS2322)"
+- [x] Open `src/components/MiniTemplateCard.tsx`
+- [x] Find AnimatedPressable with delayPressIn (around line 200)
+- [x] Choose Option 1 (remove prop) or Option 2 (wrap)
+- [x] Apply fix
+- [x] Save file
+- [x] Run `tsc -p tsconfig.app.json --noEmit` to verify
+- [x] Commit with message: "Remove invalid AnimatedPressable delayPressIn prop (TS2322)"
+
+**Decision:** Chose Option 1 (remove prop) as the 50ms delay is minimal and removing it maintains the animated behavior without additional wrapper complexity.
 
 ### Task 2.8: Verify Zero TypeScript Errors
 
