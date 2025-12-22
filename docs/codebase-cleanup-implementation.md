@@ -414,12 +414,14 @@ const phaseColor = getPhaseColor(currentPhase ?? undefined);
 ```
 
 **Implementation:**
-- [ ] Open `src/components/PhaseTag/PhaseTag.tsx`
-- [ ] Find `getPhaseColor(currentPhase)` (around line 27)
-- [ ] Add `?? undefined` to normalize null
-- [ ] Save file
-- [ ] Run `tsc -p tsconfig.app.json --noEmit` to verify
-- [ ] Commit with message: "Fix null vs undefined type mismatch in PhaseTag (TS2345)"
+- [x] Open `src/components/PhaseTag/PhaseTag.tsx`
+- [x] Find `getPhaseColor(currentPhase)` (around line 27)
+- [x] Add `?? undefined` to normalize null
+- [x] Save file
+- [x] Run `tsc -p tsconfig.app.json --noEmit` to verify
+- [x] Commit with message: "Fix null vs undefined type mismatch in PhaseTag (TS2345)"
+
+**Agent Note:** This task was already completed in a previous session. The code on line 27 already contains `getPhaseInfo(resolvedPhase ?? undefined)`. Verified no TypeScript errors related to PhaseTag.tsx. Current TS error count: 6.
 
 ### Task 2.5: Fix AsyncStorage Boolean Parsing
 
