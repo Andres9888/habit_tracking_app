@@ -2,6 +2,7 @@ import { useSignIn } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -49,6 +50,8 @@ export default function SignInScreen() {
         <Text className='mb-10 text-base text-slate-500'>
           Sign in to continue tracking your habits
         </Text>
+
+        <SocialLoginButtons />
 
         <View className='gap-6'>
           <View className='gap-2'>

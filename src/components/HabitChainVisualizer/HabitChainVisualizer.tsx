@@ -348,9 +348,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           }}
         >
           {completionIcon === 'checkbox' ? (
-            <Check color="#ffffff" size={18} strokeWidth={2.25} />
+            <Check color="#ffffff" size={20} strokeWidth={2.25} />
           ) : (
-            <ChainLinkIcon color="#ffffff" size={18} variant="stroke" />
+            <ChainLinkIcon color="#ffffff" size={20} variant="stroke" />
           )}
         </Animated.View>
       </AnimatedPressable>

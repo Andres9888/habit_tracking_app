@@ -25,6 +25,7 @@ import type * as habitStrength from "../habitStrength.js";
 import type * as habits from "../habits.js";
 import type * as http from "../http.js";
 import type * as initializeAllHabitsStrength from "../initializeAllHabitsStrength.js";
+import type * as migrateHabitsToUser from "../migrateHabitsToUser.js";
 import type * as migration from "../migration.js";
 import type * as notes from "../notes.js";
 import type * as predictions from "../predictions.js";
@@ -36,6 +37,7 @@ import type * as streakUtils from "../streakUtils.js";
 import type * as templates from "../templates.js";
 import type * as testStrength from "../testStrength.js";
 import type * as tracking from "../tracking.js";
+import type * as users from "../users.js";
 import type * as visionBoard from "../visionBoard.js";
 
 /**
@@ -59,6 +61,7 @@ declare const fullApi: ApiFromModules<{
   habits: typeof habits;
   http: typeof http;
   initializeAllHabitsStrength: typeof initializeAllHabitsStrength;
+  migrateHabitsToUser: typeof migrateHabitsToUser;
   migration: typeof migration;
   notes: typeof notes;
   predictions: typeof predictions;
@@ -70,6 +73,7 @@ declare const fullApi: ApiFromModules<{
   templates: typeof templates;
   testStrength: typeof testStrength;
   tracking: typeof tracking;
+  users: typeof users;
   visionBoard: typeof visionBoard;
 }>;
 export declare const api: FilterApi<

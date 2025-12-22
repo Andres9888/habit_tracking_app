@@ -31,7 +31,16 @@ export const create = mutation({
     reminderTime: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Get all existing habits to determine next order value
+    // Get authenticated user (optional for now during auth debugging)
+    const identity = await ctx.auth.getUserIdentity();
+    const userId = identity?.subject;
+
+    console.log('habits.create: identity =', identity ? 'PRESENT' : 'MISSING');
+    if (identity) {
+      console.log('habits.create: userId =', userId);
+    }
+
+    // Get all existing habits for this user to determine next order value
     const allHabits = await ctx.db.query('habits').collect();
     let maxOrder = -1;
     for (const habit of allHabits) {
@@ -42,6 +51,7 @@ export const create = mutation({
     }
 
     return await ctx.db.insert('habits', {
+      userId, // Store Clerk user ID if available
       bestStreak: 0,
       createdAt: Date.now(),
       // Cue - Implementation Intention (Story 1.9.5)
@@ -462,12 +472,24 @@ export const get = query({
 export const list = query({
   args: {},
   handler: async (ctx) => {
+    // Get authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      // Not authenticated - return empty list
+      return [];
+    }
+
+    // Query habits directly by Clerk ID - no need to wait for user record creation
     const habits = await ctx.db
       .query('habits')
       .filter((q) =>
         q.and(
           q.neq(q.field('archived'), true),
-          q.neq(q.field('paused'), true)
+          q.neq(q.field('paused'), true),
+          q.or(
+            q.eq(q.field('userId'), identity.subject), // User's habits (matching Clerk ID)
+            q.eq(q.field('userId'), undefined) // Legacy habits without userId (for migration)
+          )
         )
       )
       .collect();

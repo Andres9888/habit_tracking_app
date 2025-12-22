@@ -1,8 +1,8 @@
 export default {
   providers: [
     {
+      domain: 'https://vital-elf-64.clerk.accounts.dev',
       applicationID: 'convex',
-      domain: process.env.CONVEX_SITE_URL,
     },
   ],
 };

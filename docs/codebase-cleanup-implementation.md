@@ -86,10 +86,12 @@ ls -lh ~/Desktop/backups/habit-app/
 
 ### Task 1.1: Generate Duplicate Inventory
 
-- [ ] Find all numbered duplicate files (" 2.tsx", " 3.tsx", " 4.tsx")
-- [ ] Save inventory to docs/specs/
-- [ ] Display count by suffix pattern
-- [ ] Review inventory file for accuracy
+- [x] Find all numbered duplicate files (" 2.tsx", " 3.tsx", " 4.tsx")
+- [x] Save inventory to docs/specs/
+- [x] Display count by suffix pattern
+- [x] Review inventory file for accuracy
+
+**Completed:** Generated inventory of 337 duplicate files (161 with " 2.*", 90 with " 3.*", 86 with " 4.*"). Inventory saved to `docs/specs/duplicates-inventory.txt`.
 
 ```bash
 find src worktrees -type f \( \

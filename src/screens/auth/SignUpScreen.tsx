@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
 import { FormInput } from './components/FormInput';
 import { SubmitButton } from './components/SubmitButton';
 import { VerificationView } from './components/VerificationView';
@@ -35,6 +36,8 @@ export default function SignUpScreen() {
         <Text className='mb-10 text-base text-slate-500'>
           Start tracking your habits today
         </Text>
+
+        <SocialLoginButtons />
 
         <View className='gap-6'>
           <FormInput
