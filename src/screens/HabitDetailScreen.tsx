@@ -19,8 +19,11 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
-import { HabitStrengthSection } from '../components/HabitStrengthSection';
-import { InsightsSection } from '../components/InsightsSection';
+// DEPRECATED: These are kept for reference but no longer used in this file.
+// The new ProgressSection combines HabitStrengthSection + InsightsSection into 3 always-visible cards.
+// import { HabitStrengthSection } from '../components/HabitStrengthSection';
+// import { InsightsSection } from '../components/InsightsSection';
+import { ProgressSection } from '../components/ProgressSection';
 import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { CalendarHeatmap } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
@@ -51,7 +54,7 @@ import {
   Bell,
   CalendarDays,
   StickyNote,
-  BarChart3,
+  // BarChart3 removed - was used by old InsightsSection header
   User,
   Heart,
   Check,
@@ -910,32 +913,23 @@ function ProgressTabContent({
   bestStreak,
   completedDates,
   currentStreak,
-  daysTracking,
   habit,
   habitCreatedAt,
   isCompletedToday,
   lastSevenDays,
   strengthPercent,
-  successRate,
-  totalCompletions,
   tracking,
 }: {
   bestStreak: number;
   completedDates: Set<string>;
   currentStreak: number;
-  daysTracking: number;
   habit: Habit;
   habitCreatedAt: number | undefined;
   isCompletedToday: boolean;
   lastSevenDays: boolean[];
   strengthPercent: number;
-  successRate: number;
-  totalCompletions: number;
   tracking: HabitTrackingEntry[];
 }) {
-  const [isStrengthExpanded, setIsStrengthExpanded] = useState(false);
-  const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
-
   return (
     <View className="gap-4">
       {/* Streak Chain Section */}
@@ -957,72 +951,37 @@ function ProgressTabContent({
         }}
       />
 
-      {/* Habit Strength Section */}
-      <SectionCard
-        accessibilityLabel={isStrengthExpanded ? 'Collapse habit strength section' : 'Expand habit strength section'}
-        onPress={() => setIsStrengthExpanded((prev) => !prev)}
-      >
-        <View className="flex-row items-center justify-between">
-          <View>
-            <Text className="text-lg font-semibold text-stone-800">Habit Strength</Text>
-            <Text className="text-sm text-stone-500">
-              {Math.round(strengthPercent)}% · {habit.strengthLevel ?? 'starting'}
-            </Text>
-          </View>
-          <ChevronRight
-            className={clsx('text-stone-400', isStrengthExpanded && 'rotate-90')}
-            size={20}
-          />
-        </View>
-      </SectionCard>
-
-      {isStrengthExpanded && (
-        <HabitStrengthSection
-          onInfoPress={() => {
-            Alert.alert(
-              'What is Habit Strength?',
-              'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
-              '🔥 Current Streak - Consecutive days completed\n\n' +
-              '📊 Success Rate - % of days you\'ve completed\n\n' +
-              '📅 Consistency - How regular your habit is\n\n' +
-              'The stronger your habit, the easier it becomes to maintain!',
-              [{ text: 'Got it' }]
-            );
-          }}
-          strength={strengthPercent}
-        />
-      )}
-
-      {/* Insights Section */}
-      <SectionCard
-        accessibilityLabel={isInsightsExpanded ? 'Collapse insights section' : 'Expand insights section'}
-        onPress={() => setIsInsightsExpanded((prev) => !prev)}
-      >
-        <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
-            <BarChart3 className="text-stone-500" size={20} />
-            <View>
-              <Text className="text-lg font-semibold text-stone-800">Insights</Text>
-              <Text className="text-xs text-stone-500">Patterns & personal bests</Text>
-            </View>
-          </View>
-          <ChevronRight
-            className={clsx('text-stone-400', isInsightsExpanded && 'rotate-90')}
-            size={20}
-          />
-        </View>
-      </SectionCard>
-
-      {isInsightsExpanded && (
-        <InsightsSection
-          habitId={habit._id}
-          tracking={tracking}
-          habitCreatedAt={habitCreatedAt}
-          totalCompletions={totalCompletions}
-          successRate={successRate}
-          daysTracking={daysTracking}
-        />
-      )}
+      {/* Consolidated Progress Section - replaces old collapsible HabitStrengthSection and InsightsSection */}
+      <ProgressSection
+        tracking={tracking}
+        habitCreatedAt={habitCreatedAt}
+        strength={strengthPercent}
+        onInfoPress={() => {
+          Alert.alert(
+            'What is Habit Strength?',
+            'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
+            '🔥 Current Streak - Consecutive days completed\n\n' +
+            '📊 Success Rate - % of days you\'ve completed\n\n' +
+            '📅 Consistency - How regular your habit is\n\n' +
+            'The stronger your habit, the easier it becomes to maintain!',
+            [{ text: 'Got it' }]
+          );
+        }}
+        onWorstDayPress={() => {
+          Alert.alert(
+            'Improve Your Weak Days',
+            'Tips to boost your consistency:\n\n' +
+            '⏰ Set a reminder for this specific day\n\n' +
+            '📍 Stack it after an existing habit\n\n' +
+            '🎯 Start with a smaller version on tough days\n\n' +
+            '🤝 Find an accountability partner',
+            [{ text: 'Got it' }]
+          );
+        }}
+        onSeeAllPress={() => {
+          // Future: Navigate to full analytics screen
+        }}
+      />
     </View>
   );
 }
@@ -2391,14 +2350,11 @@ export default function HabitDetailScreen({
                   bestStreak={habit.bestStreak ?? 0}
                   completedDates={completedDates}
                   currentStreak={habit.currentStreak ?? 0}
-                  daysTracking={daysTracking}
                   habit={habit}
                   habitCreatedAt={habitCreatedAt}
                   isCompletedToday={isCompletedToday}
                   lastSevenDays={lastSevenDays}
                   strengthPercent={strengthPercent}
-                  successRate={successRate}
-                  totalCompletions={totalCompletions}
                   tracking={tracking}
                 />
               </ScrollView>
