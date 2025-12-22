@@ -1565,6 +1565,9 @@ export default function HabitDetailScreen({
     initialTab === 'motivation' // If starting on Motivation, mark as visited
   );
 
+  // Why Editor state - declared here to be available for useEffect below
+  const [isWhyEditorOpen, setIsWhyEditorOpen] = useState(false);
+
   // Determine if Motivation tab should animate (first visit only)
   const shouldAnimateMotivation = activeTab === 'motivation' && !hasVisitedMotivation;
 
@@ -1655,7 +1658,6 @@ export default function HabitDetailScreen({
   // Modal states
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
   const [showVisualizationExercise, setShowVisualizationExercise] = useState(false);
-  const [isWhyEditorOpen, setIsWhyEditorOpen] = useState(false);
   const [whyDraft, setWhyDraft] = useState('');
   const [isIdentityEditorOpen, setIsIdentityEditorOpen] = useState(false);
   const [identityDraft, setIdentityDraft] = useState('');
