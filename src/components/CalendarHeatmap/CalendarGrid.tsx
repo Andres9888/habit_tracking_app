@@ -1,48 +1,29 @@
 /**
  * CalendarGrid Component
- * Displays the calendar grid with day cells
+ * Displays the calendar grid with day cells in horizontal GitHub-style layout
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated, {
-  SlideInRight,
-  SlideOutLeft,
-  SlideInLeft,
-  SlideOutRight,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { View, Text, ScrollView } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { DayCell } from './DayCell';
 import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
-import type { CalendarDay } from './types';
+import type { CalendarDay, MonthLabel } from './types';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface CalendarGridProps {
-  /** 2D array of calendar days (weeks x days) */
-  grid: CalendarDay[][];
+  /** 2D array of calendar days organized as weeks (columns) */
+  weeks: CalendarDay[][];
 
-  /** Current month date for animation key */
-  currentMonth: Date;
-
-  /** Swipe direction for animations ('left' or 'right') */
-  swipeDirection: 'left' | 'right';
+  /** Month labels with their week indices */
+  monthLabels: MonthLabel[];
 
   /** Custom habit color (hex) */
   habitColor?: string;
 
   /** Callback when a day cell is pressed */
   onDayPress?: (date: string, completed: boolean) => void;
-
-  /** Callback when user swipes right (previous month) */
-  onSwipeRight?: () => void;
-
-  /** Callback when user swipes left (next month) */
-  onSwipeLeft?: () => void;
-
-  /** Whether forward navigation is disabled (current month) */
-  isCurrentMonth?: boolean;
 
   /** Set of completed dates for streak calculation */
   completedDates: Set<string>;
@@ -51,113 +32,107 @@ export interface CalendarGridProps {
   habitCreatedAt?: number;
 }
 
-// Swipe configuration
-const SWIPE_THRESHOLD = 50; // Minimum distance to trigger navigation
-const SWIPE_VELOCITY_THRESHOLD = 300; // Minimum velocity to trigger navigation
-
 export function CalendarGrid({
-  grid,
-  currentMonth,
-  swipeDirection,
+  weeks,
+  monthLabels,
   habitColor,
   onDayPress,
-  onSwipeRight,
-  onSwipeLeft,
-  isCurrentMonth = false,
   completedDates,
   habitCreatedAt,
 }: CalendarGridProps) {
   const reduceMotion = useReduceMotion();
+  const scrollViewRef = React.useRef<ScrollView>(null);
 
-  // Shared value for tracking horizontal translation during swipe
-  const translateX = useSharedValue(0);
-
-  // Pan gesture for horizontal swipe navigation
-  const panGesture = React.useMemo(
-    () =>
-      Gesture.Pan()
-        .activeOffsetX([-15, 15]) // Activate only for horizontal swipes
-        .failOffsetY([-15, 15]) // Fail if vertical movement is detected (allow scrolling)
-        .onUpdate((event) => {
-          // Constrain translation for visual feedback
-          const maxTranslation = 100;
-          translateX.value = Math.max(
-            -maxTranslation,
-            Math.min(maxTranslation, event.translationX)
-          );
-        })
-        .onEnd((event) => {
-          const shouldNavigate =
-            Math.abs(event.translationX) > SWIPE_THRESHOLD ||
-            Math.abs(event.velocityX) > SWIPE_VELOCITY_THRESHOLD;
-
-          if (shouldNavigate) {
-            if (event.translationX > 0 && onSwipeRight) {
-              // Swiped right → go to previous month
-              onSwipeRight();
-            } else if (event.translationX < 0 && !isCurrentMonth && onSwipeLeft) {
-              // Swiped left → go to next month (only if not current month)
-              onSwipeLeft();
-            }
-          }
-
-          // Reset translation with spring animation
-          translateX.value = 0;
-        }),
-    [isCurrentMonth, onSwipeRight, onSwipeLeft, translateX]
-  );
-
-  // Animated style for swipe feedback
-  const swipeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value * 0.3 }], // Subtle parallax effect
-  }));
+  // Auto-scroll to show recent weeks on mount
+  React.useEffect(() => {
+    // Delay scroll to ensure layout is complete
+    const timer = setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: !reduceMotion });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [reduceMotion]);
 
   return (
     <View>
-      {/* Day of week labels */}
-      <View
-        className="flex-row mb-2"
-        accessible={true}
-        accessibilityRole="none"
-        accessibilityLabel="Days of the week: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"
-      >
-        {DAY_LABELS.map((label, index) => (
-          <View
-            key={index}
-            className="flex-1 items-center"
-            accessible={true}
-            accessibilityRole="text"
-            accessibilityLabel={DAY_NAMES_FULL[index]}
-          >
-            <Text className="text-xs font-medium text-stone-400" importantForAccessibility="no-hide-descendants">
-              {label}
-            </Text>
+      {/* Month Labels Row */}
+      <View className="flex-row mb-2">
+        {/* Empty space above day labels */}
+        <View className="w-5 mr-2" />
+
+        {/* Month labels above week columns */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={false}
+          className="flex-row"
+          contentContainerStyle={{ paddingRight: 8 }}
+        >
+          <View className="flex-row">
+            {monthLabels.map((monthLabel, idx) => {
+              // Calculate width based on weeks until next month or end
+              const nextMonthIndex = monthLabels[idx + 1]?.weekIndex || weeks.length;
+              const weeksInMonth = nextMonthIndex - monthLabel.weekIndex;
+              const width = weeksInMonth * 23; // 20px cell + 3px gap
+
+              return (
+                <View
+                  key={`${monthLabel.label}-${monthLabel.weekIndex}`}
+                  style={{ width }}
+                  className="items-start"
+                >
+                  <Text className="text-[10px] font-medium text-stone-400">
+                    {monthLabel.label}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
-        ))}
+        </ScrollView>
       </View>
 
-      {/* Calendar Grid with Swipe Gesture */}
-      <GestureDetector gesture={panGesture}>
-        <Animated.View style={swipeAnimatedStyle}>
-          <Animated.View
-            key={currentMonth.toISOString()}
-            entering={
-              reduceMotion
-                ? undefined
-                : swipeDirection === 'left'
-                  ? SlideInRight.duration(200)
-                  : SlideInLeft.duration(200)
-            }
-            exiting={
-              reduceMotion
-                ? undefined
-                : swipeDirection === 'left'
-                  ? SlideOutLeft.duration(200)
-                  : SlideOutRight.duration(200)
-            }
+      {/* Horizontal Layout: Day labels on left, week columns scrollable */}
+      <View className="flex-row">
+        {/* Day of week labels column (sticky left) */}
+        <View
+          className="mr-2"
+          accessible={true}
+          accessibilityRole="none"
+          accessibilityLabel="Days of the week: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"
+        >
+          {DAY_LABELS.map((label, index) => (
+            <View
+              key={index}
+              className="h-5 w-5 items-center justify-center mb-[3px]"
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel={DAY_NAMES_FULL[index]}
+            >
+              <Text className="text-xs font-medium text-stone-400" importantForAccessibility="no-hide-descendants">
+                {label}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Scrollable week columns with edge fade gradients */}
+        <View className="flex-1 relative">
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="flex-row"
+            contentContainerStyle={{ paddingRight: 8 }}
           >
-            {grid.map((week, weekIndex) => (
-              <View key={weekIndex} className="flex-row gap-1 mb-1">
+            {weeks.map((week, weekIndex) => (
+              <Animated.View
+                key={weekIndex}
+                className="flex-col gap-[3px] mr-[3px]"
+                entering={
+                  reduceMotion
+                    ? undefined
+                    : FadeIn.delay((weeks.length - weekIndex) * 15).duration(200)
+                }
+              >
                 {week.map((day, dayIndex) => (
                   <DayCell
                     key={day.date || `empty-${weekIndex}-${dayIndex}`}
@@ -169,11 +144,29 @@ export function CalendarGrid({
                     habitCreatedAt={habitCreatedAt}
                   />
                 ))}
-              </View>
+              </Animated.View>
             ))}
-          </Animated.View>
-        </Animated.View>
-      </GestureDetector>
+          </ScrollView>
+
+          {/* Left edge fade */}
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            pointerEvents="none"
+            className="absolute left-0 top-0 bottom-0 w-4"
+          />
+
+          {/* Right edge fade */}
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            pointerEvents="none"
+            className="absolute right-0 top-0 bottom-0 w-4"
+          />
+        </View>
+      </View>
     </View>
   );
 }

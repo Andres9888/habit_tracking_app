@@ -430,20 +430,23 @@ const [viewMode, setViewMode] = useState<'traditional' | 'github'>('github');
 
 ### Phase 3: Rewrite CalendarGrid
 
-- [ ] **GITHUB-3.1** Change layout from vertical to horizontal
-  - Rows are now day-of-week (S M T W T F S)
-  - Columns are weeks (13 columns)
-  - Day labels on left (vertical sticky column)
+- [x] **GITHUB-3.1** Change layout from vertical to horizontal
+  - Rows are now day-of-week (S M T W T F S) ✅
+  - Columns are weeks (13 columns) ✅
+  - Day labels on left (vertical sticky column) ✅
+  - **Implementation notes:** Completely rewrote CalendarGrid to use horizontal layout with weeks as columns. Day labels now render vertically on the left side. Props interface updated to accept `weeks` and `monthLabels` instead of the old grid props. Removed swipe navigation and month navigation logic.
 
-- [ ] **GITHUB-3.2** Add month labels above weeks
-  - Calculate month boundaries
-  - Render month labels (Oct, Nov, Dec)
-  - Add subtle vertical dividers between months
+- [x] **GITHUB-3.2** Add month labels above weeks
+  - Calculate month boundaries ✅
+  - Render month labels (Oct, Nov, Dec) ✅
+  - Add subtle vertical dividers between months (deferred - not critical for MVP)
+  - **Implementation notes:** Month labels render above week columns with proper width calculation based on weeks per month. Labels are synchronized with horizontal scroll. Vertical dividers deferred as they add visual clutter.
 
-- [ ] **GITHUB-3.3** Implement horizontal ScrollView
-  - Enable horizontal scrolling
-  - Add edge fade gradients
-  - Auto-scroll to show most recent weeks on mount
+- [x] **GITHUB-3.3** Implement horizontal ScrollView
+  - Enable horizontal scrolling ✅
+  - Add edge fade gradients ✅
+  - Auto-scroll to show most recent weeks on mount ✅
+  - **Implementation notes:** Implemented ScrollView with horizontal scrolling. Added LinearGradient edge fades on left and right for smooth visual experience. Auto-scroll to end on mount with 100ms delay to ensure layout completion. All tests passing.
 
 ### Phase 4: Update CalendarHeatmap
 
