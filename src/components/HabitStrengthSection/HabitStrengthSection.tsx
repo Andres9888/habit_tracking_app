@@ -27,6 +27,7 @@ import Animated, {
   Easing,
   FadeInDown,
   runOnJS,
+  SharedValue,
 } from 'react-native-reanimated';
 import { TrendingUp, TrendingDown, Minus, Info, Zap } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -133,7 +134,7 @@ const getNextLevel = (strength: number): LevelConfig | null => {
 function AnimatedPercentageText({
   animatedValue,
 }: {
-  animatedValue: Animated.SharedValue<number>;
+  animatedValue: SharedValue<number>;
 }) {
   const [displayText, setDisplayText] = React.useState('0%');
 
