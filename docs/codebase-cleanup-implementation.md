@@ -455,10 +455,12 @@ checked={localSettings[setting.key] as boolean}
 
 ### Task 2.6: Fix Variable Hoisting in HabitDetailScreen
 
-- [ ] Find the useEffect that uses isWhyEditorOpen (around line 1608)
-- [ ] Find the useState declaration for isWhyEditorOpen (much later in file)
-- [ ] Move useState declaration above the useEffect
-- [ ] Verify no other dependencies have same issue
+- [x] Find the useEffect that uses isWhyEditorOpen (around line 1608)
+- [x] Find the useState declaration for isWhyEditorOpen (much later in file)
+- [x] Move useState declaration above the useEffect
+- [x] Verify no other dependencies have same issue
+
+**Completed:** Fixed variable hoisting error by moving `isWhyEditorOpen` state declaration from line 1658 to line 1569 (before the useEffect at line 1608 that depends on it). TypeScript errors reduced from 5 to 3 (2 errors fixed).
 
 **File:** `src/screens/HabitDetailScreen.tsx`
 
