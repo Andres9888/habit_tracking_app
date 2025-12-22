@@ -610,11 +610,12 @@ function detectWeakDay(
     - Tests use accessibility labels for reliable querying
     - Integration tests validate the component works correctly when receiving realistic parent data similar to what HabitDetailScreen would provide
 
-- [ ] **CALENDAR-6.4** Manual device testing ⚠️ REQUIRES HUMAN TESTING
+- [ ] **CALENDAR-6.4** Manual device testing ⚠️ REQUIRES HUMAN TESTING ⚠️
   - iOS: animations smooth, VoiceOver works
   - Android: animations smooth, TalkBack works
   - Touch targets are adequate (45px cells)
   - Colors meet WCAG AA contrast
+  - **AI Status:** This task cannot be completed by AI and requires manual human testing on physical devices. All automated preparation and test infrastructure is complete. The component is ready for manual QA.
   - **Testing Guide:**
     1. **Animation Smoothness (iOS/Android):**
        - Launch app on physical device or simulator
