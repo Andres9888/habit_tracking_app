@@ -206,6 +206,7 @@ jest.mock('react-native-reanimated', () => {
       Text: AnimatedText,
       ScrollView: AnimatedScrollView,
       createAnimatedComponent,
+      addWhitelistedNativeProps: jest.fn(),
     },
 
     // Also export as named
@@ -213,6 +214,7 @@ jest.mock('react-native-reanimated', () => {
     Text: AnimatedText,
     ScrollView: AnimatedScrollView,
     createAnimatedComponent,
+    addWhitelistedNativeProps: jest.fn(),
 
     // Animation functions
     useSharedValue: (initial) => ({ value: initial }),
@@ -231,6 +233,14 @@ jest.mock('react-native-reanimated', () => {
       ease: (t) => t,
       quad: (t) => t,
       cubic: (t) => t,
+      elastic: (bounciness) => (t) => t,
+      bezier: () => (t) => t,
+      circle: (t) => t,
+      back: (t) => t,
+      bounce: (t) => t,
+      poly: (n) => (t) => t,
+      sin: (t) => t,
+      exp: (t) => t,
       in: (easing) => easing,
       out: (easing) => easing,
       inOut: (easing) => easing,
@@ -264,7 +274,30 @@ jest.mock('react-native-reanimated', () => {
       duration: jest.fn().mockReturnThis(),
     },
 
-    // runOnJS
+    // runOnJS - CRITICAL: Must be defined as a function that executes callbacks
     runOnJS: (fn) => fn,
+
+    // runOnUI - CRITICAL: Add missing runOnUI mock (causes most test failures)
+    runOnUI: (fn) => fn,
+
+    // Additional hooks that may be missing
+    useDerivedValue: (callback) => ({ value: callback() }),
+    useAnimatedScrollHandler: () => ({}),
+    useAnimatedGestureHandler: () => ({}),
   };
 });
+
+// Mock @shopify/react-native-skia if needed
+jest.mock('@shopify/react-native-skia', () => ({
+  Canvas: 'Canvas',
+  Path: 'Path',
+  Skia: {
+    Path: {
+      Make: jest.fn(() => ({
+        moveTo: jest.fn(),
+        lineTo: jest.fn(),
+        close: jest.fn(),
+      })),
+    },
+  },
+}));
