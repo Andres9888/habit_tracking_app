@@ -318,7 +318,9 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
   - Verify animations perform well
   - Check color contrast
   - Test with VoiceOver/TalkBack
-  - **Note:** Manual testing required on physical devices.
+  - **Note:** Manual testing required on physical devices - cannot be automated.
+  - **Status:** BLOCKED - Requires manual testing by developer on physical iOS and Android devices.
+  - **Prerequisites:** All automated tests pass (88/88 tests passing as of 2025-12-22)
   - **Checklist for testing:**
     - [ ] iOS: Progress ring fill animation smooth (1200ms)
     - [ ] iOS: Current streak pulse animation smooth (2000ms infinite)
