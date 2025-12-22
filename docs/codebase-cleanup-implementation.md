@@ -40,10 +40,12 @@ git push origin backup/pre-cleanup-$(date +%Y%m%d-%H%M)
 
 ### Task 0.2: Capture Baseline Metrics
 
-- [ ] Run TypeScript compilation and save errors
-- [ ] Run test suite and save results
-- [ ] Count current error counts
-- [ ] Save baseline logs to docs/
+- [x] Run TypeScript compilation and save errors
+- [x] Run test suite and save results
+- [x] Count current error counts
+- [x] Save baseline logs to docs/
+
+**Completed:** Captured baseline metrics showing 23 TypeScript errors and 84.9% test pass rate (1791/2110 tests passing). Results saved to `docs/baseline-lint-20251222.log`, `docs/baseline-test-20251222.log`, and `docs/baseline-summary.txt`.
 
 ```bash
 npm run lint 2>&1 | tee docs/baseline-lint-$(date +%Y%m%d).log
