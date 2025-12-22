@@ -40,7 +40,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
             <SettingItem
               key={setting.key}
               ariaLabel={setting.ariaLabel}
-              checked={localSettings[setting.key]}
+              checked={localSettings[setting.key] as boolean}
               label={setting.label}
               onToggle={() => toggleSetting(setting.key)}
             />
