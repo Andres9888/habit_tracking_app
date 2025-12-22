@@ -17,6 +17,7 @@ import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { DayCell } from './DayCell';
 import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
 import type { CalendarDay } from './types';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface CalendarGridProps {
   /** 2D array of calendar days (weeks x days) */
@@ -58,6 +59,8 @@ export function CalendarGrid({
   onSwipeLeft,
   isCurrentMonth = false,
 }: CalendarGridProps) {
+  const reduceMotion = useReduceMotion();
+
   // Shared value for tracking horizontal translation during swipe
   const translateX = useSharedValue(0);
 
@@ -131,14 +134,18 @@ export function CalendarGrid({
           <Animated.View
             key={currentMonth.toISOString()}
             entering={
-              swipeDirection === 'left'
-                ? SlideInRight.duration(200)
-                : SlideInLeft.duration(200)
+              reduceMotion
+                ? undefined
+                : swipeDirection === 'left'
+                  ? SlideInRight.duration(200)
+                  : SlideInLeft.duration(200)
             }
             exiting={
-              swipeDirection === 'left'
-                ? SlideOutLeft.duration(200)
-                : SlideOutRight.duration(200)
+              reduceMotion
+                ? undefined
+                : swipeDirection === 'left'
+                  ? SlideOutLeft.duration(200)
+                  : SlideOutRight.duration(200)
             }
           >
             {grid.map((week, weekIndex) => (

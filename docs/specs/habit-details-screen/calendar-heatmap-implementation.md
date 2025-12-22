@@ -550,10 +550,19 @@ function detectWeakDay(
     - InsightCard action buttons have clear labels and hints
     - All non-interactive text elements properly marked with `importantForAccessibility="no-hide-descendants"`
 
-- [ ] **CALENDAR-5.4** Implement reduceMotion support
-  - Skip today cell pulse
-  - Skip row stagger animation
-  - Skip cell press scale animation
+- [x] **CALENDAR-5.4** Implement reduceMotion support
+  - Skip today cell pulse ✅
+  - Skip row stagger animation ✅
+  - Skip cell press scale animation ✅
+  - Skip slide animations in CalendarGrid ✅
+  - Implementation notes:
+    - Added `useReduceMotion` hook import to DayCell and CalendarGrid components
+    - DayCell: Today pulse animation now respects `!reduceMotion` flag (line 45)
+    - DayCell: Press scale animations conditionally applied based on reduceMotion (lines 84, 90)
+    - DayCell: Staggered FadeIn entry animations skip when reduceMotion enabled (line 111-112)
+    - CalendarGrid: Month transition slide animations conditionally disabled (lines 137-148)
+    - All animations gracefully degrade to instant transitions when reduceMotion is enabled
+    - Maintains full functionality without visual motion for users with motion sensitivity
 
 ### Phase 6: Testing & Quality
 

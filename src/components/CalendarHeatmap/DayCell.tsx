@@ -81,13 +81,15 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
   }, [shouldPulse, pulseScale, pulseOpacity]);
 
   const handlePressIn = () => {
-    if (day.date && !day.isFuture && !day.isBeforeCreation) {
+    if (day.date && !day.isFuture && !day.isBeforeCreation && !reduceMotion) {
       scale.value = withSpring(0.9, { damping: 15 });
     }
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15 });
+    if (!reduceMotion) {
+      scale.value = withSpring(1, { damping: 15 });
+    }
   };
 
   const handlePress = () => {
@@ -105,8 +107,9 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
     opacity: pulseOpacity.value,
   }));
 
-  // Staggered animation delay for all cell types
-  const staggerDelay = index * 10;
+  // Staggered animation delay for all cell types - skip if reduceMotion
+  const staggerDelay = reduceMotion ? 0 : index * 10;
+  const fadeInAnimation = reduceMotion ? undefined : FadeIn.delay(staggerDelay).duration(200);
 
   // Get accessibility label
   const accessibilityLabel = getDayAccessibilityLabel(day);
@@ -115,7 +118,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
   if (day.date === null) {
     return (
       <Animated.View
-        entering={FadeIn.delay(staggerDelay).duration(200)}
+        entering={fadeInAnimation}
         className="flex-1 aspect-square"
         accessible={true}
         accessibilityLabel={accessibilityLabel}
@@ -128,7 +131,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
   if (day.isBeforeCreation) {
     return (
       <Animated.View
-        entering={FadeIn.delay(staggerDelay).duration(200)}
+        entering={fadeInAnimation}
         className="flex-1 aspect-square items-center justify-center"
         accessible={true}
         accessibilityLabel={accessibilityLabel}
@@ -147,7 +150,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
   if (day.isFuture) {
     return (
       <Animated.View
-        entering={FadeIn.delay(staggerDelay).duration(200)}
+        entering={fadeInAnimation}
         className="flex-1 aspect-square items-center justify-center"
         accessible={true}
         accessibilityLabel={accessibilityLabel}
@@ -184,7 +187,7 @@ export function DayCell({ day, index, habitColor, onPress }: DayCellProps) {
 
   return (
     <AnimatedPressable
-      entering={FadeIn.delay(staggerDelay).duration(200)}
+      entering={fadeInAnimation}
       style={animatedStyle}
       className="flex-1 aspect-square items-center justify-center"
       onPressIn={handlePressIn}
