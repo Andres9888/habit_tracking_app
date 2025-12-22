@@ -533,10 +533,22 @@ function detectWeakDay(
     - onSeeTips displays contextual strategies based on weak day
     - InsightCard conditionally rendered based on dismissal state
 
-- [ ] **CALENDAR-5.3** Add accessibility labels
-  - Each cell: descriptive label with date and status
-  - Navigation buttons: "Previous month", "Next month"
-  - Insight card: actionable button labels
+- [x] **CALENDAR-5.3** Add accessibility labels
+  - Each cell: descriptive label with date and status ✅
+  - Navigation buttons: "Previous month", "Next month" ✅
+  - Insight card: actionable button labels ✅
+  - Implementation notes:
+    - `getDayAccessibilityLabel()` utility provides comprehensive labels with:
+      - Full date format (e.g., "Saturday, December 20, 2025")
+      - Completion status ("Completed" or "Not completed")
+      - Today indicator when applicable
+      - Context for future dates and dates before habit creation
+    - Navigation buttons include detailed labels with month names (e.g., "Go to December 2025")
+    - Navigation buttons include accessibility hints (e.g., "Navigate to previous month")
+    - All interactive elements have proper `accessibilityRole` (button, text, summary, header, toolbar)
+    - Completed cells use `accessibilityState={{ selected: true }}` for screen reader context
+    - InsightCard action buttons have clear labels and hints
+    - All non-interactive text elements properly marked with `importantForAccessibility="no-hide-descendants"`
 
 - [ ] **CALENDAR-5.4** Implement reduceMotion support
   - Skip today cell pulse
