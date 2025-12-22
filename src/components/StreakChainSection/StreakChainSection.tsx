@@ -307,7 +307,7 @@ export function StreakChainSection({
   }));
 
   // Build chain
-  const days = [...Array.from({length: 7 - lastSevenDays.length}).fill(false), ...lastSevenDays];
+  const days: boolean[] = [...Array.from({length: 7 - lastSevenDays.length}).fill(false) as boolean[], ...lastSevenDays];
   const chainData = days.map((completed, idx) => ({ completed, isToday: idx === 6 }));
   chainData[6].completed = todayCompleted;
 
