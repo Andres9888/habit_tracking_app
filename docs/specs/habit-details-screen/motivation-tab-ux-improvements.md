@@ -44,9 +44,12 @@ See: `.superdesign/design_iterations/motivation_tab_ux_1.html`
   - **Completed**: Added LinearGradient backgrounds to Vision Board empty state (#faf5ff → #f3e8ff, violet gradient) and Affirmations empty state (#ecfdf5 → #d1fae5, emerald gradient)
 
 ### T4: Section Card Press Feedback
-- [ ] T4.1: Add scale animation on press (0.98) using `Springs.button`
-- [ ] T4.2: Ensure press feedback works alongside entrance animations
-- [ ] T4.3: Add subtle shadow elevation change on press
+- [x] T4.1: Add scale animation on press (0.98) using `Springs.button`
+  - **Completed**: Updated `SectionCard` component in `HabitDetailScreen.tsx:337-427` to use `withSpring` with `Springs.button` values (damping: 15, stiffness: 300) for both press-in and press-out animations
+- [x] T4.2: Ensure press feedback works alongside entrance animations
+  - **Completed**: SectionCard uses its own `Animated.View` for press feedback (scale/shadow), while `AnimatedSection` uses a separate `Animated.View` for entrance animations (translateY/opacity). These nested animated views operate independently.
+- [x] T4.3: Add subtle shadow elevation change on press
+  - **Completed**: Added `shadowOpacity` (0.08 → 0.04) and `elevation` (2 → 1) animations on press. Shadow properties animate alongside scale for a cohesive "pressed-in" visual effect. Uses stone-500 (#78716c) shadow color.
 
 ### T5: Testing & Cleanup
 - [ ] T5.1: Test animations on low-end device for performance

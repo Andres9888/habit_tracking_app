@@ -336,7 +336,8 @@ function ActionButton({
 
 /**
  * Section Card Component for consistent styling
- * Includes animated press state (scale 0.98) for tappable cards
+ * Includes animated press state (scale 0.98) with Springs.button for tappable cards
+ * T4: Press feedback with scale animation and shadow elevation change
  */
 function SectionCard({
   children,
@@ -350,29 +351,53 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
+  const shadowOpacity = useSharedValue(0.08);
+  const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+    // Shadow properties for iOS
+    shadowOpacity: shadowOpacity.value,
+    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowOffset: {
+      width: 0,
+      height: interpolate(elevation.value, [1, 2], [1, 2]),
+    },
+    // Elevation for Android
+    elevation: elevation.value,
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
-    scale.value = withTiming(0.98, { duration: 100 });
-  }, [scale]);
+    // T4.1: Use Springs.button (damping: 15, stiffness: 300)
+    scale.value = withSpring(0.98, { damping: 15, stiffness: 300 });
+    // T4.3: Reduce shadow/elevation on press for pressed-in effect
+    shadowOpacity.value = withSpring(0.04, { damping: 15, stiffness: 300 });
+    elevation.value = withSpring(1, { damping: 15, stiffness: 300 });
+  }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
-    scale.value = withSpring(1, { damping: 15, stiffness: 200 });
-  }, [scale]);
+    // T4.1: Use Springs.button for release
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    // T4.3: Restore shadow/elevation
+    shadowOpacity.value = withSpring(0.08, { damping: 15, stiffness: 300 });
+    elevation.value = withSpring(2, { damping: 15, stiffness: 300 });
+  }, [scale, shadowOpacity, elevation]);
 
   if (onPress) {
     return (
-      <Animated.View style={animatedStyle}>
+      <Animated.View
+        style={[
+          animatedStyle,
+          { shadowColor: '#78716c' } // stone-500 for shadow color
+        ]}
+      >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="button"
           className={clsx(
-            'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+            'rounded-2xl bg-white p-4',
             className
           )}
           onPress={onPress}
