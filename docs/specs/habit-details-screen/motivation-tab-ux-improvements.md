@@ -21,11 +21,16 @@ See: `.superdesign/design_iterations/motivation_tab_ux_1.html`
   - **Completed**: Added `hasVisitedMotivation` state and `shouldAnimateMotivation` computed value. Resets when modal closes/reopens
 
 ### T2: Progress Checkmarks
-- [ ] T2.1: Add completion checkmark badge to filled sections (Why, Identity, Cue)
-- [ ] T2.2: Animate checkmark with pop-in effect (scale 0 → 1.2 → 1)
-- [ ] T2.3: Position badge at top-right of section icon
-- [ ] T2.4: Use emerald-500 background with white check icon
-- [ ] T2.5: Delay checkmark animation until after section entrance (600ms)
+- [x] T2.1: Add completion checkmark badge to filled sections (Why, Identity, Cue)
+  - **Completed**: Created `CompletionCheckmark` component in `HabitDetailScreen.tsx:480-554`. Added to all three sections (Your Why, Your Identity, Your Cue)
+- [x] T2.2: Animate checkmark with pop-in effect (scale 0 → 1.2 → 1)
+  - **Completed**: Using `withSequence` with `Springs.bouncy` (damping: 8, stiffness: 300) for overshoot, then settling spring
+- [x] T2.3: Position badge at top-right of section icon
+  - **Completed**: Positioned with `absolute`, `top: -4`, `right: -4` on parent View with `relative` class
+- [x] T2.4: Use emerald-500 background with white check icon
+  - **Completed**: `bg-emerald-500` background, white `Check` icon with `size={12}` and `strokeWidth={3}`
+- [x] T2.5: Delay checkmark animation until after section entrance (600ms)
+  - **Completed**: `BASE_CHECKMARK_DELAY = 600` plus staggered delay based on section index (0/80/160ms)
 
 ### T3: Improved Empty States
 - [ ] T3.1: Add subtle pulse animation to empty section icons

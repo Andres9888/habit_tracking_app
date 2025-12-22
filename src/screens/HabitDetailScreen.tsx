@@ -463,6 +463,97 @@ function AnimatedSection({
 }
 
 /**
+ * CompletionCheckmark Component
+ * Animated checkmark badge that pops in when a section is filled
+ *
+ * Design spec (T2 Progress Checkmarks):
+ * - Positioned at top-right of section icon
+ * - Emerald-500 background with white check icon
+ * - Pop-in animation: scale 0 → 1.2 → 1 (Springs.bouncy)
+ * - Delayed 600ms after section entrance animation
+ *
+ * @param isVisible - Whether the checkmark should be shown (section is filled)
+ * @param sectionIndex - Section index for staggered delay calculation
+ * @param shouldAnimate - Whether entrance animation should run (first tab visit)
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function CompletionCheckmark({
+  isVisible,
+  sectionIndex,
+  shouldAnimate,
+  reduceMotion = false,
+}: {
+  isVisible: boolean;
+  sectionIndex: number;
+  shouldAnimate: boolean;
+  reduceMotion?: boolean;
+}) {
+  const STAGGER_DELAY = 80;
+  const BASE_CHECKMARK_DELAY = 600; // Wait for section entrance
+
+  const scale = useSharedValue(isVisible && shouldAnimate && !reduceMotion ? 0 : (isVisible ? 1 : 0));
+  const opacity = useSharedValue(isVisible && shouldAnimate && !reduceMotion ? 0 : (isVisible ? 1 : 0));
+
+  useEffect(() => {
+    if (!isVisible) {
+      scale.value = 0;
+      opacity.value = 0;
+      return;
+    }
+
+    if (!shouldAnimate || reduceMotion) {
+      scale.value = 1;
+      opacity.value = 1;
+      return;
+    }
+
+    // Calculate delay: section stagger + base checkmark delay
+    const delay = (sectionIndex * STAGGER_DELAY) + BASE_CHECKMARK_DELAY;
+
+    const timeout = setTimeout(() => {
+      // Pop-in animation: 0 → 1.2 → 1 using Springs.bouncy
+      scale.value = withSequence(
+        withSpring(1.2, {
+          damping: 8,    // Springs.bouncy
+          stiffness: 300, // Springs.bouncy
+        }),
+        withSpring(1, {
+          damping: 15,   // Settle down
+          stiffness: 300,
+        })
+      );
+      opacity.value = withTiming(1, { duration: 150 });
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [isVisible, shouldAnimate, reduceMotion, sectionIndex, scale, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  if (!isVisible) return null;
+
+  return (
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          position: 'absolute',
+          top: -4,
+          right: -4,
+        },
+      ]}
+    >
+      <View className="h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
+        <Check className="text-white" size={12} strokeWidth={3} />
+      </View>
+    </Animated.View>
+  );
+}
+
+/**
  * Danger Zone Section Component (T4.3)
  * Groups destructive actions with red-tinted styling
  */
@@ -893,8 +984,14 @@ function MotivationTabContent({
           className="border-l-4 border-rose-400"
         >
           <View className="flex-row items-start gap-3">
-            <View className="h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
               <Heart className="text-rose-500" size={20} />
+              <CompletionCheckmark
+                isVisible={!!habit.why}
+                sectionIndex={0}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
             </View>
             <View className="flex-1">
               <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
@@ -918,8 +1015,14 @@ function MotivationTabContent({
           className="border-l-4 border-violet-400"
         >
           <View className="flex-row items-start gap-3">
-            <View className="h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
               <Sparkles className="text-violet-500" size={20} />
+              <CompletionCheckmark
+                isVisible={!!habitIdentity}
+                sectionIndex={1}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
             </View>
             <View className="flex-1">
               <View className="mb-1 flex-row items-center gap-2">
@@ -948,8 +1051,14 @@ function MotivationTabContent({
           className="border-l-4 border-amber-400"
         >
           <View className="flex-row items-start gap-3">
-            <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
               <Target className="text-amber-500" size={20} />
+              <CompletionCheckmark
+                isVisible={hasCue}
+                sectionIndex={2}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
             </View>
             <View className="flex-1">
               <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
