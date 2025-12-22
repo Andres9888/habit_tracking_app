@@ -361,9 +361,11 @@ const someValue: SharedValue<number>
 
 ### Task 2.3: Add Date Type Guards
 
-- [ ] Add null guards to format() calls in CalendarTimeline files
-- [ ] Use ternary operator for safe date formatting
-- [ ] Verify all date formatting is protected
+- [x] Add null guards to format() calls in CalendarTimeline files
+- [x] Use ternary operator for safe date formatting
+- [x] Verify all date formatting is protected
+
+**Completed:** Fixed potential undefined errors from `Array.at(-1)` in both CalendarTimelineDebug.tsx and CalendarTimelineWithPulse.tsx. Added ternary operator to safely handle cases where `lastDate` could be undefined. TypeScript errors remain at 7 (no new errors introduced). The task description mentioned `habitCreatedDate` but the actual issue was with `lastDate` from the `.at(-1)` method which has return type `Date | undefined`.
 
 **Files:**
 - `src/components/CalendarTimeline/CalendarTimelineDebug.tsx` (line ~44)
@@ -380,16 +382,16 @@ const createdDateStr = habitCreatedDate
 ```
 
 **Implementation:**
-- [ ] Open `src/components/CalendarTimeline/CalendarTimelineDebug.tsx`
-- [ ] Find `format(habitCreatedDate, 'MMM d')` (around line 44)
-- [ ] Add null guard with ternary
-- [ ] Save file
-- [ ] Open `src/components/CalendarTimeline/CalendarTimelineWithPulse.tsx`
-- [ ] Find `format(habitCreatedDate, 'MMM d')` (around line 76)
-- [ ] Add null guard with ternary
-- [ ] Save file
-- [ ] Run `tsc -p tsconfig.app.json --noEmit` to verify
-- [ ] Commit with message: "Add type guards for Date | undefined (TS2345)"
+- [x] Open `src/components/CalendarTimeline/CalendarTimelineDebug.tsx`
+- [x] Find date formatting issue (line 44 - `lastDate` from `.at(-1)`)
+- [x] Add null guard with ternary
+- [x] Save file
+- [x] Open `src/components/CalendarTimeline/CalendarTimelineWithPulse.tsx`
+- [x] Find date formatting issue (line 76 - `lastDate` from `.at(-1)`)
+- [x] Add null guard with ternary
+- [x] Save file
+- [x] Run `tsc -p tsconfig.app.json --noEmit` to verify
+- [x] Commit with message: "Add type guards for Date | undefined (TS2345)"
 
 ### Task 2.4: Fix null vs undefined in PhaseTag
 
