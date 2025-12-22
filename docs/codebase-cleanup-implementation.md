@@ -395,9 +395,11 @@ const createdDateStr = habitCreatedDate
 
 ### Task 2.4: Fix null vs undefined in PhaseTag
 
-- [ ] Update PhaseTag.tsx to normalize null to undefined
-- [ ] Use nullish coalescing operator (??)
-- [ ] Verify function accepts null OR update signature
+- [x] Update PhaseTag.tsx to normalize null to undefined
+- [x] Use nullish coalescing operator (??)
+- [x] Verify function accepts null OR update signature
+
+**Completed:** Fixed type mismatch by adding `?? undefined` to normalize null values before passing to `getPhaseInfo()`. The function signature expects `HubermanPhase | undefined` but was receiving `HubermanPhase | null`. TypeScript errors reduced from 7 to 6.
 
 **File:** `src/components/PhaseTag/PhaseTag.tsx`
 
