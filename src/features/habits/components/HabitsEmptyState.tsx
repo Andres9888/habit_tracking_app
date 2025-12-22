@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Check, ChevronDown, Plus } from 'lucide-react-native';
+import { Check, Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import Animated, {
@@ -100,60 +100,6 @@ const BASE_CARD_CLASS =
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-// Scroll hint component to indicate more content below the fold
-function ScrollHint({ visible }: { visible: boolean }) {
-  const translateY = useSharedValue(0);
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (visible) {
-      // Fade in
-      opacity.value = withDelay(600, withTiming(1, { duration: 400 }));
-
-      // Bounce animation
-      translateY.value = withDelay(
-        800,
-        withRepeat(
-          withSequence(
-            withTiming(6, { duration: 600 }),
-            withTiming(0, { duration: 600 })
-          ),
-          -1,
-          true
-        )
-      );
-    } else {
-      opacity.value = withTiming(0, { duration: 200 });
-    }
-
-    return () => {
-      cancelAnimation(translateY);
-      cancelAnimation(opacity);
-    };
-  }, [visible, translateY, opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
-
-  if (!visible) return null;
-
-  return (
-    <Animated.View
-      entering={FadeInDown.delay(800).springify()}
-      exiting={FadeOut.duration(200)}
-      className='items-center gap-1 pb-2 pt-4'
-      style={animatedStyle}
-    >
-      <Text className='text-[13px] font-medium text-stone-400'>
-        More options below
-      </Text>
-      <ChevronDown color='#a8a29e' size={18} strokeWidth={2} />
-    </Animated.View>
-  );
-}
-
 export function HabitsEmptyState({
   isLoading,
   openCreateHabitScreen,
@@ -164,18 +110,7 @@ export function HabitsEmptyState({
 }: HabitsEmptyStateProps) {
   const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
   const [successHabit, setSuccessHabit] = useState<string | null>(null);
-  const [showScrollHint, setShowScrollHint] = useState(true);
   const { triggerMediumImpact, triggerSuccess, triggerLightImpact } = useHapticFeedback();
-
-  // Auto-dismiss scroll hint after 4 seconds
-  useEffect(() => {
-    if (!isLoading && showScrollHint) {
-      const timer = setTimeout(() => {
-        setShowScrollHint(false);
-      }, 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading, showScrollHint]);
 
   if (isLoading) {
     return (
@@ -214,6 +149,19 @@ export function HabitsEmptyState({
       {/* Welcome Hero */}
       <WelcomeHero greeting={timeContext.greeting} period={timeContext.period} />
 
+      {/* PRIMARY CTA: Import Templates */}
+      {openTemplatesScreen && <TemplatesPeekCard onPress={openTemplatesScreen} />}
+
+      {/* Section Divider */}
+      {onQuickCreateHabit && (
+        <View className='flex-row items-center gap-3 py-2'>
+          <View className='h-[1px] flex-1 bg-stone-200' />
+          <Text className='text-[12px] font-semibold text-stone-500'>Or pick one to start now</Text>
+          <View className='h-[1px] flex-1 bg-stone-200' />
+        </View>
+      )}
+
+      {/* SECONDARY: Quick Win Habits */}
       {onQuickCreateHabit && (
         <QuickWinCard
           creatingHabit={creatingHabit}
@@ -245,11 +193,6 @@ export function HabitsEmptyState({
           }}
         />
       )}
-
-      {/* Scroll hint indicator - shows users there's more content below */}
-      <ScrollHint visible={showScrollHint} />
-
-      {openTemplatesScreen && <TemplatesPeekCard onPress={openTemplatesScreen} />}
 
       <CustomHabitCard onPress={openCreateHabitScreen} onNeedHelpQuiz={onNeedHelpQuiz} />
 
@@ -489,12 +432,53 @@ function QuickStartButton({
   const rotation = useSharedValue(0);
   const bgProgress = useSharedValue(0);
   const checkScale = useSharedValue(0);
+  const pulseOpacity = useSharedValue(0);
+  const pulseScale = useSharedValue(1);
   const { triggerLightImpact, triggerSelection } = useHapticFeedback();
+
+  // Pulsing tap indicator animation
+  useEffect(() => {
+    const delay = index * 500; // Stagger by index
+    pulseOpacity.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(0, { duration: 0 }),
+          withTiming(0.5, { duration: 1000 }),
+          withTiming(0, { duration: 1000 })
+        ),
+        -1,
+        false
+      )
+    );
+    pulseScale.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(1, { duration: 0 }),
+          withTiming(1.02, { duration: 1000 }),
+          withTiming(1, { duration: 1000 })
+        ),
+        -1,
+        false
+      )
+    );
+
+    return () => {
+      cancelAnimation(pulseOpacity);
+      cancelAnimation(pulseScale);
+    };
+  }, [index, pulseOpacity, pulseScale]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }, { rotate: `${rotation.value}deg` }],
     backgroundColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#ffffff', '#fafaf9', '#dcfce7']),
     borderColor: interpolateColor(bgProgress.value, [0, 1, 2], ['#e7e5e4', '#d6d3d1', '#86efac']),
+  }));
+
+  const pulseRingStyle = useAnimatedStyle(() => ({
+    opacity: pulseOpacity.value,
+    transform: [{ scale: pulseScale.value }],
   }));
 
   const checkmarkStyle = useAnimatedStyle(() => ({
@@ -534,30 +518,37 @@ function QuickStartButton({
   };
 
   return (
-    <AnimatedPressable
-      accessibilityLabel={`Add ${habit.name} habit`}
-      accessibilityRole='button'
-      className='items-center justify-center gap-2 rounded-2xl border px-3 py-4 shadow-sm'
-      disabled={isCreating || isSuccess}
-      entering={FadeInDown.delay(200 + index * 100)
-        .springify()
-        .damping(12)
-        .mass(0.8)
-        .stiffness(100)}
-      style={[animatedStyle, containerStyle]}
-      onPress={handlePress}
-      onPressIn={() => {
-        triggerLightImpact();
-        scale.value = withSpring(0.92, { damping: 12, stiffness: 400 });
-        bgProgress.value = withTiming(1, { duration: 100 });
-      }}
-      onPressOut={() => {
-        scale.value = withSpring(1, { damping: 12, stiffness: 300 });
-        if (!isCreating) {
-          bgProgress.value = withTiming(0, { duration: 150 });
-        }
-      }}
-    >
+    <View style={containerStyle}>
+      {/* Pulsing tap indicator ring */}
+      <Animated.View
+        className='absolute inset-[-2px] rounded-2xl border-2 border-emerald-500'
+        pointerEvents='none'
+        style={pulseRingStyle}
+      />
+      <AnimatedPressable
+        accessibilityLabel={`Add ${habit.name} habit`}
+        accessibilityRole='button'
+        className='items-center justify-center gap-2 rounded-2xl border px-3 py-4 shadow-sm'
+        disabled={isCreating || isSuccess}
+        entering={FadeInDown.delay(200 + index * 100)
+          .springify()
+          .damping(12)
+          .mass(0.8)
+          .stiffness(100)}
+        style={animatedStyle}
+        onPress={handlePress}
+        onPressIn={() => {
+          triggerLightImpact();
+          scale.value = withSpring(0.92, { damping: 12, stiffness: 400 });
+          bgProgress.value = withTiming(1, { duration: 100 });
+        }}
+        onPressOut={() => {
+          scale.value = withSpring(1, { damping: 12, stiffness: 300 });
+          if (!isCreating) {
+            bgProgress.value = withTiming(0, { duration: 150 });
+          }
+        }}
+      >
       {isSuccess ? (
         <Animated.View className='items-center justify-center' style={checkmarkStyle}>
           <View className='mb-1.5 h-9 w-9 items-center justify-center rounded-full bg-[#16a34a]'>
@@ -582,7 +573,8 @@ function QuickStartButton({
           </View>
         </Animated.View>
       )}
-    </AnimatedPressable>
+      </AnimatedPressable>
+    </View>
   );
 }
 
@@ -784,16 +776,16 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
       accessibilityHint='Preview expert-designed habit journeys'
       accessibilityLabel='Import habits'
       accessibilityRole='button'
-      entering={FadeInDown.delay(200).springify().damping(18)}
+      entering={FadeInDown.delay(80).springify().damping(18)}
       className={clsx(BASE_CARD_CLASS, 'gap-4')}
       style={[
         animatedStyle,
         {
-          shadowColor: '#78716c',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.08,
-          shadowRadius: 12,
-          elevation: 3,
+          shadowColor: '#10b981',
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.15,
+          shadowRadius: 16,
+          elevation: 4,
         }
       ]}
       onPress={() => {
@@ -810,13 +802,20 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
         bgProgress.value = withTiming(0, { duration: 150 });
       }}
     >
+      {/* Popular Badge */}
+      <View className='self-start rounded-full bg-emerald-100 px-3 py-1'>
+        <View className='flex-row items-center gap-1'>
+          <Text className='text-[11px] font-bold tracking-wide text-emerald-700'>⭐ POPULAR</Text>
+        </View>
+      </View>
+
       <View className='gap-1.5'>
         <View className='flex-row items-center gap-2'>
           <Text className='text-lg'>🧪</Text>
-          <Text className='text-lg font-bold text-stone-800'>Skip the guesswork</Text>
+          <Text className='text-lg font-bold text-stone-800'>Import science-backed habits</Text>
         </View>
         <Text className='text-sm leading-5 text-stone-500'>
-          Science-backed routines designed by habit researchers.
+          Ready-made routines designed by habit researchers
         </Text>
       </View>
       <View
@@ -830,7 +829,7 @@ function TemplatesPeekCard({ onPress }: { onPress: () => void }) {
           elevation: 4,
         }}
       >
-        <Text className='text-center text-[15px] font-bold tracking-wide text-white'>Import habits →</Text>
+        <Text className='text-center text-[15px] font-bold tracking-wide text-white'>Get started →</Text>
       </View>
     </AnimatedPressable>
   );
