@@ -301,3 +301,136 @@ export function calculateStreakPosition(
   const position = currentStreakDates.indexOf(targetDate);
   return position >= 0 ? position + 1 : 0;
 }
+
+/**
+ * Month label for horizontal grid
+ */
+export interface MonthLabel {
+  /** Index of the week column where this month starts */
+  weekIndex: number;
+  /** Short month name (e.g., "Oct", "Nov") */
+  label: string;
+}
+
+/**
+ * Generates a horizontal grid for 3 months (GitHub-style)
+ * Returns array of weeks, each week is array of 7 dates (Sun-Sat)
+ * Also returns month labels with their week indices
+ */
+export function generateHorizontalGrid(
+  currentDate: Date,
+  completedDates: Set<string>,
+  habitCreatedAt?: number
+): {
+  weeks: CalendarDay[][];
+  monthLabels: MonthLabel[];
+} {
+  const today = new Date();
+  const todayStr = format(today, 'yyyy-MM-dd');
+
+  // Calculate 3 months back from today
+  const endDate = new Date(currentDate);
+  const startDate = new Date(endDate);
+  startDate.setDate(startDate.getDate() - 90); // ~3 months
+
+  const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
+
+  const weeks: CalendarDay[][] = [];
+  let currentWeek: CalendarDay[] = Array(7).fill(null).map(() => ({
+    date: null,
+    dayOfMonth: null,
+    completed: false,
+    isToday: false,
+    isFuture: false,
+    isBeforeCreation: false,
+  }));
+  let weekIndex = 0;
+
+  // Find the Sunday before or equal to startDate
+  const firstSunday = new Date(startDate);
+  const daysToSunday = firstSunday.getDay(); // 0 = Sunday
+  firstSunday.setDate(firstSunday.getDate() - daysToSunday);
+
+  const monthLabels: MonthLabel[] = [];
+  let lastMonth = -1;
+
+  // Iterate through all days from first Sunday to end date
+  const iterDate = new Date(firstSunday);
+  while (iterDate <= endDate) {
+    const dayOfWeek = iterDate.getDay(); // 0 = Sunday, 6 = Saturday
+    const dateStr = format(iterDate, 'yyyy-MM-dd');
+    const dayOfMonth = iterDate.getDate();
+    const isToday = dateStr === todayStr;
+    const isFuture = isAfter(iterDate, today) && !isToday;
+    const isBeforeCreation = habitCreatedDate
+      ? isBefore(iterDate, habitCreatedDate) && !isSameDay(iterDate, habitCreatedDate)
+      : false;
+
+    currentWeek[dayOfWeek] = {
+      date: dateStr,
+      dayOfMonth,
+      completed: completedDates.has(dateStr),
+      isToday,
+      isFuture,
+      isBeforeCreation,
+    };
+
+    // Track month changes for labels
+    const currentMonth = iterDate.getMonth();
+    if (currentMonth !== lastMonth) {
+      monthLabels.push({
+        weekIndex,
+        label: format(iterDate, 'MMM'), // Short month name
+      });
+      lastMonth = currentMonth;
+    }
+
+    // Complete week (Saturday reached)
+    if (dayOfWeek === 6) {
+      weeks.push(currentWeek);
+      currentWeek = Array(7).fill(null).map(() => ({
+        date: null,
+        dayOfMonth: null,
+        completed: false,
+        isToday: false,
+        isFuture: false,
+        isBeforeCreation: false,
+      }));
+      weekIndex++;
+    }
+
+    iterDate.setDate(iterDate.getDate() + 1);
+  }
+
+  // Add partial final week if it has any non-null days
+  if (currentWeek.some(d => d.date !== null)) {
+    weeks.push(currentWeek);
+  }
+
+  return { weeks, monthLabels };
+}
+
+/**
+ * Calculate statistics for 3-month period
+ */
+export function calculate3MonthStats(
+  weeks: CalendarDay[][]
+): { completions: number; eligibleDays: number; successRate: number } {
+  let completions = 0;
+  let eligibleDays = 0;
+
+  for (const week of weeks) {
+    for (const day of week) {
+      if (day.date && !day.isBeforeCreation && !day.isFuture) {
+        eligibleDays++;
+        if (day.completed) {
+          completions++;
+        }
+      }
+    }
+  }
+
+  const successRate = eligibleDays > 0 ? (completions / eligibleDays) * 100 : 0;
+
+  return { completions, eligibleDays, successRate };
+}

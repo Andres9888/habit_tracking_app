@@ -114,3 +114,14 @@ export interface DayOfWeekStat {
   /** Total eligible occurrences of this day */
   total: number;
 }
+
+/**
+ * Month label for horizontal grid
+ */
+export interface MonthLabel {
+  /** Index of the week column where this month starts */
+  weekIndex: number;
+
+  /** Short month name (e.g., "Oct", "Nov") */
+  label: string;
+}

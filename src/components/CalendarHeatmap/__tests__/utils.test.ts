@@ -7,6 +7,8 @@
 import {
   generateMonthGrid,
   calculateMonthStats,
+  generateHorizontalGrid,
+  calculate3MonthStats,
   calculateDayOfWeekStats,
   detectWeakDay,
   calculateStreakPosition,
@@ -16,6 +18,7 @@ import {
   getDayAccessibilityLabel,
   type CalendarDay,
   type DayOfWeekStat,
+  type MonthLabel,
 } from '../utils';
 
 describe('generateMonthGrid', () => {
@@ -1276,6 +1279,431 @@ describe('calculateStreakPosition', () => {
       expect(calculateStreakPosition(twoDaysAgoStr, completedDates)).toBe(1);
       // 5 days ago is not part of current streak
       expect(calculateStreakPosition(fiveDaysAgoStr, completedDates)).toBe(0);
+    });
+  });
+});
+
+describe('generateHorizontalGrid', () => {
+  const countActualDays = (weeks: CalendarDay[][]): number => {
+    return weeks.flat().filter((day) => day.date !== null).length;
+  };
+
+  describe('basic grid structure', () => {
+    it('generates approximately 13 weeks for 3 months', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      // Should have ~13 weeks (90 days / 7 ≈ 13)
+      expect(weeks.length).toBeGreaterThanOrEqual(12);
+      expect(weeks.length).toBeLessThanOrEqual(14);
+    });
+
+    it('each week has exactly 7 days', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      weeks.forEach((week) => {
+        expect(week.length).toBe(7);
+      });
+    });
+
+    it('generates approximately 90 days of data', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      const actualDays = countActualDays(weeks);
+      // Should have around 90 days (±7 for week alignment)
+      expect(actualDays).toBeGreaterThanOrEqual(83);
+      expect(actualDays).toBeLessThanOrEqual(97);
+    });
+
+    it('starts with index 0 being Sunday slot', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      // Verify the grid structure starts with Sunday slot (index 0)
+      // The actual date stored there should align with Sunday when parsed locally
+      const firstWeek = weeks[0];
+      expect(firstWeek.length).toBe(7); // All weeks have 7 days
+
+      // Find first non-null date and verify it's in the Sunday slot (index 0)
+      const firstNonNullIndex = firstWeek.findIndex(d => d.date !== null);
+      if (firstNonNullIndex === 0 && firstWeek[0].date) {
+        // If there's a date in Sunday slot, it should parse as Sunday in local time
+        const dateStr = firstWeek[0].date;
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        expect(date.getDay()).toBe(0); // Sunday
+      }
+    });
+
+    it('ends on or before the current date', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      // Find the last non-null date
+      const lastWeek = weeks[weeks.length - 1];
+      const lastDay = lastWeek.reverse().find(d => d.date !== null);
+
+      expect(lastDay).toBeDefined();
+      if (lastDay?.date) {
+        const lastDate = new Date(lastDay.date);
+        expect(lastDate <= currentDate).toBe(true);
+      }
+    });
+  });
+
+  describe('month labels', () => {
+    it('generates month labels for ~3 months', () => {
+      const currentDate = new Date('2025-12-22');
+      const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
+
+      // Should have 3-4 month labels (depending on week alignment)
+      expect(monthLabels.length).toBeGreaterThanOrEqual(3);
+      expect(monthLabels.length).toBeLessThanOrEqual(4);
+    });
+
+    it('month labels have correct format', () => {
+      const currentDate = new Date('2025-12-22');
+      const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
+
+      monthLabels.forEach((label) => {
+        expect(label.weekIndex).toBeGreaterThanOrEqual(0);
+        expect(label.label).toMatch(/^[A-Z][a-z]{2}$/); // e.g., "Oct", "Nov"
+      });
+    });
+
+    it('month labels have incrementing week indices', () => {
+      const currentDate = new Date('2025-12-22');
+      const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
+
+      for (let i = 1; i < monthLabels.length; i++) {
+        expect(monthLabels[i].weekIndex).toBeGreaterThan(monthLabels[i - 1].weekIndex);
+      }
+    });
+  });
+
+  describe('completed dates', () => {
+    it('marks completed dates correctly', () => {
+      const currentDate = new Date('2025-12-22');
+      const completedDates = new Set(['2025-12-01', '2025-12-15', '2025-11-20']);
+      const { weeks } = generateHorizontalGrid(currentDate, completedDates);
+
+      const allDays = weeks.flat().filter(d => d.date !== null);
+      const completedDays = allDays.filter(d => d.completed);
+
+      expect(completedDays.length).toBe(3);
+      expect(completedDays.some(d => d.date === '2025-12-01')).toBe(true);
+      expect(completedDays.some(d => d.date === '2025-12-15')).toBe(true);
+      expect(completedDays.some(d => d.date === '2025-11-20')).toBe(true);
+    });
+
+    it('returns completed=false when no dates are in the set', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      const allDays = weeks.flat().filter(d => d.date !== null);
+      expect(allDays.every(d => d.completed === false)).toBe(true);
+    });
+  });
+
+  describe('today detection', () => {
+    it('marks exactly one day as today', () => {
+      const today = new Date();
+      const { weeks } = generateHorizontalGrid(today, new Set());
+
+      const todayDays = weeks.flat().filter(d => d.isToday);
+      expect(todayDays.length).toBe(1);
+    });
+
+    it('marks today with correct date', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const { weeks } = generateHorizontalGrid(today, new Set());
+
+      const todayDay = weeks.flat().find(d => d.isToday);
+      expect(todayDay?.date).toBe(todayStr);
+    });
+  });
+
+  describe('future dates detection', () => {
+    it('marks dates after current date as future', () => {
+      const currentDate = new Date('2025-12-20');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      const allDays = weeks.flat().filter(d => d.date !== null);
+      const futureDays = allDays.filter(d => d.isFuture);
+
+      // Should have 2 future days (21st and 22nd if today is 20th in test)
+      futureDays.forEach(day => {
+        if (day.date) {
+          const dayDate = new Date(day.date);
+          expect(dayDate > currentDate).toBe(true);
+        }
+      });
+    });
+
+    it('today is not marked as future', () => {
+      const today = new Date();
+      const { weeks } = generateHorizontalGrid(today, new Set());
+
+      const todayDay = weeks.flat().find(d => d.isToday);
+      expect(todayDay?.isFuture).toBe(false);
+    });
+  });
+
+  describe('habitCreatedAt handling', () => {
+    it('marks dates before habit creation as isBeforeCreation', () => {
+      const currentDate = new Date('2025-12-22');
+      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const { weeks } = generateHorizontalGrid(currentDate, new Set(), habitCreatedAt);
+
+      const beforeCreationDays = weeks.flat().filter(d => d.isBeforeCreation);
+      expect(beforeCreationDays.length).toBeGreaterThan(0);
+
+      beforeCreationDays.forEach(day => {
+        if (day.date) {
+          const dayDate = new Date(day.date);
+          expect(dayDate < new Date(habitCreatedAt)).toBe(true);
+        }
+      });
+    });
+
+    it('does not mark creation day as isBeforeCreation', () => {
+      const currentDate = new Date('2025-12-22');
+      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const { weeks } = generateHorizontalGrid(currentDate, new Set(), habitCreatedAt);
+
+      const creationDay = weeks.flat().find(d => d.date === '2025-12-01');
+      expect(creationDay?.isBeforeCreation).toBe(false);
+    });
+
+    it('handles undefined habitCreatedAt by not marking any days as before creation', () => {
+      const currentDate = new Date('2025-12-22');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      const allDays = weeks.flat().filter(d => d.date !== null);
+      expect(allDays.every(d => d.isBeforeCreation === false)).toBe(true);
+    });
+  });
+
+  describe('day-of-week rows', () => {
+    it('organizes days correctly by day of week', () => {
+      const currentDate = new Date('2025-12-22'); // Monday
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      // Check that each position in the week corresponds to the correct day
+      weeks.forEach(week => {
+        week.forEach((day, index) => {
+          if (day.date) {
+            // Parse date in local timezone to match how date-fns format works
+            const [year, month, dayNum] = day.date.split('-').map(Number);
+            const dayDate = new Date(year, month - 1, dayNum);
+            expect(dayDate.getDay()).toBe(index); // index 0 = Sunday, 1 = Monday, etc.
+          }
+        });
+      });
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles current date at beginning of month', () => {
+      const currentDate = new Date('2025-12-01');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      expect(weeks.length).toBeGreaterThan(0);
+      const actualDays = countActualDays(weeks);
+      expect(actualDays).toBeGreaterThan(80);
+    });
+
+    it('handles current date at end of month', () => {
+      const currentDate = new Date('2025-12-31');
+      const { weeks } = generateHorizontalGrid(currentDate, new Set());
+
+      expect(weeks.length).toBeGreaterThan(0);
+      const actualDays = countActualDays(weeks);
+      expect(actualDays).toBeGreaterThan(80);
+    });
+  });
+});
+
+describe('calculate3MonthStats', () => {
+  const createMockDay = (overrides: Partial<CalendarDay> = {}): CalendarDay => ({
+    date: '2025-12-15',
+    dayOfMonth: 15,
+    completed: false,
+    isToday: false,
+    isFuture: false,
+    isBeforeCreation: false,
+    ...overrides,
+  });
+
+  describe('basic calculations', () => {
+    it('returns 0 completions for empty grid', () => {
+      const weeks = [[
+        createMockDay({ date: null, dayOfMonth: null }),
+        createMockDay({ date: null, dayOfMonth: null }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.completions).toBe(0);
+      expect(stats.eligibleDays).toBe(0);
+    });
+
+    it('counts completions correctly', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
+        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+        createMockDay({ date: '2025-12-04', dayOfMonth: 4, completed: true }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.completions).toBe(3);
+    });
+
+    it('counts eligible days correctly', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2 }),
+        createMockDay({ date: null, dayOfMonth: null }), // Padding
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.eligibleDays).toBe(2);
+    });
+  });
+
+  describe('excluded days', () => {
+    it('excludes null dates from eligible days', () => {
+      const weeks = [[
+        createMockDay({ date: null, dayOfMonth: null }),
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
+        createMockDay({ date: null, dayOfMonth: null }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.eligibleDays).toBe(1);
+    });
+
+    it('excludes future days from eligible days', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-15', dayOfMonth: 15 }),
+        createMockDay({ date: '2025-12-16', dayOfMonth: 16, isFuture: true }),
+        createMockDay({ date: '2025-12-17', dayOfMonth: 17, isFuture: true }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.eligibleDays).toBe(1);
+    });
+
+    it('excludes before-creation days from eligible days', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1, isBeforeCreation: true }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2, isBeforeCreation: true }),
+        createMockDay({ date: '2025-12-03', dayOfMonth: 3 }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.eligibleDays).toBe(1);
+    });
+
+    it('does not count completions on excluded days', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1, isBeforeCreation: true, completed: true }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2, isFuture: true, completed: true }),
+        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.completions).toBe(1);
+    });
+  });
+
+  describe('success rate calculation', () => {
+    it('calculates 100% success rate when all eligible days completed', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: true }),
+        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.successRate).toBe(100);
+    });
+
+    it('calculates 0% success rate when no days completed', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: false }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.successRate).toBe(0);
+    });
+
+    it('calculates 50% success rate correctly', () => {
+      const weeks = [[
+        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.successRate).toBe(50);
+    });
+
+    it('returns 0% success rate when no eligible days', () => {
+      const weeks = [[
+        createMockDay({ date: null, dayOfMonth: null }),
+        createMockDay({ date: '2025-12-15', dayOfMonth: 15, isFuture: true }),
+      ]];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.successRate).toBe(0);
+    });
+  });
+
+  describe('multi-week grid', () => {
+    it('handles multiple weeks correctly', () => {
+      const weeks = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
+        ],
+        [
+          createMockDay({ date: '2025-12-08', dayOfMonth: 8, completed: true }),
+          createMockDay({ date: '2025-12-09', dayOfMonth: 9, completed: true }),
+        ],
+        [
+          createMockDay({ date: '2025-12-15', dayOfMonth: 15, completed: false }),
+        ],
+      ];
+
+      const stats = calculate3MonthStats(weeks);
+      expect(stats.completions).toBe(3);
+      expect(stats.eligibleDays).toBe(5);
+      expect(stats.successRate).toBe(60);
+    });
+  });
+
+  describe('integration with generateHorizontalGrid', () => {
+    it('calculates stats correctly for generated grid', () => {
+      const currentDate = new Date('2025-12-22');
+      const completedDates = new Set([
+        '2025-12-01',
+        '2025-12-05',
+        '2025-12-10',
+        '2025-11-15',
+        '2025-11-20',
+      ]);
+
+      const { weeks } = generateHorizontalGrid(currentDate, completedDates);
+      const stats = calculate3MonthStats(weeks);
+
+      expect(stats.completions).toBe(5);
+      expect(stats.eligibleDays).toBeGreaterThan(80);
+      expect(stats.successRate).toBeGreaterThan(0);
+      expect(stats.successRate).toBeLessThan(10); // 5 out of ~90 days
     });
   });
 });
