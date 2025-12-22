@@ -319,6 +319,16 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
   - Check color contrast
   - Test with VoiceOver/TalkBack
   - **Note:** Manual testing required on physical devices.
+  - **Checklist for testing:**
+    - [ ] iOS: Progress ring fill animation smooth (1200ms)
+    - [ ] iOS: Current streak pulse animation smooth (2000ms infinite)
+    - [ ] iOS: Bar chart staggered animation smooth (600ms)
+    - [ ] iOS: VoiceOver announces all accessibility labels
+    - [ ] iOS: Color contrast meets WCAG AA (4.5:1 for text)
+    - [ ] Android: All animations above work correctly
+    - [ ] Android: TalkBack announces all accessibility labels
+    - [ ] Android: Scrolling remains smooth with animations
+    - [ ] Both: Haptic feedback works on interactive elements
 
 ### Phase 7: Testing
 
@@ -350,13 +360,13 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
 
 ## Success Criteria
 
-- [ ] 4+ collapsible cards → 3 always-visible sections
-- [ ] Actionable tip displayed based on user patterns
-- [ ] Current streak visually highlighted with animation
-- [ ] Worst day tappable with clear affordance
-- [ ] All animations respect `reduceMotion`
-- [ ] No performance regression on scroll
-- [ ] Accessibility audit passes
+- [x] 4+ collapsible cards → 3 always-visible sections ✅ ProgressSection renders 3 non-collapsible cards
+- [x] Actionable tip displayed based on user patterns ✅ YourProgressCard displays tip with 💡 icon
+- [x] Current streak visually highlighted with animation ✅ PersonalBestsCard shows "NOW 🔥" badge with pulse glow
+- [x] Worst day tappable with clear affordance ✅ PersonalBestsCard has Pressable with ChevronRight + "tap for tips"
+- [x] All animations respect `reduceMotion` ✅ All 3 cards check AccessibilityInfo.isReduceMotionEnabled()
+- [ ] No performance regression on scroll (requires device testing - T6.4)
+- [ ] Accessibility audit passes (requires device testing with VoiceOver/TalkBack - T6.4)
 
 ## References
 
