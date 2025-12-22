@@ -498,15 +498,15 @@ function detectWeakDay(
 
 ### Phase 4: Integration with HabitDetailScreen
 
-- [ ] **CALENDAR-4.1** Add CalendarHeatmap to HabitDetailScreen
-  - Import component
-  - Place after StreakChainSection, before TabView
-  - Pass required props: habitId, completedDates, habitCreatedAt, habitColor
+- [x] **CALENDAR-4.1** Add CalendarHeatmap to HabitDetailScreen
+  - Import component ✓
+  - Place after StreakChainSection, before TabView ✓ (Note: StreakChainSection was removed, CalendarHeatmap is now first in stats section)
+  - Pass required props: habitId, completedDates, habitCreatedAt, habitColor ✓
 
-- [ ] **CALENDAR-4.2** Wire up data from HabitDetailScreen
-  - Ensure `completedDates` Set is available
-  - Pass habit creation timestamp
-  - Pass habit color for theming (optional enhancement)
+- [x] **CALENDAR-4.2** Wire up data from HabitDetailScreen
+  - Ensure `completedDates` Set is available ✓
+  - Pass habit creation timestamp ✓
+  - Pass habit color for theming (optional enhancement) ✓ (using habit.iconColor)
 
 ### Phase 5: Polish & Interactions
 
