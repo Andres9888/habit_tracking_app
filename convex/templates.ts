@@ -32,6 +32,7 @@ type TemplateInsert = {
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;
+  tips?: string[];
   youtubeLink?: string;
 };
 
@@ -176,6 +177,11 @@ export const seedTemplates = mutation({
         'https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/1809754',
       scientificReference:
         'Goyal et al. (2014) - Meditation programs for psychological stress',
+      tips: [
+        'Start with just 2 minutes and gradually increase to 5',
+        'Find a quiet spot and sit comfortably - no special equipment needed',
+        'Focus on your breath; when your mind wanders, gently return to it',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=xLXF5aP4CtQ',
     });
 
@@ -191,6 +197,11 @@ export const seedTemplates = mutation({
       popularityScore: 88,
       scientificReference:
         "Cameron (1992) - The Artist's Way creative recovery program",
+      tips: [
+        'Write immediately upon waking, before checking your phone',
+        'Keep your pen moving - no editing or self-censorship allowed',
+        'Use a dedicated notebook and write by hand for best results',
+      ],
     });
 
     await insertWithTracking({
@@ -205,6 +216,11 @@ export const seedTemplates = mutation({
       popularityScore: 92,
       scientificReference:
         'Popkin et al. (2010) - Water, hydration, and health',
+      tips: [
+        'Keep a glass of water on your nightstand the night before',
+        'Add a slice of lemon for flavor and extra vitamin C',
+        'Drink before coffee or tea for maximum absorption',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=81QHxWBJyFg',
     });
 
@@ -220,6 +236,11 @@ export const seedTemplates = mutation({
       popularityScore: 85,
       scientificReference:
         'Huberman (2021) - Light exposure and circadian biology',
+      tips: [
+        'Go outside - window glass filters out beneficial light wavelengths',
+        'Aim for 2-10 minutes of direct sunlight exposure (no sunglasses)',
+        'On cloudy days, spend more time outside to get the same benefit',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
     });
 
@@ -235,6 +256,11 @@ export const seedTemplates = mutation({
       popularityScore: 78,
       scientificReference:
         'Cramer et al. (2016) - Yoga for chronic low back pain',
+      tips: [
+        'Start with 3-5 repetitions and build up over time',
+        'Move slowly and sync your breath with each movement',
+        'Practice on an empty stomach for best results',
+      ],
     });
 
     await insertWithTracking({
@@ -249,6 +275,11 @@ export const seedTemplates = mutation({
       popularityScore: 76,
       scientificReference:
         'Höpfl et al. (2021) - Cold water immersion for recovery',
+      tips: [
+        'Start with 30 seconds of cold water and gradually increase',
+        'End your regular shower with cold rather than starting cold',
+        'Focus on slow, controlled breathing to manage the shock',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=pq6WHJzOkno',
     });
 
@@ -264,6 +295,11 @@ export const seedTemplates = mutation({
       popularityScore: 80,
       scientificReference:
         'McRaven (2014) - Make Your Bed: Little Things That Can Change Your Life',
+      tips: [
+        'Do it immediately after getting up - before anything else',
+        'Keep it simple: straighten sheets, fluff pillows, done',
+        'Use this small win to build momentum for the day',
+      ],
     });
 
     // Health & Fitness Templates
@@ -281,6 +317,11 @@ export const seedTemplates = mutation({
         'https://journals.lww.com/acsm-healthfitness/fulltext/2013/05000/high_intensity_circuit_training_using_body_weight_.5.aspx',
       scientificReference:
         'Jordan et al. (2013) - High-intensity circuit training',
+      tips: [
+        'Use a timer app to keep 30-second intervals consistent',
+        'Focus on form over speed - quality movements matter more',
+        'Do it first thing in the morning before excuses arise',
+      ],
     });
 
     await insertWithTracking({
@@ -295,6 +336,11 @@ export const seedTemplates = mutation({
       popularityScore: 94,
       scientificReference:
         'Lee et al. (2019) - Association of step volume and intensity',
+      tips: [
+        'Take walking meetings or phone calls when possible',
+        'Park farther away and take the stairs',
+        'Break it into 3 walks: morning, lunch, and evening',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=YQ7QGKIx6vY',
     });
 
@@ -310,6 +356,11 @@ export const seedTemplates = mutation({
       popularityScore: 91,
       scientificReference:
         'Westcott (2012) - Resistance training health benefits',
+      tips: [
+        'Start with bodyweight exercises if new to strength training',
+        'Focus on compound movements: squats, deadlifts, presses, rows',
+        'Allow 48 hours between sessions for muscle recovery',
+      ],
     });
 
     await insertWithTracking({
@@ -324,6 +375,11 @@ export const seedTemplates = mutation({
       popularityScore: 86,
       scientificReference:
         'Behm et al. (2016) - Acute effects of muscle stretching',
+      tips: [
+        'Hold each stretch for 30-60 seconds for best results',
+        'Stretch after exercise when muscles are warm',
+        'Focus on major muscle groups: hamstrings, hips, shoulders',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=gdbL6WN4jNM',
     });
 
@@ -339,6 +395,11 @@ export const seedTemplates = mutation({
       popularityScore: 89,
       scientificReference:
         'Yang et al. (2014) - Added sugar intake and cardiovascular disease',
+      tips: [
+        'Read labels - sugar hides under 50+ different names',
+        'Replace sweet snacks with fruit, nuts, or dark chocolate',
+        'Prepare meals at home to control sugar content',
+      ],
     });
 
     await insertWithTracking({

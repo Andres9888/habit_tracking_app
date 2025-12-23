@@ -200,6 +200,9 @@ const applicationTables = {
     // "daily", "weekly", "custom"
     scientificReference: v.string(),
 
+    // Success tips for this habit (shown in preview modal)
+    tips: v.optional(v.array(v.string())),
+
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
   }).index('by_category', ['category']),

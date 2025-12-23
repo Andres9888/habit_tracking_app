@@ -646,48 +646,30 @@ export default function FullsizeTemplatePreview({
             </View>
             <View style={styles.tipsDivider} />
             <View style={styles.tipsContent}>
-              {/* Tip 1: Start Small */}
-              <View style={styles.tipItem}>
-                <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
-                  <Target color={iconColor} size={18} strokeWidth={2} />
-                </View>
-                <Text
-                  style={[
-                    styles.tipText,
-                    { fontFamily: theme.custom.fontFamilies.primary.text },
-                  ]}
-                >
-                  Start with just 2 minutes to build consistency
-                </Text>
-              </View>
-              {/* Tip 2: Stack with existing habit */}
-              <View style={styles.tipItem}>
-                <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
-                  <Zap color={iconColor} size={18} strokeWidth={2} />
-                </View>
-                <Text
-                  style={[
-                    styles.tipText,
-                    { fontFamily: theme.custom.fontFamilies.primary.text },
-                  ]}
-                >
-                  Attach to an existing habit for better recall
-                </Text>
-              </View>
-              {/* Tip 3: Set a reminder */}
-              <View style={styles.tipItem}>
-                <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
-                  <Bell color={iconColor} size={18} strokeWidth={2} />
-                </View>
-                <Text
-                  style={[
-                    styles.tipText,
-                    { fontFamily: theme.custom.fontFamilies.primary.text },
-                  ]}
-                >
-                  Set a daily reminder until it becomes automatic
-                </Text>
-              </View>
+              {/* Use template tips if available, otherwise show generic tips */}
+              {(template?.tips && template.tips.length > 0 ? template.tips : [
+                'Start with just 2 minutes to build consistency',
+                'Attach to an existing habit for better recall',
+                'Set a daily reminder until it becomes automatic',
+              ]).map((tip, index) => {
+                const icons = [Target, Zap, Bell];
+                const IconComponent = icons[index % icons.length];
+                return (
+                  <View key={index} style={styles.tipItem}>
+                    <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
+                      <IconComponent color={iconColor} size={18} strokeWidth={2} />
+                    </View>
+                    <Text
+                      style={[
+                        styles.tipText,
+                        { fontFamily: theme.custom.fontFamilies.primary.text },
+                      ]}
+                    >
+                      {tip}
+                    </Text>
+                  </View>
+                );
+              })}
             </View>
           </View>
 
