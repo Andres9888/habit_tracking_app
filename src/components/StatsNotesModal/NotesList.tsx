@@ -144,12 +144,12 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
           accessibilityLabel='Search notes'
           className='w-full rounded-2xl border border-stone-200 bg-white py-3 pl-11 pr-4 text-sm font-medium text-stone-900'
           placeholder='Search notes...'
-          placeholderTextColor='#999'
+          placeholderTextColor='#a8a29e'
           value={searchText}
           onChangeText={setSearchText}
         />
         <View className='absolute left-4 top-3.5'>
-          <Search color='#999' size={18} strokeWidth={2} />
+          <Search color='#a8a29e' size={18} strokeWidth={2} />
         </View>
       </View>
 

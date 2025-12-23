@@ -43,7 +43,7 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
         blurOnSubmit
         className='h-14 rounded-xl bg-white px-4 text-base text-[#1a1a1a]'
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
-        placeholderTextColor='#adaebc'
+        placeholderTextColor='#a8a29e'
         returnKeyType='done'
         value={value}
         maxLength={MAX_LENGTH}

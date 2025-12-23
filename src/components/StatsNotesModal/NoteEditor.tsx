@@ -83,7 +83,7 @@ export default function NoteEditor({
               accessibilityLabel='Note date'
               className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
               placeholder='YYYY-MM-DD'
-              placeholderTextColor='#999'
+              placeholderTextColor='#a8a29e'
               value={date}
               onChangeText={setDate}
             />
@@ -142,7 +142,7 @@ export default function NoteEditor({
           accessibilityLabel='Note body'
           className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
           placeholder='Write your note here...'
-          placeholderTextColor='#999'
+          placeholderTextColor='#a8a29e'
           textAlignVertical='top'
           value={body}
           onChangeText={setBody}

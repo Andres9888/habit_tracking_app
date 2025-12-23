@@ -175,7 +175,7 @@ export default function TemplatePreviewModal({
             <TextInput
               editable={!isImporting}
               placeholder='Enter habit name'
-              placeholderTextColor='#9CA3AF'
+              placeholderTextColor='#a8a29e'
               style={[
                 styles.input,
                 {

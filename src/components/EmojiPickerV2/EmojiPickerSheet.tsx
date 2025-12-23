@@ -300,13 +300,13 @@ export const EmojiPickerSheet = memo(
               {/* Search Bar */}
               <View style={styles.searchContainer}>
                 <Animated.View style={[styles.searchBar, searchBarAnimatedStyle]}>
-                  <Search color={isSearchFocused ? '#3b82f6' : '#9ca3af'} size={20} />
+                  <Search color={isSearchFocused ? '#3b82f6' : '#a8a29e'} size={20} />
                   <TextInput
                     accessibilityLabel="Search emojis"
                     accessibilityHint="Type keywords to search for emojis"
                     style={styles.searchInput}
                     placeholder="Search or type habit name..."
-                    placeholderTextColor="#9ca3af"
+                    placeholderTextColor="#a8a29e"
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                     onFocus={handleSearchFocus}
