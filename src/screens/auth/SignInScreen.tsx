@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
+import { AnimatedLogo } from './components/AnimatedLogo';
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -44,12 +45,16 @@ export default function SignInScreen() {
   return (
     <View className='flex-1 bg-white'>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
-          Welcome Back
-        </Text>
-        <Text className='mb-10 text-base text-slate-500'>
-          Sign in to continue tracking your habits
-        </Text>
+        {/* Logo Section */}
+        <View className='mb-8 items-center'>
+          <AnimatedLogo size={80} />
+          <Text className='mb-2 text-3xl font-extrabold tracking-tight text-slate-900'>
+            Welcome Back! 👋
+          </Text>
+          <Text className='text-base text-slate-500'>
+            Sign in to continue your journey
+          </Text>
+        </View>
 
         <SocialLoginButtons />
 
