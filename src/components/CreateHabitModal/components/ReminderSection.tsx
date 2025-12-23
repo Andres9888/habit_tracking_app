@@ -38,7 +38,7 @@ export const ReminderSection = ({
           }}
         />
       </View>
-      <Text className='mb-4 text-[13px] text-[#64748b]'>
+      <Text className='mb-4 text-[13px] text-[#78716c]'>
         {STRINGS.CREATE_HABIT.remindersHelper}
       </Text>
       {remindersEnabled && (
@@ -72,7 +72,7 @@ export const ReminderSection = ({
                   }
                 }}
               >
-                <Text className='text-[13px] font-medium text-[#334155]'>
+                <Text className='text-[13px] font-medium text-[#44403c]'>
                   {p.label}
                 </Text>
               </TouchableOpacity>

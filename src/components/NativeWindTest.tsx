@@ -7,12 +7,12 @@ import { Text, View } from 'react-native';
 
 export function NativeWindTest() {
   return (
-    <View className='flex-1 items-center justify-center bg-slate-100 p-4'>
-      <View className='mb-4 rounded-lg border border-slate-200 bg-white p-6 shadow-md'>
-        <Text className='mb-2 text-2xl font-bold text-slate-900'>
+    <View className='flex-1 items-center justify-center bg-stone-100 p-4'>
+      <View className='mb-4 rounded-lg border border-stone-200 bg-white p-6 shadow-md'>
+        <Text className='mb-2 text-2xl font-bold text-stone-900'>
           NativeWind Test
         </Text>
-        <Text className='text-sm text-slate-600'>
+        <Text className='text-sm text-stone-600'>
           If you can see styled text with proper spacing, colors, and shadows,
           NativeWind is working correctly! ✅
         </Text>

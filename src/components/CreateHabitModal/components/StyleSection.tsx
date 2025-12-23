@@ -116,7 +116,7 @@ export const StyleSection = ({
       style={{ opacity: disabled ? 0.4 : 1 }}
       pointerEvents={disabled ? 'none' : 'auto'}
     >
-      <Text className="mb-3 text-sm font-bold text-slate-800">Color</Text>
+      <Text className="mb-3 text-sm font-bold text-stone-800">Color</Text>
 
       {/* Color Picker - 24 colors in 3 rows of 8 */}
       <View>
@@ -134,7 +134,7 @@ export const StyleSection = ({
                 style={{
                   alignItems: 'center',
                   backgroundColor: color,
-                  borderColor: selectedColor === color ? '#1e293b' : 'transparent',
+                  borderColor: selectedColor === color ? '#292524' : 'transparent',
                   borderRadius: 18,
                   borderWidth: selectedColor === color ? 3 : 0,
                   height: 36,

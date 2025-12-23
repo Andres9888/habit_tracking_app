@@ -14,7 +14,7 @@ interface CalendarTabsProps {
 
 export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
   return (
-    <View className='mb-4 flex-row rounded-lg bg-slate-100 p-1'>
+    <View className='mb-4 flex-row rounded-lg bg-stone-100 p-1'>
       {/* Month Tab */}
       <Pressable
         className={`flex-1 rounded-md py-2 ${
@@ -24,7 +24,7 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
       >
         <Text
           className={`text-center text-sm font-semibold ${
-            activeView === 'month' ? 'text-slate-900' : 'text-slate-500'
+            activeView === 'month' ? 'text-stone-900' : 'text-stone-500'
           }`}
         >
           Month
@@ -40,7 +40,7 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
       >
         <Text
           className={`text-center text-sm font-semibold ${
-            activeView === 'year' ? 'text-slate-900' : 'text-slate-500'
+            activeView === 'year' ? 'text-stone-900' : 'text-stone-500'
           }`}
         >
           Year

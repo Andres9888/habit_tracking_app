@@ -127,11 +127,11 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
   return (
     <View className='gap-4'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-lg font-semibold text-slate-900'>Notes</Text>
+        <Text className='text-lg font-semibold text-stone-900'>Notes</Text>
         <TouchableOpacity
           accessibilityLabel='Add new note'
           accessibilityRole='button'
-          className='h-9 w-9 items-center justify-center rounded-full bg-slate-900'
+          className='h-9 w-9 items-center justify-center rounded-full bg-stone-900'
           onPress={() => setIsAdding(true)}
         >
           <Plus color='#ffffff' size={18} strokeWidth={2.25} />
@@ -142,7 +142,7 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
       <View className='relative'>
         <TextInput
           accessibilityLabel='Search notes'
-          className='w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm font-medium text-slate-900'
+          className='w-full rounded-2xl border border-stone-200 bg-white py-3 pl-11 pr-4 text-sm font-medium text-stone-900'
           placeholder='Search notes...'
           placeholderTextColor='#999'
           value={searchText}
@@ -156,7 +156,7 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
       {/* Filter by habit */}
       {hideHabitFilter ? null : (
         <View className='gap-2'>
-          <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
             FILTER BY HABIT
           </Text>
           <View className='flex-row flex-wrap gap-2'>
@@ -164,13 +164,13 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
               accessibilityLabel='Show all notes'
               accessibilityRole='button'
               className={`rounded-xl px-3 py-2 ${
-                selectedHabitFilter === 'all' ? 'bg-slate-900' : 'bg-slate-100'
+                selectedHabitFilter === 'all' ? 'bg-stone-900' : 'bg-stone-100'
               }`}
               onPress={() => setSelectedHabitFilter('all')}
             >
               <Text
                 className={`text-sm font-medium ${
-                  selectedHabitFilter === 'all' ? 'text-white' : 'text-slate-700'
+                  selectedHabitFilter === 'all' ? 'text-white' : 'text-stone-700'
                 }`}
               >
                 All
@@ -183,8 +183,8 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
                 accessibilityRole='button'
                 className={`rounded-xl px-3 py-2 ${
                   selectedHabitFilter === habit._id
-                    ? 'bg-slate-900'
-                    : 'bg-slate-100'
+                    ? 'bg-stone-900'
+                    : 'bg-stone-100'
                 }`}
                 onPress={() => setSelectedHabitFilter(habit._id)}
               >
@@ -192,7 +192,7 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
                   className={`text-sm font-medium ${
                     selectedHabitFilter === habit._id
                       ? 'text-white'
-                      : 'text-slate-700'
+                      : 'text-stone-700'
                   }`}
                 >
                   {habit.name}
@@ -222,7 +222,7 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
       {/* Notes list grouped by date */}
       {groupedNotes.length === 0 ? (
         <View className='items-center py-8'>
-          <Text className='text-center text-sm text-slate-500'>
+          <Text className='text-center text-sm text-stone-500'>
             {searchText || selectedHabitFilter !== 'all'
               ? 'No notes found'
               : 'No notes yet. Add your first note!'}
@@ -232,7 +232,7 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
         <View className='gap-6'>
           {groupedNotes.map(({ date, notes: dateNotes }) => (
             <View key={date} className='gap-3'>
-              <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+              <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
                 {format(new Date(date), 'MMM d, yyyy')}
               </Text>
               {dateNotes.map((note) => {
@@ -244,20 +244,20 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
                 return (
                   <View
                     key={note._id}
-                    className='gap-2 rounded-2xl bg-slate-50 p-4'
+                    className='gap-2 rounded-2xl bg-stone-50 p-4'
                   >
                     {linkedHabit && (
                       <View className='mb-1'>
-                        <Text className='text-xs font-semibold text-slate-600'>
+                        <Text className='text-xs font-semibold text-stone-600'>
                           {linkedHabit.name}
                         </Text>
                       </View>
                     )}
-                    <Text className='text-sm leading-5 text-slate-900'>
+                    <Text className='text-sm leading-5 text-stone-900'>
                       {note.body}
                     </Text>
                     <View className='flex-row items-center justify-between'>
-                      <Text className='text-xs text-slate-400'>
+                      <Text className='text-xs text-stone-400'>
                         {note.updatedAt === note.createdAt
                           ? `Created ${format(note.createdAt, 'MMM d, h:mm a')}`
                           : `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`}
@@ -266,11 +266,11 @@ export default function NotesList({ hideHabitFilter = false, initialHabitId, onA
                         <TouchableOpacity
                           accessibilityLabel='Edit note'
                           accessibilityRole='button'
-                          className='rounded-full bg-slate-200 p-2'
+                          className='rounded-full bg-stone-200 p-2'
                           disabled={isDeleting}
                           onPress={() => setEditingNoteId(note._id)}
                         >
-                          <Edit3 color='#475569' size={14} strokeWidth={2.25} />
+                          <Edit3 color='#57534e' size={14} strokeWidth={2.25} />
                         </TouchableOpacity>
                         <TouchableOpacity
                           accessibilityLabel='Delete note'

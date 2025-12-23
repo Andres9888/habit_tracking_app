@@ -46,13 +46,13 @@ export default function HeatmapCalendar({
   };
 
   return (
-    <View className='rounded-xl bg-slate-50 px-4 py-3'>
+    <View className='rounded-xl bg-stone-50 px-4 py-3'>
       {/* Month labels */}
       <View className='mb-3 flex-row'>
         <View className='w-12' />
         {months.map((month, monthIndex) => (
           <View key={monthIndex} className='flex-1'>
-            <Text className='text-center text-xs font-medium text-slate-500'>
+            <Text className='text-center text-xs font-medium text-stone-500'>
               {format(month, 'MMM')}
             </Text>
           </View>
@@ -68,7 +68,7 @@ export default function HeatmapCalendar({
           <View key={dayOfWeek} className='mb-2.5 flex-row'>
             {/* Day label */}
             <View className='w-12 justify-center'>
-              <Text className='text-xs text-slate-400'>{dayLabel}</Text>
+              <Text className='text-xs text-stone-400'>{dayLabel}</Text>
             </View>
 
             {/* Dots for each month */}
@@ -111,10 +111,10 @@ export default function HeatmapCalendar({
                           className='h-1.5 w-1.5 rounded-full'
                           style={{
                             backgroundColor: isFuture
-                              ? '#e2e8f0'
+                              ? '#e7e5e4'
                               : isCompleted
                                 ? '#10b981'
-                                : '#cbd5e1',
+                                : '#d6d3d1',
                           }}
                         />
                       );

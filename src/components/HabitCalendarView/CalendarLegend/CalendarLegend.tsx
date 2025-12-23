@@ -17,9 +17,9 @@ const LEGEND_ITEMS = [
     textClassName: 'text-blue-600',
   },
   {
-    indicatorClassName: 'bg-slate-300',
+    indicatorClassName: 'bg-stone-300',
     label: 'Upcoming',
-    textClassName: 'text-slate-400',
+    textClassName: 'text-stone-400',
   },
 ];
 

@@ -38,7 +38,7 @@ export function SettingsRow({
       }
     : {
         background: '#ffffff',
-        border: '#f1f5f9',
+        border: '#f5f5f4',
         chevron: '#8a8a8a',
         label: '#1a1a1a',
         switchThumb: '#ffffff',

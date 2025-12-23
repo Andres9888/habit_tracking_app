@@ -63,7 +63,7 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         className="mr-2 mb-2 flex-row items-center rounded-full bg-white px-3 py-2"
         style={{
           borderWidth: 1,
-          borderColor: '#e2e8f0',
+          borderColor: '#e7e5e4',
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.05,
@@ -74,7 +74,7 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         onPressOut={handlePressOut}
       >
         <Text className="mr-1.5 text-base">{chip.emoji}</Text>
-        <Text className="text-sm font-medium text-slate-700">{chip.name}</Text>
+        <Text className="text-sm font-medium text-stone-700">{chip.name}</Text>
       </Pressable>
     </Animated.View>
   );
@@ -85,7 +85,7 @@ export const SuggestionChips = ({ onSelect, visible }: SuggestionChipsProps) => 
 
   return (
     <View className="mb-3">
-      <Text className="mb-2 text-xs font-medium text-slate-500">
+      <Text className="mb-2 text-xs font-medium text-stone-500">
         QUICK START
       </Text>
       <View className="flex-row flex-wrap">

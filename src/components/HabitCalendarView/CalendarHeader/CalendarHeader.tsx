@@ -17,7 +17,7 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   return (
     <View className='flex-row items-center justify-between'>
-      <Text className='text-lg font-bold text-slate-900'>
+      <Text className='text-lg font-bold text-stone-900'>
         {format(currentMonth, 'MMMM yyyy')}
       </Text>
 
@@ -25,10 +25,10 @@ export function CalendarHeader({
         <Pressable
           accessibilityLabel='Jump to the current month'
           accessibilityRole='button'
-          className='rounded-full border border-slate-200 px-3 py-1'
+          className='rounded-full border border-stone-200 px-3 py-1'
           onPress={onToday}
         >
-          <Text className='text-xs font-semibold uppercase tracking-wide text-slate-600'>
+          <Text className='text-xs font-semibold uppercase tracking-wide text-stone-600'>
             Today
           </Text>
         </Pressable>
@@ -39,7 +39,7 @@ export function CalendarHeader({
           className='h-8 w-8 items-center justify-center rounded-full'
           onPress={onPrevious}
         >
-          <ChevronLeft color='#64748b' size={20} />
+          <ChevronLeft color='#78716c' size={20} />
         </Pressable>
 
         <Pressable
@@ -48,7 +48,7 @@ export function CalendarHeader({
           className='h-8 w-8 items-center justify-center rounded-full'
           onPress={onNext}
         >
-          <ChevronRight color='#64748b' size={20} />
+          <ChevronRight color='#78716c' size={20} />
         </Pressable>
       </View>
     </View>

@@ -84,7 +84,7 @@ export default function SettingsModal({
         accent: '#1a1a1a',
         background: '#f8f5f1',
         card: '#ffffff',
-        cardBorder: '#f1f5f9',
+        cardBorder: '#f5f5f4',
         headerText: '#1a1a1a',
         icon: '#1a1a1a',
         mutedText: '#8a8a8a',
@@ -190,8 +190,8 @@ export default function SettingsModal({
             >
               <SettingsRow
                 highContrastMode={isHighContrastActive}
-                icon={<BookOpen color='#64748b' size={16} />}
-                iconBackgroundColor='#e2e8f0'
+                icon={<BookOpen color='#78716c' size={16} />}
+                iconBackgroundColor='#e7e5e4'
                 label='Archived Habits'
                 showBorder={false}
                 type='navigation'

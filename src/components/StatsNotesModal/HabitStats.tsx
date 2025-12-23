@@ -103,7 +103,7 @@ export default function HabitStats() {
   if (habits.length === 0) {
     return (
       <View className='items-center py-8'>
-        <Text className='text-center text-sm text-slate-500'>
+        <Text className='text-center text-sm text-stone-500'>
           No habits yet. Create your first habit to see stats!
         </Text>
       </View>
@@ -112,13 +112,13 @@ export default function HabitStats() {
 
   return (
     <View className='gap-4'>
-      <Text className='text-lg font-semibold text-slate-900'>
+      <Text className='text-lg font-semibold text-stone-900'>
         Per-Habit Stats
       </Text>
 
       {/* Habit selector */}
       <View className='gap-2'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+        <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
           SELECT HABIT
         </Text>
         <ScrollView
@@ -132,7 +132,7 @@ export default function HabitStats() {
               accessibilityLabel={`View stats for ${habit.name}`}
               accessibilityRole='button'
               className={`rounded-xl px-4 py-2 ${
-                selectedHabitId === habit._id ? 'bg-slate-900' : 'bg-slate-100'
+                selectedHabitId === habit._id ? 'bg-stone-900' : 'bg-stone-100'
               }`}
               onPress={() => setSelectedHabitId(habit._id)}
             >
@@ -140,7 +140,7 @@ export default function HabitStats() {
                 className={`text-sm font-medium ${
                   selectedHabitId === habit._id
                     ? 'text-white'
-                    : 'text-slate-700'
+                    : 'text-stone-700'
                 }`}
               >
                 {habit.name}
@@ -154,28 +154,28 @@ export default function HabitStats() {
         <View className='gap-4'>
           {/* Streaks */}
           <View className='flex-row gap-3'>
-            <View className='flex-1 rounded-2xl bg-slate-50 p-4'>
-              <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+            <View className='flex-1 rounded-2xl bg-stone-50 p-4'>
+              <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
                 CURRENT STREAK
               </Text>
               <View className='mt-2 flex-row items-baseline gap-2'>
                 <Text className='text-3xl font-bold text-[#48bb78]'>
                   {habitStats.currentStreak}
                 </Text>
-                <Text className='text-xl font-semibold text-slate-400'>
+                <Text className='text-xl font-semibold text-stone-400'>
                   {habitStats.currentStreak === 1 ? 'day' : 'days'}
                 </Text>
               </View>
             </View>
-            <View className='flex-1 rounded-2xl bg-slate-50 p-4'>
-              <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+            <View className='flex-1 rounded-2xl bg-stone-50 p-4'>
+              <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
                 LONGEST STREAK
               </Text>
               <View className='mt-2 flex-row items-baseline gap-2'>
                 <Text className='text-3xl font-bold text-[#48bb78]'>
                   {habitStats.longestStreak}
                 </Text>
-                <Text className='text-xl font-semibold text-slate-400'>
+                <Text className='text-xl font-semibold text-stone-400'>
                   {habitStats.longestStreak === 1 ? 'day' : 'days'}
                 </Text>
               </View>
@@ -183,16 +183,16 @@ export default function HabitStats() {
           </View>
 
           {/* Weekly bar chart */}
-          <View className='rounded-2xl bg-slate-50 p-4'>
-            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <View className='rounded-2xl bg-stone-50 p-4'>
+            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
               LAST 7 DAYS
             </Text>
             <WeeklyBarChart data={habitStats.weeklyData} />
           </View>
 
           {/* 30-day trend line chart */}
-          <View className='rounded-2xl bg-slate-50 p-4'>
-            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <View className='rounded-2xl bg-stone-50 p-4'>
+            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
               30-DAY TREND
             </Text>
             <TrendLineChart data={habitStats.completionData} />
@@ -237,7 +237,7 @@ function WeeklyBarChart({
                 y={y}
               />
               <SvgText
-                fill='#64748b'
+                fill='#78716c'
                 fontSize='10'
                 textAnchor='middle'
                 x={x + barWidth / 2}
@@ -249,7 +249,7 @@ function WeeklyBarChart({
           );
         })}
       </Svg>
-      <Text className='mt-2 text-xs text-slate-500'>
+      <Text className='mt-2 text-xs text-stone-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
         {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>
@@ -292,7 +292,7 @@ function TrendLineChart({
       <Svg height={chartHeight} width={chartWidth}>
         {/* Grid lines */}
         <Line
-          stroke='#e2e8f0'
+          stroke='#e7e5e4'
           strokeDasharray='4,4'
           strokeWidth='1'
           x1='0'
@@ -303,7 +303,7 @@ function TrendLineChart({
 
         {/* Line path */}
         <Line
-          stroke='#cbd5e1'
+          stroke='#d6d3d1'
           strokeWidth='1'
           x1={points[0]?.x ?? 0}
           x2={points.at(-1)?.x ?? 0}
@@ -319,17 +319,17 @@ function TrendLineChart({
             cy={point.y}
             fill={point.completed ? '#48bb78' : '#dde3ed'}
             r={pointRadius}
-            stroke={point.completed ? '#48bb78' : '#94a3b8'}
+            stroke={point.completed ? '#48bb78' : '#a8a29e'}
             strokeWidth='1.5'
           />
         ))}
 
         {/* Labels */}
-        <SvgText fill='#64748b' fontSize='10' textAnchor='start' x='0' y='15'>
+        <SvgText fill='#78716c' fontSize='10' textAnchor='start' x='0' y='15'>
           ✓
         </SvgText>
         <SvgText
-          fill='#64748b'
+          fill='#78716c'
           fontSize='10'
           textAnchor='start'
           x='0'
@@ -338,7 +338,7 @@ function TrendLineChart({
           ✗
         </SvgText>
       </Svg>
-      <Text className='mt-2 text-xs text-slate-500'>
+      <Text className='mt-2 text-xs text-stone-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
         {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>

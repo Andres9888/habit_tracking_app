@@ -77,30 +77,30 @@ export default function StatsOverview() {
     <View className='gap-8'>
       {/* Overview Section */}
       <View className='gap-4'>
-        <Text className='text-lg font-semibold text-slate-900'>Overview</Text>
+        <Text className='text-lg font-semibold text-stone-900'>Overview</Text>
 
         <View className='gap-3'>
           {/* Today's completion */}
-          <View className='rounded-2xl bg-slate-50 p-4'>
-            <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <View className='rounded-2xl bg-stone-50 p-4'>
+            <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
               TODAY
             </Text>
             <View className='mt-2 flex-row items-baseline gap-2'>
               <Text className='text-3xl font-bold text-[#48bb78]'>
                 {todayCompleted}
               </Text>
-              <Text className='text-xl font-semibold text-slate-400'>
+              <Text className='text-xl font-semibold text-stone-400'>
                 / {totalHabits}
               </Text>
             </View>
-            <Text className='mt-1 text-sm text-slate-600'>
+            <Text className='mt-1 text-sm text-stone-600'>
               Habits completed today
             </Text>
           </View>
 
           {/* Weekly completion */}
-          <View className='rounded-2xl bg-slate-50 p-4'>
-            <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <View className='rounded-2xl bg-stone-50 p-4'>
+            <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
               THIS WEEK
             </Text>
             <View className='mt-2 flex-row items-baseline gap-2'>
@@ -108,40 +108,40 @@ export default function StatsOverview() {
                 {weeklyCompletionPercent}%
               </Text>
             </View>
-            <Text className='mt-1 text-sm text-slate-600'>
+            <Text className='mt-1 text-sm text-stone-600'>
               Completion rate (last 7 days)
             </Text>
           </View>
 
           {/* Longest streak */}
-          <View className='rounded-2xl bg-slate-50 p-4'>
-            <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <View className='rounded-2xl bg-stone-50 p-4'>
+            <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
               LONGEST STREAK
             </Text>
             <View className='mt-2 flex-row items-baseline gap-2'>
               <Text className='text-3xl font-bold text-[#48bb78]'>
                 {longestStreak}
               </Text>
-              <Text className='text-xl font-semibold text-slate-400'>
+              <Text className='text-xl font-semibold text-stone-400'>
                 {longestStreak === 1 ? 'day' : 'days'}
               </Text>
             </View>
-            <Text className='mt-1 text-sm text-slate-600'>
+            <Text className='mt-1 text-sm text-stone-600'>
               Across all habits
             </Text>
           </View>
 
           {/* Active habits */}
-          <View className='rounded-2xl bg-slate-50 p-4'>
-            <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+          <View className='rounded-2xl bg-stone-50 p-4'>
+            <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
               ACTIVE HABITS
             </Text>
             <View className='mt-2'>
-              <Text className='text-3xl font-bold text-slate-900'>
+              <Text className='text-3xl font-bold text-stone-900'>
                 {activeHabits}
               </Text>
             </View>
-            <Text className='mt-1 text-sm text-slate-600'>
+            <Text className='mt-1 text-sm text-stone-600'>
               Currently tracking
             </Text>
           </View>
@@ -149,7 +149,7 @@ export default function StatsOverview() {
       </View>
 
       {/* Separator */}
-      <View className='h-px bg-slate-200' />
+      <View className='h-px bg-stone-200' />
 
       {/* Per-Habit Stats Section */}
       <HabitStats />

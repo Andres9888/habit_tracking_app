@@ -71,7 +71,7 @@ export const HabitPreview = ({
 
   return (
     <View className='mb-6 mt-4 rounded-2xl bg-white p-4'>
-      <Text className='mb-2 text-xs font-semibold text-[#64748b]'>✨ Live Preview</Text>
+      <Text className='mb-2 text-xs font-semibold text-[#78716c]'>✨ Live Preview</Text>
 
       {showSkeleton ? (
         <View className='py-2'>
@@ -80,8 +80,8 @@ export const HabitPreview = ({
       ) : isEmpty ? (
         <View className='items-center py-6'>
           <Text className='mb-2 text-4xl'>✨</Text>
-          <Text className='mb-1 text-sm font-medium text-[#64748b]'>Your habit will appear here</Text>
-          <Text className='text-xs text-[#94a3b8]'>Try: "Meditate", "Run", or "Read"</Text>
+          <Text className='mb-1 text-sm font-medium text-[#78716c]'>Your habit will appear here</Text>
+          <Text className='text-xs text-[#a8a29e]'>Try: "Meditate", "Run", or "Read"</Text>
         </View>
       ) : (
         <Animated.View style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}>
@@ -108,7 +108,7 @@ export const HabitPreview = ({
                   {habitName}
                 </Text>
               ) : (
-                <Text className='text-[22px] font-semibold text-[#94a3b8]'>
+                <Text className='text-[22px] font-semibold text-[#a8a29e]'>
                   {STRINGS.CREATE_HABIT.namePlaceholder}
                 </Text>
               )}
@@ -122,13 +122,13 @@ export const HabitPreview = ({
 
           {/* Week Preview */}
           <View className='mt-4 rounded-xl bg-[#f8f5f1] p-3'>
-            <Text className='mb-2 text-xs font-medium text-[#64748b]'>This week:</Text>
+            <Text className='mb-2 text-xs font-medium text-[#78716c]'>This week:</Text>
             <View className='flex-row items-center justify-between'>
               {weekDays.map((day, index) => (
                 <View key={`${day}-${index}`} className='items-center gap-1'>
-                  <Text className='text-xs text-[#94a3b8]'>{day}</Text>
+                  <Text className='text-xs text-[#a8a29e]'>{day}</Text>
                   <View className='h-6 w-6 items-center justify-center rounded-full bg-white'>
-                    <View className='h-2 w-2 rounded-full bg-[#e2e8f0]' />
+                    <View className='h-2 w-2 rounded-full bg-[#e7e5e4]' />
                   </View>
                 </View>
               ))}

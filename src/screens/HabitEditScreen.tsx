@@ -65,7 +65,7 @@ interface SectionCardProps {
 
 const SectionCard = ({ title, icon, children }: SectionCardProps) => (
   <View className="rounded-2xl bg-white p-4">
-    <Text className="mb-4 text-base font-bold text-slate-800">
+    <Text className="mb-4 text-base font-bold text-stone-800">
       {icon ? `${icon} ${title}` : title}
     </Text>
     {children}
@@ -137,7 +137,7 @@ const AnimatedColorButton = ({
         style={{
           alignItems: 'center',
           backgroundColor: color,
-          borderColor: isSelected ? '#1e293b' : (isLightColor ? '#e2e8f0' : 'transparent'),
+          borderColor: isSelected ? '#292524' : (isLightColor ? '#e7e5e4' : 'transparent'),
           borderRadius: 20,
           borderWidth: isSelected ? 3 : (isLightColor ? 1 : 0),
           height: 40,
@@ -150,7 +150,7 @@ const AnimatedColorButton = ({
       >
         {isSelected && (
           <Check
-            color={isLightColor || ['#EAB308', '#FBBF24', '#4ADE80', '#FB923C'].includes(color) ? '#1e293b' : '#FFFFFF'}
+            color={isLightColor || ['#EAB308', '#FBBF24', '#4ADE80', '#FB923C'].includes(color) ? '#292524' : '#FFFFFF'}
             size={16}
             strokeWidth={3}
           />
@@ -363,8 +363,8 @@ export default function HabitEditScreen({
                     <Text className='text-2xl'>{selectedEmoji}</Text>
                   </View>
                   <View>
-                    <Text className='text-base font-medium text-slate-800'>Icon</Text>
-                    <Text className='text-xs text-slate-500'>Tap to change</Text>
+                    <Text className='text-base font-medium text-stone-800'>Icon</Text>
+                    <Text className='text-xs text-stone-500'>Tap to change</Text>
                   </View>
                 </View>
                 <Text className='text-sm text-[#3B82F6]'>Change</Text>
@@ -372,7 +372,7 @@ export default function HabitEditScreen({
 
               {/* Color Picker */}
               <View>
-                <Text className='mb-3 text-sm font-semibold text-slate-600'>Color</Text>
+                <Text className='mb-3 text-sm font-semibold text-stone-600'>Color</Text>
                 <View className='flex-row flex-wrap gap-3'>
                   {COLORS.map((color) => (
                     <AnimatedColorButton
@@ -406,7 +406,7 @@ export default function HabitEditScreen({
             <SectionCard title="Schedule" icon="📅">
               {/* Frequency */}
               <View className='mb-5'>
-                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                <Text className='mb-3 text-sm font-semibold text-stone-600'>
                   Frequency
                 </Text>
                 <View className='flex-row gap-3'>
@@ -435,7 +435,7 @@ export default function HabitEditScreen({
 
               {/* Days of Week */}
               <View className='mb-5'>
-                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                <Text className='mb-3 text-sm font-semibold text-stone-600'>
                   Days of Week
                 </Text>
                 <View className='flex-row justify-between'>
@@ -464,7 +464,7 @@ export default function HabitEditScreen({
 
               {/* Preferred Time */}
               <View>
-                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                <Text className='mb-3 text-sm font-semibold text-stone-600'>
                   Preferred Time
                 </Text>
                 <View className='flex-row gap-3'>
@@ -498,7 +498,7 @@ export default function HabitEditScreen({
           <View className="gap-4 mb-4">
             <SectionCard title="Reminders" icon="🔔">
               <View className='-mt-2 flex-row items-center justify-between'>
-                <Text className='text-sm font-semibold text-slate-600'>
+                <Text className='text-sm font-semibold text-stone-600'>
                   Enable Reminders
                 </Text>
                 <Switch
@@ -553,7 +553,7 @@ export default function HabitEditScreen({
           <View className="gap-4 mb-4">
             <SectionCard title="Goals" icon="🎯">
               <View className='-mt-2'>
-                <Text className='mb-3 text-sm font-semibold text-slate-600'>
+                <Text className='mb-3 text-sm font-semibold text-stone-600'>
                   Daily Goal (Optional)
                 </Text>
                 <View className='flex-row gap-3'>
@@ -632,11 +632,11 @@ export default function HabitEditScreen({
                           <MapPin color="#d97706" size={20} strokeWidth={2} />
                         </View>
                         <View>
-                          <Text className="text-base font-medium text-slate-800">Edit Cue & Intention</Text>
-                          <Text className="text-xs text-slate-500">Set when and where to do this habit</Text>
+                          <Text className="text-base font-medium text-stone-800">Edit Cue & Intention</Text>
+                          <Text className="text-xs text-stone-500">Set when and where to do this habit</Text>
                         </View>
                       </View>
-                      <ChevronRight color="#94a3b8" size={20} strokeWidth={2} />
+                      <ChevronRight color="#a8a29e" size={20} strokeWidth={2} />
                     </TouchableOpacity>
                   )}
 
@@ -656,11 +656,11 @@ export default function HabitEditScreen({
                           <MessageCircle color="#7c3aed" size={20} strokeWidth={2} />
                         </View>
                         <View>
-                          <Text className="text-base font-medium text-slate-800">Edit Affirmations</Text>
-                          <Text className="text-xs text-slate-500">Positive self-talk for motivation</Text>
+                          <Text className="text-base font-medium text-stone-800">Edit Affirmations</Text>
+                          <Text className="text-xs text-stone-500">Positive self-talk for motivation</Text>
                         </View>
                       </View>
-                      <ChevronRight color="#94a3b8" size={20} strokeWidth={2} />
+                      <ChevronRight color="#a8a29e" size={20} strokeWidth={2} />
                     </TouchableOpacity>
                   )}
 
@@ -680,11 +680,11 @@ export default function HabitEditScreen({
                           <Eye color="#e11d48" size={20} strokeWidth={2} />
                         </View>
                         <View>
-                          <Text className="text-base font-medium text-slate-800">View Why & Vision Board</Text>
-                          <Text className="text-xs text-slate-500">Your motivation and goals</Text>
+                          <Text className="text-base font-medium text-stone-800">View Why & Vision Board</Text>
+                          <Text className="text-xs text-stone-500">Your motivation and goals</Text>
                         </View>
                       </View>
-                      <ChevronRight color="#94a3b8" size={20} strokeWidth={2} />
+                      <ChevronRight color="#a8a29e" size={20} strokeWidth={2} />
                     </TouchableOpacity>
                   )}
                 </View>
@@ -814,11 +814,11 @@ export default function HabitEditScreen({
               <View className="mb-3 h-14 w-14 items-center justify-center rounded-full bg-red-100">
                 <AlertTriangle color="#ef4444" size={28} strokeWidth={2} />
               </View>
-              <Text className="text-lg font-bold text-slate-800">
+              <Text className="text-lg font-bold text-stone-800">
                 Delete '{habitName || 'this habit'}'?
               </Text>
             </View>
-            <Text className="mb-6 text-center text-sm text-slate-500">
+            <Text className="mb-6 text-center text-sm text-stone-500">
               This action cannot be undone. All your progress, streaks, and history for this habit will be permanently deleted.
             </Text>
             <View className="flex-row gap-3">
@@ -831,7 +831,7 @@ export default function HabitEditScreen({
                   setShowDeleteConfirmation(false);
                 }}
               >
-                <Text className="text-base font-semibold text-slate-700">
+                <Text className="text-base font-semibold text-stone-700">
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -867,11 +867,11 @@ export default function HabitEditScreen({
               <View className="mb-3 h-14 w-14 items-center justify-center rounded-full bg-amber-100">
                 <Archive color="#d97706" size={28} strokeWidth={2} />
               </View>
-              <Text className="text-lg font-bold text-slate-800">
+              <Text className="text-lg font-bold text-stone-800">
                 Archive '{habitName || 'this habit'}'?
               </Text>
             </View>
-            <Text className="mb-6 text-center text-sm text-slate-500">
+            <Text className="mb-6 text-center text-sm text-stone-500">
               This habit will be hidden from your home screen but all your progress, streaks, and history will be preserved. You can restore it anytime from Settings.
             </Text>
             <View className="flex-row gap-3">
@@ -884,7 +884,7 @@ export default function HabitEditScreen({
                   setShowArchiveConfirmation(false);
                 }}
               >
-                <Text className="text-base font-semibold text-slate-700">
+                <Text className="text-base font-semibold text-stone-700">
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -929,7 +929,7 @@ export default function HabitEditScreen({
 
             {/* Header */}
             <View className="flex-row items-center justify-between px-6 pb-4">
-              <Text className="text-lg font-bold text-slate-800">
+              <Text className="text-lg font-bold text-stone-800">
                 Select Unit
               </Text>
               <TouchableOpacity
@@ -966,7 +966,7 @@ export default function HabitEditScreen({
                   <View className="flex-row items-center gap-3">
                     <Text className="text-xl">{unit.icon}</Text>
                     <Text className={`text-base font-medium ${
-                      goalUnit === unit.value ? 'text-blue-600' : 'text-slate-800'
+                      goalUnit === unit.value ? 'text-blue-600' : 'text-stone-800'
                     }`}>
                       {unit.label}
                     </Text>

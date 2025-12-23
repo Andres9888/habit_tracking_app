@@ -30,14 +30,14 @@ export const CollapsibleAdvancedOptions = ({
       >
         <View className='flex-row items-center gap-2'>
           <Text className='text-base font-semibold text-[#1a1a1a]'>⚙️ Advanced Options</Text>
-          <Text className='text-xs text-[#94a3b8]'>(Optional)</Text>
+          <Text className='text-xs text-[#a8a29e]'>(Optional)</Text>
         </View>
         <Animated.View
           style={{
             transform: [{ rotate: isExpanded ? '180deg' : '0deg' }],
           }}
         >
-          <ChevronDown color='#64748b' size={20} />
+          <ChevronDown color='#78716c' size={20} />
         </Animated.View>
       </Pressable>
 

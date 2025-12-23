@@ -31,7 +31,7 @@ export const PhaseSelector = ({ selectedPhase, onSelect }: PhaseSelectorProps) =
           <Text className='text-[10px] font-semibold text-[#8B5CF6]'>SCIENCE-BACKED</Text>
         </View>
       </View>
-      <Text className='mb-4 text-[13px] text-[#64748b]'>
+      <Text className='mb-4 text-[13px] text-[#78716c]'>
         Match your habit to optimal times based on circadian biology
       </Text>
 
@@ -63,11 +63,11 @@ export const PhaseSelector = ({ selectedPhase, onSelect }: PhaseSelectorProps) =
                   >
                     {phase.shortLabel}
                   </Text>
-                  <Text className='ml-2 text-xs text-[#64748b]'>
+                  <Text className='ml-2 text-xs text-[#78716c]'>
                     {phase.timeRange}
                   </Text>
                 </View>
-                <Text className='mt-0.5 text-xs text-[#64748b]'>
+                <Text className='mt-0.5 text-xs text-[#78716c]'>
                   {phase.description}
                 </Text>
               </View>

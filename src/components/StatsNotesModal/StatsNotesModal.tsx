@@ -37,34 +37,34 @@ export default function StatsNotesModal({
             onPress={(e) => e.stopPropagation()}
           >
             {/* Header with close button */}
-            <View className='flex-row items-center justify-between border-b border-slate-200 px-5 py-4'>
-              <Text className='text-2xl font-bold text-slate-900'>
+            <View className='flex-row items-center justify-between border-b border-stone-200 px-5 py-4'>
+              <Text className='text-2xl font-bold text-stone-900'>
                 Stats & Notes
               </Text>
               <TouchableOpacity
                 accessibilityLabel='Close stats and notes'
                 accessibilityRole='button'
-                className='h-8 w-8 items-center justify-center rounded-full bg-slate-100'
+                className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
                 onPress={onClose}
               >
-                <Text className='text-lg font-semibold text-slate-500'>✕</Text>
+                <Text className='text-lg font-semibold text-stone-500'>✕</Text>
               </TouchableOpacity>
             </View>
 
             {/* Tabs */}
-            <View className='flex-row border-b border-slate-200'>
+            <View className='flex-row border-b border-stone-200'>
               <TouchableOpacity
                 accessibilityLabel='Stats tab'
                 accessibilityRole='tab'
                 accessibilityState={{ selected: activeTab === 'stats' }}
                 className={`flex-1 items-center py-3 ${
-                  activeTab === 'stats' ? 'border-b-2 border-slate-900' : ''
+                  activeTab === 'stats' ? 'border-b-2 border-stone-900' : ''
                 }`}
                 onPress={() => setActiveTab('stats')}
               >
                 <Text
                   className={`text-sm font-semibold ${
-                    activeTab === 'stats' ? 'text-slate-900' : 'text-slate-500'
+                    activeTab === 'stats' ? 'text-stone-900' : 'text-stone-500'
                   }`}
                 >
                   Stats
@@ -75,13 +75,13 @@ export default function StatsNotesModal({
                 accessibilityRole='tab'
                 accessibilityState={{ selected: activeTab === 'notes' }}
                 className={`flex-1 items-center py-3 ${
-                  activeTab === 'notes' ? 'border-b-2 border-slate-900' : ''
+                  activeTab === 'notes' ? 'border-b-2 border-stone-900' : ''
                 }`}
                 onPress={() => setActiveTab('notes')}
               >
                 <Text
                   className={`text-sm font-semibold ${
-                    activeTab === 'notes' ? 'text-slate-900' : 'text-slate-500'
+                    activeTab === 'notes' ? 'text-stone-900' : 'text-stone-500'
                   }`}
                 >
                   Notes

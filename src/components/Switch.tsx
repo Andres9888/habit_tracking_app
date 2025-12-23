@@ -43,9 +43,9 @@ export const Switch = React.forwardRef<View, SwitchProps>(function Switch(
     >
       <View
         className={clsx(
-          'justify-center rounded-full border border-slate-200 shadow-sm transition-colors',
+          'justify-center rounded-full border border-stone-200 shadow-sm transition-colors',
           sizeClasses[size].track,
-          checked ? 'border-slate-900 bg-slate-900' : 'bg-slate-100',
+          checked ? 'border-stone-900 bg-stone-900' : 'bg-stone-100',
           disabled && 'opacity-50'
         )}
       >

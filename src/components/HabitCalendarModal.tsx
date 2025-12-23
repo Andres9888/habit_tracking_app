@@ -127,16 +127,16 @@ export default function HabitCalendarModal({
           <Pressable
             accessibilityHint='Return to the previous screen'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full active:bg-slate-200'
+            className='h-10 w-10 items-center justify-center rounded-full active:bg-stone-200'
             onPress={onClose}
           >
             <ChevronLeft color='#1a1a1a' size={24} />
           </Pressable>
-          <Text className='text-xl font-bold text-slate-900'>{name}</Text>
+          <Text className='text-xl font-bold text-stone-900'>{name}</Text>
           <Pressable
             accessibilityLabel='Habit options'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full active:bg-slate-200'
+            className='h-10 w-10 items-center justify-center rounded-full active:bg-stone-200'
             onPress={handleEditPress}
           >
             <MoreVertical color='#1a1a1a' size={20} />
@@ -149,7 +149,7 @@ export default function HabitCalendarModal({
             <View
               className='rounded-3xl bg-white p-5'
               style={{
-                shadowColor: '#0f172a',
+                shadowColor: '#1c1917',
                 shadowOffset: { width: 0, height: 12 },
                 shadowOpacity: 0.08,
                 shadowRadius: 24,
@@ -165,17 +165,17 @@ export default function HabitCalendarModal({
                 <View className='flex-1'>
                   <View className='flex-row items-start justify-between'>
                     <View className='flex-1 pr-4'>
-                      <Text className='text-xl font-semibold text-slate-900'>
+                      <Text className='text-xl font-semibold text-stone-900'>
                         {name}
                       </Text>
                       {scheduleLabel ? (
-                        <Text className='mt-1 text-sm text-slate-500'>
+                        <Text className='mt-1 text-sm text-stone-500'>
                           {scheduleLabel}
                         </Text>
                       ) : null}
                       {habit.notes ? (
                         <Text
-                          className='mt-2 text-sm text-slate-500'
+                          className='mt-2 text-sm text-stone-500'
                           numberOfLines={2}
                         >
                           {habit.notes}
@@ -190,10 +190,10 @@ export default function HabitCalendarModal({
                           Current streak
                         </Text>
                       </View>
-                      <Text className='mt-2 text-lg font-semibold text-slate-900'>
+                      <Text className='mt-2 text-lg font-semibold text-stone-900'>
                         {streak} days
                       </Text>
-                      <Text className='text-xs text-slate-400'>
+                      <Text className='text-xs text-stone-400'>
                         Best {bestStreak} {bestStreak === 1 ? 'day' : 'days'}
                       </Text>
                     </View>
@@ -217,14 +217,14 @@ export default function HabitCalendarModal({
                       }
                       accessibilityRole='button'
                       className={`flex-1 rounded-2xl px-4 py-3 ${
-                        isTodayCompleted ? 'bg-slate-200' : 'bg-blue-500'
+                        isTodayCompleted ? 'bg-stone-200' : 'bg-blue-500'
                       }`}
                       disabled={isTodayCompleted}
                       onPress={handleQuickLogPress}
                     >
                       <Text
                         className={`text-center text-base font-semibold ${
-                          isTodayCompleted ? 'text-slate-600' : 'text-white'
+                          isTodayCompleted ? 'text-stone-600' : 'text-white'
                         }`}
                       >
                         {markTodayLabel}
@@ -234,10 +234,10 @@ export default function HabitCalendarModal({
                     <Pressable
                       accessibilityLabel='Edit habit'
                       accessibilityRole='button'
-                      className='w-[110px] items-center justify-center rounded-2xl border border-slate-200 px-3'
+                      className='w-[110px] items-center justify-center rounded-2xl border border-stone-200 px-3'
                       onPress={handleEditPress}
                     >
-                      <Text className='text-sm font-semibold text-slate-700'>
+                      <Text className='text-sm font-semibold text-stone-700'>
                         Edit habit
                       </Text>
                     </Pressable>

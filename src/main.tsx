@@ -31,7 +31,7 @@ class ErrorBoundary extends React.Component<
           </pre>
           <button
             aria-label='Reload application'
-            className='mt-3 rounded bg-slate-800 px-3 py-1 text-white'
+            className='mt-3 rounded bg-stone-800 px-3 py-1 text-white'
             type='button'
             onClick={() => window.location.reload()}
           >

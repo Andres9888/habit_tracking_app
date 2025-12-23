@@ -8,12 +8,12 @@ interface FormInputProps extends TextInputProps {
 export function FormInput({ label, ...props }: FormInputProps) {
   return (
     <View className='gap-2'>
-      <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
+      <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
         {label}
       </Text>
       <TextInput
-        className='rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900'
-        placeholderTextColor='#94a3b8'
+        className='rounded-3xl border border-stone-200 bg-white px-5 py-3.5 text-base font-medium text-stone-900'
+        placeholderTextColor='#a8a29e'
         {...props}
       />
     </View>

@@ -84,7 +84,7 @@ export const LivePreview = ({
 
   return (
     <View className="mb-6">
-      <Text className="mb-3 text-sm font-semibold text-slate-500">✨ PREVIEW</Text>
+      <Text className="mb-3 text-sm font-semibold text-stone-500">✨ PREVIEW</Text>
 
       <Animated.View
         className="overflow-hidden rounded-2xl bg-white p-4"
@@ -103,10 +103,10 @@ export const LivePreview = ({
           style={{ opacity: emptyOpacity }}
         >
           <Text className="mb-2 text-4xl">✨</Text>
-          <Text className="text-center text-sm font-medium text-slate-500">
+          <Text className="text-center text-sm font-medium text-stone-500">
             Your habit will appear here
           </Text>
-          <Text className="mt-1 text-center text-xs text-slate-400">
+          <Text className="mt-1 text-center text-xs text-stone-400">
             Start typing above ↑
           </Text>
         </Animated.View>
@@ -130,16 +130,16 @@ export const LivePreview = ({
 
             <View className="flex-1">
               <Text
-                className="text-lg font-bold text-slate-800"
+                className="text-lg font-bold text-stone-800"
                 numberOfLines={2}
               >
                 {habitName || 'Your habit name'}
               </Text>
               <View className="mt-1 flex-row items-center">
-                <Text className="text-sm text-slate-500">{frequencyLabel}</Text>
+                <Text className="text-sm text-stone-500">{frequencyLabel}</Text>
                 {reminderTime && (
                   <>
-                    <Text className="mx-2 text-slate-300">•</Text>
+                    <Text className="mx-2 text-stone-300">•</Text>
                     <Text className="text-sm text-blue-500">⏰ {reminderTime}</Text>
                   </>
                 )}
@@ -148,12 +148,12 @@ export const LivePreview = ({
           </View>
 
           {/* Week Preview */}
-          <View className="mt-4 rounded-xl bg-slate-50 p-3">
-            <Text className="mb-2 text-xs font-medium text-slate-500">This week</Text>
+          <View className="mt-4 rounded-xl bg-stone-50 p-3">
+            <Text className="mb-2 text-xs font-medium text-stone-500">This week</Text>
             <View className="flex-row items-center justify-between">
               {WEEK_DAYS.map((day, index) => (
                 <View key={`${day}-${index}`} className="items-center">
-                  <Text className="mb-1 text-xs text-slate-400">{day}</Text>
+                  <Text className="mb-1 text-xs text-stone-400">{day}</Text>
                   <View
                     className="h-8 w-8 items-center justify-center rounded-full"
                     style={{ backgroundColor: selectedColor + '20' || '#DBEAFE20' }}

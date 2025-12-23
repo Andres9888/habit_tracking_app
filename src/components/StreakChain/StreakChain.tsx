@@ -18,7 +18,7 @@ export interface StreakChainProps {
  * - Below: row of circles with link icon, connected by short bars
  *
  * Design language:
- * - Typography and colors align with existing app styles (#0f172a titles, #64748b secondary, #e2e8f0 borders)
+ * - Typography and colors align with existing app styles (#1c1917 titles, #78716c secondary, #e7e5e4 borders)
  * - Primary color uses #3B82F6 (blue)
  */
 export default function StreakChain({
@@ -34,14 +34,14 @@ export default function StreakChain({
   return (
     <View className='pb-3 pt-1'>
       <View className='mb-2 flex-row items-center justify-between'>
-        <Text className='text-base font-bold tracking-tight text-slate-900'>
+        <Text className='text-base font-bold tracking-tight text-stone-900'>
           {label}
         </Text>
         <View
           accessibilityLabel={`${streakDays} days`}
           className='rounded-full bg-indigo-50 px-2.5 py-1'
         >
-          <Text className='text-xs font-semibold text-slate-900'>
+          <Text className='text-xs font-semibold text-stone-900'>
             {streakDays} days
           </Text>
         </View>
