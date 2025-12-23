@@ -8,6 +8,7 @@ import {
   ForgotPasswordModal,
   FormInput,
   PasswordInput,
+  SubmitButton,
 } from './components';
 
 export default function SignInScreen() {
@@ -97,17 +98,13 @@ export default function SignInScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            className={`mt-4 items-center rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
-              isLoading || !emailAddress || !password ? 'opacity-40' : ''
-            }`}
-            disabled={isLoading || !emailAddress || !password}
+          <SubmitButton
+            label='SIGN IN'
+            loadingLabel='SIGNING IN...'
+            isLoading={isLoading}
+            disabled={!emailAddress || !password}
             onPress={onSignInPress}
-          >
-            <Text className='text-[13px] font-bold tracking-[3px] text-white'>
-              {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
-            </Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
 
