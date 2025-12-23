@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Reanimated, {
@@ -16,7 +16,10 @@ interface FormInputProps extends TextInputProps {
   error?: string; // Error message to display
 }
 
-export function FormInput({ label, icon, error, ...props }: FormInputProps) {
+export const FormInput = forwardRef<TextInput, FormInputProps>(function FormInput(
+  { label, icon, error, ...props },
+  ref
+) {
   const [isFocused, setIsFocused] = useState(false);
 
   // Reanimated values for focus animations
@@ -94,6 +97,7 @@ export function FormInput({ label, icon, error, ...props }: FormInputProps) {
             </Text>
           )}
           <TextInput
+            ref={ref}
             className='flex-1 text-base font-medium text-slate-900'
             placeholderTextColor='#94a3b8'
             onFocus={handleFocus}
@@ -109,4 +113,4 @@ export function FormInput({ label, icon, error, ...props }: FormInputProps) {
       )}
     </View>
   );
-}
+});

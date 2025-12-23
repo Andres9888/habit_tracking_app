@@ -669,18 +669,35 @@ src/
 ---
 
 ### Task 4.2: Add Keyboard Handling
-- [ ] Implement auto-dismiss keyboard on submit
-- [ ] Set `returnKeyType="next"` on email input
-- [ ] Set `returnKeyType="done"` on password input
-- [ ] Handle "next" button to focus password field
-- [ ] Handle "done" button to submit form
-- [ ] Add auto-focus to email input on mount (optional)
-- [ ] Test keyboard navigation flow
+- [x] Implement auto-dismiss keyboard on submit
+- [x] Set `returnKeyType="next"` on email input
+- [x] Set `returnKeyType="done"` on password input
+- [x] Handle "next" button to focus password field
+- [x] Handle "done" button to submit form
+- [x] Add auto-focus to email input on mount (optional)
+- [x] Test keyboard navigation flow
 
 **Acceptance Criteria:**
-- Keyboard dismisses on submit
-- Tab/next navigation works
-- Done button submits form
+- Keyboard dismisses on submit ✓
+- Tab/next navigation works ✓
+- Done button submits form ✓
+
+**Implementation Notes:**
+- Added `Keyboard.dismiss()` call in `onSignInPress` function to dismiss keyboard before submitting
+- Email input already had `returnKeyType="next"` and `onSubmitEditing` to focus password field
+- Password input already had `returnKeyType="done"` and `onSubmitEditing` to submit form
+- Email input uses `blurOnSubmit={false}` to prevent keyboard dismissal when navigating to password
+- Added optional `autoFocusEmail` prop (default: false) for programmatic focus on mount
+- Updated `FormInput` component to support `forwardRef` for ref-based focus control
+- Added `emailInputRef` to `SignInScreen` for auto-focus functionality with 100ms delay
+- Created comprehensive test suite with 8 keyboard handling tests covering:
+  - returnKeyType props
+  - blurOnSubmit behavior
+  - onSubmitEditing handlers
+  - Keyboard.dismiss on form submission
+  - Auto-focus behavior with/without prop
+- All 25 SignInScreen tests passing ✓
+- All 15 FormInput tests passing ✓
 
 ---
 

@@ -1,7 +1,8 @@
 import { useSignIn } from '@clerk/clerk-expo';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -30,9 +31,10 @@ import {
 
 interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
+  autoFocusEmail?: boolean;
 }
 
-export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) {
+export default function SignInScreen({ onNavigateToSignUp, autoFocusEmail = false }: SignInScreenProps) {
   const { signIn, setActive, isLoaded } = useSignIn();
   const insets = useSafeAreaInsets();
 
@@ -45,7 +47,19 @@ export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) 
   const [passwordError, setPasswordError] = useState<string | undefined>();
 
   // Refs for keyboard navigation
+  const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
+
+  // Auto-focus email input on mount if enabled
+  useEffect(() => {
+    if (autoFocusEmail) {
+      // Small delay to ensure the component is fully mounted
+      const timer = setTimeout(() => {
+        emailInputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [autoFocusEmail]);
 
   // Screen shake animation for invalid credentials
   const screenShake = useSharedValue(0);
@@ -77,6 +91,9 @@ export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) 
     if (!isLoaded) {
       return;
     }
+
+    // Dismiss keyboard before submitting
+    Keyboard.dismiss();
 
     // Clear previous errors
     setEmailError(undefined);
@@ -165,6 +182,7 @@ export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) 
 
             <View className='gap-6'>
               <FormInput
+                ref={emailInputRef}
                 label='EMAIL'
                 icon='📧'
                 autoCapitalize='none'
