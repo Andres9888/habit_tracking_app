@@ -34,6 +34,8 @@ export interface CollapsibleCategorySectionProps {
   icon: string;
   /** Templates in this category */
   templates: Doc<'templates'>[];
+  /** Number of science-backed templates in this category */
+  scienceCount?: number;
   /** Is section expanded */
   isExpanded: boolean;
   /** Toggle expand callback */
@@ -58,6 +60,7 @@ export function CollapsibleCategorySection({
   label,
   icon,
   templates,
+  scienceCount,
   isExpanded,
   onToggle,
   onTemplatePress,
@@ -128,7 +131,7 @@ export function CollapsibleCategorySection({
       {/* Header */}
       <Pressable
         accessible
-        accessibilityLabel={`${label} category, ${templates.length} templates, ${isExpanded ? 'expanded' : 'collapsed'}`}
+        accessibilityLabel={`${label} category, ${templates.length} templates${scienceCount !== undefined && scienceCount > 0 ? `, ${scienceCount} science-backed` : ''}, ${isExpanded ? 'expanded' : 'collapsed'}`}
         accessibilityRole="button"
         accessibilityState={{ expanded: isExpanded }}
         onPress={handleHeaderPress}
@@ -157,6 +160,7 @@ export function CollapsibleCategorySection({
             </Text>
             <Text style={[styles.countText, { color: '#6b7280' }]}>
               {templates.length} {templates.length === 1 ? 'habit' : 'habits'}
+              {scienceCount !== undefined && scienceCount > 0 && ` · ${scienceCount} science-backed`}
             </Text>
           </View>
 

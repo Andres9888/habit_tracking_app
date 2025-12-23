@@ -219,6 +219,19 @@ export default function TemplatesScreen() {
     }, {} as Record<Category, number>);
   }, [allTemplates]);
 
+  // Science-backed template counts per category
+  const scienceCountsByCategory = useMemo(() => {
+    if (!allTemplates) return {} as Record<string, number>;
+
+    const counts: Record<string, number> = {};
+    for (const template of allTemplates) {
+      if (template.scientificLink) {
+        counts[template.category] = (counts[template.category] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [allTemplates]);
+
   // Filter templates for search/category view
   const filteredTemplates = useMemo(() => {
     if (!allTemplates) return [];
@@ -829,6 +842,7 @@ export default function TemplatesScreen() {
                     label={category.label}
                     icon={category.icon}
                     templates={templates}
+                    scienceCount={scienceCountsByCategory[category.id]}
                     isExpanded={expandedCategories.has(category.id)}
                     onToggle={() => handleToggleCategory(category.id)}
                     onTemplatePress={handleTemplatePreview}
