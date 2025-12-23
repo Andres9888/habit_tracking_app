@@ -11,7 +11,7 @@ export default function WelcomeScreen() {
   if (mode === 'signin') {
     return (
       <View className='flex-1 bg-white'>
-        <SignInScreen />
+        <SignInScreen onNavigateToSignUp={() => setMode('signup')} />
         <TouchableOpacity
           className='absolute left-6 top-[60px] z-10'
           onPress={() => setMode('welcome')}
