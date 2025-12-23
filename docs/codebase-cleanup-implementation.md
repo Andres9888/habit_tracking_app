@@ -927,12 +927,20 @@ npx lint-staged
 
 ### Task 4.2: Create/Update CI/CD Workflow
 
-- [ ] Create .github/workflows directory if missing
-- [ ] Create or update ci.yml workflow
-- [ ] Add duplicate detection job
-- [ ] Add TypeScript compilation job
-- [ ] Add test execution job
-- [ ] Commit workflow file
+- [x] Create .github/workflows directory if missing
+- [x] Create or update ci.yml workflow
+- [x] Add duplicate detection job
+- [x] Add TypeScript compilation job
+- [x] Add test execution job
+- [x] Commit workflow file
+
+**Completed:** Created `.github/workflows/ci.yml` with three automated quality gate jobs:
+
+1. **check-duplicates** - Scans for numbered duplicate files (" 2.", " 3.", " 4.") and fails if found
+2. **typescript** - Runs `npm run lint` to validate TypeScript compilation (0 errors expected)
+3. **tests** - Executes full test suite with `--passWithNoTests --maxWorkers=2` and uploads coverage to Codecov
+
+Workflow triggers on push/PR to `main` and `dev` branches. Uses Node.js 18 with npm caching for faster CI runs. Committed as b76be2e (with prettier formatting via lint-staged).
 
 **File:** `.github/workflows/ci.yml`
 
