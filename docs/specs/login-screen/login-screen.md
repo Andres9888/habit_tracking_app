@@ -258,10 +258,10 @@ src/
 
 ### Unit Tests
 
-- [ ] `AnimatedLogo` - renders correctly
-- [ ] `PasswordInput` - toggle functionality
-- [ ] `ForgotPasswordModal` - form validation
-- [ ] `SocialLoginButtons` - OAuth flow
+- [x] `AnimatedLogo` - renders correctly (17 tests: rendering, accessibility, styling, animation, sizes)
+- [x] `PasswordInput` - toggle functionality (9 tests covering toggle, display, accessibility)
+- [x] `ForgotPasswordModal` - form validation (22 tests covering rendering, validation, API flow, accessibility)
+- [x] `SocialLoginButtons` - OAuth flow (22 tests covering rendering, OAuth flows, error handling, accessibility)
 
 ### Integration Tests
 
