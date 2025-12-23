@@ -281,13 +281,24 @@ export function MiniTemplateCard({
         </View>
         {/* Import button */}
         {onImport && (
-          <Animated.View style={importButtonStyle}>
+          <Animated.View
+            accessibilityLiveRegion='polite'
+            style={importButtonStyle}
+          >
             <Pressable
               accessible
               accessibilityLabel={
-                isImported ? `${name} added` : `Add ${name} habit`
+                isImported
+                  ? `${name} has been added to your habits`
+                  : isImporting
+                    ? `Adding ${name} habit`
+                    : `Add ${name} habit`
               }
               accessibilityRole='button'
+              accessibilityState={{
+                busy: isImporting,
+                disabled: isImporting || isImported,
+              }}
               disabled={isImporting || isImported}
               hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
               style={[
