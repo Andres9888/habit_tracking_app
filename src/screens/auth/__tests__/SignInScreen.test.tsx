@@ -3,6 +3,30 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 import SignInScreen from '../SignInScreen';
 
+// Mock react-native-reanimated
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return {
+    ...Reanimated,
+    useSharedValue: (initialValue: number) => ({ value: initialValue }),
+    useAnimatedStyle: (callback: () => object) => callback(),
+    withTiming: (toValue: number) => toValue,
+    withSpring: (toValue: number) => toValue,
+    withRepeat: (animation: any) => animation,
+    withSequence: (...args: any[]) => args[args.length - 1],
+    runOnJS: (fn: Function) => fn,
+    default: {
+      ...Reanimated.default,
+      View: React.forwardRef((props: any, ref: any) => (
+        <View ref={ref} {...props} />
+      )),
+    },
+  };
+});
+
 // Mock dependencies
 jest.mock('@clerk/clerk-expo', () => ({
   useSignIn: () => ({
@@ -25,11 +49,13 @@ jest.mock('react-native-safe-area-context', () => ({
 
 jest.mock('../components', () => {
   const React = require('react');
-  const { TextInput, TouchableOpacity, Text } = require('react-native');
+  const { TextInput, TouchableOpacity, Text, View } = require('react-native');
 
   return {
     AnimatedLogo: () => null,
     ForgotPasswordModal: () => null,
+    SuccessOverlay: ({ visible }: { visible: boolean }) =>
+      visible ? <View testID='success-overlay' /> : null,
     FormInput: (props: any) => (
       <TextInput
         testID={props.testID || 'form-input'}

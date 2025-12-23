@@ -1,5 +1,5 @@
 import { useSignIn } from '@clerk/clerk-expo';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -10,6 +10,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withTiming,
+  withRepeat,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
 import {
@@ -18,6 +25,7 @@ import {
   FormInput,
   PasswordInput,
   SubmitButton,
+  SuccessOverlay,
 } from './components';
 
 interface SignInScreenProps {
@@ -32,16 +40,49 @@ export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) 
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [emailError, setEmailError] = useState<string | undefined>();
+  const [passwordError, setPasswordError] = useState<string | undefined>();
 
   // Refs for keyboard navigation
   const passwordInputRef = useRef<TextInput>(null);
+
+  // Screen shake animation for invalid credentials
+  const screenShake = useSharedValue(0);
+
+  const triggerErrorShake = useCallback(() => {
+    screenShake.value = withSequence(
+      withTiming(10, { duration: 50 }),
+      withRepeat(withTiming(-10, { duration: 50 }), 5, true),
+      withTiming(0, { duration: 50 })
+    );
+  }, []);
+
+  const screenShakeStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: screenShake.value }],
+  }));
+
+  // Clear errors when user starts typing
+  const handleEmailChange = useCallback((text: string) => {
+    setEmailAddress(text);
+    if (emailError) setEmailError(undefined);
+  }, [emailError]);
+
+  const handlePasswordChange = useCallback((text: string) => {
+    setPassword(text);
+    if (passwordError) setPasswordError(undefined);
+  }, [passwordError]);
 
   const onSignInPress = async () => {
     if (!isLoaded) {
       return;
     }
 
+    // Clear previous errors
+    setEmailError(undefined);
+    setPasswordError(undefined);
     setIsLoading(true);
+
     try {
       const signInAttempt = await signIn.create({
         identifier: emailAddress,
@@ -49,130 +90,160 @@ export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) 
       });
 
       if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId });
+        // Show success animation before completing
+        setShowSuccess(true);
+        // The session will be set after the animation completes
+        setTimeout(async () => {
+          await setActive({ session: signInAttempt.createdSessionId });
+        }, 1500);
       } else {
         // Handle additional verification steps if needed
+        triggerErrorShake();
         Alert.alert(
           'Error',
           'Sign in incomplete. Please check your credentials.'
         );
+        setIsLoading(false);
       }
     } catch (error: any) {
       console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', error.errors?.[0]?.message || 'Failed to sign in');
-    } finally {
       setIsLoading(false);
+
+      // Trigger shake animation on error
+      triggerErrorShake();
+
+      // Parse error and set specific field errors
+      const errorCode = error.errors?.[0]?.code;
+      const errorMessage = error.errors?.[0]?.message || 'Failed to sign in';
+
+      if (errorCode === 'form_identifier_not_found') {
+        setEmailError('No account found with this email');
+      } else if (errorCode === 'form_password_incorrect') {
+        setPasswordError('Incorrect password');
+      } else if (errorCode === 'form_param_format_invalid') {
+        setEmailError('Please enter a valid email address');
+      } else {
+        // Generic error - show alert
+        Alert.alert('Sign In Error', errorMessage);
+      }
     }
   };
 
   return (
     <View className='flex-1 bg-white'>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        <ScrollView
+      <Animated.View style={[{ flex: 1 }, screenShakeStyle]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           className='flex-1'
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingTop: insets.top + 16,
-            paddingBottom: insets.bottom + 24,
-            paddingHorizontal: 24,
-          }}
-          keyboardShouldPersistTaps='handled'
-          showsVerticalScrollIndicator={false}
-          bounces={true}
-          testID='sign-in-scroll-view'
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
-          {/* Logo Section */}
-          <View className='mb-8 items-center'>
-            <AnimatedLogo size={80} />
-            <Text className='mb-2 text-3xl font-extrabold tracking-tight text-slate-900'>
-              Welcome Back! 👋
-            </Text>
-            <Text className='text-base text-slate-500'>
-              Sign in to continue your journey
-            </Text>
-          </View>
-
-          <SocialLoginButtons />
-
-          <View className='gap-6'>
-            <FormInput
-              label='EMAIL'
-              icon='📧'
-              autoCapitalize='none'
-              autoComplete='email'
-              keyboardType='email-address'
-              placeholder='Enter your email address'
-              value={emailAddress}
-              onChangeText={setEmailAddress}
-              accessibilityLabel='Email input'
-              accessibilityHint='Enter your email address to sign in'
-              returnKeyType='next'
-              onSubmitEditing={() => passwordInputRef.current?.focus()}
-              blurOnSubmit={false}
-            />
-
-            <PasswordInput
-              ref={passwordInputRef}
-              value={password}
-              onChangeText={setPassword}
-              placeholder='Enter your password'
-              returnKeyType='done'
-              onSubmitEditing={onSignInPress}
-            />
-
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              className='min-h-[44px] self-end justify-center'
-              onPress={() => setShowForgotPassword(true)}
-              accessibilityLabel='Forgot password?'
-              accessibilityRole='button'
-              accessibilityHint='Opens password reset form'
-            >
-              <Text className='text-sm font-semibold text-slate-900'>
-                Forgot Password?
+          <ScrollView
+            className='flex-1'
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingTop: insets.top + 16,
+              paddingBottom: insets.bottom + 24,
+              paddingHorizontal: 24,
+            }}
+            keyboardShouldPersistTaps='handled'
+            showsVerticalScrollIndicator={false}
+            bounces={true}
+            testID='sign-in-scroll-view'
+          >
+            {/* Logo Section */}
+            <View className='mb-8 items-center'>
+              <AnimatedLogo size={80} />
+              <Text className='mb-2 text-3xl font-extrabold tracking-tight text-slate-900'>
+                Welcome Back! 👋
               </Text>
-            </TouchableOpacity>
-
-            <SubmitButton
-              label='SIGN IN'
-              loadingLabel='SIGNING IN...'
-              isLoading={isLoading}
-              disabled={!emailAddress || !password}
-              onPress={onSignInPress}
-            />
-          </View>
-
-          {/* Sign Up Prompt */}
-          {onNavigateToSignUp && (
-            <View className='mt-8 flex-row items-center justify-center'>
               <Text className='text-base text-slate-500'>
-                Don't have an account?{' '}
+                Sign in to continue your journey
               </Text>
+            </View>
+
+            <SocialLoginButtons />
+
+            <View className='gap-6'>
+              <FormInput
+                label='EMAIL'
+                icon='📧'
+                autoCapitalize='none'
+                autoComplete='email'
+                keyboardType='email-address'
+                placeholder='Enter your email address'
+                value={emailAddress}
+                onChangeText={handleEmailChange}
+                error={emailError}
+                accessibilityLabel='Email input'
+                accessibilityHint='Enter your email address to sign in'
+                returnKeyType='next'
+                onSubmitEditing={() => passwordInputRef.current?.focus()}
+                blurOnSubmit={false}
+              />
+
+              <PasswordInput
+                ref={passwordInputRef}
+                value={password}
+                onChangeText={handlePasswordChange}
+                error={passwordError}
+                placeholder='Enter your password'
+                returnKeyType='done'
+                onSubmitEditing={onSignInPress}
+              />
+
+              {/* Forgot Password Link */}
               <TouchableOpacity
-                className='min-h-[44px] justify-center px-1'
-                onPress={onNavigateToSignUp}
-                accessibilityLabel='Sign up'
+                className='min-h-[44px] self-end justify-center'
+                onPress={() => setShowForgotPassword(true)}
+                accessibilityLabel='Forgot password?'
                 accessibilityRole='button'
-                accessibilityHint='Navigate to create a new account'
+                accessibilityHint='Opens password reset form'
               >
-                <Text className='text-base font-semibold text-slate-900'>
-                  Sign Up
+                <Text className='text-sm font-semibold text-slate-900'>
+                  Forgot Password?
                 </Text>
               </TouchableOpacity>
+
+              <SubmitButton
+                label='SIGN IN'
+                loadingLabel='SIGNING IN...'
+                isLoading={isLoading}
+                disabled={!emailAddress || !password}
+                onPress={onSignInPress}
+              />
             </View>
-          )}
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+            {/* Sign Up Prompt */}
+            {onNavigateToSignUp && (
+              <View className='mt-8 flex-row items-center justify-center'>
+                <Text className='text-base text-slate-500'>
+                  Don't have an account?{' '}
+                </Text>
+                <TouchableOpacity
+                  className='min-h-[44px] justify-center px-1'
+                  onPress={onNavigateToSignUp}
+                  accessibilityLabel='Sign up'
+                  accessibilityRole='button'
+                  accessibilityHint='Navigate to create a new account'
+                >
+                  <Text className='text-base font-semibold text-slate-900'>
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </Animated.View>
 
       {/* Forgot Password Modal */}
       <ForgotPasswordModal
         visible={showForgotPassword}
         onClose={() => setShowForgotPassword(false)}
       />
+
+      {/* Success Overlay */}
+      <SuccessOverlay visible={showSuccess} />
     </View>
   );
 }
