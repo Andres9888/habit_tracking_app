@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
-import { AnimatedLogo } from './components/AnimatedLogo';
+import { AnimatedLogo, PasswordInput } from './components';
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -75,20 +75,11 @@ export default function SignInScreen() {
             />
           </View>
 
-          <View className='gap-2'>
-            <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
-              PASSWORD
-            </Text>
-            <TextInput
-              secureTextEntry
-              autoComplete='password'
-              className='rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900'
-              placeholder='Enter your password'
-              placeholderTextColor='#94a3b8'
-              value={password}
-              onChangeText={setPassword}
-            />
-          </View>
+          <PasswordInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder='Enter your password'
+          />
 
           <TouchableOpacity
             className={`mt-4 items-center rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
