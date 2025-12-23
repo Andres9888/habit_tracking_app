@@ -90,7 +90,7 @@ export const ModalHeader = ({
           <TouchableOpacity
             accessibilityRole='button'
             className={`h-9 items-center justify-center rounded-full px-6 ${
-              canSave ? 'bg-stone-800' : 'bg-stone-300'
+              canSave ? 'bg-stone-800' : 'bg-stone-400'
             }`}
             disabled={!canSave}
             onPressIn={() => {

@@ -33,8 +33,8 @@ export const StickyCreateBar = ({ disabled, onPress }: StickyCreateBarProps) => 
           <Pressable
             accessibilityLabel={STRINGS.CREATE_HABIT.createAction}
             accessibilityRole='button'
-            className={`items-center justify-center rounded-xl py-3.5 ${disabled ? 'bg-stone-300' : ''}`}
-            style={{ backgroundColor: disabled ? '#d6d3d1' : '#292524' }}
+            className={`items-center justify-center rounded-xl py-3.5 ${disabled ? 'bg-stone-400' : ''}`}
+            style={{ backgroundColor: disabled ? '#a8a29e' : '#292524' }}
             disabled={disabled}
             onPressIn={() => {
               Animated.timing(scale, {
