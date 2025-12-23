@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated, {
@@ -15,13 +15,17 @@ interface PasswordInputProps extends Omit<TextInputProps, 'secureTextEntry'> {
   error?: string;
 }
 
-export function PasswordInput({
-  value,
-  onChangeText,
-  placeholder = 'Enter your password',
-  error,
-  ...props
-}: PasswordInputProps) {
+export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
+  function PasswordInput(
+    {
+      value,
+      onChangeText,
+      placeholder = 'Enter your password',
+      error,
+      ...props
+    },
+    ref
+  ) {
   const [isSecure, setIsSecure] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -91,6 +95,7 @@ export function PasswordInput({
 
         {/* Text Input */}
         <TextInput
+          ref={ref}
           secureTextEntry={isSecure}
           autoComplete="password"
           className="flex-1 px-3 py-3.5 text-base font-medium text-slate-900"
@@ -127,4 +132,5 @@ export function PasswordInput({
       )}
     </View>
   );
-}
+  }
+);

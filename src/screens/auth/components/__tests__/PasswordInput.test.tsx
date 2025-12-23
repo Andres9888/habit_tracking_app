@@ -71,33 +71,33 @@ describe('PasswordInput', () => {
   });
 
   it('has proper accessibility labels', () => {
-    const { getByLabelText, getByA11yLabel } = render(
+    const { getByLabelText } = render(
       <PasswordInput value="" onChangeText={() => {}} />
     );
 
     // Check input accessibility
-    const input = getByA11yLabel('Password input field');
+    const input = getByLabelText('Password input field');
     expect(input).toBeTruthy();
 
     // Check toggle button accessibility
-    const toggleButton = getByA11yLabel('Show password');
+    const toggleButton = getByLabelText('Show password');
     expect(toggleButton).toBeTruthy();
   });
 
   it('updates toggle button accessibility label when toggled', () => {
-    const { getByText, getByA11yLabel } = render(
+    const { getByText, getByLabelText } = render(
       <PasswordInput value="" onChangeText={() => {}} />
     );
 
     // Initially should say "Show password"
-    expect(getByA11yLabel('Show password')).toBeTruthy();
+    expect(getByLabelText('Show password')).toBeTruthy();
 
     // Toggle
     const toggleButton = getByText('👁');
     fireEvent.press(toggleButton);
 
     // Should now say "Hide password"
-    expect(getByA11yLabel('Hide password')).toBeTruthy();
+    expect(getByLabelText('Hide password')).toBeTruthy();
   });
 
   it('renders the PASSWORD label', () => {

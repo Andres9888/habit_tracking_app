@@ -66,11 +66,11 @@ describe('ForgotPasswordModal', () => {
 
   describe('Email Input Validation', () => {
     it('shows error when email is empty on submit', async () => {
-      const { getByText, getByA11yLabel } = render(
+      const { getByText, getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -79,14 +79,14 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('shows error for invalid email format', async () => {
-      const { getByPlaceholderText, getByA11yLabel, getByText } = render(
+      const { getByPlaceholderText, getByLabelText, getByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'invalid-email');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -95,12 +95,12 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('clears error when user types', async () => {
-      const { getByPlaceholderText, getByA11yLabel, queryByText } = render(
+      const { getByPlaceholderText, getByLabelText, queryByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
       // Trigger error first
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -117,7 +117,7 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('accepts valid email format', async () => {
-      const { getByPlaceholderText, getByA11yLabel } = render(
+      const { getByPlaceholderText, getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -126,7 +126,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'valid@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -140,7 +140,7 @@ describe('ForgotPasswordModal', () => {
 
   describe('Password Reset Flow', () => {
     it('calls Clerk API with correct parameters', async () => {
-      const { getByPlaceholderText, getByA11yLabel } = render(
+      const { getByPlaceholderText, getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -149,7 +149,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -161,7 +161,7 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('shows success message after successful submission', async () => {
-      const { getByPlaceholderText, getByA11yLabel, getByText } = render(
+      const { getByPlaceholderText, getByLabelText, getByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -170,7 +170,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -182,7 +182,7 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('handles account not found error', async () => {
-      const { getByPlaceholderText, getByA11yLabel, getByText } = render(
+      const { getByPlaceholderText, getByLabelText, getByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -193,7 +193,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'nonexistent@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -202,7 +202,7 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('handles generic API errors', async () => {
-      const { getByPlaceholderText, getByA11yLabel, getByText } = render(
+      const { getByPlaceholderText, getByLabelText, getByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -213,7 +213,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -222,7 +222,7 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('handles errors without specific message', async () => {
-      const { getByPlaceholderText, getByA11yLabel, getByText } = render(
+      const { getByPlaceholderText, getByLabelText, getByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -233,7 +233,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {
@@ -244,7 +244,7 @@ describe('ForgotPasswordModal', () => {
 
   describe('Loading States', () => {
     it('disables submit button when loading', async () => {
-      const { getByPlaceholderText, getByA11yLabel } = render(
+      const { getByPlaceholderText, getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -258,7 +258,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       // Button should be disabled while loading
@@ -271,29 +271,29 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('disables submit button when email is empty', () => {
-      const { getByA11yLabel } = render(
+      const { getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       expect(submitButton.props.accessibilityState.disabled).toBe(true);
     });
   });
 
   describe('Modal Interactions', () => {
     it('calls onClose when cancel button is pressed', () => {
-      const { getByA11yLabel } = render(
+      const { getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      const cancelButton = getByA11yLabel('Cancel password reset');
+      const cancelButton = getByLabelText('Cancel password reset');
       fireEvent.press(cancelButton);
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
     it('resets state when modal closes', async () => {
-      const { getByPlaceholderText, getByA11yLabel, rerender } = render(
+      const { getByPlaceholderText, getByLabelText, rerender } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -301,7 +301,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'test@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       mockCreate.mockRejectedValueOnce({
         errors: [{ message: 'Error' }],
       });
@@ -318,7 +318,7 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('closes modal after successful password reset', async () => {
-      const { getByPlaceholderText, getByA11yLabel, getByText } = render(
+      const { getByPlaceholderText, getByLabelText, getByText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -327,7 +327,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       // Wait for success state
@@ -336,7 +336,7 @@ describe('ForgotPasswordModal', () => {
       });
 
       // Press close button
-      const closeButton = getByA11yLabel('Close modal');
+      const closeButton = getByLabelText('Close modal');
       fireEvent.press(closeButton);
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
@@ -345,40 +345,40 @@ describe('ForgotPasswordModal', () => {
 
   describe('Accessibility', () => {
     it('has proper accessibility labels', () => {
-      const { getByA11yLabel } = render(
+      const { getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      expect(getByA11yLabel('Email address input')).toBeTruthy();
-      expect(getByA11yLabel('Send reset email')).toBeTruthy();
-      expect(getByA11yLabel('Cancel password reset')).toBeTruthy();
+      expect(getByLabelText('Email address input')).toBeTruthy();
+      expect(getByLabelText('Send reset email')).toBeTruthy();
+      expect(getByLabelText('Cancel password reset')).toBeTruthy();
     });
 
     it('has proper accessibility hints', () => {
-      const { getByA11yLabel } = render(
+      const { getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      const emailInput = getByA11yLabel('Email address input');
+      const emailInput = getByLabelText('Email address input');
       expect(emailInput.props.accessibilityHint).toBe(
         'Enter your email to receive password reset instructions'
       );
     });
 
     it('has proper accessibility roles', () => {
-      const { getByA11yLabel } = render(
+      const { getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       expect(submitButton.props.accessibilityRole).toBe('button');
 
-      const cancelButton = getByA11yLabel('Cancel password reset');
+      const cancelButton = getByLabelText('Cancel password reset');
       expect(cancelButton.props.accessibilityRole).toBe('button');
     });
 
     it('updates accessibility state when busy', async () => {
-      const { getByPlaceholderText, getByA11yLabel } = render(
+      const { getByPlaceholderText, getByLabelText } = render(
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
@@ -391,7 +391,7 @@ describe('ForgotPasswordModal', () => {
       const emailInput = getByPlaceholderText('Enter your email address');
       fireEvent.changeText(emailInput, 'user@example.com');
 
-      const submitButton = getByA11yLabel('Send reset email');
+      const submitButton = getByLabelText('Send reset email');
       fireEvent.press(submitButton);
 
       await waitFor(() => {

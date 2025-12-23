@@ -582,20 +582,47 @@ src/
 ---
 
 ### Task 3.2: Improve Responsive Behavior
-- [ ] Wrap content in `ScrollView` with `keyboardShouldPersistTaps="handled"`
-- [ ] Add `KeyboardAvoidingView` for iOS
+- [x] Wrap content in `ScrollView` with `keyboardShouldPersistTaps="handled"`
+- [x] Add `KeyboardAvoidingView` for iOS
 - [ ] Test on iPhone SE (small screen)
 - [ ] Test on iPhone 14 Pro Max (large screen)
 - [ ] Test on Android small/large devices
 - [ ] Test landscape orientation
-- [ ] Adjust padding for safe areas
-- [ ] Ensure all interactive elements are accessible when keyboard is open
+- [x] Adjust padding for safe areas
+- [x] Ensure all interactive elements are accessible when keyboard is open
 
 **Acceptance Criteria:**
-- Scrollable on smaller devices
-- Keyboard doesn't obscure inputs
-- Works in portrait and landscape
-- Safe area respected
+- Scrollable on smaller devices ✓
+- Keyboard doesn't obscure inputs ✓
+- Works in portrait and landscape (needs manual testing)
+- Safe area respected ✓
+
+**Implementation Notes:**
+- Added `KeyboardAvoidingView` wrapper with platform-specific behavior:
+  - iOS: Uses `padding` behavior
+  - Android: Uses `height` behavior with 20px vertical offset
+- Wrapped content in `ScrollView` with:
+  - `keyboardShouldPersistTaps="handled"` to dismiss keyboard on tap outside
+  - `showsVerticalScrollIndicator={false}` for cleaner UI
+  - `bounces={true}` for native iOS feel
+  - `flexGrow: 1` for proper content layout
+- Safe area insets applied via `contentContainerStyle`:
+  - `paddingTop: insets.top + 16` (safe area + extra padding)
+  - `paddingBottom: insets.bottom + 24` (safe area + extra padding)
+  - `paddingHorizontal: 24` (consistent horizontal padding)
+- Updated `PasswordInput` to use `forwardRef` for keyboard navigation support
+- Added `returnKeyType` props to inputs:
+  - Email: `returnKeyType="next"` focuses password field on submit
+  - Password: `returnKeyType="done"` submits form on submit
+- Enhanced touch targets with `min-h-[44px]` for Forgot Password and Sign Up links
+- Created comprehensive test suite (`SignInScreen.test.tsx`) with 19 tests covering:
+  - Responsive layout (ScrollView wrapper, safe area padding, flexGrow)
+  - Keyboard handling (returnKeyType props)
+  - Touch target sizes
+  - Navigation callbacks
+  - Welcome content
+  - Accessibility attributes
+  - Form state (button disabled/enabled states)
 
 ---
 
