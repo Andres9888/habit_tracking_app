@@ -114,13 +114,14 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
         {/* Toggle Visibility Button */}
         <TouchableOpacity
           onPress={toggleSecureEntry}
-          className="pr-5"
+          className="min-h-[44px] min-w-[44px] items-center justify-center pr-2"
           accessible={true}
           accessibilityLabel={
             isSecure ? 'Show password' : 'Hide password'
           }
           accessibilityRole="button"
           accessibilityHint="Toggle password visibility"
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Text className="text-lg">{isSecure ? '👁' : '🙈'}</Text>
         </TouchableOpacity>
@@ -128,7 +129,13 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
 
       {/* Error Message */}
       {error && (
-        <Text className="px-2 text-sm font-medium text-red-500">{error}</Text>
+        <Text
+          className="px-2 text-sm font-medium text-red-600"
+          accessibilityLiveRegion="polite"
+          accessibilityRole="alert"
+        >
+          {error}
+        </Text>
       )}
     </View>
   );

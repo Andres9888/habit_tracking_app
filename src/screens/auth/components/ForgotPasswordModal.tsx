@@ -134,6 +134,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
               onPress={handleClose}
               accessibilityLabel="Close modal"
               accessibilityRole="button"
+              accessibilityHint="Closes this dialog and returns to sign in"
             >
               <Text className="text-[13px] font-bold tracking-[3px] text-white">
                 CLOSE
@@ -154,7 +155,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                   autoComplete="email"
                   autoFocus
                   className={`rounded-3xl border ${
-                    error ? 'border-red-500' : 'border-slate-200'
+                    error ? 'border-red-600' : 'border-slate-200'
                   } bg-white px-5 py-3.5 text-base font-medium text-slate-900`}
                   editable={!isLoading}
                   keyboardType="email-address"
@@ -179,7 +180,11 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
               </View>
               {/* Error message */}
               {error && (
-                <Text className="text-xs font-medium text-red-500">
+                <Text
+                  className="text-xs font-medium text-red-600"
+                  accessibilityLiveRegion="polite"
+                  accessibilityRole="alert"
+                >
                   {error}
                 </Text>
               )}
@@ -196,6 +201,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                 onPress={handleResetPassword}
                 accessibilityLabel="Send reset email"
                 accessibilityRole="button"
+                accessibilityHint="Sends password reset instructions to your email"
                 accessibilityState={{
                   disabled: isLoading || !email.trim(),
                   busy: isLoading,
@@ -217,6 +223,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                 onPress={handleClose}
                 accessibilityLabel="Cancel password reset"
                 accessibilityRole="button"
+                accessibilityHint="Closes this dialog without sending reset email"
               >
                 <Text className="text-[13px] font-bold tracking-[3px] text-slate-900">
                   CANCEL

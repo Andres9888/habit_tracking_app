@@ -107,7 +107,11 @@ export const FormInput = forwardRef<TextInput, FormInputProps>(function FormInpu
         </View>
       </Reanimated.View>
       {error && (
-        <Text className='text-sm text-red-500' accessibilityLiveRegion='polite'>
+        <Text
+          className='text-sm text-red-600'
+          accessibilityLiveRegion='polite'
+          accessibilityRole='alert'
+        >
           {error}
         </Text>
       )}

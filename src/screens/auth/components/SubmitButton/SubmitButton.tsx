@@ -51,7 +51,7 @@ export function SubmitButton({
         accessible={true}
         accessibilityRole='button'
         accessibilityLabel={isLoading ? loadingLabel : label}
-        accessibilityState={{ busy: isLoading }}
+        accessibilityState={{ disabled: isDisabled, busy: isLoading }}
       >
         <View className='flex-row items-center justify-center gap-2'>
           {isLoading ? (

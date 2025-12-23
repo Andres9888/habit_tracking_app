@@ -158,9 +158,14 @@ export function SocialLoginButtons() {
         </Text>
       </AnimatedTouchable>
 
-      <View className="my-4 flex-row items-center gap-4">
+      <View
+        className="my-4 flex-row items-center gap-4"
+        accessible={true}
+        accessibilityRole="none"
+        importantForAccessibility="no-hide-descendants"
+      >
         <View className="h-[1px] flex-1 bg-slate-200" />
-        <Text className="text-xs text-slate-400">OR</Text>
+        <Text className="text-xs text-slate-400" aria-hidden={true}>OR</Text>
         <View className="h-[1px] flex-1 bg-slate-200" />
       </View>
     </View>
