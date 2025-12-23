@@ -254,7 +254,7 @@ export const EmojiPickerSheet = memo(
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: interpolate(searchFocusAnim.value, [0, 1], [0, 0.2], Extrapolation.CLAMP),
       shadowRadius: interpolate(searchFocusAnim.value, [0, 1], [0, 6], Extrapolation.CLAMP),
-      borderColor: interpolate(searchFocusAnim.value, [0, 1], [0, 1], Extrapolation.CLAMP) === 1 ? '#3b82f6' : '#e5e7eb',
+      borderColor: interpolate(searchFocusAnim.value, [0, 1], [0, 1], Extrapolation.CLAMP) === 1 ? '#3b82f6' : '#e7e5e4',
     }));
 
     // Get current category name for header
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f9fafb',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#e7e5e4',
     borderRadius: 16,
     height: 48,
     paddingHorizontal: 16,

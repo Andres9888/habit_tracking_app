@@ -20,7 +20,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; bgSelected: string; border: 
   social: { bg: '#FFE4E6', bgSelected: '#F43F5E', border: '#FECDD3', text: '#E11D48' },
 };
 
-const DEFAULT_COLORS = { bg: '#F3F4F6', bgSelected: '#374151', border: '#E5E7EB', text: '#374151' };
+const DEFAULT_COLORS = { bg: '#f5f5f4', bgSelected: '#374151', border: '#e7e5e4', text: '#374151' };
 
 interface CategoryFiltersProps {
   categories: CategoryFilter[];

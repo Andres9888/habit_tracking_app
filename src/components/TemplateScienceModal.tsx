@@ -219,7 +219,7 @@ const AnimatedBorderBox = ({
       [0, 1, 0, 1, 0]
     );
     return {
-      borderColor: borderColorValue > 0.5 ? activeColor : '#E5E7EB',
+      borderColor: borderColorValue > 0.5 ? activeColor : '#e7e5e4',
     };
   });
 
@@ -1002,7 +1002,7 @@ const styles = StyleSheet.create({
   },
   citationBox: {
     backgroundColor: '#FAFAFA',
-    borderColor: '#E5E7EB',
+    borderColor: '#e7e5e4',
     borderRadius: 16,
     borderWidth: 2,
     marginBottom: 16,
@@ -1220,7 +1220,7 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    borderColor: '#e7e5e4',
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 16,
@@ -1264,7 +1264,7 @@ const styles = StyleSheet.create({
   },
   skeletonCard: {
     backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    borderColor: '#e7e5e4',
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 16,
@@ -1279,7 +1279,7 @@ const styles = StyleSheet.create({
   },
   skeletonFooter: {
     backgroundColor: '#FAFAF9',
-    borderTopColor: '#E5E7EB',
+    borderTopColor: '#e7e5e4',
     borderTopWidth: 1,
     paddingBottom: 34,
     paddingHorizontal: 20,

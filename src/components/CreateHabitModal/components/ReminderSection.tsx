@@ -64,7 +64,7 @@ export const ReminderSection = ({
                 key={p.label}
                 accessibilityRole='button'
                 accessibilityLabel={`Set reminder to ${p.label}`}
-                className='rounded-full border border-[#e5e7eb] bg-[#F9FAFB] px-3 py-2'
+                className='rounded-full border border-[#e7e5e4] bg-[#fafaf9] px-3 py-2'
                 onPress={() => {
                   if (onQuickTimeSelect) {
                     triggerSelection();

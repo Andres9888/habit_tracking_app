@@ -125,7 +125,7 @@ export function TimelineInCardExample() {
     <View className='bg-[#f3f4f6] p-4'>
       <View className='overflow-hidden rounded-2xl bg-white shadow-sm'>
         {/* Header */}
-        <View className='border-b border-[#e5e7eb] px-6 py-4'>
+        <View className='border-b border-[#e7e5e4] px-6 py-4'>
           <Text className='text-[18px] font-semibold text-[#101727]'>
             This Week
           </Text>

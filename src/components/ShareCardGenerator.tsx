@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: '#e7e5e4',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
     paddingVertical: 16,
@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
   },
   customizationSection: {
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: '#e7e5e4',
     padding: 24,
   },
   personalMessage: {
@@ -626,9 +626,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   platformButton: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#f5f5f4',
     borderRadius: 8,
-    borderColor: '#E5E7EB',
+    borderColor: '#e7e5e4',
     paddingHorizontal: 16,
     borderWidth: 1,
     paddingVertical: 8,
