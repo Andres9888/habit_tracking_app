@@ -12,10 +12,15 @@ import ColorPicker, {
   BrightnessSlider,
   Preview,
 } from 'reanimated-color-picker';
-import { HueSlider } from 'reanimated-color-picker/lib/typescript/components/Sliders/Hue/HueSlider';
-import { SaturationSlider } from 'reanimated-color-picker/lib/typescript/components/Sliders/HSB/SaturationSlider';
+// @ts-expect-error - These exports exist but aren't in TS definitions
+import { HueSlider } from 'reanimated-color-picker/lib/module/components/Sliders/Hue/HueSlider';
+// @ts-expect-error - These exports exist but aren't in TS definitions
+import { SaturationSlider } from 'reanimated-color-picker/lib/module/components/Sliders/HSB/SaturationSlider';
 import type { ColorPickerValue } from 'reanimated-color-picker';
-import { getLastCustomColor, saveLastCustomColor } from '../../utils/lastCustomColor';
+import {
+  getLastCustomColor,
+  saveLastCustomColor,
+} from '../../utils/lastCustomColor';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
@@ -65,48 +70,77 @@ function useThrottle(callback: (hex: string) => void, delay: number) {
  */
 function getColorName(hex: string): string {
   const colorNames: Record<string, string> = {
-    // Reds
-    '#FF0000': 'Red',
-    '#FF4444': 'Light Red',
     '#CC0000': 'Dark Red',
-    '#FF6B6B': 'Coral Red',
-    // Oranges
-    '#FF8C00': 'Dark Orange',
-    '#FFA500': 'Orange',
-    '#FF7F50': 'Coral',
-    '#FFEDD5': 'Light Orange',
-    // Yellows
-    '#FFFF00': 'Yellow',
-    '#FFD700': 'Gold',
-    '#FFC107': 'Amber',
+
     // Greens
     '#00FF00': 'Lime',
+
+    // Reds
+    '#FF0000': 'Red',
+
     '#008000': 'Green',
-    '#22C55E': 'Emerald',
+
+    '#FF6B6B': 'Coral Red',
+
     '#10B981': 'Teal Green',
-    '#DCFCE7': 'Light Green',
-    '#CCFBF1': 'Mint',
+
+    '#FF7F50': 'Coral',
+
+    '#22C55E': 'Emerald',
+
+    // Oranges
+    '#FF8C00': 'Dark Orange',
+
     // Blues
     '#0000FF': 'Blue',
+
+    '#FF4444': 'Light Red',
+
     '#3B82F6': 'Royal Blue',
-    '#60A5FA': 'Sky Blue',
-    '#DBEAFE': 'Light Blue',
+
+    '#FFA500': 'Orange',
+
     '#06B6D4': 'Cyan',
+
+    '#FFD700': 'Gold',
+
+    '#8B5CF6': 'Violet',
+
+    '#FFEDD5': 'Light Orange',
+
+    '#60A5FA': 'Sky Blue',
+    // Yellows
+    '#FFFF00': 'Yellow',
     // Purples
     '#800080': 'Purple',
-    '#8B5CF6': 'Violet',
+
+    '#FFC107': 'Amber',
+
     '#A855F7': 'Light Purple',
-    '#F3E8FF': 'Lavender',
-    // Pinks
-    '#FF69B4': 'Hot Pink',
-    '#EC4899': 'Pink',
-    '#F472B6': 'Light Pink',
-    '#FCE7F3': 'Rose',
+
     // Neutrals
     '#000000': 'Black',
-    '#FFFFFF': 'White',
+
+    '#CCFBF1': 'Mint',
+
     '#808080': 'Gray',
+
+    '#DCFCE7': 'Light Green',
+
     '#1E293B': 'Slate',
+
+    '#DBEAFE': 'Light Blue',
+
+    '#EC4899': 'Pink',
+
+    '#F3E8FF': 'Lavender',
+
+    '#F472B6': 'Light Pink',
+
+    '#FCE7F3': 'Rose',
+    // Pinks
+    '#FF69B4': 'Hot Pink',
+    '#FFFFFF': 'White',
   };
 
   // Check for exact match (case-insensitive)
@@ -217,14 +251,17 @@ export function ColorPickerSheet({
 
   // Called when user lifts finger (touch end) - ensures final color is set
   // This is the definitive value after dragging
-  const handleColorComplete = useCallback((color: ColorPickerValue) => {
-    setCurrentColor(color.hex);
-    // Haptic feedback on color change complete
-    triggerLightImpact();
-    // Announce color name for screen reader users
-    const colorName = getColorName(color.hex);
-    AccessibilityInfo.announceForAccessibility(`Selected ${colorName}`);
-  }, [triggerLightImpact]);
+  const handleColorComplete = useCallback(
+    (color: ColorPickerValue) => {
+      setCurrentColor(color.hex);
+      // Haptic feedback on color change complete
+      triggerLightImpact();
+      // Announce color name for screen reader users
+      const colorName = getColorName(color.hex);
+      AccessibilityInfo.announceForAccessibility(`Selected ${colorName}`);
+    },
+    [triggerLightImpact]
+  );
 
   const handleDone = () => {
     // Haptic feedback on Done press
@@ -248,31 +285,31 @@ export function ColorPickerSheet({
 
   return (
     <Modal
+      accessibilityViewIsModal
+      accessibilityLabel='Custom color picker'
+      visible={visible}
+      onRequestClose={onClose}
       transparent
       // Disable animation if user has reduce motion enabled
       animationType={reduceMotion ? 'none' : 'slide'}
-      visible={visible}
-      onRequestClose={onClose}
-      accessibilityViewIsModal
-      accessibilityLabel='Custom color picker'
     >
       <View className='flex-1 justify-end bg-black/50'>
         <View
-          className='rounded-t-3xl bg-white px-4 pb-6 pt-5 shadow-2xl'
           accessible
           accessibilityRole='none'
+          className='rounded-t-3xl bg-white px-4 pb-6 pt-5 shadow-2xl'
         >
           <View className='mb-4 flex-row items-center justify-between'>
             <Text
-              className='text-lg font-semibold text-[#1a1a1a]'
               accessibilityRole='header'
+              className='text-lg font-semibold text-[#1a1a1a]'
             >
               Pick a color
             </Text>
             <TouchableOpacity
-              accessibilityRole='button'
-              accessibilityLabel={`Done. Apply ${currentColorName} color`}
               accessibilityHint='Applies the selected color and closes the picker'
+              accessibilityLabel={`Done. Apply ${currentColorName} color`}
+              accessibilityRole='button'
               className='rounded-full bg-[#1a1a1a] px-4 py-2'
               onPress={handleDone}
             >
@@ -289,8 +326,8 @@ export function ColorPickerSheet({
             >
               <View
                 accessible
-                accessibilityRole='image'
                 accessibilityLabel={`Color preview: ${currentColorName}`}
+                accessibilityRole='image'
               >
                 <Preview
                   style={{ borderRadius: 12, height: 40, marginBottom: 16 }}
@@ -298,9 +335,9 @@ export function ColorPickerSheet({
               </View>
               <View
                 accessible
-                accessibilityRole='adjustable'
-                accessibilityLabel='Hue slider. Drag to change color'
                 accessibilityHint='Adjusts the base color from red through the rainbow to violet'
+                accessibilityLabel='Hue slider. Drag to change color'
+                accessibilityRole='adjustable'
               >
                 <HueSlider
                   style={{ borderRadius: 12, height: 32, marginBottom: 12 }}
@@ -309,9 +346,9 @@ export function ColorPickerSheet({
               </View>
               <View
                 accessible
-                accessibilityRole='adjustable'
-                accessibilityLabel='Saturation slider. Drag to change color intensity'
                 accessibilityHint='Adjusts how vivid or muted the color is'
+                accessibilityLabel='Saturation slider. Drag to change color intensity'
+                accessibilityRole='adjustable'
               >
                 <SaturationSlider
                   style={{ borderRadius: 12, height: 32, marginBottom: 12 }}
@@ -320,9 +357,9 @@ export function ColorPickerSheet({
               </View>
               <View
                 accessible
-                accessibilityRole='adjustable'
-                accessibilityLabel='Brightness slider. Drag to change brightness'
                 accessibilityHint='Adjusts how light or dark the color is'
+                accessibilityLabel='Brightness slider. Drag to change brightness'
+                accessibilityRole='adjustable'
               >
                 <BrightnessSlider
                   style={{ borderRadius: 12, height: 32, marginBottom: 8 }}
@@ -332,11 +369,11 @@ export function ColorPickerSheet({
           ) : (
             // Loading state while picker initializes after modal animation
             <View
-              className='items-center justify-center'
-              style={{ height: 400 }}
               accessible
               accessibilityLabel='Loading color picker'
               accessibilityRole='progressbar'
+              className='items-center justify-center'
+              style={{ height: 400 }}
             >
               <ActivityIndicator color='#1a1a1a' size='large' />
               <Text className='mt-4 text-sm text-slate-500'>
