@@ -3,7 +3,7 @@
 echo "Running pre-commit checks..."
 
 # Check for numbered duplicate files
-DUPLICATES=$(git diff --cached --name-only | grep -E " [0-9]\.(tsx?|jsx?)$")
+DUPLICATES=$(git diff --cached --name-only | grep -E " [0-9]\.(tsx?|jsx?)$" || true)
 
 if [ -n "$DUPLICATES" ]; then
   echo ""
