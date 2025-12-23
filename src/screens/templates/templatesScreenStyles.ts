@@ -498,6 +498,13 @@ export const styles = StyleSheet.create({
   allTemplatesList: {
     paddingBottom: 16,
   },
+  // Filter controls row for All Templates tab
+  filterControlsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+  },
 });
 
 
