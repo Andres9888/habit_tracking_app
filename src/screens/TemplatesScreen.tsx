@@ -46,15 +46,15 @@ import { api } from '../../convex/_generated/api';
 import type { Doc, Id } from '../../convex/_generated/dataModel';
 
 import Button from '../components/Button/Button';
-import CollapsibleCategorySection from '../components/CollapsibleCategorySection';
-import EmptyState from '../components/EmptyState';
-import MiniTemplateCard from '../components/MiniTemplateCard';
-import TemplateCard from '../components/TemplateCard';
-import Toast from '../components/Toast';
+import CollapsibleCategorySection from '../components/habit/CollapsibleCategorySection/CollapsibleCategorySection';
+import EmptyState from '../components/ui/EmptyState/EmptyState';
+import MiniTemplateCard from '../components/templates/MiniTemplateCard/MiniTemplateCard';
+import TemplateCard from '../components/templates/TemplateCard/TemplateCard';
+import Toast from '../components/ui/Toast/Toast';
 import { useAppTheme } from '../theme';
 
 import TemplatePreviewModal from './templates/TemplatePreviewModal';
-import FullsizeTemplatePreview from '../components/FullsizeTemplatePreview';
+import FullsizeTemplatePreview from '../components/templates/FullsizeTemplatePreview/FullsizeTemplatePreview';
 import {
   CATEGORY_COLORS,
   DEFAULT_CATEGORY_COLORS,

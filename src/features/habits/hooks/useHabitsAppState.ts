@@ -61,14 +61,6 @@ export function useHabitsAppState() {
     lastUpdatedHabit?.strength ? lastUpdatedHabit.strength * 100 : undefined
   );
 
-  useEffect(() => {
-    if (!milestone) return;
-    console.log('🎉 MILESTONE DETECTED!', {
-      level: milestone.level,
-      strength: milestone.strength + '%',
-      habitName: milestone.habitName,
-    });
-  }, [milestone]);
 
   // Keep habit state snapshots in sync with the habits array when it updates
   // This ensures that when a habit is edited, the modals/screens show the updated data
@@ -109,11 +101,6 @@ export function useHabitsAppState() {
       const currentStrength = habit.strength || 0;
 
       if (currentStrength > prevStrength) {
-        console.log('🎯 Strength increased!', {
-          habitName: habit.name,
-          prevStrength: (prevStrength * 100).toFixed(1) + '%',
-          currentStrength: (currentStrength * 100).toFixed(1) + '%',
-        });
         setLastUpdatedHabit({
           id: habit._id,
           name: habit.name,
@@ -214,9 +201,7 @@ export function useHabitsAppState() {
     async ({ data }: { data: Habit[] }) => {
       try {
         const habitIds = data.map((habit) => habit._id);
-        console.log('Reordering habits:', habitIds);
         await reorderHabits({ habitIds });
-        console.log('Reorder successful');
       } catch (error) {
         console.error('Failed to reorder habits:', error);
       }

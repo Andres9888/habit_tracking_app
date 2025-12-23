@@ -25,14 +25,14 @@ import {
 } from '../utils/exportData';
 
 // Import chart components
-import StrengthDistributionChart from '../components/StrengthDistributionChart';
-import TrendLineChart from '../components/TrendLineChart';
-import ComplianceHeatmap from '../components/ComplianceHeatmap';
+import StrengthDistributionChart from '../components/charts/StrengthDistributionChart/StrengthDistributionChart';
+import TrendLineChart from '../components/charts/TrendLineChart/TrendLineChart';
+import ComplianceHeatmap from '../components/charts/ComplianceHeatmap/ComplianceHeatmap';
 
 // Import insights components
-import HabitRankingsList from '../components/HabitRankingsList';
-import WeeklyInsightsCard from '../components/WeeklyInsightsCard';
-import PremiumAnalyticsPaywall from '../components/PremiumAnalyticsPaywall';
+import HabitRankingsList from '../components/habit/HabitRankingsList/HabitRankingsList';
+import WeeklyInsightsCard from '../components/habit/WeeklyInsightsCard/WeeklyInsightsCard';
+import PremiumAnalyticsPaywall from '../components/modals/PremiumAnalyticsPaywall/PremiumAnalyticsPaywall';
 
 interface StatCardProps {
   title: string;

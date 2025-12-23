@@ -4,7 +4,24 @@
     "strict": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/ui/*": ["src/components/ui/*"],
+      "@/charts/*": ["src/components/charts/*"],
+      "@/modals/*": ["src/components/modals/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/types/*": ["src/types/*"],
+      "@/theme/*": ["src/theme/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/constants/*": ["src/constants/*"],
+      "@/features/*": ["src/features/*"],
+      "@/screens/*": ["src/screens/*"],
+      "@convex/*": ["convex/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"]
 }
