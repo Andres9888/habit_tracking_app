@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
-import { AnimatedLogo, PasswordInput } from './components';
+import { AnimatedLogo, ForgotPasswordModal, PasswordInput } from './components';
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -12,6 +12,7 @@ export default function SignInScreen() {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const onSignInPress = async () => {
     if (!isLoaded) {
@@ -81,6 +82,19 @@ export default function SignInScreen() {
             placeholder='Enter your password'
           />
 
+          {/* Forgot Password Link */}
+          <TouchableOpacity
+            className='self-end'
+            onPress={() => setShowForgotPassword(true)}
+            accessibilityLabel='Forgot password?'
+            accessibilityRole='button'
+            accessibilityHint='Opens password reset form'
+          >
+            <Text className='text-sm font-semibold text-slate-900'>
+              Forgot Password?
+            </Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             className={`mt-4 items-center rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
               isLoading || !emailAddress || !password ? 'opacity-40' : ''
@@ -94,6 +108,12 @@ export default function SignInScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        visible={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+      />
     </View>
   );
 }

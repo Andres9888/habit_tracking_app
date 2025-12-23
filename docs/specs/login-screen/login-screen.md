@@ -384,24 +384,47 @@ src/
 ---
 
 ### Task 1.3: Create ForgotPasswordModal Component
-- [ ] Create file `src/screens/auth/components/ForgotPasswordModal.tsx`
-- [ ] Define TypeScript interface (visible, onClose props)
-- [ ] Build modal UI with overlay
-- [ ] Add email input field
-- [ ] Integrate Clerk's password reset API (`signIn.resetPassword()`)
-- [ ] Add form validation for email
-- [ ] Implement submit button with loading state
-- [ ] Add success message state
-- [ ] Add error handling with user-friendly messages
-- [ ] Implement close animation (slide out)
-- [ ] Test full reset flow
-- [ ] Export component
+- [x] Create file `src/screens/auth/components/ForgotPasswordModal.tsx`
+- [x] Define TypeScript interface (visible, onClose props)
+- [x] Build modal UI with overlay
+- [x] Add email input field
+- [x] Integrate Clerk's password reset API (`signIn.create()` with `reset_password_email_code` strategy)
+- [x] Add form validation for email
+- [x] Implement submit button with loading state
+- [x] Add success message state
+- [x] Add error handling with user-friendly messages
+- [x] Implement close animation (slide out)
+- [x] Test full reset flow
+- [x] Export component
 
 **Acceptance Criteria:**
-- Modal opens/closes smoothly
-- Email validation works correctly
-- Success/error states display properly
-- Integrates with Clerk API
+- Modal opens/closes smoothly ✓
+- Email validation works correctly ✓
+- Success/error states display properly ✓
+- Integrates with Clerk API ✓
+
+**Implementation Notes:**
+- Created `ForgotPasswordModal.tsx` with full password reset functionality
+- Used existing `Modal` component with `centerAlert` variant for proper animation
+- Email validation includes empty check and format validation via regex
+- Integrated with Clerk's password reset API using `signIn.create()` with strategy `reset_password_email_code`
+- Comprehensive error handling for common scenarios:
+  - Account not found (`form_identifier_not_found`)
+  - Generic errors with fallback message
+- Success state displays checkmark icon and confirmation message
+- Loading states disable inputs and show ActivityIndicator
+- Modal state resets on close to ensure clean UX
+- Accessibility labels and hints added for screen readers
+- Component added to barrel export in `index.ts`
+- Integrated into `SignInScreen.tsx` with "Forgot Password?" link positioned below password input
+- Comprehensive test suite created with 40+ test cases covering:
+  - Rendering states
+  - Email validation
+  - Password reset flow
+  - Loading states
+  - Modal interactions
+  - Accessibility
+  - Keyboard handling
 
 ---
 
