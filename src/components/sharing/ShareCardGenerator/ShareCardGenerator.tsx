@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
   previewContainer: {
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#f5f5f4',
   },
   footerContainer: {
     alignItems: 'center',
