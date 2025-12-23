@@ -44,7 +44,7 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { X, ExternalLink, Clock, Sparkles, Check } from 'lucide-react-native';
+import { X, ExternalLink, Clock, Sparkles, Check, Target, Zap, Bell } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -627,6 +627,70 @@ export default function FullsizeTemplatePreview({
             )}
           </View>
 
+          {/* Tips for Success Section */}
+          <View
+            style={styles.tipsSection}
+            accessible
+            accessibilityLabel="Tips for success"
+          >
+            <View style={styles.tipsHeader}>
+              <Text style={styles.tipsHeaderIcon}>💡</Text>
+              <Text
+                style={[
+                  styles.tipsHeaderText,
+                  { fontFamily: theme.custom.fontFamilies.primary.text },
+                ]}
+              >
+                TIPS FOR SUCCESS
+              </Text>
+            </View>
+            <View style={styles.tipsDivider} />
+            <View style={styles.tipsContent}>
+              {/* Tip 1: Start Small */}
+              <View style={styles.tipItem}>
+                <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
+                  <Target color={iconColor} size={18} strokeWidth={2} />
+                </View>
+                <Text
+                  style={[
+                    styles.tipText,
+                    { fontFamily: theme.custom.fontFamilies.primary.text },
+                  ]}
+                >
+                  Start with just 2 minutes to build consistency
+                </Text>
+              </View>
+              {/* Tip 2: Stack with existing habit */}
+              <View style={styles.tipItem}>
+                <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
+                  <Zap color={iconColor} size={18} strokeWidth={2} />
+                </View>
+                <Text
+                  style={[
+                    styles.tipText,
+                    { fontFamily: theme.custom.fontFamilies.primary.text },
+                  ]}
+                >
+                  Attach to an existing habit for better recall
+                </Text>
+              </View>
+              {/* Tip 3: Set a reminder */}
+              <View style={styles.tipItem}>
+                <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
+                  <Bell color={iconColor} size={18} strokeWidth={2} />
+                </View>
+                <Text
+                  style={[
+                    styles.tipText,
+                    { fontFamily: theme.custom.fontFamilies.primary.text },
+                  ]}
+                >
+                  Set a daily reminder until it becomes automatic
+                </Text>
+              </View>
+            </View>
+          </View>
+
           {/* Bottom spacer for footer */}
           <View style={styles.bottomSpacer} />
         </ScrollView>
@@ -868,6 +932,58 @@ const styles = StyleSheet.create({
     color: '#2563EB',
     fontSize: 14,
     fontWeight: '600',
+  },
+  tipsSection: {
+    backgroundColor: '#fefce8',
+    borderColor: '#fef08a',
+    borderRadius: 16,
+    borderWidth: 2,
+    marginHorizontal: 20,
+    marginTop: 16,
+    padding: 20,
+  },
+  tipsHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  tipsHeaderIcon: {
+    fontSize: 20,
+  },
+  tipsHeaderText: {
+    color: '#854d0e',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  tipsDivider: {
+    backgroundColor: '#fef08a',
+    height: 1,
+    marginBottom: 14,
+  },
+  tipsContent: {
+    gap: 14,
+  },
+  tipItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  tipIconContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 36,
+    justifyContent: 'center',
+    width: 36,
+  },
+  tipText: {
+    color: '#713f12',
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 20,
   },
   bottomSpacer: {
     height: 140,
