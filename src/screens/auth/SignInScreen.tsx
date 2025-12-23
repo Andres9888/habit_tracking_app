@@ -1,9 +1,14 @@
 import { useSignIn } from '@clerk/clerk-expo';
 import { useState } from 'react';
-import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
-import { AnimatedLogo, ForgotPasswordModal, PasswordInput } from './components';
+import {
+  AnimatedLogo,
+  ForgotPasswordModal,
+  FormInput,
+  PasswordInput,
+} from './components';
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -60,21 +65,18 @@ export default function SignInScreen() {
         <SocialLoginButtons />
 
         <View className='gap-6'>
-          <View className='gap-2'>
-            <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
-              EMAIL
-            </Text>
-            <TextInput
-              autoCapitalize='none'
-              autoComplete='email'
-              className='rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900'
-              keyboardType='email-address'
-              placeholder='Enter your email'
-              placeholderTextColor='#94a3b8'
-              value={emailAddress}
-              onChangeText={setEmailAddress}
-            />
-          </View>
+          <FormInput
+            label='EMAIL'
+            icon='📧'
+            autoCapitalize='none'
+            autoComplete='email'
+            keyboardType='email-address'
+            placeholder='Enter your email address'
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+            accessibilityLabel='Email input'
+            accessibilityHint='Enter your email address to sign in'
+          />
 
           <PasswordInput
             value={password}
