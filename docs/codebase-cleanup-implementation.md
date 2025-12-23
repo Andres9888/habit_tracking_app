@@ -13,6 +13,7 @@
 This document provides a complete, agent-executable plan to fix 24 TypeScript errors, remove ~100 duplicate files, and improve test pass rate from 54% to 95%+.
 
 **Key Metrics:**
+
 ```
 Before → After:
 TypeScript Errors:   24 → 0
@@ -76,6 +77,7 @@ ls -lh ~/Desktop/backups/habit-app/
 ```
 
 **Success Criteria:**
+
 - ✅ Backup branch created and pushed
 - ✅ Baseline logs saved (2 files in docs/)
 - ✅ Tarball created (~50-100MB)
@@ -91,7 +93,7 @@ ls -lh ~/Desktop/backups/habit-app/
 - [x] Display count by suffix pattern
 - [x] Review inventory file for accuracy
 
-**Completed:** Generated inventory of 337 duplicate files (161 with " 2.*", 90 with " 3.*", 86 with " 4.*"). Inventory saved to `docs/specs/duplicates-inventory.txt`.
+**Completed:** Generated inventory of 337 duplicate files (161 with " 2._", 90 with " 3._", 86 with " 4.\*"). Inventory saved to `docs/specs/duplicates-inventory.txt`.
 
 ```bash
 find src worktrees -type f \( \
@@ -110,6 +112,7 @@ echo "Inventory saved to: docs/specs/duplicates-inventory.txt"
 ```
 
 **Success Criteria:**
+
 - ✅ Inventory file created with ~100 files
 - ✅ Counts displayed for verification
 
@@ -120,6 +123,7 @@ echo "Inventory saved to: docs/specs/duplicates-inventory.txt"
 - [x] Document any non-identical duplicates for manual review
 
 **Completed:** Compared all 337 duplicate files with their canonical versions. Found:
+
 - **70 files** that differ from canonical (documented in `docs/specs/duplicates-need-review.txt`)
 - **267 files** that are identical to canonical
 - **0 files** without a canonical version
@@ -151,6 +155,7 @@ echo "Files with no canonical: $(wc -l < docs/specs/duplicates-no-canonical.txt 
 ```
 
 **Success Criteria:**
+
 - ✅ All duplicates compared with canonical versions
 - ✅ Files needing manual review identified
 - ✅ Files with no canonical identified
@@ -161,7 +166,7 @@ echo "Files with no canonical: $(wc -l < docs/specs/duplicates-no-canonical.txt 
 - [x] Verify deletions with git status
 - [x] Count deleted files
 
-**Completed:** Successfully deleted 133 duplicate files from src/ and worktrees/ directories. Git shows 167 deletions (includes duplicates in .cursor/rules and docs/). Zero remaining duplicate files with " 2.*", " 3.*", or " 4.*" patterns.
+**Completed:** Successfully deleted 133 duplicate files from src/ and worktrees/ directories. Git shows 167 deletions (includes duplicates in .cursor/rules and docs/). Zero remaining duplicate files with " 2._", " 3._", or " 4.\*" patterns.
 
 ```bash
 # Delete duplicates (after review confirms they're safe)
@@ -175,6 +180,7 @@ git status --short | grep "^ D" | wc -l
 ```
 
 **Success Criteria:**
+
 - ✅ ~100 files deleted
 - ✅ Git shows deletions (git status)
 - ✅ No unintended deletions
@@ -207,6 +213,7 @@ echo "If any imports found above, they need manual fixes."
 ```
 
 **Success Criteria:**
+
 - ✅ No imports reference numbered files
 - ✅ Or: List of files needing import fixes documented
 
@@ -256,6 +263,7 @@ fi
 ```
 
 **Success Criteria:**
+
 - ✅ TypeScript errors reduced from 24 to ~18
 - ✅ No new errors introduced
 - ✅ Changes committed to branch
@@ -314,6 +322,7 @@ import ColorPicker, {
 ```
 
 **Implementation:**
+
 - [x] Open `src/components/CreateHabitModal/ColorPickerSheet.tsx`
 - [x] Update import statement (lines 11-16)
 - [x] Remove `thumbShape` prop (line ~329)
@@ -345,13 +354,14 @@ import Animated, { SharedValue } from 'react-native-reanimated';
 // Line ~136: FIND AND REPLACE
 
 // FIND:
-const someValue: Animated.SharedValue<number>
+const someValue: Animated.SharedValue<number>;
 
 // REPLACE WITH:
-const someValue: SharedValue<number>
+const someValue: SharedValue<number>;
 ```
 
 **Implementation:**
+
 - [x] Open `src/components/HabitStrengthSection/HabitStrengthSection.tsx`
 - [x] Add `SharedValue` to imports from 'react-native-reanimated'
 - [x] Replace `Animated.SharedValue<T>` with `SharedValue<T>` (line ~136)
@@ -368,6 +378,7 @@ const someValue: SharedValue<number>
 **Completed:** Fixed potential undefined errors from `Array.at(-1)` in both CalendarTimelineDebug.tsx and CalendarTimelineWithPulse.tsx. Added ternary operator to safely handle cases where `lastDate` could be undefined. TypeScript errors remain at 7 (no new errors introduced). The task description mentioned `habitCreatedDate` but the actual issue was with `lastDate` from the `.at(-1)` method which has return type `Date | undefined`.
 
 **Files:**
+
 - `src/components/CalendarTimeline/CalendarTimelineDebug.tsx` (line ~44)
 - `src/components/CalendarTimeline/CalendarTimelineWithPulse.tsx` (line ~76)
 
@@ -382,6 +393,7 @@ const createdDateStr = habitCreatedDate
 ```
 
 **Implementation:**
+
 - [x] Open `src/components/CalendarTimeline/CalendarTimelineDebug.tsx`
 - [x] Find date formatting issue (line 44 - `lastDate` from `.at(-1)`)
 - [x] Add null guard with ternary
@@ -414,6 +426,7 @@ const phaseColor = getPhaseColor(currentPhase ?? undefined);
 ```
 
 **Implementation:**
+
 - [x] Open `src/components/PhaseTag/PhaseTag.tsx`
 - [x] Find `getPhaseColor(currentPhase)` (around line 27)
 - [x] Add `?? undefined` to normalize null
@@ -444,6 +457,7 @@ checked={localSettings[setting.key] as boolean}
 ```
 
 **Implementation:**
+
 - [x] Open `src/components/SettingsDialog/SettingsDialog.tsx`
 - [x] Find the checked prop assignment (line 43)
 - [x] Add type assertion `as boolean`
@@ -465,6 +479,7 @@ checked={localSettings[setting.key] as boolean}
 **File:** `src/screens/HabitDetailScreen.tsx`
 
 **Implementation:**
+
 - [x] Open `src/screens/HabitDetailScreen.tsx`
 - [x] Search for `isWhyEditorOpen` in useEffect dependency array
 - [x] Note the line number of this useEffect (~1608)
@@ -489,6 +504,7 @@ checked={localSettings[setting.key] as boolean}
 **File:** `src/components/MiniTemplateCard.tsx`
 
 **Option 1 (Simple): Remove the prop**
+
 ```typescript
 // Line ~200: FIND AND REPLACE
 
@@ -507,6 +523,7 @@ checked={localSettings[setting.key] as boolean}
 ```
 
 **Option 2 (Preserve delayPressIn): Wrap with regular Pressable**
+
 ```typescript
 // FIND:
 <AnimatedPressable
@@ -529,6 +546,7 @@ checked={localSettings[setting.key] as boolean}
 ```
 
 **Implementation:**
+
 - [x] Open `src/components/MiniTemplateCard.tsx`
 - [x] Find AnimatedPressable with delayPressIn (around line 200)
 - [x] Choose Option 1 (remove prop) or Option 2 (wrap)
@@ -582,6 +600,7 @@ fi
 ```
 
 **Success Criteria:**
+
 - ✅ `npm run lint` exits with code 0
 - ✅ Zero TypeScript errors in output
 - ✅ Phase 2 changes committed
@@ -656,6 +675,7 @@ jest.mock('@shopify/react-native-skia', () => ({
 ```
 
 **Implementation:**
+
 - [x] Create or open `jest.setup.js` in project root
 - [x] Add Reanimated mock configuration
 - [x] Add Skia mock if not present
@@ -709,6 +729,7 @@ jest.mock('react-native-draggable-flatlist', () => {
 ```
 
 **Implementation:**
+
 - [x] Open `jest.setup.js`
 - [x] Add DraggableFlatList mock below Reanimated mock
 - [x] Save file
@@ -757,6 +778,7 @@ git commit -m "Sync worktree test configuration with main"
 ```
 
 **Implementation:**
+
 - [x] Determine if worktree tests are used (check recent changes)
 - [x] If unused: Execute Strategy A (remove)
 - [x] If used: Execute Strategy B (sync)
@@ -833,6 +855,7 @@ fi
 ```
 
 **Success Criteria:**
+
 - ✅ Test pass rate ≥90% (target: 95%+)
 - ✅ No "runOnUI is not a function" errors
 - ✅ Phase 3 changes committed
@@ -843,11 +866,13 @@ fi
 
 ### Task 4.1: Add Git Pre-Commit Hook
 
-- [ ] Check if .husky directory exists
-- [ ] Update or create pre-commit hook
-- [ ] Add duplicate file detection
-- [ ] Test hook with dummy file
-- [ ] Ensure lint-staged still runs
+- [x] Check if .husky directory exists
+- [x] Update or create pre-commit hook
+- [x] Add duplicate file detection
+- [x] Test hook with dummy file
+- [x] Ensure lint-staged still runs
+
+**Completed:** Created `.husky/pre-commit` hook that blocks commits containing numbered duplicate files. Successfully tested with a dummy "test 2.tsx" file - hook correctly blocked the commit. Updated to Husky v9+ format to eliminate deprecation warnings. Fixed grep exit code issue by adding `|| true` to prevent false failures. lint-staged integration verified and working. Committed as ea93b69 and b6dff2c.
 
 **File:** `.husky/pre-commit`
 
@@ -877,24 +902,28 @@ npx lint-staged
 ```
 
 **Implementation:**
-- [ ] Check for .husky directory: `ls -la .husky/`
-- [ ] If missing, run: `npx husky install`
-- [ ] Create/update `.husky/pre-commit` with content above
-- [ ] Make executable: `chmod +x .husky/pre-commit`
-- [ ] Test hook:
+
+- [x] Check for .husky directory: `ls -la .husky/`
+- [x] If missing, run: `npx husky install` (Husky already installed)
+- [x] Create/update `.husky/pre-commit` with content above (with fix for grep exit code)
+- [x] Make executable: `chmod +x .husky/pre-commit`
+- [x] Test hook:
   ```bash
   echo "test" > "src/test 2.tsx"
   git add "src/test 2.tsx"
-  git commit -m "test"  # Should be blocked
+  git commit -m "test"  # Successfully blocked ✅
   rm "src/test 2.tsx"
   git reset
   ```
-- [ ] Commit hook changes: `git commit -m "Add pre-commit hook to prevent duplicate files"`
+- [x] Commit hook changes: `git commit -m "Add pre-commit hook to prevent duplicate files"`
 
 **Success Criteria:**
+
 - ✅ Pre-commit hook blocks numbered files
 - ✅ Hook tested and working
 - ✅ lint-staged still executes
+
+**Verification Complete:** All success criteria met. Hook is production-ready.
 
 ### Task 4.2: Create/Update CI/CD Workflow
 
@@ -972,6 +1001,7 @@ jobs:
 ```
 
 **Implementation:**
+
 - [ ] Create directory: `mkdir -p .github/workflows`
 - [ ] Create file: `.github/workflows/ci.yml`
 - [ ] Add workflow content above
@@ -979,6 +1009,7 @@ jobs:
 - [ ] Commit: `git commit -m "Add CI/CD workflow for code quality checks"`
 
 **Success Criteria:**
+
 - ✅ Workflow file created
 - ✅ All three jobs defined
 - ✅ Workflow committed
@@ -1060,6 +1091,7 @@ cat docs/cleanup-completion-summary.md
 ```
 
 **Success Criteria:**
+
 - ✅ TypeScript errors = 0
 - ✅ Test pass rate ≥90%
 - ✅ Summary document generated
@@ -1126,6 +1158,7 @@ cat docs/cleanup-completion-summary.md
 ```
 
 **Implementation:**
+
 - [ ] Run `npm run dev`
 - [ ] Open app in browser/simulator
 - [ ] Execute manual test checklist
@@ -1196,6 +1229,7 @@ echo "Final results: docs/final-*.log"
 ```
 
 **Success Criteria:**
+
 - ✅ All changes committed
 - ✅ Pushed to remote
 - ✅ Summary document created
@@ -1289,6 +1323,7 @@ fi
 **Files Created:** 3 (jest.setup.js, pre-commit hook, CI workflow)
 
 **Next Steps After Completion:**
+
 1. Monitor CI/CD pipeline for green builds
 2. Deploy to staging environment
 3. Run QA testing cycle
@@ -1296,6 +1331,7 @@ fi
 5. Monitor error tracking for any runtime issues
 
 **Maintenance:**
+
 - Pre-commit hook will prevent future duplicates
 - CI/CD will catch issues before merge
 - Test suite will catch regressions
