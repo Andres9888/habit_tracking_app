@@ -121,7 +121,7 @@ export const InlineEmojiInput = ({
       case 'warning':
         return 'text-amber-600';
       default:
-        return 'text-slate-500';
+        return 'text-stone-500';
     }
   };
 
@@ -176,7 +176,7 @@ export const InlineEmojiInput = ({
             <Animated.View
               className="h-10 w-10 items-center justify-center rounded-xl"
               style={{
-                backgroundColor: isDefaultEmoji ? '#f1f5f9' : `${color}30`,
+                backgroundColor: isDefaultEmoji ? '#f5f5f4' : `${color}30`,
                 transform: [{ scale: emojiScale }],
               }}
             >
@@ -197,13 +197,13 @@ export const InlineEmojiInput = ({
           accessibilityLabel="Habit name input"
           autoFocus={autoFocus}
           blurOnSubmit
-          className="h-14 rounded-2xl bg-white pl-16 pr-14 text-base font-medium text-slate-800 shadow-sm"
+          className="h-14 rounded-2xl bg-white pl-16 pr-14 text-base font-medium text-stone-800 shadow-sm"
           maxLength={MAX_LENGTH}
           placeholder="What habit to build?"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#a8a29e"
           returnKeyType="done"
           style={{
-            borderColor: value.length > 0 ? '#10b981' : '#e2e8f0',
+            borderColor: value.length > 0 ? '#10b981' : '#e7e5e4',
             borderWidth: value.length > 0 ? 2 : 1,
           }}
           value={value}
@@ -212,10 +212,10 @@ export const InlineEmojiInput = ({
         />
 
         {/* Character Count - right side */}
-        <View className="absolute right-3 top-1/2 -translate-y-1/2">
+        <View className="absolute right-3 top-1/2 -transtone-y-1/2">
           <Text
             className={`text-xs font-medium ${
-              isNearLimit ? 'text-amber-500' : 'text-slate-400'
+              isNearLimit ? 'text-amber-500' : 'text-stone-400'
             }`}
           >
             {charCount}/{MAX_LENGTH}

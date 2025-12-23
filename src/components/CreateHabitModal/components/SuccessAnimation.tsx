@@ -241,11 +241,11 @@ export const SuccessAnimation = ({
 
           {/* Success Text */}
           <Animated.View className="items-center" style={{ opacity: textOpacity }}>
-            <Text className="mb-2 text-center text-2xl font-bold text-slate-800">
+            <Text className="mb-2 text-center text-2xl font-bold text-stone-800">
               {habitName}
             </Text>
-            <Text className="text-center text-lg text-slate-500">created! 🎉</Text>
-            <Text className="mt-4 text-center text-sm text-slate-400">
+            <Text className="text-center text-lg text-stone-500">created! 🎉</Text>
+            <Text className="mt-4 text-center text-sm text-stone-400">
               Your streak starts now
             </Text>
           </Animated.View>
@@ -261,7 +261,7 @@ export const SuccessAnimation = ({
             <Pressable
               accessibilityLabel="Start tracking habit"
               accessibilityRole="button"
-              className="items-center rounded-2xl bg-slate-900 py-4"
+              className="items-center rounded-2xl bg-stone-900 py-4"
               onPress={handleComplete}
             >
               <Text className="text-base font-semibold text-white">

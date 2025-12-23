@@ -29,9 +29,9 @@ const STATUS_STYLES: Record<
     text: 'text-blue-600',
   },
   upcoming: {
-    container: 'border-slate-200 bg-white',
-    indicator: 'bg-slate-300 opacity-60',
-    text: 'text-slate-400',
+    container: 'border-stone-200 bg-white',
+    indicator: 'bg-stone-300 opacity-60',
+    text: 'text-stone-400',
   },
 };
 

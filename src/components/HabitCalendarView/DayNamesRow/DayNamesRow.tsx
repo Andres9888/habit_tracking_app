@@ -7,7 +7,7 @@ export function DayNamesRow() {
     <View className='flex-row px-1'>
       {DAY_NAMES.map((day) => (
         <View key={day} className='flex-1 items-center py-2'>
-          <Text className='text-[10px] font-semibold tracking-widest text-slate-500'>
+          <Text className='text-[10px] font-semibold tracking-widest text-stone-500'>
             {day}
           </Text>
         </View>

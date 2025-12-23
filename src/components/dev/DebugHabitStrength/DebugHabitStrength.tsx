@@ -35,7 +35,7 @@ export function DebugHabitStrength() {
 
       {habits.map((habit) => (
         <View key={habit._id} className='mb-4 rounded-lg bg-white p-3'>
-          <Text className='font-semibold text-gray-900'>{habit.name}</Text>
+          <Text className='font-semibold text-stone-900'>{habit.name}</Text>
 
           <View className='mt-2 space-y-1'>
             <Text className='text-sm'>
@@ -101,8 +101,8 @@ export function DebugHabitStrength() {
         </View>
       ))}
 
-      <View className='mt-4 rounded-lg bg-gray-100 p-3'>
-        <Text className='text-xs text-gray-700'>
+      <View className='mt-4 rounded-lg bg-stone-100 p-3'>
+        <Text className='text-xs text-stone-700'>
           <Text className='font-bold'>How to fix:</Text>
           {'\n'}1. Make sure Convex is running (npx convex dev)
           {'\n'}2. Click "Initialize Now" button at top of app

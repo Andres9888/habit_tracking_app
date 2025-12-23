@@ -80,7 +80,7 @@ export function ForceUpdateButton({
     <View className='mt-2 gap-2'>
       <Pressable
         className={`rounded-lg px-4 py-2 ${
-          loading ? 'bg-gray-400' : 'bg-green-600'
+          loading ? 'bg-stone-400' : 'bg-green-600'
         }`}
         disabled={loading}
         onPress={handleClick}
@@ -113,7 +113,7 @@ export function ForceUpdateButton({
         </View>
       )}
 
-      <Text className='text-xs text-gray-500'>
+      <Text className='text-xs text-stone-500'>
         Current: {(currentStrength * 100).toFixed(1)}%
       </Text>
     </View>

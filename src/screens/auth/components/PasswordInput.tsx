@@ -89,9 +89,9 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      borderColor: borderColor.value === 1 ? '#0f172a' : '#e2e8f0', // slate-900 : slate-200
+      borderColor: borderColor.value === 1 ? '#1c1917' : '#e7e5e4', // stone-900 : stone-200
       shadowOpacity: shadowOpacity.value * 0.1,
-      shadowColor: '#0f172a',
+      shadowColor: '#1c1917',
       shadowOffset: { width: 0, height: 2 },
       shadowRadius: 4,
       elevation: shadowOpacity.value * 2,
@@ -107,12 +107,12 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
 
   return (
     <View className="gap-2">
-      <Text className="text-[10px] font-medium tracking-[3px] text-slate-500">
+      <Text className="text-[10px] font-medium tracking-[3px] text-stone-500">
         PASSWORD
       </Text>
       <Animated.View
         style={[animatedStyle, errorStyle]}
-        className="relative flex-row items-center rounded-3xl border border-slate-200 bg-white"
+        className="relative flex-row items-center rounded-3xl border border-stone-200 bg-white"
       >
         {/* Lock Icon Prefix */}
         <View className="pl-5">
@@ -124,9 +124,9 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
           ref={ref}
           secureTextEntry={isSecure}
           autoComplete="password"
-          className="flex-1 px-3 py-3.5 text-base font-medium text-slate-900"
+          className="flex-1 px-3 py-3.5 text-base font-medium text-stone-900"
           placeholder={placeholder}
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#a8a29e"
           value={value}
           onChangeText={onChangeText}
           onFocus={handleFocus}

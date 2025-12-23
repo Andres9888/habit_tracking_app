@@ -1321,7 +1321,7 @@ export default function HabitDetailScreen({
                 value={identityDraft}
                 onChangeText={setIdentityDraft}
               />
-              <View className="absolute right-4 top-1/2 -translate-y-1/2">
+              <View className="absolute right-4 top-1/2 -transtone-y-1/2">
                 <View className="rounded-full bg-stone-100 px-2 py-1">
                   <Text className="text-[10px] font-bold text-stone-400">{identityDraft.length} / 100</Text>
                 </View>

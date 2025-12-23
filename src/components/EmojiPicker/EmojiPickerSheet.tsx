@@ -254,7 +254,7 @@ export const EmojiPickerSheet = memo(
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: interpolate(searchFocusAnim.value, [0, 1], [0, 0.2], Extrapolation.CLAMP),
       shadowRadius: interpolate(searchFocusAnim.value, [0, 1], [0, 6], Extrapolation.CLAMP),
-      borderColor: interpolate(searchFocusAnim.value, [0, 1], [0, 1], Extrapolation.CLAMP) === 1 ? '#3b82f6' : '#e5e7eb',
+      borderColor: interpolate(searchFocusAnim.value, [0, 1], [0, 1], Extrapolation.CLAMP) === 1 ? '#3b82f6' : '#e7e5e4',
     }));
 
     // Get current category name for header
@@ -300,13 +300,13 @@ export const EmojiPickerSheet = memo(
               {/* Search Bar */}
               <View style={styles.searchContainer}>
                 <Animated.View style={[styles.searchBar, searchBarAnimatedStyle]}>
-                  <Search color={isSearchFocused ? '#3b82f6' : '#9ca3af'} size={20} />
+                  <Search color={isSearchFocused ? '#3b82f6' : '#a8a29e'} size={20} />
                   <TextInput
                     accessibilityLabel="Search emojis"
                     accessibilityHint="Type keywords to search for emojis"
                     style={styles.searchInput}
                     placeholder="Search or type habit name..."
-                    placeholderTextColor="#9ca3af"
+                    placeholderTextColor="#a8a29e"
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                     onFocus={handleSearchFocus}
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f9fafb',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#e7e5e4',
     borderRadius: 16,
     height: 48,
     paddingHorizontal: 16,

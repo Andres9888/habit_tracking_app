@@ -51,10 +51,10 @@ const WeekDateToggle = ({
   }));
 
   const backgroundClass = isFuture
-    ? 'bg-gray-100 opacity-50'
+    ? 'bg-stone-100 opacity-50'
     : isCompleted
       ? 'bg-green-500'
-      : 'bg-gray-200';
+      : 'bg-stone-200';
 
   const handlePress = () => {
     if (!isFuture) {
@@ -131,7 +131,7 @@ const ExampleHabitCard = ({
 
   return (
     <Animated.View
-      className='rounded-3xl border border-gray-200 bg-white p-5 shadow-sm'
+      className='rounded-3xl border border-stone-200 bg-white p-5 shadow-sm'
       entering={FadeInDown.duration(200)}
       exiting={FadeOutUp.duration(150)}
       layout={cardLayout}
@@ -140,7 +140,7 @@ const ExampleHabitCard = ({
         <View className='flex-row items-center gap-3'>
           <Text className='text-3xl'>{habit.emoji}</Text>
           <View>
-            <Text className='text-[17px] font-semibold text-gray-900'>
+            <Text className='text-[17px] font-semibold text-stone-900'>
               {habit.name}
             </Text>
             {streak > 0 && (
@@ -152,7 +152,7 @@ const ExampleHabitCard = ({
             )}
           </View>
         </View>
-        <Text className='text-sm text-gray-500'>{completionCount}/7</Text>
+        <Text className='text-sm text-stone-500'>{completionCount}/7</Text>
       </View>
 
       <View className='flex-row justify-between gap-2'>
@@ -175,8 +175,8 @@ const ExampleHabitCard = ({
       {/* Habit Strength */}
       <View className='mt-3 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
-          <Text className='text-sm text-gray-500'>Strength</Text>
-          <View className='h-2 w-20 overflow-hidden rounded-full bg-gray-200'>
+          <Text className='text-sm text-stone-500'>Strength</Text>
+          <View className='h-2 w-20 overflow-hidden rounded-full bg-stone-200'>
             <View
               className='h-full rounded-full'
               style={{
@@ -197,7 +197,7 @@ const ExampleHabitCard = ({
       </View>
 
       <View
-        className='mt-4 h-1.5 w-full overflow-hidden rounded-full bg-gray-100'
+        className='mt-4 h-1.5 w-full overflow-hidden rounded-full bg-stone-100'
         onLayout={(e) => {
           const w = e.nativeEvent.layout.width;
           containerWidth.value = w;
@@ -281,7 +281,7 @@ export default function HabitHomeExample() {
   }
 
   return (
-    <View className='flex-1 bg-gray-50'>
+    <View className='flex-1 bg-stone-50'>
       <ScrollView className='flex-1'>
         <View className='mx-auto w-full max-w-[448px] px-6 py-4'>
           <View className='flex-row items-center justify-between py-4'>
@@ -295,13 +295,13 @@ export default function HabitHomeExample() {
               </Pressable>
               <Pressable
                 accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'
+                className='h-9 w-9 items-center justify-center rounded-full bg-stone-100'
               >
                 <BarChart3 color={'#111'} size={18} />
               </Pressable>
               <Pressable
                 accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full bg-gray-100'
+                className='h-9 w-9 items-center justify-center rounded-full bg-stone-100'
               >
                 <Settings color={'#111'} size={18} />
               </Pressable>

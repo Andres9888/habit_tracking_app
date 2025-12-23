@@ -60,7 +60,7 @@ export function InitializeHabitStrength() {
     return (
       <View className='items-center justify-center p-4'>
         <ActivityIndicator size='large' />
-        <Text className='mt-2 text-sm text-gray-600'>Loading habits...</Text>
+        <Text className='mt-2 text-sm text-stone-600'>Loading habits...</Text>
       </View>
     );
   }
@@ -128,7 +128,7 @@ export function InitializeHabitStrength() {
         </View>
       )}
 
-      <Text className='mt-3 text-xs text-gray-600'>
+      <Text className='mt-3 text-xs text-stone-600'>
         💡 Tip: After initialization, habit strength will update automatically
         when you check off habits.
       </Text>

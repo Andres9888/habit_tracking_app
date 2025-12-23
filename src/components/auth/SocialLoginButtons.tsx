@@ -128,7 +128,7 @@ export function SocialLoginButtons() {
   return (
     <View className="gap-3">
       <AnimatedTouchable
-        className="flex-row items-center justify-center gap-3 rounded-3xl border border-slate-200 bg-white py-[14px]"
+        className="flex-row items-center justify-center gap-3 rounded-3xl border border-stone-200 bg-white py-[14px]"
         onPress={handleGoogleSignIn}
         onPressIn={() => handlePressIn(googleScale)}
         onPressOut={() => handlePressOut(googleScale)}
@@ -145,7 +145,7 @@ export function SocialLoginButtons() {
           <GoogleLogo size={20} />
         )}
         <Text
-          className="text-[13px] font-bold tracking-[2px] text-slate-900"
+          className="text-[13px] font-bold tracking-[2px] text-stone-900"
           style={{ opacity: googleLoading ? 0.6 : 1 }}
         >
           CONTINUE WITH GOOGLE
@@ -153,7 +153,7 @@ export function SocialLoginButtons() {
       </AnimatedTouchable>
 
       <AnimatedTouchable
-        className="flex-row items-center justify-center gap-3 rounded-3xl border border-slate-200 bg-white py-[14px]"
+        className="flex-row items-center justify-center gap-3 rounded-3xl border border-stone-200 bg-white py-[14px]"
         onPress={handleAppleSignIn}
         onPressIn={() => handlePressIn(appleScale)}
         onPressOut={() => handlePressOut(appleScale)}
@@ -170,7 +170,7 @@ export function SocialLoginButtons() {
           <AppleLogo size={20} />
         )}
         <Text
-          className="text-[13px] font-bold tracking-[2px] text-slate-900"
+          className="text-[13px] font-bold tracking-[2px] text-stone-900"
           style={{ opacity: appleLoading ? 0.6 : 1 }}
         >
           CONTINUE WITH APPLE
@@ -183,9 +183,9 @@ export function SocialLoginButtons() {
         accessibilityRole="none"
         importantForAccessibility="no-hide-descendants"
       >
-        <View className="h-[1px] flex-1 bg-slate-200" />
-        <Text className="text-xs text-slate-400" aria-hidden={true}>OR</Text>
-        <View className="h-[1px] flex-1 bg-slate-200" />
+        <View className="h-[1px] flex-1 bg-stone-200" />
+        <Text className="text-xs text-stone-400" aria-hidden={true}>OR</Text>
+        <View className="h-[1px] flex-1 bg-stone-200" />
       </View>
     </View>
   );

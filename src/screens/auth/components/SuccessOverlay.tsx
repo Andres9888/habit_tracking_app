@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     fontSize: 24,
     fontWeight: '700',
-    color: '#0f172a', // slate-900
+    color: '#1c1917', // stone-900
     letterSpacing: 0.5,
   },
 });

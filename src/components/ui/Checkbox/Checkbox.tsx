@@ -24,8 +24,8 @@ const sizeClasses = {
 
 const variantClasses = {
   danger: 'bg-red-600 border-red-600',
-  neutral: 'bg-slate-700 border-slate-700',
-  primary: 'bg-slate-900 border-slate-900',
+  neutral: 'bg-stone-700 border-stone-700',
+  primary: 'bg-stone-900 border-stone-900',
   success: 'bg-green-600 border-green-600',
 };
 
@@ -59,7 +59,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
     >
       <View
         className={clsx(
-          'items-center justify-center rounded border border-slate-200 bg-white shadow-sm',
+          'items-center justify-center rounded border border-stone-200 bg-white shadow-sm',
           sizeClasses[size].box,
           isActive && variantClasses[variant],
           disabled && 'opacity-50'

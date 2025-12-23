@@ -135,7 +135,7 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
   return (
     <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
         <View className="flex-1 bg-black/50">
-          <View className="mt-12 flex-1 overflow-hidden rounded-t-3xl bg-slate-50 shadow-2xl">
+          <View className="mt-12 flex-1 overflow-hidden rounded-t-3xl bg-stone-50 shadow-2xl">
             {/* Header with keyboard-aware Done button */}
             <ModalHeader
               habitName={form.habitName}

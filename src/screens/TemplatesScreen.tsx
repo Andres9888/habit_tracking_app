@@ -573,17 +573,17 @@ export default function TemplatesScreen() {
         {/* Search bar (always visible) */}
         <View style={styles.searchSection}>
           <View style={styles.searchBar}>
-            <Search color="#94a3b8" size={18} strokeWidth={2.25} />
+            <Search color="#a8a29e" size={18} strokeWidth={2.25} />
             <TextInput
               placeholder="Search habits or science keywords"
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#a8a29e"
               style={styles.searchInput}
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
             {searchQuery ? (
               <TouchableOpacity accessibilityLabel="Clear search" onPress={() => setSearchQuery('')}>
-                <X color="#94a3b8" size={18} strokeWidth={2.25} />
+                <X color="#a8a29e" size={18} strokeWidth={2.25} />
               </TouchableOpacity>
             ) : null}
           </View>
@@ -597,12 +597,12 @@ export default function TemplatesScreen() {
                 style={[styles.controlButton, showSortOptions && styles.controlButtonActive]}
                 onPress={handleOpenSortOptions}
               >
-                <SlidersHorizontal color={showSortOptions ? '#fff' : '#0f172a'} size={16} />
+                <SlidersHorizontal color={showSortOptions ? '#fff' : '#1c1917'} size={16} />
                 <Text style={[styles.controlButtonText, showSortOptions && { color: '#fff' }]}>
                   {SORT_LABELS[sortOption]}
                 </Text>
                 <ChevronDown
-                  color={showSortOptions ? '#fff' : '#0f172a'}
+                  color={showSortOptions ? '#fff' : '#1c1917'}
                   size={14}
                   style={{ transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }] }}
                 />
@@ -642,8 +642,8 @@ export default function TemplatesScreen() {
               style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
               onPress={() => setResearchOnly((prev) => !prev)}
             >
-              <Filter color={researchOnly ? '#fff' : '#0f172a'} size={16} />
-              <Text style={[styles.controlButtonText, { color: researchOnly ? '#fff' : '#0f172a' }]}>
+              <Filter color={researchOnly ? '#fff' : '#1c1917'} size={16} />
+              <Text style={[styles.controlButtonText, { color: researchOnly ? '#fff' : '#1c1917' }]}>
                 Research
               </Text>
             </Pressable>
@@ -749,17 +749,17 @@ export default function TemplatesScreen() {
       {/* Search bar - fades up with delay */}
       <Animated.View style={[styles.searchSection, searchAnimatedStyle]}>
         <View style={styles.searchBar}>
-          <Search color="#94a3b8" size={18} strokeWidth={2.25} />
+          <Search color="#a8a29e" size={18} strokeWidth={2.25} />
           <TextInput
             placeholder="Search habits..."
-            placeholderTextColor="#94a3b8"
+            placeholderTextColor="#a8a29e"
             style={styles.searchInput}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
           {searchQuery ? (
             <TouchableOpacity accessibilityLabel="Clear search" onPress={() => setSearchQuery('')}>
-              <X color="#94a3b8" size={18} strokeWidth={2.25} />
+              <X color="#a8a29e" size={18} strokeWidth={2.25} />
             </TouchableOpacity>
           ) : null}
         </View>

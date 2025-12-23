@@ -12,24 +12,24 @@
 export const AUTH_COLORS = {
   /** Primary background color */
   background: '#ffffff',
-  /** Primary text color - slate-900 */
-  primary: '#0f172a',
-  /** Secondary text color - slate-600 */
-  secondary: '#475569',
-  /** Border color - slate-200 */
-  border: '#e2e8f0',
-  /** Primary text color - slate-900 */
-  text: '#0f172a',
-  /** Muted text color - slate-500 */
-  textMuted: '#64748b',
-  /** Placeholder text color - slate-400 */
-  placeholder: '#94a3b8',
+  /** Primary text color - stone-900 */
+  primary: '#1c1917',
+  /** Secondary text color - stone-600 */
+  secondary: '#57534e',
+  /** Border color - stone-200 */
+  border: '#e7e5e4',
+  /** Primary text color - stone-900 */
+  text: '#1c1917',
+  /** Muted text color - stone-500 */
+  textMuted: '#78716c',
+  /** Placeholder text color - stone-400 */
+  placeholder: '#a8a29e',
   /** Error color - red-500/red-600 (WCAG AA compliant) */
   error: '#dc2626',
   /** Success color - green-500 */
   success: '#10b981',
-  /** Dark slate - slate-700 */
-  slateDark: '#334155',
+  /** Dark slate - stone-700 */
+  slateDark: '#44403c',
   /** Shadow color */
   shadow: '#000000',
 } as const;

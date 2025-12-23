@@ -66,20 +66,20 @@ export function MonthlyCalendar({
     <View>
       {/* Header with Month/Year and Navigation */}
       <View className='mb-4 flex-row items-center justify-between'>
-        <Text className='text-lg font-bold text-slate-900'>
+        <Text className='text-lg font-bold text-stone-900'>
           {format(currentDate, 'MMMM yyyy')}
         </Text>
 
         <View className='flex-row gap-2'>
           <Pressable
-            className='h-8 w-8 items-center justify-center rounded-full active:bg-slate-100'
+            className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
             onPress={goToPreviousMonth}
           >
             <ChevronLeft color='#1a1a1a' size={20} />
           </Pressable>
 
           <Pressable
-            className='h-8 w-8 items-center justify-center rounded-full active:bg-slate-100'
+            className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
             onPress={goToNextMonth}
           >
             <ChevronRight color='#1a1a1a' size={20} />
@@ -91,7 +91,7 @@ export function MonthlyCalendar({
       <View className='mb-3 flex-row'>
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
           <View key={day} className='w-[14.28%] items-center'>
-            <Text className='text-sm font-medium text-slate-500'>{day}</Text>
+            <Text className='text-sm font-medium text-stone-500'>{day}</Text>
           </View>
         ))}
       </View>
@@ -118,14 +118,14 @@ export function MonthlyCalendar({
               <View className='relative items-center'>
                 {/* Day number with optional black circle for today */}
                 {isToday ? (
-                  <View className='h-8 w-8 items-center justify-center rounded-full bg-slate-900'>
+                  <View className='h-8 w-8 items-center justify-center rounded-full bg-stone-900'>
                     <Text className='text-base font-bold text-white'>
                       {format(date, 'd')}
                     </Text>
                   </View>
                 ) : (
                   <View className='h-7 items-center justify-center'>
-                    <Text className='text-base font-semibold text-slate-900'>
+                    <Text className='text-base font-semibold text-stone-900'>
                       {format(date, 'd')}
                     </Text>
                   </View>

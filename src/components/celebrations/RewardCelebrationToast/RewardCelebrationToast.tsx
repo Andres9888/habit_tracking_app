@@ -105,7 +105,7 @@ export const RewardCelebrationToast = ({
     >
       <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
         <Text className='text-[17px] font-bold leading-[24px] text-[#101727]'>{title}</Text>
-        <Text className='mt-2 text-[15px] leading-[20px] text-[#334155]'>{message}</Text>
+        <Text className='mt-2 text-[15px] leading-[20px] text-[#44403c]'>{message}</Text>
 
         {/* Premium value prop */}
         <View className='mt-3 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 p-3' style={{ backgroundColor: '#faf5ff' }}>
@@ -116,7 +116,7 @@ export const RewardCelebrationToast = ({
           <Pressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#cbd5e1] px-3 py-2.5'
+            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-3 py-2.5'
             onPress={() => {
               triggerSelection();
               onSecondaryAction();
@@ -146,7 +146,7 @@ export const RewardCelebrationToast = ({
             onDismiss();
           }}
         >
-          <Text className='text-[10px] font-medium uppercase leading-[12px] tracking-wider text-[#64748b]'>Not now</Text>
+          <Text className='text-[10px] font-medium uppercase leading-[12px] tracking-wider text-[#78716c]'>Not now</Text>
         </Pressable>
       </View>
     </AnimatedContainer>

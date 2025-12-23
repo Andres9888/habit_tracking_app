@@ -23,7 +23,7 @@ export function AuthGate() {
   // Show loading while Clerk initializes
   if (!isLoaded) {
     return (
-      <View className="flex-1 items-center justify-center bg-white dark:bg-gray-900">
+      <View className="flex-1 items-center justify-center bg-white dark:bg-stone-900">
         <ActivityIndicator size="large" />
       </View>
     );

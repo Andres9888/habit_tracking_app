@@ -32,7 +32,7 @@ const SUGGESTIONS: Suggestion[] = [
   { color: '#84cc16', emoji: '🥗', keywords: ['vegetable', 'salad', 'greens'], name: 'Eat vegetables' },
   { color: '#fb923c', emoji: '🍊', keywords: ['vitamin', 'supplement'], name: 'Take vitamins' },
   { color: '#78716c', emoji: '☕', keywords: ['coffee', 'caffeine'], name: 'No coffee after 2pm' },
-  { color: '#64748b', emoji: '🥤', keywords: ['soda', 'sugar', 'drink'], name: 'No soda today' },
+  { color: '#78716c', emoji: '🥤', keywords: ['soda', 'sugar', 'drink'], name: 'No soda today' },
 
   // Mental & Learning
   { color: '#f59e0b', emoji: '📖', keywords: ['read', 'book', 'reading'], name: 'Read 10 minutes' },
@@ -43,7 +43,7 @@ const SUGGESTIONS: Suggestion[] = [
   { color: '#a855f7', emoji: '✍️', keywords: ['write', 'writing', 'words'], name: 'Write 100 words' },
 
   // Productivity & Focus
-  { color: '#64748b', emoji: '📱', keywords: ['phone', 'screen', 'digital', 'detox'], name: 'No phone for 1 hour' },
+  { color: '#78716c', emoji: '📱', keywords: ['phone', 'screen', 'digital', 'detox'], name: 'No phone for 1 hour' },
   { color: '#dc2626', emoji: '🎯', keywords: ['goal', 'task', 'complete'], name: 'Complete daily goal' },
   { color: '#0891b2', emoji: '📅', keywords: ['plan', 'tomorrow', 'schedule'], name: 'Plan tomorrow' },
   { color: '#06b6d4', emoji: '🧹', keywords: ['clean', 'tidy', 'organize'], name: 'Clean for 10 minutes' },
@@ -103,7 +103,7 @@ const SuggestionChip = ({ color, emoji, isHighlighted, name, onPick }: Suggestio
           isHighlighted ? 'bg-blue-50' : 'bg-white'
         }`}
         style={{
-          borderColor: isHighlighted ? '#3b82f6' : '#e2e8f0',
+          borderColor: isHighlighted ? '#3b82f6' : '#e7e5e4',
           borderWidth: isHighlighted ? 2 : 1,
           shadowColor: '#000',
           shadowOffset: { height: 1, width: 0 },
@@ -120,7 +120,7 @@ const SuggestionChip = ({ color, emoji, isHighlighted, name, onPick }: Suggestio
         >
           <Text className="text-xl">{emoji}</Text>
         </View>
-        <Text className="text-sm font-semibold text-slate-700">{name}</Text>
+        <Text className="text-sm font-semibold text-stone-700">{name}</Text>
       </Pressable>
     </Animated.View>
   );
@@ -189,10 +189,10 @@ export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
   if (filteredSuggestions.length === 0 && query.trim().length >= 2) {
     return (
       <View className="mb-6">
-        <Text className="mb-3 text-sm font-semibold text-slate-500">{label}</Text>
-        <View className="items-center rounded-2xl bg-slate-50 py-6">
+        <Text className="mb-3 text-sm font-semibold text-stone-500">{label}</Text>
+        <View className="items-center rounded-2xl bg-stone-50 py-6">
           <Text className="text-3xl">🎯</Text>
-          <Text className="mt-2 text-sm text-slate-500">Create your own unique habit!</Text>
+          <Text className="mt-2 text-sm text-stone-500">Create your own unique habit!</Text>
         </View>
       </View>
     );
@@ -200,7 +200,7 @@ export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
 
   return (
     <View className="mb-6">
-      <Text className="mb-3 text-sm font-semibold text-slate-500">{label}</Text>
+      <Text className="mb-3 text-sm font-semibold text-stone-500">{label}</Text>
 
       <Animated.View style={{ opacity: fadeAnim }}>
         <ScrollView

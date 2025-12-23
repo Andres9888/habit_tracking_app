@@ -38,7 +38,7 @@ export const ReminderSection = ({
           }}
         />
       </View>
-      <Text className='mb-4 text-[13px] text-[#64748b]'>
+      <Text className='mb-4 text-[13px] text-[#78716c]'>
         {STRINGS.CREATE_HABIT.remindersHelper}
       </Text>
       {remindersEnabled && (
@@ -64,7 +64,7 @@ export const ReminderSection = ({
                 key={p.label}
                 accessibilityRole='button'
                 accessibilityLabel={`Set reminder to ${p.label}`}
-                className='rounded-full border border-[#e5e7eb] bg-[#F9FAFB] px-3 py-2'
+                className='rounded-full border border-[#e7e5e4] bg-[#fafaf9] px-3 py-2'
                 onPress={() => {
                   if (onQuickTimeSelect) {
                     triggerSelection();
@@ -72,7 +72,7 @@ export const ReminderSection = ({
                   }
                 }}
               >
-                <Text className='text-[13px] font-medium text-[#334155]'>
+                <Text className='text-[13px] font-medium text-[#44403c]'>
                   {p.label}
                 </Text>
               </TouchableOpacity>

@@ -193,10 +193,10 @@ export default function SignInScreen({ onNavigateToSignUp, autoFocusEmail = fals
             {/* Logo Section */}
             <View className='mb-8 items-center'>
               <AnimatedLogo size={80} />
-              <Text className='mb-2 text-3xl font-extrabold tracking-tight text-slate-900'>
+              <Text className='mb-2 text-3xl font-extrabold tracking-tight text-stone-900'>
                 Welcome Back! 👋
               </Text>
-              <Text className='text-base text-slate-500'>
+              <Text className='text-base text-stone-500'>
                 Sign in to continue your journey
               </Text>
             </View>
@@ -240,7 +240,7 @@ export default function SignInScreen({ onNavigateToSignUp, autoFocusEmail = fals
                 accessibilityRole='button'
                 accessibilityHint='Opens password reset form'
               >
-                <Text className='text-sm font-semibold text-slate-900'>
+                <Text className='text-sm font-semibold text-stone-900'>
                   Forgot Password?
                 </Text>
               </TouchableOpacity>
@@ -257,7 +257,7 @@ export default function SignInScreen({ onNavigateToSignUp, autoFocusEmail = fals
             {/* Sign Up Prompt */}
             {onNavigateToSignUp && (
               <View className='mt-8 flex-row items-center justify-center'>
-                <Text className='text-base text-slate-500'>
+                <Text className='text-base text-stone-500'>
                   Don't have an account?{' '}
                 </Text>
                 <TouchableOpacity
@@ -267,7 +267,7 @@ export default function SignInScreen({ onNavigateToSignUp, autoFocusEmail = fals
                   accessibilityRole='button'
                   accessibilityHint='Navigate to create a new account'
                 >
-                  <Text className='text-base font-semibold text-slate-900'>
+                  <Text className='text-base font-semibold text-stone-900'>
                     Sign Up
                   </Text>
                 </TouchableOpacity>

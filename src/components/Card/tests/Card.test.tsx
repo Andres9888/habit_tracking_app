@@ -282,7 +282,7 @@ describe('Card Component', () => {
     it('Card accepts className prop for NativeWind', () => {
       const { getByTestId } = render(
         <Card
-          className='rounded-xl border border-slate-200 bg-white shadow-sm'
+          className='rounded-xl border border-stone-200 bg-white shadow-sm'
           testID='nw-card'
         >
           <Text>Test</Text>
@@ -297,7 +297,7 @@ describe('Card Component', () => {
       const { getByTestId } = render(
         <Card>
           <CardHeader
-            className='border-b border-slate-200 p-4'
+            className='border-b border-stone-200 p-4'
             testID='nw-header'
           >
             <Text>Header</Text>

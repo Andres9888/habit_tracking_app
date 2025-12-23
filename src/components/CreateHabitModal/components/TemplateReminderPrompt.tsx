@@ -19,7 +19,7 @@ export const TemplateReminderPrompt = ({
         accessibilityLabel='Browse curated habits'
         accessibilityRole='button'
         activeOpacity={0.92}
-        className='rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] px-4 py-3 shadow-lg shadow-black/10'
+        className='rounded-2xl border border-[#e7e5e4] bg-[#fafaf9] px-4 py-3 shadow-lg shadow-black/10'
         style={{ elevation: 4 }}
         onPress={onPress}
       >

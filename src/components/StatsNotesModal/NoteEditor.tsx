@@ -73,7 +73,7 @@ export default function NoteEditor({
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+        <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
           {noteId ? 'EDIT NOTE' : 'NEW NOTE'}
         </Text>
 
@@ -81,15 +81,15 @@ export default function NoteEditor({
           <>
             <TextInput
               accessibilityLabel='Note date'
-              className='w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900'
+              className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
               placeholder='YYYY-MM-DD'
-              placeholderTextColor='#999'
+              placeholderTextColor='#a8a29e'
               value={date}
               onChangeText={setDate}
             />
 
-            <View className='rounded-2xl border border-slate-200 bg-white px-4 py-3'>
-              <Text className='mb-2 text-xs font-semibold uppercase tracking-[2px] text-slate-500'>
+            <View className='rounded-2xl border border-stone-200 bg-white px-4 py-3'>
+              <Text className='mb-2 text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
                 LINKED HABIT (OPTIONAL)
               </Text>
               <View className='gap-2'>
@@ -97,13 +97,13 @@ export default function NoteEditor({
                   accessibilityLabel='No habit selected'
                   accessibilityRole='button'
                   className={`rounded-xl px-3 py-2 ${
-                    selectedHabitId ? 'bg-slate-100' : 'bg-slate-900'
+                    selectedHabitId ? 'bg-stone-100' : 'bg-stone-900'
                   }`}
                   onPress={() => setSelectedHabitId(undefined)}
                 >
                   <Text
                     className={`text-sm font-medium ${
-                      selectedHabitId ? 'text-slate-700' : 'text-white'
+                      selectedHabitId ? 'text-stone-700' : 'text-white'
                     }`}
                   >
                     None
@@ -116,8 +116,8 @@ export default function NoteEditor({
                     accessibilityRole='button'
                     className={`rounded-xl px-3 py-2 ${
                       selectedHabitId === habit._id
-                        ? 'bg-slate-900'
-                        : 'bg-slate-100'
+                        ? 'bg-stone-900'
+                        : 'bg-stone-100'
                     }`}
                     onPress={() => setSelectedHabitId(habit._id)}
                   >
@@ -125,7 +125,7 @@ export default function NoteEditor({
                       className={`text-sm font-medium ${
                         selectedHabitId === habit._id
                           ? 'text-white'
-                          : 'text-slate-700'
+                          : 'text-stone-700'
                       }`}
                     >
                       {habit.name}
@@ -140,9 +140,9 @@ export default function NoteEditor({
         <TextInput
           multiline
           accessibilityLabel='Note body'
-          className='min-h-[120px] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900'
+          className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
           placeholder='Write your note here...'
-          placeholderTextColor='#999'
+          placeholderTextColor='#a8a29e'
           textAlignVertical='top'
           value={body}
           onChangeText={setBody}
@@ -151,7 +151,7 @@ export default function NoteEditor({
         <View className='flex-row justify-between'>
           <Text
             className={`text-xs ${
-              characterCount > 1000 ? 'text-red-500' : 'text-slate-500'
+              characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
             }`}
           >
             {characterCount} / 1000 characters
@@ -168,13 +168,13 @@ export default function NoteEditor({
           disabled={isSaving}
           onPress={onCancel}
         >
-          <Text className='text-xs font-semibold tracking-[2px] text-slate-500'>
+          <Text className='text-xs font-semibold tracking-[2px] text-stone-500'>
             CANCEL
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           accessibilityRole='button'
-          className={`rounded-3xl border border-slate-900 px-5 py-2 ${
+          className={`rounded-3xl border border-stone-900 px-5 py-2 ${
             !isValid || isSaving ? 'opacity-40' : ''
           }`}
           disabled={!isValid || isSaving}
@@ -183,7 +183,7 @@ export default function NoteEditor({
           {isSaving ? (
             <ActivityIndicator color='#101727' size='small' />
           ) : (
-            <Text className='text-xs font-semibold tracking-[2px] text-slate-900'>
+            <Text className='text-xs font-semibold tracking-[2px] text-stone-900'>
               {noteId ? 'SAVE' : 'ADD'}
             </Text>
           )}

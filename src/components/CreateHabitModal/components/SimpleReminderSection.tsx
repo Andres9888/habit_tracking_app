@@ -47,7 +47,7 @@ const QuickTimeButton = ({ isSelected, label, onPress, time }: QuickTimeButtonPr
         accessibilityLabel={`Set reminder to ${label} at ${time}`}
         accessibilityRole="button"
         className={`items-center rounded-xl py-3 ${
-          isSelected ? 'bg-blue-500' : 'bg-slate-100'
+          isSelected ? 'bg-blue-500' : 'bg-stone-100'
         }`}
         onPress={() => {
           triggerSelection();
@@ -58,14 +58,14 @@ const QuickTimeButton = ({ isSelected, label, onPress, time }: QuickTimeButtonPr
       >
         <Text
           className={`text-xs font-semibold ${
-            isSelected ? 'text-white' : 'text-slate-600'
+            isSelected ? 'text-white' : 'text-stone-600'
           }`}
         >
           {label}
         </Text>
         <Text
           className={`mt-0.5 text-[10px] ${
-            isSelected ? 'text-blue-100' : 'text-slate-400'
+            isSelected ? 'text-blue-100' : 'text-stone-400'
           }`}
         >
           {time}
@@ -133,16 +133,16 @@ export const SimpleReminderSection = ({
             <Bell color="#3b82f6" size={20} />
           </View>
           <View>
-            <Text className="text-base font-semibold text-slate-800">Remind me</Text>
-            <Text className="text-xs text-slate-500">
+            <Text className="text-base font-semibold text-stone-800">Remind me</Text>
+            <Text className="text-xs text-stone-500">
               {remindersEnabled ? formatReminderTime(reminderTime) : 'Off'}
             </Text>
           </View>
         </View>
         <Switch
-          ios_backgroundColor="#e2e8f0"
+          ios_backgroundColor="#e7e5e4"
           thumbColor="#ffffff"
-          trackColor={{ false: '#e2e8f0', true: '#3b82f6' }}
+          trackColor={{ false: '#e7e5e4', true: '#3b82f6' }}
           value={remindersEnabled}
           onValueChange={(val) => {
             triggerSelection();
@@ -173,18 +173,18 @@ export const SimpleReminderSection = ({
           {/* Custom time button */}
           <Pressable
             accessibilityLabel="Choose custom reminder time"
-            className="flex-row items-center justify-between rounded-xl bg-slate-50 px-4 py-3"
+            className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3"
             onPress={() => {
               triggerSelection();
               onTimePress();
             }}
           >
-            <Text className="text-sm font-medium text-slate-700">Custom time</Text>
+            <Text className="text-sm font-medium text-stone-700">Custom time</Text>
             <View className="flex-row items-center">
               <Text className="mr-2 text-sm font-semibold text-blue-500">
                 {formatReminderTime(reminderTime)}
               </Text>
-              <ChevronRight color="#94a3b8" size={16} />
+              <ChevronRight color="#a8a29e" size={16} />
             </View>
           </Pressable>
         </View>

@@ -37,11 +37,11 @@ export function StatsCard({
             </View>
           )}
           <View className='flex-1'>
-            <Text className='text-2xl font-semibold text-slate-900'>{name}</Text>
-            <Text className='mt-1 text-base text-slate-500'>{scheduleText}</Text>
+            <Text className='text-2xl font-semibold text-stone-900'>{name}</Text>
+            <Text className='mt-1 text-base text-stone-500'>{scheduleText}</Text>
             {habitNotes ? (
               <Text
-                className='mt-2 text-sm text-slate-500'
+                className='mt-2 text-sm text-stone-500'
                 numberOfLines={2}
               >
                 {habitNotes}
@@ -58,17 +58,17 @@ export function StatsCard({
           <Text className='text-[30px] font-extrabold text-orange-500'>
             {currentStreak}
           </Text>
-          <Text className='mt-1 text-center text-sm font-medium leading-5 text-slate-500'>
+          <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>
             Current{'\n'}Streak
           </Text>
         </View>
 
         {/* Best Streak */}
         <View className='items-center'>
-          <Text className='text-[30px] font-extrabold text-slate-900'>
+          <Text className='text-[30px] font-extrabold text-stone-900'>
             {bestStreak}
           </Text>
-          <Text className='mt-1 text-center text-sm font-medium leading-5 text-slate-500'>
+          <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>
             Best Streak
           </Text>
         </View>
@@ -78,7 +78,7 @@ export function StatsCard({
           <Text className='text-[30px] font-extrabold text-emerald-500'>
             {completionPercentage}%
           </Text>
-          <Text className='mt-1 text-center text-sm font-medium leading-5 text-slate-500'>
+          <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>
             Completion
           </Text>
         </View>

@@ -376,7 +376,7 @@ export function ColorPickerSheet({
               style={{ height: 400 }}
             >
               <ActivityIndicator color='#1a1a1a' size='large' />
-              <Text className='mt-4 text-sm text-slate-500'>
+              <Text className='mt-4 text-sm text-stone-500'>
                 Loading color picker...
               </Text>
             </View>

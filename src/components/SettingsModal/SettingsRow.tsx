@@ -38,7 +38,7 @@ export function SettingsRow({
       }
     : {
         background: '#ffffff',
-        border: '#f1f5f9',
+        border: '#f5f5f4',
         chevron: '#8a8a8a',
         label: '#1a1a1a',
         switchThumb: '#ffffff',
@@ -49,7 +49,7 @@ export function SettingsRow({
 
   const content = (
     <View
-      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b border-gray-100' : ''}`}
+      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b border-stone-100' : ''}`}
       style={{
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,

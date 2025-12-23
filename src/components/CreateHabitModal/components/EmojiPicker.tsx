@@ -30,7 +30,7 @@ export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerP
         }}
       >
         <View
-          className='h-12 w-12 items-center justify-center rounded-xl bg-gray-100'
+          className='h-12 w-12 items-center justify-center rounded-xl bg-stone-100'
         >
           <Text className='text-2xl'>{selectedEmoji || '➕'}</Text>
         </View>

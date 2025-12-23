@@ -38,7 +38,7 @@ export const COLORS = [
   '#6366F1', // Indigo
   '#D946EF', // Fuchsia
   '#F43F5E', // Rose
-  '#475569', // Slate Gray
+  '#57534e', // Slate Gray
 ];
 
 export const HABIT_NAME_REGEX = /^(\p{Emoji})\s+(.+)$/u;

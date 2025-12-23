@@ -86,12 +86,12 @@ export const FormInput = forwardRef<TextInput, FormInputProps>(function FormInpu
 
   // Animated styles for the input container
   const animatedContainerStyle = useAnimatedStyle(() => {
-    // Interpolate border color from slate-200 to slate-900
+    // Interpolate border color from stone-200 to stone-900
     const borderColor = error
       ? '#ef4444' // red-500 for errors
       : borderColorProgress.value === 1
-      ? '#0f172a' // slate-900 when focused
-      : '#e2e8f0'; // slate-200 default
+      ? '#1c1917' // stone-900 when focused
+      : '#e7e5e4'; // stone-200 default
 
     return {
       borderColor,
@@ -109,7 +109,7 @@ export const FormInput = forwardRef<TextInput, FormInputProps>(function FormInpu
 
   return (
     <View className='gap-2'>
-      <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
+      <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
         {label}
       </Text>
       <Reanimated.View
@@ -124,8 +124,8 @@ export const FormInput = forwardRef<TextInput, FormInputProps>(function FormInpu
           )}
           <TextInput
             ref={ref}
-            className='flex-1 text-base font-medium text-slate-900'
-            placeholderTextColor='#94a3b8'
+            className='flex-1 text-base font-medium text-stone-900'
+            placeholderTextColor='#a8a29e'
             onFocus={handleFocus}
             onBlur={handleBlur}
             {...props}

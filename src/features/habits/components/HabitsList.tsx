@@ -184,7 +184,7 @@ function MonetizationHero({
 
       <View className='gap-2 pt-2'>
         <View className='flex-row items-center justify-between'>
-          <Text className='text-[10px] font-medium uppercase tracking-[1px] text-[#94a3b8]'>
+          <Text className='text-[10px] font-medium uppercase tracking-[1px] text-[#a8a29e]'>
             Habit slots used
           </Text>
           <Text className='text-[13px] font-bold tabular-nums text-white'>

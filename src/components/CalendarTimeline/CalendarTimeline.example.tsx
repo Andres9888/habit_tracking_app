@@ -104,7 +104,7 @@ export function MinimalTimelineExample() {
   const dates = Array.from({ length: 5 }, (_, i) => addDays(today, i));
 
   return (
-    <View className='bg-[#f9fafb]'>
+    <View className='bg-[#fafaf9]'>
       <CalendarTimeline dates={dates} showSeparator={false} />
     </View>
   );
@@ -122,10 +122,10 @@ export function TimelineInCardExample() {
   const lastWeekday = weekdays.at(-1);
 
   return (
-    <View className='bg-[#f3f4f6] p-4'>
+    <View className='bg-[#f5f5f4] p-4'>
       <View className='overflow-hidden rounded-2xl bg-white shadow-sm'>
         {/* Header */}
-        <View className='border-b border-[#e5e7eb] px-6 py-4'>
+        <View className='border-b border-[#e7e5e4] px-6 py-4'>
           <Text className='text-[18px] font-semibold text-[#101727]'>
             This Week
           </Text>

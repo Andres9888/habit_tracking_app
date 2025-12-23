@@ -190,7 +190,7 @@ function AnimatedHabitCard({
   return (
     <Animated.View style={animatedStyle}>
       <View
-        className='overflow-hidden rounded-2xl border border-slate-200 bg-white'
+        className='overflow-hidden rounded-2xl border border-stone-200 bg-white'
         style={{
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 2 },
@@ -222,15 +222,15 @@ function AnimatedHabitCard({
                 <Text className='pl-3 text-2xl'>{habit.icon || '📝'}</Text>
               </View>
               <View className='flex-1'>
-                <Text className='text-base font-semibold text-slate-900'>
+                <Text className='text-base font-semibold text-stone-900'>
                   {habit.name}
                 </Text>
                 <View className='mt-0.5 flex-row items-center gap-1'>
-                  <Text className='text-xs text-slate-400'>
+                  <Text className='text-xs text-stone-400'>
                     Archived {new Date(archiveDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </Text>
-                  <Text className='text-slate-300'>•</Text>
-                  <Text className='text-xs text-slate-400'>
+                  <Text className='text-stone-300'>•</Text>
+                  <Text className='text-xs text-stone-400'>
                     {getRelativeTime(archiveDate)}
                   </Text>
                 </View>
@@ -257,9 +257,9 @@ function AnimatedHabitCard({
                 </Text>
               </View>
             ) : (
-              <View className='flex-row items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1'>
+              <View className='flex-row items-center gap-1.5 rounded-lg bg-stone-100 px-2.5 py-1'>
                 <Text className='text-sm'>🔥</Text>
-                <Text className='text-xs font-semibold text-slate-500'>
+                <Text className='text-xs font-semibold text-stone-500'>
                   No streak
                 </Text>
               </View>
@@ -355,7 +355,7 @@ export default function ArchivedHabitsModal({
           <TouchableOpacity
             accessibilityLabel='Back to settings'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-2xl bg-slate-100/80'
+            className='h-11 w-11 items-center justify-center rounded-2xl bg-stone-100/80'
             onPress={onBack}
             style={{
               shadowColor: '#000',
@@ -365,15 +365,15 @@ export default function ArchivedHabitsModal({
               elevation: 1,
             }}
           >
-            <ChevronLeft color='#475569' size={24} strokeWidth={2} />
+            <ChevronLeft color='#57534e' size={24} strokeWidth={2} />
           </TouchableOpacity>
-          <Text className='flex-1 text-center text-xl font-bold text-slate-900'>
+          <Text className='flex-1 text-center text-xl font-bold text-stone-900'>
             Archived Habits
           </Text>
           <TouchableOpacity
             accessibilityLabel='Close'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-2xl bg-slate-100/80'
+            className='h-11 w-11 items-center justify-center rounded-2xl bg-stone-100/80'
             onPress={onClose}
             style={{
               shadowColor: '#000',
@@ -383,17 +383,17 @@ export default function ArchivedHabitsModal({
               elevation: 1,
             }}
           >
-            <X color='#64748b' size={22} strokeWidth={2} />
+            <X color='#78716c' size={22} strokeWidth={2} />
           </TouchableOpacity>
         </View>
       </BlurView>
 
       {/* Stats Summary Bar */}
       {archivedHabits.length > 0 && (
-        <View className='mb-4 flex-row items-center justify-between rounded-xl bg-slate-50 px-4 py-3'>
+        <View className='mb-4 flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3'>
           <View className='flex-row items-center gap-2'>
             <Text className='text-lg'>📦</Text>
-            <Text className='text-sm font-medium text-slate-600'>
+            <Text className='text-sm font-medium text-stone-600'>
               {archivedHabits.length} archived habit{archivedHabits.length !== 1 ? 's' : ''}
             </Text>
           </View>
@@ -421,13 +421,13 @@ export default function ArchivedHabitsModal({
             </View>
 
             {/* Text Content - warmer, more encouraging copy */}
-            <Text className='mb-2 text-center text-2xl font-bold text-slate-900'>
+            <Text className='mb-2 text-center text-2xl font-bold text-stone-900'>
               Your Habits Are Thriving!
             </Text>
-            <Text className='mb-1 text-center text-base text-slate-500'>
+            <Text className='mb-1 text-center text-base text-stone-500'>
               All your habits are active and growing.
             </Text>
-            <Text className='mb-6 max-w-xs text-center text-sm text-slate-400'>
+            <Text className='mb-6 max-w-xs text-center text-sm text-stone-400'>
               When you need a break from a habit, swipe left to archive it here for safekeeping.
             </Text>
 

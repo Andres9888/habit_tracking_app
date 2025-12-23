@@ -581,8 +581,8 @@ export function HabitCard({
                 {/* Best Streak Badge - Shows when approaching or at personal record */}
                 {bestStreak > 0 && currentStreak >= bestStreak - 2 && (
                   <View style={[styles.bestStreakBadge, {
-                    backgroundColor: currentStreak >= bestStreak ? '#FEF9C3' : '#F3F4F6',
-                    borderColor: currentStreak >= bestStreak ? '#FACC15' : '#E5E7EB',
+                    backgroundColor: currentStreak >= bestStreak ? '#FEF9C3' : '#f5f5f4',
+                    borderColor: currentStreak >= bestStreak ? '#FACC15' : '#e7e5e4',
                   }]}>
                     <Text style={styles.bestStreakIcon}>🏅</Text>
                     <Text style={[styles.bestStreakText, {

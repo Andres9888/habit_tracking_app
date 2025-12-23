@@ -95,7 +95,7 @@ const LEVELS: Record<string, LevelInfo> = {
   },
 };
 
-const BACKGROUND_COLOR = '#e5e7eb'; // gray-200
+const BACKGROUND_COLOR = '#e5e7eb'; // stone-200
 
 /**
  * Get level info based on strength percentage
@@ -238,7 +238,7 @@ export function StrengthRing({
 
     const trendConfig = {
       down: { color: '#ef4444', symbol: '↓' }, // red-500
-      stable: { color: '#6b7280', symbol: '→' }, // gray-500
+      stable: { color: '#6b7280', symbol: '→' }, // stone-500
       up: { color: '#22c55e', symbol: '↑' }, // green-500
     };
 

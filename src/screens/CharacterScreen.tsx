@@ -42,7 +42,7 @@ const AttributeCard = ({
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-3xl border border-gray-100 bg-white'
+      className='overflow-hidden rounded-3xl border border-stone-100 bg-white'
       entering={FadeInDown.duration(400)}
     >
       <View className='relative h-[110px]'>
@@ -76,7 +76,7 @@ const AttributeCard = ({
           </View>
 
           {/* Progress bar */}
-          <View className='h-2 w-full overflow-hidden rounded-full bg-gray-100'>
+          <View className='h-2 w-full overflow-hidden rounded-full bg-stone-100'>
             <View style={{ width: `${percentage}%` }}>
               <LinearGradient
                 colors={gradientColors}
@@ -94,7 +94,7 @@ const AttributeCard = ({
 
 const StatCard = ({ emoji, value, label }: StatCardProps) => (
   <Animated.View
-    className='flex-1 flex-col items-center gap-1 rounded-2xl border border-gray-100 bg-white px-4 py-4'
+    className='flex-1 flex-col items-center gap-1 rounded-2xl border border-stone-100 bg-white px-4 py-4'
     entering={FadeInDown.duration(500)}
   >
     <Text className='text-2xl leading-8'>{emoji}</Text>
@@ -161,7 +161,7 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
 
           {/* Character Card */}
           <Animated.View
-            className='mb-6 overflow-hidden rounded-3xl border border-gray-100 bg-white'
+            className='mb-6 overflow-hidden rounded-3xl border border-stone-100 bg-white'
             entering={FadeInDown.duration(300)}
           >
             <View className='flex-col gap-6 px-6 py-6'>
@@ -226,7 +226,7 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
                     {characterData.xp}/{characterData.xpToNextLevel} XP
                   </Text>
                 </View>
-                <View className='h-3 w-full overflow-hidden rounded-full bg-gray-100'>
+                <View className='h-3 w-full overflow-hidden rounded-full bg-stone-100'>
                   <View style={{ width: `${xpProgress}%` }}>
                     <LinearGradient
                       colors={['#ad46ff', '#f6339a']}
@@ -313,7 +313,7 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
             {characterData.recentAchievements.map((achievement) => (
               <Animated.View
                 key={achievement.id}
-                className='flex-row items-center gap-4 rounded-3xl border border-gray-100 bg-white px-6 py-6'
+                className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
                 entering={FadeInDown.duration(600)}
               >
                 <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>

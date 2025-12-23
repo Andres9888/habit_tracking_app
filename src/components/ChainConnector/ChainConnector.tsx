@@ -10,8 +10,8 @@ import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
  *
  * Design:
  * - Height: 24px with negative margins to maintain original spacing
- * - Vertical line: 3px wide, slate-400 (#94a3b8)
- * - Chain icon: 16px, slate-600 (#475569) on white background
+ * - Vertical line: 3px wide, stone-400 (#a8a29e)
+ * - Chain icon: 16px, stone-600 (#57534e) on white background
  * - White circle: 24px diameter with shadow
  */
 export const ChainConnector: React.FC = () => {
@@ -27,10 +27,10 @@ export const ChainConnector: React.FC = () => {
       {/* Vertical connecting line */}
       <View
         style={{
-          backgroundColor: '#94a3b8',
+          backgroundColor: '#a8a29e',
           height: '100%',
           position: 'absolute',
-          width: 3, // slate-400
+          width: 3, // stone-400
         }}
       />
 
@@ -54,7 +54,7 @@ export const ChainConnector: React.FC = () => {
           zIndex: 1, // Android shadow
         }}
       >
-        <ChainLinkIcon color='#475569' size={16} variant='stroke' />
+        <ChainLinkIcon color='#57534e' size={16} variant='stroke' />
       </View>
     </View>
   );

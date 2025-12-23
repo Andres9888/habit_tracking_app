@@ -88,7 +88,7 @@ export const HeroNameInput = ({ autoFocus, onChange, value }: HeroNameInputProps
       case 'warning':
         return 'text-amber-600';
       default:
-        return 'text-slate-500';
+        return 'text-stone-500';
     }
   };
 
@@ -96,7 +96,7 @@ export const HeroNameInput = ({ autoFocus, onChange, value }: HeroNameInputProps
     <View className="mb-4">
       {/* Hero Label */}
       <Animated.Text
-        className="mb-3 text-xl font-bold text-slate-800"
+        className="mb-3 text-xl font-bold text-stone-800"
         style={{ opacity: labelOpacity }}
       >
         What habit do you want to build?
@@ -110,13 +110,13 @@ export const HeroNameInput = ({ autoFocus, onChange, value }: HeroNameInputProps
           accessibilityLabel="Habit name input"
           autoFocus={autoFocus}
           blurOnSubmit
-          className="h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium text-slate-800 shadow-sm"
+          className="h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium text-stone-800 shadow-sm"
           maxLength={MAX_LENGTH}
           placeholder="e.g., Read for 10 minutes"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#a8a29e"
           returnKeyType="done"
           style={{
-            borderColor: value.length > 0 ? '#3b82f6' : '#e2e8f0',
+            borderColor: value.length > 0 ? '#3b82f6' : '#e7e5e4',
             borderWidth: value.length > 0 ? 2 : 1,
           }}
           value={value}
@@ -124,10 +124,10 @@ export const HeroNameInput = ({ autoFocus, onChange, value }: HeroNameInputProps
         />
 
         {/* Character Count */}
-        <View className="absolute right-4 top-1/2 -translate-y-1/2">
+        <View className="absolute right-4 top-1/2 -transtone-y-1/2">
           <Text
             className={`text-xs font-medium ${
-              isNearLimit ? 'text-amber-500' : 'text-slate-400'
+              isNearLimit ? 'text-amber-500' : 'text-stone-400'
             }`}
           >
             {charCount}/{MAX_LENGTH}

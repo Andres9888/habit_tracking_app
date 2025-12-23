@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
   },
   controlButton: {
     alignItems: 'center',
-    borderColor: '#e2e8f0',
+    borderColor: '#e7e5e4',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
     borderColor: '#111827',
   },
   controlButtonText: {
-    color: '#0f172a',
+    color: '#1c1917',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -150,7 +150,7 @@ export const styles = StyleSheet.create({
   },
   nameInput: {
     backgroundColor: '#fff',
-    borderColor: '#e2e8f0',
+    borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
     fontSize: 17,
@@ -234,7 +234,7 @@ export const styles = StyleSheet.create({
     marginTop: 8,
   },
   reminderChip: {
-    borderColor: '#e2e8f0',
+    borderColor: '#e7e5e4',
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 12,
@@ -304,7 +304,7 @@ export const styles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderColor: '#e2e8f0',
+    borderColor: '#e7e5e4',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -325,7 +325,7 @@ export const styles = StyleSheet.create({
   },
   sortDropdown: {
     backgroundColor: '#ffffff',
-    borderColor: '#e2e8f0',
+    borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
     elevation: 8,
@@ -428,7 +428,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   customizeTitle: {
-    color: '#0f172a',
+    color: '#1c1917',
     fontSize: 17,
     fontWeight: '700',
     letterSpacing: -0.2,
@@ -440,7 +440,7 @@ export const styles = StyleSheet.create({
     marginBottom: 4,
   },
   charCount: {
-    color: '#94a3b8',
+    color: '#a8a29e',
     fontSize: 12,
     marginTop: 4,
     textAlign: 'right',
@@ -451,7 +451,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 14,
     marginBottom: 12,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#f5f5f4',
     borderRadius: 14,
     padding: 5,
   },
@@ -475,19 +475,19 @@ export const styles = StyleSheet.create({
   tabText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#64748b',
+    color: '#78716c',
   },
   tabTextActive: {
-    color: '#0f172a',
+    color: '#1c1917',
   },
   tabCount: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#94a3b8',
+    color: '#a8a29e',
     marginLeft: 6,
   },
   tabCountActive: {
-    color: '#0f172a',
+    color: '#1c1917',
   },
   // All templates grid (for MiniTemplateCard)
   allTemplatesGrid: {

@@ -44,7 +44,7 @@ export const SkeletonLoader = ({
         width,
         height,
         borderRadius,
-        backgroundColor: '#e2e8f0',
+        backgroundColor: '#e7e5e4',
         opacity,
       }}
     />

@@ -31,11 +31,11 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
         <Text className='text-base font-semibold text-[#1a1a1a]'>
           {STRINGS.CREATE_HABIT.nameLabel}
         </Text>
-        <Text className={`text-xs ${isNearLimit ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
+        <Text className={`text-xs ${isNearLimit ? 'text-[#f59e0b]' : 'text-[#a8a29e]'}`}>
           {charCount}/{MAX_LENGTH}
         </Text>
       </View>
-      <Text className='mb-2 text-xs text-[#64748b]'>
+      <Text className='mb-2 text-xs text-[#78716c]'>
         {STRINGS.CREATE_HABIT.nameHelper}
       </Text>
       <TextInput
@@ -43,7 +43,7 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
         blurOnSubmit
         className='h-14 rounded-xl bg-white px-4 text-base text-[#1a1a1a]'
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
-        placeholderTextColor='#adaebc'
+        placeholderTextColor='#a8a29e'
         returnKeyType='done'
         value={value}
         maxLength={MAX_LENGTH}

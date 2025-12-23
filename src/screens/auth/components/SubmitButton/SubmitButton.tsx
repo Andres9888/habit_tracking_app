@@ -73,8 +73,8 @@ export function SubmitButton({
     <GestureDetector gesture={gesture}>
       <Animated.View
         style={[animatedStyle]}
-        className={`mt-4 rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
-          isDisabled ? 'opacity-40' : 'shadow-md shadow-slate-900/20'
+        className={`mt-4 rounded-3xl border border-stone-900 bg-stone-900 py-4 ${
+          isDisabled ? 'opacity-40' : 'shadow-md shadow-stone-900/20'
         }`}
         accessible={true}
         accessibilityRole='button'

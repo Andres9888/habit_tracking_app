@@ -65,7 +65,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
             width: size,
             height: size,
             borderRadius: 24,
-            backgroundColor: '#334155', // slate-700
+            backgroundColor: '#44403c', // stone-700
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,

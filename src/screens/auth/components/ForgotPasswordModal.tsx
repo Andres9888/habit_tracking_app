@@ -106,10 +106,10 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
       <View className="gap-4">
         {/* Header */}
         <View className="gap-1">
-          <Text className="text-2xl font-extrabold tracking-tight text-slate-900">
+          <Text className="text-2xl font-extrabold tracking-tight text-stone-900">
             Reset Password
           </Text>
-          <Text className="text-sm text-slate-500">
+          <Text className="text-sm text-stone-500">
             {success
               ? 'Check your email for reset instructions'
               : 'Enter your email address and we\'ll send you a link to reset your password'}
@@ -130,7 +130,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
             </View>
 
             <TouchableOpacity
-              className="items-center rounded-3xl border border-slate-900 bg-slate-900 py-4"
+              className="items-center rounded-3xl border border-stone-900 bg-stone-900 py-4"
               onPress={handleClose}
               accessibilityLabel="Close modal"
               accessibilityRole="button"
@@ -146,7 +146,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
           <View className="gap-4">
             {/* Email Input */}
             <View className="gap-2">
-              <Text className="text-[10px] font-medium tracking-[3px] text-slate-500">
+              <Text className="text-[10px] font-medium tracking-[3px] text-stone-500">
                 EMAIL ADDRESS
               </Text>
               <View className="relative">
@@ -155,12 +155,12 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                   autoComplete="email"
                   autoFocus
                   className={`rounded-3xl border ${
-                    error ? 'border-red-600' : 'border-slate-200'
-                  } bg-white px-5 py-3.5 text-base font-medium text-slate-900`}
+                    error ? 'border-red-600' : 'border-stone-200'
+                  } bg-white px-5 py-3.5 text-base font-medium text-stone-900`}
                   editable={!isLoading}
                   keyboardType="email-address"
                   placeholder="Enter your email address"
-                  placeholderTextColor="#94a3b8"
+                  placeholderTextColor="#a8a29e"
                   value={email}
                   onChangeText={(text) => {
                     setEmail(text);
@@ -173,7 +173,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                   accessibilityHint="Enter your email to receive password reset instructions"
                 />
                 {/* Email icon prefix */}
-                <View className="absolute left-4 top-1/2 -translate-y-1/2">
+                <View className="absolute left-4 top-1/2 -transtone-y-1/2">
                   <Text className="text-lg">📧</Text>
                 </View>
                 <View className="pl-10" />
@@ -194,7 +194,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
             <View className="gap-2">
               {/* Submit Button */}
               <TouchableOpacity
-                className={`items-center rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
+                className={`items-center rounded-3xl border border-stone-900 bg-stone-900 py-4 ${
                   isLoading || !email.trim() ? 'opacity-40' : ''
                 }`}
                 disabled={isLoading || !email.trim()}
@@ -218,14 +218,14 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
 
               {/* Cancel Button */}
               <TouchableOpacity
-                className="items-center rounded-3xl border border-slate-200 bg-white py-4"
+                className="items-center rounded-3xl border border-stone-200 bg-white py-4"
                 disabled={isLoading}
                 onPress={handleClose}
                 accessibilityLabel="Cancel password reset"
                 accessibilityRole="button"
                 accessibilityHint="Closes this dialog without sending reset email"
               >
-                <Text className="text-[13px] font-bold tracking-[3px] text-slate-900">
+                <Text className="text-[13px] font-bold tracking-[3px] text-stone-900">
                   CANCEL
                 </Text>
               </TouchableOpacity>

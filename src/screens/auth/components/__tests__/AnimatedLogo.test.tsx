@@ -52,10 +52,10 @@ describe('AnimatedLogo', () => {
   });
 
   describe('Styling', () => {
-    it('has slate-700 background color', () => {
+    it('has stone-700 background color', () => {
       const { toJSON } = render(<AnimatedLogo />);
       const tree = toJSON();
-      // The component should render with slate-700 background (#334155)
+      // The component should render with stone-700 background (#44403c)
       expect(tree).toBeTruthy();
     });
 
