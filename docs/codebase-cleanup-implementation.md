@@ -600,6 +600,8 @@ fi
 
 **Completed:** Enhanced existing Reanimated mock in jest.setup.js with critical missing functions. Added `runOnUI`, `useDerivedValue`, `useAnimatedScrollHandler`, `useAnimatedGestureHandler`, `addWhitelistedNativeProps`, and comprehensive Easing functions (elastic, bezier, circle, back, bounce, poly, sin, exp). Also added @shopify/react-native-skia mock for Canvas/Path components. Test pass rate currently at 84.9% (1791/2110 tests passing) - same as baseline, indicating no regressions from mock updates.
 
+**Verification Complete (Task 3.1):** All mocks are properly configured in jest.setup.js (lines 188-303). jest.config.js correctly references setupFilesAfterEnv on line 6. The test infrastructure improvements from previous sessions are preserved.
+
 **File:** `jest.setup.js` (create or update)
 
 ```javascript
@@ -654,18 +656,20 @@ jest.mock('@shopify/react-native-skia', () => ({
 ```
 
 **Implementation:**
-- [ ] Create or open `jest.setup.js` in project root
-- [ ] Add Reanimated mock configuration
-- [ ] Add Skia mock if not present
-- [ ] Save file
-- [ ] Verify jest.config.js has: `setupFilesAfterEnv: ['<rootDir>/jest.setup.js']`
-- [ ] Commit with message: "Add comprehensive Reanimated mocks to jest.setup.js"
+- [x] Create or open `jest.setup.js` in project root
+- [x] Add Reanimated mock configuration
+- [x] Add Skia mock if not present
+- [x] Save file
+- [x] Verify jest.config.js has: `setupFilesAfterEnv: ['<rootDir>/jest.setup.js']`
+- [x] Commit with message: "Add comprehensive Reanimated mocks to jest.setup.js" (Already committed in previous session)
 
 ### Task 3.2: Add react-native-draggable-flatlist Mock
 
-- [ ] Add DraggableFlatList mock to jest.setup.js
-- [ ] Mock as regular FlatList with drag handlers
-- [ ] Ensure it provides required props to renderItem
+- [x] Add DraggableFlatList mock to jest.setup.js
+- [x] Mock as regular FlatList with drag handlers
+- [x] Ensure it provides required props to renderItem
+
+**Completed:** Added comprehensive react-native-draggable-flatlist mock to jest.setup.js (lines 305-334). The mock wraps React Native's FlatList and provides all required drag-specific props (drag, isActive, getIndex) to the renderItem function, allowing tests to run without the native drag-and-drop functionality.
 
 **File:** `jest.setup.js` (append)
 
@@ -705,10 +709,10 @@ jest.mock('react-native-draggable-flatlist', () => {
 ```
 
 **Implementation:**
-- [ ] Open `jest.setup.js`
-- [ ] Add DraggableFlatList mock below Reanimated mock
-- [ ] Save file
-- [ ] Commit with message: "Add react-native-draggable-flatlist mock"
+- [x] Open `jest.setup.js`
+- [x] Add DraggableFlatList mock below Reanimated mock
+- [x] Save file
+- [x] Commit with message: "Add react-native-draggable-flatlist mock"
 
 ### Task 3.3: Handle Worktree Tests
 

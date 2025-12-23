@@ -301,3 +301,34 @@ jest.mock('@shopify/react-native-skia', () => ({
     },
   },
 }));
+
+// Mock react-native-draggable-flatlist
+jest.mock('react-native-draggable-flatlist', () => {
+  const React = require('react');
+  const { FlatList } = require('react-native');
+
+  const DraggableFlatList = (props) => {
+    // Strip drag-specific props, pass rest to FlatList
+    const { data, renderItem, onDragEnd, ...flatListProps } = props;
+
+    return React.createElement(FlatList, {
+      data,
+      renderItem: ({ item, index }) => {
+        // Provide mock drag handlers
+        return renderItem({
+          item,
+          index,
+          drag: jest.fn(),
+          isActive: false,
+          getIndex: () => index,
+        });
+      },
+      ...flatListProps,
+    });
+  };
+
+  return {
+    __esModule: true,
+    default: DraggableFlatList,
+  };
+});
