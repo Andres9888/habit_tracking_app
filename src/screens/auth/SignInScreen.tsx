@@ -11,7 +11,11 @@ import {
   SubmitButton,
 } from './components';
 
-export default function SignInScreen() {
+interface SignInScreenProps {
+  onNavigateToSignUp?: () => void;
+}
+
+export default function SignInScreen({ onNavigateToSignUp }: SignInScreenProps) {
   const { signIn, setActive, isLoaded } = useSignIn();
   const insets = useSafeAreaInsets();
 
@@ -106,6 +110,25 @@ export default function SignInScreen() {
             onPress={onSignInPress}
           />
         </View>
+
+        {/* Sign Up Prompt */}
+        {onNavigateToSignUp && (
+          <View className='mt-8 flex-row items-center justify-center'>
+            <Text className='text-base text-slate-500'>
+              Don't have an account?{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={onNavigateToSignUp}
+              accessibilityLabel="Sign up"
+              accessibilityRole="button"
+              accessibilityHint="Navigate to create a new account"
+            >
+              <Text className='text-base font-semibold text-slate-900'>
+                Sign Up
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {/* Forgot Password Modal */}

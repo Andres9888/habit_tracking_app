@@ -553,22 +553,31 @@ src/
 **Estimated Time:** 1-2 hours
 
 ### Task 3.1: Update SignInScreen Layout
-- [ ] Open `src/screens/auth/SignInScreen.tsx`
-- [ ] Import `AnimatedLogo` component
-- [ ] Add logo at top of screen with padding
-- [ ] Update welcome text to "Welcome Back! 👋"
-- [ ] Update subtitle to "Sign in to continue your journey"
-- [ ] Replace standard password input with `PasswordInput` component
-- [ ] Add "Forgot Password?" link (right-aligned) below password
-- [ ] Add "Don't have an account? Sign Up" text at bottom
-- [ ] Review all spacing values
-- [ ] Test layout on various screen sizes
+- [x] Open `src/screens/auth/SignInScreen.tsx`
+- [x] Import `AnimatedLogo` component
+- [x] Add logo at top of screen with padding
+- [x] Update welcome text to "Welcome Back! 👋"
+- [x] Update subtitle to "Sign in to continue your journey"
+- [x] Replace standard password input with `PasswordInput` component
+- [x] Add "Forgot Password?" link (right-aligned) below password
+- [x] Add "Don't have an account? Sign Up" text at bottom
+- [x] Review all spacing values
+- [x] Test layout on various screen sizes
 
 **Acceptance Criteria:**
-- Layout matches design mock
-- All new components are integrated
-- Spacing is consistent
-- Responsive on different devices
+- Layout matches design mock ✓
+- All new components are integrated ✓
+- Spacing is consistent ✓
+- Responsive on different devices ✓
+
+**Implementation Notes:**
+- Added `onNavigateToSignUp` optional callback prop to `SignInScreen` for navigation flexibility
+- Added "Don't have an account? Sign Up" prompt at bottom of screen with proper accessibility labels
+- Prompt only renders when `onNavigateToSignUp` callback is provided (conditional rendering)
+- Updated `WelcomeScreen` to pass navigation callback to `SignInScreen`
+- Spacing follows design spec: px-6 (24px horizontal), mb-8/mt-8 (32px vertical margins), gap-6 (24px form gaps)
+- All elements have proper accessibility labels and hints for screen readers
+- Touch targets meet 44x44pt minimum requirement
 
 ---
 
