@@ -1,0 +1,61 @@
+name: Code Quality CI
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  check-duplicates:
+    runs-on: ubuntu-latest
+    name: Check for Duplicate Files
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Detect numbered duplicates
+        run: |
+          DUPLICATES=$(find src -name "* 2.*" -o -name "* 3.*" -o -name "* 4.*")
+          if [ -n "$DUPLICATES" ]; then
+            echo "❌ Found duplicate files:"
+            echo "$DUPLICATES"
+            exit 1
+          fi
+          echo "✅ No duplicate files found"
+
+  typescript:
+    runs-on: ubuntu-latest
+    name: TypeScript Compilation
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript compilation
+        run: npm run lint
+
+  tests:
+    runs-on: ubuntu-latest
+    name: Test Suite
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --passWithNoTests --maxWorkers=2
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        if: always()
