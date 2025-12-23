@@ -153,6 +153,14 @@ export function TemplateCard({
   // Entrance animation (only if animationIndex > 0)
   useEffect(() => {
     if (skipAnimation) return;
+
+    if (reducedMotion) {
+      // Instant appearance for reduced motion users
+      cardOpacity.value = 1;
+      cardTranslateY.value = 0;
+      return;
+    }
+
     const delay = animationIndex * 80;
     cardOpacity.value = withDelay(
       delay,
@@ -168,15 +176,25 @@ export function TemplateCard({
       cancelAnimation(cardOpacity);
       cancelAnimation(cardTranslateY);
     };
-  }, [animationIndex, skipAnimation, cardOpacity, cardTranslateY]);
+  }, [
+    animationIndex,
+    skipAnimation,
+    cardOpacity,
+    cardTranslateY,
+    reducedMotion,
+  ]);
 
   // Success glow animation when imported
   useEffect(() => {
     if (isImported) {
-      // Animate checkmark appearing
-      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
-      // Animate glow effect - flash green then fade out
-      if (!reducedMotion) {
+      if (reducedMotion) {
+        // Instant appearance for reduced motion users
+        checkmarkScale.value = 1;
+        successGlow.value = 0;
+      } else {
+        // Animate checkmark appearing
+        checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
+        // Animate glow effect - flash green then fade out
         successGlow.value = withSequence(
           withTiming(0.6, { duration: 200 }),
           withTiming(0, { duration: 800 })
@@ -244,25 +262,41 @@ export function TemplateCard({
   }));
 
   const handlePressIn = () => {
-    pressScale.value = withSpring(0.97, { damping: 15, stiffness: 200 });
-    shadowOpacity.value = withTiming(0.12, { duration: 120 });
+    if (reducedMotion) {
+      // Instant feedback for reduced motion users
+      pressScale.value = 0.97;
+      shadowOpacity.value = 0.12;
+    } else {
+      pressScale.value = withSpring(0.97, { damping: 15, stiffness: 200 });
+      shadowOpacity.value = withTiming(0.12, { duration: 120 });
+    }
   };
 
   const handlePressOut = () => {
-    pressScale.value = withSpring(1, { damping: 15, stiffness: 200 });
-    shadowOpacity.value = withTiming(0.06, { duration: 200 });
+    if (reducedMotion) {
+      // Instant reset for reduced motion users
+      pressScale.value = 1;
+      shadowOpacity.value = 0.06;
+    } else {
+      pressScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+      shadowOpacity.value = withTiming(0.06, { duration: 200 });
+    }
   };
 
   const handleCardPress = () => {
     if (onPreview) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      if (!reducedMotion) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
       onPreview();
     }
   };
 
   const handleImportPress = (e: any) => {
     e.stopPropagation();
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
 
     if (isLocked && onUpgrade) {
       onUpgrade();

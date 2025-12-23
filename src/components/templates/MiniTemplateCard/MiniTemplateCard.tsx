@@ -134,21 +134,28 @@ export function MiniTemplateCard({
   // Success animation when imported
   useEffect(() => {
     if (isImported) {
-      // Animate checkmark appearing
-      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
-      // Animate glow effect
-      successGlow.value = withSequence(
-        withTiming(0.6, { duration: 200 }),
-        withTiming(0, { duration: 800 })
-      );
       // Stop pulse
       cancelAnimation(buttonPulse);
       buttonPulse.value = 1;
+
+      if (reducedMotion) {
+        // Instant transitions for reduced motion users
+        checkmarkScale.value = 1;
+        successGlow.value = 0;
+      } else {
+        // Animate checkmark appearing
+        checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
+        // Animate glow effect
+        successGlow.value = withSequence(
+          withTiming(0.6, { duration: 200 }),
+          withTiming(0, { duration: 800 })
+        );
+      }
     } else {
       checkmarkScale.value = 0;
       successGlow.value = 0;
     }
-  }, [isImported, checkmarkScale, successGlow, buttonPulse]);
+  }, [isImported, checkmarkScale, successGlow, buttonPulse, reducedMotion]);
 
   const animatedCardStyle = useAnimatedStyle(() => ({
     elevation: shadowElevation.value,
@@ -201,13 +208,17 @@ export function MiniTemplateCard({
   };
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     onPress();
   };
 
   const handleImport = () => {
     if (isImporting || isImported || !onImport) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (!reducedMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
     onImport();
   };
 
