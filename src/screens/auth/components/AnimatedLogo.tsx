@@ -8,10 +8,27 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
+/**
+ * Props for the AnimatedLogo component
+ */
 interface AnimatedLogoProps {
+  /** Size of the logo in pixels (width and height) */
   size?: number;
 }
 
+/**
+ * AnimatedLogo - Breathing logo animation for auth screens
+ *
+ * Features:
+ * - Breathing animation (scale 1.0 → 1.05 → 1.0)
+ * - 3-second infinite animation loop with ease-in-out timing
+ * - Slate-700 background with shadow
+ * - Checkmark icon centered
+ * - Full accessibility support
+ *
+ * @example
+ * <AnimatedLogo size={80} />
+ */
 export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
   const scale = useSharedValue(1);
 
@@ -41,18 +58,14 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
       accessibilityRole="image"
     >
       <Animated.View
-        style={[animatedStyle]}
-        className="items-center justify-center rounded-3xl bg-gradient-to-br from-slate-700 to-slate-900 shadow-lg"
-        // Using inline styles for size since it's dynamic
-        // @ts-ignore - style prop
-        // eslint-disable-next-line react-native/no-inline-styles
+        className="items-center justify-center rounded-3xl shadow-lg"
         style={[
           animatedStyle,
           {
             width: size,
             height: size,
             borderRadius: 24,
-            backgroundColor: '#334155', // slate-700 fallback
+            backgroundColor: '#334155', // slate-700
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,

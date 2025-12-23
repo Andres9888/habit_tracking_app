@@ -43,9 +43,11 @@ describe('SocialLoginButtons', () => {
     });
 
     it('renders OR divider', () => {
-      const { getByText } = render(<SocialLoginButtons />);
+      const { UNSAFE_root } = render(<SocialLoginButtons />);
 
-      expect(getByText('OR')).toBeTruthy();
+      // Find the OR text by traversing the tree (aria-hidden elements are not accessible via getByText)
+      const orText = UNSAFE_root.findByProps({ 'aria-hidden': true });
+      expect(orText.props.children).toBe('OR');
     });
 
     it('renders Google logo by default', () => {

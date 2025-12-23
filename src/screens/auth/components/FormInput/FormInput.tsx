@@ -1,5 +1,5 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Text, TextInput, View } from 'react-native';
+import { forwardRef, useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Reanimated, {
   useAnimatedStyle,
@@ -10,12 +10,38 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated';
 
+/**
+ * Props for the FormInput component
+ */
 interface FormInputProps extends TextInputProps {
+  /** Label text displayed above the input */
   label: string;
-  icon?: string; // Emoji icon to display on the left
-  error?: string; // Error message to display
+  /** Emoji icon to display on the left side of the input */
+  icon?: string;
+  /** Error message to display below the input */
+  error?: string;
 }
 
+/**
+ * FormInput - Enhanced text input with icon, animations, and error handling
+ *
+ * Features:
+ * - Optional left-side icon (emoji or symbol)
+ * - Focus/blur animations with border color and scale
+ * - Shake animation on validation errors
+ * - Error message display with accessibility support
+ * - Supports ref forwarding for keyboard navigation
+ *
+ * @example
+ * <FormInput
+ *   ref={emailRef}
+ *   label="EMAIL"
+ *   icon="📧"
+ *   value={email}
+ *   onChangeText={setEmail}
+ *   error={emailError}
+ * />
+ */
 export const FormInput = forwardRef<TextInput, FormInputProps>(function FormInput(
   { label, icon, error, ...props },
   ref

@@ -29,11 +29,34 @@ import {
   SuccessOverlay,
 } from './components';
 
+/**
+ * Props for the SignInScreen component
+ */
 interface SignInScreenProps {
+  /** Callback to navigate to sign up screen */
   onNavigateToSignUp?: () => void;
+  /** Whether to auto-focus the email input on mount */
   autoFocusEmail?: boolean;
 }
 
+/**
+ * SignInScreen - Main authentication screen for user sign-in
+ *
+ * Features:
+ * - Email/password authentication via Clerk
+ * - Social login (Google, Apple) via SocialLoginButtons
+ * - Forgot password flow via modal
+ * - Form validation with error feedback
+ * - Keyboard handling with auto-focus and submit
+ * - Success animation on successful sign-in
+ * - Screen-level shake animation on errors
+ *
+ * @example
+ * <SignInScreen
+ *   onNavigateToSignUp={() => navigation.navigate('SignUp')}
+ *   autoFocusEmail={true}
+ * />
+ */
 export default function SignInScreen({ onNavigateToSignUp, autoFocusEmail = false }: SignInScreenProps) {
   const { signIn, setActive, isLoaded } = useSignIn();
   const insets = useSafeAreaInsets();

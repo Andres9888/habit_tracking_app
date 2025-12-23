@@ -6,14 +6,42 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
+/**
+ * Props for the SubmitButton component
+ */
 interface SubmitButtonProps {
+  /** Button text in normal state */
   label: string;
+  /** Button text during loading state */
   loadingLabel: string;
+  /** Whether the button is in loading state */
   isLoading: boolean;
+  /** Whether the button is disabled */
   disabled?: boolean;
+  /** Callback when button is pressed */
   onPress: () => void;
 }
 
+/**
+ * SubmitButton - Primary action button with animations and loading state
+ *
+ * Features:
+ * - Press animation with spring physics (scale 0.98)
+ * - Loading state with ActivityIndicator
+ * - Disabled state with 40% opacity
+ * - Arrow icon in normal state
+ * - Shadow when enabled
+ * - Full accessibility support
+ *
+ * @example
+ * <SubmitButton
+ *   label="SIGN IN"
+ *   loadingLabel="SIGNING IN..."
+ *   isLoading={isLoading}
+ *   disabled={!isValid}
+ *   onPress={handleSubmit}
+ * />
+ */
 export function SubmitButton({
   label,
   loadingLabel,

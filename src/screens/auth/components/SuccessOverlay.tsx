@@ -7,15 +7,33 @@ import Animated, {
   withSequence,
   withSpring,
   withTiming,
-  runOnJS,
-  Easing,
 } from 'react-native-reanimated';
 
+/**
+ * Props for the SuccessOverlay component
+ */
 interface SuccessOverlayProps {
+  /** Whether the overlay is visible */
   visible: boolean;
+  /** Callback fired after the success animation completes */
   onAnimationComplete?: () => void;
 }
 
+/**
+ * SuccessOverlay - Animated success feedback overlay
+ *
+ * Displays a full-screen success animation with:
+ * - Expanding ring effect
+ * - Bouncing checkmark icon
+ * - Slide-up "Welcome back!" text
+ * - Auto-callback after 1.5s for navigation
+ *
+ * @example
+ * <SuccessOverlay
+ *   visible={showSuccess}
+ *   onAnimationComplete={() => navigation.navigate('Home')}
+ * />
+ */
 export function SuccessOverlay({
   visible,
   onAnimationComplete,

@@ -8,13 +8,39 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
+/**
+ * Props for the PasswordInput component
+ */
 interface PasswordInputProps extends Omit<TextInputProps, 'secureTextEntry'> {
+  /** Current password value */
   value: string;
+  /** Callback when password changes */
   onChangeText: (text: string) => void;
+  /** Placeholder text */
   placeholder?: string;
+  /** Error message to display */
   error?: string;
 }
 
+/**
+ * PasswordInput - Secure text input with visibility toggle
+ *
+ * Features:
+ * - Password visibility toggle with eye icons
+ * - Lock icon prefix
+ * - Focus/blur animations with border color transition
+ * - Error state styling with red border
+ * - Full accessibility support
+ * - Supports ref forwarding for keyboard navigation
+ *
+ * @example
+ * <PasswordInput
+ *   ref={passwordRef}
+ *   value={password}
+ *   onChangeText={setPassword}
+ *   error={passwordError}
+ * />
+ */
 export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
   function PasswordInput(
     {

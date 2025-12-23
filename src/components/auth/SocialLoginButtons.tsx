@@ -4,10 +4,10 @@ import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
+  SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 
 import { AppleLogo, GoogleLogo } from './logos';
@@ -17,6 +17,20 @@ WebBrowser.maybeCompleteAuthSession();
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
+/**
+ * SocialLoginButtons - OAuth login buttons for Google and Apple
+ *
+ * Features:
+ * - Google and Apple OAuth flows via Clerk
+ * - Professional SVG brand logos
+ * - Press animations with spring physics
+ * - Individual loading states per button
+ * - User-friendly error messages
+ * - Accessibility support with labels and hints
+ *
+ * @example
+ * <SocialLoginButtons />
+ */
 export function SocialLoginButtons() {
   const { startOAuthFlow: startGoogleFlow } = useOAuth({ strategy: 'oauth_google' });
   const { startOAuthFlow: startAppleFlow } = useOAuth({ strategy: 'oauth_apple' });
@@ -35,15 +49,20 @@ export function SocialLoginButtons() {
     transform: [{ scale: appleScale.value }],
   }));
 
-  const handlePressIn = (scale: Animated.SharedValue<number>) => {
+  const handlePressIn = (scale: SharedValue<number>) => {
     scale.value = withSpring(0.98, { damping: 15, stiffness: 300 });
   };
 
-  const handlePressOut = (scale: Animated.SharedValue<number>) => {
+  const handlePressOut = (scale: SharedValue<number>) => {
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
   };
 
-  const getErrorMessage = (err: any): string => {
+  /**
+   * Converts OAuth errors into user-friendly messages
+   * @param err - The error object from OAuth flow
+   * @returns User-friendly error message or null if error should be ignored
+   */
+  const getErrorMessage = (err: any): string | null => {
     const errorCode = err.errors?.[0]?.code;
     const errorMessage = err.errors?.[0]?.message;
 
