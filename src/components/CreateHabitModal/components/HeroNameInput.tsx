@@ -124,7 +124,7 @@ export const HeroNameInput = ({ autoFocus, onChange, value }: HeroNameInputProps
         />
 
         {/* Character Count */}
-        <View className="absolute right-4 top-1/2 -translate-y-1/2">
+        <View className="absolute right-4 top-1/2 -transtone-y-1/2">
           <Text
             className={`text-xs font-medium ${
               isNearLimit ? 'text-amber-500' : 'text-stone-400'

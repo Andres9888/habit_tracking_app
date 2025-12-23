@@ -212,7 +212,7 @@ export const InlineEmojiInput = ({
         />
 
         {/* Character Count - right side */}
-        <View className="absolute right-3 top-1/2 -translate-y-1/2">
+        <View className="absolute right-3 top-1/2 -transtone-y-1/2">
           <Text
             className={`text-xs font-medium ${
               isNearLimit ? 'text-amber-500' : 'text-stone-400'

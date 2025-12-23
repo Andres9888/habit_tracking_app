@@ -35,7 +35,7 @@ export const CategoryFilters = ({
 }: CategoryFiltersProps) => (
   <ScrollView
     horizontal
-    className='border-b border-gray-100'
+    className='border-b border-stone-100'
     contentContainerClassName='gap-2 px-3 py-3'
     showsHorizontalScrollIndicator={false}
   >

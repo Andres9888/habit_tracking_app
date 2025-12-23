@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
-import { EmojiPickerSheet } from '../../EmojiPickerV2';
+import { EmojiPickerSheet } from '../../EmojiPicker';
 
 interface EmojiPickerProps {
   emojis?: string[]; // kept for backwards compatibility but not used
@@ -30,7 +30,7 @@ export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerP
         }}
       >
         <View
-          className='h-12 w-12 items-center justify-center rounded-xl bg-gray-100'
+          className='h-12 w-12 items-center justify-center rounded-xl bg-stone-100'
         >
           <Text className='text-2xl'>{selectedEmoji || '➕'}</Text>
         </View>

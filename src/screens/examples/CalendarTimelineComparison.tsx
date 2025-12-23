@@ -51,17 +51,17 @@ export default function CalendarTimelineComparison() {
       <View className='mx-auto w-full max-w-[448px] gap-6 px-6 py-8'>
         {/* Header */}
         <View className='gap-2'>
-          <Text className='text-[28px] font-bold text-gray-900'>
+          <Text className='text-[28px] font-bold text-stone-900'>
             📅 Calendar Timeline Variants
           </Text>
-          <Text className='text-[15px] leading-[22px] text-gray-600'>
+          <Text className='text-[15px] leading-[22px] text-stone-600'>
             Test which navigation hint works best for your users
           </Text>
         </View>
 
         {/* Variant Selector */}
         <View className='gap-3'>
-          <Text className='text-[13px] font-semibold uppercase tracking-wide text-gray-500'>
+          <Text className='text-[13px] font-semibold uppercase tracking-wide text-stone-500'>
             Select variant to test
           </Text>
           <View className='flex-row gap-2'>
@@ -73,13 +73,13 @@ export default function CalendarTimelineComparison() {
                 className={`flex-1 rounded-xl border-2 p-3 ${
                   selectedVariant === variant.id
                     ? 'border-indigo-600 bg-indigo-50'
-                    : 'border-gray-200 bg-white'
+                    : 'border-stone-200 bg-white'
                 }`}
                 onPress={() => setSelectedVariant(variant.id)}
               >
                 <Text
                   className={`text-center text-[13px] font-semibold ${
-                    selectedVariant === variant.id ? 'text-indigo-600' : 'text-gray-700'
+                    selectedVariant === variant.id ? 'text-indigo-600' : 'text-stone-700'
                   }`}
                 >
                   {variant.label}
@@ -90,9 +90,9 @@ export default function CalendarTimelineComparison() {
         </View>
 
         {/* Live Preview */}
-        <View className='gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4'>
+        <View className='gap-3 rounded-2xl border border-stone-200 bg-stone-50 p-4'>
           <View className='flex-row items-center justify-between'>
-            <Text className='text-[13px] font-semibold uppercase tracking-wide text-gray-500'>
+            <Text className='text-[13px] font-semibold uppercase tracking-wide text-stone-500'>
               Live Preview
             </Text>
             <View className='rounded-full bg-green-100 px-3 py-1'>
@@ -137,17 +137,17 @@ export default function CalendarTimelineComparison() {
         </View>
 
         {/* Feature Comparison Table */}
-        <View className='gap-4 rounded-2xl border border-gray-200 bg-white p-5'>
-          <Text className='text-[16px] font-semibold text-gray-900'>
+        <View className='gap-4 rounded-2xl border border-stone-200 bg-white p-5'>
+          <Text className='text-[16px] font-semibold text-stone-900'>
             Feature Comparison
           </Text>
 
           {/* Original */}
-          <View className='gap-2 rounded-xl border border-gray-200 bg-gray-50 p-4'>
-            <Text className='text-[14px] font-semibold text-gray-900'>
+          <View className='gap-2 rounded-xl border border-stone-200 bg-stone-50 p-4'>
+            <Text className='text-[14px] font-semibold text-stone-900'>
               🔹 Original (Current)
             </Text>
-            <Text className='text-[13px] leading-[20px] text-gray-600'>
+            <Text className='text-[13px] leading-[20px] text-stone-600'>
               • Basic chevron buttons{'\n'}
               • No visual hints for scrollability{'\n'}
               • Minimal navigation affordance{'\n'}

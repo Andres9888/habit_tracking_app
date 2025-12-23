@@ -25,7 +25,7 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../utils/notifications';
-import { EmojiPickerSheet } from '../components/EmojiPickerV2';
+import { EmojiPickerSheet } from '../components/EmojiPicker';
 import { COLORS } from '../components/CreateHabitModal/constants';
 import { Motion } from '../constants/motion';
 import useHapticFeedback from '../hooks/useHapticFeedback';
@@ -349,7 +349,7 @@ export default function HabitEditScreen({
               <TouchableOpacity
                 accessibilityLabel='Choose icon'
                 accessibilityRole='button'
-                className='mb-5 flex-row items-center justify-between rounded-xl bg-gray-50 p-4'
+                className='mb-5 flex-row items-center justify-between rounded-xl bg-stone-50 p-4'
                 onPress={() => {
                   triggerSelection();
                   setIsEmojiPickerVisible(true);
@@ -388,7 +388,7 @@ export default function HabitEditScreen({
 
             <SectionCard title="Name" icon="✏️">
               <TextInput
-                className='h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
+                className='h-12 rounded-xl bg-stone-50 px-4 text-base text-[#1a1a1a]'
                 placeholder='e.g., Read 10 minutes'
                 placeholderTextColor='#a8a29e'
                 value={habitName}
@@ -414,7 +414,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       key={freq}
                       className={`flex-1 h-12 items-center justify-center rounded-xl ${
-                        frequency === freq ? 'bg-blue-500' : 'bg-gray-100'
+                        frequency === freq ? 'bg-blue-500' : 'bg-stone-100'
                       }`}
                       onPress={() => {
                         triggerSelection();
@@ -443,7 +443,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       key={index}
                       className={`h-10 w-10 items-center justify-center rounded-xl ${
-                        selectedDays.includes(index) ? 'bg-blue-500' : 'bg-gray-100'
+                        selectedDays.includes(index) ? 'bg-blue-500' : 'bg-stone-100'
                       }`}
                       onPress={() => {
                         triggerSelection();
@@ -472,7 +472,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       key={time}
                       className={`flex-1 h-17 items-center justify-center rounded-xl ${
-                        preferredTime === time ? 'bg-blue-500' : 'bg-gray-100'
+                        preferredTime === time ? 'bg-blue-500' : 'bg-stone-100'
                       }`}
                       onPress={() => {
                         triggerSelection();
@@ -516,7 +516,7 @@ export default function HabitEditScreen({
               {remindersEnabled && (
                 <View className='mt-4'>
                   <TouchableOpacity
-                    className='mb-3 flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
+                    className='mb-3 flex-row items-center justify-between rounded-xl bg-stone-50 px-3 h-12'
                     onPress={() => {
                       triggerSelection();
                       setShowTimePicker(true);
@@ -531,7 +531,7 @@ export default function HabitEditScreen({
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    className='flex-row items-center justify-between rounded-xl bg-gray-50 px-3 h-12'
+                    className='flex-row items-center justify-between rounded-xl bg-stone-50 px-3 h-12'
                     onPress={() => {
                       triggerSelection();
                       // Sound picker would be implemented here
@@ -558,7 +558,7 @@ export default function HabitEditScreen({
                 </Text>
                 <View className='flex-row gap-3'>
                   <TextInput
-                    className='flex-1 h-12 rounded-xl bg-gray-50 px-4 text-base text-[#1a1a1a]'
+                    className='flex-1 h-12 rounded-xl bg-stone-50 px-4 text-base text-[#1a1a1a]'
                     placeholder='30'
                     placeholderTextColor='#a8a29e'
                     keyboardType='numeric'
@@ -570,7 +570,7 @@ export default function HabitEditScreen({
                   <TouchableOpacity
                     accessibilityLabel={`Select goal unit, currently ${goalUnit}`}
                     accessibilityRole='button'
-                    className='h-12 w-28 flex-row items-center rounded-xl bg-gray-50 px-3'
+                    className='h-12 w-28 flex-row items-center rounded-xl bg-stone-50 px-3'
                     onPress={() => {
                       triggerSelection();
                       setShowUnitPicker(true);
@@ -621,7 +621,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       accessibilityLabel="Edit cue and intention"
                       accessibilityRole="button"
-                      className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+                      className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3"
                       onPress={() => {
                         triggerSelection();
                         onOpenCueEditor();
@@ -645,7 +645,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       accessibilityLabel="Edit affirmations"
                       accessibilityRole="button"
-                      className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+                      className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3"
                       onPress={() => {
                         triggerSelection();
                         onOpenAffirmationsEditor();
@@ -669,7 +669,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       accessibilityLabel="View why and vision board"
                       accessibilityRole="button"
-                      className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+                      className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3"
                       onPress={() => {
                         triggerSelection();
                         onOpenVisionBoard();
@@ -764,7 +764,7 @@ export default function HabitEditScreen({
         {/* Bottom Buttons */}
         <View className='flex-row gap-3 px-4 pb-8 pt-4 bg-[#f8f5f1]'>
           <TouchableOpacity
-            className='flex-1 h-14 items-center justify-center rounded-2xl bg-gray-200'
+            className='flex-1 h-14 items-center justify-center rounded-2xl bg-stone-200'
             onPress={() => {
               triggerSelection();
               onClose();
@@ -825,7 +825,7 @@ export default function HabitEditScreen({
               <TouchableOpacity
                 accessibilityLabel="Cancel delete"
                 accessibilityRole="button"
-                className="flex-1 h-12 items-center justify-center rounded-xl bg-gray-100"
+                className="flex-1 h-12 items-center justify-center rounded-xl bg-stone-100"
                 onPress={() => {
                   triggerSelection();
                   setShowDeleteConfirmation(false);
@@ -878,7 +878,7 @@ export default function HabitEditScreen({
               <TouchableOpacity
                 accessibilityLabel="Cancel archive"
                 accessibilityRole="button"
-                className="flex-1 h-12 items-center justify-center rounded-xl bg-gray-100"
+                className="flex-1 h-12 items-center justify-center rounded-xl bg-stone-100"
                 onPress={() => {
                   triggerSelection();
                   setShowArchiveConfirmation(false);
@@ -924,7 +924,7 @@ export default function HabitEditScreen({
           >
             {/* Handle bar */}
             <View className="items-center py-3">
-              <View className="h-1 w-10 rounded-full bg-gray-300" />
+              <View className="h-1 w-10 rounded-full bg-stone-300" />
             </View>
 
             {/* Header */}
@@ -955,7 +955,7 @@ export default function HabitEditScreen({
                   accessibilityRole="button"
                   accessibilityState={{ selected: goalUnit === unit.value }}
                   className={`mb-2 flex-row items-center justify-between rounded-xl px-4 py-4 ${
-                    goalUnit === unit.value ? 'bg-blue-50 border-2 border-blue-500' : 'bg-gray-50'
+                    goalUnit === unit.value ? 'bg-blue-50 border-2 border-blue-500' : 'bg-stone-50'
                   }`}
                   onPress={() => {
                     triggerSelection();

@@ -13,7 +13,7 @@ export const TemplateListItem = ({
   onSelect,
   onViewScience,
 }: TemplateListItemProps) => (
-  <View className='flex-row items-center gap-3 border-b border-gray-50 p-3'>
+  <View className='flex-row items-center gap-3 border-b border-stone-50 p-3'>
     <Pressable
       accessibilityLabel={`Select ${template.name} template`}
       accessibilityRole='button'

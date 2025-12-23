@@ -96,9 +96,9 @@ export const HabitPreview = ({
                 </View>
               ) : (
                 <View
-                  className='h-16 w-16 items-center justify-center rounded-2xl bg-gray-200'
+                  className='h-16 w-16 items-center justify-center rounded-2xl bg-stone-200'
                 >
-                  <Text className='text-2xl text-gray-400'>?</Text>
+                  <Text className='text-2xl text-stone-400'>?</Text>
                 </View>
               )}
             </Animated.View>
