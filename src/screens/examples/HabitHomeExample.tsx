@@ -4,7 +4,7 @@ import { addDays, format } from 'date-fns';
 import { BarChart3, Settings } from 'lucide-react-native';
 import { DateSelector } from '../../components/DateSelector';
 import CharacterScreen from '../CharacterScreen';
-import CharacterIcon from '../../components/CharacterIcon';
+import CharacterIcon from '../../components/habit/CharacterIcon/CharacterIcon';
 import Animated, {
   FadeInDown,
   FadeOutUp,

@@ -13,10 +13,10 @@ import CreateHabitModal from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../screens/HabitDetailScreen';
 import HabitEditScreen from '../../../screens/HabitEditScreen';
-import CustomModal from '../../../components/Modal';
-import PauseHabitModal from '../../../components/PauseHabitModal';
+import CustomModal from '../../../components/ui/Modal/Modal';
+import PauseHabitModal from '../../../components/modals/PauseHabitModal/PauseHabitModal';
 import SettingsModal from '../../../components/SettingsModal';
-import HapticTest from '../../../components/HapticTest';
+import HapticTest from '../../../components/dev/HapticTest/HapticTest';
 import TemplatesScreen from '../../../screens/TemplatesScreen';
 import { QuickActionsSheet } from '../../../components/QuickActionsSheet';
 import { VisualizationExercise } from '../../../components/VisualizationExercise';
@@ -373,7 +373,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
               habitName={selectedHabit?.name ?? ''}
               onClose={handleVisualizationClose}
               onSave={(data) => {
-                console.log('Visualization saved:', data);
                 Alert.alert(
                   'Visualization Saved! ✨',
                   'Your mental contrasting exercise has been saved. Review it when you need motivation.',

@@ -25,7 +25,7 @@ import {
   getDefaultReminderTime,
   scheduleHabitReminder,
 } from '../utils/notifications';
-import { EmojiPickerSheet } from '../components/EmojiPickerV2';
+import { EmojiPickerSheet } from '../components/EmojiPicker';
 import { COLORS } from '../components/CreateHabitModal/constants';
 import { Motion } from '../constants/motion';
 import useHapticFeedback from '../hooks/useHapticFeedback';

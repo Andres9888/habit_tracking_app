@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
-import { EmojiPickerSheet } from '../../EmojiPickerV2';
+import { EmojiPickerSheet } from '../../EmojiPicker';
 
 interface EmojiPickerProps {
   emojis?: string[]; // kept for backwards compatibility but not used

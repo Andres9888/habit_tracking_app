@@ -39,15 +39,6 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
     });
   }, [habits, isLoading]);
 
-  useEffect(() => {
-    if (milestone) {
-      console.log('🎉 MILESTONE DETECTED!', {
-        level: milestone.level,
-        strength: `${milestone.strength}%`,
-        habitName: milestone.habitName,
-      });
-    }
-  }, [milestone]);
 
   const resetMilestone = () => {
     clearMilestone();
