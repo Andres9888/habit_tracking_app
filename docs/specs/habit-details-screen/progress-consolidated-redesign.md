@@ -286,12 +286,27 @@ interface ProgressSectionConsolidatedProps {
 
 ### Phase 2: Integration & Container
 
-- [ ] **Task 2.1:** Create `ProgressSectionConsolidated` container
+- [x] **Task 2.1:** Create `ProgressSectionConsolidated` container
   - Compose all sub-components
   - Single card wrapper with unified styling
   - Data flow from props to children
   - Dependencies: 1.2, 1.3, 1.4, 1.5, 1.6
   - Estimate: 2h
+  - **Completed:** Implemented full ProgressSectionConsolidated container with:
+    - Unified card container with neutral gradient (white bg, stone-300/60 border, subtle shadow)
+    - FadeInDown entrance animation with spring configuration
+    - Data flow from props to all sub-components:
+      - HeroStrengthSection: strength, weeklyChange, onInfoPress
+      - InsightChips: currentStreak, bestDay, focusDay, monthlyCompleted/Total, onFocusDayPress
+      - WeeklyPatternChart: dayStats, onSeeAllPress
+      - ActionableTipCard: tip, subtitle (streak count when active), onTipPress
+      - StreakRecordsAccordion: streakRecords, currentStreak
+    - Memoized calculations for all derived data (dayStats, streaks, trends, best/worst days)
+    - Conditional rendering of detailed sections (chart, accordion) when hasEnoughData (>= 7 entries)
+    - Focus day logic: only shows when worst day rate < 70% and different from best day
+    - Dynamic streak subtitle for ActionableTipCard
+    - Full accessibility support (region role, accessible labels)
+    - 27 passing unit tests covering rendering, data flow, callbacks, edge cases, accessibility
 
 - [ ] **Task 2.2:** Update `HabitDetailScreen` to use new component
   - Feature flag for A/B testing (optional)

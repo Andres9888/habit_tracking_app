@@ -8,26 +8,204 @@
  * This component replaces the separate YourProgressCard,
  * PersonalBestsCard, and ThisMonthCard with a unified design.
  *
- * @see Task 2.1 for full implementation
+ * Key improvements over the 3-card approach:
+ * - Single neutral gradient theme (vs 3 different gradients)
+ * - Hero section with clear primary metric
+ * - Horizontal scroll insight chips (reduces vertical space)
+ * - Compact weekly pattern chart
+ * - Collapsible streak records
+ * - ~35% reduction in vertical space
+ *
+ * @see docs/specs/habit-details-screen/progress-consolidated-redesign.md
  */
 
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useMemo } from 'react';
+import { View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import type { ProgressSectionConsolidatedProps } from './types';
+import {
+  calculateDayOfWeekStats,
+  calculateCurrentStreak,
+  calculateStreakRecords,
+  calculateTrendComparison,
+  generateActionableTip,
+  getBestAndWorstDays,
+} from '../ProgressSection/utils';
+
+import { HeroStrengthSection } from './HeroStrengthSection';
+import { InsightChips } from './InsightChips';
+import { WeeklyPatternChart } from './WeeklyPatternChart';
+import { ActionableTipCard } from './ActionableTipCard';
+import { StreakRecordsAccordion } from './StreakRecordsAccordion';
 
 /**
- * Placeholder implementation - to be completed in Task 2.1
+ * ProgressSectionConsolidated Component
+ *
+ * Unified progress section that consolidates all progress information
+ * into a single card with clear visual hierarchy.
  */
-export function ProgressSectionConsolidated(
-  _props: ProgressSectionConsolidatedProps
-) {
+export function ProgressSectionConsolidated({
+  tracking,
+  habitCreatedAt,
+  strength,
+  weeklyChange = 0,
+  onInfoPress,
+  onFocusDayPress,
+  onSeeAllPress,
+  onTipPress,
+}: ProgressSectionConsolidatedProps) {
+  // Convert habitCreatedAt string to timestamp for utils
+  const habitCreatedTimestamp = useMemo(() => {
+    if (!habitCreatedAt) return;
+    try {
+      return new Date(habitCreatedAt).getTime();
+    } catch {
+      return;
+    }
+  }, [habitCreatedAt]);
+
+  // Calculate day of week statistics
+  const dayStats = useMemo(
+    () => calculateDayOfWeekStats(tracking, habitCreatedTimestamp),
+    [tracking, habitCreatedTimestamp]
+  );
+
+  // Calculate current streak
+  const currentStreak = useMemo(
+    () => calculateCurrentStreak(tracking),
+    [tracking]
+  );
+
+  // Calculate streak records for accordion
+  const streakRecords = useMemo(
+    () => calculateStreakRecords(tracking, currentStreak),
+    [tracking, currentStreak]
+  );
+
+  // Calculate trend comparison (this month vs last month)
+  const trend = useMemo(() => calculateTrendComparison(tracking), [tracking]);
+
+  // Get best and worst performing days
+  const { bestDay, worstDay } = useMemo(
+    () => getBestAndWorstDays(dayStats),
+    [dayStats]
+  );
+
+  // Generate actionable tip based on patterns
+  const actionableTip = useMemo(
+    () => generateActionableTip(dayStats, currentStreak),
+    [dayStats, currentStreak]
+  );
+
+  // Calculate this month's completed/total days
+  const { monthlyCompleted, monthlyTotal } = useMemo(() => {
+    const today = new Date();
+    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    const completedDates = new Set(
+      tracking.filter((t) => t.completed).map((t) => t.date)
+    );
+
+    let completed = 0;
+    let total = 0;
+
+    const current = new Date(thisMonthStart);
+    while (current <= today) {
+      total++;
+      if (completedDates.has(current.toISOString().split('T')[0])) {
+        completed++;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+
+    return { monthlyCompleted: completed, monthlyTotal: total };
+  }, [tracking]);
+
+  // Determine if we have enough data to show detailed sections
+  const hasEnoughData = tracking.length >= 7;
+
+  // Format best/worst days for InsightChips
+  const bestDayData = useMemo(() => {
+    if (!bestDay) return null;
+    return { name: bestDay.day, rate: bestDay.rate };
+  }, [bestDay]);
+
+  const focusDayData = useMemo(() => {
+    if (!worstDay) return null;
+    // Only show focus day if it's different from best day and below 70%
+    if (bestDay && worstDay.dayIndex === bestDay.dayIndex) return null;
+    if (worstDay.rate >= 70) return null;
+    return { name: worstDay.day, rate: worstDay.rate };
+  }, [worstDay, bestDay]);
+
   return (
-    <View className="p-4 bg-white rounded-2xl">
-      <Text className="text-stone-500 text-center">
-        ProgressSectionConsolidated - Implementation pending (Task 2.1)
-      </Text>
-    </View>
+    <Animated.View
+      accessibilityLabel='Progress section'
+      accessibilityRole='region'
+      entering={FadeInDown.delay(100).springify()}
+    >
+      {/* Unified Card Container */}
+      <View
+        className='overflow-hidden rounded-2xl p-4'
+        style={{
+          // Neutral gradient background: white → stone-50 → stone-100
+          backgroundColor: '#ffffff',
+          borderColor: 'rgba(214, 211, 209, 0.6)', // stone-300/60
+          borderWidth: 1,
+          // Subtle shadow
+          elevation: 2,
+          shadowColor: '#000',
+          shadowOffset: { height: 1, width: 0 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+        }}
+      >
+        {/* Section 1: Hero Strength Section */}
+        <HeroStrengthSection
+          strength={strength}
+          weeklyChange={weeklyChange}
+          onInfoPress={onInfoPress}
+        />
+
+        {/* Section 2: Insight Chips (horizontal scroll) */}
+        <InsightChips
+          bestDay={bestDayData}
+          currentStreak={currentStreak}
+          focusDay={focusDayData}
+          monthlyCompleted={monthlyCompleted}
+          monthlyTotal={monthlyTotal}
+          onFocusDayPress={onFocusDayPress}
+        />
+
+        {/* Section 3: Weekly Pattern Chart (only with enough data) */}
+        {hasEnoughData && (
+          <WeeklyPatternChart
+            dayStats={dayStats}
+            onSeeAllPress={onSeeAllPress}
+          />
+        )}
+
+        {/* Section 4: Actionable Tip */}
+        <ActionableTipCard
+          subtitle={
+            currentStreak > 0
+              ? `${currentStreak} day streak${currentStreak === 1 ? '' : 's'} and counting!`
+              : undefined
+          }
+          tip={actionableTip}
+          onPress={onTipPress}
+        />
+
+        {/* Section 5: Streak Records Accordion (only with enough data) */}
+        {hasEnoughData && (
+          <StreakRecordsAccordion
+            currentStreak={currentStreak}
+            streakRecords={streakRecords}
+          />
+        )}
+      </View>
+    </Animated.View>
   );
 }
 
