@@ -145,13 +145,13 @@ When a habit has been imported:
 
 ### Phase 2: Templates Screen Updates
 
-- [ ] **Task 2.1:** Remove filters from Categories tab ✅
+- [x] **Task 2.1:** Remove filters from Categories tab ✅
   - Only show filters when `browseTab === 'all'`
   - Keep search bar visible in both tabs
   - File: `src/screens/TemplatesScreen.tsx`
-  - _Completed: Added filter controls (Science-Backed toggle and Sort options) to the All Templates tab only. Categories tab has no filters as categories ARE the organization. Search bar remains visible in both tabs. FlatList in All Templates tab now uses filteredTemplates to respect filter selections. Added filterControlsRow style and dropdown backdrop._
+  - _Completed: Added filter controls (Science-Backed toggle and Sort options) to the All Templates tab only. Categories tab has no filters as categories ARE the organization. Search bar remains visible in both tabs. FlatList in All Templates tab now uses filteredTemplates to respect filter selections. Added filterControlsRow style to templatesScreenStyles.ts and dropdown backdrop for sort options._
 
-- [ ] **Task 2.2:** Update category count to show science count ✅
+- [x] **Task 2.2:** Update category count to show science count ✅
   - Format: "6 habits · 4 science-backed"
   - Calculate science count per category
   - File: `src/screens/TemplatesScreen.tsx`
@@ -159,16 +159,16 @@ When a habit has been imported:
 
 ### Phase 3: Full Card Updates
 
-- [ ] **Task 3.1:** Update Import button to use `iconColor` ✅
+- [x] **Task 3.1:** Update Import button to use `iconColor` ✅
   - Replace black/dark button with habit's `iconColor`
   - Maintain contrast with white text
-  - File: `src/components/templates/TemplateCard/TemplateCard.tsx`
+  - File: `src/components/TemplateCard.tsx`
   - _Verified complete: Import button already uses `iconColor` via inline style (line 496: `backgroundColor: isLocked ? '#9ca3af' : iconColor`). White text maintained via Button component's primary variant._
 
-- [ ] **Task 3.2:** Add "Added" state to TemplateCard ✅
+- [x] **Task 3.2:** Add "Added" state to TemplateCard ✅
   - Show "Added ✓" with green background when imported
   - Disable button to prevent re-import
-  - File: `src/components/templates/TemplateCard/TemplateCard.tsx`
+  - File: `src/components/TemplateCard.tsx`
   - _Verified complete: "Added" state already implemented (lines 482-486). Shows "Added to Habits" with checkmark icon on green (#22c55e) background. Button is replaced entirely when `isImported` is true, preventing re-import. Success animation with glow effect included._
 
 ### Phase 4: Preview Modal Updates
@@ -180,10 +180,10 @@ When a habit has been imported:
   - File: `src/components/templates/FullsizeTemplatePreview/FullsizeTemplatePreview.tsx`
   - _Completed: Added "Tips for Success" section to FullsizeTemplatePreview modal, positioned after science box. Section displays numbered tips using habit iconColor for tip number styling. Uses warm yellow color scheme (#fefce8 background, #fef08a border) with Lightbulb icon header. Section conditionally renders only when template.tips array exists and has items. Added accessibility label announcing tip count. Includes 5 new tests: rendering with tips, empty array handling, undefined tips handling, numbered ordering, and accessibility. All 44 FullsizeTemplatePreview tests pass._
 
-- [ ] **Task 4.2:** Update Import button to use `iconColor` ✅
+- [x] **Task 4.2:** Update Import button to use `iconColor` ✅
   - Replace current button color with habit's `iconColor`
-  - File: `src/components/templates/FullsizeTemplatePreview/FullsizeTemplatePreview.tsx`
-  - _Verified complete: Import button already uses `iconColor` via inline style (line 667: `backgroundColor: iconColor`). White text maintained via importButtonText style._
+  - File: `src/components/FullsizeTemplatePreview.tsx`
+  - _Verified complete: Import button already uses `iconColor` via inline style (line 705: `backgroundColor: iconColor`). White text maintained via importButtonText style._
 
 ### Phase 5: Data Updates
 
@@ -209,10 +209,10 @@ When a habit has been imported:
 
 ## Accessibility
 
-- [ ] Chevron has `accessibilityLabel="View details"`
-- [ ] Flask badge has `accessibilityLabel="Science-backed habit"`
-- [ ] Added state announced to screen readers
-- [ ] All animations respect `useReducedMotion`
+- [x] Chevron has `accessibilityLabel="View details"` - _Implemented in MiniTemplateCard.tsx line 250_
+- [x] Flask badge has `accessibilityLabel="Science-backed habit"` - _Implemented in MiniTemplateCard.tsx line 270_
+- [x] Added state announced to screen readers - _MiniTemplateCard.tsx lines 292-294: conditional accessibilityLabel shows "${name} added" when isImported_
+- [x] All animations respect `useReducedMotion` - _All animations check reducedMotion before running (MiniTemplateCard lines 100, 124, 138, 190, 202; TemplateCard lines 176-181, 276-285)_
 
 ---
 
