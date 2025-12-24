@@ -64,6 +64,7 @@ import {
   Shuffle,
   AlertTriangle,
   Lightbulb,
+  Flame,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -778,6 +779,80 @@ function EmptyWhyState({
 }
 
 /**
+ * StreakWarningCard Component (D4)
+ * Shows when user's streak is at risk to motivate habit completion
+ *
+ * Design spec (D4 Streak Warning Reminder Card):
+ * - Shows only when: streak >= 3, habit not completed today, after 6 PM (or reminder time)
+ * - Red/warning gradient background (red-50 to red-100)
+ * - Flame icon in red circle
+ * - Shows current streak count
+ * - Shows truncated Why as reminder
+ * - Optional dismissible functionality
+ *
+ * @param streak - Current streak count
+ * @param whyText - The user's "Why" statement to show as reminder
+ * @param onDismiss - Optional callback when user dismisses the card
+ */
+function StreakWarningCard({
+  streak,
+  whyText,
+  onDismiss,
+}: {
+  streak: number;
+  whyText?: string;
+  onDismiss?: () => void;
+}) {
+  // Truncate Why text to ~40 characters
+  const truncatedWhy = useMemo(() => {
+    if (!whyText) return null;
+    if (whyText.length <= 40) return whyText;
+    return whyText.slice(0, 40).trim() + '...';
+  }, [whyText]);
+
+  return (
+    <View className="mb-4 overflow-hidden rounded-xl border border-red-200">
+      <LinearGradient
+        colors={['#fef2f2', '#fee2e2']} // red-50 to red-100
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        className="flex-row items-center gap-3 p-4"
+      >
+        {/* Flame icon */}
+        <View className="h-10 w-10 items-center justify-center rounded-full bg-red-500">
+          <Flame className="text-white" size={20} />
+        </View>
+
+        {/* Content */}
+        <View className="flex-1">
+          <Text className="text-sm font-semibold text-red-700">
+            Don't break your {streak}-day streak!
+          </Text>
+          {truncatedWhy && (
+            <Text className="mt-0.5 text-xs text-red-600">
+              Remember: "{truncatedWhy}"
+            </Text>
+          )}
+        </View>
+
+        {/* Optional dismiss button */}
+        {onDismiss && (
+          <Pressable
+            accessibilityLabel="Dismiss streak warning"
+            accessibilityRole="button"
+            onPress={onDismiss}
+            hitSlop={12}
+            className="p-1"
+          >
+            <X className="text-red-400" size={16} />
+          </Pressable>
+        )}
+      </LinearGradient>
+    </View>
+  );
+}
+
+/**
  * PremiumWhyDisplay Component (D2)
  * Premium quote-style display for the "Your Why" section when filled
  *
@@ -1286,6 +1361,7 @@ function MotivationProgressBar({
 function MotivationTabContent({
   affirmations,
   affirmationFlipAnim,
+  currentStreak,
   habit,
   habitCueAfterBehavior,
   habitCueLocation,
@@ -1293,7 +1369,10 @@ function MotivationTabContent({
   habitIdentity,
   habitNotes,
   hasCue,
+  isCompletedToday,
+  isStreakWarningDismissed,
   onAddNote,
+  onDismissStreakWarning,
   onEditNote,
   onOpenAffirmationEditor,
   onOpenCueEditor,
@@ -1316,6 +1395,8 @@ function MotivationTabContent({
 }: {
   affirmations: Doc<'affirmations'>[];
   affirmationFlipAnim: SharedValue<number>;
+  /** Current streak count */
+  currentStreak: number;
   habit: Habit;
   habitCueAfterBehavior: string | undefined;
   habitCueLocation: string | undefined;
@@ -1323,7 +1404,13 @@ function MotivationTabContent({
   habitIdentity: string | undefined;
   habitNotes: Doc<'notes'>[];
   hasCue: boolean;
+  /** Whether habit is completed today */
+  isCompletedToday: boolean;
+  /** Whether user has dismissed the streak warning for this session */
+  isStreakWarningDismissed: boolean;
   onAddNote: () => void;
+  /** Callback to dismiss streak warning */
+  onDismissStreakWarning: () => void;
   onEditNote: (note: Doc<'notes'>) => void;
   onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
   onOpenCueEditor: () => void;
@@ -1355,8 +1442,46 @@ function MotivationTabContent({
   const filledCount = motivationSections.filter(s => s.filled).length;
   const totalCount = motivationSections.length;
 
+  // D4: Calculate whether to show streak warning
+  // Conditions: streak >= 3, not completed today, after 6 PM (or reminder time)
+  const showStreakWarning = useMemo(() => {
+    // Must have a streak of at least 3 days to show warning
+    if (currentStreak < 3) return false;
+
+    // Don't show if already completed today
+    if (isCompletedToday) return false;
+
+    // Don't show if user has dismissed the warning
+    if (isStreakWarningDismissed) return false;
+
+    // Check if it's after the warning time
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // Use reminder time if set, otherwise default to 6 PM (18:00)
+    let warningHour = 18; // Default: 6 PM
+    if (habit.reminderTime) {
+      // reminderTime format is "HH:MM" or similar
+      const match = habit.reminderTime.match(/^(\d{1,2})/);
+      if (match) {
+        warningHour = parseInt(match[1], 10);
+      }
+    }
+
+    return currentHour >= warningHour;
+  }, [currentStreak, isCompletedToday, isStreakWarningDismissed, habit.reminderTime]);
+
   return (
     <View className="gap-4">
+      {/* D4: Streak Warning Reminder Card - shown when streak is at risk */}
+      {showStreakWarning && (
+        <StreakWarningCard
+          streak={currentStreak}
+          whyText={habit.why}
+          onDismiss={onDismissStreakWarning}
+        />
+      )}
+
       {/* D1: Progress Indicator for Motivation Sections */}
       <MotivationProgressBar
         filledCount={filledCount}
@@ -2001,6 +2126,9 @@ export default function HabitDetailScreen({
   const [pendingDelete, setPendingDelete] = useState(false);
   const [pendingArchive, setPendingArchive] = useState(false);
 
+  // D4: Streak warning dismissal state (per session)
+  const [isStreakWarningDismissed, setIsStreakWarningDismissed] = useState(false);
+
   type VisionBoardItem = Doc<'visionBoardItems'>;
   type Affirmation = Doc<'affirmations'>;
 
@@ -2560,6 +2688,13 @@ export default function HabitDetailScreen({
     }
   };
 
+  // D4: Handler to dismiss streak warning for this session
+  const handleDismissStreakWarning = useCallback(() => {
+    setIsStreakWarningDismissed(true);
+    // Provide haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }, []);
+
   // Notes handlers - Story 1.9.3
   const handleOpenNotesEditor = () => {
     setEditingNoteId(null);
@@ -2678,6 +2813,7 @@ export default function HabitDetailScreen({
                 <MotivationTabContent
                   affirmations={affirmations}
                   affirmationFlipAnim={affirmationFlipAnim}
+                  currentStreak={habit.currentStreak ?? 0}
                   habit={habit}
                   habitCueAfterBehavior={habitCueAfterBehavior}
                   habitCueLocation={habitCueLocation}
@@ -2685,7 +2821,10 @@ export default function HabitDetailScreen({
                   habitIdentity={habitIdentity}
                   habitNotes={habitNotes}
                   hasCue={hasCue}
+                  isCompletedToday={isCompletedToday}
+                  isStreakWarningDismissed={isStreakWarningDismissed}
                   onAddNote={handleOpenNotesEditor}
+                  onDismissStreakWarning={handleDismissStreakWarning}
                   onEditNote={handleEditNote}
                   onOpenAffirmationEditor={handleOpenAffirmationEditor}
                   onOpenCueEditor={handleOpenCueEditor}
