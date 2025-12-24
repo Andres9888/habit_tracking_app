@@ -3,6 +3,7 @@
  *
  * Shows weekly trend direction with icon and value.
  * Used in HeroStrengthSection to display strength change.
+ * Memoized since weeklyChange is a primitive prop.
  */
 
 import React from 'react';
@@ -15,8 +16,11 @@ interface TrendIndicatorProps {
 
 /**
  * TrendIndicator - Shows weekly trend direction with icon and value
+ * Memoized to prevent re-renders when parent updates unrelated props
  */
-export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
+export const TrendIndicator = React.memo(function TrendIndicator({
+  weeklyChange,
+}: TrendIndicatorProps) {
   if (weeklyChange > 0) {
     return (
       <View
@@ -57,6 +61,6 @@ export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
       <Text className='text-xs font-medium text-stone-500'>Stable</Text>
     </View>
   );
-}
+});
 
 export default TrendIndicator;

@@ -47,8 +47,9 @@ const ENTRANCE_DELAY = 200;
  *
  * Displays a personalized actionable tip with gradient background,
  * icon, and chevron for tap affordance.
+ * Memoized to prevent re-renders when parent updates unrelated props.
  */
-export function ActionableTipCard({
+export const ActionableTipCard = React.memo(function ActionableTipCard({
   tip,
   subtitle,
   onPress,
@@ -179,6 +180,6 @@ export function ActionableTipCard({
       </View>
     </AnimatedPressable>
   );
-}
+});
 
 export default ActionableTipCard;

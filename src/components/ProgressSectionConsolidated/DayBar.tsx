@@ -51,8 +51,9 @@ export interface DayBarProps {
 
 /**
  * Individual animated day bar
+ * Memoized to prevent unnecessary re-renders when sibling bars update
  */
-export function DayBar({
+export const DayBar = React.memo(function DayBar({
   dayIndex,
   rate,
   isBest,
@@ -144,6 +145,6 @@ export function DayBar({
       </Text>
     </View>
   );
-}
+});
 
 export default DayBar;

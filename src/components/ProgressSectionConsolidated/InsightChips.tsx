@@ -52,10 +52,19 @@ interface InsightChipProps {
   onHapticFeedback: () => void;
 }
 
+/** Border color mapping - defined at module level to avoid recreation */
+const BORDER_COLOR_MAP: Record<string, string> = {
+  'amber-200': '#fde68a',
+  'emerald-200': '#a7f3d0',
+  'orange-200': '#fed7aa',
+  'violet-200': '#ddd6fe',
+};
+
 /**
  * Individual insight chip with entrance and pulse animations
+ * Memoized to prevent unnecessary re-renders when parent updates
  */
-function InsightChip({
+const InsightChip = React.memo(function InsightChip({
   chip,
   index,
   reduceMotion,
@@ -153,15 +162,7 @@ function InsightChip({
     transform: [{ scale: pulseScale.value }],
   }));
 
-  // Border color mapping
-  const borderColorMap: Record<string, string> = {
-    'amber-200': '#fde68a',
-    'emerald-200': '#a7f3d0',
-    'orange-200': '#fed7aa',
-    'violet-200': '#ddd6fe',
-  };
-
-  const borderColor = borderColorMap[chip.borderColor] || '#e7e5e4';
+  const borderColor = BORDER_COLOR_MAP[chip.borderColor] || '#e7e5e4';
 
   const accessibilityLabel = `${chip.label}: ${chip.value}${chip.hasPulse ? ', active streak' : ''}`;
   const accessibilityHint = chip.isInteractive
@@ -213,7 +214,7 @@ function InsightChip({
       </View>
     </AnimatedPressable>
   );
-}
+});
 
 /**
  * InsightChips Component

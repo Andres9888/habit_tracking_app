@@ -3,11 +3,12 @@
  *
  * Hero section displaying the main habit strength progress ring
  * with level information and trend indicator.
+ * Memoized to prevent re-renders when parent updates unrelated props.
  *
  * @see docs/specs/habit-details-screen/progress-consolidated-redesign.md
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, AccessibilityInfo } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
@@ -30,19 +31,28 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const RING_ANIMATION_DURATION = 1200;
 const EMOJI_SCALE_DELAY = 300;
 
-export function HeroStrengthSection({
+/** Ring dimensions - defined at module level to avoid recreation */
+const RING_SIZE = 100;
+const STROKE_WIDTH = 10;
+const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const CENTER = RING_SIZE / 2;
+
+export const HeroStrengthSection = React.memo(function HeroStrengthSection({
   strength,
   weeklyChange = 0,
 }: HeroStrengthSectionProps) {
-  const clampedStrength = Math.max(0, Math.min(100, strength));
-  const { currentLevel, nextLevel, progressPercent, pointsToNext } =
-    getProgressToNextLevel(clampedStrength);
+  // Memoize strength clamping to prevent recalculation
+  const clampedStrength = useMemo(
+    () => Math.max(0, Math.min(100, strength)),
+    [strength]
+  );
 
-  const ringSize = 100;
-  const strokeWidth = 10;
-  const radius = (ringSize - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const center = ringSize / 2;
+  // Memoize level data derivation
+  const { currentLevel, nextLevel, progressPercent, pointsToNext } = useMemo(
+    () => getProgressToNextLevel(clampedStrength),
+    [clampedStrength]
+  );
 
   const [reduceMotion, setReduceMotion] = React.useState(false);
   const animatedStrength = useSharedValue(0);
@@ -79,7 +89,7 @@ export function HeroStrengthSection({
   }, [clampedStrength, reduceMotion, progressPercent]);
 
   const animatedCircleProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - animatedStrength.value / 100),
+    strokeDashoffset: CIRCUMFERENCE * (1 - animatedStrength.value / 100),
   }));
   const emojiAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: emojiScale.value }],
@@ -99,41 +109,41 @@ export function HeroStrengthSection({
       <View
         style={{
           elevation: 4,
-          height: ringSize,
+          height: RING_SIZE,
           shadowColor: currentLevel.color,
           shadowOffset: { height: 0, width: 0 },
           shadowOpacity: 0.3,
           shadowRadius: 8,
-          width: ringSize,
+          width: RING_SIZE,
         }}
       >
-        <Svg height={ringSize} width={ringSize}>
+        <Svg height={RING_SIZE} width={RING_SIZE}>
           <Circle
-            cx={center}
-            cy={center}
+            cx={CENTER}
+            cy={CENTER}
             fill='none'
-            r={radius}
+            r={RADIUS}
             stroke='#f3f4f6'
-            strokeWidth={strokeWidth}
+            strokeWidth={STROKE_WIDTH}
           />
           <AnimatedCircle
             animatedProps={animatedCircleProps}
-            cx={center}
-            cy={center}
+            cx={CENTER}
+            cy={CENTER}
             fill='none'
-            origin={`${center}, ${center}`}
-            r={radius}
+            origin={`${CENTER}, ${CENTER}`}
+            r={RADIUS}
             rotation='-90'
             stroke={currentLevel.color}
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference}
+            strokeDasharray={CIRCUMFERENCE}
+            strokeDashoffset={CIRCUMFERENCE}
             strokeLinecap='round'
-            strokeWidth={strokeWidth}
+            strokeWidth={STROKE_WIDTH}
           />
         </Svg>
         <View
           className='absolute items-center justify-center'
-          style={{ height: ringSize, width: ringSize }}
+          style={{ height: RING_SIZE, width: RING_SIZE }}
         >
           <Animated.Text className='text-2xl' style={emojiAnimatedStyle}>
             {currentLevel.emoji}
@@ -182,6 +192,6 @@ export function HeroStrengthSection({
       </View>
     </View>
   );
-}
+});
 
 export default HeroStrengthSection;

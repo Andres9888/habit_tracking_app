@@ -15,26 +15,29 @@ interface AnimatedPercentageTextProps {
 
 /**
  * AnimatedPercentageText - Displays the strength percentage with counting animation
+ * Memoized since animatedValue is a stable SharedValue reference
  */
-export function AnimatedPercentageText({
-  animatedValue,
-}: AnimatedPercentageTextProps) {
-  const [displayText, setDisplayText] = React.useState('0%');
+export const AnimatedPercentageText = React.memo(
+  function AnimatedPercentageText({
+    animatedValue,
+  }: AnimatedPercentageTextProps) {
+    const [displayText, setDisplayText] = React.useState('0%');
 
-  useDerivedValue(() => {
-    const formatted = `${Math.round(animatedValue.value)}%`;
-    runOnJS(setDisplayText)(formatted);
-    return formatted;
-  });
+    useDerivedValue(() => {
+      const formatted = `${Math.round(animatedValue.value)}%`;
+      runOnJS(setDisplayText)(formatted);
+      return formatted;
+    });
 
-  return (
-    <Text
-      accessibilityElementsHidden
-      className='text-xl font-bold text-stone-900'
-    >
-      {displayText}
-    </Text>
-  );
-}
+    return (
+      <Text
+        accessibilityElementsHidden
+        className='text-xl font-bold text-stone-900'
+      >
+        {displayText}
+      </Text>
+    );
+  }
+);
 
 export default AnimatedPercentageText;

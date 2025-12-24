@@ -54,8 +54,9 @@ function findWorstDay(
  *
  * Compact 7-day bar chart showing weekly completion patterns.
  * Highlights best (emerald) and worst (amber) performing days.
+ * Memoized to prevent re-renders when parent updates unrelated props.
  */
-export function WeeklyPatternChart({
+export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
   dayStats,
   onSeeAllPress,
 }: WeeklyPatternChartProps) {
@@ -157,6 +158,6 @@ export function WeeklyPatternChart({
       </View>
     </View>
   );
-}
+});
 
 export default WeeklyPatternChart;
