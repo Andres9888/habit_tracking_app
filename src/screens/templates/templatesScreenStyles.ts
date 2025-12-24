@@ -96,7 +96,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f8f5f1',
+    backgroundColor: '#faf9f7',
   },
   controlButton: {
     alignItems: 'center',
@@ -167,7 +167,7 @@ export const styles = StyleSheet.create({
     marginTop: 32,
   },
   previewCategory: {
-    color: '#6b7280',
+    color: '#78716c',
     marginTop: 6,
   },
   previewHeader: {
@@ -426,7 +426,7 @@ export const styles = StyleSheet.create({
   customizeSubtitle: {
     backgroundColor: '#f3f4f6',
     borderRadius: 6,
-    color: '#6b7280',
+    color: '#78716c',
     fontSize: 10,
     fontWeight: '500',
     overflow: 'hidden',

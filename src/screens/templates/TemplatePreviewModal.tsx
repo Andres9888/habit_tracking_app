@@ -27,7 +27,7 @@ import { useAppTheme } from '../../theme';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 
 /** Default fallback color when iconColor is missing or invalid */
-const DEFAULT_ICON_COLOR = '#6b7280';
+const DEFAULT_ICON_COLOR = '#78716c';
 
 /** Ensure color is valid, fallback to default if empty/undefined */
 const safeColor = (color: string | undefined): string => {

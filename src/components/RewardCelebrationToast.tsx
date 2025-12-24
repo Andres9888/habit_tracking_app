@@ -104,7 +104,7 @@ export const RewardCelebrationToast = ({
       }}
     >
       <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
-        <Text className='text-[17px] font-bold leading-[24px] text-[#101727]'>{title}</Text>
+        <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>{title}</Text>
         <Text className='mt-2 text-[15px] leading-[20px] text-[#44403c]'>{message}</Text>
 
         {/* Premium value prop */}

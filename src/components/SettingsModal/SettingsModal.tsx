@@ -82,13 +82,13 @@ export default function SettingsModal({
       }
     : {
         accent: '#1a1a1a',
-        background: '#f8f5f1',
+        background: '#faf9f7',
         card: '#ffffff',
         cardBorder: '#f5f5f4',
         headerText: '#1a1a1a',
         icon: '#1a1a1a',
         mutedText: '#8a8a8a',
-        versionText: '#6b7280',
+        versionText: '#78716c',
       };
 
   if (!visible) return null;

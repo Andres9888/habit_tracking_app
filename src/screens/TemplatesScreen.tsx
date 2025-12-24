@@ -523,10 +523,10 @@ export default function TemplatesScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
+          <Text style={[theme.custom.typography.heading1, { color: '#1c1917', fontWeight: '700' }]}>
             Import Habits
           </Text>
-          <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 4 }]}>
+          <Text style={[theme.custom.typography.bodySmall, { color: '#78716c', marginTop: 4 }]}>
             Science-backed habits to get you started
           </Text>
         </View>
@@ -599,10 +599,10 @@ export default function TemplatesScreen() {
               </View>
             )}
             <View>
-              <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
+              <Text style={[theme.custom.typography.heading1, { color: '#1c1917', fontWeight: '700' }]}>
                 {effectiveViewMode === 'search' ? 'Search Results' : getCategoryLabel(selectedCategory)}
               </Text>
-              <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 2 }]}>
+              <Text style={[theme.custom.typography.bodySmall, { color: '#78716c', marginTop: 2 }]}>
                 {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''}
               </Text>
             </View>
@@ -777,10 +777,10 @@ export default function TemplatesScreen() {
     <View style={styles.container}>
       {/* Header - slides down on entrance */}
       <Animated.View style={[styles.header, headerAnimatedStyle]}>
-        <Text style={[theme.custom.typography.heading1, { color: '#101727', fontWeight: '700' }]}>
+        <Text style={[theme.custom.typography.heading1, { color: '#1c1917', fontWeight: '700' }]}>
           Import Habits
         </Text>
-        <Text style={[theme.custom.typography.bodySmall, { color: '#6b7280', marginTop: 4 }]}>
+        <Text style={[theme.custom.typography.bodySmall, { color: '#78716c', marginTop: 4 }]}>
           Science-backed habits to get you started
         </Text>
       </Animated.View>

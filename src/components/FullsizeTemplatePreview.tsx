@@ -71,7 +71,7 @@ const CONFETTI_COLORS = [
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /** Default fallback color when iconColor is missing or invalid */
-const DEFAULT_ICON_COLOR = '#6b7280';
+const DEFAULT_ICON_COLOR = '#78716c';
 
 export interface FullsizeTemplatePreviewProps {
   /** Template to preview */
@@ -816,7 +816,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   templateName: {
-    color: '#101727',
+    color: '#1c1917',
     fontSize: 28,
     fontWeight: '800',
     letterSpacing: -0.5,

@@ -103,7 +103,7 @@ export interface TemplateCardProps {
 }
 
 /** Default fallback color when iconColor is missing or invalid */
-const DEFAULT_ICON_COLOR = '#6b7280';
+const DEFAULT_ICON_COLOR = '#78716c';
 
 export function TemplateCard({
   animationIndex = 0,
@@ -377,7 +377,7 @@ export function TemplateCard({
           numberOfLines={1}
           style={[
             theme.custom.typography.heading3,
-            { color: '#101727', fontWeight: '700', marginTop: 14 },
+            { color: '#1c1917', fontWeight: '700', marginTop: 14 },
           ]}
         >
           {name}

@@ -59,7 +59,7 @@ export function NotificationBadge({ count = 1, visible = true }: NotificationBad
           borderRadius: 9,
           backgroundColor: '#ef4444',
           borderWidth: 2,
-          borderColor: '#f8f5f1',
+          borderColor: '#faf9f7',
           alignItems: 'center',
           justifyContent: 'center',
           paddingHorizontal: 4,

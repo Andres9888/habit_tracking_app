@@ -310,7 +310,7 @@ export default function HabitEditScreen({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className='flex-1 bg-[#f8f5f1]'>
+      <View className='flex-1 bg-[#faf9f7]'>
         {/* Header */}
         <View className='flex-row items-center justify-between px-4 pb-4' style={{ paddingTop: insets.top + 8 }}>
           <TouchableOpacity
@@ -762,7 +762,7 @@ export default function HabitEditScreen({
         )}
 
         {/* Bottom Buttons */}
-        <View className='flex-row gap-3 px-4 pb-8 pt-4 bg-[#f8f5f1]'>
+        <View className='flex-row gap-3 px-4 pb-8 pt-4 bg-[#faf9f7]'>
           <TouchableOpacity
             className='flex-1 h-14 items-center justify-center rounded-2xl bg-stone-200'
             onPress={() => {

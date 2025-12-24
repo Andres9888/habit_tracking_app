@@ -246,7 +246,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   }, [completed, isToday]);
 
   const backgroundColor = completed ? accentColor : highContrastMode ? '#000000' : '#f5f5f5';
-  const borderColor = highContrastMode ? '#facc15' : '#6b7280';
+  const borderColor = highContrastMode ? '#facc15' : '#78716c';
 
   const handlePressIn = () => {
     Animated.spring(buttonScale, {

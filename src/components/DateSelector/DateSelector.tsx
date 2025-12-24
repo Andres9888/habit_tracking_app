@@ -38,7 +38,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           className='h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]'
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color='#101727' size={16} strokeWidth={2.25} />
+          <ChevronLeft color='#1c1917' size={16} strokeWidth={2.25} />
         </Pressable>
 
         <Text className='text-[15px] leading-5 tracking-[-0.15px] text-[#4a5565]'>
@@ -53,7 +53,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           disabled={!canNavigateForward}
           onPress={onNextWeek}
         >
-          <ChevronRight color='#101727' size={16} strokeWidth={2.25} />
+          <ChevronRight color='#1c1917' size={16} strokeWidth={2.25} />
         </Pressable>
       </View>
 
@@ -83,7 +83,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
               </Text>
               <View
                 className={`h-12 w-12 items-center justify-center rounded-full ${
-                  isCurrentDay ? 'bg-[#101727]' : 'bg-transparent'
+                  isCurrentDay ? 'bg-[#1c1917]' : 'bg-transparent'
                 } ${isUpcoming && !isCurrentDay ? 'opacity-50' : ''}`}
               >
                 <Text

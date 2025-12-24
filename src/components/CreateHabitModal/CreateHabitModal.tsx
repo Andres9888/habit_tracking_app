@@ -27,7 +27,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
   return (
     <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
       <View className='flex-1 bg-black/50'>
-        <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'>
+        <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'>
           <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
           <ScrollView
             ref={template.scrollViewRef}

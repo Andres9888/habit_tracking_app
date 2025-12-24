@@ -121,7 +121,7 @@ export const HabitPreview = ({
           </View>
 
           {/* Week Preview */}
-          <View className='mt-4 rounded-xl bg-[#f8f5f1] p-3'>
+          <View className='mt-4 rounded-xl bg-[#faf9f7] p-3'>
             <Text className='mb-2 text-xs font-medium text-[#78716c]'>This week:</Text>
             <View className='flex-row items-center justify-between'>
               {weekDays.map((day, index) => (
