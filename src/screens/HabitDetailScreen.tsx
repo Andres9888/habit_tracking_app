@@ -587,6 +587,39 @@ function CompletionCheckmark({
 }
 
 /**
+ * EmptyCircleIndicator Component (D1)
+ * Shows an outline circle for unfilled motivation sections
+ *
+ * Design spec (D1 Progress Indicator):
+ * - Positioned at top-right of section icon (same as CompletionCheckmark)
+ * - Stone-200 border with stone-200 inner dot
+ * - Only visible when section is NOT filled
+ *
+ * @param isVisible - Whether to show (section is NOT filled)
+ */
+function EmptyCircleIndicator({
+  isVisible,
+}: {
+  isVisible: boolean;
+}) {
+  if (!isVisible) return null;
+
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: -4,
+        right: -4,
+      }}
+    >
+      <View className="h-5 w-5 items-center justify-center rounded-full border-2 border-stone-200 bg-white">
+        <View className="h-2 w-2 rounded-full bg-stone-200" />
+      </View>
+    </View>
+  );
+}
+
+/**
  * PulsingIcon Component for Empty State Icons (T3.1)
  * Wraps icons with subtle opacity + scale pulse animation
  *
@@ -973,6 +1006,91 @@ function ProgressTabContent({
 }
 
 /**
+ * MotivationProgressBar Component (D1)
+ * Shows progress indicator for motivation sections completion
+ *
+ * Design spec (D1 Progress Indicator):
+ * - Shows "X of 4 complete" text
+ * - Progress bar with rose gradient fill
+ * - Animated width changes on completion
+ *
+ * @param filledCount - Number of completed motivation sections
+ * @param totalCount - Total number of motivation sections (4)
+ * @param shouldAnimate - Whether to animate the progress bar
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function MotivationProgressBar({
+  filledCount,
+  totalCount,
+  shouldAnimate,
+  reduceMotion = false,
+}: {
+  filledCount: number;
+  totalCount: number;
+  shouldAnimate: boolean;
+  reduceMotion?: boolean;
+}) {
+  const progressWidth = useSharedValue(shouldAnimate && !reduceMotion ? 0 : (filledCount / totalCount) * 100);
+
+  useEffect(() => {
+    const targetWidth = (filledCount / totalCount) * 100;
+
+    if (reduceMotion) {
+      progressWidth.value = targetWidth;
+      return;
+    }
+
+    // Animate progress bar with spring
+    const delay = shouldAnimate ? 400 : 0; // Delay on first load to sync with section animations
+    const timeout = setTimeout(() => {
+      progressWidth.value = withSpring(targetWidth, {
+        damping: 20,
+        stiffness: 120,
+        mass: 1,
+      });
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [filledCount, totalCount, shouldAnimate, reduceMotion, progressWidth]);
+
+  const progressStyle = useAnimatedStyle(() => ({
+    width: `${progressWidth.value}%`,
+  }));
+
+  const isComplete = filledCount === totalCount;
+
+  return (
+    <View className="mb-4 rounded-xl bg-white p-4 shadow-sm shadow-stone-200/50">
+      <View className="mb-2 flex-row items-center justify-between">
+        <Text className="text-xs font-medium text-stone-500">Motivation Setup</Text>
+        <Text className={clsx(
+          'text-xs font-bold',
+          isComplete ? 'text-emerald-500' : 'text-rose-500'
+        )}>
+          {filledCount} of {totalCount} complete
+        </Text>
+      </View>
+      <View className="h-2 overflow-hidden rounded-full bg-stone-100">
+        <Animated.View
+          style={progressStyle}
+          className={clsx(
+            'h-full rounded-full',
+            isComplete ? 'bg-emerald-500' : 'bg-rose-400'
+          )}
+        >
+          <LinearGradient
+            colors={isComplete ? ['#34d399', '#10b981'] : ['#fb7185', '#f43f5e']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className="h-full w-full rounded-full"
+          />
+        </Animated.View>
+      </View>
+    </View>
+  );
+}
+
+/**
  * Motivation Tab Content
  * Features staggered entrance animations on first tab visit (T1)
  */
@@ -1038,8 +1156,26 @@ function MotivationTabContent({
   /** Whether to animate entrance (first tab visit only) */
   shouldAnimate?: boolean;
 }) {
+  // D1: Calculate motivation sections completion
+  const motivationSections = [
+    { filled: !!habit.why, label: 'Why' },
+    { filled: !!habitIdentity, label: 'Identity' },
+    { filled: hasCue, label: 'Cue' },
+    { filled: visionBoardItems.length > 0, label: 'Vision Board' },
+  ];
+  const filledCount = motivationSections.filter(s => s.filled).length;
+  const totalCount = motivationSections.length;
+
   return (
     <View className="gap-4">
+      {/* D1: Progress Indicator for Motivation Sections */}
+      <MotivationProgressBar
+        filledCount={filledCount}
+        totalCount={totalCount}
+        shouldAnimate={shouldAnimate ?? false}
+        reduceMotion={reduceMotion}
+      />
+
       {/* Your Why Section - Index 0 */}
       <AnimatedSection index={0} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
         <SectionCard
@@ -1062,6 +1198,7 @@ function MotivationTabContent({
                 shouldAnimate={shouldAnimate ?? false}
                 reduceMotion={reduceMotion}
               />
+              <EmptyCircleIndicator isVisible={!habit.why} />
             </View>
             <View className="flex-1">
               {habit.why ? (
@@ -1110,6 +1247,7 @@ function MotivationTabContent({
                 shouldAnimate={shouldAnimate ?? false}
                 reduceMotion={reduceMotion}
               />
+              <EmptyCircleIndicator isVisible={!habitIdentity} />
             </View>
             <View className="flex-1">
               {habitIdentity ? (
@@ -1168,6 +1306,7 @@ function MotivationTabContent({
                 shouldAnimate={shouldAnimate ?? false}
                 reduceMotion={reduceMotion}
               />
+              <EmptyCircleIndicator isVisible={!hasCue} />
             </View>
             <View className="flex-1">
               {hasCue ? (
@@ -1226,7 +1365,25 @@ function MotivationTabContent({
         <SectionCard>
           <View className="mb-3 flex-row items-center justify-between">
             <View className="flex-row items-center gap-2">
-              <Eye className="text-stone-500" size={18} />
+              <View className="relative">
+                <Eye className="text-stone-500" size={18} />
+                {/* D1: Completion indicator for Vision Board */}
+                {visionBoardItems.length > 0 ? (
+                  <View
+                    style={{ position: 'absolute', top: -6, right: -6 }}
+                    className="h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500"
+                  >
+                    <Check className="text-white" size={8} strokeWidth={3} />
+                  </View>
+                ) : (
+                  <View
+                    style={{ position: 'absolute', top: -6, right: -6 }}
+                    className="h-3.5 w-3.5 items-center justify-center rounded-full border border-stone-200 bg-white"
+                  >
+                    <View className="h-1.5 w-1.5 rounded-full bg-stone-200" />
+                  </View>
+                )}
+              </View>
               <Text className="font-semibold text-stone-800">Vision Board</Text>
             </View>
             <Pressable
