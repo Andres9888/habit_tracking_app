@@ -323,11 +323,22 @@ interface ProgressSectionConsolidatedProps {
     - All 22 HabitDetailScreen tests pass
     - No TypeScript errors in modified file
 
-- [ ] **Task 2.3:** Remove redundant stats strip when Progress tab active
+- [x] **Task 2.3:** Remove redundant stats strip when Progress tab active ✅
   - Conditional rendering based on active tab
   - Smooth transition when switching tabs
   - Dependencies: 2.2
   - Estimate: 1h
+  - **Completed:** Implemented conditional QuickStatsStrip visibility:
+    - Hidden on Progress tab (reduces redundancy with ProgressSectionConsolidated)
+    - Visible on Motivation and Manage tabs (provides useful context)
+    - Smooth FadeIn/FadeOut animations (200ms enter, 150ms exit)
+    - Spring-based LinearTransition for layout changes (damping: 15, stiffness: 150)
+    - Added FadeOut and LinearTransition imports to react-native-reanimated
+    - 15 passing unit tests covering:
+      - Conditional rendering logic for all 3 tabs
+      - Animation configuration verification
+      - Tab switching behavior scenarios
+      - Redundancy reduction rationale
 
 ### Phase 3: Testing
 
