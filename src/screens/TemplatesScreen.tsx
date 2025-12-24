@@ -219,6 +219,19 @@ export default function TemplatesScreen() {
     }, {} as Record<Category, number>);
   }, [allTemplates]);
 
+  // Science counts per category
+  const scienceCountsByCategory = useMemo(() => {
+    if (!allTemplates) return {} as Record<string, number>;
+
+    const counts: Record<string, number> = {};
+    for (const template of allTemplates) {
+      if (template.scientificLink) {
+        counts[template.category] = (counts[template.category] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [allTemplates]);
+
   // Filter templates for search/category view
   const filteredTemplates = useMemo(() => {
     if (!allTemplates) return [];
@@ -829,6 +842,7 @@ export default function TemplatesScreen() {
                     label={category.label}
                     icon={category.icon}
                     templates={templates}
+                    scienceCount={scienceCountsByCategory[category.id] || 0}
                     isExpanded={expandedCategories.has(category.id)}
                     onToggle={() => handleToggleCategory(category.id)}
                     onTemplatePress={handleTemplatePreview}
@@ -845,8 +859,69 @@ export default function TemplatesScreen() {
       {/* View All tab - FlatList for performance - fades up with delay */}
       {browseTab === 'all' && (
         <Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
+          {/* Filter controls - only shown in All tab */}
+          <View style={styles.filterControlsRow}>
+            <View style={styles.sortButtonWrapper}>
+              <Pressable
+                accessibilityLabel="Open sort options"
+                accessibilityRole="button"
+                style={[styles.controlButton, showSortOptions && styles.controlButtonActive]}
+                onPress={handleOpenSortOptions}
+              >
+                <SlidersHorizontal color={showSortOptions ? '#fff' : '#1c1917'} size={16} />
+                <Text style={[styles.controlButtonText, showSortOptions && { color: '#fff' }]}>
+                  {SORT_LABELS[sortOption]}
+                </Text>
+                <ChevronDown
+                  color={showSortOptions ? '#fff' : '#1c1917'}
+                  size={14}
+                  style={{ transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }] }}
+                />
+              </Pressable>
+              {showSortOptions && (
+                <Animated.View entering={FadeIn.duration(150)} style={styles.sortDropdown}>
+                  {SORT_OPTIONS.map((option) => {
+                    const isSelected = sortOption === option.value;
+                    return (
+                      <Pressable
+                        key={option.value}
+                        accessible
+                        accessibilityLabel={`Sort by ${option.label}`}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: isSelected }}
+                        style={[styles.sortDropdownOption, isSelected && styles.sortDropdownOptionSelected]}
+                        onPress={() => handleSelectSortOption(option.value)}
+                      >
+                        <Text
+                          style={[
+                            styles.sortDropdownOptionText,
+                            isSelected && styles.sortDropdownOptionTextSelected,
+                          ]}
+                        >
+                          {option.label}
+                        </Text>
+                        {isSelected && <Check color="#10B981" size={16} strokeWidth={2.5} />}
+                      </Pressable>
+                    );
+                  })}
+                </Animated.View>
+              )}
+            </View>
+            <Pressable
+              accessibilityLabel={`Filter by science-backed habits, ${researchOnly ? 'active' : 'inactive'}`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: researchOnly }}
+              style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
+              onPress={() => setResearchOnly((prev) => !prev)}
+            >
+              <Filter color={researchOnly ? '#fff' : '#1c1917'} size={16} />
+              <Text style={[styles.controlButtonText, { color: researchOnly ? '#fff' : '#1c1917' }]}>
+                Science-Backed
+              </Text>
+            </Pressable>
+          </View>
           <FlatList
-          data={allTemplates}
+          data={filteredTemplates}
           keyExtractor={(item) => item._id}
           contentContainerStyle={styles.allTemplatesList}
           showsVerticalScrollIndicator={false}
@@ -877,6 +952,9 @@ export default function TemplatesScreen() {
         />
         </Animated.View>
       )}
+
+      {/* Dropdown backdrop for sort options in browse mode */}
+      {showSortOptions && browseTab === 'all' && <Pressable style={styles.dropdownBackdrop} onPress={handleCloseSortOptions} />}
 
       <FullsizeTemplatePreview
         isImporting={importingTemplateId === previewTemplate?._id}
