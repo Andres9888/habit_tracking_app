@@ -158,13 +158,14 @@ Simplify the Habit Homepage header by:
 
 ### Phase 2: Move Sort to Section Header
 
-- [ ] **Task 2.1: Create HabitsSectionHeader component**
+- [x] **Task 2.1: Create HabitsSectionHeader component** ✅ Completed
   - File: `src/features/habits/components/HabitsSectionHeader.tsx`
   - Create new component with "MY HABITS" label and sort control
   - Move sort modal JSX from HabitsHeader to this component
   - Props: `habitSortMode`, `onChangeHabitSortMode`, `habitCount?`
+  - **Implementation notes:** Created new component with animated sort button, "MY HABITS" section label, sort control with ChevronDown indicator, and full sort modal. Sort control changes to amber styling when a non-manual sort is active.
 
-- [ ] **Task 2.2: Remove sort from HabitsHeader**
+- [x] **Task 2.2: Remove sort from HabitsHeader** ✅ Completed
   - File: `src/features/habits/components/HabitsHeader.tsx`
   - Remove sort button JSX
   - Remove sort modal JSX
@@ -172,12 +173,14 @@ Simplify the Habit Homepage header by:
   - Remove sort-related handlers (`handleSortPress`, `handleSelectSortMode`, etc.)
   - Remove unused imports (`ArrowUpDown`, `Check` if not used elsewhere)
   - Remove `habitSortMode`, `onChangeHabitSortMode` from props interface
+  - **Implementation notes:** Removed all sort-related code including SORT_OPTIONS constant, useState for dropdown, sortButtonScale animated value, sortButtonAnimatedStyle, all sort handlers, habitSortLabel computation, sort button JSX, and sort modal JSX. Also removed ArrowUpDown and Check icon imports. Header now has only 3 buttons: Add Habit, BookOpen templates, and Settings.
 
-- [ ] **Task 2.3: Integrate HabitsSectionHeader into list**
+- [x] **Task 2.3: Integrate HabitsSectionHeader into list** ✅ Completed
   - File: `src/features/habits/components/HabitsList.tsx`
   - Add `HabitsSectionHeader` component above the habit list
   - Pass sort props through to the section header
   - Ensure proper spacing between momentum meter and section header
+  - **Implementation notes:** Added HabitsSectionHeader import and placed it in renderHeader after CalendarTimeline but before the habit list. Component is conditionally rendered when totalHabits > 0. Sort props (habitSortMode, onChangeHabitSortMode) are now passed to HabitsSectionHeader instead of HabitsHeader.
 
 ---
 

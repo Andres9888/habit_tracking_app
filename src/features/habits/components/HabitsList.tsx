@@ -11,19 +11,26 @@ import { useHabitRenderItem } from '../hooks/useHabitRenderItem';
 import { HabitsModalsState } from '../hooks/types';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { HabitsHeader } from './HabitsHeader';
-import { CalendarTimeline, type DayCompletionStatus } from '../../../components/CalendarTimeline';
+import { HabitsSectionHeader } from './HabitsSectionHeader';
+import {
+  CalendarTimeline,
+  type DayCompletionStatus,
+} from '../../../components/CalendarTimeline';
 
 const PREMIUM_BENEFITS = [
   {
-    description: 'Expand beyond the three core routines and organize every area of life.',
+    description:
+      'Expand beyond the three core routines and organize every area of life.',
     title: 'Unlimited habits',
   },
   {
-    description: 'Flexible reminder schedules keep momentum without overwhelming you.',
+    description:
+      'Flexible reminder schedules keep momentum without overwhelming you.',
     title: 'Smart reminders',
   },
   {
-    description: 'Detailed insights reveal streak trends and habit pairings that stick.',
+    description:
+      'Detailed insights reveal streak trends and habit pairings that stick.',
     title: 'Deep insights',
   },
 ];
@@ -132,14 +139,24 @@ function MonetizationHero({
     return () => wave.stop();
   }, [shimmer, reduceMotion]);
 
-  const handleTrackLayout = useCallback((event: { nativeEvent: { layout: { width: number } } }) => {
-    setTrackWidth(event.nativeEvent.layout.width);
-  }, []);
+  const handleTrackLayout = useCallback(
+    (event: { nativeEvent: { layout: { width: number } } }) => {
+      setTrackWidth(event.nativeEvent.layout.width);
+    },
+    []
+  );
 
   return (
     <View
       className='overflow-hidden rounded-3xl p-6'
-      style={{ backgroundColor: '#1c1917', shadowColor: '#78350f', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.18, shadowRadius: 28, elevation: 12 }}
+      style={{
+        backgroundColor: '#1c1917',
+        elevation: 12,
+        shadowColor: '#78350f',
+        shadowOffset: { height: 14, width: 0 },
+        shadowOpacity: 0.18,
+        shadowRadius: 28,
+      }}
     >
       <View className='gap-2'>
         <Text className='text-[10px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
@@ -149,7 +166,8 @@ function MonetizationHero({
           Ready to build more?
         </Text>
         <Text className='text-[15px] font-normal leading-[22px] text-[#cbd5f5]'>
-          Track unlimited habits, get smart reminders, and unlock insights to guide your growth.
+          Track unlimited habits, get smart reminders, and unlock insights to
+          guide your growth.
         </Text>
       </View>
 
@@ -158,21 +176,21 @@ function MonetizationHero({
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
           className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
-          onPress={onUpgradePress}
           style={{
-            transform: [{ scale: ctaPulse }],
+            elevation: 6,
             shadowColor: '#312e81',
-            shadowOffset: { width: 0, height: 8 },
+            shadowOffset: { height: 8, width: 0 },
             shadowOpacity: 0.32,
             shadowRadius: 16,
-            elevation: 6,
+            transform: [{ scale: ctaPulse }],
           }}
+          onPress={onUpgradePress}
         >
           <Text className='text-[15px] font-bold leading-[20px] tracking-wide text-white'>
             Go Premium
           </Text>
         </AnimatedPressable>
-        <View className='flex-1 rounded-full border border-white/22 px-4 py-3'>
+        <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
           <Animated.Text
             className='text-center text-[13px] font-semibold text-[#cbd5f5]'
             style={{ opacity: shimmer }}
@@ -193,18 +211,18 @@ function MonetizationHero({
         </View>
 
         <View
-          className='h-2 w-full overflow-hidden rounded-full bg-white/12'
+          className='bg-white/12 h-2 w-full overflow-hidden rounded-full'
           onLayout={handleTrackLayout}
         >
           <Animated.View
             className='h-2 rounded-full bg-[#fbbf24]'
-            style={{ width: progress, maxWidth: trackWidth }}
+            style={{ maxWidth: trackWidth, width: progress }}
           />
         </View>
 
         <Text className='text-[13px] font-medium text-[#fbbf24]'>
           {hasReachedHabitLimit
-            ? 'You\'re making great progress! Upgrade to track every area of your life.'
+            ? "You're making great progress! Upgrade to track every area of your life."
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
         </Text>
       </View>
@@ -220,7 +238,7 @@ function PremiumBenefitsRow() {
       </Text>
       <View className='gap-3'>
         {PREMIUM_BENEFITS.map((benefit) => (
-          <View className='gap-1' key={benefit.title}>
+          <View key={benefit.title} className='gap-1'>
             <Text className='text-[15px] font-semibold text-stone-800'>
               {benefit.title}
             </Text>
@@ -255,7 +273,10 @@ interface LockedHabitCardProps {
   reduceMotion?: boolean;
 }
 
-function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCardProps) {
+function LockedHabitCard({
+  onUpgradePress,
+  reduceMotion = false,
+}: LockedHabitCardProps) {
   const scale = useRef(new Animated.Value(0.94)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -293,7 +314,8 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
             Want to add more habits?
           </Text>
           <Text className='text-center text-[13px] leading-[18px] text-stone-600'>
-            Track unlimited habits, get smart reminders, and unlock deeper insights to build stronger routines.
+            Track unlimited habits, get smart reminders, and unlock deeper
+            insights to build stronger routines.
           </Text>
         </View>
       </View>
@@ -303,7 +325,9 @@ function LockedHabitCard({ onUpgradePress, reduceMotion = false }: LockedHabitCa
         className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
         onPress={onUpgradePress}
       >
-        <Text className='text-[15px] font-semibold text-white'>✨ Upgrade to Premium</Text>
+        <Text className='text-[15px] font-semibold text-white'>
+          ✨ Upgrade to Premium
+        </Text>
       </Pressable>
     </Animated.View>
   );
@@ -315,7 +339,11 @@ interface UpgradePromptProps {
   visible: boolean;
 }
 
-function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps) {
+function UpgradePrompt({
+  onClose,
+  onUpgradePress,
+  visible,
+}: UpgradePromptProps) {
   if (!visible) {
     return null;
   }
@@ -337,7 +365,8 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
             You're on a roll! Ready for more?
           </Text>
           <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
-            Track unlimited habits across all areas of your life. Premium members build stronger routines and stay consistent 2× longer.
+            Track unlimited habits across all areas of your life. Premium
+            members build stronger routines and stay consistent 2× longer.
           </Text>
           <Pressable
             accessibilityLabel='Upgrade to premium'
@@ -345,7 +374,9 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
             className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
             onPress={onUpgradePress}
           >
-            <Text className='text-[15px] font-semibold text-white'>✨ Unlock unlimited habits</Text>
+            <Text className='text-[15px] font-semibold text-white'>
+              ✨ Unlock unlimited habits
+            </Text>
           </Pressable>
           <Pressable
             accessibilityLabel='Continue with free plan'
@@ -353,7 +384,9 @@ function UpgradePrompt({ onClose, onUpgradePress, visible }: UpgradePromptProps)
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
             onPress={onClose}
           >
-            <Text className='text-[15px] font-semibold text-stone-500'>Keep 3 habits free</Text>
+            <Text className='text-[15px] font-semibold text-stone-500'>
+              Keep 3 habits free
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -413,18 +446,27 @@ export function HabitsList({
     isPremiumUser,
   } = list;
 
-  const { onSettingsChange, openQuickActions, openSettings, openTemplatesScreen } = modals;
+  const {
+    onSettingsChange,
+    openQuickActions,
+    openSettings,
+    openTemplatesScreen,
+  } = modals;
   const isReorderingEnabled = habitSortMode === 'manual';
 
-  const handleChangeHabitSortMode = useCallback((value: typeof habitSortMode) => {
-    void onSettingsChange({
-      habitSortMode: value,
-    });
-  }, [onSettingsChange]);
+  const handleChangeHabitSortMode = useCallback(
+    (value: typeof habitSortMode) => {
+      void onSettingsChange({
+        habitSortMode: value,
+      });
+    },
+    [onSettingsChange]
+  );
 
   // Quick-create habit mutation for instant habit creation
   const createHabit = useMutation(api.habits.create);
-  const [justCreatedHabitId, setJustCreatedHabitId] = useState<Id<'habits'> | null>(null);
+  const [justCreatedHabitId, setJustCreatedHabitId] =
+    useState<Id<'habits'> | null>(null);
 
   const handleQuickCreateHabit = useCallback(
     async (habitName: string) => {
@@ -494,76 +536,79 @@ export function HabitsList({
     []
   );
 
-  const renderHeader = useCallback(
-    () => {
-      // Calculate today's completion stats
-      const todayString = new Date().toISOString().split('T')[0];
-      const completedToday = habits.filter(
-        (habit) => getHabitStatus(habit._id, todayString) === 'done'
+  const renderHeader = useCallback(() => {
+    // Calculate today's completion stats
+    const todayString = new Date().toISOString().split('T')[0];
+    const completedToday = habits.filter(
+      (habit) => getHabitStatus(habit._id, todayString) === 'done'
+    ).length;
+    const totalHabits = habits.length;
+
+    // Calculate completion status for each day in the week
+    const completionByDay: Record<string, DayCompletionStatus> = {};
+    for (const dateString of weekDateStrings) {
+      const completed = habits.filter(
+        (habit) => getHabitStatus(habit._id, dateString) === 'done'
       ).length;
-      const totalHabits = habits.length;
+      completionByDay[dateString] = {
+        completed,
+        total: totalHabits,
+      };
+    }
 
-      // Calculate completion status for each day in the week
-      const completionByDay: Record<string, DayCompletionStatus> = {};
-      weekDateStrings.forEach((dateString) => {
-        const completed = habits.filter(
-          (habit) => getHabitStatus(habit._id, dateString) === 'done'
-        ).length;
-        completionByDay[dateString] = {
-          completed,
-          total: totalHabits,
-        };
-      });
+    const shouldShowTimeline = totalHabits > 0;
 
-      const shouldShowTimeline = totalHabits > 0;
+    return (
+      <View className='gap-3 pb-2.5 pt-16'>
+        <HabitsHeader
+          completedToday={completedToday}
+          openCreateHabitScreen={handleAddHabitPress}
+          openSettings={openSettings}
+          openTemplatesScreen={openTemplatesScreen}
+          reduceMotion={reduceMotionPreference}
+          showCompletionSummary={showWeekCompletionBar}
+          totalHabits={totalHabits}
+        />
 
-      return (
-        <View className='gap-3 pb-2.5 pt-16'>
-          <HabitsHeader
-            completedToday={completedToday}
+        {shouldShowTimeline && (
+          <CalendarTimeline
+            showSeparator
+            canNavigateForward={canNavigateForward}
+            completionByDay={completionByDay}
+            dates={weekDates}
+            reduceMotion={reduceMotionPreference}
+            onNextWeek={onNextWeek}
+            onPreviousWeek={onPreviousWeek}
+          />
+        )}
+
+        {/* Section Header with Sort Control */}
+        {totalHabits > 0 && (
+          <HabitsSectionHeader
+            habitCount={totalHabits}
             habitSortMode={habitSortMode}
             onChangeHabitSortMode={handleChangeHabitSortMode}
-            openCreateHabitScreen={handleAddHabitPress}
-            openSettings={openSettings}
-            openTemplatesScreen={openTemplatesScreen}
-            reduceMotion={reduceMotionPreference}
-            showCompletionSummary={showWeekCompletionBar}
-            totalHabits={totalHabits}
           />
-
-          {shouldShowTimeline && (
-            <CalendarTimeline
-              showSeparator
-              canNavigateForward={canNavigateForward}
-              completionByDay={completionByDay}
-              dates={weekDates}
-              reduceMotion={reduceMotionPreference}
-              onNextWeek={onNextWeek}
-              onPreviousWeek={onPreviousWeek}
-            />
-          )}
-        </View>
-      );
-    },
-    [
-      handleAddHabitPress,
-      handleChangeHabitSortMode,
-      habitSortMode,
-      openSettings,
-      openTemplatesScreen,
-      showWeekCompletionBar,
-      canNavigateForward,
-      weekDates,
-      weekDateStrings,
-      onNextWeek,
-      onPreviousWeek,
-      habits,
-      getHabitStatus,
-      isHabitsLoading,
-      reduceMotionPreference,
-    ]
-  );
-
+        )}
+      </View>
+    );
+  }, [
+    handleAddHabitPress,
+    handleChangeHabitSortMode,
+    habitSortMode,
+    openSettings,
+    openTemplatesScreen,
+    showWeekCompletionBar,
+    canNavigateForward,
+    weekDates,
+    weekDateStrings,
+    onNextWeek,
+    onPreviousWeek,
+    habits,
+    getHabitStatus,
+    isHabitsLoading,
+    reduceMotionPreference,
+  ]);
 
   const renderFooter = useCallback(() => {
     const showLockedCard = !isPremiumUser && hasReachedHabitLimit;
@@ -579,8 +624,8 @@ export function HabitsList({
         {showLockedCard && (
           <View className='mt-2'>
             <LockedHabitCard
-              onUpgradePress={onUpgradeIntent}
               reduceMotion={reduceMotionPreference}
+              onUpgradePress={onUpgradeIntent}
             />
           </View>
         )}
@@ -596,19 +641,14 @@ export function HabitsList({
   return (
     <View className='flex-1 bg-transparent'>
       <DraggableFlatList
-        data={habits}
-        keyExtractor={keyExtractor}
-        onDragBegin={handleDragBegin}
-        renderItem={renderItem}
-        onDragEnd={handleDragEnd}
         activationDistance={isReorderingEnabled ? 12 : 9999}
         contentContainerStyle={{
           paddingBottom: contentPadding.paddingBottom,
           paddingHorizontal: contentPadding.paddingHorizontal,
           paddingTop: 0,
         }}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
+        data={habits}
+        keyExtractor={keyExtractor}
         ListEmptyComponent={
           <HabitsEmptyState
             isLoading={isHabitsLoading}
@@ -617,7 +657,12 @@ export function HabitsList({
             onQuickCreateHabit={handleQuickCreateHabit}
           />
         }
+        ListFooterComponent={renderFooter}
+        ListHeaderComponent={renderHeader}
+        renderItem={renderItem}
         showsVerticalScrollIndicator={false}
+        onDragBegin={handleDragBegin}
+        onDragEnd={handleDragEnd}
       />
       <UpgradePrompt
         visible={upgradePromptVisible}
