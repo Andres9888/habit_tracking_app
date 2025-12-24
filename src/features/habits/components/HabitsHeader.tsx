@@ -1,4 +1,10 @@
-import { ArrowUpDown, Check, Lightbulb, Plus, Settings } from 'lucide-react-native';
+import {
+  ArrowUpDown,
+  BookOpen,
+  Check,
+  Plus,
+  Settings,
+} from 'lucide-react-native';
 import { useState } from 'react';
 import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
@@ -173,7 +179,8 @@ export function HabitsHeader({
                   : 'Sort';
 
   // Calculate completion percentage for accessibility
-  const percentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
+  const percentage =
+    totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
   // Smart Empty State - hide header completely when user has no habits
   // Let HabitsEmptyState component handle the full onboarding experience
@@ -186,105 +193,109 @@ export function HabitsHeader({
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
         <Animated.View style={addButtonAnimatedStyle}>
-        <Pressable
-          accessibilityHint='Open create habit modal'
-          accessibilityLabel='Add habit'
-          accessibilityRole='button'
-          onPress={handleAddHabitPress}
-          onPressIn={handleAddHabitPressIn}
-          onPressOut={handleAddHabitPressOut}
-        >
-          <LinearGradient
-            colors={['#101828', '#1a2332']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className='h-12 flex-row items-center gap-2 rounded-full px-5'
-            style={{
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.15,
-              shadowRadius: 6,
-              elevation: 4,
-            }}
+          <Pressable
+            accessibilityHint='Open create habit modal'
+            accessibilityLabel='Add habit'
+            accessibilityRole='button'
+            onPress={handleAddHabitPress}
+            onPressIn={handleAddHabitPressIn}
+            onPressOut={handleAddHabitPressOut}
           >
-            <Plus color='#ffffff' size={18} strokeWidth={2.25} />
-            <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
-              Add Habit
-            </Text>
-          </LinearGradient>
-        </Pressable>
-      </Animated.View>
+            <LinearGradient
+              className='h-12 flex-row items-center gap-2 rounded-full px-5'
+              colors={['#101828', '#1a2332']}
+              end={{ x: 1, y: 1 }}
+              start={{ x: 0, y: 0 }}
+              style={{
+                elevation: 4,
+                shadowColor: '#000',
+                shadowOffset: { height: 2, width: 0 },
+                shadowOpacity: 0.15,
+                shadowRadius: 6,
+              }}
+            >
+              <Plus color='#ffffff' size={18} strokeWidth={2.25} />
+              <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
+                Add Habit
+              </Text>
+            </LinearGradient>
+          </Pressable>
+        </Animated.View>
 
-      <View className='flex-row gap-3'>
-        <Animated.View style={templatesButtonAnimatedStyle}>
-          <View style={{ position: 'relative' }}>
+        <View className='flex-row gap-3'>
+          <Animated.View style={templatesButtonAnimatedStyle}>
+            <View style={{ position: 'relative' }}>
+              <Pressable
+                accessibilityHint='Browse habit templates to add'
+                accessibilityLabel='Browse habit templates'
+                accessibilityRole='button'
+                className='h-9 w-9 items-center justify-center rounded-full border border-violet-200 bg-violet-50/70'
+                onPress={handleTemplatesPress}
+                onPressIn={handleTemplatesPressIn}
+                onPressOut={handleTemplatesPressOut}
+              >
+                <BookOpen color='#7c3aed' size={18} strokeWidth={2.25} />
+              </Pressable>
+
+              {/* Smart notification badge */}
+              <NotificationBadge count={1} visible={showBadge} />
+            </View>
+
+            {/* First-time user tooltip */}
+            <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
+          </Animated.View>
+
+          <Animated.View style={sortButtonAnimatedStyle}>
             <Pressable
-              accessibilityHint='Discover science-backed habits to add'
-              accessibilityLabel='Discover Habits'
+              accessibilityHint='Tap to change habit sort order'
+              accessibilityLabel={
+                habitSortMode === 'manual'
+                  ? 'Sort habits'
+                  : `Sorted by ${habitSortLabel}`
+              }
+              accessibilityRole='button'
+              className={`h-9 flex-row items-center gap-1.5 rounded-full border ${
+                habitSortMode === 'manual'
+                  ? 'w-9 justify-center border-stone-200 bg-white/60'
+                  : 'border-amber-200 bg-amber-50/70 px-3'
+              }`}
+              onPress={handleSortPress}
+              onPressIn={handleSortPressIn}
+              onPressOut={handleSortPressOut}
+            >
+              <ArrowUpDown
+                color={habitSortMode === 'manual' ? '#44403c' : '#92400e'}
+                size={16}
+                strokeWidth={2.25}
+              />
+              {habitSortMode !== 'manual' && (
+                <Text className='text-[13px] font-semibold text-amber-800'>
+                  {habitSortLabel}
+                </Text>
+              )}
+            </Pressable>
+          </Animated.View>
+
+          <Animated.View style={settingsButtonAnimatedStyle}>
+            <Pressable
+              accessibilityLabel='Open settings'
               accessibilityRole='button'
               className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
-              onPress={handleTemplatesPress}
-              onPressIn={handleTemplatesPressIn}
-              onPressOut={handleTemplatesPressOut}
+              onPress={handleSettingsPress}
+              onPressIn={handleSettingsPressIn}
+              onPressOut={handleSettingsPressOut}
             >
-              <Lightbulb color='#f59e0b' size={18} strokeWidth={2.25} />
+              <Settings color='#44403c' size={20} strokeWidth={2.25} />
             </Pressable>
-
-            {/* Smart notification badge */}
-            <NotificationBadge visible={showBadge} count={1} />
-          </View>
-
-          {/* First-time user tooltip */}
-          <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
-        </Animated.View>
-
-        <Animated.View style={sortButtonAnimatedStyle}>
-          <Pressable
-            accessibilityHint='Tap to change habit sort order'
-            accessibilityLabel={habitSortMode === 'manual' ? 'Sort habits' : `Sorted by ${habitSortLabel}`}
-            accessibilityRole='button'
-            className={`h-9 flex-row items-center gap-1.5 rounded-full border ${
-              habitSortMode === 'manual'
-                ? 'w-9 justify-center border-stone-200 bg-white/60'
-                : 'border-amber-200 bg-amber-50/70 px-3'
-            }`}
-            onPress={handleSortPress}
-            onPressIn={handleSortPressIn}
-            onPressOut={handleSortPressOut}
-          >
-            <ArrowUpDown
-              color={habitSortMode === 'manual' ? '#44403c' : '#92400e'}
-              size={16}
-              strokeWidth={2.25}
-            />
-            {habitSortMode !== 'manual' && (
-              <Text className='text-[13px] font-semibold text-amber-800'>
-                {habitSortLabel}
-              </Text>
-            )}
-          </Pressable>
-        </Animated.View>
-
-        <Animated.View style={settingsButtonAnimatedStyle}>
-          <Pressable
-            accessibilityLabel='Open settings'
-            accessibilityRole='button'
-            className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
-            onPress={handleSettingsPress}
-            onPressIn={handleSettingsPressIn}
-            onPressOut={handleSettingsPressOut}
-          >
-            <Settings color='#44403c' size={20} strokeWidth={2.25} />
-          </Pressable>
-        </Animated.View>
-      </View>
+          </Animated.View>
+        </View>
       </View>
 
       {/* Daily Momentum Meter */}
       {showCompletionSummary && (
         <View
-          accessibilityRole='text'
           accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}
+          accessibilityRole='text'
         >
           <DailyMomentumMeter
             completedToday={completedToday}
@@ -297,8 +308,8 @@ export function HabitsHeader({
 
       {/* Sort Options Dropdown Modal */}
       <Modal
-        animationType='fade'
         transparent
+        animationType='fade'
         visible={isSortDropdownOpen}
         onRequestClose={() => setIsSortDropdownOpen(false)}
       >
@@ -322,7 +333,9 @@ export function HabitsHeader({
               >
                 <Text
                   className={`text-[15px] font-medium ${
-                    habitSortMode === value ? 'text-amber-700' : 'text-stone-800'
+                    habitSortMode === value
+                      ? 'text-amber-700'
+                      : 'text-stone-800'
                   }`}
                 >
                   {label}
