@@ -14,7 +14,7 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, withRepeat, cancelAnimation, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
@@ -64,8 +64,6 @@ import {
   Shuffle,
   AlertTriangle,
   Lightbulb,
-  Flame,
-  Mic,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -79,11 +77,6 @@ import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
-
-// E2: Voice Input - Speech Recognition (disabled in Expo Go)
-// Voice input requires a development build with native modules
-// To enable: npm install expo-speech-recognition, create dev build, uncomment hooks below
-const speechRecognitionAvailable = false;
 
 // Types
 type Habit = HabitDoc & {
@@ -105,67 +98,6 @@ interface HabitDetailScreenProps {
   tracking?: HabitTrackingEntry[];
   visible: boolean;
 }
-
-// E3: Smart Templates by Category
-type WhyCategory = 'fitness' | 'health' | 'mindset' | 'family';
-
-interface WhyTemplate {
-  icon: string;
-  text: string;
-}
-
-const WHY_CATEGORY_LABELS: Record<WhyCategory, { label: string; icon: string }> = {
-  fitness: { label: 'Fitness', icon: '🏃' },
-  health: { label: 'Health', icon: '💚' },
-  mindset: { label: 'Mindset', icon: '🧠' },
-  family: { label: 'Family', icon: '👨‍👩‍👧' },
-};
-
-const WHY_TEMPLATES_BY_CATEGORY: Record<WhyCategory, WhyTemplate[]> = {
-  fitness: [
-    { icon: '💪', text: 'To feel strong and capable in my body' },
-    { icon: '⚡', text: 'To have more energy throughout the day' },
-    { icon: '🏆', text: 'To prove I can commit to my fitness goals' },
-    { icon: '🌅', text: 'To start my mornings with accomplishment' },
-  ],
-  health: [
-    { icon: '💚', text: 'To take care of my body for the long run' },
-    { icon: '🌱', text: 'To build a healthier future for myself' },
-    { icon: '😌', text: 'To feel better mentally and physically' },
-    { icon: '🔋', text: 'To have the energy to do what I love' },
-  ],
-  mindset: [
-    { icon: '🧠', text: 'To strengthen my discipline and willpower' },
-    { icon: '✨', text: 'To prove to myself I can change' },
-    { icon: '📈', text: 'To become a better version of myself' },
-    { icon: '🎯', text: 'To develop focus and mental clarity' },
-  ],
-  family: [
-    { icon: '👨‍👩‍👧', text: 'To be healthy and present for my family' },
-    { icon: '💝', text: 'To set a positive example for my kids' },
-    { icon: '🤝', text: 'To keep my commitments to loved ones' },
-    { icon: '🏠', text: 'To build a better life for my family' },
-  ],
-};
-
-/**
- * E3: Detect habit category from habit name keywords
- */
-const detectWhyCategory = (habitName: string): WhyCategory => {
-  const name = habitName.toLowerCase();
-
-  if (/run|walk|gym|workout|exercise|lift|stretch|yoga|swim|cycle|jog|pushup|squat/.test(name)) {
-    return 'fitness';
-  }
-  if (/meditat|sleep|water|vitamin|eat|health|diet|fruit|vegetable|supplement/.test(name)) {
-    return 'health';
-  }
-  if (/family|kid|parent|partner|friend|spouse|child|son|daughter/.test(name)) {
-    return 'family';
-  }
-  // Default to mindset for reading, learning, journaling, etc.
-  return 'mindset';
-};
 
 /**
  * Hero Section - Icon, Name, Description, Why Teaser (sticky portion)
@@ -655,39 +587,6 @@ function CompletionCheckmark({
 }
 
 /**
- * EmptyCircleIndicator Component (D1)
- * Shows an outline circle for unfilled motivation sections
- *
- * Design spec (D1 Progress Indicator):
- * - Positioned at top-right of section icon (same as CompletionCheckmark)
- * - Stone-200 border with stone-200 inner dot
- * - Only visible when section is NOT filled
- *
- * @param isVisible - Whether to show (section is NOT filled)
- */
-function EmptyCircleIndicator({
-  isVisible,
-}: {
-  isVisible: boolean;
-}) {
-  if (!isVisible) return null;
-
-  return (
-    <View
-      style={{
-        position: 'absolute',
-        top: -4,
-        right: -4,
-      }}
-    >
-      <View className="h-5 w-5 items-center justify-center rounded-full border-2 border-stone-200 bg-white">
-        <View className="h-2 w-2 rounded-full bg-stone-200" />
-      </View>
-    </View>
-  );
-}
-
-/**
  * PulsingIcon Component for Empty State Icons (T3.1)
  * Wraps icons with subtle opacity + scale pulse animation
  *
@@ -764,303 +663,6 @@ function PulsingIcon({
     <Animated.View style={animatedStyle}>
       {children}
     </Animated.View>
-  );
-}
-
-/**
- * EmptyWhyState Component (D3)
- * Improved empty state for "Your Why" section with encouraging call-to-action
- *
- * Design spec (D3 Improved Empty State):
- * - Dashed border with gradient background (stone-50 to stone-100)
- * - Plus icon in rose circle (w-14 h-14)
- * - Clear "Add Your Why" text
- * - "RECOMMENDED" badge
- * - Pressable opens Why Editor
- *
- * @param onPress - Callback when tapped to add Why
- */
-function EmptyWhyState({
-  onPress,
-}: {
-  onPress: () => void;
-}) {
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = useCallback(() => {
-    'worklet';
-    scale.value = withSpring(0.98, { damping: 15, stiffness: 300 });
-  }, [scale]);
-
-  const handlePressOut = useCallback(() => {
-    'worklet';
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
-  }, [scale]);
-
-  return (
-    <Animated.View style={animatedStyle}>
-      <Pressable
-        accessibilityLabel="Add your why. Define your deeper motivation."
-        accessibilityRole="button"
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        className="active:opacity-90"
-      >
-        <LinearGradient
-          colors={['#fafaf9', '#f5f5f4']} // stone-50 to stone-100
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="items-center rounded-2xl border-2 border-dashed border-stone-200 p-6"
-        >
-          {/* Recommended Badge - top centered */}
-          <View className="mb-3 flex-row items-center gap-2">
-            <Heart className="text-rose-400" size={16} />
-            <Text
-              className="text-[10px] font-bold uppercase text-stone-400"
-              style={{ letterSpacing: 2 }}
-            >
-              Your Why
-            </Text>
-            <View className="rounded-full bg-rose-100 px-2 py-0.5">
-              <Text className="text-[9px] font-bold text-rose-500">RECOMMENDED</Text>
-            </View>
-          </View>
-
-          {/* Plus icon in rose circle */}
-          <View className="mb-3 h-14 w-14 items-center justify-center rounded-full bg-rose-100">
-            <Plus className="text-rose-400" size={24} />
-          </View>
-
-          {/* Add Your Why text */}
-          <Text className="font-semibold text-stone-700">Add Your Why</Text>
-          <Text className="mt-1 text-xs text-stone-400">Define your deeper motivation</Text>
-        </LinearGradient>
-      </Pressable>
-    </Animated.View>
-  );
-}
-
-/**
- * StreakWarningCard Component (D4)
- * Shows when user's streak is at risk to motivate habit completion
- *
- * Design spec (D4 Streak Warning Reminder Card):
- * - Shows only when: streak >= 3, habit not completed today, after 6 PM (or reminder time)
- * - Red/warning gradient background (red-50 to red-100)
- * - Flame icon in red circle
- * - Shows current streak count
- * - Shows truncated Why as reminder
- * - Optional dismissible functionality
- *
- * @param streak - Current streak count
- * @param whyText - The user's "Why" statement to show as reminder
- * @param onDismiss - Optional callback when user dismisses the card
- */
-function StreakWarningCard({
-  streak,
-  whyText,
-  onDismiss,
-}: {
-  streak: number;
-  whyText?: string;
-  onDismiss?: () => void;
-}) {
-  // Truncate Why text to ~40 characters
-  const truncatedWhy = useMemo(() => {
-    if (!whyText) return null;
-    if (whyText.length <= 40) return whyText;
-    return whyText.slice(0, 40).trim() + '...';
-  }, [whyText]);
-
-  return (
-    <View className="mb-4 overflow-hidden rounded-xl border border-red-200">
-      <LinearGradient
-        colors={['#fef2f2', '#fee2e2']} // red-50 to red-100
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        className="flex-row items-center gap-3 p-4"
-      >
-        {/* Flame icon */}
-        <View className="h-10 w-10 items-center justify-center rounded-full bg-red-500">
-          <Flame className="text-white" size={20} />
-        </View>
-
-        {/* Content */}
-        <View className="flex-1">
-          <Text className="text-sm font-semibold text-red-700">
-            Don't break your {streak}-day streak!
-          </Text>
-          {truncatedWhy && (
-            <Text className="mt-0.5 text-xs text-red-600">
-              Remember: "{truncatedWhy}"
-            </Text>
-          )}
-        </View>
-
-        {/* Optional dismiss button */}
-        {onDismiss && (
-          <Pressable
-            accessibilityLabel="Dismiss streak warning"
-            accessibilityRole="button"
-            onPress={onDismiss}
-            hitSlop={12}
-            className="p-1"
-          >
-            <X className="text-red-400" size={16} />
-          </Pressable>
-        )}
-      </LinearGradient>
-    </View>
-  );
-}
-
-/**
- * ProTipCard Component (D5)
- * Shows motivational statistics to encourage filling the Why field
- *
- * Design spec (D5 Pro Tip Card - Empty State Only):
- * - Only shows when Why is empty
- * - Amber/gold color scheme gradient (amber-50 to orange-50)
- * - Lightbulb emoji
- * - Compelling statistic or tip about Why completion benefits
- */
-function ProTipCard() {
-  return (
-    <View className="mb-4 overflow-hidden rounded-xl border border-amber-200">
-      <LinearGradient
-        colors={['#fffbeb', '#fff7ed']} // amber-50 to orange-50
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        className="flex-row items-start gap-3 p-4"
-      >
-        {/* Lightbulb emoji */}
-        <Text className="text-2xl">💡</Text>
-
-        {/* Content */}
-        <View className="flex-1">
-          <Text className="text-sm font-semibold text-amber-800">Pro tip</Text>
-          <Text className="mt-1 text-xs text-amber-700">
-            People with a defined "why" are 42% more likely to maintain their habits long-term.
-          </Text>
-        </View>
-      </LinearGradient>
-    </View>
-  );
-}
-
-/**
- * PremiumWhyDisplay Component (D2)
- * Premium quote-style display for the "Your Why" section when filled
- *
- * Design spec (D2 Premium Quote-Style Why Display):
- * - Dark gradient background (stone-800 to stone-900)
- * - Large decorative quote marks (rose-500 at 20% opacity)
- * - Heart icon with subtle heartbeat animation
- * - Italic white text for the quote
- * - "Tap to edit" hint at bottom
- *
- * @param whyText - The user's "Why" statement
- * @param onPress - Callback when tapped to edit
- * @param reduceMotion - Whether to skip animations for accessibility
- */
-function PremiumWhyDisplay({
-  whyText,
-  onPress,
-  reduceMotion = false,
-}: {
-  whyText: string;
-  onPress: () => void;
-  reduceMotion?: boolean;
-}) {
-  const heartbeatScale = useSharedValue(1);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      heartbeatScale.value = 1;
-      return;
-    }
-
-    // Heartbeat animation: 1 → 1.15 → 1 → 1.1 → 1 (repeating)
-    // Simulates a realistic heartbeat with double-pulse
-    heartbeatScale.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 0 }),
-        withTiming(1.15, { duration: 150, easing: Easing.out(Easing.ease) }),
-        withTiming(1, { duration: 150, easing: Easing.in(Easing.ease) }),
-        withTiming(1.1, { duration: 150, easing: Easing.out(Easing.ease) }),
-        withTiming(1, { duration: 1550, easing: Easing.in(Easing.ease) })
-      ),
-      -1, // infinite
-      false
-    );
-
-    return () => {
-      cancelAnimation(heartbeatScale);
-    };
-  }, [reduceMotion, heartbeatScale]);
-
-  const heartbeatStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: heartbeatScale.value }],
-  }));
-
-  return (
-    <Pressable
-      accessibilityLabel={`Your why: ${whyText}. Tap to edit.`}
-      accessibilityRole="button"
-      onPress={onPress}
-      className="active:opacity-90"
-    >
-      <LinearGradient
-        colors={['#292524', '#1c1917']} // stone-800 to stone-900
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="relative overflow-hidden rounded-2xl p-5"
-      >
-        {/* Decorative opening quote mark */}
-        <Text
-          className="absolute left-4 top-2 font-serif text-6xl"
-          style={{ color: 'rgba(244, 63, 94, 0.2)' }} // rose-500 at 20% opacity
-        >
-          "
-        </Text>
-
-        {/* Decorative closing quote mark */}
-        <Text
-          className="absolute bottom-0 right-4 font-serif text-6xl"
-          style={{ color: 'rgba(244, 63, 94, 0.2)' }} // rose-500 at 20% opacity
-        >
-          "
-        </Text>
-
-        {/* Heart icon with heartbeat animation */}
-        <View className="absolute right-4 top-4">
-          <Animated.View style={heartbeatStyle}>
-            <View className="h-8 w-8 items-center justify-center rounded-full bg-rose-500/20">
-              <Heart className="text-rose-400" size={16} fill="currentColor" />
-            </View>
-          </Animated.View>
-        </View>
-
-        {/* Quote content */}
-        <Text
-          className="pr-10 pt-4 text-lg font-medium italic leading-relaxed text-white"
-          style={{ fontStyle: 'italic' }}
-        >
-          {whyText}
-        </Text>
-
-        {/* Tap hint */}
-        <View className="mt-4 flex-row items-center gap-1">
-          <Edit3 className="text-stone-400" size={12} />
-          <Text className="text-[10px] text-stone-400">Tap to edit</Text>
-        </View>
-      </LinearGradient>
-    </Pressable>
   );
 }
 
@@ -1371,98 +973,12 @@ function ProgressTabContent({
 }
 
 /**
- * MotivationProgressBar Component (D1)
- * Shows progress indicator for motivation sections completion
- *
- * Design spec (D1 Progress Indicator):
- * - Shows "X of 4 complete" text
- * - Progress bar with rose gradient fill
- * - Animated width changes on completion
- *
- * @param filledCount - Number of completed motivation sections
- * @param totalCount - Total number of motivation sections (4)
- * @param shouldAnimate - Whether to animate the progress bar
- * @param reduceMotion - Whether to skip animations for accessibility
- */
-function MotivationProgressBar({
-  filledCount,
-  totalCount,
-  shouldAnimate,
-  reduceMotion = false,
-}: {
-  filledCount: number;
-  totalCount: number;
-  shouldAnimate: boolean;
-  reduceMotion?: boolean;
-}) {
-  const progressWidth = useSharedValue(shouldAnimate && !reduceMotion ? 0 : (filledCount / totalCount) * 100);
-
-  useEffect(() => {
-    const targetWidth = (filledCount / totalCount) * 100;
-
-    if (reduceMotion) {
-      progressWidth.value = targetWidth;
-      return;
-    }
-
-    // Animate progress bar with spring
-    const delay = shouldAnimate ? 400 : 0; // Delay on first load to sync with section animations
-    const timeout = setTimeout(() => {
-      progressWidth.value = withSpring(targetWidth, {
-        damping: 20,
-        stiffness: 120,
-        mass: 1,
-      });
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [filledCount, totalCount, shouldAnimate, reduceMotion, progressWidth]);
-
-  const progressStyle = useAnimatedStyle(() => ({
-    width: `${progressWidth.value}%`,
-  }));
-
-  const isComplete = filledCount === totalCount;
-
-  return (
-    <View className="mb-4 rounded-xl bg-white p-4 shadow-sm shadow-stone-200/50">
-      <View className="mb-2 flex-row items-center justify-between">
-        <Text className="text-xs font-medium text-stone-500">Motivation Setup</Text>
-        <Text className={clsx(
-          'text-xs font-bold',
-          isComplete ? 'text-emerald-500' : 'text-rose-500'
-        )}>
-          {filledCount} of {totalCount} complete
-        </Text>
-      </View>
-      <View className="h-2 overflow-hidden rounded-full bg-stone-100">
-        <Animated.View
-          style={progressStyle}
-          className={clsx(
-            'h-full rounded-full',
-            isComplete ? 'bg-emerald-500' : 'bg-rose-400'
-          )}
-        >
-          <LinearGradient
-            colors={isComplete ? ['#34d399', '#10b981'] : ['#fb7185', '#f43f5e']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            className="h-full w-full rounded-full"
-          />
-        </Animated.View>
-      </View>
-    </View>
-  );
-}
-
-/**
  * Motivation Tab Content
  * Features staggered entrance animations on first tab visit (T1)
  */
 function MotivationTabContent({
   affirmations,
   affirmationFlipAnim,
-  currentStreak,
   habit,
   habitCueAfterBehavior,
   habitCueLocation,
@@ -1470,10 +986,7 @@ function MotivationTabContent({
   habitIdentity,
   habitNotes,
   hasCue,
-  isCompletedToday,
-  isStreakWarningDismissed,
   onAddNote,
-  onDismissStreakWarning,
   onEditNote,
   onOpenAffirmationEditor,
   onOpenCueEditor,
@@ -1496,8 +1009,6 @@ function MotivationTabContent({
 }: {
   affirmations: Doc<'affirmations'>[];
   affirmationFlipAnim: SharedValue<number>;
-  /** Current streak count */
-  currentStreak: number;
   habit: Habit;
   habitCueAfterBehavior: string | undefined;
   habitCueLocation: string | undefined;
@@ -1505,13 +1016,7 @@ function MotivationTabContent({
   habitIdentity: string | undefined;
   habitNotes: Doc<'notes'>[];
   hasCue: boolean;
-  /** Whether habit is completed today */
-  isCompletedToday: boolean;
-  /** Whether user has dismissed the streak warning for this session */
-  isStreakWarningDismissed: boolean;
   onAddNote: () => void;
-  /** Callback to dismiss streak warning */
-  onDismissStreakWarning: () => void;
   onEditNote: (note: Doc<'notes'>) => void;
   onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
   onOpenCueEditor: () => void;
@@ -1533,81 +1038,55 @@ function MotivationTabContent({
   /** Whether to animate entrance (first tab visit only) */
   shouldAnimate?: boolean;
 }) {
-  // D1: Calculate motivation sections completion
-  const motivationSections = [
-    { filled: !!habit.why, label: 'Why' },
-    { filled: !!habitIdentity, label: 'Identity' },
-    { filled: hasCue, label: 'Cue' },
-    { filled: visionBoardItems.length > 0, label: 'Vision Board' },
-  ];
-  const filledCount = motivationSections.filter(s => s.filled).length;
-  const totalCount = motivationSections.length;
-
-  // D4: Calculate whether to show streak warning
-  // Conditions: streak >= 3, not completed today, after 6 PM (or reminder time)
-  const showStreakWarning = useMemo(() => {
-    // Must have a streak of at least 3 days to show warning
-    if (currentStreak < 3) return false;
-
-    // Don't show if already completed today
-    if (isCompletedToday) return false;
-
-    // Don't show if user has dismissed the warning
-    if (isStreakWarningDismissed) return false;
-
-    // Check if it's after the warning time
-    const now = new Date();
-    const currentHour = now.getHours();
-
-    // Use reminder time if set, otherwise default to 6 PM (18:00)
-    let warningHour = 18; // Default: 6 PM
-    if (habit.reminderTime) {
-      // reminderTime format is "HH:MM" or similar
-      const match = habit.reminderTime.match(/^(\d{1,2})/);
-      if (match) {
-        warningHour = parseInt(match[1], 10);
-      }
-    }
-
-    return currentHour >= warningHour;
-  }, [currentStreak, isCompletedToday, isStreakWarningDismissed, habit.reminderTime]);
-
   return (
     <View className="gap-4">
-      {/* D4: Streak Warning Reminder Card - shown when streak is at risk */}
-      {showStreakWarning && (
-        <StreakWarningCard
-          streak={currentStreak}
-          whyText={habit.why}
-          onDismiss={onDismissStreakWarning}
-        />
-      )}
-
-      {/* D1: Progress Indicator for Motivation Sections */}
-      <MotivationProgressBar
-        filledCount={filledCount}
-        totalCount={totalCount}
-        shouldAnimate={shouldAnimate ?? false}
-        reduceMotion={reduceMotion}
-      />
-
       {/* Your Why Section - Index 0 */}
       <AnimatedSection index={0} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
-        {habit.why ? (
-          /* D2: Premium Quote-Style Why Display when filled */
-          <PremiumWhyDisplay
-            whyText={habit.why}
-            onPress={onOpenWhyEditor}
-            reduceMotion={reduceMotion}
-          />
-        ) : (
-          /* D3: Improved Empty State with encouraging call-to-action */
-          <EmptyWhyState onPress={onOpenWhyEditor} />
-        )}
+        <SectionCard
+          accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
+          onPress={onOpenWhyEditor}
+          className="border-l-4 border-rose-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
+              {habit.why ? (
+                <Heart className="text-rose-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Heart className="text-rose-500" size={20} />
+                </PulsingIcon>
+              )}
+              <CompletionCheckmark
+                isVisible={!!habit.why}
+                sectionIndex={0}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
+            </View>
+            <View className="flex-1">
+              {habit.why ? (
+                <>
+                  <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
+                  <Text className="text-sm text-stone-600">"{habit.why}"</Text>
+                </>
+              ) : (
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <Text className="font-semibold text-stone-800">Your Why</Text>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-rose-600" size={12} />
+                      <Text className="text-xs font-medium text-rose-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Define your deeper motivation
+                  </Text>
+                </>
+              )}
+            </View>
+          </View>
+        </SectionCard>
       </AnimatedSection>
-
-      {/* D5: Pro Tip Card - Only shows when Why is empty */}
-      {!habit.why && <ProTipCard />}
 
       {/* Your Identity Section - Index 1 */}
       <AnimatedSection index={1} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
@@ -1631,7 +1110,6 @@ function MotivationTabContent({
                 shouldAnimate={shouldAnimate ?? false}
                 reduceMotion={reduceMotion}
               />
-              <EmptyCircleIndicator isVisible={!habitIdentity} />
             </View>
             <View className="flex-1">
               {habitIdentity ? (
@@ -1690,7 +1168,6 @@ function MotivationTabContent({
                 shouldAnimate={shouldAnimate ?? false}
                 reduceMotion={reduceMotion}
               />
-              <EmptyCircleIndicator isVisible={!hasCue} />
             </View>
             <View className="flex-1">
               {hasCue ? (
@@ -1749,25 +1226,7 @@ function MotivationTabContent({
         <SectionCard>
           <View className="mb-3 flex-row items-center justify-between">
             <View className="flex-row items-center gap-2">
-              <View className="relative">
-                <Eye className="text-stone-500" size={18} />
-                {/* D1: Completion indicator for Vision Board */}
-                {visionBoardItems.length > 0 ? (
-                  <View
-                    style={{ position: 'absolute', top: -6, right: -6 }}
-                    className="h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500"
-                  >
-                    <Check className="text-white" size={8} strokeWidth={3} />
-                  </View>
-                ) : (
-                  <View
-                    style={{ position: 'absolute', top: -6, right: -6 }}
-                    className="h-3.5 w-3.5 items-center justify-center rounded-full border border-stone-200 bg-white"
-                  >
-                    <View className="h-1.5 w-1.5 rounded-full bg-stone-200" />
-                  </View>
-                )}
-              </View>
+              <Eye className="text-stone-500" size={18} />
               <Text className="font-semibold text-stone-800">Vision Board</Text>
             </View>
             <Pressable
@@ -2200,12 +1659,6 @@ export default function HabitDetailScreen({
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
   const [showVisualizationExercise, setShowVisualizationExercise] = useState(false);
   const [whyDraft, setWhyDraft] = useState('');
-  // E3: Smart Templates by Category - selected category state
-  const [selectedWhyCategory, setSelectedWhyCategory] = useState<WhyCategory | null>(null);
-  // E2: Voice Input - recording state
-  const [isVoiceRecording, setIsVoiceRecording] = useState(false);
-  // E2: Pulse animation for recording indicator
-  const voicePulseAnim = useSharedValue(1);
   const [isIdentityEditorOpen, setIsIdentityEditorOpen] = useState(false);
   const [identityDraft, setIdentityDraft] = useState('');
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
@@ -2236,9 +1689,6 @@ export default function HabitDetailScreen({
   const [pendingDelete, setPendingDelete] = useState(false);
   const [pendingArchive, setPendingArchive] = useState(false);
 
-  // D4: Streak warning dismissal state (per session)
-  const [isStreakWarningDismissed, setIsStreakWarningDismissed] = useState(false);
-
   type VisionBoardItem = Doc<'visionBoardItems'>;
   type Affirmation = Doc<'affirmations'>;
 
@@ -2249,31 +1699,6 @@ export default function HabitDetailScreen({
   const createAffirmation = useMutation(api.affirmations.create);
   const updateAffirmation = useMutation(api.affirmations.update);
   const removeAffirmation = useMutation(api.affirmations.remove);
-
-  // E2: Voice Input - Speech Recognition Event Handlers
-  // DISABLED: expo-speech-recognition requires a development build, not available in Expo Go
-  // These hooks will be re-enabled when a dev build is created
-  // useSpeechRecognitionEvent('start', () => { ... });
-  // useSpeechRecognitionEvent('end', () => { ... });
-  // useSpeechRecognitionEvent('result', (event) => { ... });
-  // useSpeechRecognitionEvent('error', (event) => { ... });
-
-  // E2: Voice Input - Toggle recording handler
-  const handleVoiceInputToggle = useCallback(async () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    // Voice input is disabled in Expo Go - requires development build
-    Alert.alert(
-      'Voice Input Unavailable',
-      'Voice input requires a development build. It is not available in Expo Go.',
-      [{ text: 'OK' }]
-    );
-  }, []);
-
-  // E2: Voice Input - Animated style for pulse effect
-  const voicePulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: voicePulseAnim.value }],
-  }));
 
   const habitCreatedAt = habit?.createdAt;
   const habitId = habit?._id;
@@ -2565,9 +1990,6 @@ export default function HabitDetailScreen({
 
   const handleOpenWhyEditor = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    // E3: Auto-detect category from habit name when opening editor
-    const detectedCategory = detectWhyCategory(habit.name);
-    setSelectedWhyCategory(detectedCategory);
     setIsWhyEditorOpen(true);
   };
 
@@ -2826,13 +2248,6 @@ export default function HabitDetailScreen({
     }
   };
 
-  // D4: Handler to dismiss streak warning for this session
-  const handleDismissStreakWarning = useCallback(() => {
-    setIsStreakWarningDismissed(true);
-    // Provide haptic feedback
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  }, []);
-
   // Notes handlers - Story 1.9.3
   const handleOpenNotesEditor = () => {
     setEditingNoteId(null);
@@ -2951,7 +2366,6 @@ export default function HabitDetailScreen({
                 <MotivationTabContent
                   affirmations={affirmations}
                   affirmationFlipAnim={affirmationFlipAnim}
-                  currentStreak={habit.currentStreak ?? 0}
                   habit={habit}
                   habitCueAfterBehavior={habitCueAfterBehavior}
                   habitCueLocation={habitCueLocation}
@@ -2959,10 +2373,7 @@ export default function HabitDetailScreen({
                   habitIdentity={habitIdentity}
                   habitNotes={habitNotes}
                   hasCue={hasCue}
-                  isCompletedToday={isCompletedToday}
-                  isStreakWarningDismissed={isStreakWarningDismissed}
                   onAddNote={handleOpenNotesEditor}
-                  onDismissStreakWarning={handleDismissStreakWarning}
                   onEditNote={handleEditNote}
                   onOpenAffirmationEditor={handleOpenAffirmationEditor}
                   onOpenCueEditor={handleOpenCueEditor}
@@ -3101,63 +2512,27 @@ export default function HabitDetailScreen({
                 Your why is the deeper reason that keeps you going when motivation fades.
               </Text>
             </RNAnimated.View>
-            {/* E1: Habit Context Card - shows which habit we're editing */}
-            <View className="mb-5 rounded-2xl border border-rose-100 bg-rose-50 p-4">
-              <View className="flex-row items-center gap-3">
-                <View className="h-12 w-12 items-center justify-center rounded-xl bg-emerald-500">
-                  <Text className="text-2xl">{habit.icon || '✨'}</Text>
-                </View>
-                <View>
-                  <Text className="text-[10px] font-medium uppercase tracking-wide text-rose-400">
-                    Defining why for
-                  </Text>
-                  <Text className="text-lg font-bold text-stone-900">{habit.name}</Text>
-                </View>
-              </View>
-            </View>
             <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
               I do this because...
             </Text>
             <View>
-              <View className="relative">
-                <TextInput
-                  multiline
-                  accessibilityLabel="Why you are doing this habit"
-                  className="min-h-[120px] rounded-2xl border-2 border-rose-100 bg-white px-5 py-4 pr-14 text-base text-stone-800 shadow-sm"
-                  maxLength={200}
-                  placeholder="I want to be healthy for my kids..."
-                  placeholderTextColor="#a8a29e"
-                  textAlignVertical="top"
-                  value={whyDraft}
-                  onChangeText={setWhyDraft}
-                  onFocus={() => {
-                    // Auto-scroll to keep input visible (T5)
-                    setTimeout(() => {
-                      whyEditorScrollRef.current?.scrollTo({ y: 60, animated: true });
-                    }, 100);
-                  }}
-                />
-                {/* E2: Voice Input Button - with recording state and pulse animation */}
-                <Animated.View
-                  className="absolute right-3 top-3"
-                  style={voicePulseStyle}
-                >
-                  <Pressable
-                    accessibilityLabel={isVoiceRecording ? 'Stop recording' : 'Record your why using voice'}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: isVoiceRecording }}
-                    className={clsx(
-                      'h-10 w-10 items-center justify-center rounded-xl',
-                      isVoiceRecording
-                        ? 'bg-rose-500' // Active recording state - solid rose
-                        : 'bg-rose-100 active:bg-rose-200'
-                    )}
-                    onPress={() => void handleVoiceInputToggle()}
-                  >
-                    <Mic className={isVoiceRecording ? 'text-white' : 'text-rose-500'} size={20} />
-                  </Pressable>
-                </Animated.View>
-              </View>
+              <TextInput
+                multiline
+                accessibilityLabel="Why you are doing this habit"
+                className="min-h-[120px] rounded-2xl border-2 border-rose-100 bg-white px-5 py-4 text-base text-stone-800 shadow-sm"
+                maxLength={200}
+                placeholder="I want to be healthy for my kids..."
+                placeholderTextColor="#a8a29e"
+                textAlignVertical="top"
+                value={whyDraft}
+                onChangeText={setWhyDraft}
+                onFocus={() => {
+                  // Auto-scroll to keep input visible (T5)
+                  setTimeout(() => {
+                    whyEditorScrollRef.current?.scrollTo({ y: 60, animated: true });
+                  }, 100);
+                }}
+              />
               {/* Character counter - positioned outside input (T3) */}
               <View className="mt-2 flex-row justify-end px-1">
                 <Text className={`text-xs font-semibold ${whyDraft.length >= 200 ? 'text-rose-500' : whyDraft.length >= 180 ? 'text-amber-500' : 'text-stone-400'}`}>
@@ -3165,72 +2540,32 @@ export default function HabitDetailScreen({
                 </Text>
               </View>
             </View>
-            {/* E3: Smart Templates by Category */}
             <View className="mt-6">
-              <Text className="mb-3 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
+              <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
                 Inspiration:
               </Text>
-              {/* E3: Category chips */}
-              <ScrollView
-                horizontal
-                className="mb-4"
-                contentContainerStyle={{ gap: 8 }}
-                showsHorizontalScrollIndicator={false}
-              >
-                {(Object.keys(WHY_CATEGORY_LABELS) as WhyCategory[]).map((category) => {
-                  const isActive = selectedWhyCategory === category;
-                  const { label, icon } = WHY_CATEGORY_LABELS[category];
-                  return (
-                    <Pressable
-                      key={category}
-                      accessibilityLabel={`Filter by ${label}`}
-                      accessibilityRole="button"
-                      accessibilityState={{ selected: isActive }}
-                      className={clsx(
-                        'flex-row items-center gap-1.5 rounded-full px-4 py-2',
-                        isActive
-                          ? 'bg-rose-500'
-                          : 'border border-stone-200 bg-white'
-                      )}
-                      onPress={() => {
-                        Haptics.selectionAsync();
-                        setSelectedWhyCategory(category);
-                      }}
-                    >
-                      <Text className="text-sm">{icon}</Text>
-                      <Text
-                        className={clsx(
-                          'text-sm font-medium',
-                          isActive ? 'text-white' : 'text-stone-600'
-                        )}
-                      >
-                        {label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </ScrollView>
-              {/* E3: Category-filtered templates */}
-              <Animated.View entering={FadeIn.duration(200)}>
-                <View className="gap-2">
-                  {selectedWhyCategory &&
-                    WHY_TEMPLATES_BY_CATEGORY[selectedWhyCategory].map((template) => (
-                      <Pressable
-                        key={template.text}
-                        accessibilityLabel={`Use template: ${template.text}`}
-                        accessibilityRole="button"
-                        className="flex-row items-center gap-3 rounded-xl border border-stone-100 bg-white px-4 py-3 active:bg-rose-50"
-                        onPress={() => {
-                          Haptics.selectionAsync();
-                          setWhyDraft(template.text);
-                        }}
-                      >
-                        <Text className="text-lg">{template.icon}</Text>
-                        <Text className="flex-1 text-sm text-stone-700">{template.text}</Text>
-                      </Pressable>
-                    ))}
-                </View>
-              </Animated.View>
+              <View className="gap-2">
+                {[
+                  { text: 'To be healthy and present for my family', icon: '👨‍👩‍👧' },
+                  { text: 'To prove to myself I can follow through', icon: '💪' },
+                  { text: 'To feel more confident and energized', icon: '⚡' },
+                  { text: 'To build a better future for myself', icon: '🌟' },
+                ].map((template) => (
+                  <Pressable
+                    key={template.text}
+                    accessibilityLabel={`Use template: ${template.text}`}
+                    accessibilityRole="button"
+                    className="flex-row items-center gap-3 rounded-xl border border-stone-100 bg-white px-4 py-3 active:bg-rose-50"
+                    onPress={() => {
+                      Haptics.selectionAsync();
+                      setWhyDraft(template.text);
+                    }}
+                  >
+                    <Text className="text-lg">{template.icon}</Text>
+                    <Text className="flex-1 text-sm text-stone-700">{template.text}</Text>
+                  </Pressable>
+                ))}
+              </View>
             </View>
           </ScrollView>
           {/* Footer - adjusts position when keyboard is visible (T6) */}

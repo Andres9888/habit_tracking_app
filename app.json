@@ -36,14 +36,7 @@
     "plugins": [
       "expo-font",
       "expo-notifications",
-      "expo-web-browser",
-      [
-        "expo-speech-recognition",
-        {
-          "microphonePermission": "Allow Daily Habits to use the microphone for voice input.",
-          "speechRecognitionPermission": "Allow Daily Habits to use speech recognition for voice input."
-        }
-      ]
+      "expo-web-browser"
     ]
   }
 }
