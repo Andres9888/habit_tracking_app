@@ -79,11 +79,11 @@ import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
-// E2: Voice Input - Speech Recognition
-import {
-  ExpoSpeechRecognitionModule,
-  useSpeechRecognitionEvent,
-} from 'expo-speech-recognition';
+
+// E2: Voice Input - Speech Recognition (disabled in Expo Go)
+// Voice input requires a development build with native modules
+// To enable: npm install expo-speech-recognition, create dev build, uncomment hooks below
+const speechRecognitionAvailable = false;
 
 // Types
 type Habit = HabitDoc & {
@@ -2251,101 +2251,24 @@ export default function HabitDetailScreen({
   const removeAffirmation = useMutation(api.affirmations.remove);
 
   // E2: Voice Input - Speech Recognition Event Handlers
-  useSpeechRecognitionEvent('start', () => {
-    setIsVoiceRecording(true);
-    // Start pulse animation
-    voicePulseAnim.value = withRepeat(
-      withSequence(
-        withTiming(1.15, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: 600, easing: Easing.inOut(Easing.ease) })
-      ),
-      -1, // infinite
-      true
-    );
-  });
-
-  useSpeechRecognitionEvent('end', () => {
-    setIsVoiceRecording(false);
-    // Stop pulse animation
-    cancelAnimation(voicePulseAnim);
-    voicePulseAnim.value = withTiming(1, { duration: 200 });
-  });
-
-  useSpeechRecognitionEvent('result', (event) => {
-    // Get the final transcript or the most recent interim result
-    const results = event.results;
-    if (results && results.length > 0) {
-      const transcript = results[results.length - 1]?.transcript ?? '';
-      if (transcript) {
-        // Append to existing text or replace if empty
-        setWhyDraft((prev) => {
-          if (prev.trim()) {
-            // Add space before appending if there's existing text
-            const newText = prev.endsWith(' ') ? prev + transcript : prev + ' ' + transcript;
-            return newText.slice(0, 200); // Respect max length
-          }
-          return transcript.slice(0, 200);
-        });
-      }
-    }
-  });
-
-  useSpeechRecognitionEvent('error', (event) => {
-    console.warn('Speech recognition error:', event.error, event.message);
-    setIsVoiceRecording(false);
-    cancelAnimation(voicePulseAnim);
-    voicePulseAnim.value = withTiming(1, { duration: 200 });
-
-    // Show user-friendly error message
-    let errorMessage = 'Unable to recognize speech. Please try again.';
-    if (event.error === 'not-allowed') {
-      errorMessage = 'Microphone access denied. Please enable microphone permissions in Settings.';
-    } else if (event.error === 'network') {
-      errorMessage = 'Network error. Please check your connection and try again.';
-    } else if (event.error === 'no-speech') {
-      errorMessage = 'No speech detected. Please speak clearly and try again.';
-    }
-    Alert.alert('Voice Input Error', errorMessage);
-  });
+  // DISABLED: expo-speech-recognition requires a development build, not available in Expo Go
+  // These hooks will be re-enabled when a dev build is created
+  // useSpeechRecognitionEvent('start', () => { ... });
+  // useSpeechRecognitionEvent('end', () => { ... });
+  // useSpeechRecognitionEvent('result', (event) => { ... });
+  // useSpeechRecognitionEvent('error', (event) => { ... });
 
   // E2: Voice Input - Toggle recording handler
   const handleVoiceInputToggle = useCallback(async () => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
-    if (isVoiceRecording) {
-      // Stop recording
-      ExpoSpeechRecognitionModule.stop();
-    } else {
-      // Request permissions and start recording
-      try {
-        const permissionResult = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-        if (!permissionResult.granted) {
-          Alert.alert(
-            'Permission Required',
-            'Microphone and speech recognition permissions are required for voice input.',
-            [{ text: 'OK' }]
-          );
-          return;
-        }
-
-        // Start speech recognition
-        ExpoSpeechRecognitionModule.start({
-          lang: 'en-US',
-          interimResults: true,
-          maxAlternatives: 1,
-          continuous: false,
-          addsPunctuation: true,
-        });
-      } catch (error) {
-        console.error('Failed to start speech recognition:', error);
-        Alert.alert(
-          'Voice Input Unavailable',
-          'Speech recognition is not available on this device.',
-          [{ text: 'OK' }]
-        );
-      }
-    }
-  }, [isVoiceRecording]);
+    // Voice input is disabled in Expo Go - requires development build
+    Alert.alert(
+      'Voice Input Unavailable',
+      'Voice input requires a development build. It is not available in Expo Go.',
+      [{ text: 'OK' }]
+    );
+  }, []);
 
   // E2: Voice Input - Animated style for pulse effect
   const voicePulseStyle = useAnimatedStyle(() => ({
