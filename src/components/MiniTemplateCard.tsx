@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 13,
     lineHeight: 18,
-    marginBottom: 10,
+    marginBottom: 36,
   },
   glowOverlay: {
     borderRadius: 16,
