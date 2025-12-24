@@ -3000,6 +3000,20 @@ export default function HabitDetailScreen({
                 Your why is the deeper reason that keeps you going when motivation fades.
               </Text>
             </RNAnimated.View>
+            {/* E1: Habit Context Card - shows which habit we're editing */}
+            <View className="mb-5 rounded-2xl border border-rose-100 bg-rose-50 p-4">
+              <View className="flex-row items-center gap-3">
+                <View className="h-12 w-12 items-center justify-center rounded-xl bg-emerald-500">
+                  <Text className="text-2xl">{habit.icon || '✨'}</Text>
+                </View>
+                <View>
+                  <Text className="text-[10px] font-medium uppercase tracking-wide text-rose-400">
+                    Defining why for
+                  </Text>
+                  <Text className="text-lg font-bold text-stone-900">{habit.name}</Text>
+                </View>
+              </View>
+            </View>
             <Text className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
               I do this because...
             </Text>
