@@ -101,6 +101,67 @@ interface HabitDetailScreenProps {
   visible: boolean;
 }
 
+// E3: Smart Templates by Category
+type WhyCategory = 'fitness' | 'health' | 'mindset' | 'family';
+
+interface WhyTemplate {
+  icon: string;
+  text: string;
+}
+
+const WHY_CATEGORY_LABELS: Record<WhyCategory, { label: string; icon: string }> = {
+  fitness: { label: 'Fitness', icon: '🏃' },
+  health: { label: 'Health', icon: '💚' },
+  mindset: { label: 'Mindset', icon: '🧠' },
+  family: { label: 'Family', icon: '👨‍👩‍👧' },
+};
+
+const WHY_TEMPLATES_BY_CATEGORY: Record<WhyCategory, WhyTemplate[]> = {
+  fitness: [
+    { icon: '💪', text: 'To feel strong and capable in my body' },
+    { icon: '⚡', text: 'To have more energy throughout the day' },
+    { icon: '🏆', text: 'To prove I can commit to my fitness goals' },
+    { icon: '🌅', text: 'To start my mornings with accomplishment' },
+  ],
+  health: [
+    { icon: '💚', text: 'To take care of my body for the long run' },
+    { icon: '🌱', text: 'To build a healthier future for myself' },
+    { icon: '😌', text: 'To feel better mentally and physically' },
+    { icon: '🔋', text: 'To have the energy to do what I love' },
+  ],
+  mindset: [
+    { icon: '🧠', text: 'To strengthen my discipline and willpower' },
+    { icon: '✨', text: 'To prove to myself I can change' },
+    { icon: '📈', text: 'To become a better version of myself' },
+    { icon: '🎯', text: 'To develop focus and mental clarity' },
+  ],
+  family: [
+    { icon: '👨‍👩‍👧', text: 'To be healthy and present for my family' },
+    { icon: '💝', text: 'To set a positive example for my kids' },
+    { icon: '🤝', text: 'To keep my commitments to loved ones' },
+    { icon: '🏠', text: 'To build a better life for my family' },
+  ],
+};
+
+/**
+ * E3: Detect habit category from habit name keywords
+ */
+const detectWhyCategory = (habitName: string): WhyCategory => {
+  const name = habitName.toLowerCase();
+
+  if (/run|walk|gym|workout|exercise|lift|stretch|yoga|swim|cycle|jog|pushup|squat/.test(name)) {
+    return 'fitness';
+  }
+  if (/meditat|sleep|water|vitamin|eat|health|diet|fruit|vegetable|supplement/.test(name)) {
+    return 'health';
+  }
+  if (/family|kid|parent|partner|friend|spouse|child|son|daughter/.test(name)) {
+    return 'family';
+  }
+  // Default to mindset for reading, learning, journaling, etc.
+  return 'mindset';
+};
+
 /**
  * Hero Section - Icon, Name, Description, Why Teaser (sticky portion)
  */
@@ -2134,6 +2195,8 @@ export default function HabitDetailScreen({
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
   const [showVisualizationExercise, setShowVisualizationExercise] = useState(false);
   const [whyDraft, setWhyDraft] = useState('');
+  // E3: Smart Templates by Category - selected category state
+  const [selectedWhyCategory, setSelectedWhyCategory] = useState<WhyCategory | null>(null);
   const [isIdentityEditorOpen, setIsIdentityEditorOpen] = useState(false);
   const [identityDraft, setIdentityDraft] = useState('');
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
@@ -2468,6 +2531,9 @@ export default function HabitDetailScreen({
 
   const handleOpenWhyEditor = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // E3: Auto-detect category from habit name when opening editor
+    const detectedCategory = detectWhyCategory(habit.name);
+    setSelectedWhyCategory(detectedCategory);
     setIsWhyEditorOpen(true);
   };
 
@@ -3061,32 +3127,72 @@ export default function HabitDetailScreen({
                 </Text>
               </View>
             </View>
+            {/* E3: Smart Templates by Category */}
             <View className="mt-6">
-              <Text className="mb-4 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
+              <Text className="mb-3 text-[10px] font-bold uppercase tracking-[2px] text-stone-400">
                 Inspiration:
               </Text>
-              <View className="gap-2">
-                {[
-                  { text: 'To be healthy and present for my family', icon: '👨‍👩‍👧' },
-                  { text: 'To prove to myself I can follow through', icon: '💪' },
-                  { text: 'To feel more confident and energized', icon: '⚡' },
-                  { text: 'To build a better future for myself', icon: '🌟' },
-                ].map((template) => (
-                  <Pressable
-                    key={template.text}
-                    accessibilityLabel={`Use template: ${template.text}`}
-                    accessibilityRole="button"
-                    className="flex-row items-center gap-3 rounded-xl border border-stone-100 bg-white px-4 py-3 active:bg-rose-50"
-                    onPress={() => {
-                      Haptics.selectionAsync();
-                      setWhyDraft(template.text);
-                    }}
-                  >
-                    <Text className="text-lg">{template.icon}</Text>
-                    <Text className="flex-1 text-sm text-stone-700">{template.text}</Text>
-                  </Pressable>
-                ))}
-              </View>
+              {/* E3: Category chips */}
+              <ScrollView
+                horizontal
+                className="mb-4"
+                contentContainerStyle={{ gap: 8 }}
+                showsHorizontalScrollIndicator={false}
+              >
+                {(Object.keys(WHY_CATEGORY_LABELS) as WhyCategory[]).map((category) => {
+                  const isActive = selectedWhyCategory === category;
+                  const { label, icon } = WHY_CATEGORY_LABELS[category];
+                  return (
+                    <Pressable
+                      key={category}
+                      accessibilityLabel={`Filter by ${label}`}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: isActive }}
+                      className={clsx(
+                        'flex-row items-center gap-1.5 rounded-full px-4 py-2',
+                        isActive
+                          ? 'bg-rose-500'
+                          : 'border border-stone-200 bg-white'
+                      )}
+                      onPress={() => {
+                        Haptics.selectionAsync();
+                        setSelectedWhyCategory(category);
+                      }}
+                    >
+                      <Text className="text-sm">{icon}</Text>
+                      <Text
+                        className={clsx(
+                          'text-sm font-medium',
+                          isActive ? 'text-white' : 'text-stone-600'
+                        )}
+                      >
+                        {label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+              {/* E3: Category-filtered templates */}
+              <Animated.View entering={FadeIn.duration(200)}>
+                <View className="gap-2">
+                  {selectedWhyCategory &&
+                    WHY_TEMPLATES_BY_CATEGORY[selectedWhyCategory].map((template) => (
+                      <Pressable
+                        key={template.text}
+                        accessibilityLabel={`Use template: ${template.text}`}
+                        accessibilityRole="button"
+                        className="flex-row items-center gap-3 rounded-xl border border-stone-100 bg-white px-4 py-3 active:bg-rose-50"
+                        onPress={() => {
+                          Haptics.selectionAsync();
+                          setWhyDraft(template.text);
+                        }}
+                      >
+                        <Text className="text-lg">{template.icon}</Text>
+                        <Text className="flex-1 text-sm text-stone-700">{template.text}</Text>
+                      </Pressable>
+                    ))}
+                </View>
+              </Animated.View>
             </View>
           </ScrollView>
           {/* Footer - adjusts position when keyboard is visible (T6) */}
