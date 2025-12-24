@@ -96,7 +96,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f8f5f1',
+    backgroundColor: '#faf9f7',
   },
   controlButton: {
     alignItems: 'center',
@@ -167,7 +167,7 @@ export const styles = StyleSheet.create({
     marginTop: 32,
   },
   previewCategory: {
-    color: '#6b7280',
+    color: '#78716c',
     marginTop: 6,
   },
   previewHeader: {
@@ -311,12 +311,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderColor: '#e7e5e4',
-    borderRadius: 999,
-    borderWidth: 1,
+    borderRadius: 14,
+    borderWidth: 1.5,
     flexDirection: 'row',
     gap: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
   },
   searchInput: {
     flex: 1,
@@ -426,7 +426,7 @@ export const styles = StyleSheet.create({
   customizeSubtitle: {
     backgroundColor: '#f3f4f6',
     borderRadius: 6,
-    color: '#6b7280',
+    color: '#78716c',
     fontSize: 10,
     fontWeight: '500',
     overflow: 'hidden',
@@ -458,8 +458,22 @@ export const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 12,
     backgroundColor: '#f5f5f4',
-    borderRadius: 14,
+    borderRadius: 12,
     padding: 5,
+    position: 'relative',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    bottom: 5,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
   },
   tab: {
     flex: 1,
@@ -469,13 +483,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
+    zIndex: 1,
   },
   tabActive: {
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
     elevation: 2,
   },
   tabText: {
@@ -493,7 +508,7 @@ export const styles = StyleSheet.create({
     marginLeft: 6,
   },
   tabCountActive: {
-    color: '#1c1917',
+    color: '#6366f1',
   },
   // All templates grid (for MiniTemplateCard)
   allTemplatesGrid: {

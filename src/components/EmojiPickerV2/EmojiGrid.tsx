@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   categoryHeaderText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#6b7280',
+    color: '#78716c',
     letterSpacing: 0.5,
   },
   gridContent: {

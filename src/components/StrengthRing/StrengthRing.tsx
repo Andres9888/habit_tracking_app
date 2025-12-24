@@ -238,7 +238,7 @@ export function StrengthRing({
 
     const trendConfig = {
       down: { color: '#ef4444', symbol: '↓' }, // red-500
-      stable: { color: '#6b7280', symbol: '→' }, // stone-500
+      stable: { color: '#78716c', symbol: '→' }, // stone-500
       up: { color: '#22c55e', symbol: '↑' }, // green-500
     };
 

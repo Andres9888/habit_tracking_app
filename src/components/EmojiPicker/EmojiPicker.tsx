@@ -315,7 +315,7 @@ export const EmojiPicker = memo(
         <View className='flex-1 bg-black/50'>
           <View
             style={{ height: '85%', marginTop: 'auto' }}
-            className='overflow-hidden rounded-t-3xl bg-[#f8f5f1] shadow-2xl'
+            className='overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
           >
             {/* Header */}
             <View className='flex-row items-center justify-between border-b border-gray-200 px-4 pb-3 pt-4'>

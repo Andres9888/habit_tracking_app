@@ -54,7 +54,7 @@ export interface MiniTemplateCardProps {
 }
 
 /** Default fallback color when iconColor is missing or invalid */
-const DEFAULT_ICON_COLOR = '#6b7280';
+const DEFAULT_ICON_COLOR = '#78716c';
 
 export function MiniTemplateCard({
   icon,

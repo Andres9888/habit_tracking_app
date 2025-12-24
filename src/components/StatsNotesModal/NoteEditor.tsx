@@ -181,7 +181,7 @@ export default function NoteEditor({
           onPress={handleSave}
         >
           {isSaving ? (
-            <ActivityIndicator color='#101727' size='small' />
+            <ActivityIndicator color='#1c1917' size='small' />
           ) : (
             <Text className='text-xs font-semibold tracking-[2px] text-stone-900'>
               {noteId ? 'SAVE' : 'ADD'}

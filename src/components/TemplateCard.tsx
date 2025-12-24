@@ -26,7 +26,7 @@ import Animated, {
   FadeInUp,
   FadeIn,
 } from 'react-native-reanimated';
-import { Check } from 'lucide-react-native';
+import { Check, Eye } from 'lucide-react-native';
 import { useAppTheme } from '../theme';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import Button from './Button/Button';
@@ -103,7 +103,7 @@ export interface TemplateCardProps {
 }
 
 /** Default fallback color when iconColor is missing or invalid */
-const DEFAULT_ICON_COLOR = '#6b7280';
+const DEFAULT_ICON_COLOR = '#78716c';
 
 export function TemplateCard({
   animationIndex = 0,
@@ -134,7 +134,10 @@ export function TemplateCard({
   const isLocked = isPremium && !hasAccess;
 
   // Ensure iconColor is valid - fallback to neutral gray if missing or empty
-  const iconColor = iconColorProp && iconColorProp.trim() !== '' ? iconColorProp : DEFAULT_ICON_COLOR;
+  const iconColor =
+    iconColorProp && iconColorProp.trim() !== ''
+      ? iconColorProp
+      : DEFAULT_ICON_COLOR;
 
   // Animation values - skip entrance animation if animationIndex is 0
   const skipAnimation = animationIndex === 0;
@@ -271,30 +274,26 @@ export function TemplateCard({
     }
   };
 
-  // Generate tinted background color (3% opacity of accent)
-  const tintedBackground = `${iconColor}08`;
+  // Card background - use white per mock spec (previously used tinted background)
+  const cardBackground = '#fff';
 
   // Scroll reveal animation - slides up and fades in when entering viewport
   // Using FadeInUp for a subtle, smooth entrance as cards scroll into view
   const scrollRevealAnimation = reducedMotion
     ? FadeIn.duration(0) // Instant appearance for reduced motion
-    : FadeInUp
-        .duration(350)
-        .springify()
-        .damping(18)
-        .stiffness(120);
+    : FadeInUp.duration(350).springify().damping(18).stiffness(120);
 
   // Wrap card in animated container for scroll reveal
   const cardContent = (
     <AnimatedPressable
       accessible
-      accessibilityHint="Tap to preview, or tap Import Habit to add to your habits"
+      accessibilityHint='Tap to preview, or tap Import Habit to add to your habits'
       accessibilityLabel={`${name} template. ${description}`}
-      accessibilityRole="button"
+      accessibilityRole='button'
       style={[
         styles.card,
         {
-          backgroundColor: tintedBackground,
+          backgroundColor: cardBackground,
           opacity: isLocked ? 0.75 : 1,
         },
         containerStyle,
@@ -307,16 +306,17 @@ export function TemplateCard({
     >
       {/* Success glow overlay */}
       <Animated.View
-        style={[
-          styles.glowOverlay,
-          { backgroundColor: '#22c55e' },
-          glowStyle,
-        ]}
-        pointerEvents="none"
+        pointerEvents='none'
+        style={[styles.glowOverlay, { backgroundColor: '#22c55e' }, glowStyle]}
       />
 
       {/* Left accent bar - green when imported */}
-      <View style={[styles.accentBar, { backgroundColor: isImported ? '#22c55e' : iconColor }]} />
+      <View
+        style={[
+          styles.accentBar,
+          { backgroundColor: isImported ? '#22c55e' : iconColor },
+        ]}
+      />
 
       {/* Card Content */}
       <View style={styles.content}>
@@ -377,22 +377,24 @@ export function TemplateCard({
           numberOfLines={1}
           style={[
             theme.custom.typography.heading3,
-            { color: '#101727', fontWeight: '700', marginTop: 14 },
+            { color: '#1c1917', fontWeight: '700', marginTop: 14 },
           ]}
         >
           {name}
         </Text>
 
         {/* Metadata pills */}
-        {(formattedFrequency || scientificLink || youtubeLink || popularityScore) && (
+        {(formattedFrequency ||
+          scientificLink ||
+          youtubeLink ||
+          popularityScore) && (
           <View style={styles.metadataRow}>
             {formattedFrequency && (
-              <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
+              <View
+                style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}
+              >
                 <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    styles.metadataText,
-                  ]}
+                  style={[theme.custom.typography.caption, styles.metadataText]}
                 >
                   ⏱️ {formattedFrequency}
                 </Text>
@@ -400,12 +402,11 @@ export function TemplateCard({
             )}
 
             {scientificLink && (
-              <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
+              <View
+                style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}
+              >
                 <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    styles.metadataText,
-                  ]}
+                  style={[theme.custom.typography.caption, styles.metadataText]}
                 >
                   🔗 Research
                 </Text>
@@ -415,10 +416,7 @@ export function TemplateCard({
             {youtubeLink && (
               <View style={[styles.metadataPill, { borderColor: '#FF000030' }]}>
                 <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    styles.metadataText,
-                  ]}
+                  style={[theme.custom.typography.caption, styles.metadataText]}
                 >
                   ▶️ Video
                 </Text>
@@ -426,12 +424,11 @@ export function TemplateCard({
             )}
 
             {typeof popularityScore === 'number' && (
-              <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
+              <View
+                style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}
+              >
                 <Text
-                  style={[
-                    theme.custom.typography.caption,
-                    styles.metadataText,
-                  ]}
+                  style={[theme.custom.typography.caption, styles.metadataText]}
                 >
                   {popularityScore >= 90 ? 'Popular' : '⭐ Trusted'}
                 </Text>
@@ -461,7 +458,12 @@ export function TemplateCard({
             },
           ]}
         >
-          <Text style={styles.scienceIcon}>🔬</Text>
+          <View style={styles.scienceHeader}>
+            <Text style={styles.scienceIcon}>🔬</Text>
+            <Text style={styles.scienceHeaderText}>
+              Science Behind This Habit
+            </Text>
+          </View>
           <Text
             numberOfLines={2}
             style={[
@@ -469,6 +471,7 @@ export function TemplateCard({
               {
                 color: '#166534',
                 flex: 1,
+                fontStyle: 'italic',
                 lineHeight: 16,
               },
             ]}
@@ -477,28 +480,47 @@ export function TemplateCard({
           </Text>
         </View>
 
-        {/* Import Button */}
+        {/* Action Buttons */}
         <View style={styles.footer}>
           {isImported ? (
             <Animated.View style={[styles.successButton, checkmarkStyle]}>
-              <Check color="#fff" size={18} strokeWidth={3} />
+              <Check color='#fff' size={18} strokeWidth={3} />
               <Text style={styles.successButtonText}>Added to Habits</Text>
             </Animated.View>
           ) : (
-            <Button
-              accessibilityLabel={`Import ${name} habit`}
-              disabled={isLocked}
-              loading={isImporting}
-              onPress={handleImportPress}
-              size="medium"
-              style={[
-                styles.importButton,
-                { backgroundColor: isLocked ? '#9ca3af' : iconColor },
-              ]}
-              variant="primary"
-            >
-              {isLocked ? 'Unlock with Pro' : 'Import Habit'}
-            </Button>
+            <View style={styles.buttonRow}>
+              {showPreviewCTA && onPreview && (
+                <Button
+                  accessibilityLabel={`Preview ${name} habit`}
+                  icon={<Eye color='#57534e' size={18} />}
+                  size='medium'
+                  style={styles.previewButton}
+                  textStyle={styles.previewButtonText}
+                  variant='primary'
+                  onPress={(e: any) => {
+                    e.stopPropagation();
+                    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    onPreview();
+                  }}
+                >
+                  Preview
+                </Button>
+              )}
+              <Button
+                accessibilityLabel={`Import ${name} habit`}
+                disabled={isLocked}
+                loading={isImporting}
+                size='medium'
+                style={[
+                  styles.importButton,
+                  { backgroundColor: isLocked ? '#9ca3af' : iconColor },
+                ]}
+                variant='primary'
+                onPress={handleImportPress}
+              >
+                {isLocked ? 'Unlock with Pro' : 'Import Habit'}
+              </Button>
+            </View>
           )}
         </View>
       </View>
@@ -519,11 +541,11 @@ export function TemplateCard({
 
 const styles = StyleSheet.create({
   accentBar: {
-    borderTopLeftRadius: 16,
     borderBottomLeftRadius: 16,
+    borderTopLeftRadius: 16,
+    bottom: 0,
     left: 0,
     position: 'absolute',
-    bottom: 0,
     top: 0,
     width: 4,
   },
@@ -535,15 +557,21 @@ const styles = StyleSheet.create({
     gap: 6,
     marginLeft: 8,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
   card: {
+    backgroundColor: '#fff',
     borderRadius: 16,
+    elevation: 2,
     marginHorizontal: 20,
     marginVertical: 8,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.05,
     shadowRadius: 8,
-    elevation: 3,
   },
   categoryBadge: {
     borderRadius: 8,
@@ -551,11 +579,10 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   content: {
-    padding: 20,
-    paddingLeft: 20,
+    padding: 16,
+    paddingLeft: 16,
   },
   footer: {
-    gap: 8,
     marginTop: 16,
   },
   glowOverlay: {
@@ -586,7 +613,7 @@ const styles = StyleSheet.create({
     height: 56,
     opacity: 0.2,
     position: 'absolute',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.4,
     shadowRadius: 16,
     width: 56,
@@ -595,7 +622,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   importButton: {
-    width: '100%',
+    borderRadius: 12,
+    flex: 1,
+    paddingVertical: 12,
   },
   inlinePremiumBadge: {
     backgroundColor: '#FEF3C7',
@@ -626,14 +655,32 @@ const styles = StyleSheet.create({
   metadataText: {
     color: '#4b5563',
   },
+  previewButton: {
+    backgroundColor: '#f5f5f4',
+    borderRadius: 12,
+    flex: 1,
+    paddingVertical: 12,
+  },
+  previewButtonText: {
+    color: '#57534e',
+  },
   scienceBox: {
-    alignItems: 'flex-start',
-    borderRadius: 10,
-    borderWidth: 1,
-    flexDirection: 'row',
+    borderRadius: 12,
+    borderWidth: 2,
     gap: 8,
     marginTop: 14,
     padding: 12,
+  },
+  scienceHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 6,
+  },
+  scienceHeaderText: {
+    color: '#166534',
+    fontSize: 13,
+    fontWeight: '600',
   },
   scienceIcon: {
     fontSize: 14,

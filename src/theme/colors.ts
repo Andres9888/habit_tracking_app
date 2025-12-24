@@ -19,31 +19,31 @@ export const colors = {
   error: '#EF4444',
 
   // Convenience aliases for common usage (defaults to light mode)
-  background: '#f8f5f1',
+  background: '#faf9f7',
 
   // Matches secondary blue
   // Neutral Grays (iOS-inspired)
   gray: {
-    50: '#f8f5f1', // Background, cards in dark mode
-    100: '#f8f5f1', // Card backgrounds
+    50: '#faf9f7', // Background, cards in dark mode
+    100: '#faf9f7', // Card backgrounds
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
     400: '#9CA3AF', // Placeholder text
-    500: '#6B7280', // Secondary text
+    500: '#78716c', // Secondary text (stone-500)
     600: '#4B5563', // Body text
     700: '#374151', // Headings
     800: '#1F2937', // Very dark text
     900: '#111827', // Pure black alternative
   },
 
-  border: '#E5E7EB',
+  border: '#e7e5e4',
 
   // Red - errors, delete confirmations
   info: '#3B82F6',
 
   // Background & Surfaces
   light: {
-    background: '#f8f5f1', // Warm beige background
+    background: '#faf9f7', // Warm stone background
     card: '#ffffff', // Pure white cards for contrast
     surface: '#ffffff', // White surface for elevated elements
     surfaceMuted: '#fafaf9', // stone-50 for subtle sections
@@ -83,7 +83,7 @@ export const colors = {
   // Semantic Colors
   success: '#10B981',
 
-  surface: '#f8f5f1',
+  surface: '#faf9f7',
 
   // Text Colors
   text: {
@@ -93,7 +93,7 @@ export const colors = {
     primary: '#1F2937',
 
     // Gray-800 - Headings and important text
-    secondary: '#6B7280',
+    secondary: '#78716c',
     // Gray-500 - Secondary text, labels
     tertiary: '#9CA3AF', // White text on dark backgrounds
   },

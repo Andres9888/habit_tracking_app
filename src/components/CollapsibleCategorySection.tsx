@@ -21,7 +21,10 @@ import { ChevronDown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 import type { Doc } from '../../convex/_generated/dataModel';
-import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLORS } from '../screens/templates/constants';
+import {
+  CATEGORY_COLORS,
+  DEFAULT_CATEGORY_COLORS,
+} from '../screens/templates/constants';
 import MiniTemplateCard from './MiniTemplateCard';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 
@@ -78,17 +81,16 @@ export function CollapsibleCategorySection({
   }));
 
   const chevronAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: withTiming(isExpanded ? '0deg' : '-90deg', { duration: 200 }) }],
+    transform: [
+      { rotate: withTiming(isExpanded ? '0deg' : '-90deg', { duration: 200 }) },
+    ],
   }));
 
   // Icon bounce animation when expanding
   const iconAnimatedStyle = useAnimatedStyle(() => {
     'worklet';
     return {
-      transform: [
-        { translateY: iconBounce.value },
-        { scale: iconScale.value },
-      ],
+      transform: [{ translateY: iconBounce.value }, { scale: iconScale.value }],
     };
   });
 
@@ -132,7 +134,7 @@ export function CollapsibleCategorySection({
       <Pressable
         accessible
         accessibilityLabel={`${label} category, ${templates.length} ${templates.length === 1 ? 'habit' : 'habits'}${scienceCount > 0 ? `, ${scienceCount} science-backed` : ''}, ${isExpanded ? 'expanded' : 'collapsed'}`}
-        accessibilityRole="button"
+        accessibilityRole='button'
         accessibilityState={{ expanded: isExpanded }}
         onPress={handleHeaderPress}
         onPressIn={handleHeaderPressIn}
@@ -142,29 +144,52 @@ export function CollapsibleCategorySection({
           style={[
             styles.header,
             {
-              backgroundColor: isExpanded ? colors.bg : 'transparent',
+              backgroundColor: isExpanded ? colors.bg : '#fff',
               borderLeftColor: isExpanded ? colors.bgSelected : 'transparent',
             },
             headerAnimatedStyle,
           ]}
         >
           {/* Icon with colored background and bounce animation */}
-          <Animated.View style={[styles.iconBadge, { backgroundColor: `${colors.bgSelected}20` }, iconAnimatedStyle]}>
+          <Animated.View
+            style={[
+              styles.iconBadge,
+              { backgroundColor: `${colors.bgSelected}20` },
+              iconAnimatedStyle,
+            ]}
+          >
             <Text style={styles.icon}>{icon}</Text>
           </Animated.View>
 
           {/* Label and count */}
           <View style={styles.labelContainer}>
-            <Text style={[styles.label, { color: isExpanded ? colors.bgSelected : '#374151' }]}>
+            <Text
+              style={[
+                styles.label,
+                { color: isExpanded ? colors.bgSelected : '#374151' },
+              ]}
+            >
               {label}
             </Text>
-            <Text style={[styles.countText, { color: '#6b7280' }]}>
-              {templates.length} {templates.length === 1 ? 'habit' : 'habits'}{scienceCount > 0 ? ` · ${scienceCount} science-backed` : ''}
+            <Text style={styles.countText}>
+              <Text style={styles.countTextHabits}>
+                {templates.length} {templates.length === 1 ? 'habit' : 'habits'}
+              </Text>
+              {scienceCount > 0 && (
+                <>
+                  <Text style={styles.countTextHabits}> · </Text>
+                  <Text style={styles.countTextScience}>
+                    {scienceCount} science-backed
+                  </Text>
+                </>
+              )}
             </Text>
           </View>
 
           {/* Chevron */}
-          <Animated.View style={[styles.chevronContainer, chevronAnimatedStyle]}>
+          <Animated.View
+            style={[styles.chevronContainer, chevronAnimatedStyle]}
+          >
             <ChevronDown
               color={isExpanded ? colors.bgSelected : '#9ca3af'}
               size={20}
@@ -182,17 +207,20 @@ export function CollapsibleCategorySection({
           style={styles.content}
         >
           <ScrollView
+            directionalLockEnabled
             horizontal
-            nestedScrollEnabled={true}
-            directionalLockEnabled={true}
-            showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled
             contentContainerStyle={styles.templatesScroll}
+            decelerationRate='fast'
             scrollEventThrottle={16}
-            decelerationRate="fast"
+            showsHorizontalScrollIndicator={false}
           >
             {templates.map((template, index) => {
               // Calculate stagger delay with a cap for large categories
-              const staggerDelay = Math.min(index * CARD_STAGGER_DELAY, MAX_STAGGER_DELAY);
+              const staggerDelay = Math.min(
+                index * CARD_STAGGER_DELAY,
+                MAX_STAGGER_DELAY
+              );
 
               // Create appropriate entering animation based on reduced motion preference
               const enteringAnimation = reducedMotion
@@ -205,8 +233,7 @@ export function CollapsibleCategorySection({
               // Create appropriate exiting animation
               const exitingAnimation = reducedMotion
                 ? FadeOut.duration(0)
-                : SlideOutLeft.delay(Math.min(index * 30, 200))
-                    .duration(150);
+                : SlideOutLeft.delay(Math.min(index * 30, 200)).duration(150);
 
               return (
                 <Animated.View
@@ -215,16 +242,18 @@ export function CollapsibleCategorySection({
                   exiting={exitingAnimation}
                 >
                   <MiniTemplateCard
+                    description={template.description}
+                    hasResearch={Boolean(template.scientificLink)}
                     icon={template.icon}
                     iconColor={template.iconColor}
-                    name={template.name}
-                    description={template.description}
-                    subtitle={frequencyLabels[template.frequency] || template.frequency}
-                    hasResearch={Boolean(template.scientificLink)}
-                    scientificReference={template.scientificReference}
-                    onPress={() => onTemplatePress(template)}
-                    onImport={() => onImport(template)}
                     isImporting={importingTemplateId === template._id}
+                    name={template.name}
+                    scientificReference={template.scientificReference}
+                    subtitle={
+                      frequencyLabels[template.frequency] || template.frequency
+                    }
+                    onImport={() => onImport(template)}
+                    onPress={() => onTemplatePress(template)}
                   />
                 </Animated.View>
               );
@@ -237,54 +266,60 @@ export function CollapsibleCategorySection({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginHorizontal: 12,
-    borderRadius: 14,
-    borderLeftWidth: 4,
-    gap: 12,
-  },
-  iconBadge: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+  chevronContainer: {
+    height: 28,
+    width: 28,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  icon: {
-    fontSize: 18,
+  container: {
+    marginBottom: 8,
   },
-  labelContainer: {
-    flex: 1,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '700',
+  content: {
+    marginTop: 8,
   },
   countText: {
     fontSize: 13,
     fontWeight: '500',
     marginTop: 2,
   },
-  chevronContainer: {
-    width: 28,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+  countTextHabits: {
+    color: '#78716c',
   },
-  content: {
-    marginTop: 8,
+  countTextScience: {
+    color: '#059669',
+  },
+  header: {
+    alignItems: 'center',
+    borderRadius: 16,
+    borderLeftWidth: 4,
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 12,
+    paddingVertical: 14,
+  },
+  icon: {
+    fontSize: 22,
+  },
+  iconBadge: {
+    alignItems: 'center',
+    borderRadius: 14,
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  labelContainer: {
+    flex: 1,
   },
   templatesScroll: {
+    paddingBottom: 12,
     paddingLeft: 16,
     paddingRight: 8,
-    paddingBottom: 12,
   },
 });
 
