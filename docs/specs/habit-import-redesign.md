@@ -193,6 +193,119 @@ When a habit has been imported:
   - File: `convex/schema.ts`, `convex/templates.ts`
   - _Completed: Added optional `tips` field (array of strings) to templates table in convex/schema.ts. Updated TemplateInsert type in convex/templates.ts. Added tips arrays to 10 popular seed templates across categories: 5-Minute Meditation, Hydration First, 7-Minute Workout, 10,000 Steps, Deep Work Session, Gratitude Journaling, Morning Sunlight Viewing, Delay Caffeine 90 Minutes, Consistent Bedtime, 7-9 Hours Sleep, and Daily Social Call. All 44 FullsizeTemplatePreview tests pass including tips-related tests._
 
+### Phase 6: Layout Fixes to Match Mock (NEW)
+
+#### 6.1 Mini Card Layout Restructure
+
+- [x] **Task 6.1.1:** Restructure MiniTemplateCard layout to match mock ✅
+  - **Current:** Icon, title, and Add button in horizontal header row
+  - **Mock:** Icon at top-left, Title below icon, Description below title, Add button at bottom-right (absolute)
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Restructured layout from horizontal header row to vertical stack. New structure: topRow (icon + chevron), title, description, absolute-positioned import button. Removed headerRow and headerContent styles, added topRow style with flex-start alignment and space-between justification._
+
+- [x] **Task 6.1.2:** Move Add button to bottom-right (absolute positioned) ✅
+  - Position: `position: absolute, bottom: 14, right: 14`
+  - Remove from header row
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Created importButtonWrapper style with `position: 'absolute', bottom: 14, right: 14`. Button now renders outside the content flow at bottom-right corner. Removed marginLeft from importButton style._
+
+- [x] **Task 6.1.3:** Update card dimensions to match mock ✅
+  - Width: 200px (currently 220px)
+  - Min height: 150px (currently 140px)
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Updated card style width from 220px to 200px, minHeight from 140px to 150px._
+
+- [x] **Task 6.1.4:** Fix icon size and spacing ✅
+  - Icon container: 42x42px with 12px border radius
+  - Icon font size: 22px
+  - Spacing below icon: 10px
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Updated iconContainer to 42x42px with 12px borderRadius (was 36x36px with 10px). Updated icon fontSize to 22px (was 18px). topRow marginBottom provides 10px spacing._
+
+- [x] **Task 6.1.5:** Update title styling ✅
+  - Font size: 16px (currently 15px)
+  - Font weight: 700
+  - Color: #1c1917
+  - Line height: 1.3
+  - Margin bottom: 6px
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Updated name style: fontSize 16px (was 15px), fontWeight 700, color #1c1917 (was #101727), lineHeight 21 (approx 1.3), marginBottom 6px (was 2px)._
+
+#### 6.2 Search Bar & Tab Navigation Fixes
+
+- [ ] **Task 6.2.1:** Update search bar styling to match mock
+  - Background: #fff
+  - Border: 1.5px solid #e7e5e4
+  - Border radius: 14px
+  - Padding: 11px 14px
+  - Placeholder color: #a8a29e
+  - File: `src/screens/TemplatesScreen.tsx`, `src/screens/templates/templatesScreenStyles.ts`
+
+- [ ] **Task 6.2.2:** Update tab bar styling to match mock
+  - Background: #f5f5f4
+  - Border radius: 12px
+  - Tab indicator: white with shadow
+  - Active tab color: #1c1917
+  - Inactive tab color: #78716c
+  - Tab count badge: purple (#6366f1) when active
+  - File: `src/screens/TemplatesScreen.tsx`, `src/screens/templates/templatesScreenStyles.ts`
+
+- [ ] **Task 6.2.3:** Fix tab indicator animation
+  - Smooth slide animation between tabs
+  - Tab indicator width: calc(50% - 4px)
+  - Shadow: 0 2px 6px rgba(0,0,0,0.08)
+  - File: `src/screens/TemplatesScreen.tsx`
+
+#### 6.3 Category Header Fixes
+
+- [ ] **Task 6.3.1:** Update category header styling to match mock
+  - Background: #fff (when collapsed), category bg color (when expanded)
+  - Border radius: 16px
+  - Padding: 14px 16px
+  - Icon badge: 48x48px with 14px border radius
+  - File: `src/components/CollapsibleCategorySection.tsx`
+
+- [ ] **Task 6.3.2:** Update category count text styling
+  - Format: "X habits · Y science-backed"
+  - Science count in green (#059669)
+  - Font size: 13px
+  - File: `src/components/CollapsibleCategorySection.tsx`
+
+#### 6.4 Full Card (All Templates Tab) Fixes
+
+- [ ] **Task 6.4.1:** Update TemplateCard styling to match mock
+  - Card background: #fff
+  - Border radius: 16px
+  - Padding: 16px
+  - Shadow: 0 2px 8px rgba(0,0,0,0.05)
+  - File: `src/components/TemplateCard.tsx`
+
+- [ ] **Task 6.4.2:** Update science box styling
+  - Background: #f0fdf4
+  - Border: 2px solid #bbf7d0
+  - Border radius: 12px
+  - Header: "🔬 Science Behind This Habit"
+  - Text color: #166534
+  - File: `src/components/TemplateCard.tsx`
+
+- [ ] **Task 6.4.3:** Update action buttons layout
+  - Preview button: gray (#f5f5f4) background
+  - Import button: uses habit's iconColor
+  - Border radius: 12px
+  - Padding: 12px
+  - Gap between buttons: 10px
+  - File: `src/components/TemplateCard.tsx`
+
+#### 6.5 Color Scheme Updates
+
+- [ ] **Task 6.5.1:** Update color palette to match mock
+  - Text primary: #1c1917 (currently #101727)
+  - Text secondary: #78716c (currently #6b7280)
+  - Text muted: #a8a29e (currently #94a3b8)
+  - Border color: #e7e5e4 (currently #e2e8f0)
+  - Background: #faf9f7 (currently #f8f5f1)
+  - File: Multiple files
+
 ---
 
 ## Design Assets

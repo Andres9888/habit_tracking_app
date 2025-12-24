@@ -61,9 +61,9 @@ export function MiniTemplateCard({
   iconColor: iconColorProp,
   name,
   description,
-  subtitle,
+  subtitle: _subtitle,
   hasResearch,
-  scientificReference,
+  scientificReference: _scientificReference,
   onPress,
   onImport,
   isImporting,
@@ -245,16 +245,8 @@ export function MiniTemplateCard({
         ]}
       />
 
-      {/* Chevron indicator - tap to view details */}
-      <Animated.View
-        accessibilityLabel='View details'
-        style={[styles.chevronContainer, chevronStyle]}
-      >
-        <ChevronRight color='#9ca3af' size={16} strokeWidth={2.5} />
-      </Animated.View>
-
-      {/* Header row with icon and name */}
-      <View style={styles.headerRow}>
+      {/* Top row: Icon + Chevron */}
+      <View style={styles.topRow}>
         <View style={styles.iconWrapper}>
           <View
             style={[
@@ -274,58 +266,61 @@ export function MiniTemplateCard({
             </Animated.View>
           )}
         </View>
-        <View style={styles.headerContent}>
-          <Text numberOfLines={1} style={styles.name}>
-            {name}
-          </Text>
-          {subtitle && (
-            <Text numberOfLines={1} style={styles.subtitle}>
-              {subtitle}
-            </Text>
-          )}
-        </View>
-        {/* Import button */}
-        {onImport && (
-          <Animated.View style={importButtonStyle}>
-            <Pressable
-              accessible
-              accessibilityLabel={
-                isImported ? `${name} added` : `Add ${name} habit`
-              }
-              accessibilityRole='button'
-              disabled={isImporting || isImported}
-              hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
-              style={[
-                styles.importButton,
-                { backgroundColor: isImported ? '#22c55e' : iconColor },
-              ]}
-              onPress={handleImport}
-            >
-              {isImporting ? (
-                <ActivityIndicator color='#fff' size={12} />
-              ) : isImported ? (
-                <Animated.View
-                  style={[styles.checkmarkContainer, checkmarkStyle]}
-                >
-                  <Check color='#fff' size={14} strokeWidth={3} />
-                  <Text style={styles.importButtonText}>Added</Text>
-                </Animated.View>
-              ) : (
-                <>
-                  <Plus color='#fff' size={14} strokeWidth={3} />
-                  <Text style={styles.importButtonText}>Add</Text>
-                </>
-              )}
-            </Pressable>
-          </Animated.View>
-        )}
+        {/* Chevron indicator - tap to view details */}
+        <Animated.View
+          accessibilityLabel='View details'
+          style={[styles.chevronContainer, chevronStyle]}
+        >
+          <ChevronRight color='#a8a29e' size={16} strokeWidth={2.5} />
+        </Animated.View>
       </View>
+
+      {/* Title */}
+      <Text numberOfLines={1} style={styles.name}>
+        {name}
+      </Text>
 
       {/* Description */}
       {description && (
         <Text numberOfLines={2} style={styles.description}>
           {description}
         </Text>
+      )}
+
+      {/* Import button - absolute positioned at bottom-right */}
+      {onImport && (
+        <Animated.View style={[styles.importButtonWrapper, importButtonStyle]}>
+          <Pressable
+            accessible
+            accessibilityLabel={
+              isImported ? `${name} added` : `Add ${name} habit`
+            }
+            accessibilityRole='button'
+            disabled={isImporting || isImported}
+            hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+            style={[
+              styles.importButton,
+              { backgroundColor: isImported ? '#22c55e' : iconColor },
+            ]}
+            onPress={handleImport}
+          >
+            {isImporting ? (
+              <ActivityIndicator color='#fff' size={12} />
+            ) : isImported ? (
+              <Animated.View
+                style={[styles.checkmarkContainer, checkmarkStyle]}
+              >
+                <Check color='#fff' size={14} strokeWidth={3} />
+                <Text style={styles.importButtonText}>Added</Text>
+              </Animated.View>
+            ) : (
+              <>
+                <Plus color='#fff' size={14} strokeWidth={3} />
+                <Text style={styles.importButtonText}>Add</Text>
+              </>
+            )}
+          </Pressable>
+        </Animated.View>
       )}
     </AnimatedPressable>
   );
@@ -344,8 +339,9 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     elevation: 3,
+    flexDirection: 'column',
     marginRight: 12,
-    minHeight: 140,
+    minHeight: 150,
     overflow: 'hidden',
     paddingHorizontal: 14,
     paddingLeft: 18,
@@ -354,7 +350,7 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
-    width: 220,
+    width: 200,
   },
   checkmarkContainer: {
     alignItems: 'center',
@@ -364,17 +360,13 @@ const styles = StyleSheet.create({
   chevronContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.04)',
-    borderRadius: 14,
+    borderRadius: 8,
     height: 28,
     justifyContent: 'center',
-    position: 'absolute',
-    right: 14,
-    top: 14,
     width: 28,
   },
   description: {
-    color: '#4b5563',
-    flex: 1,
+    color: '#78716c',
     fontSize: 13,
     lineHeight: 18,
     marginBottom: 36,
@@ -387,24 +379,15 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
   },
-  headerContent: {
-    flex: 1,
-  },
-  headerRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 8,
-  },
   icon: {
-    fontSize: 18,
+    fontSize: 22,
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 10,
-    height: 36,
+    borderRadius: 12,
+    height: 42,
     justifyContent: 'center',
-    width: 36,
+    width: 42,
   },
   iconWrapper: {
     position: 'relative',
@@ -415,8 +398,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
     justifyContent: 'center',
-    marginLeft: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 6,
   },
   importButtonText: {
@@ -424,11 +406,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
   },
+  importButtonWrapper: {
+    bottom: 14,
+    position: 'absolute',
+    right: 14,
+  },
   name: {
-    color: '#101727',
-    fontSize: 15,
+    color: '#1c1917',
+    fontSize: 16,
     fontWeight: '700',
-    marginBottom: 2,
+    lineHeight: 21,
+    marginBottom: 6,
   },
   scienceBadge: {
     alignItems: 'center',
@@ -441,10 +429,11 @@ const styles = StyleSheet.create({
     right: -4,
     width: 18,
   },
-  subtitle: {
-    color: '#6b7280',
-    fontSize: 12,
-    fontWeight: '500',
+  topRow: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
 });
 
