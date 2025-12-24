@@ -14,7 +14,7 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue, LinearTransition } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
@@ -23,7 +23,7 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 // The new ProgressSection combines HabitStrengthSection + InsightsSection into 3 always-visible cards.
 // import { HabitStrengthSection } from '../components/HabitStrengthSection';
 // import { InsightsSection } from '../components/InsightsSection';
-import { ProgressSection } from '../components/ProgressSection';
+import { ProgressSectionConsolidated } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { CalendarHeatmap } from '../components/CalendarHeatmap';
@@ -937,10 +937,10 @@ function ProgressTabContent({
         }}
       />
 
-      {/* Consolidated Progress Section - 3 always-visible cards */}
-      <ProgressSection
+      {/* Consolidated Progress Section - unified design with improved visual hierarchy */}
+      <ProgressSectionConsolidated
         tracking={tracking}
-        habitCreatedAt={habitCreatedAt}
+        habitCreatedAt={habitCreatedAt ? new Date(habitCreatedAt).toISOString() : new Date().toISOString()}
         strength={strengthPercent}
         onInfoPress={() => {
           Alert.alert(
@@ -953,10 +953,10 @@ function ProgressTabContent({
             [{ text: 'Got it' }]
           );
         }}
-        onWorstDayPress={() => {
+        onFocusDayPress={() => {
           Alert.alert(
-            'Improve Your Weak Days',
-            'Tips to boost your consistency:\n\n' +
+            'Focus Day',
+            'This is your lowest-performing day. Tips to improve:\n\n' +
             '⏰ Set a reminder for this specific day\n\n' +
             '📍 Stack it after an existing habit\n\n' +
             '🎯 Start with a smaller version on tough days\n\n' +
@@ -966,6 +966,9 @@ function ProgressTabContent({
         }}
         onSeeAllPress={() => {
           // Future: Navigate to full analytics screen
+        }}
+        onTipPress={() => {
+          // Future: Navigate to tips or guidance screen
         }}
       />
     </View>
@@ -2319,16 +2322,23 @@ export default function HabitDetailScreen({
         <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
           <HeroSection currentStreak={habit.currentStreak ?? 0} habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} reduceMotion={reduceMotion} />
 
-          {/* Quick Stats Strip */}
-          <View className="mb-4">
-            <QuickStatsStrip
-              animationKey={statsAnimationKey}
-              currentStreak={habit.currentStreak ?? 0}
-              habitStrength={habitStrength}
-              successRate={successRate}
-              onStatPress={handleStatPress}
-            />
-          </View>
+          {/* Quick Stats Strip - hidden on Progress tab to reduce redundancy with ProgressSectionConsolidated */}
+          {activeTab !== 'progress' && (
+            <Animated.View
+              className="mb-4"
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(150)}
+              layout={LinearTransition.springify().damping(15).stiffness(150)}
+            >
+              <QuickStatsStrip
+                animationKey={statsAnimationKey}
+                currentStreak={habit.currentStreak ?? 0}
+                habitStrength={habitStrength}
+                successRate={successRate}
+                onStatPress={handleStatPress}
+              />
+            </Animated.View>
+          )}
         </View>
 
         {/* Tab Bar (sticky) */}

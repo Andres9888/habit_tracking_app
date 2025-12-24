@@ -1,6 +1,23 @@
 /**
  * YourProgressCard Component
  *
+ * @deprecated This component is deprecated and will be removed in the next major version.
+ * Use `ProgressSectionConsolidated` from `../ProgressSectionConsolidated` instead.
+ *
+ * Migration Guide:
+ * - Import `ProgressSectionConsolidated` from `../ProgressSectionConsolidated`
+ * - Pass the same props to the new consolidated component
+ * - The new component combines YourProgressCard, PersonalBestsCard, and ThisMonthCard
+ *   into a single unified card with improved visual hierarchy
+ *
+ * Old:
+ *   <YourProgressCard strength={75} weeklyChange={5} ... />
+ *   <PersonalBestsCard streakRecords={...} ... />
+ *   <ThisMonthCard dayStats={...} ... />
+ *
+ * New:
+ *   <ProgressSectionConsolidated tracking={...} strength={75} ... />
+ *
  * Section 1: Combines Habit Strength + actionable guidance.
  * Features:
  * - Progress ring (88px) with emoji + percentage

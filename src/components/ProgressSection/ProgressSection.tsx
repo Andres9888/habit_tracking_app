@@ -1,6 +1,23 @@
 /**
  * ProgressSection Component
  *
+ * @deprecated This component is deprecated and will be removed in the next major version.
+ * Use `ProgressSectionConsolidated` from `../ProgressSectionConsolidated` instead.
+ *
+ * Migration Guide:
+ * - Import `ProgressSectionConsolidated` from `../ProgressSectionConsolidated`
+ * - The new component combines all 3 child cards into a single unified card
+ * - ~35% reduction in vertical space with improved visual hierarchy
+ * - Same props interface (tracking, habitCreatedAt, strength, weeklyChange, callbacks)
+ *
+ * Old:
+ *   import { ProgressSection } from '../ProgressSection';
+ *   <ProgressSection tracking={...} strength={75} ... />
+ *
+ * New:
+ *   import { ProgressSectionConsolidated } from '../ProgressSectionConsolidated';
+ *   <ProgressSectionConsolidated tracking={...} strength={75} ... />
+ *
  * Main container for the consolidated Progress tab content.
  * Combines 3 focused, always-visible sections:
  * 1. YourProgressCard - Habit strength + actionable guidance

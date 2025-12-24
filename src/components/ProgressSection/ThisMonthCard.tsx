@@ -1,6 +1,22 @@
 /**
  * ThisMonthCard Component
  *
+ * @deprecated This component is deprecated and will be removed in the next major version.
+ * Use `ProgressSectionConsolidated` from `../ProgressSectionConsolidated` instead.
+ *
+ * Migration Guide:
+ * - Import `ProgressSectionConsolidated` from `../ProgressSectionConsolidated`
+ * - The new component combines YourProgressCard, PersonalBestsCard, and ThisMonthCard
+ *   into a single unified card with improved visual hierarchy
+ * - The weekly pattern chart is now a compact 56px-height bar chart (WeeklyPatternChart)
+ * - Monthly stats are shown in the InsightChips component
+ *
+ * Old:
+ *   <ThisMonthCard dayStats={...} thisMonthRate={80} lastMonthRate={75} ... />
+ *
+ * New:
+ *   <ProgressSectionConsolidated tracking={...} strength={75} ... />
+ *
  * Section 3: Combines Best Days chart + Monthly Trend.
  * Features:
  * - Animated bar chart (7 days, staggered animation)

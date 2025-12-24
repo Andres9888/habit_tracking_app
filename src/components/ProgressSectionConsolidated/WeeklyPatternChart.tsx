@@ -1,0 +1,163 @@
+/**
+ * WeeklyPatternChart Component
+ *
+ * Compact 7-day bar chart showing completion patterns.
+ * Highlights best and worst performing days.
+ *
+ * @see docs/specs/habit-details-screen/progress-consolidated-redesign.md
+ */
+
+import React, { useMemo } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
+
+import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { DayBar } from './DayBar';
+
+import type { WeeklyPatternChartProps } from './types';
+
+/** Chart container height (px) */
+const CHART_HEIGHT = 56;
+
+/**
+ * Find the best performing day from stats with data
+ */
+function findBestDay(
+  withData: Array<{ dayIndex: number; rate: number }>
+): { dayIndex: number; rate: number } | undefined {
+  let best: { dayIndex: number; rate: number } | undefined;
+  for (const day of withData) {
+    if (!best || day.rate > best.rate) {
+      best = day;
+    }
+  }
+  return best;
+}
+
+/**
+ * Find the worst performing day from stats with data
+ */
+function findWorstDay(
+  withData: Array<{ dayIndex: number; rate: number }>
+): { dayIndex: number; rate: number } | undefined {
+  let worst: { dayIndex: number; rate: number } | undefined;
+  for (const day of withData) {
+    if (!worst || day.rate < worst.rate) {
+      worst = day;
+    }
+  }
+  return worst;
+}
+
+/**
+ * WeeklyPatternChart Component
+ *
+ * Compact 7-day bar chart showing weekly completion patterns.
+ * Highlights best (emerald) and worst (amber) performing days.
+ * Memoized to prevent re-renders when parent updates unrelated props.
+ */
+export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
+  dayStats,
+  onSeeAllPress,
+}: WeeklyPatternChartProps) {
+  const reduceMotion = useReduceMotion();
+
+  // Calculate best and worst days
+  const { bestDayIndex, worstDayIndex, maxRate } = useMemo(() => {
+    const withData = dayStats.filter((d) => d.total > 0);
+
+    if (withData.length === 0) {
+      return { bestDayIndex: -1, maxRate: 1, worstDayIndex: -1 };
+    }
+
+    const best = findBestDay(withData);
+    const worst = findWorstDay(withData);
+    const max = Math.max(...dayStats.map((d) => d.rate), 1);
+
+    // Only mark worst if different from best and below 70%
+    const worstIdx =
+      best && worst && worst.dayIndex !== best.dayIndex && worst.rate < 70
+        ? worst.dayIndex
+        : -1;
+
+    return {
+      bestDayIndex: best?.dayIndex ?? -1,
+      maxRate: max,
+      worstDayIndex: worstIdx,
+    };
+  }, [dayStats]);
+
+  // Build accessibility summary
+  const accessibilitySummary = useMemo(() => {
+    const bestDay = dayStats.find((d) => d.dayIndex === bestDayIndex);
+    const worstDay = dayStats.find((d) => d.dayIndex === worstDayIndex);
+
+    let summary = 'Weekly pattern chart.';
+    if (bestDay) {
+      summary += ` Best day: ${bestDay.day} at ${bestDay.rate}%.`;
+    }
+    if (worstDay) {
+      summary += ` Focus day: ${worstDay.day} at ${worstDay.rate}%.`;
+    }
+    return summary;
+  }, [dayStats, bestDayIndex, worstDayIndex]);
+
+  return (
+    <View className='mb-4'>
+      {/* Header */}
+      <View className='mb-2 flex-row items-center justify-between'>
+        <Text className='text-sm font-semibold text-stone-700'>
+          Weekly Pattern
+        </Text>
+        {onSeeAllPress && (
+          <Pressable
+            accessibilityLabel='See all weekly patterns'
+            accessibilityRole='button'
+            className='flex-row items-center gap-0.5 active:opacity-70'
+            hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+            style={{ justifyContent: 'center', minHeight: 44, minWidth: 44 }}
+            onPress={onSeeAllPress}
+          >
+            <Text className='text-xs font-medium text-violet-600'>Details</Text>
+            <ChevronRight className='text-violet-400' size={14} />
+          </Pressable>
+        )}
+      </View>
+
+      {/* Chart container */}
+      <View
+        accessibilityLabel={accessibilitySummary}
+        accessibilityRole='image'
+        className='flex-row items-end justify-between rounded-xl bg-stone-50 px-2'
+        style={{ height: CHART_HEIGHT, paddingBottom: 0, paddingTop: 8 }}
+      >
+        {dayStats.map((day, index) => (
+          <DayBar
+            key={day.dayIndex}
+            dayIndex={day.dayIndex}
+            index={index}
+            isBest={day.dayIndex === bestDayIndex}
+            isWorst={day.dayIndex === worstDayIndex}
+            maxRate={maxRate}
+            rate={day.rate}
+            reduceMotion={reduceMotion}
+          />
+        ))}
+      </View>
+
+      {/* Legend */}
+      <View className='mt-2 flex-row items-center justify-center gap-4'>
+        <View className='flex-row items-center gap-1'>
+          <View className='h-2 w-2 rounded-sm bg-emerald-500' />
+          <Text className='text-[10px] text-stone-500'>Best</Text>
+        </View>
+        <View className='flex-row items-center gap-1'>
+          <View className='h-2 w-2 rounded-sm bg-amber-400' />
+          <Text className='text-[10px] text-stone-500'>Focus</Text>
+        </View>
+      </View>
+    </View>
+  );
+});
+
+export default WeeklyPatternChart;
