@@ -186,11 +186,11 @@ Simplify the Habit Homepage header by:
 
 ## Verification Checklist
 
-- [ ] Header shows only 3 buttons (Add, Book, Settings)
-- [ ] Book Open icon is violet colored and tappable
-- [ ] Tapping Book Open still opens templates screen
-- [ ] "MY HABITS" label appears above habit list
-- [ ] Sort control is visible next to the label
-- [ ] Tapping sort opens the sort modal with all options
-- [ ] Selecting a sort option works correctly
-- [ ] Sort indicator shows current mode (amber when non-default)
+- [x] Header shows only 3 buttons (Add, Book, Settings) ✅ Verified: HabitsHeader.tsx contains only Plus, BookOpen, and Settings buttons
+- [x] Book Open icon is violet colored and tappable ✅ Verified: Uses `border-violet-200 bg-violet-50/70` and `color='#7c3aed'`
+- [x] Tapping Book Open still opens templates screen ✅ Verified: `onPress={handleTemplatesPress}` calls `openTemplatesScreen()`
+- [x] "MY HABITS" label appears above habit list ✅ Verified: HabitsSectionHeader renders "My Habits" label
+- [x] Sort control is visible next to the label ✅ Verified: Sort button rendered with `justify-between` layout
+- [x] Tapping sort opens the sort modal with all options ✅ Verified: Modal contains all 8 SORT_OPTIONS
+- [x] Selecting a sort option works correctly ✅ Verified: `handleSelectSortMode` updates state via `onChangeHabitSortMode`
+- [x] Sort indicator shows current mode (amber when non-default) ✅ Verified: `isNonDefaultSort` triggers amber styling (`bg-amber-50`, `text-amber-800`)
