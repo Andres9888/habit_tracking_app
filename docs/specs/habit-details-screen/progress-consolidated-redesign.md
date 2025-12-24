@@ -264,12 +264,25 @@ interface ProgressSectionConsolidatedProps {
     - Full accessibility support (labels, hints, roles, reduceMotion)
     - 29 passing unit tests covering rendering, interactivity, accessibility, edge cases
 
-- [ ] **Task 1.6:** Create `StreakRecordsAccordion` component
+- [x] **Task 1.6:** Create `StreakRecordsAccordion` component ✅
   - Collapsed by default with preview
   - Expand/collapse animation
   - Medal display when expanded
   - Dependencies: 1.1
   - Estimate: 1.5h
+  - **Completed:** Implemented full StreakRecordsAccordion component with:
+    - Collapsible accordion with 250ms height + opacity animation
+    - Preview text showing medal counts when collapsed (🥇6 🥈5 🥉3)
+    - Chevron rotation animation for expand/collapse state
+    - Medal display when expanded (same layout as PersonalBestsCard)
+    - Current streak highlighting with pulse animation (scale 1→1.05, 2s cycle)
+    - "NOW 🔥" badge for current streak records
+    - Empty slot placeholders for less than 3 records
+    - Empty state message when no records exist
+    - Date range display for each streak (e.g., "Dec 1 - Dec 6")
+    - Haptic feedback on toggle (triggerSelection)
+    - Full accessibility support (expanded state announcement, labels, hints)
+    - reduceMotion preference support
 
 ### Phase 2: Integration & Container
 
@@ -338,12 +351,24 @@ interface ProgressSectionConsolidatedProps {
     - Animation stagger and reduced motion support
     - Data memoization and updates
 
-- [ ] **Task 3.4:** Unit tests for `StreakRecordsAccordion`
+- [x] **Task 3.4:** Unit tests for `StreakRecordsAccordion` ✅
   - Expand/collapse state
   - Preview data display
   - Accessibility announcements
   - Dependencies: 1.6
   - Estimate: 1h
+  - **Completed:** 36 passing tests covering:
+    - Rendering (header, preview text, chevron icon)
+    - Expand/collapse (toggle state, haptic feedback, defaultExpanded prop)
+    - Medal display (gold, silver, bronze medals, days count, labels)
+    - Current streak highlighting ("NOW 🔥" badge, isCurrent flag, matching days)
+    - Empty slots (placeholders for < 3 records)
+    - Empty state (message when no records)
+    - Accessibility (button role, hints, expanded state announcement, labels)
+    - Date formatting (month + day display)
+    - Edge cases (single record, >3 records, very long streaks)
+    - Reduced motion preference handling
+    - Visual elements (background, structure)
 
 - [ ] **Task 3.5:** Integration tests for `ProgressSectionConsolidated`
   - Full component render with mock data
