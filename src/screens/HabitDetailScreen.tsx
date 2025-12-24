@@ -79,6 +79,11 @@ import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
+// E2: Voice Input - Speech Recognition
+import {
+  ExpoSpeechRecognitionModule,
+  useSpeechRecognitionEvent,
+} from 'expo-speech-recognition';
 
 // Types
 type Habit = HabitDoc & {
@@ -2197,6 +2202,10 @@ export default function HabitDetailScreen({
   const [whyDraft, setWhyDraft] = useState('');
   // E3: Smart Templates by Category - selected category state
   const [selectedWhyCategory, setSelectedWhyCategory] = useState<WhyCategory | null>(null);
+  // E2: Voice Input - recording state
+  const [isVoiceRecording, setIsVoiceRecording] = useState(false);
+  // E2: Pulse animation for recording indicator
+  const voicePulseAnim = useSharedValue(1);
   const [isIdentityEditorOpen, setIsIdentityEditorOpen] = useState(false);
   const [identityDraft, setIdentityDraft] = useState('');
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
@@ -2240,6 +2249,108 @@ export default function HabitDetailScreen({
   const createAffirmation = useMutation(api.affirmations.create);
   const updateAffirmation = useMutation(api.affirmations.update);
   const removeAffirmation = useMutation(api.affirmations.remove);
+
+  // E2: Voice Input - Speech Recognition Event Handlers
+  useSpeechRecognitionEvent('start', () => {
+    setIsVoiceRecording(true);
+    // Start pulse animation
+    voicePulseAnim.value = withRepeat(
+      withSequence(
+        withTiming(1.15, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 600, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1, // infinite
+      true
+    );
+  });
+
+  useSpeechRecognitionEvent('end', () => {
+    setIsVoiceRecording(false);
+    // Stop pulse animation
+    cancelAnimation(voicePulseAnim);
+    voicePulseAnim.value = withTiming(1, { duration: 200 });
+  });
+
+  useSpeechRecognitionEvent('result', (event) => {
+    // Get the final transcript or the most recent interim result
+    const results = event.results;
+    if (results && results.length > 0) {
+      const transcript = results[results.length - 1]?.transcript ?? '';
+      if (transcript) {
+        // Append to existing text or replace if empty
+        setWhyDraft((prev) => {
+          if (prev.trim()) {
+            // Add space before appending if there's existing text
+            const newText = prev.endsWith(' ') ? prev + transcript : prev + ' ' + transcript;
+            return newText.slice(0, 200); // Respect max length
+          }
+          return transcript.slice(0, 200);
+        });
+      }
+    }
+  });
+
+  useSpeechRecognitionEvent('error', (event) => {
+    console.warn('Speech recognition error:', event.error, event.message);
+    setIsVoiceRecording(false);
+    cancelAnimation(voicePulseAnim);
+    voicePulseAnim.value = withTiming(1, { duration: 200 });
+
+    // Show user-friendly error message
+    let errorMessage = 'Unable to recognize speech. Please try again.';
+    if (event.error === 'not-allowed') {
+      errorMessage = 'Microphone access denied. Please enable microphone permissions in Settings.';
+    } else if (event.error === 'network') {
+      errorMessage = 'Network error. Please check your connection and try again.';
+    } else if (event.error === 'no-speech') {
+      errorMessage = 'No speech detected. Please speak clearly and try again.';
+    }
+    Alert.alert('Voice Input Error', errorMessage);
+  });
+
+  // E2: Voice Input - Toggle recording handler
+  const handleVoiceInputToggle = useCallback(async () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    if (isVoiceRecording) {
+      // Stop recording
+      ExpoSpeechRecognitionModule.stop();
+    } else {
+      // Request permissions and start recording
+      try {
+        const permissionResult = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+        if (!permissionResult.granted) {
+          Alert.alert(
+            'Permission Required',
+            'Microphone and speech recognition permissions are required for voice input.',
+            [{ text: 'OK' }]
+          );
+          return;
+        }
+
+        // Start speech recognition
+        ExpoSpeechRecognitionModule.start({
+          lang: 'en-US',
+          interimResults: true,
+          maxAlternatives: 1,
+          continuous: false,
+          addsPunctuation: true,
+        });
+      } catch (error) {
+        console.error('Failed to start speech recognition:', error);
+        Alert.alert(
+          'Voice Input Unavailable',
+          'Speech recognition is not available on this device.',
+          [{ text: 'OK' }]
+        );
+      }
+    }
+  }, [isVoiceRecording]);
+
+  // E2: Voice Input - Animated style for pulse effect
+  const voicePulseStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: voicePulseAnim.value }],
+  }));
 
   const habitCreatedAt = habit?.createdAt;
   const habitId = habit?._id;
@@ -3103,22 +3214,26 @@ export default function HabitDetailScreen({
                     }, 100);
                   }}
                 />
-                {/* E2: Voice Input Button */}
-                <Pressable
-                  accessibilityLabel="Record your why using voice"
-                  accessibilityRole="button"
-                  className="absolute right-3 top-3 h-10 w-10 items-center justify-center rounded-xl bg-rose-100 active:bg-rose-200"
-                  onPress={() => {
-                    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    Alert.alert(
-                      'Voice Input Coming Soon',
-                      'Dictate your "why" using your voice. This feature is in development!',
-                      [{ text: 'OK' }]
-                    );
-                  }}
+                {/* E2: Voice Input Button - with recording state and pulse animation */}
+                <Animated.View
+                  className="absolute right-3 top-3"
+                  style={voicePulseStyle}
                 >
-                  <Mic className="text-rose-500" size={20} />
-                </Pressable>
+                  <Pressable
+                    accessibilityLabel={isVoiceRecording ? 'Stop recording' : 'Record your why using voice'}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: isVoiceRecording }}
+                    className={clsx(
+                      'h-10 w-10 items-center justify-center rounded-xl',
+                      isVoiceRecording
+                        ? 'bg-rose-500' // Active recording state - solid rose
+                        : 'bg-rose-100 active:bg-rose-200'
+                    )}
+                    onPress={() => void handleVoiceInputToggle()}
+                  >
+                    <Mic className={isVoiceRecording ? 'text-white' : 'text-rose-500'} size={20} />
+                  </Pressable>
+                </Animated.View>
               </View>
               {/* Character counter - positioned outside input (T3) */}
               <View className="mt-2 flex-row justify-end px-1">
