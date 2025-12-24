@@ -3,8 +3,9 @@
  * Compact template card for horizontal scrolling previews within category sections
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
+  AccessibilityInfo,
   ActivityIndicator,
   Pressable,
   StyleSheet,
@@ -70,6 +71,7 @@ export function MiniTemplateCard({
   isImported,
 }: MiniTemplateCardProps) {
   const reducedMotion = useReduceMotion();
+  const hasAnnouncedRef = useRef(false);
 
   // Ensure iconColor is valid - fallback to neutral gray if missing or empty
   const iconColor =
@@ -138,6 +140,14 @@ export function MiniTemplateCard({
       cancelAnimation(buttonPulse);
       buttonPulse.value = 1;
 
+      // Announce to screen readers (only once per import)
+      if (!hasAnnouncedRef.current) {
+        hasAnnouncedRef.current = true;
+        AccessibilityInfo.announceForAccessibility(
+          `${name} habit added successfully`
+        );
+      }
+
       if (reducedMotion) {
         // Instant transitions for reduced motion users
         checkmarkScale.value = 1;
@@ -154,8 +164,9 @@ export function MiniTemplateCard({
     } else {
       checkmarkScale.value = 0;
       successGlow.value = 0;
+      hasAnnouncedRef.current = false;
     }
-  }, [isImported, checkmarkScale, successGlow, buttonPulse, reducedMotion]);
+  }, [isImported, checkmarkScale, successGlow, buttonPulse, reducedMotion, name]);
 
   const animatedCardStyle = useAnimatedStyle(() => ({
     elevation: shadowElevation.value,

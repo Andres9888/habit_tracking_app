@@ -103,6 +103,7 @@ export default function FullsizeTemplatePreview({
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
   const confettiRef = useRef<ConfettiCannon>(null);
+  const hasAnnouncedRef = useRef(false);
 
   // Animation values - Base entrance
   const backdropOpacity = useSharedValue(0);
@@ -238,7 +239,15 @@ export default function FullsizeTemplatePreview({
 
   // Success animation when imported
   useEffect(() => {
-    if (isImported) {
+    if (isImported && template) {
+      // Announce to screen readers (only once per import)
+      if (!hasAnnouncedRef.current) {
+        hasAnnouncedRef.current = true;
+        AccessibilityInfo.announceForAccessibility(
+          `${template.name} habit added successfully`
+        );
+      }
+
       if (reducedMotion) {
         // Instant appearance for reduced motion users
         checkmarkScale.value = 1;
@@ -295,7 +304,7 @@ export default function FullsizeTemplatePreview({
           )
         );
       }
-    } else {
+    } else if (!isImported) {
       // Reset all success animations
       checkmarkScale.value = 0;
       checkmarkRotation.value = -30;
@@ -303,8 +312,9 @@ export default function FullsizeTemplatePreview({
       successGlowScale.value = 1;
       successButtonGlow.value = 0;
       successIconBounce.value = 0;
+      hasAnnouncedRef.current = false;
     }
-  }, [isImported, reducedMotion, triggerSuccessHaptic, triggerConfetti]);
+  }, [isImported, reducedMotion, triggerSuccessHaptic, triggerConfetti, template]);
 
   // Animated styles
   const backdropStyle = useAnimatedStyle(() => ({

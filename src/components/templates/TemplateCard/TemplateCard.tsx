@@ -6,8 +6,9 @@
  * Features: Left accent bar, tinted background, glowing icon, scientific citation
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
+  AccessibilityInfo,
   View,
   Text,
   StyleSheet,
@@ -132,6 +133,7 @@ export function TemplateCard({
   const theme = useAppTheme();
   const reducedMotion = useReduceMotion();
   const isLocked = isPremium && !hasAccess;
+  const hasAnnouncedRef = useRef(false);
 
   // Ensure iconColor is valid - fallback to neutral gray if missing or empty
   const iconColor =
@@ -187,6 +189,14 @@ export function TemplateCard({
   // Success glow animation when imported
   useEffect(() => {
     if (isImported) {
+      // Announce to screen readers (only once per import)
+      if (!hasAnnouncedRef.current) {
+        hasAnnouncedRef.current = true;
+        AccessibilityInfo.announceForAccessibility(
+          `${name} habit added successfully`
+        );
+      }
+
       if (reducedMotion) {
         // Instant appearance for reduced motion users
         checkmarkScale.value = 1;
@@ -203,6 +213,7 @@ export function TemplateCard({
     } else {
       checkmarkScale.value = 0;
       successGlow.value = 0;
+      hasAnnouncedRef.current = false;
     }
 
     // Cleanup animations on unmount
@@ -210,7 +221,7 @@ export function TemplateCard({
       cancelAnimation(checkmarkScale);
       cancelAnimation(successGlow);
     };
-  }, [isImported, checkmarkScale, successGlow, reducedMotion]);
+  }, [isImported, checkmarkScale, successGlow, reducedMotion, name]);
 
   const frequencyLabels: Record<string, string> = {
     custom: 'Custom',
