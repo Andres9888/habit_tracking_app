@@ -65,6 +65,7 @@ import {
   AlertTriangle,
   Lightbulb,
   Flame,
+  Mic,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../convex/_generated/dataModel';
@@ -3018,23 +3019,41 @@ export default function HabitDetailScreen({
               I do this because...
             </Text>
             <View>
-              <TextInput
-                multiline
-                accessibilityLabel="Why you are doing this habit"
-                className="min-h-[120px] rounded-2xl border-2 border-rose-100 bg-white px-5 py-4 text-base text-stone-800 shadow-sm"
-                maxLength={200}
-                placeholder="I want to be healthy for my kids..."
-                placeholderTextColor="#a8a29e"
-                textAlignVertical="top"
-                value={whyDraft}
-                onChangeText={setWhyDraft}
-                onFocus={() => {
-                  // Auto-scroll to keep input visible (T5)
-                  setTimeout(() => {
-                    whyEditorScrollRef.current?.scrollTo({ y: 60, animated: true });
-                  }, 100);
-                }}
-              />
+              <View className="relative">
+                <TextInput
+                  multiline
+                  accessibilityLabel="Why you are doing this habit"
+                  className="min-h-[120px] rounded-2xl border-2 border-rose-100 bg-white px-5 py-4 pr-14 text-base text-stone-800 shadow-sm"
+                  maxLength={200}
+                  placeholder="I want to be healthy for my kids..."
+                  placeholderTextColor="#a8a29e"
+                  textAlignVertical="top"
+                  value={whyDraft}
+                  onChangeText={setWhyDraft}
+                  onFocus={() => {
+                    // Auto-scroll to keep input visible (T5)
+                    setTimeout(() => {
+                      whyEditorScrollRef.current?.scrollTo({ y: 60, animated: true });
+                    }, 100);
+                  }}
+                />
+                {/* E2: Voice Input Button */}
+                <Pressable
+                  accessibilityLabel="Record your why using voice"
+                  accessibilityRole="button"
+                  className="absolute right-3 top-3 h-10 w-10 items-center justify-center rounded-xl bg-rose-100 active:bg-rose-200"
+                  onPress={() => {
+                    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    Alert.alert(
+                      'Voice Input Coming Soon',
+                      'Dictate your "why" using your voice. This feature is in development!',
+                      [{ text: 'OK' }]
+                    );
+                  }}
+                >
+                  <Mic className="text-rose-500" size={20} />
+                </Pressable>
+              </View>
               {/* Character counter - positioned outside input (T3) */}
               <View className="mt-2 flex-row justify-end px-1">
                 <Text className={`text-xs font-semibold ${whyDraft.length >= 200 ? 'text-rose-500' : whyDraft.length >= 180 ? 'text-amber-500' : 'text-stone-400'}`}>
