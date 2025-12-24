@@ -78,9 +78,18 @@ jest.mock('react-native-reanimated', () => {
 });
 
 // Mock Ionicons
-jest.mock('@expo/vector-icons', () => ({
-  Ionicons: 'Ionicons',
-}));
+jest.mock('@expo/vector-icons', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return {
+    Ionicons: (props: { name: string }) =>
+      React.createElement(View, {
+        testID: `ionicons-${props.name}`,
+        ...props,
+      }),
+  };
+});
 
 describe('StreakRecordsAccordion', () => {
   const defaultStreakRecords = [
@@ -146,10 +155,10 @@ describe('StreakRecordsAccordion', () => {
     });
 
     it('renders chevron icon', () => {
-      const { UNSAFE_getByType } = render(
+      const { getByTestId } = render(
         <StreakRecordsAccordion {...defaultProps} />
       );
-      expect(UNSAFE_getByType('Ionicons')).toBeTruthy();
+      expect(getByTestId('ionicons-chevron-down')).toBeTruthy();
     });
   });
 

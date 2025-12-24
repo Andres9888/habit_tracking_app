@@ -142,7 +142,7 @@ export function ProgressSectionConsolidated({
   return (
     <Animated.View
       accessibilityLabel='Progress section'
-      accessibilityRole='region'
+      accessibilityRole='summary'
       entering={FadeInDown.delay(100).springify()}
     >
       {/* Unified Card Container */}

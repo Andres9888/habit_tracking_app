@@ -14,6 +14,21 @@ import { AccessibilityInfo } from 'react-native';
 import { ProgressSectionConsolidated } from '../ProgressSectionConsolidated';
 import type { HabitTrackingEntry } from '../../../features/habits/types';
 
+/**
+ * Mock tracking entry type for tests.
+ * Only includes fields used by ProgressSectionConsolidated.
+ * Cast to HabitTrackingEntry[] when passing to component props.
+ */
+type MockTrackingEntry = Pick<HabitTrackingEntry, 'date' | 'completed'>;
+
+/**
+ * Helper to cast mock entries to HabitTrackingEntry[] for component props.
+ * The component only uses date and completed fields, so this is safe.
+ */
+function asTracking(entries: MockTrackingEntry[]): HabitTrackingEntry[] {
+  return entries as unknown as HabitTrackingEntry[];
+}
+
 // Mock AccessibilityInfo
 jest
   .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
@@ -139,7 +154,7 @@ function generateTrackingEntries(
   count: number,
   completedRatio = 0.7
 ): HabitTrackingEntry[] {
-  const entries: HabitTrackingEntry[] = [];
+  const entries: MockTrackingEntry[] = [];
   const today = new Date();
 
   for (let i = 0; i < count; i++) {
@@ -151,7 +166,7 @@ function generateTrackingEntries(
     });
   }
 
-  return entries;
+  return asTracking(entries);
 }
 
 // Helper to generate entries with specific completion pattern
@@ -159,7 +174,7 @@ function generateEntriesWithPattern(
   days: number,
   pattern: boolean[]
 ): HabitTrackingEntry[] {
-  const entries: HabitTrackingEntry[] = [];
+  const entries: MockTrackingEntry[] = [];
   const today = new Date();
 
   for (let i = 0; i < days; i++) {
@@ -171,7 +186,7 @@ function generateEntriesWithPattern(
     });
   }
 
-  return entries;
+  return asTracking(entries);
 }
 
 describe('ProgressSectionConsolidated', () => {
@@ -498,7 +513,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       const container = getByLabelText('Progress section');
-      expect(container.props.accessibilityRole).toBe('region');
+      expect(container.props.accessibilityRole).toBe('summary');
     });
 
     it('insight chips container has list role', () => {
@@ -518,7 +533,7 @@ describe('ProgressSectionConsolidated', () => {
     it('does not show focus day when worst day rate >= 70%', () => {
       // Create entries where all days have >= 70% completion
       // 8 weeks worth of data (56 days) with 100% completion on all days
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       for (let i = 0; i < 56; i++) {
@@ -536,7 +551,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 60 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={90}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -547,7 +562,7 @@ describe('ProgressSectionConsolidated', () => {
     it('shows focus day when there is a day with rate < 70%', () => {
       // Create entries where one day (Sunday) is missed often
       // 4 weeks of data, always completing Mon-Sat but never Sunday
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       for (let i = 0; i < 28; i++) {
@@ -566,7 +581,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 30 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={70}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -598,7 +613,7 @@ describe('ProgressSectionConsolidated', () => {
   describe('Integration: Full Component Render with Mock Data', () => {
     it('renders complete component with 30 days of realistic tracking data', () => {
       // Simulate a user with 30 days of varied tracking data
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Pattern: Complete Mon-Fri, miss some weekends
@@ -622,7 +637,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 30 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={72}
-          tracking={entries}
+          tracking={asTracking(entries)}
           weeklyChange={8}
           onInfoPress={mockOnInfoPress}
           onFocusDayPress={mockOnFocusDayPress}
@@ -642,7 +657,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('renders all sub-components with complete user journey data', () => {
       // Simulate a "power user" with excellent habits
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // 14-day perfect streak
@@ -661,7 +676,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 14 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={95}
-          tracking={entries}
+          tracking={asTracking(entries)}
           weeklyChange={15}
         />
       );
@@ -686,7 +701,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('renders with new user scenario (first week)', () => {
       // New user: only 5 days of data
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       for (let i = 0; i < 5; i++) {
@@ -704,7 +719,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 5 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={15}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -723,7 +738,7 @@ describe('ProgressSectionConsolidated', () => {
   describe('Integration: Data Flow Verification', () => {
     it('correctly calculates and displays streak from tracking data', () => {
       // Create specific pattern: 7-day streak then a gap then 3-day streak
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Current streak: 7 days
@@ -760,7 +775,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 15 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={60}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -775,7 +790,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('correctly identifies best and worst days from pattern', () => {
       // Create pattern: Perfect Mon-Fri (100%), poor weekends (25%)
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // 8 weeks of data for statistical significance
@@ -802,7 +817,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 60 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={75}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -819,7 +834,7 @@ describe('ProgressSectionConsolidated', () => {
       // Create entries for current month
       const today = new Date();
       const dayOfMonth = today.getDate();
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
 
       // Complete every day this month
       for (let i = 0; i < dayOfMonth; i++) {
@@ -839,7 +854,7 @@ describe('ProgressSectionConsolidated', () => {
             1
           ).toISOString()}
           strength={80}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -851,7 +866,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('correctly derives weekly pattern chart data', () => {
       // Create entries for 3 weeks
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       for (let i = 0; i < 21; i++) {
@@ -869,7 +884,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 21 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={85}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -902,7 +917,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('handles single completed day', () => {
       const today = new Date();
-      const entries: HabitTrackingEntry[] = [
+      const entries: MockTrackingEntry[] = [
         {
           date: today.toISOString().split('T')[0],
           completed: true,
@@ -913,7 +928,7 @@ describe('ProgressSectionConsolidated', () => {
         <ProgressSectionConsolidated
           habitCreatedAt={today.toISOString()}
           strength={10}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -922,7 +937,7 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles gap in middle of tracking data', () => {
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // 3 days completed, then 5 days gap, then 3 more completed
@@ -952,7 +967,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 15 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={40}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -961,7 +976,7 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles all days incomplete (no completions)', () => {
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       for (let i = 0; i < 10; i++) {
@@ -979,7 +994,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 10 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={5}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -990,7 +1005,7 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles future dates in tracking data', () => {
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Past entries
@@ -1019,7 +1034,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 10 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={50}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -1028,7 +1043,7 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles very old habit creation date', () => {
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Only 7 recent entries
@@ -1047,7 +1062,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 365 * 24 * 60 * 60 * 1000
           ).toISOString()} // 1 year ago
           strength={30}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -1057,7 +1072,7 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles partial month data correctly', () => {
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Only complete half the days this month
@@ -1079,7 +1094,7 @@ describe('ProgressSectionConsolidated', () => {
             1
           ).toISOString()}
           strength={50}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -1092,7 +1107,7 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles duplicate date entries', () => {
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
       const todayStr = today.toISOString().split('T')[0];
 
@@ -1105,7 +1120,7 @@ describe('ProgressSectionConsolidated', () => {
         <ProgressSectionConsolidated
           habitCreatedAt={today.toISOString()}
           strength={50}
-          tracking={entries}
+          tracking={asTracking(entries)}
         />
       );
 
@@ -1232,7 +1247,7 @@ describe('ProgressSectionConsolidated', () => {
   describe('Integration: Real-World Usage Scenarios', () => {
     it('renders correctly for "struggling user" scenario', () => {
       // User who started strong but fell off
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Past week: only 2 completions
@@ -1261,7 +1276,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 21 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={35}
-          tracking={entries}
+          tracking={asTracking(entries)}
           weeklyChange={-12}
         />
       );
@@ -1273,7 +1288,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('renders correctly for "comeback user" scenario', () => {
       // User returning after a break with recent completions
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // Recent 5 days: all completed
@@ -1304,7 +1319,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 30 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={45}
-          tracking={entries}
+          tracking={asTracking(entries)}
           weeklyChange={25}
         />
       );
@@ -1316,7 +1331,7 @@ describe('ProgressSectionConsolidated', () => {
 
     it('renders correctly for "consistent user" scenario', () => {
       // User with very consistent daily completion
-      const entries: HabitTrackingEntry[] = [];
+      const entries: MockTrackingEntry[] = [];
       const today = new Date();
 
       // 60 days, 95% completion rate
@@ -1345,7 +1360,7 @@ describe('ProgressSectionConsolidated', () => {
             Date.now() - 60 * 24 * 60 * 60 * 1000
           ).toISOString()}
           strength={88}
-          tracking={entries}
+          tracking={asTracking(entries)}
           weeklyChange={2}
         />
       );

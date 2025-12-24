@@ -92,9 +92,18 @@ jest.mock('../../../constants/motion', () => ({
 }));
 
 // Mock Ionicons
-jest.mock('@expo/vector-icons', () => ({
-  Ionicons: 'Ionicons',
-}));
+jest.mock('@expo/vector-icons', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return {
+    Ionicons: (props: { name: string }) =>
+      React.createElement(View, {
+        testID: `ionicons-${props.name}`,
+        ...props,
+      }),
+  };
+});
 
 describe('ActionableTipCard', () => {
   const defaultProps = {
@@ -142,18 +151,23 @@ describe('ActionableTipCard', () => {
     });
 
     it('renders chevron when onPress is provided', () => {
-      const { UNSAFE_getByType } = render(
+      const { UNSAFE_getByProps } = render(
         <ActionableTipCard {...defaultProps} onPress={() => {}} />
       );
-      // Check that Ionicons is rendered (chevron-forward)
-      expect(UNSAFE_getByType('Ionicons')).toBeTruthy();
+      // Check that Ionicons chevron-forward is rendered
+      // Using UNSAFE_getByProps since chevron is inside an accessibility-hidden container
+      expect(
+        UNSAFE_getByProps({ testID: 'ionicons-chevron-forward' })
+      ).toBeTruthy();
     });
 
     it('does not render chevron when onPress is not provided', () => {
-      const { UNSAFE_queryByType } = render(
+      const { UNSAFE_queryByProps } = render(
         <ActionableTipCard {...defaultProps} onPress={undefined} />
       );
-      expect(UNSAFE_queryByType('Ionicons')).toBeNull();
+      expect(
+        UNSAFE_queryByProps({ testID: 'ionicons-chevron-forward' })
+      ).toBeNull();
     });
   });
 
