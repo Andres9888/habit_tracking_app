@@ -756,6 +756,104 @@ describe('FullsizeTemplatePreview', () => {
     });
   });
 
+  describe('Tips for Success Section', () => {
+    it('renders tips section when tips are provided', () => {
+      const template = createMockTemplate();
+      // Add tips to the template
+      (template as any).tips = [
+        'Start with just 2 minutes and gradually increase',
+        'Practice at the same time each day',
+        'Use a timer to stay focused',
+      ];
+
+      const { getByText } = render(
+        <FullsizeTemplatePreview
+          template={template}
+          visible={true}
+          onClose={mockOnClose}
+          onImport={mockOnImport}
+          onCustomize={mockOnCustomize}
+        />
+      );
+
+      expect(getByText('TIPS FOR SUCCESS')).toBeTruthy();
+      expect(getByText('Start with just 2 minutes and gradually increase')).toBeTruthy();
+      expect(getByText('Practice at the same time each day')).toBeTruthy();
+      expect(getByText('Use a timer to stay focused')).toBeTruthy();
+    });
+
+    it('does not render tips section when tips array is empty', () => {
+      const template = createMockTemplate();
+      (template as any).tips = [];
+
+      const { queryByText } = render(
+        <FullsizeTemplatePreview
+          template={template}
+          visible={true}
+          onClose={mockOnClose}
+          onImport={mockOnImport}
+          onCustomize={mockOnCustomize}
+        />
+      );
+
+      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
+    });
+
+    it('does not render tips section when tips is undefined', () => {
+      const template = createMockTemplate();
+      // tips is not set (undefined)
+
+      const { queryByText } = render(
+        <FullsizeTemplatePreview
+          template={template}
+          visible={true}
+          onClose={mockOnClose}
+          onImport={mockOnImport}
+          onCustomize={mockOnCustomize}
+        />
+      );
+
+      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
+    });
+
+    it('renders numbered tips with correct order', () => {
+      const template = createMockTemplate();
+      (template as any).tips = ['First tip', 'Second tip'];
+
+      const { getByText } = render(
+        <FullsizeTemplatePreview
+          template={template}
+          visible={true}
+          onClose={mockOnClose}
+          onImport={mockOnImport}
+          onCustomize={mockOnCustomize}
+        />
+      );
+
+      expect(getByText('1')).toBeTruthy();
+      expect(getByText('2')).toBeTruthy();
+      expect(getByText('First tip')).toBeTruthy();
+      expect(getByText('Second tip')).toBeTruthy();
+    });
+
+    it('has accessible tips section with count', () => {
+      const template = createMockTemplate();
+      (template as any).tips = ['Tip one', 'Tip two', 'Tip three'];
+
+      const { getByLabelText } = render(
+        <FullsizeTemplatePreview
+          template={template}
+          visible={true}
+          onClose={mockOnClose}
+          onImport={mockOnImport}
+          onCustomize={mockOnCustomize}
+        />
+      );
+
+      expect(getByLabelText('Tips for success: 3 tips available')).toBeTruthy();
+    });
+  });
+
   describe('Different Template Categories', () => {
     const categories = [
       { value: 'morning_routine', label: 'Morning Routine' },
