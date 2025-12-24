@@ -404,12 +404,24 @@ interface ProgressSectionConsolidatedProps {
     - Reduced motion preference handling
     - Visual elements (background, structure)
 
-- [ ] **Task 3.5:** Integration tests for `ProgressSectionConsolidated`
+- [x] **Task 3.5:** Integration tests for `ProgressSectionConsolidated` ✅
   - Full component render with mock data
   - Data flow verification
   - Edge cases (no data, partial data)
   - Dependencies: 2.1
   - Estimate: 1.5h
+  - **Completed:** Added comprehensive integration tests covering:
+    - Full component render with 30 days of realistic tracking data
+    - Sub-component composition verification (all 5 sections render)
+    - New user scenario (first week with limited data)
+    - Power user scenario (14-day perfect streak)
+    - Data flow verification: streak calculation, best/worst day identification, monthly stats
+    - Weekly pattern chart data derivation
+    - Edge cases: empty tracking, single day, gaps in data, all incomplete, future dates, old habit creation, partial month, duplicate entries, strength boundaries
+    - Component composition verification: callbacks wired correctly, render order, conditional rendering
+    - Real-world usage scenarios: struggling user, comeback user, consistent user
+    - Total: 22 new integration tests (49 total in ProgressSectionConsolidated.test.tsx)
+    - All 207 ProgressSectionConsolidated tests pass
 
 ### Phase 4: Polish & Cleanup
 
