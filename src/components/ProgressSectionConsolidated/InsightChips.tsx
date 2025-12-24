@@ -184,6 +184,7 @@ function InsightChip({
         style={{
           borderColor,
           borderWidth: 1,
+          minHeight: 44, // Minimum touch target height for accessibility
           minWidth: 80,
         }}
       >

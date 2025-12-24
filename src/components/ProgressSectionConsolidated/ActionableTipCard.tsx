@@ -136,7 +136,9 @@ export function ActionableTipCard({
       >
         {/* Icon Container */}
         <View
+          accessibilityElementsHidden
           className='h-10 w-10 flex-shrink-0 items-center justify-center rounded-full'
+          importantForAccessibility='no-hide-descendants'
           style={{ backgroundColor: '#ede9fe' }} // violet-100
         >
           <Text className='text-lg'>💡</Text>
@@ -162,12 +164,17 @@ export function ActionableTipCard({
 
         {/* Chevron (only when interactive) */}
         {isInteractive && (
-          <Ionicons
-            color='#a78bfa' // violet-400
-            name='chevron-forward'
-            size={20}
-            style={{ flexShrink: 0 }}
-          />
+          <View
+            accessibilityElementsHidden
+            importantForAccessibility='no-hide-descendants'
+          >
+            <Ionicons
+              color='#a78bfa' // violet-400
+              name='chevron-forward'
+              size={20}
+              style={{ flexShrink: 0 }}
+            />
+          </View>
         )}
       </View>
     </AnimatedPressable>

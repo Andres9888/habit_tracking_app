@@ -343,7 +343,9 @@ export function StreakRecordsAccordion({
       {/* Hidden content for measuring height */}
       {!hasContentMeasured && (
         <View
+          accessibilityElementsHidden
           className='absolute opacity-0'
+          importantForAccessibility='no-hide-descendants'
           pointerEvents='none'
           onLayout={handleContentLayout}
         >

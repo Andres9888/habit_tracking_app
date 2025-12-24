@@ -21,6 +21,7 @@ export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
     return (
       <View
         accessibilityLabel={`Up ${weeklyChange} percent this week`}
+        accessibilityRole='text'
         className='flex-row items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5'
       >
         <TrendingUp className='text-emerald-600' size={12} />
@@ -35,6 +36,7 @@ export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
     return (
       <View
         accessibilityLabel={`Down ${Math.abs(weeklyChange)} percent this week`}
+        accessibilityRole='text'
         className='flex-row items-center gap-1 rounded-full bg-red-50 px-2 py-0.5'
       >
         <TrendingDown className='text-red-600' size={12} />
@@ -48,6 +50,7 @@ export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
   return (
     <View
       accessibilityLabel='Stable this week'
+      accessibilityRole='text'
       className='flex-row items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5'
     >
       <Minus className='text-stone-500' size={12} />

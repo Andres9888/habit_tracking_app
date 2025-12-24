@@ -113,6 +113,8 @@ export function WeeklyPatternChart({
             accessibilityLabel='See all weekly patterns'
             accessibilityRole='button'
             className='flex-row items-center gap-0.5 active:opacity-70'
+            hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+            style={{ justifyContent: 'center', minHeight: 44, minWidth: 44 }}
             onPress={onSeeAllPress}
           >
             <Text className='text-xs font-medium text-violet-600'>Details</Text>
