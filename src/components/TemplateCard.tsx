@@ -26,7 +26,7 @@ import Animated, {
   FadeInUp,
   FadeIn,
 } from 'react-native-reanimated';
-import { Check } from 'lucide-react-native';
+import { Check, Eye } from 'lucide-react-native';
 import { useAppTheme } from '../theme';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import Button from './Button/Button';
@@ -480,7 +480,7 @@ export function TemplateCard({
           </Text>
         </View>
 
-        {/* Import Button */}
+        {/* Action Buttons */}
         <View style={styles.footer}>
           {isImported ? (
             <Animated.View style={[styles.successButton, checkmarkStyle]}>
@@ -488,20 +488,39 @@ export function TemplateCard({
               <Text style={styles.successButtonText}>Added to Habits</Text>
             </Animated.View>
           ) : (
-            <Button
-              accessibilityLabel={`Import ${name} habit`}
-              disabled={isLocked}
-              loading={isImporting}
-              size='medium'
-              style={[
-                styles.importButton,
-                { backgroundColor: isLocked ? '#9ca3af' : iconColor },
-              ]}
-              variant='primary'
-              onPress={handleImportPress}
-            >
-              {isLocked ? 'Unlock with Pro' : 'Import Habit'}
-            </Button>
+            <View style={styles.buttonRow}>
+              {showPreviewCTA && onPreview && (
+                <Button
+                  accessibilityLabel={`Preview ${name} habit`}
+                  icon={<Eye color='#57534e' size={18} />}
+                  size='medium'
+                  style={styles.previewButton}
+                  textStyle={styles.previewButtonText}
+                  variant='primary'
+                  onPress={(e: any) => {
+                    e.stopPropagation();
+                    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    onPreview();
+                  }}
+                >
+                  Preview
+                </Button>
+              )}
+              <Button
+                accessibilityLabel={`Import ${name} habit`}
+                disabled={isLocked}
+                loading={isImporting}
+                size='medium'
+                style={[
+                  styles.importButton,
+                  { backgroundColor: isLocked ? '#9ca3af' : iconColor },
+                ]}
+                variant='primary'
+                onPress={handleImportPress}
+              >
+                {isLocked ? 'Unlock with Pro' : 'Import Habit'}
+              </Button>
+            </View>
           )}
         </View>
       </View>
@@ -538,6 +557,10 @@ const styles = StyleSheet.create({
     gap: 6,
     marginLeft: 8,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
   card: {
     backgroundColor: '#fff',
     borderRadius: 16,
@@ -560,7 +583,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   footer: {
-    gap: 8,
     marginTop: 16,
   },
   glowOverlay: {
@@ -600,7 +622,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   importButton: {
-    width: '100%',
+    borderRadius: 12,
+    flex: 1,
+    paddingVertical: 12,
   },
   inlinePremiumBadge: {
     backgroundColor: '#FEF3C7',
@@ -630,6 +654,15 @@ const styles = StyleSheet.create({
   },
   metadataText: {
     color: '#4b5563',
+  },
+  previewButton: {
+    backgroundColor: '#f5f5f4',
+    borderRadius: 12,
+    flex: 1,
+    paddingVertical: 12,
+  },
+  previewButtonText: {
+    color: '#57534e',
   },
   scienceBox: {
     borderRadius: 12,
