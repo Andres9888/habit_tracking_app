@@ -229,12 +229,23 @@ interface ProgressSectionConsolidatedProps {
     - Full accessibility support (labels, hints, roles, reduceMotion preference)
     - 36 passing unit tests covering rendering, interactions, and accessibility
 
-- [ ] **Task 1.4:** Create `WeeklyPatternChart` component
+- [x] **Task 1.4:** Create `WeeklyPatternChart` component ✅
   - Compact 7-day bar chart (56px height)
   - Color coding by performance
   - Staggered bar animations
   - Dependencies: 1.1
   - Estimate: 1.5h
+  - **Completed:** Implemented full WeeklyPatternChart component with:
+    - 56px compact chart container with 40px max bar height
+    - 7 animated day bars with staggered entrance (50ms delay per bar)
+    - Color coding: emerald-500 (best day), amber-400 (focus/worst day), stone gradients by rate
+    - Best day identification (highest rate with data)
+    - Focus day identification (lowest rate < 70%, different from best)
+    - "Details" button with onSeeAllPress callback
+    - Legend showing Best/Focus indicators
+    - Full accessibility: chart summary, per-bar labels with day/rate/status
+    - reduceMotion preference support via useReduceMotion hook
+    - 30 passing unit tests covering rendering, highlighting, accessibility, edge cases
 
 - [ ] **Task 1.5:** Create `ActionableTipCard` component
   - Gradient background with icon
@@ -300,12 +311,22 @@ interface ProgressSectionConsolidatedProps {
     - Reduced motion preference handling
     - Press interactions (pressIn/pressOut events)
 
-- [ ] **Task 3.3:** Unit tests for `WeeklyPatternChart`
+- [x] **Task 3.3:** Unit tests for `WeeklyPatternChart` ✅
   - Bar heights, color coding
   - Best/worst day highlighting
   - Animation stagger
   - Dependencies: 1.4
   - Estimate: 1h
+  - **Completed:** 30 passing tests covering:
+    - Rendering (header, legend, all 7 day bars)
+    - Best/worst day highlighting (identification, styling, edge cases)
+    - Color coding (emerald for best, amber for focus, stone gradients)
+    - Details button (rendering, callback invocation)
+    - Accessibility (chart summary, per-bar labels, button role/label)
+    - Edge cases (empty data, all zeros, all 100%, partial data, single day)
+    - Bar heights (normalized relative to max rate)
+    - Animation stagger and reduced motion support
+    - Data memoization and updates
 
 - [ ] **Task 3.4:** Unit tests for `StreakRecordsAccordion`
   - Expand/collapse state

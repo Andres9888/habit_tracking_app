@@ -24,9 +24,10 @@ export { WeeklyPatternChart } from './WeeklyPatternChart';
 export { ActionableTipCard } from './ActionableTipCard';
 export { StreakRecordsAccordion } from './StreakRecordsAccordion';
 
-// Helper components (used internally by HeroStrengthSection)
+// Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';
 export { AnimatedPercentageText } from './AnimatedPercentageText';
+export { DayBar } from './DayBar';
 
 // Types
 export * from './types';
