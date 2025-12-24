@@ -853,6 +853,40 @@ function StreakWarningCard({
 }
 
 /**
+ * ProTipCard Component (D5)
+ * Shows motivational statistics to encourage filling the Why field
+ *
+ * Design spec (D5 Pro Tip Card - Empty State Only):
+ * - Only shows when Why is empty
+ * - Amber/gold color scheme gradient (amber-50 to orange-50)
+ * - Lightbulb emoji
+ * - Compelling statistic or tip about Why completion benefits
+ */
+function ProTipCard() {
+  return (
+    <View className="mb-4 overflow-hidden rounded-xl border border-amber-200">
+      <LinearGradient
+        colors={['#fffbeb', '#fff7ed']} // amber-50 to orange-50
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        className="flex-row items-start gap-3 p-4"
+      >
+        {/* Lightbulb emoji */}
+        <Text className="text-2xl">💡</Text>
+
+        {/* Content */}
+        <View className="flex-1">
+          <Text className="text-sm font-semibold text-amber-800">Pro tip</Text>
+          <Text className="mt-1 text-xs text-amber-700">
+            People with a defined "why" are 42% more likely to maintain their habits long-term.
+          </Text>
+        </View>
+      </LinearGradient>
+    </View>
+  );
+}
+
+/**
  * PremiumWhyDisplay Component (D2)
  * Premium quote-style display for the "Your Why" section when filled
  *
@@ -1504,6 +1538,9 @@ function MotivationTabContent({
           <EmptyWhyState onPress={onOpenWhyEditor} />
         )}
       </AnimatedSection>
+
+      {/* D5: Pro Tip Card - Only shows when Why is empty */}
+      {!habit.why && <ProTipCard />}
 
       {/* Your Identity Section - Index 1 */}
       <AnimatedSection index={1} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
