@@ -20,7 +20,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import type { ProgressSectionConsolidatedProps } from './types';
@@ -168,7 +168,15 @@ export function ProgressSectionConsolidated({
           onInfoPress={onInfoPress}
         />
 
+        {/* Divider between Hero and Insights */}
+        <View className='mb-4 h-px bg-stone-100' />
+
         {/* Section 2: Insight Chips (horizontal scroll) */}
+        <View className='mb-2'>
+          <Text className='text-[10px] font-semibold uppercase tracking-wider text-stone-400'>
+            Key Insights
+          </Text>
+        </View>
         <InsightChips
           bestDay={bestDayData}
           currentStreak={currentStreak}

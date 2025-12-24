@@ -181,12 +181,12 @@ const InsightChip = React.memo(function InsightChip({
       onPressOut={handlePressOut}
     >
       <View
-        className='relative rounded-xl bg-white px-3 py-2'
+        className='relative rounded-xl bg-white px-3 py-2.5'
         style={{
           borderColor,
           borderWidth: 1,
-          minHeight: 44, // Minimum touch target height for accessibility
-          minWidth: 80,
+          minHeight: 56, // Increased touch target height
+          minWidth: 90,
         }}
       >
         {/* Pulse ring overlay for active streak */}
@@ -204,13 +204,16 @@ const InsightChip = React.memo(function InsightChip({
           />
         )}
 
-        <View className='flex-row items-center gap-1.5'>
-          <Text className='text-base'>{chip.icon}</Text>
-          <Text className='text-sm font-semibold text-stone-800'>
-            {chip.value}
-          </Text>
+        {/* Stacked layout: emoji on top, value + label below */}
+        <View className='flex-row items-center gap-2'>
+          <Text className='text-lg'>{chip.icon}</Text>
+          <View>
+            <Text className='text-base font-bold text-stone-800'>
+              {chip.value}
+            </Text>
+            <Text className='text-[10px] text-stone-500'>{chip.label}</Text>
+          </View>
         </View>
-        <Text className='mt-0.5 text-xs text-stone-500'>{chip.label}</Text>
       </View>
     </AnimatedPressable>
   );
