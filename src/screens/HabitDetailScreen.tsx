@@ -23,7 +23,7 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 // The new ProgressSection combines HabitStrengthSection + InsightsSection into 3 always-visible cards.
 // import { HabitStrengthSection } from '../components/HabitStrengthSection';
 // import { InsightsSection } from '../components/InsightsSection';
-import { ProgressSection } from '../components/ProgressSection';
+import { ProgressSectionConsolidated } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { CalendarHeatmap } from '../components/CalendarHeatmap';
@@ -937,10 +937,10 @@ function ProgressTabContent({
         }}
       />
 
-      {/* Consolidated Progress Section - 3 always-visible cards */}
-      <ProgressSection
+      {/* Consolidated Progress Section - unified design with improved visual hierarchy */}
+      <ProgressSectionConsolidated
         tracking={tracking}
-        habitCreatedAt={habitCreatedAt}
+        habitCreatedAt={habitCreatedAt ? new Date(habitCreatedAt).toISOString() : new Date().toISOString()}
         strength={strengthPercent}
         onInfoPress={() => {
           Alert.alert(
@@ -953,10 +953,10 @@ function ProgressTabContent({
             [{ text: 'Got it' }]
           );
         }}
-        onWorstDayPress={() => {
+        onFocusDayPress={() => {
           Alert.alert(
-            'Improve Your Weak Days',
-            'Tips to boost your consistency:\n\n' +
+            'Focus Day',
+            'This is your lowest-performing day. Tips to improve:\n\n' +
             '⏰ Set a reminder for this specific day\n\n' +
             '📍 Stack it after an existing habit\n\n' +
             '🎯 Start with a smaller version on tough days\n\n' +
@@ -966,6 +966,9 @@ function ProgressTabContent({
         }}
         onSeeAllPress={() => {
           // Future: Navigate to full analytics screen
+        }}
+        onTipPress={() => {
+          // Future: Navigate to tips or guidance screen
         }}
       />
     </View>

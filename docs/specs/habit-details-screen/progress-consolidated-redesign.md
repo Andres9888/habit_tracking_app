@@ -308,12 +308,20 @@ interface ProgressSectionConsolidatedProps {
     - Full accessibility support (region role, accessible labels)
     - 27 passing unit tests covering rendering, data flow, callbacks, edge cases, accessibility
 
-- [ ] **Task 2.2:** Update `HabitDetailScreen` to use new component
+- [x] **Task 2.2:** Update `HabitDetailScreen` to use new component ✅
   - Feature flag for A/B testing (optional)
   - Replace ProgressSection import
   - Verify prop compatibility
   - Dependencies: 2.1
   - Estimate: 1h
+  - **Completed:** Updated HabitDetailScreen to use ProgressSectionConsolidated:
+    - Replaced `import { ProgressSection }` with `import { ProgressSectionConsolidated }`
+    - Converted `habitCreatedAt` from number timestamp to ISO string format for new component
+    - Renamed `onWorstDayPress` to `onFocusDayPress` with updated alert messaging
+    - Added new `onTipPress` callback for future actionable tip navigation
+    - All 185 ProgressSectionConsolidated tests pass
+    - All 22 HabitDetailScreen tests pass
+    - No TypeScript errors in modified file
 
 - [ ] **Task 2.3:** Remove redundant stats strip when Progress tab active
   - Conditional rendering based on active tab
