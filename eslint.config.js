@@ -19,6 +19,9 @@ export default tseslint.config(
       'App.tsx',
       'index.ts',
       '__tests__/**',
+      '**/__tests__/**',
+      '**/*.test.ts',
+      '**/*.test.tsx',
       'docs/HabitHome-FigmaCode/**',
       'e2e/**',
     ],
@@ -39,10 +42,7 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        project: [
-          './tsconfig.app.json',
-          './convex/tsconfig.json',
-        ],
+        project: ['./tsconfig.app.json', './convex/tsconfig.json'],
       },
     },
     plugins: {
@@ -136,5 +136,5 @@ export default tseslint.config(
       'unicorn/no-array-sort': 'off', // toSorted() not supported in React Native (ES2023)
       'unicorn/no-array-reverse': 'off', // toReversed() not supported in React Native (ES2023)
     },
-  },
+  }
 );
