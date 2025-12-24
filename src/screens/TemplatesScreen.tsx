@@ -93,6 +93,9 @@ export default function TemplatesScreen() {
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(20);
 
+  // Tab indicator animation
+  const tabIndicatorPosition = useSharedValue(0); // 0 = categories, 1 = all
+
   // Trigger choreographed entrance animation on mount
   useEffect(() => {
     if (reducedMotion) {
@@ -144,6 +147,29 @@ export default function TemplatesScreen() {
     transform: [{ translateY: contentTranslateY.value }],
     opacity: contentOpacity.value,
   }));
+
+  // Tab bar width for indicator calculations
+  const tabBarWidth = useSharedValue(0);
+
+  // Animated style for sliding tab indicator
+  // Indicator is positioned absolutely and slides left/right
+  // Width is ~50% minus some padding for the gap
+  const tabIndicatorStyle = useAnimatedStyle(() => {
+    const padding = 5; // tabBar padding
+    const availableWidth = tabBarWidth.value - padding * 2;
+    const indicatorWidth = availableWidth / 2;
+    const translateX = tabIndicatorPosition.value * indicatorWidth;
+
+    return {
+      width: indicatorWidth,
+      transform: [{ translateX }],
+    };
+  });
+
+  // Handle tab bar layout to get width for indicator
+  const handleTabBarLayout = useCallback((event: LayoutChangeEvent) => {
+    tabBarWidth.value = event.nativeEvent.layout.width;
+  }, [tabBarWidth]);
 
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>('browse');
@@ -779,16 +805,21 @@ export default function TemplatesScreen() {
       </Animated.View>
 
       {/* Tab bar - fades up with delay */}
-      <Animated.View style={[styles.tabBar, tabBarAnimatedStyle]}>
+      <Animated.View style={[styles.tabBar, tabBarAnimatedStyle]} onLayout={handleTabBarLayout}>
+        {/* Animated sliding indicator */}
+        <Animated.View style={[styles.tabIndicator, tabIndicatorStyle]} />
         <Pressable
           accessible
           accessibilityLabel={`Categories tab, ${categories?.filter((c) => c.id !== 'all').length || 0} categories`}
           accessibilityRole="tab"
           accessibilityState={{ selected: browseTab === 'categories' }}
-          style={[styles.tab, browseTab === 'categories' && styles.tabActive]}
+          style={styles.tab}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             setBrowseTab('categories');
+            tabIndicatorPosition.value = reducedMotion
+              ? 0
+              : withSpring(0, { damping: 20, stiffness: 300 });
           }}
         >
           <Text style={[styles.tabText, browseTab === 'categories' && styles.tabTextActive]}>
@@ -803,10 +834,13 @@ export default function TemplatesScreen() {
           accessibilityLabel={`View All tab, ${allTemplates?.length || 0} templates`}
           accessibilityRole="tab"
           accessibilityState={{ selected: browseTab === 'all' }}
-          style={[styles.tab, browseTab === 'all' && styles.tabActive]}
+          style={styles.tab}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             setBrowseTab('all');
+            tabIndicatorPosition.value = reducedMotion
+              ? 1
+              : withSpring(1, { damping: 20, stiffness: 300 });
           }}
         >
           <Text style={[styles.tabText, browseTab === 'all' && styles.tabTextActive]}>
