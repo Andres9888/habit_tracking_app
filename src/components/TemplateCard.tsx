@@ -458,7 +458,12 @@ export function TemplateCard({
             },
           ]}
         >
-          <Text style={styles.scienceIcon}>🔬</Text>
+          <View style={styles.scienceHeader}>
+            <Text style={styles.scienceIcon}>🔬</Text>
+            <Text style={styles.scienceHeaderText}>
+              Science Behind This Habit
+            </Text>
+          </View>
           <Text
             numberOfLines={2}
             style={[
@@ -466,6 +471,7 @@ export function TemplateCard({
               {
                 color: '#166534',
                 flex: 1,
+                fontStyle: 'italic',
                 lineHeight: 16,
               },
             ]}
@@ -626,13 +632,22 @@ const styles = StyleSheet.create({
     color: '#4b5563',
   },
   scienceBox: {
-    alignItems: 'flex-start',
-    borderRadius: 10,
-    borderWidth: 1,
-    flexDirection: 'row',
+    borderRadius: 12,
+    borderWidth: 2,
     gap: 8,
     marginTop: 14,
     padding: 12,
+  },
+  scienceHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 6,
+  },
+  scienceHeaderText: {
+    color: '#166534',
+    fontSize: 13,
+    fontWeight: '600',
   },
   scienceIcon: {
     fontSize: 14,
