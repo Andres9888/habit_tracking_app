@@ -122,6 +122,12 @@ export const styles = StyleSheet.create({
     gap: 12,
     marginTop: 12,
   },
+  filterControlsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+  },
   emptyStateWrapper: {
     paddingHorizontal: 32,
     paddingVertical: 24,
