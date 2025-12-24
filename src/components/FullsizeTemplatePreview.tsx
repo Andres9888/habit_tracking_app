@@ -44,7 +44,7 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { X, ExternalLink, Clock, Sparkles, Check } from 'lucide-react-native';
+import { X, ExternalLink, Clock, Sparkles, Check, Lightbulb } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -627,6 +627,44 @@ export default function FullsizeTemplatePreview({
             )}
           </View>
 
+          {/* Tips for Success Section */}
+          {(template as any).tips && Array.isArray((template as any).tips) && (template as any).tips.length > 0 && (
+            <View
+              style={styles.tipsBox}
+              accessible
+              accessibilityLabel={`Tips for success: ${(template as any).tips.length} tips available`}
+              accessibilityRole="text"
+            >
+              <View style={styles.tipsHeader}>
+                <Lightbulb color={iconColor} size={20} strokeWidth={2} />
+                <Text
+                  style={[
+                    styles.tipsLabel,
+                    { fontFamily: theme.custom.fontFamilies.primary.text },
+                  ]}
+                >
+                  TIPS FOR SUCCESS
+                </Text>
+              </View>
+              <View style={styles.tipsDivider} />
+              {(template as any).tips.map((tip: string, index: number) => (
+                <View key={index} style={styles.tipItem}>
+                  <View style={[styles.tipIconContainer, { backgroundColor: `${iconColor}15` }]}>
+                    <Text style={[styles.tipNumber, { color: iconColor }]}>{index + 1}</Text>
+                  </View>
+                  <Text
+                    style={[
+                      styles.tipText,
+                      { fontFamily: theme.custom.fontFamilies.primary.text },
+                    ]}
+                  >
+                    {tip}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
+
           {/* Bottom spacer for footer */}
           <View style={styles.bottomSpacer} />
         </ScrollView>
@@ -868,6 +906,56 @@ const styles = StyleSheet.create({
     color: '#2563EB',
     fontSize: 14,
     fontWeight: '600',
+  },
+  tipsBox: {
+    backgroundColor: '#fefce8',
+    borderColor: '#fef08a',
+    borderRadius: 16,
+    borderWidth: 2,
+    marginHorizontal: 20,
+    marginTop: 16,
+    padding: 20,
+  },
+  tipsHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  tipsLabel: {
+    color: '#854d0e',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  tipsDivider: {
+    backgroundColor: '#fef08a',
+    height: 1,
+    marginBottom: 12,
+  },
+  tipItem: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  tipIconContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
+  },
+  tipNumber: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  tipText: {
+    color: '#713f12',
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 22,
   },
   bottomSpacer: {
     height: 140,

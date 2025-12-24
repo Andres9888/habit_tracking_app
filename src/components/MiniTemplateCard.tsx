@@ -4,7 +4,13 @@
  */
 
 import React, { useEffect } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -16,13 +22,11 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Check, Plus } from 'lucide-react-native';
+import { Check, ChevronRight, FlaskConical, Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export interface MiniTemplateCardProps {
   /** Template icon/emoji */
@@ -68,7 +72,10 @@ export function MiniTemplateCard({
   const reducedMotion = useReduceMotion();
 
   // Ensure iconColor is valid - fallback to neutral gray if missing or empty
-  const iconColor = iconColorProp && iconColorProp.trim() !== '' ? iconColorProp : DEFAULT_ICON_COLOR;
+  const iconColor =
+    iconColorProp && iconColorProp.trim() !== ''
+      ? iconColorProp
+      : DEFAULT_ICON_COLOR;
 
   // Card press animations
   const pressScale = useSharedValue(1);
@@ -82,23 +89,35 @@ export function MiniTemplateCard({
   const checkmarkScale = useSharedValue(0);
   const successGlow = useSharedValue(0);
 
-  // Research badge shimmer animation
-  const shimmerTranslate = useSharedValue(-120);
+  // Chevron hover animation
+  const chevronTranslate = useSharedValue(0);
 
-  // Shimmer animation for research badge (subtle attention-getter)
+  // Science badge pulse animation
+  const scienceBadgePulse = useSharedValue(1);
+
+  // Pulse animation for science badge (subtle attention-getter)
   useEffect(() => {
-    if (reducedMotion || !hasResearch) return;
+    if (reducedMotion || !hasResearch || isImported) {
+      // Stop animation when imported or reduced motion
+      cancelAnimation(scienceBadgePulse);
+      scienceBadgePulse.value = 1;
+      return;
+    }
 
-    shimmerTranslate.value = withRepeat(
-      withTiming(120, { duration: 2000, easing: Easing.linear }),
+    // Subtle pulse animation (opacity 0.6 to 1.0)
+    scienceBadgePulse.value = withRepeat(
+      withSequence(
+        withTiming(0.6, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      ),
       -1, // infinite
-      false // don't reverse, reset to start
+      true
     );
 
     return () => {
-      cancelAnimation(shimmerTranslate);
+      cancelAnimation(scienceBadgePulse);
     };
-  }, [shimmerTranslate, reducedMotion, hasResearch]);
+  }, [scienceBadgePulse, reducedMotion, hasResearch, isImported]);
 
   // Subtle pulse animation for import button (draws attention)
   useEffect(() => {
@@ -138,12 +157,12 @@ export function MiniTemplateCard({
   }, [isImported, checkmarkScale, successGlow, buttonPulse]);
 
   const animatedCardStyle = useAnimatedStyle(() => ({
+    elevation: shadowElevation.value,
+    shadowOpacity: interpolate(shadowElevation.value, [3, 8], [0.08, 0.15]),
     transform: [
       { scale: pressScale.value },
       { rotate: `${pressRotation.value}deg` },
     ],
-    shadowOpacity: interpolate(shadowElevation.value, [3, 8], [0.08, 0.15]),
-    elevation: shadowElevation.value,
   }));
 
   const importButtonStyle = useAnimatedStyle(() => ({
@@ -151,16 +170,20 @@ export function MiniTemplateCard({
   }));
 
   const checkmarkStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: checkmarkScale.value }],
     opacity: checkmarkScale.value,
+    transform: [{ scale: checkmarkScale.value }],
   }));
 
   const glowStyle = useAnimatedStyle(() => ({
     opacity: successGlow.value,
   }));
 
-  const shimmerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: shimmerTranslate.value }],
+  const chevronStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: chevronTranslate.value }],
+  }));
+
+  const scienceBadgeStyle = useAnimatedStyle(() => ({
+    opacity: scienceBadgePulse.value,
   }));
 
   const handlePressIn = () => {
@@ -170,6 +193,7 @@ export function MiniTemplateCard({
       pressScale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
       shadowElevation.value = withTiming(8, { duration: 100 });
       pressRotation.value = withSpring(-0.5, { damping: 20, stiffness: 400 });
+      chevronTranslate.value = withSpring(2, { damping: 15, stiffness: 300 });
     }
   };
 
@@ -178,6 +202,7 @@ export function MiniTemplateCard({
     if (!reducedMotion) {
       shadowElevation.value = withTiming(3, { duration: 150 });
       pressRotation.value = withSpring(0, { damping: 15, stiffness: 300 });
+      chevronTranslate.value = withSpring(0, { damping: 15, stiffness: 300 });
     }
   };
 
@@ -196,29 +221,58 @@ export function MiniTemplateCard({
     <AnimatedPressable
       accessible
       accessibilityLabel={`${name} template`}
-      accessibilityRole="button"
-      style={[styles.card, { backgroundColor: `${iconColor}08` }, animatedCardStyle]}
+      accessibilityRole='button'
+      style={[
+        styles.card,
+        { backgroundColor: `${iconColor}08` },
+        animatedCardStyle,
+      ]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
       {/* Success glow overlay */}
       <Animated.View
-        style={[
-          styles.glowOverlay,
-          { backgroundColor: '#22c55e' },
-          glowStyle,
-        ]}
-        pointerEvents="none"
+        pointerEvents='none'
+        style={[styles.glowOverlay, { backgroundColor: '#22c55e' }, glowStyle]}
       />
 
       {/* Left accent */}
-      <View style={[styles.accent, { backgroundColor: isImported ? '#22c55e' : iconColor }]} />
+      <View
+        style={[
+          styles.accent,
+          { backgroundColor: isImported ? '#22c55e' : iconColor },
+        ]}
+      />
+
+      {/* Chevron indicator - tap to view details */}
+      <Animated.View
+        accessibilityLabel='View details'
+        style={[styles.chevronContainer, chevronStyle]}
+      >
+        <ChevronRight color='#9ca3af' size={16} strokeWidth={2.5} />
+      </Animated.View>
 
       {/* Header row with icon and name */}
       <View style={styles.headerRow}>
-        <View style={[styles.iconContainer, { backgroundColor: `${iconColor}20` }]}>
-          <Text style={styles.icon}>{icon}</Text>
+        <View style={styles.iconWrapper}>
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: `${iconColor}20` },
+            ]}
+          >
+            <Text style={styles.icon}>{icon}</Text>
+          </View>
+          {/* Science badge on icon corner */}
+          {hasResearch && (
+            <Animated.View
+              accessibilityLabel='Science-backed habit'
+              style={[styles.scienceBadge, scienceBadgeStyle]}
+            >
+              <FlaskConical color='#fff' size={10} strokeWidth={2.5} />
+            </Animated.View>
+          )}
         </View>
         <View style={styles.headerContent}>
           <Text numberOfLines={1} style={styles.name}>
@@ -235,10 +289,12 @@ export function MiniTemplateCard({
           <Animated.View style={importButtonStyle}>
             <Pressable
               accessible
-              accessibilityLabel={isImported ? `${name} added` : `Add ${name} habit`}
-              accessibilityRole="button"
+              accessibilityLabel={
+                isImported ? `${name} added` : `Add ${name} habit`
+              }
+              accessibilityRole='button'
               disabled={isImporting || isImported}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
               style={[
                 styles.importButton,
                 { backgroundColor: isImported ? '#22c55e' : iconColor },
@@ -246,15 +302,17 @@ export function MiniTemplateCard({
               onPress={handleImport}
             >
               {isImporting ? (
-                <ActivityIndicator color="#fff" size={12} />
+                <ActivityIndicator color='#fff' size={12} />
               ) : isImported ? (
-                <Animated.View style={[styles.checkmarkContainer, checkmarkStyle]}>
-                  <Check color="#fff" size={14} strokeWidth={3} />
+                <Animated.View
+                  style={[styles.checkmarkContainer, checkmarkStyle]}
+                >
+                  <Check color='#fff' size={14} strokeWidth={3} />
                   <Text style={styles.importButtonText}>Added</Text>
                 </Animated.View>
               ) : (
                 <>
-                  <Plus color="#fff" size={14} strokeWidth={3} />
+                  <Plus color='#fff' size={14} strokeWidth={3} />
                   <Text style={styles.importButtonText}>Add</Text>
                 </>
               )}
@@ -269,143 +327,124 @@ export function MiniTemplateCard({
           {description}
         </Text>
       )}
-
-      {/* Research badge with shimmer effect */}
-      {hasResearch && (
-        <View style={[styles.researchBadge, { backgroundColor: `${iconColor}15` }]}>
-          {/* Shimmer overlay */}
-          {!reducedMotion && (
-            <AnimatedLinearGradient
-              colors={['#00000000', `${iconColor}20`, '#00000000']}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              style={[styles.shimmerOverlay, shimmerStyle]}
-            />
-          )}
-          <Text style={styles.researchIcon}>🔬</Text>
-          <Text numberOfLines={1} style={[styles.researchText, { color: iconColor }]}>
-            {scientificReference ? scientificReference.split(' ').slice(0, 3).join(' ') + '...' : 'Research-backed'}
-          </Text>
-        </View>
-      )}
     </AnimatedPressable>
   );
 }
 
 const styles = StyleSheet.create({
+  accent: {
+    borderBottomLeftRadius: 16,
+    borderTopLeftRadius: 16,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: 4,
+  },
   card: {
-    width: 220,
-    minHeight: 140,
-    marginRight: 12,
     borderRadius: 16,
+    elevation: 3,
+    marginRight: 12,
+    minHeight: 140,
     overflow: 'hidden',
-    paddingVertical: 14,
     paddingHorizontal: 14,
     paddingLeft: 18,
+    paddingVertical: 14,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
-    elevation: 3,
+    width: 220,
+  },
+  checkmarkContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+  chevronContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.04)',
+    borderRadius: 14,
+    height: 28,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 14,
+    top: 14,
+    width: 28,
+  },
+  description: {
+    color: '#4b5563',
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 36,
   },
   glowOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     borderRadius: 16,
-  },
-  accent: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
     bottom: 0,
-    width: 4,
-    borderTopLeftRadius: 16,
-    borderBottomLeftRadius: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 8,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   headerContent: {
     flex: 1,
   },
-  importButton: {
-    flexDirection: 'row',
+  headerRow: {
     alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 8,
+  },
+  icon: {
+    fontSize: 18,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 36,
     justifyContent: 'center',
+    width: 36,
+  },
+  iconWrapper: {
+    position: 'relative',
+  },
+  importButton: {
+    alignItems: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
     gap: 4,
+    justifyContent: 'center',
+    marginLeft: 8,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
-    marginLeft: 8,
   },
   importButtonText: {
     color: '#fff',
     fontSize: 12,
     fontWeight: '700',
   },
-  checkmarkContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  iconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 18,
-  },
   name: {
+    color: '#101727',
     fontSize: 15,
     fontWeight: '700',
-    color: '#101727',
     marginBottom: 2,
   },
+  scienceBadge: {
+    alignItems: 'center',
+    backgroundColor: '#10b981',
+    borderRadius: 9,
+    bottom: -4,
+    height: 18,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: -4,
+    width: 18,
+  },
   subtitle: {
+    color: '#6b7280',
     fontSize: 12,
     fontWeight: '500',
-    color: '#6b7280',
-  },
-  description: {
-    fontSize: 13,
-    lineHeight: 18,
-    color: '#4b5563',
-    marginBottom: 10,
-    flex: 1,
-  },
-  researchBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    alignSelf: 'flex-start',
-    overflow: 'hidden', // Required for shimmer to be clipped within badge bounds
-    position: 'relative', // Required for shimmer absolute positioning
-  },
-  shimmerOverlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: 60, // Width of the shimmer highlight
-    left: 0,
-  },
-  researchIcon: {
-    fontSize: 10,
-  },
-  researchText: {
-    fontSize: 10,
-    fontWeight: '600',
   },
 });
 

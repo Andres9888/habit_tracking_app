@@ -32,6 +32,7 @@ type TemplateInsert = {
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;
+  tips?: string[];
   youtubeLink?: string;
 };
 
@@ -176,6 +177,11 @@ export const seedTemplates = mutation({
         'https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/1809754',
       scientificReference:
         'Goyal et al. (2014) - Meditation programs for psychological stress',
+      tips: [
+        'Start with just 2 minutes and gradually increase',
+        'Use a guided meditation app for your first few weeks',
+        'Same time each morning builds the habit faster',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=xLXF5aP4CtQ',
     });
 
@@ -205,6 +211,11 @@ export const seedTemplates = mutation({
       popularityScore: 92,
       scientificReference:
         'Popkin et al. (2010) - Water, hydration, and health',
+      tips: [
+        'Keep a water bottle by your bed the night before',
+        'Add a squeeze of lemon for extra motivation',
+        'Drink before checking your phone',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=81QHxWBJyFg',
     });
 
@@ -281,6 +292,11 @@ export const seedTemplates = mutation({
         'https://journals.lww.com/acsm-healthfitness/fulltext/2013/05000/high_intensity_circuit_training_using_body_weight_.5.aspx',
       scientificReference:
         'Jordan et al. (2013) - High-intensity circuit training',
+      tips: [
+        'Lay out workout clothes the night before',
+        'Use a timer app to keep the pace',
+        'Do it before breakfast for best results',
+      ],
     });
 
     await insertWithTracking({
@@ -295,6 +311,11 @@ export const seedTemplates = mutation({
       popularityScore: 94,
       scientificReference:
         'Lee et al. (2019) - Association of step volume and intensity',
+      tips: [
+        'Take walking meetings when possible',
+        'Park further away from entrances',
+        'Use stairs instead of elevators',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=YQ7QGKIx6vY',
     });
 
@@ -411,6 +432,11 @@ export const seedTemplates = mutation({
       popularityScore: 96,
       scientificReference:
         'Newport (2016) - Deep Work: Rules for focused success',
+      tips: [
+        'Put your phone in another room completely',
+        'Use website blockers during deep work time',
+        'Schedule deep work during your peak energy hours',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=gTaJhjQHcf8',
     });
 
@@ -537,6 +563,11 @@ export const seedTemplates = mutation({
         'https://greatergood.berkeley.edu/pdfs/GratitudePDFs/6Emmons-BlessingsBurdens.pdf',
       scientificReference:
         'Emmons & McCullough (2003) - Counting blessings versus burdens',
+      tips: [
+        'Keep a dedicated gratitude notebook by your bed',
+        'Include one specific detail about why you appreciate each item',
+        'Do it at the same time each day - morning or night',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=mPH7w64diJc',
     });
 
@@ -667,6 +698,11 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Morning sunlight for optimal circadian biology',
+      tips: [
+        'No sunglasses - you need the light hitting your eyes',
+        'Cloudy days still count, just double the time',
+        'Face towards where the sun rises, not directly at it',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=WDv4AWk0J3U',
     });
 
@@ -683,6 +719,11 @@ export const seedTemplates = mutation({
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
         'Huberman Lab (2023) - Optimal caffeine timing protocol',
+      tips: [
+        'Set a timer when you wake up',
+        'Drink water first to help with morning grogginess',
+        'Start with a 60-minute delay and work up to 90',
+      ],
       youtubeLink: 'https://www.youtube.com/watch?v=iw97uvIge7c',
     });
 
@@ -908,6 +949,11 @@ export const seedTemplates = mutation({
       popularityScore: 87,
       scientificReference:
         'Holt-Lunstad et al. (2010) - Social relationships and mortality',
+      tips: [
+        'Keep a rotation list of people to call',
+        'Schedule calls during your commute or walk',
+        'A 5-minute call counts - it doesn\'t have to be long',
+      ],
     });
 
     await insertWithTracking({
@@ -993,6 +1039,11 @@ export const seedTemplates = mutation({
       popularityScore: 92,
       scientificReference:
         'Walker (2017) - Why We Sleep: Unlocking the Power of Sleep',
+      tips: [
+        'Set an alarm 30 minutes before your target bedtime',
+        'Keep weekends within 1 hour of your weekday schedule',
+        'Start your wind-down routine at the same time each night',
+      ],
     });
 
     await insertWithTracking({
@@ -1081,6 +1132,11 @@ export const seedTemplates = mutation({
         'https://www.sleepfoundation.org/how-sleep-works/how-much-sleep-do-we-really-need',
       scientificReference:
         'Hirshkowitz et al. (2015) - National Sleep Foundation sleep duration recommendations',
+      tips: [
+        'Calculate your ideal wake time and count back 8 hours',
+        'Track your sleep to find your personal sweet spot',
+        'Prioritize sleep like you would an important meeting',
+      ],
     });
 
     await insertWithTracking({
