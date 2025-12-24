@@ -117,45 +117,41 @@ When a habit has been imported:
 ### Phase 1: Mini Card Updates
 
 - [x] **Task 1.1:** Add chevron indicator to MiniTemplateCard ✅
-
   - Add `ChevronRight` icon in top-right corner
   - Style with rounded container (`28x28px`, `rgba(0,0,0,0.04)` background)
   - Add hover animation (translateX +2px)
-  - File: `src/components/templates/MiniTemplateCard/MiniTemplateCard.tsx`
-  - _Completed: Added ChevronRight icon from lucide-react-native, positioned absolutely at top-right (14px inset), with animated translateX(+2px) on press. Includes accessibilityLabel="View details"._
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Added ChevronRight icon from lucide-react-native, positioned absolutely at top-right (14px inset), with animated translateX(+2px) on press via chevronStyle and chevronTranslate shared value. Includes accessibilityLabel="View details"._
 
 - [x] **Task 1.2:** Update science badge to Option A style ✅
-
   - Position badge on icon corner (bottom-right, -4px offset)
   - Use green circle (`#10b981`) with white flask icon
   - Add shimmer animation (existing, verify working)
-  - File: `src/components/templates/MiniTemplateCard/MiniTemplateCard.tsx`
-  - _Completed: Replaced text-based research badge with circular FlaskConical icon badge (18x18px) positioned at bottom-right (-4px offset) of icon container. Badge uses green (#10b981) background with white flask icon. Added subtle pulse animation (opacity 0.6-1.0) that respects reduced motion and stops when imported. Badge includes accessibilityLabel="Science-backed habit"._
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Replaced text-based research badge with circular FlaskConical icon badge (18x18px) positioned at bottom-right (-4px offset) of icon container. Badge uses green (#10b981) background with white flask icon. Added subtle pulse animation (opacity 0.6-1.0) that respects reduced motion and stops when imported. Badge includes accessibilityLabel="Science-backed habit". Removed old shimmer-based research badge at bottom of card._
 
 - [x] **Task 1.3:** Fix description/button overlap ✅
-
   - Add `marginBottom: 36` to description style
   - Ensure Add button doesn't overlap text
-  - File: `src/components/templates/MiniTemplateCard/MiniTemplateCard.tsx`
-  - _Completed: Updated description marginBottom from 10 to 36 pixels, providing sufficient spacing to prevent overlap with the Add button when positioned absolutely at bottom-right._
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: Updated description marginBottom from 10 to 36 pixels in MiniTemplateCard.tsx, providing sufficient spacing to prevent text overflow beneath the card content area._
 
 - [x] **Task 1.4:** Implement "Added" state styling ✅
   - Change left accent to green when `isImported`
   - Change button to "Added ✓" with green background
   - Stop shimmer animation when imported
-  - File: `src/components/templates/MiniTemplateCard/MiniTemplateCard.tsx`
-  - _Completed: All "Added" state styling was already implemented. Left accent bar changes to green (#22c55e) via conditional backgroundColor. Add button shows Check icon with "Added" text on green background. Shimmer/pulse animation stops when isImported is true (checked in useEffect and scienceBadgeStyle application). Button is disabled when isImported to prevent re-import._
+  - File: `src/components/MiniTemplateCard.tsx`
+  - _Completed: All "Added" state styling was already implemented. Left accent bar changes to green (#22c55e) via conditional backgroundColor (line 244). Add button shows Check icon with "Added" text on green background (lines 300-312). Shimmer/pulse animation stops when isImported is true (lines 99-105). Button is disabled when isImported to prevent re-import (line 296). File path corrected to actual location._
 
 ### Phase 2: Templates Screen Updates
 
-- [x] **Task 2.1:** Remove filters from Categories tab ✅
-
+- [ ] **Task 2.1:** Remove filters from Categories tab ✅
   - Only show filters when `browseTab === 'all'`
   - Keep search bar visible in both tabs
   - File: `src/screens/TemplatesScreen.tsx`
   - _Completed: Added filter controls (Science-Backed toggle and Sort options) to the All Templates tab only. Categories tab has no filters as categories ARE the organization. Search bar remains visible in both tabs. FlatList in All Templates tab now uses filteredTemplates to respect filter selections. Added filterControlsRow style and dropdown backdrop._
 
-- [x] **Task 2.2:** Update category count to show science count ✅
+- [ ] **Task 2.2:** Update category count to show science count ✅
   - Format: "6 habits · 4 science-backed"
   - Calculate science count per category
   - File: `src/screens/TemplatesScreen.tsx`
@@ -163,14 +159,13 @@ When a habit has been imported:
 
 ### Phase 3: Full Card Updates
 
-- [x] **Task 3.1:** Update Import button to use `iconColor` ✅
-
+- [ ] **Task 3.1:** Update Import button to use `iconColor` ✅
   - Replace black/dark button with habit's `iconColor`
   - Maintain contrast with white text
   - File: `src/components/templates/TemplateCard/TemplateCard.tsx`
   - _Verified complete: Import button already uses `iconColor` via inline style (line 496: `backgroundColor: isLocked ? '#9ca3af' : iconColor`). White text maintained via Button component's primary variant._
 
-- [x] **Task 3.2:** Add "Added" state to TemplateCard ✅
+- [ ] **Task 3.2:** Add "Added" state to TemplateCard ✅
   - Show "Added ✓" with green background when imported
   - Disable button to prevent re-import
   - File: `src/components/templates/TemplateCard/TemplateCard.tsx`
@@ -178,24 +173,25 @@ When a habit has been imported:
 
 ### Phase 4: Preview Modal Updates
 
-- [ ] **Task 4.1:** Add "Tips for Success" section
-
+- [x] **Task 4.1:** Add "Tips for Success" section ✅
   - Create new section below science box
   - Show 2-3 actionable tips with icons
   - Use habit color for tip icons
   - File: `src/components/templates/FullsizeTemplatePreview/FullsizeTemplatePreview.tsx`
+  - _Completed: Added "Tips for Success" section to FullsizeTemplatePreview modal, positioned after science box. Section displays numbered tips using habit iconColor for tip number styling. Uses warm yellow color scheme (#fefce8 background, #fef08a border) with Lightbulb icon header. Section conditionally renders only when template.tips array exists and has items. Added accessibility label announcing tip count. Includes 5 new tests: rendering with tips, empty array handling, undefined tips handling, numbered ordering, and accessibility. All 44 FullsizeTemplatePreview tests pass._
 
-- [x] **Task 4.2:** Update Import button to use `iconColor` ✅
+- [ ] **Task 4.2:** Update Import button to use `iconColor` ✅
   - Replace current button color with habit's `iconColor`
   - File: `src/components/templates/FullsizeTemplatePreview/FullsizeTemplatePreview.tsx`
   - _Verified complete: Import button already uses `iconColor` via inline style (line 667: `backgroundColor: iconColor`). White text maintained via importButtonText style._
 
 ### Phase 5: Data Updates
 
-- [ ] **Task 5.1:** Add `tips` field to template schema
+- [x] **Task 5.1:** Add `tips` field to template schema ✅
   - Array of strings for success tips
   - Update seed data with tips for existing templates
   - File: `convex/schema.ts`, `convex/templates.ts`
+  - _Completed: Added optional `tips` field (array of strings) to templates table in convex/schema.ts. Updated TemplateInsert type in convex/templates.ts. Added tips arrays to 10 popular seed templates across categories: 5-Minute Meditation, Hydration First, 7-Minute Workout, 10,000 Steps, Deep Work Session, Gratitude Journaling, Morning Sunlight Viewing, Delay Caffeine 90 Minutes, Consistent Bedtime, 7-9 Hours Sleep, and Daily Social Call. All 44 FullsizeTemplatePreview tests pass including tips-related tests._
 
 ---
 
@@ -213,8 +209,8 @@ When a habit has been imported:
 
 ## Accessibility
 
-- [x] Chevron has `accessibilityLabel="View details"`
-- [x] Flask badge has `accessibilityLabel="Science-backed habit"`
+- [ ] Chevron has `accessibilityLabel="View details"`
+- [ ] Flask badge has `accessibilityLabel="Science-backed habit"`
 - [ ] Added state announced to screen readers
 - [ ] All animations respect `useReducedMotion`
 
