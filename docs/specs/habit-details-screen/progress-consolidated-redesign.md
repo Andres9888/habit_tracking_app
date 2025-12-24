@@ -212,13 +212,22 @@ interface ProgressSectionConsolidatedProps {
     - Full accessibility support (VoiceOver/TalkBack labels, reduceMotion preference)
     - 27 passing unit tests covering all levels, trends, clamping, and accessibility
 
-- [ ] **Task 1.3:** Create `InsightChips` component
+- [x] **Task 1.3:** Create `InsightChips` component ✅
   - Horizontal scroll container
   - 4 chip types: streak, best day, focus day, monthly
   - Pulse animation for active streak
   - Haptic feedback on tap
   - Dependencies: 1.1
   - Estimate: 2h
+  - **Completed:** Implemented full InsightChips component with:
+    - Horizontal ScrollView with touch momentum and hidden scroll indicator
+    - 4 chip types: Current Streak (🔥), Best Day (🏆), Focus Day (⚡), Monthly (📅)
+    - Staggered entrance animations (50ms delay per chip) with FadeInRight effect
+    - Pulse animation (scale 1→1.05, opacity 0→0.6→0) for active streak chip (continuous 2s cycle)
+    - Haptic feedback via useHapticFeedback hook (triggerSelection on tap)
+    - Press animation with spring scale (0.95 on press)
+    - Full accessibility support (labels, hints, roles, reduceMotion preference)
+    - 36 passing unit tests covering rendering, interactions, and accessibility
 
 - [ ] **Task 1.4:** Create `WeeklyPatternChart` component
   - Compact 7-day bar chart (56px height)
@@ -273,12 +282,23 @@ interface ProgressSectionConsolidatedProps {
   - Estimate: 1h
   - **Completed:** 27 passing tests covering level display, trend indicators, progress to next level, strength clamping, accessibility, visual elements, and reduceMotion support
 
-- [ ] **Task 3.2:** Unit tests for `InsightChips`
+- [x] **Task 3.2:** Unit tests for `InsightChips` ✅
   - Chip rendering, scroll behavior
   - Pulse animation for active streak
   - Tap callbacks
   - Dependencies: 1.3
   - Estimate: 1h
+  - **Completed:** 36 passing tests covering:
+    - Rendering (all 4 chip types, conditional rendering when data is null)
+    - Streak chip (singular/plural formatting, zero streak handling)
+    - Best Day chip (name display, completion rate with rounding)
+    - Focus Day chip (interactive state, onPress callback, haptic feedback)
+    - Monthly chip (fraction display, edge cases)
+    - Accessibility (container role, chip labels/hints, active streak indication)
+    - Edge cases (minimal props, large numbers, 0%/100% rates)
+    - Chip data generation (ordering, memoization)
+    - Reduced motion preference handling
+    - Press interactions (pressIn/pressOut events)
 
 - [ ] **Task 3.3:** Unit tests for `WeeklyPatternChart`
   - Bar heights, color coding
