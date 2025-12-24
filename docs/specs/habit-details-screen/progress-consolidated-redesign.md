@@ -247,12 +247,22 @@ interface ProgressSectionConsolidatedProps {
     - reduceMotion preference support via useReduceMotion hook
     - 30 passing unit tests covering rendering, highlighting, accessibility, edge cases
 
-- [ ] **Task 1.5:** Create `ActionableTipCard` component
+- [x] **Task 1.5:** Create `ActionableTipCard` component ✅
   - Gradient background with icon
   - Tip text from existing generator
   - Chevron for tap affordance
   - Dependencies: 1.1
   - Estimate: 1h
+  - **Completed:** Implemented full ActionableTipCard component with:
+    - Violet-50 gradient background with violet-100 border
+    - 40px circular icon container with lightbulb emoji (💡)
+    - Tip text (violet-900) with optional subtitle (violet-600)
+    - Chevron icon (violet-400) for interactive cards
+    - Entrance animation (400ms fade-in + spring translateY)
+    - Press animation with spring scale (0.98 on press)
+    - Haptic feedback via useHapticFeedback hook (triggerLightImpact)
+    - Full accessibility support (labels, hints, roles, reduceMotion)
+    - 29 passing unit tests covering rendering, interactivity, accessibility, edge cases
 
 - [ ] **Task 1.6:** Create `StreakRecordsAccordion` component
   - Collapsed by default with preview
