@@ -700,6 +700,84 @@ function PulsingIcon({
 }
 
 /**
+ * EmptyWhyState Component (D3)
+ * Improved empty state for "Your Why" section with encouraging call-to-action
+ *
+ * Design spec (D3 Improved Empty State):
+ * - Dashed border with gradient background (stone-50 to stone-100)
+ * - Plus icon in rose circle (w-14 h-14)
+ * - Clear "Add Your Why" text
+ * - "RECOMMENDED" badge
+ * - Pressable opens Why Editor
+ *
+ * @param onPress - Callback when tapped to add Why
+ */
+function EmptyWhyState({
+  onPress,
+}: {
+  onPress: () => void;
+}) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    'worklet';
+    scale.value = withSpring(0.98, { damping: 15, stiffness: 300 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    'worklet';
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  }, [scale]);
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        accessibilityLabel="Add your why. Define your deeper motivation."
+        accessibilityRole="button"
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        className="active:opacity-90"
+      >
+        <LinearGradient
+          colors={['#fafaf9', '#f5f5f4']} // stone-50 to stone-100
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          className="items-center rounded-2xl border-2 border-dashed border-stone-200 p-6"
+        >
+          {/* Recommended Badge - top centered */}
+          <View className="mb-3 flex-row items-center gap-2">
+            <Heart className="text-rose-400" size={16} />
+            <Text
+              className="text-[10px] font-bold uppercase text-stone-400"
+              style={{ letterSpacing: 2 }}
+            >
+              Your Why
+            </Text>
+            <View className="rounded-full bg-rose-100 px-2 py-0.5">
+              <Text className="text-[9px] font-bold text-rose-500">RECOMMENDED</Text>
+            </View>
+          </View>
+
+          {/* Plus icon in rose circle */}
+          <View className="mb-3 h-14 w-14 items-center justify-center rounded-full bg-rose-100">
+            <Plus className="text-rose-400" size={24} />
+          </View>
+
+          {/* Add Your Why text */}
+          <Text className="font-semibold text-stone-700">Add Your Why</Text>
+          <Text className="mt-1 text-xs text-stone-400">Define your deeper motivation</Text>
+        </LinearGradient>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+/**
  * PremiumWhyDisplay Component (D2)
  * Premium quote-style display for the "Your Why" section when filled
  *
@@ -1297,33 +1375,8 @@ function MotivationTabContent({
             reduceMotion={reduceMotion}
           />
         ) : (
-          /* Empty state - original card layout */
-          <SectionCard
-            accessibilityLabel="Add your why"
-            onPress={onOpenWhyEditor}
-            className="border-l-4 border-rose-400"
-          >
-            <View className="flex-row items-start gap-3">
-              <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Heart className="text-rose-500" size={20} />
-                </PulsingIcon>
-                <EmptyCircleIndicator isVisible />
-              </View>
-              <View className="flex-1">
-                <View className="mb-1 flex-row items-center justify-between">
-                  <Text className="font-semibold text-stone-800">Your Why</Text>
-                  <View className="flex-row items-center gap-1">
-                    <Plus className="text-rose-600" size={12} />
-                    <Text className="text-xs font-medium text-rose-600">Set up</Text>
-                  </View>
-                </View>
-                <Text className="text-sm text-stone-500">
-                  Define your deeper motivation
-                </Text>
-              </View>
-            </View>
-          </SectionCard>
+          /* D3: Improved Empty State with encouraging call-to-action */
+          <EmptyWhyState onPress={onOpenWhyEditor} />
         )}
       </AnimatedSection>
 
