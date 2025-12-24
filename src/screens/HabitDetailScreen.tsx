@@ -16,40 +16,74 @@ import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { Modal } from '../components/ui/Modal/Modal';
+import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
+// DEPRECATED: These are kept for reference but no longer used in this file.
+// The new ProgressSection combines HabitStrengthSection + InsightsSection into 3 always-visible cards.
+// import { HabitStrengthSection } from '../components/HabitStrengthSection';
+// import { InsightsSection } from '../components/InsightsSection';
+import { ProgressSection } from '../components/ProgressSection';
+// REMOVED: StreakChainSection - redundant with Personal Bests card
+// import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
+import { CalendarHeatmap } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
-import { Toast } from '../components/ui/Toast/Toast';
+import { Toast } from '../components/Toast';
 import { HabitDetailTabs, type TabType } from '../components/HabitDetailTabs';
+import { HabitNotesSection } from '../components/HabitNotesSection';
 import { QuickStatsStrip } from '../components/QuickStatsStrip';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { HeaderCompleteToggle } from '../components/HeaderCompleteToggle';
 import { format, parseISO } from 'date-fns';
+import { getNextReminderRelativeTime } from '../utils/notifications';
 import {
   X,
   Edit3,
+  Pause,
+  Archive,
+  Trash2,
+  Calendar,
+  ChevronRight,
+  Eye,
+  Brain,
+  Sparkles,
+  Target,
+  MapPin,
+  Clock,
+  MessageCircle,
+  Plus,
+  Bell,
+  CalendarDays,
+  StickyNote,
+  // BarChart3 removed - was used by old InsightsSection header
   User,
+  Heart,
+  Check,
   Zap,
+  Shuffle,
+  AlertTriangle,
+  Lightbulb,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Id } from '../../convex/_generated/dataModel';
 import type { Doc } from '../../convex/_generated/dataModel';
+import type { Habit as HabitDoc, HabitTrackingEntry } from '../features/habits/types';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
+import { SwipeableActionButton } from '../components/SwipeableActionButton';
 import { DeleteUndoToast } from '../components/DeleteUndoToast';
 import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
-// Extracted tab content components
-import {
-  ProgressTabContent,
-  MotivationTabContent,
-  ManageTabContent,
-  type Habit,
-} from './HabitDetailScreen/components';
+
+// Types
+type Habit = HabitDoc & {
+  successRate?: number;
+  totalCompletions?: number;
+  totalMisses?: number;
+};
 
 interface HabitDetailScreenProps {
   habit: Habit | null;
@@ -209,6 +243,1282 @@ function HeroSection({
           <Text className="text-xs italic text-rose-400">Add your why</Text>
         )}
       </Pressable>
+    </View>
+  );
+}
+
+/**
+ * Action Button Component for Manage Tab
+ */
+function ActionButton({
+  icon: Icon,
+  label,
+  onPress,
+  showChevron = false,
+  subtitle,
+  variant = 'default',
+}: {
+  icon: React.ComponentType<{ className?: string; size?: number; strokeWidth?: number }>;
+  label: string;
+  onPress: () => void;
+  showChevron?: boolean;
+  subtitle?: string;
+  variant?: 'default' | 'destructive' | 'boost';
+}) {
+  const isDestructive = variant === 'destructive';
+  const isBoost = variant === 'boost';
+
+  // Build accessible label with context
+  const accessibleLabel = subtitle
+    ? `${label}. ${subtitle}${isDestructive ? '. This is a destructive action.' : ''}`
+    : `${label}${isDestructive ? '. This is a destructive action.' : ''}`;
+
+  return (
+    <Pressable
+      accessibilityLabel={accessibleLabel}
+      accessibilityRole="button"
+      className={clsx(
+        'flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70',
+        isDestructive && 'border-red-200/60 bg-red-50/50',
+        isBoost && 'border-violet-200/60 bg-gradient-to-r from-violet-50 to-indigo-50',
+        !isDestructive && !isBoost && 'border-stone-200 bg-white/80'
+      )}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onPress();
+      }}
+    >
+      <View
+        className={clsx(
+          'h-10 w-10 items-center justify-center rounded-xl',
+          isBoost && 'bg-gradient-to-br from-violet-500 to-indigo-600',
+          isDestructive && 'bg-red-100',
+          !isBoost && !isDestructive && 'bg-stone-100'
+        )}
+      >
+        <Icon
+          className={clsx(
+            isDestructive && 'text-red-500',
+            isBoost && 'text-white',
+            !isDestructive && !isBoost && 'text-stone-600'
+          )}
+          size={20}
+          strokeWidth={2.25}
+        />
+      </View>
+      <View className="flex-1">
+        <Text
+          className={clsx(
+            'text-base font-medium',
+            isDestructive && 'text-red-600',
+            isBoost && 'text-violet-900',
+            !isDestructive && !isBoost && 'text-stone-800'
+          )}
+        >
+          {label}
+        </Text>
+        {subtitle && (
+          <Text className={clsx(
+            'text-xs',
+            isBoost ? 'text-violet-600' : 'text-stone-500'
+          )}>
+            {subtitle}
+          </Text>
+        )}
+      </View>
+      {showChevron && (
+        <ChevronRight
+          className={clsx(
+            isDestructive && 'text-red-400',
+            isBoost && 'text-violet-400',
+            !isDestructive && !isBoost && 'text-stone-400'
+          )}
+          size={20}
+        />
+      )}
+    </Pressable>
+  );
+}
+
+/**
+ * Section Card Component for consistent styling
+ * Includes animated press state (scale 0.98) with Springs.button for tappable cards
+ * T4: Press feedback with scale animation and shadow elevation change
+ */
+function SectionCard({
+  children,
+  className,
+  onPress,
+  accessibilityLabel,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  onPress?: () => void;
+  accessibilityLabel?: string;
+}) {
+  const scale = useSharedValue(1);
+  const shadowOpacity = useSharedValue(0.08);
+  const elevation = useSharedValue(2);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    // Shadow properties for iOS
+    shadowOpacity: shadowOpacity.value,
+    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowOffset: {
+      width: 0,
+      height: interpolate(elevation.value, [1, 2], [1, 2]),
+    },
+    // Elevation for Android
+    elevation: elevation.value,
+  }));
+
+  const handlePressIn = useCallback(() => {
+    'worklet';
+    // T4.1: Use Springs.button (damping: 15, stiffness: 300)
+    scale.value = withSpring(0.98, { damping: 15, stiffness: 300 });
+    // T4.3: Reduce shadow/elevation on press for pressed-in effect
+    shadowOpacity.value = withSpring(0.04, { damping: 15, stiffness: 300 });
+    elevation.value = withSpring(1, { damping: 15, stiffness: 300 });
+  }, [scale, shadowOpacity, elevation]);
+
+  const handlePressOut = useCallback(() => {
+    'worklet';
+    // T4.1: Use Springs.button for release
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    // T4.3: Restore shadow/elevation
+    shadowOpacity.value = withSpring(0.08, { damping: 15, stiffness: 300 });
+    elevation.value = withSpring(2, { damping: 15, stiffness: 300 });
+  }, [scale, shadowOpacity, elevation]);
+
+  if (onPress) {
+    return (
+      <Animated.View
+        style={[
+          animatedStyle,
+          { shadowColor: '#78716c' } // stone-500 for shadow color
+        ]}
+      >
+        <Pressable
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="button"
+          className={clsx(
+            'rounded-2xl bg-white p-4',
+            className
+          )}
+          onPress={onPress}
+          onPressIn={() => {
+            handlePressIn();
+          }}
+          onPressOut={() => {
+            handlePressOut();
+          }}
+        >
+          {children}
+        </Pressable>
+      </Animated.View>
+    );
+  }
+
+  return (
+    <View
+      className={clsx(
+        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        className
+      )}
+    >
+      {children}
+    </View>
+  );
+}
+
+/**
+ * AnimatedSection Component for Motivation Tab
+ * Wraps sections with staggered slide-up entrance animations
+ * Respects reduceMotion preference and only animates on first tab visit
+ *
+ * @param index - Section index (0-5) for stagger delay calculation
+ * @param shouldAnimate - Whether to run entrance animation (first visit only)
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function AnimatedSection({
+  children,
+  index,
+  shouldAnimate,
+  reduceMotion = false,
+}: {
+  children: React.ReactNode;
+  index: number;
+  shouldAnimate: boolean;
+  reduceMotion?: boolean;
+}) {
+  const STAGGER_DELAY = 80; // 80ms between sections per spec
+  const INITIAL_TRANSLATE_Y = 24; // Starting Y offset per spec
+
+  // Start at final values if not animating or reduce motion enabled
+  const translateY = useSharedValue(shouldAnimate && !reduceMotion ? INITIAL_TRANSLATE_Y : 0);
+  const opacity = useSharedValue(shouldAnimate && !reduceMotion ? 0 : 1);
+
+  useEffect(() => {
+    // Skip if not animating or reduce motion is enabled
+    if (!shouldAnimate || reduceMotion) {
+      translateY.value = 0;
+      opacity.value = 1;
+      return;
+    }
+
+    // Apply staggered entrance animation with Springs.gentle
+    const delay = index * STAGGER_DELAY;
+
+    // Delay the animation based on section index
+    const timeout = setTimeout(() => {
+      translateY.value = withSpring(0, {
+        damping: 28,    // Springs.gentle
+        stiffness: 180, // Springs.gentle
+        mass: 1.2,      // Springs.gentle - slight overshoot
+      });
+      opacity.value = withTiming(1, { duration: 300 });
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [shouldAnimate, reduceMotion, index, translateY, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.View style={animatedStyle}>
+      {children}
+    </Animated.View>
+  );
+}
+
+/**
+ * CompletionCheckmark Component
+ * Animated checkmark badge that pops in when a section is filled
+ *
+ * Design spec (T2 Progress Checkmarks):
+ * - Positioned at top-right of section icon
+ * - Emerald-500 background with white check icon
+ * - Pop-in animation: scale 0 → 1.2 → 1 (Springs.bouncy)
+ * - Delayed 600ms after section entrance animation
+ *
+ * @param isVisible - Whether the checkmark should be shown (section is filled)
+ * @param sectionIndex - Section index for staggered delay calculation
+ * @param shouldAnimate - Whether entrance animation should run (first tab visit)
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function CompletionCheckmark({
+  isVisible,
+  sectionIndex,
+  shouldAnimate,
+  reduceMotion = false,
+}: {
+  isVisible: boolean;
+  sectionIndex: number;
+  shouldAnimate: boolean;
+  reduceMotion?: boolean;
+}) {
+  const STAGGER_DELAY = 80;
+  const BASE_CHECKMARK_DELAY = 600; // Wait for section entrance
+
+  const scale = useSharedValue(isVisible && shouldAnimate && !reduceMotion ? 0 : (isVisible ? 1 : 0));
+  const opacity = useSharedValue(isVisible && shouldAnimate && !reduceMotion ? 0 : (isVisible ? 1 : 0));
+
+  useEffect(() => {
+    if (!isVisible) {
+      scale.value = 0;
+      opacity.value = 0;
+      return;
+    }
+
+    if (!shouldAnimate || reduceMotion) {
+      scale.value = 1;
+      opacity.value = 1;
+      return;
+    }
+
+    // Calculate delay: section stagger + base checkmark delay
+    const delay = (sectionIndex * STAGGER_DELAY) + BASE_CHECKMARK_DELAY;
+
+    const timeout = setTimeout(() => {
+      // Pop-in animation: 0 → 1.2 → 1 using Springs.bouncy
+      scale.value = withSequence(
+        withSpring(1.2, {
+          damping: 8,    // Springs.bouncy
+          stiffness: 300, // Springs.bouncy
+        }),
+        withSpring(1, {
+          damping: 15,   // Settle down
+          stiffness: 300,
+        })
+      );
+      opacity.value = withTiming(1, { duration: 150 });
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [isVisible, shouldAnimate, reduceMotion, sectionIndex, scale, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  if (!isVisible) return null;
+
+  return (
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          position: 'absolute',
+          top: -4,
+          right: -4,
+        },
+      ]}
+    >
+      <View className="h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
+        <Check className="text-white" size={12} strokeWidth={3} />
+      </View>
+    </Animated.View>
+  );
+}
+
+/**
+ * PulsingIcon Component for Empty State Icons (T3.1)
+ * Wraps icons with subtle opacity + scale pulse animation
+ *
+ * Design spec (T3 Improved Empty States):
+ * - Opacity: 0.5 → 1 → 0.5 (2000ms loop)
+ * - Scale: 1 → 1.05 → 1 (synced with opacity)
+ * - Only animates when reduceMotion is false
+ *
+ * @param children - The icon element to wrap
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function PulsingIcon({
+  children,
+  reduceMotion = false,
+}: {
+  children: React.ReactNode;
+  reduceMotion?: boolean;
+}) {
+  const opacity = useSharedValue(1);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      opacity.value = 1;
+      scale.value = 1;
+      return;
+    }
+
+    // Create infinite pulse animation
+    const pulseOpacity = () => {
+      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
+        if (finished) {
+          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
+            if (finished2) {
+              runOnJS(pulseOpacity)();
+            }
+          });
+        }
+      });
+    };
+
+    const pulseScale = () => {
+      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
+        if (finished) {
+          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
+            if (finished2) {
+              runOnJS(pulseScale)();
+            }
+          });
+        }
+      });
+    };
+
+    pulseOpacity();
+    pulseScale();
+
+    return () => {
+      // Cleanup - reset to default values
+      opacity.value = 1;
+      scale.value = 1;
+    };
+  }, [reduceMotion, opacity, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  if (reduceMotion) {
+    return <>{children}</>;
+  }
+
+  return (
+    <Animated.View style={animatedStyle}>
+      {children}
+    </Animated.View>
+  );
+}
+
+/**
+ * Danger Zone Section Component (T4.3)
+ * Groups destructive actions with red-tinted styling
+ */
+function DangerZoneSection({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <View className="mt-4">
+      {/* Red-tinted section header */}
+      <View className="mb-3 flex-row items-center gap-2 px-1">
+        <View className="h-5 w-5 items-center justify-center rounded-md bg-red-100">
+          <AlertTriangle className="text-red-500" size={12} />
+        </View>
+        <Text className="text-xs font-semibold uppercase tracking-wider text-red-500">
+          Danger Zone
+        </Text>
+      </View>
+
+      {/* Red-tinted card container */}
+      <View className="overflow-hidden rounded-2xl border border-red-200/50 bg-red-50/30">
+        {children}
+      </View>
+    </View>
+  );
+}
+
+/**
+ * Animated Pressable Card Component
+ * Used for individual motivation cards (vision board, affirmations) with scale 0.98 press animation
+ * Respects reduce motion accessibility setting
+ */
+function AnimatedPressableCard({
+  children,
+  className,
+  onPress,
+  onLongPress,
+  accessibilityLabel,
+  reduceMotion = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  onPress: () => void;
+  onLongPress?: () => void;
+  accessibilityLabel?: string;
+  reduceMotion?: boolean;
+}) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    'worklet';
+    // Skip animation if reduce motion is enabled
+    if (reduceMotion) return;
+    scale.value = withTiming(0.98, { duration: 100 });
+  }, [scale, reduceMotion]);
+
+  const handlePressOut = useCallback(() => {
+    'worklet';
+    // Skip animation if reduce motion is enabled
+    if (reduceMotion) return;
+    scale.value = withSpring(1, { damping: 15, stiffness: 200 });
+  }, [scale, reduceMotion]);
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        className={className}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        onPressIn={() => {
+          handlePressIn();
+        }}
+        onPressOut={() => {
+          handlePressOut();
+        }}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+/**
+ * T4.2: Affirmations Section with Shuffle Feature
+ * Shows a single affirmation with card flip animation on shuffle
+ * Respects reduce motion accessibility setting
+ */
+function AffirmationsSection({
+  affirmations,
+  affirmationFlipAnim,
+  shuffledAffirmationIndex,
+  onShuffleAffirmation,
+  onOpenAffirmationEditor,
+  onConfirmDeleteAffirmation,
+  onSetAffirmationsListOpen,
+  reduceMotion = false,
+}: {
+  affirmations: Doc<'affirmations'>[];
+  affirmationFlipAnim: SharedValue<number>;
+  shuffledAffirmationIndex: number;
+  onShuffleAffirmation: () => void;
+  onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
+  onConfirmDeleteAffirmation: (item: Doc<'affirmations'>) => void;
+  onSetAffirmationsListOpen: (open: boolean) => void;
+  reduceMotion?: boolean;
+}) {
+  // Get the current affirmation to display based on shuffled index
+  const safeIndex = affirmations.length > 0
+    ? shuffledAffirmationIndex % affirmations.length
+    : 0;
+  const currentAffirmation = affirmations[safeIndex];
+
+  // Animated style for card flip effect
+  // Skip animation if reduce motion is enabled
+  const flipAnimatedStyle = useAnimatedStyle(() => {
+    // No animation transform when reduce motion is enabled
+    if (reduceMotion) {
+      return {
+        transform: [{ perspective: 1000 }, { rotateY: '0deg' }],
+        opacity: 1,
+      };
+    }
+    const rotateY = interpolate(
+      affirmationFlipAnim.value,
+      [0, 1],
+      [0, 90],
+      Extrapolation.CLAMP
+    );
+    const opacity = interpolate(
+      affirmationFlipAnim.value,
+      [0, 0.5, 1],
+      [1, 0.5, 0],
+      Extrapolation.CLAMP
+    );
+    return {
+      transform: [{ perspective: 1000 }, { rotateY: `${rotateY}deg` }],
+      opacity,
+    };
+  });
+
+  return (
+    <SectionCard>
+      <View className="mb-3 flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <MessageCircle className="text-stone-500" size={18} />
+          <Text className="font-semibold text-stone-800">Affirmations</Text>
+          {affirmations.length > 0 && (
+            <View className="rounded-full bg-stone-100 px-1.5 py-0.5">
+              <Text className="text-[10px] font-medium text-stone-500">
+                {safeIndex + 1}/{affirmations.length}
+              </Text>
+            </View>
+          )}
+        </View>
+        <View className="flex-row items-center gap-2">
+          {/* Shuffle button - only show when more than 1 affirmation */}
+          {affirmations.length > 1 && (
+            <Pressable
+              accessibilityLabel="Shuffle affirmation"
+              accessibilityRole="button"
+              className="rounded-full bg-stone-100 p-2 active:bg-stone-200"
+              onPress={onShuffleAffirmation}
+            >
+              <Shuffle className="text-stone-600" size={16} />
+            </Pressable>
+          )}
+          <Pressable
+            accessibilityLabel="Add affirmation"
+            accessibilityRole="button"
+            className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+            onPress={() => onOpenAffirmationEditor()}
+          >
+            <Text className="text-xs font-semibold text-white">+ Add</Text>
+          </Pressable>
+        </View>
+      </View>
+      {affirmations.length === 0 ? (
+        <LinearGradient
+          colors={['#ecfdf5', '#d1fae5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          className="items-center rounded-xl py-6"
+        >
+          <PulsingIcon reduceMotion={reduceMotion}>
+            <MessageCircle className="mb-2 text-emerald-300" size={28} />
+          </PulsingIcon>
+          <Text className="text-center text-sm text-stone-500">
+            What do you tell yourself?
+          </Text>
+          <View className="mt-2 flex-row items-center gap-1">
+            <Plus className="text-emerald-600" size={12} />
+            <Text className="text-xs font-medium text-emerald-600">Add affirmation</Text>
+          </View>
+        </LinearGradient>
+      ) : (
+        <View className="gap-3">
+          {/* Single affirmation card with flip animation */}
+          <Animated.View style={flipAnimatedStyle}>
+            <AnimatedPressableCard
+              accessibilityLabel={`Edit affirmation: ${currentAffirmation?.text.slice(0, 30)}`}
+              className="rounded-xl border border-stone-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4"
+              onLongPress={() => currentAffirmation && onConfirmDeleteAffirmation(currentAffirmation)}
+              onPress={() => onOpenAffirmationEditor(currentAffirmation)}
+              reduceMotion={reduceMotion}
+            >
+              <Text className="text-sm leading-5 text-stone-700">"{currentAffirmation?.text}"</Text>
+              {currentAffirmation?.type && (
+                <View className="mt-2">
+                  <View className="self-start rounded-full bg-violet-100 px-2 py-0.5">
+                    <Text className="text-xs text-violet-600">{currentAffirmation.type}</Text>
+                  </View>
+                </View>
+              )}
+            </AnimatedPressableCard>
+          </Animated.View>
+          {/* View all link - show when more than 1 affirmation */}
+          {affirmations.length > 1 && (
+            <Pressable
+              accessibilityLabel="View all affirmations"
+              accessibilityRole="button"
+              className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
+              onPress={() => onSetAffirmationsListOpen(true)}
+            >
+              <Text className="text-sm font-medium text-stone-600">
+                View all ({affirmations.length})
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+    </SectionCard>
+  );
+}
+
+/**
+ * Progress Tab Content
+ */
+function ProgressTabContent({
+  completedDates,
+  habit,
+  habitCreatedAt,
+  strengthPercent,
+  tracking,
+}: {
+  completedDates: Set<string>;
+  habit: Habit;
+  habitCreatedAt: number | undefined;
+  strengthPercent: number;
+  tracking: HabitTrackingEntry[];
+}) {
+  return (
+    <View className="gap-4">
+      {/* Calendar Heatmap - visual history of completions */}
+      <CalendarHeatmap
+        habitId={habit._id}
+        completedDates={completedDates}
+        habitCreatedAt={habitCreatedAt}
+        habitColor={habit.iconColor}
+        onDayPress={(date, completed) => {
+          // Future: Could open day detail or allow editing past dates
+        }}
+      />
+
+      {/* Consolidated Progress Section - 3 always-visible cards */}
+      <ProgressSection
+        tracking={tracking}
+        habitCreatedAt={habitCreatedAt}
+        strength={strengthPercent}
+        onInfoPress={() => {
+          Alert.alert(
+            'What is Habit Strength?',
+            'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
+            '🔥 Current Streak - Consecutive days completed\n\n' +
+            '📊 Success Rate - % of days you\'ve completed\n\n' +
+            '📅 Consistency - How regular your habit is\n\n' +
+            'The stronger your habit, the easier it becomes to maintain!',
+            [{ text: 'Got it' }]
+          );
+        }}
+        onWorstDayPress={() => {
+          Alert.alert(
+            'Improve Your Weak Days',
+            'Tips to boost your consistency:\n\n' +
+            '⏰ Set a reminder for this specific day\n\n' +
+            '📍 Stack it after an existing habit\n\n' +
+            '🎯 Start with a smaller version on tough days\n\n' +
+            '🤝 Find an accountability partner',
+            [{ text: 'Got it' }]
+          );
+        }}
+        onSeeAllPress={() => {
+          // Future: Navigate to full analytics screen
+        }}
+      />
+    </View>
+  );
+}
+
+/**
+ * Motivation Tab Content
+ * Features staggered entrance animations on first tab visit (T1)
+ */
+function MotivationTabContent({
+  affirmations,
+  affirmationFlipAnim,
+  habit,
+  habitCueAfterBehavior,
+  habitCueLocation,
+  habitCueTime,
+  habitIdentity,
+  habitNotes,
+  hasCue,
+  onAddNote,
+  onEditNote,
+  onOpenAffirmationEditor,
+  onOpenCueEditor,
+  onOpenIdentityEditor,
+  onShuffleAffirmation,
+  onOpenVisualizationExercise,
+  onOpenVisualizationGuide,
+  onOpenVisionBoardEditor,
+  onOpenVisionBoardPreview,
+  onOpenWhyEditor,
+  onConfirmDeleteAffirmation,
+  onConfirmDeleteVisionBoardItem,
+  onSetAffirmationsListOpen,
+  onSetVisionBoardListOpen,
+  onViewAllNotes,
+  shuffledAffirmationIndex,
+  visionBoardItems,
+  reduceMotion = false,
+  shouldAnimate = false,
+}: {
+  affirmations: Doc<'affirmations'>[];
+  affirmationFlipAnim: SharedValue<number>;
+  habit: Habit;
+  habitCueAfterBehavior: string | undefined;
+  habitCueLocation: string | undefined;
+  habitCueTime: string | undefined;
+  habitIdentity: string | undefined;
+  habitNotes: Doc<'notes'>[];
+  hasCue: boolean;
+  onAddNote: () => void;
+  onEditNote: (note: Doc<'notes'>) => void;
+  onOpenAffirmationEditor: (item?: Doc<'affirmations'>) => void;
+  onOpenCueEditor: () => void;
+  onOpenIdentityEditor: () => void;
+  onShuffleAffirmation: () => void;
+  onOpenVisualizationExercise: () => void;
+  onOpenVisualizationGuide: () => void;
+  onOpenVisionBoardEditor: (item?: Doc<'visionBoardItems'>) => void;
+  onOpenVisionBoardPreview: (index: number) => void;
+  onOpenWhyEditor: () => void;
+  onConfirmDeleteAffirmation: (item: Doc<'affirmations'>) => void;
+  onConfirmDeleteVisionBoardItem: (item: Doc<'visionBoardItems'>) => void;
+  onSetAffirmationsListOpen: (open: boolean) => void;
+  onSetVisionBoardListOpen: (open: boolean) => void;
+  onViewAllNotes: () => void;
+  shuffledAffirmationIndex: number;
+  visionBoardItems: Doc<'visionBoardItems'>[];
+  reduceMotion?: boolean;
+  /** Whether to animate entrance (first tab visit only) */
+  shouldAnimate?: boolean;
+}) {
+  return (
+    <View className="gap-4">
+      {/* Your Why Section - Index 0 */}
+      <AnimatedSection index={0} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard
+          accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
+          onPress={onOpenWhyEditor}
+          className="border-l-4 border-rose-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
+              {habit.why ? (
+                <Heart className="text-rose-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Heart className="text-rose-500" size={20} />
+                </PulsingIcon>
+              )}
+              <CompletionCheckmark
+                isVisible={!!habit.why}
+                sectionIndex={0}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
+            </View>
+            <View className="flex-1">
+              {habit.why ? (
+                <>
+                  <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
+                  <Text className="text-sm text-stone-600">"{habit.why}"</Text>
+                </>
+              ) : (
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <Text className="font-semibold text-stone-800">Your Why</Text>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-rose-600" size={12} />
+                      <Text className="text-xs font-medium text-rose-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Define your deeper motivation
+                  </Text>
+                </>
+              )}
+            </View>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Your Identity Section - Index 1 */}
+      <AnimatedSection index={1} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard
+          accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
+          onPress={onOpenIdentityEditor}
+          className="border-l-4 border-violet-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+              {habitIdentity ? (
+                <Sparkles className="text-violet-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Sparkles className="text-violet-500" size={20} />
+                </PulsingIcon>
+              )}
+              <CompletionCheckmark
+                isVisible={!!habitIdentity}
+                sectionIndex={1}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
+            </View>
+            <View className="flex-1">
+              {habitIdentity ? (
+                <>
+                  <View className="mb-1 flex-row items-center gap-2">
+                    <Text className="font-semibold text-stone-800">Your Identity</Text>
+                    <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                      <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
+                </>
+              ) : (
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <View className="flex-row items-center gap-2">
+                      <Text className="font-semibold text-stone-800">Your Identity</Text>
+                      <View className="rounded-full bg-violet-100 px-2 py-0.5">
+                        <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
+                      </View>
+                    </View>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-violet-600" size={12} />
+                      <Text className="text-xs font-medium text-violet-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Who are you becoming?
+                  </Text>
+                </>
+              )}
+            </View>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Your Cue Section - Index 2 */}
+      <AnimatedSection index={2} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard
+          accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
+          onPress={onOpenCueEditor}
+          className="border-l-4 border-amber-400"
+        >
+          <View className="flex-row items-start gap-3">
+            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+              {hasCue ? (
+                <Target className="text-amber-500" size={20} />
+              ) : (
+                <PulsingIcon reduceMotion={reduceMotion}>
+                  <Target className="text-amber-500" size={20} />
+                </PulsingIcon>
+              )}
+              <CompletionCheckmark
+                isVisible={hasCue}
+                sectionIndex={2}
+                shouldAnimate={shouldAnimate ?? false}
+                reduceMotion={reduceMotion}
+              />
+            </View>
+            <View className="flex-1">
+              {hasCue ? (
+                <>
+                  <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
+                  {habitCueAfterBehavior && (
+                    <Text className="text-sm text-stone-600">
+                      After I {habitCueAfterBehavior}, I will {habit.name}
+                    </Text>
+                  )}
+                  {(habitCueLocation || habitCueTime) && (
+                    <View className="mt-2 flex-row flex-wrap gap-2">
+                      {habitCueLocation && (
+                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
+                          <MapPin className="text-amber-500" size={12} />
+                          <Text className="text-xs text-amber-700">{habitCueLocation}</Text>
+                        </View>
+                      )}
+                      {habitCueTime && (
+                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
+                          <Clock className="text-amber-500" size={12} />
+                          <Text className="text-xs text-amber-700">{habitCueTime}</Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </>
+              ) : (
+                <>
+                  <View className="mb-1 flex-row items-center justify-between">
+                    <Text className="font-semibold text-stone-800">Your Cue</Text>
+                    <View className="flex-row items-center gap-1">
+                      <Plus className="text-amber-600" size={12} />
+                      <Text className="text-xs font-medium text-amber-600">Set up</Text>
+                    </View>
+                  </View>
+                  <Text className="text-sm text-stone-500">
+                    Link this habit to an existing routine
+                  </Text>
+                  {/* T3.2: Helpful tip for empty Cue section */}
+                  <View className="mt-2 flex-row items-center gap-1.5 rounded-lg bg-amber-50 px-2 py-1.5">
+                    <Lightbulb className="text-amber-600" size={12} />
+                    <Text className="flex-1 text-xs text-amber-700">
+                      Habits with cues are 2x more likely to stick
+                    </Text>
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Vision Board Section - Index 3 */}
+      <AnimatedSection index={3} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard>
+          <View className="mb-3 flex-row items-center justify-between">
+            <View className="flex-row items-center gap-2">
+              <Eye className="text-stone-500" size={18} />
+              <Text className="font-semibold text-stone-800">Vision Board</Text>
+            </View>
+            <Pressable
+              accessibilityLabel="Add vision board card"
+              accessibilityRole="button"
+              className="rounded-full bg-violet-600 px-3 py-1.5 active:bg-violet-700"
+              onPress={() => onOpenVisionBoardEditor()}
+            >
+              <Text className="text-xs font-semibold text-white">+ Add</Text>
+            </Pressable>
+          </View>
+          {visionBoardItems.length === 0 ? (
+            <LinearGradient
+              colors={['#faf5ff', '#f3e8ff']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="items-center rounded-xl py-6"
+            >
+              <PulsingIcon reduceMotion={reduceMotion}>
+                <Eye className="mb-2 text-violet-300" size={28} />
+              </PulsingIcon>
+              <Text className="text-center text-sm text-stone-500">
+                What are you building toward?
+              </Text>
+              <View className="mt-2 flex-row items-center gap-1">
+                <Plus className="text-violet-600" size={12} />
+                <Text className="text-xs font-medium text-violet-600">Add a vision</Text>
+              </View>
+            </LinearGradient>
+          ) : (
+            <View className="gap-3">
+              {visionBoardItems.slice(0, 2).map((item, index) => (
+                <AnimatedPressableCard
+                  key={item._id}
+                  accessibilityLabel={`Preview vision card ${item.title}. Tap to view full screen.`}
+                  className="rounded-xl border border-stone-100 bg-stone-50/50 p-4"
+                  onLongPress={() => onConfirmDeleteVisionBoardItem(item)}
+                  onPress={() => onOpenVisionBoardPreview(index)}
+                  reduceMotion={reduceMotion}
+                >
+                  <Text className="text-sm font-semibold text-stone-800">{item.title}</Text>
+                  {item.body && (
+                    <Text className="mt-1 text-sm leading-5 text-stone-600" numberOfLines={3}>
+                      {item.body}
+                    </Text>
+                  )}
+                  <Text className="mt-2 text-xs text-stone-400">Tap to preview</Text>
+                </AnimatedPressableCard>
+              ))}
+              {visionBoardItems.length > 2 && (
+                <Pressable
+                  accessibilityLabel="View all vision board cards"
+                  accessibilityRole="button"
+                  className="items-center rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50"
+                  onPress={() => onSetVisionBoardListOpen(true)}
+                >
+                  <Text className="text-sm font-medium text-stone-600">
+                    View all ({visionBoardItems.length})
+                  </Text>
+                </Pressable>
+              )}
+            </View>
+          )}
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Affirmations Section - Index 4 - T4.2: Shuffle feature */}
+      <AnimatedSection index={4} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <AffirmationsSection
+          affirmations={affirmations}
+          affirmationFlipAnim={affirmationFlipAnim}
+          shuffledAffirmationIndex={shuffledAffirmationIndex}
+          onShuffleAffirmation={onShuffleAffirmation}
+          onOpenAffirmationEditor={onOpenAffirmationEditor}
+          onConfirmDeleteAffirmation={onConfirmDeleteAffirmation}
+          onSetAffirmationsListOpen={onSetAffirmationsListOpen}
+          reduceMotion={reduceMotion}
+        />
+      </AnimatedSection>
+
+      {/* Mental Exercises Section - Index 5 */}
+      <AnimatedSection index={5} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <SectionCard>
+          <View className="mb-3 flex-row items-center gap-2">
+            <Brain className="text-stone-500" size={18} />
+            <Text className="font-semibold text-stone-800">Mental Exercises</Text>
+          </View>
+          <Text className="mb-4 text-sm text-stone-500">
+            Science-backed techniques to strengthen your resolve.
+          </Text>
+          <View className="gap-3">
+            <Pressable
+              accessibilityLabel="Open mental contrasting exercise"
+              accessibilityRole="button"
+              className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-cyan-50 to-teal-50 p-4 active:opacity-80"
+              onPress={onOpenVisualizationExercise}
+            >
+              <View className="flex-row items-center gap-3">
+                <Text className="text-xl">🎯</Text>
+                <Text className="text-sm font-medium text-stone-700">Mental Contrasting</Text>
+              </View>
+              <ChevronRight className="text-stone-400" size={18} />
+            </Pressable>
+            <Pressable
+              accessibilityLabel="Open visualization guide"
+              accessibilityRole="button"
+              className="flex-row items-center justify-between rounded-xl border border-stone-100 bg-gradient-to-r from-indigo-50 to-blue-50 p-4 active:opacity-80"
+              onPress={onOpenVisualizationGuide}
+            >
+              <View className="flex-row items-center gap-3">
+                <Text className="text-xl">✨</Text>
+                <Text className="text-sm font-medium text-stone-700">Visualization Guide</Text>
+              </View>
+              <ChevronRight className="text-stone-400" size={18} />
+            </Pressable>
+          </View>
+        </SectionCard>
+      </AnimatedSection>
+
+      {/* Notes Section - Index 6 - Story 1.9.3 */}
+      <AnimatedSection index={6} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+        <HabitNotesSection
+          notes={habitNotes}
+          onAddNote={onAddNote}
+          onEditNote={onEditNote}
+          onViewAll={onViewAllNotes}
+        />
+      </AnimatedSection>
+    </View>
+  );
+}
+
+/**
+ * Manage Tab Content
+ */
+function ManageTabContent({
+  habit,
+  habitNotes,
+  onArchive,
+  onDelete,
+  onOpenCalendar,
+  onOpenNotesList,
+  onOpenNotesEditor,
+  onPause,
+  onSwipeDelete,
+  onSwipeArchive,
+}: {
+  habit: Habit;
+  habitNotes: Doc<'notes'>[];
+  onArchive: () => void;
+  onDelete: () => void;
+  onOpenCalendar: () => void;
+  onOpenNotesList: () => void;
+  onOpenNotesEditor: () => void;
+  onPause: () => void;
+  /** Swipe action for delete - triggers undo toast flow */
+  onSwipeDelete?: () => void;
+  /** Swipe action for archive - triggers undo toast flow */
+  onSwipeArchive?: () => void;
+}) {
+  // Real-time relative time for next reminder (T3.4)
+  // Update every minute for accurate display
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!habit.remindersEnabled || !habit.reminderTime) return;
+    const interval = setInterval(() => {
+      setTick(t => t + 1);
+    }, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, [habit.remindersEnabled, habit.reminderTime]);
+
+  // Get relative time display for next reminder
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const nextReminderText = useMemo(() => {
+    if (!habit.remindersEnabled || !habit.reminderTime) {
+      return 'Not set';
+    }
+    return getNextReminderRelativeTime(habit.reminderTime) || habit.reminderTime;
+  }, [habit.remindersEnabled, habit.reminderTime, tick]); // tick triggers recalculation every minute
+
+  return (
+    <View className="gap-4">
+      {/* Reminders */}
+      <SectionCard>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
+              <Bell className="text-blue-500" size={20} />
+            </View>
+            <View>
+              <Text className="font-semibold text-stone-800">Reminders</Text>
+              <Text className={clsx(
+                "text-sm",
+                habit.remindersEnabled ? "text-blue-600 font-medium" : "text-stone-500"
+              )}>
+                {nextReminderText}
+              </Text>
+            </View>
+          </View>
+          <ChevronRight className="text-stone-400" size={20} />
+        </View>
+      </SectionCard>
+
+      {/* Frequency */}
+      <SectionCard>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-purple-100">
+              <CalendarDays className="text-purple-500" size={20} />
+            </View>
+            <View>
+              <Text className="font-semibold text-stone-800">Frequency</Text>
+              <Text className="text-sm text-stone-500">Every day</Text>
+            </View>
+          </View>
+          <ChevronRight className="text-stone-400" size={20} />
+        </View>
+      </SectionCard>
+
+      {/* Notes */}
+      <SectionCard
+        accessibilityLabel="View notes"
+        onPress={onOpenNotesList}
+      >
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+              <StickyNote className="text-amber-500" size={20} />
+            </View>
+            <View>
+              <Text className="font-semibold text-stone-800">Notes</Text>
+              <Text className="text-sm text-stone-500">
+                {habitNotes.length} journal {habitNotes.length === 1 ? 'entry' : 'entries'}
+              </Text>
+            </View>
+          </View>
+          <ChevronRight className="text-stone-400" size={20} />
+        </View>
+      </SectionCard>
+
+      {/* View Full Calendar */}
+      <ActionButton
+        icon={Calendar}
+        label="View Full Calendar"
+        subtitle="See your complete habit history"
+        onPress={onOpenCalendar}
+        showChevron
+      />
+
+      {/* Divider */}
+      <View className="mx-4 h-px bg-stone-200" />
+
+      {/* Pause Habit */}
+      <ActionButton
+        icon={Pause}
+        label="Pause Habit"
+        subtitle="Take a break without losing progress"
+        onPress={onPause}
+      />
+
+      {/* Danger Zone Section (T4.3) */}
+      <DangerZoneSection>
+        {/* Archive - Swipeable */}
+        <SwipeableActionButton
+          icon={Archive}
+          label="Archive"
+          subtitle="Hide from active habits"
+          onPress={onArchive}
+          onSwipeAction={onSwipeArchive}
+          swipeEnabled={!!onSwipeArchive}
+          swipeIcon={Archive}
+          swipeLabel="Archive"
+          swipeVariant="warning"
+        />
+
+        {/* Subtle divider between destructive actions */}
+        <View className="mx-4 h-px bg-red-200/40" />
+
+        {/* Delete - Swipeable */}
+        <SwipeableActionButton
+          icon={Trash2}
+          label="Delete Habit"
+          subtitle="Permanently remove this habit"
+          onPress={onDelete}
+          onSwipeAction={onSwipeDelete}
+          swipeEnabled={!!onSwipeDelete}
+          swipeIcon={Trash2}
+          swipeLabel="Delete"
+          swipeVariant="destructive"
+          variant="destructive"
+        />
+      </DangerZoneSection>
     </View>
   );
 }
@@ -400,6 +1710,16 @@ export default function HabitDetailScreen({
   const habitCueTime = habit?.cueTime;
   const hasCue = Boolean(habitCueAfterBehavior || habitCueLocation || habitCueTime);
 
+  // Debug: Log when habit prop updates
+  useEffect(() => {
+    if (habit) {
+      console.log('🔢 HabitDetailScreen habit updated:', {
+        name: habit.name,
+        currentStreak: habit.currentStreak,
+        timestamp: Date.now(),
+      });
+    }
+  }, [habit, habit?.currentStreak]);
 
   const habitNotes =
     useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];

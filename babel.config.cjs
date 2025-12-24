@@ -8,27 +8,6 @@ module.exports = function (api) {
       '@babel/plugin-transform-react-jsx',
       { runtime: 'automatic', importSource: 'react-native-css-interop' },
     ],
-    [
-      'module-resolver',
-      {
-        alias: {
-          '@': './src',
-          '@/components': './src/components',
-          '@/ui': './src/components/ui',
-          '@/charts': './src/components/charts',
-          '@/modals': './src/components/modals',
-          '@/hooks': './src/hooks',
-          '@/utils': './src/utils',
-          '@/types': './src/types',
-          '@/theme': './src/theme',
-          '@/lib': './src/lib',
-          '@/constants': './src/constants',
-          '@/features': './src/features',
-          '@/screens': './src/screens',
-          '@convex': './convex',
-        },
-      },
-    ],
   ];
 
   if (process.env.NODE_ENV === 'production') {

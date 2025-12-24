@@ -15,6 +15,15 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
     lastUpdatedHabit?.strength ? lastUpdatedHabit.strength * 100 : undefined
   );
 
+  useEffect(() => {
+    if (milestone) {
+      console.log('🎉 MILESTONE DETECTED!', {
+        level: milestone.level,
+        strength: milestone.strength + '%',
+        habitName: milestone.habitName,
+      });
+    }
+  }, [milestone]);
 
   const prevStrengthsRef = useRef<Map<string, number>>(new Map());
 
@@ -26,6 +35,11 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
       const currentStrength = (habit.strength as number | undefined) ?? 0;
 
       if (currentStrength > prevStrength) {
+        console.log('🎯 Strength increased!', {
+          habitName: habit.name,
+          prevStrength: (prevStrength * 100).toFixed(1) + '%',
+          currentStrength: (currentStrength * 100).toFixed(1) + '%',
+        });
         setLastUpdatedHabit({
           id: habit._id,
           name: habit.name,

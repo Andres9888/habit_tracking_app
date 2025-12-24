@@ -22,13 +22,17 @@ export const SparkleBurst = ({
   const scale = useRef(new Animated.Value(0.6)).current;
 
   useEffect(() => {
+    console.log('🌟 SparkleBurst:', { isActive, reduceMotion, color });
+
     if (!isActive || reduceMotion) {
       if (isActive && reduceMotion) {
+        console.log('🌟 SparkleBurst skipped (reduceMotion enabled)');
         onComplete?.();
       }
       return;
     }
 
+    console.log('🌟 SparkleBurst TRIGGERED!');
     opacity.setValue(0.9); // More prominent for celebration
     scale.setValue(0.6);
 
@@ -46,6 +50,7 @@ export const SparkleBurst = ({
         useNativeDriver: true,
       }),
     ]).start(() => {
+      console.log('🌟 SparkleBurst completed');
       onComplete?.();
     });
   }, [isActive, onComplete, opacity, reduceMotion, scale]);

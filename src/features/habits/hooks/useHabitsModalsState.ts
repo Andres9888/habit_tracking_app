@@ -60,6 +60,12 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
         const streakChanged = updated.currentStreak !== selectedHabit.currentStreak;
         const strengthChanged = updated.strength !== selectedHabit.strength;
         if (streakChanged || strengthChanged || updated !== selectedHabit) {
+          console.log('🔄 Syncing selectedHabit:', {
+            habitName: updated.name,
+            oldStreak: selectedHabit.currentStreak,
+            newStreak: updated.currentStreak,
+            streakChanged,
+          });
           setSelectedHabit(updated);
         }
       }
@@ -114,8 +120,10 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   const openHabitCalendar = useCallback((habit: Habit) => { setSelectedHabit(habit); setIsHabitCalendarOpen(true); }, []);
   const openPauseModal = useCallback((habitId: Id<'habits'>) => { const habit = habits.find(h => h._id === habitId); if (habit) { setHabitToPause(habit); setShowPauseModal(true); } }, [habits]);
   const openEditHabit = useCallback((habit: Habit | null) => {
+    console.log('[openEditHabit] habit:', habit?._id, 'name:', habit?.name);
     setHabitToEdit(habit);
     if (habit) {
+      console.log('[openEditHabit] Setting showEditScreen to true');
       setShowEditScreen(true);
     }
   }, []);

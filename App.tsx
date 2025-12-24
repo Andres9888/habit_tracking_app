@@ -35,11 +35,11 @@ import { CalendarTimeline } from './src/components/CalendarTimeline';
 import SettingsModal from './src/components/SettingsModal';
 import DraggableHabit from './src/components/DraggableHabit';
 import CharacterScreen from './src/screens/CharacterScreen';
-import CharacterIcon from './src/components/habit/CharacterIcon/CharacterIcon';
+import CharacterIcon from './src/components/CharacterIcon';
 import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
-import { HapticTest } from './src/components/dev/HapticTest/HapticTest';
+import { HapticTest } from './src/components/HapticTest';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 

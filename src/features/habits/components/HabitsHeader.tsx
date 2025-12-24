@@ -9,8 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
-import { TemplateTooltip } from '../../../components/templates/TemplateTooltip/TemplateTooltip';
-import { NotificationBadge } from '../../../components/ui/NotificationBadge/NotificationBadge';
+import { TemplateTooltip } from '../../../components/TemplateTooltip';
+import { NotificationBadge } from '../../../components/NotificationBadge';
 import { useTemplateTooltip } from '../hooks/useTemplateTooltip';
 import { useTemplateBadge } from '../hooks/useTemplateBadge';
 import { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';

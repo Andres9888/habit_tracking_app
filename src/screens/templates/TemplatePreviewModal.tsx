@@ -21,7 +21,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { Clock, X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Modal from '../../components/ui/Modal/Modal';
+import Modal from '../../components/Modal';
 import Button from '../../components/Button/Button';
 import { useAppTheme } from '../../theme';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
