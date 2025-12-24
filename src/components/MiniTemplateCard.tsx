@@ -22,13 +22,11 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Check, ChevronRight, Plus } from 'lucide-react-native';
+import { Check, ChevronRight, FlaskConical, Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export interface MiniTemplateCardProps {
   /** Template icon/emoji */
@@ -91,26 +89,35 @@ export function MiniTemplateCard({
   const checkmarkScale = useSharedValue(0);
   const successGlow = useSharedValue(0);
 
-  // Research badge shimmer animation
-  const shimmerTranslate = useSharedValue(-120);
-
   // Chevron hover animation
   const chevronTranslate = useSharedValue(0);
 
-  // Shimmer animation for research badge (subtle attention-getter)
-  useEffect(() => {
-    if (reducedMotion || !hasResearch) return;
+  // Science badge pulse animation
+  const scienceBadgePulse = useSharedValue(1);
 
-    shimmerTranslate.value = withRepeat(
-      withTiming(120, { duration: 2000, easing: Easing.linear }),
+  // Pulse animation for science badge (subtle attention-getter)
+  useEffect(() => {
+    if (reducedMotion || !hasResearch || isImported) {
+      // Stop animation when imported or reduced motion
+      cancelAnimation(scienceBadgePulse);
+      scienceBadgePulse.value = 1;
+      return;
+    }
+
+    // Subtle pulse animation (opacity 0.6 to 1.0)
+    scienceBadgePulse.value = withRepeat(
+      withSequence(
+        withTiming(0.6, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      ),
       -1, // infinite
-      false // don't reverse, reset to start
+      true
     );
 
     return () => {
-      cancelAnimation(shimmerTranslate);
+      cancelAnimation(scienceBadgePulse);
     };
-  }, [shimmerTranslate, reducedMotion, hasResearch]);
+  }, [scienceBadgePulse, reducedMotion, hasResearch, isImported]);
 
   // Subtle pulse animation for import button (draws attention)
   useEffect(() => {
@@ -171,12 +178,12 @@ export function MiniTemplateCard({
     opacity: successGlow.value,
   }));
 
-  const shimmerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: shimmerTranslate.value }],
-  }));
-
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: chevronTranslate.value }],
+  }));
+
+  const scienceBadgeStyle = useAnimatedStyle(() => ({
+    opacity: scienceBadgePulse.value,
   }));
 
   const handlePressIn = () => {
@@ -248,10 +255,24 @@ export function MiniTemplateCard({
 
       {/* Header row with icon and name */}
       <View style={styles.headerRow}>
-        <View
-          style={[styles.iconContainer, { backgroundColor: `${iconColor}20` }]}
-        >
-          <Text style={styles.icon}>{icon}</Text>
+        <View style={styles.iconWrapper}>
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: `${iconColor}20` },
+            ]}
+          >
+            <Text style={styles.icon}>{icon}</Text>
+          </View>
+          {/* Science badge on icon corner */}
+          {hasResearch && (
+            <Animated.View
+              accessibilityLabel='Science-backed habit'
+              style={[styles.scienceBadge, scienceBadgeStyle]}
+            >
+              <FlaskConical color='#fff' size={10} strokeWidth={2.5} />
+            </Animated.View>
+          )}
         </View>
         <View style={styles.headerContent}>
           <Text numberOfLines={1} style={styles.name}>
@@ -306,32 +327,6 @@ export function MiniTemplateCard({
           {description}
         </Text>
       )}
-
-      {/* Research badge with shimmer effect */}
-      {hasResearch && (
-        <View
-          style={[styles.researchBadge, { backgroundColor: `${iconColor}15` }]}
-        >
-          {/* Shimmer overlay */}
-          {!reducedMotion && (
-            <AnimatedLinearGradient
-              colors={['#00000000', `${iconColor}20`, '#00000000']}
-              end={{ x: 1, y: 0.5 }}
-              start={{ x: 0, y: 0.5 }}
-              style={[styles.shimmerOverlay, shimmerStyle]}
-            />
-          )}
-          <Text style={styles.researchIcon}>🔬</Text>
-          <Text
-            numberOfLines={1}
-            style={[styles.researchText, { color: iconColor }]}
-          >
-            {scientificReference
-              ? scientificReference.split(' ').slice(0, 3).join(' ') + '...'
-              : 'Research-backed'}
-          </Text>
-        </View>
-      )}
     </AnimatedPressable>
   );
 }
@@ -348,18 +343,18 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 16,
+    elevation: 3,
     marginRight: 12,
     minHeight: 140,
     overflow: 'hidden',
-    elevation: 3,
     paddingHorizontal: 14,
     paddingLeft: 18,
     paddingVertical: 14,
     shadowColor: '#000',
-    width: 220,
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
+    width: 220,
   },
   checkmarkContainer: {
     alignItems: 'center',
@@ -378,10 +373,10 @@ const styles = StyleSheet.create({
     width: 28,
   },
   description: {
-    fontSize: 13,
     color: '#4b5563',
-    lineHeight: 18,
     flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
     marginBottom: 10,
   },
   glowOverlay: {
@@ -411,6 +406,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 36,
   },
+  iconWrapper: {
+    position: 'relative',
+  },
   importButton: {
     alignItems: 'center',
     borderRadius: 8,
@@ -432,33 +430,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 2,
   },
-  researchBadge: {
+  scienceBadge: {
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    borderRadius: 6,
-    flexDirection: 'row',
-    gap: 4,
-    overflow: 'hidden',
-    paddingHorizontal: 8,
-    paddingVertical: 4, // Required for shimmer to be clipped within badge bounds
-    position: 'relative', // Required for shimmer absolute positioning
-  },
-  researchIcon: {
-    fontSize: 10,
-  },
-  researchText: {
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  shimmerOverlay: {
-    bottom: 0,
-    // Width of the shimmer highlight
-    left: 0,
-
+    backgroundColor: '#10b981',
+    borderRadius: 9,
+    bottom: -4,
+    height: 18,
+    justifyContent: 'center',
     position: 'absolute',
-
-    top: 0,
-    width: 60,
+    right: -4,
+    width: 18,
   },
   subtitle: {
     color: '#6b7280',
