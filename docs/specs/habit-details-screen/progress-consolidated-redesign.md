@@ -455,12 +455,20 @@ interface ProgressSectionConsolidatedProps {
     - **Bundle size impact**: Minimal - React.memo has negligible overhead, module-level constants reduce runtime allocations
     - All 207 ProgressSectionConsolidated tests pass with no regressions
 
-- [ ] **Task 4.3:** Deprecate old components
+- [x] **Task 4.3:** Deprecate old components ✅
   - Mark YourProgressCard, PersonalBestsCard, ThisMonthCard as deprecated
   - Add migration notes
   - Keep for reference until next major version
   - Dependencies: 3.5
   - Estimate: 0.5h
+  - **Completed:** Added deprecation notices to all old ProgressSection components:
+    - `YourProgressCard.tsx`: Added @deprecated JSDoc with migration guide to ProgressSectionConsolidated (HeroStrengthSection + ActionableTipCard)
+    - `PersonalBestsCard.tsx`: Added @deprecated JSDoc with migration guide (InsightChips + StreakRecordsAccordion)
+    - `ThisMonthCard.tsx`: Added @deprecated JSDoc with migration guide (WeeklyPatternChart + InsightChips)
+    - `ProgressSection.tsx`: Added @deprecated JSDoc with migration guide
+    - `index.ts`: Added module-level deprecation notice and @deprecated annotations on all component exports
+    - Types and utils remain available (used by ProgressSectionConsolidated)
+    - All 207 ProgressSectionConsolidated tests pass
 
 - [ ] **Task 4.4:** Update documentation
   - Update progress-post-calendar-redesign.md
