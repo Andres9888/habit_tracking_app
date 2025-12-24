@@ -14,7 +14,7 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, withRepeat, cancelAnimation, Easing, interpolate, Extrapolation, runOnJS, type SharedValue } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
@@ -700,6 +700,117 @@ function PulsingIcon({
 }
 
 /**
+ * PremiumWhyDisplay Component (D2)
+ * Premium quote-style display for the "Your Why" section when filled
+ *
+ * Design spec (D2 Premium Quote-Style Why Display):
+ * - Dark gradient background (stone-800 to stone-900)
+ * - Large decorative quote marks (rose-500 at 20% opacity)
+ * - Heart icon with subtle heartbeat animation
+ * - Italic white text for the quote
+ * - "Tap to edit" hint at bottom
+ *
+ * @param whyText - The user's "Why" statement
+ * @param onPress - Callback when tapped to edit
+ * @param reduceMotion - Whether to skip animations for accessibility
+ */
+function PremiumWhyDisplay({
+  whyText,
+  onPress,
+  reduceMotion = false,
+}: {
+  whyText: string;
+  onPress: () => void;
+  reduceMotion?: boolean;
+}) {
+  const heartbeatScale = useSharedValue(1);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      heartbeatScale.value = 1;
+      return;
+    }
+
+    // Heartbeat animation: 1 → 1.15 → 1 → 1.1 → 1 (repeating)
+    // Simulates a realistic heartbeat with double-pulse
+    heartbeatScale.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 0 }),
+        withTiming(1.15, { duration: 150, easing: Easing.out(Easing.ease) }),
+        withTiming(1, { duration: 150, easing: Easing.in(Easing.ease) }),
+        withTiming(1.1, { duration: 150, easing: Easing.out(Easing.ease) }),
+        withTiming(1, { duration: 1550, easing: Easing.in(Easing.ease) })
+      ),
+      -1, // infinite
+      false
+    );
+
+    return () => {
+      cancelAnimation(heartbeatScale);
+    };
+  }, [reduceMotion, heartbeatScale]);
+
+  const heartbeatStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: heartbeatScale.value }],
+  }));
+
+  return (
+    <Pressable
+      accessibilityLabel={`Your why: ${whyText}. Tap to edit.`}
+      accessibilityRole="button"
+      onPress={onPress}
+      className="active:opacity-90"
+    >
+      <LinearGradient
+        colors={['#292524', '#1c1917']} // stone-800 to stone-900
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="relative overflow-hidden rounded-2xl p-5"
+      >
+        {/* Decorative opening quote mark */}
+        <Text
+          className="absolute left-4 top-2 font-serif text-6xl"
+          style={{ color: 'rgba(244, 63, 94, 0.2)' }} // rose-500 at 20% opacity
+        >
+          "
+        </Text>
+
+        {/* Decorative closing quote mark */}
+        <Text
+          className="absolute bottom-0 right-4 font-serif text-6xl"
+          style={{ color: 'rgba(244, 63, 94, 0.2)' }} // rose-500 at 20% opacity
+        >
+          "
+        </Text>
+
+        {/* Heart icon with heartbeat animation */}
+        <View className="absolute right-4 top-4">
+          <Animated.View style={heartbeatStyle}>
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-rose-500/20">
+              <Heart className="text-rose-400" size={16} fill="currentColor" />
+            </View>
+          </Animated.View>
+        </View>
+
+        {/* Quote content */}
+        <Text
+          className="pr-10 pt-4 text-lg font-medium italic leading-relaxed text-white"
+          style={{ fontStyle: 'italic' }}
+        >
+          {whyText}
+        </Text>
+
+        {/* Tap hint */}
+        <View className="mt-4 flex-row items-center gap-1">
+          <Edit3 className="text-stone-400" size={12} />
+          <Text className="text-[10px] text-stone-400">Tap to edit</Text>
+        </View>
+      </LinearGradient>
+    </Pressable>
+  );
+}
+
+/**
  * Danger Zone Section Component (T4.3)
  * Groups destructive actions with red-tinted styling
  */
@@ -1178,51 +1289,42 @@ function MotivationTabContent({
 
       {/* Your Why Section - Index 0 */}
       <AnimatedSection index={0} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
-        <SectionCard
-          accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
-          onPress={onOpenWhyEditor}
-          className="border-l-4 border-rose-400"
-        >
-          <View className="flex-row items-start gap-3">
-            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
-              {habit.why ? (
-                <Heart className="text-rose-500" size={20} />
-              ) : (
+        {habit.why ? (
+          /* D2: Premium Quote-Style Why Display when filled */
+          <PremiumWhyDisplay
+            whyText={habit.why}
+            onPress={onOpenWhyEditor}
+            reduceMotion={reduceMotion}
+          />
+        ) : (
+          /* Empty state - original card layout */
+          <SectionCard
+            accessibilityLabel="Add your why"
+            onPress={onOpenWhyEditor}
+            className="border-l-4 border-rose-400"
+          >
+            <View className="flex-row items-start gap-3">
+              <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
                 <PulsingIcon reduceMotion={reduceMotion}>
                   <Heart className="text-rose-500" size={20} />
                 </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={!!habit.why}
-                sectionIndex={0}
-                shouldAnimate={shouldAnimate ?? false}
-                reduceMotion={reduceMotion}
-              />
-              <EmptyCircleIndicator isVisible={!habit.why} />
-            </View>
-            <View className="flex-1">
-              {habit.why ? (
-                <>
-                  <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
-                  <Text className="text-sm text-stone-600">"{habit.why}"</Text>
-                </>
-              ) : (
-                <>
-                  <View className="mb-1 flex-row items-center justify-between">
-                    <Text className="font-semibold text-stone-800">Your Why</Text>
-                    <View className="flex-row items-center gap-1">
-                      <Plus className="text-rose-600" size={12} />
-                      <Text className="text-xs font-medium text-rose-600">Set up</Text>
-                    </View>
+                <EmptyCircleIndicator isVisible />
+              </View>
+              <View className="flex-1">
+                <View className="mb-1 flex-row items-center justify-between">
+                  <Text className="font-semibold text-stone-800">Your Why</Text>
+                  <View className="flex-row items-center gap-1">
+                    <Plus className="text-rose-600" size={12} />
+                    <Text className="text-xs font-medium text-rose-600">Set up</Text>
                   </View>
-                  <Text className="text-sm text-stone-500">
-                    Define your deeper motivation
-                  </Text>
-                </>
-              )}
+                </View>
+                <Text className="text-sm text-stone-500">
+                  Define your deeper motivation
+                </Text>
+              </View>
             </View>
-          </View>
-        </SectionCard>
+          </SectionCard>
+        )}
       </AnimatedSection>
 
       {/* Your Identity Section - Index 1 */}
