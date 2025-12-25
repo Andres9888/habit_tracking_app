@@ -28,6 +28,7 @@ export { WeeklySummaryStrip } from './WeeklySummaryStrip';
 export { StatsGrid } from './StatsGrid';
 export { CompactStrengthRing } from './CompactStrengthRing';
 export { StatCard } from './StatCard';
+export { MilestoneProgress } from './MilestoneProgress';
 
 // Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';
@@ -39,6 +40,7 @@ export * from './types';
 export * from './TodaysFocusCardTypes';
 export * from './WeeklySummaryStripTypes';
 export * from './StatsGridTypes';
+export * from './MilestoneProgressTypes';
 
 // Re-export utility functions from existing ProgressSection
 // These are reused for data calculations
