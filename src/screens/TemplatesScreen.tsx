@@ -176,8 +176,9 @@ export default function TemplatesScreen() {
   const [browseTab, setBrowseTab] = useState<BrowseTab>('categories');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(['morning_routine', 'health_fitness']) // Default expanded
+    new Set() // Will be initialized when categories load
   );
+  const [hasInitializedExpanded, setHasInitializedExpanded] = useState(false);
 
   // Search & filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -212,6 +213,24 @@ export default function TemplatesScreen() {
   const seedAdditionalTemplates = useMutation(api.templates.seedAdditionalTemplates);
   const seedNewScienceTemplates = useMutation(api.templates.seedNewScienceTemplates);
   const [isSeeding, setIsSeeding] = useState(false);
+
+  // Initialize expanded categories - every 3rd category (3rd, 6th, 9th...)
+  useEffect(() => {
+    if (categories && !hasInitializedExpanded) {
+      const nonAllCategories = categories.filter((cat) => cat.id !== 'all');
+      const initialExpanded = new Set<string>();
+
+      nonAllCategories.forEach((cat, index) => {
+        // Expand every 3rd category (index 2, 5, 8... which are positions 3, 6, 9...)
+        if ((index + 1) % 3 === 0) {
+          initialExpanded.add(cat.id);
+        }
+      });
+
+      setExpandedCategories(initialExpanded);
+      setHasInitializedExpanded(true);
+    }
+  }, [categories, hasInitializedExpanded]);
 
   // Group templates by category
   const templatesByCategory = useMemo(() => {

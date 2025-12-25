@@ -1,34 +1,45 @@
 # Progress Tab Complete Redesign
 
+> **SUPERSEDED:** This specification has been superseded by `progress-consolidated-redesign.md`.
+> The 3-card design described here has been further consolidated into `ProgressSectionConsolidated`,
+> a single unified component that provides ~35% vertical space reduction and improved visual hierarchy.
+> See `progress-consolidated-redesign.md` for the current implementation details.
+
 ## Overview
 
 **UPDATED 2024-12-22:** Complete redesign of the Progress tab to show ONLY 3 focused, actionable cards. Removed StreakChainSection and CalendarHeatmap from Progress tab - the entire tab now renders just the ProgressSection component.
 
+**UPDATED 2024-12-24:** The 3 separate cards (YourProgressCard, PersonalBestsCard, ThisMonthCard) have been consolidated into `ProgressSectionConsolidated`. See `progress-consolidated-redesign.md` for details.
+
 ## Previous State (Before Redesign)
 
 The Progress tab had:
+
 - **StreakChainSection** - Chain of dots showing last 7 days
 - **CalendarHeatmap** - Monthly calendar with completion heatmap
 - **HabitStrengthSection** (collapsible) - Ring + levels + tips
 - **InsightsSection** (collapsible) with 4 sub-cards
 
 ### Problems Solved
-| Issue | Solution |
-|-------|----------|
-| Visual overload | Reduced to 3 clean cards |
-| Redundancy | Removed duplicate stats (streak shown in header) |
-| No actionability | Added smart tips based on patterns |
-| Too much scrolling | Single-scroll view with key insights |
-| Collapsed content | All 3 cards always visible |
+
+| Issue              | Solution                                         |
+| ------------------ | ------------------------------------------------ |
+| Visual overload    | Reduced to 3 clean cards                         |
+| Redundancy         | Removed duplicate stats (streak shown in header) |
+| No actionability   | Added smart tips based on patterns               |
+| Too much scrolling | Single-scroll view with key insights             |
+| Collapsed content  | All 3 cards always visible                       |
 
 ## New Design (Implemented)
 
 Progress tab now renders **ONLY `<ProgressSection />`** with 3 always-visible cards:
 
 ### Card 1: Your Progress
+
 **File:** `src/components/ProgressSection/YourProgressCard.tsx`
 
 **Components:**
+
 - Progress ring (88px) with emoji + percentage
 - Level badge (🌱 Starting → ⚡ Automatic)
 - Trend indicator (+X% weekly change)
@@ -36,18 +47,22 @@ Progress tab now renders **ONLY `<ProgressSection />`** with 3 always-visible ca
 - **Actionable tip** based on weak days pattern
 
 ### Card 2: Personal Bests
+
 **File:** `src/components/ProgressSection/PersonalBestsCard.tsx`
 
 **Components:**
+
 - Top 3 streak medals (🥇🥈🥉 horizontal layout)
 - Current streak highlighted with pulse animation + "NOW 🔥" badge
 - Best day card (emerald theme)
 - "Focus On" card for worst day (amber theme, tappable for tips)
 
 ### Card 3: This Month
+
 **File:** `src/components/ProgressSection/ThisMonthCard.tsx`
 
 **Components:**
+
 - Animated bar chart (7 days, staggered animation)
 - Best day highlighted (emerald), worst day highlighted (amber)
 - Summary row: "+X% vs last month" + "Y/Z days completed"
@@ -58,26 +73,30 @@ Progress tab now renders **ONLY `<ProgressSection />`** with 3 always-visible ca
 ## Visual Design
 
 ### Color Palette
-| Section | Primary | Accent |
-|---------|---------|--------|
-| Your Progress | Teal-500 | Emerald-400 |
-| Personal Bests | Amber-500 | Orange-400 |
-| This Month | Violet-500 | Blue-400 |
+
+| Section        | Primary    | Accent      |
+| -------------- | ---------- | ----------- |
+| Your Progress  | Teal-500   | Emerald-400 |
+| Personal Bests | Amber-500  | Orange-400  |
+| This Month     | Violet-500 | Blue-400    |
 
 ### Animations
-| Element | Animation | Duration |
-|---------|-----------|----------|
-| Progress ring | Fill from 0 | 1200ms ease-out |
-| Bar chart | Scale Y from 0 | 600ms staggered (50ms delay each) |
-| Current streak | Pulse glow | 2000ms infinite |
-| Tip card | Shake on hover | 500ms |
+
+| Element        | Animation      | Duration                          |
+| -------------- | -------------- | --------------------------------- |
+| Progress ring  | Fill from 0    | 1200ms ease-out                   |
+| Bar chart      | Scale Y from 0 | 600ms staggered (50ms delay each) |
+| Current streak | Pulse glow     | 2000ms infinite                   |
+| Tip card       | Shake on hover | 500ms                             |
 
 ### Card Style
+
 ```css
 /* Gradient background */
-background: linear-gradient(135deg,
+background: linear-gradient(
+  135deg,
   rgba(primary, 0.08) 0%,
-  rgba(255,255,255,0.02) 50%,
+  rgba(255, 255, 255, 0.02) 50%,
   rgba(accent, 0.06) 100%
 );
 border: 1px solid rgba(primary, 0.2);
@@ -86,16 +105,17 @@ border-radius: 16px;
 
 ## Files to Modify
 
-| File | Changes |
-|------|---------|
-| `src/screens/HabitDetailScreen.tsx` | Remove collapsible wrappers, integrate new sections |
-| `src/components/InsightsSection/InsightsSection.tsx` | Major refactor or replace |
-| `src/components/HabitStrengthSection/HabitStrengthSection.tsx` | Extract to new unified component |
-| `src/components/ProgressSection/` (new) | Create new consolidated components |
+| File                                                           | Changes                                             |
+| -------------------------------------------------------------- | --------------------------------------------------- |
+| `src/screens/HabitDetailScreen.tsx`                            | Remove collapsible wrappers, integrate new sections |
+| `src/components/InsightsSection/InsightsSection.tsx`           | Major refactor or replace                           |
+| `src/components/HabitStrengthSection/HabitStrengthSection.tsx` | Extract to new unified component                    |
+| `src/components/ProgressSection/` (new)                        | Create new consolidated components                  |
 
 ## API/Data Requirements
 
 No new API calls needed. Reuse existing:
+
 - `tracking: HabitTrackingEntry[]`
 - `habitCreatedAt: number`
 - `totalCompletions: number`
@@ -104,16 +124,20 @@ No new API calls needed. Reuse existing:
 - Strength calculation from existing hook
 
 ### New Computed Values
+
 ```typescript
 // Actionable tip generation
-function generateActionableTip(dayStats: DayStats[], currentStreak: number): string {
+function generateActionableTip(
+  dayStats: DayStats[],
+  currentStreak: number
+): string {
   const weakDays = dayStats
-    .filter(d => d.rate < 70)
+    .filter((d) => d.rate < 70)
     .sort((a, b) => a.rate - b.rate)
     .slice(0, 2);
 
   if (weakDays.length > 0) {
-    return `Complete ${weakDays.map(d => d.day).join(' & ')} to level up!`;
+    return `Complete ${weakDays.map((d) => d.day).join(' & ')} to level up!`;
   }
   return 'Keep your streak going!';
 }
@@ -149,6 +173,7 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
 ### Phase 2: YourProgressCard Component
 
 - [x] **T2.1** Create `YourProgressCard.tsx` with props interface ✅ COMPLETED
+
   ```typescript
   interface YourProgressCardProps {
     strength: number;
@@ -157,6 +182,7 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
     onInfoPress?: () => void;
   }
   ```
+
   - **Note:** Props interface defined in `types.ts`, component fully implemented with all features.
 
 - [x] **T2.2** Implement progress ring (88px) with animated fill ✅ COMPLETED
@@ -188,6 +214,7 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
 ### Phase 3: PersonalBestsCard Component
 
 - [x] **T3.1** Create `PersonalBestsCard.tsx` with props interface ✅ COMPLETED
+
   ```typescript
   interface PersonalBestsCardProps {
     streakRecords: StreakRecord[];
@@ -197,6 +224,7 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
     onWorstDayPress?: () => void;
   }
   ```
+
   - **Note:** Component fully implemented with all features, props in `types.ts`.
 
 - [x] **T3.2** Implement medal row (top 3 streaks) ✅ COMPLETED
@@ -230,6 +258,7 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
 ### Phase 4: ThisMonthCard Component
 
 - [x] **T4.1** Create `ThisMonthCard.tsx` with props interface ✅ COMPLETED
+
   ```typescript
   interface ThisMonthCardProps {
     dayStats: DayStats[];
@@ -240,6 +269,7 @@ function generateActionableTip(dayStats: DayStats[], currentStreak: number): str
     onSeeAllPress?: () => void;
   }
   ```
+
   - **Note:** Component fully implemented with DayBar sub-component, props in `types.ts`.
 
 - [x] **T4.2** Implement animated bar chart ✅ COMPLETED
