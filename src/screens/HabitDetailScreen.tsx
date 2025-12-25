@@ -31,7 +31,7 @@ import {
 import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { CalendarHeatmap } from '../components/CalendarHeatmap';
+import { CollapsibleCalendar } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -972,13 +972,15 @@ function ProgressTabContent({
         lastWeekCompleted={lastWeekCompleted}
       />
 
-      {/* Calendar Heatmap - visual history of completions */}
-      <CalendarHeatmap
+      {/* Collapsible Calendar - visual history of completions with collapse support */}
+      <CollapsibleCalendar
         habitId={habit._id}
         completedDates={completedDates}
         habitCreatedAt={habitCreatedAt}
         habitColor={habit.iconColor}
-        onDayPress={(date, completed) => {
+        defaultExpanded={false}
+        showMiniPreview={true}
+        onDayPress={(_date, _completed) => {
           // Future: Could open day detail or allow editing past dates
         }}
       />

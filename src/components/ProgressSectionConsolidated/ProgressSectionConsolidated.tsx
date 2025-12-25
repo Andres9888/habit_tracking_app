@@ -34,6 +34,7 @@ import {
 import { calculateMonthlyChangeForStatsGrid } from '../../utils/trendCalculations';
 
 import { StatsGrid } from './StatsGrid';
+import { MilestoneProgress } from './MilestoneProgress';
 import { WeeklyPatternChart } from './WeeklyPatternChart';
 import { ActionableTipCard } from './ActionableTipCard';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
@@ -176,6 +177,9 @@ export function ProgressSectionConsolidated({
           weeklyChange={weeklyChange}
           onFocusDayPress={onFocusDayPress}
         />
+
+        {/* Section 2: Milestone Progress (Phase 2 gamification) */}
+        <MilestoneProgress currentStreak={currentStreak} />
 
         {/* Section 3: Weekly Pattern Chart (only with enough data) */}
         {hasEnoughData && (
