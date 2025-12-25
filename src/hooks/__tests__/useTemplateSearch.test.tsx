@@ -606,6 +606,352 @@ describe('useTemplateSearch - Recent Searches', () => {
   });
 });
 
+describe('useTemplateSearch - Recent Searches Persistence', () => {
+  const STORAGE_KEY = 'template_recent_searches';
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+  });
+
+  describe('storage key and format', () => {
+    it('uses the correct storage key for all operations', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(AsyncStorage.getItem).toHaveBeenCalledWith(STORAGE_KEY);
+      });
+
+      // Add a search
+      act(() => {
+        result.current.addRecentSearch('test query');
+      });
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        STORAGE_KEY,
+        expect.any(String)
+      );
+    });
+
+    it('stores searches as a JSON array of strings', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result.current.addRecentSearch('meditation');
+        result.current.addRecentSearch('exercise');
+      });
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      expect(lastCall[0]).toBe(STORAGE_KEY);
+
+      const storedData = JSON.parse(lastCall[1]);
+      expect(Array.isArray(storedData)).toBe(true);
+      expect(storedData.every((s: unknown) => typeof s === 'string')).toBe(true);
+      expect(storedData).toContain('meditation');
+      expect(storedData).toContain('exercise');
+    });
+  });
+
+  describe('MRU ordering persistence', () => {
+    it('stores searches in most-recently-used order', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result.current.addRecentSearch('first');
+        result.current.addRecentSearch('second');
+        result.current.addRecentSearch('third');
+      });
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedData = JSON.parse(lastCall[1]);
+
+      // Most recent should be first
+      expect(storedData[0]).toBe('third');
+      expect(storedData[1]).toBe('second');
+      expect(storedData[2]).toBe('first');
+    });
+
+    it('moves re-added search to the front', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result.current.addRecentSearch('meditation');
+        result.current.addRecentSearch('exercise');
+        result.current.addRecentSearch('sleep');
+        result.current.addRecentSearch('meditation'); // Re-add first one
+      });
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedData = JSON.parse(lastCall[1]);
+
+      expect(storedData[0]).toBe('meditation');
+      expect(storedData).toHaveLength(3); // No duplicates
+    });
+  });
+
+  describe('persistence across hook re-renders', () => {
+    it('loads persisted searches on subsequent mount', async () => {
+      // First mount - add some searches
+      const { result: result1, unmount } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result1.current.addRecentSearch('meditation');
+        result1.current.addRecentSearch('exercise');
+      });
+
+      // Capture what was stored
+      const lastSetCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedValue = lastSetCall[1];
+
+      // Unmount first instance
+      unmount();
+
+      // Reset mocks and set up storage to return previously stored value
+      jest.clearAllMocks();
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(storedValue);
+
+      // Second mount - should load persisted searches
+      const { result: result2 } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result2.current.recentSearches).toEqual(['exercise', 'meditation']);
+      });
+    });
+
+    it('preserves order after app restart simulation', async () => {
+      const storedSearches = JSON.stringify([
+        'sleep',
+        'exercise',
+        'meditation',
+      ]);
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(storedSearches);
+
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result.current.recentSearches).toEqual([
+          'sleep',
+          'exercise',
+          'meditation',
+        ]);
+      });
+
+      // Verify order is maintained
+      expect(result.current.recentSearches[0]).toBe('sleep');
+      expect(result.current.recentSearches[2]).toBe('meditation');
+    });
+  });
+
+  describe('removeRecentSearch persistence', () => {
+    it('persists removal to AsyncStorage', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['meditation', 'exercise', 'sleep'])
+      );
+
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result.current.recentSearches).toHaveLength(3);
+      });
+
+      jest.clearAllMocks();
+
+      act(() => {
+        result.current.removeRecentSearch('exercise');
+      });
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        STORAGE_KEY,
+        expect.any(String)
+      );
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedData = JSON.parse(lastCall[1]);
+      expect(storedData).toEqual(['meditation', 'sleep']);
+      expect(storedData).not.toContain('exercise');
+    });
+
+    it('handles removing non-existent search gracefully', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['meditation', 'exercise'])
+      );
+
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result.current.recentSearches).toHaveLength(2);
+      });
+
+      jest.clearAllMocks();
+
+      // Remove something that doesn't exist
+      act(() => {
+        result.current.removeRecentSearch('non-existent');
+      });
+
+      // Should still persist (empty removal is still valid)
+      expect(AsyncStorage.setItem).toHaveBeenCalled();
+      expect(result.current.recentSearches).toEqual(['meditation', 'exercise']);
+    });
+  });
+
+  describe('clearRecentSearches persistence', () => {
+    it('removes storage key when clearing all searches', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['meditation', 'exercise', 'sleep'])
+      );
+
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result.current.recentSearches).toHaveLength(3);
+      });
+
+      jest.clearAllMocks();
+
+      act(() => {
+        result.current.clearRecentSearches();
+      });
+
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(STORAGE_KEY);
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled(); // Should use removeItem, not setItem([])
+    });
+  });
+
+  describe('edge cases for persistence', () => {
+    it('handles null stored value', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result.current.recentSearches).toEqual([]);
+      });
+    });
+
+    it('handles empty array stored value', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue('[]');
+
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      await waitFor(() => {
+        expect(result.current.recentSearches).toEqual([]);
+      });
+    });
+
+    it('handles storage error gracefully during load', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockRejectedValue(
+        new Error('Storage error')
+      );
+
+      // Should not throw
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      // Should have empty recent searches since load failed
+      expect(result.current.recentSearches).toEqual([]);
+    });
+
+    it('trims whitespace from searches before storing', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result.current.addRecentSearch('  meditation  ');
+      });
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedData = JSON.parse(lastCall[1]);
+      expect(storedData[0]).toBe('meditation');
+    });
+
+    it('handles case-insensitive duplicate detection', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result.current.addRecentSearch('Meditation');
+        result.current.addRecentSearch('MEDITATION');
+        result.current.addRecentSearch('meditation');
+      });
+
+      // Should only have one entry (the most recent casing)
+      expect(result.current.recentSearches).toHaveLength(1);
+      expect(result.current.recentSearches[0]).toBe('meditation');
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedData = JSON.parse(lastCall[1]);
+      expect(storedData).toHaveLength(1);
+    });
+
+    it('respects MAX_RECENT_SEARCHES limit in storage', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      act(() => {
+        result.current.addRecentSearch('one');
+        result.current.addRecentSearch('two');
+        result.current.addRecentSearch('three');
+        result.current.addRecentSearch('four');
+        result.current.addRecentSearch('five');
+        result.current.addRecentSearch('six'); // This should push out 'one'
+      });
+
+      const lastCall = (AsyncStorage.setItem as jest.Mock).mock.calls.pop();
+      const storedData = JSON.parse(lastCall[1]);
+
+      expect(storedData).toHaveLength(5);
+      expect(storedData).not.toContain('one');
+      expect(storedData[0]).toBe('six');
+    });
+
+    it('does not persist empty or whitespace-only searches', async () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: mockTemplates })
+      );
+
+      jest.clearAllMocks();
+
+      act(() => {
+        result.current.addRecentSearch('');
+        result.current.addRecentSearch('   ');
+      });
+
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+      expect(result.current.recentSearches).toEqual([]);
+    });
+  });
+});
+
 describe('useTemplateSearch - highlightMatch', () => {
   it('returns text unchanged when no matches provided', () => {
     const { result } = renderHook(() =>

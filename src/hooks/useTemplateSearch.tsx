@@ -41,16 +41,20 @@ export function useTemplateSearch({ templates }: UseTemplateSearchOptions) {
 
   // Load recent searches from storage
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY).then((data) => {
-      if (data) {
-        try {
-          setRecentSearches(JSON.parse(data));
-        } catch {
-          // Invalid data, reset
-          AsyncStorage.removeItem(STORAGE_KEY);
+    AsyncStorage.getItem(STORAGE_KEY)
+      .then((data) => {
+        if (data) {
+          try {
+            setRecentSearches(JSON.parse(data));
+          } catch {
+            // Invalid data, reset
+            AsyncStorage.removeItem(STORAGE_KEY);
+          }
         }
-      }
-    });
+      })
+      .catch(() => {
+        // Storage error - silently fail, start with empty recent searches
+      });
   }, []);
 
   // Initialize Fuse instance - memoized for performance
