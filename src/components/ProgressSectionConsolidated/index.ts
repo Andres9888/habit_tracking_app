@@ -23,6 +23,7 @@ export { InsightChips } from './InsightChips';
 export { WeeklyPatternChart } from './WeeklyPatternChart';
 export { ActionableTipCard } from './ActionableTipCard';
 export { StreakRecordsAccordion } from './StreakRecordsAccordion';
+export { TodaysFocusCard } from './TodaysFocusCard';
 
 // Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';
@@ -31,6 +32,7 @@ export { DayBar } from './DayBar';
 
 // Types
 export * from './types';
+export * from './TodaysFocusCardTypes';
 
 // Re-export utility functions from existing ProgressSection
 // These are reused for data calculations
