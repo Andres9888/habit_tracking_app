@@ -51,6 +51,12 @@ import EmptyState from '../components/EmptyState';
 import MiniTemplateCard from '../components/MiniTemplateCard';
 import TemplateCard from '../components/TemplateCard';
 import Toast from '../components/Toast';
+import {
+  RecentSearches,
+  SearchSuggestions,
+  SearchCategoryFilter,
+} from '../components/search';
+import { useTemplateSearch } from '../hooks/useTemplateSearch';
 import { useAppTheme } from '../theme';
 
 import TemplatePreviewModal from './templates/TemplatePreviewModal';
@@ -180,10 +186,10 @@ export default function TemplatesScreen() {
   );
   const [hasInitializedExpanded, setHasInitializedExpanded] = useState(false);
 
-  // Search & filter state
-  const [searchQuery, setSearchQuery] = useState('');
+  // Sort & filter state (search is handled by useTemplateSearch hook)
   const [sortOption, setSortOption] = useState<SortOption>('popular');
   const [researchOnly, setResearchOnly] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // Modal & UI state
   const [previewTemplate, setPreviewTemplate] = useState<Doc<'templates'> | null>(null);
@@ -204,6 +210,26 @@ export default function TemplatesScreen() {
   const allTemplates = useQuery(api.templates.list, {});
   const categories = useQuery(api.categories.list, {});
   const isLoading = allTemplates === undefined || categories === undefined;
+
+  // Initialize fuzzy search hook with templates
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    isSearching,
+    searchCategoryFilter,
+    setSearchCategoryFilter,
+    categoryResultCounts,
+    recentSearches,
+    addRecentSearch,
+    removeRecentSearch,
+    clearRecentSearches,
+    suggestions,
+    clearSearch,
+    highlightMatch,
+  } = useTemplateSearch({
+    templates: allTemplates || [],
+  });
 
   // Import template mutation
   const importTemplate = useMutation(api.templates.importTemplate);
@@ -309,8 +335,7 @@ export default function TemplatesScreen() {
     return data.sort(sorter[sortOption]);
   }, [allTemplates, selectedCategory, researchOnly, searchQuery, sortOption]);
 
-  // Determine if we're in search mode
-  const isSearching = searchQuery.trim().length > 0;
+  // Determine effective view mode based on search state
   const effectiveViewMode = isSearching ? 'search' : viewMode;
 
   const hasActiveFilters = selectedCategory !== 'all' || Boolean(searchQuery.trim()) || researchOnly;
@@ -333,8 +358,32 @@ export default function TemplatesScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setSelectedCategory('all');
     setViewMode('browse');
+    clearSearch();
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
+  }, [clearSearch]);
+
+  // Handle search submit - add to recent searches
+  const handleSearchSubmit = useCallback(() => {
+    if (searchQuery.trim()) {
+      addRecentSearch(searchQuery.trim());
+    }
+  }, [searchQuery, addRecentSearch]);
+
+  // Handle suggestion selection
+  const handleSuggestionSelect = useCallback((suggestion: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setSearchQuery(suggestion);
+    addRecentSearch(suggestion);
+    setIsSearchFocused(false);
+  }, [setSearchQuery, addRecentSearch]);
+
+  // Handle recent search selection
+  const handleRecentSearchSelect = useCallback((query: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setSearchQuery(query);
+    addRecentSearch(query);
+    setIsSearchFocused(false);
+  }, [setSearchQuery, addRecentSearch]);
 
   // Handle template preview - opens fullsize preview first
   const handleTemplatePreview = useCallback((template: Doc<'templates'>) => {
@@ -430,12 +479,13 @@ export default function TemplatesScreen() {
 
   const handleResetFilters = useCallback(() => {
     setSelectedCategory('all');
-    setSearchQuery('');
+    clearSearch();
+    setSearchCategoryFilter(null);
     setResearchOnly(false);
     setSortOption('popular');
     setViewMode('browse');
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
+  }, [clearSearch, setSearchCategoryFilter]);
 
   const handleSeedTemplates = useCallback(async () => {
     setIsSeeding(true);
@@ -630,21 +680,46 @@ export default function TemplatesScreen() {
 
         {/* Search bar (always visible) */}
         <View style={styles.searchSection}>
-          <View style={styles.searchBar}>
-            <Search color="#a8a29e" size={18} strokeWidth={2.25} />
-            <TextInput
-              placeholder="Search habits or science keywords"
-              placeholderTextColor="#a8a29e"
-              style={styles.searchInput}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-            {searchQuery ? (
-              <TouchableOpacity accessibilityLabel="Clear search" onPress={() => setSearchQuery('')}>
-                <X color="#a8a29e" size={18} strokeWidth={2.25} />
-              </TouchableOpacity>
-            ) : null}
+          <View style={styles.searchBarContainer}>
+            <View style={styles.searchBar}>
+              <Search color="#a8a29e" size={18} strokeWidth={2.25} />
+              <TextInput
+                placeholder="Search habits or science keywords"
+                placeholderTextColor="#a8a29e"
+                style={styles.searchInput}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onSubmitEditing={handleSearchSubmit}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 150)}
+                returnKeyType="search"
+              />
+              {searchQuery ? (
+                <TouchableOpacity accessibilityLabel="Clear search" onPress={clearSearch}>
+                  <X color="#a8a29e" size={18} strokeWidth={2.25} />
+                </TouchableOpacity>
+              ) : null}
+            </View>
+
+            {/* Suggestions dropdown */}
+            {isSearchFocused && (
+              <SearchSuggestions
+                suggestions={suggestions}
+                query={searchQuery}
+                onSelect={handleSuggestionSelect}
+              />
+            )}
           </View>
+
+          {/* Category filter pills (shown when searching) */}
+          {isSearching && (
+            <SearchCategoryFilter
+              categories={categories || []}
+              resultCounts={categoryResultCounts}
+              selectedCategory={searchCategoryFilter}
+              onSelectCategory={setSearchCategoryFilter}
+            />
+          )}
 
           {/* Controls row */}
           <View style={styles.controlRow}>
@@ -806,21 +881,56 @@ export default function TemplatesScreen() {
 
       {/* Search bar - fades up with delay */}
       <Animated.View style={[styles.searchSection, searchAnimatedStyle]}>
-        <View style={styles.searchBar}>
-          <Search color="#a8a29e" size={18} strokeWidth={2.25} />
-          <TextInput
-            placeholder="Search habits..."
-            placeholderTextColor="#a8a29e"
-            style={styles.searchInput}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          {searchQuery ? (
-            <TouchableOpacity accessibilityLabel="Clear search" onPress={() => setSearchQuery('')}>
-              <X color="#a8a29e" size={18} strokeWidth={2.25} />
-            </TouchableOpacity>
-          ) : null}
+        <View style={styles.searchBarContainer}>
+          <View style={styles.searchBar}>
+            <Search color="#a8a29e" size={18} strokeWidth={2.25} />
+            <TextInput
+              placeholder="Search habits..."
+              placeholderTextColor="#a8a29e"
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onSubmitEditing={handleSearchSubmit}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 150)}
+              returnKeyType="search"
+            />
+            {searchQuery ? (
+              <TouchableOpacity accessibilityLabel="Clear search" onPress={clearSearch}>
+                <X color="#a8a29e" size={18} strokeWidth={2.25} />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+
+          {/* Suggestions dropdown */}
+          {isSearchFocused && (
+            <SearchSuggestions
+              suggestions={suggestions}
+              query={searchQuery}
+              onSelect={handleSuggestionSelect}
+            />
+          )}
         </View>
+
+        {/* Recent searches (shown when search is empty and focused) */}
+        {!isSearching && isSearchFocused && recentSearches.length > 0 && (
+          <RecentSearches
+            searches={recentSearches}
+            onSelect={handleRecentSearchSelect}
+            onRemove={removeRecentSearch}
+            onClearAll={clearRecentSearches}
+          />
+        )}
+
+        {/* Category filter pills (shown when searching) */}
+        {isSearching && (
+          <SearchCategoryFilter
+            categories={categories || []}
+            resultCounts={categoryResultCounts}
+            selectedCategory={searchCategoryFilter}
+            onSelectCategory={setSearchCategoryFilter}
+          />
+        )}
       </Animated.View>
 
       {/* Tab bar - fades up with delay */}

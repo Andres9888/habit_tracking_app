@@ -325,6 +325,10 @@ export const styles = StyleSheet.create({
   searchSection: {
     paddingHorizontal: 20,
   },
+  searchBarContainer: {
+    position: 'relative',
+    zIndex: 100,
+  },
   sortButtonWrapper: {
     position: 'relative',
     zIndex: 100,
