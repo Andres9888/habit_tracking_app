@@ -142,7 +142,9 @@ export const ActionableTipCard = React.memo(function ActionableTipCard({
     ? `Tip: ${tip}. ${subtitle}`
     : `Tip: ${tip}`;
   const accessibilityHint = isInteractive
-    ? 'Double tap to view quick actions'
+    ? onQuickAction
+      ? 'Double tap to view quick actions'
+      : 'Double tap to open this tip'
     : undefined;
 
   return (

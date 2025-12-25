@@ -54,16 +54,3 @@ export {
   generateActionableTip,
   getBestAndWorstDays,
 } from '../ProgressSection/utils';
-
-// Re-export trend calculation utilities
-export {
-  calculateWeekOverWeekTrend,
-  calculateMonthOverMonthTrend,
-  calculateMonthlyChangeForStatsGrid,
-  getWeekStart,
-  getWeekEnd,
-} from '../../utils/trendCalculations';
-export type {
-  WeekOverWeekTrend,
-  MonthOverMonthTrend,
-} from '../../utils/trendCalculations';

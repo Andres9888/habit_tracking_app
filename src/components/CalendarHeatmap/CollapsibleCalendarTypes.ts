@@ -33,7 +33,12 @@ export interface CollapsibleCalendarProps {
 /**
  * Mini preview dot visual state
  */
-export type MiniPreviewDotState = 'complete' | 'missed' | 'today' | 'future';
+export type MiniPreviewDotState =
+  | 'complete'
+  | 'missed'
+  | 'todayComplete'
+  | 'todayIncomplete'
+  | 'future';
 
 /**
  * Data for a single mini preview dot

@@ -59,7 +59,8 @@ function generateMiniPreviewDots(
 
     let state: MiniPreviewDot['state'];
     if (isToday) {
-      state = 'today';
+      // For today, we use 'todayComplete' or 'todayIncomplete' to properly track completion
+      state = isCompleted ? 'todayComplete' : 'todayIncomplete';
     } else if (isCompleted) {
       state = 'complete';
     } else {
@@ -88,21 +89,26 @@ const MiniPreviewDots = React.memo(function MiniPreviewDots({
     [completedDates]
   );
 
+  // Count completed days (including today if completed)
+  const completedCount = dots.filter(
+    (d) => d.state === 'complete' || d.state === 'todayComplete'
+  ).length;
+
   return (
     <View
       accessible
-      accessibilityLabel={`Last 7 days: ${dots.filter((d) => d.state === 'complete').length} completed`}
+      accessibilityLabel={`Last 7 days: ${completedCount} completed`}
       className='flex-row items-center gap-1.5'
     >
       {dots.map((dot) => {
         let bgColor: string;
-        let borderStyle = '';
+        let hasBorder = false;
 
-        if (dot.state === 'complete') {
+        if (dot.state === 'complete' || dot.state === 'todayComplete') {
           bgColor = habitColor || '#10b981'; // emerald-500
-        } else if (dot.state === 'today') {
+        } else if (dot.state === 'todayIncomplete') {
           bgColor = '#fef3c7'; // amber-100
-          borderStyle = 'border border-amber-400';
+          hasBorder = true;
         } else {
           bgColor = '#e7e5e4'; // stone-200 (missed or future)
         }
@@ -110,8 +116,14 @@ const MiniPreviewDots = React.memo(function MiniPreviewDots({
         return (
           <View
             key={dot.date}
-            className={`h-2 w-2 rounded-full ${borderStyle}`}
-            style={{ backgroundColor: bgColor }}
+            className='h-2 w-2 rounded-full'
+            style={{
+              backgroundColor: bgColor,
+              ...(hasBorder && {
+                borderColor: '#fbbf24', // amber-400
+                borderWidth: 1,
+              }),
+            }}
           />
         );
       })}

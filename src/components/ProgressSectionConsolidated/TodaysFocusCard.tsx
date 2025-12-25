@@ -258,11 +258,111 @@ function calculateGoalValue(
 }
 
 /**
+ * ConfettiParticle Component
+ * A single confetti particle with its own animated values
+ */
+interface ConfettiParticleProps {
+  angle: number;
+  color: string;
+  delay: number;
+  distance: number;
+  isActive: boolean;
+  size: number;
+}
+
+const ConfettiParticle = React.memo(function ConfettiParticle({
+  angle,
+  color,
+  delay,
+  distance,
+  isActive,
+  size,
+}: ConfettiParticleProps) {
+  const opacity = useSharedValue(0);
+  const scale = useSharedValue(0);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+
+  useEffect(() => {
+    if (isActive) {
+      const targetX = Math.cos(angle) * distance;
+      const targetY = Math.sin(angle) * distance - 30; // Bias upward
+
+      // Reset to center
+      translateX.value = 0;
+      translateY.value = 0;
+      scale.value = 0;
+      opacity.value = 0;
+
+      // Animate outward with spring physics
+      translateX.value = withDelay(
+        delay,
+        withSpring(targetX, { damping: 12, mass: 0.5, stiffness: 200 })
+      );
+      translateY.value = withDelay(
+        delay,
+        withSpring(targetY, { damping: 12, mass: 0.5, stiffness: 200 })
+      );
+      scale.value = withDelay(
+        delay,
+        withSequence(
+          withSpring(1.3, { damping: 8, stiffness: 300 }),
+          withTiming(0, { duration: 400, easing: Easing.out(Easing.ease) })
+        )
+      );
+      opacity.value = withDelay(
+        delay,
+        withSequence(
+          withTiming(1, { duration: 50 }),
+          withDelay(
+            250,
+            withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+          )
+        )
+      );
+    }
+  }, [
+    isActive,
+    angle,
+    delay,
+    distance,
+    opacity,
+    scale,
+    translateX,
+    translateY,
+  ]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+      { scale: scale.value },
+    ],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        styles.confettiParticle,
+        {
+          backgroundColor: color,
+          borderRadius: size / 2,
+          height: size,
+          width: size,
+        },
+        animatedStyle,
+      ]}
+    />
+  );
+});
+
+/**
  * ConfettiBurst Component
  * Renders a burst of confetti particles emanating from a central point
  */
 function ConfettiBurst({ isActive }: { isActive: boolean }) {
-  // Create shared values for each particle
+  // Create particle configurations (stable across renders)
   const particles = useMemo(
     () =>
       Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => ({
@@ -270,111 +370,27 @@ function ConfettiBurst({ isActive }: { isActive: boolean }) {
           (i / CONFETTI_PARTICLE_COUNT) * Math.PI * 2 +
           (Math.random() * 0.3 - 0.15),
         color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        delay: i * 20, // Stagger particles slightly
         distance: 50 + Math.random() * 40,
+        id: i,
         size: 5 + Math.random() * 5,
       })),
     []
-  );
-
-  // Create shared values for animation
-  const particleOpacities = particles.map(() =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useSharedValue(0)
-  );
-  const particleScales = particles.map(() =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useSharedValue(0)
-  );
-  const particleTranslateX = particles.map(() =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useSharedValue(0)
-  );
-  const particleTranslateY = particles.map(() =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useSharedValue(0)
-  );
-
-  useEffect(() => {
-    if (isActive) {
-      // Animate each particle outward with burst effect
-      for (const [i, particle] of particles.entries()) {
-        const delay = i * 20; // Stagger particles slightly
-        const targetX = Math.cos(particle.angle) * particle.distance;
-        const targetY = Math.sin(particle.angle) * particle.distance - 30; // Bias upward
-
-        // Reset to center
-        particleTranslateX[i].value = 0;
-        particleTranslateY[i].value = 0;
-        particleScales[i].value = 0;
-        particleOpacities[i].value = 0;
-
-        // Animate outward with spring physics
-        particleTranslateX[i].value = withDelay(
-          delay,
-          withSpring(targetX, { damping: 12, mass: 0.5, stiffness: 200 })
-        );
-        particleTranslateY[i].value = withDelay(
-          delay,
-          withSpring(targetY, { damping: 12, mass: 0.5, stiffness: 200 })
-        );
-        particleScales[i].value = withDelay(
-          delay,
-          withSequence(
-            withSpring(1.3, { damping: 8, stiffness: 300 }),
-            withTiming(0, { duration: 400, easing: Easing.out(Easing.ease) })
-          )
-        );
-        particleOpacities[i].value = withDelay(
-          delay,
-          withSequence(
-            withTiming(1, { duration: 50 }),
-            withDelay(
-              250,
-              withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
-            )
-          )
-        );
-      }
-    }
-  }, [
-    isActive,
-    particles,
-    particleOpacities,
-    particleScales,
-    particleTranslateX,
-    particleTranslateY,
-  ]);
-
-  // Create animated styles for each particle
-  const particleStyles = particles.map((_, i) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useAnimatedStyle(() => ({
-      opacity: particleOpacities[i].value,
-      transform: [
-        { translateX: particleTranslateX[i].value },
-        { translateY: particleTranslateY[i].value },
-        { scale: particleScales[i].value },
-      ],
-    }))
   );
 
   if (!isActive) return null;
 
   return (
     <View pointerEvents='none' style={styles.confettiContainer}>
-      {particles.map((particle, i) => (
-        <Animated.View
-          key={i}
-          style={[
-            styles.confettiParticle,
-            {
-              backgroundColor: particle.color,
-              borderRadius: particle.size / 2,
-              height: particle.size,
-              width: particle.size,
-            },
-            particleStyles[i],
-          ]}
+      {particles.map((particle) => (
+        <ConfettiParticle
+          key={particle.id}
+          angle={particle.angle}
+          color={particle.color}
+          delay={particle.delay}
+          distance={particle.distance}
+          isActive={isActive}
+          size={particle.size}
         />
       ))}
     </View>
@@ -438,7 +454,6 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
   const scale = useSharedValue(reduceMotion ? 1 : 0.95);
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
   const shimmerPosition = useSharedValue(0);
-  const countValue = useSharedValue(reduceMotion ? goalValue : 0);
   const badgeScale = useSharedValue(0);
   const shareButtonOpacity = useSharedValue(0);
 
@@ -478,7 +493,6 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
     if (reduceMotion) {
       scale.value = 1;
       opacity.value = 1;
-      countValue.value = goalValue;
       return;
     }
 
@@ -494,13 +508,7 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
       duration: ENTRANCE_DURATION,
       easing: Easing.out(Easing.cubic),
     });
-
-    // Number count up animation
-    countValue.value = withTiming(goalValue, {
-      duration: NUMBER_COUNT_DURATION,
-      easing: Easing.out(Easing.cubic),
-    });
-  }, [reduceMotion, goalValue, scale, opacity, countValue]);
+  }, [reduceMotion, scale, opacity]);
 
   // Shimmer animation (continuous)
   useEffect(() => {
@@ -701,7 +709,7 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
                 <AnimatedGoalNumber
                   color={config.textColor}
                   reduceMotion={reduceMotion}
-                  value={countValue}
+                  targetValue={goalValue}
                 />
                 <Text
                   style={[styles.goalLabel, { color: config.subTextColor }]}
@@ -756,64 +764,50 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
  * AnimatedGoalNumber - Displays the animated goal number
  */
 interface AnimatedGoalNumberProps {
-  value: SharedValue<number>;
+  targetValue: number;
   color: string;
   reduceMotion: boolean;
 }
 
 const AnimatedGoalNumber = React.memo(function AnimatedGoalNumber({
-  value,
+  targetValue,
   color,
   reduceMotion,
 }: AnimatedGoalNumberProps) {
-  const animatedStyle = useAnimatedStyle(() => {
-    // Reference value to trigger re-render when it changes
-    // The actual display is handled by GoalValueDisplay
-    const _currentValue = value.value;
-    return {};
-  });
-
-  // For the text, we use a wrapper that reads the value
-  // In practice, we'd use Reanimated text, but for simplicity:
-  const AnimatedText = Animated.createAnimatedComponent(Text);
-
   return (
-    <AnimatedText style={[styles.goalValue, { color }, animatedStyle]}>
-      {/* Note: For true animated text, we'd need useAnimatedProps with native driver */}
-      {/* For now, using static display since Reanimated text animation requires native config */}
-      <GoalValueDisplay reduceMotion={reduceMotion} value={value} />
-    </AnimatedText>
+    <Text style={[styles.goalValue, { color }]}>
+      <GoalValueDisplay reduceMotion={reduceMotion} targetValue={targetValue} />
+    </Text>
   );
 });
 
 /**
- * GoalValueDisplay - Displays the goal value (static for now, animated counting handled separately)
+ * GoalValueDisplay - Displays the goal value with optional counting animation
  */
 interface GoalValueDisplayProps {
-  value: SharedValue<number>;
+  targetValue: number;
   reduceMotion: boolean;
 }
 
 const GoalValueDisplay = React.memo(function GoalValueDisplay({
-  value,
+  targetValue,
   reduceMotion,
 }: GoalValueDisplayProps) {
   // For true animated counting, this would use Reanimated's derived values
-  // For now, we'll use the final value directly since the counting animation
-  // is complex to implement without native driver text support
+  // For now, we'll use a timer-based approach for the count-up animation
   const [displayValue, setDisplayValue] = React.useState(
-    Math.round(value.value)
+    reduceMotion ? targetValue : 0
   );
 
   useEffect(() => {
     if (reduceMotion) {
-      setDisplayValue(Math.round(value.value));
+      setDisplayValue(targetValue);
       return;
     }
 
     // Animate the count up using a timer-based approach
     const startValue = 0;
-    const endValue = Math.round(value.value);
+    const endValue = targetValue;
     const duration = NUMBER_COUNT_DURATION;
     const steps = 20;
     const stepDuration = duration / steps;
@@ -835,24 +829,12 @@ const GoalValueDisplay = React.memo(function GoalValueDisplay({
     }, stepDuration);
 
     return () => clearInterval(timer);
-  }, [value, reduceMotion]);
+  }, [targetValue, reduceMotion]);
 
   return <>{displayValue}</>;
 });
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 16,
-    elevation: 3,
-    marginBottom: 12,
-
-    overflow: 'hidden',
-    // Shadow
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
   // Celebration styles
   badgeContainer: {
     alignItems: 'center',
@@ -863,42 +845,18 @@ const styles = StyleSheet.create({
     width: 56,
   },
 
-  content: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-    padding: 16,
-    zIndex: 2,
-  },
-
   badgeEmoji: {
     fontSize: 32,
     textAlign: 'center',
-  },
-
-  goalLabel: {
-    fontSize: 13,
-    fontWeight: '500',
   },
 
   celebrationContent: {
     gap: 2,
   },
 
-  goalRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 4,
-  },
-
   celebrationSubtext: {
     fontSize: 14,
     fontWeight: '500',
-  },
-
-  goalValue: {
-    fontSize: 16,
-    fontWeight: '700',
   },
 
   // Confetti styles
@@ -912,11 +870,6 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
 
-  gradient: {
-    overflow: 'hidden',
-    position: 'relative',
-  },
-
   confettiParticle: {
     elevation: 2,
     position: 'absolute',
@@ -924,6 +877,59 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 2,
+  },
+
+  container: {
+    borderRadius: 16,
+    elevation: 3,
+    marginBottom: 12,
+
+    overflow: 'hidden',
+    // Shadow
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+
+  content: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    padding: 16,
+    zIndex: 2,
+  },
+
+  dismissButton: {
+    alignItems: 'center',
+    paddingBottom: 12,
+    paddingTop: 4,
+  },
+
+  dismissText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+
+  goalLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+
+  goalRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+
+  goalValue: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+
+  gradient: {
+    overflow: 'hidden',
+    position: 'relative',
   },
 
   iconContainer: {
@@ -935,37 +941,16 @@ const styles = StyleSheet.create({
     width: 48,
   },
 
-  dismissButton: {
-    alignItems: 'center',
-    paddingBottom: 12,
-    paddingTop: 4,
-  },
-
   message: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
   },
 
-  dismissText: {
-    fontSize: 12,
-    fontWeight: '500',
-  },
-
-  shimmerGradient: {
-    height: '100%',
-    width: 200,
-  },
-
   nextMilestone: {
     fontSize: 12,
     fontWeight: '400',
     opacity: 0.85,
-  },
-
-  shimmerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 1,
   },
 
   shareButton: {
@@ -975,6 +960,16 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     width: 40,
+  },
+
+  shimmerGradient: {
+    height: '100%',
+    width: 200,
+  },
+
+  shimmerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1,
   },
   textContainer: {
     flex: 1,

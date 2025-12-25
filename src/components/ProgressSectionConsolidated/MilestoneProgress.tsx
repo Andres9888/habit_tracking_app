@@ -145,9 +145,8 @@ export const MilestoneProgress = React.memo(function MilestoneProgress({
       withTiming(1, { duration: 500 })
     );
 
-    // Call callback if provided
-    if (onMilestoneHit && nextMilestone) {
-      // The milestone just hit is the previous one in the list
+    // Call callback if provided - check if current streak matches any milestone
+    if (onMilestoneHit) {
       const justHitMilestone = MILESTONES.find((m) => m.days === currentStreak);
       if (justHitMilestone) {
         onMilestoneHit(justHitMilestone.days);
@@ -159,7 +158,6 @@ export const MilestoneProgress = React.memo(function MilestoneProgress({
     celebrationScale,
     onMilestoneHit,
     currentStreak,
-    nextMilestone,
   ]);
 
   // Container animated style

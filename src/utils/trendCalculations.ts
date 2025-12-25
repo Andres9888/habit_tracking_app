@@ -98,7 +98,8 @@ export function calculateWeekOverWeekTrend(
   tracking: HabitTrackingEntry[],
   referenceDate?: Date
 ): WeekOverWeekTrend {
-  const today = referenceDate ?? new Date();
+  // Clone the date to avoid mutating the caller's object
+  const today = new Date(referenceDate ?? new Date());
   today.setHours(23, 59, 59, 999);
 
   // This week: Monday to today
@@ -180,7 +181,8 @@ export function calculateMonthOverMonthTrend(
   tracking: HabitTrackingEntry[],
   referenceDate?: Date
 ): MonthOverMonthTrend {
-  const today = referenceDate ?? new Date();
+  // Clone the date to avoid mutating the caller's object
+  const today = new Date(referenceDate ?? new Date());
   today.setHours(23, 59, 59, 999);
 
   // This month: 1st to today
