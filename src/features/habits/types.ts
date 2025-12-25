@@ -15,8 +15,7 @@ export type HabitSortMode =
   | 'strength_asc'
   | 'strength_desc'
   | 'streak_asc'
-  | 'streak_desc'
-  | 'day_phase';
+  | 'streak_desc';
 
 export type ShareCardData = {
   habitName: string;
