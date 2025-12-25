@@ -19,6 +19,7 @@
  * - struggling: streak = 0, weekly < 3 (amber→orange gradient)
  * - recovering: streak = 0, bestStreak > 7 (violet→purple gradient)
  * - completed: isCompletedToday = true (green→emerald gradient)
+ * - celebrating: Just hit a milestone (gold→amber gradient with confetti)
  */
 export type FocusState =
   | 'thriving'
@@ -26,7 +27,8 @@ export type FocusState =
   | 'starting'
   | 'struggling'
   | 'recovering'
-  | 'completed';
+  | 'completed'
+  | 'celebrating';
 
 /**
  * Configuration for each focus state
@@ -59,6 +61,8 @@ export interface FocusStateConfig {
  *   weeklyCompletion={6}
  *   habitAge={30}
  *   bestStreak={21}
+ *   celebratedMilestones={[7, 14]}
+ *   onMilestoneCelebrated={(milestone) => console.log(`Celebrated ${milestone}`)}
  * />
  * ```
  */
@@ -77,6 +81,15 @@ export interface TodaysFocusCardProps {
 
   /** Best streak ever achieved in days */
   bestStreak: number;
+
+  /** Array of milestones that have already been celebrated (to avoid re-celebrating) */
+  celebratedMilestones?: number[];
+
+  /** Callback when a milestone celebration is acknowledged */
+  onMilestoneCelebrated?: (milestone: number) => void;
+
+  /** Optional callback when share button is pressed during celebration */
+  onShare?: () => void;
 }
 
 /**
@@ -90,3 +103,106 @@ export const MILESTONE_THRESHOLDS = [
  * Type for milestone values
  */
 export type MilestoneValue = (typeof MILESTONE_THRESHOLDS)[number];
+
+/**
+ * Milestone configuration for celebrations
+ */
+export interface MilestoneCelebrationConfig {
+  /** Number of days for this milestone */
+  days: number;
+  /** Badge emoji for this milestone */
+  badge: string;
+  /** Display name for this milestone */
+  name: string;
+  /** Celebration message */
+  message: string;
+  /** Subtext for encouragement */
+  subtext: string;
+}
+
+/**
+ * Celebration milestone configurations
+ */
+export const CELEBRATION_MILESTONES: MilestoneCelebrationConfig[] = [
+  {
+    badge: '⚡',
+    days: 3,
+    message: '🎉 You hit 3 days!',
+    name: 'Habit Starter',
+    subtext: "You're building momentum!",
+  },
+  {
+    badge: '⭐',
+    days: 7,
+    message: '🎉 You hit 7 days!',
+    name: 'Week Warrior',
+    subtext: 'A whole week strong!',
+  },
+  {
+    badge: '🔥',
+    days: 14,
+    message: '🎉 You hit 14 days!',
+    name: 'Two Week Titan',
+    subtext: 'Two weeks of consistency!',
+  },
+  {
+    badge: '🏅',
+    days: 21,
+    message: '🎉 You hit 21 days!',
+    name: 'Habit Builder',
+    subtext: "You're building a real habit!",
+  },
+  {
+    badge: '🏆',
+    days: 30,
+    message: '🎉 You hit 30 days!',
+    name: 'Monthly Master',
+    subtext: 'A full month - incredible!',
+  },
+  {
+    badge: '💎',
+    days: 60,
+    message: '🎉 You hit 60 days!',
+    name: 'Two Month Diamond',
+    subtext: 'Diamond-level dedication!',
+  },
+  {
+    badge: '🌟',
+    days: 90,
+    message: '🎉 You hit 90 days!',
+    name: 'Quarterly Legend',
+    subtext: 'A quarter year of excellence!',
+  },
+  {
+    badge: '💯',
+    days: 100,
+    message: '🎉 You hit 100 days!',
+    name: 'Century Club',
+    subtext: 'Welcome to the Century Club!',
+  },
+  {
+    badge: '👑',
+    days: 365,
+    message: '🎉 You hit 365 days!',
+    name: 'Year Hero',
+    subtext: "A whole year - you're legendary!",
+  },
+];
+
+/**
+ * Gets the celebration milestone config for a given streak
+ */
+export function getCelebrationMilestone(
+  currentStreak: number
+): MilestoneCelebrationConfig | null {
+  return CELEBRATION_MILESTONES.find((m) => m.days === currentStreak) ?? null;
+}
+
+/**
+ * Gets the next milestone after the current streak
+ */
+export function getNextCelebrationMilestone(
+  currentStreak: number
+): MilestoneCelebrationConfig | null {
+  return CELEBRATION_MILESTONES.find((m) => m.days > currentStreak) ?? null;
+}

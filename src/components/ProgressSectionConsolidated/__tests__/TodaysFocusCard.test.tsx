@@ -115,6 +115,16 @@ jest.mock('@expo/vector-icons', () => {
   };
 });
 
+// Mock expo-haptics
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(),
+  ImpactFeedbackStyle: {
+    Light: 'light',
+    Medium: 'medium',
+    Heavy: 'heavy',
+  },
+}));
+
 describe('TodaysFocusCard', () => {
   // Default props for different states
   const baseProps: TodaysFocusCardProps = {
@@ -318,9 +328,14 @@ describe('TodaysFocusCard', () => {
       ).toBeTruthy();
     });
 
-    it('completed state takes priority over other states', () => {
-      // Even with thriving metrics, completed should show
-      const props = { ...thrivingProps, isCompletedToday: true };
+    it('completed state takes priority over other states (when not on milestone)', () => {
+      // Even with thriving metrics, completed should show (when not on a milestone)
+      // 14 is a milestone so we mark it as celebrated to test completed state
+      const props = {
+        ...thrivingProps,
+        isCompletedToday: true,
+        celebratedMilestones: [14],
+      };
       const { getByLabelText } = render(<TodaysFocusCard {...props} />);
       expect(getByLabelText(/14 day streak and counting!/)).toBeTruthy();
     });
@@ -463,17 +478,33 @@ describe('TodaysFocusCard', () => {
   });
 
   describe('State Priority', () => {
-    it('completed state has highest priority', () => {
-      // User has everything: thriving metrics + completed today
+    it('celebrating state has highest priority when on a milestone', () => {
+      // User has everything: thriving metrics + completed today + on milestone
       const props: TodaysFocusCardProps = {
         currentStreak: 21,
         isCompletedToday: true,
         weeklyCompletion: 7,
         habitAge: 60,
         bestStreak: 30,
+        celebratedMilestones: [], // Not yet celebrated
+      };
+      const { getByText } = render(<TodaysFocusCard {...props} />);
+      // Should show celebration badge, not checkmark icon
+      expect(getByText('🏅')).toBeTruthy();
+    });
+
+    it('completed state has highest priority when milestone already celebrated', () => {
+      // User has everything: thriving metrics + completed today + milestone already celebrated
+      const props: TodaysFocusCardProps = {
+        currentStreak: 21,
+        isCompletedToday: true,
+        weeklyCompletion: 7,
+        habitAge: 60,
+        bestStreak: 30,
+        celebratedMilestones: [21], // Already celebrated
       };
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
-      // Should show completed icon, not thriving icon
+      // Should show completed icon, not celebration badge
       expect(
         UNSAFE_getByProps({ testID: 'ionicons-checkmark-circle-outline' })
       ).toBeTruthy();
@@ -520,6 +551,242 @@ describe('TodaysFocusCard', () => {
     it('renders goal label', () => {
       const { getByText } = render(<TodaysFocusCard {...thrivingProps} />);
       expect(getByText('Goal:')).toBeTruthy();
+    });
+  });
+
+  describe('Milestone Celebration', () => {
+    // Props for celebration state at different milestones
+    const celebrating7DaysProps: TodaysFocusCardProps = {
+      currentStreak: 7,
+      isCompletedToday: true,
+      weeklyCompletion: 7,
+      habitAge: 30,
+      bestStreak: 7,
+      celebratedMilestones: [],
+    };
+
+    const celebrating21DaysProps: TodaysFocusCardProps = {
+      currentStreak: 21,
+      isCompletedToday: true,
+      weeklyCompletion: 5,
+      habitAge: 60,
+      bestStreak: 21,
+      celebratedMilestones: [],
+    };
+
+    const alreadyCelebratedProps: TodaysFocusCardProps = {
+      currentStreak: 7,
+      isCompletedToday: true,
+      weeklyCompletion: 7,
+      habitAge: 30,
+      bestStreak: 7,
+      celebratedMilestones: [7], // Already celebrated 7 days
+    };
+
+    it('shows celebrating state when on a milestone and completed today', () => {
+      const { getByLabelText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+      expect(getByLabelText(/Milestone celebration/)).toBeTruthy();
+      expect(getByLabelText(/You hit 7 days!/)).toBeTruthy();
+    });
+
+    it('shows celebration message for 21-day milestone', () => {
+      const { getByLabelText } = render(
+        <TodaysFocusCard {...celebrating21DaysProps} />
+      );
+      expect(getByLabelText(/You hit 21 days!/)).toBeTruthy();
+    });
+
+    it('shows badge emoji in celebration state', () => {
+      const { getByText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+      // 7-day milestone badge is ⭐
+      expect(getByText('⭐')).toBeTruthy();
+    });
+
+    it('shows 21-day badge emoji in celebration state', () => {
+      const { getByText } = render(
+        <TodaysFocusCard {...celebrating21DaysProps} />
+      );
+      // 21-day milestone badge is 🏅
+      expect(getByText('🏅')).toBeTruthy();
+    });
+
+    it('shows celebration subtext', () => {
+      const { getByText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+      expect(getByText(/A whole week strong!/)).toBeTruthy();
+    });
+
+    it('shows next milestone preview in celebration state', () => {
+      const { getByText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+      // After 7 days, next is 14
+      expect(getByText(/Next: 14 days/)).toBeTruthy();
+    });
+
+    it('does NOT show celebration state if milestone already celebrated', () => {
+      const { getByLabelText, queryByText } = render(
+        <TodaysFocusCard {...alreadyCelebratedProps} />
+      );
+      // Should show completed state instead
+      expect(getByLabelText(/7 day streak and counting!/)).toBeTruthy();
+      // Should NOT show celebration subtext
+      expect(queryByText(/A whole week strong!/)).toBeNull();
+    });
+
+    it('celebration state takes priority over completed state', () => {
+      const { getByText, UNSAFE_queryByProps } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+      // Should show badge, not checkmark icon
+      expect(getByText('⭐')).toBeTruthy();
+      expect(
+        UNSAFE_queryByProps({ testID: 'ionicons-checkmark-circle-outline' })
+      ).toBeNull();
+    });
+
+    it('calls onMilestoneCelebrated when dismiss is pressed', () => {
+      const mockOnMilestoneCelebrated = jest.fn();
+      const { getByText } = render(
+        <TodaysFocusCard
+          {...celebrating7DaysProps}
+          onMilestoneCelebrated={mockOnMilestoneCelebrated}
+        />
+      );
+
+      const dismissButton = getByText(/Tap to continue/);
+      const { fireEvent } = require('@testing-library/react-native');
+      fireEvent.press(dismissButton);
+
+      expect(mockOnMilestoneCelebrated).toHaveBeenCalledWith(7);
+    });
+
+    it('renders share button when onShare is provided', () => {
+      const mockOnShare = jest.fn();
+      const { getByLabelText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} onShare={mockOnShare} />
+      );
+
+      expect(getByLabelText('Share')).toBeTruthy();
+    });
+
+    it('calls onShare when share button is pressed', () => {
+      const mockOnShare = jest.fn();
+      const { getByLabelText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} onShare={mockOnShare} />
+      );
+
+      const shareButton = getByLabelText('Share');
+      const { fireEvent } = require('@testing-library/react-native');
+      fireEvent.press(shareButton);
+
+      expect(mockOnShare).toHaveBeenCalled();
+    });
+
+    it('does not render share button when onShare is not provided', () => {
+      const { queryByLabelText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+
+      expect(queryByLabelText('Share')).toBeNull();
+    });
+
+    it('does not render dismiss button when onMilestoneCelebrated is not provided', () => {
+      const { queryByText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+
+      expect(queryByText(/Tap to continue/)).toBeNull();
+    });
+
+    it('has correct accessibility label for celebration state', () => {
+      const { getByLabelText } = render(
+        <TodaysFocusCard {...celebrating7DaysProps} />
+      );
+      const card = getByLabelText(/Milestone celebration/);
+      expect(card.props.accessibilityLabel).toContain('A whole week strong!');
+      expect(card.props.accessibilityLabel).toContain('Next goal: 14 days');
+    });
+
+    it('shows 3-day milestone celebration', () => {
+      const props: TodaysFocusCardProps = {
+        currentStreak: 3,
+        isCompletedToday: true,
+        weeklyCompletion: 3,
+        habitAge: 30,
+        bestStreak: 3,
+        celebratedMilestones: [],
+      };
+      const { getByText } = render(<TodaysFocusCard {...props} />);
+      expect(getByText('⚡')).toBeTruthy();
+      expect(getByText(/You're building momentum!/)).toBeTruthy();
+    });
+
+    it('shows 30-day milestone celebration', () => {
+      const props: TodaysFocusCardProps = {
+        currentStreak: 30,
+        isCompletedToday: true,
+        weeklyCompletion: 7,
+        habitAge: 60,
+        bestStreak: 30,
+        celebratedMilestones: [],
+      };
+      const { getByText } = render(<TodaysFocusCard {...props} />);
+      expect(getByText('🏆')).toBeTruthy();
+      expect(getByText(/A full month - incredible!/)).toBeTruthy();
+    });
+
+    it('shows 100-day milestone celebration', () => {
+      const props: TodaysFocusCardProps = {
+        currentStreak: 100,
+        isCompletedToday: true,
+        weeklyCompletion: 7,
+        habitAge: 120,
+        bestStreak: 100,
+        celebratedMilestones: [],
+      };
+      const { getByText } = render(<TodaysFocusCard {...props} />);
+      expect(getByText('💯')).toBeTruthy();
+      expect(getByText(/Welcome to the Century Club!/)).toBeTruthy();
+    });
+
+    it('shows 365-day milestone celebration without next milestone', () => {
+      const props: TodaysFocusCardProps = {
+        currentStreak: 365,
+        isCompletedToday: true,
+        weeklyCompletion: 7,
+        habitAge: 400,
+        bestStreak: 365,
+        celebratedMilestones: [],
+      };
+      const { getByText, queryByText } = render(<TodaysFocusCard {...props} />);
+      expect(getByText('👑')).toBeTruthy();
+      expect(getByText(/you're legendary!/)).toBeTruthy();
+      // No next milestone after 365
+      expect(queryByText(/Next:/)).toBeNull();
+    });
+
+    it('does not show celebration for non-milestone streaks', () => {
+      const props: TodaysFocusCardProps = {
+        currentStreak: 5, // Not a milestone
+        isCompletedToday: true,
+        weeklyCompletion: 5,
+        habitAge: 30,
+        bestStreak: 5,
+        celebratedMilestones: [],
+      };
+      const { getByLabelText, queryByText } = render(
+        <TodaysFocusCard {...props} />
+      );
+      // Should show completed state
+      expect(getByLabelText(/5 day streak and counting!/)).toBeTruthy();
+      // Should NOT show celebration subtext
+      expect(queryByText(/building momentum/i)).toBeNull();
     });
   });
 });

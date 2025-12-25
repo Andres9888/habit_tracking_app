@@ -5,18 +5,19 @@
  * Displays different states based on user's current progress and streak.
  *
  * Features:
- * - 6 distinct states (Thriving, Building, Starting, Struggling, Recovering, Completed)
+ * - 7 distinct states (Thriving, Building, Starting, Struggling, Recovering, Completed, Celebrating)
  * - Gradient backgrounds per state using LinearGradient
  * - Shimmer animation on gradient background
  * - Scale spring entrance animation (0.95 → 1)
  * - Goal number counts up on first view
+ * - Confetti burst animation on milestone celebration
  * - Full accessibility support
  *
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
-import React, { useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,12 +25,14 @@ import Animated, {
   withTiming,
   withRepeat,
   withSequence,
+  withDelay,
   Easing,
   interpolate,
   SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { Springs } from '../../constants/motion';
@@ -40,12 +43,31 @@ import type {
   FocusStateConfig,
 } from './TodaysFocusCardTypes';
 
+import {
+  getCelebrationMilestone,
+  getNextCelebrationMilestone,
+} from './TodaysFocusCardTypes';
+
 // Re-export types
 
 /** Animation timing constants */
 const ENTRANCE_DURATION = 300;
 const SHIMMER_DURATION = 2500;
 const NUMBER_COUNT_DURATION = 800;
+const CONFETTI_DURATION = 700;
+const CONFETTI_PARTICLE_COUNT = 16;
+
+/**
+ * Confetti colors - celebratory gold/amber theme with accent colors
+ */
+const CONFETTI_COLORS = [
+  '#F59E0B', // Amber 500 (primary celebration)
+  '#FBBF24', // Amber 400
+  '#FCD34D', // Amber 300
+  '#D97706', // Amber 600
+  '#10B981', // Emerald 500 (success accent)
+  '#34D399', // Emerald 400
+];
 
 /**
  * Focus state configurations
@@ -54,67 +76,93 @@ const NUMBER_COUNT_DURATION = 800;
 const FOCUS_STATE_CONFIGS: Record<FocusState, FocusStateConfig> = {
   building: {
     getGoalLabel: () => '7 days',
-    gradientColors: ['#14b8a6', '#06b6d4'],
-
     getMessage: (streak: number) => `${streak} days strong - keep going!`,
+
+    gradientColors: ['#14b8a6', '#06b6d4'],
     // teal-500 → cyan-500
     icon: 'trending-up-outline',
     iconColor: '#ffffff',
     subTextColor: 'rgba(255, 255, 255, 0.9)',
     textColor: '#ffffff',
   },
+  celebrating: {
+    getGoalLabel: () => 'next',
+    getMessage: (milestone: number) => `🎉 You hit ${milestone} days!`,
+
+    gradientColors: ['#F59E0B', '#D97706'],
+    // amber-500 → amber-600 (gold gradient)
+    icon: 'trophy-outline',
+    iconColor: '#ffffff',
+    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    textColor: '#ffffff',
+  },
   completed: {
-    gradientColors: ['#22c55e', '#10b981'], // green-500 → emerald-500
+    getGoalLabel: () => '🔥',
+    getMessage: (streak: number) => `${streak} day streak and counting!`,
+
+    gradientColors: ['#22c55e', '#10b981'],
+    // green-500 → emerald-500
     icon: 'checkmark-circle-outline',
     iconColor: '#ffffff',
-    getGoalLabel: () => '🔥',
     subTextColor: 'rgba(255, 255, 255, 0.9)',
-    getMessage: (streak: number) => `${streak} day streak and counting!`,
     textColor: '#ffffff',
   },
   recovering: {
-    gradientColors: ['#8b5cf6', '#a855f7'], // violet-500 → purple-500
-    icon: 'refresh-outline',
-    iconColor: '#ffffff',
     getGoalLabel: () => 'best streak',
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
     getMessage: (bestStreak: number) =>
       `You've done ${bestStreak} before. Do it again!`,
+
+    gradientColors: ['#8b5cf6', '#a855f7'],
+    // violet-500 → purple-500
+    icon: 'refresh-outline',
+    iconColor: '#ffffff',
+    subTextColor: 'rgba(255, 255, 255, 0.9)',
     textColor: '#ffffff',
   },
   starting: {
-    gradientColors: ['#3b82f6', '#6366f1'], // blue-500 → indigo-500
-    icon: 'sparkles-outline',
     getGoalLabel: () => '3 days',
-    iconColor: '#ffffff',
     getMessage: () => '3 days unlocks momentum!',
+
+    gradientColors: ['#3b82f6', '#6366f1'],
+    // blue-500 → indigo-500
+    icon: 'sparkles-outline',
+    iconColor: '#ffffff',
     subTextColor: 'rgba(255, 255, 255, 0.9)',
     textColor: '#ffffff',
   },
   struggling: {
-    gradientColors: ['#f59e0b', '#f97316'], // amber-500 → orange-500
-    icon: 'heart-outline',
     getGoalLabel: () => '1 day',
-    iconColor: '#ffffff',
     getMessage: () => 'Every day is a fresh start!',
+
+    gradientColors: ['#f59e0b', '#f97316'],
+    // amber-500 → orange-500
+    icon: 'heart-outline',
+    iconColor: '#ffffff',
     subTextColor: 'rgba(255, 255, 255, 0.9)',
     textColor: '#ffffff',
   },
   thriving: {
-    gradientColors: ['#10b981', '#14b8a6'], // emerald-500 → teal-500
-    icon: 'locate-outline', // target equivalent
+    getGoalLabel: () => 'next milestone',
+    getMessage: (goal: number) => `Complete today to hit ${goal} days!`,
+
+    gradientColors: ['#10b981', '#14b8a6'],
+
+    // emerald-500 → teal-500
+    icon: 'locate-outline',
+    // target equivalent
     iconColor: '#ffffff',
     subTextColor: 'rgba(255, 255, 255, 0.9)',
-    getGoalLabel: () => 'next milestone',
     textColor: '#ffffff',
-    getMessage: (goal: number) => `Complete today to hit ${goal} days!`,
   },
 };
 
 /**
  * Determines the focus state based on user metrics
  */
-function determineFocusState(props: TodaysFocusCardProps): FocusState {
+function determineFocusState(
+  props: TodaysFocusCardProps,
+  celebratedMilestones: number[] = []
+): FocusState {
   const {
     currentStreak,
     isCompletedToday,
@@ -123,7 +171,18 @@ function determineFocusState(props: TodaysFocusCardProps): FocusState {
     bestStreak,
   } = props;
 
-  // Completed state takes priority
+  // Check for celebration state first (highest priority when on a milestone)
+  // Only show celebration if completed today and on a milestone that hasn't been celebrated
+  const milestoneConfig = getCelebrationMilestone(currentStreak);
+  if (
+    isCompletedToday &&
+    milestoneConfig &&
+    !celebratedMilestones.includes(currentStreak)
+  ) {
+    return 'celebrating';
+  }
+
+  // Completed state takes priority (after celebration)
   if (isCompletedToday) {
     return 'completed';
   }
@@ -172,6 +231,11 @@ function calculateGoalValue(
       const milestones = [7, 14, 21, 30, 60, 90, 100, 365];
       return milestones.find((m) => m > currentStreak) ?? currentStreak + 1;
     }
+    case 'celebrating': {
+      // Show the next milestone after celebration
+      const nextMilestone = getNextCelebrationMilestone(currentStreak);
+      return nextMilestone?.days ?? currentStreak + 1;
+    }
     case 'building': {
       return 7;
     }
@@ -194,6 +258,130 @@ function calculateGoalValue(
 }
 
 /**
+ * ConfettiBurst Component
+ * Renders a burst of confetti particles emanating from a central point
+ */
+function ConfettiBurst({ isActive }: { isActive: boolean }) {
+  // Create shared values for each particle
+  const particles = useMemo(
+    () =>
+      Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => ({
+        angle:
+          (i / CONFETTI_PARTICLE_COUNT) * Math.PI * 2 +
+          (Math.random() * 0.3 - 0.15),
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        distance: 50 + Math.random() * 40,
+        size: 5 + Math.random() * 5,
+      })),
+    []
+  );
+
+  // Create shared values for animation
+  const particleOpacities = particles.map(() =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useSharedValue(0)
+  );
+  const particleScales = particles.map(() =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useSharedValue(0)
+  );
+  const particleTranslateX = particles.map(() =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useSharedValue(0)
+  );
+  const particleTranslateY = particles.map(() =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useSharedValue(0)
+  );
+
+  useEffect(() => {
+    if (isActive) {
+      // Animate each particle outward with burst effect
+      for (const [i, particle] of particles.entries()) {
+        const delay = i * 20; // Stagger particles slightly
+        const targetX = Math.cos(particle.angle) * particle.distance;
+        const targetY = Math.sin(particle.angle) * particle.distance - 30; // Bias upward
+
+        // Reset to center
+        particleTranslateX[i].value = 0;
+        particleTranslateY[i].value = 0;
+        particleScales[i].value = 0;
+        particleOpacities[i].value = 0;
+
+        // Animate outward with spring physics
+        particleTranslateX[i].value = withDelay(
+          delay,
+          withSpring(targetX, { damping: 12, mass: 0.5, stiffness: 200 })
+        );
+        particleTranslateY[i].value = withDelay(
+          delay,
+          withSpring(targetY, { damping: 12, mass: 0.5, stiffness: 200 })
+        );
+        particleScales[i].value = withDelay(
+          delay,
+          withSequence(
+            withSpring(1.3, { damping: 8, stiffness: 300 }),
+            withTiming(0, { duration: 400, easing: Easing.out(Easing.ease) })
+          )
+        );
+        particleOpacities[i].value = withDelay(
+          delay,
+          withSequence(
+            withTiming(1, { duration: 50 }),
+            withDelay(
+              250,
+              withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+            )
+          )
+        );
+      }
+    }
+  }, [
+    isActive,
+    particles,
+    particleOpacities,
+    particleScales,
+    particleTranslateX,
+    particleTranslateY,
+  ]);
+
+  // Create animated styles for each particle
+  const particleStyles = particles.map((_, i) =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useAnimatedStyle(() => ({
+      opacity: particleOpacities[i].value,
+      transform: [
+        { translateX: particleTranslateX[i].value },
+        { translateY: particleTranslateY[i].value },
+        { scale: particleScales[i].value },
+      ],
+    }))
+  );
+
+  if (!isActive) return null;
+
+  return (
+    <View pointerEvents='none' style={styles.confettiContainer}>
+      {particles.map((particle, i) => (
+        <Animated.View
+          key={i}
+          style={[
+            styles.confettiParticle,
+            {
+              backgroundColor: particle.color,
+              borderRadius: particle.size / 2,
+              height: particle.size,
+              width: particle.size,
+            },
+            particleStyles[i],
+          ]}
+        />
+      ))}
+    </View>
+  );
+}
+
+/**
  * TodaysFocusCard Component
  *
  * Displays contextual motivation based on user's current progress.
@@ -208,13 +396,33 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
     weeklyCompletion,
     habitAge,
     bestStreak,
+    celebratedMilestones = [],
+    onMilestoneCelebrated,
+    onShare,
   } = props;
   const reduceMotion = useReduceMotion();
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Determine current state
   const focusState = useMemo(
-    () => determineFocusState(props),
-    [currentStreak, isCompletedToday, weeklyCompletion, habitAge, bestStreak]
+    () => determineFocusState(props, celebratedMilestones),
+    [
+      currentStreak,
+      isCompletedToday,
+      weeklyCompletion,
+      habitAge,
+      bestStreak,
+      celebratedMilestones,
+    ]
+  );
+
+  // Get celebration milestone config if celebrating
+  const celebrationConfig = useMemo(
+    () =>
+      focusState === 'celebrating'
+        ? getCelebrationMilestone(currentStreak)
+        : null,
+    [focusState, currentStreak]
   );
 
   // Get configuration for current state
@@ -231,6 +439,39 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
   const shimmerPosition = useSharedValue(0);
   const countValue = useSharedValue(reduceMotion ? goalValue : 0);
+  const badgeScale = useSharedValue(0);
+  const shareButtonOpacity = useSharedValue(0);
+
+  // Trigger confetti and haptics for celebration state
+  useEffect(() => {
+    if (focusState === 'celebrating' && !reduceMotion) {
+      // Trigger haptic feedback
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+
+      // Show confetti
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), CONFETTI_DURATION);
+
+      // Animate badge bounce
+      badgeScale.value = withSequence(
+        withSpring(1.4, { damping: 8, stiffness: 200 }),
+        withSpring(1, { damping: 12, stiffness: 150 })
+      );
+
+      // Fade in share button
+      shareButtonOpacity.value = withDelay(
+        400,
+        withTiming(1, { duration: 300 })
+      );
+
+      return () => clearTimeout(timer);
+    } else if (focusState === 'celebrating' && reduceMotion) {
+      // Even with reduce motion, trigger light haptic
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      badgeScale.value = 1;
+      shareButtonOpacity.value = 1;
+    }
+  }, [focusState, reduceMotion, badgeScale, shareButtonOpacity]);
 
   // Entrance animation
   useEffect(() => {
@@ -294,6 +535,32 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
     ],
   }));
 
+  // Badge animated style for celebration
+  const badgeAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: badgeScale.value }],
+  }));
+
+  // Share button animated style
+  const shareButtonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: shareButtonOpacity.value,
+  }));
+
+  // Handle celebration acknowledgment
+  const handleCelebrationAcknowledge = useCallback(() => {
+    if (focusState === 'celebrating' && onMilestoneCelebrated) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      onMilestoneCelebrated(currentStreak);
+    }
+  }, [focusState, currentStreak, onMilestoneCelebrated]);
+
+  // Handle share button press
+  const handleSharePress = useCallback(() => {
+    if (onShare) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      onShare();
+    }
+  }, [onShare]);
+
   // Get message based on state
   const message = useMemo(() => {
     switch (focusState) {
@@ -309,6 +576,9 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
       case 'completed': {
         return config.getMessage(currentStreak);
       }
+      case 'celebrating': {
+        return config.getMessage(currentStreak);
+      }
       default: {
         return config.getMessage(0);
       }
@@ -317,8 +587,30 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
 
   const goalLabel = config.getGoalLabel();
 
+  // Get subtext for celebration
+  const celebrationSubtext = useMemo(() => {
+    if (focusState === 'celebrating' && celebrationConfig) {
+      return celebrationConfig.subtext;
+    }
+    return null;
+  }, [focusState, celebrationConfig]);
+
+  // Get next milestone label for celebration
+  const nextMilestoneLabel = useMemo(() => {
+    if (focusState === 'celebrating') {
+      const nextMilestone = getNextCelebrationMilestone(currentStreak);
+      if (nextMilestone) {
+        return `Next: ${nextMilestone.days} days ${nextMilestone.badge}`;
+      }
+    }
+    return null;
+  }, [focusState, currentStreak]);
+
   // Accessibility
-  const accessibilityLabel = `Today's focus: ${message}. Goal: ${goalValue} ${goalLabel}`;
+  const accessibilityLabel =
+    focusState === 'celebrating'
+      ? `Milestone celebration: ${message}. ${celebrationSubtext ?? ''}. Next goal: ${goalValue} days`
+      : `Today's focus: ${message}. Goal: ${goalValue} ${goalLabel}`;
 
   return (
     <Animated.View
@@ -326,6 +618,9 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
       accessibilityRole='text'
       style={[styles.container, containerAnimatedStyle]}
     >
+      {/* Confetti animation for celebration */}
+      <ConfettiBurst isActive={showConfetti} />
+
       <LinearGradient
         colors={config.gradientColors}
         end={{ x: 1, y: 1 }}
@@ -346,39 +641,112 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
 
         {/* Content */}
         <View style={styles.content}>
-          {/* Icon */}
-          <View
-            accessibilityElementsHidden
-            importantForAccessibility='no-hide-descendants'
-            style={styles.iconContainer}
-          >
-            <Ionicons
-              color={config.iconColor}
-              name={config.icon as any}
-              size={28}
-            />
-          </View>
+          {/* Icon or Badge */}
+          {focusState === 'celebrating' && celebrationConfig ? (
+            <Animated.View
+              accessibilityLabel={`${celebrationConfig.name} badge`}
+              style={[styles.badgeContainer, badgeAnimatedStyle]}
+            >
+              <Text style={styles.badgeEmoji}>{celebrationConfig.badge}</Text>
+            </Animated.View>
+          ) : (
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility='no-hide-descendants'
+              style={styles.iconContainer}
+            >
+              <Ionicons
+                color={config.iconColor}
+                name={config.icon as any}
+                size={28}
+              />
+            </View>
+          )}
 
           {/* Text content */}
           <View style={styles.textContainer}>
             <Text style={[styles.message, { color: config.textColor }]}>
               {message}
             </Text>
-            <View style={styles.goalRow}>
-              <Text style={[styles.goalLabel, { color: config.subTextColor }]}>
-                Goal:
-              </Text>
-              <AnimatedGoalNumber
-                color={config.textColor}
-                reduceMotion={reduceMotion}
-                value={countValue}
-              />
-              <Text style={[styles.goalLabel, { color: config.subTextColor }]}>
-                {goalLabel}
-              </Text>
-            </View>
+
+            {/* Celebration subtext or goal row */}
+            {focusState === 'celebrating' && celebrationSubtext ? (
+              <View style={styles.celebrationContent}>
+                <Text
+                  style={[
+                    styles.celebrationSubtext,
+                    { color: config.subTextColor },
+                  ]}
+                >
+                  {celebrationSubtext}
+                </Text>
+                {nextMilestoneLabel && (
+                  <Text
+                    style={[
+                      styles.nextMilestone,
+                      { color: config.subTextColor },
+                    ]}
+                  >
+                    {nextMilestoneLabel}
+                  </Text>
+                )}
+              </View>
+            ) : (
+              <View style={styles.goalRow}>
+                <Text
+                  style={[styles.goalLabel, { color: config.subTextColor }]}
+                >
+                  Goal:
+                </Text>
+                <AnimatedGoalNumber
+                  color={config.textColor}
+                  reduceMotion={reduceMotion}
+                  value={countValue}
+                />
+                <Text
+                  style={[styles.goalLabel, { color: config.subTextColor }]}
+                >
+                  {goalLabel}
+                </Text>
+              </View>
+            )}
           </View>
+
+          {/* Share button for celebration (optional) */}
+          {focusState === 'celebrating' && onShare && (
+            <Animated.View style={shareButtonAnimatedStyle}>
+              <Pressable
+                accessibilityHint='Share your milestone achievement'
+                accessibilityLabel='Share'
+                accessibilityRole='button'
+                hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+                style={styles.shareButton}
+                onPress={handleSharePress}
+              >
+                <Ionicons
+                  color={config.iconColor}
+                  name='share-outline'
+                  size={20}
+                />
+              </Pressable>
+            </Animated.View>
+          )}
         </View>
+
+        {/* Dismiss button for celebration */}
+        {focusState === 'celebrating' && onMilestoneCelebrated && (
+          <Pressable
+            accessibilityHint='Dismiss celebration and continue'
+            accessibilityLabel='Continue'
+            accessibilityRole='button'
+            style={styles.dismissButton}
+            onPress={handleCelebrationAcknowledge}
+          >
+            <Text style={[styles.dismissText, { color: config.subTextColor }]}>
+              Tap to continue
+            </Text>
+          </Pressable>
+        )}
       </LinearGradient>
     </Animated.View>
   );
@@ -485,6 +853,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
+  // Celebration styles
+  badgeContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderRadius: 28,
+    height: 56,
+    justifyContent: 'center',
+    width: 56,
+  },
+
   content: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -492,43 +870,111 @@ const styles = StyleSheet.create({
     padding: 16,
     zIndex: 2,
   },
+
+  badgeEmoji: {
+    fontSize: 32,
+    textAlign: 'center',
+  },
+
   goalLabel: {
     fontSize: 13,
     fontWeight: '500',
   },
-  gradient: {
-    overflow: 'hidden',
-    position: 'relative',
+
+  celebrationContent: {
+    gap: 2,
   },
+
   goalRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 4,
   },
-  iconContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    height: 48,
-    alignItems: 'center',
-    width: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
+
+  celebrationSubtext: {
+    fontSize: 14,
+    fontWeight: '500',
   },
+
   goalValue: {
     fontSize: 16,
     fontWeight: '700',
   },
-  shimmerGradient: {
-    height: '100%',
-    width: 200,
+
+  // Confetti styles
+  confettiContainer: {
+    height: 0,
+    left: '50%',
+    pointerEvents: 'none',
+    position: 'absolute',
+    top: '50%',
+    width: 0,
+    zIndex: 100,
   },
+
+  gradient: {
+    overflow: 'hidden',
+    position: 'relative',
+  },
+
+  confettiParticle: {
+    elevation: 2,
+    position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+  },
+
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 24,
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
+  },
+
+  dismissButton: {
+    alignItems: 'center',
+    paddingBottom: 12,
+    paddingTop: 4,
+  },
+
   message: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
   },
+
+  dismissText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+
+  shimmerGradient: {
+    height: '100%',
+    width: 200,
+  },
+
+  nextMilestone: {
+    fontSize: 12,
+    fontWeight: '400',
+    opacity: 0.85,
+  },
+
   shimmerOverlay: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
+  },
+
+  shareButton: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
   },
   textContainer: {
     flex: 1,
@@ -541,4 +987,8 @@ export {
   type TodaysFocusCardProps,
   type FocusState,
   type FocusStateConfig,
+  type MilestoneCelebrationConfig,
+  CELEBRATION_MILESTONES,
+  getCelebrationMilestone,
+  getNextCelebrationMilestone,
 } from './TodaysFocusCardTypes';
