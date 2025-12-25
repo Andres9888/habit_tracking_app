@@ -12,22 +12,52 @@ This component replaces the previous 3-card design (`YourProgressCard`, `Persona
 - **Collapsible streak records** for progressive disclosure
 - **Single neutral gradient theme** (vs. 3 different gradients)
 
+### Progress Tab Redesign (Phase 1-3)
+
+The Progress tab has been redesigned with the following new components:
+
+- **TodaysFocusCard** - Contextual motivation at top (7 states: thriving/building/starting/struggling/recovering/completed/celebrating)
+- **WeeklySummaryStrip** - Visual 7-day progress view with trend comparison
+- **StatsGrid** - Compact 2x2 stats layout with embedded strength ring (replaces HeroStrengthSection + InsightChips)
+- **MilestoneProgress** - Gamification component with 9 milestone tiers (3→365 days)
+- **TipQuickActionsSheet** - Bottom sheet with contextual quick actions for tips
+- **CollapsibleCalendar** - Wrapper for CalendarHeatmap with expand/collapse and mini preview
+
+See: `docs/specs/habit-details-screen/progress-tab-improvements-spec.md`
+
 ## Component Structure
 
 ```
 ProgressSectionConsolidated/
 ├── ProgressSectionConsolidated.tsx  # Main container
-├── HeroStrengthSection.tsx          # Progress ring + level info
-├── InsightChips.tsx                 # Horizontal scroll chips
+├── TodaysFocusCard.tsx              # Contextual motivation (7 states)
+├── TodaysFocusCardTypes.ts          # Focus card types + celebration milestones
+├── WeeklySummaryStrip/              # 7-day visual progress
+│   ├── index.tsx                    # Main component
+│   ├── CardContent.tsx              # Content layout
+│   ├── DayCell.tsx                  # Individual day cell
+│   ├── WeeklySummaryStripStyles.ts  # Styling constants
+│   └── WeeklySummaryStripUtils.ts   # Utility functions
+├── WeeklySummaryStripTypes.ts       # Weekly strip types
+├── StatsGrid.tsx                    # Compact 2x2 stats layout
+├── StatsGridTypes.ts                # Stats grid types
+├── CompactStrengthRing.tsx          # 56px strength ring
+├── StatCard.tsx                     # Individual stat card
+├── MilestoneProgress.tsx            # Gamification progress bar
+├── MilestoneProgressTypes.ts        # Milestone types + calculations
+├── HeroStrengthSection.tsx          # Progress ring + level info (legacy)
+├── InsightChips.tsx                 # Horizontal scroll chips (legacy)
 ├── WeeklyPatternChart.tsx           # Compact 7-day bar chart
 ├── ActionableTipCard.tsx            # CTA with personalized tip
+├── TipQuickActionsSheet.tsx         # Bottom sheet for quick actions
+├── TipQuickActionsSheetTypes.ts     # Quick action types
 ├── StreakRecordsAccordion.tsx       # Collapsible streak medals
 ├── TrendIndicator.tsx               # Weekly change indicator
 ├── AnimatedPercentageText.tsx       # Animated percentage display
 ├── DayBar.tsx                       # Individual bar in chart
 ├── types.ts                         # TypeScript interfaces
 ├── index.ts                         # Module exports
-└── __tests__/                       # Unit and integration tests
+└── __tests__/                       # Unit and integration tests (454+ tests)
 ```
 
 ## Usage
@@ -169,6 +199,76 @@ Key differences:
 - `onWorstDayPress` renamed to `onFocusDayPress`
 - New `onTipPress` callback for actionable tip interaction
 
+## New Phase Components
+
+### TodaysFocusCard
+
+Contextual motivation card at the top of Progress tab with 7 distinct states:
+
+| State       | Condition                             | Gradient      | Icon         |
+| ----------- | ------------------------------------- | ------------- | ------------ |
+| Thriving    | streak ≥ 7, weekly ≥ 5                | emerald→teal  | target       |
+| Building    | streak 3-6                            | teal→cyan     | trending-up  |
+| Starting    | habitAge < 7                          | blue→indigo   | sparkles     |
+| Struggling  | streak = 0, weekly < 3                | amber→orange  | heart        |
+| Recovering  | streak = 0, bestStreak > 7            | violet→purple | refresh-cw   |
+| Completed   | isCompletedToday = true               | green→emerald | check-circle |
+| Celebrating | on milestone + completed + first view | amber→gold    | trophy + 🎉  |
+
+Features: Shimmer animation, confetti burst on milestones, goal counting animation, share button.
+
+### WeeklySummaryStrip
+
+Visual 7-day view with states per day:
+
+- **Complete**: `bg-emerald-500` with check icon
+- **Missed**: `bg-stone-200` with X icon
+- **Today (incomplete)**: `bg-amber-100` with pulsing border
+- **Today (complete)**: `bg-emerald-500` with ring highlight
+- **Perfect Week (7/7)**: Gradient background + trophy emoji + "Perfect!" badge + sparkle animation
+
+### StatsGrid
+
+Compact 2x2 grid layout with embedded 56px strength ring:
+
+```
+┌─────────────┬─────────────────────────────┐
+│             │  🔥 14      │  📅 18/21    │
+│  Strength   │  Day Streak │  This Month  │
+│    Ring     ├─────────────┼──────────────┤
+│   (56px)    │  🏆 Tue     │  ⚡ Sat      │
+│             │  Best Day   │  Focus Day   │
+└─────────────┴─────────────────────────────┘
+```
+
+Stat card colors: Streak (orange-50), Monthly (violet-50), Best Day (emerald-50), Focus Day (amber-50)
+
+### MilestoneProgress
+
+Gamification progress bar with 9 milestone tiers:
+
+| Days | Badge | Name              |
+| ---- | ----- | ----------------- |
+| 3    | ⚡    | Habit Starter     |
+| 7    | ⭐    | Week Warrior      |
+| 14   | 🔥    | Two Week Titan    |
+| 21   | 🏅    | Habit Builder     |
+| 30   | 🏆    | Monthly Master    |
+| 60   | 💎    | Two Month Diamond |
+| 90   | 🌟    | Quarterly Legend  |
+| 100  | 💯    | Century Club      |
+| 365  | 👑    | Year Hero         |
+
+States: In-progress (with "X days away"), Just-hit (celebration), No-streak (CTA)
+
+### TipQuickActionsSheet
+
+Bottom sheet with contextual quick actions for tips:
+
+- **Focus Day tip**: Set reminder, Edit habit, View history
+- **Low streak tip**: Set daily reminder, Make smaller, Review why
+- **Good streak tip**: Celebrate, Share progress
+
 ## Testing
 
 Run tests with:
@@ -179,11 +279,12 @@ npm test -- --testPathPattern="ProgressSectionConsolidated"
 
 Coverage includes:
 
-- Unit tests for each sub-component
+- **454+ unit tests** for all components
 - Integration tests for full component render
 - Edge cases (empty data, partial data, power users)
 - Accessibility verification
 - Animation configuration tests
+- Reduce motion preference compliance
 
 ## Related Files
 
