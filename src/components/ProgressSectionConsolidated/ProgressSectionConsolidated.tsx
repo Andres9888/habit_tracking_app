@@ -28,10 +28,10 @@ import {
   calculateDayOfWeekStats,
   calculateCurrentStreak,
   calculateStreakRecords,
-  calculateTrendComparison,
   generateActionableTip,
   getBestAndWorstDays,
 } from '../ProgressSection/utils';
+import { calculateMonthlyChangeForStatsGrid } from '../../utils/trendCalculations';
 
 import { StatsGrid } from './StatsGrid';
 import { WeeklyPatternChart } from './WeeklyPatternChart';
@@ -82,9 +82,11 @@ export function ProgressSectionConsolidated({
     [tracking, currentStreak]
   );
 
-  // Calculate trend comparison (this month vs last month)
-  // Note: trend is currently unused but kept for future monthly change indicator
-  const _trend = useMemo(() => calculateTrendComparison(tracking), [tracking]);
+  // Calculate monthly change for trend indicator
+  const monthlyChange = useMemo(
+    () => calculateMonthlyChangeForStatsGrid(tracking),
+    [tracking]
+  );
 
   // Get best and worst performing days
   const { bestDay, worstDay } = useMemo(
@@ -164,12 +166,13 @@ export function ProgressSectionConsolidated({
         {/* Section 1: Stats Grid (replaces HeroStrengthSection + InsightChips) */}
         {/* Phase 1 redesign: Compact 2x2 grid with embedded strength ring */}
         <StatsGrid
-          strength={strength}
+          bestDay={bestDayData}
           currentStreak={currentStreak}
+          focusDay={focusDayData}
+          monthlyChange={monthlyChange}
           monthlyCompleted={monthlyCompleted}
           monthlyTotal={monthlyTotal}
-          bestDay={bestDayData}
-          focusDay={focusDayData}
+          strength={strength}
           weeklyChange={weeklyChange}
           onFocusDayPress={onFocusDayPress}
         />
