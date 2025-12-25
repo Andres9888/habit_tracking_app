@@ -693,6 +693,8 @@ export default function TemplatesScreen() {
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setTimeout(() => setIsSearchFocused(false), 150)}
                 returnKeyType="search"
+                accessibilityLabel="Search templates"
+                accessibilityHint="Enter keywords to search for habit templates"
               />
               {searchQuery ? (
                 <TouchableOpacity accessibilityLabel="Clear search" onPress={clearSearch}>
@@ -894,6 +896,8 @@ export default function TemplatesScreen() {
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setTimeout(() => setIsSearchFocused(false), 150)}
               returnKeyType="search"
+              accessibilityLabel="Search templates"
+              accessibilityHint="Enter keywords to search for habit templates"
             />
             {searchQuery ? (
               <TouchableOpacity accessibilityLabel="Clear search" onPress={clearSearch}>

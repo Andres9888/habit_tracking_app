@@ -35,6 +35,8 @@ export const RecentSearches = memo(function RecentSearches({
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onClearAll();
           }}
+          accessibilityLabel="Clear all recent searches"
+          accessibilityRole="button"
           hitSlop={8}
         >
           <Text style={styles.clearText}>Clear</Text>
@@ -71,6 +73,7 @@ export const RecentSearches = memo(function RecentSearches({
                   onRemove(search);
                 }}
                 accessibilityLabel={`Remove ${search} from recent searches`}
+                accessibilityRole="button"
                 hitSlop={8}
                 style={styles.chipRemove}
               >
