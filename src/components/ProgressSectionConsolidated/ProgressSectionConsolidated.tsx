@@ -54,6 +54,7 @@ export function ProgressSectionConsolidated({
   onFocusDayPress,
   onSeeAllPress,
   onTipPress,
+  onTipQuickAction,
 }: ProgressSectionConsolidatedProps) {
   // Convert habitCreatedAt string to timestamp for utils
   const habitCreatedTimestamp = useMemo(() => {
@@ -189,8 +190,9 @@ export function ProgressSectionConsolidated({
           />
         )}
 
-        {/* Section 4: Actionable Tip */}
+        {/* Section 4: Actionable Tip with Quick Actions */}
         <ActionableTipCard
+          currentStreak={currentStreak}
           subtitle={
             currentStreak > 0
               ? `${currentStreak} day streak${currentStreak === 1 ? '' : 's'} and counting!`
@@ -198,6 +200,7 @@ export function ProgressSectionConsolidated({
           }
           tip={actionableTip}
           onPress={onTipPress}
+          onQuickAction={onTipQuickAction}
         />
 
         {/* Section 5: Streak Records Accordion (only with enough data) */}

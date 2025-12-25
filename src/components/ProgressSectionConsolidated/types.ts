@@ -34,8 +34,12 @@ export interface ProgressSectionConsolidatedProps {
   onFocusDayPress?: () => void;
   /** Callback when "See All" is pressed in weekly pattern section */
   onSeeAllPress?: () => void;
-  /** Callback when actionable tip is pressed */
+  /** Callback when actionable tip is pressed (legacy) */
   onTipPress?: () => void;
+  /** Callback when a quick action is selected from the tip card */
+  onTipQuickAction?: (
+    action: import('./TipQuickActionsSheetTypes').QuickAction
+  ) => void;
 }
 
 /**
@@ -118,8 +122,14 @@ export interface ActionableTipCardProps {
   tip: string;
   /** Optional subtitle for additional context */
   subtitle?: string;
+  /** Current streak for determining tip type */
+  currentStreak?: number;
   /** Callback when tip card is pressed */
   onPress?: () => void;
+  /** Callback when a quick action is selected from the sheet */
+  onQuickAction?: (
+    action: import('./TipQuickActionsSheetTypes').QuickAction
+  ) => void;
 }
 
 /**
@@ -165,49 +175,84 @@ export interface LevelThreshold {
  */
 export const STRENGTH_LEVELS: LevelThreshold[] = [
   {
-    min: 0,
-    max: 20,
-    label: 'Starting Out',
-    emoji: '🌱',
-    color: '#65a30d', // lime-600
-    bgColor: '#ecfccb', // lime-100
+    // lime-600
+    bgColor: '#ecfccb',
+
+    color: '#65a30d',
+
+    // lime-100
     description: 'Just getting started',
+
+    emoji: '🌱',
+
+    label: 'Starting Out',
+
+    max: 20,
+    min: 0,
   },
   {
-    min: 20,
-    max: 40,
-    label: 'Building',
-    emoji: '🌿',
-    color: '#16a34a', // green-600
-    bgColor: '#dcfce7', // green-100
+    // green-600
+    bgColor: '#dcfce7',
+
+    color: '#16a34a',
+
+    // green-100
     description: 'Building momentum',
+
+    emoji: '🌿',
+
+    label: 'Building',
+
+    max: 40,
+    min: 20,
   },
   {
-    min: 40,
-    max: 60,
-    label: 'Growing',
-    emoji: '🌳',
-    color: '#059669', // emerald-600
-    bgColor: '#d1fae5', // emerald-100
+    // emerald-600
+    bgColor: '#d1fae5',
+
+    color: '#059669',
+
+    // emerald-100
     description: 'Habit is taking root',
+
+    emoji: '🌳',
+
+    label: 'Growing',
+
+    max: 60,
+    min: 40,
   },
   {
-    min: 60,
-    max: 80,
-    label: 'Strong',
-    emoji: '💪',
-    color: '#0891b2', // cyan-600
-    bgColor: '#cffafe', // cyan-100
+    // cyan-600
+    bgColor: '#cffafe',
+
+    color: '#0891b2',
+
+    // cyan-100
     description: 'Solid consistency',
+
+    emoji: '💪',
+
+    label: 'Strong',
+
+    max: 80,
+    min: 60,
   },
   {
-    min: 80,
-    max: 101,
-    label: 'Unbreakable',
-    emoji: '⚡',
-    color: '#7c3aed', // violet-600
-    bgColor: '#ede9fe', // violet-100
+    // violet-600
+    bgColor: '#ede9fe',
+
+    color: '#7c3aed',
+
+    // violet-100
     description: 'Habit mastery achieved',
+
+    emoji: '⚡',
+
+    label: 'Unbreakable',
+
+    max: 101,
+    min: 80,
   },
 ];
 
@@ -241,8 +286,8 @@ export function getProgressToNextLevel(strength: number): {
     return {
       currentLevel,
       nextLevel: null,
-      progressPercent: 100,
       pointsToNext: 0,
+      progressPercent: 100,
     };
   }
 
@@ -254,7 +299,7 @@ export function getProgressToNextLevel(strength: number): {
   return {
     currentLevel,
     nextLevel,
-    progressPercent,
     pointsToNext,
+    progressPercent,
   };
 }

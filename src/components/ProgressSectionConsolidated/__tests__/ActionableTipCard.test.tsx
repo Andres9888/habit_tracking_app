@@ -251,7 +251,9 @@ describe('ActionableTipCard', () => {
         <ActionableTipCard {...defaultProps} onPress={() => {}} />
       );
       const card = getByLabelText(/Tip: Complete Tuesday to level up!/);
-      expect(card.props.accessibilityHint).toBe('Double tap to view details');
+      expect(card.props.accessibilityHint).toBe(
+        'Double tap to view quick actions'
+      );
     });
 
     it('has no accessibility hint when not interactive', () => {
