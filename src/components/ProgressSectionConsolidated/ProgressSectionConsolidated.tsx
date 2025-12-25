@@ -33,8 +33,7 @@ import {
   getBestAndWorstDays,
 } from '../ProgressSection/utils';
 
-import { HeroStrengthSection } from './HeroStrengthSection';
-import { InsightChips } from './InsightChips';
+import { StatsGrid } from './StatsGrid';
 import { WeeklyPatternChart } from './WeeklyPatternChart';
 import { ActionableTipCard } from './ActionableTipCard';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
@@ -50,7 +49,7 @@ export function ProgressSectionConsolidated({
   habitCreatedAt,
   strength,
   weeklyChange = 0,
-  onInfoPress,
+  onInfoPress: _onInfoPress, // Kept for backwards compatibility
   onFocusDayPress,
   onSeeAllPress,
   onTipPress,
@@ -84,7 +83,8 @@ export function ProgressSectionConsolidated({
   );
 
   // Calculate trend comparison (this month vs last month)
-  const trend = useMemo(() => calculateTrendComparison(tracking), [tracking]);
+  // Note: trend is currently unused but kept for future monthly change indicator
+  const _trend = useMemo(() => calculateTrendComparison(tracking), [tracking]);
 
   // Get best and worst performing days
   const { bestDay, worstDay } = useMemo(
@@ -161,20 +161,16 @@ export function ProgressSectionConsolidated({
           shadowRadius: 3,
         }}
       >
-        {/* Section 1: Hero Strength Section */}
-        <HeroStrengthSection
+        {/* Section 1: Stats Grid (replaces HeroStrengthSection + InsightChips) */}
+        {/* Phase 1 redesign: Compact 2x2 grid with embedded strength ring */}
+        <StatsGrid
           strength={strength}
-          weeklyChange={weeklyChange}
-          onInfoPress={onInfoPress}
-        />
-
-        {/* Section 2: Insight Chips (horizontal scroll) */}
-        <InsightChips
-          bestDay={bestDayData}
           currentStreak={currentStreak}
-          focusDay={focusDayData}
           monthlyCompleted={monthlyCompleted}
           monthlyTotal={monthlyTotal}
+          bestDay={bestDayData}
+          focusDay={focusDayData}
+          weeklyChange={weeklyChange}
           onFocusDayPress={onFocusDayPress}
         />
 

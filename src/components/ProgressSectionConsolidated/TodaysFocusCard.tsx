@@ -26,12 +26,13 @@ import Animated, {
   withSequence,
   Easing,
   interpolate,
+  SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { Springs, Motion } from '../../constants/motion';
+import { Springs } from '../../constants/motion';
 
 import type {
   TodaysFocusCardProps,
@@ -387,7 +388,7 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
  * AnimatedGoalNumber - Displays the animated goal number
  */
 interface AnimatedGoalNumberProps {
-  value: Animated.SharedValue<number>;
+  value: SharedValue<number>;
   color: string;
   reduceMotion: boolean;
 }
@@ -398,8 +399,9 @@ const AnimatedGoalNumber = React.memo(function AnimatedGoalNumber({
   reduceMotion,
 }: AnimatedGoalNumberProps) {
   const animatedStyle = useAnimatedStyle(() => {
-    // Round the animated value for display
-    const displayValue = Math.round(value.value);
+    // Reference value to trigger re-render when it changes
+    // The actual display is handled by GoalValueDisplay
+    const _currentValue = value.value;
     return {};
   });
 
@@ -420,7 +422,7 @@ const AnimatedGoalNumber = React.memo(function AnimatedGoalNumber({
  * GoalValueDisplay - Displays the goal value (static for now, animated counting handled separately)
  */
 interface GoalValueDisplayProps {
-  value: Animated.SharedValue<number>;
+  value: SharedValue<number>;
   reduceMotion: boolean;
 }
 

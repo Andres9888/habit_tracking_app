@@ -23,7 +23,12 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 // The new ProgressSection combines HabitStrengthSection + InsightsSection into 3 always-visible cards.
 // import { HabitStrengthSection } from '../components/HabitStrengthSection';
 // import { InsightsSection } from '../components/InsightsSection';
-import { ProgressSectionConsolidated } from '../components/ProgressSectionConsolidated';
+import {
+  ProgressSectionConsolidated,
+  TodaysFocusCard,
+  WeeklySummaryStrip,
+} from '../components/ProgressSectionConsolidated';
+import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { CalendarHeatmap } from '../components/CalendarHeatmap';
@@ -910,22 +915,63 @@ function AffirmationsSection({
 
 /**
  * Progress Tab Content
+ *
+ * Phase 1 redesign includes:
+ * - TodaysFocusCard: Contextual motivation at top
+ * - WeeklySummaryStrip: Visual 7-day progress view
+ * - StatsGrid: Compact 2x2 stats layout (replaces InsightChips)
+ *
+ * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 function ProgressTabContent({
   completedDates,
   habit,
   habitCreatedAt,
+  isCompletedToday,
   strengthPercent,
   tracking,
+  weekData,
+  lastWeekCompleted,
 }: {
   completedDates: Set<string>;
   habit: Habit;
   habitCreatedAt: number | undefined;
+  isCompletedToday: boolean;
   strengthPercent: number;
   tracking: HabitTrackingEntry[];
+  weekData: WeekDayData[];
+  lastWeekCompleted: number;
 }) {
+  // Calculate habit age in days
+  const habitAge = useMemo(() => {
+    if (!habitCreatedAt) return 0;
+    const createdDate = new Date(habitCreatedAt);
+    const today = new Date();
+    return Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+  }, [habitCreatedAt]);
+
+  // Calculate weekly completion count for TodaysFocusCard
+  const weeklyCompletion = useMemo(() => {
+    return weekData.filter((d) => d.completed).length;
+  }, [weekData]);
+
   return (
     <View className="gap-4">
+      {/* Phase 1: Today's Focus Card - contextual motivation */}
+      <TodaysFocusCard
+        currentStreak={habit.currentStreak ?? 0}
+        isCompletedToday={isCompletedToday}
+        weeklyCompletion={weeklyCompletion}
+        habitAge={habitAge}
+        bestStreak={habit.bestStreak ?? 0}
+      />
+
+      {/* Phase 1: Weekly Summary Strip - 7-day progress view */}
+      <WeeklySummaryStrip
+        weekData={weekData}
+        lastWeekCompleted={lastWeekCompleted}
+      />
+
       {/* Calendar Heatmap - visual history of completions */}
       <CalendarHeatmap
         habitId={habit._id}
@@ -1785,6 +1831,58 @@ export default function HabitDetailScreen({
     return (completedLastThirty / 30) * 100;
   }, [lastThirtyDays]);
 
+  /**
+   * Calculate week data for WeeklySummaryStrip (Phase 1)
+   * Returns array of 7 days (Monday to Sunday) for the current week
+   */
+  const weekData = useMemo<WeekDayData[]>(() => {
+    const todayDate = new Date();
+    const dayOfWeek = todayDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    // Convert to Monday-based (0 = Monday, 6 = Sunday)
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    const monday = new Date(todayDate);
+    monday.setDate(todayDate.getDate() - mondayOffset);
+    monday.setHours(0, 0, 0, 0);
+
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+      const dateKey = date.toISOString().split('T')[0];
+      const isTodayDate = dateKey === today;
+
+      return {
+        completed: isTodayDate ? isCompletedToday : completedDates.has(dateKey),
+        date: dateKey,
+        isToday: isTodayDate,
+      };
+    });
+  }, [today, isCompletedToday, completedDates]);
+
+  /**
+   * Calculate last week's completion count for trend comparison (Phase 1)
+   */
+  const lastWeekCompleted = useMemo(() => {
+    const todayDate = new Date();
+    const dayOfWeek = todayDate.getDay();
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    // Get last week's Monday
+    const lastMonday = new Date(todayDate);
+    lastMonday.setDate(todayDate.getDate() - mondayOffset - 7);
+    lastMonday.setHours(0, 0, 0, 0);
+
+    let count = 0;
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(lastMonday);
+      date.setDate(lastMonday.getDate() + i);
+      const dateKey = date.toISOString().split('T')[0];
+      if (completedDates.has(dateKey)) {
+        count++;
+      }
+    }
+    return count;
+  }, [completedDates]);
+
   useEffect(() => {
     setWhyDraft(habitWhy ?? '');
   }, [habitId, habitWhy]);
@@ -2359,8 +2457,11 @@ export default function HabitDetailScreen({
                   completedDates={completedDates}
                   habit={habit}
                   habitCreatedAt={habitCreatedAt}
+                  isCompletedToday={isCompletedToday}
                   strengthPercent={strengthPercent}
                   tracking={tracking}
+                  weekData={weekData}
+                  lastWeekCompleted={lastWeekCompleted}
                 />
               </ScrollView>
             )}
