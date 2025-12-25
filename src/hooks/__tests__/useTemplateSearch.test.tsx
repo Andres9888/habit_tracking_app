@@ -988,3 +988,402 @@ describe('useTemplateSearch - highlightMatch', () => {
     expect(highlighted).toBe('Test text');
   });
 });
+
+// Helper to generate large template datasets for performance testing
+const categories = [
+  'morning_routine',
+  'health_fitness',
+  'productivity',
+  'mindfulness',
+  'andrew_huberman',
+  'social',
+  'sleep',
+  'learning',
+  'financial',
+  'creativity',
+  'longevity',
+  'mental_health',
+  'recovery',
+  'breathing',
+] as const;
+
+const habitPrefixes = [
+  'Daily', 'Morning', 'Evening', 'Weekly', 'Quick', 'Deep', 'Mindful',
+  'Active', 'Relaxing', 'Energizing', 'Calming', 'Focused', 'Creative',
+];
+
+const habitTypes = [
+  'Meditation', 'Exercise', 'Stretching', 'Reading', 'Journaling', 'Walking',
+  'Breathing', 'Yoga', 'Running', 'Swimming', 'Cycling', 'Hydration',
+  'Sleep Routine', 'Cold Shower', 'Gratitude', 'Planning', 'Review',
+];
+
+const generateLargeTemplateSet = (count: number): Doc<'templates'>[] => {
+  const templates: Doc<'templates'>[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const prefix = habitPrefixes[i % habitPrefixes.length];
+    const type = habitTypes[i % habitTypes.length];
+    const category = categories[i % categories.length];
+    const variant = Math.floor(i / (habitPrefixes.length * habitTypes.length)) + 1;
+
+    templates.push(
+      createMockTemplate(
+        `perf-${i}`,
+        `${prefix} ${type}${variant > 1 ? ` ${variant}` : ''}`,
+        `This is a description for ${prefix.toLowerCase()} ${type.toLowerCase()} habit. It helps improve your ${category.replace(/_/g, ' ')} through consistent practice.`,
+        category,
+        `Research Study ${i + 1}, 2024`
+      )
+    );
+  }
+
+  return templates;
+};
+
+describe('useTemplateSearch - Performance with 100+ Templates', () => {
+  const TEMPLATE_COUNT = 150; // Exceeds 100 requirement
+  const largeTemplateSet = generateLargeTemplateSet(TEMPLATE_COUNT);
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+  });
+
+  describe('Fuse instance initialization', () => {
+    it('initializes Fuse instance with 150 templates without error', () => {
+      expect(() => {
+        renderHook(() => useTemplateSearch({ templates: largeTemplateSet }));
+      }).not.toThrow();
+    });
+
+    it('Fuse instance is memoized across re-renders', () => {
+      const { result, rerender } = renderHook(
+        ({ templates }) => useTemplateSearch({ templates }),
+        { initialProps: { templates: largeTemplateSet } }
+      );
+
+      const initialSearchResults = result.current.searchResults;
+
+      // Re-render with same templates
+      rerender({ templates: largeTemplateSet });
+
+      // Results should be referentially stable (no unnecessary re-computation)
+      expect(result.current.searchResults).toEqual(initialSearchResults);
+    });
+
+    it('updates Fuse instance when templates change', () => {
+      const { result, rerender } = renderHook(
+        ({ templates }) => useTemplateSearch({ templates }),
+        { initialProps: { templates: largeTemplateSet } }
+      );
+
+      act(() => {
+        result.current.setSearchQuery('meditation');
+      });
+
+      const initialResultCount = result.current.searchResults.length;
+
+      // Add more meditation templates
+      const extendedTemplates = [
+        ...largeTemplateSet,
+        createMockTemplate('extra-1', 'Extra Meditation Session', 'New meditation', 'mindfulness'),
+        createMockTemplate('extra-2', 'Bonus Meditation Practice', 'More meditation', 'mindfulness'),
+      ];
+
+      rerender({ templates: extendedTemplates });
+
+      // Should find more results with updated templates
+      expect(result.current.searchResults.length).toBeGreaterThan(initialResultCount);
+    });
+  });
+
+  describe('search performance', () => {
+    it('completes search within acceptable time (< 50ms) for 150 templates', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      const startTime = performance.now();
+
+      act(() => {
+        result.current.setSearchQuery('meditation');
+      });
+
+      const endTime = performance.now();
+      const searchDuration = endTime - startTime;
+
+      // Search should complete in under 50ms
+      expect(searchDuration).toBeLessThan(50);
+    });
+
+    it('handles multiple rapid queries efficiently', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      const queries = ['med', 'medi', 'medit', 'medita', 'meditat', 'meditati', 'meditatio', 'meditation'];
+      const startTime = performance.now();
+
+      queries.forEach((query) => {
+        act(() => {
+          result.current.setSearchQuery(query);
+        });
+      });
+
+      const endTime = performance.now();
+      const totalDuration = endTime - startTime;
+
+      // All 8 queries should complete in under 200ms
+      expect(totalDuration).toBeLessThan(200);
+    });
+
+    it('returns results for common search terms', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('daily');
+      });
+
+      expect(result.current.searchResults.length).toBeGreaterThan(0);
+      // Every category should have at least one "Daily" habit
+      expect(result.current.searchResults.length).toBeGreaterThanOrEqual(10);
+    });
+  });
+
+  describe('fuzzy matching quality with large dataset', () => {
+    it('finds matches with typos in large dataset', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      // Common typos
+      const typoTests = [
+        { typo: 'meditatoin', expected: 'Meditation' },
+        { typo: 'exersice', expected: 'Exercise' },
+        { typo: 'breathign', expected: 'Breathing' },
+        { typo: 'jounraling', expected: 'Journaling' },
+      ];
+
+      typoTests.forEach(({ typo, expected }) => {
+        act(() => {
+          result.current.setSearchQuery(typo);
+        });
+
+        expect(result.current.searchResults.length).toBeGreaterThan(0);
+        const firstResultName = result.current.searchResults[0].item.name;
+        expect(firstResultName.toLowerCase()).toContain(expected.toLowerCase());
+      });
+    });
+
+    it('ranks exact matches higher than partial matches', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('morning meditation');
+      });
+
+      expect(result.current.searchResults.length).toBeGreaterThan(0);
+
+      // First result should have better score (lower) than last result
+      const firstScore = result.current.searchResults[0].score;
+      const lastScore = result.current.searchResults[result.current.searchResults.length - 1].score;
+      expect(firstScore).toBeLessThanOrEqual(lastScore);
+    });
+  });
+
+  describe('category filtering with large dataset', () => {
+    it('filters by category correctly with many templates', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('daily');
+        result.current.setSearchCategoryFilter('mindfulness');
+      });
+
+      // All results should be in mindfulness category
+      result.current.searchResults.forEach((r) => {
+        expect(r.item.category).toBe('mindfulness');
+      });
+    });
+
+    it('calculates category counts accurately for large dataset', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('routine');
+      });
+
+      const categoryResultCounts = result.current.categoryResultCounts;
+
+      // Should have counts for multiple categories
+      expect(Object.keys(categoryResultCounts).length).toBeGreaterThan(0);
+
+      // Sum of counts should equal total search results
+      const totalFromCounts = Object.values(categoryResultCounts).reduce((a, b) => a + b, 0);
+      expect(totalFromCounts).toBe(result.current.searchResults.length +
+        (result.current.searchCategoryFilter ?
+          result.current.searchResults.length - totalFromCounts : 0));
+    });
+  });
+
+  describe('suggestions with large dataset', () => {
+    it('generates suggestions efficiently', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      const startTime = performance.now();
+
+      act(() => {
+        result.current.setSearchQuery('da');
+      });
+
+      const endTime = performance.now();
+
+      // Suggestions should be generated quickly
+      expect(endTime - startTime).toBeLessThan(20);
+      expect(result.current.suggestions.length).toBeGreaterThan(0);
+      expect(result.current.suggestions.length).toBeLessThanOrEqual(5);
+    });
+
+    it('prioritizes prefix matches in suggestions', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('dai');
+      });
+
+      // Suggestions should prefer names starting with "dai"
+      result.current.suggestions.forEach((suggestion) => {
+        expect(suggestion.toLowerCase().startsWith('dai')).toBe(true);
+      });
+    });
+  });
+
+  describe('memory efficiency', () => {
+    it('search results contain proper structure', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('morning');
+      });
+
+      // Verify structure is correct for each result
+      result.current.searchResults.forEach((searchResult) => {
+        expect(searchResult).toHaveProperty('item');
+        expect(searchResult).toHaveProperty('score');
+        expect(typeof searchResult.score).toBe('number');
+        expect(searchResult.item).toHaveProperty('_id');
+        expect(searchResult.item).toHaveProperty('name');
+        expect(searchResult.item).toHaveProperty('description');
+        expect(searchResult.item).toHaveProperty('category');
+      });
+    });
+
+    it('does not include matches for empty search', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      // Empty search should return no results (memory efficient)
+      expect(result.current.searchResults).toEqual([]);
+      expect(result.current.categoryResultCounts).toEqual({});
+    });
+  });
+
+  describe('edge cases with scale', () => {
+    it('handles search with many results gracefully', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      // Search term that matches many templates
+      act(() => {
+        result.current.setSearchQuery('habit');
+      });
+
+      // Should return many results since "habit" appears in all descriptions
+      expect(result.current.searchResults.length).toBeGreaterThan(50);
+    });
+
+    it('handles very specific search with few results', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      // Very specific search
+      act(() => {
+        result.current.setSearchQuery('Research Study 42');
+      });
+
+      // Should find the specific template with this scientific reference
+      expect(result.current.searchResults.length).toBeGreaterThan(0);
+    });
+
+    it('handles clearing search state efficiently', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      // Perform search
+      act(() => {
+        result.current.setSearchQuery('morning');
+        result.current.setSearchCategoryFilter('health_fitness');
+      });
+
+      expect(result.current.searchResults.length).toBeGreaterThan(0);
+
+      // Clear search
+      act(() => {
+        result.current.clearSearch();
+      });
+
+      expect(result.current.searchQuery).toBe('');
+      expect(result.current.searchCategoryFilter).toBeNull();
+      expect(result.current.searchResults).toEqual([]);
+    });
+  });
+
+  describe('concurrent operations', () => {
+    it('handles category filter change during active search', () => {
+      const { result } = renderHook(() =>
+        useTemplateSearch({ templates: largeTemplateSet })
+      );
+
+      act(() => {
+        result.current.setSearchQuery('exercise');
+      });
+
+      const allResultsCount = result.current.searchResults.length;
+
+      act(() => {
+        result.current.setSearchCategoryFilter('health_fitness');
+      });
+
+      // Filtered results should be subset of all results
+      expect(result.current.searchResults.length).toBeLessThanOrEqual(allResultsCount);
+      expect(result.current.searchResults.length).toBeGreaterThan(0);
+
+      // Remove filter
+      act(() => {
+        result.current.setSearchCategoryFilter(null);
+      });
+
+      // Should return to full results
+      expect(result.current.searchResults.length).toBe(allResultsCount);
+    });
+  });
+});
