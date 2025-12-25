@@ -3,6 +3,7 @@
  */
 
 export { CalendarHeatmap } from './CalendarHeatmap';
+export { CollapsibleCalendar } from './CollapsibleCalendar';
 export { CalendarGrid } from './CalendarGrid';
 export { DayCell } from './DayCell';
 export { InsightCard } from './InsightCard';
@@ -16,6 +17,12 @@ export type {
   MonthStats,
   DayOfWeekStat,
 } from './types';
+
+export type {
+  CollapsibleCalendarProps,
+  MiniPreviewDot,
+  MiniPreviewDotState,
+} from './CollapsibleCalendarTypes';
 
 export {
   generateMonthGrid,
