@@ -94,6 +94,17 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
   },
+  sparkleContainer: {
+    position: 'absolute',
+    right: -8,
+    top: -4,
+  },
+  sparkleEmoji: {
+    fontSize: 14,
+  },
+  titleContainer: {
+    position: 'relative',
+  },
   todayText: {
     fontSize: 8,
     fontWeight: '700',

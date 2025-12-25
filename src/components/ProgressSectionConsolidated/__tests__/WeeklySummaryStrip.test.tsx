@@ -279,6 +279,48 @@ describe('WeeklySummaryStrip', () => {
       );
       expect(getByText('7/7 vs 5/7')).toBeTruthy();
     });
+
+    it('shows sparkle emoji for perfect week', () => {
+      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
+      useReduceMotion.mockReturnValue(false);
+
+      const { UNSAFE_root } = render(
+        <WeeklySummaryStrip {...perfectWeekProps} />
+      );
+
+      // Find the sparkle container with testID
+      const sparkleElement = UNSAFE_root.findAllByProps({
+        testID: 'perfect-week-sparkle',
+      });
+      expect(sparkleElement.length).toBeGreaterThan(0);
+    });
+
+    it('does not show sparkle emoji for non-perfect week', () => {
+      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
+      useReduceMotion.mockReturnValue(false);
+
+      const { UNSAFE_root } = render(<WeeklySummaryStrip {...defaultProps} />);
+
+      const sparkleElement = UNSAFE_root.findAllByProps({
+        testID: 'perfect-week-sparkle',
+      });
+      expect(sparkleElement.length).toBe(0);
+    });
+
+    it('does not show sparkle with reduced motion enabled', () => {
+      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
+      useReduceMotion.mockReturnValue(true);
+
+      const { UNSAFE_root } = render(
+        <WeeklySummaryStrip {...perfectWeekProps} />
+      );
+
+      // Sparkle should not render when reduce motion is enabled
+      const sparkleElement = UNSAFE_root.findAllByProps({
+        testID: 'perfect-week-sparkle',
+      });
+      expect(sparkleElement.length).toBe(0);
+    });
   });
 
   describe('Trend Indicator', () => {
