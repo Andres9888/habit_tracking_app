@@ -24,6 +24,7 @@ export { WeeklyPatternChart } from './WeeklyPatternChart';
 export { ActionableTipCard } from './ActionableTipCard';
 export { StreakRecordsAccordion } from './StreakRecordsAccordion';
 export { TodaysFocusCard } from './TodaysFocusCard';
+export { WeeklySummaryStrip } from './WeeklySummaryStrip';
 
 // Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';
@@ -33,6 +34,7 @@ export { DayBar } from './DayBar';
 // Types
 export * from './types';
 export * from './TodaysFocusCardTypes';
+export * from './WeeklySummaryStripTypes';
 
 // Re-export utility functions from existing ProgressSection
 // These are reused for data calculations
