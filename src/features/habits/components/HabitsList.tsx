@@ -12,6 +12,7 @@ import { HabitsModalsState } from '../hooks/types';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { HabitsHeader } from './HabitsHeader';
 import { HabitsSectionHeader } from './HabitsSectionHeader';
+import { SortBottomSheet } from './SortBottomSheet';
 import {
   CalendarTimeline,
   type DayCompletionStatus,
@@ -454,6 +455,17 @@ export function HabitsList({
   } = modals;
   const isReorderingEnabled = habitSortMode === 'manual';
 
+  // State for SortBottomSheet visibility
+  const [isSortSheetOpen, setIsSortSheetOpen] = useState(false);
+
+  const handleOpenSortSheet = useCallback(() => {
+    setIsSortSheetOpen(true);
+  }, []);
+
+  const handleCloseSortSheet = useCallback(() => {
+    setIsSortSheetOpen(false);
+  }, []);
+
   const handleChangeHabitSortMode = useCallback(
     (value: typeof habitSortMode) => {
       void onSettingsChange({
@@ -587,14 +599,15 @@ export function HabitsList({
           <HabitsSectionHeader
             habitCount={totalHabits}
             habitSortMode={habitSortMode}
-            onChangeHabitSortMode={handleChangeHabitSortMode}
+            reduceMotion={reduceMotionPreference}
+            onPress={handleOpenSortSheet}
           />
         )}
       </View>
     );
   }, [
     handleAddHabitPress,
-    handleChangeHabitSortMode,
+    handleOpenSortSheet,
     habitSortMode,
     openSettings,
     openTemplatesScreen,
@@ -668,6 +681,13 @@ export function HabitsList({
         visible={upgradePromptVisible}
         onClose={onUpgradeDismiss}
         onUpgradePress={onUpgradeConfirm}
+      />
+      <SortBottomSheet
+        reduceMotion={reduceMotionPreference}
+        sortMode={habitSortMode}
+        visible={isSortSheetOpen}
+        onClose={handleCloseSortSheet}
+        onSelectSortMode={handleChangeHabitSortMode}
       />
     </View>
   );
