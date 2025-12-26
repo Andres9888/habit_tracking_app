@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { HabitSortMode } from '../../types';
 
@@ -117,25 +118,38 @@ export function SortChip({
         accessibilityHint="Opens sort options"
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
-        className="flex-row items-center gap-1.5 rounded-full bg-stone-800 px-3 py-1.5"
         style={animatedStyle}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <ArrowUpDown
-          color="#ffffff"
-          size={14}
-          strokeWidth={2.25}
-        />
-        <Text className="text-[13px] font-medium text-white">
-          {sortLabel}
-        </Text>
-        <ChevronDown
-          color="#a8a29e"
-          size={12}
-          strokeWidth={2.5}
-        />
+        <LinearGradient
+          className="flex-row items-center gap-1.5 rounded-full px-3 py-1.5"
+          colors={['#292524', '#1c1917']}
+          end={{ x: 1, y: 1 }}
+          start={{ x: 0, y: 0 }}
+          style={{
+            elevation: 2,
+            shadowColor: '#000',
+            shadowOffset: { height: 1, width: 0 },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
+          }}
+        >
+          <ArrowUpDown
+            color="#ffffff"
+            size={14}
+            strokeWidth={2.25}
+          />
+          <Text className="text-[13px] font-medium text-white">
+            {sortLabel}
+          </Text>
+          <ChevronDown
+            color="#a8a29e"
+            size={12}
+            strokeWidth={2.5}
+          />
+        </LinearGradient>
       </AnimatedPressable>
 
       {/* Habit count */}
