@@ -25,9 +25,9 @@ const darkenColor = (hex: string, percent: number = 20): string => {
   const color = hex.replace('#', '');
 
   // Parse RGB values
-  const r = parseInt(color.substring(0, 2), 16);
-  const g = parseInt(color.substring(2, 4), 16);
-  const b = parseInt(color.substring(4, 6), 16);
+  const r = Number.parseInt(color.slice(0, 2), 16);
+  const g = Number.parseInt(color.slice(2, 4), 16);
+  const b = Number.parseInt(color.slice(4, 6), 16);
 
   // Calculate darker values
   const darkerR = Math.max(0, Math.floor(r * (1 - percent / 100)));
@@ -41,7 +41,11 @@ const darkenColor = (hex: string, percent: number = 20): string => {
 // Default green color for the button when no color is selected
 const DEFAULT_BUTTON_COLOR = '#22C55E';
 
-export const StickyCreateBar = ({ disabled, onPress, selectedColor }: StickyCreateBarProps) => {
+export const StickyCreateBar = ({
+  disabled,
+  onPress,
+  selectedColor,
+}: StickyCreateBarProps) => {
   const insets = useSafeAreaInsets();
   const { isKeyboardVisible, keyboardHeight } = useKeyboardState();
   const { triggerSuccess } = useHapticFeedback();
@@ -49,7 +53,9 @@ export const StickyCreateBar = ({ disabled, onPress, selectedColor }: StickyCrea
 
   // Animation for smooth color transitions
   const colorOpacity = useRef(new Animated.Value(1)).current;
-  const previousColorRef = useRef<string>(selectedColor ?? DEFAULT_BUTTON_COLOR);
+  const previousColorRef = useRef<string>(
+    selectedColor ?? DEFAULT_BUTTON_COLOR
+  );
 
   // Animate color transitions when selectedColor changes
   useEffect(() => {
@@ -58,15 +64,15 @@ export const StickyCreateBar = ({ disabled, onPress, selectedColor }: StickyCrea
       // Quick fade out and in for smooth color transition
       Animated.sequence([
         Animated.timing(colorOpacity, {
-          toValue: 0.85,
           duration: Motion.duration.fast,
           easing: Motion.easing.inEase,
+          toValue: 0.85,
           useNativeDriver: true,
         }),
         Animated.timing(colorOpacity, {
-          toValue: 1,
           duration: Motion.duration.base,
           easing: Motion.easing.outEase,
+          toValue: 1,
           useNativeDriver: true,
         }),
       ]).start();
@@ -92,51 +98,72 @@ export const StickyCreateBar = ({ disabled, onPress, selectedColor }: StickyCrea
   return (
     <View
       pointerEvents='box-none'
-      style={{ position: 'absolute', left: 16, right: 16, bottom }}
+      style={{
+        bottom: 0,
+        left: 0,
+        paddingBottom: bottom - 12,
+        position: 'absolute',
+        right: 0,
+      }}
     >
-      <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-stone-300/40'>
-        <Animated.View style={{ transform: [{ scale }], opacity: colorOpacity }}>
-          <Pressable
-            accessibilityLabel={STRINGS.CREATE_HABIT.createAction}
-            accessibilityRole='button'
-            accessibilityState={{ disabled }}
-            disabled={disabled}
-            onPressIn={() => {
-              Animated.timing(scale, {
-                duration: Motion.duration.fast,
-                easing: Motion.easing.inEase,
-                toValue: 0.98,
-                useNativeDriver: true,
-              }).start();
-            }}
-            onPressOut={() => {
-              Animated.timing(scale, {
-                duration: Motion.duration.base,
-                easing: Motion.easing.outEase,
-                toValue: 1,
-                useNativeDriver: true,
-              }).start();
-            }}
-            onPress={() => {
-              if (!disabled) {
-                triggerSuccess();
-                onPress();
-              }
-            }}
+      {/* Gradient fade mask to smoothly hide content scrolling behind CTA */}
+      <LinearGradient
+        colors={['transparent', 'rgba(250, 249, 247, 0.9)', '#faf9f7']}
+        locations={[0, 0.4, 1]}
+        pointerEvents='none'
+        style={{ height: 32 }}
+      />
+      <View className='bg-[#faf9f7] px-4 pb-2'>
+        <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-stone-300/40'>
+          <Animated.View
+            style={{ opacity: colorOpacity, transform: [{ scale }] }}
           >
-            <LinearGradient
-              colors={gradientColors}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              className='flex-row items-center justify-center rounded-xl py-3.5'
+            <Pressable
+              accessibilityLabel={STRINGS.CREATE_HABIT.createAction}
+              accessibilityRole='button'
+              accessibilityState={{ disabled }}
+              disabled={disabled}
+              onPress={() => {
+                if (!disabled) {
+                  triggerSuccess();
+                  onPress();
+                }
+              }}
+              onPressIn={() => {
+                Animated.timing(scale, {
+                  duration: Motion.duration.fast,
+                  easing: Motion.easing.inEase,
+                  toValue: 0.96,
+                  useNativeDriver: true,
+                }).start();
+              }}
+              onPressOut={() => {
+                Animated.timing(scale, {
+                  duration: Motion.duration.base,
+                  easing: Motion.easing.outEase,
+                  toValue: 1,
+                  useNativeDriver: true,
+                }).start();
+              }}
             >
-              <Check color='#ffffff' size={18} strokeWidth={2.5} />
-              <Text className='ml-2 text-[15px] font-semibold text-white'>
-                {STRINGS.CREATE_HABIT.createAction}
-              </Text>
-            </LinearGradient>
-          </Pressable>
-        </Animated.View>
+              <LinearGradient
+                className='flex-row items-center justify-center rounded-xl py-3.5'
+                colors={gradientColors}
+                end={{ x: 1, y: 1 }}
+                start={{ x: 0, y: 0 }}
+              >
+                <Check color='#ffffff' size={18} strokeWidth={2.5} />
+                <Text className='ml-2 text-[15px] font-semibold text-white'>
+                  {STRINGS.CREATE_HABIT.createAction}
+                </Text>
+              </LinearGradient>
+            </Pressable>
+          </Animated.View>
+        </View>
+        {/* Home indicator bar */}
+        <View className='mt-3 items-center'>
+          <View className='h-1 w-32 rounded-full bg-stone-300/60' />
+        </View>
       </View>
     </View>
   );

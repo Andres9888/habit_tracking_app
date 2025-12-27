@@ -4,7 +4,7 @@ import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface StyleSectionProps {
-  colors: string[];
+  colors: readonly string[];
   onSelectColor: (color: string) => void;
   selectedColor: string;
   disabled?: boolean;
@@ -42,9 +42,9 @@ const AnimatedButton = ({
           useNativeDriver: true,
         }),
         Animated.spring(scale, {
-          toValue: 1,
           damping: 12,
           stiffness: 180,
+          toValue: 1,
           useNativeDriver: true,
         }),
       ]).start();
@@ -79,7 +79,7 @@ const AnimatedButton = ({
     <Animated.View style={{ transform: [{ scale }] }}>
       <Pressable
         accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
+        accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
         style={style}
         onPress={handlePress}
@@ -98,11 +98,14 @@ export const StyleSection = ({
   selectedColor,
   disabled = false,
 }: StyleSectionProps) => {
-  const handleColorSelect = useCallback((color: string) => {
-    if (disabled) return;
-    Keyboard.dismiss(); // Dismiss keyboard when tapping color
-    onSelectColor(color);
-  }, [onSelectColor, disabled]);
+  const handleColorSelect = useCallback(
+    (color: string) => {
+      if (disabled) return;
+      Keyboard.dismiss(); // Dismiss keyboard when tapping color
+      onSelectColor(color);
+    },
+    [onSelectColor, disabled]
+  );
 
   // Split colors into rows of 8 for 3-row layout
   const colorRows = [];
@@ -112,38 +115,39 @@ export const StyleSection = ({
 
   return (
     <Animated.View
-      className="mb-6 rounded-2xl bg-white p-4"
-      style={{ opacity: disabled ? 0.4 : 1 }}
+      className='mb-6 rounded-2xl bg-white p-4'
       pointerEvents={disabled ? 'none' : 'auto'}
+      style={{ opacity: disabled ? 0.4 : 1 }}
     >
-      <Text className="mb-3 text-sm font-bold text-stone-800">Color</Text>
+      <Text className='mb-3 text-sm font-bold text-stone-800'>Color</Text>
 
       {/* Color Picker - 24 colors in 3 rows of 8 */}
       <View>
         {colorRows.map((row, rowIndex) => (
           <View
             key={`color-row-${rowIndex}`}
-            className="flex-row justify-between mb-2"
+            className='mb-2 flex-row justify-between'
           >
             {row.map((color) => (
               <AnimatedButton
                 key={color}
                 accessibilityLabel={`Select color ${color}`}
                 isSelected={selectedColor === color}
-                onPress={() => handleColorSelect(color)}
                 style={{
                   alignItems: 'center',
                   backgroundColor: color,
-                  borderColor: selectedColor === color ? '#292524' : 'transparent',
+                  borderColor:
+                    selectedColor === color ? '#292524' : 'transparent',
                   borderRadius: 18,
                   borderWidth: selectedColor === color ? 3 : 0,
                   height: 36,
                   justifyContent: 'center',
                   width: 36,
                 }}
+                onPress={() => handleColorSelect(color)}
               >
                 {selectedColor === color && (
-                  <Text className="text-xs font-bold text-white">✓</Text>
+                  <Text className='text-xs font-bold text-white'>✓</Text>
                 )}
               </AnimatedButton>
             ))}

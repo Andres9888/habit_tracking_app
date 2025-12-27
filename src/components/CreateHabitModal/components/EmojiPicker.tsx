@@ -43,7 +43,7 @@ const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
-    scale.value = withTiming(0.9, { duration: 50 });
+    scale.value = withTiming(0.96, { duration: 50 });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
@@ -62,12 +62,10 @@ const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
       accessibilityLabel={`Select emoji ${emoji}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
-      style={animatedStyle}
       className={`h-12 w-12 items-center justify-center rounded-xl ${
-        isSelected
-          ? 'border-2 border-[#22C55E] bg-[#DCFCE7]'
-          : 'bg-stone-100'
+        isSelected ? 'border-2 border-[#10B981] bg-[#ECFDF5]' : 'bg-stone-100'
       }`}
+      style={animatedStyle}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -77,7 +75,11 @@ const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   );
 };
 
-export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerProps) => {
+export const EmojiPicker = ({
+  selectedEmoji,
+  onSelect,
+  habitName,
+}: EmojiPickerProps) => {
   const { triggerSelection } = useHapticFeedback();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [debouncedHabitName, setDebouncedHabitName] = useState(habitName || '');
@@ -145,13 +147,15 @@ export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerP
           {STRINGS.CREATE_HABIT.iconLabel}
         </Text>
         <Pressable
+          accessibilityHint='Opens full emoji picker'
           accessibilityLabel='Browse all icons'
           accessibilityRole='button'
-          accessibilityHint='Opens full emoji picker'
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
           onPress={handleMorePress}
         >
-          <Text className='text-sm font-medium text-[#3B82F6]'>More →</Text>
+          <Text className='text-sm font-medium text-[#10B981]'>
+            Browse all →
+          </Text>
         </Pressable>
       </View>
 
@@ -177,11 +181,11 @@ export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerP
       </Animated.View>
 
       <EmojiPickerSheet
-        visible={isModalVisible}
-        selectedEmoji={selectedEmoji}
         habitName={habitName || ''}
-        onSelect={handleSheetSelect}
+        selectedEmoji={selectedEmoji}
+        visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
+        onSelect={handleSheetSelect}
       />
     </View>
   );
