@@ -484,13 +484,13 @@ export default function DraggableHabit({
   // Get strength as percentage (0-100) from decimal (0-1)
   const strengthPercent = (habit.strength ?? 0) * 100;
 
-  // Get strength color based on percentage
-  const getStrengthColor = () => {
-    if (strengthPercent >= 80) return '#22c55e'; // green-500 (Automatic)
-    if (strengthPercent >= 60) return '#84cc16'; // lime-500 (Strong)
-    if (strengthPercent >= 40) return '#eab308'; // yellow-500 (Developing)
-    if (strengthPercent >= 20) return '#f97316'; // orange-500 (Building)
-    return '#ef4444'; // red-500 (Starting)
+  // Get strength emoji based on percentage (matches StrengthProgressBar levels)
+  const getStrengthEmoji = () => {
+    if (strengthPercent >= 80) return '⚡'; // Automatic
+    if (strengthPercent >= 60) return '💪'; // Strong
+    if (strengthPercent >= 40) return '🌳'; // Developing
+    if (strengthPercent >= 20) return '🌿'; // Building
+    return '🌱'; // Starting
   };
 
   const habitCard = (
@@ -637,16 +637,55 @@ export default function DraggableHabit({
             </Animated.View>
           )}
 
-          {/* Strength Progress Bar - full width for now, alignment TBD */}
+          {/* Strength Progress Bar - 5-column grid for alignment */}
           {showHabitStrengthPercentage && (
-            <View className='mx-3 mb-3'>
-              <StrengthProgressBar
-                showDividers
-                showPercentage
-                showNextLevel={false}
-                size='large'
-                strength={strengthPercent}
-              />
+            <View className='mb-3 flex-row items-center px-3'>
+              {/* Column 1: Plant emoji centered (aligns with first habit circle) */}
+              <View className='flex-1 items-center'>
+                <Text className='text-[20px]'>{getStrengthEmoji()}</Text>
+              </View>
+              {/* Columns 2-4: Progress bar with dividers */}
+              <View className='flex-[3] px-2'>
+                <View
+                  className='h-2 w-full overflow-hidden rounded-full'
+                  style={{ backgroundColor: '#e5e7eb' }}
+                >
+                  {/* Progress fill */}
+                  <View
+                    className='h-full rounded-full'
+                    style={{
+                      backgroundColor: '#65a30d',
+                      width: `${strengthPercent}%`,
+                    }}
+                  />
+                  {/* Dividers at 20%, 40%, 60%, 80% */}
+                  <View
+                    className='absolute h-full w-px'
+                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '20%' }}
+                  />
+                  <View
+                    className='absolute h-full w-px'
+                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '40%' }}
+                  />
+                  <View
+                    className='absolute h-full w-px'
+                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '60%' }}
+                  />
+                  <View
+                    className='absolute h-full w-px'
+                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '80%' }}
+                  />
+                </View>
+              </View>
+              {/* Column 5: Percentage centered (aligns with last habit circle) */}
+              <View className='flex-1 items-center'>
+                <Text
+                  className='text-[13px] font-bold'
+                  style={{ color: '#65a30d' }}
+                >
+                  {Math.round(strengthPercent)}%
+                </Text>
+              </View>
             </View>
           )}
           {/* Fallback divider when strength is hidden - using stone-100 for consistency */}

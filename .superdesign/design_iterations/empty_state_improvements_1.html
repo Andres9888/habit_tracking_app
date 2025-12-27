@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Empty State - UI/UX Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
+    body { margin: 0; background: #1a1a1a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #FAFAF9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    
+    .screen { padding: 60px 24px 40px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    
+    /* Hero Icon with Glow Pulse */
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      animation: breathe 3s ease-in-out infinite, glowPulse 3s ease-in-out infinite;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+    }
+    
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15); }
+      50% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.35), 0 0 60px rgba(16, 185, 129, 0.15); }
+    }
+    
+    /* Headline */
+    .headline {
+      margin-top: 32px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1C1917;
+      text-align: center;
+    }
+    
+    /* Input with Focus Glow */
+    .input-container {
+      width: 100%;
+      margin-top: 32px;
+      position: relative;
+    }
+    
+    .habit-input {
+      width: 100%;
+      height: 56px;
+      border: 2px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 0 20px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1C1917;
+      background: white;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    
+    .habit-input:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 0 20px rgba(59, 130, 246, 0.1);
+    }
+    
+    .habit-input::placeholder { color: #A8A29E; }
+    
+    /* Chips with Stagger */
+    .chips-container {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .chip-row { display: flex; gap: 8px; justify-content: center; }
+    
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: white;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #44403C;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: chipEnter 0.4s ease forwards;
+    }
+    
+    .chip:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .chip.selected {
+      background: #10B981;
+      border-color: #10B981;
+      color: white;
+    }
+    
+    /* Staggered entrance for chips */
+    .chip:nth-child(1) { animation-delay: 0.3s; }
+    .chip:nth-child(2) { animation-delay: 0.35s; }
+    .chip:nth-child(3) { animation-delay: 0.4s; }
+    .row-2 .chip:nth-child(1) { animation-delay: 0.45s; }
+    .row-2 .chip:nth-child(2) { animation-delay: 0.5s; }
+    .row-3 .chip:nth-child(1) { animation-delay: 0.55s; }
+    
+    @keyframes chipEnter {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* CTA Button with Shimmer */
+    .cta-button {
+      width: 100%;
+      height: 56px;
+      margin-top: 32px;
+      background: #10B981;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s ease;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+    
+    .cta-button:active {
+      transform: scale(0.98);
+    }
+    
+    .cta-button.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    
+    .cta-button.enabled::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s ease-in-out;
+    }
+    
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    /* Secondary Links */
+    .secondary-links {
+      margin-top: 24px;
+      display: flex;
+      gap: 24px;
+    }
+    
+    .secondary-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #78716C;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .secondary-link:hover { color: #10B981; }
+    
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #E7E5E4 25%, #F5F5F4 50%, #E7E5E4 75%);
+      background-size: 200% 100%;
+      animation: skeletonShimmer 1.5s infinite;
+      border-radius: 16px;
+    }
+    
+    @keyframes skeletonShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    /* Demo Controls */
+    .demo-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+    
+    .demo-btn {
+      padding: 10px 20px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .demo-btn:hover { background: #444; }
+    .demo-btn.active { background: #10B981; }
+    
+    /* State indicator */
+    .state-badge {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 16px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="state-badge" id="stateBadge">Default State</div>
+    
+    <!-- Default State -->
+    <div class="screen" id="defaultState">
+      <div class="hero-icon">🌱</div>
+      <h1 class="headline">What habit do you<br>want to build?</h1>
+      
+      <div class="input-container">
+        <input type="text" class="habit-input" id="habitInput" placeholder="e.g., Drink water, Meditate...">
+      </div>
+      
+      <div class="chips-container">
+        <div class="chip-row row-1">
+          <div class="chip" data-habit="Drink 8 glasses of water">💧 Water</div>
+          <div class="chip" data-habit="Walk 10,000 steps">🚶 Walk</div>
+          <div class="chip" data-habit="Write in journal">✍️ Write</div>
+        </div>
+        <div class="chip-row row-2">
+          <div class="chip" data-habit="5 minutes of deep breathing">🧘 Breathe</div>
+          <div class="chip" data-habit="Read for 20 minutes">📚 Read</div>
+        </div>
+        <div class="chip-row row-3">
+          <div class="chip" data-habit="10 minute stretch routine">🤸 Stretch</div>
+        </div>
+      </div>
+      
+      <button class="cta-button disabled" id="ctaButton">Start This Habit</button>
+      
+      <div class="secondary-links">
+        <a href="#" class="secondary-link">Browse templates</a>
+        <a href="#" class="secondary-link">Create custom</a>
+      </div>
+    </div>
+    
+    <!-- Loading State -->
+    <div class="screen" id="loadingState" style="display: none;">
+      <div class="skeleton" style="width: 80px; height: 80px; border-radius: 24px;"></div>
+      <div class="skeleton" style="width: 260px; height: 32px; margin-top: 32px;"></div>
+      <div class="skeleton" style="width: 200px; height: 24px; margin-top: 12px;"></div>
+      <div class="skeleton" style="width: 100%; height: 56px; margin-top: 32px;"></div>
+      <div style="display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; justify-content: center;">
+        <div class="skeleton" style="width: 90px; height: 40px; border-radius: 20px;"></div>
+        <div class="skeleton" style="width: 80px; height: 40px; border-radius: 20px;"></div>
+        <div class="skeleton" style="width: 85px; height: 40px; border-radius: 20px;"></div>
+      </div>
+      <div class="skeleton" style="width: 100%; height: 56px; margin-top: 32px;"></div>
+    </div>
+  </div>
+  
+  <div class="demo-controls">
+    <button class="demo-btn active" onclick="showState('default')">Default</button>
+    <button class="demo-btn" onclick="showState('loading')">Loading</button>
+    <button class="demo-btn" onclick="showState('focused')">Input Focus</button>
+    <button class="demo-btn" onclick="showState('selected')">Chip Selected</button>
+    <button class="demo-btn" onclick="triggerShimmer()">CTA Shimmer</button>
+    <button class="demo-btn" onclick="replayAnimations()">Replay All</button>
+  </div>
+  
+  <script>
+    const habitInput = document.getElementById('habitInput');
+    const ctaButton = document.getElementById('ctaButton');
+    const chips = document.querySelectorAll('.chip');
+    const stateBadge = document.getElementById('stateBadge');
+    
+    // Chip selection
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        habitInput.value = chip.dataset.habit;
+        updateCta();
+        stateBadge.textContent = 'Chip Selected';
+      });
+    });
+    
+    // Input handling
+    habitInput.addEventListener('input', () => {
+      chips.forEach(c => c.classList.remove('selected'));
+      updateCta();
+    });
+    
+    habitInput.addEventListener('focus', () => {
+      stateBadge.textContent = 'Input Focused';
+    });
+    
+    function updateCta() {
+      if (habitInput.value.trim()) {
+        ctaButton.classList.remove('disabled');
+        ctaButton.classList.add('enabled');
+      } else {
+        ctaButton.classList.add('disabled');
+        ctaButton.classList.remove('enabled');
+      }
+    }
+    
+    function showState(state) {
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.getElementById('defaultState').style.display = 'none';
+      document.getElementById('loadingState').style.display = 'none';
+      
+      if (state === 'loading') {
+        document.getElementById('loadingState').style.display = 'flex';
+        stateBadge.textContent = 'Loading Skeleton';
+      } else {
+        document.getElementById('defaultState').style.display = 'flex';
+        if (state === 'focused') {
+          habitInput.focus();
+          stateBadge.textContent = 'Input Focused';
+        } else if (state === 'selected') {
+          chips[0].click();
+        } else {
+          habitInput.blur();
+          habitInput.value = '';
+          chips.forEach(c => c.classList.remove('selected'));
+          updateCta();
+          stateBadge.textContent = 'Default State';
+        }
+      }
+    }
+    
+    function triggerShimmer() {
+      habitInput.value = 'Drink water';
+      updateCta();
+      ctaButton.classList.remove('enabled');
+      void ctaButton.offsetWidth; // Force reflow
+      ctaButton.classList.add('enabled');
+      stateBadge.textContent = 'CTA Shimmer Effect';
+    }
+    
+    function replayAnimations() {
+      // Reset chips
+      chips.forEach(chip => {
+        chip.style.animation = 'none';
+        chip.offsetHeight; // Force reflow
+        chip.style.animation = '';
+      });
+      stateBadge.textContent = 'Replaying Animations';
+    }
+  </script>
+</body>
+</html>

@@ -4,6 +4,8 @@
 
 This spec defines 5 UI/UX polish improvements for the empty habits page to enhance perceived performance, visual feedback, and micro-interactions.
 
+**Design Mock**: `.superdesign/design_iterations/empty_state_improvements_1.html`
+
 ## Current State
 
 The empty state already has:
@@ -12,6 +14,8 @@ The empty state already has:
 - Chip selection with emerald highlight
 - CTA button with press animation
 - Staggered entrance via `AnimatedEntrance` wrapper
+
+---
 
 ## Proposed Improvements
 
@@ -149,6 +153,187 @@ export const CTA_SHIMMER = {
 | `HeroIcon.tsx` | Add shadow pulse synced with breathing |
 | `CtaButton.tsx` | Add shimmer on enable transition |
 | `animations.ts` | Add new constants |
+
+---
+
+## Implementation Tasks
+
+### Task 1: Add Animation Constants
+**Priority**: High | **Effort**: 10 min | **Dependencies**: None
+
+Add new animation constants for chip stagger, hero glow, and CTA shimmer.
+
+**Acceptance Criteria**:
+- [ ] `CHIP_STAGGER` constant with delay, duration, translateY
+- [ ] `HERO_GLOW` constant with shadow opacity/radius ranges
+- [ ] `CTA_SHIMMER` constant with duration, gradientOpacity
+- [ ] All values match spec
+
+**Files**: `src/features/habits/components/HabitsEmptyStateMinimal/animations.ts`
+
+---
+
+### Task 2: Create Loading Skeleton Component
+**Priority**: High | **Effort**: 30 min | **Dependencies**: None
+
+Create skeleton placeholder component with shimmer animation for loading state.
+
+**Acceptance Criteria**:
+- [ ] Renders skeleton elements matching layout (hero, headline, input, chips, CTA)
+- [ ] Shimmer animation using `LinearGradient` or animated background
+- [ ] Skeleton colors: base `#E7E5E4`, highlight `#F5F5F4`
+- [ ] Animation duration: 1.5s infinite
+- [ ] Exported from index.ts
+- [ ] Includes `accessibilityLabel="Loading"`
+
+**Files**: Create `LoadingSkeleton.tsx`, modify `index.ts`
+
+---
+
+### Task 3: Integrate Loading Skeleton
+**Priority**: High | **Effort**: 10 min | **Dependencies**: Task 2
+
+Replace static disabled state with LoadingSkeleton when `isLoading=true`.
+
+**Acceptance Criteria**:
+- [ ] When `isLoading=true`, render `LoadingSkeleton` instead of main content
+- [ ] When `isLoading=false`, render normal empty state
+- [ ] Transition between states is instant (no animation needed)
+
+**Files**: `HabitsEmptyStateMinimal.tsx`
+
+---
+
+### Task 4: Add Chip Stagger Animation
+**Priority**: Medium | **Effort**: 25 min | **Dependencies**: Task 1
+
+Stagger each chip's entrance animation by 50ms for cascade effect.
+
+**Acceptance Criteria**:
+- [ ] Each chip has individual entrance animation
+- [ ] Delays: 0, 50, 100, 150, 200, 250ms (per chip index)
+- [ ] Animation: opacity 0→1, translateY 10→0
+- [ ] Duration: 400ms, ease-out
+- [ ] Base delay still respects `ENTRANCE_DELAYS.chips`
+- [ ] Reduced motion: instant appearance, no stagger
+
+**Files**: `SuggestionChips.tsx`, `HabitsEmptyStateMinimal.tsx`
+
+---
+
+### Task 5: Add Input Focus Haptic
+**Priority**: Low | **Effort**: 10 min | **Dependencies**: None
+
+Add light haptic feedback when input receives focus.
+
+**Acceptance Criteria**:
+- [ ] Trigger `impactLight` haptic on focus
+- [ ] No haptic on blur
+- [ ] Uses existing `useHapticFeedback` hook
+
+**Files**: `HabitInput.tsx`
+
+---
+
+### Task 6: Add Hero Glow Pulse
+**Priority**: Medium | **Effort**: 20 min | **Dependencies**: Task 1
+
+Sync hero icon shadow with breathing animation for glow pulse effect.
+
+**Acceptance Criteria**:
+- [ ] Shadow opacity pulses: 0.15 → 0.35 → 0.15
+- [ ] Shadow radius pulses: 24 → 32 → 24
+- [ ] Synced with existing 3s breathing animation
+- [ ] Reuses existing `scale` shared value (interpolate for shadow)
+- [ ] Reduced motion: static shadow at min values
+
+**Files**: `HeroIcon.tsx`
+
+---
+
+### Task 7: Add CTA Shimmer Effect
+**Priority**: Medium | **Effort**: 25 min | **Dependencies**: Task 1
+
+Add shimmer animation when CTA button transitions from disabled to enabled.
+
+**Acceptance Criteria**:
+- [ ] Shimmer triggers when `disabled` changes from `true` to `false`
+- [ ] Animation: gradient sweeps left-to-right
+- [ ] Gradient: transparent → white(0.3) → transparent
+- [ ] Duration: 600ms
+- [ ] Only plays once per enable transition
+- [ ] Reduced motion: no shimmer, just instant enable
+
+**Files**: `CtaButton.tsx`
+
+---
+
+### Task 8: Add Unit Tests
+**Priority**: Medium | **Effort**: 45 min | **Dependencies**: Tasks 2, 4, 6, 7
+
+Add unit tests for new components and animations.
+
+**Acceptance Criteria**:
+- [ ] `LoadingSkeleton` renders correct skeleton elements
+- [ ] `LoadingSkeleton` has correct accessibility label
+- [ ] Chip stagger delays are calculated correctly
+- [ ] CTA shimmer triggers on enable transition
+- [ ] Hero glow respects reduced motion
+- [ ] Animation constants have correct values
+
+**Files**: Create `LoadingSkeleton.test.tsx`, modify existing test files
+
+---
+
+### Task 9: Manual QA
+**Priority**: High | **Effort**: 30 min | **Dependencies**: Tasks 3, 4, 5, 6, 7
+
+Manual testing on devices.
+
+**Acceptance Criteria**:
+- [ ] Test loading skeleton on slow network simulation
+- [ ] Verify chip stagger looks smooth (60fps)
+- [ ] Verify input haptic feels appropriate
+- [ ] Verify hero glow syncs with breathing
+- [ ] Verify CTA shimmer timing
+- [ ] Test reduced motion settings
+- [ ] Test on iOS and Android
+
+---
+
+## Task Dependencies Graph
+
+```text
+Task 1 (Constants)
+    ├── Task 4 (Chip Stagger)
+    ├── Task 6 (Hero Glow)
+    └── Task 7 (CTA Shimmer)
+
+Task 2 (LoadingSkeleton)
+    └── Task 3 (Integrate Skeleton)
+
+Task 5 (Input Haptic) - Independent
+
+Tasks 2, 4, 6, 7 → Task 8 (Tests)
+Tasks 3, 4, 5, 6, 7 → Task 9 (QA)
+```
+
+---
+
+## Estimated Total Effort
+
+| Task | Effort |
+|------|--------|
+| Task 1 | 10 min |
+| Task 2 | 30 min |
+| Task 3 | 10 min |
+| Task 4 | 25 min |
+| Task 5 | 10 min |
+| Task 6 | 20 min |
+| Task 7 | 25 min |
+| Task 8 | 45 min |
+| Task 9 | 30 min |
+| **Total** | **~3.5 hours** |
 
 ---
 
