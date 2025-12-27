@@ -6,15 +6,12 @@ import { COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
-import { TemplateBrowser } from './components/TemplateBrowser';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
 import { HabitPreview } from './components/HabitPreview';
 import { HabitNameField } from './components/HabitNameField';
-import { NameSuggestions } from './components/NameSuggestions';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
-import { PhaseSelector } from './components/PhaseSelector';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
 
@@ -37,28 +34,13 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             showsVerticalScrollIndicator={false}
             onScroll={template.handleMainScroll}
           >
-            <TemplateBrowser isEditMode={isEditMode} template={template} onViewScience={science.open} />
             <HabitPreview
               habitName={form.habitName}
               selectedEmoji={form.selectedEmoji}
               selectedColor={form.selectedColor}
               frequencyLabel={form.frequency}
             />
-            <NameSuggestions
-              query={form.habitName}
-              onPick={(emoji, name, color) => {
-                form.setHabitName(name);
-                form.setSelectedEmoji(emoji);
-                if (color) form.setSelectedColor(color);
-                triggerSelection();
-              }}
-            />
             <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
-            <PhaseSelector
-              selectedPhase={form.dayPhase}
-              onSelect={form.setDayPhase}
-            />
-            {/* Emoji Picker - uses the new modal picker */}
             <EmojiPicker
               selectedEmoji={form.selectedEmoji}
               onSelect={form.setSelectedEmoji}
