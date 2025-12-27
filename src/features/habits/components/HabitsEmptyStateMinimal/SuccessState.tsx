@@ -28,8 +28,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, PROGRESS_RING, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
+import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, PARTICLE_BURST, POP_ANIMATION, PROGRESS_RING, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
+import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
 import type { SuccessStateProps } from './types';
 
@@ -179,6 +180,9 @@ export function SuccessState({
   const ringOpacity = useSharedValue(1);
   const ringActive = useSharedValue(true); // Controls whether ring should animate
 
+  // Particle burst animation values
+  const burstOpacity = useSharedValue(1);
+
   // Display emoji - use habit emoji if provided, fallback to growth emoji
   const displayEmoji = habitEmoji || '🌿';
 
@@ -203,6 +207,12 @@ export function SuccessState({
 
     // Fade out the progress ring during exit
     ringOpacity.value = withTiming(0, {
+      duration: EXIT_TRANSITION.content.duration,
+      easing: Easing.out(Easing.ease),
+    });
+
+    // Fade out the particle burst during exit
+    burstOpacity.value = withTiming(0, {
       duration: EXIT_TRANSITION.content.duration,
       easing: Easing.out(Easing.ease),
     });
@@ -237,6 +247,7 @@ export function SuccessState({
     containerOpacity,
     ringActive,
     ringOpacity,
+    burstOpacity,
   ]);
 
   // Tap to skip handler
@@ -393,6 +404,10 @@ export function SuccessState({
     opacity: ringOpacity.value,
   }));
 
+  const burstStyle = useAnimatedStyle(() => ({
+    opacity: burstOpacity.value,
+  }));
+
   return (
     <Pressable
       accessibilityLabel="Tap to continue to your habits"
@@ -445,6 +460,23 @@ export function SuccessState({
               />
             </Animated.View>
           )}
+
+          {/* Particle Burst - Triggers on mount with icon pop, positioned behind icon */}
+          <Animated.View
+            style={[
+              burstStyle,
+              {
+                position: 'absolute',
+                width: PROGRESS_RING.size,
+                height: PROGRESS_RING.size,
+              },
+            ]}
+          >
+            <ParticleBurst
+              duration={PARTICLE_BURST.duration}
+              distance={PARTICLE_BURST.distance}
+            />
+          </Animated.View>
 
           {/* Success Icon - Shows habit emoji for visual continuity */}
           <View
