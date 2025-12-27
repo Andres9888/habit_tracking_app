@@ -140,7 +140,7 @@ function Chip({ chip, isSelected, onPress }: ChipProps) {
         style={[
           textStyle,
           {
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: '600',
           },
         ]}

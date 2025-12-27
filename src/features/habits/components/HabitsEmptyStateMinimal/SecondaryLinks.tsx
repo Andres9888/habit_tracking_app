@@ -41,7 +41,7 @@ export function SecondaryLinks({ onBrowseTemplates, onCreateCustom }: SecondaryL
       >
         <Text
           style={{
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: '500',
             color: COLORS.stone400,
           }}
@@ -53,7 +53,7 @@ export function SecondaryLinks({ onBrowseTemplates, onCreateCustom }: SecondaryL
       {/* Dot separator */}
       <Text
         style={{
-          fontSize: 14,
+          fontSize: 15,
           color: COLORS.stone300,
         }}
       >
@@ -75,7 +75,7 @@ export function SecondaryLinks({ onBrowseTemplates, onCreateCustom }: SecondaryL
       >
         <Text
           style={{
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: '500',
             color: COLORS.stone400,
           }}

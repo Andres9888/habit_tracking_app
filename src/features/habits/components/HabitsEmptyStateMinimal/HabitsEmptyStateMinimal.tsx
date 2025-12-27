@@ -214,7 +214,7 @@ export function HabitsEmptyStateMinimal({
           accessibilityRole="alert"
           style={{
             marginTop: 12,
-            fontSize: 14,
+            fontSize: 15,
             color: '#DC2626',
             textAlign: 'center',
           }}

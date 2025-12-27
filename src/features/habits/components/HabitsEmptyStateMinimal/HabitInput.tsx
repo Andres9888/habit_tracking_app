@@ -130,7 +130,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           onSubmitEditing={onSubmitEditing}
           style={{
             flex: 1,
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: '500',
             color: COLORS.stone800,
           }}

@@ -27,10 +27,10 @@ export const TemplateListItem = ({
         <Text className='text-xl'>{template.icon}</Text>
       </View>
       <View className='flex-1'>
-        <Text className='text-base font-semibold text-[#1a1a1a]' numberOfLines={1}>
+        <Text className='text-[15px] font-semibold text-stone-800' numberOfLines={1}>
           {template.name}
         </Text>
-        <Text className='text-xs text-[#8a8a8a]' numberOfLines={2}>
+        <Text className='text-[15px] text-stone-500' numberOfLines={2}>
           {template.description}
         </Text>
       </View>

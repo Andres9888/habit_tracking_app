@@ -512,7 +512,7 @@ export function SuccessState({
           {/* Subtext */}
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 15,
               color: COLORS.stone400,
               textAlign: 'center',
               marginBottom: 24,
@@ -558,7 +558,7 @@ export function SuccessState({
               <Text
                 style={{
                   color: '#ffffff',
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: '700',
                 }}
               >

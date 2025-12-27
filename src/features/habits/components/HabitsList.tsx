@@ -242,7 +242,7 @@ function PremiumBenefitsRow() {
             <Text className='text-[15px] font-semibold text-stone-800'>
               {benefit.title}
             </Text>
-            <Text className='text-[13px] leading-[18px] text-stone-600'>
+            <Text className='text-[15px] leading-[20px] text-stone-600'>
               {benefit.description}
             </Text>
           </View>
@@ -313,7 +313,7 @@ function LockedHabitCard({
           <Text className='text-center text-[17px] font-semibold text-stone-800'>
             Want to add more habits?
           </Text>
-          <Text className='text-center text-[13px] leading-[18px] text-stone-600'>
+          <Text className='text-center text-[15px] leading-[20px] text-stone-600'>
             Track unlimited habits, get smart reminders, and unlock deeper
             insights to build stronger routines.
           </Text>

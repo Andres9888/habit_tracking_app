@@ -64,9 +64,9 @@ export const CategoryFilters = ({
               style={{ backgroundColor: colors.bgSelected }}
             />
           )}
-          <Text className='text-sm'>{category.icon}</Text>
+          <Text className='text-[15px]'>{category.icon}</Text>
           <Text
-            className='text-sm font-semibold'
+            className='text-[15px] font-semibold'
             style={{ color: selected ? '#FFFFFF' : colors.text }}
           >
             {category.label}
