@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -10,6 +10,7 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
+import { Plus } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
 import { EmojiPickerSheet } from '../../EmojiPickerV2';
@@ -39,7 +40,7 @@ interface EmojiChipProps {
 /**
  * Individual emoji chip with press animation and green ring when selected
  */
-const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
+const EmojiChipComponent = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -75,7 +76,9 @@ const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   );
 };
 
-export const EmojiPicker = ({
+const EmojiChip = memo(EmojiChipComponent);
+
+const EmojiPickerComponent = ({
   selectedEmoji,
   onSelect,
   habitName,
@@ -141,25 +144,16 @@ export const EmojiPicker = ({
 
   return (
     <View className='mb-6'>
-      {/* Header with "More →" link */}
-      <View className='mb-3 flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-stone-800'>
-          {STRINGS.CREATE_HABIT.iconLabel}
-        </Text>
-        <Pressable
-          accessibilityHint='Opens full emoji picker'
-          accessibilityLabel='Browse all icons'
-          accessibilityRole='button'
-          hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-          onPress={handleMorePress}
-        >
-          <Text className='text-sm font-medium text-[#10B981]'>
-            Browse all →
-          </Text>
-        </Pressable>
-      </View>
+      {/* Section label */}
+      <Text
+        accessibilityRole='text'
+        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+        style={{ letterSpacing: 0.5 }}
+      >
+        {STRINGS.CREATE_HABIT.iconLabel}
+      </Text>
 
-      {/* Emoji chips row */}
+      {/* Emoji chips row with "+" button */}
       <Animated.View
         className='flex-row gap-2'
         layout={LinearTransition.springify().damping(15).stiffness(120)}
@@ -178,6 +172,16 @@ export const EmojiPicker = ({
             />
           </Animated.View>
         ))}
+        {/* Plus button to open full emoji picker */}
+        <Pressable
+          accessibilityHint='Opens full emoji picker'
+          accessibilityLabel='Browse all icons'
+          accessibilityRole='button'
+          className='h-12 w-12 items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-100'
+          onPress={handleMorePress}
+        >
+          <Plus color='#a8a29e' size={20} />
+        </Pressable>
       </Animated.View>
 
       <EmojiPickerSheet
@@ -190,3 +194,5 @@ export const EmojiPicker = ({
     </View>
   );
 };
+
+export const EmojiPicker = memo(EmojiPickerComponent);

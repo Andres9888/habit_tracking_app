@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import {
   AccessibilityInfo,
   Animated,
@@ -63,7 +63,7 @@ interface QuickPickCardProps {
   onPress: () => void;
 }
 
-const QuickPickCard = ({
+const QuickPickCardComponent = ({
   template,
   isSelected,
   onPress,
@@ -71,27 +71,28 @@ const QuickPickCard = ({
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
 
-  const handlePressIn = () => {
+  const handlePressIn = useCallback(() => {
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
       toValue: 0.96,
       useNativeDriver: true,
     }).start();
-  };
+  }, [scaleAnim]);
 
-  const handlePressOut = () => {
+  const handlePressOut = useCallback(() => {
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
       toValue: 1,
       useNativeDriver: true,
     }).start();
-  };
+  }, [scaleAnim]);
 
   return (
     <Pressable
-      accessibilityLabel={`Quick pick: ${template.name}`}
+      accessibilityHint={`Tap to use the ${template.name} template`}
+      accessibilityLabel={`Quick pick: ${template.name}, ${phaseInfo.shortLabel}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       onPress={onPress}
@@ -131,52 +132,67 @@ const QuickPickCard = ({
   );
 };
 
+const QuickPickCard = memo(QuickPickCardComponent);
+
 interface QuickPicksRowProps {
   selectedTemplateId: string | null;
   onSelectTemplate: (template: QuickPickTemplate) => void;
   onBrowseAll?: () => void;
 }
 
-export const QuickPicksRow = ({
+const QuickPicksRowComponent = ({
   selectedTemplateId,
   onSelectTemplate,
   onBrowseAll,
 }: QuickPicksRowProps) => {
   const { triggerSelection } = useHapticFeedback();
 
-  const handleSelectTemplate = (template: QuickPickTemplate) => {
-    triggerSelection();
-    onSelectTemplate(template);
-    // Announce template selection for screen readers
-    const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
-    AccessibilityInfo.announceForAccessibility(
-      `Selected ${template.name} template. Scheduled for ${phaseInfo.shortLabel}`
-    );
-  };
-
-  const renderItem = ({ item }: { item: QuickPickTemplate }) => (
-    <QuickPickCard
-      isSelected={selectedTemplateId === item.id}
-      template={item}
-      onPress={() => handleSelectTemplate(item)}
-    />
+  const handleSelectTemplate = useCallback(
+    (template: QuickPickTemplate) => {
+      triggerSelection();
+      onSelectTemplate(template);
+      // Announce template selection for screen readers
+      const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
+      AccessibilityInfo.announceForAccessibility(
+        `Selected ${template.name} template. Scheduled for ${phaseInfo.shortLabel}`
+      );
+    },
+    [onSelectTemplate, triggerSelection]
   );
+
+  const handleBrowseAll = useCallback(() => {
+    triggerSelection();
+    onBrowseAll?.();
+  }, [onBrowseAll, triggerSelection]);
+
+  const renderItem = useCallback(
+    ({ item }: { item: QuickPickTemplate }) => (
+      <QuickPickCard
+        isSelected={selectedTemplateId === item.id}
+        template={item}
+        onPress={() => handleSelectTemplate(item)}
+      />
+    ),
+    [selectedTemplateId, handleSelectTemplate]
+  );
+
+  const keyExtractor = useCallback((item: QuickPickTemplate) => item.id, []);
 
   return (
     <View className='mb-4'>
       {/* Header row */}
       <View className='mb-3 flex-row items-center justify-between px-1'>
-        <Text className='text-base font-semibold text-stone-800'>
+        <Text
+          accessibilityRole='header'
+          className='text-base font-semibold text-stone-800'
+        >
           Quick picks
         </Text>
         {onBrowseAll && (
           <Pressable
             accessibilityLabel='Browse all templates'
             accessibilityRole='button'
-            onPress={() => {
-              triggerSelection();
-              onBrowseAll();
-            }}
+            onPress={handleBrowseAll}
           >
             <Text className='text-sm font-medium text-[#22C55E]'>
               Browse all →
@@ -188,14 +204,18 @@ export const QuickPicksRow = ({
       {/* Template cards */}
       <FlatList
         horizontal
+        accessibilityLabel='Quick pick templates'
+        accessibilityRole='list'
         contentContainerStyle={{ paddingHorizontal: 1 }}
         data={QUICK_PICK_TEMPLATES}
-        keyExtractor={(item) => item.id}
+        keyExtractor={keyExtractor}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
       />
     </View>
   );
 };
+
+export const QuickPicksRow = memo(QuickPicksRowComponent);
 
 export { QUICK_PICK_TEMPLATES };

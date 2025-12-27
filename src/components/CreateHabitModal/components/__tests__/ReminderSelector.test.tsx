@@ -51,9 +51,10 @@ describe('ReminderSelector - V8 Unified Design', () => {
   });
 
   describe('Component Rendering', () => {
-    it('should render the section header "Reminder"', () => {
+    it('should render the section header "Daily reminder"', () => {
       const { getByText } = render(<ReminderSelector {...defaultProps} />);
-      expect(getByText('Reminder')).toBeDefined();
+      // V9: Updated to "Daily reminder" with uppercase styling
+      expect(getByText('Daily reminder')).toBeDefined();
     });
 
     it('should render all 4 reminder options', () => {

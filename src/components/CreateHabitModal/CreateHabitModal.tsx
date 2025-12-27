@@ -16,7 +16,7 @@ import {
   ReminderSelector,
   type ReminderOption,
 } from './components/ReminderSelector';
-import { TemplatesLinkSection } from './components/TemplatesLinkSection';
+// V9: TemplatesLinkSection removed from modal for focused flow (component retained for potential future use)
 
 // Stagger delay between section animations (ms)
 const ANIMATION_STAGGER_DELAY = 50;
@@ -79,7 +79,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             showsVerticalScrollIndicator={false}
             onScroll={template.handleMainScroll}
           >
-            {/* V8 Layout: Name input first (hero position) */}
+            {/* V9 Layout: Name input first (hero position), no QuickPicks */}
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
             >
@@ -123,16 +123,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 onSelectOption={handleReminderSelect}
               />
             </Animated.View>
-            {/* Templates Link Section - hidden in edit mode */}
-            {!isEditMode && (
-              <Animated.View
-                entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                  ANIMATION_STAGGER_DELAY * 4
-                )}
-              >
-                <TemplatesLinkSection onPress={template.handleHeroPress} />
-              </Animated.View>
-            )}
+            {/* V9: Templates Link Section removed for focused flow */}
           </ScrollView>
           <TemplateReminderPrompt
             bottomOffset={template.reminderBottomOffset}

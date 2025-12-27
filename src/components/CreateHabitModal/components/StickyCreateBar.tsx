@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -41,7 +41,7 @@ const darkenColor = (hex: string, percent: number = 20): string => {
 // Default green color for the button when no color is selected
 const DEFAULT_BUTTON_COLOR = '#22C55E';
 
-export const StickyCreateBar = ({
+const StickyCreateBarComponent = ({
   disabled,
   onPress,
   selectedColor,
@@ -95,6 +95,31 @@ export const StickyCreateBar = ({
     return [buttonColor, darkenColor(buttonColor, 25)] as const;
   }, [disabled, buttonColor]);
 
+  const handlePress = useCallback(() => {
+    if (!disabled) {
+      triggerSuccess();
+      onPress();
+    }
+  }, [disabled, onPress, triggerSuccess]);
+
+  const handlePressIn = useCallback(() => {
+    Animated.timing(scale, {
+      duration: Motion.duration.fast,
+      easing: Motion.easing.inEase,
+      toValue: 0.96,
+      useNativeDriver: true,
+    }).start();
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    Animated.timing(scale, {
+      duration: Motion.duration.base,
+      easing: Motion.easing.outEase,
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [scale]);
+
   return (
     <View
       pointerEvents='box-none'
@@ -114,6 +139,20 @@ export const StickyCreateBar = ({
         style={{ height: 32 }}
       />
       <View className='bg-[#faf9f7] px-4 pb-2'>
+        {/* Motivation text - V9 addition */}
+        <View
+          accessible
+          accessibilityLabel={`${STRINGS.CREATE_HABIT.motivationHighlight}${STRINGS.CREATE_HABIT.motivationSuffix}`}
+          accessibilityRole='text'
+          className='items-center mb-3'
+        >
+          <Text className='text-[13px] text-stone-500'>
+            <Text className='text-emerald-600 font-semibold'>
+              {STRINGS.CREATE_HABIT.motivationHighlight}
+            </Text>
+            {STRINGS.CREATE_HABIT.motivationSuffix}
+          </Text>
+        </View>
         <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-stone-300/40'>
           <Animated.View
             style={{ opacity: colorOpacity, transform: [{ scale }] }}
@@ -123,28 +162,9 @@ export const StickyCreateBar = ({
               accessibilityRole='button'
               accessibilityState={{ disabled }}
               disabled={disabled}
-              onPress={() => {
-                if (!disabled) {
-                  triggerSuccess();
-                  onPress();
-                }
-              }}
-              onPressIn={() => {
-                Animated.timing(scale, {
-                  duration: Motion.duration.fast,
-                  easing: Motion.easing.inEase,
-                  toValue: 0.96,
-                  useNativeDriver: true,
-                }).start();
-              }}
-              onPressOut={() => {
-                Animated.timing(scale, {
-                  duration: Motion.duration.base,
-                  easing: Motion.easing.outEase,
-                  toValue: 1,
-                  useNativeDriver: true,
-                }).start();
-              }}
+              onPress={handlePress}
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}
             >
               <LinearGradient
                 className='flex-row items-center justify-center rounded-xl py-3.5'
@@ -168,5 +188,7 @@ export const StickyCreateBar = ({
     </View>
   );
 };
+
+export const StickyCreateBar = memo(StickyCreateBarComponent);
 
 export default StickyCreateBar;

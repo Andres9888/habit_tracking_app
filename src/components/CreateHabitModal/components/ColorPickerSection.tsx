@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
 import { Motion } from '../../../constants/motion';
@@ -19,7 +19,7 @@ interface ColorPickerSectionProps {
   onCustomPress: () => void;
 }
 
-export const ColorPickerSection = ({
+const ColorPickerSectionComponent = ({
   colors,
   selectedColor,
   onSelectColor,
@@ -33,6 +33,8 @@ export const ColorPickerSection = ({
   />
 );
 
+export const ColorPickerSection = memo(ColorPickerSectionComponent);
+
 // Separate component to fix Rules of Hooks
 interface ColorButtonProps {
   color: string;
@@ -42,10 +44,10 @@ interface ColorButtonProps {
 
 /**
  * Individual color swatch button with selection animation
- * Spec: 44x44px base, scale(1.12) when selected, 2.5px ring
+ * V9 Spec: 36x36px base, scale(1.15) when selected, box-shadow ring
  */
-const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
-  const scale = useRef(new Animated.Value(isSelected ? 1.12 : 1)).current;
+const ColorButtonComponent = ({ color, isSelected, onSelect }: ColorButtonProps) => {
+  const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
   const wasSelected = useRef(isSelected);
   const { triggerSelection } = useHapticFeedback();
   const colorName = getColorName(color);
@@ -58,7 +60,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
         Animated.spring(scale, {
           damping: 12,
           stiffness: 180,
-          toValue: 1.12,
+          toValue: 1.15,
           useNativeDriver: true,
         }).start();
       } else {
@@ -85,7 +87,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
     Animated.timing(scale, {
       duration: Motion.duration.fast,
       easing: Motion.easing.inEase,
-      toValue: isSelected ? 1.05 : 0.96,
+      toValue: isSelected ? 1.08 : 0.96,
       useNativeDriver: true,
     }).start();
   }, [isSelected, scale]);
@@ -94,7 +96,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
     Animated.timing(scale, {
       duration: Motion.duration.base,
       easing: Motion.easing.outEase,
-      toValue: isSelected ? 1.12 : 1,
+      toValue: isSelected ? 1.15 : 1,
       useNativeDriver: true,
     }).start();
   }, [isSelected, scale]);
@@ -108,12 +110,20 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
         style={{
           alignItems: 'center',
           backgroundColor: color,
-          borderColor: '#1c1917', // stone-800
           borderRadius: 999,
-          borderWidth: isSelected ? 2.5 : 0,
-          height: 26,
+          height: 36,
           justifyContent: 'center',
-          width: 26,
+          width: 36,
+          // V9: Box-shadow ring instead of border for cleaner selection
+          shadowColor: isSelected ? color : 'transparent',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: isSelected ? 1 : 0,
+          shadowRadius: isSelected ? 0 : 0,
+          // Outer ring effect using elevation on Android, shadow on iOS
+          ...(isSelected && {
+            borderWidth: 3,
+            borderColor: '#ffffff',
+          }),
         }}
         testID={`color-swatch-${color.replace('#', '')}`}
         onPress={handlePress}
@@ -124,8 +134,11 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
   );
 };
 
+const ColorButton = memo(ColorButtonComponent);
+
 // Custom color button with dashed border and plus icon
-const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
+// V9: Updated to 36px to match color swatches
+const CustomColorButtonComponent = ({ onPress }: { onPress: () => void }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
 
@@ -163,20 +176,22 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
           borderRadius: 999,
           borderStyle: 'dashed',
           borderWidth: 2,
-          height: 26,
+          height: 36,
           justifyContent: 'center',
-          width: 26,
+          width: 36,
         }}
         testID='color-swatch-custom'
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <Plus color='#a8a29e' size={14} />
+        <Plus color='#a8a29e' size={18} />
       </TouchableOpacity>
     </Animated.View>
   );
 };
+
+const CustomColorButton = memo(CustomColorButtonComponent);
 
 /**
  * V8 Color Picker - 12 colors in a single row
@@ -191,7 +206,11 @@ const ColorPickerContent = ({
 }: ColorPickerSectionProps) => {
   return (
     <View className='mb-6'>
-      <Text className='mb-3 text-base font-semibold text-stone-800'>
+      <Text
+        accessibilityRole='text'
+        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+        style={{ letterSpacing: 0.5 }}
+      >
         {STRINGS.CREATE_HABIT.colorLabel}
       </Text>
       {/* 12 colors + custom button = 13 items, justify-between for even spacing */}
