@@ -1,4 +1,5 @@
-import { Modal, ScrollView, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Modal, ScrollView, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
@@ -14,11 +15,56 @@ import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
+import { QuickPicksRow, type QuickPickTemplate } from './components/QuickPicksRow';
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
   const { triggerSelection } = useHapticFeedback();
+  const [selectedQuickPickId, setSelectedQuickPickId] = useState<string | null>(null);
+
+  const handleQuickPickSelect = useCallback(
+    (quickPick: QuickPickTemplate) => {
+      setSelectedQuickPickId(quickPick.id);
+      form.setHabitName(quickPick.name);
+      form.setSelectedEmoji(quickPick.emoji);
+      form.setSelectedColor(quickPick.color);
+      form.setDayPhase(quickPick.timeOfDay);
+    },
+    [form]
+  );
+
+  // Clear quick pick selection when user manually modifies any field
+  const handleNameChange = useCallback(
+    (value: string) => {
+      setSelectedQuickPickId(null);
+      form.setHabitName(value);
+    },
+    [form]
+  );
+
+  const handleEmojiSelect = useCallback(
+    (emoji: string | null) => {
+      setSelectedQuickPickId(null);
+      form.setSelectedEmoji(emoji);
+    },
+    [form]
+  );
+
+  const handleColorSelect = useCallback(
+    (color: string) => {
+      setSelectedQuickPickId(null);
+      form.setSelectedColor(color);
+    },
+    [form]
+  );
+
+  // Reset quick pick selection when modal opens (for new habit creation)
+  useEffect(() => {
+    if (visible && !isEditMode) {
+      setSelectedQuickPickId(null);
+    }
+  }, [visible, isEditMode]);
 
   return (
     <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
@@ -34,22 +80,38 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             showsVerticalScrollIndicator={false}
             onScroll={template.handleMainScroll}
           >
+            {/* Quick Picks Section - hidden in edit mode */}
+            {!isEditMode && (
+              <>
+                <View className='mt-3' />
+                <QuickPicksRow
+                  selectedTemplateId={selectedQuickPickId}
+                  onSelectTemplate={handleQuickPickSelect}
+                />
+                {/* Divider */}
+                <View className='mb-4 flex-row items-center'>
+                  <View className='h-px flex-1 bg-[#e7e5e4]' />
+                  <Text className='mx-4 text-xs font-medium text-[#a8a29e]'>or create your own</Text>
+                  <View className='h-px flex-1 bg-[#e7e5e4]' />
+                </View>
+              </>
+            )}
             <HabitPreview
               habitName={form.habitName}
               selectedEmoji={form.selectedEmoji}
               selectedColor={form.selectedColor}
               timeOfDay={form.dayPhase}
             />
-            <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
+            <HabitNameField value={form.habitName} onChange={handleNameChange} autoFocus={visible && !isEditMode} />
             <EmojiPicker
               selectedEmoji={form.selectedEmoji}
-              onSelect={form.setSelectedEmoji}
+              onSelect={handleEmojiSelect}
               habitName={form.habitName}
             />
             <ColorPickerSection
               colors={COLORS}
               selectedColor={form.selectedColor}
-              onSelectColor={form.setSelectedColor}
+              onSelectColor={handleColorSelect}
               onCustomPress={form.openColorPicker}
             />
             <ReminderSection
