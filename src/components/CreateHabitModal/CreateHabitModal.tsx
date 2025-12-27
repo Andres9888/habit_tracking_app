@@ -38,7 +38,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               habitName={form.habitName}
               selectedEmoji={form.selectedEmoji}
               selectedColor={form.selectedColor}
-              frequencyLabel={form.frequency}
+              timeOfDay={form.dayPhase}
             />
             <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
             <EmojiPicker
