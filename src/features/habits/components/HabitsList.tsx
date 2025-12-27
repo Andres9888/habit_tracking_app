@@ -242,7 +242,7 @@ function PremiumBenefitsRow() {
             <Text className='text-[15px] font-semibold text-stone-800'>
               {benefit.title}
             </Text>
-            <Text className='text-[15px] leading-[20px] text-stone-600'>
+            <Text className='text-[13px] font-normal leading-[18px] text-stone-500'>
               {benefit.description}
             </Text>
           </View>
@@ -261,7 +261,7 @@ function SocialProofCard() {
       <Text className='text-[15px] font-normal leading-[22px] text-stone-800'>
         "{SOCIAL_PROOF.quote}"
       </Text>
-      <Text className='text-[13px] font-semibold text-stone-500'>
+      <Text className='text-[13px] font-normal text-stone-500'>
         {SOCIAL_PROOF.attribution}
       </Text>
     </View>
@@ -313,7 +313,7 @@ function LockedHabitCard({
           <Text className='text-center text-[17px] font-semibold text-stone-800'>
             Want to add more habits?
           </Text>
-          <Text className='text-center text-[15px] leading-[20px] text-stone-600'>
+          <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
             Track unlimited habits, get smart reminders, and unlock deeper
             insights to build stronger routines.
           </Text>
@@ -364,7 +364,7 @@ function UpgradePrompt({
           <Text className='text-center text-[24px] font-bold text-stone-900'>
             You're on a roll! Ready for more?
           </Text>
-          <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
+          <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2× longer.
           </Text>
@@ -384,7 +384,7 @@ function UpgradePrompt({
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
             onPress={onClose}
           >
-            <Text className='text-[15px] font-semibold text-stone-500'>
+            <Text className='text-[13px] font-normal text-stone-500'>
               Keep 3 habits free
             </Text>
           </Pressable>

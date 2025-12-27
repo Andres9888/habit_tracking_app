@@ -14,28 +14,28 @@ import type { HabitSortMode } from '../../types';
  * Abbreviated labels for each sort mode, displayed in the chip trigger
  */
 const SORT_LABEL_MAP: Record<HabitSortMode, string> = {
-  manual: 'Custom',
   day_phase: 'Day Phase',
+  manual: 'Custom',
   name_asc: 'A–Z',
   name_desc: 'Z–A',
-  strength_asc: 'Strength ↑',
-  strength_desc: 'Strength ↓',
   streak_asc: 'Streak ↑',
   streak_desc: 'Streak ↓',
+  strength_asc: 'Strength ↑',
+  strength_desc: 'Strength ↓',
 };
 
 /**
  * Full labels for accessibility announcements
  */
 const SORT_ACCESSIBILITY_LABEL_MAP: Record<HabitSortMode, string> = {
-  manual: 'Custom order',
   day_phase: 'Day phase',
+  manual: 'Custom order',
   name_asc: 'Name A to Z',
   name_desc: 'Name Z to A',
-  strength_asc: 'Strength low to high',
-  strength_desc: 'Strength high to low',
   streak_asc: 'Streak low to high',
   streak_desc: 'Streak high to low',
+  strength_asc: 'Strength low to high',
+  strength_desc: 'Strength high to low',
 };
 
 interface SortChipProps {
@@ -111,18 +111,20 @@ export function SortChip({
 
   return (
     <Animated.View
-      entering={reduceMotion ? undefined : FadeInDown.delay(100).springify().damping(18)}
+      entering={
+        reduceMotion ? undefined : FadeInDown.delay(100).springify().damping(18)
+      }
     >
       <AnimatedPressable
-        accessibilityHint="Opens sort options"
+        accessibilityHint='Opens sort options'
         accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3 active:bg-stone-100"
+        accessibilityRole='button'
+        className='flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3 active:bg-stone-100'
         style={[
           animatedStyle,
           {
-            borderWidth: 1,
-            borderColor: '#e7e5e4', // stone-200
+            borderColor: '#e7e5e4',
+            borderWidth: 1, // stone-200
           },
         ]}
         onPress={handlePress}
@@ -130,27 +132,19 @@ export function SortChip({
         onPressOut={handlePressOut}
       >
         {/* Left side: icon + label */}
-        <View className="flex-row items-center gap-2">
-          <LayoutList
-            color="#78716c"
-            size={18}
-            strokeWidth={2}
-          />
-          <Text className="text-[14px] font-semibold text-stone-700">
+        <View className='flex-row items-center gap-2'>
+          <LayoutList color='#78716c' size={18} strokeWidth={2} />
+          <Text className='text-[14px] font-semibold text-stone-700'>
             My Habits
           </Text>
         </View>
 
         {/* Right side: sort label + chevron */}
-        <View className="flex-row items-center gap-1">
-          <Text className="text-[13px] font-medium text-stone-500">
+        <View className='flex-row items-center gap-1'>
+          <Text className='text-[13px] font-normal text-stone-500'>
             {sortLabel}
           </Text>
-          <ChevronRight
-            color="#a8a29e"
-            size={16}
-            strokeWidth={2}
-          />
+          <ChevronRight color='#a8a29e' size={16} strokeWidth={2} />
         </View>
       </AnimatedPressable>
     </Animated.View>

@@ -28,7 +28,16 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, PARTICLE_BURST, POP_ANIMATION, PROGRESS_RING, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
+import {
+  CONFETTI_CONFIG,
+  EXIT_TRANSITION,
+  EXIT_SPRING_CONFIG,
+  PARTICLE_BURST,
+  POP_ANIMATION,
+  PROGRESS_RING,
+  SPRING_CONFIGS,
+  TAP_HINT_PULSE,
+} from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
 import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
@@ -37,7 +46,15 @@ import type { SuccessStateProps } from './types';
 /**
  * Individual confetti particle
  */
-function ConfettiParticle({ delay, color, shouldReduceMotion }: { delay: number; color: string; shouldReduceMotion: boolean }) {
+function ConfettiParticle({
+  delay,
+  color,
+  shouldReduceMotion,
+}: {
+  delay: number;
+  color: string;
+  shouldReduceMotion: boolean;
+}) {
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(shouldReduceMotion ? 0 : 1);
@@ -60,7 +77,10 @@ function ConfettiParticle({ delay, color, shouldReduceMotion }: { delay: number;
 
     translateY.value = withDelay(
       delay,
-      withTiming(-300, { duration: CONFETTI_CONFIG.duration, easing: Easing.out(Easing.quad) })
+      withTiming(-300, {
+        duration: CONFETTI_CONFIG.duration,
+        easing: Easing.out(Easing.quad),
+      })
     );
     translateX.value = withDelay(
       delay,
@@ -68,7 +88,10 @@ function ConfettiParticle({ delay, color, shouldReduceMotion }: { delay: number;
     );
     opacity.value = withDelay(
       delay,
-      withTiming(0, { duration: CONFETTI_CONFIG.duration, easing: Easing.in(Easing.ease) })
+      withTiming(0, {
+        duration: CONFETTI_CONFIG.duration,
+        easing: Easing.in(Easing.ease),
+      })
     );
     rotation.value = withDelay(
       delay,
@@ -78,16 +101,24 @@ function ConfettiParticle({ delay, color, shouldReduceMotion }: { delay: number;
       delay + 200,
       withTiming(0.5, { duration: CONFETTI_CONFIG.duration - 200 })
     );
-  }, [delay, opacity, rotation, scale, shouldReduceMotion, translateX, translateY]);
+  }, [
+    delay,
+    opacity,
+    rotation,
+    scale,
+    shouldReduceMotion,
+    translateX,
+    translateY,
+  ]);
 
   const particleStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
       { rotate: `${rotation.value}deg` },
       { scale: scale.value },
     ],
-    opacity: opacity.value,
   }));
 
   return (
@@ -95,11 +126,11 @@ function ConfettiParticle({ delay, color, shouldReduceMotion }: { delay: number;
       style={[
         particleStyle,
         {
+          backgroundColor: color,
+          borderRadius: 4,
+          height: 8,
           position: 'absolute',
           width: 8,
-          height: 8,
-          borderRadius: 4,
-          backgroundColor: color,
         },
       ]}
     />
@@ -113,31 +144,34 @@ function Confetti({ shouldReduceMotion }: { shouldReduceMotion: boolean }) {
   // Skip rendering particles entirely when reduced motion is preferred
   if (shouldReduceMotion) return null;
 
-  const particles = Array.from({ length: CONFETTI_CONFIG.particleCount }, (_, i) => ({
-    id: i,
-    delay: Math.random() * 300,
-    color: CONFETTI_CONFIG.colors[i % CONFETTI_CONFIG.colors.length],
-  }));
+  const particles = Array.from(
+    { length: CONFETTI_CONFIG.particleCount },
+    (_, i) => ({
+      color: CONFETTI_CONFIG.colors[i % CONFETTI_CONFIG.colors.length],
+      delay: Math.random() * 300,
+      id: i,
+    })
+  );
 
   return (
     <View
-      pointerEvents="none"
+      pointerEvents='none'
       style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         alignItems: 'center',
+        bottom: 0,
         justifyContent: 'center',
+        left: 0,
         overflow: 'hidden',
+        position: 'absolute',
+        right: 0,
+        top: 0,
       }}
     >
       {particles.map((particle) => (
         <ConfettiParticle
           key={particle.id}
-          delay={particle.delay}
           color={particle.color}
+          delay={particle.delay}
           shouldReduceMotion={shouldReduceMotion}
         />
       ))}
@@ -163,7 +197,9 @@ export function SuccessState({
   const autoTransitionTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Entrance animation values
-  const iconScale = useSharedValue(shouldReduceMotion ? POP_ANIMATION.finalScale : POP_ANIMATION.initialScale);
+  const iconScale = useSharedValue(
+    shouldReduceMotion ? POP_ANIMATION.finalScale : POP_ANIMATION.initialScale
+  );
   const contentOpacity = useSharedValue(shouldReduceMotion ? 1 : 0);
   const contentTranslateY = useSharedValue(shouldReduceMotion ? 0 : 20);
 
@@ -222,14 +258,14 @@ export function SuccessState({
       EXIT_TRANSITION.icon.translateY,
       EXIT_SPRING_CONFIG
     );
-    iconExitScale.value = withTiming(
-      EXIT_TRANSITION.icon.scale,
-      { duration: EXIT_TRANSITION.icon.duration, easing: Easing.out(Easing.cubic) }
-    );
-    contentOpacity.value = withTiming(
-      0,
-      { duration: EXIT_TRANSITION.content.duration, easing: Easing.out(Easing.ease) }
-    );
+    iconExitScale.value = withTiming(EXIT_TRANSITION.icon.scale, {
+      duration: EXIT_TRANSITION.icon.duration,
+      easing: Easing.out(Easing.cubic),
+    });
+    contentOpacity.value = withTiming(0, {
+      duration: EXIT_TRANSITION.content.duration,
+      easing: Easing.out(Easing.ease),
+    });
     containerOpacity.value = withDelay(
       EXIT_TRANSITION.onCompleteDelay,
       withTiming(0, { duration: 200 }, (finished) => {
@@ -278,7 +314,9 @@ export function SuccessState({
 
     // Icon pop animation: 0.8 → 1.1 → 1.0 with bounce
     iconScale.value = withSequence(
-      withTiming(POP_ANIMATION.overshootScale, { duration: POP_ANIMATION.duration * 0.6 }),
+      withTiming(POP_ANIMATION.overshootScale, {
+        duration: POP_ANIMATION.duration * 0.6,
+      }),
       withSpring(POP_ANIMATION.finalScale, SPRING_CONFIGS.successPop)
     );
 
@@ -296,7 +334,10 @@ export function SuccessState({
 
     // For reduced motion, just fade in to static opacity (no pulse)
     if (shouldReduceMotion) {
-      tapHintOpacity.value = withDelay(800, withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300 }));
+      tapHintOpacity.value = withDelay(
+        800,
+        withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300 })
+      );
       tapHintScale.value = TAP_HINT_PULSE.minScale;
       return;
     }
@@ -306,7 +347,10 @@ export function SuccessState({
       800,
       withSequence(
         // Initial fade in
-        withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300, easing: Easing.out(Easing.ease) }),
+        withTiming(TAP_HINT_PULSE.maxOpacity, {
+          duration: 300,
+          easing: Easing.out(Easing.ease),
+        }),
         // Then start infinite pulse between minOpacity and maxOpacity
         withRepeat(
           withSequence(
@@ -410,18 +454,18 @@ export function SuccessState({
 
   return (
     <Pressable
-      accessibilityLabel="Tap to continue to your habits"
-      accessibilityRole="button"
-      accessibilityHint="Skip the celebration and view your habit list"
-      onPress={handleTapToSkip}
+      accessibilityHint='Skip the celebration and view your habit list'
+      accessibilityLabel='Tap to continue to your habits'
+      accessibilityRole='button'
       style={{ flex: 1 }}
+      onPress={handleTapToSkip}
     >
       <Animated.View
         style={[
           containerStyle,
           {
-            flex: 1,
             alignItems: 'center',
+            flex: 1,
             justifyContent: 'center',
             paddingHorizontal: 24,
           },
@@ -434,11 +478,11 @@ export function SuccessState({
           style={[
             iconStyle,
             {
-              width: PROGRESS_RING.size,
-              height: PROGRESS_RING.size,
               alignItems: 'center',
+              height: PROGRESS_RING.size,
               justifyContent: 'center',
               marginBottom: 24,
+              width: PROGRESS_RING.size,
             },
           ]}
         >
@@ -448,9 +492,9 @@ export function SuccessState({
               style={[
                 ringStyle,
                 {
+                  height: PROGRESS_RING.size,
                   position: 'absolute',
                   width: PROGRESS_RING.size,
-                  height: PROGRESS_RING.size,
                 },
               ]}
             >
@@ -466,27 +510,27 @@ export function SuccessState({
             style={[
               burstStyle,
               {
+                height: PROGRESS_RING.size,
                 position: 'absolute',
                 width: PROGRESS_RING.size,
-                height: PROGRESS_RING.size,
               },
             ]}
           >
             <ParticleBurst
-              duration={PARTICLE_BURST.duration}
               distance={PARTICLE_BURST.distance}
+              duration={PARTICLE_BURST.duration}
             />
           </Animated.View>
 
           {/* Success Icon - Shows habit emoji for visual continuity */}
           <View
             style={{
-              width: 96,
-              height: 96,
-              borderRadius: 48,
-              backgroundColor: COLORS.successBackground,
               alignItems: 'center',
+              backgroundColor: COLORS.successBackground,
+              borderRadius: 48,
+              height: 96,
               justifyContent: 'center',
+              width: 96,
               zIndex: 10,
             }}
           >
@@ -495,15 +539,17 @@ export function SuccessState({
         </Animated.View>
 
         {/* Content */}
-        <Animated.View style={[contentStyle, { alignItems: 'center', width: '100%' }]}>
+        <Animated.View
+          style={[contentStyle, { alignItems: 'center', width: '100%' }]}
+        >
           {/* Headline */}
           <Text
             style={{
+              color: COLORS.stone800,
               fontSize: 24,
               fontWeight: '700',
-              color: COLORS.stone800,
-              textAlign: 'center',
               marginBottom: 8,
+              textAlign: 'center',
             }}
           >
             {COPY.successHeadline}
@@ -512,10 +558,10 @@ export function SuccessState({
           {/* Subtext */}
           <Text
             style={{
-              fontSize: 15,
-              color: COLORS.stone400,
-              textAlign: 'center',
+              color: COLORS.stone500,
+              fontSize: 13,
               marginBottom: 24,
+              textAlign: 'center',
             }}
           >
             {COPY.successSubtext(habitName)}
@@ -527,8 +573,8 @@ export function SuccessState({
               style={[
                 tapHintStyle,
                 {
+                  color: COLORS.stone500,
                   fontSize: 13,
-                  color: COLORS.stone300,
                   textAlign: 'center',
                 },
               ]}
@@ -540,20 +586,20 @@ export function SuccessState({
           {/* Add another button - only show if not auto-transitioning */}
           {!autoTransition && (
             <Pressable
+              accessibilityHint='Creates another habit'
               accessibilityLabel={COPY.addAnother}
-              accessibilityRole="button"
-              accessibilityHint="Creates another habit"
-              onPress={onAddAnother}
+              accessibilityRole='button'
               style={({ pressed }) => ({
+                alignItems: 'center',
                 backgroundColor: COLORS.stone800,
                 borderRadius: BORDER_RADIUS.cta,
                 height: TOUCH_TARGETS.ctaHeight,
-                width: '100%',
-                alignItems: 'center',
                 justifyContent: 'center',
                 opacity: pressed ? 0.9 : 1,
                 transform: [{ scale: pressed ? 0.98 : 1 }],
+                width: '100%',
               })}
+              onPress={onAddAnother}
             >
               <Text
                 style={{

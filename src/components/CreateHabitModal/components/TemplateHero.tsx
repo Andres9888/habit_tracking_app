@@ -40,7 +40,9 @@ export const TemplateHero = ({
         <Text className='text-lg font-bold text-[#111827]'>
           {STRINGS.CREATE_HABIT.templateHeroTitle}
         </Text>
-        <Text className='mt-1 text-[15px] font-medium text-[#111827]/70'>{subtitle}</Text>
+        <Text className='mt-1 text-[13px] font-normal text-stone-500'>
+          {subtitle}
+        </Text>
       </View>
       <Animated.View style={{ transform: [{ rotate: chevronRotation }] }}>
         <ChevronRight color='#111827' size={18} strokeWidth={2.5} />
