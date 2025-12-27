@@ -13,9 +13,12 @@ import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 
+// Create trackable mock functions at module level (prefixed with "mock" for jest)
+const mockMutationFn = jest.fn(() => Promise.resolve('new-habit-id'));
+
 // Mock dependencies before imports
 jest.mock('convex/react', () => ({
-  useMutation: () => jest.fn(() => Promise.resolve('test-habit-id')),
+  useMutation: () => mockMutationFn,
   useQuery: () => [],
 }));
 
@@ -508,6 +511,169 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       // Quick picks should not be visible in edit mode
       expect(queryByText('Quick picks')).toBeNull();
       expect(queryByText('or create your own')).toBeNull();
+    });
+  });
+
+  describe('V8 Full Habit Creation Flow', () => {
+    it('should have all form fields properly populated before create', async () => {
+      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
+
+      // 1. Fill in habit name
+      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      fireEvent.changeText(nameInput, 'Morning Meditation');
+
+      // 2. Select a color (Teal - #14B8A6)
+      const tealSwatch = getByTestId('color-swatch-14B8A6');
+      fireEvent.press(tealSwatch);
+
+      // Verify teal is selected
+      await waitFor(() => {
+        expect(tealSwatch.props.accessibilityState?.selected).toBe(true);
+      });
+
+      // 3. Select Morning reminder
+      const morningOption = getByTestId('reminder-option-morning');
+      fireEvent.press(morningOption);
+
+      // Verify Morning is selected
+      await waitFor(() => {
+        expect(morningOption.props.accessibilityState?.selected).toBe(true);
+      });
+
+      // 4. Verify Create button is enabled (name is filled)
+      const createButtons = getAllByLabelText('Create habit');
+      const createButton = createButtons.find(
+        (el) => el.props.accessibilityState?.disabled !== undefined
+      );
+      expect(createButton?.props.accessibilityState?.disabled).toBe(false);
+
+      // 5. Verify name input has correct value
+      expect(nameInput.props.value).toBe('Morning Meditation');
+    });
+
+    it('should configure reminders disabled when None is selected', async () => {
+      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
+
+      // Fill in habit name
+      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      fireEvent.changeText(nameInput, 'Daily Journal');
+
+      // None reminder should be selected by default
+      const noneOption = getByTestId('reminder-option-none');
+      expect(noneOption.props.accessibilityState?.selected).toBe(true);
+
+      // Morning, Midday, Evening should NOT be selected
+      expect(
+        getByTestId('reminder-option-morning').props.accessibilityState
+          ?.selected
+      ).toBe(false);
+      expect(
+        getByTestId('reminder-option-midday').props.accessibilityState?.selected
+      ).toBe(false);
+      expect(
+        getByTestId('reminder-option-evening').props.accessibilityState
+          ?.selected
+      ).toBe(false);
+
+      // Verify Create button is enabled
+      const createButtons = getAllByLabelText('Create habit');
+      const createButton = createButtons.find(
+        (el) => el.props.accessibilityState?.disabled !== undefined
+      );
+      expect(createButton?.props.accessibilityState?.disabled).toBe(false);
+    });
+
+    it('should have quick pick data ready for creation', async () => {
+      const { getByLabelText, getByText, getAllByLabelText } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
+
+      // Select Exercise quick pick
+      const exerciseCard = getByLabelText('Quick pick: Exercise');
+      fireEvent.press(exerciseCard);
+
+      // Wait for selection to apply
+      await waitFor(() => {
+        expect(exerciseCard.props.accessibilityState?.selected).toBe(true);
+      });
+
+      // Verify form shows Exercise data
+      expect(getByText('Exercise')).toBeDefined(); // Preview shows name
+
+      // Verify Create button is enabled
+      const createButtons = getAllByLabelText('Create habit');
+      const createButton = createButtons.find(
+        (el) => el.props.accessibilityState?.disabled !== undefined
+      );
+      expect(createButton?.props.accessibilityState?.disabled).toBe(false);
+    });
+
+    it('should have Evening reminder configured properly', async () => {
+      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
+
+      // Fill in habit name
+      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      fireEvent.changeText(nameInput, 'Evening Reading');
+
+      // Select Evening reminder
+      const eveningOption = getByTestId('reminder-option-evening');
+      fireEvent.press(eveningOption);
+
+      // Verify Evening is selected
+      await waitFor(() => {
+        expect(eveningOption.props.accessibilityState?.selected).toBe(true);
+      });
+
+      // Other options should not be selected
+      expect(
+        getByTestId('reminder-option-none').props.accessibilityState?.selected
+      ).toBe(false);
+      expect(
+        getByTestId('reminder-option-morning').props.accessibilityState
+          ?.selected
+      ).toBe(false);
+      expect(
+        getByTestId('reminder-option-midday').props.accessibilityState?.selected
+      ).toBe(false);
+
+      // Verify Create button is enabled
+      const createButtons = getAllByLabelText('Create habit');
+      const createButton = createButtons.find(
+        (el) => el.props.accessibilityState?.disabled !== undefined
+      );
+      expect(createButton?.props.accessibilityState?.disabled).toBe(false);
+    });
+
+    it('should have Midday reminder configured properly', async () => {
+      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
+
+      // Fill in habit name
+      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      fireEvent.changeText(nameInput, 'Midday Stretch');
+
+      // Select Midday reminder
+      const middayOption = getByTestId('reminder-option-midday');
+      fireEvent.press(middayOption);
+
+      // Verify Midday is selected
+      await waitFor(() => {
+        expect(middayOption.props.accessibilityState?.selected).toBe(true);
+      });
+
+      // Verify Create button is enabled
+      const createButtons = getAllByLabelText('Create habit');
+      const createButton = createButtons.find(
+        (el) => el.props.accessibilityState?.disabled !== undefined
+      );
+      expect(createButton?.props.accessibilityState?.disabled).toBe(false);
     });
   });
 });
