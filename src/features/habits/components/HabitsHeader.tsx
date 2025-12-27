@@ -180,19 +180,20 @@ export function HabitsHeader({
           </Pressable>
         </Animated.View>
 
-        <View className='flex-row gap-3'>
+        {/* Compact icon group in pill container */}
+        <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'>
           <Animated.View style={templatesButtonAnimatedStyle}>
             <View style={{ position: 'relative' }}>
               <Pressable
                 accessibilityHint='Browse habit templates to add'
                 accessibilityLabel='Browse habit templates'
                 accessibilityRole='button'
-                className='h-9 w-9 items-center justify-center rounded-full border border-violet-200 bg-violet-50/70'
+                className='h-8 w-8 items-center justify-center rounded-full'
                 onPress={handleTemplatesPress}
                 onPressIn={handleTemplatesPressIn}
                 onPressOut={handleTemplatesPressOut}
               >
-                <BookOpen color='#7c3aed' size={18} strokeWidth={2.25} />
+                <BookOpen color='#7c3aed' size={16} strokeWidth={2.25} />
               </Pressable>
 
               {/* Smart notification badge */}
@@ -203,30 +204,34 @@ export function HabitsHeader({
             <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
           </Animated.View>
 
+          <View className='mx-0.5 h-4 w-px bg-stone-200' />
+
           <Animated.View style={sortButtonAnimatedStyle}>
             <Pressable
               accessibilityHint='Change habit sort order'
               accessibilityLabel='Sort habits'
               accessibilityRole='button'
-              className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
+              className='h-8 w-8 items-center justify-center rounded-full'
               onPress={handleSortPress}
               onPressIn={handleSortPressIn}
               onPressOut={handleSortPressOut}
             >
-              <ArrowUpDown color='#44403c' size={18} strokeWidth={2.25} />
+              <ArrowUpDown color='#44403c' size={16} strokeWidth={2.25} />
             </Pressable>
           </Animated.View>
+
+          <View className='mx-0.5 h-4 w-px bg-stone-200' />
 
           <Animated.View style={settingsButtonAnimatedStyle}>
             <Pressable
               accessibilityLabel='Open settings'
               accessibilityRole='button'
-              className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
+              className='h-8 w-8 items-center justify-center rounded-full'
               onPress={handleSettingsPress}
               onPressIn={handleSettingsPressIn}
               onPressOut={handleSettingsPressOut}
             >
-              <Settings color='#44403c' size={20} strokeWidth={2.25} />
+              <Settings color='#44403c' size={16} strokeWidth={2.25} />
             </Pressable>
           </Animated.View>
         </View>

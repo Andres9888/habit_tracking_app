@@ -1,5 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, View, type ViewStyle } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import { parse, format } from 'date-fns';
 import clsx from 'clsx';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -30,6 +42,35 @@ interface DayConnectorProps {
  * - Day 14-20: Very strong (2.7px, 75% opacity)
  * - Day 21+: Legendary status (3px, 85% opacity, accent glow)
  */
+const getStrengthConfig = (streak: number) => {
+  if (streak >= 21)
+    return { height: 3, maxOpacity: 0.85, shimmerSpeed: 1000, useAccent: true };
+  if (streak >= 14)
+    return {
+      height: 2.7,
+      maxOpacity: 0.75,
+      shimmerSpeed: 1200,
+      useAccent: true,
+    };
+  if (streak >= 7)
+    return {
+      height: 2.4,
+      maxOpacity: 0.65,
+      shimmerSpeed: 1500,
+      useAccent: true,
+    };
+  if (streak >= 5)
+    return {
+      height: 2.1,
+      maxOpacity: 0.55,
+      shimmerSpeed: 2000,
+      useAccent: false,
+    };
+  if (streak >= 3)
+    return { height: 1.8, maxOpacity: 0.45, shimmerSpeed: 0, useAccent: false };
+  return { height: 1.5, maxOpacity: 0.35, shimmerSpeed: 0, useAccent: false };
+};
+
 const DayConnector: React.FC<DayConnectorProps> = ({
   accentColor,
   baseColor,
@@ -39,15 +80,6 @@ const DayConnector: React.FC<DayConnectorProps> = ({
 }) => {
   const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
   const shimmerPosition = useRef(new Animated.Value(0)).current;
-
-  const getStrengthConfig = (streak: number) => {
-    if (streak >= 21) return { height: 3, maxOpacity: 0.85, shimmerSpeed: 1000, useAccent: true };
-    if (streak >= 14) return { height: 2.7, maxOpacity: 0.75, shimmerSpeed: 1200, useAccent: true };
-    if (streak >= 7) return { height: 2.4, maxOpacity: 0.65, shimmerSpeed: 1500, useAccent: true };
-    if (streak >= 5) return { height: 2.1, maxOpacity: 0.55, shimmerSpeed: 2000, useAccent: false };
-    if (streak >= 3) return { height: 1.8, maxOpacity: 0.45, shimmerSpeed: 0, useAccent: false };
-    return { height: 1.5, maxOpacity: 0.35, shimmerSpeed: 0, useAccent: false };
-  };
 
   const strengthConfig = getStrengthConfig(currentStreak);
   const connectorColor = strengthConfig.useAccent ? accentColor : baseColor;
@@ -64,7 +96,7 @@ const DayConnector: React.FC<DayConnectorProps> = ({
     return () => {
       opacityAnimation.stop();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- opacity is a stable ref from useRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- opacity is a stable ref from useRef
   }, [visible]);
 
   useEffect(() => {
@@ -89,7 +121,7 @@ const DayConnector: React.FC<DayConnectorProps> = ({
     } else {
       shimmerPosition.setValue(0);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- shimmerPosition is a stable ref from useRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- shimmerPosition is a stable ref from useRef
   }, [visible, strengthConfig.shimmerSpeed]);
 
   return (
@@ -99,12 +131,12 @@ const DayConnector: React.FC<DayConnectorProps> = ({
           backgroundColor: connectorColor,
           borderRadius: strengthConfig.height / 2,
           height: strengthConfig.height,
+          minWidth: 14,
           opacity: opacity.interpolate({
             inputRange: [0, 1],
             outputRange: [0, strengthConfig.maxOpacity],
           }),
           overflow: 'hidden',
-          width: 14,
         },
         strengthConfig.useAccent &&
           currentStreak >= 30 && {
@@ -184,36 +216,34 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   useEffect(() => {
     let animation: Animated.CompositeAnimation | null = null;
 
-    if (completed) {
-      animation = Animated.parallel([
-        Animated.spring(buttonScale, {
-          friction: 6,
-          tension: 300,
-          toValue: 1,
+    animation = completed
+      ? Animated.parallel([
+          Animated.spring(buttonScale, {
+            friction: 6,
+            tension: 300,
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+          Animated.timing(completion, {
+            duration: 220,
+            easing: Easing.out(Easing.cubic),
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+        ])
+      : Animated.timing(completion, {
+          duration: 150,
+          easing: Easing.in(Easing.ease),
+          toValue: 0,
           useNativeDriver: true,
-        }),
-        Animated.timing(completion, {
-          duration: 220,
-          easing: Easing.out(Easing.cubic),
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ]);
-    } else {
-      animation = Animated.timing(completion, {
-        duration: 150,
-        easing: Easing.in(Easing.ease),
-        toValue: 0,
-        useNativeDriver: true,
-      });
-    }
+        });
 
     animation.start();
 
     return () => {
       animation?.stop();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- completion & buttonScale are stable refs from useRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- completion & buttonScale are stable refs from useRef
   }, [completed]);
 
   useEffect(() => {
@@ -242,10 +272,14 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     } else {
       breathingPulse.setValue(1);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- breathingPulse is a stable ref from useRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- breathingPulse is a stable ref from useRef
   }, [completed, isToday]);
 
-  const backgroundColor = completed ? accentColor : highContrastMode ? '#000000' : '#f5f5f5';
+  const backgroundColor = completed
+    ? accentColor
+    : highContrastMode
+      ? '#000000'
+      : '#f5f5f5';
   const borderColor = highContrastMode ? '#facc15' : '#78716c';
 
   const handlePressIn = () => {
@@ -310,16 +344,20 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       <AnimatedPressable
         accessibilityHint={accessibilityHint}
         accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
+        accessibilityRole='button'
         accessibilityState={{ disabled }}
-        className={clsx('h-9 w-9 items-center justify-center', !completed && 'border-2')}
+        className={clsx(
+          'h-9 w-9 items-center justify-center',
+          !completed && 'border-2'
+        )}
         disabled={disabled}
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
         style={{
           backgroundColor,
-          borderColor: completed ? accentColor : isToday ? goldenGlowColor : borderColor,
+          borderColor: completed
+            ? accentColor
+            : isToday
+              ? goldenGlowColor
+              : borderColor,
           borderRadius,
           borderWidth: completed ? 0 : 2,
           opacity: disabled ? 0.5 : 1,
@@ -333,6 +371,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
               shadowRadius: 5,
             }),
         }}
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
         <Animated.View
           style={{
@@ -348,9 +389,9 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           }}
         >
           {completionIcon === 'checkbox' ? (
-            <Check color="#ffffff" size={20} strokeWidth={2.25} />
+            <Check color='#ffffff' size={20} strokeWidth={2.25} />
           ) : (
-            <ChainLinkIcon color="#ffffff" size={20} variant="stroke" />
+            <ChainLinkIcon color='#ffffff' size={20} variant='stroke' />
           )}
         </Animated.View>
       </AnimatedPressable>
@@ -425,7 +466,12 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   const handleToggleDay = useCallback(
-    (dateString: string, completed: boolean, disabled: boolean, index: number) => {
+    (
+      dateString: string,
+      completed: boolean,
+      disabled: boolean,
+      index: number
+    ) => {
       if (disabled) {
         triggerSelection();
         return;
@@ -455,11 +501,18 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         onWeekComplete?.({ completedDate: dateString });
       }
     },
-    [celebrationsEnabled, habitId, onToggle, onWeekComplete, triggerSelection, triggerSuccess]
+    [
+      celebrationsEnabled,
+      habitId,
+      onToggle,
+      onWeekComplete,
+      triggerSelection,
+      triggerSuccess,
+    ]
   );
 
   return (
-    <View className="relative flex-row items-center justify-between">
+    <View className='flex-row items-center justify-between'>
       {/* Visual link to previous week if streak continues */}
       {showConnectors && isConnectedToPreviousWeek && isCompleted(0) && (
         <View
@@ -472,10 +525,10 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           }}
         >
           <DayConnector
+            visible
             accentColor={accentColor}
             baseColor={connectorColor}
             currentStreak={currentStreak}
-            visible={true}
           />
         </View>
       )}
@@ -487,11 +540,19 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         const statusLabel = completed ? 'Completed' : 'Not completed';
         const toggleInstruction = `Tap to toggle completion for ${dateLabel}`;
         const accessibilityLabel =
-          dateLabel === todayLabel ? `Today, ${statusLabel}` : `${dateLabel}: ${statusLabel}`;
-        const accessibilityHint = disabled ? 'Future dates are unavailable' : toggleInstruction;
+          dateLabel === todayLabel
+            ? `Today, ${statusLabel}`
+            : `${dateLabel}: ${statusLabel}`;
+        const accessibilityHint = disabled
+          ? 'Future dates are unavailable'
+          : toggleInstruction;
+
+        const isLastItem = index === weekDateStrings.length - 1;
+        const showConnector =
+          showConnectors && !isLastItem && completed && isCompleted(index + 1);
 
         return (
-          <View key={dateString} className="flex-1 items-center">
+          <View key={dateString} className='relative flex-1 items-center'>
             <HabitDayToggle
               accentColor={accentColor}
               accessibilityHint={accessibilityHint}
@@ -502,15 +563,49 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               disabled={disabled}
               highContrastMode={highContrastMode}
               isToday={isToday(index)}
-              onPress={() => handleToggleDay(dateString, completed, disabled, index)}
               shape={shape}
+              onPress={() =>
+                handleToggleDay(dateString, completed, disabled, index)
+              }
             />
             <SparkleBurst
               color={accentColor}
               isActive={activeBurst === dateString && celebrationsEnabled}
-              onComplete={() => setActiveBurst(null)}
               reduceMotion={shouldReduceMotion}
+              onComplete={() => setActiveBurst(null)}
             />
+            {/* Connector to next day - positioned to span from this circle to next */}
+            {showConnector && (
+              <View
+                pointerEvents='none'
+                style={{
+                  // Extend 18px into next flex-1 container
+                  height: 3,
+
+                  // Start at center + half circle width (right edge of circle)
+                  // left: 50% + 18px, right: -18px (into next container to its circle's left edge)
+                  left: '50%',
+
+                  marginLeft: 18,
+
+                  position: 'absolute',
+
+                  // Half of 36px circle
+                  right: -18,
+
+                  top: 16,
+                  zIndex: 1,
+                }}
+              >
+                <DayConnector
+                  visible
+                  accentColor={accentColor}
+                  baseColor={connectorColor}
+                  currentStreak={currentStreak}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            )}
           </View>
         );
       })}

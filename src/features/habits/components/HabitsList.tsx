@@ -482,10 +482,13 @@ export function HabitsList({
   const [isInSuccessCelebration, setIsInSuccessCelebration] = useState(false);
 
   // Staggered entrance animation for header elements
+  // Start visible (1, 0) - will be reset to hidden before animating when coming from success state
   const headerOpacity = useRef(new Animated.Value(1)).current;
   const headerTranslateY = useRef(new Animated.Value(0)).current;
   const calendarOpacity = useRef(new Animated.Value(1)).current;
   const calendarTranslateY = useRef(new Animated.Value(0)).current;
+  const habitRowOpacity = useRef(new Animated.Value(1)).current;
+  const habitRowTranslateY = useRef(new Animated.Value(0)).current;
 
   const handleQuickCreateHabit = useCallback(
     async (habitName: string) => {
@@ -519,10 +522,52 @@ export function HabitsList({
 
   // Callback when success animation completes - transition to list
   const handleSuccessTransitionComplete = useCallback(() => {
+    console.log(
+      '[HabitsList] handleSuccessTransitionComplete called - triggering entrance animations'
+    );
     setIsInSuccessCelebration(false);
-    // Header will show naturally now that isInSuccessCelebration is false
-    // and the FlatList will render the header with the habit data
-  }, []);
+
+    // Trigger staggered entrance animations for header, calendar, and habit row
+    const animationConfig = {
+      duration: 350,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    };
+
+    // Reset to initial hidden state before animating
+    headerOpacity.setValue(0);
+    headerTranslateY.setValue(20);
+    calendarOpacity.setValue(0);
+    calendarTranslateY.setValue(20);
+    habitRowOpacity.setValue(0);
+    habitRowTranslateY.setValue(20);
+
+    // Staggered entrance: header first, then calendar, then habit row
+    Animated.stagger(100, [
+      // Header entrance
+      Animated.parallel([
+        Animated.timing(headerOpacity, { ...animationConfig, toValue: 1 }),
+        Animated.timing(headerTranslateY, { ...animationConfig, toValue: 0 }),
+      ]),
+      // Calendar entrance
+      Animated.parallel([
+        Animated.timing(calendarOpacity, { ...animationConfig, toValue: 1 }),
+        Animated.timing(calendarTranslateY, { ...animationConfig, toValue: 0 }),
+      ]),
+      // Habit row entrance
+      Animated.parallel([
+        Animated.timing(habitRowOpacity, { ...animationConfig, toValue: 1 }),
+        Animated.timing(habitRowTranslateY, { ...animationConfig, toValue: 0 }),
+      ]),
+    ]).start();
+  }, [
+    headerOpacity,
+    headerTranslateY,
+    calendarOpacity,
+    calendarTranslateY,
+    habitRowOpacity,
+    habitRowTranslateY,
+  ]);
 
   useEffect(() => {
     if (!justCreatedHabitId) {
@@ -705,7 +750,20 @@ export function HabitsList({
         }
         ListFooterComponent={renderFooter}
         ListHeaderComponent={renderHeader}
-        renderItem={renderItem}
+        renderItem={(props) => (
+          <Animated.View
+            style={
+              props.item._id === justCreatedHabitId
+                ? {
+                    opacity: habitRowOpacity,
+                    transform: [{ translateY: habitRowTranslateY }],
+                  }
+                : undefined
+            }
+          >
+            {renderItem(props)}
+          </Animated.View>
+        )}
         showsVerticalScrollIndicator={false}
         onDragBegin={handleDragBegin}
         onDragEnd={handleDragEnd}
