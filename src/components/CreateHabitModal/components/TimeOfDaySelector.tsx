@@ -69,7 +69,7 @@ const TimeOfDayButton = ({ phase, isSelected, onPress }: TimeOfDayButtonProps) =
           {
             backgroundColor: isSelected ? '#22C55E' : '#fafaf9',
             borderWidth: 1.5,
-            borderColor: isSelected ? '#16A34A' : '#e7e5e4',
+            borderColor: isSelected ? '#16A34A' : '#e7e5e4', // #e7e5e4 = stone-200
             transform: [{ scale: scaleAnim }],
           },
         ]}

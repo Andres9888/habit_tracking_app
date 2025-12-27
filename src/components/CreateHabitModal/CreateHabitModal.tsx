@@ -150,11 +150,11 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 />
                 {/* Divider */}
                 <View className='mb-4 flex-row items-center'>
-                  <View className='h-px flex-1 bg-[#e7e5e4]' />
-                  <Text className='mx-4 text-xs font-medium text-[#a8a29e]'>
+                  <View className='h-px flex-1 bg-stone-200' />
+                  <Text className='mx-4 text-xs font-medium text-stone-400'>
                     or create your own
                   </Text>
-                  <View className='h-px flex-1 bg-[#e7e5e4]' />
+                  <View className='h-px flex-1 bg-stone-200' />
                 </View>
               </Animated.View>
             )}

@@ -159,7 +159,7 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
         accessibilityRole='button'
         style={{
           alignItems: 'center',
-          borderColor: '#a8a29e',
+          borderColor: '#a8a29e', // stone-400
           borderRadius: 999,
           borderStyle: 'dashed',
           borderWidth: 2,

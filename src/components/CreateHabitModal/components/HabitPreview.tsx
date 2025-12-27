@@ -118,7 +118,7 @@ export const HabitPreview = ({
       className='mb-4 mt-3 overflow-hidden rounded-2xl bg-white p-3'
       style={{
         borderWidth: 2,
-        borderColor: isEmpty ? '#e7e5e4' : selectedColor,
+        borderColor: isEmpty ? '#e7e5e4' : selectedColor, // #e7e5e4 = stone-200
       }}
     >
       <Text className='mb-2 text-xs font-semibold text-stone-500'>✨ Live Preview</Text>
