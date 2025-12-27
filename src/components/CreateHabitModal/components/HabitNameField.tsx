@@ -67,12 +67,15 @@ const HabitNameFieldComponent = ({
     <View className='mb-6'>
       <View className='mb-1 flex-row items-center justify-between'>
         <Text
+          accessibilityRole='text'
           className='text-[13px] font-semibold uppercase text-stone-500'
           style={{ letterSpacing: 0.5 }}
         >
           {STRINGS.CREATE_HABIT.nameLabel}
         </Text>
         <Text
+          accessibilityLabel={`${charCount} of ${MAX_LENGTH} characters used${isNearLimit ? ', approaching limit' : ''}`}
+          accessibilityRole='text'
           className={`text-xs ${isNearLimit ? 'text-amber-500' : 'text-stone-400'}`}
         >
           {charCount}/{MAX_LENGTH}
@@ -94,7 +97,10 @@ const HabitNameFieldComponent = ({
         onChangeText={onChange}
         onFocus={handleFocus}
       />
-      <Text className='mt-2 text-xs text-stone-400'>
+      <Text
+        accessibilityRole='text'
+        className='mt-2 text-xs text-stone-400'
+      >
         {STRINGS.CREATE_HABIT.nameHelper}
       </Text>
     </View>

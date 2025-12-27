@@ -91,7 +91,8 @@ const QuickPickCardComponent = ({
 
   return (
     <Pressable
-      accessibilityLabel={`Quick pick: ${template.name}`}
+      accessibilityHint={`Tap to use the ${template.name} template`}
+      accessibilityLabel={`Quick pick: ${template.name}, ${phaseInfo.shortLabel}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       onPress={onPress}
@@ -181,7 +182,10 @@ const QuickPicksRowComponent = ({
     <View className='mb-4'>
       {/* Header row */}
       <View className='mb-3 flex-row items-center justify-between px-1'>
-        <Text className='text-base font-semibold text-stone-800'>
+        <Text
+          accessibilityRole='header'
+          className='text-base font-semibold text-stone-800'
+        >
           Quick picks
         </Text>
         {onBrowseAll && (
@@ -200,6 +204,8 @@ const QuickPicksRowComponent = ({
       {/* Template cards */}
       <FlatList
         horizontal
+        accessibilityLabel='Quick pick templates'
+        accessibilityRole='list'
         contentContainerStyle={{ paddingHorizontal: 1 }}
         data={QUICK_PICK_TEMPLATES}
         keyExtractor={keyExtractor}

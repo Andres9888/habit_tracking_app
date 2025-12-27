@@ -212,6 +212,7 @@ const ReminderSelectorComponent = ({
   return (
     <View className='mb-6 rounded-2xl bg-white p-4' testID='reminder-selector'>
       <Text
+        accessibilityRole='text'
         className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
         style={{ letterSpacing: 0.5 }}
       >

@@ -140,7 +140,12 @@ const StickyCreateBarComponent = ({
       />
       <View className='bg-[#faf9f7] px-4 pb-2'>
         {/* Motivation text - V9 addition */}
-        <View className='items-center mb-3'>
+        <View
+          accessible
+          accessibilityLabel={`${STRINGS.CREATE_HABIT.motivationHighlight}${STRINGS.CREATE_HABIT.motivationSuffix}`}
+          accessibilityRole='text'
+          className='items-center mb-3'
+        >
           <Text className='text-[13px] text-stone-500'>
             <Text className='text-emerald-600 font-semibold'>
               {STRINGS.CREATE_HABIT.motivationHighlight}

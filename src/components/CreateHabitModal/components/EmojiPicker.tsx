@@ -146,6 +146,7 @@ const EmojiPickerComponent = ({
     <View className='mb-6'>
       {/* Section label */}
       <Text
+        accessibilityRole='text'
         className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
         style={{ letterSpacing: 0.5 }}
       >
