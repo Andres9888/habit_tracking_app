@@ -7,7 +7,7 @@ export const STRINGS = {
     iconLabel: 'Icon',
     colorLabel: 'Color',
     customColor: 'Custom color',
-    remindersLabel: 'Reminders',
+    remindersLabel: 'Daily reminder',
     remindersHelper: "We'll only remind you at your chosen time.",
     reminderTime: 'Reminder time',
     sound: 'Sound',
@@ -18,6 +18,13 @@ export const STRINGS = {
     templateCTA: 'Browse curated habits',
     save: 'Save',
     close: 'Close',
+    // V9 additions
+    orCreateYourOwn: 'or create your own',
+    motivationHighlight: 'Start your streak today',
+    motivationSuffix: ' — consistency is key \u{1F525}',
+    reminderAnnouncementWithTime: (label: string, time: string) =>
+      `Selected ${label} reminder at ${time}`,
+    reminderAnnouncementDisabled: 'Reminders disabled',
   },
 } as const;
 

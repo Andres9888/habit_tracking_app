@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import STRINGS from '../../../constants/strings';
 
 /**
  * Reminder options for the V8 unified reminder selector
@@ -195,8 +196,11 @@ export const ReminderSelector = ({
     // Announce selection for screen readers
     const optionInfo = REMINDER_OPTIONS[option];
     const announcement = optionInfo.time
-      ? `Selected ${optionInfo.label} reminder at ${optionInfo.time}`
-      : 'Reminders disabled';
+      ? STRINGS.CREATE_HABIT.reminderAnnouncementWithTime(
+          optionInfo.label,
+          optionInfo.time
+        )
+      : STRINGS.CREATE_HABIT.reminderAnnouncementDisabled;
     AccessibilityInfo.announceForAccessibility(announcement);
   };
 
@@ -206,7 +210,7 @@ export const ReminderSelector = ({
         className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
         style={{ letterSpacing: 0.5 }}
       >
-        Daily reminder
+        {STRINGS.CREATE_HABIT.remindersLabel}
       </Text>
       <View className='flex-row gap-2'>
         {REMINDER_OPTION_ORDER.map((option) => (

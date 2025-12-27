@@ -21,6 +21,7 @@ import {
   ReminderSelector,
   type ReminderOption,
 } from './components/ReminderSelector';
+import STRINGS from '../../constants/strings';
 // V9: TemplatesLinkSection removed from modal for focused flow (component retained for potential future use)
 
 // Stagger delay between section animations (ms)
@@ -152,7 +153,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 <View className='mb-4 flex-row items-center'>
                   <View className='h-px flex-1 bg-stone-200' />
                   <Text className='mx-4 text-xs font-medium text-stone-400'>
-                    or create your own
+                    {STRINGS.CREATE_HABIT.orCreateYourOwn}
                   </Text>
                   <View className='h-px flex-1 bg-stone-200' />
                 </View>
