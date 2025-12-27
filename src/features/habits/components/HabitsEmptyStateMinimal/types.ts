@@ -42,6 +42,10 @@ export interface HabitsEmptyStateMinimalProps {
 export interface HeroIconProps {
   /** Whether to animate the breathing effect */
   animate?: boolean;
+  /** Icon container size in pixels (default: 80) */
+  size?: number;
+  /** Emoji font size in pixels (default: 36) */
+  emojiSize?: number;
 }
 
 /**

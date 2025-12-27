@@ -10,10 +10,17 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useReducedMotion,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useKeyboardVisible } from '../../../../hooks/useKeyboardVisible';
 import { AnimatedEntrance } from './AnimatedEntrance';
-import { ENTRANCE_DELAYS } from './animations';
+import { ENTRANCE_DELAYS, KEYBOARD_LAYOUT } from './animations';
 import { COLORS, COPY } from './constants';
 import { CtaButton } from './CtaButton';
 import { ErrorMessage } from './ErrorMessage';
@@ -44,6 +51,56 @@ export function HabitsEmptyStateMinimal({
 }: HabitsEmptyStateMinimalProps) {
   const inputRef = useRef<TextInput>(null);
   const { triggerSuccess } = useHapticFeedback();
+  const { isKeyboardVisible } = useKeyboardVisible();
+  const shouldReduceMotion = useReducedMotion();
+
+  // Timing config for keyboard-aware transitions
+  const timingConfig = {
+    duration: shouldReduceMotion ? 0 : KEYBOARD_LAYOUT.transitionDuration,
+    easing: Easing.out(Easing.ease),
+  };
+
+  // Animated styles for keyboard-aware compact mode
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    justifyContent: isKeyboardVisible ? 'flex-start' : 'center',
+    paddingTop: withTiming(
+      isKeyboardVisible ? KEYBOARD_LAYOUT.topPadding : 0,
+      timingConfig
+    ),
+  }));
+
+  const heroAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: withTiming(
+          isKeyboardVisible ? KEYBOARD_LAYOUT.compactHeroSize / 80 : 1,
+          timingConfig
+        ),
+      },
+    ],
+  }));
+
+  const headlineAnimatedStyle = useAnimatedStyle(() => ({
+    fontSize: withTiming(
+      isKeyboardVisible ? KEYBOARD_LAYOUT.compactHeadlineFontSize : 24,
+      timingConfig
+    ),
+    marginBottom: withTiming(isKeyboardVisible ? 16 : 32, timingConfig),
+    marginTop: withTiming(isKeyboardVisible ? 16 : 32, timingConfig),
+  }));
+
+  const chipsAnimatedStyle = useAnimatedStyle(() => ({
+    marginBottom: withTiming(isKeyboardVisible ? 0 : 32, timingConfig),
+    maxHeight: withTiming(isKeyboardVisible ? 0 : 200, timingConfig),
+    opacity: withTiming(isKeyboardVisible ? 0 : 1, timingConfig),
+    overflow: 'hidden' as const,
+  }));
+
+  const secondaryLinksAnimatedStyle = useAnimatedStyle(() => ({
+    maxHeight: withTiming(isKeyboardVisible ? 0 : 100, timingConfig),
+    opacity: withTiming(isKeyboardVisible ? 0 : 1, timingConfig),
+    overflow: 'hidden' as const,
+  }));
 
   // Component state
   const [inputValue, setInputValue] = useState('');
@@ -173,34 +230,38 @@ export function HabitsEmptyStateMinimal({
   const isCtaDisabled = !inputValue.trim();
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center',
-        paddingHorizontal: 24,
-      }}
+    <Animated.View
+      style={[
+        {
+          alignItems: 'center',
+          flex: 1,
+          paddingHorizontal: 24,
+        },
+        containerAnimatedStyle,
+      ]}
     >
-      {/* Hero Icon */}
-      <AnimatedEntrance delay={ENTRANCE_DELAYS.heroIcon}>
-        <HeroIcon animate={!isLoading} />
-      </AnimatedEntrance>
+      {/* Hero Icon - animates to compact size when keyboard visible */}
+      <Animated.View style={heroAnimatedStyle}>
+        <AnimatedEntrance delay={ENTRANCE_DELAYS.heroIcon}>
+          <HeroIcon animate={!isLoading} />
+        </AnimatedEntrance>
+      </Animated.View>
 
-      {/* Question Headline */}
+      {/* Question Headline - animates to smaller font when keyboard visible */}
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
-        <Text
-          style={{
-            color: COLORS.stone800,
-            fontSize: 24,
-            fontWeight: '700',
-            lineHeight: 32,
-            marginBottom: 32,
-            marginTop: 32,
-            textAlign: 'center',
-          }}
+        <Animated.Text
+          style={[
+            {
+              color: COLORS.stone800,
+              fontWeight: '700',
+              lineHeight: 32,
+              textAlign: 'center',
+            },
+            headlineAnimatedStyle,
+          ]}
         >
           {COPY.headline}
-        </Text>
+        </Animated.Text>
       </AnimatedEntrance>
 
       {/* Text Input - full width */}
@@ -216,14 +277,20 @@ export function HabitsEmptyStateMinimal({
         </AnimatedEntrance>
       </View>
 
-      {/* Suggestion Chips - full width for proper wrapping */}
+      {/* Suggestion Chips - fades out when keyboard visible */}
       {/* Note: Each chip has its own staggered entrance animation, no wrapper needed */}
-      <View style={{ marginBottom: 32, width: '100%' }}>
+      <Animated.View
+        accessibilityElementsHidden={isKeyboardVisible}
+        importantForAccessibility={
+          isKeyboardVisible ? 'no-hide-descendants' : 'auto'
+        }
+        style={[{ width: '100%' }, chipsAnimatedStyle]}
+      >
         <SuggestionChips
           selectedIndex={selectedChipIndex}
           onSelect={handleChipSelect}
         />
-      </View>
+      </Animated.View>
 
       {/* Primary CTA Button - full width */}
       <View style={{ width: '100%' }}>
@@ -241,13 +308,21 @@ export function HabitsEmptyStateMinimal({
         <ErrorMessage message={errorMessage} onDismiss={handleDismissError} />
       )}
 
-      {/* Secondary Links */}
-      <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
-        <SecondaryLinks
-          onBrowseTemplates={openTemplatesScreen}
-          onCreateCustom={openCreateHabitScreen}
-        />
-      </AnimatedEntrance>
-    </View>
+      {/* Secondary Links - fades out when keyboard visible */}
+      <Animated.View
+        accessibilityElementsHidden={isKeyboardVisible}
+        importantForAccessibility={
+          isKeyboardVisible ? 'no-hide-descendants' : 'auto'
+        }
+        style={secondaryLinksAnimatedStyle}
+      >
+        <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
+          <SecondaryLinks
+            onBrowseTemplates={openTemplatesScreen}
+            onCreateCustom={openCreateHabitScreen}
+          />
+        </AnimatedEntrance>
+      </Animated.View>
+    </Animated.View>
   );
 }
