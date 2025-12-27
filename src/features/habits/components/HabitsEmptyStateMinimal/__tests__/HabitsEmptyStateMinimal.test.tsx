@@ -19,12 +19,17 @@ import { COPY, SUGGESTION_CHIPS } from '../constants';
 import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';
 
 // Mock dependencies
+const mockTriggerLightImpact = jest.fn();
+const mockTriggerSuccess = jest.fn();
+const mockTriggerSelection = jest.fn();
+const mockTriggerMediumImpact = jest.fn();
+
 jest.mock('../../../../../hooks/useHapticFeedback', () => ({
   useHapticFeedback: () => ({
-    triggerSuccess: jest.fn(),
-    triggerSelection: jest.fn(),
-    triggerLightImpact: jest.fn(),
-    triggerMediumImpact: jest.fn(),
+    triggerSuccess: mockTriggerSuccess,
+    triggerSelection: mockTriggerSelection,
+    triggerLightImpact: mockTriggerLightImpact,
+    triggerMediumImpact: mockTriggerMediumImpact,
   }),
 }));
 
@@ -367,6 +372,35 @@ describe('HabitsEmptyStateMinimal', () => {
 
       // Input should have the new typed value
       expect(getByDisplayValue('New habit')).toBeDefined();
+    });
+
+    it('should trigger light haptic feedback when input is focused', () => {
+      const { getByPlaceholderText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
+
+      // Focus the input
+      const input = getByPlaceholderText(COPY.inputPlaceholder);
+      fireEvent(input, 'focus');
+
+      // Should trigger light haptic
+      expect(mockTriggerLightImpact).toHaveBeenCalled();
+    });
+
+    it('should not trigger haptic when input is blurred', () => {
+      const { getByPlaceholderText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
+
+      // Clear mock from any previous calls
+      mockTriggerLightImpact.mockClear();
+
+      // Blur the input (without focusing first)
+      const input = getByPlaceholderText(COPY.inputPlaceholder);
+      fireEvent(input, 'blur');
+
+      // Should NOT trigger haptic on blur
+      expect(mockTriggerLightImpact).not.toHaveBeenCalled();
     });
   });
 
