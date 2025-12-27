@@ -295,7 +295,16 @@ Per app design system analysis:
 - [ ] Test on iOS simulator
 - [ ] Test on Android emulator
 - [ ] Verify keyboard behavior (input focus, dismiss)
-- [ ] Delete or deprecate original `HabitsEmptyState.tsx` when ready
+
+**Phase 5.3 Notes (Manual Testing Required):** These three tasks require manual human testing - they cannot be performed by an AI agent. A developer should:
+1. Run `npm run expo:ios` to launch the iOS simulator
+2. Run `npm run expo:android` to launch the Android emulator
+3. Navigate to the empty habits state (new user or delete all habits)
+4. Test: chip selection, input focus with blue border, keyboard dismiss on scroll/tap outside, CTA button enabled/disabled states, success state with confetti
+
+- [x] Delete or deprecate original `HabitsEmptyState.tsx` when ready
+
+**Phase 5.4 Notes (Delete Old Component):** Deleted `HabitsEmptyState.tsx` (880 lines) and removed the unused import from `HabitsList.tsx:8`. Per spec's Migration Strategy "Option A: Replace", the minimal design is now the sole implementation. Old code preserved in git history (commit 89af0f8 and earlier) for rollback reference if needed.
 
 ---
 
