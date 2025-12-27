@@ -25,12 +25,23 @@ import { BREATHING_ANIMATION, HERO_GLOW } from './animations';
 import { BORDER_RADIUS, COLORS } from './constants';
 import type { HeroIconProps } from './types';
 
+/** Default icon container size */
+const DEFAULT_SIZE = 80;
+/** Default emoji font size */
+const DEFAULT_EMOJI_SIZE = 36;
+
 /**
  * Hero icon with breathing animation
  *
  * @param animate - Whether to animate the breathing effect (default: true)
+ * @param size - Icon container size in pixels (default: 80)
+ * @param emojiSize - Emoji font size in pixels (default: 36)
  */
-export function HeroIcon({ animate = true }: HeroIconProps) {
+export function HeroIcon({
+  animate = true,
+  size = DEFAULT_SIZE,
+  emojiSize = DEFAULT_EMOJI_SIZE,
+}: HeroIconProps) {
   const shouldReduceMotion = useReducedMotion();
   const scale = useSharedValue(BREATHING_ANIMATION.minScale);
 
@@ -77,6 +88,9 @@ export function HeroIcon({ animate = true }: HeroIconProps) {
     };
   });
 
+  // Calculate dynamic border radius based on size ratio
+  const dynamicBorderRadius = (size / DEFAULT_SIZE) * BORDER_RADIUS.heroIcon;
+
   return (
     <Animated.View
       style={[
@@ -84,16 +98,16 @@ export function HeroIcon({ animate = true }: HeroIconProps) {
         {
           alignItems: 'center',
           backgroundColor: COLORS.emerald100,
-          borderRadius: BORDER_RADIUS.heroIcon,
+          borderRadius: dynamicBorderRadius,
           elevation: 4,
-          height: 80,
+          height: size,
           justifyContent: 'center',
 
           // Emerald tinted shadow (opacity/radius animated via breathingStyle)
           shadowColor: COLORS.emerald500,
 
           shadowOffset: { height: 8, width: 0 },
-          width: 80,
+          width: size,
         },
       ]}
     >
@@ -101,7 +115,7 @@ export function HeroIcon({ animate = true }: HeroIconProps) {
       <View
         style={{
           backgroundColor: COLORS.green50,
-          borderRadius: BORDER_RADIUS.heroIcon,
+          borderRadius: dynamicBorderRadius,
           bottom: 0,
           left: 0,
           opacity: 0.5,
@@ -110,7 +124,7 @@ export function HeroIcon({ animate = true }: HeroIconProps) {
           top: 0,
         }}
       />
-      <Text style={{ fontSize: 36 }}>🌱</Text>
+      <Text style={{ fontSize: emojiSize }}>🌱</Text>
     </Animated.View>
   );
 }

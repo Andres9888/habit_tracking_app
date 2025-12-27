@@ -42,6 +42,10 @@ export interface HabitsEmptyStateMinimalProps {
 export interface HeroIconProps {
   /** Whether to animate the breathing effect */
   animate?: boolean;
+  /** Icon container size in pixels (default: 80) */
+  size?: number;
+  /** Emoji font size in pixels (default: 36) */
+  emojiSize?: number;
 }
 
 /**
@@ -124,4 +128,16 @@ export interface EmptyStateState {
   isCreating: boolean;
   /** Habit name shown in success state (null if not showing success) */
   successHabitName: string | null;
+}
+
+/**
+ * ErrorMessage component props
+ */
+export interface ErrorMessageProps {
+  /** Error message to display */
+  message: string;
+  /** Callback when dismiss button is pressed */
+  onDismiss: () => void;
+  /** Optional auto-dismiss after delay (uses ERROR_ANIMATION.autoDismissDelay if not specified) */
+  autoDismiss?: boolean;
 }

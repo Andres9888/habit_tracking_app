@@ -48,6 +48,9 @@ export const COPY = {
  * Design system color tokens aligned with app patterns
  */
 export const COLORS = {
+  // Character counter warning/error colors
+  amber500: '#F59E0B',
+
   // Input focus color (per app pattern)
   blue500: '#3B82F6',
 
@@ -63,6 +66,9 @@ export const COLORS = {
   emeraldCaret: '#10B981',
 
   green50: '#F0FDF4',
+
+  // Character counter error color
+  red500: '#EF4444',
 
   stone200: '#E7E5E4',
 
@@ -101,4 +107,14 @@ export const BORDER_RADIUS = {
   heroIcon: 24,
   // Pill/full rounded
   input: 16,
+} as const;
+
+/**
+ * Character limit configuration for habit name input
+ * Shows visual warning at warningThreshold, error color at errorThreshold
+ */
+export const CHARACTER_LIMIT = {
+  errorThreshold: 45,
+  max: 50,
+  warningThreshold: 35,
 } as const;
