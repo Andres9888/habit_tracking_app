@@ -44,8 +44,9 @@ export const TemplateList = ({
         keyExtractor={(item) => item._id}
         ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
         nestedScrollEnabled
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <TemplateListItem
+            index={index}
             template={item}
             onSelect={onSelectTemplate}
             onViewScience={onViewScience}
