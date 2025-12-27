@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
 import { HABIT_COLORS } from './constants';
@@ -13,18 +12,15 @@ import { HabitPreview } from './components/HabitPreview';
 import { HabitNameField } from './components/HabitNameField';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
-import { ReminderSection } from './components/ReminderSection';
-import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
 import {
   QuickPicksRow,
   type QuickPickTemplate,
 } from './components/QuickPicksRow';
 import {
-  TimeOfDaySelector,
-  getReminderTimeForPhase,
-} from './components/TimeOfDaySelector';
-import type { HubermanPhase } from '../../constants/hubermanPhases';
+  ReminderSelector,
+  type ReminderOption,
+} from './components/ReminderSelector';
 
 // Stagger delay between section animations (ms)
 const ANIMATION_STAGGER_DELAY = 50;
@@ -34,11 +30,22 @@ const ANIMATION_DURATION = 300;
 // Height offset to scroll past quick picks section to show form
 const QUICK_PICKS_SECTION_HEIGHT = 180;
 
+/**
+ * Map HubermanPhase to ReminderOption for quick pick templates
+ */
+const phaseToReminderOption = (phase: string): ReminderOption => {
+  const mapping: Record<string, ReminderOption> = {
+    phase1_push: 'morning',
+    phase2_pivot: 'midday',
+    phase3_pull: 'evening',
+  };
+  return mapping[phase] || 'morning';
+};
+
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } =
     useCreateHabitModal(props);
-  const { triggerSelection } = useHapticFeedback();
   const [selectedQuickPickId, setSelectedQuickPickId] = useState<string | null>(
     null
   );
@@ -50,12 +57,10 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       form.setHabitName(quickPick.name);
       form.setSelectedEmoji(quickPick.emoji);
       form.setSelectedColor(quickPick.color);
-      form.setDayPhase(quickPick.timeOfDay);
 
-      // Auto-enable reminders with appropriate time for the selected template
-      const reminderTime = getReminderTimeForPhase(quickPick.timeOfDay);
-      form.setReminderTime(reminderTime);
-      form.setRemindersEnabled(true);
+      // Convert quick pick's timeOfDay to reminder option and set it
+      const reminderOption = phaseToReminderOption(quickPick.timeOfDay);
+      form.setReminderOption(reminderOption);
 
       // Scroll to form section after selection with a small delay for smoother UX
       setTimeout(() => {
@@ -93,15 +98,10 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
     [form]
   );
 
-  const handleTimeOfDaySelect = useCallback(
-    (phase: HubermanPhase) => {
+  const handleReminderSelect = useCallback(
+    (option: ReminderOption) => {
       setSelectedQuickPickId(null);
-      form.setDayPhase(phase);
-      // Auto-set reminder time based on selected phase
-      const reminderTime = getReminderTimeForPhase(phase);
-      form.setReminderTime(reminderTime);
-      // Auto-enable reminders when time of day is selected
-      form.setRemindersEnabled(true);
+      form.setReminderOption(option);
     },
     [form]
   );
@@ -208,21 +208,9 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 ANIMATION_STAGGER_DELAY * 5
               )}
             >
-              <TimeOfDaySelector
-                selectedPhase={form.dayPhase}
-                onSelectPhase={handleTimeOfDaySelect}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY * 6
-              )}
-            >
-              <ReminderSection
-                remindersEnabled={form.remindersEnabled}
-                reminderTime={form.reminderTime}
-                onTimePress={() => form.setShowTimePicker(true)}
-                onToggle={form.setRemindersEnabled}
+              <ReminderSelector
+                selectedOption={form.reminderOption}
+                onSelectOption={handleReminderSelect}
               />
             </Animated.View>
           </ScrollView>
@@ -236,21 +224,6 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             selectedColor={form.selectedColor}
             onPress={handleCreate}
           />
-          {form.showTimePicker && (
-            <DateTimePicker
-              display='spinner'
-              is24Hour={false}
-              mode='time'
-              value={form.reminderTime}
-              onChange={(_event, selected) => {
-                form.setShowTimePicker(false);
-                if (selected) {
-                  triggerSelection();
-                  form.setReminderTime(selected);
-                }
-              }}
-            />
-          )}
         </View>
       </View>
       <ColorPickerSheet

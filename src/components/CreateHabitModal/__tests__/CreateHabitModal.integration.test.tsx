@@ -1,11 +1,11 @@
 /**
- * CreateHabitModal Integration Tests - V5 Redesign
+ * CreateHabitModal Integration Tests - V5/V8 Redesign
  * Task 5.3: Integration test for template → form flow
  *
  * Tests:
  * - Template selection populates all form fields
  * - Form modifications clear template selection
- * - TimeOfDay selection auto-sets reminder time
+ * - Reminder selection (V8 unified selector) auto-sets reminder time
  * - Quick picks → form data flow
  */
 
@@ -186,17 +186,19 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       });
     });
 
-    it('should set time of day when quick pick is selected', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+    it('should set reminder option when quick pick is selected', async () => {
+      const { getByLabelText, getByTestId } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
 
-      // Select the Read quick pick (which uses phase3_pull)
+      // Select the Read quick pick (which maps to evening reminder)
       const readCard = getByLabelText('Quick pick: Read');
       fireEvent.press(readCard);
 
-      // Verify Pull time of day is selected
+      // V8: Verify Evening reminder option is selected (maps from phase3_pull)
       await waitFor(() => {
-        const pullButton = getByLabelText('Pull - 16+h after waking');
-        expect(pullButton.props.accessibilityState?.selected).toBe(true);
+        const eveningOption = getByTestId('reminder-option-evening');
+        expect(eveningOption.props.accessibilityState?.selected).toBe(true);
       });
     });
 
@@ -218,7 +220,9 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
     });
 
     it('should auto-enable reminders when quick pick is selected', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+      const { getByLabelText, getByTestId } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
 
       // Select a quick pick
       const hydrateCard = getByLabelText('Quick pick: Hydrate');
@@ -230,9 +234,9 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         expect(hydrateCard.props.accessibilityState?.selected).toBe(true);
       });
 
-      // Also verify Push phase is selected (Hydrate uses phase1_push)
-      const pushButton = getByLabelText('Push - 0-8h after waking');
-      expect(pushButton.props.accessibilityState?.selected).toBe(true);
+      // V8: Verify Morning reminder option is selected (Hydrate maps to morning)
+      const morningOption = getByTestId('reminder-option-morning');
+      expect(morningOption.props.accessibilityState?.selected).toBe(true);
     });
   });
 
@@ -261,10 +265,12 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       });
     });
 
-    it('should clear quick pick selection when time of day is manually changed', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+    it('should clear quick pick selection when reminder option is manually changed', async () => {
+      const { getByLabelText, getByTestId } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
 
-      // First select Read (which uses Pull phase)
+      // First select Read (which uses evening reminder)
       const readCard = getByLabelText('Quick pick: Read');
       fireEvent.press(readCard);
 
@@ -272,9 +278,9 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         expect(readCard.props.accessibilityState?.selected).toBe(true);
       });
 
-      // Now manually change time of day to Push
-      const pushButton = getByLabelText('Push - 0-8h after waking');
-      fireEvent.press(pushButton);
+      // V8: Now manually change reminder to Morning
+      const morningOption = getByTestId('reminder-option-morning');
+      fireEvent.press(morningOption);
 
       // Quick pick should no longer be selected
       await waitFor(() => {
@@ -284,40 +290,62 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
     });
   });
 
-  describe('Time of Day → Reminder Time Flow', () => {
-    it('should select Push phase when pressed', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+  describe('V8 Unified Reminder Selection', () => {
+    it('should select Morning reminder when pressed', async () => {
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
-      const pushButton = getByLabelText('Push - 0-8h after waking');
-      fireEvent.press(pushButton);
+      const morningOption = getByTestId('reminder-option-morning');
+      fireEvent.press(morningOption);
 
-      // Push should be selected
+      // Morning should be selected
       await waitFor(() => {
-        expect(pushButton.props.accessibilityState?.selected).toBe(true);
+        expect(morningOption.props.accessibilityState?.selected).toBe(true);
       });
     });
 
-    it('should select Pivot phase when pressed', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+    it('should select Midday reminder when pressed', async () => {
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
-      const pivotButton = getByLabelText('Pivot - 9-15h after waking');
-      fireEvent.press(pivotButton);
+      const middayOption = getByTestId('reminder-option-midday');
+      fireEvent.press(middayOption);
 
-      // Pivot should be selected
+      // Midday should be selected
       await waitFor(() => {
-        expect(pivotButton.props.accessibilityState?.selected).toBe(true);
+        expect(middayOption.props.accessibilityState?.selected).toBe(true);
       });
     });
 
-    it('should select Pull phase when pressed', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+    it('should select Evening reminder when pressed', async () => {
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
-      const pullButton = getByLabelText('Pull - 16+h after waking');
-      fireEvent.press(pullButton);
+      const eveningOption = getByTestId('reminder-option-evening');
+      fireEvent.press(eveningOption);
 
-      // Pull should be selected
+      // Evening should be selected
       await waitFor(() => {
-        expect(pullButton.props.accessibilityState?.selected).toBe(true);
+        expect(eveningOption.props.accessibilityState?.selected).toBe(true);
+      });
+    });
+
+    it('should disable reminders when None is selected', async () => {
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
+
+      // First select Morning to enable reminders
+      const morningOption = getByTestId('reminder-option-morning');
+      fireEvent.press(morningOption);
+
+      await waitFor(() => {
+        expect(morningOption.props.accessibilityState?.selected).toBe(true);
+      });
+
+      // Now select None
+      const noneOption = getByTestId('reminder-option-none');
+      fireEvent.press(noneOption);
+
+      // None should be selected
+      await waitFor(() => {
+        expect(noneOption.props.accessibilityState?.selected).toBe(true);
+        expect(morningOption.props.accessibilityState?.selected).toBe(false);
       });
     });
   });
@@ -432,14 +460,15 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       );
     });
 
-    it('should announce when time of day is selected', async () => {
-      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
+    it('should announce when reminder option is selected', async () => {
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
-      const pushButton = getByLabelText('Push - 0-8h after waking');
-      fireEvent.press(pushButton);
+      // V8: Uses unified ReminderSelector instead of TimeOfDaySelector
+      const morningOption = getByTestId('reminder-option-morning');
+      fireEvent.press(morningOption);
 
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
-        expect.stringContaining('Push')
+        expect.stringContaining('Morning')
       );
     });
   });
@@ -455,8 +484,8 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       expect(getByText('or create your own')).toBeDefined();
       expect(getByText('Icon')).toBeDefined();
       expect(getByText('Color')).toBeDefined();
-      expect(getByText('When')).toBeDefined();
-      expect(getByText('Remind me')).toBeDefined();
+      // V8: "Reminder" replaced separate "When" and "Remind me" sections
+      expect(getByText('Reminder')).toBeDefined();
       expect(getByText('Create Habit')).toBeDefined();
     });
 
