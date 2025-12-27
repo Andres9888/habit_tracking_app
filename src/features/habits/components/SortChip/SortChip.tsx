@@ -1,12 +1,12 @@
-import { ArrowUpDown, ChevronDown } from 'lucide-react-native';
+import { ChevronRight, LayoutList } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
+  FadeInDown,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { HabitSortMode } from '../../types';
 
@@ -44,7 +44,7 @@ interface SortChipProps {
    */
   sortMode: HabitSortMode;
   /**
-   * Number of habits to display next to the chip
+   * Number of habits to display
    */
   habitCount: number;
   /**
@@ -60,16 +60,14 @@ interface SortChipProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
- * SortChip - A compact dark pill button that shows the current sort mode
- * and opens the sort bottom sheet when pressed.
+ * SortChip - Card header style row that shows "My Habits" label with sort control.
  *
- * Design specs:
- * - Dark pill button (bg-stone-800, white text)
- * - Contains: sort icon + current sort label + chevron
- * - Habit count displayed next to chip
- * - Height: ~32px
- * - Press animation: scale 0.95 with 50ms timing
- * - Release: spring back (damping: 15, stiffness: 300)
+ * Design specs (Option B - Card Header):
+ * - Full width tappable row with rounded corners
+ * - Left: List icon + "My Habits" label
+ * - Right: Current sort label + chevron
+ * - Subtle background (bg-stone-50)
+ * - Press animation: scale 0.98
  * - Haptic: light impact on press
  */
 export function SortChip({
@@ -90,15 +88,15 @@ export function SortChip({
   const handlePressIn = () => {
     triggerLightImpact();
     if (!reduceMotion) {
-      buttonScale.value = withTiming(0.95, { duration: 50 });
+      buttonScale.value = withTiming(0.98, { duration: 80 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
       buttonScale.value = withSpring(1, {
-        damping: 15,
-        stiffness: 300,
+        damping: 18,
+        stiffness: 200,
       });
     }
   };
@@ -110,53 +108,52 @@ export function SortChip({
 
   const sortLabel = SORT_LABEL_MAP[sortMode];
   const accessibilityLabel = `Sort habits, currently sorted by ${SORT_ACCESSIBILITY_LABEL_MAP[sortMode]}`;
-  const habitCountText = habitCount === 1 ? '1 habit' : `${habitCount} habits`;
 
   return (
-    <View className="flex-row items-center gap-2">
+    <Animated.View
+      entering={reduceMotion ? undefined : FadeInDown.delay(100).springify().damping(18)}
+    >
       <AnimatedPressable
         accessibilityHint="Opens sort options"
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
-        style={animatedStyle}
+        className="flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3 active:bg-stone-100"
+        style={[
+          animatedStyle,
+          {
+            borderWidth: 1,
+            borderColor: '#e7e5e4', // stone-200
+          },
+        ]}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <LinearGradient
-          className="flex-row items-center gap-1.5 rounded-full px-3 py-1.5"
-          colors={['#292524', '#1c1917']}
-          end={{ x: 1, y: 1 }}
-          start={{ x: 0, y: 0 }}
-          style={{
-            elevation: 2,
-            shadowColor: '#000',
-            shadowOffset: { height: 1, width: 0 },
-            shadowOpacity: 0.1,
-            shadowRadius: 3,
-          }}
-        >
-          <ArrowUpDown
-            color="#ffffff"
-            size={14}
-            strokeWidth={2.25}
+        {/* Left side: icon + label */}
+        <View className="flex-row items-center gap-2">
+          <LayoutList
+            color="#78716c"
+            size={18}
+            strokeWidth={2}
           />
-          <Text className="text-[13px] font-medium text-white">
+          <Text className="text-[14px] font-semibold text-stone-700">
+            My Habits
+          </Text>
+        </View>
+
+        {/* Right side: sort label + chevron */}
+        <View className="flex-row items-center gap-1">
+          <Text className="text-[13px] font-medium text-stone-500">
             {sortLabel}
           </Text>
-          <ChevronDown
+          <ChevronRight
             color="#a8a29e"
-            size={12}
-            strokeWidth={2.5}
+            size={16}
+            strokeWidth={2}
           />
-        </LinearGradient>
+        </View>
       </AnimatedPressable>
-
-      {/* Habit count */}
-      <Text className="text-[13px] text-stone-400">
-        {habitCountText}
-      </Text>
-    </View>
+    </Animated.View>
   );
 }
 

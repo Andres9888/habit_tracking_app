@@ -41,6 +41,9 @@ import {
 /** Animation duration for expand/collapse (ms) */
 const ANIMATION_DURATION = 300;
 
+/** Estimated calendar height - used before measurement completes to avoid double render */
+const ESTIMATED_CALENDAR_HEIGHT = 280;
+
 /**
  * Generates the last 7 days for mini preview
  */
@@ -150,8 +153,8 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
   const { triggerSelection } = useHapticFeedback();
 
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-  const [contentHeight, setContentHeight] = useState(0);
-  const [hasContentMeasured, setHasContentMeasured] = useState(false);
+  // Use estimated height initially to avoid double-rendering for measurement
+  const [contentHeight, setContentHeight] = useState(ESTIMATED_CALENDAR_HEIGHT);
   const [hasLoadedPreference, setHasLoadedPreference] = useState(false);
 
   // Animation values
@@ -159,11 +162,13 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
   const chevronRotation = useSharedValue(defaultExpanded ? 180 : 0);
 
   // Load persisted preference on mount
+  // Note: expandProgress and chevronRotation are SharedValues and should NOT be in deps
   useEffect(() => {
+    let isMounted = true;
     const loadPreference = async () => {
       try {
         const savedState = await getCalendarExpandedState(habitId);
-        if (savedState !== null) {
+        if (isMounted && savedState !== null) {
           setIsExpanded(savedState);
           expandProgress.value = savedState ? 1 : 0;
           chevronRotation.value = savedState ? 180 : 0;
@@ -172,25 +177,31 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
         // Fall back to default state on error
         console.error('Error loading calendar collapse preference:', error);
       } finally {
-        setHasLoadedPreference(true);
+        if (isMounted) {
+          setHasLoadedPreference(true);
+        }
       }
     };
     void loadPreference();
-  }, [habitId, expandProgress, chevronRotation]);
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habitId]);
 
   // Current month/year for header
   const monthYearLabel = useMemo(() => {
     return format(new Date(), 'MMMM yyyy');
   }, []);
 
-  // Handle content height measurement
+  // Handle content height measurement - update if significantly different from estimate
   const handleContentLayout = useCallback((event: any) => {
     const { height } = event.nativeEvent.layout;
-    if (height > 0) {
+    // Only update if height changed significantly (avoid unnecessary re-renders)
+    if (height > 0 && Math.abs(height - contentHeight) > 10) {
       setContentHeight(height);
-      setHasContentMeasured(true);
     }
-  }, []);
+  }, [contentHeight]);
 
   // Toggle expand/collapse
   const handleToggle = useCallback(() => {
@@ -233,7 +244,7 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
     const opacity = expandProgress.value;
 
     return {
-      height: hasContentMeasured ? height : 'auto',
+      height,
       opacity,
       overflow: 'hidden',
     };
@@ -251,9 +262,22 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
     [monthYearLabel, isExpanded]
   );
 
-  // Don't render until we've loaded preferences to avoid flash
+  // Show skeleton placeholder while loading preferences to avoid layout shift
   if (!hasLoadedPreference) {
-    return null;
+    return (
+      <View className='overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm shadow-stone-200/50'>
+        <View className='flex-row items-center justify-between p-4'>
+          <View className='flex-row items-center gap-2'>
+            <View className='h-8 w-8 items-center justify-center rounded-lg bg-stone-100' />
+            <View>
+              <View className='h-4 w-24 rounded bg-stone-100' />
+              <View className='mt-1 h-3 w-16 rounded bg-stone-100' />
+            </View>
+          </View>
+          <View className='h-5 w-5 rounded bg-stone-100' />
+        </View>
+      </View>
+    );
   }
 
   return (
@@ -310,27 +334,6 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
           />
         </View>
       </Animated.View>
-
-      {/* Hidden content for measuring height */}
-      {!hasContentMeasured && (
-        <View
-          accessibilityElementsHidden
-          className='absolute opacity-0'
-          importantForAccessibility='no-hide-descendants'
-          pointerEvents='none'
-          onLayout={handleContentLayout}
-        >
-          <View className='px-2 pb-2'>
-            <CalendarHeatmap
-              completedDates={completedDates}
-              habitColor={habitColor}
-              habitCreatedAt={habitCreatedAt}
-              habitId={habitId}
-              onDayPress={onDayPress}
-            />
-          </View>
-        </View>
-      )}
     </View>
   );
 });

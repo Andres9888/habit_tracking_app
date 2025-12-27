@@ -14,7 +14,6 @@ import { NameSuggestions } from './components/NameSuggestions';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
-import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
 import { PhaseSelector } from './components/PhaseSelector';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
@@ -65,22 +64,20 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               onSelect={form.setSelectedEmoji}
               habitName={form.habitName}
             />
-            <CollapsibleAdvancedOptions>
-              <ColorPickerSection
-                colors={COLORS}
-                selectedColor={form.selectedColor}
-                onSelectColor={form.setSelectedColor}
-                onCustomPress={form.openColorPicker}
-              />
-              <ReminderSection
-                remindersEnabled={form.remindersEnabled}
-                onToggle={form.setRemindersEnabled}
-                reminderTime={form.reminderTime}
-                onTimePress={() => form.setShowTimePicker(true)}
-                reminderSound={form.reminderSound}
-                onQuickTimeSelect={form.setReminderTime}
-              />
-            </CollapsibleAdvancedOptions>
+            <ColorPickerSection
+              colors={COLORS}
+              selectedColor={form.selectedColor}
+              onSelectColor={form.setSelectedColor}
+              onCustomPress={form.openColorPicker}
+            />
+            <ReminderSection
+              remindersEnabled={form.remindersEnabled}
+              onToggle={form.setRemindersEnabled}
+              reminderTime={form.reminderTime}
+              onTimePress={() => form.setShowTimePicker(true)}
+              reminderSound={form.reminderSound}
+              onQuickTimeSelect={form.setReminderTime}
+            />
           </ScrollView>
           <TemplateReminderPrompt
             visible={template.shouldShowTemplateReminder}

@@ -1690,7 +1690,9 @@ export default function HabitDetailScreen({
     .failOffsetY([-15, 15]) // Fail if vertical movement exceeds 15px (allow scrolling)
     .onEnd((event) => {
       'worklet';
-      const { velocityX, translationX } = event;
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityX = Math.round(event.velocityX);
+      const translationX = event.translationX;
       // Velocity-based detection: require minimum velocity for swipe
       // Also consider translation for slower but deliberate swipes
       const VELOCITY_THRESHOLD = 500; // pixels per second

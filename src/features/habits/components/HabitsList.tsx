@@ -11,7 +11,6 @@ import { useHabitRenderItem } from '../hooks/useHabitRenderItem';
 import { HabitsModalsState } from '../hooks/types';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { HabitsHeader } from './HabitsHeader';
-import { HabitsSectionHeader } from './HabitsSectionHeader';
 import { SortBottomSheet } from './SortBottomSheet';
 import {
   CalendarTimeline,
@@ -479,6 +478,14 @@ export function HabitsList({
   const createHabit = useMutation(api.habits.create);
   const [justCreatedHabitId, setJustCreatedHabitId] =
     useState<Id<'habits'> | null>(null);
+  // Track if we're in the success celebration phase (before transition)
+  const [isInSuccessCelebration, setIsInSuccessCelebration] = useState(false);
+
+  // Staggered entrance animation for header elements
+  const headerOpacity = useRef(new Animated.Value(1)).current;
+  const headerTranslateY = useRef(new Animated.Value(0)).current;
+  const calendarOpacity = useRef(new Animated.Value(1)).current;
+  const calendarTranslateY = useRef(new Animated.Value(0)).current;
 
   const handleQuickCreateHabit = useCallback(
     async (habitName: string) => {
@@ -496,6 +503,12 @@ export function HabitsList({
         })) as Id<'habits'>;
         if (newHabitId) {
           setJustCreatedHabitId(newHabitId);
+          // Mark that we're in celebration phase
+          setIsInSuccessCelebration(true);
+          // Note: We no longer hide the header here because it causes issues
+          // where the header doesn't reappear after the success animation.
+          // The header will naturally be hidden during the success state
+          // because ListEmptyComponent (SuccessState) is shown instead.
         }
       } catch (error) {
         console.error('Failed to create habit:', error);
@@ -504,11 +517,19 @@ export function HabitsList({
     [createHabit, hasReachedHabitLimit, isPremiumUser, onCreateHabitRequest]
   );
 
+  // Callback when success animation completes - transition to list
+  const handleSuccessTransitionComplete = useCallback(() => {
+    setIsInSuccessCelebration(false);
+    // Header will show naturally now that isInSuccessCelebration is false
+    // and the FlatList will render the header with the habit data
+  }, []);
+
   useEffect(() => {
     if (!justCreatedHabitId) {
       return;
     }
-    const timeout = setTimeout(() => setJustCreatedHabitId(null), 2000);
+    // Longer timeout to accommodate the shared element transition (3s total)
+    const timeout = setTimeout(() => setJustCreatedHabitId(null), 3000);
     return () => clearTimeout(timeout);
   }, [justCreatedHabitId]);
 
@@ -568,47 +589,53 @@ export function HabitsList({
       };
     }
 
-    const shouldShowTimeline = totalHabits > 0;
+    // Show timeline/header when we have habits OR when transitioning from empty state
+    const shouldShowTimeline = totalHabits > 0 || justCreatedHabitId !== null;
 
     return (
       <View className='gap-3 pb-2.5 pt-16'>
-        <HabitsHeader
-          completedToday={completedToday}
-          openCreateHabitScreen={handleAddHabitPress}
-          openSettings={openSettings}
-          openTemplatesScreen={openTemplatesScreen}
-          reduceMotion={reduceMotionPreference}
-          showCompletionSummary={showWeekCompletionBar}
-          totalHabits={totalHabits}
-        />
+        <Animated.View
+          style={{
+            opacity: headerOpacity,
+            transform: [{ translateY: headerTranslateY }],
+          }}
+        >
+          <HabitsHeader
+            completedToday={completedToday}
+            forceShow={justCreatedHabitId !== null}
+            openCreateHabitScreen={handleAddHabitPress}
+            openSettings={openSettings}
+            openSortSheet={handleOpenSortSheet}
+            openTemplatesScreen={openTemplatesScreen}
+            reduceMotion={reduceMotionPreference}
+            showCompletionSummary={showWeekCompletionBar}
+            totalHabits={totalHabits}
+          />
+        </Animated.View>
 
         {shouldShowTimeline && (
-          <CalendarTimeline
-            showSeparator
-            canNavigateForward={canNavigateForward}
-            completionByDay={completionByDay}
-            dates={weekDates}
-            reduceMotion={reduceMotionPreference}
-            onNextWeek={onNextWeek}
-            onPreviousWeek={onPreviousWeek}
-          />
-        )}
-
-        {/* Section Header with Sort Control */}
-        {totalHabits > 0 && (
-          <HabitsSectionHeader
-            habitCount={totalHabits}
-            habitSortMode={habitSortMode}
-            reduceMotion={reduceMotionPreference}
-            onPress={handleOpenSortSheet}
-          />
+          <Animated.View
+            style={{
+              opacity: calendarOpacity,
+              transform: [{ translateY: calendarTranslateY }],
+            }}
+          >
+            <CalendarTimeline
+              showSeparator
+              canNavigateForward={canNavigateForward}
+              completionByDay={completionByDay}
+              dates={weekDates}
+              reduceMotion={reduceMotionPreference}
+              onNextWeek={onNextWeek}
+              onPreviousWeek={onPreviousWeek}
+            />
+          </Animated.View>
         )}
       </View>
     );
   }, [
     handleAddHabitPress,
     handleOpenSortSheet,
-    habitSortMode,
     openSettings,
     openTemplatesScreen,
     showWeekCompletionBar,
@@ -621,6 +648,11 @@ export function HabitsList({
     getHabitStatus,
     isHabitsLoading,
     reduceMotionPreference,
+    headerOpacity,
+    headerTranslateY,
+    calendarOpacity,
+    calendarTranslateY,
+    justCreatedHabitId,
   ]);
 
   const renderFooter = useCallback(() => {
@@ -668,6 +700,7 @@ export function HabitsList({
             openCreateHabitScreen={handleAddHabitPress}
             openTemplatesScreen={openTemplatesScreen}
             onQuickCreateHabit={handleQuickCreateHabit}
+            onSuccessTransitionComplete={handleSuccessTransitionComplete}
           />
         }
         ListFooterComponent={renderFooter}

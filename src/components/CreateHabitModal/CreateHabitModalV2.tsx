@@ -13,7 +13,6 @@ import { StyleSection } from './components/StyleSection';
 import { SimpleReminderSection } from './components/SimpleReminderSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
 import { PhaseSelector } from './components/PhaseSelector';
-import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../utils/notifications';
 import { EmojiPickerSheet } from '../EmojiPickerV2';
@@ -196,13 +195,11 @@ export default function CreateHabitModalV2(props: CreateHabitModalProps) {
                 onToggle={form.setRemindersEnabled}
               />
 
-              {/* 6. Advanced Options (collapsed by default) */}
-              <CollapsibleAdvancedOptions>
-                <PhaseSelector
-                  selectedPhase={form.dayPhase}
-                  onSelect={form.setDayPhase}
-                />
-              </CollapsibleAdvancedOptions>
+              {/* 6. Phase Selector */}
+              <PhaseSelector
+                selectedPhase={form.dayPhase}
+                onSelect={form.setDayPhase}
+              />
             </ScrollView>
 
             {/* Sticky Create Bar */}

@@ -125,37 +125,62 @@ export default function DraggableHabit({
       highlightGlow.setValue(0);
       return;
     }
+
+    // Enhanced highlight animation for newly created habits
+    // Delay slightly to coordinate with the shared element transition
+    const animationDelay = 200;
+
     highlightGlow.setValue(0);
-    Animated.parallel([
-      Animated.sequence([
-        Animated.spring(cardScale, {
-          toValue: 1.035,
-          useNativeDriver: true,
-          damping: 16,
-          stiffness: 250,
-        }),
-        Animated.spring(cardScale, {
-          toValue: 1,
-          useNativeDriver: true,
-          damping: 18,
-          stiffness: 250,
-        }),
-      ]),
-      Animated.sequence([
-        Animated.timing(highlightGlow, {
-          duration: 220,
-          easing: Easing.out(Easing.ease),
-          toValue: 1,
-          useNativeDriver: false,
-        }),
-        Animated.timing(highlightGlow, {
-          duration: 320,
-          easing: Easing.in(Easing.ease),
-          toValue: 0,
-          useNativeDriver: false,
-        }),
-      ]),
-    ]).start();
+    cardScale.setValue(0.95); // Start smaller for entrance effect
+
+    const timeout = setTimeout(() => {
+      Animated.parallel([
+        // Scale entrance: 0.95 → 1.04 → 1.0 (bouncy)
+        Animated.sequence([
+          Animated.spring(cardScale, {
+            toValue: 1.04,
+            useNativeDriver: true,
+            damping: 12,
+            stiffness: 200,
+          }),
+          Animated.spring(cardScale, {
+            toValue: 1,
+            useNativeDriver: true,
+            damping: 15,
+            stiffness: 250,
+          }),
+        ]),
+        // Glow pulse: 0 → 1 → 0.6 → 1 → 0 (double pulse)
+        Animated.sequence([
+          Animated.timing(highlightGlow, {
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            toValue: 1,
+            useNativeDriver: false,
+          }),
+          Animated.timing(highlightGlow, {
+            duration: 400,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 0.5,
+            useNativeDriver: false,
+          }),
+          Animated.timing(highlightGlow, {
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            toValue: 1,
+            useNativeDriver: false,
+          }),
+          Animated.timing(highlightGlow, {
+            duration: 500,
+            easing: Easing.in(Easing.ease),
+            toValue: 0,
+            useNativeDriver: false,
+          }),
+        ]),
+      ]).start();
+    }, animationDelay);
+
+    return () => clearTimeout(timeout);
   }, [cardScale, highlightGlow, isJustCreated, reduceMotionPreference]);
 
   // Pulse animation for icon when week is complete
@@ -488,8 +513,8 @@ export default function DraggableHabit({
           }}
         />
 
-        {/* Main card content with increased padding */}
-        <View className='px-5 pb-5 pt-4'>
+        {/* Main card content - header section with px-5 */}
+        <View className='px-5 pt-4'>
           {/* Title row with icon and streak */}
           <View className='mb-3 flex-row items-center justify-between'>
             <View className='flex-1 flex-row items-center gap-3'>
@@ -591,8 +616,10 @@ export default function DraggableHabit({
               }}
             />
           )}
+        </View>
 
-          {/* Week status visualizer - full width */}
+        {/* Week status visualizer - px-3 to align with CalendarTimeline dates */}
+        <View className='px-3 pb-5'>
           <HabitChainVisualizer
             accentColor={accentColor}
             celebrationsEnabled={celebrationsEnabled}

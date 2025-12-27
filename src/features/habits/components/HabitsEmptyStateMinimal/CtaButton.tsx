@@ -69,6 +69,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
           backgroundColor: COLORS.emerald500,
           borderRadius: BORDER_RADIUS.cta,
           height: TOUCH_TARGETS.ctaHeight,
+          width: '100%',
           paddingVertical: 16,
           alignItems: 'center',
           justifyContent: 'center',

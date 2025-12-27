@@ -38,6 +38,7 @@ export function HabitsEmptyStateMinimal({
   onQuickCreateHabit,
   openTemplatesScreen,
   openCreateHabitScreen,
+  onSuccessTransitionComplete,
 }: HabitsEmptyStateMinimalProps) {
   const inputRef = useRef<TextInput>(null);
   const { triggerSuccess } = useHapticFeedback();
@@ -45,14 +46,26 @@ export function HabitsEmptyStateMinimal({
   // Component state
   const [inputValue, setInputValue] = useState('');
   const [selectedChipIndex, setSelectedChipIndex] = useState<number | null>(null);
+  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [successHabitName, setSuccessHabitName] = useState<string | null>(null);
+  const [successEmoji, setSuccessEmoji] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Handle chip selection - populates input with full habit name
+  // Tapping a selected chip deselects it and clears input
   const handleChipSelect = useCallback((index: number, chip: SuggestionChip) => {
-    setSelectedChipIndex(index);
-    setInputValue(chip.fullName);
-  }, []);
+    if (selectedChipIndex === index) {
+      // Deselect if tapping the same chip
+      setSelectedChipIndex(null);
+      setSelectedEmoji(null);
+      setInputValue('');
+    } else {
+      setSelectedChipIndex(index);
+      setSelectedEmoji(chip.emoji);
+      setInputValue(chip.fullName);
+    }
+  }, [selectedChipIndex]);
 
   // Handle text input changes - deselects chips when typing
   const handleInputChange = useCallback((text: string) => {
@@ -60,6 +73,7 @@ export function HabitsEmptyStateMinimal({
     // Deselect chips when user types manually
     if (selectedChipIndex !== null) {
       setSelectedChipIndex(null);
+      setSelectedEmoji(null);
     }
   }, [selectedChipIndex]);
 
@@ -69,22 +83,41 @@ export function HabitsEmptyStateMinimal({
 
     Keyboard.dismiss();
     setIsCreating(true);
+    setErrorMessage(null);
 
     try {
       await onQuickCreateHabit(inputValue.trim());
       triggerSuccess();
       setSuccessHabitName(inputValue.trim());
-    } catch {
-      // Error handling done by parent
+      setSuccessEmoji(selectedEmoji); // Save emoji for success state
+    } catch (error) {
       setIsCreating(false);
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to create habit. Please try again.');
     }
-  }, [inputValue, isCreating, onQuickCreateHabit, triggerSuccess]);
+  }, [inputValue, isCreating, onQuickCreateHabit, triggerSuccess, selectedEmoji]);
+
+  // Handle keyboard submit (Done button)
+  const handleSubmitEditing = useCallback(() => {
+    if (inputValue.trim() && !isCreating) {
+      handleCreateHabit();
+    }
+  }, [inputValue, isCreating, handleCreateHabit]);
+
+  // Handle clear input button
+  const handleClearInput = useCallback(() => {
+    setInputValue('');
+    setSelectedChipIndex(null);
+    setSelectedEmoji(null);
+    inputRef.current?.focus();
+  }, []);
 
   // Handle "Add another habit" from success state
   const handleAddAnother = useCallback(() => {
     setSuccessHabitName(null);
+    setSuccessEmoji(null);
     setInputValue('');
     setSelectedChipIndex(null);
+    setSelectedEmoji(null);
     setIsCreating(false);
     // Focus input for next habit entry
     setTimeout(() => inputRef.current?.focus(), 100);
@@ -92,10 +125,17 @@ export function HabitsEmptyStateMinimal({
 
   // Show success state if habit was created
   if (successHabitName) {
+    // If we have a transition callback, auto-transition after celebration
+    // Otherwise, show "Add another" button
+    const shouldAutoTransition = !!onSuccessTransitionComplete;
+
     return (
       <SuccessState
         habitName={successHabitName}
+        habitEmoji={successEmoji}
         onAddAnother={handleAddAnother}
+        onTransitionComplete={onSuccessTransitionComplete}
+        autoTransition={shouldAutoTransition}
       />
     );
   }
@@ -120,8 +160,8 @@ export function HabitsEmptyStateMinimal({
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
         <Text
           style={{
-            marginTop: 24,
-            marginBottom: 24,
+            marginTop: 32,
+            marginBottom: 32,
             fontSize: 24,
             fontWeight: '700',
             color: COLORS.stone800,
@@ -133,37 +173,55 @@ export function HabitsEmptyStateMinimal({
         </Text>
       </AnimatedEntrance>
 
-      {/* Text Input */}
-      <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
-        <View style={{ width: '100%', marginBottom: 16 }}>
+      {/* Text Input - full width */}
+      <View style={{ width: '100%', marginBottom: 24 }}>
+        <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
           <HabitInput
             ref={inputRef}
             value={inputValue}
             onChangeText={handleInputChange}
+            onSubmitEditing={handleSubmitEditing}
+            onClear={handleClearInput}
           />
-        </View>
-      </AnimatedEntrance>
+        </AnimatedEntrance>
+      </View>
 
-      {/* Suggestion Chips */}
-      <AnimatedEntrance delay={ENTRANCE_DELAYS.chips}>
-        <View style={{ marginBottom: 24 }}>
+      {/* Suggestion Chips - full width for proper wrapping */}
+      <View style={{ width: '100%', marginBottom: 32 }}>
+        <AnimatedEntrance delay={ENTRANCE_DELAYS.chips}>
           <SuggestionChips
             selectedIndex={selectedChipIndex}
             onSelect={handleChipSelect}
           />
-        </View>
-      </AnimatedEntrance>
+        </AnimatedEntrance>
+      </View>
 
-      {/* Primary CTA Button */}
-      <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
-        <View style={{ width: '100%' }}>
+      {/* Primary CTA Button - full width */}
+      <View style={{ width: '100%' }}>
+        <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
           <CtaButton
             disabled={isCtaDisabled}
             isLoading={isCreating}
             onPress={handleCreateHabit}
           />
-        </View>
-      </AnimatedEntrance>
+        </AnimatedEntrance>
+      </View>
+
+      {/* Error Message */}
+      {errorMessage && (
+        <Text
+          accessibilityLiveRegion="polite"
+          accessibilityRole="alert"
+          style={{
+            marginTop: 12,
+            fontSize: 14,
+            color: '#DC2626',
+            textAlign: 'center',
+          }}
+        >
+          {errorMessage}
+        </Text>
+      )}
 
       {/* Secondary Links */}
       <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>

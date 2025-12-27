@@ -68,12 +68,12 @@ export function HeroIcon({ animate = true }: HeroIconProps) {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: COLORS.emerald100,
-          // Emerald tinted shadow
+          // Emerald tinted shadow (subtle per mockup)
           shadowColor: COLORS.emerald500,
           shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 32,
-          elevation: 8,
+          shadowOpacity: 0.15,
+          shadowRadius: 24,
+          elevation: 4,
         },
       ]}
     >

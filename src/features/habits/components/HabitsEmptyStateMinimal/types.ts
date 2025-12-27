@@ -31,6 +31,9 @@ export interface HabitsEmptyStateMinimalProps {
 
   /** Callback to open the full create habit modal */
   openCreateHabitScreen: () => void;
+
+  /** Callback when success transition completes (habit list should now show) */
+  onSuccessTransitionComplete?: () => void;
 }
 
 /**
@@ -53,8 +56,10 @@ export interface HabitInputProps {
   onFocus?: () => void;
   /** Callback when input is blurred */
   onBlur?: () => void;
-  /** Whether the input is currently focused */
-  isFocused?: boolean;
+  /** Callback when keyboard submit (Done) is pressed */
+  onSubmitEditing?: () => void;
+  /** Callback when clear button is pressed */
+  onClear?: () => void;
 }
 
 /**
@@ -95,8 +100,14 @@ export interface SecondaryLinksProps {
 export interface SuccessStateProps {
   /** Name of the habit that was created */
   habitName: string;
+  /** Emoji for the habit (shows in success icon for visual continuity) */
+  habitEmoji?: string;
   /** Callback to add another habit (resets to initial state) */
   onAddAnother: () => void;
+  /** Callback when exit transition completes (for transitioning to list) */
+  onTransitionComplete?: () => void;
+  /** Whether to auto-transition to list after celebration (default: true) */
+  autoTransition?: boolean;
 }
 
 /**

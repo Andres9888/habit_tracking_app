@@ -22,7 +22,7 @@ export function SecondaryLinks({ onBrowseTemplates, onCreateCustom }: SecondaryL
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 8,
+        gap: 24,
         marginTop: 24,
       }}
     >
@@ -54,7 +54,7 @@ export function SecondaryLinks({ onBrowseTemplates, onCreateCustom }: SecondaryL
       <Text
         style={{
           fontSize: 14,
-          color: COLORS.stone400,
+          color: COLORS.stone300,
         }}
       >
         •

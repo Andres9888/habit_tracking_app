@@ -59,6 +59,7 @@ export const COLORS = {
   stone800: '#1C1917',
   stone700: '#44403C',
   stone400: '#A8A29E',
+  stone300: '#D6D3D1',
   stone200: '#E7E5E4',
 
   // Caret color

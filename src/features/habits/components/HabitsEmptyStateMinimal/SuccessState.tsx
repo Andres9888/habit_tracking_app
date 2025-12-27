@@ -5,13 +5,18 @@
  * - Pop animation on the success icon
  * - Confetti particles floating upward
  * - Habit name confirmation
- * - "Add another habit" button to reset
+ * - Auto-transition to habit list with shared element animation
+ * - Tap anywhere to skip and transition immediately
+ * - Haptic feedback on mount
+ * - "Add another habit" button to reset (if staying on empty state)
  */
 
-import { useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { useEffect, useCallback, useRef } from 'react';
+import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
+  cancelAnimation,
+  runOnJS,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -21,7 +26,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { CONFETTI_CONFIG, POP_ANIMATION, SPRING_CONFIGS } from './animations';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, SPRING_CONFIGS } from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
 import type { SuccessStateProps } from './types';
 
@@ -139,12 +145,96 @@ function Confetti({ shouldReduceMotion }: { shouldReduceMotion: boolean }) {
 /**
  * Success celebration screen after habit creation
  */
-export function SuccessState({ habitName, onAddAnother }: SuccessStateProps) {
+export function SuccessState({
+  habitName,
+  habitEmoji,
+  onAddAnother,
+  onTransitionComplete,
+  autoTransition = true,
+}: SuccessStateProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { triggerSuccess } = useHapticFeedback();
+
+  // Track if we've already started exiting (to prevent double-trigger)
+  const isExiting = useRef(false);
+  const autoTransitionTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Entrance animation values
   const iconScale = useSharedValue(shouldReduceMotion ? POP_ANIMATION.finalScale : POP_ANIMATION.initialScale);
   const contentOpacity = useSharedValue(shouldReduceMotion ? 1 : 0);
   const contentTranslateY = useSharedValue(shouldReduceMotion ? 0 : 20);
 
+  // Exit animation values (shared element effect)
+  const iconTranslateY = useSharedValue(0);
+  const iconExitScale = useSharedValue(1);
+  const containerOpacity = useSharedValue(1);
+
+  // Display emoji - use habit emoji if provided, fallback to growth emoji
+  const displayEmoji = habitEmoji || '🌿';
+
+  // Trigger exit animation (used by both auto-transition and tap-to-skip)
+  const triggerExitAnimation = useCallback(() => {
+    if (isExiting.current) return;
+    isExiting.current = true;
+
+    // Clear auto-transition timeout if tapping to skip
+    if (autoTransitionTimeout.current) {
+      clearTimeout(autoTransitionTimeout.current);
+      autoTransitionTimeout.current = null;
+    }
+
+    if (shouldReduceMotion) {
+      onTransitionComplete?.();
+      return;
+    }
+
+    // Shared element exit: icon floats up and shrinks, content fades
+    iconTranslateY.value = withSpring(
+      EXIT_TRANSITION.icon.translateY,
+      EXIT_SPRING_CONFIG
+    );
+    iconExitScale.value = withTiming(
+      EXIT_TRANSITION.icon.scale,
+      { duration: EXIT_TRANSITION.icon.duration, easing: Easing.out(Easing.cubic) }
+    );
+    contentOpacity.value = withTiming(
+      0,
+      { duration: EXIT_TRANSITION.content.duration, easing: Easing.out(Easing.ease) }
+    );
+    containerOpacity.value = withDelay(
+      EXIT_TRANSITION.onCompleteDelay,
+      withTiming(0, { duration: 200 }, (finished) => {
+        if (finished) {
+          runOnJS(onTransitionComplete!)();
+        }
+      })
+    );
+  }, [
+    shouldReduceMotion,
+    onTransitionComplete,
+    iconTranslateY,
+    iconExitScale,
+    contentOpacity,
+    containerOpacity,
+  ]);
+
+  // Tap to skip handler
+  const handleTapToSkip = useCallback(() => {
+    if (!autoTransition || !onTransitionComplete) return;
+    triggerExitAnimation();
+  }, [autoTransition, onTransitionComplete, triggerExitAnimation]);
+
+  // Haptic feedback on mount + accessibility announcement
+  useEffect(() => {
+    // Trigger success haptic immediately
+    triggerSuccess();
+
+    // Announce for screen readers
+    const message = `Success! ${habitName} has been added to your habits. Tap anywhere to continue.`;
+    AccessibilityInfo?.announceForAccessibility?.(message);
+  }, [habitName, triggerSuccess]);
+
+  // Entrance animation
   useEffect(() => {
     // Skip animations if reduced motion is preferred
     if (shouldReduceMotion) {
@@ -168,8 +258,40 @@ export function SuccessState({ habitName, onAddAnother }: SuccessStateProps) {
     );
   }, [contentOpacity, contentTranslateY, iconScale, shouldReduceMotion]);
 
+  // Auto-transition exit animation (after celebration delay)
+  useEffect(() => {
+    if (!autoTransition || !onTransitionComplete) return;
+
+    // Delay before starting exit animation (let user see the celebration)
+    const celebrationDelay = 1800; // 1.8s to enjoy the moment
+
+    autoTransitionTimeout.current = setTimeout(() => {
+      triggerExitAnimation();
+    }, celebrationDelay);
+
+    return () => {
+      if (autoTransitionTimeout.current) {
+        clearTimeout(autoTransitionTimeout.current);
+      }
+      // Cancel animations on unmount
+      cancelAnimation(iconTranslateY);
+      cancelAnimation(iconExitScale);
+      cancelAnimation(containerOpacity);
+    };
+  }, [
+    autoTransition,
+    onTransitionComplete,
+    triggerExitAnimation,
+    iconTranslateY,
+    iconExitScale,
+    containerOpacity,
+  ]);
+
   const iconStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: iconScale.value }],
+    transform: [
+      { scale: iconScale.value * iconExitScale.value },
+      { translateY: iconTranslateY.value },
+    ],
   }));
 
   const contentStyle = useAnimatedStyle(() => ({
@@ -177,90 +299,121 @@ export function SuccessState({ habitName, onAddAnother }: SuccessStateProps) {
     transform: [{ translateY: contentTranslateY.value }],
   }));
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 24,
-      }}
-    >
-      <Confetti shouldReduceMotion={shouldReduceMotion ?? false} />
+  const containerStyle = useAnimatedStyle(() => ({
+    opacity: containerOpacity.value,
+  }));
 
-      {/* Success Icon */}
+  return (
+    <Pressable
+      accessibilityLabel="Tap to continue to your habits"
+      accessibilityRole="button"
+      accessibilityHint="Skip the celebration and view your habit list"
+      onPress={handleTapToSkip}
+      style={{ flex: 1 }}
+    >
       <Animated.View
         style={[
-          iconStyle,
+          containerStyle,
           {
-            width: 96,
-            height: 96,
-            borderRadius: 48,
-            backgroundColor: COLORS.successBackground,
+            flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: 24,
+            paddingHorizontal: 24,
           },
         ]}
       >
-        <Text style={{ fontSize: 48 }}>🌿</Text>
-      </Animated.View>
+        <Confetti shouldReduceMotion={shouldReduceMotion ?? false} />
 
-      {/* Content */}
-      <Animated.View style={[contentStyle, { alignItems: 'center' }]}>
-        {/* Headline */}
-        <Text
-          style={{
-            fontSize: 24,
-            fontWeight: '700',
-            color: COLORS.stone800,
-            textAlign: 'center',
-            marginBottom: 8,
-          }}
+        {/* Success Icon - Shows habit emoji for visual continuity */}
+        <Animated.View
+          style={[
+            iconStyle,
+            {
+              width: 96,
+              height: 96,
+              borderRadius: 48,
+              backgroundColor: COLORS.successBackground,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 24,
+              zIndex: 10,
+            },
+          ]}
         >
-          {COPY.successHeadline}
-        </Text>
+          <Text style={{ fontSize: 48 }}>{displayEmoji}</Text>
+        </Animated.View>
 
-        {/* Subtext */}
-        <Text
-          style={{
-            fontSize: 16,
-            color: COLORS.stone400,
-            textAlign: 'center',
-            marginBottom: 32,
-          }}
-        >
-          {COPY.successSubtext(habitName)}
-        </Text>
-
-        {/* Add another button */}
-        <Pressable
-          accessibilityLabel={COPY.addAnother}
-          accessibilityRole="button"
-          accessibilityHint="Creates another habit"
-          onPress={onAddAnother}
-          style={({ pressed }) => ({
-            backgroundColor: COLORS.stone800,
-            borderRadius: BORDER_RADIUS.cta,
-            height: TOUCH_TARGETS.ctaHeight,
-            paddingHorizontal: 32,
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: pressed ? 0.9 : 1,
-            transform: [{ scale: pressed ? 0.98 : 1 }],
-          })}
-        >
+        {/* Content */}
+        <Animated.View style={[contentStyle, { alignItems: 'center', width: '100%' }]}>
+          {/* Headline */}
           <Text
             style={{
-              color: '#ffffff',
-              fontSize: 16,
-              fontWeight: '600',
+              fontSize: 24,
+              fontWeight: '700',
+              color: COLORS.stone800,
+              textAlign: 'center',
+              marginBottom: 8,
             }}
           >
-            {COPY.addAnother}
+            {COPY.successHeadline}
           </Text>
-        </Pressable>
+
+          {/* Subtext */}
+          <Text
+            style={{
+              fontSize: 16,
+              color: COLORS.stone400,
+              textAlign: 'center',
+              marginBottom: 24,
+            }}
+          >
+            {COPY.successSubtext(habitName)}
+          </Text>
+
+          {/* Tap to continue hint - only show if auto-transitioning */}
+          {autoTransition && (
+            <Text
+              style={{
+                fontSize: 13,
+                color: COLORS.stone300,
+                textAlign: 'center',
+              }}
+            >
+              Tap anywhere to continue
+            </Text>
+          )}
+
+          {/* Add another button - only show if not auto-transitioning */}
+          {!autoTransition && (
+            <Pressable
+              accessibilityLabel={COPY.addAnother}
+              accessibilityRole="button"
+              accessibilityHint="Creates another habit"
+              onPress={onAddAnother}
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.stone800,
+                borderRadius: BORDER_RADIUS.cta,
+                height: TOUCH_TARGETS.ctaHeight,
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: pressed ? 0.9 : 1,
+                transform: [{ scale: pressed ? 0.98 : 1 }],
+              })}
+            >
+              <Text
+                style={{
+                  color: '#ffffff',
+                  fontSize: 16,
+                  fontWeight: '700',
+                }}
+              >
+                {COPY.addAnother}
+              </Text>
+            </Pressable>
+          )}
+        </Animated.View>
       </Animated.View>
-    </View>
+    </Pressable>
   );
 }

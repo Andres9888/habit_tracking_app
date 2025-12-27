@@ -135,3 +135,36 @@ export const CONFETTI_CONFIG = {
   duration: 1500,
   colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#FCD34D', '#F59E0B'],
 } as const;
+
+/**
+ * Exit transition animation config for success → list transition
+ * Shared element style: icon morphs up while content fades
+ */
+export const EXIT_TRANSITION = {
+  // Total duration of exit animation
+  duration: 500,
+
+  // Icon morph animation
+  icon: {
+    translateY: -150, // Move upward
+    scale: 0.4, // Shrink
+    duration: 400,
+  },
+
+  // Content fade out (faster than icon)
+  content: {
+    duration: 250,
+    delay: 0,
+  },
+
+  // Delay before triggering list transition
+  onCompleteDelay: 300,
+} as const;
+
+/**
+ * Spring config for exit transition
+ */
+export const EXIT_SPRING_CONFIG = {
+  damping: 20,
+  stiffness: 200,
+} satisfies WithSpringConfig;

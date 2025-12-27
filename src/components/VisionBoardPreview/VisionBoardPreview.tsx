@@ -127,10 +127,14 @@ export function VisionBoardPreview({
       }
     })
     .onEnd((event) => {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
+      const velocityX = Math.round(event.velocityX);
+
       // Check for vertical dismiss
       if (
         Math.abs(event.translationY) > DISMISS_THRESHOLD ||
-        Math.abs(event.velocityY) > SWIPE_VELOCITY_THRESHOLD
+        Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD
       ) {
         translateY.value = reduceMotion
           ? SCREEN_HEIGHT
@@ -143,7 +147,7 @@ export function VisionBoardPreview({
       // Check for horizontal navigation
       if (
         event.translationX < -HORIZONTAL_SWIPE_THRESHOLD ||
-        event.velocityX < -SWIPE_VELOCITY_THRESHOLD
+        velocityX < -SWIPE_VELOCITY_THRESHOLD
       ) {
         // Swipe left - go next
         if (hasNext) {
@@ -151,7 +155,7 @@ export function VisionBoardPreview({
         }
       } else if (
         event.translationX > HORIZONTAL_SWIPE_THRESHOLD ||
-        event.velocityX > SWIPE_VELOCITY_THRESHOLD
+        velocityX > SWIPE_VELOCITY_THRESHOLD
       ) {
         // Swipe right - go prev
         if (hasPrev) {

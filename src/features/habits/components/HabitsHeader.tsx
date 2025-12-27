@@ -1,4 +1,4 @@
-import { BookOpen, Plus, Settings } from 'lucide-react-native';
+import { ArrowUpDown, BookOpen, Plus, Settings } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -16,8 +16,11 @@ import { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';
 
 interface HabitsHeaderProps {
   completedToday?: number;
+  /** Force show header even when totalHabits is 0 (used during empty->list transition) */
+  forceShow?: boolean;
   openCreateHabitScreen: () => void;
   openSettings: () => void;
+  openSortSheet: () => void;
   openTemplatesScreen: () => void;
   reduceMotion?: boolean;
   showCompletionSummary?: boolean;
@@ -26,8 +29,10 @@ interface HabitsHeaderProps {
 
 export function HabitsHeader({
   completedToday = 0,
+  forceShow = false,
   openCreateHabitScreen,
   openSettings,
+  openSortSheet,
   openTemplatesScreen,
   reduceMotion = false,
   showCompletionSummary = true,
@@ -41,11 +46,16 @@ export function HabitsHeader({
   const addButtonScale = useSharedValue(1);
 
   // Animated values for icon buttons
+  const sortButtonScale = useSharedValue(1);
   const templatesButtonScale = useSharedValue(1);
   const settingsButtonScale = useSharedValue(1);
 
   const addButtonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: addButtonScale.value }],
+  }));
+
+  const sortButtonAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: sortButtonScale.value }],
   }));
 
   const templatesButtonAnimatedStyle = useAnimatedStyle(() => ({
@@ -71,6 +81,23 @@ export function HabitsHeader({
   const handleAddHabitPress = () => {
     triggerSelection();
     openCreateHabitScreen();
+  };
+
+  const handleSortPressIn = () => {
+    triggerLightImpact();
+    sortButtonScale.value = withTiming(0.9, { duration: 50 });
+  };
+
+  const handleSortPressOut = () => {
+    sortButtonScale.value = withSpring(1, {
+      damping: 15,
+      stiffness: 300,
+    });
+  };
+
+  const handleSortPress = () => {
+    triggerSelection();
+    openSortSheet();
   };
 
   const handleTemplatesPressIn = () => {
@@ -114,7 +141,8 @@ export function HabitsHeader({
 
   // Smart Empty State - hide header completely when user has no habits
   // Let HabitsEmptyState component handle the full onboarding experience
-  if (totalHabits === 0) {
+  // Exception: forceShow is true during transition from empty state to list
+  if (totalHabits === 0 && !forceShow) {
     return null;
   }
 
@@ -173,6 +201,20 @@ export function HabitsHeader({
 
             {/* First-time user tooltip */}
             <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />
+          </Animated.View>
+
+          <Animated.View style={sortButtonAnimatedStyle}>
+            <Pressable
+              accessibilityHint='Change habit sort order'
+              accessibilityLabel='Sort habits'
+              accessibilityRole='button'
+              className='h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white/60'
+              onPress={handleSortPress}
+              onPressIn={handleSortPressIn}
+              onPressOut={handleSortPressOut}
+            >
+              <ArrowUpDown color='#44403c' size={18} strokeWidth={2.25} />
+            </Pressable>
           </Animated.View>
 
           <Animated.View style={settingsButtonAnimatedStyle}>

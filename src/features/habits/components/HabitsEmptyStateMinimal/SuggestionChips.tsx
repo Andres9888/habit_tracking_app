@@ -124,11 +124,11 @@ function Chip({ chip, isSelected, onPress }: ChipProps) {
           borderRadius: BORDER_RADIUS.chip,
           borderWidth: 1,
           minHeight: TOUCH_TARGETS.chipHeight,
-          // Base shadow properties (opacity is animated)
+          // Base shadow properties - subtle (opacity animates on hover)
           shadowColor: '#000000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowRadius: 8,
-          elevation: 4,
+          shadowOffset: { width: 0, height: 1 },
+          shadowRadius: 2,
+          elevation: 1,
         },
       ]}
       onPress={handlePress}
@@ -152,27 +152,58 @@ function Chip({ chip, isSelected, onPress }: ChipProps) {
 }
 
 /**
- * Grid of suggestion chips for quick habit selection
+ * Pyramid layout of suggestion chips (3-2-1 formation)
  */
 export function SuggestionChips({ selectedIndex, onSelect }: SuggestionChipsProps) {
+  // Split chips into rows: 3, 2, 1
+  const row1 = SUGGESTION_CHIPS.slice(0, 3); // Water, Walk, Write
+  const row2 = SUGGESTION_CHIPS.slice(3, 5); // Breathe, Read
+  const row3 = SUGGESTION_CHIPS.slice(5, 6); // Stretch
+
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: 8,
-      }}
-    >
-      {SUGGESTION_CHIPS.map((chip, index) => (
-        <Chip
-          key={chip.label}
-          chip={chip}
-          index={index}
-          isSelected={selectedIndex === index}
-          onPress={() => onSelect(index, chip)}
-        />
-      ))}
+    <View style={{ alignItems: 'center', gap: 8 }}>
+      {/* Row 1: 3 chips */}
+      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+        {row1.map((chip, i) => (
+          <Chip
+            key={chip.label}
+            chip={chip}
+            index={i}
+            isSelected={selectedIndex === i}
+            onPress={() => onSelect(i, chip)}
+          />
+        ))}
+      </View>
+      {/* Row 2: 2 chips */}
+      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+        {row2.map((chip, i) => {
+          const index = i + 3;
+          return (
+            <Chip
+              key={chip.label}
+              chip={chip}
+              index={index}
+              isSelected={selectedIndex === index}
+              onPress={() => onSelect(index, chip)}
+            />
+          );
+        })}
+      </View>
+      {/* Row 3: 1 chip */}
+      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+        {row3.map((chip, i) => {
+          const index = i + 5;
+          return (
+            <Chip
+              key={chip.label}
+              chip={chip}
+              index={index}
+              isSelected={selectedIndex === index}
+              onPress={() => onSelect(index, chip)}
+            />
+          );
+        })}
+      </View>
     </View>
   );
 }

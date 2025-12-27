@@ -459,7 +459,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className="relative flex-row items-center justify-between" style={{ paddingHorizontal: 4 }}>
+    <View className="relative flex-row items-center justify-between">
       {/* Visual link to previous week if streak continues */}
       {showConnectors && isConnectedToPreviousWeek && isCompleted(0) && (
         <View
@@ -490,42 +490,28 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           dateLabel === todayLabel ? `Today, ${statusLabel}` : `${dateLabel}: ${statusLabel}`;
         const accessibilityHint = disabled ? 'Future dates are unavailable' : toggleInstruction;
 
-        const isLastItem = index === weekDateStrings.length - 1;
-        const showConnector = showConnectors && !isLastItem && completed && isCompleted(index + 1);
-
         return (
-          <React.Fragment key={dateString}>
-            <View className="items-center justify-center">
-              <HabitDayToggle
-                accentColor={accentColor}
-                accessibilityHint={accessibilityHint}
-                accessibilityLabel={accessibilityLabel}
-                completed={completed}
-                completionIcon={completionIcon}
-                currentStreak={currentStreak}
-                disabled={disabled}
-                highContrastMode={highContrastMode}
-                isToday={isToday(index)}
-                onPress={() => handleToggleDay(dateString, completed, disabled, index)}
-                shape={shape}
-              />
-              <SparkleBurst
-                color={accentColor}
-                isActive={activeBurst === dateString && celebrationsEnabled}
-                onComplete={() => setActiveBurst(null)}
-                reduceMotion={shouldReduceMotion}
-              />
-            </View>
-            {showConnectors && !isLastItem && (
-              <DayConnector
-                accentColor={accentColor}
-                baseColor={connectorColor}
-                currentStreak={currentStreak}
-                style={{ flex: 1, minWidth: 14, width: 'auto' }}
-                visible={showConnector}
-              />
-            )}
-          </React.Fragment>
+          <View key={dateString} className="flex-1 items-center">
+            <HabitDayToggle
+              accentColor={accentColor}
+              accessibilityHint={accessibilityHint}
+              accessibilityLabel={accessibilityLabel}
+              completed={completed}
+              completionIcon={completionIcon}
+              currentStreak={currentStreak}
+              disabled={disabled}
+              highContrastMode={highContrastMode}
+              isToday={isToday(index)}
+              onPress={() => handleToggleDay(dateString, completed, disabled, index)}
+              shape={shape}
+            />
+            <SparkleBurst
+              color={accentColor}
+              isActive={activeBurst === dateString && celebrationsEnabled}
+              onComplete={() => setActiveBurst(null)}
+              reduceMotion={shouldReduceMotion}
+            />
+          </View>
         );
       })}
     </View>

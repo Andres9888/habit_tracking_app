@@ -253,7 +253,9 @@ export function Modal({
       }
     })
     .onEnd((event) => {
-      if (event.translationY > DISMISS_THRESHOLD || event.velocityY > VELOCITY_THRESHOLD) {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
+      if (event.translationY > DISMISS_THRESHOLD || velocityY > VELOCITY_THRESHOLD) {
         translateY.value = withSpring(SCREEN_HEIGHT, BOTTOM_SHEET_SPRING_CONFIG);
         runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
         runOnJS(onClose)();
@@ -274,7 +276,9 @@ export function Modal({
       }
     })
     .onEnd((event) => {
-      if (event.translationY > DISMISS_THRESHOLD || event.velocityY > VELOCITY_THRESHOLD) {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
+      if (event.translationY > DISMISS_THRESHOLD || velocityY > VELOCITY_THRESHOLD) {
         // Dismiss
         fullScreenProgress.value = withSpring(0, EXIT_SPRING_CONFIG);
         fullScreenGestureY.value = withSpring(0, GESTURE_SPRING_CONFIG);

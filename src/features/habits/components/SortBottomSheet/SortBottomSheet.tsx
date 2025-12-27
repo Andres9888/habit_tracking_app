@@ -35,11 +35,12 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 /**
  * Spring configuration for bottom sheet animations
- * Spec: damping: 20, stiffness: 300
+ * Using softer, more organic spring matching app's FadeInDown.springify().damping(18) pattern
  */
 const SHEET_SPRING_CONFIG = {
-  damping: 20,
-  stiffness: 300,
+  damping: 18,
+  stiffness: 120,
+  mass: 1,
 };
 
 /**
@@ -185,13 +186,13 @@ export function SortBottomSheet({
       // Slide up with spring
       backdropOpacity.value = reduceMotion
         ? 0.4
-        : withTiming(0.4, { duration: 200, easing: Easing.out(Easing.cubic) });
+        : withTiming(0.4, { duration: 300, easing: Easing.out(Easing.cubic) });
       translateY.value = reduceMotion ? 0 : withSpring(0, SHEET_SPRING_CONFIG);
     } else {
       // Slide down
       backdropOpacity.value = reduceMotion
         ? 0
-        : withTiming(0, { duration: 200, easing: Easing.in(Easing.cubic) });
+        : withTiming(0, { duration: 250, easing: Easing.in(Easing.cubic) });
       translateY.value = reduceMotion
         ? SCREEN_HEIGHT
         : withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);
@@ -206,9 +207,11 @@ export function SortBottomSheet({
       }
     })
     .onEnd((event) => {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
       if (
         event.translationY > DISMISS_THRESHOLD ||
-        event.velocityY > VELOCITY_THRESHOLD
+        velocityY > VELOCITY_THRESHOLD
       ) {
         translateY.value = withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);
         runOnJS(triggerLightImpact)();

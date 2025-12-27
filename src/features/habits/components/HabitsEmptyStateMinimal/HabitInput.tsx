@@ -4,12 +4,14 @@
  * Features:
  * - Blue border on focus (per app pattern)
  * - Animated border color transition
+ * - Clear button (X) when text is present
+ * - Keyboard submit support
  * - Forwarded ref for external focus control
  * - Proper accessibility labels
  */
 
 import { forwardRef, useCallback, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -24,12 +26,50 @@ import type { HabitInputProps } from './types';
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 /**
+ * X icon for clear button
+ */
+function ClearIcon() {
+  return (
+    <View
+      style={{
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: COLORS.stone200,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <View
+        style={{
+          width: 10,
+          height: 2,
+          backgroundColor: COLORS.stone400,
+          position: 'absolute',
+          transform: [{ rotate: '45deg' }],
+        }}
+      />
+      <View
+        style={{
+          width: 10,
+          height: 2,
+          backgroundColor: COLORS.stone400,
+          position: 'absolute',
+          transform: [{ rotate: '-45deg' }],
+        }}
+      />
+    </View>
+  );
+}
+
+/**
  * Text input for habit name with animated focus states
  */
 export const HabitInput = forwardRef<TextInput, HabitInputProps>(
-  function HabitInput({ value, onChangeText, onFocus, onBlur }, ref) {
+  function HabitInput({ value, onChangeText, onFocus, onBlur, onSubmitEditing, onClear }, ref) {
     const [isFocused, setIsFocused] = useState(false);
     const focusProgress = useSharedValue(0);
+    const showClearButton = value.length > 0;
 
     const handleFocus = useCallback(() => {
       setIsFocused(true);
@@ -62,8 +102,10 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
             borderWidth: 2,
             borderRadius: BORDER_RADIUS.input,
             height: TOUCH_TARGETS.inputHeight,
+            width: '100%',
             paddingHorizontal: 20,
-            justifyContent: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
             // Shadow properties
             shadowColor: COLORS.blue500,
             shadowOffset: { width: 0, height: 0 },
@@ -85,13 +127,29 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           onBlur={handleBlur}
           onChangeText={onChangeText}
           onFocus={handleFocus}
+          onSubmitEditing={onSubmitEditing}
           style={{
+            flex: 1,
             fontSize: 16,
             fontWeight: '500',
             color: COLORS.stone800,
           }}
           selectionColor={COLORS.emeraldCaret}
         />
+        {showClearButton && (
+          <Pressable
+            accessibilityLabel="Clear input"
+            accessibilityRole="button"
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            onPress={onClear}
+            style={({ pressed }) => ({
+              marginLeft: 8,
+              opacity: pressed ? 0.6 : 1,
+            })}
+          >
+            <ClearIcon />
+          </Pressable>
+        )}
       </AnimatedView>
     );
   }

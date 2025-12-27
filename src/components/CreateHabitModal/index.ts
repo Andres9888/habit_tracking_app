@@ -1,8 +1,7 @@
-// Original modal (keep for fallback)
-export { default as CreateHabitModalLegacy } from './CreateHabitModal';
+// Original modal - simple flow with full input, emoji picker, color picker
+export { default } from './CreateHabitModal';
 
-// New redesigned modal (V2 - improved UX)
-export { default } from './CreateHabitModalV2';
+// V2 modal (inline emoji input variant)
 export { default as CreateHabitModalV2 } from './CreateHabitModalV2';
 
 // New components

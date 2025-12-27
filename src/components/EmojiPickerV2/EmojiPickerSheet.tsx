@@ -191,8 +191,10 @@ export const EmojiPickerSheet = memo(
         translateY.value = Math.max(context.value.y + event.translationY, 0);
       })
       .onEnd((event) => {
+        // Use Math.round on velocity to avoid precision loss error in Reanimated
+        const velocityY = Math.round(event.velocityY);
         // If dragged more than 25% down or velocity is high, dismiss
-        if (translateY.value > SHEET_HEIGHT * 0.25 || event.velocityY > 500) {
+        if (translateY.value > SHEET_HEIGHT * 0.25 || velocityY > 500) {
           runOnJS(closeSheet)();
         } else {
           translateY.value = withSpring(0, {
