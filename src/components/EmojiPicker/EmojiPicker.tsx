@@ -15,7 +15,10 @@ import {
 import { Search, X } from 'lucide-react-native';
 import { getAllEmojis } from '../../utils/emojiData';
 import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
-import { searchEmojisByKeyword, suggestEmojisForHabitName } from '../../utils/emojiKeywords';
+import {
+  searchEmojisByKeyword,
+  suggestEmojisForHabitName,
+} from '../../utils/emojiKeywords';
 import { addRecentEmoji, getRecentEmojis } from '../../utils/recentEmojis';
 
 interface EmojiPickerProps {
@@ -45,19 +48,19 @@ const EmojiItem = memo(
 
     const handlePressIn = useCallback(() => {
       Animated.spring(scaleAnim, {
+        bounciness: 4,
+        speed: 50,
         toValue: 0.9,
         useNativeDriver: true,
-        speed: 50,
-        bounciness: 4,
       }).start();
     }, [scaleAnim]);
 
     const handlePressOut = useCallback(() => {
       Animated.spring(scaleAnim, {
+        bounciness: 4,
+        speed: 50,
         toValue: isSelected ? 1.1 : 1,
         useNativeDriver: true,
-        speed: 50,
-        bounciness: 4,
       }).start();
     }, [scaleAnim, isSelected]);
 
@@ -65,27 +68,27 @@ const EmojiItem = memo(
       <Pressable
         accessibilityLabel={`Select ${emoji} emoji`}
         accessibilityRole='button'
+        style={{
+          aspectRatio: 1,
+          padding: 2,
+          width: `${100 / EMOJIS_PER_ROW}%`,
+        }}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        style={{
-          width: `${100 / EMOJIS_PER_ROW}%`,
-          aspectRatio: 1,
-          padding: 2,
-        }}
       >
         <Animated.View
           style={[
             {
-              flex: 1,
               alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 12,
               backgroundColor: isSelected ? '#dbeafe' : '#f9fafb',
-              borderWidth: isSelected ? 2 : 0,
               borderColor: isSelected ? '#3b82f6' : 'transparent',
-              minWidth: 44,
+              borderRadius: 12,
+              borderWidth: isSelected ? 2 : 0,
+              flex: 1,
+              justifyContent: 'center',
               minHeight: 44,
+              minWidth: 44,
             },
             {
               transform: [{ scale: scaleAnim }],
@@ -118,19 +121,19 @@ const QuickAccessEmojiItem = memo(
 
     const handlePressIn = useCallback(() => {
       Animated.spring(scaleAnim, {
+        bounciness: 4,
+        speed: 50,
         toValue: 0.9,
         useNativeDriver: true,
-        speed: 50,
-        bounciness: 4,
       }).start();
     }, [scaleAnim]);
 
     const handlePressOut = useCallback(() => {
       Animated.spring(scaleAnim, {
+        bounciness: 4,
+        speed: 50,
         toValue: isSelected ? 1.1 : 1,
         useNativeDriver: true,
-        speed: 50,
-        bounciness: 4,
       }).start();
     }, [scaleAnim, isSelected]);
 
@@ -149,19 +152,19 @@ const QuickAccessEmojiItem = memo(
         <Animated.View
           style={[
             {
-              width: 44,
-              height: 44,
-              borderRadius: 12,
-              backgroundColor: isSelected ? '#dbeafe' : 'white',
-              borderWidth: isSelected ? 2 : 0,
-              borderColor: isSelected ? '#3b82f6' : 'transparent',
               alignItems: 'center',
+              backgroundColor: isSelected ? '#dbeafe' : 'white',
+              borderColor: isSelected ? '#3b82f6' : 'transparent',
+              borderRadius: 12,
+              borderWidth: isSelected ? 2 : 0,
+              elevation: 1,
+              height: 44,
               justifyContent: 'center',
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 1 },
+              shadowOffset: { height: 1, width: 0 },
+              width: 44,
               shadowOpacity: 0.05,
               shadowRadius: 2,
-              elevation: 1,
             },
             {
               transform: [{ scale: scaleAnim }],
@@ -181,7 +184,14 @@ QuickAccessEmojiItem.displayName = 'QuickAccessEmojiItem';
 const RecentEmojiItem = QuickAccessEmojiItem;
 
 export const EmojiPicker = memo(
-  ({ onClose, onSelect, selectedEmoji, visible, triggerRef, habitName }: EmojiPickerProps) => {
+  ({
+    onClose,
+    onSelect,
+    selectedEmoji,
+    visible,
+    triggerRef,
+    habitName,
+  }: EmojiPickerProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('fitness');
     const [searchQuery, setSearchQuery] = useState('');
     const [recentEmojis, setRecentEmojis] = useState<string[]>([]);
@@ -240,7 +250,9 @@ export const EmojiPicker = memo(
         return allEmojis;
       }
 
-      const category = HABIT_CATEGORIES.find((cat) => cat.id === selectedCategory);
+      const category = HABIT_CATEGORIES.find(
+        (cat) => cat.id === selectedCategory
+      );
       return category?.emojis ?? [];
     }, [selectedCategory, debouncedQuery, allEmojis]);
 
@@ -299,7 +311,9 @@ export const EmojiPicker = memo(
 
     // Get current category name for header
     const currentCategoryName = useMemo(() => {
-      const category = HABIT_CATEGORIES.find((cat) => cat.id === selectedCategory);
+      const category = HABIT_CATEGORIES.find(
+        (cat) => cat.id === selectedCategory
+      );
       return category ? `${category.icon} ${category.name.toUpperCase()}` : '';
     }, [selectedCategory]);
 
@@ -307,19 +321,19 @@ export const EmojiPicker = memo(
 
     return (
       <Modal
-        animationType='slide'
         transparent
+        animationType='slide'
         visible={visible}
         onRequestClose={handleClose}
       >
         <View className='flex-1 bg-black/50'>
           <View
-            style={{ height: '85%', marginTop: 'auto' }}
             className='overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
+            style={{ height: '85%', marginTop: 'auto' }}
           >
             {/* Header */}
             <View className='flex-row items-center justify-between border-b border-gray-200 px-4 pb-3 pt-4'>
-              <Text className='text-[22px] font-semibold text-[#1a1a1a]'>
+              <Text className='text-[24px] font-bold text-stone-800'>
                 Choose Icon
               </Text>
               <TouchableOpacity
@@ -337,8 +351,8 @@ export const EmojiPicker = memo(
               <View className='flex-row items-center rounded-xl bg-white px-3 py-2 shadow-sm'>
                 <Search color='#8a8a8a' size={20} />
                 <TextInput
-                  accessibilityLabel='Search emojis'
                   accessibilityHint='Type keywords like run, water, or sleep to find emojis'
+                  accessibilityLabel='Search emojis'
                   className='ml-2 flex-1 text-base text-[#1a1a1a]'
                   placeholder='Search "run", "water", "sleep"...'
                   placeholderTextColor='#adaebc'
@@ -366,16 +380,16 @@ export const EmojiPicker = memo(
                 </Text>
                 <ScrollView
                   horizontal
-                  showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{ gap: 8 }}
+                  showsHorizontalScrollIndicator={false}
                 >
                   {suggestedEmojis.map((emoji) => (
                     <QuickAccessEmojiItem
                       key={`suggested-${emoji}`}
+                      accessibilityLabelSuffix='from suggestions'
                       emoji={emoji}
                       isSelected={selectedEmoji === emoji}
                       onPress={() => handleEmojiSelect(emoji)}
-                      accessibilityLabelSuffix='from suggestions'
                     />
                   ))}
                 </ScrollView>
@@ -390,16 +404,16 @@ export const EmojiPicker = memo(
                 </Text>
                 <ScrollView
                   horizontal
-                  showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{ gap: 8 }}
+                  showsHorizontalScrollIndicator={false}
                 >
                   {recentEmojis.map((emoji) => (
                     <QuickAccessEmojiItem
                       key={emoji}
+                      accessibilityLabelSuffix='from recently used'
                       emoji={emoji}
                       isSelected={selectedEmoji === emoji}
                       onPress={() => handleEmojiSelect(emoji)}
-                      accessibilityLabelSuffix='from recently used'
                     />
                   ))}
                 </ScrollView>
@@ -409,9 +423,13 @@ export const EmojiPicker = memo(
             {/* Category Chips */}
             {!searchQuery && (
               <ScrollView
-                className='border-b border-gray-200'
-                contentContainerStyle={{ gap: 8, paddingHorizontal: 16, paddingVertical: 12 }}
                 horizontal
+                className='border-b border-gray-200'
+                contentContainerStyle={{
+                  gap: 8,
+                  paddingHorizontal: 16,
+                  paddingVertical: 12,
+                }}
                 showsHorizontalScrollIndicator={false}
               >
                 {HABIT_CATEGORIES.map((category) => {
@@ -424,18 +442,18 @@ export const EmojiPicker = memo(
                       accessibilityState={{ selected: isSelected }}
                       style={[
                         {
-                          flexDirection: 'row',
                           alignItems: 'center',
+                          backgroundColor: isSelected ? '#1a1a1a' : 'white',
+                          borderRadius: 9999,
+                          elevation: 1,
+                          flexDirection: 'row',
                           gap: 4,
                           paddingHorizontal: 12,
                           paddingVertical: 8,
-                          borderRadius: 9999,
-                          backgroundColor: isSelected ? '#1a1a1a' : 'white',
                           shadowColor: '#000',
-                          shadowOffset: { width: 0, height: 1 },
+                          shadowOffset: { height: 1, width: 0 },
                           shadowOpacity: 0.05,
                           shadowRadius: 2,
-                          elevation: 1,
                         },
                       ]}
                       onPress={() => handleCategorySelect(category.id)}
@@ -444,9 +462,9 @@ export const EmojiPicker = memo(
                       <Text
                         style={[
                           {
+                            color: isSelected ? 'white' : '#1a1a1a',
                             fontSize: 14,
                             fontWeight: '500',
-                            color: isSelected ? 'white' : '#1a1a1a',
                           },
                         ]}
                       >
@@ -481,15 +499,18 @@ export const EmojiPicker = memo(
                     </View>
                   )}
                   <FlatList
+                    removeClippedSubviews
+                    showsVerticalScrollIndicator
+                    contentContainerStyle={{
+                      paddingBottom: 16,
+                      paddingHorizontal: 8,
+                    }}
                     data={emojiRows}
-                    keyExtractor={(_, index) => `row-${index}`}
-                    renderItem={renderEmojiItem}
-                    showsVerticalScrollIndicator={true}
-                    contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: 16 }}
                     initialNumToRender={10}
+                    keyExtractor={(_, index) => `row-${index}`}
                     maxToRenderPerBatch={10}
+                    renderItem={renderEmojiItem}
                     windowSize={5}
-                    removeClippedSubviews={true}
                   />
                 </>
               )}

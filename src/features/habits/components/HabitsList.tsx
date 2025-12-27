@@ -162,7 +162,7 @@ function MonetizationHero({
         <Text className='text-[10px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
           Level up
         </Text>
-        <Text className='text-[26px] font-bold leading-[32px] tracking-tight text-white'>
+        <Text className='text-[24px] font-bold leading-[32px] tracking-tight text-white'>
           Ready to build more?
         </Text>
         <Text className='text-[15px] font-normal leading-[22px] text-[#cbd5f5]'>
@@ -361,7 +361,7 @@ function UpgradePrompt({
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
           </View>
-          <Text className='text-center text-[22px] font-semibold text-stone-900'>
+          <Text className='text-center text-[24px] font-bold text-stone-900'>
             You're on a roll! Ready for more?
           </Text>
           <Text className='text-center text-[15px] leading-[22px] text-stone-600'>
