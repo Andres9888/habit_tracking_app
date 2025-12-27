@@ -1,12 +1,12 @@
 /**
- * EmojiPicker Component Tests - V5 Redesign
- * Task 2.3: Update EmojiPicker for smart suggestions
+ * EmojiPicker Component Tests - V8 Focused Creation Flow
+ * Task 3: Simplify EmojiPicker to Smart Suggestions
  *
  * Tests:
  * - 6 inline emoji chips display
- * - Dynamic suggestions based on habit name
- * - "More →" link opens full EmojiPickerSheet
- * - Selected state with green ring
+ * - Dynamic suggestions based on habit name keywords
+ * - "Browse all →" link opens full EmojiPickerSheet
+ * - Selected state with emerald ring (#10B981) and tinted background (#ECFDF5)
  * - Smooth animations when suggestions change
  * - Accessibility labels
  */
@@ -28,9 +28,7 @@ jest.mock('../../../../hooks/useHapticFeedback', () => ({
 // Mock EmojiPickerSheet since we're testing the inline behavior
 jest.mock('../../../EmojiPickerV2', () => ({
   EmojiPickerSheet: jest.fn(({ visible, onSelect, onClose }) =>
-    visible ? (
-      <></>
-    ) : null
+    visible ? <></> : null
   ),
 }));
 
@@ -42,7 +40,7 @@ const defaultProps = {
   habitName: '',
 };
 
-describe('EmojiPicker - V5 Redesign', () => {
+describe('EmojiPicker - V8 Smart Suggestions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
@@ -65,9 +63,9 @@ describe('EmojiPicker - V5 Redesign', () => {
       expect(buttons.length).toBe(7);
     });
 
-    it('should render "More →" link', () => {
+    it('should render "Browse all →" link', () => {
       const { getByText } = render(<EmojiPicker {...defaultProps} />);
-      expect(getByText('More →')).toBeDefined();
+      expect(getByText('Browse all →')).toBeDefined();
     });
 
     it('should display default emojis when no habit name is provided', () => {
@@ -86,7 +84,7 @@ describe('EmojiPicker - V5 Redesign', () => {
   describe('Dynamic Suggestions Based on Habit Name', () => {
     it('should suggest 🏃 for "Run" habit name', async () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName="Run" />
+        <EmojiPicker {...defaultProps} habitName='Run' />
       );
 
       // Wait for debounce
@@ -99,7 +97,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should suggest 💧 for "Drink Water" habit name', async () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName="Drink Water" />
+        <EmojiPicker {...defaultProps} habitName='Drink Water' />
       );
 
       await act(async () => {
@@ -111,7 +109,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should suggest 🧘 for "Meditate" habit name', async () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName="Meditate" />
+        <EmojiPicker {...defaultProps} habitName='Meditate' />
       );
 
       await act(async () => {
@@ -123,7 +121,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should suggest 📖 for "Read" habit name', async () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName="Read" />
+        <EmojiPicker {...defaultProps} habitName='Read' />
       );
 
       await act(async () => {
@@ -135,7 +133,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should pad with default emojis when fewer than 6 suggestions', async () => {
       const { getAllByRole } = render(
-        <EmojiPicker {...defaultProps} habitName="xyz" />
+        <EmojiPicker {...defaultProps} habitName='xyz' />
       );
 
       await act(async () => {
@@ -149,14 +147,14 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should debounce suggestion updates', async () => {
       const { rerender, getByLabelText, queryByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName="" />
+        <EmojiPicker {...defaultProps} habitName='' />
       );
 
       // Initially shows default emojis
       expect(getByLabelText('Select emoji 🎯')).toBeDefined();
 
       // Update habit name
-      rerender(<EmojiPicker {...defaultProps} habitName="Run" />);
+      rerender(<EmojiPicker {...defaultProps} habitName='Run' />);
 
       // Immediately after update, should still show old emojis (debounce hasn't fired)
       // Note: The default includes 🎯, so we check if 🏃 is NOT yet present
@@ -174,7 +172,7 @@ describe('EmojiPicker - V5 Redesign', () => {
   describe('Selection State with Green Ring', () => {
     it('should show selected state on currently selected emoji', () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} selectedEmoji="💪" />
+        <EmojiPicker {...defaultProps} selectedEmoji='💪' />
       );
 
       const selectedButton = getByLabelText('Select emoji 💪');
@@ -183,7 +181,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should not show selected state on non-selected emojis', () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} selectedEmoji="💪" />
+        <EmojiPicker {...defaultProps} selectedEmoji='💪' />
       );
 
       const nonSelectedButton = getByLabelText('Select emoji 🎯');
@@ -237,7 +235,9 @@ describe('EmojiPicker - V5 Redesign', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
       const moreButton = getByLabelText('Browse all icons');
-      expect(moreButton.props.accessibilityHint).toBe('Opens full emoji picker');
+      expect(moreButton.props.accessibilityHint).toBe(
+        'Opens full emoji picker'
+      );
     });
 
     it('should have role="button" for emoji chips', () => {
@@ -249,7 +249,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('should indicate selected state in accessibility', () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} selectedEmoji="💪" />
+        <EmojiPicker {...defaultProps} selectedEmoji='💪' />
       );
 
       const selectedButton = getByLabelText('Select emoji 💪');
@@ -276,14 +276,14 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('✅ AC2: Dynamic suggestions based on habit name', async () => {
       const { getByLabelText, rerender } = render(
-        <EmojiPicker {...defaultProps} habitName="" />
+        <EmojiPicker {...defaultProps} habitName='' />
       );
 
       // Default state
       expect(getByLabelText('Select emoji 🎯')).toBeDefined();
 
       // Update to "Exercise"
-      rerender(<EmojiPicker {...defaultProps} habitName="Exercise" />);
+      rerender(<EmojiPicker {...defaultProps} habitName='Exercise' />);
 
       await act(async () => {
         jest.advanceTimersByTime(350);
@@ -292,12 +292,12 @@ describe('EmojiPicker - V5 Redesign', () => {
       expect(getByLabelText('Select emoji 💪')).toBeDefined();
     });
 
-    it('✅ AC3: "More →" link opens full EmojiPickerSheet', () => {
+    it('✅ AC3: "Browse all →" link opens full EmojiPickerSheet', () => {
       const { getByText, getByLabelText } = render(
         <EmojiPicker {...defaultProps} />
       );
 
-      expect(getByText('More →')).toBeDefined();
+      expect(getByText('Browse all →')).toBeDefined();
 
       const moreButton = getByLabelText('Browse all icons');
       fireEvent.press(moreButton);
@@ -308,7 +308,7 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('✅ AC4: Selected state with green ring styling', () => {
       const { getByLabelText } = render(
-        <EmojiPicker {...defaultProps} selectedEmoji="💪" />
+        <EmojiPicker {...defaultProps} selectedEmoji='💪' />
       );
 
       const selectedButton = getByLabelText('Select emoji 💪');
@@ -317,10 +317,10 @@ describe('EmojiPicker - V5 Redesign', () => {
 
     it('✅ AC5: Debounced suggestions for smooth animation', async () => {
       const { rerender, queryByLabelText, getByLabelText } = render(
-        <EmojiPicker {...defaultProps} habitName="" />
+        <EmojiPicker {...defaultProps} habitName='' />
       );
 
-      rerender(<EmojiPicker {...defaultProps} habitName="Run" />);
+      rerender(<EmojiPicker {...defaultProps} habitName='Run' />);
 
       // Before debounce - should not have updated yet
       expect(queryByLabelText('Select emoji 🏃')).toBeNull();
