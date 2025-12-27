@@ -146,6 +146,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
           <StickyCreateBar
             disabled={!form.habitName.trim().length}
             onPress={handleCreate}
+            selectedColor={form.selectedColor}
           />
           {form.showTimePicker && (
             <DateTimePicker
