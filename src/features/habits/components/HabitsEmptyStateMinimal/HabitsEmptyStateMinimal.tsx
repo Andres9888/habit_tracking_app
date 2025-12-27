@@ -14,11 +14,12 @@ import { Keyboard, Text, TextInput, View } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
-import { LoadingSkeleton } from './LoadingSkeleton';
 import { COLORS, COPY } from './constants';
 import { CtaButton } from './CtaButton';
+import { ErrorMessage } from './ErrorMessage';
 import { HabitInput } from './HabitInput';
 import { HeroIcon } from './HeroIcon';
+import { LoadingSkeleton } from './LoadingSkeleton';
 import { SecondaryLinks } from './SecondaryLinks';
 import { SuccessState } from './SuccessState';
 import { SuggestionChips } from './SuggestionChips';
@@ -142,6 +143,11 @@ export function HabitsEmptyStateMinimal({
     setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
+  // Handle error dismiss
+  const handleDismissError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
+
   // Show success state if habit was created
   if (successHabitName) {
     // If we have a transition callback, auto-transition after celebration
@@ -232,18 +238,7 @@ export function HabitsEmptyStateMinimal({
 
       {/* Error Message */}
       {errorMessage && (
-        <Text
-          accessibilityLiveRegion='polite'
-          accessibilityRole='alert'
-          style={{
-            color: '#DC2626',
-            fontSize: 14,
-            marginTop: 12,
-            textAlign: 'center',
-          }}
-        >
-          {errorMessage}
-        </Text>
+        <ErrorMessage message={errorMessage} onDismiss={handleDismissError} />
       )}
 
       {/* Secondary Links */}
