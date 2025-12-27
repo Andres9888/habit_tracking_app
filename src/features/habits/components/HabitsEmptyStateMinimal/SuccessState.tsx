@@ -28,8 +28,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
+import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, PROGRESS_RING, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
+import { ProgressRing } from './ProgressRing';
 import type { SuccessStateProps } from './types';
 
 /**
@@ -174,6 +175,10 @@ export function SuccessState({
   const tapHintOpacity = useSharedValue(0);
   const tapHintScale = useSharedValue(TAP_HINT_PULSE.minScale);
 
+  // Progress ring animation values
+  const ringOpacity = useSharedValue(1);
+  const ringActive = useSharedValue(true); // Controls whether ring should animate
+
   // Display emoji - use habit emoji if provided, fallback to growth emoji
   const displayEmoji = habitEmoji || '🌿';
 
@@ -192,6 +197,15 @@ export function SuccessState({
       onTransitionComplete?.();
       return;
     }
+
+    // Freeze the progress ring animation by marking it inactive
+    ringActive.value = false;
+
+    // Fade out the progress ring during exit
+    ringOpacity.value = withTiming(0, {
+      duration: EXIT_TRANSITION.content.duration,
+      easing: Easing.out(Easing.ease),
+    });
 
     // Shared element exit: icon floats up and shrinks, content fades
     iconTranslateY.value = withSpring(
@@ -221,6 +235,8 @@ export function SuccessState({
     iconExitScale,
     contentOpacity,
     containerOpacity,
+    ringActive,
+    ringOpacity,
   ]);
 
   // Tap to skip handler
@@ -373,6 +389,10 @@ export function SuccessState({
     transform: [{ scale: tapHintScale.value }],
   }));
 
+  const ringStyle = useAnimatedStyle(() => ({
+    opacity: ringOpacity.value,
+  }));
+
   return (
     <Pressable
       accessibilityLabel="Tap to continue to your habits"
@@ -394,23 +414,52 @@ export function SuccessState({
       >
         <Confetti shouldReduceMotion={shouldReduceMotion ?? false} />
 
-        {/* Success Icon - Shows habit emoji for visual continuity */}
+        {/* Icon Container - Wraps both progress ring and success icon */}
         <Animated.View
           style={[
             iconStyle,
             {
+              width: PROGRESS_RING.size,
+              height: PROGRESS_RING.size,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 24,
+            },
+          ]}
+        >
+          {/* Progress Ring - Behind the icon, shows countdown to auto-transition */}
+          {autoTransition && (
+            <Animated.View
+              style={[
+                ringStyle,
+                {
+                  position: 'absolute',
+                  width: PROGRESS_RING.size,
+                  height: PROGRESS_RING.size,
+                },
+              ]}
+            >
+              <ProgressRing
+                duration={PROGRESS_RING.duration}
+                size={PROGRESS_RING.size}
+              />
+            </Animated.View>
+          )}
+
+          {/* Success Icon - Shows habit emoji for visual continuity */}
+          <View
+            style={{
               width: 96,
               height: 96,
               borderRadius: 48,
               backgroundColor: COLORS.successBackground,
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 24,
               zIndex: 10,
-            },
-          ]}
-        >
-          <Text style={{ fontSize: 48 }}>{displayEmoji}</Text>
+            }}
+          >
+            <Text style={{ fontSize: 48 }}>{displayEmoji}</Text>
+          </View>
         </Animated.View>
 
         {/* Content */}
