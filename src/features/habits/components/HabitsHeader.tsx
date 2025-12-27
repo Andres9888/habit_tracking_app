@@ -188,12 +188,12 @@ export function HabitsHeader({
                 accessibilityHint='Browse habit templates to add'
                 accessibilityLabel='Browse habit templates'
                 accessibilityRole='button'
-                className='h-8 w-8 items-center justify-center rounded-full'
+                className='h-11 w-11 items-center justify-center rounded-full'
                 onPress={handleTemplatesPress}
                 onPressIn={handleTemplatesPressIn}
                 onPressOut={handleTemplatesPressOut}
               >
-                <BookOpen color='#7c3aed' size={16} strokeWidth={2.25} />
+                <BookOpen color='#7c3aed' size={18} strokeWidth={2.25} />
               </Pressable>
 
               {/* Smart notification badge */}
@@ -211,12 +211,12 @@ export function HabitsHeader({
               accessibilityHint='Change habit sort order'
               accessibilityLabel='Sort habits'
               accessibilityRole='button'
-              className='h-8 w-8 items-center justify-center rounded-full'
+              className='h-11 w-11 items-center justify-center rounded-full'
               onPress={handleSortPress}
               onPressIn={handleSortPressIn}
               onPressOut={handleSortPressOut}
             >
-              <ArrowUpDown color='#44403c' size={16} strokeWidth={2.25} />
+              <ArrowUpDown color='#44403c' size={18} strokeWidth={2.25} />
             </Pressable>
           </Animated.View>
 
@@ -226,12 +226,12 @@ export function HabitsHeader({
             <Pressable
               accessibilityLabel='Open settings'
               accessibilityRole='button'
-              className='h-8 w-8 items-center justify-center rounded-full'
+              className='h-11 w-11 items-center justify-center rounded-full'
               onPress={handleSettingsPress}
               onPressIn={handleSettingsPressIn}
               onPressOut={handleSettingsPressOut}
             >
-              <Settings color='#44403c' size={16} strokeWidth={2.25} />
+              <Settings color='#44403c' size={18} strokeWidth={2.25} />
             </Pressable>
           </Animated.View>
         </View>

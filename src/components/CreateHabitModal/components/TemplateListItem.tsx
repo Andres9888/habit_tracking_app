@@ -13,7 +13,7 @@ export const TemplateListItem = ({
   onSelect,
   onViewScience,
 }: TemplateListItemProps) => (
-  <View className='flex-row items-center gap-3 border-b border-stone-100 p-3'>
+  <View className='flex-row items-center gap-3 border-b border-stone-100 p-4'>
     <Pressable
       accessibilityLabel={`Select ${template.name} template`}
       accessibilityRole='button'
@@ -44,10 +44,10 @@ export const TemplateListItem = ({
     <TouchableOpacity
       accessibilityLabel={`View science for ${template.name}`}
       accessibilityRole='button'
-      className='h-9 w-9 items-center justify-center rounded-full bg-blue-50'
+      className='h-11 w-11 items-center justify-center rounded-full bg-blue-50'
       onPress={() => onViewScience(template)}
     >
-      <Microscope color='#3B82F6' size={16} strokeWidth={2} />
+      <Microscope color='#3B82F6' size={18} strokeWidth={2} />
     </TouchableOpacity>
   </View>
 );
