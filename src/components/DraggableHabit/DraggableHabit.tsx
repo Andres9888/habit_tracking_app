@@ -626,7 +626,7 @@ export default function DraggableHabit({
         {/* Main card content - header section */}
         <View className='pt-4'>
           {/* Title row - 5-column grid matching calendar/chain visualizer exactly */}
-          <View className='mb-3 flex-row items-center px-3'>
+          <View className='relative mb-3 flex-row items-center justify-between px-3'>
             {/* Column 1: emoji centered (aligns with first calendar date & habit circle) */}
             <View className='flex-1 items-center'>
               <Animated.View
@@ -652,12 +652,27 @@ export default function DraggableHabit({
                 </View>
               </Animated.View>
             </View>
-
-            {/* Columns 2-5: title content flows naturally from column 2 */}
-            <View className='flex-1 items-start pl-2'>
+            {/* Columns 2-5: empty flex spacers to maintain 5-column grid */}
+            <View className='flex-1' />
+            <View className='flex-1' />
+            <View className='flex-1' />
+            <View className='flex-1' />
+            {/* Title overlay - positioned from column 2 to end */}
+            <View
+              style={{
+                bottom: 0,
+                justifyContent: 'center',
+                left: '20%',
+                paddingLeft: 8,
+                paddingRight: 12,
+                position: 'absolute',
+                right: 12,
+                top: 0,
+              }}
+            >
               <View className='flex-row items-center gap-2'>
                 <Text
-                  className='text-[17px] font-bold leading-[22px]'
+                  className='shrink text-[17px] font-bold leading-[22px]'
                   ellipsizeMode='tail'
                   numberOfLines={1}
                   style={{
@@ -682,9 +697,6 @@ export default function DraggableHabit({
                   </Text>
                 )}
             </View>
-            <View className='flex-1' />
-            <View className='flex-1' />
-            <View className='flex-1' />
           </View>
 
           {/* New Personal Record celebration badge */}
@@ -711,7 +723,7 @@ export default function DraggableHabit({
 
           {/* Strength Progress Bar - 5-column grid for alignment */}
           {showHabitStrengthPercentage && (
-            <View className='relative mb-3 flex-row items-center px-3'>
+            <View className='relative mb-3 flex-row items-center justify-between px-3'>
               {/* Column 1: Animated plant emoji centered (aligns with first habit circle) */}
               <View className='flex-1 items-center justify-center'>
                 <ReAnimated.Text
@@ -733,7 +745,7 @@ export default function DraggableHabit({
               <View className='flex-1 items-center'>
                 <Text
                   className='text-[13px] font-bold'
-                  style={{ color: '#65a30d' }}
+                  style={{ color: '#65a30d', marginLeft: 12 }}
                 >
                   {Math.round(strengthPercent)}%
                 </Text>

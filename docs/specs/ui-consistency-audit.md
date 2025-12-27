@@ -259,17 +259,91 @@ triggerSelection();
   - Updated HabitsList.tsx limit modal headline: 22px font-semibold → 24px font-bold
   - Updated ModalHeader.tsx (Create/Edit Habit): 22px font-semibold → 24px font-bold
   - Updated EmojiPicker.tsx header: 22px font-semibold → 24px font-bold (also normalized color to stone-800)
-- [ ] All body text uses 15pt Regular
-- [ ] All secondary text uses 13pt Regular, stone-500
-- [ ] All button text uses 15pt Semibold
-- [ ] tracking-tight applied consistently
+- [x] All body text uses 15pt Regular
+  - Updated HabitsEmptyStateMinimal.tsx error message: 14px → 15px
+  - Updated SecondaryLinks.tsx links and separator: 14px → 15px
+  - Updated SuggestionChips.tsx chip labels: 14px → 15px
+  - Updated CtaButton.tsx button text: 16px → 15px
+  - Updated HabitInput.tsx input text: 16px → 15px
+  - Updated SuccessState.tsx subtext and button: 16px → 15px
+  - Updated HabitsList.tsx premium benefit descriptions: 13px → 15px
+  - Updated HabitsList.tsx locked card description: 13px → 15px
+  - Updated TemplateHero.tsx subtitle: text-sm (14px) → 15px
+  - Updated CategoryFilters.tsx filter labels: text-sm (14px) → 15px
+  - Updated TemplateListItem.tsx name and description: text-base/text-xs → 15px (also normalized colors to stone palette)
+  - Updated TemplateListEmpty.tsx messages: text-sm/text-xs → 15px (also normalized colors to stone palette)
+  - Updated TemplateListFooter.tsx button text: text-sm (14px) → 15px (also normalized color to stone palette)
+- [x] All secondary text uses 13pt Regular, stone-500
+  - Updated SecondaryLinks.tsx: Browse templates/Create custom links and separator: 15px stone-400/stone-300 → 13px Regular stone-500
+  - Updated SuccessState.tsx: Success subtext and tap hint: 15px stone-400/13px stone-300 → 13px Regular stone-500
+  - Updated SortOptionRow.tsx: Description text: 12px → 13px Regular
+  - Updated SortChip.tsx: Sort mode label: font-medium → font-normal
+  - Updated HabitsList.tsx: Premium benefit descriptions: 15px stone-600 → 13px Regular stone-500; Social proof attribution: font-semibold → font-normal; Locked card description: 15px stone-600 → 13px Regular stone-500; Upgrade prompt description and secondary button: 15px → 13px Regular stone-500
+  - Updated TemplateListItem.tsx: Template description: 15px → 13px Regular
+  - Updated TemplateListEmpty.tsx: Helper text: 15px → 13px Regular
+  - Updated TemplateHero.tsx: Subtitle: 15px font-medium text-[#111827]/70 → 13px Regular stone-500
+  - Updated HabitEditScreen.tsx: All helper text (Tap to change, Edit Cue description, Edit Affirmations description, Vision Board description, Streak helper, Archive helper, Delete/Archive dialog descriptions): text-xs/text-sm with #8a8a8a → text-[13px] font-normal stone-500
+  - Added stone500 constant (#78716C) to HabitsEmptyStateMinimal/constants.ts
+- [x] All button text uses 15pt Semibold
+  - Updated SubmitButton.tsx: text-[13px] font-bold → text-[15px] font-semibold
+  - Updated CtaButton.tsx: fontWeight '700' → fontWeight '600' (semibold)
+  - Updated SocialLoginButtons.tsx: text-[13px] font-bold → text-[15px] font-semibold (Google and Apple buttons)
+  - Updated QuickCompleteButton.tsx: text-lg font-bold → text-[15px] font-semibold
+  - Updated HabitsList.tsx: "Go Premium" button text-[15px] font-bold → text-[15px] font-semibold
+  - Updated WelcomeScreen.tsx: "GET STARTED" and "SIGN IN" buttons text-[13px] font-bold → text-[15px] font-semibold
+  - Updated SignInScreen.tsx: Sign in button text-[13px] font-bold → text-[15px] font-semibold
+  - Updated ForgotPasswordModal.tsx: "CLOSE", "SEND RESET EMAIL", "CANCEL" buttons text-[13px] font-bold → text-[15px] font-semibold
+  - Updated VisualizationExercise.tsx: "Begin Exercise" button text-base font-bold → text-[15px] font-semibold
+  - Updated HabitDetailScreen.tsx: "Save My Why" and "Claim My Identity" buttons text-base font-bold → text-[15px] font-semibold
+  - TemplateListFooter.tsx: Already correct (text-[15px] font-semibold)
+- [x] tracking-tight applied consistently
+  - Updated HabitsList.tsx: "You're on a roll!" headline → added tracking-tight
+  - Updated ModalHeader.tsx: "Create Habit" / "Edit Habit" headline → added tracking-tight
+  - Updated SettingsModal.tsx: "Settings" headline → added tracking-tight
+  - Updated EmojiPicker.tsx: "Choose Icon" headline → added tracking-tight
+  - Updated PausedHabitsModal.tsx: "Paused Habits" headline → added tracking-tight
+  - Updated StatsNotesModal.tsx: "Stats & Notes" headline → added tracking-tight
+  - Updated ArchivedHabitsModal.tsx: "Your Habits Are Thriving!" headline → added tracking-tight
+  - Updated VisionBoardPreview.tsx: dynamic title → added tracking-tight
+  - Updated VisualizationExercise.tsx: "Visualization Exercise" headline → added tracking-tight
+  - Updated SuccessAnimation.tsx: habit name display → added tracking-tight
+  - Updated HabitEditExample.tsx: example screen title → added tracking-tight
+  - Updated NativeWindTest.tsx: test component title → added tracking-tight
+  - Note: Numeric stat displays (QuickStatsStrip, InsightsSection, HabitEditScreen stats) intentionally left without tracking-tight as they are data values, not headlines
 
 ## Colors
 
-- [ ] Primary actions: emerald-500 (user actions) or dark gradient (navigation)
-- [ ] Premium: violet-600
-- [ ] Text: stone-800 (primary), stone-500 (secondary), stone-400 (tertiary)
-- [ ] Borders: stone-200 (visible), stone-100 (subtle)
+- [x] Primary actions: emerald-500 (user actions) or dark gradient (navigation)
+  - Verified: CtaButton (empty state) uses emerald-500, HabitsHeader Add button uses dark gradient (#101828 → #1a2332)
+  - Added `premium` color palette to theme/colors.ts with violet-400 through violet-700
+  - Updated PremiumAnalyticsPaywall to use colors.premium[600] instead of colors.primary[500]
+- [x] Premium: violet-600
+  - Updated PremiumTeaser.tsx: Changed from amber color scheme to violet-600 (from-violet-50 to-indigo-50, violet-700 text, #7c3aed sparkles icon)
+  - Updated TemplateCard.tsx: Changed inlinePremiumBadge from amber (#FEF3C7/#92400E) to violet (#ede9fe/#7c3aed)
+  - Updated PremiumBadge.tsx: Changed PRO badge gradient from gold (#FFD700/#FFA500) to violet (#8b5cf6/#7c3aed) with white text
+  - RewardCelebrationToast.tsx: Already using #7c3aed (violet-600) correctly
+  - HabitsList.tsx monetization components: Already using from-violet-600 to-indigo-600 gradients correctly
+  - PremiumAnalyticsPaywall.tsx: Already using colors.premium[600] correctly
+- [x] Text: stone-800 (primary), stone-500 (secondary), stone-400 (tertiary)
+  - Standardized all #1a1a1a → stone-800/#1c1917 and #8a8a8a → stone-500/#78716c across:
+    - SettingsModal.tsx, SettingsRow.tsx, SettingsSection.tsx: Updated theme colors
+    - HabitCalendarModal.tsx, MonthlyCalendar.tsx: Updated icon colors
+    - CreateHabitModal components: TimeOfDaySelector, QuickPicksRow, PhaseSelector, ReminderSection, CollapsibleAdvancedOptions, ColorPickerSection, EmojiPicker, HabitNameField, HabitPreview, ColorPickerSheet
+    - EmojiPickerV2 components: EmojiPickerSheet, CategoryPills, EmojiGrid
+    - HabitEditScreen.tsx: Updated all text inputs, buttons, labels
+    - TemplateListFooter.tsx, TemplateList.tsx, TemplateListShadows.tsx
+- [x] Borders: stone-200 (visible), stone-100 (subtle)
+  - Updated Card.tsx: border-slate-200 → border-stone-200 (Card and CardHeader components)
+  - Updated FormInput.tsx: border-slate-200 → border-stone-200, text-slate-* → text-stone-*
+  - Updated TemplateListItem.tsx: border-stone-50 → border-stone-100 (subtle divider)
+  - Updated CreateHabitModal.tsx: hex dividers #e7e5e4 → bg-stone-200 class, text #a8a29e → text-stone-400
+  - Documented inline style hex values with stone palette comments:
+    - HabitPreview.tsx: #e7e5e4 = stone-200 (empty state border)
+    - QuickPicksRow.tsx: #e7e5e4 = stone-200 (unselected border)
+    - ReminderSelector.tsx: #e7e5e4 = stone-200 (unselected border)
+    - TimeOfDaySelector.tsx: #e7e5e4 = stone-200 (unselected border)
+    - SuggestionChips.tsx: #e7e5e4 = stone-200 (chip border)
+    - ColorPickerSection.tsx: #a8a29e = stone-400 (custom color button dashed border)
 - [ ] Backgrounds: white, stone-50
 
 ## Spacing

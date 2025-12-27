@@ -320,6 +320,8 @@ Manual testing on devices.
 - [ ] Test reduced motion settings
 - [ ] Test on iOS and Android
 
+**Note**: This task requires human intervention - manual testing on physical iOS and Android devices. Cannot be automated by Maestro agents.
+
 ---
 
 ## Task Dependencies Graph

@@ -160,9 +160,9 @@ export const ERROR_ANIMATION = {
 Add `CHARACTER_LIMIT`, `KEYBOARD_LAYOUT`, and `ERROR_ANIMATION` constants.
 
 **Acceptance Criteria**:
-- [ ] `CHARACTER_LIMIT` with max, warningThreshold, errorThreshold
-- [ ] `KEYBOARD_LAYOUT` with transition and size values
-- [ ] `ERROR_ANIMATION` with timing and distance values
+- [x] `CHARACTER_LIMIT` with max, warningThreshold, errorThreshold
+- [x] `KEYBOARD_LAYOUT` with transition and size values
+- [x] `ERROR_ANIMATION` with timing and distance values
 
 **Files**: `animations.ts`, `constants.ts`
 
