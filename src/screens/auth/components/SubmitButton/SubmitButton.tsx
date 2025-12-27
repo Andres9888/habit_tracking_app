@@ -19,7 +19,7 @@ export function SubmitButton({
 
   return (
     <TouchableOpacity
-      className={`mt-4 items-center rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
+      className={`mt-4 items-center rounded-3xl border border-stone-800 bg-stone-800 py-4 ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}

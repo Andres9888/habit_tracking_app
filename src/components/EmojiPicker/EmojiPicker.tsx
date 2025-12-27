@@ -81,8 +81,8 @@ const EmojiItem = memo(
           style={[
             {
               alignItems: 'center',
-              backgroundColor: isSelected ? '#dbeafe' : '#f9fafb',
-              borderColor: isSelected ? '#3b82f6' : 'transparent',
+              backgroundColor: isSelected ? '#f5f5f4' : '#fafaf9', // stone-100 : stone-50
+              borderColor: isSelected ? '#10b981' : 'transparent', // emerald-500
               borderRadius: 12,
               borderWidth: isSelected ? 2 : 0,
               flex: 1,
@@ -153,8 +153,8 @@ const QuickAccessEmojiItem = memo(
           style={[
             {
               alignItems: 'center',
-              backgroundColor: isSelected ? '#dbeafe' : 'white',
-              borderColor: isSelected ? '#3b82f6' : 'transparent',
+              backgroundColor: isSelected ? '#f5f5f4' : 'white', // stone-100 when selected
+              borderColor: isSelected ? '#10b981' : 'transparent', // emerald-500
               borderRadius: 12,
               borderWidth: isSelected ? 2 : 0,
               elevation: 1,
@@ -332,30 +332,30 @@ export const EmojiPicker = memo(
             style={{ height: '85%', marginTop: 'auto' }}
           >
             {/* Header */}
-            <View className='flex-row items-center justify-between border-b border-gray-200 px-4 pb-3 pt-4'>
+            <View className='flex-row items-center justify-between border-b border-stone-200 px-4 pb-3 pt-4'>
               <Text className='text-[24px] font-bold tracking-tight text-stone-800'>
                 Choose Icon
               </Text>
               <TouchableOpacity
                 accessibilityLabel='Close emoji picker'
                 accessibilityRole='button'
-                className='h-10 w-10 items-center justify-center rounded-full bg-gray-200'
+                className='h-10 w-10 items-center justify-center rounded-full bg-stone-200'
                 onPress={handleClose}
               >
-                <X color='#1a1a1a' size={20} strokeWidth={2} />
+                <X color='#1c1917' size={20} strokeWidth={2} />
               </TouchableOpacity>
             </View>
 
             {/* Search Bar */}
             <View className='px-4 pb-3 pt-3'>
               <View className='flex-row items-center rounded-xl bg-white px-3 py-2 shadow-sm'>
-                <Search color='#8a8a8a' size={20} />
+                <Search color='#78716c' size={20} />
                 <TextInput
                   accessibilityHint='Type keywords like run, water, or sleep to find emojis'
                   accessibilityLabel='Search emojis'
-                  className='ml-2 flex-1 text-base text-[#1a1a1a]'
+                  className='ml-2 flex-1 text-base text-stone-800'
                   placeholder='Search "run", "water", "sleep"...'
-                  placeholderTextColor='#adaebc'
+                  placeholderTextColor='#a8a29e'
                   returnKeyType='search'
                   value={searchQuery}
                   onChangeText={setSearchQuery}
@@ -366,7 +366,7 @@ export const EmojiPicker = memo(
                     accessibilityRole='button'
                     onPress={handleClearSearch}
                   >
-                    <X color='#8a8a8a' size={18} />
+                    <X color='#78716c' size={18} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -375,7 +375,7 @@ export const EmojiPicker = memo(
             {/* Suggested Emojis Section - based on habit name */}
             {!searchQuery && suggestedEmojis.length > 0 && (
               <View className='px-4 pb-2'>
-                <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500'>
+                <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500'>
                   Suggested for "{habitName}"
                 </Text>
                 <ScrollView
@@ -399,7 +399,7 @@ export const EmojiPicker = memo(
             {/* Recently Used Section */}
             {!searchQuery && recentEmojis.length > 0 && (
               <View className='px-4 pb-2'>
-                <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500'>
+                <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500'>
                   Recently Used
                 </Text>
                 <ScrollView
@@ -424,7 +424,7 @@ export const EmojiPicker = memo(
             {!searchQuery && (
               <ScrollView
                 horizontal
-                className='border-b border-gray-200'
+                className='border-b border-stone-200'
                 contentContainerStyle={{
                   gap: 8,
                   paddingHorizontal: 16,
@@ -443,7 +443,7 @@ export const EmojiPicker = memo(
                       style={[
                         {
                           alignItems: 'center',
-                          backgroundColor: isSelected ? '#1a1a1a' : 'white',
+                          backgroundColor: isSelected ? '#1c1917' : 'white', // stone-800 : white
                           borderRadius: 9999,
                           elevation: 1,
                           flexDirection: 'row',
@@ -462,7 +462,7 @@ export const EmojiPicker = memo(
                       <Text
                         style={[
                           {
-                            color: isSelected ? 'white' : '#1a1a1a',
+                            color: isSelected ? 'white' : '#1c1917', // stone-800
                             fontSize: 14,
                             fontWeight: '500',
                           },
@@ -480,11 +480,11 @@ export const EmojiPicker = memo(
             <View className='flex-1 bg-white'>
               {displayedEmojis.length === 0 ? (
                 <View className='flex-1 items-center justify-center'>
-                  <Search color='#8a8a8a' size={48} />
-                  <Text className='mt-3 text-base font-medium text-[#1a1a1a]'>
+                  <Search color='#78716c' size={48} />
+                  <Text className='mt-3 text-base font-medium text-stone-800'>
                     No emojis found
                   </Text>
-                  <Text className='mt-1 text-sm text-[#8a8a8a]'>
+                  <Text className='mt-1 text-sm text-stone-500'>
                     Try a different search term
                   </Text>
                 </View>
@@ -493,7 +493,7 @@ export const EmojiPicker = memo(
                   {/* Category Header */}
                   {!searchQuery && (
                     <View className='px-4 pb-2 pt-3'>
-                      <Text className='text-xs font-semibold uppercase tracking-wider text-gray-500'>
+                      <Text className='text-xs font-semibold uppercase tracking-wider text-stone-500'>
                         {currentCategoryName}
                       </Text>
                     </View>
@@ -517,12 +517,12 @@ export const EmojiPicker = memo(
             </View>
 
             {/* No Icon Option */}
-            <View className='border-t border-gray-200 bg-white px-4 py-3'>
+            <View className='border-t border-stone-200 bg-white px-4 py-3'>
               <TouchableOpacity
                 accessibilityLabel='Select no icon for this habit'
                 accessibilityRole='button'
                 className={`flex-row items-center justify-center rounded-xl py-3 ${
-                  selectedEmoji === null ? 'bg-[#1a1a1a]' : 'bg-gray-100'
+                  selectedEmoji === null ? 'bg-stone-800' : 'bg-stone-100'
                 }`}
                 onPress={() => {
                   onSelect(null);
@@ -531,7 +531,7 @@ export const EmojiPicker = memo(
               >
                 <Text
                   className={`text-base font-semibold ${
-                    selectedEmoji === null ? 'text-white' : 'text-[#1a1a1a]'
+                    selectedEmoji === null ? 'text-white' : 'text-stone-800'
                   }`}
                 >
                   No Icon

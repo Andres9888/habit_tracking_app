@@ -458,7 +458,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       key={freq}
                       className={`h-12 flex-1 items-center justify-center rounded-xl ${
-                        frequency === freq ? 'bg-blue-500' : 'bg-stone-100'
+                        frequency === freq ? 'bg-emerald-500' : 'bg-stone-100'
                       }`}
                       onPress={() => {
                         triggerSelection();
@@ -488,7 +488,7 @@ export default function HabitEditScreen({
                       key={index}
                       className={`h-10 w-10 items-center justify-center rounded-xl ${
                         selectedDays.includes(index)
-                          ? 'bg-blue-500'
+                          ? 'bg-emerald-500'
                           : 'bg-stone-100'
                       }`}
                       onPress={() => {
@@ -520,7 +520,7 @@ export default function HabitEditScreen({
                     <TouchableOpacity
                       key={time}
                       className={`h-17 flex-1 items-center justify-center rounded-xl ${
-                        preferredTime === time ? 'bg-blue-500' : 'bg-stone-100'
+                        preferredTime === time ? 'bg-emerald-500' : 'bg-stone-100'
                       }`}
                       onPress={() => {
                         triggerSelection();
@@ -1036,7 +1036,7 @@ export default function HabitEditScreen({
                   accessibilityState={{ selected: goalUnit === unit.value }}
                   className={`mb-2 flex-row items-center justify-between rounded-xl px-4 py-4 ${
                     goalUnit === unit.value
-                      ? 'border-2 border-blue-500 bg-blue-50'
+                      ? 'border-2 border-emerald-500 bg-stone-50'
                       : 'bg-stone-50'
                   }`}
                   onPress={() => {
@@ -1050,7 +1050,7 @@ export default function HabitEditScreen({
                     <Text
                       className={`text-base font-medium ${
                         goalUnit === unit.value
-                          ? 'text-blue-600'
+                          ? 'text-emerald-600'
                           : 'text-stone-800'
                       }`}
                     >
