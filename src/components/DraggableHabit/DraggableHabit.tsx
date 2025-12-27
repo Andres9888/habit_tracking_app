@@ -8,12 +8,20 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import ReAnimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withSequence,
+  withTiming,
+  withDelay,
+  Easing as ReanimatedEasing,
+} from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 import { TrendingUp, Archive } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { StrengthProgressBar } from '../StrengthProgressBar';
 import { PhaseTag } from '../PhaseTag';
 import * as Haptics from 'expo-haptics';
 
@@ -493,6 +501,70 @@ export default function DraggableHabit({
     return '🌱'; // Starting
   };
 
+  const getStrengthLabel = () => {
+    if (strengthPercent >= 80) return 'Automatic';
+    if (strengthPercent >= 60) return 'Strong';
+    if (strengthPercent >= 40) return 'Developing';
+    if (strengthPercent >= 20) return 'Building';
+    return 'Starting';
+  };
+
+  // Animated emoji for strength indicator
+  const strengthEmojiScale = useSharedValue(1);
+  const strengthEmojiOpacity = useSharedValue(1);
+  const strengthEmojiRotation = useSharedValue(0);
+  const previousStrengthLevelRef = useRef(getStrengthLabel());
+
+  useEffect(() => {
+    const currentLabel = getStrengthLabel();
+    const levelChanged = previousStrengthLevelRef.current !== currentLabel;
+    previousStrengthLevelRef.current = currentLabel;
+
+    if (reduceMotionPreference) return;
+
+    if (levelChanged) {
+      // Level-up animation: fade out + shrink, then fade in + grow with wobble
+      strengthEmojiOpacity.value = withTiming(0.3, {
+        duration: 150,
+        easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+      });
+      strengthEmojiScale.value = withTiming(0.6, {
+        duration: 150,
+        easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+      });
+      strengthEmojiRotation.value = withSequence(
+        withTiming(-8, { duration: 80, easing: ReanimatedEasing.inOut(ReanimatedEasing.ease) }),
+        withTiming(8, { duration: 80, easing: ReanimatedEasing.inOut(ReanimatedEasing.ease) }),
+        withTiming(0, { duration: 60, easing: ReanimatedEasing.out(ReanimatedEasing.ease) })
+      );
+      strengthEmojiOpacity.value = withDelay(
+        150,
+        withTiming(1, { duration: 200, easing: ReanimatedEasing.out(ReanimatedEasing.ease) })
+      );
+      strengthEmojiScale.value = withDelay(
+        150,
+        withSequence(
+          withSpring(1.4, { damping: 6, stiffness: 120 }),
+          withSpring(1, { damping: 10, stiffness: 180 })
+        )
+      );
+    } else {
+      // Subtle pulse for regular updates
+      strengthEmojiScale.value = withSequence(
+        withTiming(1.08, { duration: 100, easing: ReanimatedEasing.out(ReanimatedEasing.ease) }),
+        withSpring(1, { damping: 15, stiffness: 200 })
+      );
+    }
+  }, [strengthPercent, reduceMotionPreference]);
+
+  const strengthEmojiAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: strengthEmojiOpacity.value,
+    transform: [
+      { scale: strengthEmojiScale.value },
+      { rotate: `${strengthEmojiRotation.value}deg` },
+    ],
+  }));
+
   const habitCard = (
     <Pressable
       style={({ pressed }) => ({
@@ -639,44 +711,24 @@ export default function DraggableHabit({
 
           {/* Strength Progress Bar - 5-column grid for alignment */}
           {showHabitStrengthPercentage && (
-            <View className='mb-3 flex-row items-center px-3'>
-              {/* Column 1: Plant emoji centered (aligns with first habit circle) */}
-              <View className='flex-1 items-center'>
-                <Text className='text-[20px]'>{getStrengthEmoji()}</Text>
-              </View>
-              {/* Columns 2-4: Progress bar with dividers */}
-              <View className='flex-[3] px-2'>
-                <View
-                  className='h-2 w-full overflow-hidden rounded-full'
-                  style={{ backgroundColor: '#e5e7eb' }}
+            <View className='relative mb-3 flex-row items-center px-3'>
+              {/* Column 1: Animated plant emoji centered (aligns with first habit circle) */}
+              <View className='flex-1 items-center justify-center'>
+                <ReAnimated.Text
+                  style={[
+                    { fontSize: 20, textAlign: 'center' },
+                    strengthEmojiAnimatedStyle,
+                  ]}
                 >
-                  {/* Progress fill */}
-                  <View
-                    className='h-full rounded-full'
-                    style={{
-                      backgroundColor: '#65a30d',
-                      width: `${strengthPercent}%`,
-                    }}
-                  />
-                  {/* Dividers at 20%, 40%, 60%, 80% */}
-                  <View
-                    className='absolute h-full w-px'
-                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '20%' }}
-                  />
-                  <View
-                    className='absolute h-full w-px'
-                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '40%' }}
-                  />
-                  <View
-                    className='absolute h-full w-px'
-                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '60%' }}
-                  />
-                  <View
-                    className='absolute h-full w-px'
-                    style={{ backgroundColor: 'rgba(0,0,0,0.15)', left: '80%' }}
-                  />
-                </View>
+                  {getStrengthEmoji()}
+                </ReAnimated.Text>
               </View>
+              {/* Column 2 */}
+              <View className='flex-1' />
+              {/* Column 3 */}
+              <View className='flex-1' />
+              {/* Column 4 */}
+              <View className='flex-1' />
               {/* Column 5: Percentage centered (aligns with last habit circle) */}
               <View className='flex-1 items-center'>
                 <Text
@@ -685,6 +737,81 @@ export default function DraggableHabit({
                 >
                   {Math.round(strengthPercent)}%
                 </Text>
+              </View>
+              {/* Progress bar overlay spanning columns 2-4 */}
+              <View
+                pointerEvents='none'
+                style={{
+                  bottom: 0,
+                  justifyContent: 'center',
+                  left: '20%',
+                  position: 'absolute',
+                  right: '20%',
+                  top: 0,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: '#e5e7eb',
+                    borderRadius: 4,
+                    height: 8,
+                    marginHorizontal: 8,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    width: '100%',
+                  }}
+                >
+                  {/* Progress fill */}
+                  <View
+                    style={{
+                      backgroundColor: '#65a30d',
+                      borderRadius: 4,
+                      height: '100%',
+                      width: `${strengthPercent}%`,
+                    }}
+                  />
+                  {/* Dividers at 20%, 40%, 60%, 80% */}
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.15)',
+                      height: '100%',
+                      left: '20%',
+                      position: 'absolute',
+                      top: 0,
+                      width: 1,
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.15)',
+                      height: '100%',
+                      left: '40%',
+                      position: 'absolute',
+                      top: 0,
+                      width: 1,
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.15)',
+                      height: '100%',
+                      left: '60%',
+                      position: 'absolute',
+                      top: 0,
+                      width: 1,
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.15)',
+                      height: '100%',
+                      left: '80%',
+                      position: 'absolute',
+                      top: 0,
+                      width: 1,
+                    }}
+                  />
+                </View>
               </View>
             </View>
           )}

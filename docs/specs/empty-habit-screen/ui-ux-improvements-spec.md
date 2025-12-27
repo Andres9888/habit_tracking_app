@@ -164,12 +164,14 @@ export const CTA_SHIMMER = {
 Add new animation constants for chip stagger, hero glow, and CTA shimmer.
 
 **Acceptance Criteria**:
-- [ ] `CHIP_STAGGER` constant with delay, duration, translateY
-- [ ] `HERO_GLOW` constant with shadow opacity/radius ranges
-- [ ] `CTA_SHIMMER` constant with duration, gradientOpacity
-- [ ] All values match spec
+- [x] `CHIP_STAGGER` constant with delay, duration, translateY
+- [x] `HERO_GLOW` constant with shadow opacity/radius ranges
+- [x] `CTA_SHIMMER` constant with duration, gradientOpacity
+- [x] All values match spec
 
 **Files**: `src/features/habits/components/HabitsEmptyStateMinimal/animations.ts`
+
+**Completed**: 2025-12-27 - Added `CHIP_STAGGER`, `HERO_GLOW`, and `CTA_SHIMMER` constants with all spec values.
 
 ---
 
@@ -179,14 +181,16 @@ Add new animation constants for chip stagger, hero glow, and CTA shimmer.
 Create skeleton placeholder component with shimmer animation for loading state.
 
 **Acceptance Criteria**:
-- [ ] Renders skeleton elements matching layout (hero, headline, input, chips, CTA)
-- [ ] Shimmer animation using `LinearGradient` or animated background
-- [ ] Skeleton colors: base `#E7E5E4`, highlight `#F5F5F4`
-- [ ] Animation duration: 1.5s infinite
-- [ ] Exported from index.ts
-- [ ] Includes `accessibilityLabel="Loading"`
+- [x] Renders skeleton elements matching layout (hero, headline, input, chips, CTA)
+- [x] Shimmer animation using `LinearGradient` or animated background
+- [x] Skeleton colors: base `#E7E5E4`, highlight `#F5F5F4`
+- [x] Animation duration: 1.5s infinite
+- [x] Exported from index.ts
+- [x] Includes `accessibilityLabel="Loading"`
 
 **Files**: Create `LoadingSkeleton.tsx`, modify `index.ts`
+
+**Completed**: 2025-12-27 - Created `LoadingSkeleton.tsx` with shimmer animation using `expo-linear-gradient` and Reanimated. Component includes 5 skeleton elements matching the empty state layout (hero 80x80, headline 260x32, input full-width x56, 3 chips, CTA full-width x56). All 10 unit tests passing.
 
 ---
 
@@ -196,11 +200,13 @@ Create skeleton placeholder component with shimmer animation for loading state.
 Replace static disabled state with LoadingSkeleton when `isLoading=true`.
 
 **Acceptance Criteria**:
-- [ ] When `isLoading=true`, render `LoadingSkeleton` instead of main content
-- [ ] When `isLoading=false`, render normal empty state
-- [ ] Transition between states is instant (no animation needed)
+- [x] When `isLoading=true`, render `LoadingSkeleton` instead of main content
+- [x] When `isLoading=false`, render normal empty state
+- [x] Transition between states is instant (no animation needed)
 
 **Files**: `HabitsEmptyStateMinimal.tsx`
+
+**Completed**: 2025-12-27 - Integrated `LoadingSkeleton` component into `HabitsEmptyStateMinimal`. When `isLoading=true`, the component now renders the skeleton instead of main content. Updated 3 existing loading state tests to verify the new behavior (skeleton shows with accessibility label, content hidden during load, proper transition from loading to content). All 35 tests passing.
 
 ---
 

@@ -254,7 +254,11 @@ triggerSelection();
 
 ## Typography
 
-- [ ] All headlines use 24pt Bold
+- [x] All headlines use 24pt Bold
+  - Updated HabitsList.tsx MonetizationHero headline: 26px → 24px
+  - Updated HabitsList.tsx limit modal headline: 22px font-semibold → 24px font-bold
+  - Updated ModalHeader.tsx (Create/Edit Habit): 22px font-semibold → 24px font-bold
+  - Updated EmojiPicker.tsx header: 22px font-semibold → 24px font-bold (also normalized color to stone-800)
 - [ ] All body text uses 15pt Regular
 - [ ] All secondary text uses 13pt Regular, stone-500
 - [ ] All button text uses 15pt Semibold
