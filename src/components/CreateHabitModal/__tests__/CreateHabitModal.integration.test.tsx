@@ -1,5 +1,5 @@
 /**
- * CreateHabitModal Integration Tests - V5/V8 Redesign
+ * CreateHabitModal Integration Tests - V5/V8/V9 Redesign
  * Task 5.3: Integration test for template → form flow
  *
  * Tests:
@@ -7,6 +7,7 @@
  * - Form modifications clear template selection
  * - Reminder selection (V8 unified selector) auto-sets reminder time
  * - Quick picks → form data flow
+ * - V9 Design System elements (motivation text, uppercase labels, tip text)
  */
 
 import React from 'react';
@@ -511,6 +512,52 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       // Quick picks should not be visible in edit mode
       expect(queryByText('Quick picks')).toBeNull();
       expect(queryByText('or create your own')).toBeNull();
+    });
+  });
+
+  describe('V9 Design System Elements', () => {
+    it('should render V9 motivation text "Start your streak today"', () => {
+      const { getByText } = render(<CreateHabitModal {...defaultProps} />);
+
+      expect(getByText('Start your streak today')).toBeDefined();
+    });
+
+    it('should render V9 motivation text with consistency message and fire emoji', () => {
+      const { getByText } = render(<CreateHabitModal {...defaultProps} />);
+
+      expect(getByText(/consistency is key/)).toBeDefined();
+    });
+
+    it('should render V9 tip text below habit name input', () => {
+      const { getByText } = render(<CreateHabitModal {...defaultProps} />);
+
+      expect(getByText(/Tip: Be specific/)).toBeDefined();
+    });
+
+    it('should render V9 uppercase section labels (Daily reminder)', () => {
+      const { getByText } = render(<CreateHabitModal {...defaultProps} />);
+
+      // V9: "Daily reminder" replaces previous "Reminder" label
+      expect(getByText('Daily reminder')).toBeDefined();
+    });
+
+    it('should not render TemplatesLinkSection (removed in V9)', () => {
+      const { queryByText } = render(<CreateHabitModal {...defaultProps} />);
+
+      // V9: Templates link section was removed for focused flow
+      expect(queryByText('Start from Template')).toBeNull();
+      expect(queryByText('Browse curated')).toBeNull();
+    });
+
+    it('should render "+" button instead of "Browse all →" link in emoji section', () => {
+      const { getByLabelText, queryByText } = render(
+        <CreateHabitModal {...defaultProps} />
+      );
+
+      // V9: "+" button replaced "Browse all →" link
+      expect(getByLabelText('Browse all icons')).toBeDefined();
+      // The old link should not exist in the emoji picker section
+      // (Note: "Browse all →" still exists in QuickPicksRow for templates)
     });
   });
 
