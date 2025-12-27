@@ -39,6 +39,8 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
         {STRINGS.CREATE_HABIT.nameHelper}
       </Text>
       <TextInput
+        accessibilityLabel='Habit name'
+        accessibilityHint='Enter a name for your habit, up to 50 characters'
         autoFocus={autoFocus}
         blurOnSubmit
         className='h-14 rounded-xl bg-white px-4 text-base text-[#1a1a1a]'

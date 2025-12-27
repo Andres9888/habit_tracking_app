@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { AccessibilityInfo, Animated, Pressable, Text, View } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { HUBERMAN_PHASES, PHASE_ORDER, type HubermanPhase } from '../../../constants/hubermanPhases';
 
@@ -100,6 +100,9 @@ export const TimeOfDaySelector = ({
   const handleSelectPhase = (phase: HubermanPhase) => {
     triggerSelection();
     onSelectPhase(phase);
+    // Announce time of day selection for screen readers
+    const phaseInfo = HUBERMAN_PHASES[phase];
+    AccessibilityInfo.announceForAccessibility(`Selected ${phaseInfo.shortLabel}, ${phaseInfo.timeRange}`);
   };
 
   return (

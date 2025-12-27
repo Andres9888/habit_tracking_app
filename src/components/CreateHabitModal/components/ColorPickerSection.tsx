@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react-native';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { AccessibilityInfo, Animated, Text, TouchableOpacity, View } from 'react-native';
 import { useRef } from 'react';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
@@ -37,11 +37,19 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
 
+  const handlePress = () => {
+    triggerSelection();
+    onSelect(color);
+    // Announce color selection for screen readers
+    AccessibilityInfo.announceForAccessibility(`Selected ${color} color`);
+  };
+
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
       <TouchableOpacity
-        accessibilityLabel={`Select ${color} color`}
+        accessibilityLabel={`${color} color${isSelected ? ', selected' : ''}`}
         accessibilityRole='button'
+        accessibilityState={{ selected: isSelected }}
         className='h-11 w-11 items-center justify-center rounded-full'
         style={{
           backgroundColor: color,
@@ -64,10 +72,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
             useNativeDriver: true,
           }).start();
         }}
-        onPress={() => {
-          triggerSelection();
-          onSelect(color);
-        }}
+        onPress={handlePress}
       />
     </Animated.View>
   );

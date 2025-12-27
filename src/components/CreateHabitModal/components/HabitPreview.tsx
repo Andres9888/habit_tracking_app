@@ -100,8 +100,22 @@ export const HabitPreview = ({
     return phase ? `Daily • ${phase.icon} ${phase.shortLabel}` : 'Daily';
   };
 
+  // Generate accessibility label based on current state
+  const getAccessibilityLabel = () => {
+    if (isEmpty) {
+      return 'Habit preview: No habit configured yet. Enter a name and select an icon to preview.';
+    }
+    const nameText = habitName || 'Unnamed habit';
+    const emojiText = selectedEmoji ? `with icon ${selectedEmoji}` : 'without icon';
+    const timeText = getTimeOfDayLabel();
+    return `Habit preview: ${nameText} ${emojiText}. Schedule: ${timeText}`;
+  };
+
   return (
     <View
+      accessible
+      accessibilityLabel={getAccessibilityLabel()}
+      accessibilityRole='summary'
       className='mb-4 mt-3 overflow-hidden rounded-2xl bg-white p-3'
       style={{
         borderWidth: 2,

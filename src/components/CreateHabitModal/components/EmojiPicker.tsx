@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -118,6 +118,8 @@ export const EmojiPicker = ({ selectedEmoji, onSelect, habitName }: EmojiPickerP
     (emoji: string) => {
       triggerSelection();
       onSelect(emoji);
+      // Announce emoji selection for screen readers
+      AccessibilityInfo.announceForAccessibility(`Selected emoji ${emoji}`);
     },
     [onSelect, triggerSelection]
   );

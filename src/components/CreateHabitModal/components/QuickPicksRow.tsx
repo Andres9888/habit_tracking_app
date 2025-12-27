@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Animated, FlatList, Pressable, Text, View } from 'react-native';
+import { AccessibilityInfo, Animated, FlatList, Pressable, Text, View } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import type { HubermanPhase } from '../../../constants/hubermanPhases';
 import { HUBERMAN_PHASES } from '../../../constants/hubermanPhases';
@@ -136,6 +136,11 @@ export const QuickPicksRow = ({
   const handleSelectTemplate = (template: QuickPickTemplate) => {
     triggerSelection();
     onSelectTemplate(template);
+    // Announce template selection for screen readers
+    const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
+    AccessibilityInfo.announceForAccessibility(
+      `Selected ${template.name} template. Scheduled for ${phaseInfo.shortLabel}`
+    );
   };
 
   const renderItem = ({ item }: { item: QuickPickTemplate }) => (
