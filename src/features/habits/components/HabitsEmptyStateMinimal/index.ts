@@ -15,6 +15,7 @@ export { SuggestionChips } from './SuggestionChips';
 export { CtaButton } from './CtaButton';
 export { SecondaryLinks } from './SecondaryLinks';
 export { SuccessState } from './SuccessState';
+export { AnimatedEntrance } from './AnimatedEntrance';
 
 // Type exports
 export type {

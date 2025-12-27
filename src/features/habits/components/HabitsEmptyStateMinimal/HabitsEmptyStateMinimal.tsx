@@ -12,6 +12,8 @@ import { useCallback, useRef, useState } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { AnimatedEntrance } from './AnimatedEntrance';
+import { ENTRANCE_DELAYS } from './animations';
 import { COLORS, COPY } from './constants';
 import { CtaButton } from './CtaButton';
 import { HabitInput } from './HabitInput';
@@ -110,54 +112,66 @@ export function HabitsEmptyStateMinimal({
       }}
     >
       {/* Hero Icon */}
-      <HeroIcon animate={!isLoading} />
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.heroIcon}>
+        <HeroIcon animate={!isLoading} />
+      </AnimatedEntrance>
 
       {/* Question Headline */}
-      <Text
-        style={{
-          marginTop: 24,
-          marginBottom: 24,
-          fontSize: 24,
-          fontWeight: '700',
-          color: COLORS.stone800,
-          textAlign: 'center',
-          lineHeight: 32,
-        }}
-      >
-        {COPY.headline}
-      </Text>
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
+        <Text
+          style={{
+            marginTop: 24,
+            marginBottom: 24,
+            fontSize: 24,
+            fontWeight: '700',
+            color: COLORS.stone800,
+            textAlign: 'center',
+            lineHeight: 32,
+          }}
+        >
+          {COPY.headline}
+        </Text>
+      </AnimatedEntrance>
 
       {/* Text Input */}
-      <View style={{ width: '100%', marginBottom: 16 }}>
-        <HabitInput
-          ref={inputRef}
-          value={inputValue}
-          onChangeText={handleInputChange}
-        />
-      </View>
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
+        <View style={{ width: '100%', marginBottom: 16 }}>
+          <HabitInput
+            ref={inputRef}
+            value={inputValue}
+            onChangeText={handleInputChange}
+          />
+        </View>
+      </AnimatedEntrance>
 
       {/* Suggestion Chips */}
-      <View style={{ marginBottom: 24 }}>
-        <SuggestionChips
-          selectedIndex={selectedChipIndex}
-          onSelect={handleChipSelect}
-        />
-      </View>
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.chips}>
+        <View style={{ marginBottom: 24 }}>
+          <SuggestionChips
+            selectedIndex={selectedChipIndex}
+            onSelect={handleChipSelect}
+          />
+        </View>
+      </AnimatedEntrance>
 
       {/* Primary CTA Button */}
-      <View style={{ width: '100%' }}>
-        <CtaButton
-          disabled={isCtaDisabled}
-          isLoading={isCreating}
-          onPress={handleCreateHabit}
-        />
-      </View>
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
+        <View style={{ width: '100%' }}>
+          <CtaButton
+            disabled={isCtaDisabled}
+            isLoading={isCreating}
+            onPress={handleCreateHabit}
+          />
+        </View>
+      </AnimatedEntrance>
 
       {/* Secondary Links */}
-      <SecondaryLinks
-        onBrowseTemplates={openTemplatesScreen}
-        onCreateCustom={openCreateHabitScreen}
-      />
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
+        <SecondaryLinks
+          onBrowseTemplates={openTemplatesScreen}
+          onCreateCustom={openCreateHabitScreen}
+        />
+      </AnimatedEntrance>
     </View>
   );
 }
