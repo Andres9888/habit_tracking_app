@@ -1,5 +1,4 @@
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
-import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../utils/notifications';
 
@@ -8,106 +7,71 @@ interface ReminderSectionProps {
   onToggle: (value: boolean) => void;
   reminderTime: Date;
   onTimePress: () => void;
-  reminderSound: string;
-  onQuickTimeSelect?: (d: Date) => void;
 }
 
+/**
+ * Compact reminder section for V5 create habit redesign.
+ * Single row layout with bell icon, label/time, and toggle.
+ * Quick time buttons removed - time is now set by TimeOfDaySelector.
+ */
 export const ReminderSection = ({
   remindersEnabled,
   onToggle,
   reminderTime,
   onTimePress,
-  reminderSound,
-  onQuickTimeSelect,
 }: ReminderSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
+
   return (
     <View className='mb-6 rounded-2xl bg-white p-4'>
-      <View className='mb-1 flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-[#1a1a1a]'>
-          {STRINGS.CREATE_HABIT.remindersLabel}
-        </Text>
+      <View className='flex-row items-center'>
+        {/* Bell icon in colored circle */}
+        <View
+          className='mr-3 h-10 w-10 items-center justify-center rounded-full'
+          style={{ backgroundColor: remindersEnabled ? '#DCFCE7' : '#F5F5F5' }}
+        >
+          <Text style={{ fontSize: 18 }}>🔔</Text>
+        </View>
+
+        {/* Label and time - tappable when enabled */}
+        <TouchableOpacity
+          className='flex-1'
+          disabled={!remindersEnabled}
+          activeOpacity={remindersEnabled ? 0.7 : 1}
+          accessibilityRole='button'
+          accessibilityLabel={`Reminder time: ${formatReminderTime(reminderTime)}. Tap to change.`}
+          accessibilityState={{ disabled: !remindersEnabled }}
+          onPress={() => {
+            if (remindersEnabled) {
+              triggerSelection();
+              onTimePress();
+            }
+          }}
+        >
+          <Text className='text-base font-semibold text-[#1a1a1a]'>Remind me</Text>
+          <Text
+            className='text-sm'
+            style={{ color: remindersEnabled ? '#22C55E' : '#a8a29e' }}
+          >
+            {formatReminderTime(reminderTime)}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Toggle switch on right */}
         <Switch
           ios_backgroundColor='#E5E5E5'
           thumbColor='#FFFFFF'
-          trackColor={{ false: '#E5E5E5', true: '#3B82F6' }}
+          trackColor={{ false: '#E5E5E5', true: '#22C55E' }}
           value={remindersEnabled}
+          accessibilityRole='switch'
+          accessibilityLabel='Toggle reminder'
+          accessibilityState={{ checked: remindersEnabled }}
           onValueChange={(val) => {
             triggerSelection();
             onToggle(val);
           }}
         />
       </View>
-      <Text className='mb-4 text-[13px] text-[#78716c]'>
-        {STRINGS.CREATE_HABIT.remindersHelper}
-      </Text>
-      {remindersEnabled && (
-        <>
-          <TouchableOpacity
-            className='mb-3 flex-row items-center justify-between rounded-xl bg-[#F5F5F5] px-3 py-3'
-            onPress={() => {
-              triggerSelection();
-              onTimePress();
-            }}
-          >
-            <Text className='text-base font-medium text-[#1a1a1a]'>
-              {STRINGS.CREATE_HABIT.reminderTime}
-            </Text>
-            <Text className='text-base font-semibold text-[#3B82F6]'>
-              {formatReminderTime(reminderTime)}
-            </Text>
-          </TouchableOpacity>
-          {/* Quick reminder presets */}
-          <View className='mb-3 flex-row flex-wrap gap-2'>
-            {buildQuickPresets().map((p) => (
-              <TouchableOpacity
-                key={p.label}
-                accessibilityRole='button'
-                accessibilityLabel={`Set reminder to ${p.label}`}
-                className='rounded-full border border-[#e7e5e4] bg-[#fafaf9] px-3 py-2'
-                onPress={() => {
-                  if (onQuickTimeSelect) {
-                    triggerSelection();
-                    onQuickTimeSelect(p.date);
-                  }
-                }}
-              >
-                <Text className='text-[13px] font-medium text-[#44403c]'>
-                  {p.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          <View className='flex-row items-center justify-between rounded-xl bg-[#F5F5F5] px-3 py-3'>
-            <Text className='text-base font-medium text-[#1a1a1a]'>
-              {STRINGS.CREATE_HABIT.sound}
-            </Text>
-            <Text className='text-base font-semibold text-[#3B82F6]'>
-              {reminderSound}
-            </Text>
-          </View>
-        </>
-      )}
     </View>
   );
-};
-
-const buildQuickPresets = () => {
-  const now = new Date();
-  const presets = [
-    { label: 'Morning 8:00', hour: 8, minute: 0, alwaysTomorrow: false },
-    { label: 'Afternoon 1:00', hour: 13, minute: 0, alwaysTomorrow: false },
-    { label: 'Evening 8:30', hour: 20, minute: 30, alwaysTomorrow: false },
-    { label: 'Tomorrow 9:00', hour: 9, minute: 0, alwaysTomorrow: true },
-  ];
-  return presets.map((p) => ({ label: p.label, date: nextAt(now, p.hour, p.minute, p.alwaysTomorrow) }));
-};
-
-const nextAt = (base: Date, hour: number, minute: number, alwaysTomorrow: boolean) => {
-  const d = new Date(base);
-  d.setHours(hour, minute, 0, 0);
-  if (alwaysTomorrow || d.getTime() <= base.getTime()) {
-    d.setDate(d.getDate() + 1);
-  }
-  return d;
 };

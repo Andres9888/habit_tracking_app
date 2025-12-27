@@ -136,8 +136,6 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               onToggle={form.setRemindersEnabled}
               reminderTime={form.reminderTime}
               onTimePress={() => form.setShowTimePicker(true)}
-              reminderSound={form.reminderSound}
-              onQuickTimeSelect={form.setReminderTime}
             />
           </ScrollView>
           <TemplateReminderPrompt
