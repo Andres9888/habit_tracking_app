@@ -2,28 +2,29 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, Text, View } from 'react-native';
 import STRINGS from '../../../constants/strings';
 import { SkeletonCard } from './SkeletonLoader';
+import { HUBERMAN_PHASES, type HubermanPhase } from '../../../constants/hubermanPhases';
 
 interface HabitPreviewProps {
   habitName: string;
   selectedEmoji: string | null;
   selectedColor: string;
-  frequencyLabel?: string;
+  timeOfDay?: HubermanPhase | null;
 }
 
 export const HabitPreview = ({
   habitName,
   selectedEmoji,
   selectedColor,
-  frequencyLabel,
+  timeOfDay,
 }: HabitPreviewProps) => {
   const isEmpty = !habitName && !selectedEmoji;
-  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   const [showSkeleton, setShowSkeleton] = useState(false);
 
   // Animations
   const iconScale = useRef(new Animated.Value(1)).current;
   const contentOpacity = useRef(new Animated.Value(1)).current;
   const contentScale = useRef(new Animated.Value(1)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   // Brief skeleton on mount for polish
   useEffect(() => {
@@ -31,6 +32,28 @@ export const HabitPreview = ({
     const timer = setTimeout(() => setShowSkeleton(false), 400);
     return () => clearTimeout(timer);
   }, []);
+
+  // Pulse ring animation on emoji icon
+  useEffect(() => {
+    if (!isEmpty && selectedEmoji) {
+      const pulse = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.15,
+            duration: 1200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1200,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      pulse.start();
+      return () => pulse.stop();
+    }
+  }, [isEmpty, selectedEmoji, pulseAnim]);
 
   // Trigger spring animation when content changes
   useEffect(() => {
@@ -69,8 +92,35 @@ export const HabitPreview = ({
     }
   }, [habitName, selectedEmoji, selectedColor, isEmpty, iconScale, contentScale]);
 
+  // Get time of day display text
+  const getTimeOfDayLabel = () => {
+    if (!timeOfDay) return 'Daily';
+    const phase = HUBERMAN_PHASES[timeOfDay];
+    return phase ? `Daily • ${phase.icon} ${phase.shortLabel}` : 'Daily';
+  };
+
+  // Generate accessibility label based on current state
+  const getAccessibilityLabel = () => {
+    if (isEmpty) {
+      return 'Habit preview: No habit configured yet. Enter a name and select an icon to preview.';
+    }
+    const nameText = habitName || 'Unnamed habit';
+    const emojiText = selectedEmoji ? `with icon ${selectedEmoji}` : 'without icon';
+    const timeText = getTimeOfDayLabel();
+    return `Habit preview: ${nameText} ${emojiText}. Schedule: ${timeText}`;
+  };
+
   return (
-    <View className='mb-6 mt-4 rounded-2xl bg-white p-4'>
+    <View
+      accessible
+      accessibilityLabel={getAccessibilityLabel()}
+      accessibilityRole='summary'
+      className='mb-4 mt-3 overflow-hidden rounded-2xl bg-white p-3'
+      style={{
+        borderWidth: 2,
+        borderColor: isEmpty ? '#e7e5e4' : selectedColor,
+      }}
+    >
       <Text className='mb-2 text-xs font-semibold text-[#78716c]'>✨ Live Preview</Text>
 
       {showSkeleton ? (
@@ -78,69 +128,56 @@ export const HabitPreview = ({
           <SkeletonCard />
         </View>
       ) : isEmpty ? (
-        <View className='items-center py-6'>
+        <View className='items-center py-4'>
           <Text className='mb-2 text-4xl'>✨</Text>
           <Text className='mb-1 text-sm font-medium text-[#78716c]'>Your habit will appear here</Text>
           <Text className='text-xs text-[#a8a29e]'>Try: "Meditate", "Run", or "Read"</Text>
         </View>
       ) : (
         <Animated.View style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}>
-          <View className='flex-row items-center gap-4'>
+          <View className='flex-row items-center gap-3'>
             <Animated.View style={{ transform: [{ scale: iconScale }] }}>
               {selectedEmoji ? (
-                <View
-                  className='h-16 w-16 items-center justify-center rounded-2xl'
-                  style={{ backgroundColor: selectedColor }}
-                >
-                  <Text className='text-[30px]'>{selectedEmoji}</Text>
+                <View className='relative'>
+                  {/* Pulse ring behind icon */}
+                  <Animated.View
+                    className='absolute inset-0 rounded-2xl'
+                    style={{
+                      backgroundColor: selectedColor,
+                      opacity: 0.3,
+                      transform: [{ scale: pulseAnim }],
+                    }}
+                  />
+                  <View
+                    className='h-14 w-14 items-center justify-center rounded-2xl'
+                    style={{ backgroundColor: selectedColor }}
+                  >
+                    <Text className='text-[28px]'>{selectedEmoji}</Text>
+                  </View>
                 </View>
               ) : (
-                <View
-                  className='h-16 w-16 items-center justify-center rounded-2xl bg-stone-200'
-                >
-                  <Text className='text-2xl text-stone-400'>?</Text>
+                <View className='h-14 w-14 items-center justify-center rounded-2xl bg-stone-200'>
+                  <Text className='text-xl text-stone-400'>?</Text>
                 </View>
               )}
             </Animated.View>
             <View className='flex-1'>
               {habitName ? (
-                <Text className='text-[22px] font-semibold text-[#1a1a1a]'>
+                <Text className='text-lg font-semibold text-[#1a1a1a]' numberOfLines={1}>
                   {habitName}
                 </Text>
               ) : (
-                <Text className='text-[22px] font-semibold text-[#a8a29e]'>
+                <Text className='text-lg font-semibold text-[#a8a29e]'>
                   {STRINGS.CREATE_HABIT.namePlaceholder}
                 </Text>
               )}
-              {!!frequencyLabel && (
-                <Text className='text-sm font-medium text-[#8a8a8a]'>
-                  {capitalize(frequencyLabel)}
-                </Text>
-              )}
-            </View>
-          </View>
-
-          {/* Week Preview */}
-          <View className='mt-4 rounded-xl bg-[#faf9f7] p-3'>
-            <Text className='mb-2 text-xs font-medium text-[#78716c]'>This week:</Text>
-            <View className='flex-row items-center justify-between'>
-              {weekDays.map((day, index) => (
-                <View key={`${day}-${index}`} className='items-center gap-1'>
-                  <Text className='text-xs text-[#a8a29e]'>{day}</Text>
-                  <View className='h-6 w-6 items-center justify-center rounded-full bg-white'>
-                    <View className='h-2 w-2 rounded-full bg-[#e7e5e4]' />
-                  </View>
-                </View>
-              ))}
+              <Text className='text-sm text-[#8a8a8a]'>
+                {getTimeOfDayLabel()}
+              </Text>
             </View>
           </View>
         </Animated.View>
       )}
     </View>
   );
-};
-
-const capitalize = (s?: string) => {
-  if (!s) return s ?? '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
 };

@@ -48,7 +48,7 @@ export const useCreateHabitModal = ({ visible, onClose, habitToEdit }: CreateHab
       setSelectedEmoji(emoji);
       setHabitName(name);
       if (template.iconColor) setSelectedColor(template.iconColor);
-      if ((template as any)?.frequency) setFrequency((template as any).frequency);
+      if (template.frequency) setFrequency(template.frequency);
     },
     [setHabitName, setSelectedColor, setSelectedEmoji, setFrequency]
   );

@@ -88,7 +88,10 @@ export const ModalHeader = ({
       ) : (
         <Animated.View style={{ transform: [{ scale: saveScale }] }}>
           <TouchableOpacity
+            accessibilityLabel={isEditMode ? 'Save habit changes' : STRINGS.CREATE_HABIT.createAction}
             accessibilityRole='button'
+            accessibilityState={{ disabled: !canSave }}
+            accessibilityHint={canSave ? '' : 'Enter a habit name first'}
             className={`h-9 items-center justify-center rounded-full px-6 ${
               canSave ? 'bg-stone-800' : 'bg-stone-400'
             }`}
