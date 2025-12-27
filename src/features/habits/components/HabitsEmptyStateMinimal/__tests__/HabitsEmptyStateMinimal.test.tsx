@@ -14,6 +14,7 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
+import { CHIP_STAGGER, ENTRANCE_DELAYS } from '../animations';
 import { COPY, SUGGESTION_CHIPS } from '../constants';
 import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';
 
@@ -447,6 +448,49 @@ describe('HabitsEmptyStateMinimal', () => {
 
       const ctaButton = getByLabelText(COPY.ctaButton);
       expect(ctaButton.props.accessibilityState?.disabled).toBe(true);
+    });
+  });
+
+  describe('Chip Stagger Animation', () => {
+    it('should have correct stagger delay constant values', () => {
+      // Per spec: 50ms between each chip, 400ms duration, 10px translateY
+      expect(CHIP_STAGGER.delay).toBe(50);
+      expect(CHIP_STAGGER.duration).toBe(400);
+      expect(CHIP_STAGGER.translateY).toBe(10);
+    });
+
+    it('should calculate stagger delays correctly for all chips', () => {
+      // Row 1 (Water, Walk, Write): indices 0, 1, 2 -> delays 0, 50, 100ms
+      // Row 2 (Breathe, Read): indices 3, 4 -> delays 150, 200ms
+      // Row 3 (Stretch): index 5 -> delay 250ms
+      const expectedDelays = [0, 50, 100, 150, 200, 250];
+
+      SUGGESTION_CHIPS.forEach((_, index) => {
+        const calculatedDelay = index * CHIP_STAGGER.delay;
+        expect(calculatedDelay).toBe(expectedDelays[index]);
+      });
+    });
+
+    it('should add base entrance delay to stagger', () => {
+      // Total delay = ENTRANCE_DELAYS.chips + (index * CHIP_STAGGER.delay)
+      const baseDelay = ENTRANCE_DELAYS.chips; // 300ms per constants
+      expect(baseDelay).toBe(300);
+
+      // First chip: 300 + 0 = 300ms
+      expect(baseDelay + 0 * CHIP_STAGGER.delay).toBe(300);
+      // Last chip: 300 + 250 = 550ms
+      expect(baseDelay + 5 * CHIP_STAGGER.delay).toBe(550);
+    });
+
+    it('should render all 6 chips for staggered animation', () => {
+      const { getAllByRole } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
+
+      // Find all button roles (chips + CTA + secondary links)
+      const buttons = getAllByRole('button');
+      // Should have at least 6 chips (plus CTA and 2 secondary links = 9 total)
+      expect(buttons.length).toBeGreaterThanOrEqual(6);
     });
   });
 

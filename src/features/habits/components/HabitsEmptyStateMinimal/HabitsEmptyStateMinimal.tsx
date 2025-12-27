@@ -211,13 +211,12 @@ export function HabitsEmptyStateMinimal({
       </View>
 
       {/* Suggestion Chips - full width for proper wrapping */}
+      {/* Note: Each chip has its own staggered entrance animation, no wrapper needed */}
       <View style={{ marginBottom: 32, width: '100%' }}>
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.chips}>
-          <SuggestionChips
-            selectedIndex={selectedChipIndex}
-            onSelect={handleChipSelect}
-          />
-        </AnimatedEntrance>
+        <SuggestionChips
+          selectedIndex={selectedChipIndex}
+          onSelect={handleChipSelect}
+        />
       </View>
 
       {/* Primary CTA Button - full width */}
