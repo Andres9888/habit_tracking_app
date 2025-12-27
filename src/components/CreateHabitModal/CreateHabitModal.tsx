@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, ScrollView, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
@@ -19,11 +19,15 @@ import { QuickPicksRow, type QuickPickTemplate } from './components/QuickPicksRo
 import { TimeOfDaySelector, getReminderTimeForPhase } from './components/TimeOfDaySelector';
 import type { HubermanPhase } from '../../constants/hubermanPhases';
 
+// Height offset to scroll past quick picks section to show form
+const QUICK_PICKS_SECTION_HEIGHT = 180;
+
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
   const { triggerSelection } = useHapticFeedback();
   const [selectedQuickPickId, setSelectedQuickPickId] = useState<string | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const handleQuickPickSelect = useCallback(
     (quickPick: QuickPickTemplate) => {
@@ -32,6 +36,14 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       form.setSelectedEmoji(quickPick.emoji);
       form.setSelectedColor(quickPick.color);
       form.setDayPhase(quickPick.timeOfDay);
+
+      // Scroll to form section after selection with a small delay for smoother UX
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          y: QUICK_PICKS_SECTION_HEIGHT,
+          animated: true,
+        });
+      }, 100);
     },
     [form]
   );
@@ -85,7 +97,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
         <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'>
           <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
           <ScrollView
-            ref={template.scrollViewRef}
+            ref={scrollViewRef}
             className='flex-1 px-4'
             contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}
             keyboardShouldPersistTaps='handled'
