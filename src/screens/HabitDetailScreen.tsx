@@ -2697,7 +2697,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-rose-500 py-4 active:bg-rose-600"
               onPress={handleSaveWhy}
             >
-              <Text className="text-base font-bold text-white">Save My Why</Text>
+              <Text className="text-[15px] font-semibold text-white">Save My Why</Text>
             </Pressable>
           </RNAnimated.View>
         </View>
@@ -2811,7 +2811,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-violet-600 py-4 shadow-lg shadow-violet-100 active:bg-violet-700"
               onPress={handleSaveIdentity}
             >
-              <Text className="text-base font-bold text-white">Claim My Identity</Text>
+              <Text className="text-[15px] font-semibold text-white">Claim My Identity</Text>
             </Pressable>
           </View>
         </View>

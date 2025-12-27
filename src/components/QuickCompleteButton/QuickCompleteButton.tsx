@@ -289,7 +289,7 @@ export function QuickCompleteButton({
         </View>
 
         <Text
-          className={`text-lg font-bold ${
+          className={`text-[15px] font-semibold ${
             localCompleted ? 'text-emerald-700' : 'text-white'
           }`}
         >

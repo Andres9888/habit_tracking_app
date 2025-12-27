@@ -140,7 +140,7 @@ function IntroStep({ habitName, onNext }: { habitName: string; onNext: () => voi
           onNext();
         }}
       >
-        <Text className="text-base font-bold text-white">Begin Exercise</Text>
+        <Text className="text-[15px] font-semibold text-white">Begin Exercise</Text>
         <ChevronRight className="text-white" size={20} />
       </Pressable>
     </Animated.View>

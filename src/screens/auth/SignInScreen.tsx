@@ -89,7 +89,7 @@ export default function SignInScreen() {
             disabled={isLoading || !emailAddress || !password}
             onPress={onSignInPress}
           >
-            <Text className='text-[13px] font-bold tracking-[3px] text-white'>
+            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
               {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
             </Text>
           </TouchableOpacity>

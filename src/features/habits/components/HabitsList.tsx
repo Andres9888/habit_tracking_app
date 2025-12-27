@@ -186,7 +186,7 @@ function MonetizationHero({
           }}
           onPress={onUpgradePress}
         >
-          <Text className='text-[15px] font-bold leading-[20px] tracking-wide text-white'>
+          <Text className='text-[15px] font-semibold leading-[20px] tracking-wide text-white'>
             Go Premium
           </Text>
         </AnimatedPressable>

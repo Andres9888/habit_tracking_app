@@ -54,7 +54,7 @@ export default function WelcomeScreen() {
             className='items-center rounded-3xl bg-slate-900 py-[18px]'
             onPress={() => setMode('signup')}
           >
-            <Text className='text-[13px] font-bold tracking-[3px] text-white'>
+            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
               GET STARTED
             </Text>
           </TouchableOpacity>
@@ -63,7 +63,7 @@ export default function WelcomeScreen() {
             className='items-center rounded-3xl border border-slate-200 py-[18px]'
             onPress={() => setMode('signin')}
           >
-            <Text className='text-[13px] font-bold tracking-[3px] text-slate-900'>
+            <Text className='text-[15px] font-semibold tracking-[3px] text-slate-900'>
               SIGN IN
             </Text>
           </TouchableOpacity>

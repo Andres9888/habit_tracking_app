@@ -93,7 +93,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
           style={{
             color: '#ffffff',
             fontSize: 15,
-            fontWeight: '700',
+            fontWeight: '600',
           }}
         >
           {COPY.ctaButton}
