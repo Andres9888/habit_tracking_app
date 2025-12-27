@@ -1,4 +1,8 @@
-import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import type {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import type { HabitTemplate } from '../types';
 import { TemplateListEmpty } from './TemplateListEmpty';
@@ -40,10 +44,13 @@ export const TemplateList = ({
       <TemplateListEmpty />
     ) : (
       <FlatList
+        nestedScrollEnabled
+        showsVerticalScrollIndicator
+        accessibilityLabel='Habit templates list'
+        accessibilityRole='list'
         data={templates}
         keyExtractor={(item) => item._id}
         ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
-        nestedScrollEnabled
         renderItem={({ item, index }) => (
           <TemplateListItem
             index={index}
@@ -53,12 +60,14 @@ export const TemplateList = ({
           />
         )}
         scrollEventThrottle={16}
-        showsVerticalScrollIndicator
         onContentSizeChange={onContentSizeChange}
         onLayout={onLayout}
         onScroll={onScroll}
       />
     )}
-    <TemplateListShadows showTop={showTopShadow} showBottom={showBottomShadow} />
+    <TemplateListShadows
+      showBottom={showBottomShadow}
+      showTop={showTopShadow}
+    />
   </View>
 );

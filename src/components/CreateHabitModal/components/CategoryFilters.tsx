@@ -251,6 +251,8 @@ export const CategoryFilters = ({
 }: CategoryFiltersProps) => (
   <ScrollView
     horizontal
+    accessibilityLabel='Category filters'
+    accessibilityRole='list'
     className='border-b border-stone-100'
     contentContainerClassName='gap-3 px-4 py-4'
     showsHorizontalScrollIndicator={false}
