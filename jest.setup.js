@@ -274,6 +274,24 @@ jest.mock('react-native-reanimated', () => {
       duration: jest.fn().mockReturnThis(),
     },
 
+    // Layout animations
+    LinearTransition: {
+      springify: jest.fn(() => ({
+        damping: jest.fn().mockReturnThis(),
+        stiffness: jest.fn().mockReturnThis(),
+        mass: jest.fn().mockReturnThis(),
+      })),
+      duration: jest.fn().mockReturnThis(),
+      delay: jest.fn().mockReturnThis(),
+      easing: jest.fn().mockReturnThis(),
+    },
+    Layout: {
+      springify: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      delay: jest.fn().mockReturnThis(),
+      easing: jest.fn().mockReturnThis(),
+    },
+
     // runOnJS - CRITICAL: Must be defined as a function that executes callbacks
     runOnJS: (fn) => fn,
 
