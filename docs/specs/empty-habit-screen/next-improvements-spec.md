@@ -330,6 +330,8 @@ Manual testing on devices.
 
 **Agent Note (2025-12-27)**: This task cannot be completed by an automated agent. It requires a human tester with physical iOS and Android devices to verify UX feel, animation smoothness, and real-device behavior. All prerequisite tasks (1-7) have been completed successfully.
 
+**SKIPPED BY AGENT (2025-12-27)**: This is a manual QA task that requires human testing on physical devices. An automated agent cannot perform subjective UX evaluation such as "feels natural", "smooth transitions", or "noticeable but not annoying". Awaiting human tester.
+
 ---
 
 ## Task Dependencies Graph
