@@ -17,6 +17,7 @@ export { SecondaryLinks } from './SecondaryLinks';
 export { SuccessState } from './SuccessState';
 export { AnimatedEntrance } from './AnimatedEntrance';
 export { ProgressRing } from './ProgressRing';
+export { ParticleBurst } from './ParticleBurst';
 
 // Type exports
 export type {
