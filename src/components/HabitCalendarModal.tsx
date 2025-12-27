@@ -130,7 +130,7 @@ export default function HabitCalendarModal({
             className='h-10 w-10 items-center justify-center rounded-full active:bg-stone-200'
             onPress={onClose}
           >
-            <ChevronLeft color='#1a1a1a' size={24} />
+            <ChevronLeft color='#1c1917' size={24} />
           </Pressable>
           <Text className='text-xl font-bold text-stone-900'>{name}</Text>
           <Pressable
@@ -139,7 +139,7 @@ export default function HabitCalendarModal({
             className='h-10 w-10 items-center justify-center rounded-full active:bg-stone-200'
             onPress={handleEditPress}
           >
-            <MoreVertical color='#1a1a1a' size={20} />
+            <MoreVertical color='#1c1917' size={20} />
           </Pressable>
         </View>
 

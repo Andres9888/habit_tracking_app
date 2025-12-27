@@ -102,7 +102,7 @@ const QuickPickCard = ({
         className='mr-3 overflow-hidden rounded-2xl bg-white p-3'
         style={[
           {
-            borderColor: isSelected ? '#22C55E' : '#e7e5e4',
+            borderColor: isSelected ? '#22C55E' : '#e7e5e4', // #e7e5e4 = stone-200
             borderWidth: 2,
             minWidth: 100,
             transform: [{ scale: scaleAnim }],
@@ -118,12 +118,12 @@ const QuickPickCard = ({
         </View>
 
         {/* Name */}
-        <Text className='mb-1 text-center text-sm font-semibold text-[#1a1a1a]'>
+        <Text className='mb-1 text-center text-sm font-semibold text-stone-800'>
           {template.name}
         </Text>
 
         {/* Timing subtitle */}
-        <Text className='text-center text-xs text-[#78716c]'>
+        <Text className='text-center text-xs text-stone-500'>
           {phaseInfo.icon} {phaseInfo.shortLabel}
         </Text>
       </Animated.View>
@@ -166,7 +166,7 @@ export const QuickPicksRow = ({
     <View className='mb-4'>
       {/* Header row */}
       <View className='mb-3 flex-row items-center justify-between px-1'>
-        <Text className='text-base font-semibold text-[#1a1a1a]'>
+        <Text className='text-base font-semibold text-stone-800'>
           Quick picks
         </Text>
         {onBrowseAll && (

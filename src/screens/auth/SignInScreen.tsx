@@ -43,53 +43,53 @@ export default function SignInScreen() {
   return (
     <View className='flex-1 bg-white'>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
+        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-800'>
           Welcome Back
         </Text>
-        <Text className='mb-10 text-base text-slate-500'>
+        <Text className='mb-10 text-base text-stone-500'>
           Sign in to continue tracking your habits
         </Text>
 
         <View className='gap-6'>
           <View className='gap-2'>
-            <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
+            <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
               EMAIL
             </Text>
             <TextInput
               autoCapitalize='none'
               autoComplete='email'
-              className='rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900'
+              className='rounded-3xl border border-stone-200 bg-white px-5 py-3.5 text-base font-medium text-stone-800'
               keyboardType='email-address'
               placeholder='Enter your email'
-              placeholderTextColor='#94a3b8'
+              placeholderTextColor='#78716c'
               value={emailAddress}
               onChangeText={setEmailAddress}
             />
           </View>
 
           <View className='gap-2'>
-            <Text className='text-[10px] font-medium tracking-[3px] text-slate-500'>
+            <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
               PASSWORD
             </Text>
             <TextInput
               secureTextEntry
               autoComplete='password'
-              className='rounded-3xl border border-slate-200 bg-white px-5 py-3.5 text-base font-medium text-slate-900'
+              className='rounded-3xl border border-stone-200 bg-white px-5 py-3.5 text-base font-medium text-stone-800'
               placeholder='Enter your password'
-              placeholderTextColor='#94a3b8'
+              placeholderTextColor='#78716c'
               value={password}
               onChangeText={setPassword}
             />
           </View>
 
           <TouchableOpacity
-            className={`mt-4 items-center rounded-3xl border border-slate-900 bg-slate-900 py-4 ${
+            className={`mt-4 items-center rounded-3xl border border-stone-800 bg-stone-800 py-4 ${
               isLoading || !emailAddress || !password ? 'opacity-40' : ''
             }`}
             disabled={isLoading || !emailAddress || !password}
             onPress={onSignInPress}
           >
-            <Text className='text-[13px] font-bold tracking-[3px] text-white'>
+            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
               {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
             </Text>
           </TouchableOpacity>

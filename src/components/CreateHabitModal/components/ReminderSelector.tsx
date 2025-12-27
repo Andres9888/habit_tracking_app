@@ -139,7 +139,7 @@ const ReminderOptionButton = ({
         style={[
           {
             backgroundColor: isSelected ? '#ECFDF5' : '#fafaf9',
-            borderColor: isSelected ? '#10B981' : '#e7e5e4',
+            borderColor: isSelected ? '#10B981' : '#e7e5e4', // #e7e5e4 = stone-200
             borderWidth: isSelected ? 2 : 1,
             transform: [{ scale: scaleAnim }],
           },

@@ -12,58 +12,70 @@ import type { SuggestionChip } from './types';
  * Each chip includes emoji, short label, and full habit name for creation.
  */
 export const SUGGESTION_CHIPS: SuggestionChip[] = [
-  { emoji: '💧', label: 'Water', fullName: 'Drink water' },
-  { emoji: '🚶', label: 'Walk', fullName: 'Walk 5 minutes' },
-  { emoji: '📝', label: 'Write', fullName: 'Write one line' },
-  { emoji: '🧘', label: 'Breathe', fullName: 'Breathe for 2 minutes' },
-  { emoji: '📚', label: 'Read', fullName: 'Read 5 pages' },
-  { emoji: '🤸', label: 'Stretch', fullName: 'Stretch for 5 minutes' },
+  { emoji: '💧', fullName: 'Drink water', label: 'Water' },
+  { emoji: '🚶', fullName: 'Walk 5 minutes', label: 'Walk' },
+  { emoji: '📝', fullName: 'Write one line', label: 'Write' },
+  { emoji: '🧘', fullName: 'Breathe for 2 minutes', label: 'Breathe' },
+  { emoji: '📚', fullName: 'Read 5 pages', label: 'Read' },
+  { emoji: '🤸', fullName: 'Stretch for 5 minutes', label: 'Stretch' },
 ];
 
 /**
  * Copy strings for the minimal empty state
  */
 export const COPY = {
+  addAnother: 'Add another habit',
+
+  // Secondary links
+  browseTemplates: 'Browse templates',
+
+  createCustom: 'Create custom habit',
+
+  // Primary CTA
+  ctaButton: 'Start my journey →',
+
   // Question headline - line break after "thing" for rhythm
   headline: "What's one small thing\nyou want to do daily?",
 
   // Input placeholder
   inputPlaceholder: 'Type your habit...',
-
-  // Primary CTA
-  ctaButton: 'Start my journey →',
-
-  // Secondary links
-  browseTemplates: 'Browse templates',
-  createCustom: 'Create custom habit',
-
   // Success state
   successHeadline: "You're growing!",
   successSubtext: (habitName: string) => `"${habitName}" added to your habits`,
-  addAnother: 'Add another habit',
 } as const;
 
 /**
  * Design system color tokens aligned with app patterns
  */
 export const COLORS = {
-  // Primary action color
-  emerald500: '#10B981',
-  emerald100: '#D1FAE5',
-  green50: '#F0FDF4',
-
   // Input focus color (per app pattern)
   blue500: '#3B82F6',
 
-  // Text colors - Stone palette
-  stone800: '#1C1917',
-  stone700: '#44403C',
-  stone400: '#A8A29E',
-  stone300: '#D6D3D1',
-  stone200: '#E7E5E4',
+  emerald100: '#D1FAE5',
+
+  // Primary action color (used for indicators/accents)
+  emerald500: '#10B981',
+
+  // WCAG AA compliant primary action (5.21:1 contrast with white)
+  emerald700: '#047857',
 
   // Caret color
   emeraldCaret: '#10B981',
+
+  green50: '#F0FDF4',
+
+  stone200: '#E7E5E4',
+
+  stone300: '#D6D3D1',
+
+  stone400: '#A8A29E',
+
+  stone500: '#78716C',
+
+  stone700: '#44403C',
+
+  // Text colors - Stone palette
+  stone800: '#1C1917',
 
   // Success state
   successBackground: '#D1FAE5',
@@ -73,18 +85,20 @@ export const COLORS = {
  * Touch target sizes (minimum 44pt per accessibility guidelines)
  */
 export const TOUCH_TARGETS = {
-  minSize: 44,
   chipHeight: 44,
   ctaHeight: 56,
   inputHeight: 52,
+  minSize: 44,
 } as const;
 
 /**
  * Border radius values consistent with app design system
  */
 export const BORDER_RADIUS = {
-  chip: 9999, // Pill/full rounded
-  input: 16,
+  chip: 9999,
   cta: 16,
+
   heroIcon: 24,
+  // Pill/full rounded
+  input: 16,
 } as const;

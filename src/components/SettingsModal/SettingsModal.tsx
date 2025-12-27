@@ -81,14 +81,14 @@ export default function SettingsModal({
         versionText: '#facc15',
       }
     : {
-        accent: '#1a1a1a',
+        accent: '#1c1917', // stone-800
         background: '#faf9f7',
         card: '#ffffff',
         cardBorder: '#f5f5f4',
-        headerText: '#1a1a1a',
-        icon: '#1a1a1a',
-        mutedText: '#8a8a8a',
-        versionText: '#78716c',
+        headerText: '#1c1917', // stone-800
+        icon: '#1c1917', // stone-800
+        mutedText: '#78716c', // stone-500
+        versionText: '#78716c', // stone-500
       };
 
   if (!visible) return null;
@@ -130,7 +130,7 @@ export default function SettingsModal({
               <ChevronLeft color={colors.icon} size={28} />
             </TouchableOpacity>
             <Text
-              className='text-[24px] font-bold leading-[32px] text-foreground'
+              className='text-[24px] font-bold leading-[32px] tracking-tight text-foreground'
               style={{ color: colors.headerText }}
             >
               Settings

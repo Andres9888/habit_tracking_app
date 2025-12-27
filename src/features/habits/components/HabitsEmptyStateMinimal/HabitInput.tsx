@@ -149,7 +149,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           <Pressable
             accessibilityLabel='Clear input'
             accessibilityRole='button'
-            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             style={({ pressed }) => ({
               marginLeft: 8,
               opacity: pressed ? 0.6 : 1,

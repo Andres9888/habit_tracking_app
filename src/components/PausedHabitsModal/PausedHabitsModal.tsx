@@ -33,7 +33,7 @@ export default function PausedHabitsModal({
         >
           <Text className='text-xl font-semibold text-stone-500'>←</Text>
         </TouchableOpacity>
-        <Text className='flex-1 text-center text-2xl font-bold text-stone-900'>
+        <Text className='flex-1 text-center text-2xl font-bold tracking-tight text-stone-900'>
           Paused Habits
         </Text>
         <TouchableOpacity

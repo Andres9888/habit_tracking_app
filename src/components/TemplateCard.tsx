@@ -627,13 +627,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   inlinePremiumBadge: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: '#ede9fe', // violet-100
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
   inlinePremiumText: {
-    color: '#92400E',
+    color: '#7c3aed', // violet-600
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 0.5,

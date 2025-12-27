@@ -106,7 +106,8 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
         animatedStyle,
         {
           alignItems: 'center',
-          backgroundColor: COLORS.emerald500,
+          // Using emerald-700 for WCAG AA contrast (5.21:1 with white text)
+          backgroundColor: '#047857',
           borderRadius: BORDER_RADIUS.cta,
           elevation: isDisabled ? 0 : 4,
           height: TOUCH_TARGETS.ctaHeight,
@@ -117,9 +118,8 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
 
           // Required for shimmer to clip at button edges
           // Shadow for depth
-          shadowColor: COLORS.emerald500,
-
-          shadowOffset: { height: 4, width: 0 },
+          shadowColor: '#047857',
+          shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.3,
           shadowRadius: 8,
           width: '100%',
@@ -151,8 +151,8 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
         <Text
           style={{
             color: '#ffffff',
-            fontSize: 16,
-            fontWeight: '700',
+            fontSize: 15,
+            fontWeight: '600',
           }}
         >
           {COPY.ctaButton}

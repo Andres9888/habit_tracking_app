@@ -24,14 +24,14 @@ export const PhaseSelector = ({ selectedPhase, onSelect }: PhaseSelectorProps) =
     <View className='mb-6 rounded-2xl border-2 border-[#8B5CF6]/20 bg-gradient-to-r p-4' style={{ backgroundColor: '#FAFAFF' }}>
       <View className='mb-2 flex-row items-center'>
         <Text className='text-lg'>🧠</Text>
-        <Text className='ml-2 text-base font-bold text-[#1a1a1a]'>
+        <Text className='ml-2 text-base font-bold text-stone-800'>
           Huberman Day Phase
         </Text>
         <View className='ml-2 rounded-full bg-[#8B5CF6]/10 px-2 py-0.5'>
           <Text className='text-[10px] font-semibold text-[#8B5CF6]'>SCIENCE-BACKED</Text>
         </View>
       </View>
-      <Text className='mb-4 text-[13px] text-[#78716c]'>
+      <Text className='mb-4 text-[13px] text-stone-500'>
         Match your habit to optimal times based on circadian biology
       </Text>
 
@@ -58,16 +58,16 @@ export const PhaseSelector = ({ selectedPhase, onSelect }: PhaseSelectorProps) =
                 <View className='flex-row items-center'>
                   <Text
                     className={`text-sm font-semibold ${
-                      isSelected ? 'text-[#3B82F6]' : 'text-[#1a1a1a]'
+                      isSelected ? 'text-[#3B82F6]' : 'text-stone-800'
                     }`}
                   >
                     {phase.shortLabel}
                   </Text>
-                  <Text className='ml-2 text-xs text-[#78716c]'>
+                  <Text className='ml-2 text-xs text-stone-500'>
                     {phase.timeRange}
                   </Text>
                 </View>
-                <Text className='mt-0.5 text-xs text-[#78716c]'>
+                <Text className='mt-0.5 text-xs text-stone-500'>
                   {phase.description}
                 </Text>
               </View>

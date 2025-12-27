@@ -69,7 +69,7 @@ const TimeOfDayButton = ({ phase, isSelected, onPress }: TimeOfDayButtonProps) =
           {
             backgroundColor: isSelected ? '#22C55E' : '#fafaf9',
             borderWidth: 1.5,
-            borderColor: isSelected ? '#16A34A' : '#e7e5e4',
+            borderColor: isSelected ? '#16A34A' : '#e7e5e4', // #e7e5e4 = stone-200
             transform: [{ scale: scaleAnim }],
           },
         ]}
@@ -77,7 +77,7 @@ const TimeOfDayButton = ({ phase, isSelected, onPress }: TimeOfDayButtonProps) =
         <Text className="mb-1 text-lg">{phaseInfo.icon}</Text>
         <Text
           className="text-sm font-semibold"
-          style={{ color: isSelected ? '#FFFFFF' : '#1a1a1a' }}
+          style={{ color: isSelected ? '#FFFFFF' : '#1c1917' }}
         >
           {phaseInfo.shortLabel}
         </Text>
@@ -107,7 +107,7 @@ export const TimeOfDaySelector = ({
 
   return (
     <View className="mb-6 rounded-2xl bg-white p-4">
-      <Text className="mb-3 text-base font-semibold text-[#1a1a1a]">When</Text>
+      <Text className="mb-3 text-base font-semibold text-stone-800">When</Text>
       <View className="flex-row gap-3">
         {PHASE_ORDER.map((phase) => (
           <TimeOfDayButton

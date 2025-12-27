@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: '#1c1917', // stone-800
   },
   suggestionsContainer: {
     marginHorizontal: 20,
@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
   noIconText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#4b5563',
+    color: '#78716c', // stone-500
   },
 });
 

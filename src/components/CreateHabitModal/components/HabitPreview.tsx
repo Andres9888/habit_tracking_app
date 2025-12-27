@@ -118,10 +118,10 @@ export const HabitPreview = ({
       className='mb-4 mt-3 overflow-hidden rounded-2xl bg-white p-3'
       style={{
         borderWidth: 2,
-        borderColor: isEmpty ? '#e7e5e4' : selectedColor,
+        borderColor: isEmpty ? '#e7e5e4' : selectedColor, // #e7e5e4 = stone-200
       }}
     >
-      <Text className='mb-2 text-xs font-semibold text-[#78716c]'>✨ Live Preview</Text>
+      <Text className='mb-2 text-xs font-semibold text-stone-500'>✨ Live Preview</Text>
 
       {showSkeleton ? (
         <View className='py-2'>
@@ -130,8 +130,8 @@ export const HabitPreview = ({
       ) : isEmpty ? (
         <View className='items-center py-4'>
           <Text className='mb-2 text-4xl'>✨</Text>
-          <Text className='mb-1 text-sm font-medium text-[#78716c]'>Your habit will appear here</Text>
-          <Text className='text-xs text-[#a8a29e]'>Try: "Meditate", "Run", or "Read"</Text>
+          <Text className='mb-1 text-sm font-medium text-stone-500'>Your habit will appear here</Text>
+          <Text className='text-xs text-stone-400'>Try: "Meditate", "Run", or "Read"</Text>
         </View>
       ) : (
         <Animated.View style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}>
@@ -163,15 +163,15 @@ export const HabitPreview = ({
             </Animated.View>
             <View className='flex-1'>
               {habitName ? (
-                <Text className='text-lg font-semibold text-[#1a1a1a]' numberOfLines={1}>
+                <Text className='text-lg font-semibold text-stone-800' numberOfLines={1}>
                   {habitName}
                 </Text>
               ) : (
-                <Text className='text-lg font-semibold text-[#a8a29e]'>
+                <Text className='text-lg font-semibold text-stone-400'>
                   {STRINGS.CREATE_HABIT.namePlaceholder}
                 </Text>
               )}
-              <Text className='text-sm text-[#8a8a8a]'>
+              <Text className='text-sm text-stone-500'>
                 {getTimeOfDayLabel()}
               </Text>
             </View>

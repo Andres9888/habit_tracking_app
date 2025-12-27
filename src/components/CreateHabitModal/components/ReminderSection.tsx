@@ -48,7 +48,7 @@ export const ReminderSection = ({
             }
           }}
         >
-          <Text className='text-base font-semibold text-[#1a1a1a]'>Remind me</Text>
+          <Text className='text-base font-semibold text-stone-800'>Remind me</Text>
           <Text
             className='text-sm'
             style={{ color: remindersEnabled ? '#22C55E' : '#a8a29e' }}

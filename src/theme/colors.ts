@@ -7,6 +7,11 @@
  */
 
 export const colors = {
+  // Convenience aliases for common usage (defaults to light mode)
+  background: '#faf9f7',
+
+  border: '#e7e5e4',
+
   // Dark Mode (Future)
   dark: {
     background: '#111827',
@@ -17,9 +22,6 @@ export const colors = {
   },
 
   error: '#EF4444',
-
-  // Convenience aliases for common usage (defaults to light mode)
-  background: '#faf9f7',
 
   // Matches secondary blue
   // Neutral Grays (iOS-inspired)
@@ -36,8 +38,6 @@ export const colors = {
     900: '#111827', // Pure black alternative
   },
 
-  border: '#e7e5e4',
-
   // Red - errors, delete confirmations
   info: '#3B82F6',
 
@@ -47,6 +47,14 @@ export const colors = {
     card: '#ffffff', // Pure white cards for contrast
     surface: '#ffffff', // White surface for elevated elements
     surfaceMuted: '#fafaf9', // stone-50 for subtle sections
+  },
+
+  // Premium Colors (Monetization & Premium Features)
+  premium: {
+    400: '#a78bfa', // Lighter violet, hover states
+    500: '#8b5cf6', // Standard violet-500
+    600: '#7c3aed', // Violet-600 - primary premium color
+    700: '#6d28d9', // Darker violet, pressed states
   },
 
   // Primary Colors (Growth & Progress)
@@ -66,11 +74,11 @@ export const colors = {
 
   // Habit Strength Level Colors (Gradient)
   strength: {
-    // 0-20% - Light green 🌱
-    building: '#10B981',
-
     // 60-80% - Dark green 💪
     automatic: '#065F46',
+
+    // 0-20% - Light green 🌱
+    building: '#10B981',
 
     // 20-40% - Brand green 🌿
     developing: '#059669',

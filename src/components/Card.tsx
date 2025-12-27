@@ -14,7 +14,7 @@ export function Card({
   return (
     <View
       className={clsx(
-        "rounded-xl border border-slate-200 bg-white shadow-sm",
+        "rounded-xl border border-stone-200 bg-white shadow-sm",
         className
       )}
       style={style}
@@ -30,7 +30,7 @@ export function CardHeader({
 }: ViewProps & { className?: string }) {
   return (
     <View
-      className={clsx("border-b border-slate-200 p-4", className)}
+      className={clsx("border-b border-stone-200 p-4", className)}
       style={style}
       {...props}
     />

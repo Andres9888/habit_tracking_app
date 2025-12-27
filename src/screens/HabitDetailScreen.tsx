@@ -1464,14 +1464,14 @@ function ManageTabContent({
       <SectionCard>
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
-            <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
-              <Bell className="text-blue-500" size={20} />
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-stone-100">
+              <Bell className="text-stone-500" size={20} />
             </View>
             <View>
               <Text className="font-semibold text-stone-800">Reminders</Text>
               <Text className={clsx(
                 "text-sm",
-                habit.remindersEnabled ? "text-blue-600 font-medium" : "text-stone-500"
+                habit.remindersEnabled ? "text-emerald-600 font-medium" : "text-stone-500"
               )}>
                 {nextReminderText}
               </Text>
@@ -2697,7 +2697,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-rose-500 py-4 active:bg-rose-600"
               onPress={handleSaveWhy}
             >
-              <Text className="text-base font-bold text-white">Save My Why</Text>
+              <Text className="text-[15px] font-semibold text-white">Save My Why</Text>
             </Pressable>
           </RNAnimated.View>
         </View>
@@ -2811,7 +2811,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-violet-600 py-4 shadow-lg shadow-violet-100 active:bg-violet-700"
               onPress={handleSaveIdentity}
             >
-              <Text className="text-base font-bold text-white">Claim My Identity</Text>
+              <Text className="text-[15px] font-semibold text-white">Claim My Identity</Text>
             </Pressable>
           </View>
         </View>
@@ -3107,9 +3107,9 @@ export default function HabitDetailScreen({
             </Animated.View>
 
             {/* Explanation */}
-            <View className="mb-4 flex-row items-start gap-2 rounded-xl bg-blue-50 p-3">
-              <Sparkles className="mt-0.5 text-blue-500" size={14} />
-              <Text className="flex-1 text-xs leading-relaxed text-blue-700">
+            <View className="mb-4 flex-row items-start gap-2 rounded-xl bg-stone-50 p-3">
+              <Sparkles className="mt-0.5 text-stone-500" size={14} />
+              <Text className="flex-1 text-xs leading-relaxed text-stone-600">
                 Link your habit to an existing behavior. Research shows this increases follow-through by{' '}
                 <Text className="font-bold">2-3x</Text>.
               </Text>

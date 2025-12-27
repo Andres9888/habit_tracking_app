@@ -145,7 +145,7 @@ export function SocialLoginButtons() {
           <GoogleLogo size={20} />
         )}
         <Text
-          className="text-[13px] font-bold tracking-[2px] text-stone-900"
+          className="text-[15px] font-semibold tracking-[2px] text-stone-900"
           style={{ opacity: googleLoading ? 0.6 : 1 }}
         >
           CONTINUE WITH GOOGLE
@@ -170,7 +170,7 @@ export function SocialLoginButtons() {
           <AppleLogo size={20} />
         )}
         <Text
-          className="text-[13px] font-bold tracking-[2px] text-stone-900"
+          className="text-[15px] font-semibold tracking-[2px] text-stone-900"
           style={{ opacity: appleLoading ? 0.6 : 1 }}
         >
           CONTINUE WITH APPLE

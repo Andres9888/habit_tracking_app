@@ -39,10 +39,15 @@ export const ModalHeader = ({
   }, [triggerSelection, onDismissKeyboard]);
 
   // Compact padding when keyboard is visible
-  const headerPadding = isKeyboardVisible ? Math.max(insets.top + 4, 12) : Math.max(insets.top + 8, 16);
+  const headerPadding = isKeyboardVisible
+    ? Math.max(insets.top + 4, 12)
+    : Math.max(insets.top + 8, 16);
 
   return (
-    <View className='flex-row items-center justify-between px-4 pb-3' style={{ paddingTop: headerPadding }}>
+    <View
+      className='flex-row items-center justify-between px-4 pb-3'
+      style={{ paddingTop: headerPadding }}
+    >
       <TouchableOpacity
         accessibilityLabel={STRINGS.CREATE_HABIT.close}
         accessibilityRole='button'
@@ -51,7 +56,7 @@ export const ModalHeader = ({
       >
         <X color='#44403c' size={24} strokeWidth={2} />
       </TouchableOpacity>
-      <Text className='text-[22px] font-semibold text-stone-900'>
+      <Text className='text-[24px] font-bold tracking-tight text-stone-900'>
         {isEditMode ? 'Edit Habit' : STRINGS.CREATE_HABIT.title}
       </Text>
 
@@ -59,9 +64,10 @@ export const ModalHeader = ({
       {isKeyboardVisible ? (
         <Animated.View style={{ transform: [{ scale: doneScale }] }}>
           <TouchableOpacity
-            accessibilityRole='button'
             accessibilityLabel='Done editing'
+            accessibilityRole='button'
             className='h-9 items-center justify-center rounded-full px-4'
+            onPress={handleDismissKeyboard}
             onPressIn={() => {
               Animated.timing(doneScale, {
                 duration: Motion.duration.fast,
@@ -78,24 +84,26 @@ export const ModalHeader = ({
                 useNativeDriver: true,
               }).start();
             }}
-            onPress={handleDismissKeyboard}
           >
-            <Text className='text-base font-semibold text-blue-600'>
-              Done
-            </Text>
+            <Text className='text-base font-semibold text-blue-600'>Done</Text>
           </TouchableOpacity>
         </Animated.View>
       ) : (
         <Animated.View style={{ transform: [{ scale: saveScale }] }}>
           <TouchableOpacity
-            accessibilityLabel={isEditMode ? 'Save habit changes' : STRINGS.CREATE_HABIT.createAction}
+            accessibilityHint={canSave ? '' : 'Enter a habit name first'}
+            accessibilityLabel={
+              isEditMode
+                ? 'Save habit changes'
+                : STRINGS.CREATE_HABIT.createAction
+            }
             accessibilityRole='button'
             accessibilityState={{ disabled: !canSave }}
-            accessibilityHint={canSave ? '' : 'Enter a habit name first'}
             className={`h-9 items-center justify-center rounded-full px-6 ${
               canSave ? 'bg-stone-800' : 'bg-stone-400'
             }`}
             disabled={!canSave}
+            onPress={onSave}
             onPressIn={() => {
               Animated.timing(saveScale, {
                 duration: Motion.duration.fast,
@@ -112,7 +120,6 @@ export const ModalHeader = ({
                 useNativeDriver: true,
               }).start();
             }}
-            onPress={onSave}
           >
             <Text className='text-sm font-semibold text-white'>
               {STRINGS.CREATE_HABIT.save}

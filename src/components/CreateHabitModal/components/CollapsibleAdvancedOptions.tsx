@@ -29,8 +29,8 @@ export const CollapsibleAdvancedOptions = ({
         onPress={toggleExpanded}
       >
         <View className='flex-row items-center gap-2'>
-          <Text className='text-base font-semibold text-[#1a1a1a]'>⚙️ Advanced Options</Text>
-          <Text className='text-xs text-[#a8a29e]'>(Optional)</Text>
+          <Text className='text-base font-semibold text-stone-800'>⚙️ Advanced Options</Text>
+          <Text className='text-xs text-stone-400'>(Optional)</Text>
         </View>
         <Animated.View
           style={{

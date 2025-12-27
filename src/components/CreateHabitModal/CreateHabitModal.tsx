@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { Modal, ScrollView, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Modal, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
@@ -8,10 +8,15 @@ import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
+import { HabitPreview } from './components/HabitPreview';
 import { HabitNameField } from './components/HabitNameField';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
+import {
+  QuickPicksRow,
+  type QuickPickTemplate,
+} from './components/QuickPicksRow';
 import {
   ReminderSelector,
   type ReminderOption,
@@ -23,13 +28,56 @@ const ANIMATION_STAGGER_DELAY = 50;
 // Base animation duration (ms)
 const ANIMATION_DURATION = 300;
 
+// Height offset to scroll past quick picks section to show form
+const QUICK_PICKS_SECTION_HEIGHT = 180;
+
+/**
+ * Map HubermanPhase to ReminderOption for quick pick templates
+ */
+const phaseToReminderOption = (phase: string): ReminderOption => {
+  const mapping: Record<string, ReminderOption> = {
+    phase1_push: 'morning',
+    phase2_pivot: 'midday',
+    phase3_pull: 'evening',
+  };
+  return mapping[phase] || 'morning';
+};
+
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } =
     useCreateHabitModal(props);
+  const [selectedQuickPickId, setSelectedQuickPickId] = useState<string | null>(
+    null
+  );
+  const scrollViewRef = useRef<ScrollView>(null);
 
+  const handleQuickPickSelect = useCallback(
+    (quickPick: QuickPickTemplate) => {
+      setSelectedQuickPickId(quickPick.id);
+      form.setHabitName(quickPick.name);
+      form.setSelectedEmoji(quickPick.emoji);
+      form.setSelectedColor(quickPick.color);
+
+      // Convert quick pick's timeOfDay to reminder option and set it
+      const reminderOption = phaseToReminderOption(quickPick.timeOfDay);
+      form.setReminderOption(reminderOption);
+
+      // Scroll to form section after selection with a small delay for smoother UX
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          animated: true,
+          y: QUICK_PICKS_SECTION_HEIGHT,
+        });
+      }, 100);
+    },
+    [form]
+  );
+
+  // Clear quick pick selection when user manually modifies any field
   const handleNameChange = useCallback(
     (value: string) => {
+      setSelectedQuickPickId(null);
       form.setHabitName(value);
     },
     [form]
@@ -37,6 +85,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
 
   const handleEmojiSelect = useCallback(
     (emoji: string | null) => {
+      setSelectedQuickPickId(null);
       form.setSelectedEmoji(emoji);
     },
     [form]
@@ -44,6 +93,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
 
   const handleColorSelect = useCallback(
     (color: string) => {
+      setSelectedQuickPickId(null);
       form.setSelectedColor(color);
     },
     [form]
@@ -51,10 +101,18 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
 
   const handleReminderSelect = useCallback(
     (option: ReminderOption) => {
+      setSelectedQuickPickId(null);
       form.setReminderOption(option);
     },
     [form]
   );
+
+  // Reset quick pick selection when modal opens (for new habit creation)
+  useEffect(() => {
+    if (visible && !isEditMode) {
+      setSelectedQuickPickId(null);
+    }
+  }, [visible, isEditMode]);
 
   return (
     <Modal
@@ -72,6 +130,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             onSave={handleCreate}
           />
           <ScrollView
+            ref={scrollViewRef}
             className='flex-1 px-4'
             contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}
             keyboardShouldPersistTaps='handled'
@@ -79,11 +138,43 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             showsVerticalScrollIndicator={false}
             onScroll={template.handleMainScroll}
           >
-            {/* V8 Layout: Name input first (hero position) */}
+            {/* Quick Picks Section - hidden in edit mode */}
+            {!isEditMode && (
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
+              >
+                <View className='mt-3' />
+                <QuickPicksRow
+                  selectedTemplateId={selectedQuickPickId}
+                  onSelectTemplate={handleQuickPickSelect}
+                />
+                {/* Divider */}
+                <View className='mb-4 flex-row items-center'>
+                  <View className='h-px flex-1 bg-stone-200' />
+                  <Text className='mx-4 text-xs font-medium text-stone-400'>
+                    or create your own
+                  </Text>
+                  <View className='h-px flex-1 bg-stone-200' />
+                </View>
+              </Animated.View>
+            )}
             <Animated.View
-              entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY
+              )}
             >
-              <View className='mt-4' />
+              <HabitPreview
+                habitName={form.habitName}
+                selectedColor={form.selectedColor}
+                selectedEmoji={form.selectedEmoji}
+                timeOfDay={form.dayPhase}
+              />
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 2
+              )}
+            >
               <HabitNameField
                 autoFocus={visible && !isEditMode}
                 value={form.habitName}
@@ -92,7 +183,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             </Animated.View>
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY
+                ANIMATION_STAGGER_DELAY * 3
               )}
             >
               <EmojiPicker
@@ -103,7 +194,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             </Animated.View>
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY * 2
+                ANIMATION_STAGGER_DELAY * 4
               )}
             >
               <ColorPickerSection
@@ -115,7 +206,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             </Animated.View>
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY * 3
+                ANIMATION_STAGGER_DELAY * 5
               )}
             >
               <ReminderSelector
@@ -127,7 +218,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             {!isEditMode && (
               <Animated.View
                 entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                  ANIMATION_STAGGER_DELAY * 4
+                  ANIMATION_STAGGER_DELAY * 6
                 )}
               >
                 <TemplatesLinkSection onPress={template.handleHeroPress} />

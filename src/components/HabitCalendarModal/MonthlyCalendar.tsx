@@ -75,14 +75,14 @@ export function MonthlyCalendar({
             className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
             onPress={goToPreviousMonth}
           >
-            <ChevronLeft color='#1a1a1a' size={20} />
+            <ChevronLeft color='#1c1917' size={20} />
           </Pressable>
 
           <Pressable
             className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
             onPress={goToNextMonth}
           >
-            <ChevronRight color='#1a1a1a' size={20} />
+            <ChevronRight color='#1c1917' size={20} />
           </Pressable>
         </View>
       </View>

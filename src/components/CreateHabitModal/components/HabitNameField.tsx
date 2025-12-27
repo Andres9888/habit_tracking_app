@@ -28,14 +28,14 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
   return (
     <View className='mb-6'>
       <View className='mb-1 flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-[#1a1a1a]'>
+        <Text className='text-base font-semibold text-stone-800'>
           {STRINGS.CREATE_HABIT.nameLabel}
         </Text>
-        <Text className={`text-xs ${isNearLimit ? 'text-[#f59e0b]' : 'text-[#a8a29e]'}`}>
+        <Text className={`text-xs ${isNearLimit ? 'text-amber-500' : 'text-stone-400'}`}>
           {charCount}/{MAX_LENGTH}
         </Text>
       </View>
-      <Text className='mb-2 text-xs text-[#78716c]'>
+      <Text className='mb-2 text-xs text-stone-500'>
         {STRINGS.CREATE_HABIT.nameHelper}
       </Text>
       <TextInput
@@ -43,7 +43,7 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
         accessibilityHint='Enter a name for your habit, up to 50 characters'
         autoFocus={autoFocus}
         blurOnSubmit
-        className='h-14 rounded-xl bg-white px-4 text-base text-[#1a1a1a]'
+        className='h-14 rounded-xl bg-white px-4 text-base text-stone-800'
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
         placeholderTextColor='#a8a29e'
         returnKeyType='done'

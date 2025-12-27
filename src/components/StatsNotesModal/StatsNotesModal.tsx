@@ -38,7 +38,7 @@ export default function StatsNotesModal({
           >
             {/* Header with close button */}
             <View className='flex-row items-center justify-between border-b border-stone-200 px-5 py-4'>
-              <Text className='text-2xl font-bold text-stone-900'>
+              <Text className='text-2xl font-bold tracking-tight text-stone-900'>
                 Stats & Notes
               </Text>
               <TouchableOpacity

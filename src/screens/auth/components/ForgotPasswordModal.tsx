@@ -136,7 +136,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
               accessibilityRole="button"
               accessibilityHint="Closes this dialog and returns to sign in"
             >
-              <Text className="text-[13px] font-bold tracking-[3px] text-white">
+              <Text className="text-[15px] font-semibold tracking-[3px] text-white">
                 CLOSE
               </Text>
             </TouchableOpacity>
@@ -210,7 +210,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                 {isLoading ? (
                   <ActivityIndicator color="#ffffff" size="small" />
                 ) : (
-                  <Text className="text-[13px] font-bold tracking-[3px] text-white">
+                  <Text className="text-[15px] font-semibold tracking-[3px] text-white">
                     SEND RESET EMAIL
                   </Text>
                 )}
@@ -225,7 +225,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                 accessibilityRole="button"
                 accessibilityHint="Closes this dialog without sending reset email"
               >
-                <Text className="text-[13px] font-bold tracking-[3px] text-stone-900">
+                <Text className="text-[15px] font-semibold tracking-[3px] text-stone-900">
                   CANCEL
                 </Text>
               </TouchableOpacity>
