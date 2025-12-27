@@ -1,3 +1,4 @@
+import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import type { HabitTemplate } from '../types';
 import { TemplateListEmpty } from './TemplateListEmpty';
@@ -11,9 +12,9 @@ interface TemplateListProps {
   onSelectTemplate: (template: HabitTemplate) => void;
   onViewScience: (template: HabitTemplate) => void;
   onClose: () => void;
-  onScroll: (event: any) => void;
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onContentSizeChange: (width: number, height: number) => void;
-  onLayout: (event: any) => void;
+  onLayout: (event: LayoutChangeEvent) => void;
   showTopShadow: boolean;
   showBottomShadow: boolean;
 }

@@ -8,7 +8,6 @@ interface HabitPreviewProps {
   habitName: string;
   selectedEmoji: string | null;
   selectedColor: string;
-  frequencyLabel?: string;
   timeOfDay?: HubermanPhase | null;
 }
 

@@ -38,7 +38,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     habitToEdit?.reminderSound ?? DEFAULT_SOUND
   );
   const [frequency, setFrequency] = useState<string>(
-    (habitToEdit as any)?.frequency ?? ''
+    habitToEdit?.frequency ?? ''
   );
   const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
     getPhaseFromPreferredTime(habitToEdit?.preferredTime)
@@ -60,7 +60,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
-    setFrequency((habitToEdit as any)?.frequency ?? '');
+    setFrequency(habitToEdit.frequency ?? '');
     setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));
   }, [habitToEdit, parsed]);
 
