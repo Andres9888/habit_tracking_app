@@ -14,6 +14,7 @@ import { Keyboard, Text, TextInput, View } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
+import { LoadingSkeleton } from './LoadingSkeleton';
 import { COLORS, COPY } from './constants';
 import { CtaButton } from './CtaButton';
 import { HabitInput } from './HabitInput';
@@ -45,7 +46,9 @@ export function HabitsEmptyStateMinimal({
 
   // Component state
   const [inputValue, setInputValue] = useState('');
-  const [selectedChipIndex, setSelectedChipIndex] = useState<number | null>(null);
+  const [selectedChipIndex, setSelectedChipIndex] = useState<number | null>(
+    null
+  );
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [successHabitName, setSuccessHabitName] = useState<string | null>(null);
@@ -54,28 +57,34 @@ export function HabitsEmptyStateMinimal({
 
   // Handle chip selection - populates input with full habit name
   // Tapping a selected chip deselects it and clears input
-  const handleChipSelect = useCallback((index: number, chip: SuggestionChip) => {
-    if (selectedChipIndex === index) {
-      // Deselect if tapping the same chip
-      setSelectedChipIndex(null);
-      setSelectedEmoji(null);
-      setInputValue('');
-    } else {
-      setSelectedChipIndex(index);
-      setSelectedEmoji(chip.emoji);
-      setInputValue(chip.fullName);
-    }
-  }, [selectedChipIndex]);
+  const handleChipSelect = useCallback(
+    (index: number, chip: SuggestionChip) => {
+      if (selectedChipIndex === index) {
+        // Deselect if tapping the same chip
+        setSelectedChipIndex(null);
+        setSelectedEmoji(null);
+        setInputValue('');
+      } else {
+        setSelectedChipIndex(index);
+        setSelectedEmoji(chip.emoji);
+        setInputValue(chip.fullName);
+      }
+    },
+    [selectedChipIndex]
+  );
 
   // Handle text input changes - deselects chips when typing
-  const handleInputChange = useCallback((text: string) => {
-    setInputValue(text);
-    // Deselect chips when user types manually
-    if (selectedChipIndex !== null) {
-      setSelectedChipIndex(null);
-      setSelectedEmoji(null);
-    }
-  }, [selectedChipIndex]);
+  const handleInputChange = useCallback(
+    (text: string) => {
+      setInputValue(text);
+      // Deselect chips when user types manually
+      if (selectedChipIndex !== null) {
+        setSelectedChipIndex(null);
+        setSelectedEmoji(null);
+      }
+    },
+    [selectedChipIndex]
+  );
 
   // Handle CTA button press - creates the habit
   const handleCreateHabit = useCallback(async () => {
@@ -92,9 +101,19 @@ export function HabitsEmptyStateMinimal({
       setSuccessEmoji(selectedEmoji); // Save emoji for success state
     } catch (error) {
       setIsCreating(false);
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to create habit. Please try again.');
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : 'Failed to create habit. Please try again.'
+      );
     }
-  }, [inputValue, isCreating, onQuickCreateHabit, triggerSuccess, selectedEmoji]);
+  }, [
+    inputValue,
+    isCreating,
+    onQuickCreateHabit,
+    triggerSuccess,
+    selectedEmoji,
+  ]);
 
   // Handle keyboard submit (Done button)
   const handleSubmitEditing = useCallback(() => {
@@ -131,22 +150,27 @@ export function HabitsEmptyStateMinimal({
 
     return (
       <SuccessState
-        habitName={successHabitName}
+        autoTransition={shouldAutoTransition}
         habitEmoji={successEmoji}
+        habitName={successHabitName}
         onAddAnother={handleAddAnother}
         onTransitionComplete={onSuccessTransitionComplete}
-        autoTransition={shouldAutoTransition}
       />
     );
   }
 
-  const isCtaDisabled = !inputValue.trim() || isLoading;
+  // Show loading skeleton during initial load
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
+  const isCtaDisabled = !inputValue.trim();
 
   return (
     <View
       style={{
-        flex: 1,
         alignItems: 'center',
+        flex: 1,
         justifyContent: 'center',
         paddingHorizontal: 24,
       }}
@@ -160,13 +184,13 @@ export function HabitsEmptyStateMinimal({
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
         <Text
           style={{
-            marginTop: 32,
-            marginBottom: 32,
+            color: COLORS.stone800,
             fontSize: 24,
             fontWeight: '700',
-            color: COLORS.stone800,
-            textAlign: 'center',
             lineHeight: 32,
+            marginBottom: 32,
+            marginTop: 32,
+            textAlign: 'center',
           }}
         >
           {COPY.headline}
@@ -174,26 +198,25 @@ export function HabitsEmptyStateMinimal({
       </AnimatedEntrance>
 
       {/* Text Input - full width */}
-      <View style={{ width: '100%', marginBottom: 24 }}>
+      <View style={{ marginBottom: 24, width: '100%' }}>
         <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
           <HabitInput
             ref={inputRef}
             value={inputValue}
             onChangeText={handleInputChange}
-            onSubmitEditing={handleSubmitEditing}
             onClear={handleClearInput}
+            onSubmitEditing={handleSubmitEditing}
           />
         </AnimatedEntrance>
       </View>
 
       {/* Suggestion Chips - full width for proper wrapping */}
-      <View style={{ width: '100%', marginBottom: 32 }}>
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.chips}>
-          <SuggestionChips
-            selectedIndex={selectedChipIndex}
-            onSelect={handleChipSelect}
-          />
-        </AnimatedEntrance>
+      {/* Note: Each chip has its own staggered entrance animation, no wrapper needed */}
+      <View style={{ marginBottom: 32, width: '100%' }}>
+        <SuggestionChips
+          selectedIndex={selectedChipIndex}
+          onSelect={handleChipSelect}
+        />
       </View>
 
       {/* Primary CTA Button - full width */}
@@ -210,12 +233,12 @@ export function HabitsEmptyStateMinimal({
       {/* Error Message */}
       {errorMessage && (
         <Text
-          accessibilityLiveRegion="polite"
-          accessibilityRole="alert"
+          accessibilityLiveRegion='polite'
+          accessibilityRole='alert'
           style={{
-            marginTop: 12,
-            fontSize: 14,
             color: '#DC2626',
+            fontSize: 14,
+            marginTop: 12,
             textAlign: 'center',
           }}
         >

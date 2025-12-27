@@ -4,6 +4,7 @@
  * Features:
  * - Blue border on focus (per app pattern)
  * - Animated border color transition
+ * - Light haptic feedback on focus
  * - Clear button (X) when text is present
  * - Keyboard submit support
  * - Forwarded ref for external focus control
@@ -19,6 +20,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { TIMING_CONFIGS } from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
 import type { HabitInputProps } from './types';
@@ -32,30 +34,30 @@ function ClearIcon() {
   return (
     <View
       style={{
-        width: 20,
-        height: 20,
-        borderRadius: 10,
-        backgroundColor: COLORS.stone200,
         alignItems: 'center',
+        backgroundColor: COLORS.stone200,
+        borderRadius: 10,
+        height: 20,
         justifyContent: 'center',
+        width: 20,
       }}
     >
       <View
         style={{
-          width: 10,
-          height: 2,
           backgroundColor: COLORS.stone400,
+          height: 2,
           position: 'absolute',
           transform: [{ rotate: '45deg' }],
+          width: 10,
         }}
       />
       <View
         style={{
-          width: 10,
-          height: 2,
           backgroundColor: COLORS.stone400,
+          height: 2,
           position: 'absolute',
           transform: [{ rotate: '-45deg' }],
+          width: 10,
         }}
       />
     </View>
@@ -66,16 +68,21 @@ function ClearIcon() {
  * Text input for habit name with animated focus states
  */
 export const HabitInput = forwardRef<TextInput, HabitInputProps>(
-  function HabitInput({ value, onChangeText, onFocus, onBlur, onSubmitEditing, onClear }, ref) {
+  function HabitInput(
+    { value, onChangeText, onFocus, onBlur, onSubmitEditing, onClear },
+    ref
+  ) {
     const [isFocused, setIsFocused] = useState(false);
     const focusProgress = useSharedValue(0);
     const showClearButton = value.length > 0;
+    const { triggerLightImpact } = useHapticFeedback();
 
     const handleFocus = useCallback(() => {
       setIsFocused(true);
       focusProgress.value = withTiming(1, TIMING_CONFIGS.inputFocus);
+      triggerLightImpact();
       onFocus?.();
-    }, [focusProgress, onFocus]);
+    }, [focusProgress, onFocus, triggerLightImpact]);
 
     const handleBlur = useCallback(() => {
       setIsFocused(false);
@@ -98,54 +105,56 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
         style={[
           containerStyle,
           {
-            backgroundColor: '#ffffff',
-            borderWidth: 2,
-            borderRadius: BORDER_RADIUS.input,
-            height: TOUCH_TARGETS.inputHeight,
-            width: '100%',
-            paddingHorizontal: 20,
-            flexDirection: 'row',
             alignItems: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: BORDER_RADIUS.input,
+            borderWidth: 2,
+            elevation: isFocused ? 2 : 0,
+            flexDirection: 'row',
+            height: TOUCH_TARGETS.inputHeight,
+            paddingHorizontal: 20,
+
             // Shadow properties
             shadowColor: COLORS.blue500,
-            shadowOffset: { width: 0, height: 0 },
+
+            shadowOffset: { height: 0, width: 0 },
             shadowRadius: 8,
-            elevation: isFocused ? 2 : 0,
+            width: '100%',
           },
         ]}
       >
         <TextInput
           ref={ref}
-          accessibilityLabel="Enter your habit name"
-          accessibilityHint="Type a habit you want to track daily"
-          autoCapitalize="sentences"
+          accessibilityHint='Type a habit you want to track daily'
+          accessibilityLabel='Enter your habit name'
+          autoCapitalize='sentences'
           autoCorrect={false}
           placeholder={COPY.inputPlaceholder}
           placeholderTextColor={COLORS.stone400}
-          returnKeyType="done"
+          returnKeyType='done'
+          selectionColor={COLORS.emeraldCaret}
+          style={{
+            color: COLORS.stone800,
+            flex: 1,
+            fontSize: 16,
+            fontWeight: '500',
+          }}
           value={value}
           onBlur={handleBlur}
           onChangeText={onChangeText}
           onFocus={handleFocus}
           onSubmitEditing={onSubmitEditing}
-          style={{
-            flex: 1,
-            fontSize: 16,
-            fontWeight: '500',
-            color: COLORS.stone800,
-          }}
-          selectionColor={COLORS.emeraldCaret}
         />
         {showClearButton && (
           <Pressable
-            accessibilityLabel="Clear input"
-            accessibilityRole="button"
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            onPress={onClear}
+            accessibilityLabel='Clear input'
+            accessibilityRole='button'
+            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             style={({ pressed }) => ({
               marginLeft: 8,
               opacity: pressed ? 0.6 : 1,
             })}
+            onPress={onClear}
           >
             <ClearIcon />
           </Pressable>

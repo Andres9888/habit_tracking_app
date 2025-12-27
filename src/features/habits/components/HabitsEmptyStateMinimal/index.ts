@@ -18,6 +18,7 @@ export { SuccessState } from './SuccessState';
 export { AnimatedEntrance } from './AnimatedEntrance';
 export { ProgressRing } from './ProgressRing';
 export { ParticleBurst } from './ParticleBurst';
+export { LoadingSkeleton } from './LoadingSkeleton';
 
 // Type exports
 export type {
@@ -33,7 +34,13 @@ export type {
 } from './types';
 
 // Constant exports
-export { SUGGESTION_CHIPS, COPY, COLORS, TOUCH_TARGETS, BORDER_RADIUS } from './constants';
+export {
+  SUGGESTION_CHIPS,
+  COPY,
+  COLORS,
+  TOUCH_TARGETS,
+  BORDER_RADIUS,
+} from './constants';
 
 // Animation exports
 export {

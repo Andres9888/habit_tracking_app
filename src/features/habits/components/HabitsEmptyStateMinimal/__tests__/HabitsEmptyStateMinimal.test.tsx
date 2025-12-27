@@ -14,16 +14,22 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
+import { CHIP_STAGGER, ENTRANCE_DELAYS } from '../animations';
 import { COPY, SUGGESTION_CHIPS } from '../constants';
 import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';
 
 // Mock dependencies
+const mockTriggerLightImpact = jest.fn();
+const mockTriggerSuccess = jest.fn();
+const mockTriggerSelection = jest.fn();
+const mockTriggerMediumImpact = jest.fn();
+
 jest.mock('../../../../../hooks/useHapticFeedback', () => ({
   useHapticFeedback: () => ({
-    triggerSuccess: jest.fn(),
-    triggerSelection: jest.fn(),
-    triggerLightImpact: jest.fn(),
-    triggerMediumImpact: jest.fn(),
+    triggerSuccess: mockTriggerSuccess,
+    triggerSelection: mockTriggerSelection,
+    triggerLightImpact: mockTriggerLightImpact,
+    triggerMediumImpact: mockTriggerMediumImpact,
   }),
 }));
 
@@ -40,35 +46,47 @@ describe('HabitsEmptyStateMinimal', () => {
 
   describe('Component Rendering', () => {
     it('should render without crashing', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       expect(getByText(COPY.headline)).toBeDefined();
     });
 
     it('should render the hero headline', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       expect(getByText(COPY.headline)).toBeDefined();
     });
 
     it('should render the CTA button', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       expect(getByText(COPY.ctaButton)).toBeDefined();
     });
 
     it('should render secondary links', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       expect(getByText(COPY.browseTemplates)).toBeDefined();
       expect(getByText(COPY.createCustom)).toBeDefined();
     });
 
     it('should render all 6 suggestion chips', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       SUGGESTION_CHIPS.forEach((chip) => {
         expect(getByText(chip.label)).toBeDefined();
       });
     });
 
     it('should render the habit input with placeholder', () => {
-      const { getByPlaceholderText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByPlaceholderText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       expect(getByPlaceholderText(COPY.inputPlaceholder)).toBeDefined();
     });
   });
@@ -116,7 +134,9 @@ describe('HabitsEmptyStateMinimal', () => {
 
   describe('CTA Button State', () => {
     it('should have CTA disabled when input is empty', () => {
-      const { getByLabelText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByLabelText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       const ctaButton = getByLabelText(COPY.ctaButton);
       expect(ctaButton.props.accessibilityState?.disabled).toBe(true);
@@ -148,7 +168,9 @@ describe('HabitsEmptyStateMinimal', () => {
     });
 
     it('should not call onQuickCreateHabit when CTA is disabled', () => {
-      const { getByLabelText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByLabelText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       const ctaButton = getByLabelText(COPY.ctaButton);
       fireEvent.press(ctaButton);
@@ -170,7 +192,9 @@ describe('HabitsEmptyStateMinimal', () => {
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
-        expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith('Drink water');
+        expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith(
+          'Drink water'
+        );
       });
     });
 
@@ -187,7 +211,9 @@ describe('HabitsEmptyStateMinimal', () => {
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
-        expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith('Exercise for 10 minutes');
+        expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith(
+          'Exercise for 10 minutes'
+        );
       });
     });
 
@@ -204,7 +230,9 @@ describe('HabitsEmptyStateMinimal', () => {
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
-        expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith('My habit');
+        expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith(
+          'My habit'
+        );
       });
     });
   });
@@ -305,7 +333,9 @@ describe('HabitsEmptyStateMinimal', () => {
 
   describe('Secondary Links', () => {
     it('should call openTemplatesScreen when "Browse templates" is pressed', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       fireEvent.press(getByText(COPY.browseTemplates));
 
@@ -313,7 +343,9 @@ describe('HabitsEmptyStateMinimal', () => {
     });
 
     it('should call openCreateHabitScreen when "Create custom habit" is pressed', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       fireEvent.press(getByText(COPY.createCustom));
 
@@ -323,9 +355,12 @@ describe('HabitsEmptyStateMinimal', () => {
 
   describe('Input Behavior', () => {
     it('should deselect chips when user types in input', () => {
-      const { getByText, getByPlaceholderText, getByDisplayValue, queryByDisplayValue } = render(
-        <HabitsEmptyStateMinimal {...defaultProps} />
-      );
+      const {
+        getByText,
+        getByPlaceholderText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
 
       // Select a chip first
       fireEvent.press(getByText('Water'));
@@ -338,36 +373,91 @@ describe('HabitsEmptyStateMinimal', () => {
       // Input should have the new typed value
       expect(getByDisplayValue('New habit')).toBeDefined();
     });
+
+    it('should trigger light haptic feedback when input is focused', () => {
+      const { getByPlaceholderText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
+
+      // Focus the input
+      const input = getByPlaceholderText(COPY.inputPlaceholder);
+      fireEvent(input, 'focus');
+
+      // Should trigger light haptic
+      expect(mockTriggerLightImpact).toHaveBeenCalled();
+    });
+
+    it('should not trigger haptic when input is blurred', () => {
+      const { getByPlaceholderText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
+
+      // Clear mock from any previous calls
+      mockTriggerLightImpact.mockClear();
+
+      // Blur the input (without focusing first)
+      const input = getByPlaceholderText(COPY.inputPlaceholder);
+      fireEvent(input, 'blur');
+
+      // Should NOT trigger haptic on blur
+      expect(mockTriggerLightImpact).not.toHaveBeenCalled();
+    });
   });
 
   describe('Loading State', () => {
-    it('should accept isLoading prop', () => {
-      const { getByText } = render(
+    it('should render LoadingSkeleton when isLoading is true', () => {
+      const { getByLabelText, queryByText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} isLoading={true} />
       );
 
-      // Component should still render
-      expect(getByText(COPY.headline)).toBeDefined();
+      // Should show LoadingSkeleton with accessibility label
+      expect(getByLabelText('Loading')).toBeDefined();
+
+      // Should NOT render main content
+      expect(queryByText(COPY.headline)).toBeNull();
     });
 
-    it('should disable CTA when isLoading is true even with input value', () => {
-      const { getByPlaceholderText, getByLabelText } = render(
+    it('should render main content when isLoading is false', () => {
+      const { getByText, queryByLabelText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} isLoading={false} />
+      );
+
+      // Should show main content
+      expect(getByText(COPY.headline)).toBeDefined();
+
+      // Should NOT show loading skeleton
+      expect(queryByLabelText('Loading')).toBeNull();
+    });
+
+    it('should transition from loading to content when isLoading changes', () => {
+      const {
+        rerender,
+        getByLabelText,
+        getByText,
+        queryByText,
+        queryByLabelText,
+      } = render(
         <HabitsEmptyStateMinimal {...defaultProps} isLoading={true} />
       );
 
-      // Type something
-      const input = getByPlaceholderText(COPY.inputPlaceholder);
-      fireEvent.changeText(input, 'My habit');
+      // Initially loading
+      expect(getByLabelText('Loading')).toBeDefined();
+      expect(queryByText(COPY.headline)).toBeNull();
 
-      // CTA should still be disabled due to isLoading
-      const ctaButton = getByLabelText(COPY.ctaButton);
-      expect(ctaButton.props.accessibilityState?.disabled).toBe(true);
+      // Change to not loading
+      rerender(<HabitsEmptyStateMinimal {...defaultProps} isLoading={false} />);
+
+      // Now shows content
+      expect(getByText(COPY.headline)).toBeDefined();
+      expect(queryByLabelText('Loading')).toBeNull();
     });
   });
 
   describe('Accessibility', () => {
     it('should have accessible labels on chips', () => {
-      const { getByLabelText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByLabelText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       // Each chip should have an accessibility label
       SUGGESTION_CHIPS.forEach((chip) => {
@@ -376,7 +466,9 @@ describe('HabitsEmptyStateMinimal', () => {
     });
 
     it('should have accessible role on chips', () => {
-      const { getAllByRole } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getAllByRole } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       // Should have button roles (chips + CTA + secondary links)
       const buttons = getAllByRole('button');
@@ -384,16 +476,63 @@ describe('HabitsEmptyStateMinimal', () => {
     });
 
     it('should announce disabled state on CTA', () => {
-      const { getByLabelText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByLabelText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
 
       const ctaButton = getByLabelText(COPY.ctaButton);
       expect(ctaButton.props.accessibilityState?.disabled).toBe(true);
     });
   });
 
+  describe('Chip Stagger Animation', () => {
+    it('should have correct stagger delay constant values', () => {
+      // Per spec: 50ms between each chip, 400ms duration, 10px translateY
+      expect(CHIP_STAGGER.delay).toBe(50);
+      expect(CHIP_STAGGER.duration).toBe(400);
+      expect(CHIP_STAGGER.translateY).toBe(10);
+    });
+
+    it('should calculate stagger delays correctly for all chips', () => {
+      // Row 1 (Water, Walk, Write): indices 0, 1, 2 -> delays 0, 50, 100ms
+      // Row 2 (Breathe, Read): indices 3, 4 -> delays 150, 200ms
+      // Row 3 (Stretch): index 5 -> delay 250ms
+      const expectedDelays = [0, 50, 100, 150, 200, 250];
+
+      SUGGESTION_CHIPS.forEach((_, index) => {
+        const calculatedDelay = index * CHIP_STAGGER.delay;
+        expect(calculatedDelay).toBe(expectedDelays[index]);
+      });
+    });
+
+    it('should add base entrance delay to stagger', () => {
+      // Total delay = ENTRANCE_DELAYS.chips + (index * CHIP_STAGGER.delay)
+      const baseDelay = ENTRANCE_DELAYS.chips; // 300ms per constants
+      expect(baseDelay).toBe(300);
+
+      // First chip: 300 + 0 = 300ms
+      expect(baseDelay + 0 * CHIP_STAGGER.delay).toBe(300);
+      // Last chip: 300 + 250 = 550ms
+      expect(baseDelay + 5 * CHIP_STAGGER.delay).toBe(550);
+    });
+
+    it('should render all 6 chips for staggered animation', () => {
+      const { getAllByRole } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
+
+      // Find all button roles (chips + CTA + secondary links)
+      const buttons = getAllByRole('button');
+      // Should have at least 6 chips (plus CTA and 2 secondary links = 9 total)
+      expect(buttons.length).toBeGreaterThanOrEqual(6);
+    });
+  });
+
   describe('CodeRabbit Review Checklist', () => {
     it('✅ Component renders without crashing', () => {
-      const { getByText } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
+      const { getByText } = render(
+        <HabitsEmptyStateMinimal {...defaultProps} />
+      );
       expect(getByText(COPY.headline)).toBeDefined();
     });
 
@@ -432,7 +571,9 @@ describe('HabitsEmptyStateMinimal', () => {
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
-        expect(getByText(COPY.successSubtext('Breathe for 2 minutes'))).toBeDefined();
+        expect(
+          getByText(COPY.successSubtext('Breathe for 2 minutes'))
+        ).toBeDefined();
       });
     });
 

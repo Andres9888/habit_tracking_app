@@ -4,6 +4,7 @@
  * Features:
  * - Gentle breathing scale animation (1.0 → 1.08 → 1.0)
  * - Emerald gradient container
+ * - Shadow glow pulse synced with breathing animation
  * - Respects reduce motion preference
  */
 
@@ -12,6 +13,7 @@ import { Text, View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
+  interpolate,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -19,7 +21,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { BREATHING_ANIMATION } from './animations';
+import { BREATHING_ANIMATION, HERO_GLOW } from './animations';
 import { BORDER_RADIUS, COLORS } from './constants';
 import type { HeroIconProps } from './types';
 
@@ -53,41 +55,59 @@ export function HeroIcon({ animate = true }: HeroIconProps) {
     };
   }, [animate, scale, shouldReduceMotion]);
 
-  const breathingStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const breathingStyle = useAnimatedStyle(() => {
+    // Interpolate shadow values based on scale
+    // Scale goes 1.0 → 1.08, map to shadow opacity/radius ranges
+    const shadowOpacity = interpolate(
+      scale.value,
+      [BREATHING_ANIMATION.minScale, BREATHING_ANIMATION.maxScale],
+      [HERO_GLOW.minShadowOpacity, HERO_GLOW.maxShadowOpacity]
+    );
+
+    const shadowRadius = interpolate(
+      scale.value,
+      [BREATHING_ANIMATION.minScale, BREATHING_ANIMATION.maxScale],
+      [HERO_GLOW.minShadowRadius, HERO_GLOW.maxShadowRadius]
+    );
+
+    return {
+      shadowOpacity,
+      shadowRadius,
+      transform: [{ scale: scale.value }],
+    };
+  });
 
   return (
     <Animated.View
       style={[
         breathingStyle,
         {
-          width: 80,
-          height: 80,
-          borderRadius: BORDER_RADIUS.heroIcon,
           alignItems: 'center',
-          justifyContent: 'center',
           backgroundColor: COLORS.emerald100,
-          // Emerald tinted shadow (subtle per mockup)
-          shadowColor: COLORS.emerald500,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.15,
-          shadowRadius: 24,
+          borderRadius: BORDER_RADIUS.heroIcon,
           elevation: 4,
+          height: 80,
+          justifyContent: 'center',
+
+          // Emerald tinted shadow (opacity/radius animated via breathingStyle)
+          shadowColor: COLORS.emerald500,
+
+          shadowOffset: { height: 8, width: 0 },
+          width: 80,
         },
       ]}
     >
       {/* Inner gradient effect using overlay */}
       <View
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          borderRadius: BORDER_RADIUS.heroIcon,
           backgroundColor: COLORS.green50,
+          borderRadius: BORDER_RADIUS.heroIcon,
+          bottom: 0,
+          left: 0,
           opacity: 0.5,
+          position: 'absolute',
+          right: 0,
+          top: 0,
         }}
       />
       <Text style={{ fontSize: 36 }}>🌱</Text>

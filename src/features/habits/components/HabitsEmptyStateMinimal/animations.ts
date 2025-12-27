@@ -203,3 +203,35 @@ export const TAP_HINT_PULSE = {
   minScale: 1,
   maxScale: 1.02,
 } as const;
+
+/**
+ * Chip stagger entrance animation
+ * Each chip fades in and slides up with a 50ms delay between each
+ */
+export const CHIP_STAGGER = {
+  delay: 50, // ms between each chip
+  duration: 400,
+  translateY: 10,
+} as const;
+
+/**
+ * Hero glow pulse animation (synced with breathing)
+ * Shadow opacity and radius pulse with the 3s breathing cycle
+ */
+export const HERO_GLOW = {
+  minShadowOpacity: 0.15,
+  maxShadowOpacity: 0.35,
+  minShadowRadius: 24,
+  maxShadowRadius: 32,
+  outerGlowOpacity: 0.15,
+  outerGlowRadius: 60,
+} as const;
+
+/**
+ * CTA shimmer animation on enable transition
+ * Gradient sweeps left-to-right when button becomes enabled
+ */
+export const CTA_SHIMMER = {
+  duration: 600,
+  gradientOpacity: 0.3,
+} as const;
