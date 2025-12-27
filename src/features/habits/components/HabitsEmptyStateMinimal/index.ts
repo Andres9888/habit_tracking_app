@@ -19,6 +19,7 @@ export { AnimatedEntrance } from './AnimatedEntrance';
 export { ProgressRing } from './ProgressRing';
 export { ParticleBurst } from './ParticleBurst';
 export { LoadingSkeleton } from './LoadingSkeleton';
+export { ErrorMessage } from './ErrorMessage';
 
 // Type exports
 export type {
@@ -31,6 +32,7 @@ export type {
   SecondaryLinksProps,
   SuccessStateProps,
   EmptyStateState,
+  ErrorMessageProps,
 } from './types';
 
 // Constant exports
@@ -53,4 +55,6 @@ export {
   CTA_TRANSFORMS,
   CONFETTI_CONFIG,
   PROGRESS_RING,
+  ERROR_ANIMATION,
+  KEYBOARD_LAYOUT,
 } from './animations';

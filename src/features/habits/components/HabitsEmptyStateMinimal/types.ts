@@ -125,3 +125,15 @@ export interface EmptyStateState {
   /** Habit name shown in success state (null if not showing success) */
   successHabitName: string | null;
 }
+
+/**
+ * ErrorMessage component props
+ */
+export interface ErrorMessageProps {
+  /** Error message to display */
+  message: string;
+  /** Callback when dismiss button is pressed */
+  onDismiss: () => void;
+  /** Optional auto-dismiss after delay (uses ERROR_ANIMATION.autoDismissDelay if not specified) */
+  autoDismiss?: boolean;
+}
