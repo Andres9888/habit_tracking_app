@@ -114,6 +114,13 @@ export const StickyCreateBar = ({
         style={{ height: 32 }}
       />
       <View className='bg-[#faf9f7] px-4 pb-2'>
+        {/* Motivation text - V9 addition */}
+        <View className='items-center mb-3'>
+          <Text className='text-[13px] text-stone-500'>
+            <Text className='text-emerald-600 font-semibold'>Start your streak today</Text>
+            {' — consistency is key \u{1F525}'}
+          </Text>
+        </View>
         <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-stone-300/40'>
           <Animated.View
             style={{ opacity: colorOpacity, transform: [{ scale }] }}
