@@ -21,6 +21,7 @@ import {
   ReminderSelector,
   type ReminderOption,
 } from './components/ReminderSelector';
+import { TemplatesLinkSection } from './components/TemplatesLinkSection';
 
 // Stagger delay between section animations (ms)
 const ANIMATION_STAGGER_DELAY = 50;
@@ -213,6 +214,16 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 onSelectOption={handleReminderSelect}
               />
             </Animated.View>
+            {/* Templates Link Section - hidden in edit mode */}
+            {!isEditMode && (
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                  ANIMATION_STAGGER_DELAY * 6
+                )}
+              >
+                <TemplatesLinkSection onPress={template.handleHeroPress} />
+              </Animated.View>
+            )}
           </ScrollView>
           <TemplateReminderPrompt
             bottomOffset={template.reminderBottomOffset}
