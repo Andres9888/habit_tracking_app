@@ -1,7 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 interface HabitNameFieldProps {
   value: string;
@@ -17,9 +24,32 @@ export const HabitNameField = ({
   const MAX_LENGTH = 50;
   const charCount = value.length;
   const isNearLimit = charCount > 40;
-  const isAtLimit = charCount >= 50;
+  const [isFocused, setIsFocused] = useState(false);
   const { triggerWarning } = useHapticFeedback();
   const previousCount = useRef(charCount);
+
+  // Animation values for focus state
+  const focusProgress = useSharedValue(0);
+
+  // Update focus animation
+  useEffect(() => {
+    focusProgress.value = withTiming(isFocused ? 1 : 0, { duration: 200 });
+  }, [isFocused, focusProgress]);
+
+  // Animated style for input focus
+  const animatedInputStyle = useAnimatedStyle(() => ({
+    borderColor:
+      focusProgress.value > 0.5
+        ? '#10B981' // primary.500 - emerald
+        : '#e7e5e4',
+    borderWidth: 2,
+    elevation: focusProgress.value * 2,
+    // stone-200
+    shadowColor: '#10B981',
+    shadowOffset: { height: 0, width: 0 },
+    shadowOpacity: focusProgress.value * 0.1,
+    shadowRadius: focusProgress.value * 3,
+  }));
 
   // Trigger haptic when hitting character limit
   useEffect(() => {
@@ -28,6 +58,9 @@ export const HabitNameField = ({
     }
     previousCount.current = charCount;
   }, [charCount, triggerWarning]);
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
 
   return (
     <View className='mb-6'>
@@ -47,7 +80,7 @@ export const HabitNameField = ({
       <Text className='mb-2 text-xs text-stone-500'>
         {STRINGS.CREATE_HABIT.nameHelper}
       </Text>
-      <TextInput
+      <AnimatedTextInput
         blurOnSubmit
         accessibilityHint='Enter a name for your habit, up to 50 characters'
         accessibilityLabel='Habit name'
@@ -57,8 +90,11 @@ export const HabitNameField = ({
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
         placeholderTextColor='#a8a29e'
         returnKeyType='done'
+        style={animatedInputStyle}
         value={value}
+        onBlur={handleBlur}
         onChangeText={onChange}
+        onFocus={handleFocus}
       />
     </View>
   );
