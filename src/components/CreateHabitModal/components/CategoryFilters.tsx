@@ -1,5 +1,13 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import type { Category, CategoryFilter } from '../types';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 // Category color mapping for visual differentiation
 const CATEGORY_COLORS: Record<
@@ -105,6 +113,69 @@ const DEFAULT_COLORS = {
   text: '#374151',
 };
 
+interface CategoryFilterItemProps {
+  category: CategoryFilter;
+  selected: boolean;
+  colors: { bg: string; bgSelected: string; border: string; text: string };
+  onSelect: (category: Category) => void;
+}
+
+const CategoryFilterItem = ({
+  category,
+  selected,
+  colors,
+  onSelect,
+}: CategoryFilterItemProps) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withTiming(0.95, { duration: 50 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  };
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel={`Filter by ${category.label}`}
+      accessibilityRole='button'
+      accessibilityState={{ selected }}
+      className='flex-row items-center gap-1.5 rounded-full px-3 py-2'
+      style={[
+        animatedStyle,
+        {
+          backgroundColor: selected ? colors.bgSelected : colors.bg,
+          borderColor: selected ? colors.bgSelected : colors.border,
+          borderWidth: 1.5,
+        },
+      ]}
+      onPress={() => onSelect(category.id)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      {/* Colored dot indicator for quick visual scan */}
+      {!selected && (
+        <View
+          className='h-2 w-2 rounded-full'
+          style={{ backgroundColor: colors.bgSelected }}
+        />
+      )}
+      <Text className='text-[15px]'>{category.icon}</Text>
+      <Text
+        className='text-[15px] font-semibold'
+        style={{ color: selected ? '#FFFFFF' : colors.text }}
+      >
+        {category.label}
+      </Text>
+    </AnimatedPressable>
+  );
+};
+
 interface CategoryFiltersProps {
   categories: CategoryFilter[];
   onSelect: (category: Category) => void;
@@ -127,34 +198,13 @@ export const CategoryFilters = ({
       const colors = CATEGORY_COLORS[category.id] || DEFAULT_COLORS;
 
       return (
-        <Pressable
+        <CategoryFilterItem
           key={category.id}
-          accessibilityLabel={`Filter by ${category.label}`}
-          accessibilityRole='button'
-          accessibilityState={{ selected }}
-          className='flex-row items-center gap-1.5 rounded-full px-3 py-2'
-          style={{
-            backgroundColor: selected ? colors.bgSelected : colors.bg,
-            borderColor: selected ? colors.bgSelected : colors.border,
-            borderWidth: 1.5,
-          }}
-          onPress={() => onSelect(category.id)}
-        >
-          {/* Colored dot indicator for quick visual scan */}
-          {!selected && (
-            <View
-              className='h-2 w-2 rounded-full'
-              style={{ backgroundColor: colors.bgSelected }}
-            />
-          )}
-          <Text className='text-[15px]'>{category.icon}</Text>
-          <Text
-            className='text-[15px] font-semibold'
-            style={{ color: selected ? '#FFFFFF' : colors.text }}
-          >
-            {category.label}
-          </Text>
-        </Pressable>
+          category={category}
+          colors={colors}
+          selected={selected}
+          onSelect={onSelect}
+        />
       );
     })}
   </ScrollView>
