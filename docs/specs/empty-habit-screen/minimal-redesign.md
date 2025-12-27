@@ -292,9 +292,9 @@ Per app design system analysis:
 
 **Phase 5.2 Notes (Feature Flag Decision):** Intentionally skipped - per spec's Migration Strategy, "Option A: Replace" is recommended. The spec states "the minimal design is strictly better for new users." Since `HabitsEmptyStateMinimal` is already the sole component used in `HabitsList.tsx:666-673` and there's no existing feature flag infrastructure in the app, implementing a toggle would add unnecessary complexity. If A/B testing is desired later, it can be added as a separate initiative. The original `HabitsEmptyState.tsx` remains in codebase for git history reference per spec guidance.
 
-- [ ] Test on iOS simulator
-- [ ] Test on Android emulator
-- [ ] Verify keyboard behavior (input focus, dismiss)
+- [ ] Test on iOS simulator *(Manual testing required - cannot be automated)*
+- [ ] Test on Android emulator *(Manual testing required - cannot be automated)*
+- [ ] Verify keyboard behavior (input focus, dismiss) *(Manual testing required - cannot be automated)*
 
 **Phase 5.3 Notes (Manual Testing Required):** These three tasks require manual human testing - they cannot be performed by an AI agent. A developer should:
 1. Run `npm run expo:ios` to launch the iOS simulator
