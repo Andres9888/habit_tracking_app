@@ -202,8 +202,11 @@ export const ReminderSelector = ({
 
   return (
     <View className='mb-6 rounded-2xl bg-white p-4' testID='reminder-selector'>
-      <Text className='mb-3 text-sm font-semibold text-[#1F2937]'>
-        Reminder
+      <Text
+        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+        style={{ letterSpacing: 0.5 }}
+      >
+        Daily reminder
       </Text>
       <View className='flex-row gap-2'>
         {REMINDER_OPTION_ORDER.map((option) => (

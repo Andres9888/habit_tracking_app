@@ -191,7 +191,10 @@ const ColorPickerContent = ({
 }: ColorPickerSectionProps) => {
   return (
     <View className='mb-6'>
-      <Text className='mb-3 text-base font-semibold text-stone-800'>
+      <Text
+        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+        style={{ letterSpacing: 0.5 }}
+      >
         {STRINGS.CREATE_HABIT.colorLabel}
       </Text>
       {/* 12 colors + custom button = 13 items, justify-between for even spacing */}

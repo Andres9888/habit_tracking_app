@@ -9,7 +9,11 @@ interface HabitNameFieldProps {
   autoFocus: boolean;
 }
 
-export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldProps) => {
+export const HabitNameField = ({
+  value,
+  onChange,
+  autoFocus,
+}: HabitNameFieldProps) => {
   const MAX_LENGTH = 50;
   const charCount = value.length;
   const isNearLimit = charCount > 40;
@@ -28,10 +32,15 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
   return (
     <View className='mb-6'>
       <View className='mb-1 flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-stone-800'>
+        <Text
+          className='text-[13px] font-semibold uppercase text-stone-500'
+          style={{ letterSpacing: 0.5 }}
+        >
           {STRINGS.CREATE_HABIT.nameLabel}
         </Text>
-        <Text className={`text-xs ${isNearLimit ? 'text-amber-500' : 'text-stone-400'}`}>
+        <Text
+          className={`text-xs ${isNearLimit ? 'text-amber-500' : 'text-stone-400'}`}
+        >
           {charCount}/{MAX_LENGTH}
         </Text>
       </View>
@@ -39,16 +48,16 @@ export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldPro
         {STRINGS.CREATE_HABIT.nameHelper}
       </Text>
       <TextInput
-        accessibilityLabel='Habit name'
-        accessibilityHint='Enter a name for your habit, up to 50 characters'
-        autoFocus={autoFocus}
         blurOnSubmit
+        accessibilityHint='Enter a name for your habit, up to 50 characters'
+        accessibilityLabel='Habit name'
+        autoFocus={autoFocus}
         className='h-14 rounded-xl bg-white px-4 text-base text-stone-800'
+        maxLength={MAX_LENGTH}
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
         placeholderTextColor='#a8a29e'
         returnKeyType='done'
         value={value}
-        maxLength={MAX_LENGTH}
         onChangeText={onChange}
       />
     </View>

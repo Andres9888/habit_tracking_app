@@ -487,8 +487,8 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       expect(getByText('or create your own')).toBeDefined();
       expect(getByText('Icon')).toBeDefined();
       expect(getByText('Color')).toBeDefined();
-      // V8: "Reminder" replaced separate "When" and "Remind me" sections
-      expect(getByText('Reminder')).toBeDefined();
+      // V9: "Daily reminder" with uppercase styling (see V9 spec)
+      expect(getByText('Daily reminder')).toBeDefined();
       expect(getByText('Create Habit')).toBeDefined();
     });
 
