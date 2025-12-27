@@ -13,6 +13,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withDelay,
   withSequence,
@@ -27,14 +28,20 @@ import type { SuccessStateProps } from './types';
 /**
  * Individual confetti particle
  */
-function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
+function ConfettiParticle({ delay, color, shouldReduceMotion }: { delay: number; color: string; shouldReduceMotion: boolean }) {
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
-  const opacity = useSharedValue(1);
+  const opacity = useSharedValue(shouldReduceMotion ? 0 : 1);
   const scale = useSharedValue(1);
   const rotation = useSharedValue(0);
 
   useEffect(() => {
+    // Skip animation if reduced motion is preferred
+    if (shouldReduceMotion) {
+      opacity.value = 0;
+      return;
+    }
+
     // Random horizontal drift
     const drift = (Math.random() - 0.5) * 100;
     const startX = (Math.random() - 0.5) * 200;
@@ -62,7 +69,7 @@ function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
       delay + 200,
       withTiming(0.5, { duration: CONFETTI_CONFIG.duration - 200 })
     );
-  }, [delay, opacity, rotation, scale, translateX, translateY]);
+  }, [delay, opacity, rotation, scale, shouldReduceMotion, translateX, translateY]);
 
   const particleStyle = useAnimatedStyle(() => ({
     transform: [
@@ -93,7 +100,10 @@ function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
 /**
  * Confetti burst component
  */
-function Confetti() {
+function Confetti({ shouldReduceMotion }: { shouldReduceMotion: boolean }) {
+  // Skip rendering particles entirely when reduced motion is preferred
+  if (shouldReduceMotion) return null;
+
   const particles = Array.from({ length: CONFETTI_CONFIG.particleCount }, (_, i) => ({
     id: i,
     delay: Math.random() * 300,
@@ -119,6 +129,7 @@ function Confetti() {
           key={particle.id}
           delay={particle.delay}
           color={particle.color}
+          shouldReduceMotion={shouldReduceMotion}
         />
       ))}
     </View>
@@ -129,11 +140,20 @@ function Confetti() {
  * Success celebration screen after habit creation
  */
 export function SuccessState({ habitName, onAddAnother }: SuccessStateProps) {
-  const iconScale = useSharedValue(POP_ANIMATION.initialScale);
-  const contentOpacity = useSharedValue(0);
-  const contentTranslateY = useSharedValue(20);
+  const shouldReduceMotion = useReducedMotion();
+  const iconScale = useSharedValue(shouldReduceMotion ? POP_ANIMATION.finalScale : POP_ANIMATION.initialScale);
+  const contentOpacity = useSharedValue(shouldReduceMotion ? 1 : 0);
+  const contentTranslateY = useSharedValue(shouldReduceMotion ? 0 : 20);
 
   useEffect(() => {
+    // Skip animations if reduced motion is preferred
+    if (shouldReduceMotion) {
+      iconScale.value = POP_ANIMATION.finalScale;
+      contentOpacity.value = 1;
+      contentTranslateY.value = 0;
+      return;
+    }
+
     // Icon pop animation: 0.8 → 1.1 → 1.0 with bounce
     iconScale.value = withSequence(
       withTiming(POP_ANIMATION.overshootScale, { duration: POP_ANIMATION.duration * 0.6 }),
@@ -146,7 +166,7 @@ export function SuccessState({ habitName, onAddAnother }: SuccessStateProps) {
       200,
       withSpring(0, SPRING_CONFIGS.entrance)
     );
-  }, [contentOpacity, contentTranslateY, iconScale]);
+  }, [contentOpacity, contentTranslateY, iconScale, shouldReduceMotion]);
 
   const iconStyle = useAnimatedStyle(() => ({
     transform: [{ scale: iconScale.value }],
@@ -166,7 +186,7 @@ export function SuccessState({ habitName, onAddAnother }: SuccessStateProps) {
         paddingHorizontal: 24,
       }}
     >
-      <Confetti />
+      <Confetti shouldReduceMotion={shouldReduceMotion ?? false} />
 
       {/* Success Icon */}
       <Animated.View

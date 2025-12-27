@@ -12,6 +12,7 @@ import { useCallback } from 'react';
 import { ActivityIndicator, Pressable, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
@@ -26,6 +27,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
  * Primary action button with disabled/loading states
  */
 export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
+  const shouldReduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
   const translateY = useSharedValue(0);
 
@@ -37,14 +39,15 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
   }));
 
   const handlePressIn = useCallback(() => {
-    if (disabled || isLoading) return;
+    if (disabled || isLoading || shouldReduceMotion) return;
     scale.value = withSpring(CTA_TRANSFORMS.pressScale, SPRING_CONFIGS.ctaPress);
-  }, [disabled, isLoading, scale]);
+  }, [disabled, isLoading, scale, shouldReduceMotion]);
 
   const handlePressOut = useCallback(() => {
+    if (shouldReduceMotion) return;
     scale.value = withSpring(1, SPRING_CONFIGS.ctaPress);
     translateY.value = withSpring(0, SPRING_CONFIGS.ctaPress);
-  }, [scale, translateY]);
+  }, [scale, shouldReduceMotion, translateY]);
 
   const handlePress = useCallback(() => {
     if (disabled || isLoading) return;
