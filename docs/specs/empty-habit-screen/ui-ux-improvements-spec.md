@@ -216,14 +216,16 @@ Replace static disabled state with LoadingSkeleton when `isLoading=true`.
 Stagger each chip's entrance animation by 50ms for cascade effect.
 
 **Acceptance Criteria**:
-- [ ] Each chip has individual entrance animation
-- [ ] Delays: 0, 50, 100, 150, 200, 250ms (per chip index)
-- [ ] Animation: opacity 0→1, translateY 10→0
-- [ ] Duration: 400ms, ease-out
-- [ ] Base delay still respects `ENTRANCE_DELAYS.chips`
-- [ ] Reduced motion: instant appearance, no stagger
+- [x] Each chip has individual entrance animation
+- [x] Delays: 0, 50, 100, 150, 200, 250ms (per chip index)
+- [x] Animation: opacity 0→1, translateY 10→0
+- [x] Duration: 400ms, ease-out
+- [x] Base delay still respects `ENTRANCE_DELAYS.chips`
+- [x] Reduced motion: instant appearance, no stagger
 
 **Files**: `SuggestionChips.tsx`, `HabitsEmptyStateMinimal.tsx`
+
+**Completed**: 2025-12-27 - Added individual entrance animations to each chip with staggered delays (0-250ms in 50ms increments). Animation uses `withTiming` with ease-out easing for opacity (0→1) and translateY (10→0) over 400ms. Total delay combines `ENTRANCE_DELAYS.chips` (300ms) with chip-specific stagger. Reduced motion users see instant appearance. Removed `AnimatedEntrance` wrapper from `HabitsEmptyStateMinimal.tsx`. Added 4 unit tests for stagger delay calculations. All 98 tests passing.
 
 ---
 
@@ -233,11 +235,13 @@ Stagger each chip's entrance animation by 50ms for cascade effect.
 Add light haptic feedback when input receives focus.
 
 **Acceptance Criteria**:
-- [ ] Trigger `impactLight` haptic on focus
-- [ ] No haptic on blur
-- [ ] Uses existing `useHapticFeedback` hook
+- [x] Trigger `impactLight` haptic on focus
+- [x] No haptic on blur
+- [x] Uses existing `useHapticFeedback` hook
 
 **Files**: `HabitInput.tsx`
+
+**Completed**: 2025-12-27 - Added `useHapticFeedback` hook to `HabitInput.tsx` and called `triggerLightImpact()` in the `handleFocus` callback. No haptic is triggered on blur. Added 2 unit tests verifying haptic triggers on focus but not on blur. All 100 tests passing.
 
 ---
 
@@ -247,13 +251,15 @@ Add light haptic feedback when input receives focus.
 Sync hero icon shadow with breathing animation for glow pulse effect.
 
 **Acceptance Criteria**:
-- [ ] Shadow opacity pulses: 0.15 → 0.35 → 0.15
-- [ ] Shadow radius pulses: 24 → 32 → 24
-- [ ] Synced with existing 3s breathing animation
-- [ ] Reuses existing `scale` shared value (interpolate for shadow)
-- [ ] Reduced motion: static shadow at min values
+- [x] Shadow opacity pulses: 0.15 → 0.35 → 0.15
+- [x] Shadow radius pulses: 24 → 32 → 24
+- [x] Synced with existing 3s breathing animation
+- [x] Reuses existing `scale` shared value (interpolate for shadow)
+- [x] Reduced motion: static shadow at min values
 
 **Files**: `HeroIcon.tsx`
+
+**Completed**: 2025-12-27 - Added `interpolate` from react-native-reanimated to interpolate `shadowOpacity` (0.15 → 0.35) and `shadowRadius` (24 → 32) based on the existing breathing `scale` shared value. The shadow pulse is now synced with the 3s breathing animation cycle. When reduced motion is enabled, scale stays at minScale which keeps shadow at static minimum values. Added 13 unit tests in `HeroIcon.test.tsx` covering animation constants, glow behavior, and reduced motion. All 113 HabitsEmptyStateMinimal tests passing.
 
 ---
 
@@ -263,14 +269,16 @@ Sync hero icon shadow with breathing animation for glow pulse effect.
 Add shimmer animation when CTA button transitions from disabled to enabled.
 
 **Acceptance Criteria**:
-- [ ] Shimmer triggers when `disabled` changes from `true` to `false`
-- [ ] Animation: gradient sweeps left-to-right
-- [ ] Gradient: transparent → white(0.3) → transparent
-- [ ] Duration: 600ms
-- [ ] Only plays once per enable transition
-- [ ] Reduced motion: no shimmer, just instant enable
+- [x] Shimmer triggers when `disabled` changes from `true` to `false`
+- [x] Animation: gradient sweeps left-to-right
+- [x] Gradient: transparent → white(0.3) → transparent
+- [x] Duration: 600ms
+- [x] Only plays once per enable transition
+- [x] Reduced motion: no shimmer, just instant enable
 
 **Files**: `CtaButton.tsx`
+
+**Completed**: 2025-12-27 - Added shimmer effect using `expo-linear-gradient` and Reanimated. Shimmer is triggered via `useEffect` that detects `disabled` prop changes from `true` to `false`. Animation uses `withTiming` over 600ms with `Easing.inOut(Easing.ease)`. The shimmer overlay is positioned absolutely over the button with `overflow: hidden` to clip at button edges. Reduced motion users see instant enable without shimmer animation. Added 27 unit tests in `CtaButton.test.tsx` covering shimmer trigger behavior, accessibility, press behavior, and reduced motion. All 137 HabitsEmptyStateMinimal tests passing.
 
 ---
 
@@ -280,14 +288,21 @@ Add shimmer animation when CTA button transitions from disabled to enabled.
 Add unit tests for new components and animations.
 
 **Acceptance Criteria**:
-- [ ] `LoadingSkeleton` renders correct skeleton elements
-- [ ] `LoadingSkeleton` has correct accessibility label
-- [ ] Chip stagger delays are calculated correctly
-- [ ] CTA shimmer triggers on enable transition
-- [ ] Hero glow respects reduced motion
-- [ ] Animation constants have correct values
+- [x] `LoadingSkeleton` renders correct skeleton elements
+- [x] `LoadingSkeleton` has correct accessibility label
+- [x] Chip stagger delays are calculated correctly
+- [x] CTA shimmer triggers on enable transition
+- [x] Hero glow respects reduced motion
+- [x] Animation constants have correct values
 
 **Files**: Create `LoadingSkeleton.test.tsx`, modify existing test files
+
+**Completed**: 2025-12-27 - All unit tests were added during Tasks 2, 4, 5, 6, and 7. Test coverage includes:
+- `LoadingSkeleton.test.tsx` (10 tests): skeleton elements, accessibility label, layout
+- `HabitsEmptyStateMinimal.test.tsx` (4 tests): chip stagger delay calculations
+- `CtaButton.test.tsx` (27 tests): shimmer trigger behavior, reduced motion
+- `HeroIcon.test.tsx` (13 tests): glow pulse constants, reduced motion
+Total: 137 tests across all HabitsEmptyStateMinimal component tests.
 
 ---
 
