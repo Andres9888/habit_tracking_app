@@ -77,9 +77,6 @@ export const HabitNameField = ({
           {charCount}/{MAX_LENGTH}
         </Text>
       </View>
-      <Text className='mb-2 text-xs text-stone-500'>
-        {STRINGS.CREATE_HABIT.nameHelper}
-      </Text>
       <AnimatedTextInput
         blurOnSubmit
         accessibilityHint='Enter a name for your habit, up to 50 characters'
@@ -96,6 +93,9 @@ export const HabitNameField = ({
         onChangeText={onChange}
         onFocus={handleFocus}
       />
+      <Text className='mt-2 text-xs text-stone-400'>
+        {STRINGS.CREATE_HABIT.nameHelper}
+      </Text>
     </View>
   );
 };
