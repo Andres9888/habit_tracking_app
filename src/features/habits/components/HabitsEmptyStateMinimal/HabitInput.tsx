@@ -6,13 +6,15 @@
  * - Animated border color transition
  * - Light haptic feedback on focus
  * - Clear button (X) when text is present
+ * - Character counter with color warnings (35+ chars: amber, 45+: red)
+ * - Max length enforcement (50 characters)
  * - Keyboard submit support
  * - Forwarded ref for external focus control
  * - Proper accessibility labels
  */
 
-import { forwardRef, useCallback, useState } from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import { forwardRef, useCallback, useMemo, useState } from 'react';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -22,10 +24,32 @@ import Animated, {
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { TIMING_CONFIGS } from './animations';
-import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
+import {
+  BORDER_RADIUS,
+  CHARACTER_LIMIT,
+  COLORS,
+  COPY,
+  TOUCH_TARGETS,
+} from './constants';
 import type { HabitInputProps } from './types';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
+
+/**
+ * Get character counter color based on length
+ * - Default (stone-400): under warning threshold
+ * - Warning (amber-500): 35+ characters
+ * - Error (red-500): 45+ characters
+ */
+function getCharacterCounterColor(length: number): string {
+  if (length >= CHARACTER_LIMIT.errorThreshold) {
+    return COLORS.red500;
+  }
+  if (length >= CHARACTER_LIMIT.warningThreshold) {
+    return COLORS.amber500;
+  }
+  return COLORS.stone400;
+}
 
 /**
  * X icon for clear button
@@ -77,6 +101,13 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     const showClearButton = value.length > 0;
     const { triggerLightImpact } = useHapticFeedback();
 
+    // Character counter: visible when focused or has text
+    const showCharacterCounter = isFocused || value.length > 0;
+    const characterCounterColor = useMemo(
+      () => getCharacterCounterColor(value.length),
+      [value.length]
+    );
+
     const handleFocus = useCallback(() => {
       setIsFocused(true);
       focusProgress.value = withTiming(1, TIMING_CONFIGS.inputFocus);
@@ -125,10 +156,11 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
       >
         <TextInput
           ref={ref}
-          accessibilityHint='Type a habit you want to track daily'
+          accessibilityHint={`Type a habit you want to track daily, maximum ${CHARACTER_LIMIT.max} characters`}
           accessibilityLabel='Enter your habit name'
           autoCapitalize='sentences'
           autoCorrect={false}
+          maxLength={CHARACTER_LIMIT.max}
           placeholder={COPY.inputPlaceholder}
           placeholderTextColor={COLORS.stone400}
           returnKeyType='done'
@@ -158,6 +190,20 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           >
             <ClearIcon />
           </Pressable>
+        )}
+        {showCharacterCounter && (
+          <Text
+            accessibilityElementsHidden
+            importantForAccessibility='no'
+            style={{
+              color: characterCounterColor,
+              fontSize: 12,
+              fontWeight: '500',
+              marginLeft: 8,
+            }}
+          >
+            {value.length}/{CHARACTER_LIMIT.max}
+          </Text>
         )}
       </AnimatedView>
     );

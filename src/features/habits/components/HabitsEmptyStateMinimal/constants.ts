@@ -48,6 +48,9 @@ export const COPY = {
  * Design system color tokens aligned with app patterns
  */
 export const COLORS = {
+  // Character counter warning/error colors
+  amber500: '#F59E0B',
+
   // Input focus color (per app pattern)
   blue500: '#3B82F6',
 
@@ -60,6 +63,9 @@ export const COLORS = {
   emeraldCaret: '#10B981',
 
   green50: '#F0FDF4',
+
+  // Character counter error color
+  red500: '#EF4444',
 
   stone200: '#E7E5E4',
 
