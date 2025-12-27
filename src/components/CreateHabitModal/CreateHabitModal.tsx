@@ -37,6 +37,11 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       form.setSelectedColor(quickPick.color);
       form.setDayPhase(quickPick.timeOfDay);
 
+      // Auto-enable reminders with appropriate time for the selected template
+      const reminderTime = getReminderTimeForPhase(quickPick.timeOfDay);
+      form.setReminderTime(reminderTime);
+      form.setRemindersEnabled(true);
+
       // Scroll to form section after selection with a small delay for smoother UX
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
@@ -80,6 +85,8 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       // Auto-set reminder time based on selected phase
       const reminderTime = getReminderTimeForPhase(phase);
       form.setReminderTime(reminderTime);
+      // Auto-enable reminders when time of day is selected
+      form.setRemindersEnabled(true);
     },
     [form]
   );
