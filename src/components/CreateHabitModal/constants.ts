@@ -28,6 +28,33 @@ export const HABIT_COLORS = [
   '#78716C', // Stone
 ] as const;
 
+/**
+ * Human-readable color names for accessibility (VoiceOver)
+ * Maps hex values to descriptive names
+ */
+export const COLOR_NAMES: Record<string, string> = {
+  '#EF4444': 'Red',
+  '#F97316': 'Orange',
+  '#FBBF24': 'Amber',
+  '#84CC16': 'Lime',
+  '#10B981': 'Emerald',
+  '#14B8A6': 'Teal',
+  '#06B6D4': 'Cyan',
+  '#3B82F6': 'Blue',
+  '#8B5CF6': 'Violet',
+  '#A855F7': 'Purple',
+  '#EC4899': 'Pink',
+  '#78716C': 'Stone',
+} as const;
+
+/**
+ * Get human-readable color name for accessibility
+ * Returns the hex value if no name is found
+ */
+export const getColorName = (hex: string): string => {
+  return COLOR_NAMES[hex.toUpperCase()] || COLOR_NAMES[hex] || hex;
+};
+
 /** @deprecated Use HABIT_COLORS instead - kept for backward compatibility */
 export const COLORS = HABIT_COLORS;
 
