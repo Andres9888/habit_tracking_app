@@ -10,6 +10,7 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import type { HabitTemplate } from '../types';
 
@@ -35,10 +36,13 @@ export const TemplateListItem = ({
   onViewScience,
 }: TemplateListItemProps) => {
   const reduceMotion = useReduceMotion();
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
 
   // Entrance animation values
   const entranceOpacity = useSharedValue(reduceMotion ? 1 : 0);
-  const entranceTranslateY = useSharedValue(reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y);
+  const entranceTranslateY = useSharedValue(
+    reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y
+  );
 
   // Press animation for template row
   const templateScale = useSharedValue(1);
@@ -56,7 +60,10 @@ export const TemplateListItem = ({
     const delay = index * ENTRANCE_STAGGER_DELAY;
     entranceOpacity.value = withDelay(
       delay,
-      withTiming(1, { duration: ENTRANCE_DURATION, easing: Easing.out(Easing.cubic) })
+      withTiming(1, {
+        duration: ENTRANCE_DURATION,
+        easing: Easing.out(Easing.cubic),
+      })
     );
     entranceTranslateY.value = withDelay(
       delay,
@@ -83,6 +90,7 @@ export const TemplateListItem = ({
   }));
 
   const handleTemplatePressIn = () => {
+    triggerLightImpact();
     templateScale.value = withTiming(0.98, { duration: 50 });
   };
 
@@ -91,6 +99,7 @@ export const TemplateListItem = ({
   };
 
   const handleSciencePressIn = () => {
+    triggerLightImpact();
     scienceScale.value = withTiming(0.95, { duration: 50 });
   };
 
@@ -106,7 +115,10 @@ export const TemplateListItem = ({
           accessibilityRole='button'
           className='flex-1 flex-row items-center gap-3'
           style={templateAnimatedStyle}
-          onPress={() => onSelect(template)}
+          onPress={() => {
+            triggerSelection();
+            onSelect(template);
+          }}
           onPressIn={handleTemplatePressIn}
           onPressOut={handleTemplatePressOut}
         >
@@ -136,7 +148,10 @@ export const TemplateListItem = ({
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full bg-blue-50'
           style={scienceAnimatedStyle}
-          onPress={() => onViewScience(template)}
+          onPress={() => {
+            triggerSelection();
+            onViewScience(template);
+          }}
           onPressIn={handleSciencePressIn}
           onPressOut={handleSciencePressOut}
         >

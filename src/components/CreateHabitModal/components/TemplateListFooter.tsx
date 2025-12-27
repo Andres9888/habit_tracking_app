@@ -10,6 +10,7 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -25,10 +26,13 @@ interface TemplateListFooterProps {
 
 export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
   const reduceMotion = useReduceMotion();
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
 
   // Entrance animation values
   const entranceOpacity = useSharedValue(reduceMotion ? 1 : 0);
-  const entranceTranslateY = useSharedValue(reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y);
+  const entranceTranslateY = useSharedValue(
+    reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y
+  );
 
   // Press animation
   const scale = useSharedValue(1);
@@ -43,7 +47,10 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
 
     entranceOpacity.value = withDelay(
       ENTRANCE_DELAY,
-      withTiming(1, { duration: ENTRANCE_DURATION, easing: Easing.out(Easing.cubic) })
+      withTiming(1, {
+        duration: ENTRANCE_DURATION,
+        easing: Easing.out(Easing.cubic),
+      })
     );
     entranceTranslateY.value = withDelay(
       ENTRANCE_DELAY,
@@ -66,6 +73,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
   }));
 
   const handlePressIn = () => {
+    triggerLightImpact();
     scale.value = withTiming(0.98, { duration: 50 });
   };
 
@@ -81,7 +89,10 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
           accessibilityRole='button'
           className='flex-row items-center justify-center rounded-full bg-[#f4f4f4] px-4 py-3'
           style={pressAnimatedStyle}
-          onPress={onClose}
+          onPress={() => {
+            triggerSelection();
+            onClose();
+          }}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >

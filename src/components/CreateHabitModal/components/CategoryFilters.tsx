@@ -9,6 +9,7 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import type { Category, CategoryFilter } from '../types';
 
@@ -140,10 +141,13 @@ const CategoryFilterItem = ({
   selected,
 }: CategoryFilterItemProps) => {
   const reduceMotion = useReduceMotion();
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
 
   // Entrance animation values
   const entranceOpacity = useSharedValue(reduceMotion ? 1 : 0);
-  const entranceTranslateY = useSharedValue(reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y);
+  const entranceTranslateY = useSharedValue(
+    reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y
+  );
 
   // Press animation
   const scale = useSharedValue(1);
@@ -159,7 +163,10 @@ const CategoryFilterItem = ({
     const delay = index * ENTRANCE_STAGGER_DELAY;
     entranceOpacity.value = withDelay(
       delay,
-      withTiming(1, { duration: ENTRANCE_DURATION, easing: Easing.out(Easing.cubic) })
+      withTiming(1, {
+        duration: ENTRANCE_DURATION,
+        easing: Easing.out(Easing.cubic),
+      })
     );
     entranceTranslateY.value = withDelay(
       delay,
@@ -182,6 +189,7 @@ const CategoryFilterItem = ({
   }));
 
   const handlePressIn = () => {
+    triggerLightImpact();
     scale.value = withTiming(0.95, { duration: 50 });
   };
 
@@ -204,7 +212,10 @@ const CategoryFilterItem = ({
             borderWidth: 1.5,
           },
         ]}
-        onPress={() => onSelect(category.id)}
+        onPress={() => {
+          triggerSelection();
+          onSelect(category.id);
+        }}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
