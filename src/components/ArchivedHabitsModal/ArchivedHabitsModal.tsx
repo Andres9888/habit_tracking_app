@@ -421,7 +421,7 @@ export default function ArchivedHabitsModal({
             </View>
 
             {/* Text Content - warmer, more encouraging copy */}
-            <Text className='mb-2 text-center text-2xl font-bold text-stone-900'>
+            <Text className='mb-2 text-center text-2xl font-bold tracking-tight text-stone-900'>
               Your Habits Are Thriving!
             </Text>
             <Text className='mb-1 text-center text-base text-stone-500'>

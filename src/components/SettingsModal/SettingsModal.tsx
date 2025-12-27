@@ -130,7 +130,7 @@ export default function SettingsModal({
               <ChevronLeft color={colors.icon} size={28} />
             </TouchableOpacity>
             <Text
-              className='text-[24px] font-bold leading-[32px] text-foreground'
+              className='text-[24px] font-bold leading-[32px] tracking-tight text-foreground'
               style={{ color: colors.headerText }}
             >
               Settings

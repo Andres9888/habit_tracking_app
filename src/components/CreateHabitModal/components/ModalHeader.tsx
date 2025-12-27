@@ -56,7 +56,7 @@ export const ModalHeader = ({
       >
         <X color='#44403c' size={24} strokeWidth={2} />
       </TouchableOpacity>
-      <Text className='text-[24px] font-bold text-stone-900'>
+      <Text className='text-[24px] font-bold tracking-tight text-stone-900'>
         {isEditMode ? 'Edit Habit' : STRINGS.CREATE_HABIT.title}
       </Text>
 

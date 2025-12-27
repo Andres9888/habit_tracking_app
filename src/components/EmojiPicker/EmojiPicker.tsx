@@ -333,7 +333,7 @@ export const EmojiPicker = memo(
           >
             {/* Header */}
             <View className='flex-row items-center justify-between border-b border-gray-200 px-4 pb-3 pt-4'>
-              <Text className='text-[24px] font-bold text-stone-800'>
+              <Text className='text-[24px] font-bold tracking-tight text-stone-800'>
                 Choose Icon
               </Text>
               <TouchableOpacity

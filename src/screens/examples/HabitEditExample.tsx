@@ -35,7 +35,7 @@ export default function HabitEditExample() {
 
   return (
     <View className='flex-1 bg-[#faf9f7] pt-12'>
-      <Text className='mb-4 px-4 text-2xl font-bold text-[#1a1a1a]'>
+      <Text className='mb-4 px-4 text-2xl font-bold tracking-tight text-[#1a1a1a]'>
         Habit Edit Screen Example
       </Text>
       <Text className='mb-6 px-4 text-base text-[#8a8a8a]'>

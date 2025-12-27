@@ -76,7 +76,7 @@ function IntroStep({ habitName, onNext }: { habitName: string; onNext: () => voi
         <View className="h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500 to-indigo-600">
           <Brain className="text-white" size={40} />
         </View>
-        <Text className="text-center text-2xl font-bold text-stone-900">
+        <Text className="text-center text-2xl font-bold tracking-tight text-stone-900">
           Visualization Exercise
         </Text>
         <Text className="px-4 text-center text-base text-stone-500">

@@ -232,7 +232,7 @@ export function VisionBoardPreview({
             <View className="flex-1 justify-center px-6">
               <View className="rounded-3xl bg-white/10 p-6 backdrop-blur-lg">
                 {/* Title */}
-                <Text className="mb-4 text-center text-2xl font-bold text-white">
+                <Text className="mb-4 text-center text-2xl font-bold tracking-tight text-white">
                   {currentItem.title}
                 </Text>
 

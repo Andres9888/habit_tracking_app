@@ -361,7 +361,7 @@ function UpgradePrompt({
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
           </View>
-          <Text className='text-center text-[24px] font-bold text-stone-900'>
+          <Text className='text-center text-[24px] font-bold tracking-tight text-stone-900'>
             You're on a roll! Ready for more?
           </Text>
           <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
