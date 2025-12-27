@@ -16,6 +16,8 @@ export { CtaButton } from './CtaButton';
 export { SecondaryLinks } from './SecondaryLinks';
 export { SuccessState } from './SuccessState';
 export { AnimatedEntrance } from './AnimatedEntrance';
+export { ProgressRing } from './ProgressRing';
+export { ParticleBurst } from './ParticleBurst';
 
 // Type exports
 export type {
@@ -43,4 +45,5 @@ export {
   CHIP_TRANSFORMS,
   CTA_TRANSFORMS,
   CONFETTI_CONFIG,
+  PROGRESS_RING,
 } from './animations';

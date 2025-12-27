@@ -21,14 +21,17 @@ import Animated, {
   useReducedMotion,
   useSharedValue,
   withDelay,
+  withRepeat,
   withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, SPRING_CONFIGS } from './animations';
+import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, PARTICLE_BURST, POP_ANIMATION, PROGRESS_RING, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
+import { ParticleBurst } from './ParticleBurst';
+import { ProgressRing } from './ProgressRing';
 import type { SuccessStateProps } from './types';
 
 /**
@@ -169,6 +172,17 @@ export function SuccessState({
   const iconExitScale = useSharedValue(1);
   const containerOpacity = useSharedValue(1);
 
+  // Tap hint pulse animation values
+  const tapHintOpacity = useSharedValue(0);
+  const tapHintScale = useSharedValue(TAP_HINT_PULSE.minScale);
+
+  // Progress ring animation values
+  const ringOpacity = useSharedValue(1);
+  const ringActive = useSharedValue(true); // Controls whether ring should animate
+
+  // Particle burst animation values
+  const burstOpacity = useSharedValue(1);
+
   // Display emoji - use habit emoji if provided, fallback to growth emoji
   const displayEmoji = habitEmoji || '🌿';
 
@@ -187,6 +201,21 @@ export function SuccessState({
       onTransitionComplete?.();
       return;
     }
+
+    // Freeze the progress ring animation by marking it inactive
+    ringActive.value = false;
+
+    // Fade out the progress ring during exit
+    ringOpacity.value = withTiming(0, {
+      duration: EXIT_TRANSITION.content.duration,
+      easing: Easing.out(Easing.ease),
+    });
+
+    // Fade out the particle burst during exit
+    burstOpacity.value = withTiming(0, {
+      duration: EXIT_TRANSITION.content.duration,
+      easing: Easing.out(Easing.ease),
+    });
 
     // Shared element exit: icon floats up and shrinks, content fades
     iconTranslateY.value = withSpring(
@@ -216,6 +245,9 @@ export function SuccessState({
     iconExitScale,
     contentOpacity,
     containerOpacity,
+    ringActive,
+    ringOpacity,
+    burstOpacity,
   ]);
 
   // Tap to skip handler
@@ -257,6 +289,66 @@ export function SuccessState({
       withSpring(0, SPRING_CONFIGS.entrance)
     );
   }, [contentOpacity, contentTranslateY, iconScale, shouldReduceMotion]);
+
+  // Tap hint pulse animation - fade in after delay, then pulse infinitely
+  useEffect(() => {
+    if (!autoTransition) return;
+
+    // For reduced motion, just fade in to static opacity (no pulse)
+    if (shouldReduceMotion) {
+      tapHintOpacity.value = withDelay(800, withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300 }));
+      tapHintScale.value = TAP_HINT_PULSE.minScale;
+      return;
+    }
+
+    // Fade in after 800ms delay
+    tapHintOpacity.value = withDelay(
+      800,
+      withSequence(
+        // Initial fade in
+        withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300, easing: Easing.out(Easing.ease) }),
+        // Then start infinite pulse between minOpacity and maxOpacity
+        withRepeat(
+          withSequence(
+            withTiming(TAP_HINT_PULSE.minOpacity, {
+              duration: TAP_HINT_PULSE.duration / 2,
+              easing: Easing.inOut(Easing.ease),
+            }),
+            withTiming(TAP_HINT_PULSE.maxOpacity, {
+              duration: TAP_HINT_PULSE.duration / 2,
+              easing: Easing.inOut(Easing.ease),
+            })
+          ),
+          -1, // infinite
+          false // don't reverse (already using sequence for back and forth)
+        )
+      )
+    );
+
+    // Scale pulse - starts with delay matching fade-in completion
+    tapHintScale.value = withDelay(
+      1100, // 800ms delay + 300ms fade-in
+      withRepeat(
+        withSequence(
+          withTiming(TAP_HINT_PULSE.maxScale, {
+            duration: TAP_HINT_PULSE.duration / 2,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          withTiming(TAP_HINT_PULSE.minScale, {
+            duration: TAP_HINT_PULSE.duration / 2,
+            easing: Easing.inOut(Easing.ease),
+          })
+        ),
+        -1, // infinite
+        false
+      )
+    );
+
+    return () => {
+      cancelAnimation(tapHintOpacity);
+      cancelAnimation(tapHintScale);
+    };
+  }, [autoTransition, shouldReduceMotion, tapHintOpacity, tapHintScale]);
 
   // Auto-transition exit animation (after celebration delay)
   useEffect(() => {
@@ -303,6 +395,19 @@ export function SuccessState({
     opacity: containerOpacity.value,
   }));
 
+  const tapHintStyle = useAnimatedStyle(() => ({
+    opacity: tapHintOpacity.value,
+    transform: [{ scale: tapHintScale.value }],
+  }));
+
+  const ringStyle = useAnimatedStyle(() => ({
+    opacity: ringOpacity.value,
+  }));
+
+  const burstStyle = useAnimatedStyle(() => ({
+    opacity: burstOpacity.value,
+  }));
+
   return (
     <Pressable
       accessibilityLabel="Tap to continue to your habits"
@@ -324,23 +429,69 @@ export function SuccessState({
       >
         <Confetti shouldReduceMotion={shouldReduceMotion ?? false} />
 
-        {/* Success Icon - Shows habit emoji for visual continuity */}
+        {/* Icon Container - Wraps both progress ring and success icon */}
         <Animated.View
           style={[
             iconStyle,
             {
+              width: PROGRESS_RING.size,
+              height: PROGRESS_RING.size,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 24,
+            },
+          ]}
+        >
+          {/* Progress Ring - Behind the icon, shows countdown to auto-transition */}
+          {autoTransition && (
+            <Animated.View
+              style={[
+                ringStyle,
+                {
+                  position: 'absolute',
+                  width: PROGRESS_RING.size,
+                  height: PROGRESS_RING.size,
+                },
+              ]}
+            >
+              <ProgressRing
+                duration={PROGRESS_RING.duration}
+                size={PROGRESS_RING.size}
+              />
+            </Animated.View>
+          )}
+
+          {/* Particle Burst - Triggers on mount with icon pop, positioned behind icon */}
+          <Animated.View
+            style={[
+              burstStyle,
+              {
+                position: 'absolute',
+                width: PROGRESS_RING.size,
+                height: PROGRESS_RING.size,
+              },
+            ]}
+          >
+            <ParticleBurst
+              duration={PARTICLE_BURST.duration}
+              distance={PARTICLE_BURST.distance}
+            />
+          </Animated.View>
+
+          {/* Success Icon - Shows habit emoji for visual continuity */}
+          <View
+            style={{
               width: 96,
               height: 96,
               borderRadius: 48,
               backgroundColor: COLORS.successBackground,
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 24,
               zIndex: 10,
-            },
-          ]}
-        >
-          <Text style={{ fontSize: 48 }}>{displayEmoji}</Text>
+            }}
+          >
+            <Text style={{ fontSize: 48 }}>{displayEmoji}</Text>
+          </View>
         </Animated.View>
 
         {/* Content */}
@@ -372,15 +523,18 @@ export function SuccessState({
 
           {/* Tap to continue hint - only show if auto-transitioning */}
           {autoTransition && (
-            <Text
-              style={{
-                fontSize: 13,
-                color: COLORS.stone300,
-                textAlign: 'center',
-              }}
+            <Animated.Text
+              style={[
+                tapHintStyle,
+                {
+                  fontSize: 13,
+                  color: COLORS.stone300,
+                  textAlign: 'center',
+                },
+              ]}
             >
               Tap anywhere to continue
-            </Text>
+            </Animated.Text>
           )}
 
           {/* Add another button - only show if not auto-transitioning */}
