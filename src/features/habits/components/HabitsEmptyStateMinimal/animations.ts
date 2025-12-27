@@ -7,7 +7,11 @@
  * Spring values per app patterns: damping 15-32, stiffness 180-300
  */
 
-import { WithSpringConfig, WithTimingConfig, Easing } from 'react-native-reanimated';
+import {
+  WithSpringConfig,
+  WithTimingConfig,
+  Easing,
+} from 'react-native-reanimated';
 
 /**
  * Hero icon breathing animation
@@ -15,8 +19,8 @@ import { WithSpringConfig, WithTimingConfig, Easing } from 'react-native-reanima
  */
 export const BREATHING_ANIMATION = {
   duration: 3000,
-  minScale: 1.0,
   maxScale: 1.08,
+  minScale: 1,
 } as const;
 
 /**
@@ -24,26 +28,26 @@ export const BREATHING_ANIMATION = {
  * Scale: 0.8 → 1.1 → 1.0 with bounce (0.4s)
  */
 export const POP_ANIMATION = {
+  duration: 400,
+  finalScale: 1,
   initialScale: 0.8,
   overshootScale: 1.1,
-  finalScale: 1.0,
-  duration: 400,
 } as const;
 
 /**
  * Spring configs for interactive elements
  */
 export const SPRING_CONFIGS = {
-  // Chip press feedback - snappy
-  chipPress: {
-    damping: 15,
-    stiffness: 300,
-  } satisfies WithSpringConfig,
-
   // Chip hover lift
   chipHover: {
     damping: 18,
     stiffness: 240,
+  } satisfies WithSpringConfig,
+
+  // Chip press feedback - snappy
+  chipPress: {
+    damping: 15,
+    stiffness: 300,
   } satisfies WithSpringConfig,
 
   // CTA button press
@@ -52,9 +56,9 @@ export const SPRING_CONFIGS = {
     stiffness: 280,
   } satisfies WithSpringConfig,
 
-  // Success pop animation
-  successPop: {
-    damping: 10,
+  // Entrance animation spring
+  entrance: {
+    damping: 18,
     stiffness: 200,
   } satisfies WithSpringConfig,
 
@@ -64,9 +68,9 @@ export const SPRING_CONFIGS = {
     stiffness: 180,
   } satisfies WithSpringConfig,
 
-  // Entrance animation spring
-  entrance: {
-    damping: 18,
+  // Success pop animation
+  successPop: {
+    damping: 10,
     stiffness: 200,
   } satisfies WithSpringConfig,
 } as const;
@@ -75,16 +79,16 @@ export const SPRING_CONFIGS = {
  * Timing configs for non-spring animations
  */
 export const TIMING_CONFIGS = {
-  // Input focus border transition
-  inputFocus: {
-    duration: 200,
-    easing: Easing.out(Easing.ease),
-  } satisfies WithTimingConfig,
-
   // Fade transitions
   fade: {
     duration: 150,
     easing: Easing.ease,
+  } satisfies WithTimingConfig,
+
+  // Input focus border transition
+  inputFocus: {
+    duration: 200,
+    easing: Easing.out(Easing.ease),
   } satisfies WithTimingConfig,
 } as const;
 
@@ -93,11 +97,11 @@ export const TIMING_CONFIGS = {
  * Each element delayed by 100ms
  */
 export const ENTRANCE_DELAYS = {
-  heroIcon: 0,
-  headline: 100,
-  input: 200,
   chips: 300,
   cta: 400,
+  headline: 100,
+  heroIcon: 0,
+  input: 200,
   secondaryLinks: 500,
 } as const;
 
@@ -105,15 +109,15 @@ export const ENTRANCE_DELAYS = {
  * Chip interaction transforms
  */
 export const CHIP_TRANSFORMS = {
+  hoverScale: 1.05,
   // Hover: translateY -2px, scale 1.05
   hoverTranslateY: -2,
-  hoverScale: 1.05,
 
   // Press: scale 0.95
   pressScale: 0.95,
 
   // Selected state
-  selectedScale: 1.0,
+  selectedScale: 1,
 } as const;
 
 /**
@@ -131,9 +135,9 @@ export const CTA_TRANSFORMS = {
  * Confetti animation config for success state
  */
 export const CONFETTI_CONFIG = {
-  particleCount: 20,
-  duration: 1500,
   colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#FCD34D', '#F59E0B'],
+  duration: 1500,
+  particleCount: 20,
 } as const;
 
 /**
@@ -141,20 +145,23 @@ export const CONFETTI_CONFIG = {
  * Shared element style: icon morphs up while content fades
  */
 export const EXIT_TRANSITION = {
+  // Content fade out (faster than icon)
+  content: {
+    delay: 0,
+    duration: 250,
+  },
+
   // Total duration of exit animation
   duration: 500,
 
   // Icon morph animation
   icon: {
-    translateY: -150, // Move upward
-    scale: 0.4, // Shrink
+    // Shrink
     duration: 400,
-  },
 
-  // Content fade out (faster than icon)
-  content: {
-    duration: 250,
-    delay: 0,
+    // Move upward
+    scale: 0.4,
+    translateY: -150,
   },
 
   // Delay before triggering list transition
@@ -174,10 +181,11 @@ export const EXIT_SPRING_CONFIG = {
  * SVG circular progress indicator around the success icon
  */
 export const PROGRESS_RING = {
-  duration: 1800, // matches auto-transition delay
+  circumference: 339.292,
+  duration: 1800,
+  // matches auto-transition delay
   size: 120,
-  strokeWidth: 4,
-  circumference: 339.292, // 2 * PI * 54 (radius)
+  strokeWidth: 4, // 2 * PI * 54 (radius)
 } as const;
 
 /**
@@ -185,10 +193,10 @@ export const PROGRESS_RING = {
  * 8 circular particles in radial pattern that burst outward
  */
 export const PARTICLE_BURST = {
-  count: 8,
-  duration: 800,
-  distance: 60,
   colors: ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6'],
+  count: 8,
+  distance: 60,
+  duration: 800,
   staggerDelay: 25,
 } as const;
 
@@ -198,10 +206,10 @@ export const PARTICLE_BURST = {
  */
 export const TAP_HINT_PULSE = {
   duration: 2000,
-  minOpacity: 0.6,
   maxOpacity: 1,
-  minScale: 1,
   maxScale: 1.02,
+  minOpacity: 0.6,
+  minScale: 1,
 } as const;
 
 /**
@@ -219,10 +227,10 @@ export const CHIP_STAGGER = {
  * Shadow opacity and radius pulse with the 3s breathing cycle
  */
 export const HERO_GLOW = {
-  minShadowOpacity: 0.15,
   maxShadowOpacity: 0.35,
-  minShadowRadius: 24,
   maxShadowRadius: 32,
+  minShadowOpacity: 0.15,
+  minShadowRadius: 24,
   outerGlowOpacity: 0.15,
   outerGlowRadius: 60,
 } as const;
@@ -234,4 +242,28 @@ export const HERO_GLOW = {
 export const CTA_SHIMMER = {
   duration: 600,
   gradientOpacity: 0.3,
+} as const;
+
+/**
+ * Keyboard-aware layout configuration
+ * Compact mode activates when keyboard is visible to optimize screen real estate
+ */
+export const KEYBOARD_LAYOUT = {
+  compactHeadlineFontSize: 20,
+  compactHeroFontSize: 28,
+  compactHeroSize: 60,
+  topPadding: 100,
+  transitionDuration: 300,
+} as const;
+
+/**
+ * Error message animation configuration
+ * Includes entrance animation with shake effect for emphasis
+ */
+export const ERROR_ANIMATION = {
+  autoDismissDelay: 5000,
+  entranceDuration: 300,
+  shakeDistance: 8,
+  shakeDuration: 500,
+  shakeOscillations: 3,
 } as const;
