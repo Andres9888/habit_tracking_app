@@ -107,7 +107,7 @@ export default function PremiumAnalyticsPaywall({
               <View key={index} style={styles.featureItem}>
                 <View style={styles.featureIcon}>
                   <Ionicons
-                    color={colors.primary[500]}
+                    color={colors.premium[600]}
                     name={feature.icon as any}
                     size={24}
                   />
@@ -178,7 +178,7 @@ export default function PremiumAnalyticsPaywall({
 const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
-    backgroundColor: colors.primary[500],
+    backgroundColor: colors.premium[600],
     borderRadius: 20,
     flexDirection: 'row',
     paddingHorizontal: spacing.md,
@@ -220,6 +220,22 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
     paddingHorizontal: spacing.lg,
   },
+  ctaButton: {
+    alignItems: 'center',
+    backgroundColor: colors.premium[600],
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+    paddingVertical: spacing.lg,
+  },
+  ctaButtonText: {
+    color: colors.surface,
+    fontSize: 17,
+    fontWeight: '600',
+    lineHeight: 24,
+    marginRight: spacing.sm,
+  },
   featureContent: {
     flex: 1,
     marginRight: spacing.sm,
@@ -230,13 +246,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   featureIcon: {
-    backgroundColor: colors.background,
-    height: 40,
     alignItems: 'center',
-    width: 40,
+    backgroundColor: colors.background,
     borderRadius: 8,
+    height: 40,
     justifyContent: 'center',
     marginRight: spacing.md,
+    width: 40,
   },
   featureItem: {
     alignItems: 'flex-start',
@@ -249,40 +265,12 @@ const styles = StyleSheet.create({
   featuresList: {
     marginBottom: spacing.xl,
   },
-  header: {
-    paddingTop: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    alignItems: 'flex-end',
-  },
-  ctaButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor: colors.primary[500],
-    justifyContent: 'center',
-    borderRadius: 12,
-    paddingVertical: spacing.lg,
-    marginBottom: spacing.md,
-  },
   featureTitle: {
     color: colors.text.primary,
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 22,
     marginBottom: spacing.xxs,
-  },
-  ctaButtonText: {
-    color: colors.surface,
-    fontSize: 17,
-    fontWeight: '600',
-    lineHeight: 24,
-    marginRight: spacing.sm,
-  },
-  subtitle: {
-    color: colors.text.secondary,
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: spacing.xl,
-    textAlign: 'center',
   },
   finePrint: {
     color: colors.text.tertiary,
@@ -291,23 +279,20 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
     textAlign: 'center',
   },
-  title: {
-    color: colors.text.primary,
-    fontSize: 20,
-    fontWeight: '600',
-    lineHeight: 28,
-    marginBottom: spacing.xs,
-    textAlign: 'center',
+  header: {
+    alignItems: 'flex-end',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
   },
   pricingAmount: {
-    color: colors.primary[500],
+    color: colors.premium[600],
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 36,
   },
   pricingCard: {
     backgroundColor: colors.surface,
-    borderColor: colors.primary[500],
+    borderColor: colors.premium[600],
     borderRadius: 16,
     borderWidth: 2,
     marginBottom: spacing.lg,
@@ -345,9 +330,24 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   restoreButtonText: {
-    color: colors.primary[500],
+    color: colors.premium[600],
     fontSize: 14,
     lineHeight: 20,
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: colors.text.secondary,
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: spacing.xl,
+    textAlign: 'center',
+  },
+  title: {
+    color: colors.text.primary,
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 28,
+    marginBottom: spacing.xs,
     textAlign: 'center',
   },
 });
