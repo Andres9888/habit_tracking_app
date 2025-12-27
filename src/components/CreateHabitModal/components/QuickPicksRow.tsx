@@ -1,5 +1,12 @@
 import { useRef } from 'react';
-import { AccessibilityInfo, Animated, FlatList, Pressable, Text, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import type { HubermanPhase } from '../../../constants/hubermanPhases';
 import { HUBERMAN_PHASES } from '../../../constants/hubermanPhases';
@@ -14,38 +21,38 @@ export interface QuickPickTemplate {
 
 const QUICK_PICK_TEMPLATES: QuickPickTemplate[] = [
   {
-    id: 'meditate',
-    name: 'Meditate',
+    color: '#8B5CF6',
     emoji: '🧘',
-    color: '#8B5CF6', // Purple
+    id: 'meditate',
+    name: 'Meditate', // Purple
     timeOfDay: 'phase1_push',
   },
   {
-    id: 'read',
-    name: 'Read',
+    color: '#3B82F6',
     emoji: '📖',
-    color: '#3B82F6', // Blue
+    id: 'read',
+    name: 'Read', // Blue
     timeOfDay: 'phase3_pull',
   },
   {
-    id: 'exercise',
-    name: 'Exercise',
+    color: '#22C55E',
     emoji: '💪',
-    color: '#22C55E', // Green
+    id: 'exercise',
+    name: 'Exercise', // Green
     timeOfDay: 'phase1_push',
   },
   {
-    id: 'hydrate',
-    name: 'Hydrate',
+    color: '#06B6D4',
     emoji: '💧',
-    color: '#06B6D4', // Cyan
+    id: 'hydrate',
+    name: 'Hydrate', // Cyan
     timeOfDay: 'phase1_push',
   },
   {
-    id: 'journal',
-    name: 'Journal',
+    color: '#F97316',
     emoji: '✍️',
-    color: '#F97316', // Orange
+    id: 'journal',
+    name: 'Journal', // Orange
     timeOfDay: 'phase3_pull',
   },
 ];
@@ -56,63 +63,67 @@ interface QuickPickCardProps {
   onPress: () => void;
 }
 
-const QuickPickCard = ({ template, isSelected, onPress }: QuickPickCardProps) => {
+const QuickPickCard = ({
+  template,
+  isSelected,
+  onPress,
+}: QuickPickCardProps) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
-      tension: 300,
       friction: 10,
+      tension: 300,
+      toValue: 0.96,
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, {
-      toValue: 1,
-      tension: 300,
       friction: 10,
+      tension: 300,
+      toValue: 1,
       useNativeDriver: true,
     }).start();
   };
 
   return (
     <Pressable
+      accessibilityLabel={`Quick pick: ${template.name}`}
+      accessibilityRole='button'
+      accessibilityState={{ selected: isSelected }}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      accessibilityLabel={`Quick pick: ${template.name}`}
-      accessibilityRole="button"
-      accessibilityState={{ selected: isSelected }}
     >
       <Animated.View
-        className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+        className='mr-3 overflow-hidden rounded-2xl bg-white p-3'
         style={[
           {
-            minWidth: 100,
-            borderWidth: 2,
             borderColor: isSelected ? '#22C55E' : '#e7e5e4',
+            borderWidth: 2,
+            minWidth: 100,
             transform: [{ scale: scaleAnim }],
           },
         ]}
       >
         {/* Emoji with gradient background */}
         <View
-          className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+          className='mb-2 h-12 w-12 items-center justify-center self-center rounded-xl'
           style={{ backgroundColor: template.color }}
         >
-          <Text className="text-2xl">{template.emoji}</Text>
+          <Text className='text-2xl'>{template.emoji}</Text>
         </View>
 
         {/* Name */}
-        <Text className="mb-1 text-center text-sm font-semibold text-[#1a1a1a]">
+        <Text className='mb-1 text-center text-sm font-semibold text-[#1a1a1a]'>
           {template.name}
         </Text>
 
         {/* Timing subtitle */}
-        <Text className="text-center text-xs text-[#78716c]">
+        <Text className='text-center text-xs text-[#78716c]'>
           {phaseInfo.icon} {phaseInfo.shortLabel}
         </Text>
       </Animated.View>
@@ -145,27 +156,31 @@ export const QuickPicksRow = ({
 
   const renderItem = ({ item }: { item: QuickPickTemplate }) => (
     <QuickPickCard
-      template={item}
       isSelected={selectedTemplateId === item.id}
+      template={item}
       onPress={() => handleSelectTemplate(item)}
     />
   );
 
   return (
-    <View className="mb-4">
+    <View className='mb-4'>
       {/* Header row */}
-      <View className="mb-3 flex-row items-center justify-between px-1">
-        <Text className="text-base font-semibold text-[#1a1a1a]">Quick picks</Text>
+      <View className='mb-3 flex-row items-center justify-between px-1'>
+        <Text className='text-base font-semibold text-[#1a1a1a]'>
+          Quick picks
+        </Text>
         {onBrowseAll && (
           <Pressable
+            accessibilityLabel='Browse all templates'
+            accessibilityRole='button'
             onPress={() => {
               triggerSelection();
               onBrowseAll();
             }}
-            accessibilityLabel="Browse all templates"
-            accessibilityRole="button"
           >
-            <Text className="text-sm font-medium text-[#22C55E]">Browse all →</Text>
+            <Text className='text-sm font-medium text-[#22C55E]'>
+              Browse all →
+            </Text>
           </Pressable>
         )}
       </View>
@@ -173,11 +188,11 @@ export const QuickPicksRow = ({
       {/* Template cards */}
       <FlatList
         horizontal
-        data={QUICK_PICK_TEMPLATES}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 1 }}
+        data={QUICK_PICK_TEMPLATES}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );

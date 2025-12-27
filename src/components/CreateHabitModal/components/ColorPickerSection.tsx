@@ -85,7 +85,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
     Animated.timing(scale, {
       duration: Motion.duration.fast,
       easing: Motion.easing.inEase,
-      toValue: isSelected ? 1.05 : 0.94,
+      toValue: isSelected ? 1.05 : 0.96,
       useNativeDriver: true,
     }).start();
   }, [isSelected, scale]);
@@ -138,7 +138,7 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
     Animated.timing(scale, {
       duration: Motion.duration.fast,
       easing: Motion.easing.inEase,
-      toValue: 0.94,
+      toValue: 0.96,
       useNativeDriver: true,
     }).start();
   }, [scale]);

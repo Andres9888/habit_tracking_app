@@ -105,7 +105,7 @@ const ReminderOptionButton = ({
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
-      toValue: 0.95,
+      toValue: 0.96,
       useNativeDriver: true,
     }).start();
   };

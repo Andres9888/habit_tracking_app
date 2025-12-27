@@ -43,7 +43,7 @@ const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
-    scale.value = withTiming(0.9, { duration: 50 });
+    scale.value = withTiming(0.96, { duration: 50 });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {

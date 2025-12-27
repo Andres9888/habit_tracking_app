@@ -36,7 +36,7 @@ export const TemplatesLinkSection = ({
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
-      toValue: 0.98,
+      toValue: 0.96,
       useNativeDriver: true,
     }).start();
   };
