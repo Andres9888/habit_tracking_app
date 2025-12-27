@@ -91,20 +91,28 @@ export const TemplateListItem = ({
 
   const handleTemplatePressIn = () => {
     triggerLightImpact();
-    templateScale.value = withTiming(0.98, { duration: 50 });
+    if (!reduceMotion) {
+      templateScale.value = withTiming(0.98, { duration: 50 });
+    }
   };
 
   const handleTemplatePressOut = () => {
-    templateScale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    if (!reduceMotion) {
+      templateScale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    }
   };
 
   const handleSciencePressIn = () => {
     triggerLightImpact();
-    scienceScale.value = withTiming(0.95, { duration: 50 });
+    if (!reduceMotion) {
+      scienceScale.value = withTiming(0.95, { duration: 50 });
+    }
   };
 
   const handleSciencePressOut = () => {
-    scienceScale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    if (!reduceMotion) {
+      scienceScale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    }
   };
 
   return (

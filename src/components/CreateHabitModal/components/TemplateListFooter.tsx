@@ -74,11 +74,15 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
 
   const handlePressIn = () => {
     triggerLightImpact();
-    scale.value = withTiming(0.98, { duration: 50 });
+    if (!reduceMotion) {
+      scale.value = withTiming(0.98, { duration: 50 });
+    }
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    if (!reduceMotion) {
+      scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    }
   };
 
   return (
