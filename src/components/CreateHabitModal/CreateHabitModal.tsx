@@ -4,7 +4,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
-import { COLORS } from './constants';
+import { HABIT_COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
@@ -16,8 +16,14 @@ import { ColorPickerSection } from './components/ColorPickerSection';
 import { ReminderSection } from './components/ReminderSection';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
-import { QuickPicksRow, type QuickPickTemplate } from './components/QuickPicksRow';
-import { TimeOfDaySelector, getReminderTimeForPhase } from './components/TimeOfDaySelector';
+import {
+  QuickPicksRow,
+  type QuickPickTemplate,
+} from './components/QuickPicksRow';
+import {
+  TimeOfDaySelector,
+  getReminderTimeForPhase,
+} from './components/TimeOfDaySelector';
 import type { HubermanPhase } from '../../constants/hubermanPhases';
 
 // Stagger delay between section animations (ms)
@@ -30,9 +36,12 @@ const QUICK_PICKS_SECTION_HEIGHT = 180;
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
-  const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
+  const { isEditMode, form, template, science, handleCreate } =
+    useCreateHabitModal(props);
   const { triggerSelection } = useHapticFeedback();
-  const [selectedQuickPickId, setSelectedQuickPickId] = useState<string | null>(null);
+  const [selectedQuickPickId, setSelectedQuickPickId] = useState<string | null>(
+    null
+  );
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleQuickPickSelect = useCallback(
@@ -51,8 +60,8 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       // Scroll to form section after selection with a small delay for smoother UX
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
-          y: QUICK_PICKS_SECTION_HEIGHT,
           animated: true,
+          y: QUICK_PICKS_SECTION_HEIGHT,
         });
       }, 100);
     },
@@ -105,10 +114,20 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
   }, [visible, isEditMode]);
 
   return (
-    <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
+    <Modal
+      transparent
+      animationType='slide'
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View className='flex-1 bg-black/50'>
         <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'>
-          <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
+          <ModalHeader
+            habitName={form.habitName}
+            isEditMode={isEditMode}
+            onClose={onClose}
+            onSave={handleCreate}
+          />
           <ScrollView
             ref={scrollViewRef}
             className='flex-1 px-4'
@@ -120,7 +139,9 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
           >
             {/* Quick Picks Section - hidden in edit mode */}
             {!isEditMode && (
-              <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}>
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
+              >
                 <View className='mt-3' />
                 <QuickPicksRow
                   selectedTemplateId={selectedQuickPickId}
@@ -129,61 +150,91 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 {/* Divider */}
                 <View className='mb-4 flex-row items-center'>
                   <View className='h-px flex-1 bg-[#e7e5e4]' />
-                  <Text className='mx-4 text-xs font-medium text-[#a8a29e]'>or create your own</Text>
+                  <Text className='mx-4 text-xs font-medium text-[#a8a29e]'>
+                    or create your own
+                  </Text>
                   <View className='h-px flex-1 bg-[#e7e5e4]' />
                 </View>
               </Animated.View>
             )}
-            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY)}>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY
+              )}
+            >
               <HabitPreview
                 habitName={form.habitName}
-                selectedEmoji={form.selectedEmoji}
                 selectedColor={form.selectedColor}
+                selectedEmoji={form.selectedEmoji}
                 timeOfDay={form.dayPhase}
               />
             </Animated.View>
-            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 2)}>
-              <HabitNameField value={form.habitName} onChange={handleNameChange} autoFocus={visible && !isEditMode} />
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 2
+              )}
+            >
+              <HabitNameField
+                autoFocus={visible && !isEditMode}
+                value={form.habitName}
+                onChange={handleNameChange}
+              />
             </Animated.View>
-            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 3)}>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 3
+              )}
+            >
               <EmojiPicker
+                habitName={form.habitName}
                 selectedEmoji={form.selectedEmoji}
                 onSelect={handleEmojiSelect}
-                habitName={form.habitName}
               />
             </Animated.View>
-            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 4)}>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 4
+              )}
+            >
               <ColorPickerSection
-                colors={COLORS}
+                colors={HABIT_COLORS}
                 selectedColor={form.selectedColor}
-                onSelectColor={handleColorSelect}
                 onCustomPress={form.openColorPicker}
+                onSelectColor={handleColorSelect}
               />
             </Animated.View>
-            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 5)}>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 5
+              )}
+            >
               <TimeOfDaySelector
                 selectedPhase={form.dayPhase}
                 onSelectPhase={handleTimeOfDaySelect}
               />
             </Animated.View>
-            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 6)}>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 6
+              )}
+            >
               <ReminderSection
                 remindersEnabled={form.remindersEnabled}
-                onToggle={form.setRemindersEnabled}
                 reminderTime={form.reminderTime}
                 onTimePress={() => form.setShowTimePicker(true)}
+                onToggle={form.setRemindersEnabled}
               />
             </Animated.View>
           </ScrollView>
           <TemplateReminderPrompt
-            visible={template.shouldShowTemplateReminder}
             bottomOffset={template.reminderBottomOffset}
+            visible={template.shouldShowTemplateReminder}
             onPress={template.handleReminderPress}
           />
           <StickyCreateBar
-            disabled={!form.habitName.trim().length}
-            onPress={handleCreate}
+            disabled={form.habitName.trim().length === 0}
             selectedColor={form.selectedColor}
+            onPress={handleCreate}
           />
           {form.showTimePicker && (
             <DateTimePicker

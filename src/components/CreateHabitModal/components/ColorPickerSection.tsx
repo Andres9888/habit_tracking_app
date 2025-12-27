@@ -1,12 +1,18 @@
 import { Plus } from 'lucide-react-native';
-import { AccessibilityInfo, Animated, Text, TouchableOpacity, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useRef } from 'react';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
 import { Motion } from '../../../constants/motion';
 
 interface ColorPickerSectionProps {
-  colors: string[];
+  colors: readonly string[];
   selectedColor: string;
   onSelectColor: (color: string) => void;
   onCustomPress: () => void;
@@ -21,8 +27,8 @@ export const ColorPickerSection = ({
   <ColorPickerContent
     colors={colors}
     selectedColor={selectedColor}
-    onSelectColor={onSelectColor}
     onCustomPress={onCustomPress}
+    onSelectColor={onSelectColor}
   />
 );
 
@@ -56,6 +62,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
           borderColor: '#1a1a1a',
           borderWidth: isSelected ? 2 : 0,
         }}
+        onPress={handlePress}
         onPressIn={() => {
           Animated.timing(scale, {
             duration: Motion.duration.fast,
@@ -72,7 +79,6 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
             useNativeDriver: true,
           }).start();
         }}
-        onPress={handlePress}
       />
     </Animated.View>
   );
@@ -91,8 +97,12 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
         className='h-11 w-11 items-center justify-center rounded-full'
         style={{
           borderColor: '#a8a29e',
-          borderWidth: 2,
           borderStyle: 'dashed',
+          borderWidth: 2,
+        }}
+        onPress={() => {
+          triggerSelection();
+          onPress();
         }}
         onPressIn={() => {
           Animated.timing(scale, {
@@ -110,10 +120,6 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
             useNativeDriver: true,
           }).start();
         }}
-        onPress={() => {
-          triggerSelection();
-          onPress();
-        }}
       >
         <Plus color='#a8a29e' size={20} />
       </TouchableOpacity>
@@ -121,7 +127,12 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
   );
 };
 
-const ColorPickerContent = ({ colors, selectedColor, onSelectColor, onCustomPress }: ColorPickerSectionProps) => {
+const ColorPickerContent = ({
+  colors,
+  selectedColor,
+  onSelectColor,
+  onCustomPress,
+}: ColorPickerSectionProps) => {
   return (
     <View className='mb-6'>
       <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
