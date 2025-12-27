@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -16,12 +16,13 @@ interface HabitNameFieldProps {
   autoFocus: boolean;
 }
 
-export const HabitNameField = ({
+const MAX_LENGTH = 50;
+
+const HabitNameFieldComponent = ({
   value,
   onChange,
   autoFocus,
 }: HabitNameFieldProps) => {
-  const MAX_LENGTH = 50;
   const charCount = value.length;
   const isNearLimit = charCount > 40;
   const [isFocused, setIsFocused] = useState(false);
@@ -59,8 +60,8 @@ export const HabitNameField = ({
     previousCount.current = charCount;
   }, [charCount, triggerWarning]);
 
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
+  const handleFocus = useCallback(() => setIsFocused(true), []);
+  const handleBlur = useCallback(() => setIsFocused(false), []);
 
   return (
     <View className='mb-6'>
@@ -99,3 +100,5 @@ export const HabitNameField = ({
     </View>
   );
 };
+
+export const HabitNameField = memo(HabitNameFieldComponent);

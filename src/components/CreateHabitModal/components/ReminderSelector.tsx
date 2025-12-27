@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import {
   AccessibilityInfo,
   Animated,
@@ -94,7 +94,7 @@ interface ReminderOptionButtonProps {
   onPress: () => void;
 }
 
-const ReminderOptionButton = ({
+const ReminderOptionButtonComponent = ({
   option,
   isSelected,
   onPress,
@@ -102,23 +102,23 @@ const ReminderOptionButton = ({
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const optionInfo = REMINDER_OPTIONS[option];
 
-  const handlePressIn = () => {
+  const handlePressIn = useCallback(() => {
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
       toValue: 0.96,
       useNativeDriver: true,
     }).start();
-  };
+  }, [scaleAnim]);
 
-  const handlePressOut = () => {
+  const handlePressOut = useCallback(() => {
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
       toValue: 1,
       useNativeDriver: true,
     }).start();
-  };
+  }, [scaleAnim]);
 
   const accessibilityLabel = optionInfo.time
     ? `${optionInfo.label} at ${optionInfo.time}`
@@ -166,6 +166,8 @@ const ReminderOptionButton = ({
   );
 };
 
+const ReminderOptionButton = memo(ReminderOptionButtonComponent);
+
 interface ReminderSelectorProps {
   selectedOption: ReminderOption;
   onSelectOption: (option: ReminderOption) => void;
@@ -183,26 +185,29 @@ interface ReminderSelectorProps {
  * Replaces the separate TimeOfDaySelector and ReminderSection components
  * from the V5 design for a simpler, unified UX.
  */
-export const ReminderSelector = ({
+const ReminderSelectorComponent = ({
   selectedOption,
   onSelectOption,
 }: ReminderSelectorProps) => {
   const { triggerSelection } = useHapticFeedback();
 
-  const handleSelectOption = (option: ReminderOption) => {
-    triggerSelection();
-    onSelectOption(option);
+  const handleSelectOption = useCallback(
+    (option: ReminderOption) => {
+      triggerSelection();
+      onSelectOption(option);
 
-    // Announce selection for screen readers
-    const optionInfo = REMINDER_OPTIONS[option];
-    const announcement = optionInfo.time
-      ? STRINGS.CREATE_HABIT.reminderAnnouncementWithTime(
-          optionInfo.label,
-          optionInfo.time
-        )
-      : STRINGS.CREATE_HABIT.reminderAnnouncementDisabled;
-    AccessibilityInfo.announceForAccessibility(announcement);
-  };
+      // Announce selection for screen readers
+      const optionInfo = REMINDER_OPTIONS[option];
+      const announcement = optionInfo.time
+        ? STRINGS.CREATE_HABIT.reminderAnnouncementWithTime(
+            optionInfo.label,
+            optionInfo.time
+          )
+        : STRINGS.CREATE_HABIT.reminderAnnouncementDisabled;
+      AccessibilityInfo.announceForAccessibility(announcement);
+    },
+    [onSelectOption, triggerSelection]
+  );
 
   return (
     <View className='mb-6 rounded-2xl bg-white p-4' testID='reminder-selector'>
@@ -225,5 +230,7 @@ export const ReminderSelector = ({
     </View>
   );
 };
+
+export const ReminderSelector = memo(ReminderSelectorComponent);
 
 export default ReminderSelector;

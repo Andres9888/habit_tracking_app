@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -40,7 +40,7 @@ interface EmojiChipProps {
 /**
  * Individual emoji chip with press animation and green ring when selected
  */
-const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
+const EmojiChipComponent = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -76,7 +76,9 @@ const EmojiChip = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   );
 };
 
-export const EmojiPicker = ({
+const EmojiChip = memo(EmojiChipComponent);
+
+const EmojiPickerComponent = ({
   selectedEmoji,
   onSelect,
   habitName,
@@ -191,3 +193,5 @@ export const EmojiPicker = ({
     </View>
   );
 };
+
+export const EmojiPicker = memo(EmojiPickerComponent);

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import STRINGS from '../../../constants/strings';
 import { Motion } from '../../../constants/motion';
@@ -19,7 +19,7 @@ interface ColorPickerSectionProps {
   onCustomPress: () => void;
 }
 
-export const ColorPickerSection = ({
+const ColorPickerSectionComponent = ({
   colors,
   selectedColor,
   onSelectColor,
@@ -33,6 +33,8 @@ export const ColorPickerSection = ({
   />
 );
 
+export const ColorPickerSection = memo(ColorPickerSectionComponent);
+
 // Separate component to fix Rules of Hooks
 interface ColorButtonProps {
   color: string;
@@ -44,7 +46,7 @@ interface ColorButtonProps {
  * Individual color swatch button with selection animation
  * V9 Spec: 36x36px base, scale(1.15) when selected, box-shadow ring
  */
-const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
+const ColorButtonComponent = ({ color, isSelected, onSelect }: ColorButtonProps) => {
   const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
   const wasSelected = useRef(isSelected);
   const { triggerSelection } = useHapticFeedback();
@@ -132,9 +134,11 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
   );
 };
 
+const ColorButton = memo(ColorButtonComponent);
+
 // Custom color button with dashed border and plus icon
 // V9: Updated to 36px to match color swatches
-const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
+const CustomColorButtonComponent = ({ onPress }: { onPress: () => void }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
 
@@ -186,6 +190,8 @@ const CustomColorButton = ({ onPress }: { onPress: () => void }) => {
     </Animated.View>
   );
 };
+
+const CustomColorButton = memo(CustomColorButtonComponent);
 
 /**
  * V8 Color Picker - 12 colors in a single row
