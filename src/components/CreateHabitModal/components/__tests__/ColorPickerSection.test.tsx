@@ -1,10 +1,10 @@
 /**
- * ColorPickerSection Component Tests - V8 Redesign
- * Task 2: ColorPicker with 12 colors in single row
+ * ColorPickerSection Component Tests - V9 Redesign
+ * Task 5: ColorPicker with 36px swatches and box-shadow selection
  *
  * Tests:
  * - 12 color swatches render in single row layout
- * - Selection state with scale(1.12) animation
+ * - Selection state with scale(1.15) animation and white border ring
  * - Haptic feedback on color selection
  * - Accessible color name labels for VoiceOver
  */
@@ -31,7 +31,7 @@ jest
   .spyOn(AccessibilityInfo, 'announceForAccessibility')
   .mockImplementation(jest.fn());
 
-describe('ColorPickerSection - V8 Redesign', () => {
+describe('ColorPickerSection - V9 Redesign', () => {
   const mockOnSelectColor = jest.fn();
   const mockOnCustomPress = jest.fn();
 
@@ -105,18 +105,21 @@ describe('ColorPickerSection - V8 Redesign', () => {
       expect(emeraldButton.props.accessibilityState?.selected).toBe(false);
     });
 
-    it('should have border on selected color', () => {
+    it('should have white border ring on selected color (V9 box-shadow style)', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
 
       const emeraldSwatch = getByTestId('color-swatch-10B981');
-      expect(emeraldSwatch.props.style.borderWidth).toBe(2.5);
+      // V9: Uses 3px white border for box-shadow ring effect
+      expect(emeraldSwatch.props.style.borderWidth).toBe(3);
+      expect(emeraldSwatch.props.style.borderColor).toBe('#ffffff');
     });
 
     it('should NOT have border on unselected colors', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
 
       const redSwatch = getByTestId('color-swatch-EF4444');
-      expect(redSwatch.props.style.borderWidth).toBe(0);
+      // V9: Unselected colors have no border (undefined)
+      expect(redSwatch.props.style.borderWidth).toBeUndefined();
     });
   });
 
