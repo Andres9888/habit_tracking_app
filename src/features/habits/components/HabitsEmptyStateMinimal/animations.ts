@@ -168,3 +168,38 @@ export const EXIT_SPRING_CONFIG = {
   damping: 20,
   stiffness: 200,
 } satisfies WithSpringConfig;
+
+/**
+ * Progress ring animation config for success state
+ * SVG circular progress indicator around the success icon
+ */
+export const PROGRESS_RING = {
+  duration: 1800, // matches auto-transition delay
+  size: 120,
+  strokeWidth: 4,
+  circumference: 339.292, // 2 * PI * 54 (radius)
+} as const;
+
+/**
+ * Particle burst animation config for success state
+ * 8 circular particles in radial pattern that burst outward
+ */
+export const PARTICLE_BURST = {
+  count: 8,
+  duration: 800,
+  distance: 60,
+  colors: ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6'],
+  staggerDelay: 25,
+} as const;
+
+/**
+ * Tap hint pulse animation config
+ * Draws attention to the "Tap anywhere to continue" text
+ */
+export const TAP_HINT_PULSE = {
+  duration: 2000,
+  minOpacity: 0.6,
+  maxOpacity: 1,
+  minScale: 1,
+  maxScale: 1.02,
+} as const;
