@@ -1,11 +1,11 @@
 /**
- * EmojiPicker Component Tests - V8 Focused Creation Flow
- * Task 3: Simplify EmojiPicker to Smart Suggestions
+ * EmojiPicker Component Tests - V9 Design System Update
+ * Task 4: Replace "Browse all →" with "+" Button
  *
  * Tests:
  * - 6 inline emoji chips display
  * - Dynamic suggestions based on habit name keywords
- * - "Browse all →" link opens full EmojiPickerSheet
+ * - Dashed "+" button opens full EmojiPickerSheet
  * - Selected state with emerald ring (#10B981) and tinted background (#ECFDF5)
  * - Smooth animations when suggestions change
  * - Accessibility labels
@@ -59,13 +59,13 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
     it('should render 6 emoji chips by default', () => {
       const { getAllByRole } = render(<EmojiPicker {...defaultProps} />);
       const buttons = getAllByRole('button');
-      // 6 emoji chips + 1 "More →" link = 7 buttons
+      // 6 emoji chips + 1 "+" button = 7 buttons
       expect(buttons.length).toBe(7);
     });
 
-    it('should render "Browse all →" link', () => {
-      const { getByText } = render(<EmojiPicker {...defaultProps} />);
-      expect(getByText('Browse all →')).toBeDefined();
+    it('should render "+" button to browse all icons', () => {
+      const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
+      expect(getByLabelText('Browse all icons')).toBeDefined();
     });
 
     it('should display default emojis when no habit name is provided', () => {
@@ -141,7 +141,7 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       });
 
       const buttons = getAllByRole('button');
-      // Should still have 6 emoji chips + 1 "More →" link
+      // Should still have 6 emoji chips + 1 "+" button
       expect(buttons.length).toBe(7);
     });
 
@@ -199,13 +199,13 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       expect(mockOnSelect).toHaveBeenCalledWith('💪');
     });
 
-    it('should open EmojiPickerSheet when "More →" is pressed', () => {
+    it('should open EmojiPickerSheet when "+" button is pressed', () => {
       const { getByLabelText, UNSAFE_getByType } = render(
         <EmojiPicker {...defaultProps} />
       );
 
-      const moreButton = getByLabelText('Browse all icons');
-      fireEvent.press(moreButton);
+      const plusButton = getByLabelText('Browse all icons');
+      fireEvent.press(plusButton);
 
       // The EmojiPickerSheet should now be visible
       const { EmojiPickerSheet } = require('../../../EmojiPickerV2');
@@ -225,17 +225,17 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       expect(getByLabelText('Select emoji 💧')).toBeDefined();
     });
 
-    it('should have accessible label for "More →" button', () => {
+    it('should have accessible label for "+" button', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
       expect(getByLabelText('Browse all icons')).toBeDefined();
     });
 
-    it('should have accessibility hint for "More →" button', () => {
+    it('should have accessibility hint for "+" button', () => {
       const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
-      const moreButton = getByLabelText('Browse all icons');
-      expect(moreButton.props.accessibilityHint).toBe(
+      const plusButton = getByLabelText('Browse all icons');
+      expect(plusButton.props.accessibilityHint).toBe(
         'Opens full emoji picker'
       );
     });
@@ -268,9 +268,9 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
     it('✅ AC1: Shows 6 emoji chips inline', () => {
       const { getAllByRole } = render(<EmojiPicker {...defaultProps} />);
 
-      // Filter out "More →" button by counting emoji buttons specifically
+      // Filter out "+" button by counting emoji buttons specifically
       const buttons = getAllByRole('button');
-      // 6 emoji chips + 1 "More →" link = 7 buttons
+      // 6 emoji chips + 1 "+" button = 7 buttons
       expect(buttons.length).toBe(7);
     });
 
@@ -292,15 +292,11 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       expect(getByLabelText('Select emoji 💪')).toBeDefined();
     });
 
-    it('✅ AC3: "Browse all →" link opens full EmojiPickerSheet', () => {
-      const { getByText, getByLabelText } = render(
-        <EmojiPicker {...defaultProps} />
-      );
+    it('✅ AC3: Dashed "+" button opens full EmojiPickerSheet', () => {
+      const { getByLabelText } = render(<EmojiPicker {...defaultProps} />);
 
-      expect(getByText('Browse all →')).toBeDefined();
-
-      const moreButton = getByLabelText('Browse all icons');
-      fireEvent.press(moreButton);
+      const plusButton = getByLabelText('Browse all icons');
+      fireEvent.press(plusButton);
 
       const { EmojiPickerSheet } = require('../../../EmojiPickerV2');
       expect(EmojiPickerSheet).toHaveBeenCalled();
