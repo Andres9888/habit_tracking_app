@@ -51,13 +51,15 @@ const CATEGORY_COLORS: Record<
   },
   financial: {
     bg: '#ECFDF5',
-    bgSelected: '#10B981',
+    // Using emerald-700 (#047857) for selected state - 5.21:1 contrast with white
+    bgSelected: '#047857',
     border: '#A7F3D0',
     text: '#059669',
   },
   health_fitness: {
     bg: '#D1FAE5',
-    bgSelected: '#10B981',
+    // Using emerald-700 (#047857) for selected state - 5.21:1 contrast with white
+    bgSelected: '#047857',
     border: '#6EE7B7',
     text: '#047857',
   },
@@ -87,9 +89,11 @@ const CATEGORY_COLORS: Record<
   },
   morning_routine: {
     bg: '#FEF3C7',
-    bgSelected: '#F59E0B',
+    // Using amber-700 (#B45309) for selected state - 4.66:1 contrast with white
+    bgSelected: '#B45309',
     border: '#FDE68A',
-    text: '#D97706',
+    // Using amber-800 (#92400E) for text - 6.39:1 contrast with #FEF3C7
+    text: '#92400E',
   },
   productivity: {
     bg: '#DBEAFE',

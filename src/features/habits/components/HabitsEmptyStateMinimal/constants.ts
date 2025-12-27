@@ -53,8 +53,11 @@ export const COLORS = {
 
   emerald100: '#D1FAE5',
 
-  // Primary action color
+  // Primary action color (used for indicators/accents)
   emerald500: '#10B981',
+
+  // WCAG AA compliant primary action (5.21:1 contrast with white)
+  emerald700: '#047857',
 
   // Caret color
   emeraldCaret: '#10B981',

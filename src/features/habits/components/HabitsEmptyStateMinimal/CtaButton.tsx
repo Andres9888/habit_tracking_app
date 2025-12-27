@@ -66,7 +66,8 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
       style={[
         animatedStyle,
         {
-          backgroundColor: COLORS.emerald500,
+          // Using emerald-700 for WCAG AA contrast (5.21:1 with white text)
+          backgroundColor: '#047857',
           borderRadius: BORDER_RADIUS.cta,
           height: TOUCH_TARGETS.ctaHeight,
           width: '100%',
@@ -75,7 +76,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
           justifyContent: 'center',
           opacity: isDisabled ? 0.4 : 1,
           // Shadow for depth
-          shadowColor: COLORS.emerald500,
+          shadowColor: '#047857',
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.3,
           shadowRadius: 8,

@@ -60,15 +60,16 @@ function Chip({ chip, isSelected, onPress }: ChipProps) {
       { translateY: translateY.value },
       { scale: scale.value },
     ],
+    // Using emerald-700 (#047857) for WCAG AA contrast (5.21:1 with white text)
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#ffffff', COLORS.emerald500]
+      ['#ffffff', '#047857']
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [COLORS.stone200, COLORS.emerald500]
+      [COLORS.stone200, '#047857']
     ),
     // Shadow increases on hover
     shadowOpacity: shadowOpacity.value,
