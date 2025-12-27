@@ -21,13 +21,14 @@ import Animated, {
   useReducedMotion,
   useSharedValue,
   withDelay,
+  withRepeat,
   withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, SPRING_CONFIGS } from './animations';
+import { CONFETTI_CONFIG, EXIT_TRANSITION, EXIT_SPRING_CONFIG, POP_ANIMATION, SPRING_CONFIGS, TAP_HINT_PULSE } from './animations';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
 import type { SuccessStateProps } from './types';
 
@@ -169,6 +170,10 @@ export function SuccessState({
   const iconExitScale = useSharedValue(1);
   const containerOpacity = useSharedValue(1);
 
+  // Tap hint pulse animation values
+  const tapHintOpacity = useSharedValue(0);
+  const tapHintScale = useSharedValue(TAP_HINT_PULSE.minScale);
+
   // Display emoji - use habit emoji if provided, fallback to growth emoji
   const displayEmoji = habitEmoji || '🌿';
 
@@ -258,6 +263,66 @@ export function SuccessState({
     );
   }, [contentOpacity, contentTranslateY, iconScale, shouldReduceMotion]);
 
+  // Tap hint pulse animation - fade in after delay, then pulse infinitely
+  useEffect(() => {
+    if (!autoTransition) return;
+
+    // For reduced motion, just fade in to static opacity (no pulse)
+    if (shouldReduceMotion) {
+      tapHintOpacity.value = withDelay(800, withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300 }));
+      tapHintScale.value = TAP_HINT_PULSE.minScale;
+      return;
+    }
+
+    // Fade in after 800ms delay
+    tapHintOpacity.value = withDelay(
+      800,
+      withSequence(
+        // Initial fade in
+        withTiming(TAP_HINT_PULSE.maxOpacity, { duration: 300, easing: Easing.out(Easing.ease) }),
+        // Then start infinite pulse between minOpacity and maxOpacity
+        withRepeat(
+          withSequence(
+            withTiming(TAP_HINT_PULSE.minOpacity, {
+              duration: TAP_HINT_PULSE.duration / 2,
+              easing: Easing.inOut(Easing.ease),
+            }),
+            withTiming(TAP_HINT_PULSE.maxOpacity, {
+              duration: TAP_HINT_PULSE.duration / 2,
+              easing: Easing.inOut(Easing.ease),
+            })
+          ),
+          -1, // infinite
+          false // don't reverse (already using sequence for back and forth)
+        )
+      )
+    );
+
+    // Scale pulse - starts with delay matching fade-in completion
+    tapHintScale.value = withDelay(
+      1100, // 800ms delay + 300ms fade-in
+      withRepeat(
+        withSequence(
+          withTiming(TAP_HINT_PULSE.maxScale, {
+            duration: TAP_HINT_PULSE.duration / 2,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          withTiming(TAP_HINT_PULSE.minScale, {
+            duration: TAP_HINT_PULSE.duration / 2,
+            easing: Easing.inOut(Easing.ease),
+          })
+        ),
+        -1, // infinite
+        false
+      )
+    );
+
+    return () => {
+      cancelAnimation(tapHintOpacity);
+      cancelAnimation(tapHintScale);
+    };
+  }, [autoTransition, shouldReduceMotion, tapHintOpacity, tapHintScale]);
+
   // Auto-transition exit animation (after celebration delay)
   useEffect(() => {
     if (!autoTransition || !onTransitionComplete) return;
@@ -301,6 +366,11 @@ export function SuccessState({
 
   const containerStyle = useAnimatedStyle(() => ({
     opacity: containerOpacity.value,
+  }));
+
+  const tapHintStyle = useAnimatedStyle(() => ({
+    opacity: tapHintOpacity.value,
+    transform: [{ scale: tapHintScale.value }],
   }));
 
   return (
@@ -372,15 +442,18 @@ export function SuccessState({
 
           {/* Tap to continue hint - only show if auto-transitioning */}
           {autoTransition && (
-            <Text
-              style={{
-                fontSize: 13,
-                color: COLORS.stone300,
-                textAlign: 'center',
-              }}
+            <Animated.Text
+              style={[
+                tapHintStyle,
+                {
+                  fontSize: 13,
+                  color: COLORS.stone300,
+                  textAlign: 'center',
+                },
+              ]}
             >
               Tap anywhere to continue
-            </Text>
+            </Animated.Text>
           )}
 
           {/* Add another button - only show if not auto-transitioning */}
