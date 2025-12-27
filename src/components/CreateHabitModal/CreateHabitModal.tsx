@@ -16,6 +16,8 @@ import { ReminderSection } from './components/ReminderSection';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
 import { QuickPicksRow, type QuickPickTemplate } from './components/QuickPicksRow';
+import { TimeOfDaySelector, getReminderTimeForPhase } from './components/TimeOfDaySelector';
+import type { HubermanPhase } from '../../constants/hubermanPhases';
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
@@ -55,6 +57,17 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
     (color: string) => {
       setSelectedQuickPickId(null);
       form.setSelectedColor(color);
+    },
+    [form]
+  );
+
+  const handleTimeOfDaySelect = useCallback(
+    (phase: HubermanPhase) => {
+      setSelectedQuickPickId(null);
+      form.setDayPhase(phase);
+      // Auto-set reminder time based on selected phase
+      const reminderTime = getReminderTimeForPhase(phase);
+      form.setReminderTime(reminderTime);
     },
     [form]
   );
@@ -113,6 +126,10 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               selectedColor={form.selectedColor}
               onSelectColor={handleColorSelect}
               onCustomPress={form.openColorPicker}
+            />
+            <TimeOfDaySelector
+              selectedPhase={form.dayPhase}
+              onSelectPhase={handleTimeOfDaySelect}
             />
             <ReminderSection
               remindersEnabled={form.remindersEnabled}
