@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, ScrollView, Text, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
@@ -18,6 +19,11 @@ import { StickyCreateBar } from './components/StickyCreateBar';
 import { QuickPicksRow, type QuickPickTemplate } from './components/QuickPicksRow';
 import { TimeOfDaySelector, getReminderTimeForPhase } from './components/TimeOfDaySelector';
 import type { HubermanPhase } from '../../constants/hubermanPhases';
+
+// Stagger delay between section animations (ms)
+const ANIMATION_STAGGER_DELAY = 50;
+// Base animation duration (ms)
+const ANIMATION_DURATION = 300;
 
 // Height offset to scroll past quick picks section to show form
 const QUICK_PICKS_SECTION_HEIGHT = 180;
@@ -114,7 +120,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
           >
             {/* Quick Picks Section - hidden in edit mode */}
             {!isEditMode && (
-              <>
+              <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}>
                 <View className='mt-3' />
                 <QuickPicksRow
                   selectedTemplateId={selectedQuickPickId}
@@ -126,36 +132,48 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                   <Text className='mx-4 text-xs font-medium text-[#a8a29e]'>or create your own</Text>
                   <View className='h-px flex-1 bg-[#e7e5e4]' />
                 </View>
-              </>
+              </Animated.View>
             )}
-            <HabitPreview
-              habitName={form.habitName}
-              selectedEmoji={form.selectedEmoji}
-              selectedColor={form.selectedColor}
-              timeOfDay={form.dayPhase}
-            />
-            <HabitNameField value={form.habitName} onChange={handleNameChange} autoFocus={visible && !isEditMode} />
-            <EmojiPicker
-              selectedEmoji={form.selectedEmoji}
-              onSelect={handleEmojiSelect}
-              habitName={form.habitName}
-            />
-            <ColorPickerSection
-              colors={COLORS}
-              selectedColor={form.selectedColor}
-              onSelectColor={handleColorSelect}
-              onCustomPress={form.openColorPicker}
-            />
-            <TimeOfDaySelector
-              selectedPhase={form.dayPhase}
-              onSelectPhase={handleTimeOfDaySelect}
-            />
-            <ReminderSection
-              remindersEnabled={form.remindersEnabled}
-              onToggle={form.setRemindersEnabled}
-              reminderTime={form.reminderTime}
-              onTimePress={() => form.setShowTimePicker(true)}
-            />
+            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY)}>
+              <HabitPreview
+                habitName={form.habitName}
+                selectedEmoji={form.selectedEmoji}
+                selectedColor={form.selectedColor}
+                timeOfDay={form.dayPhase}
+              />
+            </Animated.View>
+            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 2)}>
+              <HabitNameField value={form.habitName} onChange={handleNameChange} autoFocus={visible && !isEditMode} />
+            </Animated.View>
+            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 3)}>
+              <EmojiPicker
+                selectedEmoji={form.selectedEmoji}
+                onSelect={handleEmojiSelect}
+                habitName={form.habitName}
+              />
+            </Animated.View>
+            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 4)}>
+              <ColorPickerSection
+                colors={COLORS}
+                selectedColor={form.selectedColor}
+                onSelectColor={handleColorSelect}
+                onCustomPress={form.openColorPicker}
+              />
+            </Animated.View>
+            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 5)}>
+              <TimeOfDaySelector
+                selectedPhase={form.dayPhase}
+                onSelectPhase={handleTimeOfDaySelect}
+              />
+            </Animated.View>
+            <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(ANIMATION_STAGGER_DELAY * 6)}>
+              <ReminderSection
+                remindersEnabled={form.remindersEnabled}
+                onToggle={form.setRemindersEnabled}
+                reminderTime={form.reminderTime}
+                onTimePress={() => form.setShowTimePicker(true)}
+              />
+            </Animated.View>
           </ScrollView>
           <TemplateReminderPrompt
             visible={template.shouldShowTemplateReminder}
