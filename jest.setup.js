@@ -284,6 +284,8 @@ jest.mock('react-native-reanimated', () => {
     useDerivedValue: (callback) => ({ value: callback() }),
     useAnimatedScrollHandler: () => ({}),
     useAnimatedGestureHandler: () => ({}),
+    useReducedMotion: () => false,
+    interpolateColor: (value, inputRange, outputRange) => outputRange[Math.round(value)],
   };
 });
 

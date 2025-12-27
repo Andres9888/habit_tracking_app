@@ -345,8 +345,8 @@ Per app design system analysis:
 - [x] Error handling if habit creation fails
 
 ### Testing
-- [x] Component renders without crashing *(Requires runtime test)*
-- [x] Chip selection populates input correctly *(Requires runtime test)*
+- [x] Component renders without crashing *(Verified via test suite)*
+- [x] Chip selection populates input correctly *(Verified via test suite)*
 - [x] CTA disabled until input has value
 - [x] Success state displays correct habit name
 - [x] "Add another" resets state properly
