@@ -5,8 +5,16 @@
  * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
-// Component will be exported here once implemented
+// Component exports
+// Main component will be exported once implemented in Phase 3
 // export { HabitsEmptyStateMinimal } from './HabitsEmptyStateMinimal';
+
+// Sub-component exports (Phase 2)
+export { HeroIcon } from './HeroIcon';
+export { HabitInput } from './HabitInput';
+export { SuggestionChips } from './SuggestionChips';
+export { CtaButton } from './CtaButton';
+export { SecondaryLinks } from './SecondaryLinks';
 
 // Type exports
 export type {
