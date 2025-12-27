@@ -357,9 +357,9 @@ export default function HabitEditScreen({
               onClose();
             }}
           >
-            <ChevronLeft color='#1a1a1a' size={20} strokeWidth={2} />
+            <ChevronLeft color='#1c1917' size={20} strokeWidth={2} />
           </TouchableOpacity>
-          <Text className='text-[17px] font-semibold text-[#1a1a1a]'>
+          <Text className='text-[17px] font-semibold text-stone-800'>
             Edit Habit
           </Text>
           {/* Empty spacer for layout balance - delete moved to Danger Zone */}
@@ -435,7 +435,7 @@ export default function HabitEditScreen({
                 autoCorrect
                 blurOnSubmit
                 autoCapitalize='sentences'
-                className='h-12 rounded-xl bg-stone-50 px-4 text-base text-[#1a1a1a]'
+                className='h-12 rounded-xl bg-stone-50 px-4 text-base text-stone-800'
                 placeholder='e.g., Read 10 minutes'
                 placeholderTextColor='#a8a29e'
                 returnKeyType='done'
@@ -467,7 +467,7 @@ export default function HabitEditScreen({
                     >
                       <Text
                         className={`text-base font-medium capitalize ${
-                          frequency === freq ? 'text-white' : 'text-[#1a1a1a]'
+                          frequency === freq ? 'text-white' : 'text-stone-800'
                         }`}
                       >
                         {freq}
@@ -500,7 +500,7 @@ export default function HabitEditScreen({
                         className={`text-base font-semibold ${
                           selectedDays.includes(index)
                             ? 'text-white'
-                            : 'text-[#1a1a1a]'
+                            : 'text-stone-800'
                         }`}
                       >
                         {day}
@@ -532,7 +532,7 @@ export default function HabitEditScreen({
                         className={`text-sm font-medium capitalize ${
                           preferredTime === time
                             ? 'text-white'
-                            : 'text-[#1a1a1a]'
+                            : 'text-stone-800'
                         }`}
                       >
                         {time}
@@ -572,7 +572,7 @@ export default function HabitEditScreen({
                       setShowTimePicker(true);
                     }}
                   >
-                    <Text className='text-base font-medium text-[#1a1a1a]'>
+                    <Text className='text-base font-medium text-stone-800'>
                       Reminder Time
                     </Text>
                     <Text className='text-base font-semibold text-blue-500'>
@@ -587,7 +587,7 @@ export default function HabitEditScreen({
                       // Sound picker would be implemented here
                     }}
                   >
-                    <Text className='text-base font-medium text-[#1a1a1a]'>
+                    <Text className='text-base font-medium text-stone-800'>
                       Sound
                     </Text>
                     <Text className='text-base font-semibold capitalize text-blue-500'>
@@ -609,7 +609,7 @@ export default function HabitEditScreen({
                 <View className='flex-row gap-3'>
                   <TextInput
                     blurOnSubmit
-                    className='h-12 flex-1 rounded-xl bg-stone-50 px-4 text-base text-[#1a1a1a]'
+                    className='h-12 flex-1 rounded-xl bg-stone-50 px-4 text-base text-stone-800'
                     keyboardType='numeric'
                     placeholder='30'
                     placeholderTextColor='#a8a29e'
@@ -626,7 +626,7 @@ export default function HabitEditScreen({
                       setShowUnitPicker(true);
                     }}
                   >
-                    <Text className='flex-1 text-base capitalize text-[#1a1a1a]'>
+                    <Text className='flex-1 text-base capitalize text-stone-800'>
                       {goalUnit}
                     </Text>
                     <ChevronDown color='#3B82F6' size={20} />
@@ -847,12 +847,12 @@ export default function HabitEditScreen({
               onClose();
             }}
           >
-            <Text className='text-base font-semibold text-[#1a1a1a]'>
+            <Text className='text-base font-semibold text-stone-800'>
               Cancel
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className='h-14 flex-1 items-center justify-center rounded-2xl bg-[#1a1a1a]'
+            className='h-14 flex-1 items-center justify-center rounded-2xl bg-stone-800'
             onPress={() => {
               triggerSelection();
               handleSave();

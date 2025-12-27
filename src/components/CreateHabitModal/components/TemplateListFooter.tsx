@@ -14,7 +14,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => (
       onPress={onClose}
     >
       <Text className='mr-2 text-[15px] font-semibold text-stone-800'>Hide habits</Text>
-      <ChevronDown color='#1a1a1a' size={16} />
+      <ChevronDown color='#1c1917' size={16} />
     </TouchableOpacity>
   </View>
 );

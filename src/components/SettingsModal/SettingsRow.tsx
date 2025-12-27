@@ -39,12 +39,12 @@ export function SettingsRow({
     : {
         background: '#ffffff',
         border: '#f5f5f4',
-        chevron: '#8a8a8a',
-        label: '#1a1a1a',
+        chevron: '#78716c', // stone-500
+        label: '#1c1917', // stone-800
         switchThumb: '#ffffff',
         switchTrackFalse: '#d1d5db',
-        switchTrackTrue: '#1a1a1a',
-        value: '#8a8a8a',
+        switchTrackTrue: '#1c1917', // stone-800
+        value: '#78716c', // stone-500
       };
 
   const content = (

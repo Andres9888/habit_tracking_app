@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   categoryPillActive: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#1c1917', // stone-800
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
+    color: '#57534e', // stone-600
   },
   categoryPillTextActive: {
     color: '#ffffff',

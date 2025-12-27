@@ -21,7 +21,7 @@ export function SettingsSection({
     : {
         background: '#ffffff',
         border: '#f5f5f4',
-        title: '#8a8a8a',
+        title: '#78716c', // stone-500
       };
 
   return (

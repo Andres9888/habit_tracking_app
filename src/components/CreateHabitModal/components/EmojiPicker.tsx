@@ -143,7 +143,7 @@ export const EmojiPicker = ({
     <View className='mb-6'>
       {/* Header with "More →" link */}
       <View className='mb-3 flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-[#1a1a1a]'>
+        <Text className='text-base font-semibold text-stone-800'>
           {STRINGS.CREATE_HABIT.iconLabel}
         </Text>
         <Pressable

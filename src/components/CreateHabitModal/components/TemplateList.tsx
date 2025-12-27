@@ -34,7 +34,7 @@ export const TemplateList = ({
   <View className='relative max-h-[300px]'>
     {isLoading ? (
       <View className='items-center justify-center py-12'>
-        <ActivityIndicator color='#1a1a1a' size='small' />
+        <ActivityIndicator color='#1c1917' size='small' />
       </View>
     ) : templates.length === 0 ? (
       <TemplateListEmpty />

@@ -108,7 +108,7 @@ const ColorButton = ({ color, isSelected, onSelect }: ColorButtonProps) => {
         style={{
           alignItems: 'center',
           backgroundColor: color,
-          borderColor: '#1a1a1a',
+          borderColor: '#1c1917', // stone-800
           borderRadius: 999,
           borderWidth: isSelected ? 2.5 : 0,
           height: 26,
@@ -191,7 +191,7 @@ const ColorPickerContent = ({
 }: ColorPickerSectionProps) => {
   return (
     <View className='mb-6'>
-      <Text className='mb-3 text-base font-semibold text-[#1a1a1a]'>
+      <Text className='mb-3 text-base font-semibold text-stone-800'>
         {STRINGS.CREATE_HABIT.colorLabel}
       </Text>
       {/* 12 colors + custom button = 13 items, justify-between for even spacing */}
