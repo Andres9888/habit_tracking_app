@@ -92,7 +92,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
           accessibilityLabel='Hide template browser'
           accessibilityRole='button'
           className='flex-row items-center justify-center rounded-full bg-[#f4f4f4] px-4 py-3'
-          style={pressAnimatedStyle}
+          style={[pressAnimatedStyle, { minHeight: 44 }]}
           onPress={() => {
             triggerSelection();
             onClose();

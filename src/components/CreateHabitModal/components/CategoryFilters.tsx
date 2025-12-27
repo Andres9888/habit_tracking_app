@@ -207,13 +207,14 @@ const CategoryFilterItem = ({
         accessibilityLabel={`Filter by ${category.label}`}
         accessibilityRole='button'
         accessibilityState={{ selected }}
-        className='flex-row items-center gap-1.5 rounded-full px-3 py-2'
+        className='flex-row items-center gap-1.5 rounded-full px-4 py-3'
         style={[
           pressAnimatedStyle,
           {
             backgroundColor: selected ? colors.bgSelected : colors.bg,
             borderColor: selected ? colors.bgSelected : colors.border,
             borderWidth: 1.5,
+            minHeight: 44, // Accessibility minimum touch target
           },
         ]}
         onPress={() => {

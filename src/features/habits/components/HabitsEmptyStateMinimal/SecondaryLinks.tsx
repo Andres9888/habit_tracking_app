@@ -36,8 +36,9 @@ export function SecondaryLinks({
         style={({ pressed }) => ({
           justifyContent: 'center',
           minHeight: TOUCH_TARGETS.minSize,
+          minWidth: TOUCH_TARGETS.minSize,
           opacity: pressed ? 0.7 : 1,
-          paddingHorizontal: 4,
+          paddingHorizontal: 8,
           paddingVertical: 8,
         })}
         onPress={onBrowseTemplates}
@@ -70,8 +71,9 @@ export function SecondaryLinks({
         style={({ pressed }) => ({
           justifyContent: 'center',
           minHeight: TOUCH_TARGETS.minSize,
+          minWidth: TOUCH_TARGETS.minSize,
           opacity: pressed ? 0.7 : 1,
-          paddingHorizontal: 4,
+          paddingHorizontal: 8,
           paddingVertical: 8,
         })}
         onPress={onCreateCustom}
