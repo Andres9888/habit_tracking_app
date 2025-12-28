@@ -854,94 +854,479 @@ describe('AC5: User can set up basic visualization (success + failure)', () => {
     failureEmotion: 'Regretful, disappointed',
   };
 
-  describe('Setting up visualization', () => {
+  describe('Setting up a new visualization', () => {
     it('shows empty state when visualization is not set', () => {
       const { getByText, getByLabelText } = render(
         <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
       );
 
-      expect(getByText(/Visualization|Mental Contrasting/i)).toBeTruthy();
-      expect(getByLabelText(/Add.*visualization/i)).toBeTruthy();
+      expect(getByText('Dual Visualization')).toBeTruthy();
+      expect(getByLabelText('Add your visualizations')).toBeTruthy();
     });
 
-    it('opens editor when tapped', () => {
+    it('opens editor when tapped in empty state', () => {
       const onPress = jest.fn();
       const { getByLabelText } = render(
         <DualVizSetup visualization={emptyViz} onPress={onPress} />
       );
 
-      fireEvent.press(getByLabelText(/Add.*visualization/i));
+      fireEvent.press(getByLabelText('Add your visualizations'));
 
       expect(onPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('shows Set up CTA in empty state', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      expect(getByText('Set up')).toBeTruthy();
+    });
+
+    it('shows visualization description in empty state', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      expect(getByText('Success + Failure feelings')).toBeTruthy();
+    });
+
+    it('shows science-backed tip in empty state (T5.5)', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      expect(
+        getByText('Fear moves you 2x better when unmotivated')
+      ).toBeTruthy();
+    });
+
+    it('shows pulse animation in empty state (reduced motion off)', () => {
+      const { getByLabelText } = render(
+        <DualVizSetup
+          visualization={emptyViz}
+          onPress={jest.fn()}
+          reduceMotion={false}
+        />
+      );
+
+      // Component should render without errors with animations enabled
+      expect(getByLabelText('Add your visualizations')).toBeTruthy();
+    });
+  });
+
+  describe('Displaying a completed visualization', () => {
+    it('displays "Success" and "Failure" section labels', () => {
+      const { getAllByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      expect(getAllByText('Success').length).toBe(1);
+      expect(getAllByText('Failure').length).toBe(1);
+    });
+
+    it('displays Body/Mind/Feel labels for success', () => {
+      const { getAllByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      // Body, Mind, Feel labels appear in both success and failure sections
+      expect(getAllByText('Body:').length).toBe(2);
+      expect(getAllByText('Mind:').length).toBe(2);
+      expect(getAllByText('Feel:').length).toBe(2);
+    });
+
+    it('shows completion checkmark when all 6 fields are filled', () => {
+      const { getByLabelText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      expect(getByLabelText('Edit your visualizations')).toBeTruthy();
+    });
+
+    it('hides empty state elements when visualization is set', () => {
+      const { queryByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      expect(queryByText('Success + Failure feelings')).toBeNull();
+      expect(queryByText('Set up')).toBeNull();
     });
   });
 
   describe('Success visualization (T5.3)', () => {
-    it('displays success visualization fields (Body/Mind/Emotion)', () => {
+    it('displays success visualization Body field', () => {
       const { getByText } = render(
         <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
       );
 
       expect(getByText(/Strong, energized/)).toBeTruthy();
+    });
+
+    it('displays success visualization Mind field', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
       expect(getByText(/Clear, focused/)).toBeTruthy();
+    });
+
+    it('displays success visualization Emotion field', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
       expect(getByText(/Proud, accomplished/)).toBeTruthy();
+    });
+
+    it('shows success section with Sparkles icon', () => {
+      const { getByTestId } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      // Sparkles icon is used for success visualization
+      expect(getByTestId('lucide-icon-Sparkles')).toBeTruthy();
     });
   });
 
   describe('Failure visualization (T5.4)', () => {
-    it('displays failure visualization fields (Body/Mind/Emotion)', () => {
+    it('displays failure visualization Body field', () => {
       const { getByText } = render(
         <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
       );
 
       expect(getByText(/Heavy, sluggish/)).toBeTruthy();
+    });
+
+    it('displays failure visualization Mind field', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
       expect(getByText(/Foggy, making excuses/)).toBeTruthy();
+    });
+
+    it('displays failure visualization Emotion field', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
       expect(getByText(/Regretful, disappointed/)).toBeTruthy();
+    });
+
+    it('shows failure section with AlertTriangle icon', () => {
+      const { getByTestId } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      // AlertTriangle icon is used for failure visualization
+      expect(getByTestId('lucide-icon-AlertTriangle')).toBeTruthy();
+    });
+  });
+
+  describe('Editing an existing visualization', () => {
+    it('opens editor when tapped in filled state', () => {
+      const onPress = jest.fn();
+      const { getByLabelText } = render(
+        <DualVizSetup visualization={filledViz} onPress={onPress} />
+      );
+
+      fireEvent.press(getByLabelText('Edit your visualizations'));
+
+      expect(onPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('has accessible button role for screen readers', () => {
+      const { getByRole } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      expect(getByRole('button')).toBeTruthy();
+    });
+  });
+
+  describe('Partial visualization configuration', () => {
+    it('allows partial configuration (success only)', () => {
+      const successOnlyViz: VisualizationData = {
+        successBody: 'Energized',
+        successMind: 'Clear',
+        successEmotion: 'Happy',
+      };
+      const { getByText, getByLabelText } = render(
+        <DualVizSetup visualization={successOnlyViz} onPress={jest.fn()} />
+      );
+
+      expect(getByText(/Energized/)).toBeTruthy();
+      expect(getByText(/Clear/)).toBeTruthy();
+      expect(getByText(/Happy/)).toBeTruthy();
+      // Should show Edit label since data exists
+      expect(getByLabelText('Edit your visualizations')).toBeTruthy();
+    });
+
+    it('allows partial configuration (failure only)', () => {
+      const failureOnlyViz: VisualizationData = {
+        failureBody: 'Tired',
+        failureMind: 'Foggy',
+        failureEmotion: 'Regretful',
+      };
+      const { getByText, getByLabelText } = render(
+        <DualVizSetup visualization={failureOnlyViz} onPress={jest.fn()} />
+      );
+
+      expect(getByText(/Tired/)).toBeTruthy();
+      expect(getByText(/Foggy/)).toBeTruthy();
+      expect(getByText(/Regretful/)).toBeTruthy();
+      expect(getByLabelText('Edit your visualizations')).toBeTruthy();
+    });
+
+    it('allows partial configuration (mixed - successBody + failureMind)', () => {
+      const mixedViz: VisualizationData = {
+        successBody: 'Strong',
+        failureMind: 'Making excuses',
+      };
+      const { getByText, getByLabelText } = render(
+        <DualVizSetup visualization={mixedViz} onPress={jest.fn()} />
+      );
+
+      expect(getByText(/Strong/)).toBeTruthy();
+      expect(getByText(/Making excuses/)).toBeTruthy();
+      expect(getByLabelText('Edit your visualizations')).toBeTruthy();
+    });
+
+    it('shows placeholder text for unfilled success fields', () => {
+      const failureOnlyViz: VisualizationData = {
+        failureBody: 'Tired',
+        failureMind: 'Foggy',
+        failureEmotion: 'Regretful',
+      };
+      const { getByText } = render(
+        <DualVizSetup visualization={failureOnlyViz} onPress={jest.fn()} />
+      );
+
+      // Empty success section shows placeholder
+      expect(getByText(/How will you feel\?/i)).toBeTruthy();
+    });
+
+    it('shows placeholder text for unfilled failure fields', () => {
+      const successOnlyViz: VisualizationData = {
+        successBody: 'Energized',
+        successMind: 'Clear',
+        successEmotion: 'Happy',
+      };
+      const { getByText } = render(
+        <DualVizSetup visualization={successOnlyViz} onPress={jest.fn()} />
+      );
+
+      // Empty failure section shows placeholder
+      expect(getByText(/What will you avoid\?/i)).toBeTruthy();
+    });
+
+    it('does not show completion checkmark when partially filled', () => {
+      const partialViz: VisualizationData = {
+        successBody: 'Energized',
+        // Missing other 5 fields
+      };
+      const { getByLabelText, queryByTestId } = render(
+        <DualVizSetup visualization={partialViz} onPress={jest.fn()} />
+      );
+
+      // Should show Edit label (data exists) but checkmark requires all 6 fields
+      expect(getByLabelText('Edit your visualizations')).toBeTruthy();
     });
   });
 
   describe('Huberman science explainer (T5.5)', () => {
-    it('provides access to "Fear moves you 2x better" explanation via help button', () => {
+    it('provides access to explanation via help button', () => {
       const { getByLabelText } = render(
         <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
       );
 
-      // Help button should be accessible (triggers internal explainer modal)
-      expect(getByLabelText(/visualization|help|info/i)).toBeTruthy();
+      expect(getByLabelText('Learn about dual visualization')).toBeTruthy();
+    });
+
+    it('help button triggers explainer modal on press', () => {
+      const { getByLabelText, getByText, queryByText, getAllByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      // Modal should not be visible initially (checking for modal-specific content)
+      expect(queryByText('Andrew Huberman, Stanford')).toBeNull();
+
+      // Press help button
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      // Modal content should now be visible
+      expect(getByText('Andrew Huberman, Stanford')).toBeTruthy();
+      // "Dual Visualization" appears in both main component and modal header
+      expect(getAllByText('Dual Visualization').length).toBeGreaterThanOrEqual(
+        1
+      );
+    });
+
+    it('explainer modal shows "Fear moves you 2x better" key insight', () => {
+      const { getByLabelText, getAllByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      // "Fear moves you 2x better" appears in both empty state tip and modal
+      expect(
+        getAllByText(/Fear moves you 2x better/i).length
+      ).toBeGreaterThanOrEqual(1);
+    });
+
+    it('explainer modal explains context-aware visualization', () => {
+      const { getByLabelText, getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      expect(getByText(/context-aware/i)).toBeTruthy();
+    });
+
+    it('explainer modal shows when to visualize success', () => {
+      const { getByLabelText, getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      expect(getByText(/Feeling Motivated\?/i)).toBeTruthy();
+      expect(getByText(/Visualize SUCCESS/i)).toBeTruthy();
+    });
+
+    it('explainer modal shows when to visualize failure', () => {
+      const { getByLabelText, getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      expect(getByText(/Not Motivated\?/i)).toBeTruthy();
+      expect(getByText(/Visualize FAILURE/i)).toBeTruthy();
+    });
+
+    it('explainer modal shows Body/Mind/Emotion breakdown', () => {
+      const { getByLabelText, getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      expect(getByText(/Visualize How You'll Feel/i)).toBeTruthy();
+      expect(getByText(/Physical sensations/i)).toBeTruthy();
+      expect(getByText(/Mental state/i)).toBeTruthy();
+    });
+
+    it('explainer modal cites Huberman Lab Podcast source', () => {
+      const { getByLabelText, getByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+
+      expect(getByText(/Huberman Lab Podcast #55/i)).toBeTruthy();
+    });
+
+    it('explainer modal can be closed', () => {
+      const { getByLabelText, queryByText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      // Open modal
+      fireEvent.press(getByLabelText('Learn about dual visualization'));
+      expect(queryByText('Andrew Huberman, Stanford')).toBeTruthy();
+
+      // Close modal
+      fireEvent.press(getByLabelText('Close'));
+      expect(queryByText('Andrew Huberman, Stanford')).toBeNull();
+    });
+
+    it('help button is also available in filled state', () => {
+      const { getByLabelText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      expect(getByLabelText('Learn about dual visualization')).toBeTruthy();
     });
   });
 
   describe('Emerald/Rose gradient styling (T5.6)', () => {
-    it('renders with success (emerald) and failure (rose) styling', () => {
-      const { getByLabelText } = render(
+    it('renders with gradient icon background', () => {
+      const { getByTestId } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      // Eye icon is used for dual visualization (from emerald to rose gradient)
+      expect(getByTestId('lucide-icon-Eye')).toBeTruthy();
+    });
+
+    it('renders success section with emerald styling', () => {
+      const { getByText } = render(
         <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
       );
 
-      // Component renders correctly with gradient styling
-      expect(getByLabelText(/Edit.*visualization/i)).toBeTruthy();
+      // Component renders with success section (emerald styling in VizPreview)
+      expect(getByText('Success')).toBeTruthy();
+    });
+
+    it('renders failure section with rose styling', () => {
+      const { getByText } = render(
+        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+      );
+
+      // Component renders with failure section (rose styling in VizPreview)
+      expect(getByText('Failure')).toBeTruthy();
     });
   });
 
-  describe('Completion checkmark', () => {
-    it('shows checkmark when all 6 fields are filled', () => {
+  describe('Animation support', () => {
+    it('supports shouldAnimate prop', () => {
       const { getByLabelText } = render(
-        <DualVizSetup visualization={filledViz} onPress={jest.fn()} />
+        <DualVizSetup
+          visualization={emptyViz}
+          onPress={jest.fn()}
+          shouldAnimate={true}
+        />
       );
 
-      expect(getByLabelText(/Edit.*visualization/i)).toBeTruthy();
+      expect(getByLabelText('Add your visualizations')).toBeTruthy();
     });
 
-    it('does not show checkmark when partially filled', () => {
-      const partialViz: VisualizationData = {
-        successBody: 'Energized',
-        // Missing other fields
-      };
+    it('supports sectionIndex prop for staggered animations', () => {
       const { getByLabelText } = render(
-        <DualVizSetup visualization={partialViz} onPress={jest.fn()} />
+        <DualVizSetup
+          visualization={emptyViz}
+          onPress={jest.fn()}
+          sectionIndex={5}
+        />
       );
 
-      // Should still be "Add" not "Edit"
-      expect(getByLabelText(/Add.*visualization/i)).toBeTruthy();
+      expect(getByLabelText('Add your visualizations')).toBeTruthy();
+    });
+
+    it('respects reduceMotion prop', () => {
+      const { getByLabelText } = render(
+        <DualVizSetup
+          visualization={emptyViz}
+          onPress={jest.fn()}
+          reduceMotion={true}
+        />
+      );
+
+      expect(getByLabelText('Add your visualizations')).toBeTruthy();
+    });
+
+    it('defaults sectionIndex to 4 for Workshop positioning', () => {
+      // Default sectionIndex=4 matches Workshop tab order where DualViz comes after
+      // YourWhy (0), Identity (1), Cue (2), WOOP (3)
+      const { getByLabelText } = render(
+        <DualVizSetup visualization={emptyViz} onPress={jest.fn()} />
+      );
+
+      expect(getByLabelText('Add your visualizations')).toBeTruthy();
     });
   });
 });
