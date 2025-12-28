@@ -15,8 +15,16 @@ import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import { CHIP_STAGGER, ENTRANCE_DELAYS, KEYBOARD_LAYOUT } from '../animations';
-import { COPY, SUGGESTION_CHIPS } from '../constants';
+import { getChipSuggestionsForTime, getTimeOfDay } from '../chipSuggestions';
+import { COPY } from '../constants';
 import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';
+
+// Get the current time-based suggestions for tests
+const getCurrentSuggestions = () => getChipSuggestionsForTime(getTimeOfDay());
+
+// Helper to get first and second chips for tests that need specific chip references
+const getFirstChip = () => getCurrentSuggestions()[0];
+const getSecondChip = () => getCurrentSuggestions()[1];
 
 // Mock dependencies
 const mockTriggerLightImpact = jest.fn();
@@ -92,7 +100,7 @@ describe('HabitsEmptyStateMinimal', () => {
       const { getByText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
-      SUGGESTION_CHIPS.forEach((chip) => {
+      getCurrentSuggestions().forEach((chip) => {
         expect(getByText(chip.label)).toBeDefined();
       });
     });
@@ -111,12 +119,12 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      // Tap the "Water" chip
-      const waterChip = getByText('Water');
-      fireEvent.press(waterChip);
+      // Tap the first chip (varies by time of day)
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
 
-      // Input should now contain "Drink water"
-      expect(getByDisplayValue('Drink water')).toBeDefined();
+      // Input should now contain the full name
+      expect(getByDisplayValue(firstChip.fullName)).toBeDefined();
     });
 
     it('should update input when different chip is selected', () => {
@@ -124,13 +132,16 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      // First select "Water"
-      fireEvent.press(getByText('Water'));
-      expect(getByDisplayValue('Drink water')).toBeDefined();
+      const firstChip = getFirstChip();
+      const secondChip = getSecondChip();
 
-      // Then select "Walk"
-      fireEvent.press(getByText('Walk'));
-      expect(getByDisplayValue('Walk 5 minutes')).toBeDefined();
+      // First select first chip
+      fireEvent.press(getByText(firstChip.label));
+      expect(getByDisplayValue(firstChip.fullName)).toBeDefined();
+
+      // Then select second chip
+      fireEvent.press(getByText(secondChip.label));
+      expect(getByDisplayValue(secondChip.fullName)).toBeDefined();
     });
 
     it('should populate input with correct full name for each chip', () => {
@@ -139,7 +150,7 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Test each chip
-      SUGGESTION_CHIPS.forEach((chip) => {
+      getCurrentSuggestions().forEach((chip) => {
         fireEvent.press(getByText(chip.label));
         expect(getByDisplayValue(chip.fullName)).toBeDefined();
       });
@@ -175,7 +186,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Select a chip
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
 
       const ctaButton = getByLabelText(COPY.ctaButton);
       expect(ctaButton.props.accessibilityState?.disabled).toBe(false);
@@ -200,14 +212,15 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Select a chip
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
 
       // Press CTA
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
         expect(defaultProps.onQuickCreateHabit).toHaveBeenCalledWith(
-          'Drink water'
+          firstChip.fullName
         );
       });
     });
@@ -258,7 +271,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Select and create habit
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
@@ -272,13 +286,16 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      // Select "Read" chip and create
-      fireEvent.press(getByText('Read'));
+      // Select first chip and create
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
         // Should show the subtext with the habit name
-        expect(getByText(COPY.successSubtext('Read 5 pages'))).toBeDefined();
+        expect(
+          getByText(COPY.successSubtext(firstChip.fullName))
+        ).toBeDefined();
       });
     });
 
@@ -288,7 +305,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Create habit
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
@@ -304,7 +322,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Create habit
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
@@ -327,7 +346,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Create habit
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
@@ -377,8 +397,9 @@ describe('HabitsEmptyStateMinimal', () => {
       } = render(<HabitsEmptyStateMinimal {...defaultProps} />);
 
       // Select a chip first
-      fireEvent.press(getByText('Water'));
-      expect(getByDisplayValue('Drink water')).toBeDefined();
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
+      expect(getByDisplayValue(firstChip.fullName)).toBeDefined();
 
       // Now type something different
       const input = getByPlaceholderText(COPY.inputPlaceholder);
@@ -473,9 +494,14 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      // Each chip should have an accessibility label
-      SUGGESTION_CHIPS.forEach((chip) => {
-        expect(getByLabelText(`Select ${chip.fullName}`)).toBeDefined();
+      const currentTimePeriod = getTimeOfDay();
+      // Each chip should have an accessibility label with time context
+      getCurrentSuggestions().forEach((chip) => {
+        expect(
+          getByLabelText(
+            `Select ${chip.fullName}, ${currentTimePeriod} suggestion`
+          )
+        ).toBeDefined();
       });
     });
 
@@ -486,7 +512,9 @@ describe('HabitsEmptyStateMinimal', () => {
 
       // Should have button roles (chips + CTA + secondary links)
       const buttons = getAllByRole('button');
-      expect(buttons.length).toBeGreaterThanOrEqual(SUGGESTION_CHIPS.length);
+      expect(buttons.length).toBeGreaterThanOrEqual(
+        getCurrentSuggestions().length
+      );
     });
 
     it('should announce disabled state on CTA', () => {
@@ -513,7 +541,7 @@ describe('HabitsEmptyStateMinimal', () => {
       // Row 3 (Stretch): index 5 -> delay 250ms
       const expectedDelays = [0, 50, 100, 150, 200, 250];
 
-      SUGGESTION_CHIPS.forEach((_, index) => {
+      getCurrentSuggestions().forEach((_, index) => {
         const calculatedDelay = index * CHIP_STAGGER.delay;
         expect(calculatedDelay).toBe(expectedDelays[index]);
       });
@@ -555,8 +583,9 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      fireEvent.press(getByText('Water'));
-      expect(getByDisplayValue('Drink water')).toBeDefined();
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
+      expect(getByDisplayValue(firstChip.fullName)).toBeDefined();
     });
 
     it('✅ CTA disabled until input has value', () => {
@@ -581,12 +610,13 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      fireEvent.press(getByText('Breathe'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
         expect(
-          getByText(COPY.successSubtext('Breathe for 2 minutes'))
+          getByText(COPY.successSubtext(firstChip.fullName))
         ).toBeDefined();
       });
     });
@@ -597,7 +627,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Create and show success
-      fireEvent.press(getByText('Water'));
+      const firstChip = getFirstChip();
+      fireEvent.press(getByText(firstChip.label));
       fireEvent.press(getByLabelText(COPY.ctaButton));
 
       await waitFor(() => {
@@ -633,7 +664,9 @@ describe('HabitsEmptyStateMinimal', () => {
 
       // Should have chips visible (chips + CTA + secondary links)
       const buttons = getAllByRole('button');
-      expect(buttons.length).toBeGreaterThanOrEqual(SUGGESTION_CHIPS.length);
+      expect(buttons.length).toBeGreaterThanOrEqual(
+        getCurrentSuggestions().length
+      );
     });
 
     it('should render all chips with correct accessibility labels when keyboard hidden', () => {
@@ -643,8 +676,13 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      SUGGESTION_CHIPS.forEach((chip) => {
-        expect(getByLabelText(`Select ${chip.fullName}`)).toBeDefined();
+      const currentTimePeriod = getTimeOfDay();
+      getCurrentSuggestions().forEach((chip) => {
+        expect(
+          getByLabelText(
+            `Select ${chip.fullName}, ${currentTimePeriod} suggestion`
+          )
+        ).toBeDefined();
       });
     });
 

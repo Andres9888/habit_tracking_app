@@ -18,6 +18,7 @@ export { SuccessState } from './SuccessState';
 export { AnimatedEntrance } from './AnimatedEntrance';
 export { ProgressRing } from './ProgressRing';
 export { ParticleBurst } from './ParticleBurst';
+export { ConfettiParticle } from './ConfettiParticle';
 export { LoadingSkeleton } from './LoadingSkeleton';
 export { ErrorMessage } from './ErrorMessage';
 
@@ -33,6 +34,8 @@ export type {
   SuccessStateProps,
   EmptyStateState,
   ErrorMessageProps,
+  TimePeriod,
+  ConfettiShape,
 } from './types';
 
 // Constant exports
@@ -57,4 +60,25 @@ export {
   PROGRESS_RING,
   ERROR_ANIMATION,
   KEYBOARD_LAYOUT,
+  TIME_PERIODS,
 } from './animations';
+
+// Time-based chip suggestion exports
+export {
+  CHIP_SUGGESTIONS_BY_TIME,
+  TIME_PERIOD_LABELS,
+  TIME_PERIOD_GREETINGS,
+  TIME_PERIOD_TINTS,
+  getTimeOfDay,
+  getChipSuggestionsForTime,
+  getChipSuggestionsLabel,
+  getTimePeriodTint,
+} from './chipSuggestions';
+
+// Confetti hook exports
+export {
+  useConfetti,
+  useParticleAnimation,
+  type ConfettiParticleData,
+  type ParticleAnimationValues,
+} from './useConfetti';
