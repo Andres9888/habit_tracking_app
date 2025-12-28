@@ -7,7 +7,9 @@
 import { format } from 'date-fns';
 import {
   generateMonthGrid,
+  generateWeekGrid,
   calculateMonthStats,
+  calculateWeekStats,
   generateHorizontalGrid,
   calculate3MonthStats,
   calculate3MonthTrend,
@@ -400,6 +402,471 @@ describe('generateMonthGrid', () => {
       // January 2025
       const janGrid = generateMonthGrid(2025, 0, new Set());
       expect(getAllDates(janGrid)[0]).toBe('2025-01-01');
+    });
+  });
+});
+
+describe('generateWeekGrid', () => {
+  // Helper to parse date string in local timezone (avoids UTC issues)
+  const parseDateLocal = (dateStr: string): Date => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  describe('basic week structure', () => {
+    it('generates exactly 7 days', () => {
+      const week = generateWeekGrid(new Set());
+      expect(week).toHaveLength(7);
+    });
+
+    it('all days have non-null dates', () => {
+      const week = generateWeekGrid(new Set());
+      week.forEach((day) => {
+        expect(day.date).not.toBeNull();
+        expect(day.dayOfMonth).not.toBeNull();
+      });
+    });
+
+    it('dates are in YYYY-MM-DD format', () => {
+      const week = generateWeekGrid(new Set());
+      week.forEach((day) => {
+        expect(day.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      });
+    });
+
+    it('dates are consecutive', () => {
+      const week = generateWeekGrid(new Set());
+      for (let i = 1; i < 7; i++) {
+        const prevDate = parseDateLocal(week[i - 1].date!);
+        const currDate = parseDateLocal(week[i].date!);
+        const dayDiff =
+          (currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24);
+        expect(dayDiff).toBe(1);
+      }
+    });
+  });
+
+  describe('week start day customization', () => {
+    it('starts on Sunday when weekStartDay is 0 (default)', () => {
+      const week = generateWeekGrid(new Set(), undefined, 0);
+
+      // First day should be a Sunday
+      const firstDate = parseDateLocal(week[0].date!);
+      expect(firstDate.getDay()).toBe(0); // Sunday
+    });
+
+    it('starts on Monday when weekStartDay is 1', () => {
+      const week = generateWeekGrid(new Set(), undefined, 1);
+
+      // First day should be a Monday
+      const firstDate = parseDateLocal(week[0].date!);
+      expect(firstDate.getDay()).toBe(1); // Monday
+    });
+
+    it('starts on Saturday when weekStartDay is 6', () => {
+      const week = generateWeekGrid(new Set(), undefined, 6);
+
+      // First day should be a Saturday
+      const firstDate = parseDateLocal(week[0].date!);
+      expect(firstDate.getDay()).toBe(6); // Saturday
+    });
+
+    it('last day is one day before week start day', () => {
+      // When week starts on Monday (1), last day should be Sunday (0)
+      const weekMonday = generateWeekGrid(new Set(), undefined, 1);
+      const lastDate = parseDateLocal(weekMonday[6].date!);
+      expect(lastDate.getDay()).toBe(0); // Sunday
+
+      // When week starts on Sunday (0), last day should be Saturday (6)
+      const weekSunday = generateWeekGrid(new Set(), undefined, 0);
+      const lastDateSunday = parseDateLocal(weekSunday[6].date!);
+      expect(lastDateSunday.getDay()).toBe(6); // Saturday
+    });
+
+    it('generates same dates for same today regardless of start day', () => {
+      // All week configurations should include today
+      const today = new Date();
+      const todayStr = format(today, 'yyyy-MM-dd');
+
+      for (let startDay = 0; startDay <= 6; startDay++) {
+        const week = generateWeekGrid(
+          new Set(),
+          undefined,
+          startDay as 0 | 1 | 2 | 3 | 4 | 5 | 6
+        );
+        const todayInWeek = week.find((d) => d.date === todayStr);
+        expect(todayInWeek).toBeDefined();
+        expect(todayInWeek?.isToday).toBe(true);
+      }
+    });
+
+    it('Wednesday start includes correct 7-day range', () => {
+      const week = generateWeekGrid(new Set(), undefined, 3); // Wednesday
+
+      // First day should be Wednesday
+      const firstDate = parseDateLocal(week[0].date!);
+      expect(firstDate.getDay()).toBe(3); // Wednesday
+
+      // Last day should be Tuesday
+      const lastDate = parseDateLocal(week[6].date!);
+      expect(lastDate.getDay()).toBe(2); // Tuesday
+    });
+  });
+
+  describe('completed dates', () => {
+    it('marks completed dates correctly', () => {
+      // Use dates that are definitely in the current week
+      const week = generateWeekGrid(new Set());
+      const firstDayInWeek = week[0].date!;
+      const secondDayInWeek = week[1].date!;
+
+      const completedDates = new Set([firstDayInWeek, secondDayInWeek]);
+      const weekWithCompletions = generateWeekGrid(completedDates);
+
+      const completedDays = weekWithCompletions.filter((d) => d.completed);
+      expect(completedDays.length).toBe(2);
+    });
+
+    it('returns completed=false when no dates are in the set', () => {
+      const week = generateWeekGrid(new Set());
+      expect(week.every((d) => d.completed === false)).toBe(true);
+    });
+
+    it('ignores completed dates outside the week', () => {
+      // Date from 2 weeks ago
+      const oldDate = new Date();
+      oldDate.setDate(oldDate.getDate() - 14);
+      const oldDateStr = format(oldDate, 'yyyy-MM-dd');
+
+      const completedDates = new Set([oldDateStr]);
+      const week = generateWeekGrid(completedDates);
+
+      expect(week.every((d) => d.completed === false)).toBe(true);
+    });
+  });
+
+  describe('today detection', () => {
+    it('marks exactly one day as today', () => {
+      const week = generateWeekGrid(new Set());
+      const todayDays = week.filter((d) => d.isToday);
+      expect(todayDays.length).toBe(1);
+    });
+
+    it('today has correct date', () => {
+      const today = new Date();
+      const todayStr = format(today, 'yyyy-MM-dd');
+
+      const week = generateWeekGrid(new Set());
+      const todayDay = week.find((d) => d.isToday);
+
+      expect(todayDay?.date).toBe(todayStr);
+    });
+  });
+
+  describe('future dates detection', () => {
+    it('marks dates after today as future', () => {
+      const week = generateWeekGrid(new Set());
+      const todayIndex = week.findIndex((d) => d.isToday);
+
+      // All days after today should be future
+      for (let i = todayIndex + 1; i < 7; i++) {
+        expect(week[i].isFuture).toBe(true);
+      }
+    });
+
+    it('marks dates before today as not future', () => {
+      const week = generateWeekGrid(new Set());
+      const todayIndex = week.findIndex((d) => d.isToday);
+
+      // All days before today should not be future
+      for (let i = 0; i < todayIndex; i++) {
+        expect(week[i].isFuture).toBe(false);
+      }
+    });
+
+    it('today is not marked as future', () => {
+      const week = generateWeekGrid(new Set());
+      const todayDay = week.find((d) => d.isToday);
+      expect(todayDay?.isFuture).toBe(false);
+    });
+  });
+
+  describe('habitCreatedAt handling', () => {
+    it('marks dates before habit creation as isBeforeCreation', () => {
+      // Create habit 3 days ago
+      const today = new Date();
+      const creationDate = new Date(today);
+      creationDate.setDate(creationDate.getDate() - 3);
+      const habitCreatedAt = creationDate.getTime();
+
+      const week = generateWeekGrid(new Set(), habitCreatedAt);
+      const beforeCreationDays = week.filter((d) => d.isBeforeCreation);
+
+      // Depends on today's position in the week, but should have some before-creation days
+      // if the week spans before the creation date
+      beforeCreationDays.forEach((day) => {
+        const dayDate = parseDateLocal(day.date!);
+        expect(dayDate < creationDate).toBe(true);
+      });
+    });
+
+    it('does not mark creation day as isBeforeCreation', () => {
+      const today = new Date();
+      const creationDate = new Date(today);
+      creationDate.setDate(creationDate.getDate() - 2);
+      const creationDateStr = format(creationDate, 'yyyy-MM-dd');
+      const habitCreatedAt = creationDate.getTime();
+
+      const week = generateWeekGrid(new Set(), habitCreatedAt);
+      const creationDay = week.find((d) => d.date === creationDateStr);
+
+      if (creationDay) {
+        expect(creationDay.isBeforeCreation).toBe(false);
+      }
+    });
+
+    it('handles undefined habitCreatedAt by not marking any days as before creation', () => {
+      const week = generateWeekGrid(new Set());
+      expect(week.every((d) => d.isBeforeCreation === false)).toBe(true);
+    });
+
+    it('handles habit created in the future', () => {
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 30);
+      const habitCreatedAt = futureDate.getTime();
+
+      const week = generateWeekGrid(new Set(), habitCreatedAt);
+      // All days should be before creation
+      expect(week.every((d) => d.isBeforeCreation === true)).toBe(true);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles week that spans month boundary', () => {
+      // This test verifies the function handles month transitions gracefully
+      const week = generateWeekGrid(new Set());
+
+      // Verify all dates are valid
+      week.forEach((day) => {
+        expect(day.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(day.dayOfMonth).toBeGreaterThanOrEqual(1);
+        expect(day.dayOfMonth).toBeLessThanOrEqual(31);
+      });
+    });
+
+    it('handles week that spans year boundary', () => {
+      // Week around Dec 31 / Jan 1
+      const week = generateWeekGrid(new Set());
+
+      // Just verify no errors and all valid dates
+      week.forEach((day) => {
+        expect(day.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      });
+    });
+
+    it('works with all possible week start days', () => {
+      const weekStartDays: Array<0 | 1 | 2 | 3 | 4 | 5 | 6> = [
+        0, 1, 2, 3, 4, 5, 6,
+      ];
+
+      weekStartDays.forEach((startDay) => {
+        const week = generateWeekGrid(new Set(), undefined, startDay);
+
+        expect(week).toHaveLength(7);
+        expect(week.every((d) => d.date !== null)).toBe(true);
+
+        // First day should be the configured start day
+        const firstDate = parseDateLocal(week[0].date!);
+        expect(firstDate.getDay()).toBe(startDay);
+      });
+    });
+  });
+});
+
+describe('calculateWeekStats', () => {
+  const createMockWeekDay = (
+    overrides: Partial<CalendarDay> = {}
+  ): CalendarDay => ({
+    date: '2025-12-15',
+    dayOfMonth: 15,
+    completed: false,
+    isToday: false,
+    isFuture: false,
+    isBeforeCreation: false,
+    ...overrides,
+  });
+
+  describe('basic calculations', () => {
+    it('counts completions correctly', () => {
+      const week = [
+        createMockWeekDay({ date: '2025-12-15', completed: true }),
+        createMockWeekDay({ date: '2025-12-16', completed: false }),
+        createMockWeekDay({ date: '2025-12-17', completed: true }),
+        createMockWeekDay({ date: '2025-12-18', completed: true }),
+        createMockWeekDay({ date: '2025-12-19', completed: false }),
+        createMockWeekDay({ date: '2025-12-20', completed: true }),
+        createMockWeekDay({ date: '2025-12-21', completed: false }),
+      ];
+
+      const stats = calculateWeekStats(week);
+      expect(stats.completions).toBe(4);
+      expect(stats.eligibleDays).toBe(7);
+      expect(stats.successRate).toBeCloseTo(57.14, 1);
+    });
+
+    it('returns 0 for week with no completions', () => {
+      const week = Array(7)
+        .fill(null)
+        .map((_, i) =>
+          createMockWeekDay({ date: `2025-12-${15 + i}`, completed: false })
+        );
+
+      const stats = calculateWeekStats(week);
+      expect(stats.completions).toBe(0);
+      expect(stats.successRate).toBe(0);
+    });
+
+    it('returns 100% for perfect week', () => {
+      const week = Array(7)
+        .fill(null)
+        .map((_, i) =>
+          createMockWeekDay({ date: `2025-12-${15 + i}`, completed: true })
+        );
+
+      const stats = calculateWeekStats(week);
+      expect(stats.completions).toBe(7);
+      expect(stats.successRate).toBe(100);
+    });
+  });
+
+  describe('excluded days', () => {
+    it('excludes future days from eligible days', () => {
+      const week = [
+        createMockWeekDay({ date: '2025-12-15', completed: true }),
+        createMockWeekDay({ date: '2025-12-16', completed: true }),
+        createMockWeekDay({ date: '2025-12-17', completed: false }),
+        createMockWeekDay({
+          date: '2025-12-18',
+          completed: false,
+          isFuture: true,
+        }),
+        createMockWeekDay({
+          date: '2025-12-19',
+          completed: false,
+          isFuture: true,
+        }),
+        createMockWeekDay({
+          date: '2025-12-20',
+          completed: false,
+          isFuture: true,
+        }),
+        createMockWeekDay({
+          date: '2025-12-21',
+          completed: false,
+          isFuture: true,
+        }),
+      ];
+
+      const stats = calculateWeekStats(week);
+      expect(stats.eligibleDays).toBe(3);
+      expect(stats.completions).toBe(2);
+      expect(stats.successRate).toBeCloseTo(66.67, 1);
+    });
+
+    it('excludes before-creation days from eligible days', () => {
+      const week = [
+        createMockWeekDay({
+          date: '2025-12-15',
+          completed: false,
+          isBeforeCreation: true,
+        }),
+        createMockWeekDay({
+          date: '2025-12-16',
+          completed: false,
+          isBeforeCreation: true,
+        }),
+        createMockWeekDay({ date: '2025-12-17', completed: true }),
+        createMockWeekDay({ date: '2025-12-18', completed: true }),
+        createMockWeekDay({ date: '2025-12-19', completed: true }),
+        createMockWeekDay({ date: '2025-12-20', completed: false }),
+        createMockWeekDay({ date: '2025-12-21', completed: false }),
+      ];
+
+      const stats = calculateWeekStats(week);
+      expect(stats.eligibleDays).toBe(5);
+      expect(stats.completions).toBe(3);
+      expect(stats.successRate).toBe(60);
+    });
+
+    it('handles week with all excluded days', () => {
+      const week = [
+        createMockWeekDay({ date: '2025-12-15', isFuture: true }),
+        createMockWeekDay({ date: '2025-12-16', isFuture: true }),
+        createMockWeekDay({ date: '2025-12-17', isFuture: true }),
+        createMockWeekDay({ date: '2025-12-18', isFuture: true }),
+        createMockWeekDay({ date: '2025-12-19', isFuture: true }),
+        createMockWeekDay({ date: '2025-12-20', isFuture: true }),
+        createMockWeekDay({ date: '2025-12-21', isFuture: true }),
+      ];
+
+      const stats = calculateWeekStats(week);
+      expect(stats.eligibleDays).toBe(0);
+      expect(stats.completions).toBe(0);
+      expect(stats.successRate).toBe(0);
+    });
+
+    it('does not count completions on excluded days', () => {
+      const week = [
+        createMockWeekDay({
+          date: '2025-12-15',
+          completed: true,
+          isBeforeCreation: true,
+        }),
+        createMockWeekDay({
+          date: '2025-12-16',
+          completed: true,
+          isFuture: true,
+        }),
+        createMockWeekDay({ date: '2025-12-17', completed: true }),
+        createMockWeekDay({ date: '2025-12-18', completed: false }),
+        createMockWeekDay({ date: '2025-12-19', completed: false }),
+        createMockWeekDay({ date: '2025-12-20', completed: false }),
+        createMockWeekDay({ date: '2025-12-21', completed: false }),
+      ];
+
+      const stats = calculateWeekStats(week);
+      expect(stats.completions).toBe(1); // Only the non-excluded completion counts
+    });
+  });
+
+  describe('integration with generateWeekGrid', () => {
+    it('calculates stats correctly for generated week', () => {
+      // Get dates that are definitely in the current week and eligible (not future)
+      const week = generateWeekGrid(new Set());
+      // Find eligible (non-future) days in the week
+      const eligibleDays = week.filter((d) => !d.isFuture);
+
+      // Complete all eligible days
+      const completedDates = new Set(eligibleDays.map((d) => d.date!));
+      const weekWithCompletions = generateWeekGrid(completedDates);
+      const stats = calculateWeekStats(weekWithCompletions);
+
+      // All eligible days should be completed
+      expect(stats.completions).toBe(eligibleDays.length);
+      expect(stats.successRate).toBe(100);
+    });
+
+    it('handles partial completion', () => {
+      // Complete just today if there's only one eligible day
+      const week = generateWeekGrid(new Set());
+      const today = week.find((d) => d.isToday);
+      expect(today).toBeDefined();
+
+      const completedDates = new Set([today!.date!]);
+      const weekWithCompletions = generateWeekGrid(completedDates);
+      const stats = calculateWeekStats(weekWithCompletions);
+
+      expect(stats.completions).toBe(1);
     });
   });
 });

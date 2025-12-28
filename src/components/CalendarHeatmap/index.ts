@@ -78,7 +78,9 @@ export type {
 
 export {
   generateMonthGrid,
+  generateWeekGrid,
   calculateMonthStats,
+  calculateWeekStats,
   calculateDayOfWeekStats,
   detectWeakDay,
   calculateStreakPosition,

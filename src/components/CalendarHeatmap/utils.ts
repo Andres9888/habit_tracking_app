@@ -3,7 +3,17 @@
  * Grid generation and date helpers
  */
 
-import { format, startOfMonth, endOfMonth, getDay, getDaysInMonth, isSameDay, isAfter, isBefore, parseISO } from 'date-fns';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  getDay,
+  getDaysInMonth,
+  isSameDay,
+  isAfter,
+  isBefore,
+  parseISO,
+} from 'date-fns';
 
 /**
  * Represents a single day in the calendar grid
@@ -49,12 +59,12 @@ export function generateMonthGrid(
   // Add padding for days before the 1st of the month
   for (let i = 0; i < startPadding; i++) {
     currentWeek.push({
+      completed: false,
       date: null,
       dayOfMonth: null,
-      completed: false,
-      isToday: false,
-      isFuture: false,
       isBeforeCreation: false,
+      isFuture: false,
+      isToday: false,
     });
   }
 
@@ -64,15 +74,17 @@ export function generateMonthGrid(
     const dateStr = format(date, 'yyyy-MM-dd');
     const isToday = dateStr === todayStr;
     const isFuture = isAfter(date, today) && !isToday;
-    const isBeforeCreation = habitCreatedDate ? isBefore(date, habitCreatedDate) && !isSameDay(date, habitCreatedDate) : false;
+    const isBeforeCreation = habitCreatedDate
+      ? isBefore(date, habitCreatedDate) && !isSameDay(date, habitCreatedDate)
+      : false;
 
     currentWeek.push({
+      completed: completedDates.has(dateStr),
       date: dateStr,
       dayOfMonth: day,
-      completed: completedDates.has(dateStr),
-      isToday,
-      isFuture,
       isBeforeCreation,
+      isFuture,
+      isToday,
     });
 
     if (currentWeek.length === 7) {
@@ -85,18 +97,109 @@ export function generateMonthGrid(
   if (currentWeek.length > 0) {
     while (currentWeek.length < 7) {
       currentWeek.push({
+        completed: false,
         date: null,
         dayOfMonth: null,
-        completed: false,
-        isToday: false,
-        isFuture: false,
         isBeforeCreation: false,
+        isFuture: false,
+        isToday: false,
       });
     }
     grid.push(currentWeek);
   }
 
   return grid;
+}
+
+/**
+ * Generates a week array for the current week
+ *
+ * Returns an array of 7 CalendarDay objects representing the current week,
+ * starting from the configured week start day.
+ *
+ * @param completedDates - Set of completed dates in YYYY-MM-DD format
+ * @param habitCreatedAt - Optional timestamp when habit was created
+ * @param weekStartDay - Day the week starts on (0 = Sunday, 1 = Monday, etc.)
+ * @returns Array of 7 CalendarDay objects
+ *
+ * @example
+ * // Week starting Sunday (default)
+ * generateWeekGrid(completedDates) // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+ *
+ * // Week starting Monday
+ * generateWeekGrid(completedDates, undefined, 1) // [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+ */
+export function generateWeekGrid(
+  completedDates: Set<string>,
+  habitCreatedAt?: number,
+  weekStartDay: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0
+): CalendarDay[] {
+  const today = new Date();
+  const todayStr = format(today, 'yyyy-MM-dd');
+  const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
+
+  const week: CalendarDay[] = [];
+
+  // Calculate the start of the current week based on weekStartDay
+  // e.g., if today is Wednesday (3) and weekStartDay is Monday (1):
+  // daysToSubtract = (3 - 1 + 7) % 7 = 2 (go back 2 days to Monday)
+  const todayDayOfWeek = today.getDay();
+  const daysToSubtract = (todayDayOfWeek - weekStartDay + 7) % 7;
+  const weekStartDate = new Date(today);
+  weekStartDate.setDate(today.getDate() - daysToSubtract);
+  // Reset time to start of day to avoid timezone issues
+  weekStartDate.setHours(0, 0, 0, 0);
+
+  // Generate 7 days starting from weekStartDate
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(weekStartDate);
+    date.setDate(weekStartDate.getDate() + i);
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const isToday = dateStr === todayStr;
+    const isFuture = isAfter(date, today) && !isToday;
+    const isBeforeCreation = habitCreatedDate
+      ? isBefore(date, habitCreatedDate) && !isSameDay(date, habitCreatedDate)
+      : false;
+
+    week.push({
+      completed: completedDates.has(dateStr),
+      date: dateStr,
+      dayOfMonth: date.getDate(),
+      isBeforeCreation,
+      isFuture,
+      isToday,
+    });
+  }
+
+  return week;
+}
+
+/**
+ * Calculate week summary statistics
+ *
+ * @param week - Array of 7 CalendarDay objects
+ * @returns Statistics for the week period
+ */
+export function calculateWeekStats(week: CalendarDay[]): {
+  completions: number;
+  eligibleDays: number;
+  successRate: number;
+} {
+  let completions = 0;
+  let eligibleDays = 0;
+
+  for (const day of week) {
+    if (day.date && !day.isBeforeCreation && !day.isFuture) {
+      eligibleDays++;
+      if (day.completed) {
+        completions++;
+      }
+    }
+  }
+
+  const successRate = eligibleDays > 0 ? (completions / eligibleDays) * 100 : 0;
+
+  return { completions, eligibleDays, successRate };
 }
 
 /**
@@ -135,7 +238,15 @@ export const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 /**
  * Full day of week names for accessibility
  */
-export const DAY_NAMES_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+export const DAY_NAMES_FULL = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
 
 /**
  * Format a date string for accessibility (e.g., "Saturday, December 20, 2025")
@@ -186,13 +297,23 @@ export function calculateDayOfWeekStats(
   completedDates: Set<string>,
   habitCreatedAt?: number
 ): DayOfWeekStat[] {
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const stats = Array(7).fill(0).map((_, i) => ({
-    day: dayNames[i],
-    count: 0,
-    total: 0,
-    rate: 0,
-  }));
+  const dayNames = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const stats = Array.from({ length: 7 })
+    .fill(0)
+    .map((_, i) => ({
+      count: 0,
+      day: dayNames[i],
+      rate: 0,
+      total: 0,
+    }));
 
   const startDate = habitCreatedAt ? new Date(habitCreatedAt) : new Date();
   const endDate = new Date();
@@ -209,9 +330,10 @@ export function calculateDayOfWeekStats(
   }
 
   // Calculate rates
-  stats.forEach(stat => {
-    stat.rate = stat.total > 0 ? Math.round((stat.count / stat.total) * 100) : 0;
-  });
+  for (const stat of stats) {
+    stat.rate =
+      stat.total > 0 ? Math.round((stat.count / stat.total) * 100) : 0;
+  }
 
   return stats;
 }
@@ -227,7 +349,7 @@ export function detectWeakDay(
 
   // Find day that's >20% below average
   const weak = dayStats
-    .filter(s => s.rate < avgRate - 20)
+    .filter((s) => s.rate < avgRate - 20)
     .sort((a, b) => a.rate - b.rate)[0];
 
   return weak ? { day: weak.day, rate: weak.rate } : null;
@@ -257,10 +379,13 @@ export function calculateStreakPosition(
 
   // Find the current streak by working backwards from today
   const todayStr = format(today, 'yyyy-MM-dd');
-  let currentStreakDates: string[] = [];
+  const currentStreakDates: string[] = [];
 
   // Check if we have a valid streak (completed today or yesterday)
-  const yesterdayStr = format(new Date(today.getTime() - 24 * 60 * 60 * 1000), 'yyyy-MM-dd');
+  const yesterdayStr = format(
+    new Date(today.getTime() - 24 * 60 * 60 * 1000),
+    'yyyy-MM-dd'
+  );
 
   if (!completedDates.has(todayStr) && !completedDates.has(yesterdayStr)) {
     // No active streak
@@ -268,7 +393,7 @@ export function calculateStreakPosition(
   }
 
   // Start from the most recent completion (today or yesterday)
-  let checkDate = completedDates.has(todayStr) ? todayStr : yesterdayStr;
+  const checkDate = completedDates.has(todayStr) ? todayStr : yesterdayStr;
   currentStreakDates.push(checkDate);
 
   // Walk backwards to build the streak
@@ -282,7 +407,10 @@ export function calculateStreakPosition(
     // Check if habit was created yet
     if (habitCreatedAt) {
       const createdDate = new Date(habitCreatedAt);
-      if (isBefore(prevDateObj, createdDate) && !isSameDay(prevDateObj, createdDate)) {
+      if (
+        isBefore(prevDateObj, createdDate) &&
+        !isSameDay(prevDateObj, createdDate)
+      ) {
         break;
       }
     }
@@ -299,7 +427,7 @@ export function calculateStreakPosition(
 
   // Find the target date's position in the streak (1-indexed)
   const position = currentStreakDates.indexOf(targetDate);
-  return position >= 0 ? position + 1 : 0;
+  return position === -1 ? 0 : position + 1;
 }
 
 /**
@@ -336,14 +464,16 @@ export function generateHorizontalGrid(
   const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
 
   const weeks: CalendarDay[][] = [];
-  let currentWeek: CalendarDay[] = Array(7).fill(null).map(() => ({
-    date: null,
-    dayOfMonth: null,
-    completed: false,
-    isToday: false,
-    isFuture: false,
-    isBeforeCreation: false,
-  }));
+  let currentWeek: CalendarDay[] = Array.from({ length: 7 })
+    .fill(null)
+    .map(() => ({
+      completed: false,
+      date: null,
+      dayOfMonth: null,
+      isBeforeCreation: false,
+      isFuture: false,
+      isToday: false,
+    }));
   let weekIndex = 0;
 
   // Find the Sunday before or equal to startDate
@@ -363,24 +493,25 @@ export function generateHorizontalGrid(
     const isToday = dateStr === todayStr;
     const isFuture = isAfter(iterDate, today) && !isToday;
     const isBeforeCreation = habitCreatedDate
-      ? isBefore(iterDate, habitCreatedDate) && !isSameDay(iterDate, habitCreatedDate)
+      ? isBefore(iterDate, habitCreatedDate) &&
+        !isSameDay(iterDate, habitCreatedDate)
       : false;
 
     currentWeek[dayOfWeek] = {
+      completed: completedDates.has(dateStr),
       date: dateStr,
       dayOfMonth,
-      completed: completedDates.has(dateStr),
-      isToday,
-      isFuture,
       isBeforeCreation,
+      isFuture,
+      isToday,
     };
 
     // Track month changes for labels
     const currentMonth = iterDate.getMonth();
     if (currentMonth !== lastMonth) {
       monthLabels.push({
-        weekIndex,
-        label: format(iterDate, 'MMM'), // Short month name
+        label: format(iterDate, 'MMM'),
+        weekIndex, // Short month name
       });
       lastMonth = currentMonth;
     }
@@ -388,14 +519,16 @@ export function generateHorizontalGrid(
     // Complete week (Saturday reached)
     if (dayOfWeek === 6) {
       weeks.push(currentWeek);
-      currentWeek = Array(7).fill(null).map(() => ({
-        date: null,
-        dayOfMonth: null,
-        completed: false,
-        isToday: false,
-        isFuture: false,
-        isBeforeCreation: false,
-      }));
+      currentWeek = Array.from({ length: 7 })
+        .fill(null)
+        .map(() => ({
+          completed: false,
+          date: null,
+          dayOfMonth: null,
+          isBeforeCreation: false,
+          isFuture: false,
+          isToday: false,
+        }));
       weekIndex++;
     }
 
@@ -403,19 +536,21 @@ export function generateHorizontalGrid(
   }
 
   // Add partial final week if it has any non-null days
-  if (currentWeek.some(d => d.date !== null)) {
+  if (currentWeek.some((d) => d.date !== null)) {
     weeks.push(currentWeek);
   }
 
-  return { weeks, monthLabels };
+  return { monthLabels, weeks };
 }
 
 /**
  * Calculate statistics for 3-month period
  */
-export function calculate3MonthStats(
-  weeks: CalendarDay[][]
-): { completions: number; eligibleDays: number; successRate: number } {
+export function calculate3MonthStats(weeks: CalendarDay[][]): {
+  completions: number;
+  eligibleDays: number;
+  successRate: number;
+} {
   let completions = 0;
   let eligibleDays = 0;
 
@@ -465,7 +600,11 @@ export function calculate3MonthTrend(
   const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
 
   // Count for current period (last 90 days)
-  for (let d = new Date(current3MonthsStart); d <= today; d.setDate(d.getDate() + 1)) {
+  for (
+    let d = new Date(current3MonthsStart);
+    d <= today;
+    d.setDate(d.getDate() + 1)
+  ) {
     const dateStr = format(d, 'yyyy-MM-dd');
     const isAfterCreation = !habitCreatedDate || d >= habitCreatedDate;
     const isNotFuture = d <= today;
@@ -479,7 +618,11 @@ export function calculate3MonthTrend(
   }
 
   // Count for previous period (days 91-180 ago)
-  for (let d = new Date(previous3MonthsStart); d <= previous3MonthsEnd; d.setDate(d.getDate() + 1)) {
+  for (
+    let d = new Date(previous3MonthsStart);
+    d <= previous3MonthsEnd;
+    d.setDate(d.getDate() + 1)
+  ) {
     const dateStr = format(d, 'yyyy-MM-dd');
     const isAfterCreation = !habitCreatedDate || d >= habitCreatedDate;
 
@@ -496,8 +639,14 @@ export function calculate3MonthTrend(
     return null;
   }
 
-  const currentRate = currentEligibleDays > 0 ? (currentCompletions / currentEligibleDays) * 100 : 0;
-  const previousRate = previousEligibleDays > 0 ? (previousCompletions / previousEligibleDays) * 100 : 0;
+  const currentRate =
+    currentEligibleDays > 0
+      ? (currentCompletions / currentEligibleDays) * 100
+      : 0;
+  const previousRate =
+    previousEligibleDays > 0
+      ? (previousCompletions / previousEligibleDays) * 100
+      : 0;
 
   // Calculate percentage change
   if (previousRate === 0 && currentRate === 0) {
