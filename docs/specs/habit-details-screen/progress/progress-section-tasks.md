@@ -451,7 +451,18 @@
     - Full integration via `GridThemeContext` - DayCell, WeekGrid, MonthGrid consume theme correctly
     - 101 unit/integration tests passing, including dedicated TILES_THEME test block (lines 180-200 in gridTheme.test.ts)
     - Exported from `CalendarHeatmap/index.ts` as `TILES_THEME` preset
-- [ ] Implement "Dots" theme
+- [x] Implement "Dots" theme
+  - **COMPLETED**: Full DOTS_THEME implementation with glow effect for strong streaks:
+    - Added `calculateGlowIntensity()` function with 4 intensity levels based on streak length (3+, 7+, 14+, 30+ days)
+    - Implemented animated glow ring (`glowRingStyle`) with pulsing animation (1.15x scale, opacity cycling)
+    - Added shadow-based glow effect for completed cells (`shadowColor` matching streak color, `shadowOpacity` and `shadowRadius` scaling with intensity)
+    - Glow ring appears for streaks of 7+ days with Dots theme (`shouldShowGlowAnimation` condition)
+    - Full reduce motion support - glow disabled when reduce motion is enabled
+    - Added comprehensive integration tests in `GridThemeIntegration.test.tsx` covering:
+      - Theme preset validation (enableStreakGlow, circular cells, green color palette)
+      - Glow ring rendering for strong vs short streaks
+      - Theme-specific behavior (GitHub theme doesn't show glow)
+    - All existing theme features maintained: circular cells (`rounded-full`), transparent backgrounds, dot completion indicator, green color gradient
 - [ ] Implement "Pixels" theme
 - [ ] Add theme picker UI
 - [ ] Persist to AsyncStorage
