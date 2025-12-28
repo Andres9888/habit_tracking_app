@@ -55,14 +55,14 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (initial: any) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
     withSpring: (value: any) => value,
-    withTiming: (value: any, _config: any, callback: any) => {
-      if (callback) callback(true);
-      return value;
-    },
+    // Don't call callback to prevent infinite recursion in looping animations
+    withTiming: (value: any, _config?: any, _callback?: any) => value,
     withDelay: (_delay: any, value: any) => value,
     withSequence: (...values: any[]) => values[values.length - 1],
-    interpolate: (value: number, input: number[], output: number[]) => output[0],
-    runOnJS: (fn: any) => fn,
+    interpolate: (value: number, input: number[], output: number[]) =>
+      output[0],
+    // runOnJS should return a no-op to prevent recursive calls
+    runOnJS: (_fn: any) => () => {},
     Extrapolation: { CLAMP: 'clamp' },
     Easing: {
       out: (fn: any) => fn,
@@ -81,9 +81,7 @@ jest.mock('react-native-safe-area-context', () => ({
 // Mock the Modal component
 jest.mock('../../../Modal', () => ({
   Modal: ({ children, visible, onClose }: any) =>
-    visible ? (
-      <>{children}</>
-    ) : null,
+    visible ? <>{children}</> : null,
 }));
 
 // Mock the motion constants
@@ -104,7 +102,7 @@ describe('ActivationModal', () => {
     currentStreak: 7,
     totalCompletions: 42,
     why: 'To be healthy and energized for my family',
-    woopObstacle: "I feel too tired",
+    woopObstacle: 'I feel too tired',
     woopPlan: "I'll just do 5 minutes of stretching",
     cueTime: '7:00 AM',
     cueLocation: 'Living room',
@@ -243,22 +241,27 @@ describe('ActivationModal', () => {
 
   describe('T7.5: Cue/Trigger reminder', () => {
     it('displays cue section when time exists', () => {
-      const { getByText } = render(<ActivationModal {...defaultProps} />);
+      const { getByText, queryByText } = render(
+        <ActivationModal {...defaultProps} />
+      );
 
       expect(getByText('Your Cue')).toBeTruthy();
-      expect(getByText('7:00 AM')).toBeTruthy();
+      // Text is nested in React Native, use queryByText with the exact time
+      expect(queryByText(/7:00 AM/)).toBeTruthy();
     });
 
     it('displays cue location', () => {
-      const { getByText } = render(<ActivationModal {...defaultProps} />);
+      const { queryByText } = render(<ActivationModal {...defaultProps} />);
 
-      expect(getByText('Living room')).toBeTruthy();
+      // Text is nested in React Native
+      expect(queryByText(/Living room/)).toBeTruthy();
     });
 
     it('displays after behavior cue', () => {
-      const { getByText } = render(<ActivationModal {...defaultProps} />);
+      const { queryByText } = render(<ActivationModal {...defaultProps} />);
 
-      expect(getByText('After morning coffee')).toBeTruthy();
+      // Text is nested in React Native
+      expect(queryByText(/After morning coffee/)).toBeTruthy();
     });
 
     it('does not show cue section when all cue fields are missing', () => {
