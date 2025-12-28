@@ -6,6 +6,7 @@
 import { useMemo } from 'react';
 import type {
   StreakSegment,
+  StreakBreak,
   ChainConnection,
   GridPosition,
   UseStreakChainReturn,
@@ -13,6 +14,7 @@ import type {
 } from './types';
 import {
   detectStreakSegments,
+  detectStreakBreaks,
   calculateGridPositions,
   generateConnections,
   getDefaultGridData,
@@ -37,6 +39,7 @@ interface UseStreakChainOptions {
  * const {
  *   segments,
  *   connections,
+ *   breaks,
  *   activeStreak,
  *   longestStreak,
  *   positions,
@@ -51,6 +54,7 @@ interface UseStreakChainOptions {
  * - Detects all streak segments in completion data
  * - Calculates grid positions for each date
  * - Generates connections between consecutive completed cells
+ * - Detects breaks (gaps) between segments
  * - Identifies active and longest streaks
  * - Memoized for performance
  */
@@ -87,6 +91,12 @@ export function useStreakChain({
     [segments, positions]
   );
 
+  // Detect breaks between segments
+  const breaks = useMemo(
+    () => detectStreakBreaks(segments, positions),
+    [segments, positions]
+  );
+
   // Find the active streak (if any)
   const activeStreak = useMemo(
     () => segments.find((segment) => segment.isActive) || null,
@@ -104,6 +114,7 @@ export function useStreakChain({
   return {
     segments,
     connections,
+    breaks,
     activeStreak,
     longestStreak,
     positions,

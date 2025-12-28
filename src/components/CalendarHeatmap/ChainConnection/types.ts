@@ -180,6 +180,10 @@ export interface ChainConnectionOverlayProps {
   /** Grid dimensions for SVG sizing */
   gridWidth: number;
   gridHeight: number;
+  /** Whether to show break indicators (default: true) */
+  showBreakIndicators?: boolean;
+  /** Custom break indicator configuration */
+  breakIndicatorConfig?: Partial<BreakIndicatorConfig>;
 }
 
 /**
@@ -195,6 +199,64 @@ export interface ConnectionPathProps {
 }
 
 /**
+ * Represents a break (gap) between two streak segments
+ */
+export interface StreakBreak {
+  /** Unique identifier for the break */
+  id: string;
+  /** Last completed date before the break (YYYY-MM-DD) */
+  beforeDate: string;
+  /** First completed date after the break (YYYY-MM-DD) */
+  afterDate: string;
+  /** Number of missed days (gap duration) */
+  gapDays: number;
+  /** Reference to the segment that ended before the break */
+  beforeSegmentId: string;
+  /** Reference to the segment that started after the break */
+  afterSegmentId: string;
+  /** Position of the cell before the break */
+  beforePosition?: GridPosition;
+  /** Position of the cell after the break */
+  afterPosition?: GridPosition;
+}
+
+/**
+ * Visual configuration for break indicator rendering
+ */
+export interface BreakIndicatorConfig {
+  /** Whether to show break indicators */
+  enabled: boolean;
+  /** Color for break indicator (typically a warning/muted color) */
+  color: string;
+  /** Opacity of break indicator (0-1) */
+  opacity: number;
+  /** Line thickness for dashed connection */
+  thickness: number;
+  /** Dash array pattern (e.g., "4 4" for equal dash/gap) */
+  dashPattern: string;
+  /** Whether to show break icon (X or broken chain) */
+  showIcon: boolean;
+  /** Size of break icon in pixels */
+  iconSize: number;
+}
+
+/**
+ * Props for BreakIndicator component
+ */
+export interface BreakIndicatorProps {
+  /** Break to visualize */
+  break_: StreakBreak;
+  /** Visual configuration */
+  config: BreakIndicatorConfig;
+  /** Whether to reduce motion */
+  reduceMotion: boolean;
+  /** Cell size for positioning */
+  cellSize: number;
+  /** Animation delay for staggered entrance */
+  animationDelay: number;
+}
+
+/**
  * Return type for useStreakChain hook
  */
 export interface UseStreakChainReturn {
@@ -202,6 +264,8 @@ export interface UseStreakChainReturn {
   segments: StreakSegment[];
   /** Generated connections between cells */
   connections: ChainConnection[];
+  /** Detected breaks between segments */
+  breaks: StreakBreak[];
   /** Currently active streak (if any) */
   activeStreak: StreakSegment | null;
   /** Longest streak in the data */

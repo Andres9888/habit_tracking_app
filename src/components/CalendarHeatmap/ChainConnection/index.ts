@@ -6,6 +6,7 @@
 // Components
 export { ChainConnectionOverlay } from './ChainConnectionOverlay';
 export { ConnectionPath } from './ConnectionPath';
+export { BreakIndicator } from './BreakIndicator';
 
 // Hook
 export { useStreakChain } from './useStreakChain';
@@ -30,6 +31,11 @@ export {
   calculateProgressionColor,
   hexToHSL,
   hslToHex,
+  // Break indicator utilities
+  DEFAULT_BREAK_INDICATOR_CONFIG,
+  detectStreakBreaks,
+  generateBreakPath,
+  calculateBreakCenter,
 } from './utils';
 
 // Types
@@ -37,10 +43,13 @@ export type {
   CalendarViewMode,
   StreakStrength,
   StreakSegment,
+  StreakBreak,
   GridPosition,
   ChainConnection,
   ConnectionPathType,
   ConnectionConfig,
+  BreakIndicatorConfig,
+  BreakIndicatorProps,
   GridData,
   StrengthConfig,
   StreakProgressionGradient,

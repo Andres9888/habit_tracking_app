@@ -5,9 +5,21 @@
 
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import type { ChainConnectionOverlayProps, ConnectionConfig, ChainConnection } from './types';
-import { generateConnections, getDefaultGridData } from './utils';
+import type {
+  ChainConnectionOverlayProps,
+  ConnectionConfig,
+  ChainConnection,
+  BreakIndicatorConfig,
+  StreakBreak,
+} from './types';
+import {
+  generateConnections,
+  getDefaultGridData,
+  detectStreakBreaks,
+  DEFAULT_BREAK_INDICATOR_CONFIG,
+} from './utils';
 import { ConnectionPath } from './ConnectionPath';
+import { BreakIndicator } from './BreakIndicator';
 
 /**
  * ChainConnectionOverlay renders visual connections between consecutive completed days
@@ -16,6 +28,7 @@ import { ConnectionPath } from './ConnectionPath';
  * - Positioned absolutely behind calendar cells (z-index: -1)
  * - Generates connections from streak segments
  * - Staggered animation for smooth appearance
+ * - Break indicators showing where streaks were interrupted
  * - Optimized for performance with memoization
  */
 export function ChainConnectionOverlay({
@@ -26,6 +39,8 @@ export function ChainConnectionOverlay({
   viewMode,
   gridWidth,
   gridHeight,
+  showBreakIndicators = true,
+  breakIndicatorConfig,
 }: ChainConnectionOverlayProps) {
   // Get grid configuration for view mode
   const gridData = useMemo(() => getDefaultGridData(viewMode), [viewMode]);
@@ -34,6 +49,12 @@ export function ChainConnectionOverlay({
   const connections = useMemo(
     () => generateConnections(segments, positions),
     [segments, positions]
+  );
+
+  // Detect breaks between segments
+  const breaks = useMemo(
+    () => (showBreakIndicators ? detectStreakBreaks(segments, positions) : []),
+    [segments, positions, showBreakIndicators]
   );
 
   // Create connection config
@@ -49,21 +70,47 @@ export function ChainConnectionOverlay({
     [habitColor, reduceMotion, gridData]
   );
 
+  // Create break indicator config (merge defaults with overrides)
+  const breakConfig: BreakIndicatorConfig = useMemo(
+    () => ({
+      ...DEFAULT_BREAK_INDICATOR_CONFIG,
+      ...breakIndicatorConfig,
+    }),
+    [breakIndicatorConfig]
+  );
+
   // Sort connections for consistent animation order (oldest to newest)
   const sortedConnections = useMemo(
     () => [...connections].sort((a, b) => a.fromDate.localeCompare(b.fromDate)),
     [connections]
   );
 
+  // Sort breaks for consistent animation order
+  const sortedBreaks = useMemo(
+    () => [...breaks].sort((a, b) => a.beforeDate.localeCompare(b.beforeDate)),
+    [breaks]
+  );
+
   // Calculate animation delay based on position
-  const getAnimationDelay = (connection: ChainConnection, index: number): number => {
+  const getConnectionAnimationDelay = (
+    connection: ChainConnection,
+    index: number
+  ): number => {
     if (reduceMotion) return 0;
     // Stagger from left to right (oldest to newest)
     return index * 30; // 30ms between each connection
   };
 
-  // Don't render if no connections
-  if (connections.length === 0) {
+  // Calculate animation delay for break indicators
+  // Breaks appear after connections finish (staggered after the last connection)
+  const getBreakAnimationDelay = (break_: StreakBreak, index: number): number => {
+    if (reduceMotion) return 0;
+    const connectionsDuration = sortedConnections.length * 30;
+    return connectionsDuration + 100 + index * 50; // 50ms between each break
+  };
+
+  // Don't render if no connections AND no breaks
+  if (connections.length === 0 && breaks.length === 0) {
     return null;
   }
 
@@ -80,14 +127,28 @@ export function ChainConnectionOverlay({
       accessible={false}
       importantForAccessibility="no-hide-descendants"
     >
+      {/* Render streak connections */}
       {sortedConnections.map((connection, index) => (
         <ConnectionPath
           key={connection.id}
           connection={connection}
           config={config}
-          animationDelay={getAnimationDelay(connection, index)}
+          animationDelay={getConnectionAnimationDelay(connection, index)}
         />
       ))}
+
+      {/* Render break indicators */}
+      {breakConfig.enabled &&
+        sortedBreaks.map((break_, index) => (
+          <BreakIndicator
+            key={break_.id}
+            break_={break_}
+            config={breakConfig}
+            reduceMotion={reduceMotion}
+            cellSize={gridData.cellSize}
+            animationDelay={getBreakAnimationDelay(break_, index)}
+          />
+        ))}
     </View>
   );
 }

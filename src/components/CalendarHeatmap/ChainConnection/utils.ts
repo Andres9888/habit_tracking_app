@@ -14,12 +14,14 @@ import {
 } from 'date-fns';
 import type {
   StreakSegment,
+  StreakBreak,
   StreakStrength,
   GridPosition,
   ChainConnection,
   GridData,
   StrengthConfig,
   StreakProgressionGradient,
+  BreakIndicatorConfig,
   ConnectionPathType,
   CalendarViewMode,
 } from './types';
@@ -798,4 +800,146 @@ export function calculateProgressionColor(
   const adjustedSaturation = Math.min(1, hsl.s * saturationMultiplier);
 
   return hslToHex(hsl.h, adjustedSaturation, hsl.l);
+}
+
+/**
+ * Default break indicator configuration
+ * Uses a muted amber/warning color to indicate broken streaks
+ */
+export const DEFAULT_BREAK_INDICATOR_CONFIG: BreakIndicatorConfig = {
+  enabled: true,
+  color: '#f59e0b', // amber-500
+  opacity: 0.4,
+  thickness: 1.5,
+  dashPattern: '4 4',
+  showIcon: true,
+  iconSize: 12,
+};
+
+/**
+ * Detect breaks (gaps) between streak segments
+ *
+ * Algorithm:
+ * 1. Iterate through consecutive pairs of segments
+ * 2. For each pair, calculate the gap between end of first and start of second
+ * 3. Create a StreakBreak object for each gap
+ *
+ * Time Complexity: O(n) where n = number of segments
+ */
+export function detectStreakBreaks(
+  segments: StreakSegment[],
+  positions: Map<string, GridPosition>
+): StreakBreak[] {
+  if (segments.length < 2) {
+    return [];
+  }
+
+  const breaks: StreakBreak[] = [];
+
+  for (let i = 0; i < segments.length - 1; i++) {
+    const beforeSegment = segments[i];
+    const afterSegment = segments[i + 1];
+
+    const beforeDate = beforeSegment.endDate;
+    const afterDate = afterSegment.startDate;
+
+    // Calculate gap in days
+    const beforeDateObj = parseISO(beforeDate);
+    const afterDateObj = parseISO(afterDate);
+    const gapDays = differenceInDays(afterDateObj, beforeDateObj) - 1;
+
+    // Get positions for both dates
+    const beforePosition = positions.get(beforeDate);
+    const afterPosition = positions.get(afterDate);
+
+    breaks.push({
+      id: `break-${i}`,
+      beforeDate,
+      afterDate,
+      gapDays,
+      beforeSegmentId: beforeSegment.id,
+      afterSegmentId: afterSegment.id,
+      beforePosition,
+      afterPosition,
+    });
+  }
+
+  return breaks;
+}
+
+/**
+ * Generate SVG path for a break indicator
+ * Creates a dashed line between the two positions
+ */
+export function generateBreakPath(
+  break_: StreakBreak,
+  cellSize: number
+): string | null {
+  const { beforePosition, afterPosition } = break_;
+
+  if (!beforePosition || !afterPosition) {
+    return null;
+  }
+
+  const fromX = beforePosition.x;
+  const fromY = beforePosition.y;
+  const toX = afterPosition.x;
+  const toY = afterPosition.y;
+
+  const halfCell = cellSize / 2;
+
+  // Determine direction and create appropriate path
+  const dx = toX - fromX;
+  const dy = toY - fromY;
+
+  // Start from edge of "before" cell, end at edge of "after" cell
+  let startX: number;
+  let startY: number;
+  let endX: number;
+  let endY: number;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    // Mostly horizontal
+    startX = fromX + (dx > 0 ? halfCell : -halfCell);
+    startY = fromY;
+    endX = toX + (dx > 0 ? -halfCell : halfCell);
+    endY = toY;
+  } else {
+    // Mostly vertical
+    startX = fromX;
+    startY = fromY + (dy > 0 ? halfCell : -halfCell);
+    endX = toX;
+    endY = toY + (dy > 0 ? -halfCell : halfCell);
+  }
+
+  // Use quadratic bezier for a subtle curve (looks more "broken")
+  const midX = (startX + endX) / 2;
+  const midY = (startY + endY) / 2;
+
+  // Add a slight perpendicular offset for the control point
+  const perpX = -(endY - startY) * 0.15;
+  const perpY = (endX - startX) * 0.15;
+
+  const controlX = midX + perpX;
+  const controlY = midY + perpY;
+
+  return `M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`;
+}
+
+/**
+ * Calculate the center point of a break for icon placement
+ */
+export function calculateBreakCenter(
+  break_: StreakBreak
+): { x: number; y: number } | null {
+  const { beforePosition, afterPosition } = break_;
+
+  if (!beforePosition || !afterPosition) {
+    return null;
+  }
+
+  return {
+    x: (beforePosition.x + afterPosition.x) / 2,
+    y: (beforePosition.y + afterPosition.y) / 2,
+  };
 }
