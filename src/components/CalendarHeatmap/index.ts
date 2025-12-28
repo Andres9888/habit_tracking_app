@@ -19,6 +19,8 @@ export { ThemePickerSheet } from './ThemePickerSheet';
 export type { ThemePickerSheetProps } from './ThemePickerSheet';
 export { MonthPickerSheet } from './MonthPickerSheet';
 export type { MonthPickerSheetProps } from './MonthPickerSheet';
+export { TodayJumpButton } from './TodayJumpButton';
+export type { TodayJumpButtonProps } from './TodayJumpButton';
 export { PinchToZoomContainer } from './PinchToZoomContainer';
 export type {
   PinchToZoomContainerProps,
