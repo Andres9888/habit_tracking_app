@@ -4,6 +4,20 @@
  * Type definitions for the minimal empty state component.
  */
 
+import { CONFETTI_CONFIG, TIME_PERIODS } from './animations';
+
+/**
+ * Available confetti particle shapes
+ * Derived from CONFETTI_CONFIG.shapes for type safety
+ */
+export type ConfettiShape = (typeof CONFETTI_CONFIG.shapes)[number];
+
+/**
+ * Time period keys for smart chip suggestions
+ * morning (6:00-11:59), afternoon (12:00-16:59), evening (17:00-20:59), night (21:00-5:59)
+ */
+export type TimePeriod = keyof typeof TIME_PERIODS;
+
 /**
  * Suggestion chip data structure
  */
