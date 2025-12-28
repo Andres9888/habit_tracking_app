@@ -662,4 +662,296 @@ describe('useAudioPlayback', () => {
       expect(result.current.formattedRemaining).toBe('-2:00');
     });
   });
+
+  describe('Audio interruption handling', () => {
+    it('initializes with interruption state as false', () => {
+      const { result } = renderHook(() => useAudioPlayback());
+
+      expect(result.current.isInterrupted).toBe(false);
+      expect(result.current.status.wasInterrupted).toBe(false);
+      expect(result.current.status.interruptionReason).toBeNull();
+    });
+
+    it('detects interruption when isPlaying unexpectedly becomes false', async () => {
+      const onInterrupted = jest.fn();
+      const { result } = renderHook(() => useAudioPlayback({ onInterrupted }));
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing state
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 10000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      expect(result.current.status.state).toBe('playing');
+
+      // Simulate interruption - isPlaying becomes false unexpectedly
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: false,
+          positionMillis: 15000,
+          durationMillis: 60000,
+          didJustFinish: false, // Not finished naturally
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      expect(result.current.status.state).toBe('interrupted');
+      expect(result.current.isInterrupted).toBe(true);
+      expect(result.current.status.wasInterrupted).toBe(true);
+      expect(result.current.status.interruptionReason).toBe('system');
+      expect(onInterrupted).toHaveBeenCalledWith('system');
+    });
+
+    it('preserves playback position during interruption', async () => {
+      const { result } = renderHook(() => useAudioPlayback());
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing at 30 seconds
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 30000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      expect(result.current.status.positionSeconds).toBe(30);
+
+      // Simulate interruption
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: false,
+          positionMillis: 30000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      // Position should be preserved during interruption
+      expect(result.current.status.state).toBe('interrupted');
+      expect(result.current.status.positionSeconds).toBe(30);
+    });
+
+    it('can resume from interruption', async () => {
+      const onInterruptionEnded = jest.fn();
+      const { result } = renderHook(() =>
+        useAudioPlayback({ onInterruptionEnded })
+      );
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 10000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      // Simulate interruption
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: false,
+          positionMillis: 15000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      expect(result.current.status.state).toBe('interrupted');
+
+      // Resume from interruption
+      await act(async () => {
+        await result.current.resumeFromInterruption();
+      });
+
+      expect(result.current.status.state).toBe('playing');
+      expect(result.current.status.interruptionReason).toBeNull();
+      expect(result.current.status.wasInterrupted).toBe(true); // Still true for analytics
+      expect(mockPlayAsync).toHaveBeenCalled();
+      expect(onInterruptionEnded).toHaveBeenCalled();
+    });
+
+    it('resumeFromInterruption does nothing if not interrupted', async () => {
+      const { result } = renderHook(() => useAudioPlayback());
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 10000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      const playCallCount = mockPlayAsync.mock.calls.length;
+
+      // Try to resume when not interrupted
+      await act(async () => {
+        await result.current.resumeFromInterruption();
+      });
+
+      // playAsync should not have been called again
+      expect(mockPlayAsync.mock.calls.length).toBe(playCallCount);
+    });
+
+    it('clears interruption state on unload', async () => {
+      const { result } = renderHook(() => useAudioPlayback());
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing then interruption
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 10000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: false,
+          positionMillis: 15000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      expect(result.current.status.wasInterrupted).toBe(true);
+
+      // Unload audio
+      await act(async () => {
+        await result.current.unloadAudio();
+      });
+
+      expect(result.current.status.state).toBe('idle');
+      expect(result.current.status.wasInterrupted).toBe(false);
+      expect(result.current.status.interruptionReason).toBeNull();
+    });
+
+    it('does not trigger interruption when playback finishes naturally', async () => {
+      const onInterrupted = jest.fn();
+      const onFinish = jest.fn();
+      const { result } = renderHook(() =>
+        useAudioPlayback({ onInterrupted, onFinish })
+      );
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 55000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      // Simulate natural finish
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: false,
+          positionMillis: 60000,
+          durationMillis: 60000,
+          didJustFinish: true, // Finished naturally
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      expect(result.current.status.state).toBe('finished');
+      expect(result.current.isInterrupted).toBe(false);
+      expect(onFinish).toHaveBeenCalled();
+      expect(onInterrupted).not.toHaveBeenCalled();
+    });
+
+    it('does not trigger interruption during normal pause', async () => {
+      const onInterrupted = jest.fn();
+      const { result } = renderHook(() => useAudioPlayback({ onInterrupted }));
+
+      await act(async () => {
+        await result.current.loadAudio('file:///test.m4a');
+      });
+
+      // Simulate playing
+      await act(async () => {
+        statusCallback?.({
+          isLoaded: true,
+          isPlaying: true,
+          positionMillis: 10000,
+          durationMillis: 60000,
+          didJustFinish: false,
+          isBuffering: false,
+          isMuted: false,
+        });
+      });
+
+      // Normal pause by user (via pause() method)
+      await act(async () => {
+        await result.current.pause();
+      });
+
+      // Since pause() changes state before statusCallback reports isPlaying=false,
+      // it should not be detected as an interruption
+      expect(result.current.status.state).not.toBe('interrupted');
+    });
+  });
 });

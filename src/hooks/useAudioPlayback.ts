@@ -19,7 +19,14 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Audio, AVPlaybackStatus, AVPlaybackStatusSuccess } from 'expo-av';
+import {
+  Audio,
+  AVPlaybackStatus,
+  AVPlaybackStatusSuccess,
+  InterruptionModeIOS,
+  InterruptionModeAndroid,
+} from 'expo-av';
+import { AppState, AppStateStatus } from 'react-native';
 
 /**
  * Playback speed options
@@ -39,6 +46,7 @@ export type PlaybackState =
   | 'playing'
   | 'paused'
   | 'seeking'
+  | 'interrupted'
   | 'error'
   | 'finished';
 
@@ -61,6 +69,10 @@ export interface PlaybackStatus {
   errorMessage: string | null;
   /** URI of the currently loaded audio */
   audioUri: string | null;
+  /** Whether playback was interrupted by another audio source */
+  wasInterrupted: boolean;
+  /** Reason for interruption if interrupted */
+  interruptionReason: 'phone-call' | 'other-app' | 'system' | null;
 }
 
 export interface UseAudioPlaybackReturn {
@@ -76,6 +88,8 @@ export interface UseAudioPlaybackReturn {
   pause: () => Promise<void>;
   /** Toggle between play and pause */
   togglePlayPause: () => Promise<void>;
+  /** Resume playback after an interruption */
+  resumeFromInterruption: () => Promise<void>;
   /** Seek to a specific position (0-1 progress) */
   seekToProgress: (progress: number) => Promise<void>;
   /** Seek to a specific position in seconds */
@@ -96,6 +110,8 @@ export interface UseAudioPlaybackReturn {
   isReady: boolean;
   /** Whether audio is currently loading */
   isLoading: boolean;
+  /** Whether audio was interrupted */
+  isInterrupted: boolean;
   /** Formatted position string (MM:SS) */
   formattedPosition: string;
   /** Formatted duration string (MM:SS) */
@@ -129,16 +145,32 @@ function isPlaybackStatusSuccess(
  * @param options.autoPlayOnLoad - Whether to auto-play when audio is loaded
  * @param options.onFinish - Callback when playback finishes
  * @param options.onError - Callback for error handling
+ * @param options.onInterrupted - Callback when playback is interrupted by phone call or other app
+ * @param options.onInterruptionEnded - Callback when interruption ends (user can resume)
  */
 export function useAudioPlayback(options?: {
   autoPlayOnLoad?: boolean;
   onFinish?: () => void;
   onError?: (error: Error) => void;
+  onInterrupted?: (reason: 'phone-call' | 'other-app' | 'system') => void;
+  onInterruptionEnded?: () => void;
 }): UseAudioPlaybackReturn {
-  const { autoPlayOnLoad = false, onFinish, onError } = options || {};
+  const {
+    autoPlayOnLoad = false,
+    onFinish,
+    onError,
+    onInterrupted,
+    onInterruptionEnded,
+  } = options || {};
 
   // Sound instance ref
   const soundRef = useRef<Audio.Sound | null>(null);
+
+  // Track if we were playing when interrupted (for resumption)
+  const wasPlayingBeforeInterruptionRef = useRef<boolean>(false);
+
+  // Track the previous app state for interruption detection
+  const previousAppStateRef = useRef<AppStateStatus>(AppState.currentState);
 
   // Status state
   const [status, setStatus] = useState<PlaybackStatus>({
@@ -146,15 +178,42 @@ export function useAudioPlayback(options?: {
     didJustFinish: false,
     durationSeconds: 0,
     errorMessage: null,
+    interruptionReason: null,
     isMuted: false,
     positionSeconds: 0,
     progress: 0,
     speed: 1,
     state: 'idle',
+    wasInterrupted: false,
   });
 
   /**
+   * Handle audio interruption (phone call, other app taking audio focus)
+   * @param reason - The reason for the interruption
+   */
+  const handleInterruption = useCallback(
+    (reason: 'phone-call' | 'other-app' | 'system') => {
+      // Only handle if we're currently playing
+      if (status.state !== 'playing') return;
+
+      // Mark that we were playing before interruption
+      wasPlayingBeforeInterruptionRef.current = true;
+
+      setStatus((prev) => ({
+        ...prev,
+        interruptionReason: reason,
+        state: 'interrupted',
+        wasInterrupted: true,
+      }));
+
+      onInterrupted?.(reason);
+    },
+    [status.state, onInterrupted]
+  );
+
+  /**
    * Handle playback status updates
+   * Also detects audio interruptions by monitoring isPlaying state changes
    */
   const onPlaybackStatusUpdate = useCallback(
     (playbackStatus: AVPlaybackStatus) => {
@@ -180,6 +239,18 @@ export function useAudioPlayback(options?: {
       const progress =
         durationSeconds > 0 ? positionSeconds / durationSeconds : 0;
 
+      // Detect interruption: if we think we're playing but isPlaying is false
+      // and we haven't finished and we're not paused by user
+      if (
+        !playbackStatus.isPlaying &&
+        !playbackStatus.didJustFinish &&
+        status.state === 'playing'
+      ) {
+        // Playback was unexpectedly paused - this is an interruption
+        handleInterruption('system');
+        return;
+      }
+
       // Determine state based on playback status
       let newState: PlaybackState = 'ready';
       if (playbackStatus.isBuffering) {
@@ -203,18 +274,31 @@ export function useAudioPlayback(options?: {
         state: newState,
       }));
     },
-    [onFinish, onError]
+    [status.state, onFinish, onError, handleInterruption]
   );
 
   /**
    * Configure audio mode for playback
+   * Sets up interruption handling so playback pauses during phone calls or other app audio
    */
   const configureAudioMode = useCallback(async (): Promise<void> => {
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
+
+      // Android: Do not mix with other audio - pause when interrupted
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+
+      // iOS: Do not mix with other audio - pause when interrupted
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+
       playsInSilentModeIOS: true,
+
+      // Android-specific
       playThroughEarpieceAndroid: false,
-      shouldDuckAndroid: true,
+
+      shouldDuckAndroid: false,
+
+      // Don't duck, pause completely
       staysActiveInBackground: false,
     });
   }, []);
@@ -288,16 +372,20 @@ export function useAudioPlayback(options?: {
       soundRef.current = null;
     }
 
+    wasPlayingBeforeInterruptionRef.current = false;
+
     setStatus({
       audioUri: null,
       didJustFinish: false,
       durationSeconds: 0,
       errorMessage: null,
+      interruptionReason: null,
       isMuted: false,
       positionSeconds: 0,
       progress: 0,
       speed: 1,
       state: 'idle',
+      wasInterrupted: false,
     });
   }, []);
 
@@ -352,6 +440,47 @@ export function useAudioPlayback(options?: {
   const togglePlayPause = useCallback(async (): Promise<void> => {
     await (status.state === 'playing' ? pause() : play());
   }, [status.state, play, pause]);
+
+  /**
+   * Resume playback after an interruption (phone call, other app)
+   * Clears the interruption state and resumes playback
+   */
+  const resumeFromInterruption = useCallback(async (): Promise<void> => {
+    if (!soundRef.current || status.state !== 'interrupted') {
+      return;
+    }
+
+    try {
+      // Reconfigure audio mode in case it was modified by the interrupting app
+      await configureAudioMode();
+
+      // Resume playback
+      await soundRef.current.playAsync();
+
+      // Clear interruption state
+      wasPlayingBeforeInterruptionRef.current = false;
+
+      setStatus((prev) => ({
+        ...prev,
+        interruptionReason: null,
+        state: 'playing',
+        // Keep wasInterrupted true for analytics/UX purposes
+      }));
+
+      onInterruptionEnded?.();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to resume after interruption';
+      setStatus((prev) => ({
+        ...prev,
+        errorMessage,
+        state: 'error',
+      }));
+      onError?.(error instanceof Error ? error : new Error(errorMessage));
+    }
+  }, [status.state, configureAudioMode, onInterruptionEnded, onError]);
 
   /**
    * Seek to a specific position (0-1 progress)
@@ -513,6 +642,49 @@ export function useAudioPlayback(options?: {
     };
   }, []);
 
+  /**
+   * AppState listener for detecting when app goes to background/foreground
+   * This helps detect interruptions from phone calls or other apps
+   */
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      const previousState = previousAppStateRef.current;
+
+      // App went to background while playing - potential interruption
+      if (
+        previousState === 'active' &&
+        (nextAppState === 'background' || nextAppState === 'inactive') &&
+        status.state === 'playing'
+      ) {
+        // On iOS, 'inactive' often means phone call or other interruption
+        const reason: 'phone-call' | 'other-app' | 'system' =
+          nextAppState === 'inactive' ? 'phone-call' : 'other-app';
+        handleInterruption(reason);
+      }
+
+      // App came back to foreground after being interrupted
+      if (
+        (previousState === 'background' || previousState === 'inactive') &&
+        nextAppState === 'active' &&
+        status.state === 'interrupted'
+      ) {
+        // Notify that interruption has ended - user can now resume
+        onInterruptionEnded?.();
+      }
+
+      previousAppStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [status.state, handleInterruption, onInterruptionEnded]);
+
   // Derived states
   const isPlaying = status.state === 'playing';
   const isReady =
@@ -521,6 +693,7 @@ export function useAudioPlayback(options?: {
     status.state === 'paused' ||
     status.state === 'finished';
   const isLoading = status.state === 'loading';
+  const isInterrupted = status.state === 'interrupted';
   const formattedPosition = formatDuration(status.positionSeconds);
   const formattedDuration = formatDuration(status.durationSeconds);
   const remainingSeconds = status.durationSeconds - status.positionSeconds;
@@ -530,6 +703,7 @@ export function useAudioPlayback(options?: {
     formattedDuration,
     formattedPosition,
     formattedRemaining,
+    isInterrupted,
     isLoading,
     isPlaying,
     isReady,
@@ -537,6 +711,7 @@ export function useAudioPlayback(options?: {
     pause,
     play,
     replay,
+    resumeFromInterruption,
     seekBackward,
     seekForward,
     seekToProgress,

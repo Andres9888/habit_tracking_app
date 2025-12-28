@@ -839,4 +839,207 @@ describe('useAudioRecording', () => {
       expect(result.current.canStartRecording).toBe(true);
     });
   });
+
+  describe('Audio interruption handling', () => {
+    it('initializes with interruption state as false', () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      expect(result.current.isInterrupted).toBe(false);
+      expect(result.current.status.wasInterrupted).toBe(false);
+      expect(result.current.status.interruptionReason).toBeNull();
+    });
+
+    it('detects interruption when isRecording unexpectedly becomes false', async () => {
+      const onInterrupted = jest.fn();
+      const { result } = renderHook(() => useAudioRecording({ onInterrupted }));
+
+      // Start recording
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      expect(result.current.status.state).toBe('recording');
+
+      const statusCallback = mockCreateAsync.mock.calls[0][1];
+
+      // Simulate interruption - recording reports isRecording=false unexpectedly
+      await act(async () => {
+        statusCallback({
+          isRecording: false,
+          durationMillis: 5000,
+          metering: -30,
+        });
+      });
+
+      expect(result.current.status.state).toBe('interrupted');
+      expect(result.current.isInterrupted).toBe(true);
+      expect(result.current.status.wasInterrupted).toBe(true);
+      expect(result.current.status.interruptionReason).toBe('system');
+      expect(onInterrupted).toHaveBeenCalledWith('system');
+    });
+
+    it('preserves duration during interruption', async () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      const statusCallback = mockCreateAsync.mock.calls[0][1];
+
+      // Record for 30 seconds
+      await act(async () => {
+        statusCallback({
+          isRecording: true,
+          durationMillis: 30000,
+          metering: -30,
+        });
+      });
+
+      expect(result.current.status.durationSeconds).toBe(30);
+
+      // Simulate interruption
+      await act(async () => {
+        statusCallback({
+          isRecording: false,
+          durationMillis: 30000,
+          metering: -30,
+        });
+      });
+
+      // Duration should be preserved during interruption
+      expect(result.current.status.state).toBe('interrupted');
+      expect(result.current.status.durationSeconds).toBe(30);
+    });
+
+    it('can resume from interruption', async () => {
+      const onInterruptionEnded = jest.fn();
+      const { result } = renderHook(() =>
+        useAudioRecording({ onInterruptionEnded })
+      );
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      const statusCallback = mockCreateAsync.mock.calls[0][1];
+
+      // Simulate interruption
+      await act(async () => {
+        statusCallback({
+          isRecording: false,
+          durationMillis: 5000,
+          metering: -30,
+        });
+      });
+
+      expect(result.current.status.state).toBe('interrupted');
+
+      // Resume from interruption
+      await act(async () => {
+        await result.current.resumeFromInterruption();
+      });
+
+      expect(result.current.status.state).toBe('recording');
+      expect(result.current.status.interruptionReason).toBeNull();
+      expect(result.current.status.wasInterrupted).toBe(true); // Still true for analytics
+      expect(onInterruptionEnded).toHaveBeenCalled();
+    });
+
+    it('resumeFromInterruption does nothing if not interrupted', async () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      // Try to resume when not interrupted
+      await act(async () => {
+        await result.current.resumeFromInterruption();
+      });
+
+      // Should still be recording (not changed)
+      expect(result.current.status.state).toBe('recording');
+    });
+
+    it('clears interruption state on cancel', async () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      const statusCallback = mockCreateAsync.mock.calls[0][1];
+
+      // Simulate interruption
+      await act(async () => {
+        statusCallback({
+          isRecording: false,
+          durationMillis: 5000,
+          metering: -30,
+        });
+      });
+
+      expect(result.current.status.wasInterrupted).toBe(true);
+
+      // Cancel recording
+      await act(async () => {
+        await result.current.cancelRecording();
+      });
+
+      expect(result.current.status.state).toBe('idle');
+      expect(result.current.status.wasInterrupted).toBe(false);
+      expect(result.current.status.interruptionReason).toBeNull();
+    });
+
+    it('clears interruption state on reset', async () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      const statusCallback = mockCreateAsync.mock.calls[0][1];
+
+      // Simulate interruption
+      await act(async () => {
+        statusCallback({
+          isRecording: false,
+          durationMillis: 5000,
+          metering: -30,
+        });
+      });
+
+      expect(result.current.status.wasInterrupted).toBe(true);
+
+      // Stop and reset
+      await act(async () => {
+        await result.current.stopRecording();
+      });
+      act(() => {
+        result.current.reset();
+      });
+
+      expect(result.current.status.wasInterrupted).toBe(false);
+      expect(result.current.status.interruptionReason).toBeNull();
+    });
+
+    it('does not trigger interruption during normal pause', async () => {
+      const onInterrupted = jest.fn();
+      const { result } = renderHook(() => useAudioRecording({ onInterrupted }));
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      // Normal pause by user
+      await act(async () => {
+        await result.current.pauseRecording();
+      });
+
+      expect(result.current.status.state).toBe('paused');
+      expect(result.current.isInterrupted).toBe(false);
+      expect(onInterrupted).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -18,8 +18,19 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Audio, AVPlaybackStatus } from 'expo-av';
-import { Platform, Linking, Alert } from 'react-native';
+import {
+  Audio,
+  AVPlaybackStatus,
+  InterruptionModeIOS,
+  InterruptionModeAndroid,
+} from 'expo-av';
+import {
+  Platform,
+  Linking,
+  Alert,
+  AppState,
+  AppStateStatus,
+} from 'react-native';
 
 /**
  * Recording quality preset optimized for voice notes
@@ -123,6 +134,7 @@ export type RecordingState =
   | 'paused'
   | 'stopping'
   | 'stopped'
+  | 'interrupted'
   | 'error';
 
 export interface RecordingStatus {
@@ -144,6 +156,10 @@ export interface RecordingStatus {
   isApproachingMaxDuration: boolean;
   /** Seconds remaining until max duration (only set when isApproachingMaxDuration is true) */
   secondsUntilMaxDuration: number | null;
+  /** Whether recording was interrupted by another audio source (phone call, other app) */
+  wasInterrupted: boolean;
+  /** Reason for interruption if interrupted */
+  interruptionReason: 'phone-call' | 'other-app' | 'system' | null;
 }
 
 export interface UseAudioRecordingReturn {
@@ -157,6 +173,8 @@ export interface UseAudioRecordingReturn {
   pauseRecording: () => Promise<void>;
   /** Resume a paused recording */
   resumeRecording: () => Promise<void>;
+  /** Resume after an interruption (phone call, other app) */
+  resumeFromInterruption: () => Promise<void>;
   /** Cancel the current recording without saving */
   cancelRecording: () => Promise<void>;
   /** Check and request microphone permission */
@@ -171,6 +189,8 @@ export interface UseAudioRecordingReturn {
   isRecording: boolean;
   /** Whether recording is paused */
   isPaused: boolean;
+  /** Whether recording was interrupted */
+  isInterrupted: boolean;
   /** Whether recording can be started */
   canStartRecording: boolean;
   /** Formatted duration string (MM:SS) */
@@ -204,6 +224,8 @@ function formatDuration(seconds: number): string {
  * @param options.onError - Callback for error handling
  * @param options.onPermissionDenied - Callback when microphone permission is denied
  * @param options.onOpenSettings - Callback when user opens settings
+ * @param options.onInterrupted - Callback when recording is interrupted by phone call or other app
+ * @param options.onInterruptionEnded - Callback when interruption ends (user can resume)
  */
 export function useAudioRecording(options?: {
   maxDurationSeconds?: number;
@@ -214,6 +236,8 @@ export function useAudioRecording(options?: {
   onError?: (error: Error) => void;
   onPermissionDenied?: (canAskAgain: boolean) => void;
   onOpenSettings?: () => void;
+  onInterrupted?: (reason: 'phone-call' | 'other-app' | 'system') => void;
+  onInterruptionEnded?: () => void;
 }): UseAudioRecordingReturn {
   const {
     maxDurationSeconds = MAX_RECORDING_DURATION_SECONDS,
@@ -224,6 +248,8 @@ export function useAudioRecording(options?: {
     onError,
     onPermissionDenied,
     onOpenSettings,
+    onInterrupted,
+    onInterruptionEnded,
   } = options || {};
 
   // Recording instance ref
@@ -235,11 +261,13 @@ export function useAudioRecording(options?: {
     durationSeconds: 0,
     errorMessage: null,
     hasPermission: null,
+    interruptionReason: null,
     isApproachingMaxDuration: false,
     meteringLevel: 0,
     recordingUri: null,
     secondsUntilMaxDuration: null,
     state: 'idle',
+    wasInterrupted: false,
   });
 
   // Duration tracking ref (to avoid stale closure issues)
@@ -247,6 +275,12 @@ export function useAudioRecording(options?: {
 
   // Warning tracking ref (to only fire callback once per recording)
   const warningFiredRef = useRef<boolean>(false);
+
+  // Track if we were recording when interrupted (for resumption)
+  const wasRecordingBeforeInterruptionRef = useRef<boolean>(false);
+
+  // Track the previous app state for interruption detection
+  const previousAppStateRef = useRef<AppStateStatus>(AppState.currentState);
 
   /**
    * Request microphone permission
@@ -298,25 +332,73 @@ export function useAudioRecording(options?: {
 
   /**
    * Configure audio mode for recording
+   * Sets up interruption handling so recording pauses during phone calls or other app audio
    */
   const configureAudioMode = useCallback(async (): Promise<void> => {
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: true,
+
+      // Android: Do not mix with other audio - pause when interrupted
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+
+      // iOS: Do not mix with other audio - pause when interrupted
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+
       playsInSilentModeIOS: true,
 
+      // Android-specific
       playThroughEarpieceAndroid: false,
 
-      // Android-specific
-      shouldDuckAndroid: true,
+      shouldDuckAndroid: false,
+
+      // Don't duck, pause completely for recording
       staysActiveInBackground: false,
     });
   }, []);
 
   /**
+   * Handle audio interruption (phone call, other app taking audio focus)
+   * @param reason - The reason for the interruption
+   */
+  const handleInterruption = useCallback(
+    (reason: 'phone-call' | 'other-app' | 'system') => {
+      // Only handle if we're currently recording
+      if (status.state !== 'recording') return;
+
+      // Mark that we were recording before interruption
+      wasRecordingBeforeInterruptionRef.current = true;
+
+      setStatus((prev) => ({
+        ...prev,
+        interruptionReason: reason,
+        state: 'interrupted',
+        wasInterrupted: true,
+      }));
+
+      onInterrupted?.(reason);
+    },
+    [status.state, onInterrupted]
+  );
+
+  /**
    * Handle recording status updates
+   * Also detects audio interruptions by monitoring isRecording state changes
    */
   const onRecordingStatusUpdate = useCallback(
     (recordingStatus: Audio.RecordingStatus) => {
+      // Detect interruption: if we think we're recording but isRecording is false
+      // and we're not in a stopping/paused/error state
+      if (
+        !recordingStatus.isRecording &&
+        recordingStatus.durationMillis &&
+        recordingStatus.durationMillis > 0 &&
+        status.state === 'recording'
+      ) {
+        // Recording was unexpectedly paused - this is an interruption
+        handleInterruption('system');
+        return;
+      }
+
       if (recordingStatus.isRecording) {
         const durationSeconds = Math.floor(
           (recordingStatus.durationMillis || 0) / 1000
@@ -361,10 +443,12 @@ export function useAudioRecording(options?: {
       }
     },
     [
+      status.state,
       maxDurationSeconds,
       warningThresholdSeconds,
       onMaxDurationReached,
       onWarningThresholdReached,
+      handleInterruption,
     ]
   );
 
@@ -542,6 +626,47 @@ export function useAudioRecording(options?: {
   }, [status.state, onError]);
 
   /**
+   * Resume recording after an interruption (phone call, other app)
+   * Clears the interruption state and resumes the recording
+   */
+  const resumeFromInterruption = useCallback(async (): Promise<void> => {
+    if (!recordingRef.current || status.state !== 'interrupted') {
+      return;
+    }
+
+    try {
+      // Reconfigure audio mode in case it was modified by the interrupting app
+      await configureAudioMode();
+
+      // Resume recording
+      await recordingRef.current.startAsync();
+
+      // Clear interruption state
+      wasRecordingBeforeInterruptionRef.current = false;
+
+      setStatus((prev) => ({
+        ...prev,
+        interruptionReason: null,
+        state: 'recording',
+        // Keep wasInterrupted true for analytics/UX purposes
+      }));
+
+      onInterruptionEnded?.();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to resume after interruption';
+      setStatus((prev) => ({
+        ...prev,
+        errorMessage,
+        state: 'error',
+      }));
+      onError?.(error instanceof Error ? error : new Error(errorMessage));
+    }
+  }, [status.state, configureAudioMode, onInterruptionEnded, onError]);
+
+  /**
    * Cancel the current recording without saving
    */
   const cancelRecording = useCallback(async (): Promise<void> => {
@@ -565,17 +690,20 @@ export function useAudioRecording(options?: {
       recordingRef.current = null;
       durationRef.current = 0;
       warningFiredRef.current = false;
+      wasRecordingBeforeInterruptionRef.current = false;
 
       setStatus({
         canAskAgain: status.canAskAgain,
         durationSeconds: 0,
         errorMessage: null,
         hasPermission: status.hasPermission,
+        interruptionReason: null,
         isApproachingMaxDuration: false,
         meteringLevel: 0,
         recordingUri: null,
         secondsUntilMaxDuration: null,
         state: 'idle',
+        wasInterrupted: false,
       });
     } catch (error) {
       const errorMessage =
@@ -598,14 +726,17 @@ export function useAudioRecording(options?: {
       durationSeconds: 0,
       errorMessage: null,
       hasPermission: status.hasPermission,
+      interruptionReason: null,
       isApproachingMaxDuration: false,
       meteringLevel: 0,
       recordingUri: null,
       secondsUntilMaxDuration: null,
       state: 'idle',
+      wasInterrupted: false,
     });
     durationRef.current = 0;
     warningFiredRef.current = false;
+    wasRecordingBeforeInterruptionRef.current = false;
   }, [status.hasPermission, status.canAskAgain]);
 
   /**
@@ -636,9 +767,53 @@ export function useAudioRecording(options?: {
     };
   }, []);
 
+  /**
+   * AppState listener for detecting when app goes to background/foreground
+   * This helps detect interruptions from phone calls or other apps
+   */
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      const previousState = previousAppStateRef.current;
+
+      // App went to background while recording - potential interruption
+      if (
+        previousState === 'active' &&
+        (nextAppState === 'background' || nextAppState === 'inactive') &&
+        status.state === 'recording'
+      ) {
+        // On iOS, 'inactive' often means phone call or other interruption
+        const reason: 'phone-call' | 'other-app' | 'system' =
+          nextAppState === 'inactive' ? 'phone-call' : 'other-app';
+        handleInterruption(reason);
+      }
+
+      // App came back to foreground after being interrupted
+      if (
+        (previousState === 'background' || previousState === 'inactive') &&
+        nextAppState === 'active' &&
+        status.state === 'interrupted'
+      ) {
+        // Notify that interruption has ended - user can now resume
+        onInterruptionEnded?.();
+      }
+
+      previousAppStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [status.state, handleInterruption, onInterruptionEnded]);
+
   // Derived states
   const isRecording = status.state === 'recording';
   const isPaused = status.state === 'paused';
+  const isInterrupted = status.state === 'interrupted';
   const canStartRecording =
     status.state === 'idle' || status.state === 'stopped';
   const formattedDuration = formatDuration(status.durationSeconds);
@@ -651,6 +826,7 @@ export function useAudioRecording(options?: {
     canStartRecording,
     formattedDuration,
     isApproachingMaxDuration,
+    isInterrupted,
     isMaxDurationReached,
     isPaused,
     isRecording,
@@ -658,6 +834,7 @@ export function useAudioRecording(options?: {
     pauseRecording,
     requestPermission,
     reset,
+    resumeFromInterruption,
     resumeRecording,
     secondsUntilMaxDuration,
     showPermissionAlert,
