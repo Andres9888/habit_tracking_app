@@ -503,7 +503,7 @@ export function useMotivationFeatures() {
 ### Phase 1: Core Free Features (Week 1-2)
 
 #### T1: Your Why Section
-- [ ] T1.1: Add `why` field to habits schema
+- [x] T1.1: Add `why` field to habits schema *(Already implemented - field exists at `convex/schema.ts:75` as `why: v.optional(v.string())`)*
 - [ ] T1.2: Create `YourWhySection` component with empty/filled states
 - [ ] T1.3: Add text editor modal with prompts
 - [ ] T1.4: Style with rose accent color (border-l-rose-400)
