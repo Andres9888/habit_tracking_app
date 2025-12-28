@@ -40,6 +40,13 @@
         {
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice note recordings."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to capture images for your Vision Board."
+        }
       ]
     ]
   }

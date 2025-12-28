@@ -29,15 +29,21 @@ const applicationTables = {
     // Memory Accessibility System (Tobias, 2009; Zhang et al., 2021)
     // Memory accessibility (0-1), starts at 1.0
     accessibility: v.optional(v.number()),
+
+    accessibilityAtPause: v.optional(v.number()),
+
     // ADP - how fast memory fades
     accessibilityDecayParam: v.optional(v.number()),
+
     // AGP_beh - boost from behavior
     accessibilityGainBehavior: v.optional(v.number()),
+
     // AGP_rem - boost from reminders
     accessibilityGainReminder: v.optional(v.number()),
     // Last time accessibility was updated
     accessibilityUpdatedAt: v.optional(v.number()),
     archived: v.optional(v.boolean()),
+
     archivedAt: v.optional(v.number()),
 
     bestStreak: v.optional(v.number()),
@@ -46,8 +52,6 @@ const applicationTables = {
     consecutiveDays: v.optional(v.number()),
 
     createdAt: v.number(),
-
-    accessibilityAtPause: v.optional(v.number()),
 
     // Cue - Implementation Intention (Gollwitzer, 1999: 2-3x follow-through)
     // "After I pour my morning coffee"
@@ -412,11 +416,14 @@ const applicationTables = {
     // Associated habit
     habitId: v.id('habits'),
 
-    // Convex file storage URL
-    imageUrl: v.string(),
+    // Cached image URL for convenience (may expire)
+    imageUrl: v.optional(v.string()),
 
     // Display order in grid (0-based, for drag-to-reorder)
     order: v.number(),
+
+    // Convex file storage ID (use storage.getUrl to get URL)
+    storageId: v.id('_storage'),
 
     // Last updated timestamp
     updatedAt: v.optional(v.number()),

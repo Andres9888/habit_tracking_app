@@ -15,3 +15,8 @@ export {
   type WOOPSectionProps,
   type WOOPData,
 } from './WOOPSection';
+export {
+  VisionBoardSection,
+  type VisionBoardSectionProps,
+  type VisionBoardImage,
+} from './VisionBoardSection';

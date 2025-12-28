@@ -19,15 +19,30 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
-// Vision board image object validator for return types
+// Vision board image object validator for return types (with resolved URL)
 const visionBoardImageObjectValidator = v.object({
   _creationTime: v.number(),
   _id: v.id('visionBoardImages'),
   caption: v.optional(v.string()),
   createdAt: v.number(),
   habitId: v.id('habits'),
-  imageUrl: v.string(),
+  imageUrl: v.union(v.string(), v.null()),
   order: v.number(),
+  storageId: v.id('_storage'),
+  updatedAt: v.optional(v.number()),
+  userId: v.optional(v.string()),
+});
+
+// Vision board image as stored in DB (no resolved URL)
+const visionBoardImageDbValidator = v.object({
+  _creationTime: v.number(),
+  _id: v.id('visionBoardImages'),
+  caption: v.optional(v.string()),
+  createdAt: v.number(),
+  habitId: v.id('habits'),
+  imageUrl: v.optional(v.string()),
+  order: v.number(),
+  storageId: v.id('_storage'),
   updatedAt: v.optional(v.number()),
   userId: v.optional(v.string()),
 });
@@ -40,6 +55,7 @@ const MAX_CAPTION_LENGTH = 200;
 
 /**
  * Get all images for a specific habit, ordered by display order
+ * Resolves storage IDs to URLs
  */
 export const listByHabit = query({
   args: {
@@ -51,21 +67,41 @@ export const listByHabit = query({
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    // Sort by order field
-    return images.sort((a, b) => a.order - b.order);
+    // Sort by order field and resolve URLs
+    const sortedImages = images.sort((a, b) => a.order - b.order);
+
+    // Resolve storage URLs for each image
+    const imagesWithUrls = await Promise.all(
+      sortedImages.map(async (image) => {
+        const url = await ctx.storage.getUrl(image.storageId);
+        return {
+          ...image,
+          imageUrl: url,
+        };
+      })
+    );
+
+    return imagesWithUrls;
   },
   returns: v.array(visionBoardImageObjectValidator),
 });
 
 /**
- * Get a single image by ID
+ * Get a single image by ID with resolved URL
  */
 export const get = query({
   args: {
     imageId: v.id('visionBoardImages'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.imageId);
+    const image = await ctx.db.get(args.imageId);
+    if (!image) return null;
+
+    const url = await ctx.storage.getUrl(image.storageId);
+    return {
+      ...image,
+      imageUrl: url,
+    };
   },
   returns: v.union(v.null(), visionBoardImageObjectValidator),
 });
@@ -89,14 +125,14 @@ export const countByHabit = query({
 });
 
 /**
- * Create a new vision board image
+ * Create a new vision board image from storage ID
  */
 export const create = mutation({
   args: {
     caption: v.optional(v.string()),
     habitId: v.id('habits'),
-    imageUrl: v.string(),
     order: v.optional(v.number()),
+    storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
     // Validate that habit exists
@@ -105,9 +141,10 @@ export const create = mutation({
       throw new Error('Habit not found');
     }
 
-    // Validate imageUrl
-    if (!args.imageUrl || args.imageUrl.trim() === '') {
-      throw new Error('Image URL is required');
+    // Validate that storage file exists
+    const fileMetadata = await ctx.db.system.get(args.storageId);
+    if (!fileMetadata) {
+      throw new Error('Storage file not found');
     }
 
     // Validate caption length
@@ -153,8 +190,8 @@ export const create = mutation({
       caption: args.caption?.trim(),
       createdAt: now,
       habitId: args.habitId,
-      imageUrl: args.imageUrl.trim(),
       order,
+      storageId: args.storageId,
     });
   },
   returns: v.id('visionBoardImages'),
@@ -229,7 +266,7 @@ export const reorder = mutation({
 });
 
 /**
- * Delete an image from the vision board
+ * Delete an image from the vision board and storage
  */
 export const remove = mutation({
   args: {
@@ -241,8 +278,13 @@ export const remove = mutation({
       throw new Error('Image not found');
     }
 
-    // Note: The image file in storage should be deleted separately
-    // via a scheduled job or file storage cleanup
+    // Delete the file from storage
+    try {
+      await ctx.storage.delete(image.storageId);
+    } catch (error) {
+      // File may already be deleted, continue with record deletion
+      console.warn('Failed to delete storage file:', error);
+    }
 
     await ctx.db.delete(args.imageId);
 
@@ -270,7 +312,7 @@ export const remove = mutation({
 });
 
 /**
- * Get images by user (for user dashboard/profile)
+ * Get images by user (for user dashboard/profile) with resolved URLs
  */
 export const listByUser = query({
   args: {
@@ -283,17 +325,28 @@ export const listByUser = query({
       .withIndex('by_user', (q) => q.eq('userId', args.userId))
       .order('desc');
 
-    if (args.limit) {
-      return await query.take(args.limit);
-    }
+    const images = args.limit
+      ? await query.take(args.limit)
+      : await query.collect();
 
-    return await query.collect();
+    // Resolve storage URLs for each image
+    const imagesWithUrls = await Promise.all(
+      images.map(async (image) => {
+        const url = await ctx.storage.getUrl(image.storageId);
+        return {
+          ...image,
+          imageUrl: url,
+        };
+      })
+    );
+
+    return imagesWithUrls;
   },
   returns: v.array(visionBoardImageObjectValidator),
 });
 
 /**
- * Get recent images across all habits
+ * Get recent images across all habits with resolved URLs
  */
 export const listRecent = query({
   args: {
@@ -301,7 +354,23 @@ export const listRecent = query({
   },
   handler: async (ctx, args) => {
     const limit = args.limit ?? 10;
-    return await ctx.db.query('visionBoardImages').order('desc').take(limit);
+    const images = await ctx.db
+      .query('visionBoardImages')
+      .order('desc')
+      .take(limit);
+
+    // Resolve storage URLs for each image
+    const imagesWithUrls = await Promise.all(
+      images.map(async (image) => {
+        const url = await ctx.storage.getUrl(image.storageId);
+        return {
+          ...image,
+          imageUrl: url,
+        };
+      })
+    );
+
+    return imagesWithUrls;
   },
   returns: v.array(visionBoardImageObjectValidator),
 });
