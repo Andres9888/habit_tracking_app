@@ -20,3 +20,11 @@ export {
   type VisionBoardSectionProps,
   type VisionBoardImage,
 } from './VisionBoardSection';
+export {
+  AffirmationsSection,
+  type AffirmationsSectionProps,
+  type AffirmationData,
+  type AffirmationType,
+  getRandomAffirmation,
+  getRandomAffirmationByType,
+} from './AffirmationsSection';
