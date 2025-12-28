@@ -5,7 +5,9 @@
 
 // Components
 export { ChainConnectionOverlay } from './ChainConnectionOverlay';
+export { OptimizedChainConnectionOverlay } from './OptimizedChainConnectionOverlay';
 export { ConnectionPath } from './ConnectionPath';
+export { BatchedConnectionPath } from './BatchedConnectionPath';
 export { BreakIndicator } from './BreakIndicator';
 
 // Hook

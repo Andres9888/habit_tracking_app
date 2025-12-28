@@ -13,12 +13,18 @@ jest.mock('react-native-svg', () => {
   const React = require('react');
   return {
     __esModule: true,
-    default: ({ children, ...props }: any) => React.createElement('svg', props, children),
-    Svg: ({ children, ...props }: any) => React.createElement('svg', props, children),
+    default: ({ children, ...props }: any) =>
+      React.createElement('svg', props, children),
+    Svg: ({ children, ...props }: any) =>
+      React.createElement('svg', props, children),
     Path: (props: any) => React.createElement('path', props),
-    Defs: ({ children, ...props }: any) => React.createElement('defs', props, children),
-    LinearGradient: ({ children, ...props }: any) => React.createElement('linearGradient', props, children),
+    Defs: ({ children, ...props }: any) =>
+      React.createElement('defs', props, children),
+    LinearGradient: ({ children, ...props }: any) =>
+      React.createElement('linearGradient', props, children),
     Stop: (props: any) => React.createElement('stop', props),
+    Circle: (props: any) => React.createElement('circle', props),
+    Line: (props: any) => React.createElement('line', props),
   };
 });
 
@@ -94,9 +100,7 @@ describe('ChainConnectionOverlay', () => {
 
     it('should render null when segment has only one day (no connections)', () => {
       const segments = [createSegment(['2025-12-20'])];
-      const positions = new Map([
-        createPosition('2025-12-20', 50, 30, 5, 1),
-      ]);
+      const positions = new Map([createPosition('2025-12-20', 50, 30, 5, 1)]);
 
       const { toJSON } = render(
         <ChainConnectionOverlay
@@ -196,7 +200,9 @@ describe('ChainConnectionOverlay', () => {
 
   describe('missing positions', () => {
     it('should skip connections when position is missing', () => {
-      const segments = [createSegment(['2025-12-20', '2025-12-21', '2025-12-22'])];
+      const segments = [
+        createSegment(['2025-12-20', '2025-12-21', '2025-12-22']),
+      ];
       // Only provide positions for first and last date (middle is missing)
       const positions = new Map([
         createPosition('2025-12-20', 50, 30, 5, 1),
@@ -249,7 +255,7 @@ describe('ChainConnectionOverlay', () => {
       const { toJSON } = render(
         <ChainConnectionOverlay
           {...defaultProps}
-          viewMode="week"
+          viewMode='week'
           segments={segments}
           positions={positions}
         />
@@ -261,7 +267,7 @@ describe('ChainConnectionOverlay', () => {
       const { toJSON } = render(
         <ChainConnectionOverlay
           {...defaultProps}
-          viewMode="month"
+          viewMode='month'
           segments={segments}
           positions={positions}
         />
@@ -273,7 +279,7 @@ describe('ChainConnectionOverlay', () => {
       const { toJSON } = render(
         <ChainConnectionOverlay
           {...defaultProps}
-          viewMode="year"
+          viewMode='year'
           segments={segments}
           positions={positions}
         />
@@ -301,10 +307,14 @@ describe('ChainConnectionOverlay', () => {
       );
 
       const tree = toJSON();
-      expect(tree?.props?.style).toMatchObject({
-        width: 500,
-        height: 300,
-      });
+      // Style can be an array or object
+      const styleArray = Array.isArray(tree?.props?.style)
+        ? tree?.props?.style
+        : [tree?.props?.style];
+      const hasCorrectDimensions = styleArray.some(
+        (s: any) => s?.width === 500 && s?.height === 300
+      );
+      expect(hasCorrectDimensions).toBe(true);
     });
   });
 });
