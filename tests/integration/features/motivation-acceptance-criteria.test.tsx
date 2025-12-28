@@ -562,7 +562,8 @@ describe('AC4: User can complete WOOP plan', () => {
       );
 
       expect(getByText('WOOP Plan')).toBeTruthy();
-      expect(getByLabelText('Add WOOP plan')).toBeTruthy();
+      // Component uses "Add your WOOP plan" accessibility label
+      expect(getByLabelText('Add your WOOP plan')).toBeTruthy();
     });
 
     it('opens editor when tapped', () => {
@@ -571,32 +572,69 @@ describe('AC4: User can complete WOOP plan', () => {
         <WOOPSection woop={emptyWOOP} onPress={onPress} />
       );
 
-      fireEvent.press(getByLabelText('Add WOOP plan'));
+      fireEvent.press(getByLabelText('Add your WOOP plan'));
 
       expect(onPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('shows Set up CTA in empty state', () => {
+      const { getByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      expect(getByText('Set up')).toBeTruthy();
+    });
+
+    it('shows WOOP description in empty state', () => {
+      const { getByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      expect(getByText('Wish-Outcome-Obstacle-Plan')).toBeTruthy();
+    });
+
+    it('shows science-backed tip in empty state', () => {
+      const { getByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      expect(getByText('Proven to double goal achievement')).toBeTruthy();
     });
   });
 
   describe('Displaying a completed WOOP plan', () => {
     it('displays all four WOOP fields', () => {
-      const { getByText } = render(
+      const { getAllByText } = render(
         <WOOPSection woop={filledWOOP} onPress={jest.fn()} />
       );
 
       // All WOOP elements should be present
-      expect(getByText(/Run every morning/)).toBeTruthy();
-      expect(getByText(/Feel energized/)).toBeTruthy();
-      expect(getByText(/tired when I wake up/)).toBeTruthy();
-      expect(getByText(/running shoes/)).toBeTruthy();
+      // Note: Some texts appear in both the field and IF-THEN preview, so use getAllByText
+      expect(getAllByText(/Run every morning/).length).toBeGreaterThan(0);
+      expect(getAllByText(/Feel energized/).length).toBeGreaterThan(0);
+      expect(getAllByText(/tired when I wake up/i).length).toBeGreaterThan(0);
+      expect(getAllByText(/running shoes/i).length).toBeGreaterThan(0);
     });
 
-    it('highlights IF-THEN statement (T4.3)', () => {
+    it('displays WOOP letters (W, O, O, P)', () => {
+      const { getAllByText } = render(
+        <WOOPSection woop={filledWOOP} onPress={jest.fn()} />
+      );
+
+      // W and first O use amber, second O uses rose, P uses emerald
+      expect(getAllByText('W').length).toBe(1);
+      expect(getAllByText('O').length).toBe(2); // Outcome and Obstacle
+      expect(getAllByText('P').length).toBe(1);
+    });
+
+    it('highlights IF-THEN implementation intention (T4.3)', () => {
       const { getByText } = render(
         <WOOPSection woop={filledWOOP} onPress={jest.fn()} />
       );
 
-      // IF-THEN format should be visible
-      expect(getByText(/If.*then/i)).toBeTruthy();
+      // IF-THEN format uses arrow symbol (→) not "then" text
+      // e.g., "If feeling tired when i wake up → put my running shoes by the bed"
+      expect(getByText(/If.*→/i)).toBeTruthy();
     });
 
     it('shows completion checkmark when all four fields are filled', () => {
@@ -604,7 +642,79 @@ describe('AC4: User can complete WOOP plan', () => {
         <WOOPSection woop={filledWOOP} onPress={jest.fn()} />
       );
 
-      expect(getByLabelText('Edit WOOP plan')).toBeTruthy();
+      // Component uses "Edit your WOOP plan" accessibility label when filled
+      expect(getByLabelText('Edit your WOOP plan')).toBeTruthy();
+    });
+  });
+
+  describe('Editing an existing WOOP plan', () => {
+    it('opens editor when tapped in filled state', () => {
+      const onPress = jest.fn();
+      const { getByLabelText } = render(
+        <WOOPSection woop={filledWOOP} onPress={onPress} />
+      );
+
+      fireEvent.press(getByLabelText('Edit your WOOP plan'));
+
+      expect(onPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('has accessible button role for screen readers', () => {
+      const { getByRole } = render(
+        <WOOPSection woop={filledWOOP} onPress={jest.fn()} />
+      );
+
+      expect(getByRole('button')).toBeTruthy();
+    });
+  });
+
+  describe('Partial WOOP configuration', () => {
+    it('allows partial configuration (wish only)', () => {
+      const partialWOOP: WOOPData = { wish: 'Run daily' };
+      const { getByText, getByLabelText } = render(
+        <WOOPSection woop={partialWOOP} onPress={jest.fn()} />
+      );
+
+      expect(getByText(/Run daily/)).toBeTruthy();
+      // Should show Edit label since data exists
+      expect(getByLabelText('Edit your WOOP plan')).toBeTruthy();
+    });
+
+    it('shows placeholder text for unfilled fields', () => {
+      const partialWOOP: WOOPData = { wish: 'Run daily' };
+      const { getByText } = render(
+        <WOOPSection woop={partialWOOP} onPress={jest.fn()} />
+      );
+
+      // Unfilled fields show placeholder text
+      expect(getByText(/Add your outcome/i)).toBeTruthy();
+      expect(getByText(/Add your obstacle/i)).toBeTruthy();
+      expect(getByText(/Add your plan/i)).toBeTruthy();
+    });
+
+    it('does not show IF-THEN when obstacle or plan is missing', () => {
+      const partialWOOP: WOOPData = {
+        wish: 'Run daily',
+        outcome: 'Feel great',
+      };
+      const { queryByText } = render(
+        <WOOPSection woop={partialWOOP} onPress={jest.fn()} />
+      );
+
+      // Should NOT show IF-THEN without both obstacle and plan
+      expect(queryByText(/If.*→/i)).toBeNull();
+    });
+
+    it('shows IF-THEN only when both obstacle and plan are filled', () => {
+      const partialWOOP: WOOPData = {
+        obstacle: 'Feeling lazy',
+        plan: 'Start with 2 minutes',
+      };
+      const { getByText } = render(
+        <WOOPSection woop={partialWOOP} onPress={jest.fn()} />
+      );
+
+      expect(getByText(/If feeling lazy → start with 2 minutes/i)).toBeTruthy();
     });
   });
 
@@ -614,8 +724,76 @@ describe('AC4: User can complete WOOP plan', () => {
         <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
       );
 
-      // Help button should be accessible (triggers internal explainer modal)
-      expect(getByLabelText(/WOOP|help|info/i)).toBeTruthy();
+      // Help button uses specific accessibility label
+      expect(getByLabelText('Learn about WOOP')).toBeTruthy();
+    });
+
+    it('help button triggers explainer modal on press', () => {
+      const { getByLabelText, getByText, queryByText, getAllByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      // Modal should not be visible initially (checking for modal-specific content)
+      expect(queryByText('Dr. Gabriele Oettingen, NYU')).toBeNull();
+
+      // Press help button
+      fireEvent.press(getByLabelText('Learn about WOOP'));
+
+      // Modal content should now be visible
+      expect(getByText('Dr. Gabriele Oettingen, NYU')).toBeTruthy();
+      expect(getByText('WOOP Method')).toBeTruthy();
+      // Note: "double goal achievement" appears in both empty state and modal
+      expect(
+        getAllByText(/double goal achievement/i).length
+      ).toBeGreaterThanOrEqual(1);
+    });
+
+    it('explainer modal shows WOOP breakdown', () => {
+      const { getByLabelText, getByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about WOOP'));
+
+      // Modal should explain each letter
+      expect(getByText('Wish')).toBeTruthy();
+      expect(getByText('Outcome')).toBeTruthy();
+      expect(getByText('Obstacle')).toBeTruthy();
+      expect(getByText('Plan')).toBeTruthy();
+    });
+
+    it('explainer modal mentions implementation intention', () => {
+      const { getByLabelText, getByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about WOOP'));
+
+      expect(getByText(/implementation intention/i)).toBeTruthy();
+    });
+
+    it('explainer modal cites source', () => {
+      const { getByLabelText, getByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      fireEvent.press(getByLabelText('Learn about WOOP'));
+
+      expect(getByText(/Rethinking Positive Thinking.*2014/i)).toBeTruthy();
+    });
+
+    it('explainer modal can be closed', () => {
+      const { getByLabelText, queryByText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} />
+      );
+
+      // Open modal
+      fireEvent.press(getByLabelText('Learn about WOOP'));
+      expect(queryByText('Dr. Gabriele Oettingen, NYU')).toBeTruthy();
+
+      // Close modal
+      fireEvent.press(getByLabelText('Close'));
+      expect(queryByText('Dr. Gabriele Oettingen, NYU')).toBeNull();
     });
   });
 
@@ -627,6 +805,36 @@ describe('AC4: User can complete WOOP plan', () => {
 
       // Component renders with WOOP letters (styling verified by implementation)
       expect(getByText('WOOP Plan')).toBeTruthy();
+    });
+  });
+
+  describe('Animation support', () => {
+    it('supports shouldAnimate prop', () => {
+      const { getByLabelText } = render(
+        <WOOPSection
+          woop={emptyWOOP}
+          onPress={jest.fn()}
+          shouldAnimate={true}
+        />
+      );
+
+      expect(getByLabelText('Add your WOOP plan')).toBeTruthy();
+    });
+
+    it('supports sectionIndex prop for staggered animations', () => {
+      const { getByLabelText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} sectionIndex={3} />
+      );
+
+      expect(getByLabelText('Add your WOOP plan')).toBeTruthy();
+    });
+
+    it('respects reduceMotion prop', () => {
+      const { getByLabelText } = render(
+        <WOOPSection woop={emptyWOOP} onPress={jest.fn()} reduceMotion={true} />
+      );
+
+      expect(getByLabelText('Add your WOOP plan')).toBeTruthy();
     });
   });
 });
@@ -880,7 +1088,7 @@ describe('AC7: Free/Premium features are correctly gated', () => {
         <WOOPSection woop={{}} onPress={jest.fn()} />
       );
 
-      expect(getByLabelText('Add WOOP plan')).toBeTruthy();
+      expect(getByLabelText('Add your WOOP plan')).toBeTruthy();
     });
 
     it('Basic Dual Visualization is accessible to free users', () => {
@@ -942,7 +1150,7 @@ describe('Reduce Motion Accessibility', () => {
       <WOOPSection woop={{}} onPress={jest.fn()} reduceMotion={true} />
     );
 
-    expect(getByLabelText('Add WOOP plan')).toBeTruthy();
+    expect(getByLabelText('Add your WOOP plan')).toBeTruthy();
   });
 
   it('DualVizSetup respects reduceMotion prop', () => {
