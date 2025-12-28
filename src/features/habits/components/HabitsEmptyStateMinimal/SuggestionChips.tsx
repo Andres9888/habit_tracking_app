@@ -1,17 +1,15 @@
 /**
- * SuggestionChips - Time-aware tappable habit suggestion pills
+ * SuggestionChips - Tappable habit suggestion pills
  *
  * Features:
- * - Time-based smart suggestions (morning/afternoon/evening/night)
- * - Contextual label showing time period
- * - Subtle time-period border tint
+ * - Flex wrap layout with centered chips
  * - Selection state with emerald highlight
  * - Hover/press animations
  * - Haptic feedback on selection
  * - Staggered entrance animation (50ms between each chip)
  */
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
@@ -32,13 +30,12 @@ import {
   SPRING_CONFIGS,
 } from './animations';
 import {
-  getChipSuggestionsForTime,
-  getChipSuggestionsLabel,
-  getTimeOfDay,
-  getTimePeriodTint,
-} from './chipSuggestions';
-import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from './constants';
-import type { SuggestionChip, SuggestionChipsProps, TimePeriod } from './types';
+  BORDER_RADIUS,
+  COLORS,
+  SUGGESTION_CHIPS,
+  TOUCH_TARGETS,
+} from './constants';
+import type { SuggestionChip, SuggestionChipsProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -49,10 +46,6 @@ interface ChipProps {
   onPress: () => void;
   /** Stagger delay for entrance animation (ms) */
   staggerDelay: number;
-  /** Time period for accessibility context */
-  timePeriod: TimePeriod;
-  /** Subtle border tint color for time-period styling */
-  tintColor: string;
 }
 
 /**
@@ -64,14 +57,7 @@ interface ChipProps {
  * - Press (onPress): triggers selection, brief scale down
  * - Release (onPressOut): animate back to rest state
  */
-function Chip({
-  chip,
-  isSelected,
-  onPress,
-  staggerDelay,
-  timePeriod,
-  tintColor,
-}: ChipProps) {
+function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
   const { triggerSelection } = useHapticFeedback();
   const shouldReduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
@@ -140,11 +126,10 @@ function Chip({
       ['#ffffff', '#047857']
     ),
 
-    // Subtle time-period tint when unselected, emerald when selected
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [tintColor, '#047857']
+      [COLORS.stone200, '#047857']
     ),
 
     // Entrance opacity
@@ -208,8 +193,7 @@ function Chip({
 
   return (
     <AnimatedPressable
-      accessibilityHint={`Adds ${chip.fullName} as your new habit`}
-      accessibilityLabel={`Select ${chip.fullName}, ${timePeriod} suggestion`}
+      accessibilityLabel={`Select ${chip.fullName}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       style={[
@@ -252,67 +236,24 @@ function Chip({
 }
 
 /**
- * Time-aware pyramid layout of suggestion chips (3-2 formation for 5 chips)
+ * Pyramid layout of suggestion chips (3-2-1 formation)
  *
  * Stagger delays per spec:
- * - Row 1 (3 chips): 0ms, 50ms, 100ms
- * - Row 2 (2 chips): 150ms, 200ms
- *
- * Time-based behavior:
- * - Auto-detects current time period on mount
- * - Shows contextual label (e.g., "Suggested for morning")
- * - Chips have subtle time-period border tint
+ * - Row 1 (Water, Walk, Write): 0ms, 50ms, 100ms
+ * - Row 2 (Breathe, Read): 150ms, 200ms
+ * - Row 3 (Stretch): 250ms
  */
 export function SuggestionChips({
   selectedIndex,
   onSelect,
-  timePeriod: timePeriodProp,
-  showTimeLabel = true,
 }: SuggestionChipsProps) {
-  // Determine time period (use prop or auto-detect)
-  const currentTimePeriod = useMemo(() => {
-    return timePeriodProp ?? getTimeOfDay();
-  }, [timePeriodProp]);
-
-  // Get suggestions and styling for current time period
-  const suggestions = useMemo(
-    () => getChipSuggestionsForTime(currentTimePeriod),
-    [currentTimePeriod]
-  );
-  const timeLabel = useMemo(
-    () => getChipSuggestionsLabel(currentTimePeriod),
-    [currentTimePeriod]
-  );
-  const tintColor = useMemo(
-    () => getTimePeriodTint(currentTimePeriod),
-    [currentTimePeriod]
-  );
-
-  // Split chips into rows: 3, 2 (for 5 chips)
-  const row1 = suggestions.slice(0, 3);
-  const row2 = suggestions.slice(3, 5);
+  // Split chips into rows: 3, 2, 1
+  const row1 = SUGGESTION_CHIPS.slice(0, 3); // Water, Walk, Write
+  const row2 = SUGGESTION_CHIPS.slice(3, 5); // Breathe, Read
+  const row3 = SUGGESTION_CHIPS.slice(5, 6); // Stretch
 
   return (
-    <View
-      accessible
-      accessibilityLabel={`${timeLabel}. ${suggestions.length} habit suggestions.`}
-      style={{ alignItems: 'center', gap: 8 }}
-    >
-      {/* Time context label */}
-      {showTimeLabel && (
-        <Text
-          style={{
-            color: COLORS.stone500,
-            fontSize: 13,
-            fontWeight: '500',
-            letterSpacing: 0.3,
-            marginBottom: 4,
-          }}
-        >
-          {timeLabel}
-        </Text>
-      )}
-
+    <View style={{ alignItems: 'center', gap: 8 }}>
       {/* Row 1: 3 chips - delays 0, 50, 100ms */}
       <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
         {row1.map((chip, i) => (
@@ -322,26 +263,41 @@ export function SuggestionChips({
             index={i}
             isSelected={selectedIndex === i}
             staggerDelay={i * CHIP_STAGGER.delay}
-            timePeriod={currentTimePeriod}
-            tintColor={tintColor}
             onPress={() => onSelect(i, chip)}
           />
         ))}
       </View>
-
       {/* Row 2: 2 chips - delays 150, 200ms */}
       <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
         {row2.map((chip, i) => {
           const index = i + 3;
+          // Continue stagger from row 1 (indices 3, 4)
+          const staggerIndex = index;
           return (
             <Chip
               key={chip.label}
               chip={chip}
               index={index}
               isSelected={selectedIndex === index}
-              staggerDelay={index * CHIP_STAGGER.delay}
-              timePeriod={currentTimePeriod}
-              tintColor={tintColor}
+              staggerDelay={staggerIndex * CHIP_STAGGER.delay}
+              onPress={() => onSelect(index, chip)}
+            />
+          );
+        })}
+      </View>
+      {/* Row 3: 1 chip - delay 250ms */}
+      <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
+        {row3.map((chip, i) => {
+          const index = i + 5;
+          // Continue stagger from row 2 (index 5)
+          const staggerIndex = index;
+          return (
+            <Chip
+              key={chip.label}
+              chip={chip}
+              index={index}
+              isSelected={selectedIndex === index}
+              staggerDelay={staggerIndex * CHIP_STAGGER.delay}
               onPress={() => onSelect(index, chip)}
             />
           );

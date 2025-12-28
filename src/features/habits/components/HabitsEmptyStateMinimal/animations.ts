@@ -132,43 +132,12 @@ export const CTA_TRANSFORMS = {
 } as const;
 
 /**
- * Time period definitions for smart chip suggestions
- * Each period has a start and end hour (24-hour format)
- */
-export const TIME_PERIODS = {
-  morning: { start: 6, end: 12 },
-  afternoon: { start: 12, end: 17 },
-  evening: { start: 17, end: 21 },
-  night: { start: 21, end: 6 }, // wraps around midnight
-} as const;
-
-/**
  * Confetti animation config for success state
- * Upgraded with multiple particle shapes and physics parameters
  */
 export const CONFETTI_CONFIG = {
-  /** Total number of particles in the burst */
-  particleCount: 50,
-  /** Available confetti shapes with weighted distribution */
-  shapes: ['circle', 'star', 'heart', 'sparkle', 'ribbon'] as const,
-  /** Distribution weights for each shape (must sum to 1.0) */
-  shapeWeights: {
-    circle: 0.30,
-    star: 0.20,
-    heart: 0.15,
-    sparkle: 0.20,
-    ribbon: 0.15,
-  },
-  /** Celebration color palette */
-  colors: ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6', '#F43F5E'],
-  /** Base animation duration in ms */
-  baseDuration: 2500,
-  /** Maximum stagger delay between particles in ms */
-  staggerMax: 500,
-  /** Particle size multiplier range */
-  sizeRange: { min: 0.8, max: 1.2 },
-  /** Horizontal drift range in pixels */
-  driftRange: { min: -30, max: 30 },
+  colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#FCD34D', '#F59E0B'],
+  duration: 1500,
+  particleCount: 20,
 } as const;
 
 /**
