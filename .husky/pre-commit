@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# Ensure node/npm are in PATH
+export PATH="/Users/andres/node-v20.10.0-darwin-arm64/bin:$PATH"
+
 echo "Running pre-commit checks..."
 
 # Check for numbered duplicate files

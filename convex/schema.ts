@@ -63,12 +63,22 @@ const applicationTables = {
     // HGP - validated optimal: 0.1-0.2 (default: 0.15)
     habitGainParam: v.optional(v.number()),
 
+    // "Regret, shame, broken promise"
+    // Background color for icon
+    frequency: v.optional(v.string()),
+
     // Habit Edit Screen fields
     icon: v.optional(v.string()),
+
+    // "daily", "weekly", "custom"
+    daysOfWeek: v.optional(v.array(v.number())),
 
     // Identity - who you are becoming (James Clear's identity-based habits)
     // "I am a healthy person" vs "I want to lose weight"
     identity: v.optional(v.string()),
+
+    // Emoji icon
+    iconColor: v.optional(v.string()),
 
     lastCompletedDate: v.optional(v.string()),
 
@@ -77,80 +87,62 @@ const applicationTables = {
 
     name: v.string(),
 
+    // "default", etc.
+    goalDuration: v.optional(v.number()),
+
     notes: v.optional(v.string()),
+
+    // Goal value
+    goalUnit: v.optional(v.string()),
+
+    order: v.optional(v.number()),
+
+    // "minutes", "hours", "times", etc.
+    // Pause/Resume functionality
+    paused: v.optional(v.boolean()),
 
     // "Proud, confident, capable"
     vizFailureBody: v.optional(v.string()),
+
+    accessibilityAtPause: v.optional(v.number()),
+
+    // "Foggy, making excuses"
+    vizFailureEmotion: v.optional(v.string()),
+
+    pausedAt: v.optional(v.number()),
 
     // Dual Visualization - Andrew Huberman Protocol (Stanford, Episode #55)
     // Key insight: Visualize FAILURE when unmotivated (fear drives action 2x)
     // Loss aversion (Kahneman & Tversky, Nobel Prize): Losses hurt 2x more
     vizSuccessBody: v.optional(v.string()),
 
-    // "Foggy, making excuses"
-    vizFailureEmotion: v.optional(v.string()),
+    // Behavior Prediction - Predicted probability of next completion
+    predictedCompletionProb: v.optional(v.number()),
 
     // "Clear, focused, accomplished"
     vizSuccessEmotion: v.optional(v.string()),
 
-    // "Regret, shame, broken promise"
-    // Background color for icon
-    frequency: v.optional(v.string()),
+    // 0-6 for Sunday-Saturday
+    preferredTime: v.optional(v.string()),
 
     // Motivation - user-provided reason for building this habit
     why: v.optional(v.string()),
 
-    // "daily", "weekly", "custom"
-    daysOfWeek: v.optional(v.array(v.number())),
-
-    woopObstacle: v.optional(v.string()),
-
-    // Emoji icon
-    iconColor: v.optional(v.string()),
-
-    woopOutcome: v.optional(v.string()),
-
-    order: v.optional(v.number()),
-
-    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
-    // Mental contrasting + implementation intentions = 2x goal achievement
-    woopWish: v.optional(v.string()),
-
-    // "default", etc.
-    goalDuration: v.optional(v.number()),
-
-    // Goal value
-    goalUnit: v.optional(v.string()),
-
-    woopPlan: v.optional(v.string()),
-
-    // "minutes", "hours", "times", etc.
-    // Pause/Resume functionality
-    paused: v.optional(v.boolean()),
-
-    // "Light, energized, powerful"
-    vizSuccessMind: v.optional(v.string()),
-
-    accessibilityAtPause: v.optional(v.number()),
-
-    pausedAt: v.optional(v.number()),
-
-    // "Heavy, sluggish, stuck"
-    vizFailureMind: v.optional(v.string()),
-
-    // Behavior Prediction - Predicted probability of next completion
-    predictedCompletionProb: v.optional(v.number()),
-
-    // 0-6 for Sunday-Saturday
-    preferredTime: v.optional(v.string()),
-
     // "morning", "afternoon", "evening"
     remindersEnabled: v.optional(v.boolean()),
+
+    woopObstacle: v.optional(v.string()),
 
     // "2:00 PM" format
     reminderSound: v.optional(v.string()),
 
+    woopOutcome: v.optional(v.string()),
+
     reminderTime: v.optional(v.string()),
+
+    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
+    // Mental contrasting + implementation intentions = 2x goal achievement
+    woopWish: v.optional(v.string()),
 
     resumedAt: v.optional(v.number()),
 
@@ -158,13 +150,21 @@ const applicationTables = {
     // Computed habit strength (0-1)
     strength: v.optional(v.number()),
 
+    woopPlan: v.optional(v.string()),
+
     strengthAtPause: v.optional(v.number()),
+
+    // "Light, energized, powerful"
+    vizSuccessMind: v.optional(v.string()),
 
     // "starting", "building", "developing", "strong", "automatic"
     strengthLevel: v.optional(v.string()),
 
     // Last time strength was calculated
     strengthUpdatedAt: v.optional(v.number()),
+
+    // "Heavy, sluggish, stuck"
+    vizFailureMind: v.optional(v.string()),
 
     tags: v.optional(v.array(v.string())),
     totalCompletions: v.optional(v.number()),
@@ -188,9 +188,12 @@ const applicationTables = {
   // Celebration + journaling increases self-awareness and habit consistency
   // Scientific Basis: Daylio (50M+ downloads) business model validates reflection patterns
   reflections: defineTable({
-    habitId: v.id('habits'),
-    userId: v.optional(v.string()),
-    date: v.string(), // ISO date string (YYYY-MM-DD)
+    // Optional text note
+    createdAt: v.number(),
+
+    date: v.string(),
+
+    // ISO date string (YYYY-MM-DD)
     // Emoji sentiment: 😤 frustrated | 😐 neutral | 😊 happy | 🔥 fire
     emoji: v.union(
       v.literal('frustrated'),
@@ -198,9 +201,12 @@ const applicationTables = {
       v.literal('happy'),
       v.literal('fire')
     ),
-    note: v.optional(v.string()), // Optional text note
-    createdAt: v.number(),
+
+    habitId: v.id('habits'),
+
+    note: v.optional(v.string()),
     updatedAt: v.number(),
+    userId: v.optional(v.string()),
   })
     .index('by_habit', ['habitId'])
     .index('by_habit_and_date', ['habitId', 'date'])
@@ -351,6 +357,34 @@ const applicationTables = {
     updatedAt: v.number(),
     userId: v.optional(v.string()),
   }).index('by_habit', ['habitId']),
+
+  // Voice Notes - Audio recordings of motivation, progress, and emotional states
+  // Scientific Basis: Voice has 40% higher emotional recall than text (cognitive psychology)
+  // Hearing your own voice from Day 1 creates powerful emotional anchor
+  // Business Model: Reflectly ($2M ARR) built business on voice journaling - premium feature
+  voiceNotes: defineTable({
+    audioUrl: v.string(),
+
+    // Flag for Day 1 recording (featured in Rescue Mode)
+    createdAt: v.number(),
+
+    // Convex file storage URL
+    duration: v.number(),
+
+    habitId: v.id('habits'),
+
+    // User-provided description (e.g., "Day 1 motivation")
+    isDay1: v.optional(v.boolean()),
+
+    // Duration in seconds
+    label: v.optional(v.string()),
+
+    updatedAt: v.optional(v.number()),
+    userId: v.optional(v.string()),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_habit_and_date', ['habitId', 'createdAt']),
 };
 
 export default defineSchema({
