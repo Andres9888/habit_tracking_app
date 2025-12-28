@@ -677,6 +677,65 @@ export function useMotivationFeatures() {
 
 ---
 
+## Edge Cases & Error Handling
+
+### Data Loss Prevention
+- [ ] Auto-save drafts for long-form content (Why, Letters, Reflections)
+- [ ] Confirm before discarding unsaved changes
+- [ ] Offline queue for submissions when network unavailable
+
+### Premium Gating UX
+- [ ] Free users see locked features with preview
+- [ ] Soft paywall: show value before asking for payment
+- [ ] Premium badge on locked features
+- [ ] Deep link to specific feature from upgrade prompt
+
+### Voice Notes Edge Cases
+- [ ] Handle microphone permission denial gracefully
+- [ ] Maximum recording length (5 min) with warning
+- [ ] Playback controls: speed (0.5x, 1x, 1.5x, 2x)
+- [ ] Handle audio interruption (phone call, other app)
+
+### Rescue Mode Triggers
+- [ ] Don't trigger rescue if habit already completed
+- [ ] Don't trigger rescue for paused/archived habits
+- [ ] Limit to 1 rescue notification per habit per day
+- [ ] Respect Do Not Disturb settings
+
+### Accessibility
+- [ ] All animations respect `reduceMotion` preference
+- [ ] Screen reader labels for all interactive elements
+- [ ] Minimum tap targets (44x44pt per Apple HIG)
+- [ ] Sufficient color contrast (WCAG 2.1 AA)
+
+---
+
+## Acceptance Criteria
+
+### Must Have (MVP)
+- [ ] User can set and edit "Your Why" statement
+- [ ] User can set and edit Identity Statement
+- [ ] User can configure Cue/Trigger (time, location, after)
+- [ ] User can complete WOOP plan
+- [ ] User can set up basic visualization (success + failure)
+- [ ] User sees Quick Reflection after completing habit
+- [ ] Free/Premium features are correctly gated
+
+### Should Have (v1.1)
+- [ ] Activation modal appears at habit notification time
+- [ ] Rescue Mode triggers when streak is at risk
+- [ ] Celebration screen with confetti after completion
+- [ ] Voice Notes recording and playback (premium)
+- [ ] Letters to Self with time-lock (premium)
+
+### Nice to Have (v1.2+)
+- [ ] Vision Board with image upload (premium)
+- [ ] Affirmations with scheduled delivery (premium)
+- [ ] AI-generated affirmations based on habit
+- [ ] Streak recovery with Voice Note from past self
+
+---
+
 ## Appendix: Research Sources
 
 ### Scientific Literature
@@ -696,3 +755,11 @@ export function useMotivationFeatures() {
 4. **Headspace**: Context-aware personalization = 25% more engagement
 5. **Daylio**: 50M+ downloads, reflection = 60% higher retention
 6. **Reflectly**: $2M ARR, voice journaling premium model
+
+---
+
+## Changelog
+
+| Date | Version | Changes |
+|------|---------|---------|
+| 2025-12-28 | 1.0 | Initial spec with business rationale, feature breakdown, and tasks |
