@@ -785,7 +785,7 @@ export function useMotivationFeatures() {
 - [ ] User can complete WOOP plan
 - [ ] User can set up basic visualization (success + failure)
 - [ ] User sees Quick Reflection after completing habit
-- [ ] Free/Premium features are correctly gated
+- [x] Free/Premium features are correctly gated _(Validated: Comprehensive acceptance criteria test suite at `tests/integration/features/premium-gating-acceptance.test.tsx` with 46 passing tests covering: 1) Free features always accessible (Your Why, Identity, Cue/Trigger, WOOP, Basic Viz, Quick Reflection) with no PRO badges; 2) Premium features gated for free users (Voice Notes 1 free, Letters premium-only, Vision Board premium-only, Affirmations 2 free); 3) Premium UI patterns (PRO badges, free tier limit badges, upgrade prompts); 4) Premium state consistency across all features; 5) Premium upsell flow (paywall trigger, feature context, dismissal); 6) Business logic validation (free tier limits enforced, premium users unlimited). Combined with existing `premium-gating.test.tsx` totaling 114 tests.)_
 
 ### Should Have (v1.1)
 
