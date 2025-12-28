@@ -17,6 +17,29 @@ export type {
   InsightCardProps,
   MonthStats,
   DayOfWeekStat,
+  // Grid Theme Types
+  GridThemeName,
+  GridTheme,
+  GridThemeOverrides,
+  GridThemeContextValue,
+  CellShape,
+  CompletionIndicator,
+  CellDensity,
+  CellBorderStyle,
+  StreakColorConfig,
+  CellSizeConfig,
+} from './types';
+
+// Grid Theme Presets and Utilities
+export {
+  GITHUB_THEME,
+  TILES_THEME,
+  DOTS_THEME,
+  PIXELS_THEME,
+  GRID_THEMES,
+  DEFAULT_THEME,
+  getTheme,
+  mergeThemeOverrides,
 } from './types';
 
 export type {
