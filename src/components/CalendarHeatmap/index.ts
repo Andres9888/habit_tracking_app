@@ -19,6 +19,20 @@ export { ThemePickerSheet } from './ThemePickerSheet';
 export type { ThemePickerSheetProps } from './ThemePickerSheet';
 export { MonthPickerSheet } from './MonthPickerSheet';
 export type { MonthPickerSheetProps } from './MonthPickerSheet';
+export { PinchToZoomContainer } from './PinchToZoomContainer';
+export type {
+  PinchToZoomContainerProps,
+  CalendarViewMode,
+  ZoomDirection,
+} from './PinchToZoomTypes';
+export {
+  VIEW_ZOOM_ORDER,
+  VIEW_MODE_LABELS,
+  getZoomInView,
+  getZoomOutView,
+  canZoomIn,
+  canZoomOut,
+} from './PinchToZoomTypes';
 
 // Theme Context and Hooks
 export {
