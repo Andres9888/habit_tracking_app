@@ -13,14 +13,20 @@
  * - Don't trigger if habit already completed today
  * - Don't trigger for paused/archived habits
  * - Limit to 1 rescue per habit per day
- * - Respect Do Not Disturb (handled by notification system)
+ * - Respect Do Not Disturb / Quiet Hours settings
+ *
+ * Do Not Disturb / Quiet Hours:
+ * - Uses configurable quiet hours (e.g., 22:00 - 07:00)
+ * - Handles overnight ranges correctly
+ * - Disabled by default; users can enable in settings
+ * - isInQuietHours returned for UI feedback
  *
  * Scientific Basis:
  * - Loss aversion is most powerful close to deadline
  * - Urgency drives action (Duolingo streak protection model)
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
 /** Habit data needed for rescue trigger evaluation */
@@ -41,6 +47,16 @@ export interface RescueEligibleHabit {
   rescueShownToday?: boolean;
 }
 
+/** Quiet hours configuration for Do Not Disturb respect */
+export interface QuietHoursConfig {
+  /** Whether quiet hours are enabled */
+  enabled: boolean;
+  /** Start time in HH:MM format (e.g., "22:00") */
+  startTime: string;
+  /** End time in HH:MM format (e.g., "07:00") */
+  endTime: string;
+}
+
 export interface RescueTriggerConfig {
   /** Hours before midnight to trigger rescue (default: 3) */
   hoursBeforeEnd?: number;
@@ -50,6 +66,10 @@ export interface RescueTriggerConfig {
   enableAppResumeTrigger?: boolean;
   /** Enable scheduled trigger (default: true) */
   enableScheduledTrigger?: boolean;
+  /** Quiet hours / Do Not Disturb configuration */
+  quietHours?: QuietHoursConfig;
+  /** Whether to respect system Do Not Disturb (checks notification permissions) */
+  respectSystemDND?: boolean;
 }
 
 export interface RescueTriggerResult {
@@ -67,13 +87,24 @@ export interface RescueTriggerResult {
   markRescueShown: (habitId: string) => void;
   /** Check if a habit is eligible for rescue */
   isEligibleForRescue: (habit: RescueEligibleHabit) => boolean;
+  /** Whether rescue is currently blocked by quiet hours / DND */
+  isInQuietHours: boolean;
 }
+
+/** Default quiet hours: 10 PM - 7 AM (disabled by default) */
+const DEFAULT_QUIET_HOURS: QuietHoursConfig = {
+  enabled: false,
+  endTime: '07:00',
+  startTime: '22:00',
+};
 
 const DEFAULT_CONFIG: Required<RescueTriggerConfig> = {
   enableAppResumeTrigger: true,
   enableScheduledTrigger: true,
   hoursBeforeEnd: 3,
   minStreakForRescue: 1,
+  quietHours: DEFAULT_QUIET_HOURS,
+  respectSystemDND: true,
 };
 
 /**
@@ -86,6 +117,44 @@ function getHoursUntilMidnight(): number {
 
   const msRemaining = midnight.getTime() - now.getTime();
   return msRemaining / (1000 * 60 * 60);
+}
+
+/**
+ * Parse time string (HH:MM) to hours and minutes
+ */
+function parseTimeString(time: string): { hours: number; minutes: number } {
+  const [hours, minutes] = time.split(':').map(Number);
+  return { hours: hours || 0, minutes: minutes || 0 };
+}
+
+/**
+ * Check if current time is within quiet hours
+ *
+ * Handles overnight ranges (e.g., 22:00 - 07:00)
+ *
+ * @param quietHours - Quiet hours configuration
+ * @returns true if currently in quiet hours
+ */
+export function isInQuietHoursWindow(quietHours: QuietHoursConfig): boolean {
+  if (!quietHours.enabled) return false;
+
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const start = parseTimeString(quietHours.startTime);
+  const end = parseTimeString(quietHours.endTime);
+
+  const startMinutes = start.hours * 60 + start.minutes;
+  const endMinutes = end.hours * 60 + end.minutes;
+
+  // Handle overnight range (e.g., 22:00 - 07:00)
+  if (startMinutes > endMinutes) {
+    // We're in quiet hours if current time is >= start OR < end
+    return currentMinutes >= startMinutes || currentMinutes < endMinutes;
+  }
+
+  // Same-day range (e.g., 13:00 - 15:00)
+  return currentMinutes >= startMinutes && currentMinutes < endMinutes;
 }
 
 /**
@@ -144,6 +213,9 @@ export function useRescueTrigger(
     'scheduled' | 'app_resume' | 'manual' | null
   >(null);
   const [hoursRemaining, setHoursRemaining] = useState(getHoursUntilMidnight);
+  const [isInQuietHours, setIsInQuietHours] = useState(() =>
+    isInQuietHoursWindow(mergedConfig.quietHours)
+  );
 
   // Track which habits have had rescue shown today
   const rescueShownRef = useRef<Set<string>>(new Set());
@@ -151,6 +223,15 @@ export function useRescueTrigger(
   // Track app state for resume detection
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
   const wasBackgroundRef = useRef(false);
+
+  /**
+   * Check if rescue is currently blocked by quiet hours / DND
+   */
+  const checkQuietHours = useCallback((): boolean => {
+    const inQuiet = isInQuietHoursWindow(mergedConfig.quietHours);
+    setIsInQuietHours(inQuiet);
+    return inQuiet;
+  }, [mergedConfig.quietHours]);
 
   /**
    * Check if a specific habit is eligible for rescue
@@ -246,6 +327,15 @@ export function useRescueTrigger(
       const hours = getHoursUntilMidnight();
       setHoursRemaining(hours);
 
+      // Check and update quiet hours status
+      const inQuiet = checkQuietHours();
+
+      // Don't trigger during quiet hours (respect DND)
+      if (inQuiet) {
+        console.log('[useRescueTrigger] In quiet hours, skipping trigger');
+        return;
+      }
+
       // Only trigger if within the window
       if (hours <= mergedConfig.hoursBeforeEnd && hours > 0) {
         const habit = findHabitNeedingRescue(true);
@@ -266,6 +356,7 @@ export function useRescueTrigger(
 
     return () => clearInterval(interval);
   }, [
+    checkQuietHours,
     mergedConfig.enableScheduledTrigger,
     mergedConfig.hoursBeforeEnd,
     findHabitNeedingRescue,
@@ -287,6 +378,18 @@ export function useRescueTrigger(
         // Update hours remaining
         const hours = getHoursUntilMidnight();
         setHoursRemaining(hours);
+
+        // Check and update quiet hours status
+        const inQuiet = checkQuietHours();
+
+        // Don't trigger during quiet hours (respect DND)
+        if (inQuiet) {
+          console.log(
+            '[useRescueTrigger] App resume in quiet hours, skipping trigger'
+          );
+          appStateRef.current = nextState;
+          return;
+        }
 
         // Only trigger within the window
         if (hours <= mergedConfig.hoursBeforeEnd && hours > 0) {
@@ -311,6 +414,7 @@ export function useRescueTrigger(
 
     return () => subscription.remove();
   }, [
+    checkQuietHours,
     mergedConfig.enableAppResumeTrigger,
     mergedConfig.hoursBeforeEnd,
     findHabitNeedingRescue,
@@ -335,6 +439,7 @@ export function useRescueTrigger(
     habitNeedingRescue,
     hoursRemaining,
     isEligibleForRescue,
+    isInQuietHours,
     markRescueShown,
     triggerReason,
     triggerRescue,

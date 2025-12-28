@@ -12,7 +12,9 @@
 
 import { renderHook, act } from '@testing-library/react-native';
 import {
+  isInQuietHoursWindow,
   useRescueTrigger,
+  type QuietHoursConfig,
   type RescueEligibleHabit,
   type RescueTriggerConfig,
 } from '../useRescueTrigger';
@@ -315,5 +317,232 @@ describe('useRescueTrigger', () => {
       // hoursRemaining should be updated when triggered
       expect(result.current.hoursRemaining).toBeCloseTo(2.5, 1);
     });
+  });
+
+  describe('quiet hours / Do Not Disturb', () => {
+    it('returns isInQuietHours = false when quiet hours disabled', () => {
+      jest.setSystemTime(new Date('2025-12-28T23:00:00')); // 11 PM
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: false, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(false);
+    });
+
+    it('returns isInQuietHours = true during overnight quiet hours', () => {
+      // 11 PM is within 22:00 - 07:00 range
+      jest.setSystemTime(new Date('2025-12-28T23:00:00'));
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(true);
+    });
+
+    it('returns isInQuietHours = true early morning during overnight quiet hours', () => {
+      // 5 AM is within 22:00 - 07:00 range
+      jest.setSystemTime(new Date('2025-12-28T05:00:00'));
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(true);
+    });
+
+    it('returns isInQuietHours = false outside quiet hours', () => {
+      // 3 PM is outside 22:00 - 07:00 range
+      jest.setSystemTime(new Date('2025-12-28T15:00:00'));
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(false);
+    });
+
+    it('returns isInQuietHours = true during same-day quiet hours', () => {
+      // 2 PM is within 13:00 - 15:00 range
+      jest.setSystemTime(new Date('2025-12-28T14:00:00'));
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: true, startTime: '13:00', endTime: '15:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(true);
+    });
+
+    it('returns isInQuietHours = false just after quiet hours end', () => {
+      // 7:01 AM is just after 22:00 - 07:00 range
+      jest.setSystemTime(new Date('2025-12-28T07:01:00'));
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(false);
+    });
+
+    it('returns isInQuietHours = true exactly at quiet hours start', () => {
+      // 10 PM is exactly at 22:00 start
+      jest.setSystemTime(new Date('2025-12-28T22:00:00'));
+
+      const config: RescueTriggerConfig = {
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([], config));
+
+      expect(result.current.isInQuietHours).toBe(true);
+    });
+
+    it('blocks scheduled trigger during quiet hours', () => {
+      // 11 PM - within trigger window but also quiet hours
+      jest.setSystemTime(new Date('2025-12-28T23:00:00'));
+
+      const habit = createHabit({
+        scheduledTime: '07:00', // Already past scheduled time
+      });
+      const config: RescueTriggerConfig = {
+        enableScheduledTrigger: true,
+        hoursBeforeEnd: 3,
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([habit], config));
+
+      // Should NOT trigger even though conditions are met
+      expect(result.current.habitNeedingRescue).toBeNull();
+      expect(result.current.isInQuietHours).toBe(true);
+    });
+
+    it('allows scheduled trigger outside quiet hours', () => {
+      // 9 PM - within trigger window, outside quiet hours
+      jest.setSystemTime(new Date('2025-12-28T21:00:00'));
+
+      const habit = createHabit({
+        scheduledTime: '07:00', // Already past scheduled time
+      });
+      const config: RescueTriggerConfig = {
+        enableScheduledTrigger: true,
+        hoursBeforeEnd: 5,
+        quietHours: { enabled: true, startTime: '22:00', endTime: '07:00' },
+      };
+      const { result } = renderHook(() => useRescueTrigger([habit], config));
+
+      // Should trigger since we're outside quiet hours
+      expect(result.current.habitNeedingRescue).toBe('habit-1');
+      expect(result.current.isInQuietHours).toBe(false);
+    });
+  });
+});
+
+describe('isInQuietHoursWindow', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  const createConfig = (
+    overrides: Partial<QuietHoursConfig> = {}
+  ): QuietHoursConfig => ({
+    enabled: true,
+    endTime: '07:00',
+    startTime: '22:00',
+    ...overrides,
+  });
+
+  it('returns false when disabled', () => {
+    jest.setSystemTime(new Date('2025-12-28T23:00:00'));
+    expect(isInQuietHoursWindow(createConfig({ enabled: false }))).toBe(false);
+  });
+
+  it('handles overnight range: late night', () => {
+    jest.setSystemTime(new Date('2025-12-28T23:30:00')); // 11:30 PM
+    expect(isInQuietHoursWindow(createConfig())).toBe(true);
+  });
+
+  it('handles overnight range: midnight', () => {
+    jest.setSystemTime(new Date('2025-12-29T00:00:00')); // midnight
+    expect(isInQuietHoursWindow(createConfig())).toBe(true);
+  });
+
+  it('handles overnight range: early morning', () => {
+    jest.setSystemTime(new Date('2025-12-29T06:00:00')); // 6 AM
+    expect(isInQuietHoursWindow(createConfig())).toBe(true);
+  });
+
+  it('handles overnight range: just before end', () => {
+    jest.setSystemTime(new Date('2025-12-29T06:59:00')); // 6:59 AM
+    expect(isInQuietHoursWindow(createConfig())).toBe(true);
+  });
+
+  it('handles overnight range: exactly at end', () => {
+    jest.setSystemTime(new Date('2025-12-29T07:00:00')); // 7:00 AM
+    expect(isInQuietHoursWindow(createConfig())).toBe(false);
+  });
+
+  it('handles overnight range: daytime', () => {
+    jest.setSystemTime(new Date('2025-12-28T15:00:00')); // 3 PM
+    expect(isInQuietHoursWindow(createConfig())).toBe(false);
+  });
+
+  it('handles overnight range: just before start', () => {
+    jest.setSystemTime(new Date('2025-12-28T21:59:00')); // 9:59 PM
+    expect(isInQuietHoursWindow(createConfig())).toBe(false);
+  });
+
+  it('handles same-day range: inside', () => {
+    jest.setSystemTime(new Date('2025-12-28T14:00:00')); // 2 PM
+    expect(
+      isInQuietHoursWindow(
+        createConfig({ startTime: '13:00', endTime: '15:00' })
+      )
+    ).toBe(true);
+  });
+
+  it('handles same-day range: outside before', () => {
+    jest.setSystemTime(new Date('2025-12-28T12:00:00')); // 12 PM
+    expect(
+      isInQuietHoursWindow(
+        createConfig({ startTime: '13:00', endTime: '15:00' })
+      )
+    ).toBe(false);
+  });
+
+  it('handles same-day range: outside after', () => {
+    jest.setSystemTime(new Date('2025-12-28T16:00:00')); // 4 PM
+    expect(
+      isInQuietHoursWindow(
+        createConfig({ startTime: '13:00', endTime: '15:00' })
+      )
+    ).toBe(false);
+  });
+
+  it('handles edge case: exactly at same-day start', () => {
+    jest.setSystemTime(new Date('2025-12-28T13:00:00'));
+    expect(
+      isInQuietHoursWindow(
+        createConfig({ startTime: '13:00', endTime: '15:00' })
+      )
+    ).toBe(true);
+  });
+
+  it('handles edge case: exactly at same-day end', () => {
+    jest.setSystemTime(new Date('2025-12-28T15:00:00'));
+    expect(
+      isInQuietHoursWindow(
+        createConfig({ startTime: '13:00', endTime: '15:00' })
+      )
+    ).toBe(false);
   });
 });
