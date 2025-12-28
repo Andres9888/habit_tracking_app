@@ -845,9 +845,9 @@ export function useMotivationFeatures() {
 
 ### Must Have (MVP)
 
-- [ ] User can set and edit "Your Why" statement
-- [ ] User can set and edit Identity Statement
-- [ ] User can configure Cue/Trigger (time, location, after)
+- [x] User can set and edit "Your Why" statement _(Validated: YourWhySection component with empty/filled states, press handler opens modal in HabitDetailScreen, saves via updateHabit mutation. Comprehensive test coverage in motivation-acceptance-criteria.test.tsx)_
+- [x] User can set and edit Identity Statement _(Validated: IdentitySection component with empty/filled states, "I am a..." prefix formatting, press handler opens modal in HabitDetailScreen with TextInput, 100 char limit, saves via updateHabit mutation. Fixed withTiming mock to prevent stack overflow in PulsingIcon animations. 7 test cases passing in motivation-acceptance-criteria.test.tsx:243-319)_
+- [x] User can configure Cue/Trigger (time, location, after) _(Validated: CueTriggerSection component at `src/components/MotivationSystem/Workshop/CueTriggerSection.tsx` with empty/filled states, sky accent styling (border-l-sky-400), 3 fields (time, location, afterBehavior), implementation intention preview "After I [behavior]...", completion checkmark when any field is filled. Full cue editor modal in HabitDetailScreen.tsx with TextInputs for all 3 fields, suggestions for common cues, save/clear handlers, 100 char limit for afterBehavior. Uses flat schema fields (cueTime, cueLocation, cueAfterBehavior) at convex/schema.ts:52-56. 22 acceptance tests passing in motivation-acceptance-criteria.test.tsx:327-538)_
 - [ ] User can complete WOOP plan
 - [ ] User can set up basic visualization (success + failure)
 - [ ] User sees Quick Reflection after completing habit
