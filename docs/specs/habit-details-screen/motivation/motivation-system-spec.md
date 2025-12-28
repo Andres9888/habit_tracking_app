@@ -504,10 +504,10 @@ export function useMotivationFeatures() {
 
 #### T1: Your Why Section
 - [x] T1.1: Add `why` field to habits schema *(Already implemented - field exists at `convex/schema.ts:75` as `why: v.optional(v.string())`)*
-- [ ] T1.2: Create `YourWhySection` component with empty/filled states
-- [ ] T1.3: Add text editor modal with prompts
-- [ ] T1.4: Style with rose accent color (border-l-rose-400)
-- [ ] T1.5: Add completion checkmark when filled
+- [x] T1.2: Create `YourWhySection` component with empty/filled states *(Implemented at `src/components/MotivationSystem/Workshop/YourWhySection.tsx` with PulsingIcon empty state, filled state with quoted why, and SectionCard with press animation)*
+- [x] T1.3: Add text editor modal with prompts *(Already implemented in `HabitDetailScreen.tsx:2581-2704` with multiline TextInput, 200 char limit, "I do this because..." prefix, 4 inspirational prompts with icons, character counter, keyboard handling, and save via `updateHabit` API)*
+- [x] T1.4: Style with rose accent color (border-l-rose-400) *(Implemented in YourWhySection with border-l-4 border-l-rose-400, rose-100 icon background, rose-500 Heart icon)*
+- [x] T1.5: Add completion checkmark when filled *(Implemented CompletionCheckmark subcomponent with emerald-500 badge, pop-in animation 0→1.2→1, staggered delay based on sectionIndex)*
 
 #### T2: Identity Statement Section
 - [ ] T2.1: Add `identity` field to habits schema
