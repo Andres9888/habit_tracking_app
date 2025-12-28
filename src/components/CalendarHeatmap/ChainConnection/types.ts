@@ -103,6 +103,8 @@ export interface ConnectionConfig {
   cellGap: number;
   /** Offset for day labels (horizontal views) */
   labelOffset: number;
+  /** Streak progression gradient configuration */
+  progressionGradient?: StreakProgressionGradient;
 }
 
 /**
@@ -138,6 +140,27 @@ export interface StrengthConfig {
   useAccent: boolean;
   /** Whether to show shadow glow */
   showShadow: boolean;
+}
+
+/**
+ * Configuration for streak progression gradient
+ * Enables visual "momentum" effect along a streak
+ */
+export interface StreakProgressionGradient {
+  /** Whether progression gradient is enabled */
+  enabled: boolean;
+  /** Minimum opacity at start of streak (0-1) */
+  startOpacity: number;
+  /** Maximum opacity at end of streak (0-1) */
+  endOpacity: number;
+  /** Minimum saturation at start (0-1) for color interpolation */
+  startSaturation: number;
+  /** Maximum saturation at end (0-1) for color interpolation */
+  endSaturation: number;
+  /** Minimum line thickness at start */
+  startThickness: number;
+  /** Maximum line thickness at end */
+  endThickness: number;
 }
 
 /**

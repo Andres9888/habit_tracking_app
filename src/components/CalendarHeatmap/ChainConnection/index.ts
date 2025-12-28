@@ -21,6 +21,15 @@ export {
   generateConnectionPath,
   getDefaultGridData,
   calculateGridDimensions,
+  // Progression gradient utilities
+  DEFAULT_PROGRESSION_GRADIENT,
+  calculateProgressionFactor,
+  interpolateValue,
+  calculateProgressionOpacity,
+  calculateProgressionThickness,
+  calculateProgressionColor,
+  hexToHSL,
+  hslToHex,
 } from './utils';
 
 // Types
@@ -34,6 +43,7 @@ export type {
   ConnectionConfig,
   GridData,
   StrengthConfig,
+  StreakProgressionGradient,
   ChainConnectionOverlayProps,
   ConnectionPathProps,
   UseStreakChainReturn,

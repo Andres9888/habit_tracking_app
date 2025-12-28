@@ -3,7 +3,15 @@
  * Algorithm implementations for streak chain visualization
  */
 
-import { format, parseISO, differenceInDays, isBefore, isSameDay, addDays, isAfter } from 'date-fns';
+import {
+  format,
+  parseISO,
+  differenceInDays,
+  isBefore,
+  isSameDay,
+  addDays,
+  isAfter,
+} from 'date-fns';
 import type {
   StreakSegment,
   StreakStrength,
@@ -11,6 +19,7 @@ import type {
   ChainConnection,
   GridData,
   StrengthConfig,
+  StreakProgressionGradient,
   ConnectionPathType,
   CalendarViewMode,
 } from './types';
@@ -36,7 +45,7 @@ export function detectStreakSegments(
   }
 
   // Sort all completed dates chronologically
-  const sortedDates = Array.from(completedDates).sort();
+  const sortedDates = [...completedDates].sort();
 
   const segments: StreakSegment[] = [];
   let currentSegment: string[] = [];
@@ -48,7 +57,11 @@ export function detectStreakSegments(
     const date = parseISO(dateStr);
 
     // Skip dates before habit creation
-    if (habitCreatedDate && isBefore(date, habitCreatedDate) && !isSameDay(date, habitCreatedDate)) {
+    if (
+      habitCreatedDate &&
+      isBefore(date, habitCreatedDate) &&
+      !isSameDay(date, habitCreatedDate)
+    ) {
       continue;
     }
 
@@ -62,7 +75,7 @@ export function detectStreakSegments(
       currentSegment.push(dateStr);
     } else {
       // Check if consecutive to previous date
-      const prevDateStr = currentSegment[currentSegment.length - 1];
+      const prevDateStr = currentSegment.at(-1);
       const prevDate = parseISO(prevDateStr);
       const daysDiff = differenceInDays(date, prevDate);
 
@@ -88,10 +101,13 @@ export function detectStreakSegments(
 /**
  * Create a StreakSegment from an array of date strings
  */
-function createSegment(dates: string[], id: number, endDate: Date): StreakSegment {
+function createSegment(
+  dates: string[],
+  id: number,
+  endDate: Date
+): StreakSegment {
   const startDate = dates[0];
-  const lastDate = dates[dates.length - 1];
-  const lastDateParsed = parseISO(lastDate);
+  const lastDate = dates.at(-1);
   const todayStr = format(endDate, 'yyyy-MM-dd');
   const yesterdayStr = format(addDays(endDate, -1), 'yyyy-MM-dd');
 
@@ -99,12 +115,12 @@ function createSegment(dates: string[], id: number, endDate: Date): StreakSegmen
   const isActive = lastDate === todayStr || lastDate === yesterdayStr;
 
   return {
-    id: `streak-${id}`,
-    startDate,
-    endDate: lastDate,
-    length: dates.length,
     dates: [...dates],
+    endDate: lastDate,
+    id: `streak-${id}`,
     isActive,
+    length: dates.length,
+    startDate,
   };
 }
 
@@ -127,19 +143,61 @@ export function getStrengthTier(streakLength: number): StreakStrength {
  */
 export function getStrengthConfig(strength: StreakStrength): StrengthConfig {
   switch (strength) {
-    case 'legendary-plus':
-      return { height: 3, maxOpacity: 0.85, shimmerSpeed: 1000, useAccent: true, showShadow: true };
-    case 'legendary':
-      return { height: 2.7, maxOpacity: 0.75, shimmerSpeed: 1200, useAccent: true, showShadow: true };
-    case 'very-strong':
-      return { height: 2.4, maxOpacity: 0.65, shimmerSpeed: 1500, useAccent: true, showShadow: false };
-    case 'strong':
-      return { height: 2.1, maxOpacity: 0.55, shimmerSpeed: 2000, useAccent: false, showShadow: false };
-    case 'growing':
-      return { height: 1.8, maxOpacity: 0.45, shimmerSpeed: 0, useAccent: false, showShadow: false };
-    case 'subtle':
-    default:
-      return { height: 1.5, maxOpacity: 0.35, shimmerSpeed: 0, useAccent: false, showShadow: false };
+    case 'legendary-plus': {
+      return {
+        height: 3,
+        maxOpacity: 0.85,
+        shimmerSpeed: 1000,
+        showShadow: true,
+        useAccent: true,
+      };
+    }
+    case 'legendary': {
+      return {
+        height: 2.7,
+        maxOpacity: 0.75,
+        shimmerSpeed: 1200,
+        showShadow: true,
+        useAccent: true,
+      };
+    }
+    case 'very-strong': {
+      return {
+        height: 2.4,
+        maxOpacity: 0.65,
+        shimmerSpeed: 1500,
+        showShadow: false,
+        useAccent: true,
+      };
+    }
+    case 'strong': {
+      return {
+        height: 2.1,
+        maxOpacity: 0.55,
+        shimmerSpeed: 2000,
+        showShadow: false,
+        useAccent: false,
+      };
+    }
+    case 'growing': {
+      return {
+        height: 1.8,
+        maxOpacity: 0.45,
+        shimmerSpeed: 0,
+        showShadow: false,
+        useAccent: false,
+      };
+    }
+    default: {
+      // subtle strength or unknown
+      return {
+        height: 1.5,
+        maxOpacity: 0.35,
+        shimmerSpeed: 0,
+        showShadow: false,
+        useAccent: false,
+      };
+    }
   }
 }
 
@@ -156,7 +214,12 @@ export function calculateGridPositions(
   const positions = new Map<string, GridPosition>();
 
   for (const dateStr of dates) {
-    const position = calculateSinglePosition(dateStr, viewMode, gridData, referenceDate);
+    const position = calculateSinglePosition(
+      dateStr,
+      viewMode,
+      gridData,
+      referenceDate
+    );
     if (position) {
       positions.set(dateStr, position);
     }
@@ -183,7 +246,7 @@ function calculateSinglePosition(
       const dayOfWeek = date.getDay(); // 0 = Sunday
       const x = dayOfWeek * (cellSize + cellGap) + cellSize / 2;
       const y = cellSize / 2;
-      return { type: 'week', primaryIndex: dayOfWeek, secondaryIndex: 0, x, y };
+      return { primaryIndex: dayOfWeek, secondaryIndex: 0, type: 'week', x, y };
     }
 
     case 'month': {
@@ -196,7 +259,13 @@ function calculateSinglePosition(
 
       const x = dayOfWeek * (cellSize + cellGap) + cellSize / 2;
       const y = row * (cellSize + cellGap) + cellSize / 2 + headerHeight;
-      return { type: 'month', primaryIndex: row, secondaryIndex: dayOfWeek, x, y };
+      return {
+        primaryIndex: row,
+        secondaryIndex: dayOfWeek,
+        type: 'month',
+        x,
+        y,
+      };
     }
 
     case '3m': {
@@ -214,7 +283,13 @@ function calculateSinglePosition(
 
       const x = labelWidth + weeksDiff * (cellSize + cellGap) + cellSize / 2;
       const y = dayOfWeek * (cellSize + cellGap) + cellSize / 2;
-      return { type: 'horizontal', primaryIndex: weeksDiff, secondaryIndex: dayOfWeek, x, y };
+      return {
+        primaryIndex: weeksDiff,
+        secondaryIndex: dayOfWeek,
+        type: 'horizontal',
+        x,
+        y,
+      };
     }
 
     case 'year': {
@@ -230,11 +305,18 @@ function calculateSinglePosition(
 
       const x = labelWidth + weeksDiff * (cellSize + cellGap) + cellSize / 2;
       const y = dayOfWeek * (cellSize + cellGap) + cellSize / 2;
-      return { type: 'year', primaryIndex: weeksDiff, secondaryIndex: dayOfWeek, x, y };
+      return {
+        primaryIndex: weeksDiff,
+        secondaryIndex: dayOfWeek,
+        type: 'year',
+        x,
+        y,
+      };
     }
 
-    default:
+    default: {
       return null;
+    }
   }
 }
 
@@ -266,15 +348,15 @@ export function generateConnections(
       }
 
       connections.push({
-        id: `connection-${connectionId++}`,
         fromDate,
-        toDate,
         fromPosition,
-        toPosition,
-        streakPosition: i + 1,
-        streakLength: segment.length,
-        strength,
+        id: `connection-${connectionId++}`,
         isActive: segment.isActive,
+        streakLength: segment.length,
+        streakPosition: i + 1,
+        strength,
+        toDate,
+        toPosition,
       });
     }
   }
@@ -285,7 +367,9 @@ export function generateConnections(
 /**
  * Determine the path type for a connection
  */
-export function getConnectionPathType(connection: ChainConnection): ConnectionPathType {
+export function getConnectionPathType(
+  connection: ChainConnection
+): ConnectionPathType {
   const { fromPosition, toPosition } = connection;
 
   // Same row, adjacent columns
@@ -365,9 +449,8 @@ export function generateConnectionPath(
       return `M ${startX} ${startY} Q ${midX} ${controlY} ${endX} ${endY}`;
     }
 
-    case 'diagonal':
     default: {
-      // L-shaped or curved path for diagonal connections
+      // diagonal or unknown - L-shaped or curved path for diagonal connections
       const startX = fromX + (toX > fromX ? halfCell : -halfCell);
       const startY = fromY + (toY > fromY ? halfCell : -halfCell);
       const endX = toX + (toX > fromX ? -halfCell : halfCell);
@@ -387,87 +470,332 @@ export function generateConnectionPath(
  */
 export function getDefaultGridData(viewMode: CalendarViewMode): GridData {
   switch (viewMode) {
-    case 'week':
+    case 'week': {
       return {
+        cellGap: 8,
+        cellSize: 64,
+        headerHeight: 0,
+        labelWidth: 0,
         viewMode,
         weekCount: 1,
-        cellSize: 64,
-        cellGap: 8,
-        headerHeight: 0,
-        labelWidth: 0,
       };
+    }
 
-    case 'month':
+    case 'month': {
       return {
-        viewMode,
-        weekCount: 6,
-        cellSize: 48,
         cellGap: 4,
+        cellSize: 48,
         headerHeight: 32,
         labelWidth: 0,
-      };
-
-    case '3m':
-      return {
         viewMode,
-        weekCount: 13,
-        cellSize: 20,
+        weekCount: 6,
+      };
+    }
+
+    case '3m': {
+      return {
         cellGap: 3,
+        cellSize: 20,
         headerHeight: 0,
         labelWidth: 20,
+        viewMode,
+        weekCount: 13,
       };
+    }
 
-    case 'year':
+    case 'year': {
       return {
+        cellGap: 1,
+        cellSize: 10,
+        headerHeight: 0,
+        labelWidth: 20,
         viewMode,
         weekCount: 53,
-        cellSize: 10,
-        cellGap: 1,
+      };
+    }
+
+    default: {
+      return {
+        cellGap: 3,
+        cellSize: 20,
         headerHeight: 0,
         labelWidth: 20,
-      };
-
-    default:
-      return {
         viewMode: '3m',
         weekCount: 13,
-        cellSize: 20,
-        cellGap: 3,
-        headerHeight: 0,
-        labelWidth: 20,
       };
+    }
   }
 }
 
 /**
  * Calculate grid dimensions for SVG viewport
  */
-export function calculateGridDimensions(
-  gridData: GridData
-): { width: number; height: number } {
-  const { viewMode, weekCount, cellSize, cellGap, headerHeight, labelWidth } = gridData;
+export function calculateGridDimensions(gridData: GridData): {
+  width: number;
+  height: number;
+} {
+  const { viewMode, weekCount, cellSize, cellGap, headerHeight, labelWidth } =
+    gridData;
 
   switch (viewMode) {
-    case 'week':
+    case 'week': {
       return {
-        width: 7 * (cellSize + cellGap) - cellGap,
         height: cellSize,
-      };
-
-    case 'month':
-      return {
         width: 7 * (cellSize + cellGap) - cellGap,
-        height: 6 * (cellSize + cellGap) - cellGap + headerHeight,
       };
+    }
+
+    case 'month': {
+      return {
+        height: 6 * (cellSize + cellGap) - cellGap + headerHeight,
+        width: 7 * (cellSize + cellGap) - cellGap,
+      };
+    }
 
     case '3m':
-    case 'year':
+    case 'year': {
       return {
-        width: labelWidth + weekCount * (cellSize + cellGap) - cellGap,
         height: 7 * (cellSize + cellGap) - cellGap,
+        width: labelWidth + weekCount * (cellSize + cellGap) - cellGap,
       };
+    }
 
-    default:
-      return { width: 0, height: 0 };
+    default: {
+      return { height: 0, width: 0 };
+    }
   }
+}
+
+/**
+ * Default progression gradient configuration
+ * Creates a "momentum" effect where streaks grow stronger over time
+ */
+export const DEFAULT_PROGRESSION_GRADIENT: StreakProgressionGradient = {
+  enabled: true,
+  endOpacity: 1,
+  endSaturation: 1,
+  endThickness: 1,
+  startOpacity: 0.3,
+  startSaturation: 0.4,
+  startThickness: 0.7,
+};
+
+/**
+ * Calculate progression factor for a connection within a streak
+ * Returns a value from 0 (start of streak) to 1 (end of streak)
+ *
+ * @param streakPosition - 1-indexed position within the streak
+ * @param streakLength - Total length of the streak
+ * @param easingType - Type of easing to apply ('linear' | 'easeIn' | 'easeOut' | 'easeInOut')
+ */
+export function calculateProgressionFactor(
+  streakPosition: number,
+  streakLength: number,
+  easingType: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' = 'easeOut'
+): number {
+  // Handle edge cases
+  if (streakLength <= 1) return 1;
+  if (streakPosition <= 0) return 0;
+  if (streakPosition >= streakLength) return 1;
+
+  // Normalize position to 0-1 range
+  // streakPosition is 1-indexed and represents the connection number
+  // For a 5-day streak, positions 1-4 (4 connections) should map to progression
+  const normalizedPosition = (streakPosition - 1) / (streakLength - 1);
+
+  // Apply easing
+  switch (easingType) {
+    case 'easeIn': {
+      return normalizedPosition * normalizedPosition;
+    }
+    case 'easeOut': {
+      return 1 - Math.pow(1 - normalizedPosition, 2);
+    }
+    case 'easeInOut': {
+      return normalizedPosition < 0.5
+        ? 2 * normalizedPosition * normalizedPosition
+        : 1 - Math.pow(-2 * normalizedPosition + 2, 2) / 2;
+    }
+    default: {
+      // linear easing (default)
+      return normalizedPosition;
+    }
+  }
+}
+
+/**
+ * Interpolate a value based on progression factor
+ */
+export function interpolateValue(
+  startValue: number,
+  endValue: number,
+  progressionFactor: number
+): number {
+  return startValue + (endValue - startValue) * progressionFactor;
+}
+
+/**
+ * Calculate gradient-adjusted opacity for a connection
+ */
+export function calculateProgressionOpacity(
+  connection: ChainConnection,
+  baseOpacity: number,
+  gradient: StreakProgressionGradient
+): number {
+  if (!gradient.enabled) return baseOpacity;
+
+  const progressionFactor = calculateProgressionFactor(
+    connection.streakPosition,
+    connection.streakLength,
+    'easeOut'
+  );
+
+  const adjustedOpacity = interpolateValue(
+    gradient.startOpacity,
+    gradient.endOpacity,
+    progressionFactor
+  );
+
+  // Combine with base opacity (multiply)
+  return baseOpacity * adjustedOpacity;
+}
+
+/**
+ * Calculate gradient-adjusted thickness for a connection
+ */
+export function calculateProgressionThickness(
+  connection: ChainConnection,
+  baseThickness: number,
+  gradient: StreakProgressionGradient
+): number {
+  if (!gradient.enabled) return baseThickness;
+
+  const progressionFactor = calculateProgressionFactor(
+    connection.streakPosition,
+    connection.streakLength,
+    'easeOut'
+  );
+
+  const thicknessMultiplier = interpolateValue(
+    gradient.startThickness,
+    gradient.endThickness,
+    progressionFactor
+  );
+
+  return baseThickness * thicknessMultiplier;
+}
+
+/**
+ * Convert hex color to HSL components
+ */
+export function hexToHSL(hex: string): { h: number; s: number; l: number } {
+  // Remove # if present
+  const cleanHex = hex.replace('#', '');
+
+  // Parse hex to RGB
+  const r = Number.parseInt(cleanHex.slice(0, 2), 16) / 255;
+  const g = Number.parseInt(cleanHex.slice(2, 4), 16) / 255;
+  const b = Number.parseInt(cleanHex.slice(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+
+  let h = 0;
+  let s = 0;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+    switch (max) {
+      case r: {
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      }
+      case g: {
+        h = ((b - r) / d + 2) / 6;
+        break;
+      }
+      case b: {
+        h = ((r - g) / d + 4) / 6;
+        break;
+      }
+    }
+  }
+
+  return { h: h * 360, l, s };
+}
+
+/**
+ * Helper function for HSL to RGB conversion
+ */
+function hueToRgb(p: number, q: number, t: number): number {
+  let tNorm = t;
+  if (tNorm < 0) tNorm += 1;
+  if (tNorm > 1) tNorm -= 1;
+  if (tNorm < 1 / 6) return p + (q - p) * 6 * tNorm;
+  if (tNorm < 1 / 2) return q;
+  if (tNorm < 2 / 3) return p + (q - p) * (2 / 3 - tNorm) * 6;
+  return p;
+}
+
+/**
+ * Convert a normalized RGB value (0-1) to hex
+ */
+function rgbToHexComponent(x: number): string {
+  const hex = Math.round(x * 255).toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+}
+
+/**
+ * Convert HSL components to hex color
+ */
+export function hslToHex(h: number, s: number, l: number): string {
+  const hNorm = h / 360;
+
+  let r: number;
+  let g: number;
+  let b: number;
+
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hueToRgb(p, q, hNorm + 1 / 3);
+    g = hueToRgb(p, q, hNorm);
+    b = hueToRgb(p, q, hNorm - 1 / 3);
+  }
+
+  return `#${rgbToHexComponent(r)}${rgbToHexComponent(g)}${rgbToHexComponent(b)}`;
+}
+
+/**
+ * Calculate gradient-adjusted color with saturation interpolation
+ */
+export function calculateProgressionColor(
+  connection: ChainConnection,
+  baseColor: string,
+  gradient: StreakProgressionGradient
+): string {
+  if (!gradient.enabled) return baseColor;
+
+  const progressionFactor = calculateProgressionFactor(
+    connection.streakPosition,
+    connection.streakLength,
+    'easeOut'
+  );
+
+  const saturationMultiplier = interpolateValue(
+    gradient.startSaturation,
+    gradient.endSaturation,
+    progressionFactor
+  );
+
+  // Convert to HSL, adjust saturation, convert back
+  const hsl = hexToHSL(baseColor);
+  const adjustedSaturation = Math.min(1, hsl.s * saturationMultiplier);
+
+  return hslToHex(hsl.h, adjustedSaturation, hsl.l);
 }

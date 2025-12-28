@@ -3,7 +3,7 @@
  * Renders a single SVG path between consecutive completed cells
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, {
@@ -14,8 +14,15 @@ import Animated, {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
-import type { ConnectionPathProps, ChainConnection } from './types';
-import { generateConnectionPath, getStrengthConfig } from './utils';
+import type { ConnectionPathProps } from './types';
+import {
+  generateConnectionPath,
+  getStrengthConfig,
+  DEFAULT_PROGRESSION_GRADIENT,
+  calculateProgressionOpacity,
+  calculateProgressionThickness,
+  calculateProgressionColor,
+} from './utils';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
@@ -33,8 +40,40 @@ export function ConnectionPath({
   config,
   animationDelay,
 }: ConnectionPathProps) {
-  const { habitColor, reduceMotion, cellSize } = config;
+  const { habitColor, reduceMotion, cellSize, progressionGradient } = config;
   const strengthConfig = getStrengthConfig(connection.strength);
+
+  // Use progression gradient (default enabled if not specified)
+  const gradient = progressionGradient ?? DEFAULT_PROGRESSION_GRADIENT;
+
+  // Calculate progression-adjusted values
+  const progressionValues = useMemo(() => {
+    const baseOpacity = strengthConfig.maxOpacity;
+    const baseThickness = strengthConfig.height;
+    const baseColor = strengthConfig.useAccent
+      ? habitColor
+      : config.useMutedColors
+        ? '#d6d3d1' // stone-300
+        : '#a8a29e'; // stone-400
+
+    return {
+      color: calculateProgressionColor(connection, baseColor, gradient),
+      opacity: calculateProgressionOpacity(connection, baseOpacity, gradient),
+      thickness: calculateProgressionThickness(
+        connection,
+        baseThickness,
+        gradient
+      ),
+    };
+  }, [
+    connection,
+    gradient,
+    strengthConfig.maxOpacity,
+    strengthConfig.height,
+    strengthConfig.useAccent,
+    habitColor,
+    config.useMutedColors,
+  ]);
 
   // Animation values
   const progress = useSharedValue(reduceMotion ? 1 : 0);
@@ -73,16 +112,16 @@ export function ConnectionPath({
     }
   }, [reduceMotion, shimmerOffset, strengthConfig.shimmerSpeed]);
 
-  // Determine colors
-  const lineColor = strengthConfig.useAccent
-    ? habitColor
-    : config.useMutedColors
-      ? '#d6d3d1' // stone-300
-      : '#a8a29e'; // stone-400
+  // Use progression-adjusted color
+  const lineColor = progressionValues.color;
 
-  // Animated path props
+  // Animated path props with progression-adjusted opacity
   const animatedPathProps = useAnimatedProps(() => {
-    const opacity = interpolate(progress.value, [0, 1], [0, strengthConfig.maxOpacity]);
+    const opacity = interpolate(
+      progress.value,
+      [0, 1],
+      [0, progressionValues.opacity]
+    );
     const dashOffset = interpolate(progress.value, [0, 1], [100, 0]);
 
     return {
@@ -105,7 +144,6 @@ export function ConnectionPath({
 
   return (
     <Svg
-      width={width}
       height={height}
       style={[
         styles.container,
@@ -115,41 +153,52 @@ export function ConnectionPath({
         },
       ]}
       viewBox={`${minX} ${minY} ${width} ${height}`}
+      width={width}
     >
       {/* Shimmer gradient for strong streaks */}
       {strengthConfig.shimmerSpeed > 0 && (
         <Defs>
-          <LinearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <Stop offset="0%" stopColor={lineColor} stopOpacity={strengthConfig.maxOpacity} />
-            <Stop offset="40%" stopColor="#ffffff" stopOpacity={0.6} />
-            <Stop offset="60%" stopColor="#ffffff" stopOpacity={0.6} />
-            <Stop offset="100%" stopColor={lineColor} stopOpacity={strengthConfig.maxOpacity} />
+          <LinearGradient id={gradientId} x1='0%' x2='100%' y1='0%' y2='0%'>
+            <Stop
+              offset='0%'
+              stopColor={lineColor}
+              stopOpacity={strengthConfig.maxOpacity}
+            />
+            <Stop offset='40%' stopColor='#ffffff' stopOpacity={0.6} />
+            <Stop offset='60%' stopColor='#ffffff' stopOpacity={0.6} />
+            <Stop
+              offset='100%'
+              stopColor={lineColor}
+              stopOpacity={strengthConfig.maxOpacity}
+            />
           </LinearGradient>
         </Defs>
       )}
 
       {/* Main connection path */}
       <AnimatedPath
-        d={pathD}
-        stroke={strengthConfig.shimmerSpeed > 0 ? `url(#${gradientId})` : lineColor}
-        strokeWidth={strengthConfig.height}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        strokeDasharray={reduceMotion ? undefined : '100'}
         animatedProps={animatedPathProps}
+        d={pathD}
+        fill='none'
+        stroke={
+          strengthConfig.shimmerSpeed > 0 ? `url(#${gradientId})` : lineColor
+        }
+        strokeDasharray={reduceMotion ? undefined : '100'}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={progressionValues.thickness}
       />
 
       {/* Shadow glow for legendary streaks */}
       {strengthConfig.showShadow && (
         <Path
           d={pathD}
-          stroke={habitColor}
-          strokeWidth={strengthConfig.height + 4}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
+          fill='none'
           opacity={0.2}
+          stroke={habitColor}
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          strokeWidth={progressionValues.thickness + 4}
         />
       )}
     </Svg>
@@ -158,8 +207,8 @@ export function ConnectionPath({
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
     pointerEvents: 'none',
+    position: 'absolute',
   },
 });
 
