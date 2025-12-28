@@ -5,6 +5,7 @@
 export { CalendarHeatmap } from './CalendarHeatmap';
 export { CollapsibleCalendar } from './CollapsibleCalendar';
 export { CalendarGrid } from './CalendarGrid';
+export { WeekGrid } from './WeekGrid';
 export { DayCell } from './DayCell';
 export { InsightCard } from './InsightCard';
 export { DayDetailTooltip } from './DayDetailTooltip';
