@@ -7,11 +7,13 @@
  * - Undo functionality (timer cancellation, callback invocation)
  * - Auto-commit on timer expiry
  * - Force commit functionality
- * - Multiple toggles (replacing pending toggles)
+ * - Queue-based multiple toggles (rapid toggle support)
+ * - undoAll functionality for clearing entire queue
+ * - Max queue size enforcement
  * - Edge cases (rapid toggles, cleanup on unmount)
  */
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-native';
 import { useToggleUndo, UseToggleUndoOptions } from '../useToggleUndo';
 
 describe('useToggleUndo', () => {
@@ -30,8 +32,10 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       expect(result.current.state.pendingToggle).toBeNull();
+      expect(result.current.state.pendingToggles).toEqual([]);
       expect(result.current.state.toastVisible).toBe(false);
       expect(result.current.state.dateLabel).toBe('');
+      expect(result.current.state.queueLength).toBe(0);
     });
 
     it('provides all expected functions', () => {
@@ -39,8 +43,10 @@ describe('useToggleUndo', () => {
 
       expect(typeof result.current.scheduleToggle).toBe('function');
       expect(typeof result.current.undoToggle).toBe('function');
+      expect(typeof result.current.undoAll).toBe('function');
       expect(typeof result.current.dismissToast).toBe('function');
       expect(typeof result.current.hasPendingToggle).toBe('function');
+      expect(typeof result.current.getPendingToggle).toBe('function');
       expect(typeof result.current.forceCommit).toBe('function');
     });
   });
@@ -50,7 +56,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       const pending = result.current.state.pendingToggle;
@@ -59,13 +70,19 @@ describe('useToggleUndo', () => {
       expect(pending?.habitName).toBe('Exercise');
       expect(pending?.date).toBe('2024-12-28');
       expect(pending?.wasCompleted).toBe(true);
+      expect(result.current.state.queueLength).toBe(1);
     });
 
     it('shows toast when toggle is scheduled', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       expect(result.current.state.toastVisible).toBe(true);
@@ -75,7 +92,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       expect(result.current.state.dateLabel).toBe('Dec 28');
@@ -86,7 +108,12 @@ describe('useToggleUndo', () => {
 
       let success: boolean = false;
       act(() => {
-        success = result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        success = result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       expect(success).toBe(true);
@@ -96,25 +123,42 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-1', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
       const firstId = result.current.state.pendingToggle?.id;
 
       act(() => {
-        result.current.scheduleToggle('habit-2', 'Meditation', '2024-12-29', false);
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
       const secondId = result.current.state.pendingToggle?.id;
 
       expect(firstId).toBeDefined();
       expect(secondId).toBeDefined();
       expect(firstId).not.toBe(secondId);
+      // Both should be in queue now (different habit+date)
+      expect(result.current.state.queueLength).toBe(2);
     });
 
     it('handles uncomplete action (wasCompleted: false)', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', false);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          false
+        );
       });
 
       expect(result.current.state.pendingToggle?.wasCompleted).toBe(false);
@@ -127,7 +171,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       // Before timer expires
@@ -151,7 +200,12 @@ describe('useToggleUndo', () => {
       );
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       // Default window (3s) passed but custom hasn't
@@ -167,19 +221,25 @@ describe('useToggleUndo', () => {
       expect(onCommit).toHaveBeenCalledTimes(1);
     });
 
-    it('clears pending toggle and toast after commit', () => {
-      const onCommit = jest.fn();
+    it('clears pending toggle and toast after commit', async () => {
+      const onCommit = jest.fn().mockResolvedValue(undefined);
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
-      act(() => {
+      await act(async () => {
         jest.advanceTimersByTime(3001);
       });
 
       expect(result.current.state.pendingToggle).toBeNull();
+      expect(result.current.state.queueLength).toBe(0);
       expect(result.current.state.toastVisible).toBe(false);
     });
 
@@ -188,7 +248,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       await act(async () => {
@@ -204,7 +269,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       await act(async () => {
@@ -215,15 +285,65 @@ describe('useToggleUndo', () => {
       expect(result.current.state.pendingToggle).toBeNull();
       consoleError.mockRestore();
     });
+
+    it('commits each queued toggle independently on its own timer', async () => {
+      const onCommit = jest.fn().mockResolvedValue(undefined);
+      const { result } = renderHook(() => useToggleUndo({ onCommit }));
+
+      // Schedule first toggle
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Wait 1 second, then schedule second toggle
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      // After 2 more seconds (3s total for first), first should commit
+      await act(async () => {
+        jest.advanceTimersByTime(2000);
+      });
+      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(result.current.state.queueLength).toBe(1);
+
+      // After 1 more second (3s total for second), second should commit
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onCommit).toHaveBeenLastCalledWith('habit-2', '2024-12-29', false);
+      expect(result.current.state.queueLength).toBe(0);
+    });
   });
 
   describe('undoToggle', () => {
-    it('cancels the pending toggle', () => {
+    it('cancels the most recent pending toggle', () => {
       const onUndo = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onUndo }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -231,15 +351,21 @@ describe('useToggleUndo', () => {
       });
 
       expect(result.current.state.pendingToggle).toBeNull();
+      expect(result.current.state.queueLength).toBe(0);
       expect(result.current.state.toastVisible).toBe(false);
     });
 
-    it('calls onUndo with correct parameters', () => {
+    it('calls onUndo with correct parameters for most recent toggle', () => {
       const onUndo = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onUndo }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -256,7 +382,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({ onCommit, onUndo }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -280,7 +411,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       let success: boolean = false;
@@ -301,6 +437,53 @@ describe('useToggleUndo', () => {
 
       expect(success).toBe(false);
     });
+
+    it('undoes only the most recent toggle from queue', () => {
+      const onUndo = jest.fn();
+      const onCommit = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onUndo, onCommit }));
+
+      // Add two toggles to queue
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      expect(result.current.state.queueLength).toBe(2);
+
+      // Undo should remove the most recent (habit-2)
+      act(() => {
+        result.current.undoToggle();
+      });
+
+      expect(onUndo).toHaveBeenCalledTimes(1);
+      expect(onUndo).toHaveBeenCalledWith('habit-2', '2024-12-29', false);
+      expect(result.current.state.queueLength).toBe(1);
+      expect(result.current.state.pendingToggle?.habitId).toBe('habit-1');
+      expect(result.current.state.toastVisible).toBe(true); // Still has one in queue
+
+      // Undo the first one
+      act(() => {
+        result.current.undoToggle();
+      });
+
+      expect(onUndo).toHaveBeenCalledTimes(2);
+      expect(onUndo).toHaveBeenLastCalledWith('habit-1', '2024-12-28', true);
+      expect(result.current.state.queueLength).toBe(0);
+      expect(result.current.state.toastVisible).toBe(false);
+    });
   });
 
   describe('dismissToast', () => {
@@ -308,7 +491,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       expect(result.current.state.toastVisible).toBe(true);
@@ -320,27 +508,40 @@ describe('useToggleUndo', () => {
       expect(result.current.state.toastVisible).toBe(false);
     });
 
-    it('does not cancel the pending toggle (timer continues)', () => {
+    it('does not cancel pending toggles (all timers continue)', () => {
       const onCommit = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
 
       act(() => {
         result.current.dismissToast();
       });
 
-      // Pending toggle should still exist
-      expect(result.current.state.pendingToggle).not.toBeNull();
+      // Queue should still have both toggles
+      expect(result.current.state.queueLength).toBe(2);
 
-      // Timer should still fire
+      // Timers should still fire for all
       act(() => {
         jest.advanceTimersByTime(3001);
       });
 
-      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onCommit).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -349,54 +550,91 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
-      expect(result.current.hasPendingToggle('habit-123', '2024-12-28')).toBe(true);
+      expect(result.current.hasPendingToggle('habit-123', '2024-12-28')).toBe(
+        true
+      );
     });
 
     it('returns false for non-matching habit ID', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
-      expect(result.current.hasPendingToggle('habit-456', '2024-12-28')).toBe(false);
+      expect(result.current.hasPendingToggle('habit-456', '2024-12-28')).toBe(
+        false
+      );
     });
 
     it('returns false for non-matching date', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
-      expect(result.current.hasPendingToggle('habit-123', '2024-12-29')).toBe(false);
+      expect(result.current.hasPendingToggle('habit-123', '2024-12-29')).toBe(
+        false
+      );
     });
 
     it('returns false when no pending toggle', () => {
       const { result } = renderHook(() => useToggleUndo());
 
-      expect(result.current.hasPendingToggle('habit-123', '2024-12-28')).toBe(false);
+      expect(result.current.hasPendingToggle('habit-123', '2024-12-28')).toBe(
+        false
+      );
     });
   });
 
   describe('forceCommit', () => {
-    it('immediately commits pending toggle', () => {
+    it('immediately commits all pending toggles', () => {
       const onCommit = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
 
       act(() => {
         result.current.forceCommit();
       });
 
-      expect(onCommit).toHaveBeenCalledTimes(1);
-      expect(onCommit).toHaveBeenCalledWith('habit-123', '2024-12-28', true);
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(onCommit).toHaveBeenCalledWith('habit-2', '2024-12-29', false);
     });
 
     it('clears state after force commit', () => {
@@ -404,7 +642,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -412,6 +655,7 @@ describe('useToggleUndo', () => {
       });
 
       expect(result.current.state.pendingToggle).toBeNull();
+      expect(result.current.state.queueLength).toBe(0);
       expect(result.current.state.toastVisible).toBe(false);
     });
 
@@ -431,7 +675,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -449,82 +698,327 @@ describe('useToggleUndo', () => {
   });
 
   describe('Multiple Toggles (Queuing)', () => {
-    it('replaces previous pending toggle with new one', () => {
+    it('queues multiple toggles for different habits', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-1', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
-
-      const firstId = result.current.state.pendingToggle?.id;
 
       act(() => {
-        result.current.scheduleToggle('habit-2', 'Meditation', '2024-12-29', false);
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
 
+      // Both should be in queue
+      expect(result.current.state.queueLength).toBe(2);
+      // Most recent should be displayed
       expect(result.current.state.pendingToggle?.habitId).toBe('habit-2');
-      expect(result.current.state.pendingToggle?.habitName).toBe('Meditation');
-      expect(result.current.state.pendingToggle?.id).not.toBe(firstId);
+      // Both should be accessible
+      expect(result.current.state.pendingToggles).toHaveLength(2);
+      expect(result.current.state.pendingToggles[0].habitId).toBe('habit-1');
+      expect(result.current.state.pendingToggles[1].habitId).toBe('habit-2');
     });
 
-    it('commits previous toggle when scheduling new one', () => {
+    it('replaces toggle for same habit+date instead of queuing', () => {
       const onCommit = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
+      // Complete a habit
       act(() => {
-        result.current.scheduleToggle('habit-1', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
+      // Toggle it again (uncomplete)
       act(() => {
-        result.current.scheduleToggle('habit-2', 'Meditation', '2024-12-29', false);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          false
+        );
       });
 
-      // First toggle should have been committed
-      expect(onCommit).toHaveBeenCalledTimes(1);
+      // Should still only have 1 in queue (replaced)
+      expect(result.current.state.queueLength).toBe(1);
+      expect(result.current.state.pendingToggle?.wasCompleted).toBe(false);
+      // First toggle committed when replaced
       expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
     });
 
-    it('only auto-commits the latest toggle', () => {
-      const onCommit = jest.fn();
+    it('auto-commits each queued toggle independently', async () => {
+      const onCommit = jest.fn().mockResolvedValue(undefined);
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
+      // Add first toggle
       act(() => {
-        result.current.scheduleToggle('habit-1', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
+      // Wait 1 second
       act(() => {
         jest.advanceTimersByTime(1000);
       });
 
+      // Add second toggle (1s after first)
       act(() => {
-        result.current.scheduleToggle('habit-2', 'Meditation', '2024-12-29', false);
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
 
-      // First toggle committed immediately when replaced
+      expect(result.current.state.queueLength).toBe(2);
+
+      // After 2 more seconds (3s total for first)
+      await act(async () => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      // First should be committed
+      expect(onCommit).toHaveBeenCalledTimes(1);
       expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(result.current.state.queueLength).toBe(1);
 
-      act(() => {
-        jest.advanceTimersByTime(3001);
+      // After 1 more second (3s total for second)
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
       });
 
-      // Second toggle committed after its timer expires
+      // Second should be committed
       expect(onCommit).toHaveBeenCalledTimes(2);
       expect(onCommit).toHaveBeenLastCalledWith('habit-2', '2024-12-29', false);
+      expect(result.current.state.queueLength).toBe(0);
+    });
+
+    it('respects maxQueueSize and commits oldest when exceeded', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() =>
+        useToggleUndo({ onCommit, maxQueueSize: 3 })
+      );
+
+      // Add 3 toggles to fill queue
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle('habit-3', 'Reading', '2024-12-30', true);
+      });
+
+      expect(result.current.state.queueLength).toBe(3);
+      expect(onCommit).not.toHaveBeenCalled();
+
+      // Add 4th toggle - should commit oldest
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-4',
+          'Writing',
+          '2024-12-31',
+          false
+        );
+      });
+
+      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(result.current.state.queueLength).toBe(3);
+      expect(result.current.state.pendingToggles[0].habitId).toBe('habit-2');
+    });
+  });
+
+  describe('undoAll', () => {
+    it('undoes all pending toggles', () => {
+      const onUndo = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onUndo }));
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle('habit-3', 'Reading', '2024-12-30', true);
+      });
+
+      let count: number = 0;
+      act(() => {
+        count = result.current.undoAll();
+      });
+
+      expect(count).toBe(3);
+      expect(onUndo).toHaveBeenCalledTimes(3);
+      expect(result.current.state.queueLength).toBe(0);
+      expect(result.current.state.toastVisible).toBe(false);
+    });
+
+    it('returns 0 when queue is empty', () => {
+      const onUndo = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onUndo }));
+
+      let count: number = 0;
+      act(() => {
+        count = result.current.undoAll();
+      });
+
+      expect(count).toBe(0);
+      expect(onUndo).not.toHaveBeenCalled();
+    });
+
+    it('cancels all timers when undoing all', () => {
+      const onCommit = jest.fn();
+      const onUndo = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onCommit, onUndo }));
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      act(() => {
+        result.current.undoAll();
+      });
+
+      // Fast-forward past all timers
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+
+      // onCommit should not have been called
+      expect(onCommit).not.toHaveBeenCalled();
+      expect(onUndo).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getPendingToggle', () => {
+    it('returns the pending toggle for matching habit+date', () => {
+      const { result } = renderHook(() => useToggleUndo());
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      const toggle = result.current.getPendingToggle('habit-1', '2024-12-28');
+      expect(toggle).toBeDefined();
+      expect(toggle?.habitId).toBe('habit-1');
+      expect(toggle?.habitName).toBe('Exercise');
+      expect(toggle?.wasCompleted).toBe(true);
+    });
+
+    it('returns undefined for non-matching habit+date', () => {
+      const { result } = renderHook(() => useToggleUndo());
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      expect(
+        result.current.getPendingToggle('habit-2', '2024-12-28')
+      ).toBeUndefined();
+      expect(
+        result.current.getPendingToggle('habit-1', '2024-12-29')
+      ).toBeUndefined();
     });
   });
 
   describe('Cleanup on Unmount', () => {
-    it('clears timer on unmount', () => {
+    it('clears all timers on unmount', () => {
       const onCommit = jest.fn();
       const { result, unmount } = renderHook(() => useToggleUndo({ onCommit }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
 
       unmount();
 
-      // Fast-forward past timer
+      // Fast-forward past all timers
       act(() => {
         jest.advanceTimersByTime(5000);
       });
@@ -539,7 +1033,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-01-15', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-01-15',
+          true
+        );
       });
 
       expect(result.current.state.dateLabel).toBe('Jan 15');
@@ -549,7 +1048,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-07-04', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-07-04',
+          true
+        );
       });
 
       expect(result.current.state.dateLabel).toBe('Jul 4');
@@ -559,7 +1063,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', 'invalid-date', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          'invalid-date',
+          true
+        );
       });
 
       // Should return the original string when parsing fails
@@ -570,7 +1079,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo());
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -582,42 +1096,59 @@ describe('useToggleUndo', () => {
   });
 
   describe('Edge Cases', () => {
-    it('handles rapid toggles correctly', () => {
+    it('handles rapid toggles correctly with queue', () => {
       const onCommit = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
-      // Rapid-fire 5 toggles
+      // Rapid-fire 5 toggles for different habits
       for (let i = 0; i < 5; i++) {
         act(() => {
-          result.current.scheduleToggle(`habit-${i}`, `Habit ${i}`, `2024-12-2${i}`, i % 2 === 0);
+          result.current.scheduleToggle(
+            `habit-${i}`,
+            `Habit ${i}`,
+            `2024-12-2${i}`,
+            i % 2 === 0
+          );
         });
       }
 
-      // First 4 toggles should have been committed immediately
-      expect(onCommit).toHaveBeenCalledTimes(4);
+      // All 5 should be in queue (different habit+date combos)
+      expect(result.current.state.queueLength).toBe(5);
+      expect(onCommit).not.toHaveBeenCalled();
 
-      // Only the last toggle should be pending
+      // Most recent should be displayed
       expect(result.current.state.pendingToggle?.habitId).toBe('habit-4');
     });
 
-    it('handles toggling the same habit twice', () => {
+    it('handles toggling the same habit twice (replaces in queue)', () => {
       const onCommit = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onCommit }));
 
       // Complete
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
-      // Uncomplete
+      // Uncomplete (same habit+date)
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', false);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          false
+        );
       });
 
-      // First toggle committed immediately
+      // First toggle committed when replaced
       expect(onCommit).toHaveBeenCalledWith('habit-123', '2024-12-28', true);
 
-      // Second toggle is now pending
+      // Only the second toggle should be pending
+      expect(result.current.state.queueLength).toBe(1);
       expect(result.current.state.pendingToggle?.wasCompleted).toBe(false);
     });
 
@@ -635,7 +1166,12 @@ describe('useToggleUndo', () => {
       const { result } = renderHook(() => useToggleUndo({}));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       // Should not crash
@@ -644,7 +1180,12 @@ describe('useToggleUndo', () => {
       });
 
       act(() => {
-        result.current.scheduleToggle('habit-456', 'Meditation', '2024-12-29', false);
+        result.current.scheduleToggle(
+          'habit-456',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
       });
 
       // Should not crash on auto-commit
@@ -653,13 +1194,18 @@ describe('useToggleUndo', () => {
       });
     });
 
-    it('handles undo after dismiss (timer still runs)', () => {
+    it('handles undo after dismiss (timers still run)', () => {
       const onCommit = jest.fn();
       const onUndo = jest.fn();
       const { result } = renderHook(() => useToggleUndo({ onCommit, onUndo }));
 
       act(() => {
-        result.current.scheduleToggle('habit-123', 'Exercise', '2024-12-28', true);
+        result.current.scheduleToggle(
+          'habit-123',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
       });
 
       act(() => {
@@ -667,12 +1213,15 @@ describe('useToggleUndo', () => {
       });
 
       // Toast is hidden but pending toggle still exists
+      expect(result.current.state.queueLength).toBe(1);
+
       act(() => {
         result.current.undoToggle();
       });
 
       // Undo should still work
       expect(onUndo).toHaveBeenCalledTimes(1);
+      expect(result.current.state.queueLength).toBe(0);
 
       // Timer should have been cancelled
       act(() => {
@@ -680,6 +1229,48 @@ describe('useToggleUndo', () => {
       });
 
       expect(onCommit).not.toHaveBeenCalled();
+    });
+
+    it('handles mixed queue of same and different habits', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onCommit }));
+
+      // Add habit-1 for date 28
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      // Add habit-2 for date 29
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+      // Toggle habit-1 for date 28 again (should replace)
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          false
+        );
+      });
+
+      // First habit-1 toggle should be committed
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(onCommit).toHaveBeenCalledTimes(1);
+
+      // Queue should have 2 items: habit-2 and new habit-1
+      expect(result.current.state.queueLength).toBe(2);
+      expect(result.current.state.pendingToggles[0].habitId).toBe('habit-2');
+      expect(result.current.state.pendingToggles[1].habitId).toBe('habit-1');
     });
   });
 
@@ -689,16 +1280,20 @@ describe('useToggleUndo', () => {
 
       const initialScheduleToggle = result.current.scheduleToggle;
       const initialUndoToggle = result.current.undoToggle;
+      const initialUndoAll = result.current.undoAll;
       const initialDismissToast = result.current.dismissToast;
       const initialHasPendingToggle = result.current.hasPendingToggle;
+      const initialGetPendingToggle = result.current.getPendingToggle;
       const initialForceCommit = result.current.forceCommit;
 
       rerender();
 
       expect(result.current.scheduleToggle).toBe(initialScheduleToggle);
       expect(result.current.undoToggle).toBe(initialUndoToggle);
+      expect(result.current.undoAll).toBe(initialUndoAll);
       expect(result.current.dismissToast).toBe(initialDismissToast);
       expect(result.current.hasPendingToggle).toBe(initialHasPendingToggle);
+      expect(result.current.getPendingToggle).toBe(initialGetPendingToggle);
       expect(result.current.forceCommit).toBe(initialForceCommit);
     });
   });

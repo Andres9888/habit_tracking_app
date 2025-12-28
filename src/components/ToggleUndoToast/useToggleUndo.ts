@@ -8,6 +8,12 @@
  * - If undone, mutation is cancelled and never sent
  * - If timer expires, mutation is committed to backend
  *
+ * Supports queuing of multiple rapid toggles:
+ * - Each toggle gets its own undo timer
+ * - Most recent toggle is displayed in the toast
+ * - Undo pops the most recent toggle from the queue
+ * - undoAll() clears the entire queue
+ *
  * This hook should be used at a screen/context level to manage
  * toggle undo state across multiple components.
  */
@@ -33,19 +39,29 @@ export interface PendingToggle {
 }
 
 export interface ToggleUndoState {
-  /** The current pending toggle (most recent) */
+  /** The current pending toggle (most recent) for display */
   pendingToggle: PendingToggle | null;
+  /** All pending toggles in the queue (oldest first) */
+  pendingToggles: PendingToggle[];
   /** Whether the toast should be visible */
   toastVisible: boolean;
   /** Formatted date label for display (e.g., "Dec 28") */
   dateLabel: string;
+  /** Number of pending toggles in the queue */
+  queueLength: number;
 }
 
 export interface UseToggleUndoOptions {
   /** Duration of the undo window in ms (default: 3000) */
   undoWindowMs?: number;
+  /** Maximum number of toggles that can be queued (default: 10) */
+  maxQueueSize?: number;
   /** Callback when a toggle is committed (timer expired without undo) */
-  onCommit?: (habitId: string, date: string, wasCompleted: boolean) => void | Promise<void>;
+  onCommit?: (
+    habitId: string,
+    date: string,
+    wasCompleted: boolean
+  ) => void | Promise<void>;
   /** Callback when a toggle is undone */
   onUndo?: (habitId: string, date: string, wasCompleted: boolean) => void;
 }
@@ -55,7 +71,7 @@ export interface UseToggleUndoReturn {
   state: ToggleUndoState;
   /**
    * Schedule a toggle with undo capability.
-   * Returns true if the toggle was scheduled, false if there's already a pending toggle.
+   * Returns true if the toggle was scheduled.
    */
   scheduleToggle: (
     habitId: string,
@@ -64,12 +80,17 @@ export interface UseToggleUndoReturn {
     wasCompleted: boolean
   ) => boolean;
   /**
-   * Undo the current pending toggle.
+   * Undo the most recent pending toggle.
    * Returns true if an undo was performed, false if there was nothing to undo.
    */
   undoToggle: () => boolean;
   /**
-   * Dismiss the toast without undoing (commits the toggle).
+   * Undo all pending toggles in the queue.
+   * Returns the number of toggles that were undone.
+   */
+  undoAll: () => number;
+  /**
+   * Dismiss the toast without undoing (timer continues for all queued toggles).
    */
   dismissToast: () => void;
   /**
@@ -77,12 +98,20 @@ export interface UseToggleUndoReturn {
    */
   hasPendingToggle: (habitId: string, date: string) => boolean;
   /**
-   * Force commit any pending toggle immediately.
+   * Force commit all pending toggles immediately.
    */
   forceCommit: () => void;
+  /**
+   * Get the pending toggle for a specific habit+date, if any.
+   */
+  getPendingToggle: (
+    habitId: string,
+    date: string
+  ) => PendingToggle | undefined;
 }
 
 const DEFAULT_UNDO_WINDOW_MS = 3000;
+const DEFAULT_MAX_QUEUE_SIZE = 10;
 
 /**
  * Format a date string (YYYY-MM-DD) to a readable label (e.g., "Dec 28")
@@ -101,155 +130,276 @@ function formatDateLabel(dateStr: string): string {
  * Generate a unique ID for a pending toggle
  */
 function generateToggleId(): string {
-  return `toggle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `toggle_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
-export function useToggleUndo(options: UseToggleUndoOptions = {}): UseToggleUndoReturn {
+export function useToggleUndo(
+  options: UseToggleUndoOptions = {}
+): UseToggleUndoReturn {
   const {
     undoWindowMs = DEFAULT_UNDO_WINDOW_MS,
+    maxQueueSize = DEFAULT_MAX_QUEUE_SIZE,
     onCommit,
     onUndo,
   } = options;
 
-  const [pendingToggle, setPendingToggle] = useState<PendingToggle | null>(null);
+  // Queue of pending toggles (oldest first)
+  const [pendingToggles, setPendingToggles] = useState<PendingToggle[]>([]);
   const [toastVisible, setToastVisible] = useState(false);
 
-  // Use ref to track latest pending toggle for cleanup
-  const pendingToggleRef = useRef<PendingToggle | null>(null);
+  // Use ref to track latest queue for cleanup and timer callbacks
+  const pendingTogglesRef = useRef<PendingToggle[]>([]);
 
   // Keep ref in sync with state
   useEffect(() => {
-    pendingToggleRef.current = pendingToggle;
-  }, [pendingToggle]);
+    pendingTogglesRef.current = pendingToggles;
+  }, [pendingToggles]);
 
-  // Cleanup on unmount
+  // Cleanup on unmount - clear all timers
   useEffect(() => {
     return () => {
-      if (pendingToggleRef.current) {
-        clearTimeout(pendingToggleRef.current.timerId);
+      for (const toggle of pendingTogglesRef.current) {
+        clearTimeout(toggle.timerId);
       }
     };
   }, []);
 
   /**
-   * Commit the pending toggle to the backend
+   * Remove a toggle from the queue by ID and commit it
    */
-  const commitToggle = useCallback(async (toggle: PendingToggle) => {
-    try {
-      await onCommit?.(toggle.habitId, toggle.date, toggle.wasCompleted);
-    } catch (error) {
-      console.error('Failed to commit toggle:', error);
-    } finally {
-      // Clear state after commit
-      setPendingToggle(null);
-      setToastVisible(false);
-    }
-  }, [onCommit]);
+  const commitToggleById = useCallback(
+    async (toggleId: string) => {
+      const queue = pendingTogglesRef.current;
+      const toggle = queue.find((t) => t.id === toggleId);
+
+      if (!toggle) {
+        return; // Already removed (undone)
+      }
+
+      try {
+        await onCommit?.(toggle.habitId, toggle.date, toggle.wasCompleted);
+      } catch (error) {
+        console.error('Failed to commit toggle:', error);
+      } finally {
+        // Remove from queue
+        setPendingToggles((prev) => {
+          const newQueue = prev.filter((t) => t.id !== toggleId);
+          // Hide toast if queue is now empty
+          if (newQueue.length === 0) {
+            setToastVisible(false);
+          }
+          return newQueue;
+        });
+      }
+    },
+    [onCommit]
+  );
 
   /**
    * Schedule a toggle with undo capability
    */
-  const scheduleToggle = useCallback((
-    habitId: string,
-    habitName: string,
-    date: string,
-    wasCompleted: boolean
-  ): boolean => {
-    // If there's already a pending toggle, commit it first
-    if (pendingToggleRef.current) {
-      clearTimeout(pendingToggleRef.current.timerId);
-      // Commit the previous toggle synchronously (fire and forget)
-      const prevToggle = pendingToggleRef.current;
-      onCommit?.(prevToggle.habitId, prevToggle.date, prevToggle.wasCompleted);
-    }
+  const scheduleToggle = useCallback(
+    (
+      habitId: string,
+      habitName: string,
+      date: string,
+      wasCompleted: boolean
+    ): boolean => {
+      const currentQueue = pendingTogglesRef.current;
 
-    // Create new pending toggle
-    const timerId = setTimeout(() => {
-      const current = pendingToggleRef.current;
-      if (current) {
-        commitToggle(current);
+      // Check if there's already a pending toggle for the same habit+date
+      // If so, remove it (cancels out) and add the new one
+      const existingIndex = currentQueue.findIndex(
+        (t) => t.habitId === habitId && t.date === date
+      );
+
+      if (existingIndex !== -1) {
+        const existing = currentQueue[existingIndex];
+        clearTimeout(existing.timerId);
+
+        // If toggling back to original state (undo equivalent), just remove it
+        if (existing.wasCompleted !== wasCompleted) {
+          // Cancel each other out - commit the existing one immediately
+          // since the user wants the opposite action now
+          onCommit?.(existing.habitId, existing.date, existing.wasCompleted);
+        }
+
+        // Remove the existing toggle for this habit+date
+        setPendingToggles((prev) => prev.filter((t) => t.id !== existing.id));
       }
-    }, undoWindowMs);
 
-    const newToggle: PendingToggle = {
-      id: generateToggleId(),
-      habitId,
-      habitName,
-      date,
-      wasCompleted,
-      timestamp: Date.now(),
-      timerId,
-    };
+      // If queue is at max capacity, commit the oldest toggle
+      if (currentQueue.length >= maxQueueSize && existingIndex === -1) {
+        const oldest = currentQueue[0];
+        if (oldest) {
+          clearTimeout(oldest.timerId);
+          onCommit?.(oldest.habitId, oldest.date, oldest.wasCompleted);
+          setPendingToggles((prev) => prev.slice(1));
+        }
+      }
 
-    setPendingToggle(newToggle);
-    setToastVisible(true);
+      // Create the new toggle ID before the closure to ensure we track the right one
+      const newToggleId = generateToggleId();
 
-    return true;
-  }, [undoWindowMs, onCommit, commitToggle]);
+      // Create new pending toggle with its own timer
+      const timerId = setTimeout(() => {
+        commitToggleById(newToggleId);
+      }, undoWindowMs);
+
+      const newToggle: PendingToggle = {
+        date,
+        habitId,
+        habitName,
+        id: newToggleId,
+        timerId,
+        timestamp: Date.now(),
+        wasCompleted,
+      };
+
+      // Add to queue
+      setPendingToggles((prev) => {
+        // Filter out any existing toggle for same habit+date
+        const filtered = prev.filter(
+          (t) => !(t.habitId === habitId && t.date === date)
+        );
+        return [...filtered, newToggle];
+      });
+      setToastVisible(true);
+
+      return true;
+    },
+    [undoWindowMs, maxQueueSize, onCommit, commitToggleById]
+  );
 
   /**
-   * Undo the current pending toggle
+   * Undo the most recent pending toggle
    */
   const undoToggle = useCallback((): boolean => {
-    const current = pendingToggleRef.current;
-    if (!current) {
+    const queue = pendingTogglesRef.current;
+    if (queue.length === 0) {
       return false;
     }
 
+    // Get the most recent toggle (last in queue)
+    const mostRecent = queue.at(-1);
+
     // Cancel the commit timer
-    clearTimeout(current.timerId);
+    clearTimeout(mostRecent.timerId);
 
     // Notify consumer of undo
-    onUndo?.(current.habitId, current.date, current.wasCompleted);
+    onUndo?.(mostRecent.habitId, mostRecent.date, mostRecent.wasCompleted);
 
-    // Clear state
-    setPendingToggle(null);
-    setToastVisible(false);
+    // Remove from queue
+    setPendingToggles((prev) => {
+      const newQueue = prev.slice(0, -1);
+      // Hide toast if queue is now empty
+      if (newQueue.length === 0) {
+        setToastVisible(false);
+      }
+      return newQueue;
+    });
 
     return true;
   }, [onUndo]);
 
   /**
-   * Dismiss the toast without undoing (timer continues/commits)
+   * Undo all pending toggles in the queue
+   */
+  const undoAll = useCallback((): number => {
+    const queue = pendingTogglesRef.current;
+    if (queue.length === 0) {
+      return 0;
+    }
+
+    const count = queue.length;
+
+    // Cancel all timers and notify for each
+    for (const toggle of queue) {
+      clearTimeout(toggle.timerId);
+      onUndo?.(toggle.habitId, toggle.date, toggle.wasCompleted);
+    }
+
+    // Clear the queue
+    setPendingToggles([]);
+    setToastVisible(false);
+
+    return count;
+  }, [onUndo]);
+
+  /**
+   * Dismiss the toast without undoing (timers continue for all queued toggles)
    */
   const dismissToast = useCallback(() => {
     setToastVisible(false);
-    // Note: We don't clear pendingToggle - the timer will still commit
+    // Note: We don't clear the queue - all timers will still commit
   }, []);
 
   /**
    * Check if a specific habit+date has a pending toggle
    */
-  const hasPendingToggle = useCallback((habitId: string, date: string): boolean => {
-    const current = pendingToggleRef.current;
-    return current?.habitId === habitId && current?.date === date;
-  }, []);
+  const hasPendingToggle = useCallback(
+    (habitId: string, date: string): boolean => {
+      return pendingTogglesRef.current.some(
+        (t) => t.habitId === habitId && t.date === date
+      );
+    },
+    []
+  );
 
   /**
-   * Force commit any pending toggle immediately
+   * Get the pending toggle for a specific habit+date
+   */
+  const getPendingToggle = useCallback(
+    (habitId: string, date: string): PendingToggle | undefined => {
+      return pendingTogglesRef.current.find(
+        (t) => t.habitId === habitId && t.date === date
+      );
+    },
+    []
+  );
+
+  /**
+   * Force commit all pending toggles immediately
    */
   const forceCommit = useCallback(() => {
-    const current = pendingToggleRef.current;
-    if (current) {
-      clearTimeout(current.timerId);
-      commitToggle(current);
+    const queue = pendingTogglesRef.current;
+    if (queue.length === 0) {
+      return;
     }
-  }, [commitToggle]);
+
+    // Clear all timers and commit each toggle
+    for (const toggle of queue) {
+      clearTimeout(toggle.timerId);
+      onCommit?.(toggle.habitId, toggle.date, toggle.wasCompleted);
+    }
+
+    // Clear the queue
+    setPendingToggles([]);
+    setToastVisible(false);
+  }, [onCommit]);
+
+  // Get the most recent toggle for display
+  const mostRecentToggle =
+    pendingToggles.length > 0 ? pendingToggles.at(-1) : null;
 
   // Compute derived state
   const state: ToggleUndoState = {
-    pendingToggle,
+    dateLabel: mostRecentToggle ? formatDateLabel(mostRecentToggle.date) : '',
+    pendingToggle: mostRecentToggle,
+    pendingToggles,
+    queueLength: pendingToggles.length,
     toastVisible,
-    dateLabel: pendingToggle ? formatDateLabel(pendingToggle.date) : '',
   };
 
   return {
-    state,
-    scheduleToggle,
-    undoToggle,
     dismissToast,
-    hasPendingToggle,
     forceCommit,
+    getPendingToggle,
+    hasPendingToggle,
+    scheduleToggle,
+    state,
+    undoAll,
+    undoToggle,
   };
 }
 
