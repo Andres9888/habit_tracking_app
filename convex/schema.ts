@@ -184,6 +184,28 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user_and_date', ['userId', 'date']),
 
+  // Quick Reflection - Post-habit completion feedback (BJ Fogg's Tiny Habits)
+  // Celebration + journaling increases self-awareness and habit consistency
+  // Scientific Basis: Daylio (50M+ downloads) business model validates reflection patterns
+  reflections: defineTable({
+    habitId: v.id('habits'),
+    userId: v.optional(v.string()),
+    date: v.string(), // ISO date string (YYYY-MM-DD)
+    // Emoji sentiment: 😤 frustrated | 😐 neutral | 😊 happy | 🔥 fire
+    emoji: v.union(
+      v.literal('frustrated'),
+      v.literal('neutral'),
+      v.literal('happy'),
+      v.literal('fire')
+    ),
+    note: v.optional(v.string()), // Optional text note
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_user_and_date', ['userId', 'date']),
+
   // Template Library (Phase 3 Feature)
   templates: defineTable({
     category: v.union(

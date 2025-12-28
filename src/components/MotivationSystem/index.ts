@@ -10,3 +10,4 @@
  */
 
 export * from './Workshop';
+export * from './Reward';

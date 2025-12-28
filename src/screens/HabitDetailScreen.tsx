@@ -82,6 +82,7 @@ import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
+import { QuickReflection, type EmojiType } from '../components/MotivationSystem/Reward';
 
 // Types
 type Habit = HabitDoc & {
@@ -932,6 +933,7 @@ function ProgressTabContent({
   tracking,
   weekData,
   lastWeekCompleted,
+  reduceMotion = false,
 }: {
   completedDates: Set<string>;
   habit: Habit;
@@ -941,13 +943,76 @@ function ProgressTabContent({
   tracking: HabitTrackingEntry[];
   weekData: WeekDayData[];
   lastWeekCompleted: number;
+  reduceMotion?: boolean;
 }) {
+  // Get today's date for reflection queries
+  const today = new Date().toISOString().split('T')[0];
+
+  // Query for today's reflection
+  const todaysReflection = useQuery(api.reflections.getByHabitAndDate, {
+    habitId: habit._id,
+    date: today,
+  });
+
+  // Mutation to upsert reflection
+  const upsertReflection = useMutation(api.reflections.upsert);
+
+  // Local state for reflection
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | undefined>(
+    todaysReflection?.emoji
+  );
+  const [reflectionNote, setReflectionNote] = useState(todaysReflection?.note ?? '');
+
+  // Sync local state with fetched reflection
+  useEffect(() => {
+    if (todaysReflection) {
+      setSelectedEmoji(todaysReflection.emoji);
+      setReflectionNote(todaysReflection.note ?? '');
+    }
+  }, [todaysReflection]);
+
+  // Handle emoji selection
+  const handleEmojiSelect = useCallback(async (emoji: EmojiType) => {
+    setSelectedEmoji(emoji);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    try {
+      await upsertReflection({
+        habitId: habit._id,
+        date: today,
+        emoji,
+        note: reflectionNote || undefined,
+      });
+    } catch (error) {
+      console.error('Failed to save reflection:', error);
+    }
+  }, [habit._id, today, reflectionNote, upsertReflection]);
+
+  // Handle note change with debounced save
+  const handleNoteChange = useCallback((note: string) => {
+    setReflectionNote(note);
+  }, []);
+
+  // Handle note submit
+  const handleNoteSubmit = useCallback(async () => {
+    if (!selectedEmoji) return;
+    try {
+      await upsertReflection({
+        habitId: habit._id,
+        date: today,
+        emoji: selectedEmoji,
+        note: reflectionNote || undefined,
+      });
+    } catch (error) {
+      console.error('Failed to save reflection note:', error);
+    }
+  }, [habit._id, today, selectedEmoji, reflectionNote, upsertReflection]);
+
   // Calculate habit age in days
   const habitAge = useMemo(() => {
     if (!habitCreatedAt) return 0;
     const createdDate = new Date(habitCreatedAt);
-    const today = new Date();
-    return Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+    const todayDate = new Date();
+    return Math.floor((todayDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
   }, [habitCreatedAt]);
 
   // Calculate weekly completion count for TodaysFocusCard
@@ -965,6 +1030,21 @@ function ProgressTabContent({
         habitAge={habitAge}
         bestStreak={habit.bestStreak ?? 0}
       />
+
+      {/* Quick Reflection - shown when habit is completed today (T6) */}
+      {isCompletedToday && (
+        <QuickReflection
+          selectedEmoji={selectedEmoji}
+          note={reflectionNote}
+          onEmojiSelect={handleEmojiSelect}
+          onNoteChange={handleNoteChange}
+          onSubmit={handleNoteSubmit}
+          showNoteInput={true}
+          shouldAnimate={true}
+          reduceMotion={reduceMotion}
+          sectionIndex={1}
+        />
+      )}
 
       {/* Phase 1: Weekly Summary Strip - 7-day progress view */}
       <WeeklySummaryStrip
@@ -2466,6 +2546,7 @@ export default function HabitDetailScreen({
                   tracking={tracking}
                   weekData={weekData}
                   lastWeekCompleted={lastWeekCompleted}
+                  reduceMotion={reduceMotion}
                 />
               </ScrollView>
             )}
