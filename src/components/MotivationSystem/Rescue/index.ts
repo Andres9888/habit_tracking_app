@@ -10,3 +10,9 @@ export type { RescueModeProps, RescueHabitData } from './RescueMode';
 
 export { FailureViz } from './FailureViz';
 export type { FailureVizProps, FailureVisualizationData } from './FailureViz';
+
+export { PreviousStreakVoiceNotes } from './PreviousStreakVoiceNotes';
+export type {
+  PreviousStreakVoiceNotesProps,
+  StreakVoiceNoteData,
+} from './PreviousStreakVoiceNotes';

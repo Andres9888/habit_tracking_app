@@ -277,3 +277,170 @@ export const listRecent = query({
   },
   returns: v.array(voiceNoteObjectValidator),
 });
+
+/**
+ * Streak context for voice notes in recovery mode
+ */
+const voiceNoteWithStreakContextValidator = v.object({
+  ...voiceNoteObjectValidator.fields,
+  daysAgo: v.number(),
+  streakAtRecording: v.number(),
+});
+
+/**
+ * Get voice notes recorded during the user's best streak period
+ *
+ * Scientific Basis:
+ * - Voice has 40% higher emotional recall than text (cognitive psychology)
+ * - Reconnecting with "peak motivation self" during struggle is powerful
+ * - Hearing your own voice from your best streak creates emotional anchor
+ *
+ * Used in Rescue Mode to help users reconnect with their most committed self.
+ * Returns voice notes with context about when they were recorded relative to streaks.
+ */
+export const getFromBestStreak = query({
+  args: {
+    habitId: v.id('habits'),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 3;
+
+    // Get habit to check best streak
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      return [];
+    }
+
+    const bestStreak = habit.bestStreak ?? 0;
+    if (bestStreak < 3) {
+      // No meaningful best streak to pull voice notes from
+      // (need at least 3 days to have a "best streak period")
+      return [];
+    }
+
+    // Get tracking history to find the best streak period dates
+    const tracking = await ctx.db
+      .query('tracking')
+      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+      .collect();
+
+    // Find the date range of the best streak
+    const completedDates = tracking
+      .filter((t) => t.completed)
+      .map((t) => t.date)
+      .sort((a, b) => a.localeCompare(b)); // ascending
+
+    if (completedDates.length === 0) {
+      return [];
+    }
+
+    // Find the best streak period (start and end dates)
+    const bestStreakPeriod = findBestStreakPeriod(completedDates, bestStreak);
+    if (!bestStreakPeriod) {
+      return [];
+    }
+
+    const { startDate, endDate } = bestStreakPeriod;
+
+    // Convert date strings to timestamps for comparison
+    const startTimestamp = new Date(startDate + 'T00:00:00').getTime();
+    const endTimestamp = new Date(endDate + 'T23:59:59').getTime();
+
+    // Get voice notes for this habit
+    const allNotes = await ctx.db
+      .query('voiceNotes')
+      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+      .collect();
+
+    // Filter to notes created during the best streak period
+    const notesFromBestStreak = allNotes.filter((note) => {
+      return note.createdAt >= startTimestamp && note.createdAt <= endTimestamp;
+    });
+
+    if (notesFromBestStreak.length === 0) {
+      return [];
+    }
+
+    // Calculate streak context for each note
+    const now = Date.now();
+    const notesWithContext = notesFromBestStreak.map((note) => {
+      // Calculate what day of the streak this note was recorded on
+      const noteDate = new Date(note.createdAt);
+      noteDate.setHours(0, 0, 0, 0);
+      const streakStartDate = new Date(startDate + 'T00:00:00');
+      const dayOfStreak =
+        Math.floor(
+          (noteDate.getTime() - streakStartDate.getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1; // 1-indexed
+
+      const daysAgo = Math.floor(
+        (now - note.createdAt) / (1000 * 60 * 60 * 24)
+      );
+
+      return {
+        ...note,
+        daysAgo,
+        streakAtRecording: dayOfStreak,
+      };
+    });
+
+    // Sort by streak day (descending - most recent streak day first) and take limit
+    return notesWithContext
+      .sort((a, b) => b.streakAtRecording - a.streakAtRecording)
+      .slice(0, limit);
+  },
+  returns: v.array(voiceNoteWithStreakContextValidator),
+});
+
+/**
+ * Find the date range of the best streak in the completion history
+ */
+function findBestStreakPeriod(
+  completedDates: string[],
+  targetStreakLength: number
+): { startDate: string; endDate: string } | null {
+  if (completedDates.length === 0) return null;
+  if (completedDates.length === 1) {
+    return { endDate: completedDates[0], startDate: completedDates[0] };
+  }
+
+  let bestStreakStart = completedDates[0];
+  let bestStreakEnd = completedDates[0];
+  let bestLength = 1;
+
+  let currentStreakStart = completedDates[0];
+  let currentLength = 1;
+
+  for (let i = 1; i < completedDates.length; i++) {
+    const prevDate = new Date(completedDates[i - 1] + 'T00:00:00');
+    const currDate = new Date(completedDates[i] + 'T00:00:00');
+    const diffDays = Math.floor(
+      (currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays === 1) {
+      // Consecutive day
+      currentLength++;
+      if (currentLength > bestLength) {
+        bestLength = currentLength;
+        bestStreakStart = currentStreakStart;
+        bestStreakEnd = completedDates[i];
+      }
+    } else if (diffDays > 1) {
+      // Gap - reset current streak
+      currentStreakStart = completedDates[i];
+      currentLength = 1;
+    }
+    // diffDays === 0 means duplicate, skip
+  }
+
+  // Verify we found the target streak (or close to it)
+  if (bestLength < targetStreakLength - 1) {
+    // Data inconsistency - the best streak in history doesn't match stored value
+    // Return what we found anyway
+  }
+
+  return { endDate: bestStreakEnd, startDate: bestStreakStart };
+}

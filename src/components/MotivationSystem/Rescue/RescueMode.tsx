@@ -50,6 +50,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Modal } from '../../Modal';
 import { FailureViz } from './FailureViz';
 import { VoiceNotePlaybackUI } from '../Workshop/VoiceNotePlaybackUI';
+import {
+  PreviousStreakVoiceNotes,
+  StreakVoiceNoteData,
+} from './PreviousStreakVoiceNotes';
 
 // Animation spring configs
 const SPRING_BUTTON = { damping: 15, stiffness: 300 };
@@ -86,6 +90,8 @@ export interface RescueHabitData {
   icon?: string;
   /** Current streak count at risk */
   currentStreak?: number;
+  /** Best streak (for context in streak recovery) */
+  bestStreak?: number;
   /** Total completions */
   totalCompletions?: number;
   /** User's "why" statement */
@@ -98,6 +104,8 @@ export interface RescueHabitData {
   hoursRemaining?: number;
   /** Day 1 voice note for emotional anchor */
   day1VoiceNote?: Day1VoiceNoteData;
+  /** Voice notes from the user's best streak period (for streak recovery) */
+  previousStreakVoiceNotes?: StreakVoiceNoteData[];
 }
 
 export interface RescueModeProps {
@@ -522,6 +530,9 @@ export function RescueMode({
     !!habit.vizFailureEmotion;
   const hasStreak = (habit.currentStreak ?? 0) > 0;
   const hasVoiceNote = !!habit.day1VoiceNote;
+  const hasPreviousStreakNotes =
+    (habit.previousStreakVoiceNotes?.length ?? 0) > 0 &&
+    (habit.bestStreak ?? 0) >= 3;
 
   return (
     <Modal
@@ -604,10 +615,34 @@ export function RescueMode({
             </AnimatedContent>
           )}
 
+          {/* Previous Streak Voice Notes - Reconnect with peak motivation self */}
+          {hasPreviousStreakNotes && (
+            <AnimatedContent
+              index={
+                (hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + (hasVoiceNote ? 1 : 0)
+              }
+              reduceMotion={reduceMotion}
+              visible={visible}
+            >
+              <View className='mt-4'>
+                <PreviousStreakVoiceNotes
+                  bestStreak={habit.bestStreak!}
+                  reduceMotion={reduceMotion}
+                  voiceNotes={habit.previousStreakVoiceNotes!}
+                  onPlayFinish={onVoiceNotePlayFinish}
+                  onPlayStart={onVoiceNotePlayStart}
+                />
+              </View>
+            </AnimatedContent>
+          )}
+
           {/* Failure Visualization - ALWAYS shown in Rescue Mode */}
           <AnimatedContent
             index={
-              (hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + (hasVoiceNote ? 1 : 0)
+              (hasStreak ? 1 : 0) +
+              (hasWhy ? 1 : 0) +
+              (hasVoiceNote ? 1 : 0) +
+              (hasPreviousStreakNotes ? 1 : 0)
             }
             reduceMotion={reduceMotion}
             visible={visible}
@@ -631,6 +666,7 @@ export function RescueMode({
               (hasStreak ? 1 : 0) +
               (hasWhy ? 1 : 0) +
               (hasVoiceNote ? 1 : 0) +
+              (hasPreviousStreakNotes ? 1 : 0) +
               1
             }
             reduceMotion={reduceMotion}
@@ -656,6 +692,7 @@ export function RescueMode({
               (hasStreak ? 1 : 0) +
               (hasWhy ? 1 : 0) +
               (hasVoiceNote ? 1 : 0) +
+              (hasPreviousStreakNotes ? 1 : 0) +
               2
             }
             reduceMotion={reduceMotion}
@@ -673,6 +710,7 @@ export function RescueMode({
               (hasStreak ? 1 : 0) +
               (hasWhy ? 1 : 0) +
               (hasVoiceNote ? 1 : 0) +
+              (hasPreviousStreakNotes ? 1 : 0) +
               3
             }
             reduceMotion={reduceMotion}
