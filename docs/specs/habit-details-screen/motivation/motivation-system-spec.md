@@ -779,14 +779,37 @@ export function useMotivationFeatures() {
   - Already implemented: `useAudioPlayback.ts` exports `PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2]` and `setSpeed()` function using `setRateAsync(speed, true)` for pitch-corrected playback
   - UI: `VoiceNotePlaybackUI.tsx` includes `SpeedControl` dropdown component with all 4 speed options, haptic feedback, teal accent styling
   - Tests: Speed setting tests in `useAudioPlayback.test.ts` (lines 402-418) and UI tests in `VoiceNotePlaybackUI.test.tsx` (lines 194-210)
-- [ ] Handle audio interruption (phone call, other app)
+- [x] Handle audio interruption (phone call, other app)
+  - Implemented audio interruption handling for both recording and playback:
+    - Added `'interrupted'` state to both `RecordingState` and `PlaybackState` types
+    - Added `wasInterrupted` and `interruptionReason` fields to track interruption details
+    - Added `onInterrupted` and `onInterruptionEnded` callbacks for UI notification
+    - Added `resumeFromInterruption()` function to resume after interruption ends
+    - Configured `InterruptionModeIOS.DoNotMix` and `InterruptionModeAndroid.DoNotMix` to pause audio on interruption
+    - Added `AppState` listener to detect app going to background (phone call, other app takes focus)
+    - Recording preserves duration during interruption; playback preserves position
+  - Tests: Comprehensive tests in `useAudioRecording.test.ts` (lines 843-1048) and `useAudioPlayback.test.ts` (lines 666-961)
 
 ### Rescue Mode Triggers
 
-- [ ] Don't trigger rescue if habit already completed
-- [ ] Don't trigger rescue for paused/archived habits
-- [ ] Limit to 1 rescue notification per habit per day
-- [ ] Respect Do Not Disturb settings
+- [x] Don't trigger rescue if habit already completed
+  - Implemented: `isEligibleForRescue()` in `useRescueTrigger` hook checks `isCompletedToday` flag
+  - Test coverage: `useRescueTrigger.test.ts:54-58` validates this behavior
+- [x] Don't trigger rescue for paused/archived habits
+  - Implemented: `isEligibleForRescue()` checks `isActive` flag before allowing trigger
+  - Test coverage: `useRescueTrigger.test.ts:61-65` validates inactive habits are skipped
+- [x] Limit to 1 rescue notification per habit per day
+  - Implemented: `rescueShownRef` tracks shown rescues in-memory, `rescueShownToday` from habit data provides persistence
+  - Midnight reset via interval clears in-memory tracking
+  - Test coverage: `useRescueTrigger.test.ts:169-203` covers `markRescueShown` functionality
+- [x] Respect Do Not Disturb settings
+  - Implemented: `QuietHoursConfig` interface with `enabled`, `startTime`, `endTime` (HH:MM format)
+  - Handles overnight ranges correctly (e.g., 22:00 - 07:00)
+  - `isInQuietHoursWindow()` exported utility function for reuse
+  - `isInQuietHours` returned from hook for UI feedback
+  - Scheduled and app resume triggers blocked during quiet hours
+  - Default: disabled; users can enable in settings
+  - Test coverage: 22 tests covering quiet hours logic in `useRescueTrigger.test.ts:320-537`
 
 ### Accessibility
 
