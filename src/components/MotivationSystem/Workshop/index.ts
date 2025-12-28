@@ -4,3 +4,4 @@
  */
 
 export { YourWhySection, type YourWhySectionProps } from './YourWhySection';
+export { IdentitySection, type IdentitySectionProps } from './IdentitySection';
