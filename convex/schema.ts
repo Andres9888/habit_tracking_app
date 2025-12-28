@@ -78,6 +78,13 @@ const applicationTables = {
     // "I am a healthy person" vs "I want to lose weight"
     identity: v.optional(v.string()),
 
+    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
+    // Mental contrasting + implementation intentions = 2x goal achievement
+    woopWish: v.optional(v.string()),
+    woopOutcome: v.optional(v.string()),
+    woopObstacle: v.optional(v.string()),
+    woopPlan: v.optional(v.string()),
+
     // Background color for icon
     frequency: v.optional(v.string()),
 

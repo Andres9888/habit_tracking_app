@@ -10,3 +10,8 @@ export {
   type CueTriggerSectionProps,
   type CueTriggerData,
 } from './CueTriggerSection';
+export {
+  WOOPSection,
+  type WOOPSectionProps,
+  type WOOPData,
+} from './WOOPSection';
