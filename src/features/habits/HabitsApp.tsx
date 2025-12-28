@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { View, Alert } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -10,15 +10,26 @@ import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { logInteraction } from '../../lib/analytics/interactions';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { useNotificationResponse } from '../../hooks/useNotificationResponse';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
-  const { openCreateHabitScreen, openTemplatesScreen } = modals;
+  const { openCreateHabitScreen, openTemplatesScreen, openActivationModalById } = modals;
   const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
+
+  // T7.8: Handle notification tap to open ActivationModal
+  const notificationHandlers = useMemo(() => ({
+    onHabitNotificationTap: (habitId: string) => {
+      console.log('[HabitsApp] Opening ActivationModal for habit:', habitId);
+      openActivationModalById(habitId);
+    },
+  }), [openActivationModalById]);
+
+  useNotificationResponse(notificationHandlers);
 
   const handleUpgradeIntent = useCallback(() => {
     logInteraction('premium_home_cta_view', { source: 'home_hero' });
