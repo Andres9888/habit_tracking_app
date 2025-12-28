@@ -97,8 +97,10 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (initial: any) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
     withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, callback?: any) => {
-      if (callback) callback(true);
+    withTiming: (value: any, _config?: any, _callback?: any) => {
+      // Note: We intentionally don't call the callback to avoid infinite loops
+      // in pulsing animations. The callback triggers runOnJS which would restart
+      // the animation, causing a stack overflow in tests.
       return value;
     },
     withSequence: (...values: any[]) => values[values.length - 1],
