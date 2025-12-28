@@ -17,6 +17,8 @@ export { InsightCard } from './InsightCard';
 export { DayDetailTooltip } from './DayDetailTooltip';
 export { ThemePickerSheet } from './ThemePickerSheet';
 export type { ThemePickerSheetProps } from './ThemePickerSheet';
+export { MonthPickerSheet } from './MonthPickerSheet';
+export type { MonthPickerSheetProps } from './MonthPickerSheet';
 
 // Theme Context and Hooks
 export {
