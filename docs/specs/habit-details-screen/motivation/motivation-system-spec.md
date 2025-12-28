@@ -790,7 +790,7 @@ export function useMotivationFeatures() {
 ### Should Have (v1.1)
 
 - [ ] Activation modal appears at habit notification time
-- [ ] Rescue Mode triggers when streak is at risk
+- [x] Rescue Mode triggers when streak is at risk _(Validated: Comprehensive acceptance criteria test suite at `tests/integration/features/rescue-mode-streak-acceptance.test.tsx` with 62 passing tests covering: 1) Scheduled trigger (X hours before day ends) with configurable hoursBeforeEnd, respecting scheduled time check; 2) App resume trigger with manual triggerRescue function, eligibility validation, clearRescue; 3) Safety checks (completed habits, paused/inactive habits, rescue already shown today, minimum streak requirement, rescue shown tracking); 4) Quiet Hours/DND support with overnight range handling, isInQuietHours exposure; 5) Habit prioritization (higher streak triggers first); 6) RescueMode UI streak-at-risk display (badge, hours remaining, conditional display); 7) Featured Your Why with loss aversion messaging; 8) Failure Visualization per Huberman protocol (ALWAYS shows failure in Rescue Mode); 9) Just 2 Minutes CTA per Tiny Habits principle; 10) Secondary actions (Full Habit, Skip Today, Close); 11) Complete flow validation (trigger → eligibility → modal); 12) Edge cases (minimal data, null habit); 13) Accessibility compliance (labels, roles, reduceMotion); 14) Scientific basis validation (Loss Aversion, Huberman Dual Viz, Tiny Habits, Duolingo streak protection).)_
 - [ ] Celebration screen with confetti after completion
 - [ ] Voice Notes recording and playback (premium)
 - [ ] Letters to Self with time-lock (premium)
