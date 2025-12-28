@@ -11,6 +11,7 @@ import React, {
   useState,
   useCallback,
   useMemo,
+  useEffect,
 } from 'react';
 import type { ReactNode } from 'react';
 import {
@@ -22,6 +23,10 @@ import {
   DEFAULT_THEME,
   mergeThemeOverrides,
 } from './types';
+import {
+  getSelectedGridTheme,
+  saveSelectedGridTheme,
+} from '../../utils/gridThemePreferences';
 
 // Create context with undefined default (will be provided by Provider)
 const GridThemeContext = createContext<GridThemeContextValue | undefined>(
@@ -37,6 +42,13 @@ export interface GridThemeProviderProps {
 
   /** Children components that will have access to the theme */
   children: ReactNode;
+
+  /**
+   * Whether to persist theme selection to AsyncStorage
+   * When enabled, selected theme is saved and restored on app restart
+   * @default true
+   */
+  persistSelection?: boolean;
 }
 
 /**
@@ -66,11 +78,38 @@ export function GridThemeProvider({
   initialTheme = DEFAULT_THEME,
   overrides: initialOverrides,
   children,
+  persistSelection = true,
 }: GridThemeProviderProps) {
   const [themeName, setThemeName] = useState<GridThemeName>(initialTheme);
   const [overrides, setOverrides] = useState<GridThemeOverrides>(
     initialOverrides ?? {}
   );
+  const [isInitialized, setIsInitialized] = useState(!persistSelection);
+
+  // Load saved theme preference on mount (only if persistence is enabled)
+  useEffect(() => {
+    if (!persistSelection) {
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadSavedTheme() {
+      const savedTheme = await getSelectedGridTheme();
+      if (isMounted && savedTheme !== null) {
+        setThemeName(savedTheme);
+      }
+      if (isMounted) {
+        setIsInitialized(true);
+      }
+    }
+
+    void loadSavedTheme();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [persistSelection]);
 
   // Compute the final theme by merging base theme with overrides
   const theme = useMemo((): GridTheme => {
@@ -79,11 +118,19 @@ export function GridThemeProvider({
   }, [themeName, overrides]);
 
   // Handler to change the active theme
-  const setTheme = useCallback((name: GridThemeName) => {
-    setThemeName(name);
-    // Clear custom overrides when switching themes
-    setOverrides({});
-  }, []);
+  const setTheme = useCallback(
+    (name: GridThemeName) => {
+      setThemeName(name);
+      // Clear custom overrides when switching themes
+      setOverrides({});
+
+      // Persist selection to AsyncStorage (fire and forget - don't block UI)
+      if (persistSelection) {
+        void saveSelectedGridTheme(name);
+      }
+    },
+    [persistSelection]
+  );
 
   // Handler to apply additional overrides to current theme
   const applyOverrides = useCallback((newOverrides: GridThemeOverrides) => {
@@ -110,13 +157,14 @@ export function GridThemeProvider({
 
   const contextValue = useMemo(
     (): GridThemeContextValue => ({
-      theme,
-      themeName,
-      setTheme,
       applyOverrides,
       availableThemes,
+      isThemeReady: isInitialized,
+      setTheme,
+      theme,
+      themeName,
     }),
-    [theme, themeName, setTheme, applyOverrides, availableThemes]
+    [theme, themeName, setTheme, applyOverrides, availableThemes, isInitialized]
   );
 
   return (

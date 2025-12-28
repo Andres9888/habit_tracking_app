@@ -169,6 +169,16 @@ export interface GridThemeContextValue {
 
   /** All available themes */
   availableThemes: GridThemeName[];
+
+  /**
+   * Whether the theme has been loaded from persistence.
+   * True when either:
+   * - Persistence is disabled (theme is immediately ready)
+   * - Persisted theme has been loaded from AsyncStorage
+   *
+   * Use this to optionally delay rendering until the saved theme is applied.
+   */
+  isThemeReady: boolean;
 }
 
 // ============================================================================
@@ -180,31 +190,36 @@ export interface GridThemeContextValue {
  * Square cells with rounded corners, checkmarks, GitHub-like emerald gradient
  */
 export const GITHUB_THEME: GridTheme = {
+  beforeCreationBackground: '#fafaf9',
   cellGap: 3,
   cellShape: 'rounded-sm',
   cellSize: { large: 64, standard: 20 },
   checkmarkScale: 0.5,
   completionIndicator: 'checkmark',
   description: 'Classic contribution graph style with checkmarks',
-  futureBackground: '#fafaf9',
-  id: 'github',
-  beforeCreationBackground: '#fafaf9',
-  incompleteBackground: '#f5f5f4',
   // stone-50
   enableShadow: false,
 
-  name: 'GitHub',
-
   enableStreakGlow: false,
 
-  incompleteBorder: 'none',
+  futureBackground: '#fafaf9',
 
   // stone-50
   futureBorder: 'dashed',
 
-  showCheckmark: true,
+  id: 'github',
+
+  incompleteBackground: '#f5f5f4',
+
+  incompleteBorder: 'none',
 
   incompleteBorderWidth: 0,
+
+  name: 'GitHub',
+
+  shadowColor: 'transparent',
+
+  showCheckmark: true,
 
   streakColors: {
     level1: '#6ee7b7', // emerald-300
@@ -212,8 +227,6 @@ export const GITHUB_THEME: GridTheme = {
     level3: '#10b981', // emerald-500
     level4: '#059669', // emerald-600
   },
-
-  shadowColor: 'transparent',
 
   // stone-100
   todayBorderColor: '#fbbf24',
@@ -226,31 +239,36 @@ export const GITHUB_THEME: GridTheme = {
  * Larger rounded squares, fill-only completion, high contrast
  */
 export const TILES_THEME: GridTheme = {
+  beforeCreationBackground: '#f5f5f4',
   cellGap: 4,
   cellShape: 'rounded-md',
   cellSize: { large: 68, standard: 22 },
   checkmarkScale: 0,
   completionIndicator: 'fill-only',
   description: 'Clean tile grid with bold fills',
-  futureBackground: '#fafaf9',
-  id: 'tiles',
-  beforeCreationBackground: '#f5f5f4',
-  incompleteBackground: '#fafaf9',
   // stone-100
   enableShadow: true,
 
-  name: 'Tiles',
-
   enableStreakGlow: false,
 
-  incompleteBorder: 'solid',
+  futureBackground: '#fafaf9',
 
   // stone-50
   futureBorder: 'dashed',
 
-  showCheckmark: false,
+  id: 'tiles',
+
+  incompleteBackground: '#fafaf9',
+
+  incompleteBorder: 'solid',
 
   incompleteBorderWidth: 1,
+
+  name: 'Tiles',
+
+  shadowColor: 'rgba(0, 0, 0, 0.05)',
+
+  showCheckmark: false,
 
   streakColors: {
     level1: '#a7f3d0', // emerald-200
@@ -258,8 +276,6 @@ export const TILES_THEME: GridTheme = {
     level3: '#34d399', // emerald-400
     level4: '#10b981', // emerald-500
   },
-
-  shadowColor: 'rgba(0, 0, 0, 0.05)',
 
   // stone-50
   todayBorderColor: '#f59e0b',
@@ -272,25 +288,27 @@ export const TILES_THEME: GridTheme = {
  * Circular cells, minimal design, dot indicator for completion
  */
 export const DOTS_THEME: GridTheme = {
+  beforeCreationBackground: 'transparent',
   cellGap: 6,
   cellShape: 'rounded-full',
   cellSize: { large: 56, standard: 16 },
   checkmarkScale: 0,
   completionIndicator: 'dot',
   description: 'Minimalist circular dots',
-  futureBackground: 'transparent',
-  id: 'dots',
-  beforeCreationBackground: 'transparent',
-  incompleteBackground: 'transparent',
   enableShadow: false,
-  name: 'Dots',
   enableStreakGlow: true,
-  incompleteBorder: 'solid',
+  futureBackground: 'transparent',
   futureBorder: 'dashed',
+  id: 'dots',
+  incompleteBackground: 'transparent',
+  incompleteBorder: 'solid',
+  incompleteBorderWidth: 1,
+
+  name: 'Dots',
+
+  shadowColor: 'transparent',
 
   showCheckmark: false,
-
-  incompleteBorderWidth: 1,
 
   streakColors: {
     level1: '#86efac', // green-300
@@ -298,8 +316,6 @@ export const DOTS_THEME: GridTheme = {
     level3: '#22c55e', // green-500
     level4: '#16a34a', // green-600
   },
-
-  shadowColor: 'transparent',
 
   todayBorderColor: '#f59e0b',
   // amber-500
@@ -311,31 +327,36 @@ export const DOTS_THEME: GridTheme = {
  * Sharp square edges, no rounding, retro pixel-art feel
  */
 export const PIXELS_THEME: GridTheme = {
+  beforeCreationBackground: '#1c1917',
   cellGap: 2,
   cellShape: 'rounded-none',
   cellSize: { large: 60, standard: 18 },
   checkmarkScale: 0.6,
   completionIndicator: 'fill-only',
   description: 'Retro pixel-art style with sharp edges',
-  futureBackground: '#292524',
-  id: 'pixels',
-  beforeCreationBackground: '#1c1917',
-  incompleteBackground: '#1c1917',
   // stone-900
   enableShadow: false,
 
-  name: 'Pixels',
-
   enableStreakGlow: true,
 
-  incompleteBorder: 'solid',
+  futureBackground: '#292524',
 
   // stone-800
   futureBorder: 'none',
 
-  showCheckmark: true,
+  id: 'pixels',
+
+  incompleteBackground: '#1c1917',
+
+  incompleteBorder: 'solid',
 
   incompleteBorderWidth: 1,
+
+  name: 'Pixels',
+
+  shadowColor: 'transparent',
+
+  showCheckmark: true,
 
   streakColors: {
     level1: '#bef264', // lime-300
@@ -343,8 +364,6 @@ export const PIXELS_THEME: GridTheme = {
     level3: '#84cc16', // lime-500
     level4: '#65a30d', // lime-600
   },
-
-  shadowColor: 'transparent',
 
   // stone-900 (dark mode feel)
   todayBorderColor: '#facc15',

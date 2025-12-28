@@ -5,11 +5,13 @@
  * - GridThemeProvider functionality
  * - useGridTheme and useGridThemeOptional hooks
  * - Theme application to DayCell, WeekGrid, and MonthGrid
+ * - Theme persistence to AsyncStorage
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GridThemeProvider,
   useGridTheme,
@@ -27,6 +29,9 @@ import {
   type CalendarDay,
 } from '../types';
 
+// Mock AsyncStorage
+jest.mock('@react-native-async-storage/async-storage');
+
 // Mock the useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({
   useReduceMotion: jest.fn(() => true), // Disable animations for testing
@@ -37,6 +42,8 @@ jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
   ImpactFeedbackStyle: { Medium: 'medium' },
 }));
+
+const STORAGE_KEY = '@habit_app:grid_theme_selection';
 
 describe('GridThemeContext', () => {
   describe('GridThemeProvider', () => {
@@ -209,6 +216,246 @@ describe('GridThemeContext', () => {
       expect(context).toBeDefined();
       expect(context?.theme.id).toBe('github');
       expect(getByText('has-context')).toBeTruthy();
+    });
+  });
+
+  describe('Theme Persistence to AsyncStorage', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+      (AsyncStorage.setItem as jest.Mock).mockResolvedValue(undefined);
+    });
+
+    it('loads saved theme from AsyncStorage on mount', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue('dots');
+
+      let capturedThemeId: string | undefined;
+
+      function ThemeConsumer() {
+        const { themeName } = useGridTheme();
+        capturedThemeId = themeName;
+        return <Text testID='theme-id'>{themeName}</Text>;
+      }
+
+      render(
+        <GridThemeProvider persistSelection={true}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      await waitFor(() => {
+        expect(capturedThemeId).toBe('dots');
+      });
+
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(STORAGE_KEY);
+    });
+
+    it('falls back to initialTheme when no saved theme exists', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+
+      let capturedThemeId: string | undefined;
+
+      function ThemeConsumer() {
+        const { themeName } = useGridTheme();
+        capturedThemeId = themeName;
+        return <Text testID='theme-id'>{themeName}</Text>;
+      }
+
+      render(
+        <GridThemeProvider initialTheme='tiles' persistSelection={true}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      await waitFor(() => {
+        expect(capturedThemeId).toBe('tiles');
+      });
+    });
+
+    it('saves theme to AsyncStorage when setTheme is called', async () => {
+      let setThemeFn:
+        | ((name: 'github' | 'tiles' | 'dots' | 'pixels') => void)
+        | undefined;
+
+      function ThemeConsumer() {
+        const { setTheme, themeName } = useGridTheme();
+        setThemeFn = setTheme;
+        return <Text testID='theme-id'>{themeName}</Text>;
+      }
+
+      render(
+        <GridThemeProvider persistSelection={true}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(setThemeFn).toBeDefined();
+      });
+
+      // Switch theme
+      act(() => {
+        if (setThemeFn) {
+          setThemeFn('pixels');
+        }
+      });
+
+      await waitFor(() => {
+        expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+          STORAGE_KEY,
+          'pixels'
+        );
+      });
+    });
+
+    it('does not persist when persistSelection is false', async () => {
+      let setThemeFn:
+        | ((name: 'github' | 'tiles' | 'dots' | 'pixels') => void)
+        | undefined;
+
+      function ThemeConsumer() {
+        const { setTheme, themeName } = useGridTheme();
+        setThemeFn = setTheme;
+        return <Text testID='theme-id'>{themeName}</Text>;
+      }
+
+      render(
+        <GridThemeProvider persistSelection={false}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      // Switch theme
+      act(() => {
+        if (setThemeFn) {
+          setThemeFn('pixels');
+        }
+      });
+
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+      expect(AsyncStorage.getItem).not.toHaveBeenCalled();
+    });
+
+    it('does not load from AsyncStorage when persistSelection is false', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue('dots');
+
+      let capturedThemeId: string | undefined;
+
+      function ThemeConsumer() {
+        const { themeName } = useGridTheme();
+        capturedThemeId = themeName;
+        return <Text testID='theme-id'>{themeName}</Text>;
+      }
+
+      render(
+        <GridThemeProvider initialTheme='github' persistSelection={false}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      // Should use initialTheme, not saved theme
+      expect(capturedThemeId).toBe('github');
+      expect(AsyncStorage.getItem).not.toHaveBeenCalled();
+    });
+
+    it('provides isThemeReady=true immediately when persistence is disabled', () => {
+      let isReady: boolean | undefined;
+
+      function ThemeConsumer() {
+        const { isThemeReady } = useGridTheme();
+        isReady = isThemeReady;
+        return <Text testID='ready'>{isThemeReady ? 'ready' : 'loading'}</Text>;
+      }
+
+      render(
+        <GridThemeProvider persistSelection={false}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      expect(isReady).toBe(true);
+    });
+
+    it('provides isThemeReady=true after loading from AsyncStorage', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue('tiles');
+
+      let isReady: boolean | undefined;
+
+      function ThemeConsumer() {
+        const { isThemeReady } = useGridTheme();
+        isReady = isThemeReady;
+        return <Text testID='ready'>{isThemeReady ? 'ready' : 'loading'}</Text>;
+      }
+
+      render(
+        <GridThemeProvider persistSelection={true}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      await waitFor(() => {
+        expect(isReady).toBe(true);
+      });
+    });
+
+    it('handles AsyncStorage error gracefully', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      (AsyncStorage.getItem as jest.Mock).mockRejectedValue(
+        new Error('Storage error')
+      );
+
+      let capturedThemeId: string | undefined;
+      let isReady: boolean | undefined;
+
+      function ThemeConsumer() {
+        const { themeName, isThemeReady } = useGridTheme();
+        capturedThemeId = themeName;
+        isReady = isThemeReady;
+        return (
+          <Text testID='theme-id'>{isThemeReady ? themeName : 'loading'}</Text>
+        );
+      }
+
+      render(
+        <GridThemeProvider initialTheme='github' persistSelection={true}>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      // Should still render with initial theme when storage fails
+      await waitFor(() => {
+        expect(isReady).toBe(true);
+      });
+
+      expect(capturedThemeId).toBe('github');
+
+      consoleSpy.mockRestore();
+    });
+
+    it('defaults persistSelection to true', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue('tiles');
+
+      let capturedThemeId: string | undefined;
+
+      function ThemeConsumer() {
+        const { themeName } = useGridTheme();
+        capturedThemeId = themeName;
+        return <Text testID='theme-id'>{themeName}</Text>;
+      }
+
+      render(
+        <GridThemeProvider>
+          <ThemeConsumer />
+        </GridThemeProvider>
+      );
+
+      // Should load saved theme (default behavior)
+      await waitFor(() => {
+        expect(capturedThemeId).toBe('tiles');
+      });
+
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(STORAGE_KEY);
     });
   });
 });
