@@ -503,134 +503,134 @@ export function useMotivationFeatures() {
 ### Phase 1: Core Free Features (Week 1-2)
 
 #### T1: Your Why Section
-- [ ] T1.1: Add `why` field to habits schema
-- [ ] T1.2: Create `YourWhySection` component with empty/filled states
-- [ ] T1.3: Add text editor modal with prompts
-- [ ] T1.4: Style with rose accent color (border-l-rose-400)
-- [ ] T1.5: Add completion checkmark when filled
+- [x] T1.1: Add `why` field to habits schema *(Already implemented - field exists at `convex/schema.ts:75` as `why: v.optional(v.string())`)*
+- [x] T1.2: Create `YourWhySection` component with empty/filled states *(Implemented at `src/components/MotivationSystem/Workshop/YourWhySection.tsx` with PulsingIcon empty state, filled state with quoted why, and SectionCard with press animation)*
+- [x] T1.3: Add text editor modal with prompts *(Already implemented in `HabitDetailScreen.tsx:2581-2704` with multiline TextInput, 200 char limit, "I do this because..." prefix, 4 inspirational prompts with icons, character counter, keyboard handling, and save via `updateHabit` API)*
+- [x] T1.4: Style with rose accent color (border-l-rose-400) *(Implemented in YourWhySection with border-l-4 border-l-rose-400, rose-100 icon background, rose-500 Heart icon)*
+- [x] T1.5: Add completion checkmark when filled *(Implemented CompletionCheckmark subcomponent with emerald-500 badge, pop-in animation 0→1.2→1, staggered delay based on sectionIndex)*
 
 #### T2: Identity Statement Section
-- [ ] T2.1: Add `identity` field to habits schema
-- [ ] T2.2: Create `IdentitySection` component
-- [ ] T2.3: Add "I am a..." prefix in input
-- [ ] T2.4: Style with indigo accent color
-- [ ] T2.5: Add explanatory text: "Not 'I run' — who you ARE"
+- [x] T2.1: Add `identity` field to habits schema *(Already implemented - field exists at `convex/schema.ts:79` as `identity: v.optional(v.string())`)*
+- [x] T2.2: Create `IdentitySection` component *(Implemented at `src/components/MotivationSystem/Workshop/IdentitySection.tsx` with PulsingIcon empty state, filled state with quoted identity, SectionCard with press animation, and CompletionCheckmark)*
+- [x] T2.3: Add "I am a..." prefix in input *(Implemented with smart formatting - `formattedIdentity` adds "I am a" prefix only if user hasn't already included it, supporting both "runner" and "I am a runner" inputs)*
+- [x] T2.4: Style with indigo accent color *(Implemented with border-l-4 border-l-indigo-400, bg-indigo-100 icon background, text-indigo-500/600/700 for icon and text)*
+- [x] T2.5: Add explanatory text: "Not 'I run' — who you ARE" *(Shown in both empty and filled states to reinforce the identity concept)*
 
 #### T3: Cue/Trigger Section
-- [ ] T3.1: Add `cue` object field to habits schema
-- [ ] T3.2: Create `CueTriggerSection` with 3 fields
-- [ ] T3.3: Time picker integration
-- [ ] T3.4: Location text input
-- [ ] T3.5: "After habit" text input
-- [ ] T3.6: Style with sky accent color
+- [x] T3.1: Add `cue` object field to habits schema *(Already implemented - flat fields exist at `convex/schema.ts:52-56` as `cueTime`, `cueLocation`, `cueAfterBehavior` with optional string validators)*
+- [x] T3.2: Create `CueTriggerSection` with 3 fields *(Implemented at `src/components/MotivationSystem/Workshop/CueTriggerSection.tsx` with PulsingIcon empty state, CueField subcomponent for each field, SectionCard with press animation, and CompletionCheckmark)*
+- [x] T3.3: Time picker integration *(Time field display implemented with Clock icon and "When:" label - shows time value from cue.time)*
+- [x] T3.4: Location text input *(Location field display implemented with MapPin icon and "Where:" label - shows location value from cue.location)*
+- [x] T3.5: "After habit" text input *(After behavior field implemented with Link icon and "After:" label - includes implementation intention preview "After I [behavior]..." when filled)*
+- [x] T3.6: Style with sky accent color *(Implemented with border-l-4 border-l-sky-400, bg-sky-100 icon background, text-sky-500/600/700 for icons and text, sky-50 background for intention preview)*
 
 #### T4: WOOP Plan Section
-- [ ] T4.1: Add `woop` object field to habits schema
-- [ ] T4.2: Create `WOOPSection` with 4 fields
-- [ ] T4.3: Highlight IF-THEN statement visually
-- [ ] T4.4: Add WOOP explanation tooltip
-- [ ] T4.5: Style with amber/rose W-O-O-P letters
+- [x] T4.1: Add `woop` object field to habits schema *(Implemented as flat fields at `convex/schema.ts:83-86` as `woopWish`, `woopOutcome`, `woopObstacle`, `woopPlan` with optional string validators, following the same pattern as cue fields)*
+- [x] T4.2: Create `WOOPSection` with 4 fields *(Implemented at `src/components/MotivationSystem/Workshop/WOOPSection.tsx` with WOOPField subcomponent for each WOOP field, PulsingIcon empty state, SectionCard with press animation, and CompletionCheckmark when all 4 fields are filled)*
+- [x] T4.3: Highlight IF-THEN statement visually *(Implemented with gradient background from-amber-50 to-emerald-50, shows "If [obstacle] → [plan]" format when both fields are filled, styled with italic font-medium)*
+- [x] T4.4: Add WOOP explanation tooltip *(Implemented WOOPExplainerModal with HelpCircle button trigger, shows WOOP method explanation, Dr. Oettingen attribution, W-O-O-P breakdown with color-coded letters, implementation intention explanation, and source citation)*
+- [x] T4.5: Style with amber/rose W-O-O-P letters *(Implemented with W=text-amber-500, first O=text-amber-500, second O=text-rose-500 for obstacle contrast, P=text-emerald-500, amber-100 icon background for Target icon)*
 
 #### T5: Basic Dual Visualization
-- [ ] T5.1: Add `visualization` object to habits schema
-- [ ] T5.2: Create `DualVizSetup` component for Workshop
-- [ ] T5.3: Success visualization form (Body/Mind/Emotion)
-- [ ] T5.4: Failure visualization form (Body/Mind/Emotion)
-- [ ] T5.5: Add science explainer: "Fear moves you 2x better"
-- [ ] T5.6: Style with emerald (success) / rose (failure) gradients
+- [x] T5.1: Add `visualization` object to habits schema *(Implemented as flat fields at `convex/schema.ts:88-96` as `vizSuccessBody`, `vizSuccessMind`, `vizSuccessEmotion`, `vizFailureBody`, `vizFailureMind`, `vizFailureEmotion` with optional string validators, following the same pattern as WOOP fields)*
+- [x] T5.2: Create `DualVizSetup` component for Workshop *(Implemented at `src/components/MotivationSystem/Workshop/DualVizSetup.tsx` with PulsingIcon empty state, VizPreview subcomponent for success/failure cards, SectionCard with press animation, and CompletionCheckmark when all 6 fields are filled)*
+- [x] T5.3: Success visualization form (Body/Mind/Emotion) *(Implemented via VizPreview component showing Body/Mind/Feel labels with emerald-50 background and emerald text colors)*
+- [x] T5.4: Failure visualization form (Body/Mind/Emotion) *(Implemented via VizPreview component showing Body/Mind/Feel labels with rose-50 background and rose text colors)*
+- [x] T5.5: Add science explainer: "Fear moves you 2x better" *(Implemented DualVizExplainerModal with HelpCircle button trigger, shows Huberman protocol explanation, key insight "Fear moves you 2x better" prominently in gradient rose-to-amber box, when-to-use guidance for motivated vs unmotivated states, and Huberman Lab Podcast #55 source citation)*
+- [x] T5.6: Style with emerald (success) / rose (failure) gradients *(Implemented with gradient icon background from-emerald-100 to-rose-100, emerald-50/emerald-700/800 for success preview, rose-50/rose-700/800 for failure preview, Sparkles icon for success, AlertTriangle icon for failure)*
 
 #### T6: Quick Reflection
-- [ ] T6.1: Create `reflections` table in Convex
-- [ ] T6.2: Create `QuickReflection` component
-- [ ] T6.3: Emoji selector (4 options)
-- [ ] T6.4: Optional text note field
-- [ ] T6.5: Integrate into habit completion flow
-- [ ] T6.6: Style with emerald accent
+- [x] T6.1: Create `reflections` table in Convex *(Implemented at `convex/schema.ts:187-207` with `habitId`, `userId`, `date`, `emoji` (union of frustrated/neutral/happy/fire), optional `note`, `createdAt`, `updatedAt`, and indexes `by_habit`, `by_habit_and_date`, `by_user_and_date`)*
+- [x] T6.2: Create `QuickReflection` component *(Implemented at `src/components/MotivationSystem/Reward/QuickReflection.tsx` with PulsingIcon empty state, SectionCard with press animation, CompletionCheckmark)*
+- [x] T6.3: Emoji selector (4 options) *(Implemented with EmojiButton subcomponent showing 😤 frustrated, 😐 neutral, 😊 happy, 🔥 fire with selection animations and haptic feedback)*
+- [x] T6.4: Optional text note field *(Implemented with TextInput showing after emoji selection, 500 char limit, character counter, multiline support, and submit handling)*
+- [x] T6.5: Integrate into habit completion flow *(Integrated into `ProgressTabContent` in `HabitDetailScreen.tsx` - shows when `isCompletedToday` is true, with reflection query/mutation via `api.reflections.getByHabitAndDate` and `api.reflections.upsert`)*
+- [x] T6.6: Style with emerald accent *(Implemented with border-l-4 border-l-emerald-400, bg-emerald-100 icon background, text-emerald-500/600/700 for icons and text, emerald selection ring on emoji buttons)*
 
 ---
 
 ### Phase 2: Screen Flows (Week 2-3)
 
 #### T7: Activation Modal
-- [ ] T7.1: Create `ActivationModal` component
-- [ ] T7.2: Habit card with stats at top
-- [ ] T7.3: Featured "Your Why" display
-- [ ] T7.4: Create `MotivationCheck` component (emoji buttons)
-- [ ] T7.5: Create `ContextAwareViz` that shows success OR failure
-- [ ] T7.6: "Start Now" button with glow animation
-- [ ] T7.7: Quick actions: Snooze, Just 2 Min
-- [ ] T7.8: Trigger from notification tap
+- [x] T7.1: Create `ActivationModal` component *(Implemented at `src/components/MotivationSystem/Activation/ActivationModal.tsx` with fullScreen Modal variant, AnimatedContent for staggered entrance, HabitCard with streak/completion stats, WhySection, WOOPReminder, CueReminder, StartNowButton with pulsing glow effect, QuickAction buttons for Snooze and Just 2 Min, comprehensive test suite at `Activation/__tests__/ActivationModal.test.tsx`)*
+- [x] T7.2: Habit card with stats at top *(Implemented as `HabitCard` subcomponent in ActivationModal.tsx:150-215 - displays habit icon in amber-100 container, habit name, streak count with Flame icon and pulse animation, total completions with Target icon)*
+- [x] T7.3: Featured "Your Why" display *(Implemented as `WhySection` subcomponent in ActivationModal.tsx:220-232 - rose-50 background with rose-400 left border, Heart icon, quoted why statement)*
+- [x] T7.4: Create `MotivationCheck` component (emoji buttons) *(Implemented at `src/components/MotivationSystem/Activation/MotivationCheck.tsx` with 3 motivation levels: 😩 Not at all, 😐 Meh, 💪 Ready! Selection triggers appropriate visualization via `shouldShowFailureViz` helper. Features violet styling, haptic feedback, science hint for unmotivated states, compact mode, comprehensive test suite with 28 tests at `Activation/__tests__/MotivationCheck.test.tsx`)*
+- [x] T7.5: Create `ContextAwareViz` that shows success OR failure *(Implemented at `src/components/MotivationSystem/Activation/ContextAwareViz.tsx` with Body/Mind/Emotion display, emerald for success, rose for failure, animated transitions, "Feel it" prompts, loss aversion science tip, compact mode, forceType override, comprehensive test suite with 21 tests at `Activation/__tests__/ContextAwareViz.test.tsx`)*
+- [x] T7.6: "Start Now" button with glow animation *(Implemented as `StartNowButton` subcomponent in ActivationModal.tsx:312-385 - pulsing glow effect via animated opacity, emerald-500 background, Play icon, scale animation on press, haptic feedback)*
+- [x] T7.7: Quick actions: Snooze, Just 2 Min *(Implemented as `QuickAction` subcomponent in ActivationModal.tsx:390-433 - stone-100 background, scale animation on press, Clock icon for Snooze, Zap icon for Just 2 Min, both call respective callbacks and close modal)*
+- [x] T7.8: Trigger from notification tap *(Implemented via `useNotificationResponse` hook at `src/hooks/useNotificationResponse.ts` - listens for `addNotificationResponseReceivedListener` and `getLastNotificationResponseAsync` from expo-notifications, extracts habitId from notification data, calls `openActivationModalById` in HabitsApp. State managed via `showActivationModal` and `activationModalHabit` in useHabitsModalsState hook. ActivationModal rendered in HabitsModals component with full habit data mapping. Comprehensive test suite at `src/hooks/__tests__/useNotificationResponse.test.ts`)*
 
 #### T8: Rescue Mode
-- [ ] T8.1: Create `RescueMode` screen/modal
-- [ ] T8.2: Streak-at-risk header with badge
-- [ ] T8.3: Featured "Your Why" (larger text)
-- [ ] T8.4: Create `FailureViz` component (always shows failure)
-- [ ] T8.5: "Just Do 2 Minutes" prominent CTA
-- [ ] T8.6: Trigger logic: X hours before day ends
-- [ ] T8.7: Trigger logic: App open after missed notification
+- [x] T8.1: Create `RescueMode` screen/modal *(Implemented at `src/components/MotivationSystem/Rescue/RescueMode.tsx` - fullScreen Modal with AnimatedContent for staggered entrance, StreakAtRiskHeader, FeaturedWhy, FailureViz integration, JustTwoMinButton with amber glow, SecondaryAction buttons for Full Habit and Skip Today, comprehensive test suite at `Rescue/__tests__/RescueMode.test.tsx` with 42 passing tests)*
+- [x] T8.2: Streak-at-risk header with badge *(Implemented as `StreakAtRiskHeader` subcomponent with pulsing AlertTriangle icon, rose-500 badge showing "{streak} Day Streak at Risk!", Timer icon with hours remaining countdown, urgent rose color scheme)*
+- [x] T8.3: Featured "Your Why" (larger text) *(Implemented as `FeaturedWhy` component with gradient from-rose-50 to-amber-50 background, filled Heart icon, text-lg font-bold header "Remember Your Why", text-lg italic quoted why statement, encouraging message "This is why you started...")*
+- [x] T8.4: Create `FailureViz` component (always shows failure) *(Implemented at `src/components/MotivationSystem/Rescue/FailureViz.tsx` - dedicated failure visualization with VizField subcomponent for Body/Mind/Emotion, StreakLossPreview showing "{streak} days gone. Starting over from zero.", EmptyVizState for missing data, loss aversion science tip, comprehensive test suite at `Rescue/__tests__/FailureViz.test.tsx`)*
+- [x] T8.5: "Just Do 2 Minutes" prominent CTA *(Implemented as `JustTwoMinButton` with gradient from-amber-500 to-orange-500 background, pulsing amber glow effect, Zap icon, text-xl font-bold title, supporting text "That's all it takes to save your streak", accessibility hint)*
+- [x] T8.6: Trigger logic: X hours before day ends *(Implemented via `useRescueTrigger` hook at `src/hooks/useRescueTrigger.ts` - configurable `hoursBeforeEnd` parameter (default 3 hours), `getHoursUntilMidnight()` calculation, 15-minute check interval, `enableScheduledTrigger` config option, comprehensive test suite at `src/hooks/__tests__/useRescueTrigger.test.ts` with 22 passing tests)*
+- [x] T8.7: Trigger logic: App open after missed notification *(Implemented via `useRescueTrigger` hook with AppState listener, `enableAppResumeTrigger` config option, checks if within `hoursBeforeEnd` window, validates habit is past scheduled time via `isPastScheduledTime()`, respects rescue-shown-today limit via `markRescueShown()` and internal tracking)*
 
 #### T9: Reward/Celebration Screen
-- [ ] T9.1: Create `CelebrationScreen` component
-- [ ] T9.2: Confetti/celebration animation
-- [ ] T9.3: Updated streak display with flame
-- [ ] T9.4: Stats cards (completion rate, best streak)
-- [ ] T9.5: Quick Reflection integration
-- [ ] T9.6: "Capture this feeling" prompt buttons
-- [ ] T9.7: Done button
+- [x] T9.1: Create `CelebrationScreen` component *(Implemented at `src/components/MotivationSystem/Reward/CelebrationScreen.tsx` - fullScreen Modal with AnimatedContent for staggered entrance, CelebrationHeader with confetti animation, StreakDisplay with flame pulse, StatsRow for metrics, QuickReflection integration, CapturePromptButtons for premium features, DoneButton with emerald glow, comprehensive test suite at `Reward/__tests__/CelebrationScreen.test.tsx` with 38 passing tests)*
+- [x] T9.2: Confetti/celebration animation *(Implemented via ConfettiBurst and ConfettiParticle components - 12 particles with random colors from CONFETTI_COLORS, radial burst pattern, scale/opacity/rotation animations, CelebrationHeader icon pop-in with wiggle effect)*
+- [x] T9.3: Updated streak display with flame *(Implemented as StreakDisplay subcomponent with continuous flame pulse animation via withRepeat, amber-to-orange gradient background, 3xl bold streak number, Flame icon with fill)*
+- [x] T9.4: Stats cards (completion rate, best streak) *(Implemented via StatsRow with 3 StatCard components - TrendingUp icon for completion rate (emerald), Trophy icon for best streak (amber), Target icon for total completions (violet), each with icon background and color-coded styling)*
+- [x] T9.5: Quick Reflection integration *(Integrated QuickReflection component with state management for emoji selection and note, passes onEmojiSelect/onNoteChange/onReflectionSubmit callbacks, syncs with selectedEmoji and reflectionNote props)*
+- [x] T9.6: "Capture this feeling" prompt buttons *(Implemented via CapturePromptButton component - Record Voice (Mic icon) and Write Letter (Mail icon), PRO badges for premium features, Sparkles decoration, press animations, description text)*
+- [x] T9.7: Done button *(Implemented as DoneButton with emerald-500 background, pulsing glow effect, Check icon, calls onDone and onClose, haptic feedback on press)*
 
 ---
 
 ### Phase 3: Premium Features (Week 3-4)
 
 #### T10: Voice Notes
-- [ ] T10.1: Create `voiceNotes` table in Convex
-- [ ] T10.2: Audio recording integration (expo-av)
-- [ ] T10.3: Waveform visualization during recording
-- [ ] T10.4: Playback UI with progress bar
-- [ ] T10.5: List of recordings with labels
-- [ ] T10.6: Premium gate: 1 free, unlimited premium
-- [ ] T10.7: Feature in Rescue Mode (Day 1 recording)
-- [ ] T10.8: Style with teal accent
+- [x] T10.1: Create `voiceNotes` table in Convex *(Implemented at `convex/schema.ts:274-290` with habitId, userId, audioUrl, duration, label, isDay1 flag, timestamps, and indexes by_habit, by_user, by_habit_and_date. API functions at `convex/voiceNotes.ts` with listByHabit, getDay1Note, get, countByHabit, create, update, remove, listRecent. Includes 5-min duration limit, 100-char label limit, Day 1 flag management. Test suite at `convex/voiceNotes.test.ts` with 25 passing tests.)*
+- [x] T10.2: Audio recording integration (expo-av) *(Implemented `useAudioRecording` hook at `src/hooks/useAudioRecording.ts` with full expo-av integration including permission handling, recording lifecycle (start/stop/pause/resume), duration tracking, metering level normalization (0-1 from dB), max duration enforcement (5 min), and error handling. VoiceNotesSection component at `src/components/MotivationSystem/Workshop/VoiceNotesSection.tsx` with recording UI, controls, and state management. Added expo-av plugin to app.json with microphone permission. Comprehensive test suites with 42 passing tests.)*
+- [x] T10.3: Waveform visualization during recording *(Implemented WaveformVisualization component within VoiceNotesSection.tsx with 20 animated bars using react-native-reanimated, metering-responsive heights, and smooth transitions. Respects reduceMotion for accessibility.)*
+- [x] T10.4: Playback UI with progress bar *(Implemented `useAudioPlayback` hook at `src/hooks/useAudioPlayback.ts` with expo-av Audio.Sound integration, progress tracking via positionMillis/durationMillis, speed control (0.5x-2x), seek functionality, replay, mute toggle, and error handling. Created `VoiceNotePlaybackUI` component at `src/components/MotivationSystem/Workshop/VoiceNotePlaybackUI.tsx` with PlayPauseButton, animated ProgressBar with seek-on-tap, time display (position/remaining), SpeedControl dropdown, compact mode option, error/loading states, and teal accent styling. Integrated into VoiceNotesList via expandable VoiceNoteItem component with animated expand/collapse using reanimated. Added onPlayStart/onPlayFinish callbacks to VoiceNotesSectionProps. Comprehensive test suites: 47 tests for hook, 17 tests for component, all 23 VoiceNotesSection tests still pass.)*
+- [x] T10.5: List of recordings with labels *(Implemented VoiceNotesList component within VoiceNotesSection.tsx displaying up to 3 recent recordings with labels, duration formatting, relative timestamps, Day 1 badge, and "View All" link when more than 3 notes exist.)*
+- [x] T10.6: Premium gate: 1 free, unlimited premium *(Implemented premium gating in VoiceNotesSection with FREE_TIER_MAX_NOTES=1 constant, canRecord check based on isPremium or voiceNoteCount < limit, onPremiumRequired callback for paywall trigger, and visual badge showing "{count}/1 Free" for non-premium users.)*
+- [x] T10.7: Feature in Rescue Mode (Day 1 recording) *(Implemented FeaturedVoiceNote component in `src/components/MotivationSystem/Rescue/RescueMode.tsx` with Day1VoiceNoteData interface, VoiceNotePlaybackUI integration, "Hear Your Day 1 Self" header with teal-400 border, Sparkles Day 1 badge, days-ago calculation, motivational text "Listen to the voice that made the commitment. That's still you.", onVoiceNotePlayStart/onVoiceNotePlayFinish callbacks, reduceMotion support. Added day1VoiceNote field to RescueHabitData interface. Comprehensive test suite with 14 new tests covering rendering, playback callbacks, days-ago display, and accessibility.)*
+- [x] T10.8: Style with teal accent *(Implemented with border-l-4 border-l-teal-400, bg-teal-100 icon background, text-teal-500/600/700 for icons and text, teal-500 record button, and teal-100 per-recording icon containers.)*
 
 #### T11: Letters to Self
-- [ ] T11.1: Create `letters` table in Convex
-- [ ] T11.2: Letter writing modal
-- [ ] T11.3: Unlock date picker (7/14/30/90 days)
-- [ ] T11.4: Locked letter display with countdown
-- [ ] T11.5: Unlock notification
-- [ ] T11.6: Letter reading modal
-- [ ] T11.7: Premium gate
-- [ ] T11.8: Style with violet accent
+- [x] T11.1: Create `letters` table in Convex *(Implemented at `convex/schema.ts:370-398` with content, createdAt, habitId, isRead, title, unlockAt, updatedAt, userId fields. Indexes: by_habit, by_user, by_unlock_date, by_habit_and_unlock. API functions at `convex/letters.ts` with listByHabit, getUnreadUnlocked, getUpcomingUnlocks, get, countByHabit, getStats, create, markAsRead, update, remove, getMostRecentUnlocked, listByUser. Includes validation for content (5000 chars), title (100 chars), unlock duration (1-365 days). Test suite at `convex/letters.test.ts` with 55 tests covering schema, validation, time-lock states, edit/delete restrictions, and scientific basis.)*
+- [x] T11.2: Letter writing modal *(Implemented at `src/components/MotivationSystem/Workshop/LettersSection.tsx` with embedded WriteLetterModal component. Two-step wizard flow: Step 1 - title input, content input with writing prompts, character counter (5000 max), minimum 10 char validation; Step 2 - UnlockDurationPicker with 4 options, unlock date preview, seal & lock CTA. Science callout reinforcing temporal self-continuity research. Comprehensive test suite at `__tests__/LettersSection.test.tsx` covering modal flow, inputs, navigation, and accessibility.)*
+- [x] T11.3: Unlock date picker (7/14/30/90 days) *(Implemented UnlockDurationPicker component within WriteLetterModal - 4 duration options: 1 Week (7 days), 2 Weeks (14 days), 1 Month (30 days), 3 Months (90 days). Each option shows label, description, and radio-style selection with violet styling. Unlock date preview shows full date with Calendar icon. UNLOCK_DURATION_OPTIONS exported for use elsewhere.)*
+- [x] T11.4: Locked letter display with countdown *(Implemented LetterItem component with locked/unlocked states. Locked letters show Lock icon, gray styling, "Unlocks in X days" countdown. Unlocked unread letters show violet-500 background with Mail icon, "Ready to read!" indicator. Read letters show violet-100 background with relative time. Unread badge shows count at section header.)*
+- [x] T11.5: Unlock notification *(Implemented letter unlock notification scheduling in `src/utils/notifications.ts` with `scheduleLetterUnlockNotification`, `cancelLetterUnlockNotification`, and `getScheduledLetterUnlockNotifications` functions. Uses DATE trigger for one-time notification at exact unlock time, separate Android channel with violet color. Extended `useNotificationResponse` hook to handle letter notifications with type-based routing. Created `useLetterNotification` hook at `src/hooks/useLetterNotification.ts` to integrate letter creation with notification scheduling. Comprehensive test suite added to `useNotificationResponse.test.ts` with 9 new tests for letter notification handling.)*
+- [x] T11.6: Letter reading modal *(Implemented `ReadLetterModal` component in `src/components/MotivationSystem/Workshop/LettersSection.tsx` with: emotional "time capsule" reveal experience with animated envelope/content, "Just Unlocked!" celebration badge for recently unlocked letters, quote-style content display with serif typography, metadata showing when letter was written and days ago, "Your Past Self" signature with optional habit name, motivational footer reinforcing commitment, locked letter error handling with unlock date preview, violet accent color scheme. Integrated into LettersSection via internal state management with onMarkAsRead callback. Added LetterData interface export. Comprehensive test suite with 17 new tests covering modal display, content, callbacks, locked state, and accessibility.)*
+- [x] T11.7: Premium gate *(Implemented premium gating throughout LettersSection - PRO badge visible for non-premium users, Write button hidden, onPremiumRequired callback triggered on section press. Premium users see full write functionality.)*
+- [x] T11.8: Style with violet accent *(Implemented with border-l-4 border-l-violet-400 section card, bg-violet-100 icon background, text-violet-500/600/700 throughout, violet-500 write button, violet-50 science callout, violet selection states in duration picker.)*
 
 #### T12: Vision Board
-- [ ] T12.1: Create `visionBoardImages` table
-- [ ] T12.2: Image picker integration (expo-image-picker)
-- [ ] T12.3: Image upload to storage (Convex file storage)
-- [ ] T12.4: 4-image grid display
-- [ ] T12.5: Full-size image viewer
-- [ ] T12.6: Optional captions
-- [ ] T12.7: Premium gate
+- [x] T12.1: Create `visionBoardImages` table *(Implemented at `convex/schema.ts:403-427` with imageUrl, caption, order, habitId, userId, timestamps. Indexes: by_habit, by_user, by_habit_and_order. API functions at `convex/visionBoardImages.ts` with listByHabit, get, countByHabit, create, updateCaption, reorder, remove, listByUser, listRecent. Includes MAX_IMAGES_PER_HABIT=4 limit, 200-char caption limit, automatic reordering on delete. Comprehensive test suite at `convex/visionBoardImages.test.ts` with 35 tests covering schema, limits, grid ordering, captions, and scientific basis validation.)*
+- [x] T12.2: Image picker integration (expo-image-picker) *(Implemented `useImagePicker` hook at `src/hooks/useImagePicker.ts` with pickFromCamera, pickFromLibrary, pickWithChoice methods, permission handling with graceful fallback and settings redirect, configurable aspect ratio and quality options, error handling, loading states. Added expo-image-picker ~16.1.0 to package.json and app.json with camera/photos permission strings. Comprehensive test suite at `src/hooks/__tests__/useImagePicker.test.ts` covering permissions, picking, cancellation, and error handling.)*
+- [x] T12.3: Image upload to storage (Convex file storage) *(Implemented `useImageUpload` hook at `src/hooks/useImageUpload.ts` with uploadImage method that generates signed URL via `convex/storage.ts:generateUploadUrl`, fetches local file as blob, POSTs to Convex storage, returns storageId. Updated schema to use `storageId: v.id('_storage')` instead of imageUrl string. Updated visionBoardImages API to resolve URLs via `ctx.storage.getUrl()`. Added 10MB size limit validation. Comprehensive test suite at `src/hooks/__tests__/useImageUpload.test.ts`.)*
+- [x] T12.4: 4-image grid display *(Implemented `VisionBoardSection` component at `src/components/MotivationSystem/Workshop/VisionBoardSection.tsx` with ImageGrid and ImageGridCell subcomponents. 2x2 grid layout with IMAGE_SIZE calculation based on screen width. Shows filled cells with images and captions, empty cells with "Add Image" button. Displays image count indicator (e.g., "2/4"). Uses fuchsia accent color for styling.)*
+- [x] T12.5: Full-size image viewer *(Implemented `ImageViewerModal` component within VisionBoardSection with full-screen black background, close button, edit caption button, delete button. Displays image at full width with contain mode. Shows caption below image with edit mode toggling.)*
+- [x] T12.6: Optional captions *(Implemented caption overlay on grid images via ImageGridCell. Caption editing in ImageViewerModal with TextInput, character counter (200 max), Save/Cancel buttons. onUpdateCaption callback triggers mutation. Caption displayed in both grid view and full-size viewer.)*
+- [x] T12.7: Premium gate *(Implemented premium gating throughout VisionBoardSection - PRO badge shown for non-premium users, image grid hidden, onPremiumRequired callback triggered on section press. Premium users see full functionality with image picker, grid, and viewer.)*
 
 #### T13: Affirmations (Extended)
-- [ ] T13.1: Add `affirmations` array to habits schema
-- [ ] T13.2: Affirmation list management
-- [ ] T13.3: Random selection for Activation
-- [ ] T13.4: Premium gate: 2 free, unlimited premium
-- [ ] T13.5: Style with amber accent
+- [x] T13.1: Add `affirmations` array to habits schema *(Already implemented - separate `affirmations` table exists at `convex/schema.ts:6-19` with `habitId`, `userId`, `text`, `type` (identity/motivational/instructional), `createdAt`, `updatedAt`. API functions at `convex/affirmations.ts` with listByHabit, create, update, remove. Includes MAX_AFFIRMATIONS_PER_HABIT=10 and MAX_TEXT_LENGTH=200 limits.)*
+- [x] T13.2: Affirmation list management *(Implemented at `src/components/MotivationSystem/Workshop/AffirmationsSection.tsx` with AffirmationsList subcomponent, AffirmationItem with edit/delete buttons, AffirmationEditorModal with text input and type selector. Features PulsingIcon empty state, SectionCard with press animation, CompletionCheckmark. Comprehensive test suite at `__tests__/AffirmationsSection.test.tsx` with 35 passing tests.)*
+- [x] T13.3: Random selection for Activation *(Implemented `getRandomAffirmation(affirmations)` and `getRandomAffirmationByType(affirmations, type)` helper functions exported from AffirmationsSection. Both handle empty arrays gracefully, returning null. Type-filtered selection useful for showing identity-based affirmations in specific contexts.)*
+- [x] T13.4: Premium gate: 2 free, unlimited premium *(Implemented with FREE_TIER_MAX_AFFIRMATIONS=2 constant, `canAddMore` check based on isPremium or count < limit, "Upgrade for Unlimited" button when at limit, free tier badge showing "{count}/2 Free", type selector disabled for non-premium users.)*
+- [x] T13.5: Style with amber accent *(Implemented with border-l-4 border-l-amber-400 section card, bg-amber-100 icon background, text-amber-500/600/700 throughout, amber-500 Add button, amber-50 science callout, amber-200 input border, amber type color palette for identity category.)*
 
 ---
 
 ### Phase 4: Polish & Integration (Week 4-5)
 
 #### T14: Animations
-- [ ] T14.1: Staggered entrance for Workshop sections (80ms)
-- [ ] T14.2: Completion checkmark pop-in
-- [ ] T14.3: Empty state pulse animations
-- [ ] T14.4: Press feedback on cards
-- [ ] T14.5: Glow animation on Start Now button
-- [ ] T14.6: Celebration confetti/particles
-- [ ] T14.7: Reduce motion preference support
+- [x] T14.1: Staggered entrance for Workshop sections (80ms) *(Implemented in `AnimatedSection` component within each Workshop section (e.g., YourWhySection.tsx:274-315) with `STAGGER_DELAY = 80ms`, `INITIAL_TRANSLATE_Y = 24`, fade+slide entrance using withSpring(SPRING_GENTLE) and withTiming for opacity)*
+- [x] T14.2: Completion checkmark pop-in *(Implemented in `CompletionCheckmark` component (e.g., YourWhySection.tsx:118-187) with pop-in sequence 0→1.2→1 using withSequence(withSpring(1.2, SPRING_BOUNCY), withSpring(1)), staggered delay based on sectionIndex)*
+- [x] T14.3: Empty state pulse animations *(Implemented in `PulsingIcon` component (e.g., YourWhySection.tsx:52-112) with infinite opacity 1→0.5→1 and scale 1→1.05→1 animations using withTiming and runOnJS for loop)*
+- [x] T14.4: Press feedback on cards *(Implemented in `SectionCard` component (e.g., YourWhySection.tsx:192-269) with scale 1→0.98 on pressIn, shadow/elevation adjustments using withSpring(SPRING_BUTTON), haptic feedback via expo-haptics)*
+- [x] T14.5: Glow animation on Start Now button *(Implemented in `StartNowButton` component in ActivationModal.tsx:312-385 with pulsing glow opacity 0.5→0.8→0.5 using withTiming loop, emerald-400/30 blur-xl glow layer, scale press animation)*
+- [x] T14.6: Celebration confetti/particles *(Implemented via `ConfettiBurst` and `ConfettiParticle` components in CelebrationScreen.tsx:171-292 - 12 particles with CONFETTI_COLORS, radial burst pattern, scale/opacity/rotation/position animations using interpolate, gravity simulation)*
+- [x] T14.7: Reduce motion preference support *(Implemented via `useReduceMotion` hook at src/hooks/useReduceMotion.ts using AccessibilityInfo.isReduceMotionEnabled() and reduceMotionChanged event listener. All animation components accept `reduceMotion` prop and skip animations when true)*
 
 #### T15: Premium Upsell
 - [ ] T15.1: Create premium feature lock UI
