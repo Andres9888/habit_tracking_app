@@ -4,9 +4,10 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Calendar, TrendingUp, TrendingDown } from 'lucide-react-native';
+import { Calendar, TrendingUp, TrendingDown, Palette } from 'lucide-react-native';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import type { CalendarHeatmapProps } from './types';
 import { CalendarGrid } from './CalendarGrid';
 import { InsightCard } from './InsightCard';
@@ -30,11 +31,14 @@ export function CalendarHeatmap({
   habitCreatedAt,
   habitColor,
   onDayPress,
+  showThemeButton = true,
+  onThemePress,
 }: CalendarHeatmapProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [insightCardDismissed, setInsightCardDismissed] = useState(false);
   const today = useMemo(() => new Date(), []);
+  const { triggerLightImpact } = useHapticFeedback();
 
   // Generate horizontal grid for 3 months
   const { weeks, monthLabels } = useMemo(() => {
@@ -126,6 +130,12 @@ export function CalendarHeatmap({
     );
   }, []);
 
+  // Handler for theme button press
+  const handleThemePress = useCallback(() => {
+    triggerLightImpact();
+    onThemePress?.();
+  }, [triggerLightImpact, onThemePress]);
+
   return (
     <Animated.View
       className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50"
@@ -152,25 +162,42 @@ export function CalendarHeatmap({
             <Text className="text-lg font-bold text-stone-800">Activity</Text>
           </View>
 
-          {/* Trend badge - only show if we have trend data */}
-          {trend !== null && (
-            <View
-              className={`flex-row items-center gap-1 px-2.5 py-1 rounded-full ${
-                trend >= 0 ? 'bg-emerald-100' : 'bg-amber-100'
-              }`}
-              accessible={true}
-              accessibilityLabel={`Trend: ${trend >= 0 ? 'up' : 'down'} ${Math.abs(trend)} percent compared to previous 3 months`}
-            >
-              {trend >= 0 ? (
-                <TrendingUp className="text-emerald-600" size={14} />
-              ) : (
-                <TrendingDown className="text-amber-600" size={14} />
-              )}
-              <Text className={`text-xs font-semibold ${trend >= 0 ? 'text-emerald-700' : 'text-amber-700'}`}>
-                {trend >= 0 ? '+' : ''}{trend}%
-              </Text>
-            </View>
-          )}
+          <View className="flex-row items-center gap-2">
+            {/* Theme picker button */}
+            {showThemeButton && onThemePress && (
+              <TouchableOpacity
+                accessibilityHint="Opens theme selection for calendar appearance"
+                accessibilityLabel="Choose calendar theme"
+                accessibilityRole="button"
+                className="h-8 w-8 items-center justify-center rounded-lg bg-stone-100 active:bg-stone-200"
+                hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+                testID="theme-picker-button"
+                onPress={handleThemePress}
+              >
+                <Palette className="text-stone-500" size={16} />
+              </TouchableOpacity>
+            )}
+
+            {/* Trend badge - only show if we have trend data */}
+            {trend !== null && (
+              <View
+                className={`flex-row items-center gap-1 px-2.5 py-1 rounded-full ${
+                  trend >= 0 ? 'bg-emerald-100' : 'bg-amber-100'
+                }`}
+                accessible={true}
+                accessibilityLabel={`Trend: ${trend >= 0 ? 'up' : 'down'} ${Math.abs(trend)} percent compared to previous 3 months`}
+              >
+                {trend >= 0 ? (
+                  <TrendingUp className="text-emerald-600" size={14} />
+                ) : (
+                  <TrendingDown className="text-amber-600" size={14} />
+                )}
+                <Text className={`text-xs font-semibold ${trend >= 0 ? 'text-emerald-700' : 'text-amber-700'}`}>
+                  {trend >= 0 ? '+' : ''}{trend}%
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
 
         {/* Calendar Grid */}

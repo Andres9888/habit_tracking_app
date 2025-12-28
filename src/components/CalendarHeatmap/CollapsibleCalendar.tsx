@@ -10,6 +10,7 @@
  * - Header with calendar icon, month/year, and chevron indicator
  * - Persists collapse state preference per habit
  * - Full accessibility support
+ * - Grid theme picker with AsyncStorage persistence
  *
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
@@ -27,6 +28,9 @@ import { Calendar, ChevronDown } from 'lucide-react-native';
 import { format, subDays } from 'date-fns';
 
 import { CalendarHeatmap } from './CalendarHeatmap';
+import { ThemePickerSheet } from './ThemePickerSheet';
+import { GridThemeProvider, useGridTheme } from './GridThemeContext';
+import type { GridThemeName } from './types';
 import type {
   CollapsibleCalendarProps,
   MiniPreviewDot,
@@ -135,12 +139,9 @@ const MiniPreviewDots = React.memo(function MiniPreviewDots({
 });
 
 /**
- * CollapsibleCalendar Component
- *
- * Wraps CalendarHeatmap with collapsible container functionality.
- * Memoized to prevent re-renders when parent updates unrelated props.
+ * Inner CollapsibleCalendar content that uses the GridTheme context
  */
-export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
+function CollapsibleCalendarContent({
   habitId,
   completedDates,
   habitCreatedAt,
@@ -148,14 +149,17 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
   onDayPress,
   defaultExpanded = false,
   showMiniPreview = true,
+  showThemeButton = true,
 }: CollapsibleCalendarProps) {
   const reduceMotion = useReduceMotion();
   const { triggerSelection } = useHapticFeedback();
+  const { themeName, setTheme } = useGridTheme();
 
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   // Use estimated height initially to avoid double-rendering for measurement
   const [contentHeight, setContentHeight] = useState(ESTIMATED_CALENDAR_HEIGHT);
   const [hasLoadedPreference, setHasLoadedPreference] = useState(false);
+  const [showThemePicker, setShowThemePicker] = useState(false);
 
   // Animation values
   const expandProgress = useSharedValue(defaultExpanded ? 1 : 0);
@@ -255,6 +259,22 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
     transform: [{ rotate: `${chevronRotation.value}deg` }],
   }));
 
+  // Theme picker handlers
+  const handleOpenThemePicker = useCallback(() => {
+    setShowThemePicker(true);
+  }, []);
+
+  const handleCloseThemePicker = useCallback(() => {
+    setShowThemePicker(false);
+  }, []);
+
+  const handleSelectTheme = useCallback(
+    (theme: GridThemeName) => {
+      setTheme(theme);
+    },
+    [setTheme]
+  );
+
   // Accessibility label
   const accessibilityLabel = useMemo(
     () =>
@@ -331,10 +351,37 @@ export const CollapsibleCalendar = React.memo(function CollapsibleCalendar({
             habitCreatedAt={habitCreatedAt}
             habitId={habitId}
             onDayPress={onDayPress}
+            onThemePress={showThemeButton ? handleOpenThemePicker : undefined}
+            showThemeButton={showThemeButton}
           />
         </View>
       </Animated.View>
+
+      {/* Theme Picker Modal */}
+      <ThemePickerSheet
+        selectedTheme={themeName}
+        visible={showThemePicker}
+        onClose={handleCloseThemePicker}
+        onSelectTheme={handleSelectTheme}
+      />
     </View>
+  );
+}
+
+/**
+ * CollapsibleCalendar Component
+ *
+ * Wraps CalendarHeatmap with collapsible container functionality.
+ * Memoized to prevent re-renders when parent updates unrelated props.
+ * Includes GridThemeProvider for theme management with AsyncStorage persistence.
+ */
+export const CollapsibleCalendar = React.memo(function CollapsibleCalendar(
+  props: CollapsibleCalendarProps
+) {
+  return (
+    <GridThemeProvider persistSelection>
+      <CollapsibleCalendarContent {...props} />
+    </GridThemeProvider>
   );
 });
 

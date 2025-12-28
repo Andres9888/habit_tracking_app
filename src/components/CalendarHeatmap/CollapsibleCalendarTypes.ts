@@ -28,6 +28,9 @@ export interface CollapsibleCalendarProps {
 
   /** Whether to show mini 7-day preview when collapsed */
   showMiniPreview?: boolean;
+
+  /** Whether to show theme picker button (default: true) */
+  showThemeButton?: boolean;
 }
 
 /**

@@ -437,6 +437,12 @@ export interface CalendarHeatmapProps {
 
   /** Callback when a day cell is tapped */
   onDayPress?: (date: string, completed: boolean) => void;
+
+  /** Whether to show theme picker button (default: true) */
+  showThemeButton?: boolean;
+
+  /** Callback when theme picker button is pressed */
+  onThemePress?: () => void;
 }
 
 /**
