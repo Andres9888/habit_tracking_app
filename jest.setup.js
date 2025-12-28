@@ -337,6 +337,28 @@ jest.mock('@shopify/react-native-skia', () => ({
   },
 }));
 
+// Mock @react-native-community/netinfo (virtual module - not installed)
+jest.mock('@react-native-community/netinfo', () => ({
+  fetch: jest.fn(() => Promise.resolve({
+    isConnected: true,
+    isInternetReachable: true,
+    type: 'wifi',
+    details: { isConnectionExpensive: false },
+  })),
+  addEventListener: jest.fn(() => jest.fn()), // Returns unsubscribe function
+  NetInfoStateType: {
+    unknown: 'unknown',
+    none: 'none',
+    cellular: 'cellular',
+    wifi: 'wifi',
+    bluetooth: 'bluetooth',
+    ethernet: 'ethernet',
+    wimax: 'wimax',
+    vpn: 'vpn',
+    other: 'other',
+  },
+}), { virtual: true });
+
 // Mock react-native-draggable-flatlist
 jest.mock('react-native-draggable-flatlist', () => {
   const React = require('react');
