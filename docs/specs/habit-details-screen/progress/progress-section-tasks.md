@@ -463,7 +463,19 @@
       - Glow ring rendering for strong vs short streaks
       - Theme-specific behavior (GitHub theme doesn't show glow)
     - All existing theme features maintained: circular cells (`rounded-full`), transparent backgrounds, dot completion indicator, green color gradient
-- [ ] Implement "Pixels" theme
+- [x] Implement "Pixels" theme
+  - **COMPLETED**: Full PIXELS_THEME implementation verified as operational:
+    - Theme preset defined in `types.ts` with all 20+ properties configured
+    - `rounded-none` cell shape for sharp pixel-art edges, `cellGap: 2` for tight grid
+    - Lime color gradient (`#bef264` → `#65a30d`) for retro terminal aesthetic
+    - Dark mode backgrounds: `#1c1917` (stone-900) and `#292524` (stone-800)
+    - CRT-style scanline effect: `isPixelsTheme()` check, `calculateScanlineOpacity()` function, scanline overlay rendering in DayCell
+    - `enableStreakGlow: true` for streak emphasis, `showCheckmark: true` (0.6 scale)
+    - Yellow today border (`#facc15`) for high contrast on dark background
+    - Dark-aware borders: `#44403c` (stone-700) for incomplete/future cells
+    - Full integration via `GridThemeContext` - DayCell, WeekGrid, MonthGrid consume theme correctly
+    - 30+ test cases in `GridThemeIntegration.test.tsx` covering preset values, scanline rendering, glow effects, and grid integration
+    - Exported from `CalendarHeatmap/index.ts` as `PIXELS_THEME` preset
 - [ ] Add theme picker UI
 - [ ] Persist to AsyncStorage
 
