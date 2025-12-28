@@ -37,7 +37,7 @@ export function calculateDayOfWeekStats(
   const startDate = habitCreatedAt
     ? new Date(habitCreatedAt)
     : tracking.length > 0
-      ? new Date(tracking[tracking.length - 1].date)
+      ? new Date(tracking.at(-1).date)
       : new Date();
 
   const today = new Date();
@@ -65,14 +65,14 @@ export function calculateDayOfWeekStats(
   }
 
   return DAY_LABELS.map((day, index) => ({
+    completed: dayStats[index].completed,
     day,
     dayIndex: index,
-    completed: dayStats[index].completed,
-    total: dayStats[index].total,
     rate:
       dayStats[index].total > 0
         ? Math.round((dayStats[index].completed / dayStats[index].total) * 100)
         : 0,
+    total: dayStats[index].total,
   }));
 }
 
@@ -159,9 +159,9 @@ export function calculateStreakRecords(
       if (streakDays >= 2) {
         streaks.push({
           days: streakDays,
-          startDate: streakStart,
           endDate: prevDateStr,
           isCurrent: false,
+          startDate: streakStart,
         });
       }
       // Start new streak
@@ -176,16 +176,16 @@ export function calculateStreakRecords(
   // Don't forget the last streak
   if (streakDays >= 2) {
     const today = getTodayString();
-    const lastDate = completedDates[completedDates.length - 1];
+    const lastDate = completedDates.at(-1);
     // Check if last date is today or yesterday (streak is still active)
     const daysSinceLastCompletion = differenceInDays(today, lastDate);
     const isCurrent = daysSinceLastCompletion <= 1;
 
     streaks.push({
       days: streakDays,
-      startDate: streakStart,
       endDate: lastDate,
       isCurrent: isCurrent && currentStreak > 0,
+      startDate: streakStart,
     });
   }
 
@@ -202,9 +202,9 @@ export function calculateStreakRecords(
       startDate.setDate(startDate.getDate() - currentStreak + 1);
       streaks.push({
         days: currentStreak,
-        startDate: formatDateString(startDate),
         endDate: today,
         isCurrent: true,
+        startDate: formatDateString(startDate),
       });
       streaks.sort((a, b) => b.days - a.days);
     }
@@ -266,9 +266,9 @@ export function calculateTrendComparison(
       : 0;
 
   return {
-    thisMonth: thisMonthRate,
-    lastMonth: lastMonthRate,
     change: thisMonthRate - lastMonthRate,
+    lastMonth: lastMonthRate,
+    thisMonth: thisMonthRate,
   };
 }
 
@@ -325,13 +325,17 @@ export function getBestAndWorstDays(dayStats: DayStats[]): {
     return { bestDay: null, worstDay: null };
   }
 
-  const bestDay = withData.reduce((best, curr) =>
-    curr.rate > best.rate ? curr : best
-  );
+  let bestDay = withData[0];
+  let worstDay = withData[0];
 
-  const worstDay = withData.reduce((worst, curr) =>
-    curr.rate < worst.rate ? curr : worst
-  );
+  for (const day of withData) {
+    if (day.rate > bestDay.rate) {
+      bestDay = day;
+    }
+    if (day.rate < worstDay.rate) {
+      worstDay = day;
+    }
+  }
 
   return { bestDay, worstDay };
 }
@@ -375,7 +379,11 @@ export function calculateConsistencyIndex(
   );
 
   // Generate sparkline data for the last 30 days
-  const sparklineData: Array<{ date: string; completed: boolean; value: number }> = [];
+  const sparklineData: Array<{
+    date: string;
+    completed: boolean;
+    value: number;
+  }> = [];
   let completedCount = 0;
   let currentStreak = 0;
   let maxStreakInPeriod = 0;
@@ -404,11 +412,12 @@ export function calculateConsistencyIndex(
 
     // Calculate running consistency value for this point
     const daysIncluded = sparklineData.length + 1;
-    const runningRate = daysIncluded > 0 ? (completedCount / daysIncluded) * 100 : 0;
+    const runningRate =
+      daysIncluded > 0 ? (completedCount / daysIncluded) * 100 : 0;
 
     sparklineData.push({
-      date: dateStr,
       completed: isCompleted,
+      date: dateStr,
       value: Math.round(runningRate),
     });
 
@@ -467,17 +476,181 @@ export function calculateConsistencyIndex(
   }
 
   // Calculate previous period score
-  const prevCompletionRate = prevDaysCount > 0 ? prevCompletedCount / prevDaysCount : 0;
+  const prevCompletionRate =
+    prevDaysCount > 0 ? prevCompletedCount / prevDaysCount : 0;
   const prevBaseScore = Math.round(prevCompletionRate * 60);
   const prevStreakBonus = Math.min(25, Math.round((prevMaxStreak / 14) * 25));
   // No recency bonus for previous period
   const previousScore = Math.min(100, prevBaseScore + prevStreakBonus);
 
   return {
-    score,
-    previousScore,
     change: score - previousScore,
-    sparklineData,
     daysIncluded,
+    previousScore,
+    score,
+    sparklineData,
+  };
+}
+
+/**
+ * Calculate weekly comparison data between this week and last week
+ *
+ * @param tracking - Array of habit tracking entries
+ * @param habitCreatedAt - Timestamp when habit was created
+ * @returns WeeklyComparisonData with this week vs last week stats
+ */
+export function calculateWeeklyComparison(
+  tracking: HabitTrackingEntry[],
+  habitCreatedAt?: number
+): {
+  thisWeekCompleted: number;
+  thisWeekTotal: number;
+  lastWeekCompleted: number;
+  lastWeekTotal: number;
+  difference: number;
+  percentChange: number;
+  trend: 'up' | 'down' | 'stable';
+  thisWeekDays: Array<{
+    date: string;
+    dayLabel: string;
+    completed: boolean;
+    isFuture: boolean;
+    isBeforeCreation: boolean;
+  }>;
+  lastWeekDays: Array<{
+    date: string;
+    dayLabel: string;
+    completed: boolean;
+    isFuture: boolean;
+    isBeforeCreation: boolean;
+  }>;
+} {
+  const today = new Date();
+  const todayStr = getTodayString();
+
+  // Get the start of this week (Sunday)
+  const thisWeekStart = new Date(today);
+  thisWeekStart.setDate(today.getDate() - today.getDay());
+  thisWeekStart.setHours(0, 0, 0, 0);
+
+  // Get the start of last week (Sunday)
+  const lastWeekStart = new Date(thisWeekStart);
+  lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+
+  // Create set of completed dates for O(1) lookup
+  const completedDates = new Set(
+    tracking.filter((t) => t.completed).map((t) => t.date)
+  );
+
+  // Day labels
+  const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Generate this week's data
+  const thisWeekDays: Array<{
+    date: string;
+    dayLabel: string;
+    completed: boolean;
+    isFuture: boolean;
+    isBeforeCreation: boolean;
+  }> = [];
+  let thisWeekCompleted = 0;
+  let thisWeekTotal = 0;
+
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(thisWeekStart);
+    day.setDate(thisWeekStart.getDate() + i);
+    const dateStr = formatDateString(day);
+    const isFuture = differenceInDays(dateStr, todayStr) > 0;
+    const isBeforeCreation = habitCreatedAt
+      ? day.getTime() < habitCreatedAt
+      : false;
+
+    const completed = completedDates.has(dateStr);
+
+    thisWeekDays.push({
+      completed,
+      date: dateStr,
+      dayLabel: dayLabels[i],
+      isBeforeCreation,
+      isFuture,
+    });
+
+    // Count trackable days and completions
+    if (!isFuture && !isBeforeCreation) {
+      thisWeekTotal++;
+      if (completed) {
+        thisWeekCompleted++;
+      }
+    }
+  }
+
+  // Generate last week's data
+  const lastWeekDays: Array<{
+    date: string;
+    dayLabel: string;
+    completed: boolean;
+    isFuture: boolean;
+    isBeforeCreation: boolean;
+  }> = [];
+  let lastWeekCompleted = 0;
+  let lastWeekTotal = 0;
+
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(lastWeekStart);
+    day.setDate(lastWeekStart.getDate() + i);
+    const dateStr = formatDateString(day);
+    const isBeforeCreation = habitCreatedAt
+      ? day.getTime() < habitCreatedAt
+      : false;
+
+    const completed = completedDates.has(dateStr);
+
+    lastWeekDays.push({
+      completed,
+      date: dateStr,
+      dayLabel: dayLabels[i],
+      // Last week is never in the future
+      isBeforeCreation,
+      isFuture: false,
+    });
+
+    // Count trackable days and completions
+    if (!isBeforeCreation) {
+      lastWeekTotal++;
+      if (completed) {
+        lastWeekCompleted++;
+      }
+    }
+  }
+
+  // Calculate difference and trend
+  const difference = thisWeekCompleted - lastWeekCompleted;
+
+  // Calculate percentage change (avoid division by zero)
+  let percentChange = 0;
+  if (lastWeekCompleted > 0) {
+    percentChange = Math.round((difference / lastWeekCompleted) * 100);
+  } else if (thisWeekCompleted > 0) {
+    percentChange = 100; // From 0 to something is 100% increase
+  }
+
+  // Determine trend
+  let trend: 'up' | 'down' | 'stable' = 'stable';
+  if (difference > 0) {
+    trend = 'up';
+  } else if (difference < 0) {
+    trend = 'down';
+  }
+
+  return {
+    difference,
+    lastWeekCompleted,
+    lastWeekDays,
+    lastWeekTotal,
+    percentChange,
+    thisWeekCompleted,
+    thisWeekDays,
+    thisWeekTotal,
+    trend,
   };
 }

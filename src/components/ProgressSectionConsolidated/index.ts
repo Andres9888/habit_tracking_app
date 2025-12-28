@@ -31,6 +31,7 @@ export { StatCard } from './StatCard';
 export { MilestoneProgress } from './MilestoneProgress';
 export { TipQuickActionsSheet } from './TipQuickActionsSheet';
 export { ConsistencyIndexCard } from './ConsistencyIndexCard';
+export { WeeklyComparisonCard } from './WeeklyComparisonCard';
 
 // Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';
@@ -45,6 +46,7 @@ export * from './StatsGridTypes';
 export * from './MilestoneProgressTypes';
 export * from './TipQuickActionsSheetTypes';
 export * from './ConsistencyIndexCardTypes';
+export * from './WeeklyComparisonCardTypes';
 
 // Re-export utility functions from existing ProgressSection
 // These are reused for data calculations
@@ -56,4 +58,5 @@ export {
   generateActionableTip,
   getBestAndWorstDays,
   calculateConsistencyIndex,
+  calculateWeeklyComparison,
 } from '../ProgressSection/utils';
