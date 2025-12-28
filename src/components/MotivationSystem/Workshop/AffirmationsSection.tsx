@@ -47,19 +47,41 @@ import {
   User,
   Zap,
   BookOpen,
-  Shuffle,
+  Bell,
+  BellOff,
+  Clock,
 } from 'lucide-react-native';
+import {
+  formatDaysOfWeek,
+  getNextAffirmationDeliveryRelativeTime,
+} from '@/utils/notifications';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
+import { AffirmationScheduleModal } from './AffirmationScheduleModal';
 
 // Affirmation types for categorization
 export type AffirmationType = 'identity' | 'motivational' | 'instructional';
+
+// Frequency types for scheduled delivery
+export type AffirmationFrequency = 'daily' | 'weekly';
 
 export interface AffirmationData {
   id: string;
   text: string;
   type?: AffirmationType;
   createdAt: number;
+  // Scheduled delivery fields (premium)
+  scheduledTime?: string; // "HH:MM" 24-hour format
+  frequency?: AffirmationFrequency;
+  daysOfWeek?: number[];
+  isScheduleEnabled?: boolean;
+}
+
+export interface AffirmationScheduleConfig {
+  scheduledTime: string;
+  frequency: AffirmationFrequency;
+  daysOfWeek?: number[];
+  isScheduleEnabled: boolean;
 }
 
 export interface AffirmationsSectionProps {
@@ -79,6 +101,13 @@ export interface AffirmationsSectionProps {
   ) => Promise<void>;
   /** Callback when an affirmation is deleted */
   onDeleteAffirmation: (id: string) => Promise<void>;
+  /** Callback when schedule is configured (premium) */
+  onScheduleAffirmation?: (
+    id: string,
+    schedule: AffirmationScheduleConfig
+  ) => Promise<void>;
+  /** Callback when schedule is cancelled */
+  onCancelSchedule?: (id: string) => Promise<void>;
   /** Callback when user hits premium limit */
   onPremiumRequired: () => void;
   /** Whether to run entrance animations */
@@ -693,72 +722,136 @@ function AffirmationEditorModal({
 }
 
 /**
+ * Format time for display (12-hour with AM/PM)
+ */
+function formatTimeForDisplay(time?: string): string {
+  if (!time) return '';
+  const [hours, minutes] = time.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+}
+
+/**
  * AffirmationItem Component
- * Individual affirmation display with edit/delete actions
+ * Individual affirmation display with edit/delete/schedule actions
  */
 function AffirmationItem({
   affirmation,
   onEdit,
   onDelete,
+  onSchedule,
   isPremium,
 }: {
   affirmation: AffirmationData;
   onEdit: () => void;
   onDelete: () => void;
+  onSchedule?: () => void;
   isPremium: boolean;
 }) {
   const typeConfig = affirmation.type ? TYPE_CONFIG[affirmation.type] : null;
   const TypeIcon = typeConfig?.icon;
+  const hasSchedule =
+    affirmation.isScheduleEnabled && affirmation.scheduledTime;
+
+  // Get next delivery time preview
+  const nextDelivery =
+    hasSchedule && affirmation.scheduledTime && affirmation.frequency
+      ? getNextAffirmationDeliveryRelativeTime(
+          affirmation.scheduledTime,
+          affirmation.frequency,
+          affirmation.daysOfWeek
+        )
+      : null;
 
   return (
-    <View className='flex-row items-start gap-3 rounded-xl bg-amber-50 p-3'>
-      {/* Type badge or default icon */}
-      <View
-        className={clsx(
-          'h-8 w-8 items-center justify-center rounded-full',
-          typeConfig ? typeConfig.bgColor : 'bg-amber-100'
-        )}
-      >
-        {TypeIcon ? (
-          <TypeIcon className={typeConfig?.textColor} size={14} />
-        ) : (
-          <MessageSquareQuote className='text-amber-600' size={14} />
-        )}
+    <View className='rounded-xl bg-amber-50 p-3'>
+      <View className='flex-row items-start gap-3'>
+        {/* Type badge or default icon */}
+        <View
+          className={clsx(
+            'h-8 w-8 items-center justify-center rounded-full',
+            typeConfig ? typeConfig.bgColor : 'bg-amber-100'
+          )}
+        >
+          {TypeIcon ? (
+            <TypeIcon className={typeConfig?.textColor} size={14} />
+          ) : (
+            <MessageSquareQuote className='text-amber-600' size={14} />
+          )}
+        </View>
+
+        {/* Content */}
+        <View className='flex-1'>
+          <Text className='text-sm text-stone-700'>"{affirmation.text}"</Text>
+          {typeConfig && (
+            <Text className={clsx('mt-1 text-xs', typeConfig.textColor)}>
+              {typeConfig.label}
+            </Text>
+          )}
+        </View>
+
+        {/* Actions */}
+        <View className='flex-row gap-1'>
+          {/* Schedule button (premium only) */}
+          {isPremium && onSchedule && (
+            <Pressable
+              accessibilityLabel={
+                hasSchedule
+                  ? `Scheduled at ${formatTimeForDisplay(affirmation.scheduledTime)}`
+                  : 'Schedule delivery'
+              }
+              className={clsx(
+                'h-8 w-8 items-center justify-center rounded-full',
+                hasSchedule ? 'bg-emerald-100' : 'bg-white'
+              )}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                onSchedule();
+              }}
+            >
+              {hasSchedule ? (
+                <Bell className='text-emerald-600' size={14} />
+              ) : (
+                <BellOff className='text-stone-400' size={14} />
+              )}
+            </Pressable>
+          )}
+          <Pressable
+            accessibilityLabel='Edit affirmation'
+            className='h-8 w-8 items-center justify-center rounded-full bg-white'
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onEdit();
+            }}
+          >
+            <Edit2 className='text-stone-400' size={14} />
+          </Pressable>
+          <Pressable
+            accessibilityLabel='Delete affirmation'
+            className='h-8 w-8 items-center justify-center rounded-full bg-white'
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onDelete();
+            }}
+          >
+            <Trash2 className='text-rose-400' size={14} />
+          </Pressable>
+        </View>
       </View>
 
-      {/* Content */}
-      <View className='flex-1'>
-        <Text className='text-sm text-stone-700'>"{affirmation.text}"</Text>
-        {typeConfig && (
-          <Text className={clsx('mt-1 text-xs', typeConfig.textColor)}>
-            {typeConfig.label}
+      {/* Schedule indicator */}
+      {hasSchedule && nextDelivery && (
+        <View className='mt-2 flex-row items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1'>
+          <Clock className='text-emerald-500' size={12} />
+          <Text className='text-xs text-emerald-700'>
+            Next: {nextDelivery}
+            {affirmation.frequency === 'weekly' &&
+              affirmation.daysOfWeek &&
+              ` • ${formatDaysOfWeek(affirmation.daysOfWeek)}`}
           </Text>
-        )}
-      </View>
-
-      {/* Actions */}
-      <View className='flex-row gap-1'>
-        <Pressable
-          accessibilityLabel='Edit affirmation'
-          className='h-8 w-8 items-center justify-center rounded-full bg-white'
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onEdit();
-          }}
-        >
-          <Edit2 className='text-stone-400' size={14} />
-        </Pressable>
-        <Pressable
-          accessibilityLabel='Delete affirmation'
-          className='h-8 w-8 items-center justify-center rounded-full bg-white'
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onDelete();
-          }}
-        >
-          <Trash2 className='text-rose-400' size={14} />
-        </Pressable>
-      </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -771,12 +864,14 @@ function AffirmationsList({
   affirmations,
   onEdit,
   onDelete,
+  onSchedule,
   isPremium,
   maxDisplay = 3,
 }: {
   affirmations: AffirmationData[];
   onEdit: (affirmation: AffirmationData) => void;
   onDelete: (affirmationId: string) => void;
+  onSchedule?: (affirmation: AffirmationData) => void;
   isPremium: boolean;
   maxDisplay?: number;
 }) {
@@ -787,12 +882,25 @@ function AffirmationsList({
   const displayAffirmations = affirmations.slice(0, maxDisplay);
   const remainingCount = affirmations.length - maxDisplay;
 
+  // Count scheduled affirmations
+  const scheduledCount = affirmations.filter(
+    (a) => a.isScheduleEnabled && a.scheduledTime
+  ).length;
+
   return (
     <View className='mt-4 border-t border-stone-100 pt-4'>
       <View className='mb-2 flex-row items-center justify-between'>
         <Text className='text-sm font-medium text-stone-600'>
           Your Affirmations ({affirmations.length})
         </Text>
+        {scheduledCount > 0 && isPremium && (
+          <View className='flex-row items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5'>
+            <Bell className='text-emerald-600' size={10} />
+            <Text className='text-xs font-medium text-emerald-700'>
+              {scheduledCount} scheduled
+            </Text>
+          </View>
+        )}
       </View>
 
       <View className='gap-2'>
@@ -803,6 +911,7 @@ function AffirmationsList({
             isPremium={isPremium}
             onDelete={() => onDelete(affirmation.id)}
             onEdit={() => onEdit(affirmation)}
+            onSchedule={onSchedule ? () => onSchedule(affirmation) : undefined}
           />
         ))}
         {remainingCount > 0 && (
@@ -848,6 +957,7 @@ export function getRandomAffirmationByType(
  * - Empty state: Pulsing sparkle icon with "Add" CTA
  * - Filled state: List of affirmations with edit/delete
  * - Premium gating: 2 free, unlimited premium
+ * - Scheduled delivery (premium feature)
  * - Amber accent color (border-l-amber-400)
  */
 export function AffirmationsSection({
@@ -857,6 +967,8 @@ export function AffirmationsSection({
   onSaveAffirmation,
   onUpdateAffirmation,
   onDeleteAffirmation,
+  onScheduleAffirmation,
+  onCancelSchedule,
   onPremiumRequired,
   shouldAnimate = false,
   reduceMotion = false,
@@ -866,6 +978,12 @@ export function AffirmationsSection({
   const [editingAffirmation, setEditingAffirmation] =
     useState<AffirmationData | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  // Schedule modal state
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [schedulingAffirmation, setSchedulingAffirmation] =
+    useState<AffirmationData | null>(null);
+  const [isScheduleSaving, setIsScheduleSaving] = useState(false);
 
   const hasAffirmations = affirmationCount > 0;
   const canAddMore = isPremium || affirmationCount < FREE_TIER_MAX_AFFIRMATIONS;
@@ -908,6 +1026,42 @@ export function AffirmationsSection({
     },
     [onDeleteAffirmation]
   );
+
+  // Schedule handlers
+  const handleOpenScheduleModal = useCallback(
+    (affirmation: AffirmationData) => {
+      if (!isPremium) {
+        onPremiumRequired();
+        return;
+      }
+      setSchedulingAffirmation(affirmation);
+      setIsScheduleModalOpen(true);
+    },
+    [isPremium, onPremiumRequired]
+  );
+
+  const handleSaveSchedule = useCallback(
+    async (schedule: AffirmationScheduleConfig) => {
+      if (!schedulingAffirmation || !onScheduleAffirmation) return;
+      setIsScheduleSaving(true);
+      try {
+        await onScheduleAffirmation(schedulingAffirmation.id, schedule);
+      } finally {
+        setIsScheduleSaving(false);
+      }
+    },
+    [schedulingAffirmation, onScheduleAffirmation]
+  );
+
+  const handleCancelSchedule = useCallback(async () => {
+    if (!schedulingAffirmation || !onCancelSchedule) return;
+    setIsScheduleSaving(true);
+    try {
+      await onCancelSchedule(schedulingAffirmation.id);
+    } finally {
+      setIsScheduleSaving(false);
+    }
+  }, [schedulingAffirmation, onCancelSchedule]);
 
   const handleSectionPress = useCallback(() => {
     if (!hasAffirmations) {
@@ -1029,6 +1183,9 @@ export function AffirmationsSection({
             isPremium={isPremium}
             onDelete={handleDelete}
             onEdit={handleEditAffirmation}
+            onSchedule={
+              onScheduleAffirmation ? handleOpenScheduleModal : undefined
+            }
           />
         </SectionCard>
       </AnimatedSection>
@@ -1044,6 +1201,27 @@ export function AffirmationsSection({
         onClose={() => setIsEditorOpen(false)}
         onSave={handleSave}
       />
+
+      {/* Schedule Modal (Premium) */}
+      {schedulingAffirmation && (
+        <AffirmationScheduleModal
+          affirmationText={schedulingAffirmation.text}
+          initialSchedule={{
+            daysOfWeek: schedulingAffirmation.daysOfWeek,
+            frequency: schedulingAffirmation.frequency,
+            isScheduleEnabled: schedulingAffirmation.isScheduleEnabled,
+            scheduledTime: schedulingAffirmation.scheduledTime,
+          }}
+          isSaving={isScheduleSaving}
+          visible={isScheduleModalOpen}
+          onCancel={handleCancelSchedule}
+          onClose={() => {
+            setIsScheduleModalOpen(false);
+            setSchedulingAffirmation(null);
+          }}
+          onSave={handleSaveSchedule}
+        />
+      )}
     </>
   );
 }

@@ -3,10 +3,40 @@ import { v } from 'convex/values';
 
 const applicationTables = {
   // Affirmations - Positive self-talk cards (Steele, 1988; Hatzigeorgiadis, 2011)
+  // Story T13: Affirmations with scheduled delivery (premium)
+  // Scientific Basis: Repetition builds neural pathways; timed delivery optimizes habit formation
   affirmations: defineTable({
     createdAt: v.number(),
+    // Days of week for weekly frequency (0=Sunday, 6=Saturday)
+    // Only used when frequency='weekly'
+    daysOfWeek: v.optional(v.array(v.number())),
+
+    // Delivery frequency: daily (every day) or weekly (specific days)
+    frequency: v.optional(
+      v.union(
+        v.literal('daily'), // Every day at scheduledTime
+        v.literal('weekly') // Only on selected daysOfWeek
+      )
+    ),
+
     habitId: v.id('habits'),
+
+    // Toggle to enable/disable scheduled delivery without losing settings
+    isScheduleEnabled: v.optional(v.boolean()),
+
+    // Timestamp of last successful delivery (for tracking/analytics)
+    lastDeliveredAt: v.optional(v.number()),
+
+    // Expo notification identifier for cancellation
+    notificationId: v.optional(v.string()),
+
+    // === Scheduled Delivery Fields (Premium Feature) ===
+    // Enables daily push notifications at specific times
+    // Time of day for delivery in "HH:MM" 24-hour format (e.g., "08:30")
+    scheduledTime: v.optional(v.string()),
+
     text: v.string(),
+
     type: v.optional(
       v.union(
         v.literal('identity'), // "I am someone who..."
@@ -14,9 +44,14 @@ const applicationTables = {
         v.literal('instructional') // "Progress, not perfection"
       )
     ),
+
     updatedAt: v.number(),
+
     userId: v.optional(v.string()),
-  }).index('by_habit', ['habitId']),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_schedule', ['isScheduleEnabled', 'scheduledTime']),
 
   articles: defineTable({
     category: v.string(),
