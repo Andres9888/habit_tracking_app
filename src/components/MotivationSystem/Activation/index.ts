@@ -11,3 +11,16 @@ export {
   type ActivationModalProps,
   type ActivationHabitData,
 } from './ActivationModal';
+
+export {
+  MotivationCheck,
+  shouldShowFailureViz,
+  type MotivationCheckProps,
+  type MotivationLevel,
+} from './MotivationCheck';
+
+export {
+  ContextAwareViz,
+  type ContextAwareVizProps,
+  type VisualizationData,
+} from './ContextAwareViz';
