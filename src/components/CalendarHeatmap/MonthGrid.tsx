@@ -22,10 +22,16 @@ import { Check } from 'lucide-react-native';
 import { format } from 'date-fns';
 import * as Haptics from 'expo-haptics';
 import type { CalendarDay } from './types';
-import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useGridThemeOptional } from './GridThemeContext';
-import { GITHUB_THEME, type GridTheme } from './types';
+import { useWeekStartOptional } from './WeekStartContext';
+import {
+  GITHUB_THEME,
+  DEFAULT_WEEK_START,
+  getRotatedDayLabels,
+  getRotatedDayNamesFull,
+  type GridTheme,
+} from './types';
 
 /**
  * Get cell color from theme for MonthGrid cells
@@ -70,6 +76,7 @@ function MonthDayCell({
   habitColor,
   onPress,
   instantToggle = true,
+  dayNamesFull,
 }: {
   day: CalendarDay;
   rowIndex: number;
@@ -77,6 +84,8 @@ function MonthDayCell({
   habitColor?: string;
   onPress?: (date: string, completed: boolean) => void;
   instantToggle?: boolean;
+  /** Full day names array (rotated based on week start) for accessibility */
+  dayNamesFull: string[];
 }) {
   const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
@@ -259,7 +268,7 @@ function MonthDayCell({
         accessibilityHint={
           instantToggle ? 'Tap to toggle completion' : 'Tap to view details'
         }
-        accessibilityLabel={`${DAY_NAMES_FULL[colIndex]}, ${day.dayOfMonth}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
+        accessibilityLabel={`${dayNamesFull[colIndex]}, ${day.dayOfMonth}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
         accessibilityRole='button'
         accessibilityState={{ disabled: !isInteractive }}
         className={`flex-1 items-center justify-center overflow-hidden rounded-lg ${getCellStyle()}`}
@@ -355,6 +364,20 @@ export function MonthGrid({
   const reduceMotion = useReduceMotion();
   const monthName = format(new Date(year, month), 'MMMM yyyy');
 
+  // Get week start from context, falling back to Sunday if no provider
+  const weekStartContext = useWeekStartOptional();
+  const weekStartDay = weekStartContext?.weekStartDay ?? DEFAULT_WEEK_START;
+
+  // Compute rotated day labels based on week start
+  const dayLabels = useMemo(
+    () => getRotatedDayLabels(weekStartDay),
+    [weekStartDay]
+  );
+  const dayNamesFull = useMemo(
+    () => getRotatedDayNamesFull(weekStartDay),
+    [weekStartDay]
+  );
+
   return (
     <View
       accessible
@@ -373,11 +396,11 @@ export function MonthGrid({
 
       {/* Day of week headers */}
       <View className='mb-2 flex-row'>
-        {DAY_LABELS.map((label, index) => (
+        {dayLabels.map((label, index) => (
           <View
             key={index}
             accessible
-            accessibilityLabel={DAY_NAMES_FULL[index]}
+            accessibilityLabel={dayNamesFull[index]}
             className='flex-1 items-center'
           >
             <Text className='text-xs font-medium text-stone-400'>{label}</Text>
@@ -394,6 +417,7 @@ export function MonthGrid({
                 key={day.date || `empty-${rowIndex}-${colIndex}`}
                 colIndex={colIndex}
                 day={day}
+                dayNamesFull={dayNamesFull}
                 habitColor={habitColor}
                 instantToggle={instantToggle}
                 rowIndex={rowIndex}

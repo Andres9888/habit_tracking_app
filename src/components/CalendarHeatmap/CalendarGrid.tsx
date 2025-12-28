@@ -3,14 +3,19 @@
  * Displays the calendar grid with day cells in horizontal GitHub-style layout
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DayCell } from './DayCell';
-import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
+import {
+  DEFAULT_WEEK_START,
+  getRotatedDayLabels,
+  getRotatedDayNamesFull,
+} from './types';
 import type { CalendarDay, MonthLabel } from './types';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useWeekStartOptional } from './WeekStartContext';
 
 export interface CalendarGridProps {
   /** 2D array of calendar days organized as weeks (columns) */
@@ -42,6 +47,20 @@ export function CalendarGrid({
 }: CalendarGridProps) {
   const reduceMotion = useReduceMotion();
   const scrollViewRef = React.useRef<ScrollView>(null);
+
+  // Get week start from context, falling back to Sunday if no provider
+  const weekStartContext = useWeekStartOptional();
+  const weekStartDay = weekStartContext?.weekStartDay ?? DEFAULT_WEEK_START;
+
+  // Compute rotated day labels based on week start
+  const dayLabels = useMemo(
+    () => getRotatedDayLabels(weekStartDay),
+    [weekStartDay]
+  );
+  const dayNamesFull = useMemo(
+    () => getRotatedDayNamesFull(weekStartDay),
+    [weekStartDay]
+  );
 
   // Auto-scroll to show recent weeks on mount
   React.useEffect(() => {
@@ -97,15 +116,15 @@ export function CalendarGrid({
           className="mr-2"
           accessible={true}
           accessibilityRole="none"
-          accessibilityLabel="Days of the week: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"
+          accessibilityLabel={`Days of the week: ${dayNamesFull.join(', ')}`}
         >
-          {DAY_LABELS.map((label, index) => (
+          {dayLabels.map((label, index) => (
             <View
               key={index}
               className="h-5 w-5 items-center justify-center mb-[3px]"
               accessible={true}
               accessibilityRole="text"
-              accessibilityLabel={DAY_NAMES_FULL[index]}
+              accessibilityLabel={dayNamesFull[index]}
             >
               <Text className="text-xs font-medium text-stone-400" importantForAccessibility="no-hide-descendants">
                 {label}

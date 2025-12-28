@@ -21,10 +21,16 @@ import Animated, {
 import { Check } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import type { CalendarDay } from './types';
-import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useGridThemeOptional } from './GridThemeContext';
-import { GITHUB_THEME, type GridTheme } from './types';
+import { useWeekStartOptional } from './WeekStartContext';
+import {
+  GITHUB_THEME,
+  DEFAULT_WEEK_START,
+  getRotatedDayLabels,
+  getRotatedDayNamesFull,
+  type GridTheme,
+} from './types';
 
 /**
  * Get streak-based color from theme for WeekGrid cells
@@ -64,12 +70,18 @@ function WeekDayCell({
   habitColor,
   onPress,
   instantToggle = true,
+  dayLabel,
+  dayNameFull,
 }: {
   day: CalendarDay;
   index: number;
   habitColor?: string;
   onPress?: (date: string, completed: boolean) => void;
   instantToggle?: boolean;
+  /** Single-letter day label (rotated based on week start) */
+  dayLabel: string;
+  /** Full day name for accessibility (rotated based on week start) */
+  dayNameFull: string;
 }) {
   const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
@@ -248,7 +260,7 @@ function WeekDayCell({
         ]}
         accessible={true}
         accessibilityRole="button"
-        accessibilityLabel={`${DAY_NAMES_FULL[index]}, ${day.dayOfMonth}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
+        accessibilityLabel={`${dayNameFull}, ${day.dayOfMonth}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
         accessibilityState={{ disabled: !isInteractive }}
         accessibilityHint={instantToggle ? 'Tap to toggle completion' : 'Tap to view details'}
       >
@@ -280,7 +292,7 @@ function WeekDayCell({
                   : 'text-stone-400'
           }`}
         >
-          {DAY_LABELS[index]}
+          {dayLabel}
         </Text>
 
         {/* Animated checkmark (for instant toggle mode) */}
@@ -340,6 +352,20 @@ function WeekDayCell({
 }
 
 export function WeekGrid({ week, habitColor, onDayPress, instantToggle = true }: WeekGridProps) {
+  // Get week start from context, falling back to Sunday if no provider
+  const weekStartContext = useWeekStartOptional();
+  const weekStartDay = weekStartContext?.weekStartDay ?? DEFAULT_WEEK_START;
+
+  // Compute rotated day labels based on week start
+  const dayLabels = useMemo(
+    () => getRotatedDayLabels(weekStartDay),
+    [weekStartDay]
+  );
+  const dayNamesFull = useMemo(
+    () => getRotatedDayNamesFull(weekStartDay),
+    [weekStartDay]
+  );
+
   return (
     <View
       className="flex-row gap-2"
@@ -351,6 +377,8 @@ export function WeekGrid({ week, habitColor, onDayPress, instantToggle = true }:
         <WeekDayCell
           key={day.date || `day-${index}`}
           day={day}
+          dayLabel={dayLabels[index]}
+          dayNameFull={dayNamesFull[index]}
           index={index}
           habitColor={habitColor}
           onPress={onDayPress}
