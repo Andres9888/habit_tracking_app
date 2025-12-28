@@ -68,6 +68,18 @@ function getStreakColorFromTheme(
   return theme.streakColors.level1; // recent completion (1-6 days)
 }
 
+/**
+ * Calculate glow intensity based on streak strength
+ * Returns 0 for no glow, higher values for stronger streaks
+ */
+function calculateGlowIntensity(streakPosition: number): number {
+  if (streakPosition >= 30) return 1.0; // legendary - maximum glow
+  if (streakPosition >= 14) return 0.75; // strong habit
+  if (streakPosition >= 7) return 0.5; // week+ streak
+  if (streakPosition >= 3) return 0.25; // starting momentum
+  return 0; // too short for glow
+}
+
 export interface DayCellProps {
   day: CalendarDay;
   /** Index for staggered animation */
@@ -88,6 +100,9 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
   const scale = useSharedValue(1);
   const pulseScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0);
+  // Separate animation values for streak glow effect
+  const glowScale = useSharedValue(1);
+  const glowOpacity = useSharedValue(0);
   const reduceMotion = useReduceMotion();
 
   // Get theme from context or fall back to default GitHub theme
@@ -142,6 +157,52 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
     };
   }, [shouldPulse, pulseScale, pulseOpacity]);
 
+  // Calculate streak position early to use in glow effect
+  // (must be before shouldShowGlowRing is determined in render)
+  const currentStreakPosition = day.date && day.completed
+    ? calculateStreakPosition(day.date, completedDates, habitCreatedAt)
+    : 0;
+  const currentGlowIntensity = theme.enableStreakGlow && day.completed
+    ? calculateGlowIntensity(currentStreakPosition)
+    : 0;
+  const shouldShowGlowAnimation = currentGlowIntensity >= 0.5 && !reduceMotion;
+
+  // Streak glow animation - subtle pulsing glow around strong streaks
+  useEffect(() => {
+    if (!shouldShowGlowAnimation) {
+      // Reset glow values when not animating
+      glowScale.value = 1;
+      glowOpacity.value = 0;
+      return;
+    }
+
+    // Slower, more subtle pulse for glow effect
+    const glowPulseAnimation = withSequence(
+      withTiming(1.15, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+      withTiming(1.0, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+    );
+
+    const glowOpacityAnimation = withSequence(
+      withTiming(currentGlowIntensity * 0.7, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+      withTiming(currentGlowIntensity * 0.3, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+    );
+
+    // Start with a delay to let the cell fade in first
+    glowScale.value = withDelay(
+      300,
+      withRepeat(glowPulseAnimation, -1, false) // Infinite repeat
+    );
+    glowOpacity.value = withDelay(
+      300,
+      withRepeat(glowOpacityAnimation, -1, false)
+    );
+
+    return () => {
+      cancelAnimation(glowScale);
+      cancelAnimation(glowOpacity);
+    };
+  }, [shouldShowGlowAnimation, currentGlowIntensity, glowScale, glowOpacity]);
+
   const handlePressIn = () => {
     if (day.date && !day.isFuture && !day.isBeforeCreation && !reduceMotion) {
       scale.value = withSpring(0.9, { damping: 15 });
@@ -167,6 +228,12 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
   const pulseRingStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulseScale.value }],
     opacity: pulseOpacity.value,
+  }));
+
+  // Animated style for streak glow ring
+  const glowRingStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: glowScale.value }],
+    opacity: glowOpacity.value,
   }));
 
   // Staggered animation delay for all cell types - skip if reduceMotion
@@ -244,16 +311,12 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
     );
   }
 
-  // Calculate streak position for color intensity
-  const streakPosition = day.date && day.completed
-    ? calculateStreakPosition(day.date, completedDates, habitCreatedAt)
-    : 0;
-
   // Get color based on streak position using theme colors
+  // Uses currentStreakPosition calculated earlier for glow effect
   const completedBgColor = useMemo(() => {
     if (!day.completed) return 'transparent';
-    return getStreakColorFromTheme(streakPosition, theme, habitColor);
-  }, [day.completed, streakPosition, theme, habitColor]);
+    return getStreakColorFromTheme(currentStreakPosition, theme, habitColor);
+  }, [day.completed, currentStreakPosition, theme, habitColor]);
 
   // Build cell style object from theme configuration
   const cellStyles = useMemo(() => {
@@ -290,6 +353,14 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
         baseStyles.shadowRadius = 2;
         baseStyles.elevation = 2;
       }
+      // Add glow effect for strong streaks
+      if (theme.enableStreakGlow && currentGlowIntensity > 0) {
+        baseStyles.shadowColor = completedBgColor;
+        baseStyles.shadowOffset = { width: 0, height: 0 };
+        baseStyles.shadowOpacity = currentGlowIntensity * 0.6;
+        baseStyles.shadowRadius = 4 + (currentGlowIntensity * 4); // 4-8px radius based on intensity
+        baseStyles.elevation = Math.round(3 + (currentGlowIntensity * 3)); // 3-6 elevation
+      }
     } else if (day.isToday) {
       // Today + not completed - highlight style
       baseStyles.backgroundColor = '#fffbeb'; // amber-50
@@ -313,6 +384,7 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
     day.isToday,
     completedBgColor,
     theme,
+    currentGlowIntensity,
   ]);
 
   // Pulse ring style for today indicator
@@ -325,6 +397,18 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
       borderColor: theme.todayBorderColor,
     }),
     [cellSize, borderRadius, theme.todayBorderColor]
+  );
+
+  // Glow ring style for streak glow effect (animated outer ring)
+  const glowRingDynamicStyles = useMemo(
+    () => ({
+      width: cellSize + 4,
+      height: cellSize + 4,
+      borderRadius: borderRadius + 2,
+      borderWidth: 1.5,
+      borderColor: completedBgColor,
+    }),
+    [cellSize, borderRadius, completedBgColor]
   );
 
   // Checkmark size based on theme configuration
@@ -349,6 +433,18 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
         <Animated.View
           style={[pulseRingStyle, pulseRingDynamicStyles, { position: 'absolute' }]}
           pointerEvents="none"
+        />
+      )}
+      {/* Glow ring for strong streaks - animated pulsing ring around completed cells */}
+      {shouldShowGlowAnimation && (
+        <Animated.View
+          style={[
+            glowRingStyle,
+            glowRingDynamicStyles,
+            { position: 'absolute' },
+          ]}
+          pointerEvents="none"
+          testID="glow-ring"
         />
       )}
       <View style={[styles.cellBase, cellStyles]}>
