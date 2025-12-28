@@ -2,9 +2,11 @@
  * MonthGrid Component
  * Traditional calendar grid showing a single month
  * Displays weeks as rows with day numbers visible
+ *
+ * Supports GridTheme customization for cell colors and styling.
  */
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
   FadeIn,
@@ -22,6 +24,19 @@ import * as Haptics from 'expo-haptics';
 import type { CalendarDay } from './types';
 import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useGridThemeOptional } from './GridThemeContext';
+import { GITHUB_THEME, type GridTheme } from './types';
+
+/**
+ * Get cell color from theme for MonthGrid cells
+ */
+function getMonthCellColor(theme: GridTheme, habitColor?: string): string {
+  if (habitColor) {
+    return habitColor;
+  }
+  // Use level3 color for larger cells
+  return theme.streakColors.level3;
+}
 
 export interface MonthGridProps {
   /** 2D array of calendar days organized as weeks (rows) */
@@ -46,6 +61,7 @@ export interface MonthGridProps {
 /**
  * Individual day cell for month view
  * Enhanced with HabitKit-style instant toggle animations
+ * Uses GridTheme for colors and styling when available
  */
 function MonthDayCell({
   day,
@@ -64,6 +80,16 @@ function MonthDayCell({
 }) {
   const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
+
+  // Get theme from context or fall back to default
+  const themeContext = useGridThemeOptional();
+  const theme = themeContext?.theme ?? GITHUB_THEME;
+
+  // Compute completed color from theme
+  const completedColor = useMemo(
+    () => getMonthCellColor(theme, habitColor),
+    [theme, habitColor]
+  );
 
   // Completion animation values
   const fillScale = useSharedValue(day.completed ? 1 : 0);
@@ -182,25 +208,41 @@ function MonthDayCell({
     return <View className='aspect-square flex-1' />;
   }
 
-  // Determine cell styling based on state
+  // Determine cell styling based on state - uses theme colors
   const getCellStyle = () => {
     if (day.isBeforeCreation) {
-      return 'bg-stone-50';
+      return '';
     }
     if (day.isFuture) {
-      return 'bg-stone-50 border border-dashed border-stone-200';
+      return 'border border-dashed border-stone-200';
     }
     if (day.completed) {
       return '';
     }
     if (day.isToday) {
-      return 'bg-amber-50 border-2 border-amber-300';
+      return 'border-2';
     }
-    return 'bg-stone-100';
+    return '';
   };
 
+  // Build background style from theme
+  const cellBackgroundStyle = useMemo(() => {
+    if (day.isBeforeCreation) {
+      return { backgroundColor: theme.beforeCreationBackground };
+    }
+    if (day.isFuture) {
+      return { backgroundColor: theme.futureBackground };
+    }
+    if (day.completed) {
+      return undefined;
+    }
+    if (day.isToday) {
+      return { backgroundColor: '#fffbeb', borderColor: theme.todayBorderColor }; // amber-50
+    }
+    return { backgroundColor: theme.incompleteBackground };
+  }, [day, theme]);
+
   const isInteractive = !day.isFuture && !day.isBeforeCreation;
-  const completedColor = habitColor || '#10b981';
 
   return (
     <Animated.View
@@ -222,11 +264,12 @@ function MonthDayCell({
         accessibilityState={{ disabled: !isInteractive }}
         className={`flex-1 items-center justify-center overflow-hidden rounded-lg ${getCellStyle()}`}
         disabled={!isInteractive}
-        style={
+        style={[
+          cellBackgroundStyle,
           !instantToggle && day.completed
             ? { backgroundColor: completedColor }
-            : undefined
-        }
+            : undefined,
+        ]}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}

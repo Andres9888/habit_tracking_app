@@ -10,6 +10,14 @@ export { DayCell } from './DayCell';
 export { InsightCard } from './InsightCard';
 export { DayDetailTooltip } from './DayDetailTooltip';
 
+// Theme Context and Hooks
+export {
+  GridThemeProvider,
+  useGridTheme,
+  useGridThemeOptional,
+} from './GridThemeContext';
+export type { GridThemeProviderProps } from './GridThemeContext';
+
 export type {
   CalendarHeatmapProps,
   CalendarDay,

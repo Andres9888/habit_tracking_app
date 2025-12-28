@@ -4,10 +4,11 @@
  * Focused view for current week progress
  *
  * HabitKit-inspired: Uses stronger haptic feedback for instant toggle feel
+ * Supports GridTheme customization for cell colors and styling.
  */
 
-import React, { useEffect, useCallback } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import React, { useEffect, useCallback, useMemo } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Animated, {
   FadeIn,
   useAnimatedStyle,
@@ -22,6 +23,21 @@ import * as Haptics from 'expo-haptics';
 import type { CalendarDay } from './types';
 import { DAY_LABELS, DAY_NAMES_FULL } from './utils';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useGridThemeOptional } from './GridThemeContext';
+import { GITHUB_THEME, type GridTheme } from './types';
+
+/**
+ * Get streak-based color from theme for WeekGrid cells
+ * Uses level2 color since week view cells are larger and more prominent
+ */
+function getWeekCellColor(theme: GridTheme, habitColor?: string): string {
+  // Custom habit color takes precedence
+  if (habitColor) {
+    return habitColor;
+  }
+  // Use level3 color for larger cells - more visually impactful
+  return theme.streakColors.level3;
+}
 
 export interface WeekGridProps {
   /** Array of 7 calendar days (Sunday to Saturday) */
@@ -40,6 +56,7 @@ export interface WeekGridProps {
 /**
  * Individual day cell for week view - larger and more detailed
  * Enhanced with HabitKit-style instant toggle animations
+ * Uses GridTheme for colors and styling when available
  */
 function WeekDayCell({
   day,
@@ -56,6 +73,16 @@ function WeekDayCell({
 }) {
   const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
+
+  // Get theme from context or fall back to default
+  const themeContext = useGridThemeOptional();
+  const theme = themeContext?.theme ?? GITHUB_THEME;
+
+  // Compute completed color from theme
+  const completedColor = useMemo(
+    () => getWeekCellColor(theme, habitColor),
+    [theme, habitColor]
+  );
 
   // Completion animation values
   const fillScale = useSharedValue(day.completed ? 1 : 0);
@@ -163,25 +190,42 @@ function WeekDayCell({
     opacity: checkScale.value,
   }));
 
-  // Determine cell styling based on state
+  // Determine cell styling based on state - uses theme colors
   const getCellStyle = () => {
     if (day.isBeforeCreation) {
-      return 'bg-stone-50 border-stone-100';
+      return `border-stone-100`;
     }
     if (day.isFuture) {
-      return 'bg-stone-50 border-dashed border-stone-200';
+      return 'border-dashed border-stone-200';
     }
     if (day.completed) {
       return 'border-transparent';
     }
     if (day.isToday) {
-      return 'bg-amber-50 border-amber-300';
+      return `border-2`;
     }
-    return 'bg-stone-100 border-stone-200';
+    return 'border-stone-200';
   };
 
+  // Build background style from theme
+  const cellBackgroundStyle = useMemo(() => {
+    if (day.isBeforeCreation) {
+      return { backgroundColor: theme.beforeCreationBackground };
+    }
+    if (day.isFuture) {
+      return { backgroundColor: theme.futureBackground };
+    }
+    if (day.completed) {
+      // Completed state uses theme-derived color (handled by fill animation)
+      return undefined;
+    }
+    if (day.isToday) {
+      return { backgroundColor: '#fffbeb', borderColor: theme.todayBorderColor }; // amber-50
+    }
+    return { backgroundColor: theme.incompleteBackground };
+  }, [day, theme]);
+
   const isInteractive = day.date && !day.isFuture && !day.isBeforeCreation;
-  const completedColor = habitColor || '#10b981';
 
   return (
     <Animated.View
@@ -198,7 +242,10 @@ function WeekDayCell({
           h-16 rounded-xl border-2 items-center justify-center overflow-hidden
           ${getCellStyle()}
         `}
-        style={!instantToggle && day.completed ? { backgroundColor: completedColor } : undefined}
+        style={[
+          cellBackgroundStyle,
+          !instantToggle && day.completed ? { backgroundColor: completedColor } : undefined,
+        ]}
         accessible={true}
         accessibilityRole="button"
         accessibilityLabel={`${DAY_NAMES_FULL[index]}, ${day.dayOfMonth}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
