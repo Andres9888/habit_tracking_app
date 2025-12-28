@@ -15,7 +15,15 @@ describe('InsightCard', () => {
 
   // Sample day-of-week stats
   const createDayStats = (rates: number[]): DayOfWeekStat[] => {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     return days.map((day, index) => ({
       day,
       rate: rates[index],
@@ -138,7 +146,7 @@ describe('InsightCard', () => {
       const stats = createDayStats([50, 60, 70, 80, 90, 85, 75]);
       const weakestDay = { day: 'Sunday', rate: 50 };
 
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <InsightCard
           dayOfWeekStats={stats}
           weakestDay={weakestDay}
@@ -148,20 +156,22 @@ describe('InsightCard', () => {
         />
       );
 
-      // Check that all day labels are present (first letter)
-      expect(getByText('S')).toBeTruthy(); // Sunday
-      expect(getByText('M')).toBeTruthy(); // Monday
-      expect(getByText('T')).toBeTruthy(); // Tuesday
-      expect(getByText('W')).toBeTruthy(); // Wednesday
-      // Thursday is also T
-      expect(getByText('F')).toBeTruthy(); // Friday
+      // Check that all day labels are present using accessibility labels
+      // (S appears twice for Sunday/Saturday, T appears twice for Tuesday/Thursday)
+      expect(getByLabelText(/Sunday:/)).toBeTruthy();
+      expect(getByLabelText(/Monday:/)).toBeTruthy();
+      expect(getByLabelText(/Tuesday:/)).toBeTruthy();
+      expect(getByLabelText(/Wednesday:/)).toBeTruthy();
+      expect(getByLabelText(/Thursday:/)).toBeTruthy();
+      expect(getByLabelText(/Friday:/)).toBeTruthy();
+      expect(getByLabelText(/Saturday:/)).toBeTruthy();
     });
 
-    it('should display percentage for each day', () => {
+    it('should display percentage for each day via accessibility', () => {
       const stats = createDayStats([50, 60, 70, 80, 90, 85, 75]);
       const weakestDay = { day: 'Sunday', rate: 50 };
 
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <InsightCard
           dayOfWeekStats={stats}
           weakestDay={weakestDay}
@@ -171,14 +181,14 @@ describe('InsightCard', () => {
         />
       );
 
-      // Check that percentages are displayed
-      expect(getByText('50%')).toBeTruthy();
-      expect(getByText('60%')).toBeTruthy();
-      expect(getByText('70%')).toBeTruthy();
-      expect(getByText('80%')).toBeTruthy();
-      expect(getByText('90%')).toBeTruthy();
-      expect(getByText('85%')).toBeTruthy();
-      expect(getByText('75%')).toBeTruthy();
+      // Check that percentages are displayed in accessibility labels
+      expect(getByLabelText(/Sunday: 50% completion rate/)).toBeTruthy();
+      expect(getByLabelText(/Monday: 60% completion rate/)).toBeTruthy();
+      expect(getByLabelText(/Tuesday: 70% completion rate/)).toBeTruthy();
+      expect(getByLabelText(/Wednesday: 80% completion rate/)).toBeTruthy();
+      expect(getByLabelText(/Thursday: 90% completion rate/)).toBeTruthy();
+      expect(getByLabelText(/Friday: 85% completion rate/)).toBeTruthy();
+      expect(getByLabelText(/Saturday: 75% completion rate/)).toBeTruthy();
     });
 
     it('should highlight weakest day bar in different color', () => {
@@ -383,7 +393,9 @@ describe('InsightCard', () => {
       );
 
       expect(
-        getByLabelText('Insight: Sundays are your challenge day at 62% completion')
+        getByLabelText(
+          'Insight: Sundays are your challenge day at 62% completion'
+        )
       ).toBeTruthy();
     });
 
@@ -403,7 +415,9 @@ describe('InsightCard', () => {
 
       const button = getByLabelText('Set reminder for Sundays');
       expect(button).toBeTruthy();
-      expect(button.props.accessibilityHint).toBe('Opens time picker to set a reminder');
+      expect(button.props.accessibilityHint).toBe(
+        'Opens time picker to set a reminder'
+      );
     });
 
     it('should have accessible button labels for Tips', () => {
@@ -422,7 +436,9 @@ describe('InsightCard', () => {
 
       const button = getByLabelText('See tips for Sundays');
       expect(button).toBeTruthy();
-      expect(button.props.accessibilityHint).toBe('Opens tips modal with strategies');
+      expect(button.props.accessibilityHint).toBe(
+        'Opens tips modal with strategies'
+      );
     });
 
     it('should have accessible dismiss button', () => {

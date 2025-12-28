@@ -147,7 +147,11 @@ describe('generateMonthGrid', () => {
 
   describe('completed dates', () => {
     it('marks completed dates correctly', () => {
-      const completedDates = new Set(['2025-12-05', '2025-12-10', '2025-12-15']);
+      const completedDates = new Set([
+        '2025-12-05',
+        '2025-12-10',
+        '2025-12-15',
+      ]);
       const grid = generateMonthGrid(2025, 11, completedDates);
 
       const days = grid.flat().filter((d) => d.date !== null);
@@ -194,7 +198,11 @@ describe('generateMonthGrid', () => {
 
     it('marks exactly one day as today for the current month', () => {
       const now = new Date();
-      const grid = generateMonthGrid(now.getFullYear(), now.getMonth(), new Set());
+      const grid = generateMonthGrid(
+        now.getFullYear(),
+        now.getMonth(),
+        new Set()
+      );
       const todayDays = grid.flat().filter((d) => d.isToday);
 
       expect(todayDays.length).toBe(1);
@@ -203,7 +211,8 @@ describe('generateMonthGrid', () => {
     it('marks no days as today for past months', () => {
       const now = new Date();
       const pastMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
-      const pastYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+      const pastYear =
+        now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
 
       const grid = generateMonthGrid(pastYear, pastMonth, new Set());
       const todayDays = grid.flat().filter((d) => d.isToday);
@@ -214,7 +223,8 @@ describe('generateMonthGrid', () => {
     it('marks no days as today for future months', () => {
       const now = new Date();
       const futureMonth = now.getMonth() === 11 ? 0 : now.getMonth() + 1;
-      const futureYear = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+      const futureYear =
+        now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
 
       const grid = generateMonthGrid(futureYear, futureMonth, new Set());
       const todayDays = grid.flat().filter((d) => d.isToday);
@@ -226,11 +236,21 @@ describe('generateMonthGrid', () => {
   describe('future dates detection', () => {
     it('marks dates after today as future', () => {
       const now = new Date();
-      const grid = generateMonthGrid(now.getFullYear(), now.getMonth(), new Set());
+      const grid = generateMonthGrid(
+        now.getFullYear(),
+        now.getMonth(),
+        new Set()
+      );
 
-      const futureDays = grid.flat().filter((d) => d.date !== null && d.isFuture);
+      const futureDays = grid
+        .flat()
+        .filter((d) => d.date !== null && d.isFuture);
       const todayDay = now.getDate();
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const daysInMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0
+      ).getDate();
 
       // Future days should be all days after today
       const expectedFutureDays = daysInMonth - todayDay;
@@ -240,7 +260,8 @@ describe('generateMonthGrid', () => {
     it('marks all days as future for a future month', () => {
       const now = new Date();
       const futureMonth = now.getMonth() === 11 ? 0 : now.getMonth() + 1;
-      const futureYear = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+      const futureYear =
+        now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
 
       const grid = generateMonthGrid(futureYear, futureMonth, new Set());
       const actualDays = grid.flat().filter((d) => d.date !== null);
@@ -257,7 +278,11 @@ describe('generateMonthGrid', () => {
 
     it('today is not marked as future', () => {
       const now = new Date();
-      const grid = generateMonthGrid(now.getFullYear(), now.getMonth(), new Set());
+      const grid = generateMonthGrid(
+        now.getFullYear(),
+        now.getMonth(),
+        new Set()
+      );
       const todayDay = grid.flat().find((d) => d.isToday);
 
       expect(todayDay?.isFuture).toBe(false);
@@ -273,10 +298,12 @@ describe('generateMonthGrid', () => {
       const beforeCreationDays = grid.flat().filter((d) => d.isBeforeCreation);
       // Days 1-14 should be before creation
       expect(beforeCreationDays.length).toBe(14);
-      expect(beforeCreationDays.every((d) => {
-        const dayNum = d.dayOfMonth;
-        return dayNum !== null && dayNum < 15;
-      })).toBe(true);
+      expect(
+        beforeCreationDays.every((d) => {
+          const dayNum = d.dayOfMonth;
+          return dayNum !== null && dayNum < 15;
+        })
+      ).toBe(true);
     });
 
     it('does not mark creation day as isBeforeCreation', () => {
@@ -291,11 +318,15 @@ describe('generateMonthGrid', () => {
       const habitCreatedAt = new Date(2025, 11, 15).getTime();
       const grid = generateMonthGrid(2025, 11, new Set(), habitCreatedAt);
 
-      const afterCreationDays = grid.flat().filter(
-        (d) => d.date !== null && d.dayOfMonth !== null && d.dayOfMonth > 15
-      );
+      const afterCreationDays = grid
+        .flat()
+        .filter(
+          (d) => d.date !== null && d.dayOfMonth !== null && d.dayOfMonth > 15
+        );
 
-      expect(afterCreationDays.every((d) => d.isBeforeCreation === false)).toBe(true);
+      expect(afterCreationDays.every((d) => d.isBeforeCreation === false)).toBe(
+        true
+      );
     });
 
     it('marks all days as before creation when habit created in a future month', () => {
@@ -374,7 +405,9 @@ describe('generateMonthGrid', () => {
 });
 
 describe('calculateMonthStats', () => {
-  const createMockDay = (overrides: Partial<CalendarDay> = {}): CalendarDay => ({
+  const createMockDay = (
+    overrides: Partial<CalendarDay> = {}
+  ): CalendarDay => ({
     date: '2025-12-15',
     dayOfMonth: 15,
     completed: false,
@@ -386,10 +419,12 @@ describe('calculateMonthStats', () => {
 
   describe('basic calculations', () => {
     it('returns 0 completions for empty grid', () => {
-      const grid = [[
-        createMockDay({ date: null, dayOfMonth: null }),
-        createMockDay({ date: null, dayOfMonth: null }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: null, dayOfMonth: null }),
+          createMockDay({ date: null, dayOfMonth: null }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.completions).toBe(0);
@@ -397,23 +432,31 @@ describe('calculateMonthStats', () => {
     });
 
     it('counts completions correctly', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
-        createMockDay({ date: '2025-12-04', dayOfMonth: 4, completed: true }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+          createMockDay({ date: '2025-12-04', dayOfMonth: 4, completed: true }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.completions).toBe(3);
     });
 
     it('counts eligible days correctly', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2 }),
-        createMockDay({ date: null, dayOfMonth: null }), // Padding
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
+          createMockDay({ date: '2025-12-02', dayOfMonth: 2 }),
+          createMockDay({ date: null, dayOfMonth: null }), // Padding
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.eligibleDays).toBe(2);
@@ -422,44 +465,70 @@ describe('calculateMonthStats', () => {
 
   describe('excluded days', () => {
     it('excludes null dates from eligible days', () => {
-      const grid = [[
-        createMockDay({ date: null, dayOfMonth: null }),
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
-        createMockDay({ date: null, dayOfMonth: null }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: null, dayOfMonth: null }),
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
+          createMockDay({ date: null, dayOfMonth: null }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.eligibleDays).toBe(1);
     });
 
     it('excludes future days from eligible days', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-15', dayOfMonth: 15 }),
-        createMockDay({ date: '2025-12-16', dayOfMonth: 16, isFuture: true }),
-        createMockDay({ date: '2025-12-17', dayOfMonth: 17, isFuture: true }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: '2025-12-15', dayOfMonth: 15 }),
+          createMockDay({ date: '2025-12-16', dayOfMonth: 16, isFuture: true }),
+          createMockDay({ date: '2025-12-17', dayOfMonth: 17, isFuture: true }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.eligibleDays).toBe(1);
     });
 
     it('excludes before-creation days from eligible days', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, isBeforeCreation: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, isBeforeCreation: true }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3 }),
-      ]];
+      const grid = [
+        [
+          createMockDay({
+            date: '2025-12-01',
+            dayOfMonth: 1,
+            isBeforeCreation: true,
+          }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            isBeforeCreation: true,
+          }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3 }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.eligibleDays).toBe(1);
     });
 
     it('does not count completions on excluded days', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, isBeforeCreation: true, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, isFuture: true, completed: true }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
-      ]];
+      const grid = [
+        [
+          createMockDay({
+            date: '2025-12-01',
+            dayOfMonth: 1,
+            isBeforeCreation: true,
+            completed: true,
+          }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            isFuture: true,
+            completed: true,
+          }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.completions).toBe(1); // Only the non-excluded completion counts
@@ -468,52 +537,82 @@ describe('calculateMonthStats', () => {
 
   describe('success rate calculation', () => {
     it('calculates 100% success rate when all eligible days completed', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: true }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: true }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.successRate).toBe(100);
     });
 
     it('calculates 0% success rate when no days completed', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: false }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-      ]];
+      const grid = [
+        [
+          createMockDay({
+            date: '2025-12-01',
+            dayOfMonth: 1,
+            completed: false,
+          }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.successRate).toBe(0);
     });
 
     it('calculates 50% success rate correctly', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.successRate).toBe(50);
     });
 
     it('calculates fractional percentages correctly', () => {
-      const grid = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: false }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+          createMockDay({
+            date: '2025-12-03',
+            dayOfMonth: 3,
+            completed: false,
+          }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.successRate).toBeCloseTo(33.33, 1);
     });
 
     it('returns 0% success rate when no eligible days', () => {
-      const grid = [[
-        createMockDay({ date: null, dayOfMonth: null }),
-        createMockDay({ date: '2025-12-15', dayOfMonth: 15, isFuture: true }),
-      ]];
+      const grid = [
+        [
+          createMockDay({ date: null, dayOfMonth: null }),
+          createMockDay({ date: '2025-12-15', dayOfMonth: 15, isFuture: true }),
+        ],
+      ];
 
       const stats = calculateMonthStats(grid, 11, 2025);
       expect(stats.successRate).toBe(0);
@@ -525,14 +624,22 @@ describe('calculateMonthStats', () => {
       const grid = [
         [
           createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-          createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
         ],
         [
           createMockDay({ date: '2025-12-08', dayOfMonth: 8, completed: true }),
           createMockDay({ date: '2025-12-09', dayOfMonth: 9, completed: true }),
         ],
         [
-          createMockDay({ date: '2025-12-15', dayOfMonth: 15, completed: false }),
+          createMockDay({
+            date: '2025-12-15',
+            dayOfMonth: 15,
+            completed: false,
+          }),
         ],
       ];
 
@@ -775,7 +882,7 @@ describe('calculateDayOfWeekStats', () => {
       const stats = calculateDayOfWeekStats(completedDates, Date.now());
 
       expect(stats).toHaveLength(7);
-      expect(stats.map(s => s.day)).toEqual([
+      expect(stats.map((s) => s.day)).toEqual([
         'Sunday',
         'Monday',
         'Tuesday',
@@ -810,7 +917,7 @@ describe('calculateDayOfWeekStats', () => {
 
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
 
-      stats.forEach(stat => {
+      stats.forEach((stat) => {
         expect(stat.count).toBe(0);
         expect(stat.rate).toBe(0);
       });
@@ -848,7 +955,10 @@ describe('calculateDayOfWeekStats', () => {
       // Should only count from Dec 15 onwards
       const today = new Date();
       const createdDate = new Date('2025-12-15');
-      const daysDiff = Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      const daysDiff =
+        Math.floor(
+          (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
+        ) + 1;
 
       expect(totalDaysTracked).toBe(daysDiff);
     });
@@ -890,7 +1000,7 @@ describe('calculateDayOfWeekStats', () => {
       expect(stats[5].count).toBeGreaterThan(0); // Friday had completions
 
       // All days should have been tracked
-      stats.forEach(stat => {
+      stats.forEach((stat) => {
         expect(stat.total).toBeGreaterThan(0);
       });
     });
@@ -913,10 +1023,18 @@ describe('calculateDayOfWeekStats', () => {
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
 
       // Weekdays should have higher rates than weekends
-      const weekdayRates = [stats[1], stats[2], stats[3], stats[4], stats[5]].map(s => s.rate);
-      const weekendRates = [stats[0], stats[6]].map(s => s.rate);
+      const weekdayRates = [
+        stats[1],
+        stats[2],
+        stats[3],
+        stats[4],
+        stats[5],
+      ].map((s) => s.rate);
+      const weekendRates = [stats[0], stats[6]].map((s) => s.rate);
 
-      expect(Math.min(...weekdayRates)).toBeGreaterThan(Math.max(...weekendRates));
+      expect(Math.min(...weekdayRates)).toBeGreaterThan(
+        Math.max(...weekendRates)
+      );
     });
   });
 
@@ -949,7 +1067,7 @@ describe('calculateDayOfWeekStats', () => {
 
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
 
-      stats.forEach(stat => {
+      stats.forEach((stat) => {
         expect(stat.count).toBe(0);
         expect(stat.rate).toBe(0);
         expect(stat.total).toBeGreaterThan(0);
@@ -957,26 +1075,62 @@ describe('calculateDayOfWeekStats', () => {
     });
 
     it('rounds rates correctly', () => {
-      // Create scenario with 1/3 completion (33.33...)
-      const habitCreatedAt = new Date('2025-12-01').getTime(); // Monday
-      const completedDates = new Set([
-        '2025-12-01', // Monday - completed
-        // Skip 2025-12-08 Monday
-        // Skip 2025-12-15 Monday
-      ]);
+      // Create a controlled scenario: exactly 3 weeks starting from a known Monday
+      // Use a date range that ends exactly 3 weeks later (21 days)
+      // This ensures exactly 3 occurrences of each day
+      const startDate = new Date('2025-12-01'); // Monday
+      const endDate = new Date('2025-12-21'); // Sunday, 3 weeks later
 
-      const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
-      const mondayStats = stats[1];
+      // Mock Date to control "today"
+      const originalDate = global.Date;
+      const mockDate = class extends originalDate {
+        constructor(...args: any[]) {
+          if (args.length === 0) {
+            super(2025, 11, 21); // Dec 21, 2025
+          } else {
+            // @ts-ignore
+            super(...args);
+          }
+        }
+        static now() {
+          return new originalDate(2025, 11, 21).getTime();
+        }
+      } as DateConstructor;
+      global.Date = mockDate;
 
-      // 1/3 = 33.33... should round to 33
-      expect(mondayStats.rate).toBe(33);
+      try {
+        const habitCreatedAt = startDate.getTime();
+        const completedDates = new Set([
+          '2025-12-01', // Monday - completed (1 of 3)
+          // Skip 2025-12-08 Monday
+          // Skip 2025-12-15 Monday
+        ]);
+
+        const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
+        const mondayStats = stats[1];
+
+        // 1/3 = 33.33... should round to 33
+        expect(mondayStats.rate).toBe(33);
+        expect(mondayStats.total).toBe(3); // Exactly 3 Mondays
+        expect(mondayStats.count).toBe(1); // 1 completed
+      } finally {
+        global.Date = originalDate;
+      }
     });
   });
 });
 
 describe('detectWeakDay', () => {
   const createMockStats = (rates: number[]): DayOfWeekStat[] => {
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     return rates.map((rate, index) => ({
       day: dayNames[index],
       rate,
@@ -1189,7 +1343,13 @@ describe('calculateStreakPosition', () => {
       }
 
       // Streak should only count from habit creation (4 days including creation day)
-      expect(calculateStreakPosition(todayStr, completedDates, habitCreatedAt.getTime())).toBe(4);
+      expect(
+        calculateStreakPosition(
+          todayStr,
+          completedDates,
+          habitCreatedAt.getTime()
+        )
+      ).toBe(4);
     });
 
     it('includes habit creation day in streak', () => {
@@ -1207,8 +1367,12 @@ describe('calculateStreakPosition', () => {
 
       const completedDates = new Set([todayStr, yesterdayStr, creationDateStr]);
 
-      expect(calculateStreakPosition(creationDateStr, completedDates, habitCreatedAt)).toBe(1);
-      expect(calculateStreakPosition(todayStr, completedDates, habitCreatedAt)).toBe(3);
+      expect(
+        calculateStreakPosition(creationDateStr, completedDates, habitCreatedAt)
+      ).toBe(1);
+      expect(
+        calculateStreakPosition(todayStr, completedDates, habitCreatedAt)
+      ).toBe(3);
     });
 
     it('handles undefined habitCreatedAt', () => {
@@ -1329,7 +1493,7 @@ describe('generateHorizontalGrid', () => {
       expect(firstWeek.length).toBe(7); // All weeks have 7 days
 
       // Find first non-null date and verify it's in the Sunday slot (index 0)
-      const firstNonNullIndex = firstWeek.findIndex(d => d.date !== null);
+      const firstNonNullIndex = firstWeek.findIndex((d) => d.date !== null);
       if (firstNonNullIndex === 0 && firstWeek[0].date) {
         // If there's a date in Sunday slot, it should parse as Sunday in local time
         const dateStr = firstWeek[0].date;
@@ -1345,7 +1509,7 @@ describe('generateHorizontalGrid', () => {
 
       // Find the last non-null date
       const lastWeek = weeks[weeks.length - 1];
-      const lastDay = lastWeek.reverse().find(d => d.date !== null);
+      const lastDay = lastWeek.reverse().find((d) => d.date !== null);
 
       expect(lastDay).toBeDefined();
       if (lastDay?.date) {
@@ -1380,7 +1544,9 @@ describe('generateHorizontalGrid', () => {
       const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
 
       for (let i = 1; i < monthLabels.length; i++) {
-        expect(monthLabels[i].weekIndex).toBeGreaterThan(monthLabels[i - 1].weekIndex);
+        expect(monthLabels[i].weekIndex).toBeGreaterThan(
+          monthLabels[i - 1].weekIndex
+        );
       }
     });
   });
@@ -1388,24 +1554,28 @@ describe('generateHorizontalGrid', () => {
   describe('completed dates', () => {
     it('marks completed dates correctly', () => {
       const currentDate = new Date('2025-12-22');
-      const completedDates = new Set(['2025-12-01', '2025-12-15', '2025-11-20']);
+      const completedDates = new Set([
+        '2025-12-01',
+        '2025-12-15',
+        '2025-11-20',
+      ]);
       const { weeks } = generateHorizontalGrid(currentDate, completedDates);
 
-      const allDays = weeks.flat().filter(d => d.date !== null);
-      const completedDays = allDays.filter(d => d.completed);
+      const allDays = weeks.flat().filter((d) => d.date !== null);
+      const completedDays = allDays.filter((d) => d.completed);
 
       expect(completedDays.length).toBe(3);
-      expect(completedDays.some(d => d.date === '2025-12-01')).toBe(true);
-      expect(completedDays.some(d => d.date === '2025-12-15')).toBe(true);
-      expect(completedDays.some(d => d.date === '2025-11-20')).toBe(true);
+      expect(completedDays.some((d) => d.date === '2025-12-01')).toBe(true);
+      expect(completedDays.some((d) => d.date === '2025-12-15')).toBe(true);
+      expect(completedDays.some((d) => d.date === '2025-11-20')).toBe(true);
     });
 
     it('returns completed=false when no dates are in the set', () => {
       const currentDate = new Date('2025-12-22');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
-      const allDays = weeks.flat().filter(d => d.date !== null);
-      expect(allDays.every(d => d.completed === false)).toBe(true);
+      const allDays = weeks.flat().filter((d) => d.date !== null);
+      expect(allDays.every((d) => d.completed === false)).toBe(true);
     });
   });
 
@@ -1414,7 +1584,7 @@ describe('generateHorizontalGrid', () => {
       const today = new Date();
       const { weeks } = generateHorizontalGrid(today, new Set());
 
-      const todayDays = weeks.flat().filter(d => d.isToday);
+      const todayDays = weeks.flat().filter((d) => d.isToday);
       expect(todayDays.length).toBe(1);
     });
 
@@ -1423,7 +1593,7 @@ describe('generateHorizontalGrid', () => {
       const todayStr = today.toISOString().split('T')[0];
       const { weeks } = generateHorizontalGrid(today, new Set());
 
-      const todayDay = weeks.flat().find(d => d.isToday);
+      const todayDay = weeks.flat().find((d) => d.isToday);
       expect(todayDay?.date).toBe(todayStr);
     });
   });
@@ -1433,11 +1603,11 @@ describe('generateHorizontalGrid', () => {
       const currentDate = new Date('2025-12-20');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
-      const allDays = weeks.flat().filter(d => d.date !== null);
-      const futureDays = allDays.filter(d => d.isFuture);
+      const allDays = weeks.flat().filter((d) => d.date !== null);
+      const futureDays = allDays.filter((d) => d.isFuture);
 
       // Should have 2 future days (21st and 22nd if today is 20th in test)
-      futureDays.forEach(day => {
+      futureDays.forEach((day) => {
         if (day.date) {
           const dayDate = new Date(day.date);
           expect(dayDate > currentDate).toBe(true);
@@ -1449,7 +1619,7 @@ describe('generateHorizontalGrid', () => {
       const today = new Date();
       const { weeks } = generateHorizontalGrid(today, new Set());
 
-      const todayDay = weeks.flat().find(d => d.isToday);
+      const todayDay = weeks.flat().find((d) => d.isToday);
       expect(todayDay?.isFuture).toBe(false);
     });
   });
@@ -1458,12 +1628,16 @@ describe('generateHorizontalGrid', () => {
     it('marks dates before habit creation as isBeforeCreation', () => {
       const currentDate = new Date('2025-12-22');
       const habitCreatedAt = new Date('2025-12-01').getTime();
-      const { weeks } = generateHorizontalGrid(currentDate, new Set(), habitCreatedAt);
+      const { weeks } = generateHorizontalGrid(
+        currentDate,
+        new Set(),
+        habitCreatedAt
+      );
 
-      const beforeCreationDays = weeks.flat().filter(d => d.isBeforeCreation);
+      const beforeCreationDays = weeks.flat().filter((d) => d.isBeforeCreation);
       expect(beforeCreationDays.length).toBeGreaterThan(0);
 
-      beforeCreationDays.forEach(day => {
+      beforeCreationDays.forEach((day) => {
         if (day.date) {
           const dayDate = new Date(day.date);
           expect(dayDate < new Date(habitCreatedAt)).toBe(true);
@@ -1474,9 +1648,13 @@ describe('generateHorizontalGrid', () => {
     it('does not mark creation day as isBeforeCreation', () => {
       const currentDate = new Date('2025-12-22');
       const habitCreatedAt = new Date('2025-12-01').getTime();
-      const { weeks } = generateHorizontalGrid(currentDate, new Set(), habitCreatedAt);
+      const { weeks } = generateHorizontalGrid(
+        currentDate,
+        new Set(),
+        habitCreatedAt
+      );
 
-      const creationDay = weeks.flat().find(d => d.date === '2025-12-01');
+      const creationDay = weeks.flat().find((d) => d.date === '2025-12-01');
       expect(creationDay?.isBeforeCreation).toBe(false);
     });
 
@@ -1484,8 +1662,8 @@ describe('generateHorizontalGrid', () => {
       const currentDate = new Date('2025-12-22');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
-      const allDays = weeks.flat().filter(d => d.date !== null);
-      expect(allDays.every(d => d.isBeforeCreation === false)).toBe(true);
+      const allDays = weeks.flat().filter((d) => d.date !== null);
+      expect(allDays.every((d) => d.isBeforeCreation === false)).toBe(true);
     });
   });
 
@@ -1495,7 +1673,7 @@ describe('generateHorizontalGrid', () => {
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       // Check that each position in the week corresponds to the correct day
-      weeks.forEach(week => {
+      weeks.forEach((week) => {
         week.forEach((day, index) => {
           if (day.date) {
             // Parse date in local timezone to match how date-fns format works
@@ -1530,7 +1708,9 @@ describe('generateHorizontalGrid', () => {
 });
 
 describe('calculate3MonthStats', () => {
-  const createMockDay = (overrides: Partial<CalendarDay> = {}): CalendarDay => ({
+  const createMockDay = (
+    overrides: Partial<CalendarDay> = {}
+  ): CalendarDay => ({
     date: '2025-12-15',
     dayOfMonth: 15,
     completed: false,
@@ -1542,10 +1722,12 @@ describe('calculate3MonthStats', () => {
 
   describe('basic calculations', () => {
     it('returns 0 completions for empty grid', () => {
-      const weeks = [[
-        createMockDay({ date: null, dayOfMonth: null }),
-        createMockDay({ date: null, dayOfMonth: null }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: null, dayOfMonth: null }),
+          createMockDay({ date: null, dayOfMonth: null }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.completions).toBe(0);
@@ -1553,23 +1735,31 @@ describe('calculate3MonthStats', () => {
     });
 
     it('counts completions correctly', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
-        createMockDay({ date: '2025-12-04', dayOfMonth: 4, completed: true }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+          createMockDay({ date: '2025-12-04', dayOfMonth: 4, completed: true }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.completions).toBe(3);
     });
 
     it('counts eligible days correctly', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2 }),
-        createMockDay({ date: null, dayOfMonth: null }), // Padding
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
+          createMockDay({ date: '2025-12-02', dayOfMonth: 2 }),
+          createMockDay({ date: null, dayOfMonth: null }), // Padding
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.eligibleDays).toBe(2);
@@ -1578,44 +1768,70 @@ describe('calculate3MonthStats', () => {
 
   describe('excluded days', () => {
     it('excludes null dates from eligible days', () => {
-      const weeks = [[
-        createMockDay({ date: null, dayOfMonth: null }),
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
-        createMockDay({ date: null, dayOfMonth: null }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: null, dayOfMonth: null }),
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1 }),
+          createMockDay({ date: null, dayOfMonth: null }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.eligibleDays).toBe(1);
     });
 
     it('excludes future days from eligible days', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-15', dayOfMonth: 15 }),
-        createMockDay({ date: '2025-12-16', dayOfMonth: 16, isFuture: true }),
-        createMockDay({ date: '2025-12-17', dayOfMonth: 17, isFuture: true }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: '2025-12-15', dayOfMonth: 15 }),
+          createMockDay({ date: '2025-12-16', dayOfMonth: 16, isFuture: true }),
+          createMockDay({ date: '2025-12-17', dayOfMonth: 17, isFuture: true }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.eligibleDays).toBe(1);
     });
 
     it('excludes before-creation days from eligible days', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, isBeforeCreation: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, isBeforeCreation: true }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3 }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({
+            date: '2025-12-01',
+            dayOfMonth: 1,
+            isBeforeCreation: true,
+          }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            isBeforeCreation: true,
+          }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3 }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.eligibleDays).toBe(1);
     });
 
     it('does not count completions on excluded days', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, isBeforeCreation: true, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, isFuture: true, completed: true }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({
+            date: '2025-12-01',
+            dayOfMonth: 1,
+            isBeforeCreation: true,
+            completed: true,
+          }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            isFuture: true,
+            completed: true,
+          }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.completions).toBe(1);
@@ -1624,41 +1840,61 @@ describe('calculate3MonthStats', () => {
 
   describe('success rate calculation', () => {
     it('calculates 100% success rate when all eligible days completed', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: true }),
-        createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: true }),
+          createMockDay({ date: '2025-12-03', dayOfMonth: 3, completed: true }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.successRate).toBe(100);
     });
 
     it('calculates 0% success rate when no days completed', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: false }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({
+            date: '2025-12-01',
+            dayOfMonth: 1,
+            completed: false,
+          }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.successRate).toBe(0);
     });
 
     it('calculates 50% success rate correctly', () => {
-      const weeks = [[
-        createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-        createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.successRate).toBe(50);
     });
 
     it('returns 0% success rate when no eligible days', () => {
-      const weeks = [[
-        createMockDay({ date: null, dayOfMonth: null }),
-        createMockDay({ date: '2025-12-15', dayOfMonth: 15, isFuture: true }),
-      ]];
+      const weeks = [
+        [
+          createMockDay({ date: null, dayOfMonth: null }),
+          createMockDay({ date: '2025-12-15', dayOfMonth: 15, isFuture: true }),
+        ],
+      ];
 
       const stats = calculate3MonthStats(weeks);
       expect(stats.successRate).toBe(0);
@@ -1670,14 +1906,22 @@ describe('calculate3MonthStats', () => {
       const weeks = [
         [
           createMockDay({ date: '2025-12-01', dayOfMonth: 1, completed: true }),
-          createMockDay({ date: '2025-12-02', dayOfMonth: 2, completed: false }),
+          createMockDay({
+            date: '2025-12-02',
+            dayOfMonth: 2,
+            completed: false,
+          }),
         ],
         [
           createMockDay({ date: '2025-12-08', dayOfMonth: 8, completed: true }),
           createMockDay({ date: '2025-12-09', dayOfMonth: 9, completed: true }),
         ],
         [
-          createMockDay({ date: '2025-12-15', dayOfMonth: 15, completed: false }),
+          createMockDay({
+            date: '2025-12-15',
+            dayOfMonth: 15,
+            completed: false,
+          }),
         ],
       ];
 
@@ -1736,7 +1980,11 @@ describe('calculate3MonthTrend', () => {
         }
       }
 
-      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      const trend = calculate3MonthTrend(
+        completedDates,
+        undefined,
+        currentDate
+      );
       expect(trend).toBeGreaterThan(0);
       expect(trend).toBeGreaterThanOrEqual(45);
       expect(trend).toBeLessThanOrEqual(55); // Approximately 50% improvement
@@ -1766,7 +2014,11 @@ describe('calculate3MonthTrend', () => {
         }
       }
 
-      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      const trend = calculate3MonthTrend(
+        completedDates,
+        undefined,
+        currentDate
+      );
       expect(trend).toBeLessThan(0);
       expect(trend).toBeLessThanOrEqual(-45);
       expect(trend).toBeGreaterThanOrEqual(-55); // Approximately 50% decline
@@ -1786,7 +2038,11 @@ describe('calculate3MonthTrend', () => {
         }
       }
 
-      const trend = calculate3MonthTrend(completedDates, habitCreatedAt, currentDate);
+      const trend = calculate3MonthTrend(
+        completedDates,
+        habitCreatedAt,
+        currentDate
+      );
       expect(trend).toBeNull();
     });
 
@@ -1814,7 +2070,11 @@ describe('calculate3MonthTrend', () => {
         }
       }
 
-      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      const trend = calculate3MonthTrend(
+        completedDates,
+        undefined,
+        currentDate
+      );
       expect(trend).toBe(100);
     });
 
@@ -1832,7 +2092,11 @@ describe('calculate3MonthTrend', () => {
         }
       }
 
-      const trend = calculate3MonthTrend(completedDates, habitCreatedAt, currentDate);
+      const trend = calculate3MonthTrend(
+        completedDates,
+        habitCreatedAt,
+        currentDate
+      );
       // Should return null because not enough previous period data (only 10 days before current 3-month period)
       expect(trend).toBeNull();
     });
@@ -1856,7 +2120,11 @@ describe('calculate3MonthTrend', () => {
         completedDates.add(format(date, 'yyyy-MM-dd'));
       }
 
-      const trend = calculate3MonthTrend(completedDates, undefined, currentDate);
+      const trend = calculate3MonthTrend(
+        completedDates,
+        undefined,
+        currentDate
+      );
       expect(trend).toBe(0); // No change
     });
   });

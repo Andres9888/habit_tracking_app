@@ -153,13 +153,22 @@ describe('CalendarHeatmap', () => {
       // Create data for 6+ months to enable trend calculation
       const completedDates = createCompletedDates([
         // Current 3 months (Dec, Nov, Oct) - 50% completion
-        '2025-12-01', '2025-12-03', '2025-12-05',
-        '2025-11-01', '2025-11-03', '2025-11-05',
-        '2025-10-01', '2025-10-03', '2025-10-05',
+        '2025-12-01',
+        '2025-12-03',
+        '2025-12-05',
+        '2025-11-01',
+        '2025-11-03',
+        '2025-11-05',
+        '2025-10-01',
+        '2025-10-03',
+        '2025-10-05',
         // Previous 3 months (Sep, Aug, Jul) - 30% completion (fewer days)
-        '2025-09-01', '2025-09-05',
-        '2025-08-01', '2025-08-05',
-        '2025-07-01', '2025-07-05',
+        '2025-09-01',
+        '2025-09-05',
+        '2025-08-01',
+        '2025-08-05',
+        '2025-07-01',
+        '2025-07-05',
       ]);
 
       const { queryByTestId } = render(
@@ -351,7 +360,7 @@ describe('CalendarHeatmap', () => {
           habitId={mockHabitId}
           completedDates={completedDates}
           habitCreatedAt={new Date('2025-12-01').getTime()}
-          habitColor="#ff0000"
+          habitColor='#ff0000'
         />
       );
 
@@ -372,7 +381,9 @@ describe('CalendarHeatmap', () => {
       );
 
       // Days before Dec 15 should be marked as before creation
-      const beforeCreationCell = getByLabelText(/December 1, 2025.*before habit was created/);
+      const beforeCreationCell = getByLabelText(
+        /December 1, 2025.*before habit was created/
+      );
       expect(beforeCreationCell).toBeTruthy();
     });
 
@@ -380,7 +391,10 @@ describe('CalendarHeatmap', () => {
       const completedDates = createCompletedDates(['2025-12-15']);
 
       const { getByText } = render(
-        <CalendarHeatmap habitId={mockHabitId} completedDates={completedDates} />
+        <CalendarHeatmap
+          habitId={mockHabitId}
+          completedDates={completedDates}
+        />
       );
 
       // Should still render calendar with abbreviated month names
@@ -463,10 +477,7 @@ describe('CalendarHeatmap', () => {
     });
 
     it('should provide summary statistics accessibility', () => {
-      const completedDates = createCompletedDates([
-        '2025-12-01',
-        '2025-12-02',
-      ]);
+      const completedDates = createCompletedDates(['2025-12-01', '2025-12-02']);
 
       const { getByLabelText } = render(
         <CalendarHeatmap
@@ -500,8 +511,9 @@ describe('CalendarHeatmap', () => {
 
     it('should handle all days completed in visible period', () => {
       // All days in December completed
-      const dates = Array.from({ length: 22 }, (_, i) =>
-        `2025-12-${String(i + 1).padStart(2, '0')}`
+      const dates = Array.from(
+        { length: 22 },
+        (_, i) => `2025-12-${String(i + 1).padStart(2, '0')}`
       );
       const completedDates = createCompletedDates(dates);
 
@@ -523,7 +535,7 @@ describe('CalendarHeatmap', () => {
       const todayStr = today.toISOString().split('T')[0];
       const completedDates = createCompletedDates([todayStr]);
 
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
@@ -533,7 +545,8 @@ describe('CalendarHeatmap', () => {
 
       // GitHub-style shows 3 months back, so if habit created today,
       // only today is eligible. Stats will show based on actual eligible days
-      expect(getByText(/%/)).toBeTruthy(); // Success rate shown
+      // Check via accessibility label since text is split across elements
+      expect(getByLabelText(/success rate/)).toBeTruthy(); // Success rate shown
     });
 
     it('should handle habit created in future (invalid)', () => {
