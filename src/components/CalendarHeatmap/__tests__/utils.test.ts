@@ -404,6 +404,267 @@ describe('generateMonthGrid', () => {
       expect(getAllDates(janGrid)[0]).toBe('2025-01-01');
     });
   });
+
+  describe('week start day customization', () => {
+    // Helper to parse date string in local timezone (avoids UTC issues)
+    const parseDateLocal = (dateStr: string): Date => {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    };
+
+    // Helper to get the day of week for a date string
+    const getDayOfWeekForDate = (dateStr: string): number => {
+      return parseDateLocal(dateStr).getDay();
+    };
+
+    describe('default behavior (Sunday start)', () => {
+      it('uses Sunday start (0) by default', () => {
+        // December 2025 starts on Monday, so Sunday column should be null/padding
+        const grid = generateMonthGrid(2025, 11, new Set());
+        const firstWeek = grid[0];
+
+        // With Sunday start, Monday (Dec 1) should be at index 1
+        expect(firstWeek[0].date).toBeNull(); // Sunday - padding
+        expect(firstWeek[1].date).toBe('2025-12-01'); // Monday
+      });
+
+      it('pads correctly when month starts on Sunday', () => {
+        // June 2025 starts on Sunday - no padding needed
+        const grid = generateMonthGrid(2025, 5, new Set());
+        const firstWeek = grid[0];
+
+        expect(firstWeek[0].date).toBe('2025-06-01');
+        expect(getDayOfWeekForDate(firstWeek[0].date!)).toBe(0); // Sunday
+      });
+    });
+
+    describe('Monday start (weekStartDay = 1)', () => {
+      it('first column is Monday when weekStartDay is 1', () => {
+        // December 2025 starts on Monday - no padding needed
+        const grid = generateMonthGrid(2025, 11, new Set(), undefined, 1);
+        const firstWeek = grid[0];
+
+        expect(firstWeek[0].date).toBe('2025-12-01');
+        expect(getDayOfWeekForDate(firstWeek[0].date!)).toBe(1); // Monday
+      });
+
+      it('pads correctly when month starts after Monday', () => {
+        // January 2025 starts on Wednesday
+        const grid = generateMonthGrid(2025, 0, new Set(), undefined, 1);
+        const firstWeek = grid[0];
+
+        // Monday (index 0) and Tuesday (index 1) should be padding
+        expect(firstWeek[0].date).toBeNull();
+        expect(firstWeek[1].date).toBeNull();
+        expect(firstWeek[2].date).toBe('2025-01-01'); // Wednesday
+        expect(getDayOfWeekForDate(firstWeek[2].date!)).toBe(3); // Wednesday
+      });
+
+      it('pads correctly when month starts on Sunday', () => {
+        // June 2025 starts on Sunday - needs 6 days of padding for Monday start
+        const grid = generateMonthGrid(2025, 5, new Set(), undefined, 1);
+        const firstWeek = grid[0];
+
+        // Indices 0-5 (Mon-Sat) should be padding
+        for (let i = 0; i < 6; i++) {
+          expect(firstWeek[i].date).toBeNull();
+        }
+        // Index 6 (Sunday in Monday-start week) should be June 1st
+        expect(firstWeek[6].date).toBe('2025-06-01');
+        expect(getDayOfWeekForDate(firstWeek[6].date!)).toBe(0); // Sunday
+      });
+
+      it('last column is Sunday when weekStartDay is 1', () => {
+        const grid = generateMonthGrid(2025, 11, new Set(), undefined, 1);
+        // Find a non-padding row to verify column order
+        const fullWeek = grid.find((week) =>
+          week.every((day) => day.date !== null)
+        );
+        if (fullWeek) {
+          // Index 6 should be Sunday
+          expect(getDayOfWeekForDate(fullWeek[6].date!)).toBe(0); // Sunday
+        }
+      });
+    });
+
+    describe('Saturday start (weekStartDay = 6)', () => {
+      it('first column is Saturday when weekStartDay is 6', () => {
+        // May 2025 starts on Thursday, so needs padding
+        const grid = generateMonthGrid(2025, 4, new Set(), undefined, 6);
+        const firstWeek = grid[0];
+
+        // Saturday (index 0) through Wednesday (index 4) should be padding
+        // Calculation: (4 - 6 + 7) % 7 = 5 padding cells
+        expect(firstWeek[0].date).toBeNull(); // Saturday
+        expect(firstWeek[1].date).toBeNull(); // Sunday
+        expect(firstWeek[2].date).toBeNull(); // Monday
+        expect(firstWeek[3].date).toBeNull(); // Tuesday
+        expect(firstWeek[4].date).toBeNull(); // Wednesday
+        expect(firstWeek[5].date).toBe('2025-05-01'); // Thursday
+        expect(getDayOfWeekForDate(firstWeek[5].date!)).toBe(4); // Thursday
+      });
+
+      it('no padding when month starts on Saturday', () => {
+        // November 2025 starts on Saturday
+        const grid = generateMonthGrid(2025, 10, new Set(), undefined, 6);
+        const firstWeek = grid[0];
+
+        expect(firstWeek[0].date).toBe('2025-11-01');
+        expect(getDayOfWeekForDate(firstWeek[0].date!)).toBe(6); // Saturday
+      });
+
+      it('last column is Friday when weekStartDay is 6', () => {
+        // November 2025 starts on Saturday - first week is complete
+        const grid = generateMonthGrid(2025, 10, new Set(), undefined, 6);
+        const firstWeek = grid[0];
+
+        // Index 6 should be Friday (November 7)
+        expect(firstWeek[6].date).toBe('2025-11-07');
+        expect(getDayOfWeekForDate(firstWeek[6].date!)).toBe(5); // Friday
+      });
+    });
+
+    describe('all week start days', () => {
+      it('generates correct number of actual days regardless of start day', () => {
+        // December 2025 has 31 days - should be true for all start days
+        for (let startDay = 0; startDay <= 6; startDay++) {
+          const grid = generateMonthGrid(
+            2025,
+            11,
+            new Set(),
+            undefined,
+            startDay as 0 | 1 | 2 | 3 | 4 | 5 | 6
+          );
+          expect(countActualDays(grid)).toBe(31);
+        }
+      });
+
+      it('maintains correct date sequence for all start days', () => {
+        for (let startDay = 0; startDay <= 6; startDay++) {
+          const grid = generateMonthGrid(
+            2025,
+            11,
+            new Set(),
+            undefined,
+            startDay as 0 | 1 | 2 | 3 | 4 | 5 | 6
+          );
+          const dates = getAllDates(grid);
+
+          // First date should be December 1st
+          expect(dates[0]).toBe('2025-12-01');
+          // Last date should be December 31st
+          expect(dates[dates.length - 1]).toBe('2025-12-31');
+        }
+      });
+
+      it('each week still has exactly 7 cells for all start days', () => {
+        for (let startDay = 0; startDay <= 6; startDay++) {
+          const grid = generateMonthGrid(
+            2025,
+            11,
+            new Set(),
+            undefined,
+            startDay as 0 | 1 | 2 | 3 | 4 | 5 | 6
+          );
+          grid.forEach((week) => {
+            expect(week.length).toBe(7);
+          });
+        }
+      });
+    });
+
+    describe('completed dates with week start customization', () => {
+      it('marks completed dates correctly with Monday start', () => {
+        const completedDates = new Set(['2025-12-05', '2025-12-15', '2025-12-25']);
+        const grid = generateMonthGrid(2025, 11, completedDates, undefined, 1);
+
+        const completedDays = grid.flat().filter((d) => d.completed);
+        expect(completedDays.length).toBe(3);
+        expect(completedDays.map((d) => d.date).sort()).toEqual([
+          '2025-12-05',
+          '2025-12-15',
+          '2025-12-25',
+        ]);
+      });
+    });
+
+    describe('habitCreatedAt with week start customization', () => {
+      it('marks before creation dates correctly with Monday start', () => {
+        // Habit created on December 15, 2025
+        const habitCreatedAt = new Date(2025, 11, 15).getTime();
+        const grid = generateMonthGrid(2025, 11, new Set(), habitCreatedAt, 1);
+
+        const beforeCreationDays = grid.flat().filter((d) => d.isBeforeCreation);
+        // Days 1-14 should be before creation
+        expect(beforeCreationDays.length).toBe(14);
+      });
+    });
+
+    describe('today and future detection with week start customization', () => {
+      it('today detection works correctly with all start days', () => {
+        const now = new Date();
+
+        for (let startDay = 0; startDay <= 6; startDay++) {
+          const grid = generateMonthGrid(
+            now.getFullYear(),
+            now.getMonth(),
+            new Set(),
+            undefined,
+            startDay as 0 | 1 | 2 | 3 | 4 | 5 | 6
+          );
+
+          const todayDays = grid.flat().filter((d) => d.isToday);
+          expect(todayDays.length).toBe(1);
+        }
+      });
+    });
+
+    describe('padding calculation edge cases', () => {
+      it('handles month starting on week start day (no padding)', () => {
+        // Test each week start day with a month that starts on that day
+        const testCases: Array<{ month: number; year: number; startDay: 0 | 1 | 2 | 3 | 4 | 5 | 6 }> = [
+          { month: 5, year: 2025, startDay: 0 }, // June 2025 starts on Sunday
+          { month: 11, year: 2025, startDay: 1 }, // December 2025 starts on Monday
+          { month: 6, year: 2025, startDay: 2 }, // July 2025 starts on Tuesday
+          { month: 0, year: 2025, startDay: 3 }, // January 2025 starts on Wednesday
+          { month: 4, year: 2025, startDay: 4 }, // May 2025 starts on Thursday
+          { month: 7, year: 2025, startDay: 5 }, // August 2025 starts on Friday
+          { month: 10, year: 2025, startDay: 6 }, // November 2025 starts on Saturday
+        ];
+
+        for (const { month, year, startDay } of testCases) {
+          const grid = generateMonthGrid(year, month, new Set(), undefined, startDay);
+          const firstWeek = grid[0];
+
+          // First cell should be the 1st of the month (no padding)
+          expect(firstWeek[0].date).not.toBeNull();
+          expect(firstWeek[0].dayOfMonth).toBe(1);
+        }
+      });
+
+      it('handles month starting one day after week start (1 padding cell)', () => {
+        // December 2025 starts on Monday
+        // With Sunday (0) start: 1 padding cell (Sunday)
+        const gridSundayStart = generateMonthGrid(2025, 11, new Set(), undefined, 0);
+        let paddingCount = gridSundayStart[0].filter((d) => d.date === null).length;
+        expect(paddingCount).toBe(1);
+
+        // With Saturday (6) start: December 1st (Monday) is 2 days after Saturday
+        // Calculation: (1 - 6 + 7) % 7 = 2 padding cells
+        const gridSaturdayStart = generateMonthGrid(2025, 11, new Set(), undefined, 6);
+        paddingCount = gridSaturdayStart[0].filter((d) => d.date === null).length;
+        expect(paddingCount).toBe(2);
+      });
+
+      it('handles maximum padding (6 cells when month starts day before week start)', () => {
+        // June 2025 starts on Sunday
+        // With Monday (1) start, Sunday is at index 6, so need 6 padding cells
+        const grid = generateMonthGrid(2025, 5, new Set(), undefined, 1);
+        const paddingCount = grid[0].filter((d) => d.date === null).length;
+        expect(paddingCount).toBe(6);
+      });
+    });
+  });
 });
 
 describe('generateWeekGrid', () => {

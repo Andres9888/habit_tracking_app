@@ -35,21 +35,42 @@ export interface CalendarDay {
 
 /**
  * Generates a calendar grid for a given month
- * Returns an array of weeks, each containing 7 days (Sunday to Saturday)
+ *
+ * Returns an array of weeks, each containing 7 days. The first column
+ * corresponds to the configured week start day.
+ *
+ * @param year - The year (e.g., 2025)
+ * @param month - The month (0-indexed: 0 = January, 11 = December)
+ * @param completedDates - Set of completed dates in YYYY-MM-DD format
+ * @param habitCreatedAt - Optional timestamp when habit was created
+ * @param weekStartDay - Day the week starts on (0 = Sunday, 1 = Monday, etc.)
+ * @returns 2D array of CalendarDay objects organized by week
+ *
+ * @example
+ * // Week starting Sunday (default)
+ * generateMonthGrid(2025, 11, completedDates) // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+ *
+ * // Week starting Monday
+ * generateMonthGrid(2025, 11, completedDates, undefined, 1) // [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
  */
 export function generateMonthGrid(
   year: number,
   month: number, // 0-indexed (0 = January)
   completedDates: Set<string>,
-  habitCreatedAt?: number
+  habitCreatedAt?: number,
+  weekStartDay: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0
 ): CalendarDay[][] {
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
 
   const firstDay = startOfMonth(new Date(year, month));
-  const lastDay = endOfMonth(new Date(year, month));
-  const startPadding = getDay(firstDay); // 0 = Sunday
   const daysInMonth = getDaysInMonth(firstDay);
+
+  // Calculate padding based on week start day
+  // e.g., if month starts on Wednesday (3) and weekStartDay is Monday (1):
+  // startPadding = (3 - 1 + 7) % 7 = 2 (need 2 padding cells)
+  const firstDayOfWeek = getDay(firstDay); // 0 = Sunday
+  const startPadding = (firstDayOfWeek - weekStartDay + 7) % 7;
 
   const habitCreatedDate = habitCreatedAt ? new Date(habitCreatedAt) : null;
 
