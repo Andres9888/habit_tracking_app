@@ -11,9 +11,11 @@
  * - undoAll functionality for clearing entire queue
  * - Max queue size enforcement
  * - Edge cases (rapid toggles, cleanup on unmount)
+ * - Navigation handling (commit on unmount, app background)
  */
 
 import { renderHook, act } from '@testing-library/react-native';
+import { AppState, type AppStateStatus } from 'react-native';
 import { useToggleUndo, UseToggleUndoOptions } from '../useToggleUndo';
 
 describe('useToggleUndo', () => {
@@ -995,7 +997,7 @@ describe('useToggleUndo', () => {
   });
 
   describe('Cleanup on Unmount', () => {
-    it('clears all timers on unmount', () => {
+    it('commits all pending toggles on unmount by default', () => {
       const onCommit = jest.fn();
       const { result, unmount } = renderHook(() => useToggleUndo({ onCommit }));
 
@@ -1018,13 +1020,18 @@ describe('useToggleUndo', () => {
 
       unmount();
 
-      // Fast-forward past all timers
+      // All pending toggles are committed on unmount by default
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(onCommit).toHaveBeenCalledWith('habit-2', '2024-12-29', false);
+
+      // Fast-forward past all timers - no additional commits should occur
       act(() => {
         jest.advanceTimersByTime(5000);
       });
 
-      // Should not have been called because hook was unmounted
-      expect(onCommit).not.toHaveBeenCalled();
+      // Should still only be 2 (from unmount), not 4
+      expect(onCommit).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -1295,6 +1302,571 @@ describe('useToggleUndo', () => {
       expect(result.current.hasPendingToggle).toBe(initialHasPendingToggle);
       expect(result.current.getPendingToggle).toBe(initialGetPendingToggle);
       expect(result.current.forceCommit).toBe(initialForceCommit);
+    });
+  });
+
+  describe('Navigation Handling - Commit on Unmount', () => {
+    it('commits pending toggles on unmount by default', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      unmount();
+
+      // Both toggles should be committed
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      expect(onCommit).toHaveBeenCalledWith('habit-2', '2024-12-29', false);
+    });
+
+    it('calls onNavigationCommit with unmount reason', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      unmount();
+
+      expect(onNavigationCommit).toHaveBeenCalledTimes(1);
+      expect(onNavigationCommit).toHaveBeenCalledWith(
+        'unmount',
+        2,
+        expect.arrayContaining([
+          expect.objectContaining({ habitId: 'habit-1' }),
+          expect.objectContaining({ habitId: 'habit-2' }),
+        ])
+      );
+    });
+
+    it('does not commit on unmount when commitOnUnmount is false', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit, commitOnUnmount: false })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      unmount();
+
+      // Should not commit - toggle is lost
+      expect(onCommit).not.toHaveBeenCalled();
+      expect(onNavigationCommit).not.toHaveBeenCalled();
+    });
+
+    it('does nothing on unmount when queue is empty', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      unmount();
+
+      expect(onCommit).not.toHaveBeenCalled();
+      expect(onNavigationCommit).not.toHaveBeenCalled();
+    });
+
+    it('clears timers on unmount even when not committing', () => {
+      const onCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, commitOnUnmount: false })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      unmount();
+
+      // Fast-forward past timer
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+
+      // Timer should have been cleared, no commit
+      expect(onCommit).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Navigation Handling - Commit on Background', () => {
+    let appStateListeners: Array<(state: AppStateStatus) => void> = [];
+    let mockAddEventListener: jest.SpyInstance;
+    let mockRemove: jest.Mock;
+
+    beforeEach(() => {
+      appStateListeners = [];
+      mockRemove = jest.fn();
+      mockAddEventListener = jest.spyOn(AppState, 'addEventListener').mockImplementation(
+        (type: string, listener: (state: AppStateStatus) => void) => {
+          if (type === 'change') {
+            appStateListeners.push(listener);
+          }
+          return { remove: mockRemove };
+        }
+      );
+      // Mock AppState.currentState
+      Object.defineProperty(AppState, 'currentState', {
+        value: 'active',
+        writable: true,
+        configurable: true,
+      });
+    });
+
+    afterEach(() => {
+      mockAddEventListener.mockRestore();
+    });
+
+    it('commits pending toggles when app goes to background', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Simulate app going to background
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+    });
+
+    it('calls onNavigationCommit with background reason', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(onNavigationCommit).toHaveBeenCalledTimes(1);
+      expect(onNavigationCommit).toHaveBeenCalledWith(
+        'background',
+        1,
+        expect.arrayContaining([
+          expect.objectContaining({ habitId: 'habit-1' }),
+        ])
+      );
+    });
+
+    it('commits when app goes to inactive state', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onCommit }));
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Simulate app going to inactive (iOS specific - before background)
+      act(() => {
+        appStateListeners.forEach((listener) => listener('inactive'));
+      });
+
+      expect(onCommit).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not commit when commitOnBackground is false', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() =>
+        useToggleUndo({ onCommit, commitOnBackground: false })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(onCommit).not.toHaveBeenCalled();
+    });
+
+    it('does not commit when app comes to foreground', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onCommit }));
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Simulate coming back to active (should not trigger commit)
+      act(() => {
+        appStateListeners.forEach((listener) => listener('active'));
+      });
+
+      expect(onCommit).not.toHaveBeenCalled();
+    });
+
+    it('does nothing when going to background with empty queue', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      renderHook(() => useToggleUndo({ onCommit, onNavigationCommit }));
+
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(onCommit).not.toHaveBeenCalled();
+      expect(onNavigationCommit).not.toHaveBeenCalled();
+    });
+
+    it('removes AppState listener on unmount', () => {
+      const { unmount } = renderHook(() =>
+        useToggleUndo({ commitOnBackground: true })
+      );
+
+      unmount();
+
+      expect(mockRemove).toHaveBeenCalled();
+    });
+
+    it('does not add AppState listener when commitOnBackground is false', () => {
+      renderHook(() => useToggleUndo({ commitOnBackground: false }));
+
+      expect(mockAddEventListener).not.toHaveBeenCalled();
+    });
+
+    it('clears pending queue and toast after background commit', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onCommit }));
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      expect(result.current.state.queueLength).toBe(1);
+      expect(result.current.state.toastVisible).toBe(true);
+
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(result.current.state.queueLength).toBe(0);
+      expect(result.current.state.toastVisible).toBe(false);
+    });
+
+    it('handles rapid background/foreground transitions', () => {
+      const onCommit = jest.fn();
+      const { result } = renderHook(() => useToggleUndo({ onCommit }));
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // First background - commits
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+      expect(onCommit).toHaveBeenCalledTimes(1);
+
+      // Come back to foreground
+      act(() => {
+        appStateListeners.forEach((listener) => listener('active'));
+      });
+
+      // Schedule another toggle
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      // Second background - commits the new toggle
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onCommit).toHaveBeenLastCalledWith('habit-2', '2024-12-29', false);
+    });
+  });
+
+  describe('Navigation Handling - Combined Scenarios', () => {
+    let appStateListeners: Array<(state: AppStateStatus) => void> = [];
+    let mockAddEventListener: jest.SpyInstance;
+
+    beforeEach(() => {
+      appStateListeners = [];
+      mockAddEventListener = jest.spyOn(AppState, 'addEventListener').mockImplementation(
+        (type: string, listener: (state: AppStateStatus) => void) => {
+          if (type === 'change') {
+            appStateListeners.push(listener);
+          }
+          return { remove: jest.fn() };
+        }
+      );
+      Object.defineProperty(AppState, 'currentState', {
+        value: 'active',
+        writable: true,
+        configurable: true,
+      });
+    });
+
+    afterEach(() => {
+      mockAddEventListener.mockRestore();
+    });
+
+    it('does not double-commit on background then unmount', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Go to background first
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onNavigationCommit).toHaveBeenCalledWith('background', 1, expect.any(Array));
+
+      // Then unmount (should not commit again since queue is empty)
+      unmount();
+
+      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onNavigationCommit).toHaveBeenCalledTimes(1);
+    });
+
+    it('commits remaining toggles on unmount after partial background commit', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Go to background - commits first toggle
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+      expect(onCommit).toHaveBeenCalledTimes(1);
+
+      // Come back, add another toggle
+      act(() => {
+        appStateListeners.forEach((listener) => listener('active'));
+      });
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      // Unmount - should commit the new toggle
+      unmount();
+
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onNavigationCommit).toHaveBeenCalledTimes(2);
+      expect(onNavigationCommit).toHaveBeenLastCalledWith(
+        'unmount',
+        1,
+        expect.arrayContaining([expect.objectContaining({ habitId: 'habit-2' })])
+      );
+    });
+
+    it('handles both commitOnUnmount and commitOnBackground being false', () => {
+      const onCommit = jest.fn();
+      const onNavigationCommit = jest.fn();
+      const { result, unmount } = renderHook(() =>
+        useToggleUndo({
+          onCommit,
+          onNavigationCommit,
+          commitOnUnmount: false,
+          commitOnBackground: false,
+        })
+      );
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      // Neither should trigger commit
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+      unmount();
+
+      expect(onCommit).not.toHaveBeenCalled();
+      expect(onNavigationCommit).not.toHaveBeenCalled();
+    });
+
+    it('timer commits still work independently of navigation commits', async () => {
+      const onCommit = jest.fn().mockResolvedValue(undefined);
+      const onNavigationCommit = jest.fn();
+      const { result } = renderHook(() =>
+        useToggleUndo({ onCommit, onNavigationCommit })
+      );
+
+      // Add two toggles with staggered timers
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-1',
+          'Exercise',
+          '2024-12-28',
+          true
+        );
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      act(() => {
+        result.current.scheduleToggle(
+          'habit-2',
+          'Meditation',
+          '2024-12-29',
+          false
+        );
+      });
+
+      // First timer expires after 1.5 more seconds
+      await act(async () => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      expect(onCommit).toHaveBeenCalledTimes(1);
+      expect(onCommit).toHaveBeenCalledWith('habit-1', '2024-12-28', true);
+      // Timer commits don't trigger onNavigationCommit
+      expect(onNavigationCommit).not.toHaveBeenCalled();
+
+      // Go to background - commits remaining toggle
+      act(() => {
+        appStateListeners.forEach((listener) => listener('background'));
+      });
+
+      expect(onCommit).toHaveBeenCalledTimes(2);
+      expect(onNavigationCommit).toHaveBeenCalledTimes(1);
+      expect(onNavigationCommit).toHaveBeenCalledWith(
+        'background',
+        1,
+        expect.any(Array)
+      );
     });
   });
 });

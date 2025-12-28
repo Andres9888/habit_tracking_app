@@ -14,11 +14,17 @@
  * - Undo pops the most recent toggle from the queue
  * - undoAll() clears the entire queue
  *
+ * Navigation handling:
+ * - Pending toggles are auto-committed when component unmounts (configurable)
+ * - App backgrounding triggers auto-commit (configurable)
+ * - Provides callbacks for navigation-triggered commits
+ *
  * This hook should be used at a screen/context level to manage
  * toggle undo state across multiple components.
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { AppState, type AppStateStatus } from 'react-native';
 import { format } from 'date-fns';
 
 export interface PendingToggle {
@@ -51,6 +57,9 @@ export interface ToggleUndoState {
   queueLength: number;
 }
 
+/** Reason why toggles were auto-committed */
+export type NavigationCommitReason = 'unmount' | 'background' | 'manual';
+
 export interface UseToggleUndoOptions {
   /** Duration of the undo window in ms (default: 3000) */
   undoWindowMs?: number;
@@ -64,6 +73,28 @@ export interface UseToggleUndoOptions {
   ) => void | Promise<void>;
   /** Callback when a toggle is undone */
   onUndo?: (habitId: string, date: string, wasCompleted: boolean) => void;
+  /**
+   * Auto-commit pending toggles when component unmounts (default: true).
+   * When true, pending toggles are committed before cleanup to prevent data loss.
+   * Set to false if you want to cancel pending toggles on navigation.
+   */
+  commitOnUnmount?: boolean;
+  /**
+   * Auto-commit pending toggles when app goes to background (default: true).
+   * When true, pending toggles are committed when AppState changes to 'background'.
+   * This ensures toggles are persisted even if the app is killed while backgrounded.
+   */
+  commitOnBackground?: boolean;
+  /**
+   * Callback when toggles are auto-committed due to navigation events.
+   * Called with the reason ('unmount' | 'background') and the number of toggles committed.
+   * Useful for analytics or showing feedback to the user.
+   */
+  onNavigationCommit?: (
+    reason: NavigationCommitReason,
+    count: number,
+    toggles: PendingToggle[]
+  ) => void;
 }
 
 export interface UseToggleUndoReturn {
@@ -141,6 +172,9 @@ export function useToggleUndo(
     maxQueueSize = DEFAULT_MAX_QUEUE_SIZE,
     onCommit,
     onUndo,
+    commitOnUnmount = true,
+    commitOnBackground = true,
+    onNavigationCommit,
   } = options;
 
   // Queue of pending toggles (oldest first)
@@ -150,18 +184,96 @@ export function useToggleUndo(
   // Use ref to track latest queue for cleanup and timer callbacks
   const pendingTogglesRef = useRef<PendingToggle[]>([]);
 
+  // Track previous app state for background detection
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
+
   // Keep ref in sync with state
   useEffect(() => {
     pendingTogglesRef.current = pendingToggles;
   }, [pendingToggles]);
 
-  // Cleanup on unmount - clear all timers
+  /**
+   * Commit all pending toggles with a specific reason.
+   * Used for navigation events (unmount, background).
+   */
+  const commitAllWithReason = useCallback(
+    (reason: NavigationCommitReason) => {
+      const queue = pendingTogglesRef.current;
+      if (queue.length === 0) {
+        return;
+      }
+
+      const count = queue.length;
+      const togglesCopy = [...queue];
+
+      // Clear all timers and commit each toggle
+      for (const toggle of queue) {
+        clearTimeout(toggle.timerId);
+        onCommit?.(toggle.habitId, toggle.date, toggle.wasCompleted);
+      }
+
+      // Notify consumer of navigation commit
+      onNavigationCommit?.(reason, count, togglesCopy);
+
+      // Clear the queue
+      setPendingToggles([]);
+      setToastVisible(false);
+    },
+    [onCommit, onNavigationCommit]
+  );
+
+  // Handle app state changes (background/foreground)
+  useEffect(() => {
+    if (!commitOnBackground) {
+      return;
+    }
+
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      // Commit when moving from active to background
+      if (
+        appStateRef.current === 'active' &&
+        (nextAppState === 'background' || nextAppState === 'inactive')
+      ) {
+        commitAllWithReason('background');
+      }
+      appStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [commitOnBackground, commitAllWithReason]);
+
+  // Cleanup on unmount - commit or clear pending toggles
   useEffect(() => {
     return () => {
-      for (const toggle of pendingTogglesRef.current) {
-        clearTimeout(toggle.timerId);
+      const queue = pendingTogglesRef.current;
+      if (queue.length === 0) {
+        return;
+      }
+
+      if (commitOnUnmount) {
+        // Commit all pending toggles before unmounting
+        const togglesCopy = [...queue];
+        for (const toggle of queue) {
+          clearTimeout(toggle.timerId);
+          onCommit?.(toggle.habitId, toggle.date, toggle.wasCompleted);
+        }
+        onNavigationCommit?.('unmount', queue.length, togglesCopy);
+      } else {
+        // Just clear timers without committing (data is lost)
+        for (const toggle of queue) {
+          clearTimeout(toggle.timerId);
+        }
       }
     };
+    // Note: We intentionally only run this on unmount, so we use refs for values
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
