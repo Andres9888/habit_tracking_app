@@ -335,3 +335,149 @@ export function getBestAndWorstDays(dayStats: DayStats[]): {
 
   return { bestDay, worstDay };
 }
+
+/**
+ * Calculate rolling 30-day consistency score with sparkline data
+ *
+ * The consistency index rewards regular completion and penalizes gaps:
+ * - Base score from completion rate (0-60 points)
+ * - Streak bonus for consecutive days (0-25 points)
+ * - Recency bonus for recent completions (0-15 points)
+ *
+ * @param tracking - Array of habit tracking entries
+ * @param habitCreatedAt - Timestamp when habit was created
+ * @returns ConsistencyData with score, previousScore, change, and sparklineData
+ */
+export function calculateConsistencyIndex(
+  tracking: HabitTrackingEntry[],
+  habitCreatedAt?: number
+): {
+  score: number;
+  previousScore: number;
+  change: number;
+  sparklineData: Array<{ date: string; completed: boolean; value: number }>;
+  daysIncluded: number;
+} {
+  const today = new Date();
+  const todayStr = getTodayString();
+
+  // Determine start date (either 30 days ago or habit creation, whichever is later)
+  const thirtyDaysAgo = new Date(today);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29); // Include today
+
+  const startDate = habitCreatedAt
+    ? new Date(Math.max(thirtyDaysAgo.getTime(), habitCreatedAt))
+    : thirtyDaysAgo;
+
+  // Create set of completed dates for O(1) lookup
+  const completedDates = new Set(
+    tracking.filter((t) => t.completed).map((t) => t.date)
+  );
+
+  // Generate sparkline data for the last 30 days
+  const sparklineData: Array<{ date: string; completed: boolean; value: number }> = [];
+  let completedCount = 0;
+  let currentStreak = 0;
+  let maxStreakInPeriod = 0;
+  let recentCompletions = 0; // Last 7 days
+
+  const current = new Date(startDate);
+  current.setHours(0, 0, 0, 0);
+
+  while (current <= today) {
+    const dateStr = formatDateString(current);
+    const isCompleted = completedDates.has(dateStr);
+
+    if (isCompleted) {
+      completedCount++;
+      currentStreak++;
+      maxStreakInPeriod = Math.max(maxStreakInPeriod, currentStreak);
+
+      // Check if in last 7 days
+      const daysFromToday = differenceInDays(todayStr, dateStr);
+      if (daysFromToday < 7) {
+        recentCompletions++;
+      }
+    } else {
+      currentStreak = 0;
+    }
+
+    // Calculate running consistency value for this point
+    const daysIncluded = sparklineData.length + 1;
+    const runningRate = daysIncluded > 0 ? (completedCount / daysIncluded) * 100 : 0;
+
+    sparklineData.push({
+      date: dateStr,
+      completed: isCompleted,
+      value: Math.round(runningRate),
+    });
+
+    current.setDate(current.getDate() + 1);
+  }
+
+  const daysIncluded = sparklineData.length;
+
+  // Calculate base score components
+  // 1. Completion rate (0-60 points)
+  const completionRate = daysIncluded > 0 ? completedCount / daysIncluded : 0;
+  const baseScore = Math.round(completionRate * 60);
+
+  // 2. Streak bonus (0-25 points) - rewards consistent runs
+  // Max bonus at 14+ day streak within the period
+  const streakBonus = Math.min(25, Math.round((maxStreakInPeriod / 14) * 25));
+
+  // 3. Recency bonus (0-15 points) - rewards recent activity
+  // Max bonus at 7/7 completions in last week
+  const recencyBonus = Math.round((recentCompletions / 7) * 15);
+
+  const score = Math.min(100, baseScore + streakBonus + recencyBonus);
+
+  // Calculate previous 30-day period score for comparison
+  const sixtyDaysAgo = new Date(thirtyDaysAgo);
+  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 30);
+
+  const prevStartDate = habitCreatedAt
+    ? new Date(Math.max(sixtyDaysAgo.getTime(), habitCreatedAt))
+    : sixtyDaysAgo;
+
+  let prevCompletedCount = 0;
+  let prevMaxStreak = 0;
+  let prevCurrentStreak = 0;
+  let prevDaysCount = 0;
+
+  const prevCurrent = new Date(prevStartDate);
+  prevCurrent.setHours(0, 0, 0, 0);
+  const prevEnd = new Date(thirtyDaysAgo);
+  prevEnd.setDate(prevEnd.getDate() - 1);
+
+  while (prevCurrent <= prevEnd) {
+    const dateStr = formatDateString(prevCurrent);
+    const isCompleted = completedDates.has(dateStr);
+
+    if (isCompleted) {
+      prevCompletedCount++;
+      prevCurrentStreak++;
+      prevMaxStreak = Math.max(prevMaxStreak, prevCurrentStreak);
+    } else {
+      prevCurrentStreak = 0;
+    }
+
+    prevDaysCount++;
+    prevCurrent.setDate(prevCurrent.getDate() + 1);
+  }
+
+  // Calculate previous period score
+  const prevCompletionRate = prevDaysCount > 0 ? prevCompletedCount / prevDaysCount : 0;
+  const prevBaseScore = Math.round(prevCompletionRate * 60);
+  const prevStreakBonus = Math.min(25, Math.round((prevMaxStreak / 14) * 25));
+  // No recency bonus for previous period
+  const previousScore = Math.min(100, prevBaseScore + prevStreakBonus);
+
+  return {
+    score,
+    previousScore,
+    change: score - previousScore,
+    sparklineData,
+    daysIncluded,
+  };
+}
