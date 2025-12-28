@@ -5,3 +5,8 @@
 
 export { YourWhySection, type YourWhySectionProps } from './YourWhySection';
 export { IdentitySection, type IdentitySectionProps } from './IdentitySection';
+export {
+  CueTriggerSection,
+  type CueTriggerSectionProps,
+  type CueTriggerData,
+} from './CueTriggerSection';
