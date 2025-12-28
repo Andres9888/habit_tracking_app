@@ -11,7 +11,13 @@ export { SwipeableMonthGrid } from './SwipeableMonthGrid';
 export type {
   SwipeableMonthGridProps,
   SwipeDirection,
+  GridEntryAnimation,
 } from './SwipeableMonthGrid';
+export { AnimatedViewTransition } from './AnimatedViewTransition';
+export type {
+  AnimatedViewTransitionProps,
+  ViewTransitionType,
+} from './AnimatedViewTransition';
 export { DayCell } from './DayCell';
 export { InsightCard } from './InsightCard';
 export { DayDetailTooltip } from './DayDetailTooltip';

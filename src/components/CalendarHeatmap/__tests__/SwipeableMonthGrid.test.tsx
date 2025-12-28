@@ -557,3 +557,137 @@ describe('SwipeableMonthGrid Gesture Logic', () => {
     expect(getByTestId('gesture-detector')).toBeTruthy();
   });
 });
+
+describe('Grid Entry Animation', () => {
+  const createSimpleGrid = (): CalendarDay[][] => [
+    [
+      {
+        date: '2025-01-01',
+        dayOfMonth: 1,
+        completed: false,
+        isToday: false,
+        isFuture: false,
+        isBeforeCreation: false,
+      },
+    ],
+  ];
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('accepts gridEntryAnimation prop', () => {
+    const grid = createSimpleGrid();
+
+    const { getByTestId } = render(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2025}
+        gridEntryAnimation="fade"
+      />
+    );
+
+    expect(getByTestId('gesture-detector')).toBeTruthy();
+  });
+
+  it('accepts gridEntryAnimation none to disable animations', () => {
+    const grid = createSimpleGrid();
+
+    const { getByTestId } = render(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2025}
+        gridEntryAnimation="none"
+      />
+    );
+
+    expect(getByTestId('gesture-detector')).toBeTruthy();
+  });
+
+  it('accepts slideIn animation type', () => {
+    const grid = createSimpleGrid();
+
+    const { getByTestId } = render(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2025}
+        gridEntryAnimation="slideIn"
+      />
+    );
+
+    expect(getByTestId('gesture-detector')).toBeTruthy();
+  });
+
+  it('accepts custom gridEntryDuration', () => {
+    const grid = createSimpleGrid();
+
+    const { getByTestId } = render(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2025}
+        gridEntryAnimation="fade"
+        gridEntryDuration={300}
+      />
+    );
+
+    expect(getByTestId('gesture-detector')).toBeTruthy();
+  });
+
+  it('handles month change with grid entry animation', async () => {
+    const grid = createSimpleGrid();
+
+    const { rerender, getByTestId } = render(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2025}
+        gridEntryAnimation="fade"
+      />
+    );
+
+    // Change to a different month
+    rerender(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={1}
+        year={2025}
+        gridEntryAnimation="fade"
+      />
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('gesture-detector')).toBeTruthy();
+    });
+  });
+
+  it('handles year change with grid entry animation', async () => {
+    const grid = createSimpleGrid();
+
+    const { rerender, getByTestId } = render(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2025}
+        gridEntryAnimation="slideIn"
+      />
+    );
+
+    // Change to a different year
+    rerender(
+      <SwipeableMonthGrid
+        grid={grid}
+        month={0}
+        year={2026}
+        gridEntryAnimation="slideIn"
+      />
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('gesture-detector')).toBeTruthy();
+    });
+  });
+});

@@ -7,6 +7,9 @@ import type { MonthGridProps } from './MonthGrid';
 /** Direction of month navigation */
 export type SwipeDirection = 'prev' | 'next';
 
+/** Animation type for grid entry transitions */
+export type GridEntryAnimation = 'none' | 'fade' | 'slideIn';
+
 /** Props for SwipeableMonthGrid component */
 export interface SwipeableMonthGridProps extends MonthGridProps {
   /** Callback when user swipes to navigate to a different month */
@@ -27,4 +30,8 @@ export interface SwipeableMonthGridProps extends MonthGridProps {
   maxDate?: string;
   /** Disable haptic feedback (default: false) */
   disableHaptics?: boolean;
+  /** Animation type for grid content when month changes (default: 'fade') */
+  gridEntryAnimation?: GridEntryAnimation;
+  /** Duration for grid entry animation in ms (default: 150) */
+  gridEntryDuration?: number;
 }

@@ -5,7 +5,7 @@
  * Provides quick navigation to any month within the allowed date range.
  */
 
-import React, { useCallback, useMemo, useRef, useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react';
 import {
   AccessibilityInfo,
   Modal,
@@ -15,7 +15,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInLeft,
+  FadeInRight,
+  FadeOut,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  runOnJS,
+} from 'react-native-reanimated';
 import {
   Calendar,
   Check,
@@ -326,6 +337,22 @@ export function MonthPickerSheet({
   const reduceMotion = useReduceMotion();
   const scrollViewRef = useRef<ScrollView>(null);
 
+  // Display year for year navigation (separate from selected year to enable smooth transitions)
+  const [displayYear, setDisplayYear] = useState(selectedYear);
+  const [yearNavDirection, setYearNavDirection] = useState<'prev' | 'next' | null>(null);
+
+  // Animation values for year header
+  const yearTextOpacity = useSharedValue(1);
+  const yearTextTranslateX = useSharedValue(0);
+
+  // Sync display year with selected year when sheet opens
+  useEffect(() => {
+    if (visible) {
+      setDisplayYear(selectedYear);
+      setYearNavDirection(null);
+    }
+  }, [visible, selectedYear]);
+
   // Parse date constraints
   const minDate = parseDate(minDateProp);
   const maxDate = parseDate(maxDateProp);
@@ -432,59 +459,75 @@ export function MonthPickerSheet({
     onClose();
   }, [onClose, triggerLightImpact, disableHaptics]);
 
-  // Navigate to previous/next year using header arrows
+  // Navigate to previous/next year using header arrows (just updates display year, doesn't select)
   const handleYearNavigation = useCallback(
     (direction: 'prev' | 'next') => {
       const targetYear =
-        direction === 'prev' ? selectedYear - 1 : selectedYear + 1;
+        direction === 'prev' ? displayYear - 1 : displayYear + 1;
 
       // Check if target year has any selectable months
       if (!hasSelectableMonthsInYear(targetYear, minDate, maxDate)) {
         return;
       }
 
-      // Find a valid month in the target year (prefer same month if possible)
-      let targetMonth = selectedMonth;
-      if (!isMonthInRange(targetMonth, targetYear, minDate, maxDate)) {
-        // Find first available month
-        for (let m = 0; m < 12; m++) {
-          if (isMonthInRange(m, targetYear, minDate, maxDate)) {
-            targetMonth = m;
-            break;
-          }
-        }
-      }
-
       if (!disableHaptics) {
         triggerLightImpact();
       }
 
-      onSelectMonth(targetMonth, targetYear);
+      // Set direction for animation
+      setYearNavDirection(direction);
+
+      // Animate year text transition
+      if (!reduceMotion) {
+        const slideDistance = direction === 'next' ? -20 : 20;
+        const animConfig = { duration: 150, easing: Easing.out(Easing.ease) };
+
+        // Fade out with slide
+        yearTextOpacity.value = withTiming(0, animConfig);
+        yearTextTranslateX.value = withTiming(slideDistance, animConfig);
+
+        // After fade out, update year and fade in
+        setTimeout(() => {
+          setDisplayYear(targetYear);
+          yearTextTranslateX.value = -slideDistance;
+          yearTextOpacity.value = withTiming(1, animConfig);
+          yearTextTranslateX.value = withTiming(0, animConfig);
+        }, 150);
+      } else {
+        setDisplayYear(targetYear);
+      }
 
       AccessibilityInfo.announceForAccessibility(
-        `Navigated to ${MONTH_NAMES[targetMonth]} ${targetYear}`
+        `Viewing ${targetYear}`
       );
     },
     [
-      selectedYear,
-      selectedMonth,
+      displayYear,
       minDate,
       maxDate,
-      onSelectMonth,
       triggerLightImpact,
       disableHaptics,
+      reduceMotion,
+      yearTextOpacity,
+      yearTextTranslateX,
     ]
   );
 
+  // Animated style for year text
+  const yearTextAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: yearTextOpacity.value,
+    transform: [{ translateX: yearTextTranslateX.value }],
+  }));
+
   // Can navigate to previous/next year
   const canNavigatePrev = useMemo(
-    () => hasSelectableMonthsInYear(selectedYear - 1, minDate, maxDate),
-    [selectedYear, minDate, maxDate]
+    () => hasSelectableMonthsInYear(displayYear - 1, minDate, maxDate),
+    [displayYear, minDate, maxDate]
   );
 
   const canNavigateNext = useMemo(
-    () => hasSelectableMonthsInYear(selectedYear + 1, minDate, maxDate),
-    [selectedYear, minDate, maxDate]
+    () => hasSelectableMonthsInYear(displayYear + 1, minDate, maxDate),
+    [displayYear, minDate, maxDate]
   );
 
   if (!visible) {
@@ -539,7 +582,7 @@ export function MonthPickerSheet({
                   ? 'Navigate to previous year'
                   : 'No earlier year available'
               }
-              accessibilityLabel={`Previous year, ${selectedYear - 1}`}
+              accessibilityLabel={`Previous year, ${displayYear - 1}`}
               accessibilityRole='button'
               accessibilityState={{ disabled: !canNavigatePrev }}
               className={`h-8 w-8 items-center justify-center rounded-full ${
@@ -557,9 +600,12 @@ export function MonthPickerSheet({
               />
             </TouchableOpacity>
 
-            <Text className='text-lg font-bold text-stone-800'>
-              {selectedYear}
-            </Text>
+            <Animated.Text
+              className='text-lg font-bold text-stone-800'
+              style={yearTextAnimatedStyle}
+            >
+              {displayYear}
+            </Animated.Text>
 
             <TouchableOpacity
               accessibilityHint={
@@ -567,7 +613,7 @@ export function MonthPickerSheet({
                   ? 'Navigate to next year'
                   : 'No later year available'
               }
-              accessibilityLabel={`Next year, ${selectedYear + 1}`}
+              accessibilityLabel={`Next year, ${displayYear + 1}`}
               accessibilityRole='button'
               accessibilityState={{ disabled: !canNavigateNext }}
               className={`h-8 w-8 items-center justify-center rounded-full ${
@@ -586,16 +632,26 @@ export function MonthPickerSheet({
             </TouchableOpacity>
           </View>
 
-          {/* Month Grid for Selected Year */}
+          {/* Month Grid - Show only the display year */}
           <ScrollView
             ref={scrollViewRef}
             showsVerticalScrollIndicator={false}
             style={{ maxHeight: 280 }}
           >
-            {years.map((year, yearIndex) => (
+            <Animated.View
+              key={displayYear}
+              entering={
+                reduceMotion
+                  ? undefined
+                  : yearNavDirection === 'next'
+                    ? FadeInRight.duration(200)
+                    : yearNavDirection === 'prev'
+                      ? FadeInLeft.duration(200)
+                      : FadeIn.duration(200)
+              }
+            >
               <YearSection
-                key={year}
-                baseIndex={yearIndex * 12}
+                baseIndex={0}
                 currentMonth={currentMonth}
                 currentYear={currentYear}
                 maxDate={maxDate}
@@ -603,10 +659,10 @@ export function MonthPickerSheet({
                 reduceMotion={reduceMotion}
                 selectedMonth={selectedMonth}
                 selectedYear={selectedYear}
-                year={year}
+                year={displayYear}
                 onSelectMonth={handleSelectMonth}
               />
-            ))}
+            </Animated.View>
           </ScrollView>
 
           {/* Jump to Today Button */}
