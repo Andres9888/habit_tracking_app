@@ -32,18 +32,24 @@ import { GITHUB_THEME, type GridTheme, type CellShape } from './types';
  */
 function getCellBorderRadius(shape: CellShape, size: number): number {
   switch (shape) {
-    case 'rounded-none':
+    case 'rounded-none': {
       return 0;
-    case 'rounded-sm':
+    }
+    case 'rounded-sm': {
       return 2;
-    case 'rounded-md':
+    }
+    case 'rounded-md': {
       return 4;
-    case 'rounded-lg':
+    }
+    case 'rounded-lg': {
       return 6;
-    case 'rounded-full':
+    }
+    case 'rounded-full': {
       return size / 2;
-    default:
+    }
+    default: {
       return 2;
+    }
   }
 }
 
@@ -73,11 +79,30 @@ function getStreakColorFromTheme(
  * Returns 0 for no glow, higher values for stronger streaks
  */
 function calculateGlowIntensity(streakPosition: number): number {
-  if (streakPosition >= 30) return 1.0; // legendary - maximum glow
+  if (streakPosition >= 30) return 1; // legendary - maximum glow
   if (streakPosition >= 14) return 0.75; // strong habit
   if (streakPosition >= 7) return 0.5; // week+ streak
   if (streakPosition >= 3) return 0.25; // starting momentum
   return 0; // too short for glow
+}
+
+/**
+ * Check if current theme is the Pixels theme
+ * Used for applying Pixels-specific visual effects like scanlines
+ */
+function isPixelsTheme(theme: GridTheme): boolean {
+  return theme.id === 'pixels';
+}
+
+/**
+ * Calculate scanline opacity for Pixels theme
+ * Stronger streaks get more visible scanlines for that retro CRT feel
+ */
+function calculateScanlineOpacity(streakPosition: number): number {
+  if (streakPosition >= 30) return 0.15; // legendary - prominent scanlines
+  if (streakPosition >= 14) return 0.12; // strong habit
+  if (streakPosition >= 7) return 0.1; // week+ streak
+  return 0.08; // subtle scanlines for recent completions
 }
 
 export interface DayCellProps {
@@ -96,7 +121,14 @@ export interface DayCellProps {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function DayCell({ day, index, habitColor, onPress, completedDates, habitCreatedAt }: DayCellProps) {
+export function DayCell({
+  day,
+  index,
+  habitColor,
+  onPress,
+  completedDates,
+  habitCreatedAt,
+}: DayCellProps) {
   const scale = useSharedValue(1);
   const pulseScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0);
@@ -133,12 +165,12 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
     // Creates a "breathing" glow effect around today's cell
     const pulseAnimation = withSequence(
       withTiming(1.3, { duration: 1000, easing: Easing.out(Easing.ease) }),
-      withTiming(1.3, { duration: 200 }), // Hold briefly
+      withTiming(1.3, { duration: 200 }) // Hold briefly
     );
 
     const opacityAnimation = withSequence(
       withTiming(0.6, { duration: 400, easing: Easing.out(Easing.ease) }),
-      withTiming(0, { duration: 800, easing: Easing.in(Easing.ease) }),
+      withTiming(0, { duration: 800, easing: Easing.in(Easing.ease) })
     );
 
     // Start with a delay to let the cell fade in first
@@ -159,12 +191,14 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
 
   // Calculate streak position early to use in glow effect
   // (must be before shouldShowGlowRing is determined in render)
-  const currentStreakPosition = day.date && day.completed
-    ? calculateStreakPosition(day.date, completedDates, habitCreatedAt)
-    : 0;
-  const currentGlowIntensity = theme.enableStreakGlow && day.completed
-    ? calculateGlowIntensity(currentStreakPosition)
-    : 0;
+  const currentStreakPosition =
+    day.date && day.completed
+      ? calculateStreakPosition(day.date, completedDates, habitCreatedAt)
+      : 0;
+  const currentGlowIntensity =
+    theme.enableStreakGlow && day.completed
+      ? calculateGlowIntensity(currentStreakPosition)
+      : 0;
   const shouldShowGlowAnimation = currentGlowIntensity >= 0.5 && !reduceMotion;
 
   // Streak glow animation - subtle pulsing glow around strong streaks
@@ -179,12 +213,18 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
     // Slower, more subtle pulse for glow effect
     const glowPulseAnimation = withSequence(
       withTiming(1.15, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-      withTiming(1.0, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+      withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) })
     );
 
     const glowOpacityAnimation = withSequence(
-      withTiming(currentGlowIntensity * 0.7, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-      withTiming(currentGlowIntensity * 0.3, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+      withTiming(currentGlowIntensity * 0.7, {
+        duration: 1500,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      withTiming(currentGlowIntensity * 0.3, {
+        duration: 1500,
+        easing: Easing.inOut(Easing.ease),
+      })
     );
 
     // Start with a delay to let the cell fade in first
@@ -226,93 +266,28 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
   }));
 
   const pulseRingStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulseScale.value }],
     opacity: pulseOpacity.value,
+    transform: [{ scale: pulseScale.value }],
   }));
 
   // Animated style for streak glow ring
   const glowRingStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: glowScale.value }],
     opacity: glowOpacity.value,
+    transform: [{ scale: glowScale.value }],
   }));
 
   // Staggered animation delay for all cell types - skip if reduceMotion
   const staggerDelay = reduceMotion ? 0 : index * 10;
-  const fadeInAnimation = reduceMotion ? undefined : FadeIn.delay(staggerDelay).duration(200);
+  const fadeInAnimation = reduceMotion
+    ? undefined
+    : FadeIn.delay(staggerDelay).duration(200);
 
   // Get accessibility label
   const accessibilityLabel = getDayAccessibilityLabel(day);
 
-  // Empty padding cell
-  if (day.date === null) {
-    return (
-      <Animated.View
-        entering={fadeInAnimation}
-        className="flex-1 aspect-square"
-        accessible={true}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="text"
-      />
-    );
-  }
-
-  // Before habit creation - dimmed/disabled appearance using theme colors
-  if (day.isBeforeCreation) {
-    const beforeCreationStyles = {
-      width: cellSize,
-      height: cellSize,
-      borderRadius,
-      backgroundColor: theme.beforeCreationBackground,
-    };
-    return (
-      <Animated.View
-        entering={fadeInAnimation}
-        className="flex-1 aspect-square items-center justify-center"
-        accessible={true}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="text"
-      >
-        <View style={[styles.cellBase, beforeCreationStyles]} />
-      </Animated.View>
-    );
-  }
-
-  // Future date - uses theme's future styling
-  if (day.isFuture) {
-    const futureStyles: {
-      width: number;
-      height: number;
-      borderRadius: number;
-      backgroundColor: string;
-      borderWidth?: number;
-      borderColor?: string;
-      borderStyle?: 'solid' | 'dashed' | 'dotted';
-    } = {
-      width: cellSize,
-      height: cellSize,
-      borderRadius,
-      backgroundColor: theme.futureBackground,
-    };
-    if (theme.futureBorder !== 'none') {
-      futureStyles.borderWidth = 1;
-      futureStyles.borderColor = '#e7e5e4'; // stone-200
-      futureStyles.borderStyle = theme.futureBorder === 'dashed' ? 'dashed' : 'solid';
-    }
-    return (
-      <Animated.View
-        entering={fadeInAnimation}
-        className="flex-1 aspect-square items-center justify-center"
-        accessible={true}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="text"
-      >
-        <View style={[styles.cellBase, futureStyles]} />
-      </Animated.View>
-    );
-  }
-
   // Get color based on streak position using theme colors
   // Uses currentStreakPosition calculated earlier for glow effect
+  // Note: Hooks must be called before any early returns per React rules
   const completedBgColor = useMemo(() => {
     if (!day.completed) return 'transparent';
     return getStreakColorFromTheme(currentStreakPosition, theme, habitColor);
@@ -334,9 +309,9 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
       shadowRadius?: number;
       elevation?: number;
     } = {
-      width: cellSize,
-      height: cellSize,
       borderRadius,
+      height: cellSize,
+      width: cellSize,
     };
 
     if (day.completed) {
@@ -348,7 +323,7 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
       // Add shadow for completed cells if theme enables it
       if (theme.enableShadow) {
         baseStyles.shadowColor = theme.shadowColor;
-        baseStyles.shadowOffset = { width: 0, height: 1 };
+        baseStyles.shadowOffset = { height: 1, width: 0 };
         baseStyles.shadowOpacity = 0.2;
         baseStyles.shadowRadius = 2;
         baseStyles.elevation = 2;
@@ -356,14 +331,15 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
       // Add glow effect for strong streaks
       if (theme.enableStreakGlow && currentGlowIntensity > 0) {
         baseStyles.shadowColor = completedBgColor;
-        baseStyles.shadowOffset = { width: 0, height: 0 };
+        baseStyles.shadowOffset = { height: 0, width: 0 };
         baseStyles.shadowOpacity = currentGlowIntensity * 0.6;
-        baseStyles.shadowRadius = 4 + (currentGlowIntensity * 4); // 4-8px radius based on intensity
-        baseStyles.elevation = Math.round(3 + (currentGlowIntensity * 3)); // 3-6 elevation
+        baseStyles.shadowRadius = 4 + currentGlowIntensity * 4; // 4-8px radius based on intensity
+        baseStyles.elevation = Math.round(3 + currentGlowIntensity * 3); // 3-6 elevation
       }
     } else if (day.isToday) {
       // Today + not completed - highlight style
-      baseStyles.backgroundColor = '#fffbeb'; // amber-50
+      // Use dark amber for Pixels theme (dark mode), light amber for others
+      baseStyles.backgroundColor = isPixelsTheme(theme) ? '#451a03' : '#fffbeb'; // amber-950 : amber-50
       baseStyles.borderWidth = 2;
       baseStyles.borderColor = theme.todayBorderColor;
     } else {
@@ -371,8 +347,10 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
       baseStyles.backgroundColor = theme.incompleteBackground;
       if (theme.incompleteBorder !== 'none') {
         baseStyles.borderWidth = theme.incompleteBorderWidth;
-        baseStyles.borderColor = '#e7e5e4'; // stone-200
-        baseStyles.borderStyle = theme.incompleteBorder === 'dashed' ? 'dashed' : 'solid';
+        // Use dark border for Pixels theme (dark mode), light border for others
+        baseStyles.borderColor = isPixelsTheme(theme) ? '#44403c' : '#e7e5e4'; // stone-700 : stone-200
+        baseStyles.borderStyle =
+          theme.incompleteBorder === 'dashed' ? 'dashed' : 'solid';
       }
     }
 
@@ -390,11 +368,11 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
   // Pulse ring style for today indicator
   const pulseRingDynamicStyles = useMemo(
     () => ({
-      width: cellSize,
-      height: cellSize,
+      borderColor: theme.todayBorderColor,
       borderRadius,
       borderWidth: 2,
-      borderColor: theme.todayBorderColor,
+      height: cellSize,
+      width: cellSize,
     }),
     [cellSize, borderRadius, theme.todayBorderColor]
   );
@@ -402,11 +380,11 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
   // Glow ring style for streak glow effect (animated outer ring)
   const glowRingDynamicStyles = useMemo(
     () => ({
-      width: cellSize + 4,
-      height: cellSize + 4,
+      borderColor: completedBgColor,
       borderRadius: borderRadius + 2,
       borderWidth: 1.5,
-      borderColor: completedBgColor,
+      height: cellSize + 4,
+      width: cellSize + 4,
     }),
     [cellSize, borderRadius, completedBgColor]
   );
@@ -414,42 +392,151 @@ export function DayCell({ day, index, habitColor, onPress, completedDates, habit
   // Checkmark size based on theme configuration
   const checkmarkSize = Math.round(cellSize * theme.checkmarkScale);
 
+  // Pixels theme specific: show scanline effect on completed cells
+  const shouldShowScanlines = isPixelsTheme(theme) && day.completed;
+  const scanlineOpacity = shouldShowScanlines
+    ? calculateScanlineOpacity(currentStreakPosition)
+    : 0;
+
+  // Empty padding cell
+  if (day.date === null) {
+    return (
+      <Animated.View
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole='text'
+        className='aspect-square flex-1'
+        entering={fadeInAnimation}
+      />
+    );
+  }
+
+  // Before habit creation - dimmed/disabled appearance using theme colors
+  if (day.isBeforeCreation) {
+    const beforeCreationStyles = {
+      backgroundColor: theme.beforeCreationBackground,
+      borderRadius,
+      height: cellSize,
+      width: cellSize,
+    };
+    return (
+      <Animated.View
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole='text'
+        className='aspect-square flex-1 items-center justify-center'
+        entering={fadeInAnimation}
+      >
+        <View style={[styles.cellBase, beforeCreationStyles]} />
+      </Animated.View>
+    );
+  }
+
+  // Future date - uses theme's future styling
+  if (day.isFuture) {
+    const futureStyles: {
+      width: number;
+      height: number;
+      borderRadius: number;
+      backgroundColor: string;
+      borderWidth?: number;
+      borderColor?: string;
+      borderStyle?: 'solid' | 'dashed' | 'dotted';
+    } = {
+      backgroundColor: theme.futureBackground,
+      borderRadius,
+      height: cellSize,
+      width: cellSize,
+    };
+    if (theme.futureBorder !== 'none') {
+      futureStyles.borderWidth = 1;
+      // Use dark border for Pixels theme (dark mode), light border for others
+      futureStyles.borderColor = isPixelsTheme(theme) ? '#44403c' : '#e7e5e4'; // stone-700 : stone-200
+      futureStyles.borderStyle =
+        theme.futureBorder === 'dashed' ? 'dashed' : 'solid';
+    }
+    return (
+      <Animated.View
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole='text'
+        className='aspect-square flex-1 items-center justify-center'
+        entering={fadeInAnimation}
+      >
+        <View style={[styles.cellBase, futureStyles]} />
+      </Animated.View>
+    );
+  }
+
   return (
     <AnimatedPressable
+      accessible
+      accessibilityHint={day.isToday ? 'Today' : 'Tap to view details'}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole='button'
+      accessibilityState={{ selected: day.completed }}
+      className='aspect-square flex-1 items-center justify-center'
       entering={fadeInAnimation}
       style={animatedStyle}
-      className="flex-1 aspect-square items-center justify-center"
+      onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      onPress={handlePress}
-      accessible={true}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint={day.isToday ? 'Today' : 'Tap to view details'}
-      accessibilityState={{ selected: day.completed }}
     >
       {/* Pulse ring for today's incomplete cell - draws attention to complete action */}
       {shouldPulse && (
         <Animated.View
-          style={[pulseRingStyle, pulseRingDynamicStyles, { position: 'absolute' }]}
-          pointerEvents="none"
+          pointerEvents='none'
+          style={[
+            pulseRingStyle,
+            pulseRingDynamicStyles,
+            { position: 'absolute' },
+          ]}
         />
       )}
       {/* Glow ring for strong streaks - animated pulsing ring around completed cells */}
       {shouldShowGlowAnimation && (
         <Animated.View
+          pointerEvents='none'
           style={[
             glowRingStyle,
             glowRingDynamicStyles,
             { position: 'absolute' },
           ]}
-          pointerEvents="none"
-          testID="glow-ring"
+          testID='glow-ring'
         />
       )}
       <View style={[styles.cellBase, cellStyles]}>
+        {/* Pixels theme scanline overlay - creates retro CRT effect */}
+        {shouldShowScanlines && (
+          <View
+            pointerEvents='none'
+            style={[
+              styles.scanlineOverlay,
+              {
+                borderRadius,
+                height: cellSize,
+                width: cellSize,
+              },
+            ]}
+            testID='scanline-overlay'
+          >
+            {/* Generate multiple horizontal scanlines */}
+            {Array.from({ length: Math.floor(cellSize / 3) }).map((_, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.scanline,
+                  {
+                    opacity: scanlineOpacity,
+                    top: i * 3,
+                  },
+                ]}
+              />
+            ))}
+          </View>
+        )}
         {day.completed && theme.showCheckmark && (
-          <Check className="text-white" size={checkmarkSize} strokeWidth={3} />
+          <Check className='text-white' size={checkmarkSize} strokeWidth={3} />
         )}
       </View>
     </AnimatedPressable>
@@ -460,6 +547,21 @@ const styles = StyleSheet.create({
   cellBase: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  // Individual scanline - thin horizontal line for CRT effect
+  scanline: {
+    backgroundColor: '#000000',
+    height: 1,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+  },
+
+  // Pixels theme scanline overlay container
+  scanlineOverlay: {
+    overflow: 'hidden',
+    position: 'absolute',
   },
 });
 

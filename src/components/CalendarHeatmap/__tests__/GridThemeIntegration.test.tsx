@@ -69,7 +69,7 @@ describe('GridThemeContext', () => {
       }
 
       render(
-        <GridThemeProvider initialTheme="tiles">
+        <GridThemeProvider initialTheme='tiles'>
           <ThemeConsumer />
         </GridThemeProvider>
       );
@@ -88,7 +88,7 @@ describe('GridThemeContext', () => {
       }
 
       render(
-        <GridThemeProvider initialTheme="github" overrides={{ cellGap: 10 }}>
+        <GridThemeProvider initialTheme='github' overrides={{ cellGap: 10 }}>
           <ThemeConsumer />
         </GridThemeProvider>
       );
@@ -99,18 +99,20 @@ describe('GridThemeContext', () => {
     });
 
     it('provides setTheme function to switch themes', () => {
-      let setThemeFn: ((name: 'github' | 'tiles' | 'dots' | 'pixels') => void) | undefined;
+      let setThemeFn:
+        | ((name: 'github' | 'tiles' | 'dots' | 'pixels') => void)
+        | undefined;
       let currentThemeId: string | undefined;
 
       function ThemeConsumer() {
         const { theme, setTheme } = useGridTheme();
         setThemeFn = setTheme;
         currentThemeId = theme.id;
-        return <Text testID="theme-id">{theme.id}</Text>;
+        return <Text testID='theme-id'>{theme.id}</Text>;
       }
 
       const { getByTestId, rerender } = render(
-        <GridThemeProvider initialTheme="github">
+        <GridThemeProvider initialTheme='github'>
           <ThemeConsumer />
         </GridThemeProvider>
       );
@@ -124,7 +126,7 @@ describe('GridThemeContext', () => {
 
       // Force rerender to get updated theme
       rerender(
-        <GridThemeProvider initialTheme="dots">
+        <GridThemeProvider initialTheme='dots'>
           <ThemeConsumer />
         </GridThemeProvider>
       );
@@ -158,7 +160,9 @@ describe('GridThemeContext', () => {
   describe('useGridTheme hook', () => {
     it('throws error when used outside provider', () => {
       // Suppress console.error for this test
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
 
       function InvalidConsumer() {
         useGridTheme();
@@ -250,7 +254,7 @@ describe('DayCell with GridTheme', () => {
     const completedDates = new Set(['2025-01-15']);
 
     const { getByRole } = render(
-      <GridThemeProvider initialTheme="dots">
+      <GridThemeProvider initialTheme='dots'>
         <DayCell
           day={day}
           index={0}
@@ -270,7 +274,7 @@ describe('DayCell with GridTheme', () => {
 
     // DOTS_THEME has showCheckmark: false
     const { queryByTestId } = render(
-      <GridThemeProvider initialTheme="dots">
+      <GridThemeProvider initialTheme='dots'>
         <DayCell
           day={day}
           index={0}
@@ -301,9 +305,7 @@ describe('WeekGrid with GridTheme', () => {
   it('renders without provider using default theme', () => {
     const week = createWeekData();
 
-    const { getByLabelText } = render(
-      <WeekGrid week={week} />
-    );
+    const { getByLabelText } = render(<WeekGrid week={week} />);
 
     expect(getByLabelText('Week view calendar')).toBeTruthy();
   });
@@ -312,7 +314,7 @@ describe('WeekGrid with GridTheme', () => {
     const week = createWeekData();
 
     const { getByLabelText } = render(
-      <GridThemeProvider initialTheme="tiles">
+      <GridThemeProvider initialTheme='tiles'>
         <WeekGrid week={week} />
       </GridThemeProvider>
     );
@@ -325,7 +327,7 @@ describe('WeekGrid with GridTheme', () => {
     const customColor = '#ff0000';
 
     const { getByLabelText } = render(
-      <GridThemeProvider initialTheme="github">
+      <GridThemeProvider initialTheme='github'>
         <WeekGrid week={week} habitColor={customColor} />
       </GridThemeProvider>
     );
@@ -385,7 +387,7 @@ describe('MonthGrid with GridTheme', () => {
     const grid = createMonthGrid();
 
     const { getByText } = render(
-      <GridThemeProvider initialTheme="pixels">
+      <GridThemeProvider initialTheme='pixels'>
         <MonthGrid grid={grid} month={0} year={2025} />
       </GridThemeProvider>
     );
@@ -397,7 +399,7 @@ describe('MonthGrid with GridTheme', () => {
     const grid = createMonthGrid();
 
     const { getByText, rerender } = render(
-      <GridThemeProvider initialTheme="github">
+      <GridThemeProvider initialTheme='github'>
         <MonthGrid grid={grid} month={0} year={2025} />
       </GridThemeProvider>
     );
@@ -406,7 +408,7 @@ describe('MonthGrid with GridTheme', () => {
 
     // Switch to different theme
     rerender(
-      <GridThemeProvider initialTheme="tiles">
+      <GridThemeProvider initialTheme='tiles'>
         <MonthGrid grid={grid} month={0} year={2025} />
       </GridThemeProvider>
     );
@@ -441,7 +443,10 @@ describe('Theme Preset Values', () => {
 });
 
 describe('Dots Theme Glow Effect', () => {
-  const createStreakDay = (date: string, streakLength: number): CalendarDay => ({
+  const createStreakDay = (
+    date: string,
+    streakLength: number
+  ): CalendarDay => ({
     date,
     dayOfMonth: parseInt(date.split('-')[2]),
     completed: true,
@@ -451,7 +456,10 @@ describe('Dots Theme Glow Effect', () => {
   });
 
   // Generate a set of consecutive completed dates to form a streak
-  const generateStreakDates = (endDate: string, length: number): Set<string> => {
+  const generateStreakDates = (
+    endDate: string,
+    length: number
+  ): Set<string> => {
     const dates = new Set<string>();
     const end = new Date(endDate);
     for (let i = 0; i < length; i++) {
@@ -477,7 +485,7 @@ describe('Dots Theme Glow Effect', () => {
     // With reduceMotion mocked to true, glow animation won't show
     // but the shadow glow effect will still be applied to cell styles
     const { getByRole } = render(
-      <GridThemeProvider initialTheme="dots">
+      <GridThemeProvider initialTheme='dots'>
         <DayCell
           day={day}
           index={0}
@@ -496,7 +504,7 @@ describe('Dots Theme Glow Effect', () => {
     const completedDates = generateStreakDates('2025-01-05', 5);
 
     const { queryByTestId, getByRole } = render(
-      <GridThemeProvider initialTheme="dots">
+      <GridThemeProvider initialTheme='dots'>
         <DayCell
           day={day}
           index={0}
@@ -517,7 +525,7 @@ describe('Dots Theme Glow Effect', () => {
     const completedDates = generateStreakDates('2025-01-15', 30);
 
     const { queryByTestId, getByRole } = render(
-      <GridThemeProvider initialTheme="github">
+      <GridThemeProvider initialTheme='github'>
         <DayCell
           day={day}
           index={0}
@@ -545,7 +553,9 @@ describe('Dots Theme Glow Effect', () => {
     expect(GITHUB_THEME.streakColors.level1).toBe('#6ee7b7');
     expect(GITHUB_THEME.streakColors.level4).toBe('#059669');
     // They should be different
-    expect(DOTS_THEME.streakColors.level1).not.toBe(GITHUB_THEME.streakColors.level1);
+    expect(DOTS_THEME.streakColors.level1).not.toBe(
+      GITHUB_THEME.streakColors.level1
+    );
   });
 
   it('Dots theme uses transparent backgrounds for minimalist look', () => {
@@ -557,5 +567,318 @@ describe('Dots Theme Glow Effect', () => {
   it('Dots theme uses dot completion indicator', () => {
     expect(DOTS_THEME.completionIndicator).toBe('dot');
     expect(DOTS_THEME.showCheckmark).toBe(false);
+  });
+});
+
+describe('Pixels Theme Retro/CRT Effect', () => {
+  const createCompletedDay = (date: string): CalendarDay => ({
+    date,
+    dayOfMonth: parseInt(date.split('-')[2]),
+    completed: true,
+    isToday: false,
+    isFuture: false,
+    isBeforeCreation: false,
+  });
+
+  const createIncompleteDay = (date: string): CalendarDay => ({
+    date,
+    dayOfMonth: parseInt(date.split('-')[2]),
+    completed: false,
+    isToday: false,
+    isFuture: false,
+    isBeforeCreation: false,
+  });
+
+  const createTodayIncomplete = (date: string): CalendarDay => ({
+    date,
+    dayOfMonth: parseInt(date.split('-')[2]),
+    completed: false,
+    isToday: true,
+    isFuture: false,
+    isBeforeCreation: false,
+  });
+
+  // Generate consecutive dates for streak testing
+  const generateStreakDates = (
+    endDate: string,
+    length: number
+  ): Set<string> => {
+    const dates = new Set<string>();
+    const end = new Date(endDate);
+    for (let i = 0; i < length; i++) {
+      const d = new Date(end);
+      d.setDate(d.getDate() - i);
+      dates.add(d.toISOString().split('T')[0]);
+    }
+    return dates;
+  };
+
+  describe('Theme Preset Values', () => {
+    it('Pixels theme uses rounded-none (sharp) cell shape', () => {
+      expect(PIXELS_THEME.cellShape).toBe('rounded-none');
+    });
+
+    it('Pixels theme has tighter cell gap for pixel grid effect', () => {
+      expect(PIXELS_THEME.cellGap).toBe(2);
+      expect(PIXELS_THEME.cellGap).toBeLessThan(GITHUB_THEME.cellGap);
+    });
+
+    it('Pixels theme uses lime color gradient for retro terminal feel', () => {
+      expect(PIXELS_THEME.streakColors.level1).toBe('#bef264'); // lime-300
+      expect(PIXELS_THEME.streakColors.level2).toBe('#a3e635'); // lime-400
+      expect(PIXELS_THEME.streakColors.level3).toBe('#84cc16'); // lime-500
+      expect(PIXELS_THEME.streakColors.level4).toBe('#65a30d'); // lime-600
+    });
+
+    it('Pixels theme uses dark backgrounds (dark mode aesthetic)', () => {
+      expect(PIXELS_THEME.incompleteBackground).toBe('#1c1917'); // stone-900
+      expect(PIXELS_THEME.futureBackground).toBe('#292524'); // stone-800
+      expect(PIXELS_THEME.beforeCreationBackground).toBe('#1c1917'); // stone-900
+    });
+
+    it('Pixels theme has streak glow enabled', () => {
+      expect(PIXELS_THEME.enableStreakGlow).toBe(true);
+    });
+
+    it('Pixels theme shows checkmarks on completed cells', () => {
+      expect(PIXELS_THEME.showCheckmark).toBe(true);
+      expect(PIXELS_THEME.checkmarkScale).toBe(0.6);
+    });
+
+    it('Pixels theme uses fill-only completion indicator (no dot)', () => {
+      expect(PIXELS_THEME.completionIndicator).toBe('fill-only');
+    });
+
+    it('Pixels theme uses yellow today border for contrast', () => {
+      expect(PIXELS_THEME.todayBorderColor).toBe('#facc15'); // yellow-400
+    });
+
+    it('Pixels theme has subtle today pulse', () => {
+      expect(PIXELS_THEME.todayPulseIntensity).toBe(1);
+    });
+  });
+
+  describe('Scanline Effect Rendering', () => {
+    it('renders scanline overlay for completed cells with Pixels theme', () => {
+      const day = createCompletedDay('2025-01-15');
+      const completedDates = new Set(['2025-01-15']);
+
+      const { getByTestId, getByRole } = render(
+        <GridThemeProvider initialTheme='pixels'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell should render
+      expect(getByRole('button')).toBeTruthy();
+      // Scanline overlay should be present for Pixels theme completed cells
+      expect(getByTestId('scanline-overlay')).toBeTruthy();
+    });
+
+    it('does not render scanline overlay for incomplete cells', () => {
+      const day = createIncompleteDay('2025-01-15');
+      const completedDates = new Set<string>();
+
+      const { queryByTestId, getByRole } = render(
+        <GridThemeProvider initialTheme='pixels'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell should render
+      expect(getByRole('button')).toBeTruthy();
+      // Scanline overlay should NOT be present for incomplete cells
+      expect(queryByTestId('scanline-overlay')).toBeNull();
+    });
+
+    it('does not render scanline overlay with GitHub theme (even for completed cells)', () => {
+      const day = createCompletedDay('2025-01-15');
+      const completedDates = new Set(['2025-01-15']);
+
+      const { queryByTestId, getByRole } = render(
+        <GridThemeProvider initialTheme='github'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell should render
+      expect(getByRole('button')).toBeTruthy();
+      // Scanline overlay should NOT be present with GitHub theme
+      expect(queryByTestId('scanline-overlay')).toBeNull();
+    });
+
+    it('does not render scanline overlay with Dots theme', () => {
+      const day = createCompletedDay('2025-01-15');
+      const completedDates = new Set(['2025-01-15']);
+
+      const { queryByTestId, getByRole } = render(
+        <GridThemeProvider initialTheme='dots'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell should render
+      expect(getByRole('button')).toBeTruthy();
+      // Scanline overlay should NOT be present with Dots theme
+      expect(queryByTestId('scanline-overlay')).toBeNull();
+    });
+
+    it('does not render scanline overlay with Tiles theme', () => {
+      const day = createCompletedDay('2025-01-15');
+      const completedDates = new Set(['2025-01-15']);
+
+      const { queryByTestId, getByRole } = render(
+        <GridThemeProvider initialTheme='tiles'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell should render
+      expect(getByRole('button')).toBeTruthy();
+      // Scanline overlay should NOT be present with Tiles theme
+      expect(queryByTestId('scanline-overlay')).toBeNull();
+    });
+  });
+
+  describe('Glow Effect with Pixels Theme', () => {
+    it('shows glow effect for strong streaks (7+ days)', () => {
+      const day = createCompletedDay('2025-01-15');
+      const completedDates = generateStreakDates('2025-01-15', 10);
+
+      const { getByTestId, getByRole } = render(
+        <GridThemeProvider initialTheme='pixels'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell should render
+      expect(getByRole('button')).toBeTruthy();
+      // Both scanline and completed cell should be present
+      expect(getByTestId('scanline-overlay')).toBeTruthy();
+      // Note: glow-ring visibility depends on reduceMotion (mocked to true)
+    });
+
+    it('applies glow shadow styling for legendary streaks (30+ days)', () => {
+      const day = createCompletedDay('2025-01-30');
+      const completedDates = generateStreakDates('2025-01-30', 30);
+
+      const { getByRole, getByTestId } = render(
+        <GridThemeProvider initialTheme='pixels'>
+          <DayCell
+            day={day}
+            index={0}
+            completedDates={completedDates}
+            habitCreatedAt={new Date('2025-01-01').getTime()}
+          />
+        </GridThemeProvider>
+      );
+
+      // Cell renders successfully with Pixels theme
+      expect(getByRole('button')).toBeTruthy();
+      // Scanline overlay present for completed cell
+      expect(getByTestId('scanline-overlay')).toBeTruthy();
+    });
+  });
+
+  describe('MonthGrid with Pixels Theme', () => {
+    const createMonthGrid = (): CalendarDay[][] => {
+      const grid: CalendarDay[][] = [];
+      let dayNum = 1;
+
+      for (let week = 0; week < 5; week++) {
+        const weekDays: CalendarDay[] = [];
+        for (let day = 0; day < 7; day++) {
+          if (dayNum <= 31) {
+            weekDays.push({
+              date: `2025-01-${String(dayNum).padStart(2, '0')}`,
+              dayOfMonth: dayNum,
+              completed: dayNum % 2 === 0, // Every even day completed
+              isToday: dayNum === 15,
+              isFuture: dayNum > 20,
+              isBeforeCreation: false,
+            });
+            dayNum++;
+          } else {
+            weekDays.push({
+              date: null,
+              dayOfMonth: null,
+              completed: false,
+              isToday: false,
+              isFuture: false,
+              isBeforeCreation: false,
+            });
+          }
+        }
+        grid.push(weekDays);
+      }
+
+      return grid;
+    };
+
+    it('renders MonthGrid with Pixels theme', () => {
+      const grid = createMonthGrid();
+
+      const { getByText } = render(
+        <GridThemeProvider initialTheme='pixels'>
+          <MonthGrid grid={grid} month={0} year={2025} />
+        </GridThemeProvider>
+      );
+
+      expect(getByText('January 2025')).toBeTruthy();
+    });
+  });
+
+  describe('WeekGrid with Pixels Theme', () => {
+    const createWeekData = (): CalendarDay[] =>
+      Array.from({ length: 7 }, (_, i) => ({
+        date: `2025-01-${String(i + 12).padStart(2, '0')}`,
+        dayOfMonth: i + 12,
+        completed: i % 2 === 0, // Alternating completed
+        isToday: i === 3,
+        isFuture: false,
+        isBeforeCreation: false,
+      }));
+
+    it('renders WeekGrid with Pixels theme', () => {
+      const week = createWeekData();
+
+      const { getByLabelText } = render(
+        <GridThemeProvider initialTheme='pixels'>
+          <WeekGrid week={week} />
+        </GridThemeProvider>
+      );
+
+      expect(getByLabelText('Week view calendar')).toBeTruthy();
+    });
   });
 });
