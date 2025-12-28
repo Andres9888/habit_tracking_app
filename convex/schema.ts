@@ -57,28 +57,37 @@ const applicationTables = {
 
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
+
+    // "daily", "weekly", "custom"
+    daysOfWeek: v.optional(v.array(v.number())),
+
+    // "Regret, shame, broken promise"
+    // Background color for icon
+    frequency: v.optional(v.string()),
+
+    // "default", etc.
+    goalDuration: v.optional(v.number()),
+
+    // Goal value
+    goalUnit: v.optional(v.string()),
+
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)
     habitDecayParam: v.optional(v.number()),
 
     // HGP - validated optimal: 0.1-0.2 (default: 0.15)
     habitGainParam: v.optional(v.number()),
 
-    // "Regret, shame, broken promise"
-    // Background color for icon
-    frequency: v.optional(v.string()),
+    accessibilityAtPause: v.optional(v.number()),
 
     // Habit Edit Screen fields
     icon: v.optional(v.string()),
 
-    // "daily", "weekly", "custom"
-    daysOfWeek: v.optional(v.array(v.number())),
+    // Emoji icon
+    iconColor: v.optional(v.string()),
 
     // Identity - who you are becoming (James Clear's identity-based habits)
     // "I am a healthy person" vs "I want to lose weight"
     identity: v.optional(v.string()),
-
-    // Emoji icon
-    iconColor: v.optional(v.string()),
 
     lastCompletedDate: v.optional(v.string()),
 
@@ -87,13 +96,7 @@ const applicationTables = {
 
     name: v.string(),
 
-    // "default", etc.
-    goalDuration: v.optional(v.number()),
-
     notes: v.optional(v.string()),
-
-    // Goal value
-    goalUnit: v.optional(v.string()),
 
     order: v.optional(v.number()),
 
@@ -101,48 +104,21 @@ const applicationTables = {
     // Pause/Resume functionality
     paused: v.optional(v.boolean()),
 
-    // "Proud, confident, capable"
-    vizFailureBody: v.optional(v.string()),
-
-    accessibilityAtPause: v.optional(v.number()),
-
-    // "Foggy, making excuses"
-    vizFailureEmotion: v.optional(v.string()),
-
     pausedAt: v.optional(v.number()),
-
-    // Dual Visualization - Andrew Huberman Protocol (Stanford, Episode #55)
-    // Key insight: Visualize FAILURE when unmotivated (fear drives action 2x)
-    // Loss aversion (Kahneman & Tversky, Nobel Prize): Losses hurt 2x more
-    vizSuccessBody: v.optional(v.string()),
 
     // Behavior Prediction - Predicted probability of next completion
     predictedCompletionProb: v.optional(v.number()),
 
-    // "Clear, focused, accomplished"
-    vizSuccessEmotion: v.optional(v.string()),
-
     // 0-6 for Sunday-Saturday
     preferredTime: v.optional(v.string()),
-
-    // Motivation - user-provided reason for building this habit
-    why: v.optional(v.string()),
 
     // "morning", "afternoon", "evening"
     remindersEnabled: v.optional(v.boolean()),
 
-    woopObstacle: v.optional(v.string()),
-
     // "2:00 PM" format
     reminderSound: v.optional(v.string()),
 
-    woopOutcome: v.optional(v.string()),
-
     reminderTime: v.optional(v.string()),
-
-    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
-    // Mental contrasting + implementation intentions = 2x goal achievement
-    woopWish: v.optional(v.string()),
 
     resumedAt: v.optional(v.number()),
 
@@ -150,27 +126,94 @@ const applicationTables = {
     // Computed habit strength (0-1)
     strength: v.optional(v.number()),
 
-    woopPlan: v.optional(v.string()),
-
     strengthAtPause: v.optional(v.number()),
 
-    // "Light, energized, powerful"
-    vizSuccessMind: v.optional(v.string()),
+    // "Proud, confident, capable"
+    vizFailureBody: v.optional(v.string()),
 
     // "starting", "building", "developing", "strong", "automatic"
     strengthLevel: v.optional(v.string()),
 
+    // "Foggy, making excuses"
+    vizFailureEmotion: v.optional(v.string()),
+
     // Last time strength was calculated
     strengthUpdatedAt: v.optional(v.number()),
+
+    // Dual Visualization - Andrew Huberman Protocol (Stanford, Episode #55)
+    // Key insight: Visualize FAILURE when unmotivated (fear drives action 2x)
+    // Loss aversion (Kahneman & Tversky, Nobel Prize): Losses hurt 2x more
+    vizSuccessBody: v.optional(v.string()),
+
+    tags: v.optional(v.array(v.string())),
+
+    // "Clear, focused, accomplished"
+    vizSuccessEmotion: v.optional(v.string()),
+
+    totalCompletions: v.optional(v.number()),
+
+    // Motivation - user-provided reason for building this habit
+    why: v.optional(v.string()),
+
+    totalMisses: v.optional(v.number()),
+
+    woopObstacle: v.optional(v.string()),
+
+    userId: v.optional(v.string()),
+
+    woopOutcome: v.optional(v.string()),
 
     // "Heavy, sluggish, stuck"
     vizFailureMind: v.optional(v.string()),
 
-    tags: v.optional(v.array(v.string())),
-    totalCompletions: v.optional(v.number()),
-    totalMisses: v.optional(v.number()),
-    userId: v.optional(v.string()),
+    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
+    // Mental contrasting + implementation intentions = 2x goal achievement
+    woopWish: v.optional(v.string()),
+
+    // "Light, energized, powerful"
+    vizSuccessMind: v.optional(v.string()),
+
+    woopPlan: v.optional(v.string()),
   }),
+
+  // Letters to Self - Time-locked messages from past self to future self
+  // Scientific Basis:
+  // - Temporal self-continuity: Connecting with future self increases self-control
+  // - Delayed gratification psychology (Mischel's marshmallow studies)
+  // Business Model:
+  // - Creates anticipation, unique feature, emotional depth
+  // - Users pay for emotional experiences (Calm model)
+  // - Premium feature: unlocking creates anticipation and engagement
+  // Story T11: Letters to Self
+  letters: defineTable({
+    // Letter content - the message to your future self
+    content: v.string(),
+
+    // Timestamp when letter was written
+    createdAt: v.number(),
+
+    // Associated habit
+    habitId: v.id('habits'),
+
+    // Whether the letter has been read after unlocking
+    isRead: v.boolean(),
+
+    // Title for the letter (optional, for organization)
+    title: v.optional(v.string()),
+
+    // Timestamp when the letter becomes readable
+    unlockAt: v.number(),
+
+    // Last updated timestamp
+    updatedAt: v.optional(v.number()),
+
+    // User who wrote the letter
+    userId: v.optional(v.string()),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_unlock_date', ['unlockAt'])
+    .index('by_habit_and_unlock', ['habitId', 'unlockAt']),
 
   notes: defineTable({
     body: v.string(),
