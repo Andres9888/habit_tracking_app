@@ -9,6 +9,8 @@ export { WeekGrid } from './WeekGrid';
 export { DayCell } from './DayCell';
 export { InsightCard } from './InsightCard';
 export { DayDetailTooltip } from './DayDetailTooltip';
+export { ThemePickerSheet } from './ThemePickerSheet';
+export type { ThemePickerSheetProps } from './ThemePickerSheet';
 
 // Theme Context and Hooks
 export {
