@@ -3,7 +3,8 @@
  *
  * Features:
  * - Pop animation on the success icon
- * - Confetti particles floating upward
+ * - Multi-shape confetti particles (circle, star, heart, sparkle, ribbon)
+ * - Physics-based animation (burst up, drift, fall with gravity)
  * - Habit name confirmation
  * - Auto-transition to habit list with shared element animation
  * - Tap anywhere to skip and transition immediately
@@ -11,7 +12,7 @@
  * - "Add another habit" button to reset (if staying on empty state)
  */
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, memo } from 'react';
 import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
@@ -38,71 +39,144 @@ import {
   SPRING_CONFIGS,
   TAP_HINT_PULSE,
 } from './animations';
+import { ConfettiParticle } from './ConfettiParticle';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
 import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
 import type { SuccessStateProps } from './types';
+import type { ConfettiParticleData } from './useConfetti';
+
+// Base size for confetti particles
+const CONFETTI_BASE_SIZE = 10;
 
 /**
- * Individual confetti particle
+ * Selects a shape based on weighted random distribution
  */
-function ConfettiParticle({
-  delay,
-  color,
+function selectWeightedShape(): (typeof CONFETTI_CONFIG.shapes)[number] {
+  const random = Math.random();
+  let cumulative = 0;
+
+  for (const shape of CONFETTI_CONFIG.shapes) {
+    cumulative += CONFETTI_CONFIG.shapeWeights[shape];
+    if (random < cumulative) {
+      return shape;
+    }
+  }
+
+  return 'circle';
+}
+
+/**
+ * Random value in range
+ */
+function randomInRange(min: number, max: number): number {
+  return Math.random() * (max - min) + min;
+}
+
+/**
+ * Generate particle data on mount
+ */
+function createParticles(): ConfettiParticleData[] {
+  return Array.from({ length: CONFETTI_CONFIG.particleCount }, (_, index) => ({
+    color: CONFETTI_CONFIG.colors[index % CONFETTI_CONFIG.colors.length],
+    delay: randomInRange(0, CONFETTI_CONFIG.staggerMax),
+    driftX: randomInRange(
+      CONFETTI_CONFIG.driftRange.min,
+      CONFETTI_CONFIG.driftRange.max
+    ),
+    id: index,
+    shape: selectWeightedShape(),
+    sizeFactor: randomInRange(
+      CONFETTI_CONFIG.sizeRange.min,
+      CONFETTI_CONFIG.sizeRange.max
+    ),
+    startX: randomInRange(-100, 100),
+  }));
+}
+
+/**
+ * Single animated confetti particle with physics-based motion
+ */
+const AnimatedConfettiParticle = memo(function AnimatedConfettiParticle({
+  particle,
   shouldReduceMotion,
 }: {
-  delay: number;
-  color: string;
+  particle: ConfettiParticleData;
   shouldReduceMotion: boolean;
 }) {
-  const translateY = useSharedValue(0);
-  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(50);
+  const translateX = useSharedValue(particle.startX);
   const opacity = useSharedValue(shouldReduceMotion ? 0 : 1);
-  const scale = useSharedValue(1);
   const rotation = useSharedValue(0);
+  const scale = useSharedValue(1);
 
   useEffect(() => {
-    // Skip animation if reduced motion is preferred
     if (shouldReduceMotion) {
       opacity.value = 0;
       return;
     }
 
-    // Random horizontal drift
-    const drift = (Math.random() - 0.5) * 100;
-    const startX = (Math.random() - 0.5) * 200;
+    const duration = CONFETTI_CONFIG.baseDuration;
+    const delay = particle.delay;
 
-    translateX.value = startX;
-    translateY.value = 50;
-
+    // Burst up then fall with gravity effect
     translateY.value = withDelay(
       delay,
-      withTiming(-300, {
-        duration: CONFETTI_CONFIG.duration,
-        easing: Easing.out(Easing.quad),
-      })
+      withSequence(
+        // Quick burst upward
+        withTiming(-150, {
+          duration: duration * 0.3,
+          easing: Easing.out(Easing.cubic),
+        }),
+        // Fall down with easing (simulates gravity)
+        withTiming(400, {
+          duration: duration * 0.7,
+          easing: Easing.in(Easing.quad),
+        })
+      )
     );
+
+    // Drift sideways
     translateX.value = withDelay(
       delay,
-      withTiming(startX + drift, { duration: CONFETTI_CONFIG.duration })
+      withTiming(particle.startX + particle.driftX, {
+        duration: duration,
+        easing: Easing.out(Easing.ease),
+      })
     );
+
+    // Fade out in the last 40%
     opacity.value = withDelay(
-      delay,
+      delay + duration * 0.6,
       withTiming(0, {
-        duration: CONFETTI_CONFIG.duration,
+        duration: duration * 0.4,
         easing: Easing.in(Easing.ease),
       })
     );
+
+    // Continuous rotation (random direction)
+    const targetRotation =
+      (Math.random() > 0.5 ? 1 : -1) * (360 + Math.random() * 360);
     rotation.value = withDelay(
       delay,
-      withTiming(Math.random() * 360, { duration: CONFETTI_CONFIG.duration })
+      withTiming(targetRotation, {
+        duration: duration,
+        easing: Easing.out(Easing.ease),
+      })
     );
+
+    // Slight scale down as it falls
     scale.value = withDelay(
-      delay + 200,
-      withTiming(0.5, { duration: CONFETTI_CONFIG.duration - 200 })
+      delay + duration * 0.5,
+      withTiming(0.6, {
+        duration: duration * 0.5,
+        easing: Easing.in(Easing.ease),
+      })
     );
   }, [
-    delay,
+    particle.delay,
+    particle.driftX,
+    particle.startX,
     opacity,
     rotation,
     scale,
@@ -111,7 +185,7 @@ function ConfettiParticle({
     translateY,
   ]);
 
-  const particleStyle = useAnimatedStyle(() => ({
+  const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
     transform: [
       { translateX: translateX.value },
@@ -122,39 +196,34 @@ function ConfettiParticle({
   }));
 
   return (
-    <Animated.View
-      style={[
-        particleStyle,
-        {
-          backgroundColor: color,
-          borderRadius: 4,
-          height: 8,
-          position: 'absolute',
-          width: 8,
-        },
-      ]}
+    <ConfettiParticle
+      animatedStyle={animatedStyle}
+      color={particle.color}
+      shape={particle.shape}
+      size={CONFETTI_BASE_SIZE}
+      sizeFactor={particle.sizeFactor}
     />
   );
-}
+});
 
 /**
- * Confetti burst component
+ * Upgraded confetti burst with multiple shapes
  */
-function Confetti({ shouldReduceMotion }: { shouldReduceMotion: boolean }) {
+const Confetti = memo(function Confetti({
+  shouldReduceMotion,
+}: {
+  shouldReduceMotion: boolean;
+}) {
   // Skip rendering particles entirely when reduced motion is preferred
   if (shouldReduceMotion) return null;
 
-  const particles = Array.from(
-    { length: CONFETTI_CONFIG.particleCount },
-    (_, i) => ({
-      color: CONFETTI_CONFIG.colors[i % CONFETTI_CONFIG.colors.length],
-      delay: Math.random() * 300,
-      id: i,
-    })
-  );
+  // Generate particles once (memo ensures this is stable)
+  const particles = createParticles();
 
   return (
     <View
+      accessibilityElementsHidden
+      importantForAccessibility='no-hide-descendants'
       pointerEvents='none'
       style={{
         alignItems: 'center',
@@ -168,16 +237,15 @@ function Confetti({ shouldReduceMotion }: { shouldReduceMotion: boolean }) {
       }}
     >
       {particles.map((particle) => (
-        <ConfettiParticle
+        <AnimatedConfettiParticle
           key={particle.id}
-          color={particle.color}
-          delay={particle.delay}
+          particle={particle}
           shouldReduceMotion={shouldReduceMotion}
         />
       ))}
     </View>
   );
-}
+});
 
 /**
  * Success celebration screen after habit creation

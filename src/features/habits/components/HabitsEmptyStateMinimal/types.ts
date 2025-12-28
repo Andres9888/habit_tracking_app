@@ -88,6 +88,10 @@ export interface SuggestionChipsProps {
   selectedIndex: number | null;
   /** Callback when a chip is selected */
   onSelect: (index: number, chip: SuggestionChip) => void;
+  /** Optional time period override (defaults to auto-detecting current time) */
+  timePeriod?: TimePeriod;
+  /** Whether to show the time context label above chips (default: true) */
+  showTimeLabel?: boolean;
 }
 
 /**
