@@ -57,6 +57,12 @@ const RECORDING_OPTIONS = {
 const MAX_RECORDING_DURATION_SECONDS = 300;
 
 /**
+ * Default warning threshold in seconds before max duration
+ * Shows warning 30 seconds before max is reached
+ */
+const DEFAULT_WARNING_THRESHOLD_SECONDS = 30;
+
+/**
  * Opens the device settings app so user can grant microphone permission
  * Uses platform-specific URL schemes
  */
@@ -134,6 +140,10 @@ export interface RecordingStatus {
   errorMessage: string | null;
   /** URI of the recording file when stopped */
   recordingUri: string | null;
+  /** Whether approaching max duration (warning threshold reached) */
+  isApproachingMaxDuration: boolean;
+  /** Seconds remaining until max duration (only set when isApproachingMaxDuration is true) */
+  secondsUntilMaxDuration: number | null;
 }
 
 export interface UseAudioRecordingReturn {
@@ -167,6 +177,10 @@ export interface UseAudioRecordingReturn {
   formattedDuration: string;
   /** Whether max duration has been reached */
   isMaxDurationReached: boolean;
+  /** Whether approaching max duration (warning active) */
+  isApproachingMaxDuration: boolean;
+  /** Seconds remaining until max duration (when warning is active) */
+  secondsUntilMaxDuration: number | null;
 }
 
 /**
@@ -183,7 +197,9 @@ function formatDuration(seconds: number): string {
  *
  * @param options - Configuration options
  * @param options.maxDurationSeconds - Maximum recording duration (default: 300 seconds / 5 minutes)
+ * @param options.warningThresholdSeconds - Seconds before max to show warning (default: 30 seconds)
  * @param options.onMaxDurationReached - Callback when max duration is reached
+ * @param options.onWarningThresholdReached - Callback when warning threshold is reached (once per recording)
  * @param options.onRecordingComplete - Callback when recording is stopped with the file URI
  * @param options.onError - Callback for error handling
  * @param options.onPermissionDenied - Callback when microphone permission is denied
@@ -191,7 +207,9 @@ function formatDuration(seconds: number): string {
  */
 export function useAudioRecording(options?: {
   maxDurationSeconds?: number;
+  warningThresholdSeconds?: number;
   onMaxDurationReached?: () => void;
+  onWarningThresholdReached?: (secondsRemaining: number) => void;
   onRecordingComplete?: (uri: string, durationSeconds: number) => void;
   onError?: (error: Error) => void;
   onPermissionDenied?: (canAskAgain: boolean) => void;
@@ -199,7 +217,9 @@ export function useAudioRecording(options?: {
 }): UseAudioRecordingReturn {
   const {
     maxDurationSeconds = MAX_RECORDING_DURATION_SECONDS,
+    warningThresholdSeconds = DEFAULT_WARNING_THRESHOLD_SECONDS,
     onMaxDurationReached,
+    onWarningThresholdReached,
     onRecordingComplete,
     onError,
     onPermissionDenied,
@@ -215,13 +235,18 @@ export function useAudioRecording(options?: {
     durationSeconds: 0,
     errorMessage: null,
     hasPermission: null,
+    isApproachingMaxDuration: false,
     meteringLevel: 0,
     recordingUri: null,
+    secondsUntilMaxDuration: null,
     state: 'idle',
   });
 
   // Duration tracking ref (to avoid stale closure issues)
   const durationRef = useRef<number>(0);
+
+  // Warning tracking ref (to only fire callback once per recording)
+  const warningFiredRef = useRef<boolean>(false);
 
   /**
    * Request microphone permission
@@ -306,10 +331,27 @@ export function useAudioRecording(options?: {
           Math.min(1, (metering + 160) / 160)
         );
 
+        // Calculate warning threshold
+        const warningStartTime = maxDurationSeconds - warningThresholdSeconds;
+        const isApproachingMax = durationSeconds >= warningStartTime;
+        const secondsRemaining = isApproachingMax
+          ? maxDurationSeconds - durationSeconds
+          : null;
+
+        // Fire warning callback once when threshold is first crossed
+        if (isApproachingMax && !warningFiredRef.current) {
+          warningFiredRef.current = true;
+          onWarningThresholdReached?.(
+            secondsRemaining ?? warningThresholdSeconds
+          );
+        }
+
         setStatus((prev) => ({
           ...prev,
           durationSeconds,
+          isApproachingMaxDuration: isApproachingMax,
           meteringLevel: normalizedMetering,
+          secondsUntilMaxDuration: secondsRemaining,
         }));
 
         // Check if max duration reached
@@ -318,7 +360,12 @@ export function useAudioRecording(options?: {
         }
       }
     },
-    [maxDurationSeconds, onMaxDurationReached]
+    [
+      maxDurationSeconds,
+      warningThresholdSeconds,
+      onMaxDurationReached,
+      onWarningThresholdReached,
+    ]
   );
 
   /**
@@ -345,10 +392,15 @@ export function useAudioRecording(options?: {
         ...prev,
         durationSeconds: 0,
         errorMessage: null,
+        isApproachingMaxDuration: false,
         meteringLevel: 0,
         recordingUri: null,
+        secondsUntilMaxDuration: null,
         state: 'preparing',
       }));
+
+      // Reset warning flag for new recording
+      warningFiredRef.current = false;
 
       // Configure audio mode
       await configureAudioMode();
@@ -512,14 +564,17 @@ export function useAudioRecording(options?: {
 
       recordingRef.current = null;
       durationRef.current = 0;
+      warningFiredRef.current = false;
 
       setStatus({
         canAskAgain: status.canAskAgain,
         durationSeconds: 0,
         errorMessage: null,
         hasPermission: status.hasPermission,
+        isApproachingMaxDuration: false,
         meteringLevel: 0,
         recordingUri: null,
+        secondsUntilMaxDuration: null,
         state: 'idle',
       });
     } catch (error) {
@@ -543,11 +598,14 @@ export function useAudioRecording(options?: {
       durationSeconds: 0,
       errorMessage: null,
       hasPermission: status.hasPermission,
+      isApproachingMaxDuration: false,
       meteringLevel: 0,
       recordingUri: null,
+      secondsUntilMaxDuration: null,
       state: 'idle',
     });
     durationRef.current = 0;
+    warningFiredRef.current = false;
   }, [status.hasPermission, status.canAskAgain]);
 
   /**
@@ -585,11 +643,14 @@ export function useAudioRecording(options?: {
     status.state === 'idle' || status.state === 'stopped';
   const formattedDuration = formatDuration(status.durationSeconds);
   const isMaxDurationReached = status.durationSeconds >= maxDurationSeconds;
+  const isApproachingMaxDuration = status.isApproachingMaxDuration;
+  const secondsUntilMaxDuration = status.secondsUntilMaxDuration;
 
   return {
     cancelRecording,
     canStartRecording,
     formattedDuration,
+    isApproachingMaxDuration,
     isMaxDurationReached,
     isPaused,
     isRecording,
@@ -598,6 +659,7 @@ export function useAudioRecording(options?: {
     requestPermission,
     reset,
     resumeRecording,
+    secondsUntilMaxDuration,
     showPermissionAlert,
     startRecording,
     status,

@@ -431,6 +431,8 @@ function RecordingControls({
   isPaused,
   formattedDuration,
   isMaxDurationReached,
+  isApproachingMaxDuration,
+  secondsUntilMaxDuration,
   canAskAgain,
   errorMessage,
   onStartRecording,
@@ -446,6 +448,8 @@ function RecordingControls({
   isPaused: boolean;
   formattedDuration: string;
   isMaxDurationReached: boolean;
+  isApproachingMaxDuration: boolean;
+  secondsUntilMaxDuration: number | null;
   canAskAgain: boolean;
   errorMessage: string | null;
   onStartRecording: () => void;
@@ -576,17 +580,34 @@ function RecordingControls({
     <View className='items-center gap-4'>
       {/* Duration display */}
       {(isRecording || isPaused) && (
-        <View className='flex-row items-center gap-2'>
-          <Text
-            className={clsx(
-              'text-2xl font-bold',
-              isMaxDurationReached ? 'text-rose-500' : 'text-stone-800'
+        <View className='items-center gap-1'>
+          <View className='flex-row items-center gap-2'>
+            <Text
+              className={clsx(
+                'text-2xl font-bold',
+                isMaxDurationReached
+                  ? 'text-rose-500'
+                  : isApproachingMaxDuration
+                    ? 'text-amber-600'
+                    : 'text-stone-800'
+              )}
+            >
+              {formattedDuration}
+            </Text>
+            {isMaxDurationReached && (
+              <Text className='text-xs text-rose-500'>Max reached</Text>
             )}
-          >
-            {formattedDuration}
-          </Text>
-          {isMaxDurationReached && (
-            <Text className='text-xs text-rose-500'>Max reached</Text>
+          </View>
+          {/* Warning message when approaching max duration */}
+          {isApproachingMaxDuration && !isMaxDurationReached && (
+            <View className='flex-row items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1'>
+              <AlertCircle className='text-amber-600' size={14} />
+              <Text className='text-xs font-medium text-amber-700'>
+                {secondsUntilMaxDuration !== null && secondsUntilMaxDuration > 0
+                  ? `${secondsUntilMaxDuration}s remaining`
+                  : 'Wrapping up...'}
+              </Text>
+            </View>
           )}
         </View>
       )}
@@ -878,7 +899,7 @@ export function VoiceNotesSection({
   // Check if user can record (premium or under free limit)
   const canRecord = isPremium || voiceNoteCount < FREE_TIER_MAX_NOTES;
 
-  // Use the audio recording hook
+  // Use the audio recording hook with warning threshold support
   const {
     status,
     startRecording,
@@ -892,8 +913,11 @@ export function VoiceNotesSection({
     isPaused,
     formattedDuration,
     isMaxDurationReached,
+    isApproachingMaxDuration,
+    secondsUntilMaxDuration,
   } = useAudioRecording({
     maxDurationSeconds: MAX_RECORDING_DURATION,
+    // Show warning 30 seconds before max
     onError: (error) => {
       console.error('Recording error:', error);
     },
@@ -917,6 +941,12 @@ export function VoiceNotesSection({
         Alert.alert('Error', 'Failed to save recording. Please try again.');
       }
     },
+    onWarningThresholdReached: (secondsRemaining) => {
+      // Provide haptic feedback when warning threshold is reached
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      console.log(`Recording warning: ${secondsRemaining}s remaining`);
+    },
+    warningThresholdSeconds: 30,
   });
 
   const handleStartRecording = useCallback(() => {
@@ -1022,10 +1052,12 @@ export function VoiceNotesSection({
               canAskAgain={status.canAskAgain}
               errorMessage={status.errorMessage}
               formattedDuration={formattedDuration}
+              isApproachingMaxDuration={isApproachingMaxDuration}
               isMaxDurationReached={isMaxDurationReached}
               isPaused={isPaused}
               isRecording={isRecording}
               reduceMotion={reduceMotion}
+              secondsUntilMaxDuration={secondsUntilMaxDuration}
               state={status.state}
               onCancelRecording={cancelRecording}
               onOpenSettings={openSettings}
