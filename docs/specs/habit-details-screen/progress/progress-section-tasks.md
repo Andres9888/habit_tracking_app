@@ -327,7 +327,15 @@
 ## Phase 8: Future Enhancements (Planned) 📋
 
 ### 8.1 Streak Chain Visualization
-- [ ] Design chain connection algorithm
+- [x] Design chain connection algorithm
+  - **COMPLETED**: Created comprehensive algorithm design document at `progress/streak-chain-algorithm.md` covering:
+    - Core data structures: `StreakSegment`, `GridPosition`, `ChainConnection`, `StreakStrength`
+    - Algorithm components: `detectStreakSegments()`, `calculateGridPositions()`, `generateConnections()`, `renderConnectionPath()`
+    - View-specific position calculations for Week, Month, 3-Month, and Year views
+    - Visual design following established `HabitChainVisualizer` patterns (6 strength tiers with shimmer animations)
+    - Performance optimization strategies: memoization, virtualization for year view, render batching
+    - Integration points with `CalendarGrid` and hook API (`useStreakChain`)
+    - File structure and testing strategy
 - [ ] Create SVG/Canvas overlay
 - [ ] Implement gradient based on streak length
 - [ ] Add break indicators
