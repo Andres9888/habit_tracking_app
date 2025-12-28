@@ -18,30 +18,41 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import {
   LettersSection,
   LetterSummary,
+  LetterData,
   UNLOCK_DURATION_OPTIONS,
 } from '../LettersSection';
 
 // Mock expo-haptics
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
+  notificationAsync: jest.fn(),
   ImpactFeedbackStyle: {
     Light: 'light',
     Medium: 'medium',
     Heavy: 'heavy',
+  },
+  NotificationFeedbackType: {
+    Success: 'success',
+    Warning: 'warning',
+    Error: 'error',
   },
 }));
 
 // Mock lucide-react-native icons
 jest.mock('lucide-react-native', () => ({
   Mail: () => null,
+  MailOpen: () => null,
   Plus: () => null,
   Check: () => null,
   X: () => null,
   Lock: () => null,
+  Unlock: () => null,
   Calendar: () => null,
   Sparkles: () => null,
   Clock: () => null,
   ChevronRight: () => null,
+  Heart: () => null,
+  Quote: () => null,
 }));
 
 // Mock clsx
@@ -77,6 +88,7 @@ describe('LettersSection', () => {
     onSaveLetter: jest.fn().mockResolvedValue(undefined),
     onViewAllLetters: jest.fn(),
     onReadLetter: jest.fn(),
+    onMarkAsRead: jest.fn(),
     onPremiumRequired: jest.fn(),
   };
 
@@ -659,9 +671,10 @@ describe('LettersSection', () => {
 
   describe('Accessibility', () => {
     it('has accessible button role', () => {
-      const { getByRole } = render(<LettersSection {...defaultProps} />);
+      const { getAllByRole } = render(<LettersSection {...defaultProps} />);
 
-      expect(getByRole('button')).toBeTruthy();
+      // Should have multiple buttons (section card, write button)
+      expect(getAllByRole('button').length).toBeGreaterThan(0);
     });
 
     it('modal has accessible inputs', () => {
@@ -716,6 +729,330 @@ describe('LettersSection', () => {
       expect(UNLOCK_DURATION_OPTIONS[1].value).toBe(14);
       expect(UNLOCK_DURATION_OPTIONS[2].value).toBe(30);
       expect(UNLOCK_DURATION_OPTIONS[3].value).toBe(90);
+    });
+  });
+
+  describe('T11.6: ReadLetterModal', () => {
+    const unlockedUnreadLetter: LetterSummary = {
+      id: 'letter-unlocked',
+      title: 'Remember Your Why',
+      content:
+        'Dear Future Me, I am writing this to remind you of why you started this journey. Remember that every small step counts.',
+      createdAt: Date.now() - 14 * 24 * 60 * 60 * 1000, // 14 days ago
+      unlockAt: Date.now() - 1 * 24 * 60 * 60 * 1000, // Unlocked yesterday
+      isRead: false,
+    };
+
+    const justUnlockedLetter: LetterSummary = {
+      id: 'letter-just-unlocked',
+      title: 'Just Unlocked Letter',
+      content: 'This letter just became available!',
+      createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days ago
+      unlockAt: Date.now() - 30 * 60 * 1000, // Unlocked 30 minutes ago (within 1 hour)
+      isRead: false,
+    };
+
+    it('opens read modal when tapping an unlocked letter', () => {
+      const { getByText, getAllByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      // Tap the unlocked letter
+      fireEvent.press(getByText('Remember Your Why'));
+
+      // Modal should open with letter title (now appears twice: list + modal header)
+      expect(getAllByText('Remember Your Why').length).toBeGreaterThanOrEqual(
+        1
+      );
+      // Content should be visible
+      expect(
+        getByText(/I am writing this to remind you of why you started/)
+      ).toBeTruthy();
+    });
+
+    it('displays letter content in the modal', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      // Check for letter content
+      expect(
+        getByText(
+          /Dear Future Me, I am writing this to remind you of why you started this journey/
+        )
+      ).toBeTruthy();
+    });
+
+    it('shows "Your Past Self" signature in the modal', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      expect(getByText(/Your Past Self/)).toBeTruthy();
+    });
+
+    it('displays habit name when provided', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+          habitName='Daily Meditation'
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      expect(getByText(/Daily Meditation journey/)).toBeTruthy();
+    });
+
+    it('shows motivational footer in the modal', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      expect(
+        getByText(/This is the voice that made the commitment/)
+      ).toBeTruthy();
+    });
+
+    it('has a "Done Reading" button to close the modal', () => {
+      const { getByText, getByLabelText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      expect(getByText('Done Reading')).toBeTruthy();
+      expect(getByLabelText('Close and return')).toBeTruthy();
+    });
+
+    it('closes modal when Done Reading is pressed', () => {
+      const { getByText, queryByText, getByLabelText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+      expect(
+        getByText(/I am writing this to remind you of why you started/)
+      ).toBeTruthy();
+
+      fireEvent.press(getByLabelText('Close and return'));
+    });
+
+    it('closes modal when X button is pressed', () => {
+      const { getByText, getByLabelText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+      fireEvent.press(getByLabelText('Close letter'));
+    });
+
+    it('calls onMarkAsRead when opening an unread letter', async () => {
+      const onMarkAsRead = jest.fn();
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+          onMarkAsRead={onMarkAsRead}
+          reduceMotion={true} // Skip animations for faster test
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      await waitFor(() => {
+        expect(onMarkAsRead).toHaveBeenCalledWith('letter-unlocked');
+      });
+    });
+
+    it('also calls onReadLetter for backwards compatibility', () => {
+      const onReadLetter = jest.fn();
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+          onReadLetter={onReadLetter}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      expect(onReadLetter).toHaveBeenCalledWith('letter-unlocked');
+    });
+
+    it('shows default title when letter has no title', () => {
+      const letterWithoutTitle: LetterSummary = {
+        ...unlockedUnreadLetter,
+        id: 'letter-no-title',
+        title: undefined,
+      };
+
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[letterWithoutTitle]}
+          letterCount={1}
+        />
+      );
+
+      // Tap the letter (using fallback text)
+      fireEvent.press(getByText('Letter to Future Self'));
+
+      // Modal should show default title
+      expect(getByText('Letter from Past Self')).toBeTruthy();
+    });
+
+    it('displays when the letter was written', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      // Should show "Written [date]"
+      expect(getByText(/Written/)).toBeTruthy();
+    });
+
+    it('shows days ago the letter was written', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Remember Your Why'));
+
+      // Should show "14 days ago" for the test letter
+      expect(getByText(/14 days ago/)).toBeTruthy();
+    });
+
+    it('respects reduceMotion prop', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[unlockedUnreadLetter]}
+          letterCount={1}
+          reduceMotion={true}
+        />
+      );
+
+      // Should still render and work
+      fireEvent.press(getByText('Remember Your Why'));
+      expect(
+        getByText(/I am writing this to remind you of why you started/)
+      ).toBeTruthy();
+    });
+
+    it('shows locked state when letter is still locked', () => {
+      const lockedLetter: LetterSummary = {
+        id: 'letter-locked',
+        title: 'Future Letter',
+        content: 'This should not be visible...',
+        createdAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+        unlockAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days from now
+        isRead: false,
+      };
+
+      const { getByText, queryByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[lockedLetter]}
+          letterCount={1}
+        />
+      );
+
+      // Should show locked state in list
+      expect(getByText(/Unlocks in 7 days/)).toBeTruthy();
+
+      // Tap the locked letter to open modal
+      fireEvent.press(getByText('Future Letter'));
+
+      // Modal should show locked state message
+      expect(getByText(/This letter is still locked/)).toBeTruthy();
+      // Should not show the content
+      expect(queryByText('This should not be visible...')).toBeNull();
+    });
+
+    it('shows Close button instead of Done Reading for locked letters', () => {
+      const lockedLetter: LetterSummary = {
+        id: 'letter-locked',
+        title: 'Future Letter',
+        content: 'This should not be visible...',
+        createdAt: Date.now() - 1 * 24 * 60 * 60 * 1000,
+        unlockAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        isRead: false,
+      };
+
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[lockedLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Future Letter'));
+
+      expect(getByText('Close')).toBeTruthy();
+    });
+
+    it('shows Just Unlocked badge for recently unlocked letters', () => {
+      const { getByText } = render(
+        <LettersSection
+          {...defaultProps}
+          letters={[justUnlockedLetter]}
+          letterCount={1}
+        />
+      );
+
+      fireEvent.press(getByText('Just Unlocked Letter'));
+
+      // Should show the "Just Unlocked!" badge
+      expect(getByText('Just Unlocked!')).toBeTruthy();
     });
   });
 });

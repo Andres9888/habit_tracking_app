@@ -37,14 +37,18 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   Mail,
+  MailOpen,
   Plus,
   Check,
   X,
   Lock,
+  Unlock,
   Calendar,
   Sparkles,
   Clock,
   ChevronRight,
+  Heart,
+  Quote,
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
@@ -73,8 +77,10 @@ export interface LettersSectionProps {
   ) => Promise<void>;
   /** Callback when user taps to view all letters */
   onViewAllLetters: () => void;
-  /** Callback when user taps a letter to read it */
+  /** Callback when user taps a letter to read it (deprecated - use internal modal) */
   onReadLetter: (letterId: string) => void;
+  /** Callback when a letter is marked as read */
+  onMarkAsRead?: (letterId: string) => void;
   /** Callback when user hits premium limit */
   onPremiumRequired: () => void;
   /** Whether to run entrance animations */
@@ -83,6 +89,8 @@ export interface LettersSectionProps {
   reduceMotion?: boolean;
   /** Section index for staggered animation timing */
   sectionIndex?: number;
+  /** Optional habit name to display in letter reading modal */
+  habitName?: string;
 }
 
 // Animation spring configs
@@ -759,6 +767,344 @@ I'm writing this because..."
 }
 
 /**
+ * Full letter data for reading (includes all fields from Convex)
+ */
+export interface LetterData {
+  id: string;
+  title?: string;
+  content: string;
+  createdAt: number;
+  unlockAt: number;
+  isRead: boolean;
+  habitName?: string;
+}
+
+/**
+ * ReadLetterModal Component
+ * Modal for reading an unlocked letter from past self
+ *
+ * Features:
+ * - Emotional "time capsule" reveal experience
+ * - Unlock celebration animation for newly unlocked letters
+ * - Quote-style content display with serif-like styling
+ * - Information about when it was written and locked
+ * - Automatic mark-as-read on open
+ *
+ * Scientific Basis:
+ * - Temporal self-continuity: Reading past self messages strengthens
+ *   connection to future self, increasing self-control
+ */
+function ReadLetterModal({
+  visible,
+  letter,
+  onClose,
+  onMarkAsRead,
+  reduceMotion = false,
+}: {
+  visible: boolean;
+  letter: LetterData | null;
+  onClose: () => void;
+  onMarkAsRead: (letterId: string) => void;
+  reduceMotion?: boolean;
+}) {
+  // Animation values
+  const envelopeScale = useSharedValue(0.8);
+  const envelopeOpacity = useSharedValue(0);
+  const contentOpacity = useSharedValue(0);
+  const contentTranslateY = useSharedValue(30);
+  const sparkleScale = useSharedValue(0);
+  const [showContent, setShowContent] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
+
+  // Check if letter was just unlocked (within last hour)
+  const wasJustUnlocked = letter
+    ? Date.now() - letter.unlockAt < 60 * 60 * 1000 && !letter.isRead
+    : false;
+
+  // Calculate time since letter was written
+  const daysSinceWritten = letter
+    ? Math.floor((Date.now() - letter.createdAt) / (24 * 60 * 60 * 1000))
+    : 0;
+
+  // Format the date when letter was written
+  const writtenDateString = letter
+    ? new Date(letter.createdAt).toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : '';
+
+  // Reset and play entrance animation when modal opens
+  useEffect(() => {
+    if (visible && letter) {
+      // Reset state
+      setShowContent(false);
+      setAnimationComplete(false);
+
+      if (reduceMotion) {
+        // Skip animations for accessibility
+        setShowContent(true);
+        setAnimationComplete(true);
+        envelopeScale.value = 1;
+        envelopeOpacity.value = 1;
+        contentOpacity.value = 1;
+        contentTranslateY.value = 0;
+        sparkleScale.value = 1;
+
+        // Mark as read immediately
+        if (!letter.isRead) {
+          onMarkAsRead(letter.id);
+        }
+        return;
+      }
+
+      // Start entrance animation
+      envelopeScale.value = 0.8;
+      envelopeOpacity.value = 0;
+
+      // Animate envelope reveal
+      envelopeScale.value = withSpring(1, SPRING_BOUNCY);
+      envelopeOpacity.value = withTiming(1, { duration: 400 });
+
+      // If just unlocked, show celebration sparkles
+      if (wasJustUnlocked) {
+        setTimeout(() => {
+          sparkleScale.value = withSequence(
+            withSpring(1.2, SPRING_BOUNCY),
+            withSpring(1, { damping: 15, stiffness: 200 })
+          );
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }, 300);
+      }
+
+      // Reveal content after envelope animation
+      setTimeout(
+        () => {
+          setShowContent(true);
+          contentOpacity.value = withTiming(1, { duration: 500 });
+          contentTranslateY.value = withSpring(0, SPRING_GENTLE);
+
+          // Mark as read after reveal
+          if (!letter.isRead) {
+            onMarkAsRead(letter.id);
+          }
+
+          setTimeout(() => {
+            setAnimationComplete(true);
+          }, 500);
+        },
+        wasJustUnlocked ? 800 : 400
+      );
+    }
+  }, [visible, letter?.id]);
+
+  // Animated styles
+  const envelopeAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: envelopeOpacity.value,
+    transform: [{ scale: envelopeScale.value }],
+  }));
+
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+    transform: [{ translateY: contentTranslateY.value }],
+  }));
+
+  const sparkleAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: sparkleScale.value,
+    transform: [{ scale: sparkleScale.value }],
+  }));
+
+  // Don't render if no letter data
+  if (!letter) return null;
+
+  // Check if letter is still locked (shouldn't happen, but safeguard)
+  const isLocked = letter.unlockAt > Date.now();
+
+  return (
+    <Modal
+      animationType='fade'
+      presentationStyle='fullScreen'
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View className='flex-1 bg-gradient-to-b from-violet-50 to-white'>
+        {/* Header */}
+        <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
+          <View className='flex-1' />
+          <View className='flex-row items-center gap-2'>
+            <Animated.View style={envelopeAnimatedStyle}>
+              <View className='h-10 w-10 items-center justify-center rounded-xl bg-violet-100'>
+                <MailOpen className='text-violet-600' size={22} />
+              </View>
+            </Animated.View>
+            <Text className='text-lg font-bold text-stone-800'>
+              {letter.title || 'Letter from Past Self'}
+            </Text>
+          </View>
+          <View className='flex-1 items-end'>
+            <Pressable
+              accessibilityLabel='Close letter'
+              accessibilityRole='button'
+              className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                onClose();
+              }}
+            >
+              <X className='text-stone-500' size={20} />
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Locked State (error) */}
+        {isLocked ? (
+          <View className='flex-1 items-center justify-center px-8'>
+            <View className='h-20 w-20 items-center justify-center rounded-full bg-stone-100'>
+              <Lock className='text-stone-400' size={36} />
+            </View>
+            <Text className='mt-4 text-center text-lg font-semibold text-stone-600'>
+              This letter is still locked
+            </Text>
+            <Text className='mt-2 text-center text-sm text-stone-500'>
+              It will unlock on{' '}
+              {new Date(letter.unlockAt).toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </Text>
+          </View>
+        ) : (
+          /* Unlocked Content */
+          <ScrollView
+            className='flex-1'
+            contentContainerClassName='px-5 pb-12'
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Time capsule reveal animation */}
+            {wasJustUnlocked && !animationComplete && (
+              <View className='mb-6 items-center'>
+                <Animated.View
+                  className='flex-row items-center gap-2 rounded-full bg-amber-50 px-4 py-2'
+                  style={[sparkleAnimatedStyle]}
+                >
+                  <Unlock className='text-amber-500' size={16} />
+                  <Text className='font-semibold text-amber-700'>
+                    Just Unlocked!
+                  </Text>
+                  <Sparkles className='text-amber-500' size={16} />
+                </Animated.View>
+              </View>
+            )}
+
+            {/* Letter metadata */}
+            <Animated.View
+              className='mb-6'
+              style={showContent ? contentAnimatedStyle : { opacity: 0 }}
+            >
+              <View className='flex-row items-center justify-center gap-3'>
+                <View className='flex-row items-center gap-1.5'>
+                  <Calendar className='text-violet-400' size={14} />
+                  <Text className='text-xs text-stone-500'>
+                    Written {writtenDateString}
+                  </Text>
+                </View>
+                <Text className='text-stone-300'>•</Text>
+                <Text className='text-xs text-stone-500'>
+                  {daysSinceWritten} day{daysSinceWritten === 1 ? '' : 's'} ago
+                </Text>
+              </View>
+            </Animated.View>
+
+            {/* Letter content with quote styling */}
+            <Animated.View
+              style={showContent ? contentAnimatedStyle : { opacity: 0 }}
+            >
+              {/* Opening quote decoration */}
+              <View className='mb-4 items-center'>
+                <Quote
+                  className='rotate-180 text-violet-200'
+                  fill='#ddd6fe'
+                  size={32}
+                />
+              </View>
+
+              {/* Letter content */}
+              <View className='rounded-2xl bg-white p-6 shadow-sm shadow-stone-200/60'>
+                <Text
+                  className='text-base leading-7 text-stone-700'
+                  style={{ fontFamily: 'serif' }}
+                >
+                  {letter.content}
+                </Text>
+              </View>
+
+              {/* Closing quote decoration */}
+              <View className='mt-4 items-center'>
+                <Quote className='text-violet-200' fill='#ddd6fe' size={32} />
+              </View>
+
+              {/* Signature line */}
+              <View className='mt-6 items-center'>
+                <View className='h-px w-16 bg-violet-200' />
+                <Text className='mt-3 text-sm italic text-stone-500'>
+                  — Your Past Self
+                </Text>
+                {letter.habitName && (
+                  <Text className='mt-1 text-xs text-violet-500'>
+                    For your {letter.habitName} journey
+                  </Text>
+                )}
+              </View>
+            </Animated.View>
+
+            {/* Motivational footer */}
+            <Animated.View
+              className='mt-8'
+              style={showContent ? contentAnimatedStyle : { opacity: 0 }}
+            >
+              <View className='flex-row items-start gap-3 rounded-xl bg-gradient-to-r from-violet-50 to-rose-50 p-4'>
+                <View className='h-8 w-8 items-center justify-center rounded-full bg-violet-100'>
+                  <Heart className='text-violet-500' fill='#8b5cf6' size={16} />
+                </View>
+                <View className='flex-1'>
+                  <Text className='text-sm font-medium text-violet-700'>
+                    This is the voice that made the commitment
+                  </Text>
+                  <Text className='mt-1 text-xs text-stone-500'>
+                    The person who wrote this believed in your ability to
+                    persist. Honor that belief.
+                  </Text>
+                </View>
+              </View>
+            </Animated.View>
+          </ScrollView>
+        )}
+
+        {/* Footer */}
+        <View className='border-t border-stone-100 px-4 pb-10 pt-4'>
+          <Pressable
+            accessibilityLabel='Close and return'
+            accessibilityRole='button'
+            className='flex-row items-center justify-center gap-2 rounded-xl bg-violet-500 py-4'
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              onClose();
+            }}
+          >
+            <Check className='text-white' size={20} />
+            <Text className='text-base font-semibold text-white'>
+              {isLocked ? 'Close' : 'Done Reading'}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+/**
  * LetterItem Component
  * Individual letter display with locked/unlocked state
  */
@@ -909,12 +1255,16 @@ export function LettersSection({
   onSaveLetter,
   onViewAllLetters,
   onReadLetter,
+  onMarkAsRead,
   onPremiumRequired,
   shouldAnimate = false,
   reduceMotion = false,
   sectionIndex = 0,
+  habitName,
 }: LettersSectionProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
+  const [isReadModalOpen, setIsReadModalOpen] = useState(false);
+  const [selectedLetter, setSelectedLetter] = useState<LetterData | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   const hasLetters = letterCount > 0;
@@ -922,13 +1272,46 @@ export function LettersSection({
     (l) => !l.isRead && l.unlockAt <= Date.now()
   ).length;
 
-  const handleOpenModal = useCallback(() => {
+  const handleOpenWriteModal = useCallback(() => {
     if (!isPremium) {
       onPremiumRequired();
       return;
     }
-    setIsModalOpen(true);
+    setIsWriteModalOpen(true);
   }, [isPremium, onPremiumRequired]);
+
+  const handleOpenReadModal = useCallback(
+    (letterId: string) => {
+      const letter = letters.find((l) => l.id === letterId);
+      if (!letter) return;
+
+      // Convert to LetterData format with habitName
+      const letterData: LetterData = {
+        ...letter,
+        habitName,
+      };
+
+      setSelectedLetter(letterData);
+      setIsReadModalOpen(true);
+
+      // Also notify parent (for backwards compatibility)
+      onReadLetter(letterId);
+    },
+    [letters, habitName, onReadLetter]
+  );
+
+  const handleCloseReadModal = useCallback(() => {
+    setIsReadModalOpen(false);
+    // Clear selected letter after animation completes
+    setTimeout(() => setSelectedLetter(null), 300);
+  }, []);
+
+  const handleMarkAsRead = useCallback(
+    (letterId: string) => {
+      onMarkAsRead?.(letterId);
+    },
+    [onMarkAsRead]
+  );
 
   const handleSaveLetter = useCallback(
     async (content: string, unlockDays: number, title?: string) => {
@@ -1040,7 +1423,7 @@ export function LettersSection({
                 accessibilityLabel='Write a new letter'
                 accessibilityRole='button'
                 className='flex-row items-center gap-2 rounded-full bg-violet-500 px-4 py-2'
-                onPress={handleOpenModal}
+                onPress={handleOpenWriteModal}
               >
                 <Mail className='text-white' size={16} />
                 <Text className='font-medium text-white'>
@@ -1053,7 +1436,7 @@ export function LettersSection({
           {/* List of existing letters */}
           <LettersList
             letters={letters}
-            onReadLetter={onReadLetter}
+            onReadLetter={handleOpenReadModal}
             onViewAllLetters={onViewAllLetters}
           />
         </SectionCard>
@@ -1062,12 +1445,22 @@ export function LettersSection({
       {/* Write Letter Modal */}
       <WriteLetterModal
         isSaving={isSaving}
-        visible={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        visible={isWriteModalOpen}
+        onClose={() => setIsWriteModalOpen(false)}
         onSave={handleSaveLetter}
+      />
+
+      {/* Read Letter Modal */}
+      <ReadLetterModal
+        letter={selectedLetter}
+        reduceMotion={reduceMotion}
+        visible={isReadModalOpen}
+        onClose={handleCloseReadModal}
+        onMarkAsRead={handleMarkAsRead}
       />
     </>
   );
 }
 
+export { LetterData };
 export default LettersSection;
