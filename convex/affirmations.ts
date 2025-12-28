@@ -13,7 +13,9 @@
  */
 
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { action, mutation, query } from './_generated/server';
+import { api } from './_generated/api';
+import OpenAI from 'openai';
 
 const MAX_AFFIRMATIONS_PER_HABIT = 10;
 const MAX_TEXT_LENGTH = 200;
@@ -463,4 +465,292 @@ export const get = query({
       userId: v.optional(v.string()),
     })
   ),
+});
+
+// ============================================================================
+// AI-GENERATED AFFIRMATIONS (Premium Feature)
+// ============================================================================
+
+/**
+ * Type definitions for habit context used in AI generation
+ */
+interface HabitContext {
+  name: string;
+  why?: string;
+  identity?: string;
+  notes?: string;
+  vizSuccessBody?: string;
+  vizSuccessMind?: string;
+  vizSuccessEmotion?: string;
+}
+
+/**
+ * Type for generated affirmation before saving
+ */
+interface GeneratedAffirmation {
+  text: string;
+  type: 'identity' | 'motivational' | 'instructional';
+}
+
+/**
+ * Build the prompt for AI affirmation generation
+ */
+function buildAffirmationPrompt(
+  habitContext: HabitContext,
+  existingAffirmations: string[],
+  count: number
+): string {
+  const contextParts: string[] = [`Habit: ${habitContext.name}`];
+
+  if (habitContext.why) {
+    contextParts.push(`Why (user's motivation): "${habitContext.why}"`);
+  }
+  if (habitContext.identity) {
+    contextParts.push(
+      `Identity (who they're becoming): "${habitContext.identity}"`
+    );
+  }
+  if (habitContext.notes) {
+    contextParts.push(`Notes: "${habitContext.notes}"`);
+  }
+  if (habitContext.vizSuccessBody) {
+    contextParts.push(
+      `Success visualization (Body): "${habitContext.vizSuccessBody}"`
+    );
+  }
+  if (habitContext.vizSuccessMind) {
+    contextParts.push(
+      `Success visualization (Mind): "${habitContext.vizSuccessMind}"`
+    );
+  }
+  if (habitContext.vizSuccessEmotion) {
+    contextParts.push(
+      `Success visualization (Emotion): "${habitContext.vizSuccessEmotion}"`
+    );
+  }
+
+  const existingPart =
+    existingAffirmations.length > 0
+      ? `\n\nExisting affirmations (avoid similar ones):\n${existingAffirmations.map((a) => `- "${a}"`).join('\n')}`
+      : '';
+
+  return `You are an expert in positive psychology, self-affirmation theory (Steele, 1988), and habit formation science.
+
+Generate exactly ${count} personalized affirmations for a user building this habit:
+
+${contextParts.join('\n')}${existingPart}
+
+REQUIREMENTS:
+1. Each affirmation MUST be under 200 characters
+2. Create a mix of three types:
+   - identity: "I am..." statements about who they're becoming (most powerful)
+   - motivational: Encouraging statements about capability and progress
+   - instructional: Guiding statements about approach and mindset
+
+3. Make them:
+   - Personal and specific to THIS habit (not generic)
+   - Present tense (not future)
+   - Positive framing (not negative)
+   - Emotionally resonant based on their "why" and visualization
+   - Actionable and believable
+
+4. If user provided identity/why statements, incorporate their language
+
+RESPOND WITH EXACTLY THIS JSON FORMAT (no other text):
+{
+  "affirmations": [
+    {"text": "...", "type": "identity"},
+    {"text": "...", "type": "motivational"},
+    {"text": "...", "type": "instructional"}
+  ]
+}`;
+}
+
+/**
+ * Parse and validate the AI response
+ */
+function parseAffirmationsResponse(response: string): GeneratedAffirmation[] {
+  // Extract JSON from potential markdown code blocks
+  let jsonStr = response.trim();
+
+  // Handle ```json ... ``` format
+  const jsonMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (jsonMatch) {
+    jsonStr = jsonMatch[1].trim();
+  }
+
+  const parsed = JSON.parse(jsonStr);
+
+  if (!parsed.affirmations || !Array.isArray(parsed.affirmations)) {
+    throw new Error('Invalid response format: missing affirmations array');
+  }
+
+  const validTypes = new Set(['identity', 'motivational', 'instructional']);
+  const validated: GeneratedAffirmation[] = [];
+
+  for (const aff of parsed.affirmations) {
+    if (!aff.text || typeof aff.text !== 'string') {
+      continue; // Skip invalid entries
+    }
+
+    const text = aff.text.trim();
+    if (text.length < 3 || text.length > MAX_TEXT_LENGTH) {
+      continue; // Skip entries that don't meet length requirements
+    }
+
+    const type = validTypes.has(aff.type) ? aff.type : 'motivational';
+
+    validated.push({ text, type });
+  }
+
+  return validated;
+}
+
+/**
+ * Generate AI-powered affirmations based on habit context
+ *
+ * Premium feature that uses OpenAI to create personalized affirmations
+ * based on the user's habit data, motivation, and identity.
+ *
+ * Scientific Basis:
+ * - Personalized affirmations are more effective (Sherman & Cohen, 2006)
+ * - Context-specific self-talk improves outcomes (Hatzigeorgiadis et al., 2011)
+ * - Identity-based affirmations align with Atomic Habits methodology
+ */
+export const generateAffirmations = action({
+  args: {
+    /** Number of affirmations to generate (1-5, default 3) */
+    count: v.optional(v.number()),
+
+    habitId: v.id('habits'),
+  },
+  handler: async (ctx, args): Promise<GeneratedAffirmation[]> => {
+    const count = Math.min(Math.max(args.count ?? 3, 1), 5);
+
+    // Fetch habit data for context
+    const habit = await ctx.runQuery(api.habits.get, { habitId: args.habitId });
+
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    // Check remaining slots (MAX_AFFIRMATIONS_PER_HABIT = 10)
+    const existingAffirmations = await ctx.runQuery(
+      api.affirmations.listByHabit,
+      {
+        habitId: args.habitId,
+      }
+    );
+
+    const remainingSlots =
+      MAX_AFFIRMATIONS_PER_HABIT - existingAffirmations.length;
+    if (remainingSlots <= 0) {
+      throw new Error(
+        `Maximum ${MAX_AFFIRMATIONS_PER_HABIT} affirmations per habit. Remove some to generate new ones.`
+      );
+    }
+
+    // Adjust count if we'd exceed the limit
+    const actualCount = Math.min(count, remainingSlots);
+
+    // Build context for AI
+    const habitContext: HabitContext = {
+      identity: habit.identity,
+      name: habit.name,
+      notes: habit.notes,
+      vizSuccessBody: habit.vizSuccessBody,
+      vizSuccessEmotion: habit.vizSuccessEmotion,
+      vizSuccessMind: habit.vizSuccessMind,
+      why: habit.why,
+    };
+
+    // Get existing affirmation texts to avoid duplicates
+    const existingTexts = existingAffirmations.map((a) => a.text);
+
+    // Build prompt
+    const prompt = buildAffirmationPrompt(
+      habitContext,
+      existingTexts,
+      actualCount
+    );
+
+    // Call OpenAI API
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+    if (!openaiApiKey) {
+      throw new Error('OpenAI API key not configured');
+    }
+
+    const openai = new OpenAI({ apiKey: openaiApiKey });
+
+    const completion = await openai.chat.completions.create({
+      messages: [{ content: prompt, role: 'user' }],
+      model: 'gpt-4o-mini', // Cost-effective for this use case
+      response_format: { type: 'json_object' },
+      temperature: 0.7, // Balance creativity and consistency
+    });
+
+    const responseContent = completion.choices[0]?.message?.content;
+    if (!responseContent) {
+      throw new Error('No response from AI');
+    }
+
+    // Parse and validate response
+    const generatedAffirmations = parseAffirmationsResponse(responseContent);
+
+    if (generatedAffirmations.length === 0) {
+      throw new Error('Failed to generate valid affirmations');
+    }
+
+    return generatedAffirmations;
+  },
+  returns: v.array(
+    v.object({
+      text: v.string(),
+      type: v.union(
+        v.literal('identity'),
+        v.literal('motivational'),
+        v.literal('instructional')
+      ),
+    })
+  ),
+});
+
+/**
+ * Generate and save AI affirmations in one call
+ *
+ * Convenience wrapper that generates affirmations and saves them directly.
+ * Returns the IDs of created affirmations.
+ */
+export const generateAndSaveAffirmations = action({
+  args: {
+    /** Number of affirmations to generate (1-5, default 3) */
+    count: v.optional(v.number()),
+
+    habitId: v.id('habits'),
+  },
+  handler: async (ctx, args): Promise<string[]> => {
+    // Generate affirmations
+    const generated = await ctx.runAction(
+      api.affirmations.generateAffirmations,
+      {
+        count: args.count,
+        habitId: args.habitId,
+      }
+    );
+
+    // Save each affirmation
+    const savedIds: string[] = [];
+
+    for (const aff of generated) {
+      const id = await ctx.runMutation(api.affirmations.create, {
+        habitId: args.habitId,
+        text: aff.text,
+        type: aff.type,
+      });
+      savedIds.push(id);
+    }
+
+    return savedIds;
+  },
+  returns: v.array(v.string()),
 });

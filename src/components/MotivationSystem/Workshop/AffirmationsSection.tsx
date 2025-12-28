@@ -58,6 +58,7 @@ import {
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import { AffirmationScheduleModal } from './AffirmationScheduleModal';
+import { GenerateAffirmationsButton } from './GenerateAffirmationsButton';
 
 // Affirmation types for categorization
 export type AffirmationType = 'identity' | 'motivational' | 'instructional';
@@ -108,6 +109,12 @@ export interface AffirmationsSectionProps {
   ) => Promise<void>;
   /** Callback when schedule is cancelled */
   onCancelSchedule?: (id: string) => Promise<void>;
+  /** Callback for AI generation (premium) */
+  onGenerateAffirmations?: () => Promise<void>;
+  /** Whether AI generation is in progress */
+  isGenerating?: boolean;
+  /** Whether habit has context for better AI generation (why, identity, viz) */
+  hasHabitContext?: boolean;
   /** Callback when user hits premium limit */
   onPremiumRequired: () => void;
   /** Whether to run entrance animations */
@@ -969,6 +976,9 @@ export function AffirmationsSection({
   onDeleteAffirmation,
   onScheduleAffirmation,
   onCancelSchedule,
+  onGenerateAffirmations,
+  isGenerating = false,
+  hasHabitContext = false,
   onPremiumRequired,
   shouldAnimate = false,
   reduceMotion = false,
@@ -1145,18 +1155,56 @@ export function AffirmationsSection({
             </View>
           </View>
 
-          {/* Add button when affirmations exist */}
+          {/* Action buttons when affirmations exist */}
           {hasAffirmations && canAddMore && (
-            <View className='mt-4 items-center'>
-              <Pressable
-                accessibilityLabel='Add a new affirmation'
-                accessibilityRole='button'
-                className='flex-row items-center gap-2 rounded-full bg-amber-500 px-4 py-2'
-                onPress={handleOpenEditor}
-              >
-                <Plus className='text-white' size={16} />
-                <Text className='font-medium text-white'>Add Affirmation</Text>
-              </Pressable>
+            <View className='mt-4 gap-3'>
+              {/* AI Generate button (Premium) */}
+              {onGenerateAffirmations && (
+                <GenerateAffirmationsButton
+                  currentCount={affirmationCount}
+                  hasHabitContext={hasHabitContext}
+                  isGenerating={isGenerating}
+                  isPremium={isPremium}
+                  maxCount={10}
+                  reduceMotion={reduceMotion}
+                  variant='full'
+                  onGenerate={onGenerateAffirmations}
+                  onPremiumRequired={onPremiumRequired}
+                />
+              )}
+
+              {/* Manual add button */}
+              <View className='items-center'>
+                <Pressable
+                  accessibilityLabel='Add a new affirmation'
+                  accessibilityRole='button'
+                  className='flex-row items-center gap-2 rounded-full bg-amber-500 px-4 py-2'
+                  onPress={handleOpenEditor}
+                >
+                  <Plus className='text-white' size={16} />
+                  <Text className='font-medium text-white'>Add Manually</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+
+          {/* Empty state AI Generate + Add */}
+          {!hasAffirmations && (
+            <View className='mt-4 gap-3'>
+              {/* AI Generate button (Premium) */}
+              {onGenerateAffirmations && (
+                <GenerateAffirmationsButton
+                  currentCount={affirmationCount}
+                  hasHabitContext={hasHabitContext}
+                  isGenerating={isGenerating}
+                  isPremium={isPremium}
+                  maxCount={10}
+                  reduceMotion={reduceMotion}
+                  variant='full'
+                  onGenerate={onGenerateAffirmations}
+                  onPremiumRequired={onPremiumRequired}
+                />
+              )}
             </View>
           )}
 
