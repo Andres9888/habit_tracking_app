@@ -40,6 +40,8 @@ import {
   X,
   Zap,
   Timer,
+  Mic,
+  Sparkles,
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
@@ -47,12 +49,30 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Modal } from '../../Modal';
 import { FailureViz } from './FailureViz';
+import { VoiceNotePlaybackUI } from '../Workshop/VoiceNotePlaybackUI';
 
 // Animation spring configs
 const SPRING_BUTTON = { damping: 15, stiffness: 300 };
 const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
 const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
 const STAGGER_DELAY = 60;
+
+/**
+ * Day 1 Voice Note data for Rescue Mode
+ * Prominently featured to reconnect user with their initial motivation
+ */
+export interface Day1VoiceNoteData {
+  /** Voice note ID */
+  id: string;
+  /** Audio URI for playback */
+  audioUrl: string;
+  /** Duration in seconds */
+  duration: number;
+  /** Optional label */
+  label?: string;
+  /** When the note was created */
+  createdAt: number;
+}
 
 /**
  * Habit data for display in Rescue Mode
@@ -76,6 +96,8 @@ export interface RescueHabitData {
   vizFailureEmotion?: string;
   /** Hours remaining until day ends */
   hoursRemaining?: number;
+  /** Day 1 voice note for emotional anchor */
+  day1VoiceNote?: Day1VoiceNoteData;
 }
 
 export interface RescueModeProps {
@@ -91,6 +113,10 @@ export interface RescueModeProps {
   onStartFull?: () => void;
   /** Called when user taps "Skip Today" */
   onSkipToday?: () => void;
+  /** Called when voice note playback starts */
+  onVoiceNotePlayStart?: () => void;
+  /** Called when voice note playback finishes */
+  onVoiceNotePlayFinish?: () => void;
   /** Whether to skip animations for accessibility */
   reduceMotion?: boolean;
 }
@@ -224,6 +250,73 @@ function FeaturedWhy({ why }: { why: string }) {
       </Text>
       <Text className='mt-3 text-sm text-rose-500'>
         This is why you started. Don't let today break your momentum.
+      </Text>
+    </View>
+  );
+}
+
+/**
+ * FeaturedVoiceNote - Prominently displays Day 1 voice note for emotional reconnection
+ *
+ * Scientific Basis:
+ * - Voice has 40% higher emotional recall than text (cognitive psychology)
+ * - Hearing your own voice from Day 1 creates powerful emotional anchor
+ * - This is particularly effective in Rescue Mode when motivation is low
+ */
+function FeaturedVoiceNote({
+  voiceNote,
+  onPlayStart,
+  onPlayFinish,
+  reduceMotion = false,
+}: {
+  voiceNote: Day1VoiceNoteData;
+  onPlayStart?: () => void;
+  onPlayFinish?: () => void;
+  reduceMotion?: boolean;
+}) {
+  // Calculate how long ago the note was recorded
+  const daysAgo = Math.floor(
+    (Date.now() - voiceNote.createdAt) / (1000 * 60 * 60 * 24)
+  );
+
+  return (
+    <View className='rounded-2xl border-l-4 border-l-teal-400 bg-gradient-to-br from-teal-50 to-emerald-50 p-5'>
+      {/* Header */}
+      <View className='mb-3 flex-row items-center gap-2'>
+        <View className='h-10 w-10 items-center justify-center rounded-xl bg-teal-100'>
+          <Mic className='text-teal-600' size={20} />
+        </View>
+        <View className='flex-1'>
+          <Text className='text-lg font-bold text-teal-800'>
+            Hear Your Day 1 Self
+          </Text>
+          {daysAgo > 0 && (
+            <Text className='text-xs text-teal-600'>
+              {daysAgo} day{daysAgo === 1 ? '' : 's'} ago
+            </Text>
+          )}
+        </View>
+        <View className='flex-row items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5'>
+          <Sparkles className='text-amber-600' size={12} />
+          <Text className='text-xs font-medium text-amber-700'>Day 1</Text>
+        </View>
+      </View>
+
+      {/* Voice Note Playback UI */}
+      <VoiceNotePlaybackUI
+        isDay1
+        audioUri={voiceNote.audioUrl}
+        initialDuration={voiceNote.duration}
+        label={voiceNote.label}
+        reduceMotion={reduceMotion}
+        showSpeedControl={false}
+        onPlayFinish={onPlayFinish}
+        onPlayStart={onPlayStart}
+      />
+
+      {/* Motivational text */}
+      <Text className='mt-3 text-sm italic text-teal-600'>
+        Listen to the voice that made the commitment. That's still you.
       </Text>
     </View>
   );
@@ -397,6 +490,8 @@ export function RescueMode({
   onJustTwoMin,
   onStartFull,
   onSkipToday,
+  onVoiceNotePlayStart,
+  onVoiceNotePlayFinish,
   reduceMotion = false,
 }: RescueModeProps) {
   const insets = useSafeAreaInsets();
@@ -426,6 +521,7 @@ export function RescueMode({
     !!habit.vizFailureMind ||
     !!habit.vizFailureEmotion;
   const hasStreak = (habit.currentStreak ?? 0) > 0;
+  const hasVoiceNote = !!habit.day1VoiceNote;
 
   return (
     <Modal
@@ -490,9 +586,29 @@ export function RescueMode({
             </AnimatedContent>
           )}
 
+          {/* Featured Day 1 Voice Note - Prominently displayed for emotional reconnection */}
+          {hasVoiceNote && (
+            <AnimatedContent
+              index={(hasStreak ? 1 : 0) + (hasWhy ? 1 : 0)}
+              reduceMotion={reduceMotion}
+              visible={visible}
+            >
+              <View className='mt-4'>
+                <FeaturedVoiceNote
+                  reduceMotion={reduceMotion}
+                  voiceNote={habit.day1VoiceNote!}
+                  onPlayFinish={onVoiceNotePlayFinish}
+                  onPlayStart={onVoiceNotePlayStart}
+                />
+              </View>
+            </AnimatedContent>
+          )}
+
           {/* Failure Visualization - ALWAYS shown in Rescue Mode */}
           <AnimatedContent
-            index={(hasStreak ? 1 : 0) + (hasWhy ? 1 : 0)}
+            index={
+              (hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + (hasVoiceNote ? 1 : 0)
+            }
             reduceMotion={reduceMotion}
             visible={visible}
           >
@@ -511,7 +627,12 @@ export function RescueMode({
 
           {/* Science tip */}
           <AnimatedContent
-            index={(hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + 1}
+            index={
+              (hasStreak ? 1 : 0) +
+              (hasWhy ? 1 : 0) +
+              (hasVoiceNote ? 1 : 0) +
+              1
+            }
             reduceMotion={reduceMotion}
             visible={visible}
           >
@@ -531,7 +652,12 @@ export function RescueMode({
         >
           {/* Just 2 Min - Primary CTA */}
           <AnimatedContent
-            index={(hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + 2}
+            index={
+              (hasStreak ? 1 : 0) +
+              (hasWhy ? 1 : 0) +
+              (hasVoiceNote ? 1 : 0) +
+              2
+            }
             reduceMotion={reduceMotion}
             visible={visible}
           >
@@ -543,7 +669,12 @@ export function RescueMode({
 
           {/* Secondary Actions */}
           <AnimatedContent
-            index={(hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + 3}
+            index={
+              (hasStreak ? 1 : 0) +
+              (hasWhy ? 1 : 0) +
+              (hasVoiceNote ? 1 : 0) +
+              3
+            }
             reduceMotion={reduceMotion}
             visible={visible}
           >

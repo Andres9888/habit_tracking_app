@@ -38,6 +38,8 @@ jest.mock('lucide-react-native', () => ({
   Timer: () => null,
   Brain: () => null,
   User: () => null,
+  Mic: () => null,
+  Sparkles: () => null,
 }));
 
 // Mock clsx
@@ -95,6 +97,39 @@ jest.mock('../FailureViz', () => ({
           <Text>{visualization.failureEmotion}</Text>
         )}
         {streakCount && <Text>{streakCount} days gone</Text>}
+      </View>
+    );
+  },
+}));
+
+// Mock VoiceNotePlaybackUI
+jest.mock('../../Workshop/VoiceNotePlaybackUI', () => ({
+  VoiceNotePlaybackUI: ({
+    audioUri,
+    initialDuration,
+    label,
+    isDay1,
+    onPlayStart,
+    onPlayFinish,
+  }: any) => {
+    const { View, Text, Pressable } = require('react-native');
+    return (
+      <View testID='voice-note-playback'>
+        <Text>VoiceNotePlaybackUI</Text>
+        <Text>Duration: {initialDuration}s</Text>
+        {label && <Text>Label: {label}</Text>}
+        {isDay1 && <Text>Day 1 Recording</Text>}
+        <Pressable
+          accessibilityLabel='Play voice note'
+          testID='play-voice-note'
+          onPress={() => {
+            onPlayStart?.();
+            // Simulate finishing after "playing"
+            setTimeout(() => onPlayFinish?.(), 100);
+          }}
+        >
+          <Text>Play</Text>
+        </Pressable>
       </View>
     );
   },
@@ -383,6 +418,167 @@ describe('RescueMode', () => {
       expect(getByText('🆘 Rescue Mode')).toBeTruthy();
       expect(queryByText('Remember Your Why')).toBeNull();
       expect(queryByText(/Day Streak at Risk/)).toBeNull();
+    });
+  });
+
+  describe('T10.7: Day 1 Voice Note in Rescue Mode', () => {
+    const mockDay1VoiceNote = {
+      id: 'voice-note-1',
+      audioUrl: 'file:///test/audio.m4a',
+      duration: 45,
+      label: 'My motivation',
+      createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days ago
+    };
+
+    const habitWithVoiceNote: RescueHabitData = {
+      ...mockHabit,
+      day1VoiceNote: mockDay1VoiceNote,
+    };
+
+    it('displays Day 1 voice note section when available', () => {
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(getByText('Hear Your Day 1 Self')).toBeTruthy();
+    });
+
+    it('displays Day 1 badge', () => {
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(getByText('Day 1')).toBeTruthy();
+    });
+
+    it('renders VoiceNotePlaybackUI component', () => {
+      const { getByTestId } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(getByTestId('voice-note-playback')).toBeTruthy();
+    });
+
+    it('displays voice note duration', () => {
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(getByText('Duration: 45s')).toBeTruthy();
+    });
+
+    it('displays voice note label', () => {
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(getByText('Label: My motivation')).toBeTruthy();
+    });
+
+    it('displays days ago text', () => {
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(getByText('7 days ago')).toBeTruthy();
+    });
+
+    it('shows singular "day" for 1 day ago', () => {
+      const habitWithOneDayAgoNote: RescueHabitData = {
+        ...mockHabit,
+        day1VoiceNote: {
+          ...mockDay1VoiceNote,
+          createdAt: Date.now() - 1 * 24 * 60 * 60 * 1000, // 1 day ago
+        },
+      };
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithOneDayAgoNote} />
+      );
+
+      expect(getByText('1 day ago')).toBeTruthy();
+    });
+
+    it('does not show days ago for notes from today', () => {
+      const habitWithTodayNote: RescueHabitData = {
+        ...mockHabit,
+        day1VoiceNote: {
+          ...mockDay1VoiceNote,
+          createdAt: Date.now(), // Today
+        },
+      };
+      const { queryByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithTodayNote} />
+      );
+
+      expect(queryByText(/days? ago/)).toBeNull();
+    });
+
+    it('displays motivational text', () => {
+      const { getByText } = render(
+        <RescueMode {...defaultProps} habit={habitWithVoiceNote} />
+      );
+
+      expect(
+        getByText(
+          "Listen to the voice that made the commitment. That's still you."
+        )
+      ).toBeTruthy();
+    });
+
+    it('calls onVoiceNotePlayStart when playback starts', () => {
+      const onVoiceNotePlayStart = jest.fn();
+      const { getByLabelText } = render(
+        <RescueMode
+          {...defaultProps}
+          habit={habitWithVoiceNote}
+          onVoiceNotePlayStart={onVoiceNotePlayStart}
+        />
+      );
+
+      fireEvent.press(getByLabelText('Play voice note'));
+
+      expect(onVoiceNotePlayStart).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onVoiceNotePlayFinish when playback finishes', async () => {
+      jest.useFakeTimers();
+      const onVoiceNotePlayFinish = jest.fn();
+      const { getByLabelText } = render(
+        <RescueMode
+          {...defaultProps}
+          habit={habitWithVoiceNote}
+          onVoiceNotePlayFinish={onVoiceNotePlayFinish}
+        />
+      );
+
+      fireEvent.press(getByLabelText('Play voice note'));
+
+      // Wait for the mock timeout in VoiceNotePlaybackUI
+      jest.advanceTimersByTime(150);
+
+      expect(onVoiceNotePlayFinish).toHaveBeenCalledTimes(1);
+      jest.useRealTimers();
+    });
+
+    it('does not show voice note section when day1VoiceNote is not provided', () => {
+      const { queryByText, queryByTestId } = render(
+        <RescueMode {...defaultProps} />
+      );
+
+      expect(queryByText('Hear Your Day 1 Self')).toBeNull();
+      expect(queryByTestId('voice-note-playback')).toBeNull();
+    });
+
+    it('accepts reduceMotion prop for voice note section', () => {
+      const { getByText } = render(
+        <RescueMode
+          {...defaultProps}
+          habit={habitWithVoiceNote}
+          reduceMotion={true}
+        />
+      );
+
+      expect(getByText('Hear Your Day 1 Self')).toBeTruthy();
     });
   });
 });
