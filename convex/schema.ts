@@ -47,11 +47,15 @@ const applicationTables = {
 
     createdAt: v.number(),
 
+    accessibilityAtPause: v.optional(v.number()),
+
     // Cue - Implementation Intention (Gollwitzer, 1999: 2-3x follow-through)
     // "After I pour my morning coffee"
     cueAfterBehavior: v.optional(v.string()),
+
     // "Kitchen"
     cueLocation: v.optional(v.string()),
+
     // "7:00 AM" or "Morning"
     cueTime: v.optional(v.string()),
 
@@ -76,8 +80,6 @@ const applicationTables = {
 
     // HGP - validated optimal: 0.1-0.2 (default: 0.15)
     habitGainParam: v.optional(v.number()),
-
-    accessibilityAtPause: v.optional(v.number()),
 
     // Habit Edit Screen fields
     icon: v.optional(v.string()),
@@ -128,52 +130,52 @@ const applicationTables = {
 
     strengthAtPause: v.optional(v.number()),
 
-    // "Proud, confident, capable"
-    vizFailureBody: v.optional(v.string()),
-
     // "starting", "building", "developing", "strong", "automatic"
     strengthLevel: v.optional(v.string()),
+
+    // Last time strength was calculated
+    strengthUpdatedAt: v.optional(v.number()),
+
+    tags: v.optional(v.array(v.string())),
+
+    totalCompletions: v.optional(v.number()),
+
+    totalMisses: v.optional(v.number()),
+
+    userId: v.optional(v.string()),
+
+    // "Proud, confident, capable"
+    vizFailureBody: v.optional(v.string()),
 
     // "Foggy, making excuses"
     vizFailureEmotion: v.optional(v.string()),
 
-    // Last time strength was calculated
-    strengthUpdatedAt: v.optional(v.number()),
+    // "Heavy, sluggish, stuck"
+    vizFailureMind: v.optional(v.string()),
 
     // Dual Visualization - Andrew Huberman Protocol (Stanford, Episode #55)
     // Key insight: Visualize FAILURE when unmotivated (fear drives action 2x)
     // Loss aversion (Kahneman & Tversky, Nobel Prize): Losses hurt 2x more
     vizSuccessBody: v.optional(v.string()),
 
-    tags: v.optional(v.array(v.string())),
-
     // "Clear, focused, accomplished"
     vizSuccessEmotion: v.optional(v.string()),
-
-    totalCompletions: v.optional(v.number()),
-
-    // Motivation - user-provided reason for building this habit
-    why: v.optional(v.string()),
-
-    totalMisses: v.optional(v.number()),
-
-    woopObstacle: v.optional(v.string()),
-
-    userId: v.optional(v.string()),
-
-    woopOutcome: v.optional(v.string()),
-
-    // "Heavy, sluggish, stuck"
-    vizFailureMind: v.optional(v.string()),
-
-    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
-    // Mental contrasting + implementation intentions = 2x goal achievement
-    woopWish: v.optional(v.string()),
 
     // "Light, energized, powerful"
     vizSuccessMind: v.optional(v.string()),
 
+    // Motivation - user-provided reason for building this habit
+    why: v.optional(v.string()),
+
+    woopObstacle: v.optional(v.string()),
+
+    woopOutcome: v.optional(v.string()),
+
     woopPlan: v.optional(v.string()),
+
+    // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
+    // Mental contrasting + implementation intentions = 2x goal achievement
+    woopWish: v.optional(v.string()),
   }),
 
   // Letters to Self - Time-locked messages from past self to future self
@@ -392,6 +394,41 @@ const applicationTables = {
     userId: v.optional(v.string()),
   }),
 
+  // Vision Board Images - Photo grid of motivational images (Story T12)
+  // Scientific Basis:
+  // - Visual motivation reinforces goals through mental imagery
+  // - Personal images > stock images for emotional connection
+  // - Mirror neurons activate when viewing goal-related imagery
+  // Business Model:
+  // - Premium feature: storage costs, personalization, high perceived value
+  // - Users pay for customization (Notion model)
+  visionBoardImages: defineTable({
+    // Optional description of what the image represents
+    caption: v.optional(v.string()),
+
+    // Timestamp when image was added
+    createdAt: v.number(),
+
+    // Associated habit
+    habitId: v.id('habits'),
+
+    // Convex file storage URL
+    imageUrl: v.string(),
+
+    // Display order in grid (0-based, for drag-to-reorder)
+    order: v.number(),
+
+    // Last updated timestamp
+    updatedAt: v.optional(v.number()),
+
+    // User who added the image
+    userId: v.optional(v.string()),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_habit_and_order', ['habitId', 'order']),
+
+  // Legacy text-based vision board items (kept for backwards compatibility)
   visionBoardItems: defineTable({
     body: v.optional(v.string()),
     createdAt: v.number(),
