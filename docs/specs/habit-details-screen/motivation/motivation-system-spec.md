@@ -761,9 +761,24 @@ export function useMotivationFeatures() {
 
 ### Voice Notes Edge Cases
 
-- [ ] Handle microphone permission denial gracefully
-- [ ] Maximum recording length (5 min) with warning
-- [ ] Playback controls: speed (0.5x, 1x, 1.5x, 2x)
+- [x] Handle microphone permission denial gracefully
+  - Implemented: `openMicrophoneSettings()` utility function with platform-specific Settings URL (iOS: `app-settings:`, Android: `Linking.openSettings()`)
+  - Implemented: `showMicrophonePermissionAlert()` function for Alert.alert with "Open Settings" option
+  - Implemented: `MicrophonePermissionDenied` UI component at `src/components/MotivationSystem/Workshop/MicrophonePermissionDenied.tsx`
+  - Enhanced: `useAudioRecording` hook with `canAskAgain` status, `openSettings`/`showPermissionAlert` functions, `onPermissionDenied` callback
+  - Updated: `VoiceNotesSection` to show enhanced permission denied UI with "Try Again" (when can ask again) or "Open Settings" (permanent denial)
+  - Tests: Added 25+ test cases for permission denial handling in hook tests and component tests
+- [x] Maximum recording length (5 min) with warning
+  - Implemented: `useAudioRecording` hook enhanced with `warningThresholdSeconds` option (default: 30 seconds before max)
+  - Added: `onWarningThresholdReached` callback fires once when approaching max duration
+  - Added: `isApproachingMaxDuration` and `secondsUntilMaxDuration` status properties for UI updates
+  - UI: Duration text changes color to amber when warning active, shows countdown badge "Xs remaining"
+  - UI: Haptic feedback (`notificationAsync.Warning`) when warning threshold is first crossed
+  - Tests: Added 7 comprehensive test cases covering threshold detection, countdown, reset behavior, default values
+- [x] Playback controls: speed (0.5x, 1x, 1.5x, 2x)
+  - Already implemented: `useAudioPlayback.ts` exports `PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2]` and `setSpeed()` function using `setRateAsync(speed, true)` for pitch-corrected playback
+  - UI: `VoiceNotePlaybackUI.tsx` includes `SpeedControl` dropdown component with all 4 speed options, haptic feedback, teal accent styling
+  - Tests: Speed setting tests in `useAudioPlayback.test.ts` (lines 402-418) and UI tests in `VoiceNotePlaybackUI.test.tsx` (lines 194-210)
 - [ ] Handle audio interruption (phone call, other app)
 
 ### Rescue Mode Triggers
