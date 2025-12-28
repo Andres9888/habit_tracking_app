@@ -22,6 +22,7 @@ Notifications.setNotificationHandler({
 });
 
 const ANDROID_CHANNEL_ID = 'habit-reminders';
+const ANDROID_LETTER_CHANNEL_ID = 'letter-unlocks';
 
 async function configureAndroidChannel() {
   if (Platform.OS !== 'android') {
@@ -32,6 +33,24 @@ async function configureAndroidChannel() {
     importance: Notifications.AndroidImportance.HIGH,
     lightColor: '#3B82F6',
     name: 'Habit Reminders',
+    sound: 'default',
+    vibrationPattern: [0, 250, 250, 250],
+  });
+}
+
+/**
+ * Configure Android notification channel for letter unlocks
+ * Uses violet color to match the Letters to Self UI theme
+ */
+async function configureLetterUnlockChannel() {
+  if (Platform.OS !== 'android') {
+    return;
+  }
+
+  await Notifications.setNotificationChannelAsync(ANDROID_LETTER_CHANNEL_ID, {
+    importance: Notifications.AndroidImportance.HIGH,
+    lightColor: '#8b5cf6', // Violet-500 to match Letters theme
+    name: 'Letter Unlocks',
     sound: 'default',
     vibrationPattern: [0, 250, 250, 250],
   });
@@ -184,7 +203,9 @@ function defaultReminderTime() {
  * Get relative time string for the next reminder occurrence
  * Examples: "In 8 hours", "In 35 minutes", "Tomorrow at 7am"
  */
-export function getNextReminderRelativeTime(reminderTime?: string): string | null {
+export function getNextReminderRelativeTime(
+  reminderTime?: string
+): string | null {
   if (!reminderTime) {
     return null;
   }
@@ -206,14 +227,16 @@ export function getNextReminderRelativeTime(reminderTime?: string): string | nul
   const minutes = reminderDate.getMinutes();
   const period = hours >= 12 ? 'pm' : 'am';
   const displayHours = hours % 12 || 12;
-  const timeStr = minutes === 0
-    ? `${displayHours}${period}`
-    : `${displayHours}:${minutes.toString().padStart(2, '0')}${period}`;
+  const timeStr =
+    minutes === 0
+      ? `${displayHours}${period}`
+      : `${displayHours}:${minutes.toString().padStart(2, '0')}${period}`;
 
   // Check if it's tomorrow (different day)
-  const isTomorrow = reminderDate.getDate() !== now.getDate() ||
-                     reminderDate.getMonth() !== now.getMonth() ||
-                     reminderDate.getFullYear() !== now.getFullYear();
+  const isTomorrow =
+    reminderDate.getDate() !== now.getDate() ||
+    reminderDate.getMonth() !== now.getMonth() ||
+    reminderDate.getFullYear() !== now.getFullYear();
 
   if (isTomorrow) {
     return `Tomorrow at ${timeStr}`;
@@ -286,5 +309,191 @@ export async function scheduleHabitReminder({
   } catch (error) {
     console.error('scheduleHabitReminder failed', { error, habitId });
     return false;
+  }
+}
+
+// ============================================================================
+// LETTER UNLOCK NOTIFICATIONS
+// ============================================================================
+
+/**
+ * Notification type identifier for letter unlocks
+ * Used to differentiate from habit reminders in the notification response handler
+ */
+export const NOTIFICATION_TYPE_LETTER_UNLOCK = 'letterUnlock';
+
+export interface ScheduleLetterUnlockParams {
+  /** The ID of the letter */
+  letterId: string;
+  /** The ID of the associated habit */
+  habitId: string;
+  /** Optional title for the letter (used in notification) */
+  letterTitle?: string;
+  /** Timestamp (ms) when the letter unlocks */
+  unlockAt: number;
+  /** Skip permission check if already verified */
+  skipPermissionCheck?: boolean;
+}
+
+/**
+ * Schedule a notification for when a letter unlocks
+ *
+ * Uses a DATE trigger for one-time notification at exact unlock time.
+ * Notification data includes type='letterUnlock' to differentiate from habit reminders.
+ *
+ * @returns Notification identifier string on success, null on failure
+ */
+export async function scheduleLetterUnlockNotification({
+  letterId,
+  habitId,
+  letterTitle = 'Letter to Self',
+  unlockAt,
+  skipPermissionCheck = false,
+}: ScheduleLetterUnlockParams): Promise<string | null> {
+  try {
+    // Don't schedule if unlock time is in the past
+    if (unlockAt <= Date.now()) {
+      console.warn(
+        'scheduleLetterUnlockNotification: unlock time is in the past',
+        {
+          letterId,
+          unlockAt,
+        }
+      );
+      return null;
+    }
+
+    if (skipPermissionCheck) {
+      await configureLetterUnlockChannel();
+    } else {
+      const hasPermission = await ensureNotificationPermissions();
+
+      if (!hasPermission) {
+        return null;
+      }
+
+      await configureLetterUnlockChannel();
+    }
+
+    // Cancel any existing notification for this letter
+    await cancelLetterUnlockNotification(letterId);
+
+    const notificationId = await Notifications.scheduleNotificationAsync({
+      content: {
+        body: 'Your letter to yourself is ready to read!',
+        data: {
+          habitId,
+          letterId,
+          type: NOTIFICATION_TYPE_LETTER_UNLOCK,
+        },
+        sound: 'default',
+        title: `📬 ${letterTitle}`,
+      },
+      trigger: {
+        ...(Platform.OS === 'android'
+          ? { channelId: ANDROID_LETTER_CHANNEL_ID }
+          : {}),
+        date: new Date(unlockAt),
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+      },
+    });
+
+    console.log('scheduleLetterUnlockNotification success', {
+      letterId,
+      notificationId,
+      unlockAt: new Date(unlockAt).toISOString(),
+    });
+
+    return notificationId;
+  } catch (error) {
+    console.error('scheduleLetterUnlockNotification failed', {
+      error,
+      letterId,
+    });
+    return null;
+  }
+}
+
+/**
+ * Cancel a scheduled letter unlock notification
+ *
+ * @param letterId The ID of the letter whose notification to cancel
+ */
+export async function cancelLetterUnlockNotification(
+  letterId: string
+): Promise<void> {
+  try {
+    const scheduledNotifications =
+      await Notifications.getAllScheduledNotificationsAsync();
+
+    const toCancel = scheduledNotifications.filter((notification) => {
+      const data = notification.content?.data;
+      return (
+        data?.type === NOTIFICATION_TYPE_LETTER_UNLOCK &&
+        data?.letterId === letterId
+      );
+    });
+
+    await Promise.all(
+      toCancel.map((notification) =>
+        Notifications.cancelScheduledNotificationAsync(notification.identifier)
+      )
+    );
+
+    if (toCancel.length > 0) {
+      console.log('cancelLetterUnlockNotification: cancelled', {
+        count: toCancel.length,
+        letterId,
+      });
+    }
+  } catch (error) {
+    console.warn('cancelLetterUnlockNotification failed', { error, letterId });
+  }
+}
+
+/**
+ * Get all scheduled letter unlock notifications
+ * Useful for debugging or displaying scheduled notifications to the user
+ */
+export async function getScheduledLetterUnlockNotifications(): Promise<
+  Array<{
+    notificationId: string;
+    letterId: string;
+    habitId: string;
+    scheduledTime: Date | null;
+  }>
+> {
+  try {
+    const scheduledNotifications =
+      await Notifications.getAllScheduledNotificationsAsync();
+
+    return scheduledNotifications
+      .filter(
+        (notification) =>
+          notification.content?.data?.type === NOTIFICATION_TYPE_LETTER_UNLOCK
+      )
+      .map((notification) => {
+        const data = notification.content.data as {
+          letterId?: string;
+          habitId?: string;
+        };
+
+        // Extract scheduled time from trigger
+        let scheduledTime: Date | null = null;
+        const trigger = notification.trigger as { date?: Date } | null;
+        if (trigger?.date) {
+          scheduledTime = new Date(trigger.date);
+        }
+
+        return {
+          habitId: data.habitId ?? '',
+          letterId: data.letterId ?? '',
+          notificationId: notification.identifier,
+          scheduledTime,
+        };
+      });
+  } catch (error) {
+    console.error('getScheduledLetterUnlockNotifications failed', error);
+    return [];
   }
 }
