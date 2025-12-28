@@ -31,6 +31,24 @@ jest.mock('expo-haptics', () => ({
   },
 }));
 
+// Mock expo-av (required by useAudioPlayback)
+jest.mock('expo-av', () => ({
+  Audio: {
+    requestPermissionsAsync: jest.fn().mockResolvedValue({ granted: true }),
+    setAudioModeAsync: jest.fn().mockResolvedValue(undefined),
+    Recording: {
+      createAsync: jest.fn().mockResolvedValue({ recording: {} }),
+    },
+    Sound: {
+      createAsync: jest.fn().mockResolvedValue({ sound: {} }),
+    },
+    AndroidOutputFormat: { MPEG_4: 'MPEG_4' },
+    AndroidAudioEncoder: { AAC: 'AAC' },
+    IOSOutputFormat: { MPEG4AAC: 'MPEG4AAC' },
+    IOSAudioQuality: { HIGH: 'HIGH' },
+  },
+}));
+
 // Mock lucide-react-native icons
 jest.mock('lucide-react-native', () => ({
   Mic: () => null,
@@ -40,6 +58,11 @@ jest.mock('lucide-react-native', () => ({
   AlertCircle: () => null,
   Pause: () => null,
   Play: () => null,
+  ChevronDown: () => null,
+  ChevronUp: () => null,
+  RotateCcw: () => null,
+  Volume2: () => null,
+  VolumeX: () => null,
 }));
 
 // Mock clsx
@@ -104,6 +127,39 @@ jest.mock('../../../../hooks/useAudioRecording', () => ({
     isMaxDurationReached: false,
   }),
   RecordingState: {},
+}));
+
+// Mock useAudioPlayback hook (for VoiceNotePlaybackUI)
+jest.mock('../../../../hooks/useAudioPlayback', () => ({
+  useAudioPlayback: () => ({
+    status: {
+      state: 'ready',
+      positionSeconds: 0,
+      durationSeconds: 60,
+      progress: 0,
+      speed: 1,
+      isMuted: false,
+      didJustFinish: false,
+      errorMessage: null,
+      audioUri: 'file:///test.m4a',
+    },
+    loadAudio: jest.fn(),
+    play: jest.fn(),
+    pause: jest.fn(),
+    togglePlayPause: jest.fn(),
+    seekToProgress: jest.fn(),
+    setSpeed: jest.fn(),
+    toggleMute: jest.fn(),
+    replay: jest.fn(),
+    unloadAudio: jest.fn(),
+    isPlaying: false,
+    isReady: true,
+    isLoading: false,
+    formattedPosition: '0:00',
+    formattedDuration: '1:00',
+    formattedRemaining: '-1:00',
+  }),
+  PLAYBACK_SPEEDS: [0.5, 1, 1.5, 2],
 }));
 
 // Mock Alert

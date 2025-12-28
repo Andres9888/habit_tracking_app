@@ -37,6 +37,8 @@ import {
   AlertCircle,
   Pause,
   Play,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
@@ -44,6 +46,7 @@ import {
   useAudioRecording,
   RecordingState,
 } from '../../../hooks/useAudioRecording';
+import { VoiceNotePlaybackUI } from './VoiceNotePlaybackUI';
 
 export interface VoiceNoteSummary {
   id: string;
@@ -51,6 +54,8 @@ export interface VoiceNoteSummary {
   label?: string;
   createdAt: number;
   isDay1?: boolean;
+  /** Audio URI for playback */
+  audioUrl?: string;
 }
 
 export interface VoiceNotesSectionProps {
@@ -70,6 +75,10 @@ export interface VoiceNotesSectionProps {
   onViewAllNotes: () => void;
   /** Callback when user hits premium limit */
   onPremiumRequired: () => void;
+  /** Callback when a voice note starts playing */
+  onPlayStart?: (noteId: string) => void;
+  /** Callback when playback finishes */
+  onPlayFinish?: (noteId: string) => void;
   /** Whether to run entrance animations */
   shouldAnimate?: boolean;
   /** Whether to skip animations for accessibility */
@@ -635,15 +644,126 @@ function RecordingControls({
 }
 
 /**
+ * VoiceNoteItem Component
+ * Individual voice note with expandable playback UI
+ */
+function VoiceNoteItem({
+  note,
+  reduceMotion = false,
+  onPlayStart,
+  onPlayFinish,
+}: {
+  note: VoiceNoteSummary;
+  reduceMotion?: boolean;
+  onPlayStart?: () => void;
+  onPlayFinish?: () => void;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const expandedHeight = useSharedValue(0);
+  const rotateIcon = useSharedValue(0);
+
+  const handleToggleExpand = useCallback(() => {
+    if (!note.audioUrl) return;
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const willExpand = !isExpanded;
+    setIsExpanded(willExpand);
+
+    if (reduceMotion) {
+      expandedHeight.value = willExpand ? 1 : 0;
+      rotateIcon.value = willExpand ? 1 : 0;
+    } else {
+      expandedHeight.value = withSpring(willExpand ? 1 : 0, SPRING_BUTTON);
+      rotateIcon.value = withSpring(willExpand ? 1 : 0, SPRING_BUTTON);
+    }
+  }, [note.audioUrl, isExpanded, reduceMotion, expandedHeight, rotateIcon]);
+
+  const expandedStyle = useAnimatedStyle(() => ({
+    height: expandedHeight.value === 0 ? 0 : 'auto',
+    opacity: expandedHeight.value,
+    overflow: 'hidden' as const,
+  }));
+
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotateIcon.value * 180}deg` }],
+  }));
+
+  const hasPlayback = !!note.audioUrl;
+
+  return (
+    <View className='rounded-lg bg-stone-50'>
+      {/* Header row - always visible */}
+      <Pressable
+        accessibilityLabel={
+          hasPlayback
+            ? `${note.label || 'Recording'}, ${formatDuration(note.duration)}. ${isExpanded ? 'Collapse' : 'Expand'} to ${isExpanded ? 'hide' : 'play'}`
+            : `${note.label || 'Recording'}, ${formatDuration(note.duration)}`
+        }
+        accessibilityRole={hasPlayback ? 'button' : 'text'}
+        className='flex-row items-center gap-3 p-3'
+        disabled={!hasPlayback}
+        onPress={handleToggleExpand}
+      >
+        <View className='h-8 w-8 items-center justify-center rounded-full bg-teal-100'>
+          <Mic className='text-teal-600' size={14} />
+        </View>
+        <View className='flex-1'>
+          <Text className='text-sm font-medium text-stone-700'>
+            {note.label || `Recording ${formatDuration(note.duration)}`}
+          </Text>
+          <Text className='text-xs text-stone-500'>
+            {formatRelativeTime(note.createdAt)}
+            {note.isDay1 && ' • Day 1'}
+          </Text>
+        </View>
+        <Text className='mr-2 text-xs text-stone-400'>
+          {formatDuration(note.duration)}
+        </Text>
+        {hasPlayback && (
+          <Animated.View style={iconStyle}>
+            <ChevronDown className='text-stone-400' size={16} />
+          </Animated.View>
+        )}
+      </Pressable>
+
+      {/* Expandable playback UI */}
+      {hasPlayback && isExpanded && (
+        <Animated.View style={expandedStyle}>
+          <View className='border-t border-stone-100 p-3'>
+            <VoiceNotePlaybackUI
+              compact
+              audioUri={note.audioUrl}
+              initialDuration={note.duration}
+              isDay1={note.isDay1}
+              label={note.label}
+              reduceMotion={reduceMotion}
+              showSpeedControl={false}
+              onPlayFinish={onPlayFinish}
+              onPlayStart={onPlayStart}
+            />
+          </View>
+        </Animated.View>
+      )}
+    </View>
+  );
+}
+
+/**
  * VoiceNotesList Component
- * Displays list of existing voice notes
+ * Displays list of existing voice notes with expandable playback
  */
 function VoiceNotesList({
   voiceNotes,
   onViewAllNotes,
+  onPlayStart,
+  onPlayFinish,
+  reduceMotion = false,
 }: {
   voiceNotes: VoiceNoteSummary[];
   onViewAllNotes: () => void;
+  onPlayStart?: (noteId: string) => void;
+  onPlayFinish?: (noteId: string) => void;
+  reduceMotion?: boolean;
 }) {
   if (voiceNotes.length === 0) {
     return null;
@@ -667,26 +787,13 @@ function VoiceNotesList({
 
       <View className='gap-2'>
         {displayNotes.map((note) => (
-          <View
+          <VoiceNoteItem
             key={note.id}
-            className='flex-row items-center gap-3 rounded-lg bg-stone-50 p-3'
-          >
-            <View className='h-8 w-8 items-center justify-center rounded-full bg-teal-100'>
-              <Mic className='text-teal-600' size={14} />
-            </View>
-            <View className='flex-1'>
-              <Text className='text-sm font-medium text-stone-700'>
-                {note.label || `Recording ${formatDuration(note.duration)}`}
-              </Text>
-              <Text className='text-xs text-stone-500'>
-                {formatRelativeTime(note.createdAt)}
-                {note.isDay1 && ' • Day 1'}
-              </Text>
-            </View>
-            <Text className='text-xs text-stone-400'>
-              {formatDuration(note.duration)}
-            </Text>
-          </View>
+            note={note}
+            reduceMotion={reduceMotion}
+            onPlayFinish={() => onPlayFinish?.(note.id)}
+            onPlayStart={() => onPlayStart?.(note.id)}
+          />
         ))}
       </View>
     </View>
@@ -735,6 +842,8 @@ export function VoiceNotesSection({
   onSaveRecording,
   onViewAllNotes,
   onPremiumRequired,
+  onPlayStart,
+  onPlayFinish,
   shouldAnimate = false,
   reduceMotion = false,
   sectionIndex = 0,
@@ -923,7 +1032,10 @@ export function VoiceNotesSection({
         {/* List of existing voice notes */}
         {!isRecording && !isPaused && (
           <VoiceNotesList
+            reduceMotion={reduceMotion}
             voiceNotes={voiceNotes}
+            onPlayFinish={onPlayFinish}
+            onPlayStart={onPlayStart}
             onViewAllNotes={onViewAllNotes}
           />
         )}
