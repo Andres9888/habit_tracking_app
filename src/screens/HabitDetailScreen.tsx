@@ -27,13 +27,11 @@ import {
   ProgressSectionConsolidated,
   TodaysFocusCard,
   WeeklySummaryStrip,
-  WeeklyComparisonCard,
 } from '../components/ProgressSectionConsolidated';
-import { calculateWeekOverWeekTrend } from '../utils/trendCalculations';
 import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { CalendarHeatmapWithViews } from '../components/CalendarHeatmap';
+import { CollapsibleCalendar } from '../components/CalendarHeatmap';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -84,7 +82,7 @@ import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
-import { QuickReflection, type EmojiType } from '../components/MotivationSystem';
+import { QuickReflection, type EmojiType } from '../components/MotivationSystem/Reward';
 
 // Types
 type Habit = HabitDoc & {
@@ -97,16 +95,12 @@ interface HabitDetailScreenProps {
   habit: Habit | null;
   /** Initial tab to show when opening (defaults to 'progress') */
   initialTab?: TabType;
-  /** Whether user has premium subscription (gates Year view) */
-  isPremium?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
   onEdit?: (habit: Habit) => void;
   onOpenCalendar?: (habit: Habit) => void;
   onPause?: (habitId: Id<'habits'>) => void;
-  /** Called when user taps locked Year view (premium upsell) */
-  onPremiumUpsell?: () => void;
   tracking?: HabitTrackingEntry[];
   visible: boolean;
 }
@@ -935,63 +929,96 @@ function ProgressTabContent({
   habit,
   habitCreatedAt,
   isCompletedToday,
-  isPremium = false,
-  onPremiumUpsell,
   strengthPercent,
   tracking,
   weekData,
   lastWeekCompleted,
-  onCalendarDayToggle,
-  // Quick Reflection props
-  selectedEmoji,
-  reflectionNote,
-  onEmojiSelect,
-  onNoteChange,
-  onReflectionSubmit,
   reduceMotion = false,
 }: {
   completedDates: Set<string>;
   habit: Habit;
   habitCreatedAt: number | undefined;
   isCompletedToday: boolean;
-  isPremium?: boolean;
-  onPremiumUpsell?: () => void;
   strengthPercent: number;
   tracking: HabitTrackingEntry[];
   weekData: WeekDayData[];
   lastWeekCompleted: number;
-  /** Handler for instant calendar day toggle (HabitKit-style) */
-  onCalendarDayToggle?: (date: string, newCompleted: boolean) => void;
-  /** Quick Reflection: Selected emoji */
-  selectedEmoji?: EmojiType | null;
-  /** Quick Reflection: Note text */
-  reflectionNote?: string;
-  /** Quick Reflection: Emoji selection handler */
-  onEmojiSelect?: (emoji: EmojiType) => void;
-  /** Quick Reflection: Note change handler */
-  onNoteChange?: (text: string) => void;
-  /** Quick Reflection: Submit handler */
-  onReflectionSubmit?: (emoji: EmojiType, note?: string) => void;
-  /** Accessibility: Reduce motion preference */
   reduceMotion?: boolean;
 }) {
+  // Get today's date for reflection queries
+  const today = new Date().toISOString().split('T')[0];
+
+  // Query for today's reflection
+  const todaysReflection = useQuery(api.reflections.getByHabitAndDate, {
+    habitId: habit._id,
+    date: today,
+  });
+
+  // Mutation to upsert reflection
+  const upsertReflection = useMutation(api.reflections.upsert);
+
+  // Local state for reflection
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | undefined>(
+    todaysReflection?.emoji
+  );
+  const [reflectionNote, setReflectionNote] = useState(todaysReflection?.note ?? '');
+
+  // Sync local state with fetched reflection
+  useEffect(() => {
+    if (todaysReflection) {
+      setSelectedEmoji(todaysReflection.emoji);
+      setReflectionNote(todaysReflection.note ?? '');
+    }
+  }, [todaysReflection]);
+
+  // Handle emoji selection
+  const handleEmojiSelect = useCallback(async (emoji: EmojiType) => {
+    setSelectedEmoji(emoji);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    try {
+      await upsertReflection({
+        habitId: habit._id,
+        date: today,
+        emoji,
+        note: reflectionNote || undefined,
+      });
+    } catch (error) {
+      console.error('Failed to save reflection:', error);
+    }
+  }, [habit._id, today, reflectionNote, upsertReflection]);
+
+  // Handle note change with debounced save
+  const handleNoteChange = useCallback((note: string) => {
+    setReflectionNote(note);
+  }, []);
+
+  // Handle note submit
+  const handleNoteSubmit = useCallback(async () => {
+    if (!selectedEmoji) return;
+    try {
+      await upsertReflection({
+        habitId: habit._id,
+        date: today,
+        emoji: selectedEmoji,
+        note: reflectionNote || undefined,
+      });
+    } catch (error) {
+      console.error('Failed to save reflection note:', error);
+    }
+  }, [habit._id, today, selectedEmoji, reflectionNote, upsertReflection]);
+
   // Calculate habit age in days
   const habitAge = useMemo(() => {
     if (!habitCreatedAt) return 0;
     const createdDate = new Date(habitCreatedAt);
-    const today = new Date();
-    return Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+    const todayDate = new Date();
+    return Math.floor((todayDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
   }, [habitCreatedAt]);
 
   // Calculate weekly completion count for TodaysFocusCard
   const weeklyCompletion = useMemo(() => {
     return weekData.filter((d) => d.completed).length;
   }, [weekData]);
-
-  // Calculate week-over-week trend for comparison card
-  const weeklyTrend = useMemo(() => {
-    return calculateWeekOverWeekTrend(tracking);
-  }, [tracking]);
 
   return (
     <View className="gap-4">
@@ -1004,19 +1031,20 @@ function ProgressTabContent({
         bestStreak={habit.bestStreak ?? 0}
       />
 
-      {/* Quick Reflection - Shows after habit completion */}
-      {/* Scientific basis: BJ Fogg's "Tiny Habits" - celebration wires habits */}
-      <QuickReflection
-        isCompletedToday={isCompletedToday}
-        selectedEmoji={selectedEmoji}
-        noteText={reflectionNote}
-        shouldAnimate={true}
-        sectionIndex={1}
-        reduceMotion={reduceMotion}
-        onEmojiSelect={onEmojiSelect}
-        onNoteChange={onNoteChange}
-        onSubmit={onReflectionSubmit}
-      />
+      {/* Quick Reflection - shown when habit is completed today (T6) */}
+      {isCompletedToday && (
+        <QuickReflection
+          selectedEmoji={selectedEmoji}
+          note={reflectionNote}
+          onEmojiSelect={handleEmojiSelect}
+          onNoteChange={handleNoteChange}
+          onSubmit={handleNoteSubmit}
+          showNoteInput={true}
+          shouldAnimate={true}
+          reduceMotion={reduceMotion}
+          sectionIndex={1}
+        />
+      )}
 
       {/* Phase 1: Weekly Summary Strip - 7-day progress view */}
       <WeeklySummaryStrip
@@ -1024,38 +1052,16 @@ function ProgressTabContent({
         lastWeekCompleted={lastWeekCompleted}
       />
 
-      {/* Weekly Comparison Card - "↑X% vs last week" motivational trend */}
-      <WeeklyComparisonCard
-        trend={weeklyTrend}
-        onInfoPress={() => {
-          Alert.alert(
-            'Weekly Comparison',
-            'See how this week compares to last week.\n\n' +
-            '📈 Green = Improvement over last week\n\n' +
-            '📉 Red = Below last week\'s performance\n\n' +
-            '➡️ Gray = Same as last week\n\n' +
-            'Every small improvement counts toward building a stronger habit!',
-            [{ text: 'Got it' }]
-          );
-        }}
-      />
-
-      {/* Calendar Heatmap with View Toggle (Week/Month/3M/Year) */}
-      {/* Year view is gated behind premium - shows crown badge for non-premium users */}
-      <CalendarHeatmapWithViews
+      {/* Collapsible Calendar - visual history of completions with collapse support */}
+      <CollapsibleCalendar
         habitId={habit._id}
         completedDates={completedDates}
         habitCreatedAt={habitCreatedAt}
         habitColor={habit.iconColor}
-        isPremium={isPremium}
-        onPremiumUpsell={onPremiumUpsell}
-        initialView="3m"
-        currentStreak={habit.currentStreak ?? 0}
-        bestStreak={habit.bestStreak ?? 0}
-        instantToggle={!!onCalendarDayToggle}
-        onDayToggle={onCalendarDayToggle}
+        defaultExpanded={false}
+        showMiniPreview={true}
         onDayPress={(_date, _completed) => {
-          // Legacy mode: Could open day detail (disabled when instantToggle is true)
+          // Future: Could open day detail or allow editing past dates
         }}
       />
 
@@ -1654,14 +1660,12 @@ function ManageTabContent({
 export default function HabitDetailScreen({
   habit,
   initialTab = 'progress',
-  isPremium = false,
   onArchive,
   onClose,
   onDelete,
   onEdit,
   onOpenCalendar,
   onPause,
-  onPremiumUpsell,
   tracking = [],
   visible,
 }: HabitDetailScreenProps) {
@@ -1822,14 +1826,12 @@ export default function HabitDetailScreen({
   type Affirmation = Doc<'affirmations'>;
 
   const updateHabit = useMutation(api.habits.update);
-  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
   const createVisionBoardItem = useMutation(api.visionBoard.create);
   const removeVisionBoardItem = useMutation(api.visionBoard.remove);
   const updateVisionBoardItem = useMutation(api.visionBoard.update);
   const createAffirmation = useMutation(api.affirmations.create);
   const updateAffirmation = useMutation(api.affirmations.update);
   const removeAffirmation = useMutation(api.affirmations.remove);
-  const upsertReflection = useMutation(api.reflections.upsert);
 
   const habitCreatedAt = habit?.createdAt;
   const habitId = habit?._id;
@@ -1859,59 +1861,6 @@ export default function HabitDetailScreen({
   const affirmations =
     useQuery(api.affirmations.listByHabit, visible && habitId ? { habitId } : 'skip') ?? [];
 
-  // Quick Reflection: Query today's reflection for this habit
-  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
-  const todayReflection = useQuery(
-    api.reflections.getByHabitAndDate,
-    visible && habitId ? { habitId, date: todayStr } : 'skip'
-  );
-
-  // Quick Reflection: Local state for emoji and note (synced from server)
-  const [reflectionEmoji, setReflectionEmoji] = useState<EmojiType | null>(null);
-  const [reflectionNote, setReflectionNote] = useState('');
-
-  // Sync local reflection state with server data
-  useEffect(() => {
-    if (todayReflection) {
-      setReflectionEmoji(todayReflection.emoji as EmojiType);
-      setReflectionNote(todayReflection.note ?? '');
-    } else {
-      setReflectionEmoji(null);
-      setReflectionNote('');
-    }
-  }, [todayReflection]);
-
-  // Quick Reflection handlers
-  const handleReflectionEmojiSelect = useCallback((emoji: EmojiType) => {
-    setReflectionEmoji(emoji);
-  }, []);
-
-  const handleReflectionNoteChange = useCallback((text: string) => {
-    setReflectionNote(text);
-  }, []);
-
-  const handleReflectionSubmit = useCallback(
-    async (emoji: EmojiType, note?: string) => {
-      if (!habitId) return;
-      try {
-        await upsertReflection({
-          habitId,
-          date: todayStr,
-          emoji,
-          note,
-        });
-      } catch (error) {
-        console.error('Failed to save reflection:', error);
-        Alert.alert('Error', 'Failed to save reflection. Please try again.');
-      }
-    },
-    [habitId, todayStr, upsertReflection]
-  );
-
-  // Settings query for premium status (used for Year calendar view gating)
-  const settingsQuery = useQuery(api.settings.get);
-  const isPremiumUser = settingsQuery?.hasPremium ?? false;
-
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const completedDates = useMemo(() => {
@@ -1927,20 +1876,6 @@ export default function HabitDetailScreen({
   }, [habitId, tracking]);
 
   const isCompletedToday = completedDates.has(today);
-
-  // Handler for calendar day toggle (HabitKit-style instant toggle)
-  const handleCalendarDayToggle = useCallback(
-    async (date: string, _newCompleted: boolean) => {
-      if (!habitId) return;
-      try {
-        await toggleHabitMutation({ habitId, date });
-      } catch (error) {
-        console.error('Failed to toggle habit:', error);
-        // Error will be shown via Convex's built-in error handling
-      }
-    },
-    [habitId, toggleHabitMutation]
-  );
 
   const daysTracking = useMemo(() => {
     return habitCreatedAt
@@ -2086,23 +2021,6 @@ export default function HabitDetailScreen({
   // Handle undo archive
   const handleUndoArchive = useCallback(() => {
     setPendingArchive(false);
-  }, []);
-
-  // Handle premium upsell (shown when Year calendar view is tapped by non-premium user)
-  const handlePremiumUpsell = useCallback(() => {
-    Alert.alert(
-      '🔓 Unlock Year View',
-      'Get access to your full yearly activity heatmap and see long-term patterns in your habit journey.\n\n' +
-      'Premium includes:\n' +
-      '✓ Yearly calendar heatmap\n' +
-      '✓ Unlimited habits\n' +
-      '✓ Advanced analytics\n' +
-      '✓ Priority support',
-      [
-        { text: 'Maybe Later', style: 'cancel' },
-        { text: 'Learn More', style: 'default' },
-      ]
-    );
   }, []);
 
   // T4.2: Affirmation shuffle handler with card flip animation
@@ -2624,19 +2542,10 @@ export default function HabitDetailScreen({
                   habit={habit}
                   habitCreatedAt={habitCreatedAt}
                   isCompletedToday={isCompletedToday}
-                  isPremium={isPremiumUser}
-                  onPremiumUpsell={handlePremiumUpsell}
                   strengthPercent={strengthPercent}
                   tracking={tracking}
                   weekData={weekData}
                   lastWeekCompleted={lastWeekCompleted}
-                  onCalendarDayToggle={handleCalendarDayToggle}
-                  // Quick Reflection props
-                  selectedEmoji={reflectionEmoji}
-                  reflectionNote={reflectionNote}
-                  onEmojiSelect={handleReflectionEmojiSelect}
-                  onNoteChange={handleReflectionNoteChange}
-                  onReflectionSubmit={handleReflectionSubmit}
                   reduceMotion={reduceMotion}
                 />
               </ScrollView>

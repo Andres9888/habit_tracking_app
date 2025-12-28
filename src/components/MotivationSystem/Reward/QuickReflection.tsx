@@ -1,18 +1,14 @@
 /**
  * QuickReflection Component
- * Post-habit emoji rating + optional note for the Motivation System
+ * Post-habit completion emoji rating + optional note
  *
- * Scientific basis:
+ * Part of the Motivation System Reward flow
+ * Story T6.2-T6.6: Quick Reflection
+ *
+ * Scientific Basis:
  * - BJ Fogg (Stanford, "Tiny Habits"): Celebration wires habits
  * - Journaling increases self-awareness and consistency
- * - Daylio validation: 50M+ downloads, reflection = 60% higher retention
- *
- * Features:
- * - 4 emoji options: 😤 frustrated, 😐 neutral, 😊 happy, 🔥 fire
- * - Optional text note with 500 char limit
- * - Emerald accent color scheme
- * - Animated selection feedback with haptics
- * - Accessibility support (reduce motion, screen reader labels)
+ * - Daylio (50M+ downloads) validates the reflection pattern
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
@@ -21,459 +17,520 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withSequence,
   withTiming,
+  withSequence,
+  interpolate,
   runOnJS,
 } from 'react-native-reanimated';
+import { Smile, Plus, Check, MessageSquare } from 'lucide-react-native';
+import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { MessageCircle, Check, Sparkles } from 'lucide-react-native';
 
-// Types
 export type EmojiType = 'frustrated' | 'neutral' | 'happy' | 'fire';
 
 export interface QuickReflectionProps {
-  /** Pre-selected emoji (for editing existing reflection) */
-  selectedEmoji?: EmojiType | null;
-  /** Pre-filled note text */
-  noteText?: string;
-  /** Whether the habit is completed today (shows reflection UI) */
-  isCompletedToday: boolean;
-  /** Whether to animate (for staggered entrance) */
-  shouldAnimate?: boolean;
-  /** Section index for staggered animation delay */
-  sectionIndex?: number;
-  /** Respect reduce motion accessibility setting */
-  reduceMotion?: boolean;
+  /** Current reflection emoji (undefined if not set) */
+  selectedEmoji?: EmojiType;
+  /** Current reflection note (undefined if not set) */
+  note?: string;
   /** Callback when emoji is selected */
-  onEmojiSelect?: (emoji: EmojiType) => void;
-  /** Callback when note text changes */
-  onNoteChange?: (text: string) => void;
-  /** Callback when reflection is submitted */
-  onSubmit?: (emoji: EmojiType, note?: string) => void;
+  onEmojiSelect: (emoji: EmojiType) => void;
+  /** Callback when note is changed */
+  onNoteChange?: (note: string) => void;
+  /** Callback when the reflection is submitted */
+  onSubmit?: () => void;
+  /** Whether to show the note input field */
+  showNoteInput?: boolean;
+  /** Whether to run entrance animations */
+  shouldAnimate?: boolean;
+  /** Whether to skip animations for accessibility */
+  reduceMotion?: boolean;
+  /** Section index for staggered animation timing */
+  sectionIndex?: number;
+  /** Whether the component is in compact mode (for inline use) */
+  compact?: boolean;
 }
 
-// Constants
-const MAX_NOTE_LENGTH = 500;
+// Animation spring configs
+const SPRING_BUTTON = { damping: 15, stiffness: 300 };
+const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
+const SPRING_GENTLE = { damping: 28, stiffness: 180, mass: 1.2 };
 const STAGGER_DELAY = 80;
-const SPRING_BOUNCY = { damping: 10, stiffness: 200 };
-const SPRING_GENTLE = { damping: 15, stiffness: 150 };
 
 // Emoji configuration
-const EMOJI_OPTIONS: Array<{
-  value: EmojiType;
-  emoji: string;
-  label: string;
-  color: string;
-}> = [
-  { value: 'frustrated', emoji: '😤', label: 'Frustrated', color: 'rose' },
-  { value: 'neutral', emoji: '😐', label: 'Neutral', color: 'stone' },
-  { value: 'happy', emoji: '😊', label: 'Happy', color: 'amber' },
-  { value: 'fire', emoji: '🔥', label: 'On Fire', color: 'emerald' },
+const EMOJI_OPTIONS: { emoji: string; type: EmojiType; label: string }[] = [
+  { emoji: '😤', type: 'frustrated', label: 'Frustrated' },
+  { emoji: '😐', type: 'neutral', label: 'Neutral' },
+  { emoji: '😊', type: 'happy', label: 'Happy' },
+  { emoji: '🔥', type: 'fire', label: 'On Fire' },
 ];
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
 /**
- * EmojiButton - Individual emoji selection button
+ * PulsingIcon Component for Empty State Icons
+ * Wraps icons with subtle opacity + scale pulse animation
  */
-function EmojiButton({
-  option,
-  isSelected,
-  onPress,
+function PulsingIcon({
+  children,
   reduceMotion = false,
 }: {
-  option: (typeof EMOJI_OPTIONS)[number];
-  isSelected: boolean;
-  onPress: () => void;
+  children: React.ReactNode;
   reduceMotion?: boolean;
 }) {
-  const scale = useSharedValue(1);
-  const backgroundOpacity = useSharedValue(isSelected ? 1 : 0);
-
-  // Update background when selection changes
-  useEffect(() => {
-    if (reduceMotion) {
-      backgroundOpacity.value = isSelected ? 1 : 0;
-    } else {
-      backgroundOpacity.value = withTiming(isSelected ? 1 : 0, { duration: 150 });
-    }
-  }, [isSelected, reduceMotion]);
-
-  const handlePress = useCallback(() => {
-    if (!reduceMotion) {
-      scale.value = withSequence(
-        withSpring(1.2, SPRING_BOUNCY),
-        withSpring(1, SPRING_GENTLE)
-      );
-    }
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onPress();
-  }, [onPress, reduceMotion]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const backgroundStyle = useAnimatedStyle(() => ({
-    opacity: backgroundOpacity.value,
-  }));
-
-  return (
-    <AnimatedPressable
-      onPress={handlePress}
-      accessibilityRole="button"
-      accessibilityLabel={`${option.label} emoji`}
-      accessibilityState={{ selected: isSelected }}
-      style={animatedStyle}
-      className="items-center justify-center"
-    >
-      <View className="relative">
-        {/* Selection background */}
-        <Animated.View
-          style={backgroundStyle}
-          className="absolute inset-0 -m-1 rounded-full bg-emerald-100 ring-2 ring-emerald-400"
-        />
-        {/* Emoji */}
-        <Text className="text-3xl">{option.emoji}</Text>
-        {/* Selection checkmark */}
-        {isSelected && (
-          <View className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-emerald-500">
-            <Check size={10} color="white" strokeWidth={3} />
-          </View>
-        )}
-      </View>
-      {/* Label */}
-      <Text
-        className={`mt-1 text-xs ${
-          isSelected ? 'font-medium text-emerald-700' : 'text-stone-500'
-        }`}
-      >
-        {option.label}
-      </Text>
-    </AnimatedPressable>
-  );
-}
-
-/**
- * PulsingIcon - Empty state icon with pulse animation
- */
-function PulsingIcon({ reduceMotion = false }: { reduceMotion?: boolean }) {
   const opacity = useSharedValue(1);
   const scale = useSharedValue(1);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion) {
+      opacity.value = 1;
+      scale.value = 1;
+      return;
+    }
 
-    const animate = () => {
-      opacity.value = withTiming(0.5, { duration: 1000 }, () => {
-        opacity.value = withTiming(1, { duration: 1000 }, () => {
-          runOnJS(animate)();
-        });
-      });
-      scale.value = withTiming(1.05, { duration: 1000 }, () => {
-        scale.value = withTiming(1, { duration: 1000 });
+    // Create infinite pulse animation
+    const pulseOpacity = () => {
+      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
+        if (finished) {
+          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
+            if (finished2) {
+              runOnJS(pulseOpacity)();
+            }
+          });
+        }
       });
     };
 
-    animate();
-  }, [reduceMotion]);
+    const pulseScale = () => {
+      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
+        if (finished) {
+          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
+            if (finished2) {
+              runOnJS(pulseScale)();
+            }
+          });
+        }
+      });
+    };
+
+    pulseOpacity();
+    pulseScale();
+
+    return () => {
+      // Animation cleanup happens automatically when component unmounts
+    };
+  }, [reduceMotion, opacity, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
     transform: [{ scale: scale.value }],
   }));
 
-  return (
-    <Animated.View
-      style={animatedStyle}
-      className="h-12 w-12 items-center justify-center rounded-full bg-emerald-100"
-    >
-      <Sparkles size={24} className="text-emerald-500" />
-    </Animated.View>
-  );
+  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
 }
 
 /**
- * SectionCard - Wrapper with press animation
- */
-function SectionCard({
-  children,
-  onPress,
-  reduceMotion = false,
-}: {
-  children: React.ReactNode;
-  onPress?: () => void;
-  reduceMotion?: boolean;
-}) {
-  const scale = useSharedValue(1);
-
-  const handlePressIn = useCallback(() => {
-    if (!reduceMotion && onPress) {
-      scale.value = withSpring(0.98, SPRING_GENTLE);
-    }
-  }, [reduceMotion, onPress]);
-
-  const handlePressOut = useCallback(() => {
-    if (!reduceMotion && onPress) {
-      scale.value = withSpring(1, SPRING_GENTLE);
-    }
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  }, [reduceMotion, onPress]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const content = (
-    <Animated.View
-      style={animatedStyle}
-      className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm border-l-4 border-l-emerald-400"
-    >
-      {children}
-    </Animated.View>
-  );
-
-  if (onPress) {
-    return (
-      <Pressable
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel="Quick Reflection"
-      >
-        {content}
-      </Pressable>
-    );
-  }
-
-  return content;
-}
-
-/**
- * CompletionCheckmark - Animated checkmark for completed section
+ * CompletionCheckmark Component
+ * Animated checkmark badge that pops in when the section is filled
  */
 function CompletionCheckmark({
-  sectionIndex = 0,
+  isVisible,
+  sectionIndex,
+  shouldAnimate,
   reduceMotion = false,
 }: {
-  sectionIndex?: number;
+  isVisible: boolean;
+  sectionIndex: number;
+  shouldAnimate: boolean;
   reduceMotion?: boolean;
 }) {
-  const scale = useSharedValue(reduceMotion ? 1 : 0);
+  const BASE_CHECKMARK_DELAY = 600;
+  const scale = useSharedValue(
+    isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
+  );
+  const opacity = useSharedValue(
+    isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
+  );
 
   useEffect(() => {
-    if (reduceMotion) {
-      scale.value = 1;
+    if (!isVisible) {
+      scale.value = 0;
+      opacity.value = 0;
       return;
     }
 
-    const delay = sectionIndex * STAGGER_DELAY + 200;
+    if (!shouldAnimate || reduceMotion) {
+      scale.value = 1;
+      opacity.value = 1;
+      return;
+    }
+
+    // Calculate delay: section stagger + base checkmark delay
+    const delay = sectionIndex * STAGGER_DELAY + BASE_CHECKMARK_DELAY;
+
     const timeout = setTimeout(() => {
+      // Pop-in animation: 0 → 1.2 → 1 using Springs.bouncy
       scale.value = withSequence(
         withSpring(1.2, SPRING_BOUNCY),
-        withSpring(1, SPRING_GENTLE)
+        withSpring(1, { damping: 15, stiffness: 200 })
       );
+      opacity.value = withTiming(1, { duration: 150 });
     }, delay);
 
     return () => clearTimeout(timeout);
-  }, [sectionIndex, reduceMotion]);
+  }, [isVisible, shouldAnimate, reduceMotion, sectionIndex, scale, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+    opacity: opacity.value,
   }));
+
+  if (!isVisible) return null;
 
   return (
     <Animated.View
-      style={animatedStyle}
-      className="h-6 w-6 items-center justify-center rounded-full bg-emerald-500"
+      style={[
+        animatedStyle,
+        {
+          position: 'absolute',
+          top: -4,
+          right: -4,
+        },
+      ]}
     >
-      <Check size={14} color="white" strokeWidth={3} />
+      <View className="h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
+        <Check className="text-white" size={12} strokeWidth={3} />
+      </View>
     </Animated.View>
   );
 }
 
 /**
- * QuickReflection - Main component
+ * SectionCard Component for consistent styling with press animation
  */
-export function QuickReflection({
-  selectedEmoji,
-  noteText = '',
-  isCompletedToday,
-  shouldAnimate = true,
-  sectionIndex = 0,
-  reduceMotion = false,
-  onEmojiSelect,
-  onNoteChange,
-  onSubmit,
-}: QuickReflectionProps) {
-  const [localEmoji, setLocalEmoji] = useState<EmojiType | null>(
-    selectedEmoji ?? null
+function SectionCard({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <View
+      className={clsx(
+        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        className
+      )}
+      style={{
+        shadowColor: '#78716c',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 2,
+      }}
+    >
+      {children}
+    </View>
   );
-  const [localNote, setLocalNote] = useState(noteText);
-  const [showNoteInput, setShowNoteInput] = useState(!!noteText);
+}
 
-  // Animation values for staggered entrance
-  const translateY = useSharedValue(shouldAnimate && !reduceMotion ? 24 : 0);
+/**
+ * AnimatedSection Component for staggered entrance animations
+ */
+function AnimatedSection({
+  children,
+  index,
+  shouldAnimate,
+  reduceMotion = false,
+}: {
+  children: React.ReactNode;
+  index: number;
+  shouldAnimate: boolean;
+  reduceMotion?: boolean;
+}) {
+  const INITIAL_TRANSLATE_Y = 24;
+
+  const translateY = useSharedValue(
+    shouldAnimate && !reduceMotion ? INITIAL_TRANSLATE_Y : 0
+  );
   const opacity = useSharedValue(shouldAnimate && !reduceMotion ? 0 : 1);
 
-  // Staggered entrance animation
   useEffect(() => {
-    if (!shouldAnimate || reduceMotion) return;
+    if (!shouldAnimate || reduceMotion) {
+      translateY.value = 0;
+      opacity.value = 1;
+      return;
+    }
 
-    const delay = sectionIndex * STAGGER_DELAY;
+    const delay = index * STAGGER_DELAY;
+
     const timeout = setTimeout(() => {
       translateY.value = withSpring(0, SPRING_GENTLE);
       opacity.value = withTiming(1, { duration: 300 });
     }, delay);
 
     return () => clearTimeout(timeout);
-  }, [shouldAnimate, sectionIndex, reduceMotion]);
+  }, [shouldAnimate, reduceMotion, index, translateY, opacity]);
 
-  const entranceStyle = useAnimatedStyle(() => ({
+  const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
     opacity: opacity.value,
   }));
 
-  // Handle emoji selection
-  const handleEmojiSelect = useCallback(
-    (emoji: EmojiType) => {
-      setLocalEmoji(emoji);
-      onEmojiSelect?.(emoji);
+  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
+}
 
-      // Auto-show note input after first selection
-      if (!showNoteInput) {
-        setShowNoteInput(true);
-      }
-    },
-    [onEmojiSelect, showNoteInput]
+/**
+ * EmojiButton Component
+ * Animated emoji selector button with selection state
+ */
+function EmojiButton({
+  emoji,
+  label,
+  isSelected,
+  onPress,
+  reduceMotion = false,
+}: {
+  emoji: string;
+  label: string;
+  isSelected: boolean;
+  onPress: () => void;
+  reduceMotion?: boolean;
+}) {
+  const scale = useSharedValue(1);
+  const selectionScale = useSharedValue(isSelected ? 1 : 0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      selectionScale.value = isSelected ? 1 : 0;
+    } else {
+      selectionScale.value = isSelected
+        ? withSequence(
+            withSpring(1.15, SPRING_BOUNCY),
+            withSpring(1, SPRING_BUTTON)
+          )
+        : withTiming(0, { duration: 150 });
+    }
+  }, [isSelected, reduceMotion, selectionScale]);
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.9, SPRING_BUTTON);
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, SPRING_BUTTON);
+  }, [scale]);
+
+  const handlePress = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPress();
+  }, [onPress]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const selectionAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: selectionScale.value,
+    transform: [{ scale: selectionScale.value }],
+  }));
+
+  return (
+    <Pressable
+      accessibilityLabel={`${label} emoji`}
+      accessibilityRole="button"
+      accessibilityState={{ selected: isSelected }}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Animated.View
+        className="items-center justify-center"
+        style={animatedStyle}
+      >
+        {/* Selection ring */}
+        <Animated.View
+          className="absolute h-14 w-14 rounded-full bg-emerald-100 border-2 border-emerald-400"
+          style={selectionAnimatedStyle}
+        />
+        {/* Emoji */}
+        <View
+          className={clsx(
+            'h-14 w-14 items-center justify-center rounded-full',
+            isSelected ? '' : 'bg-stone-100'
+          )}
+        >
+          <Text className="text-3xl">{emoji}</Text>
+        </View>
+        {/* Label */}
+        <Text
+          className={clsx(
+            'mt-1 text-xs',
+            isSelected ? 'font-medium text-emerald-700' : 'text-stone-500'
+          )}
+        >
+          {label}
+        </Text>
+      </Animated.View>
+    </Pressable>
   );
+}
 
-  // Handle note change
+/**
+ * QuickReflection - Main component
+ *
+ * Displays emoji selector with optional note field:
+ * - Empty state: Pulsing smile icon with "How did it go?" prompt
+ * - Emoji selection: 4 emoji options (😤 😐 😊 🔥)
+ * - Optional note: Text input for additional context
+ * - Emerald accent color styling
+ */
+export function QuickReflection({
+  selectedEmoji,
+  note = '',
+  onEmojiSelect,
+  onNoteChange,
+  onSubmit,
+  showNoteInput = true,
+  shouldAnimate = false,
+  reduceMotion = false,
+  sectionIndex = 0,
+  compact = false,
+}: QuickReflectionProps) {
+  const [localNote, setLocalNote] = useState(note);
+  const hasSelection = !!selectedEmoji;
+
+  // Update local note when prop changes
+  useEffect(() => {
+    setLocalNote(note);
+  }, [note]);
+
   const handleNoteChange = useCallback(
     (text: string) => {
-      if (text.length <= MAX_NOTE_LENGTH) {
-        setLocalNote(text);
-        onNoteChange?.(text);
-      }
+      setLocalNote(text);
+      onNoteChange?.(text);
     },
     [onNoteChange]
   );
 
-  // Handle submit
-  const handleSubmit = useCallback(() => {
-    if (localEmoji) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      onSubmit?.(localEmoji, localNote || undefined);
-      Keyboard.dismiss();
-    }
-  }, [localEmoji, localNote, onSubmit]);
+  const handleNoteSubmit = useCallback(() => {
+    Keyboard.dismiss();
+    onSubmit?.();
+  }, [onSubmit]);
 
-  // If habit not completed, show empty/waiting state
-  if (!isCompletedToday) {
+  if (compact) {
+    // Compact mode for inline use (e.g., in completion flow)
     return (
-      <Animated.View style={entranceStyle}>
-        <SectionCard reduceMotion={reduceMotion}>
-          <View className="flex-row items-center gap-3">
-            <PulsingIcon reduceMotion={reduceMotion} />
-            <View className="flex-1">
-              <Text className="text-sm font-medium text-stone-700">
-                Quick Reflection
-              </Text>
-              <Text className="text-xs text-stone-500">
-                Complete your habit to reflect on how it went
-              </Text>
-            </View>
-          </View>
-        </SectionCard>
-      </Animated.View>
+      <View className="flex-row items-center justify-center gap-4">
+        {EMOJI_OPTIONS.map((option) => (
+          <EmojiButton
+            key={option.type}
+            emoji={option.emoji}
+            label={option.label}
+            isSelected={selectedEmoji === option.type}
+            onPress={() => onEmojiSelect(option.type)}
+            reduceMotion={reduceMotion}
+          />
+        ))}
+      </View>
     );
   }
 
-  // Completed state - show emoji selector and optional note
-  const hasReflection = !!selectedEmoji;
-
   return (
-    <Animated.View style={entranceStyle}>
-      <SectionCard reduceMotion={reduceMotion}>
-        {/* Header */}
-        <View className="mb-4 flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
-            <View className="h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
-              <MessageCircle size={16} className="text-emerald-600" />
-            </View>
-            <View>
-              <Text className="text-sm font-semibold text-stone-800">
-                How did it feel?
-              </Text>
-              <Text className="text-xs text-stone-500">
-                Celebrate your win!
-              </Text>
-            </View>
-          </View>
-          {hasReflection && (
+    <AnimatedSection
+      index={sectionIndex}
+      shouldAnimate={shouldAnimate}
+      reduceMotion={reduceMotion}
+    >
+      <SectionCard className="border-l-4 border-l-emerald-400">
+        <View className="flex-row items-start gap-3">
+          {/* Icon with completion checkmark */}
+          <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-emerald-100">
+            {hasSelection ? (
+              <Smile className="text-emerald-500" size={20} />
+            ) : (
+              <PulsingIcon reduceMotion={reduceMotion}>
+                <Smile className="text-emerald-500" size={20} />
+              </PulsingIcon>
+            )}
             <CompletionCheckmark
+              isVisible={hasSelection}
               sectionIndex={sectionIndex}
+              shouldAnimate={shouldAnimate}
               reduceMotion={reduceMotion}
             />
-          )}
-        </View>
-
-        {/* Emoji Selector */}
-        <View className="mb-4 flex-row justify-around">
-          {EMOJI_OPTIONS.map((option) => (
-            <EmojiButton
-              key={option.value}
-              option={option}
-              isSelected={localEmoji === option.value}
-              onPress={() => handleEmojiSelect(option.value)}
-              reduceMotion={reduceMotion}
-            />
-          ))}
-        </View>
-
-        {/* Note Input - shows after emoji selection */}
-        {showNoteInput && localEmoji && (
-          <View className="mt-2">
-            <TextInput
-              value={localNote}
-              onChangeText={handleNoteChange}
-              placeholder="Add a note about your session... (optional)"
-              placeholderTextColor="#9ca3af"
-              multiline
-              numberOfLines={3}
-              maxLength={MAX_NOTE_LENGTH}
-              className="rounded-lg border border-stone-200 bg-stone-50 p-3 text-sm text-stone-700"
-              style={{ minHeight: 80, textAlignVertical: 'top' }}
-              accessibilityLabel="Reflection note input"
-              accessibilityHint="Add an optional note about how the habit went"
-            />
-            {/* Character count */}
-            <View className="mt-1 flex-row justify-between">
-              <Text className="text-xs text-stone-400">
-                {localNote.length}/{MAX_NOTE_LENGTH}
-              </Text>
-              {/* Submit button */}
-              <Pressable
-                onPress={handleSubmit}
-                accessibilityRole="button"
-                accessibilityLabel="Save reflection"
-                className="rounded-full bg-emerald-500 px-4 py-1"
-              >
-                <Text className="text-xs font-medium text-white">Save</Text>
-              </Pressable>
-            </View>
           </View>
-        )}
 
-        {/* Science callout */}
-        <View className="mt-3 rounded-lg bg-emerald-50 p-2">
-          <Text className="text-center text-xs text-emerald-700">
-            Celebration wires habits - BJ Fogg
-          </Text>
+          {/* Content area */}
+          <View className="flex-1">
+            {/* Header */}
+            <View className="mb-3 flex-row items-center justify-between">
+              <Text className="font-semibold text-stone-800">
+                Quick Reflection
+              </Text>
+              {!hasSelection && (
+                <View className="flex-row items-center gap-1">
+                  <Plus className="text-emerald-600" size={12} />
+                  <Text className="text-xs font-medium text-emerald-600">
+                    Rate it
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {/* Prompt text */}
+            <Text className="mb-4 text-sm text-stone-500">
+              How did completing this habit feel?
+            </Text>
+
+            {/* Emoji selector */}
+            <View className="flex-row items-center justify-around mb-4">
+              {EMOJI_OPTIONS.map((option) => (
+                <EmojiButton
+                  key={option.type}
+                  emoji={option.emoji}
+                  label={option.label}
+                  isSelected={selectedEmoji === option.type}
+                  onPress={() => onEmojiSelect(option.type)}
+                  reduceMotion={reduceMotion}
+                />
+              ))}
+            </View>
+
+            {/* Optional note input */}
+            {showNoteInput && hasSelection && (
+              <View className="mt-2">
+                <View className="flex-row items-center gap-2 mb-2">
+                  <MessageSquare className="text-emerald-500" size={14} />
+                  <Text className="text-xs font-medium text-stone-600">
+                    Add a note (optional)
+                  </Text>
+                </View>
+                <TextInput
+                  className="rounded-xl bg-stone-50 px-4 py-3 text-sm text-stone-700 border border-stone-200"
+                  placeholder="What made it great? Any challenges?"
+                  placeholderTextColor="#a8a29e"
+                  value={localNote}
+                  onChangeText={handleNoteChange}
+                  onSubmitEditing={handleNoteSubmit}
+                  multiline
+                  maxLength={500}
+                  numberOfLines={3}
+                  textAlignVertical="top"
+                  style={{ minHeight: 80 }}
+                />
+                <View className="flex-row justify-between mt-1">
+                  <Text className="text-xs text-stone-400">
+                    Press return to save
+                  </Text>
+                  <Text className="text-xs text-stone-400">
+                    {localNote.length}/500
+                  </Text>
+                </View>
+              </View>
+            )}
+          </View>
         </View>
       </SectionCard>
-    </Animated.View>
+    </AnimatedSection>
   );
 }
 
