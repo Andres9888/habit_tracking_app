@@ -23,46 +23,46 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 
 ### Why This Feature Matters
 
-| Metric | Industry Benchmark | Our Target |
-|--------|-------------------|------------|
-| Day 7 Retention | 20% (avg habit apps) | 35%+ |
-| Day 30 Retention | 8% (avg habit apps) | 18%+ |
-| Premium Conversion | 2-4% (freemium apps) | 6%+ |
+| Metric             | Industry Benchmark   | Our Target |
+| ------------------ | -------------------- | ---------- |
+| Day 7 Retention    | 20% (avg habit apps) | 35%+       |
+| Day 30 Retention   | 8% (avg habit apps)  | 18%+       |
+| Premium Conversion | 2-4% (freemium apps) | 6%+        |
 
 ### Monetization Strategy
 
 #### Free Tier (Hook Users with Core Science)
 
-| Feature | Why Free | Business Logic |
-|---------|----------|----------------|
+| Feature                    | Why Free                     | Business Logic                                    |
+| -------------------------- | ---------------------------- | ------------------------------------------------- |
 | **Your Why** (1 statement) | Creates emotional investment | Users who set "why" have 3x retention (Noom data) |
-| **Identity Statement** | Low effort, high impact | Identity-based habits show 2x persistence |
-| **WOOP Plan** | Core behavioral science | Proven to double goal achievement |
-| **Cue/Trigger Setup** | Habit loop foundation | Habits with cues are 2x more likely to stick |
-| **Basic Dual Viz** | Introduces Huberman concept | Hooks users into visualization habit |
-| **Quick Reflection** | Post-habit feedback | Users who reflect = 60% higher retention |
+| **Identity Statement**     | Low effort, high impact      | Identity-based habits show 2x persistence         |
+| **WOOP Plan**              | Core behavioral science      | Proven to double goal achievement                 |
+| **Cue/Trigger Setup**      | Habit loop foundation        | Habits with cues are 2x more likely to stick      |
+| **Basic Dual Viz**         | Introduces Huberman concept  | Hooks users into visualization habit              |
+| **Quick Reflection**       | Post-habit feedback          | Users who reflect = 60% higher retention          |
 
 #### Premium Tier ($6.99/mo)
 
-| Feature | Why Premium | Willingness-to-Pay Driver |
-|---------|-------------|---------------------------|
-| **Voice Notes** (unlimited) | High emotional value | Audio has 40% higher recall than text |
-| **Letters to Self** | Time-delayed motivation | Creates anticipation, emotional anchor |
-| **Vision Board** | Visual motivation | Personalized content = premium perception |
-| **Affirmations** (unlimited) | Daily reinforcement | Repetition builds neural pathways |
-| **Rescue Mode** interventions | Saves streaks | Streak protection = #1 retention (Duolingo) |
-| **Advanced Visualization** | Full Huberman protocol | Science credibility = premium value |
+| Feature                       | Why Premium             | Willingness-to-Pay Driver                   |
+| ----------------------------- | ----------------------- | ------------------------------------------- |
+| **Voice Notes** (unlimited)   | High emotional value    | Audio has 40% higher recall than text       |
+| **Letters to Self**           | Time-delayed motivation | Creates anticipation, emotional anchor      |
+| **Vision Board**              | Visual motivation       | Personalized content = premium perception   |
+| **Affirmations** (unlimited)  | Daily reinforcement     | Repetition builds neural pathways           |
+| **Rescue Mode** interventions | Saves streaks           | Streak protection = #1 retention (Duolingo) |
+| **Advanced Visualization**    | Full Huberman protocol  | Science credibility = premium value         |
 
 ### Competitive Validation
 
-| App | Revenue | Key Monetized Feature | Our Equivalent |
-|-----|---------|----------------------|----------------|
-| **Noom** | $400M ARR | "Why" + coaching + personalization | Your Why + Rescue Mode |
-| **Calm** | $2B valuation | Emotional audio content | Voice Notes |
-| **Headspace** | $300M ARR | Context-aware content | Motivation Check |
-| **Duolingo** | $500M ARR | Streak protection | Rescue Mode |
-| **Daylio** | 50M+ downloads | Reflection journaling | Quick Reflection |
-| **Reflectly** | $2M ARR | Voice journaling | Voice Notes |
+| App           | Revenue        | Key Monetized Feature              | Our Equivalent         |
+| ------------- | -------------- | ---------------------------------- | ---------------------- |
+| **Noom**      | $400M ARR      | "Why" + coaching + personalization | Your Why + Rescue Mode |
+| **Calm**      | $2B valuation  | Emotional audio content            | Voice Notes            |
+| **Headspace** | $300M ARR      | Context-aware content              | Motivation Check       |
+| **Duolingo**  | $500M ARR      | Streak protection                  | Rescue Mode            |
+| **Daylio**    | 50M+ downloads | Reflection journaling              | Quick Reflection       |
+| **Reflectly** | $2M ARR        | Voice journaling                   | Voice Notes            |
 
 ---
 
@@ -73,14 +73,17 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: A personal statement connecting the habit to deeper life goals.
 
 **Scientific Basis**:
+
 - Self-Determination Theory (Deci & Ryan): Intrinsic motivation from personal meaning
 - Noom clinical studies: Users with defined purpose show 3x higher retention
 
 **Business Rationale**:
+
 - **Free**: Low friction to set up, creates immediate emotional investment
 - **Monetization**: Unlocks premium features for users who've invested emotionally
 
 **UX Flow**:
+
 1. Empty state with pulsing icon + "Set up" CTA
 2. Tap opens text editor with prompts
 3. Saved why displays in rose-tinted card
@@ -93,14 +96,17 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: "I am a [identity]" statement (e.g., "I am a runner" not "I run").
 
 **Scientific Basis**:
+
 - James Clear's Atomic Habits (10M+ copies): Identity precedes behavior
 - Research shows identity-based habits have 2x persistence vs outcome-based
 
 **Business Rationale**:
+
 - **Free**: Single text field, massive psychological impact
 - **Monetization**: Part of core hook that drives premium conversion
 
 **UX Flow**:
+
 1. Empty state: "Define who you're becoming"
 2. Input with "I am a..." prefix
 3. Displays with explanation: "Not 'I run' — who you ARE"
@@ -112,14 +118,17 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: When, where, and after what the habit occurs.
 
 **Scientific Basis**:
+
 - Charles Duhigg's Habit Loop: Cue → Routine → Reward
 - Implementation intentions double follow-through (Gollwitzer)
 
 **Business Rationale**:
+
 - **Free**: Essential for habit formation, no premium value
 - **Monetization**: Data enables smart notifications (future premium)
 
 **UX Flow**:
+
 1. Three fields: Time, Location, Preceding habit
 2. Example: "7:00 AM" + "Front door" + "After morning coffee"
 3. Powers notification timing
@@ -131,15 +140,18 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Audio recordings of motivation, progress, and emotional states.
 
 **Scientific Basis**:
+
 - Voice has 40% higher emotional recall than text (cognitive psychology)
 - Hearing your own voice from Day 1 creates powerful emotional anchor
 
 **Business Rationale**:
+
 - **Premium**: High perceived value, storage costs, emotional depth
 - **Monetization**: Key differentiator from text-only competitors
 - **Validation**: Reflectly ($2M ARR) built business on voice journaling
 
 **UX Flow**:
+
 1. Record button with waveform visualization
 2. List of recordings with playback
 3. "Day 1" recording prominently featured in Rescue Mode
@@ -152,14 +164,17 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Time-locked messages from past self to future self.
 
 **Scientific Basis**:
+
 - Temporal self-continuity: Connecting with future self increases self-control
 - Delayed gratification psychology (Mischel's marshmallow studies)
 
 **Business Rationale**:
+
 - **Premium**: Creates anticipation, unique feature, emotional depth
 - **Monetization**: Users pay for emotional experiences (Calm model)
 
 **UX Flow**:
+
 1. Write letter with unlock date (7, 14, 30, 90 days)
 2. Locked letters show countdown
 3. Notification when letter unlocks
@@ -172,15 +187,18 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Wish-Outcome-Obstacle-Plan framework.
 
 **Scientific Basis**:
+
 - Gabriele Oettingen (NYU): 20+ peer-reviewed studies
 - Mental contrasting + implementation intentions = 2x goal achievement
 - Book: "Rethinking Positive Thinking" (2014)
 
 **Business Rationale**:
+
 - **Free**: Core behavioral science, drives habit success
 - **Monetization**: Successful users become premium converters
 
 **UX Flow**:
+
 1. Four-field form: W-O-O-P
 2. "If [obstacle] → then [plan]" statement highlighted
 3. IF-THEN plan surfaced in Activation screen
@@ -192,24 +210,27 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Context-aware visualization based on motivation level.
 
 **Scientific Basis**:
+
 - Andrew Huberman (Stanford, 5M YouTube subscribers)
 - Episode #55: "The Science of Setting & Achieving Goals"
 - Key insight: **Visualize FAILURE when unmotivated** (fear drives action 2x)
 - Loss aversion (Kahneman & Tversky, Nobel Prize): Losses hurt 2x more
 
 **Business Rationale**:
+
 - **Free (basic)**: Introduction to visualization
 - **Premium**: Full protocol with Body/Mind/Emotion breakdown
 - **Monetization**: Science credibility = premium value
 
 **Protocol**:
 
-| User State | What to Visualize | Why |
-|------------|-------------------|-----|
-| **Motivated** | SUCCESS outcomes | Amplifies existing drive |
-| **Not Motivated** | FAILURE outcomes | Fear moves you 2x better |
+| User State        | What to Visualize | Why                      |
+| ----------------- | ----------------- | ------------------------ |
+| **Motivated**     | SUCCESS outcomes  | Amplifies existing drive |
+| **Not Motivated** | FAILURE outcomes  | Fear moves you 2x better |
 
 **UX Flow**:
+
 1. **Workshop**: Set up both visualizations (success + failure feelings)
 2. **Activation**: Ask "How motivated are you?" → show appropriate viz
 3. **Rescue**: Always show failure visualization (user is clearly struggling)
@@ -221,14 +242,17 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Photo grid of motivational images.
 
 **Scientific Basis**:
+
 - Visual motivation reinforces goals
 - Personal images > stock images for emotional connection
 
 **Business Rationale**:
+
 - **Premium**: Storage costs, personalization, high perceived value
 - **Monetization**: Users pay for customization (Notion model)
 
 **UX Flow**:
+
 1. 4-image grid with add button
 2. Tap to view full-size
 3. Optional captions
@@ -240,15 +264,18 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Daily positive statements about the habit.
 
 **Scientific Basis**:
+
 - Self-affirmation theory (Steele): Reduces defensive processing
 - Repetition builds neural pathways
 
 **Business Rationale**:
+
 - **Free**: 2 affirmations
 - **Premium**: Unlimited + scheduled delivery
 - **Monetization**: Low storage, high perceived value
 
 **UX Flow**:
+
 1. List of affirmations
 2. Random selection for Activation screen
 3. Add/edit interface
@@ -260,15 +287,18 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **What**: Post-habit emoji rating + optional note.
 
 **Scientific Basis**:
+
 - BJ Fogg (Stanford, "Tiny Habits"): Celebration wires habits
 - Journaling increases self-awareness and consistency
 
 **Business Rationale**:
+
 - **Free**: Essential for habit loop completion
 - **Monetization**: Data powers insights (future premium analytics)
 - **Validation**: Daylio (50M+ downloads) entire business model
 
 **UX Flow**:
+
 1. Emoji selector: 😤 😐 😊 🔥
 2. Optional text note
 3. Displays in Reward screen
@@ -282,6 +312,7 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **Purpose**: Build the motivation toolkit
 
 **Contains**:
+
 - Your Why (with completion checkmark)
 - Identity Statement
 - Cue/Trigger Setup
@@ -293,6 +324,7 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 - Affirmations
 
 **Animations**:
+
 - Staggered entrance (80ms between sections)
 - Completion checkmarks pop-in
 - Empty state pulse on icons
@@ -306,6 +338,7 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **Trigger**: Notification at scheduled habit time
 
 **Contains**:
+
 1. Habit card with streak/completion stats
 2. Your Why (featured)
 3. Voice note quick-play (Day 1 recording)
@@ -324,11 +357,13 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **Purpose**: Prevent streak break when user is struggling
 
 **Trigger**:
+
 - X hours before day ends with habit incomplete
 - User opens app after missing notification
 - Manually triggered from habit card
 
 **Contains**:
+
 1. "🆘 Rescue Mode" header with streak-at-risk badge
 2. Voice playback (Day 1, prominently featured)
 3. Your Why (emphasized, larger)
@@ -352,6 +387,7 @@ A science-backed motivation toolkit within the Habit Details screen that helps u
 **Trigger**: User marks habit complete
 
 **Contains**:
+
 1. Celebration: 🎉 "You Did It!"
 2. Updated streak with flame animation
 3. Stats: completion rate, best streak
@@ -503,13 +539,15 @@ export function useMotivationFeatures() {
 ### Phase 1: Core Free Features (Week 1-2)
 
 #### T1: Your Why Section
-- [x] T1.1: Add `why` field to habits schema *(Already implemented - field exists at `convex/schema.ts:75` as `why: v.optional(v.string())`)*
-- [x] T1.2: Create `YourWhySection` component with empty/filled states *(Implemented at `src/components/MotivationSystem/Workshop/YourWhySection.tsx` with PulsingIcon empty state, filled state with quoted why, and SectionCard with press animation)*
-- [x] T1.3: Add text editor modal with prompts *(Already implemented in `HabitDetailScreen.tsx:2581-2704` with multiline TextInput, 200 char limit, "I do this because..." prefix, 4 inspirational prompts with icons, character counter, keyboard handling, and save via `updateHabit` API)*
-- [x] T1.4: Style with rose accent color (border-l-rose-400) *(Implemented in YourWhySection with border-l-4 border-l-rose-400, rose-100 icon background, rose-500 Heart icon)*
-- [x] T1.5: Add completion checkmark when filled *(Implemented CompletionCheckmark subcomponent with emerald-500 badge, pop-in animation 0→1.2→1, staggered delay based on sectionIndex)*
+
+- [x] T1.1: Add `why` field to habits schema _(Already implemented - field exists at `convex/schema.ts:75` as `why: v.optional(v.string())`)_
+- [x] T1.2: Create `YourWhySection` component with empty/filled states _(Implemented at `src/components/MotivationSystem/Workshop/YourWhySection.tsx` with PulsingIcon empty state, filled state with quoted why, and SectionCard with press animation)_
+- [x] T1.3: Add text editor modal with prompts _(Already implemented in `HabitDetailScreen.tsx:2581-2704` with multiline TextInput, 200 char limit, "I do this because..." prefix, 4 inspirational prompts with icons, character counter, keyboard handling, and save via `updateHabit` API)_
+- [x] T1.4: Style with rose accent color (border-l-rose-400) _(Implemented in YourWhySection with border-l-4 border-l-rose-400, rose-100 icon background, rose-500 Heart icon)_
+- [x] T1.5: Add completion checkmark when filled _(Implemented CompletionCheckmark subcomponent with emerald-500 badge, pop-in animation 0→1.2→1, staggered delay based on sectionIndex)_
 
 #### T2: Identity Statement Section
+
 - [ ] T2.1: Add `identity` field to habits schema
 - [ ] T2.2: Create `IdentitySection` component
 - [ ] T2.3: Add "I am a..." prefix in input
@@ -517,6 +555,7 @@ export function useMotivationFeatures() {
 - [ ] T2.5: Add explanatory text: "Not 'I run' — who you ARE"
 
 #### T3: Cue/Trigger Section
+
 - [ ] T3.1: Add `cue` object field to habits schema
 - [ ] T3.2: Create `CueTriggerSection` with 3 fields
 - [ ] T3.3: Time picker integration
@@ -525,6 +564,7 @@ export function useMotivationFeatures() {
 - [ ] T3.6: Style with sky accent color
 
 #### T4: WOOP Plan Section
+
 - [ ] T4.1: Add `woop` object field to habits schema
 - [ ] T4.2: Create `WOOPSection` with 4 fields
 - [ ] T4.3: Highlight IF-THEN statement visually
@@ -532,6 +572,7 @@ export function useMotivationFeatures() {
 - [ ] T4.5: Style with amber/rose W-O-O-P letters
 
 #### T5: Basic Dual Visualization
+
 - [ ] T5.1: Add `visualization` object to habits schema
 - [ ] T5.2: Create `DualVizSetup` component for Workshop
 - [ ] T5.3: Success visualization form (Body/Mind/Emotion)
@@ -540,6 +581,7 @@ export function useMotivationFeatures() {
 - [ ] T5.6: Style with emerald (success) / rose (failure) gradients
 
 #### T6: Quick Reflection
+
 - [ ] T6.1: Create `reflections` table in Convex
 - [ ] T6.2: Create `QuickReflection` component
 - [ ] T6.3: Emoji selector (4 options)
@@ -552,6 +594,7 @@ export function useMotivationFeatures() {
 ### Phase 2: Screen Flows (Week 2-3)
 
 #### T7: Activation Modal
+
 - [ ] T7.1: Create `ActivationModal` component
 - [ ] T7.2: Habit card with stats at top
 - [ ] T7.3: Featured "Your Why" display
@@ -562,6 +605,7 @@ export function useMotivationFeatures() {
 - [ ] T7.8: Trigger from notification tap
 
 #### T8: Rescue Mode
+
 - [ ] T8.1: Create `RescueMode` screen/modal
 - [ ] T8.2: Streak-at-risk header with badge
 - [ ] T8.3: Featured "Your Why" (larger text)
@@ -571,6 +615,7 @@ export function useMotivationFeatures() {
 - [ ] T8.7: Trigger logic: App open after missed notification
 
 #### T9: Reward/Celebration Screen
+
 - [ ] T9.1: Create `CelebrationScreen` component
 - [ ] T9.2: Confetti/celebration animation
 - [ ] T9.3: Updated streak display with flame
@@ -584,6 +629,7 @@ export function useMotivationFeatures() {
 ### Phase 3: Premium Features (Week 3-4)
 
 #### T10: Voice Notes
+
 - [ ] T10.1: Create `voiceNotes` table in Convex
 - [ ] T10.2: Audio recording integration (expo-av)
 - [ ] T10.3: Waveform visualization during recording
@@ -594,6 +640,7 @@ export function useMotivationFeatures() {
 - [ ] T10.8: Style with teal accent
 
 #### T11: Letters to Self
+
 - [ ] T11.1: Create `letters` table in Convex
 - [ ] T11.2: Letter writing modal
 - [ ] T11.3: Unlock date picker (7/14/30/90 days)
@@ -604,6 +651,7 @@ export function useMotivationFeatures() {
 - [ ] T11.8: Style with violet accent
 
 #### T12: Vision Board
+
 - [ ] T12.1: Create `visionBoardImages` table
 - [ ] T12.2: Image picker integration (expo-image-picker)
 - [ ] T12.3: Image upload to storage (Convex file storage)
@@ -613,6 +661,7 @@ export function useMotivationFeatures() {
 - [ ] T12.7: Premium gate
 
 #### T13: Affirmations (Extended)
+
 - [ ] T13.1: Add `affirmations` array to habits schema
 - [ ] T13.2: Affirmation list management
 - [ ] T13.3: Random selection for Activation
@@ -624,6 +673,7 @@ export function useMotivationFeatures() {
 ### Phase 4: Polish & Integration (Week 4-5)
 
 #### T14: Animations
+
 - [ ] T14.1: Staggered entrance for Workshop sections (80ms)
 - [ ] T14.2: Completion checkmark pop-in
 - [ ] T14.3: Empty state pulse animations
@@ -633,12 +683,14 @@ export function useMotivationFeatures() {
 - [ ] T14.7: Reduce motion preference support
 
 #### T15: Premium Upsell
+
 - [ ] T15.1: Create premium feature lock UI
 - [ ] T15.2: "Upgrade" CTA on locked features
 - [ ] T15.3: Premium benefits modal
 - [ ] T15.4: Paywall integration
 
 #### T16: Testing
+
 - [ ] T16.1: Unit tests for motivation components
 - [ ] T16.2: Integration tests for screen flows
 - [ ] T16.3: Premium gating tests
@@ -651,58 +703,71 @@ export function useMotivationFeatures() {
 
 ### Retention Metrics
 
-| Metric | Current | Target | Measurement |
-|--------|---------|--------|-------------|
-| Day 7 Retention | TBD | +50% | Mixpanel cohort |
-| Day 30 Retention | TBD | +100% | Mixpanel cohort |
-| Streak Length (avg) | TBD | +75% | Database query |
-| Rescue Mode Success | N/A | 40%+ | % who complete after rescue |
+| Metric              | Current | Target | Measurement                 |
+| ------------------- | ------- | ------ | --------------------------- |
+| Day 7 Retention     | TBD     | +50%   | Mixpanel cohort             |
+| Day 30 Retention    | TBD     | +100%  | Mixpanel cohort             |
+| Streak Length (avg) | TBD     | +75%   | Database query              |
+| Rescue Mode Success | N/A     | 40%+   | % who complete after rescue |
 
 ### Engagement Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Motivation Tab Visits | 3x/week per user | Event tracking |
-| Voice Notes Recorded | 2+ per user | Database count |
-| Why Completion Rate | 70%+ | % of habits with why |
-| Visualization Use | 50%+ | % of activations with viz |
+| Metric                | Target           | Measurement               |
+| --------------------- | ---------------- | ------------------------- |
+| Motivation Tab Visits | 3x/week per user | Event tracking            |
+| Voice Notes Recorded  | 2+ per user      | Database count            |
+| Why Completion Rate   | 70%+             | % of habits with why      |
+| Visualization Use     | 50%+             | % of activations with viz |
 
 ### Monetization Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Premium Conversion | 6%+ | Revenue / MAU |
-| Feature-driven Upgrades | 60%+ | Upgrade source tracking |
-| Voice Notes Upgrade Rate | 15%+ | % who upgrade after 1 free |
+| Metric                   | Target | Measurement                |
+| ------------------------ | ------ | -------------------------- |
+| Premium Conversion       | 6%+    | Revenue / MAU              |
+| Feature-driven Upgrades  | 60%+   | Upgrade source tracking    |
+| Voice Notes Upgrade Rate | 15%+   | % who upgrade after 1 free |
 
 ---
 
 ## Edge Cases & Error Handling
 
 ### Data Loss Prevention
-- [ ] Auto-save drafts for long-form content (Why, Letters, Reflections)
-- [ ] Confirm before discarding unsaved changes
+
+- [x] Auto-save drafts for long-form content (Why, Letters, Reflections)
+  - Implemented: `useDraftStorage` hook with debounced auto-save (1000ms), AsyncStorage persistence, 7-day expiration, draft recovery on mount
+  - Implemented: `DraftRecoveryBanner` component for UI feedback when drafts are recovered
+  - Files: `src/hooks/useDraftStorage.ts`, `src/components/DraftRecoveryBanner.tsx`
+  - Tests: 47 tests covering all functionality (39 hook tests + 8 component tests)
+- [x] Confirm before discarding unsaved changes
+  - Implemented: `useUnsavedChangesGuard` hook with change detection, Alert.alert confirmation, async/callback APIs, Android back button interception
+  - Implemented: `UnsavedChangesAlert` component with centerAlert Modal variant, content preview, variant styling, useUnsavedChangesAlert companion hook
+  - Files: `src/hooks/useUnsavedChangesGuard.ts`, `src/components/UnsavedChangesAlert.tsx`
+  - Tests: 47 tests covering hook (change detection, normalization, confirmation flow, back button, edge cases) + 25 tests for component (visibility, buttons, preview, accessibility, hook)
 - [ ] Offline queue for submissions when network unavailable
 
 ### Premium Gating UX
+
 - [ ] Free users see locked features with preview
 - [ ] Soft paywall: show value before asking for payment
 - [ ] Premium badge on locked features
 - [ ] Deep link to specific feature from upgrade prompt
 
 ### Voice Notes Edge Cases
+
 - [ ] Handle microphone permission denial gracefully
 - [ ] Maximum recording length (5 min) with warning
 - [ ] Playback controls: speed (0.5x, 1x, 1.5x, 2x)
 - [ ] Handle audio interruption (phone call, other app)
 
 ### Rescue Mode Triggers
+
 - [ ] Don't trigger rescue if habit already completed
 - [ ] Don't trigger rescue for paused/archived habits
 - [ ] Limit to 1 rescue notification per habit per day
 - [ ] Respect Do Not Disturb settings
 
 ### Accessibility
+
 - [ ] All animations respect `reduceMotion` preference
 - [ ] Screen reader labels for all interactive elements
 - [ ] Minimum tap targets (44x44pt per Apple HIG)
@@ -713,6 +778,7 @@ export function useMotivationFeatures() {
 ## Acceptance Criteria
 
 ### Must Have (MVP)
+
 - [ ] User can set and edit "Your Why" statement
 - [ ] User can set and edit Identity Statement
 - [ ] User can configure Cue/Trigger (time, location, after)
@@ -722,6 +788,7 @@ export function useMotivationFeatures() {
 - [ ] Free/Premium features are correctly gated
 
 ### Should Have (v1.1)
+
 - [ ] Activation modal appears at habit notification time
 - [ ] Rescue Mode triggers when streak is at risk
 - [ ] Celebration screen with confetti after completion
@@ -729,6 +796,7 @@ export function useMotivationFeatures() {
 - [ ] Letters to Self with time-lock (premium)
 
 ### Nice to Have (v1.2+)
+
 - [ ] Vision Board with image upload (premium)
 - [ ] Affirmations with scheduled delivery (premium)
 - [ ] AI-generated affirmations based on habit
@@ -760,6 +828,6 @@ export function useMotivationFeatures() {
 
 ## Changelog
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-12-28 | 1.0 | Initial spec with business rationale, feature breakdown, and tasks |
+| Date       | Version | Changes                                                            |
+| ---------- | ------- | ------------------------------------------------------------------ |
+| 2025-12-28 | 1.0     | Initial spec with business rationale, feature breakdown, and tasks |
