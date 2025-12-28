@@ -10,4 +10,5 @@
  */
 
 export * from './Workshop';
+export * from './Activation';
 export * from './Reward';
