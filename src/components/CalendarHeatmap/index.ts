@@ -20,6 +20,14 @@ export {
 } from './GridThemeContext';
 export type { GridThemeProviderProps } from './GridThemeContext';
 
+// Week Start Context and Hooks
+export {
+  WeekStartProvider,
+  useWeekStart,
+  useWeekStartOptional,
+} from './WeekStartContext';
+export type { WeekStartProviderProps } from './WeekStartContext';
+
 export type {
   CalendarHeatmapProps,
   CalendarDay,
@@ -38,6 +46,10 @@ export type {
   CellBorderStyle,
   StreakColorConfig,
   CellSizeConfig,
+  // Week Start Types
+  WeekStartDay,
+  WeekStartDayName,
+  WeekStartContextValue,
 } from './types';
 
 // Grid Theme Presets and Utilities
@@ -50,6 +62,12 @@ export {
   DEFAULT_THEME,
   getTheme,
   mergeThemeOverrides,
+  // Week Start Utilities
+  WEEK_START_DAY_MAP,
+  WEEK_START_DAY_NAMES,
+  DEFAULT_WEEK_START,
+  getRotatedDayLabels,
+  getRotatedDayNamesFull,
 } from './types';
 
 export type {

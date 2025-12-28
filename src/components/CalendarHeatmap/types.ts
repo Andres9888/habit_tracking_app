@@ -540,3 +540,117 @@ export interface MonthLabel {
   /** Short month name (e.g., "Oct", "Nov") */
   label: string;
 }
+
+// ============================================================================
+// WEEK START CUSTOMIZATION
+// ============================================================================
+
+/**
+ * Week start day as a number (matches JavaScript Date.getDay())
+ * 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+ */
+export type WeekStartDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+/**
+ * Named week start day options for UI display
+ */
+export type WeekStartDayName =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+/**
+ * Mapping from named day to numeric value
+ */
+export const WEEK_START_DAY_MAP: Record<WeekStartDayName, WeekStartDay> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+};
+
+/**
+ * Mapping from numeric value to named day
+ */
+export const WEEK_START_DAY_NAMES: Record<WeekStartDay, WeekStartDayName> = {
+  0: 'sunday',
+  1: 'monday',
+  2: 'tuesday',
+  3: 'wednesday',
+  4: 'thursday',
+  5: 'friday',
+  6: 'saturday',
+};
+
+/**
+ * Default week start day
+ */
+export const DEFAULT_WEEK_START: WeekStartDay = 0; // Sunday
+
+/**
+ * Context value for week start preference
+ */
+export interface WeekStartContextValue {
+  /** Current week start day (0-6) */
+  weekStartDay: WeekStartDay;
+
+  /** Human-readable name for the week start day */
+  weekStartDayName: WeekStartDayName;
+
+  /** Function to change the week start day */
+  setWeekStartDay: (day: WeekStartDay) => void;
+
+  /** All available week start options */
+  availableOptions: WeekStartDay[];
+
+  /**
+   * Whether the preference has been loaded from persistence.
+   * True when either:
+   * - Persistence is disabled (value is immediately ready)
+   * - Persisted value has been loaded from AsyncStorage
+   */
+  isWeekStartReady: boolean;
+}
+
+/**
+ * Get day labels rotated based on week start day
+ * @param weekStartDay - The day the week starts on (0 = Sunday)
+ * @returns Array of single-letter day labels in correct order
+ *
+ * @example
+ * getRotatedDayLabels(0) // ['S', 'M', 'T', 'W', 'T', 'F', 'S'] (Sunday start)
+ * getRotatedDayLabels(1) // ['M', 'T', 'W', 'T', 'F', 'S', 'S'] (Monday start)
+ */
+export function getRotatedDayLabels(weekStartDay: WeekStartDay): string[] {
+  const base = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  return [...base.slice(weekStartDay), ...base.slice(0, weekStartDay)];
+}
+
+/**
+ * Get full day names rotated based on week start day
+ * @param weekStartDay - The day the week starts on (0 = Sunday)
+ * @returns Array of full day names in correct order
+ *
+ * @example
+ * getRotatedDayNamesFull(0) // ['Sunday', 'Monday', ...] (Sunday start)
+ * getRotatedDayNamesFull(1) // ['Monday', 'Tuesday', ...] (Monday start)
+ */
+export function getRotatedDayNamesFull(weekStartDay: WeekStartDay): string[] {
+  const base = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  return [...base.slice(weekStartDay), ...base.slice(0, weekStartDay)];
+}
