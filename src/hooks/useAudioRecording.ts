@@ -19,7 +19,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Audio, AVPlaybackStatus } from 'expo-av';
-import { Platform } from 'react-native';
+import { Platform, Linking, Alert } from 'react-native';
 
 /**
  * Recording quality preset optimized for voice notes
@@ -57,6 +57,53 @@ const RECORDING_OPTIONS = {
 const MAX_RECORDING_DURATION_SECONDS = 300;
 
 /**
+ * Opens the device settings app so user can grant microphone permission
+ * Uses platform-specific URL schemes
+ */
+export function openMicrophoneSettings(): void {
+  if (Platform.OS === 'ios') {
+    // On iOS, app-settings: opens the app's settings page directly
+    Linking.openURL('app-settings:');
+  } else {
+    // On Android, openSettings() opens the app details page
+    Linking.openSettings();
+  }
+}
+
+/**
+ * Shows an alert when microphone permission is denied
+ * Provides option to open Settings
+ */
+export function showMicrophonePermissionAlert(options?: {
+  title?: string;
+  message?: string;
+  onOpenSettings?: () => void;
+  onCancel?: () => void;
+}): void {
+  const {
+    title = 'Microphone Access Required',
+    message = 'To record voice notes, please allow microphone access in your device Settings.',
+    onOpenSettings,
+    onCancel,
+  } = options || {};
+
+  Alert.alert(title, message, [
+    {
+      onPress: onCancel,
+      style: 'cancel',
+      text: 'Cancel',
+    },
+    {
+      onPress: () => {
+        openMicrophoneSettings();
+        onOpenSettings?.();
+      },
+      text: 'Open Settings',
+    },
+  ]);
+}
+
+/**
  * Recording status update interval in milliseconds
  */
 const STATUS_UPDATE_INTERVAL_MS = 100;
@@ -81,6 +128,8 @@ export interface RecordingStatus {
   meteringLevel: number;
   /** Whether microphone permission has been granted */
   hasPermission: boolean | null;
+  /** Whether user has permanently denied permission (selected "Don't ask again" on Android) */
+  canAskAgain: boolean;
   /** Error message if state is 'error' or 'permission-denied' */
   errorMessage: string | null;
   /** URI of the recording file when stopped */
@@ -102,6 +151,10 @@ export interface UseAudioRecordingReturn {
   cancelRecording: () => Promise<void>;
   /** Check and request microphone permission */
   requestPermission: () => Promise<boolean>;
+  /** Open device settings to grant microphone permission */
+  openSettings: () => void;
+  /** Show alert prompting user to grant permission in settings */
+  showPermissionAlert: () => void;
   /** Reset state to idle (for starting a new recording) */
   reset: () => void;
   /** Whether recording is currently active */
@@ -133,18 +186,24 @@ function formatDuration(seconds: number): string {
  * @param options.onMaxDurationReached - Callback when max duration is reached
  * @param options.onRecordingComplete - Callback when recording is stopped with the file URI
  * @param options.onError - Callback for error handling
+ * @param options.onPermissionDenied - Callback when microphone permission is denied
+ * @param options.onOpenSettings - Callback when user opens settings
  */
 export function useAudioRecording(options?: {
   maxDurationSeconds?: number;
   onMaxDurationReached?: () => void;
   onRecordingComplete?: (uri: string, durationSeconds: number) => void;
   onError?: (error: Error) => void;
+  onPermissionDenied?: (canAskAgain: boolean) => void;
+  onOpenSettings?: () => void;
 }): UseAudioRecordingReturn {
   const {
     maxDurationSeconds = MAX_RECORDING_DURATION_SECONDS,
     onMaxDurationReached,
     onRecordingComplete,
     onError,
+    onPermissionDenied,
+    onOpenSettings,
   } = options || {};
 
   // Recording instance ref
@@ -152,6 +211,7 @@ export function useAudioRecording(options?: {
 
   // Status state
   const [status, setStatus] = useState<RecordingStatus>({
+    canAskAgain: true,
     durationSeconds: 0,
     errorMessage: null,
     hasPermission: null,
@@ -165,6 +225,8 @@ export function useAudioRecording(options?: {
 
   /**
    * Request microphone permission
+   * Returns true if granted, false otherwise
+   * Updates status with permission state and canAskAgain flag
    */
   const requestPermission = useCallback(async (): Promise<boolean> => {
     try {
@@ -174,14 +236,24 @@ export function useAudioRecording(options?: {
         state: 'requesting-permission',
       }));
 
-      const { granted } = await Audio.requestPermissionsAsync();
+      const permissionResponse = await Audio.requestPermissionsAsync();
+      const { granted, canAskAgain } = permissionResponse;
 
       setStatus((prev) => ({
         ...prev,
-        errorMessage: granted ? null : 'Microphone permission denied',
+        canAskAgain: canAskAgain ?? true,
+        errorMessage: granted
+          ? null
+          : canAskAgain
+            ? 'Microphone permission denied. Please try again.'
+            : 'Microphone permission denied. Please enable it in Settings.',
         hasPermission: granted,
         state: granted ? 'idle' : 'permission-denied',
       }));
+
+      if (!granted) {
+        onPermissionDenied?.(canAskAgain ?? true);
+      }
 
       return granted;
     } catch (error) {
@@ -189,6 +261,7 @@ export function useAudioRecording(options?: {
         error instanceof Error ? error.message : 'Failed to request permission';
       setStatus((prev) => ({
         ...prev,
+        canAskAgain: true,
         errorMessage,
         hasPermission: false,
         state: 'error',
@@ -196,7 +269,7 @@ export function useAudioRecording(options?: {
       onError?.(error instanceof Error ? error : new Error(errorMessage));
       return false;
     }
-  }, [onError]);
+  }, [onError, onPermissionDenied]);
 
   /**
    * Configure audio mode for recording
@@ -441,6 +514,7 @@ export function useAudioRecording(options?: {
       durationRef.current = 0;
 
       setStatus({
+        canAskAgain: status.canAskAgain,
         durationSeconds: 0,
         errorMessage: null,
         hasPermission: status.hasPermission,
@@ -458,13 +532,14 @@ export function useAudioRecording(options?: {
       }));
       onError?.(error instanceof Error ? error : new Error(errorMessage));
     }
-  }, [status.hasPermission, onError]);
+  }, [status.hasPermission, status.canAskAgain, onError]);
 
   /**
    * Reset state to idle
    */
   const reset = useCallback(() => {
     setStatus({
+      canAskAgain: status.canAskAgain,
       durationSeconds: 0,
       errorMessage: null,
       hasPermission: status.hasPermission,
@@ -473,7 +548,24 @@ export function useAudioRecording(options?: {
       state: 'idle',
     });
     durationRef.current = 0;
-  }, [status.hasPermission]);
+  }, [status.hasPermission, status.canAskAgain]);
+
+  /**
+   * Open device settings to enable microphone permission
+   */
+  const openSettings = useCallback(() => {
+    openMicrophoneSettings();
+    onOpenSettings?.();
+  }, [onOpenSettings]);
+
+  /**
+   * Show an alert prompting user to grant permission in settings
+   */
+  const showPermissionAlert = useCallback(() => {
+    showMicrophonePermissionAlert({
+      onOpenSettings,
+    });
+  }, [onOpenSettings]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -497,16 +589,18 @@ export function useAudioRecording(options?: {
   return {
     cancelRecording,
     canStartRecording,
-    isRecording,
     formattedDuration,
-    pauseRecording,
     isMaxDurationReached,
-    requestPermission,
     isPaused,
-    startRecording,
+    isRecording,
+    openSettings,
+    pauseRecording,
+    requestPermission,
     reset,
-    status,
     resumeRecording,
+    showPermissionAlert,
+    startRecording,
+    status,
     stopRecording,
   };
 }

@@ -45,8 +45,10 @@ import * as Haptics from 'expo-haptics';
 import {
   useAudioRecording,
   RecordingState,
+  openMicrophoneSettings,
 } from '../../../hooks/useAudioRecording';
 import { VoiceNotePlaybackUI } from './VoiceNotePlaybackUI';
+import { MicrophonePermissionDenied } from './MicrophonePermissionDenied';
 
 export interface VoiceNoteSummary {
   id: string;
@@ -429,22 +431,30 @@ function RecordingControls({
   isPaused,
   formattedDuration,
   isMaxDurationReached,
+  canAskAgain,
+  errorMessage,
   onStartRecording,
   onStopRecording,
   onPauseRecording,
   onResumeRecording,
   onCancelRecording,
+  onOpenSettings,
+  reduceMotion,
 }: {
   state: RecordingState;
   isRecording: boolean;
   isPaused: boolean;
   formattedDuration: string;
   isMaxDurationReached: boolean;
+  canAskAgain: boolean;
+  errorMessage: string | null;
   onStartRecording: () => void;
   onStopRecording: () => void;
   onPauseRecording: () => void;
   onResumeRecording: () => void;
   onCancelRecording: () => void;
+  onOpenSettings: () => void;
+  reduceMotion?: boolean;
 }) {
   const recordButtonScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0);
@@ -526,19 +536,33 @@ function RecordingControls({
     );
   }
 
-  // Show error state
-  if (state === 'error' || state === 'permission-denied') {
+  // Show permission denied state with enhanced UI
+  if (state === 'permission-denied') {
+    return (
+      <MicrophonePermissionDenied
+        compact
+        canAskAgain={canAskAgain}
+        errorMessage={errorMessage ?? undefined}
+        reduceMotion={reduceMotion}
+        onOpenSettings={onOpenSettings}
+        onTryAgain={onStartRecording}
+      />
+    );
+  }
+
+  // Show generic error state
+  if (state === 'error') {
     return (
       <View className='items-center py-4'>
         <View className='flex-row items-center gap-2'>
           <AlertCircle className='text-rose-500' size={16} />
           <Text className='text-sm text-rose-600'>
-            {state === 'permission-denied'
-              ? 'Microphone access required'
-              : 'Recording failed'}
+            {errorMessage || 'Recording failed. Please try again.'}
           </Text>
         </View>
         <Pressable
+          accessibilityLabel='Try recording again'
+          accessibilityRole='button'
           className='mt-2 rounded-lg bg-teal-100 px-4 py-2'
           onPress={onStartRecording}
         >
@@ -862,6 +886,7 @@ export function VoiceNotesSection({
     pauseRecording,
     resumeRecording,
     cancelRecording,
+    openSettings,
     reset,
     isRecording,
     isPaused,
@@ -875,6 +900,10 @@ export function VoiceNotesSection({
     onMaxDurationReached: () => {
       // Auto-stop when max duration reached
       handleStopRecording();
+    },
+    onPermissionDenied: (canAskAgain) => {
+      // Log permission denial for analytics
+      console.log('Microphone permission denied, canAskAgain:', canAskAgain);
     },
     onRecordingComplete: async (uri, durationSeconds) => {
       // Determine if this should be marked as Day 1
@@ -990,12 +1019,16 @@ export function VoiceNotesSection({
           status.state === 'permission-denied') && (
           <View className='mt-4 border-t border-stone-100 pt-4'>
             <RecordingControls
+              canAskAgain={status.canAskAgain}
+              errorMessage={status.errorMessage}
               formattedDuration={formattedDuration}
               isMaxDurationReached={isMaxDurationReached}
               isPaused={isPaused}
               isRecording={isRecording}
+              reduceMotion={reduceMotion}
               state={status.state}
               onCancelRecording={cancelRecording}
+              onOpenSettings={openSettings}
               onPauseRecording={pauseRecording}
               onResumeRecording={resumeRecording}
               onStartRecording={handleStartRecording}

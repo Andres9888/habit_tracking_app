@@ -3,15 +3,17 @@
  * Story T10.2: Audio recording integration (expo-av)
  *
  * Tests:
- * - Permission handling
+ * - Permission handling (including graceful denial handling)
  * - Recording lifecycle (start, stop, pause, resume)
  * - Duration tracking
  * - Error handling
  * - Max duration enforcement
  * - State transitions
+ * - Open settings functionality
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react-native';
+import { Alert, Linking, Platform } from 'react-native';
 
 // Mock expo-av
 const mockRequestPermissionsAsync = jest.fn();
@@ -53,6 +55,24 @@ jest.mock('expo-av', () => ({
   },
 }));
 
+// Mock Linking
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+  return {
+    ...RN,
+    Linking: {
+      openURL: jest.fn(),
+      openSettings: jest.fn(),
+    },
+    Alert: {
+      alert: jest.fn(),
+    },
+    Platform: {
+      OS: 'ios',
+    },
+  };
+});
+
 import { useAudioRecording } from '../useAudioRecording';
 
 describe('useAudioRecording', () => {
@@ -77,6 +97,7 @@ describe('useAudioRecording', () => {
       expect(result.current.status.durationSeconds).toBe(0);
       expect(result.current.status.meteringLevel).toBe(0);
       expect(result.current.status.hasPermission).toBeNull();
+      expect(result.current.status.canAskAgain).toBe(true);
       expect(result.current.status.errorMessage).toBeNull();
       expect(result.current.status.recordingUri).toBeNull();
     });
@@ -90,11 +111,21 @@ describe('useAudioRecording', () => {
       expect(result.current.formattedDuration).toBe('00:00');
       expect(result.current.isMaxDurationReached).toBe(false);
     });
+
+    it('exports openSettings and showPermissionAlert functions', () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      expect(typeof result.current.openSettings).toBe('function');
+      expect(typeof result.current.showPermissionAlert).toBe('function');
+    });
   });
 
   describe('Permission handling', () => {
     it('requests permission and updates state when granted', async () => {
-      mockRequestPermissionsAsync.mockResolvedValue({ granted: true });
+      mockRequestPermissionsAsync.mockResolvedValue({
+        granted: true,
+        canAskAgain: true,
+      });
 
       const { result } = renderHook(() => useAudioRecording());
 
@@ -105,11 +136,15 @@ describe('useAudioRecording', () => {
 
       expect(permissionGranted).toBe(true);
       expect(result.current.status.hasPermission).toBe(true);
+      expect(result.current.status.canAskAgain).toBe(true);
       expect(result.current.status.state).toBe('idle');
     });
 
-    it('updates state when permission is denied', async () => {
-      mockRequestPermissionsAsync.mockResolvedValue({ granted: false });
+    it('updates state when permission is denied with canAskAgain=true', async () => {
+      mockRequestPermissionsAsync.mockResolvedValue({
+        granted: false,
+        canAskAgain: true,
+      });
 
       const { result } = renderHook(() => useAudioRecording());
 
@@ -120,10 +155,69 @@ describe('useAudioRecording', () => {
 
       expect(permissionGranted).toBe(false);
       expect(result.current.status.hasPermission).toBe(false);
+      expect(result.current.status.canAskAgain).toBe(true);
       expect(result.current.status.state).toBe('permission-denied');
       expect(result.current.status.errorMessage).toBe(
-        'Microphone permission denied'
+        'Microphone permission denied. Please try again.'
       );
+    });
+
+    it('updates state when permission is permanently denied (canAskAgain=false)', async () => {
+      mockRequestPermissionsAsync.mockResolvedValue({
+        granted: false,
+        canAskAgain: false,
+      });
+
+      const { result } = renderHook(() => useAudioRecording());
+
+      let permissionGranted: boolean | undefined;
+      await act(async () => {
+        permissionGranted = await result.current.requestPermission();
+      });
+
+      expect(permissionGranted).toBe(false);
+      expect(result.current.status.hasPermission).toBe(false);
+      expect(result.current.status.canAskAgain).toBe(false);
+      expect(result.current.status.state).toBe('permission-denied');
+      expect(result.current.status.errorMessage).toBe(
+        'Microphone permission denied. Please enable it in Settings.'
+      );
+    });
+
+    it('calls onPermissionDenied callback with canAskAgain value', async () => {
+      const onPermissionDenied = jest.fn();
+      mockRequestPermissionsAsync.mockResolvedValue({
+        granted: false,
+        canAskAgain: false,
+      });
+
+      const { result } = renderHook(() =>
+        useAudioRecording({ onPermissionDenied })
+      );
+
+      await act(async () => {
+        await result.current.requestPermission();
+      });
+
+      expect(onPermissionDenied).toHaveBeenCalledWith(false);
+    });
+
+    it('does not call onPermissionDenied when permission is granted', async () => {
+      const onPermissionDenied = jest.fn();
+      mockRequestPermissionsAsync.mockResolvedValue({
+        granted: true,
+        canAskAgain: true,
+      });
+
+      const { result } = renderHook(() =>
+        useAudioRecording({ onPermissionDenied })
+      );
+
+      await act(async () => {
+        await result.current.requestPermission();
+      });
+
+      expect(onPermissionDenied).not.toHaveBeenCalled();
     });
 
     it('handles permission request error', async () => {
@@ -140,7 +234,69 @@ describe('useAudioRecording', () => {
 
       expect(result.current.status.state).toBe('error');
       expect(result.current.status.hasPermission).toBe(false);
+      expect(result.current.status.canAskAgain).toBe(true);
       expect(onError).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    it('defaults canAskAgain to true when not provided in response', async () => {
+      mockRequestPermissionsAsync.mockResolvedValue({ granted: false });
+
+      const { result } = renderHook(() => useAudioRecording());
+
+      await act(async () => {
+        await result.current.requestPermission();
+      });
+
+      expect(result.current.status.canAskAgain).toBe(true);
+    });
+  });
+
+  describe('Open Settings functionality', () => {
+    beforeEach(() => {
+      (Linking.openURL as jest.Mock).mockClear();
+      (Linking.openSettings as jest.Mock).mockClear();
+      (Alert.alert as jest.Mock).mockClear();
+    });
+
+    it('openSettings opens app-settings URL on iOS', () => {
+      // Platform is mocked as iOS in the mock setup
+      const { result } = renderHook(() => useAudioRecording());
+
+      act(() => {
+        result.current.openSettings();
+      });
+
+      expect(Linking.openURL).toHaveBeenCalledWith('app-settings:');
+    });
+
+    it('openSettings calls onOpenSettings callback', () => {
+      const onOpenSettings = jest.fn();
+      const { result } = renderHook(() =>
+        useAudioRecording({ onOpenSettings })
+      );
+
+      act(() => {
+        result.current.openSettings();
+      });
+
+      expect(onOpenSettings).toHaveBeenCalledTimes(1);
+    });
+
+    it('showPermissionAlert displays an alert with Open Settings option', () => {
+      const { result } = renderHook(() => useAudioRecording());
+
+      act(() => {
+        result.current.showPermissionAlert();
+      });
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Microphone Access Required',
+        'To record voice notes, please allow microphone access in your device Settings.',
+        expect.arrayContaining([
+          expect.objectContaining({ text: 'Cancel' }),
+          expect.objectContaining({ text: 'Open Settings' }),
+        ])
+      );
     });
   });
 
