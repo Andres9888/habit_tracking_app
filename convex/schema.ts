@@ -157,6 +157,29 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user_and_date', ['userId', 'date']),
 
+  // Quick Reflection - Post-habit emoji rating + note (BJ Fogg "Tiny Habits" celebration)
+  // Scientific basis: Celebration wires habits, journaling increases self-awareness
+  reflections: defineTable({
+    // ISO date string (YYYY-MM-DD) for the day of reflection
+    date: v.string(),
+    // Emoji rating: frustrated (😤), neutral (😐), happy (😊), fire (🔥)
+    emoji: v.union(
+      v.literal('frustrated'),
+      v.literal('neutral'),
+      v.literal('happy'),
+      v.literal('fire')
+    ),
+    habitId: v.id('habits'),
+    // Optional text note for detailed reflection
+    note: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_user_and_date', ['userId', 'date']),
+
   // Template Library (Phase 3 Feature)
   templates: defineTable({
     category: v.union(
