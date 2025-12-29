@@ -1685,7 +1685,7 @@ describe('calculateDayOfWeekStats', () => {
     });
 
     it('calculates 0% rate when no days completed', () => {
-      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const habitCreatedAt = new Date('2025-12-01T12:00:00Z').getTime();
       const completedDates = new Set<string>();
 
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
@@ -1716,7 +1716,7 @@ describe('calculateDayOfWeekStats', () => {
   describe('habit creation date handling', () => {
     it('only counts days after habit creation', () => {
       // Habit created on Dec 15, 2025
-      const habitCreatedAt = new Date('2025-12-15').getTime();
+      const habitCreatedAt = new Date('2025-12-15T12:00:00Z').getTime();
       const completedDates = new Set([
         '2025-12-10', // Before creation - should be ignored
         '2025-12-15', // Creation day - should count
@@ -1728,7 +1728,7 @@ describe('calculateDayOfWeekStats', () => {
 
       // Should only count from Dec 15 onwards
       const today = new Date();
-      const createdDate = new Date('2025-12-15');
+      const createdDate = new Date('2025-12-15T12:00:00Z');
       const daysDiff =
         Math.floor(
           (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -1750,7 +1750,7 @@ describe('calculateDayOfWeekStats', () => {
   describe('various completion patterns', () => {
     it('tracks mixed completion patterns across days', () => {
       // Use a past date range to avoid today affecting results
-      const habitCreatedAt = new Date('2020-01-06').getTime(); // Monday
+      const habitCreatedAt = new Date('2020-01-06T12:00:00Z').getTime(); // Monday
       const completedDates = new Set([
         '2020-01-06', // Monday - completed
         '2020-01-07', // Tuesday - completed
@@ -1780,7 +1780,7 @@ describe('calculateDayOfWeekStats', () => {
     });
 
     it('handles weekend vs weekday patterns', () => {
-      const habitCreatedAt = new Date('2025-12-01').getTime(); // Monday
+      const habitCreatedAt = new Date('2025-12-01T12:00:00Z').getTime(); // Monday
       const completedDates = new Set([
         // Complete all weekdays
         '2025-12-01', // Monday
@@ -1836,7 +1836,7 @@ describe('calculateDayOfWeekStats', () => {
     });
 
     it('handles empty completion set', () => {
-      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const habitCreatedAt = new Date('2025-12-01T12:00:00Z').getTime();
       const completedDates = new Set<string>();
 
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
@@ -1852,8 +1852,8 @@ describe('calculateDayOfWeekStats', () => {
       // Create a controlled scenario: exactly 3 weeks starting from a known Monday
       // Use a date range that ends exactly 3 weeks later (21 days)
       // This ensures exactly 3 occurrences of each day
-      const startDate = new Date('2025-12-01'); // Monday
-      const endDate = new Date('2025-12-21'); // Sunday, 3 weeks later
+      const startDate = new Date('2025-12-01T12:00:00Z'); // Monday
+      const endDate = new Date('2025-12-21T12:00:00Z'); // Sunday, 3 weeks later
 
       // Mock Date to control "today"
       const originalDate = global.Date;
@@ -2247,7 +2247,7 @@ describe('generateHorizontalGrid', () => {
 
   describe('basic grid structure', () => {
     it('generates approximately 13 weeks for 3 months', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       // Should have ~13 weeks (90 days / 7 ≈ 13)
@@ -2256,7 +2256,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('each week has exactly 7 days', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       weeks.forEach((week) => {
@@ -2265,7 +2265,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('generates approximately 90 days of data', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       const actualDays = countActualDays(weeks);
@@ -2275,7 +2275,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('starts with index 0 being Sunday slot', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       // Verify the grid structure starts with Sunday slot (index 0)
@@ -2295,7 +2295,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('ends on or before the current date', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       // Find the last non-null date
@@ -2312,7 +2312,7 @@ describe('generateHorizontalGrid', () => {
 
   describe('month labels', () => {
     it('generates month labels for ~3 months', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
 
       // Should have 3-4 month labels (depending on week alignment)
@@ -2321,7 +2321,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('month labels have correct format', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
 
       monthLabels.forEach((label) => {
@@ -2331,7 +2331,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('month labels have incrementing week indices', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { monthLabels } = generateHorizontalGrid(currentDate, new Set());
 
       for (let i = 1; i < monthLabels.length; i++) {
@@ -2344,7 +2344,7 @@ describe('generateHorizontalGrid', () => {
 
   describe('completed dates', () => {
     it('marks completed dates correctly', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const completedDates = new Set([
         '2025-12-01',
         '2025-12-15',
@@ -2362,7 +2362,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('returns completed=false when no dates are in the set', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       const allDays = weeks.flat().filter((d) => d.date !== null);
@@ -2404,7 +2404,7 @@ describe('generateHorizontalGrid', () => {
 
   describe('future dates detection', () => {
     it('marks dates after current date as future', () => {
-      const currentDate = new Date('2025-12-20');
+      const currentDate = new Date('2025-12-20T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       const allDays = weeks.flat().filter((d) => d.date !== null);
@@ -2430,8 +2430,8 @@ describe('generateHorizontalGrid', () => {
 
   describe('habitCreatedAt handling', () => {
     it('marks dates before habit creation as isBeforeCreation', () => {
-      const currentDate = new Date('2025-12-22');
-      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const currentDate = new Date('2025-12-22T12:00:00Z');
+      const habitCreatedAt = new Date('2025-12-01T12:00:00Z').getTime();
       const { weeks } = generateHorizontalGrid(
         currentDate,
         new Set(),
@@ -2450,8 +2450,8 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('does not mark creation day as isBeforeCreation', () => {
-      const currentDate = new Date('2025-12-22');
-      const habitCreatedAt = new Date('2025-12-01').getTime();
+      const currentDate = new Date('2025-12-22T12:00:00Z');
+      const habitCreatedAt = new Date('2025-12-01T12:00:00Z').getTime();
       const { weeks } = generateHorizontalGrid(
         currentDate,
         new Set(),
@@ -2463,7 +2463,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('handles undefined habitCreatedAt by not marking any days as before creation', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       const allDays = weeks.flat().filter((d) => d.date !== null);
@@ -2473,7 +2473,7 @@ describe('generateHorizontalGrid', () => {
 
   describe('day-of-week rows', () => {
     it('organizes days correctly by day of week', () => {
-      const currentDate = new Date('2025-12-22'); // Monday
+      const currentDate = new Date('2025-12-22T12:00:00Z'); // Monday
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       // Check that each position in the week corresponds to the correct day
@@ -2492,7 +2492,7 @@ describe('generateHorizontalGrid', () => {
 
   describe('edge cases', () => {
     it('handles current date at beginning of month', () => {
-      const currentDate = new Date('2025-12-01');
+      const currentDate = new Date('2025-12-01T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       expect(weeks.length).toBeGreaterThan(0);
@@ -2501,7 +2501,7 @@ describe('generateHorizontalGrid', () => {
     });
 
     it('handles current date at end of month', () => {
-      const currentDate = new Date('2025-12-31');
+      const currentDate = new Date('2025-12-31T12:00:00Z');
       const { weeks } = generateHorizontalGrid(currentDate, new Set());
 
       expect(weeks.length).toBeGreaterThan(0);
@@ -2738,7 +2738,7 @@ describe('calculate3MonthStats', () => {
 
   describe('integration with generateHorizontalGrid', () => {
     it('calculates stats correctly for generated grid', () => {
-      const currentDate = new Date('2025-12-22');
+      const currentDate = new Date('2025-12-22T12:00:00Z');
       const completedDates = new Set([
         '2025-12-01',
         '2025-12-05',
@@ -2762,7 +2762,7 @@ describe('calculate3MonthTrend', () => {
   describe('Trend calculation', () => {
     it('should return positive trend when current period is better', () => {
       const completedDates = new Set<string>();
-      const currentDate = new Date('2024-03-15');
+      const currentDate = new Date('2024-03-15T12:00:00Z');
 
       // Previous 3 months (90-180 days ago): 50% completion (45/90)
       for (let i = 180; i > 90; i--) {
@@ -2796,7 +2796,7 @@ describe('calculate3MonthTrend', () => {
 
     it('should return negative trend when current period is worse', () => {
       const completedDates = new Set<string>();
-      const currentDate = new Date('2024-03-15');
+      const currentDate = new Date('2024-03-15T12:00:00Z');
 
       // Previous 3 months: 80% completion
       for (let i = 180; i > 90; i--) {
@@ -2830,7 +2830,7 @@ describe('calculate3MonthTrend', () => {
 
     it('should return null when insufficient previous data (less than 30 days)', () => {
       const completedDates = new Set<string>();
-      const currentDate = new Date('2024-03-15');
+      const currentDate = new Date('2024-03-15T12:00:00Z');
       const habitCreatedAt = currentDate.getTime() - 60 * 24 * 60 * 60 * 1000; // 60 days ago
 
       // Only 60 days of data total, not enough for previous period
@@ -2860,7 +2860,7 @@ describe('calculate3MonthTrend', () => {
 
     it('should return 100% when starting from 0%', () => {
       const completedDates = new Set<string>();
-      const currentDate = new Date('2024-03-15');
+      const currentDate = new Date('2024-03-15T12:00:00Z');
 
       // Previous 3 months: 0% completion (none)
       // (no dates added for previous period)
@@ -2884,7 +2884,7 @@ describe('calculate3MonthTrend', () => {
 
     it('should respect habitCreatedAt date', () => {
       const completedDates = new Set<string>();
-      const currentDate = new Date('2024-03-15');
+      const currentDate = new Date('2024-03-15T12:00:00Z');
       const habitCreatedAt = currentDate.getTime() - 100 * 24 * 60 * 60 * 1000; // 100 days ago
 
       // Add completions only after creation date
@@ -2915,7 +2915,7 @@ describe('calculate3MonthTrend', () => {
 
     it('should calculate correctly with 100% completion in both periods', () => {
       const completedDates = new Set<string>();
-      const currentDate = new Date('2024-03-15');
+      const currentDate = new Date('2024-03-15T12:00:00Z');
 
       // Both periods: 100% completion
       for (let i = 180; i >= 0; i--) {

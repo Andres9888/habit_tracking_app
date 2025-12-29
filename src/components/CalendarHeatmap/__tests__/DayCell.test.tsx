@@ -16,7 +16,8 @@ jest.mock('../../../hooks/useReduceMotion', () => ({
 describe('DayCell', () => {
   const mockOnPress = jest.fn();
   const mockCompletedDates = new Set<string>();
-  const mockHabitCreatedAt = new Date('2025-01-01').getTime();
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const mockHabitCreatedAt = new Date('2025-01-01T12:00:00Z').getTime();
 
   // Helper to add a completed date for testing
   const addCompletedDate = (date: string) => {

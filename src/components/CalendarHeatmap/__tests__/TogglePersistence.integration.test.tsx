@@ -35,6 +35,7 @@ describe('Toggle Persistence Integration Tests', () => {
   const mockOnDayPress = jest.fn();
 
   // Helper: Create a week of CalendarDay objects
+  // Uses noon UTC to avoid timezone boundary issues where local date differs from UTC
   const createWeek = (options: {
     startDate?: string;
     completedDays?: number[];
@@ -48,12 +49,13 @@ describe('Toggle Persistence Integration Tests', () => {
       habitCreatedIndex = 0,
     } = options;
 
-    const baseDate = new Date(startDate);
+    // Parse date as noon UTC to avoid timezone boundary issues
+    const baseDate = new Date(`${startDate}T12:00:00Z`);
     return Array.from({ length: 7 }, (_, i) => {
       const date = new Date(baseDate);
-      date.setDate(baseDate.getDate() + i);
+      date.setUTCDate(baseDate.getUTCDate() + i);
       const dateStr = date.toISOString().split('T')[0];
-      const dayOfMonth = date.getDate();
+      const dayOfMonth = date.getUTCDate();
       const isFuture = i > todayIndex && todayIndex >= 0;
       const isBeforeCreation = i < habitCreatedIndex;
 
@@ -69,6 +71,7 @@ describe('Toggle Persistence Integration Tests', () => {
   };
 
   // Helper: Create a month grid of CalendarDay objects
+  // Uses noon UTC to avoid timezone boundary issues where local date differs from UTC
   const createMonthGrid = (options: {
     month?: number;
     year?: number;
@@ -78,22 +81,25 @@ describe('Toggle Persistence Integration Tests', () => {
     const completedSet = new Set(completedDates);
 
     // Generate 5 weeks of days for December 2025
+    // Use UTC methods to avoid timezone issues
     const grid: CalendarDay[][] = [];
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const startPadding = firstDay.getDay(); // 0 = Sunday
+    const firstDay = new Date(Date.UTC(year, month, 1, 12, 0, 0));
+    const startPadding = firstDay.getUTCDay(); // 0 = Sunday
 
-    let currentDate = new Date(firstDay);
-    currentDate.setDate(1 - startPadding);
+    let currentDate = new Date(Date.UTC(year, month, 1 - startPadding, 12, 0, 0));
+
+    // Reference date for "today" - use noon UTC
+    const todayDate = new Date('2025-12-28T12:00:00Z');
+    const todayStr = '2025-12-28';
 
     for (let week = 0; week < 5; week++) {
       const weekDays: CalendarDay[] = [];
       for (let day = 0; day < 7; day++) {
         const dateStr = currentDate.toISOString().split('T')[0];
-        const isInMonth = currentDate.getMonth() === month;
-        const dayOfMonth = currentDate.getDate();
-        const isToday = dateStr === '2025-12-28'; // Current date
-        const isFuture = currentDate > new Date('2025-12-28');
+        const isInMonth = currentDate.getUTCMonth() === month;
+        const dayOfMonth = currentDate.getUTCDate();
+        const isToday = dateStr === todayStr;
+        const isFuture = currentDate > todayDate;
 
         weekDays.push({
           date: isInMonth ? dateStr : null,
@@ -104,7 +110,7 @@ describe('Toggle Persistence Integration Tests', () => {
           isBeforeCreation: false,
         });
 
-        currentDate.setDate(currentDate.getDate() + 1);
+        currentDate.setUTCDate(currentDate.getUTCDate() + 1);
       }
       grid.push(weekDays);
     }

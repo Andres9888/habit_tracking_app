@@ -46,7 +46,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -61,7 +61,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -75,7 +75,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -89,7 +89,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -107,7 +107,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-09-01').getTime()} // Started 3+ months ago
+          habitCreatedAt={new Date('2025-09-01T12:00:00Z').getTime()} // Started 3+ months ago
         />
       );
 
@@ -123,7 +123,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-09-01').getTime()}
+          habitCreatedAt={new Date('2025-09-01T12:00:00Z').getTime()}
         />
       );
 
@@ -140,7 +140,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -175,7 +175,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-07-01').getTime()}
+          habitCreatedAt={new Date('2025-07-01T12:00:00Z').getTime()}
         />
       );
 
@@ -202,7 +202,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -217,7 +217,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -243,7 +243,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -258,7 +258,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -289,7 +289,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-11-01').getTime()} // Started in November
+          habitCreatedAt={new Date('2025-11-01T12:00:00Z').getTime()} // Started in November
         />
       );
 
@@ -322,7 +322,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -343,7 +343,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -359,7 +359,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
           habitColor='#ff0000'
         />
       );
@@ -376,7 +376,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-15').getTime()} // Created mid-month
+          habitCreatedAt={new Date('2025-12-15T12:00:00Z').getTime()} // Created mid-month
         />
       );
 
@@ -410,7 +410,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
           onDayPress={mockOnDayPress}
         />
       );
@@ -428,7 +428,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -452,7 +452,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -468,7 +468,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       );
 
@@ -483,7 +483,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -501,7 +501,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -521,7 +521,7 @@ describe('CalendarHeatmap', () => {
         <CalendarHeatmap
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -550,7 +550,7 @@ describe('CalendarHeatmap', () => {
     });
 
     it('should handle habit created in future (invalid)', () => {
-      const futureDate = new Date('2025-12-31').getTime();
+      const futureDate = new Date('2025-12-31T12:00:00Z').getTime();
       const completedDates = createCompletedDates([]);
 
       const { getByText } = render(

@@ -41,7 +41,8 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 // Mock date-fns
 jest.mock('date-fns', () => {
   const actual = jest.requireActual('date-fns');
-  const mockToday = new Date('2025-12-25');
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const mockToday = new Date('2025-12-25T12:00:00Z');
   return {
     ...actual,
     format: (date: Date, formatStr: string) => actual.format(date, formatStr),
@@ -129,7 +130,7 @@ describe('CollapsibleCalendar', () => {
         <CollapsibleCalendar
           habitId={mockHabitId}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-12-01').getTime()}
+          habitCreatedAt={new Date('2025-12-01T12:00:00Z').getTime()}
         />
       );
 
@@ -532,7 +533,7 @@ describe('CollapsibleCalendar', () => {
 
     it('should pass habitCreatedAt to CalendarHeatmap', async () => {
       const completedDates = createCompletedDates(['2025-12-20']);
-      const createdAt = new Date('2025-12-01').getTime();
+      const createdAt = new Date('2025-12-01T12:00:00Z').getTime();
 
       const { getByTestId } = render(
         <CollapsibleCalendar
@@ -567,7 +568,7 @@ describe('CollapsibleCalendar', () => {
 
     it('should handle many completed dates', async () => {
       const dates = Array.from({ length: 90 }, (_, i) => {
-        const date = new Date('2025-12-25');
+        const date = new Date('2025-12-25T12:00:00Z');
         date.setDate(date.getDate() - i);
         return date.toISOString().split('T')[0];
       });

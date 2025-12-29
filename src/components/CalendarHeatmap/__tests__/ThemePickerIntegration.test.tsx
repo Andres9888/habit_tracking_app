@@ -89,7 +89,8 @@ jest.mock('../../../utils/insightCardPreferences', () => ({
 describe('Theme Picker Integration', () => {
   const mockHabitId = 'habit123' as Id<'habits'>;
   const mockCompletedDates = new Set(['2024-01-15', '2024-01-16', '2024-01-17']);
-  const mockHabitCreatedAt = new Date('2024-01-01').getTime();
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const mockHabitCreatedAt = new Date('2024-01-01T12:00:00Z').getTime();
 
   beforeEach(() => {
     jest.clearAllMocks();

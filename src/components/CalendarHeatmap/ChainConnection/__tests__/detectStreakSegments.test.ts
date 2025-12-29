@@ -7,7 +7,8 @@ import { detectStreakSegments, getStrengthTier } from '../utils';
 
 describe('detectStreakSegments', () => {
   // Fixed reference date for consistent testing
-  const referenceDate = new Date('2025-12-28');
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const referenceDate = new Date('2025-12-28T12:00:00Z');
 
   describe('basic functionality', () => {
     it('should return empty array for empty completions', () => {
@@ -124,7 +125,8 @@ describe('detectStreakSegments', () => {
         '2025-12-10', // After creation
         '2025-12-11',
       ]);
-      const habitCreatedAt = new Date('2025-12-05').getTime();
+      // Use noon UTC to avoid timezone boundary issues
+      const habitCreatedAt = new Date('2025-12-05T12:00:00Z').getTime();
       const result = detectStreakSegments(completedDates, habitCreatedAt, referenceDate);
 
       expect(result).toHaveLength(1);
@@ -136,7 +138,8 @@ describe('detectStreakSegments', () => {
         '2025-12-05', // Creation date
         '2025-12-06',
       ]);
-      const habitCreatedAt = new Date('2025-12-05').getTime();
+      // Use noon UTC to avoid timezone boundary issues
+      const habitCreatedAt = new Date('2025-12-05T12:00:00Z').getTime();
       const result = detectStreakSegments(completedDates, habitCreatedAt, referenceDate);
 
       expect(result).toHaveLength(1);

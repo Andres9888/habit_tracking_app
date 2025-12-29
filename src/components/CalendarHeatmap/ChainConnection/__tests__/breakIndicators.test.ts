@@ -16,7 +16,8 @@ import type { StreakSegment, GridPosition, StreakBreak } from '../types';
 
 describe('detectStreakBreaks', () => {
   // Fixed reference date for consistent testing
-  const referenceDate = new Date('2025-12-28');
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const referenceDate = new Date('2025-12-28T12:00:00Z');
   const gridData = getDefaultGridData('3m');
 
   /**
@@ -406,7 +407,8 @@ describe('DEFAULT_BREAK_INDICATOR_CONFIG', () => {
 });
 
 describe('break detection integration with segments', () => {
-  const referenceDate = new Date('2025-12-28');
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const referenceDate = new Date('2025-12-28T12:00:00Z');
   const gridData = getDefaultGridData('3m');
 
   it('should correctly link breaks to their segments', () => {

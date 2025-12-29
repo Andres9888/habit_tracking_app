@@ -7,7 +7,8 @@ import { calculateGridPositions, getDefaultGridData, getConnectionPathType } fro
 import type { ChainConnection, GridPosition } from '../types';
 
 describe('calculateGridPositions', () => {
-  const referenceDate = new Date('2025-12-28');
+  // Use noon UTC to avoid timezone boundary issues where local date differs from UTC
+  const referenceDate = new Date('2025-12-28T12:00:00Z');
 
   describe('week view', () => {
     it('should calculate positions for week view (7 large cells)', () => {

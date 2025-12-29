@@ -195,7 +195,7 @@ describe('Reduce Motion Accessibility Tests', () => {
   describe('DayCell Component', () => {
     const mockOnPress = jest.fn();
     const mockCompletedDates = new Set<string>();
-    const mockHabitCreatedAt = new Date('2025-01-01').getTime();
+    const mockHabitCreatedAt = new Date('2025-01-01T12:00:00Z').getTime();
 
     beforeEach(() => {
       mockCompletedDates.clear();
@@ -754,7 +754,7 @@ describe('Reduce Motion Accessibility Tests', () => {
           day={day}
           index={0}
           completedDates={new Set()}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       );
 
@@ -771,7 +771,7 @@ describe('Reduce Motion Accessibility Tests', () => {
           day={day}
           index={0}
           completedDates={new Set()}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       );
 

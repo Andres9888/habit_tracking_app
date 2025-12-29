@@ -488,7 +488,7 @@ describe('DayCell with GridTheme', () => {
         day={day}
         index={0}
         completedDates={completedDates}
-        habitCreatedAt={new Date('2025-01-01').getTime()}
+        habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
       />
     );
 
@@ -506,7 +506,7 @@ describe('DayCell with GridTheme', () => {
           day={day}
           index={0}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       </GridThemeProvider>
     );
@@ -526,7 +526,7 @@ describe('DayCell with GridTheme', () => {
           day={day}
           index={0}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       </GridThemeProvider>
     );
@@ -737,7 +737,7 @@ describe('Dots Theme Glow Effect', () => {
           day={day}
           index={0}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       </GridThemeProvider>
     );
@@ -756,7 +756,7 @@ describe('Dots Theme Glow Effect', () => {
           day={day}
           index={0}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       </GridThemeProvider>
     );
@@ -777,7 +777,7 @@ describe('Dots Theme Glow Effect', () => {
           day={day}
           index={0}
           completedDates={completedDates}
-          habitCreatedAt={new Date('2025-01-01').getTime()}
+          habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
         />
       </GridThemeProvider>
     );
@@ -916,7 +916,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
@@ -937,7 +937,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
@@ -958,7 +958,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
@@ -979,7 +979,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
@@ -1000,7 +1000,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
@@ -1023,7 +1023,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
@@ -1045,7 +1045,7 @@ describe('Pixels Theme Retro/CRT Effect', () => {
             day={day}
             index={0}
             completedDates={completedDates}
-            habitCreatedAt={new Date('2025-01-01').getTime()}
+            habitCreatedAt={new Date('2025-01-01T12:00:00Z').getTime()}
           />
         </GridThemeProvider>
       );
