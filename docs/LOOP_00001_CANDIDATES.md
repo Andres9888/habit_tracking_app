@@ -342,3 +342,96 @@
 - Use IDE refactoring tools to update import paths automatically
 - Commit frequently with clear messages prefixed with scope (e.g., `refactor(screens): extract HeroSection from HabitDetailScreen`)
 - Keep Convex API unchanged to avoid data flow issues
+
+---
+
+## Tactic 1: Mega-Component Decomposition - Executed 2025-12-29 17:45
+
+### Finding 1: HabitDetailScreen - Critical Performance Bottleneck
+
+- **File:** `src/screens/HabitDetailScreen.tsx`
+- **Line(s):** 1-3334
+- **Pattern Found:** 3,334 LOC monolith with 31 useState calls in main component, 10 internal function components (not memoized), 7 Convex mutations, and 3 real-time queries
+- **Context:** This is the largest component in the codebase. Any state change in one of the 31 useState hooks triggers a full re-render of all 10 internal components. Key issues:
+  - Internal components (HeroSection, ActionButton, SectionCard, AnimatedSection, DangerZoneSection, AnimatedPressableCard, AffirmationsSection, ProgressTabContent, MotivationTabContent, ManageTabContent) are defined inside the main component and recreated on every render
+  - State is not lifted or grouped logically - 9 modal states share the same render tree
+  - Multiple Date() instantiations on lines 1695, 1713, 1722-1723, 1733-1735
+  - Legacy Animated API on lines 1513-1514, 1560-1572 with `useNativeDriver: false`
+- **Performance Impact:** Every keystroke in any text input, every modal toggle, every affirmation shuffle causes full 3,334 LOC component tree re-render
+
+### Finding 2: TemplateScienceModal - Large Modal Component
+
+- **File:** `src/components/TemplateScienceModal.tsx`
+- **Line(s):** 1-1373
+- **Pattern Found:** 1,373 LOC with 6 internal components (SkeletonBox, ConfettiParticle, AnimatedBorderBox, etc.)
+- **Context:** Modal component for displaying template science information. Contains complex animations and internal utility functions. Internal components defined inline will be recreated on each render.
+- **Performance Impact:** Modal open/close causes unnecessary component recreation. Animation state changes trigger full re-render.
+
+### Finding 3: TemplatesScreen - Template Browser
+
+- **File:** `src/screens/TemplatesScreen.tsx`
+- **Line(s):** 1-1039
+- **Pattern Found:** 1,039 LOC screen component with template filtering, category navigation, and preview logic combined
+- **Context:** Handles template browsing, category filtering, and template selection. State changes during filtering cause full list re-render.
+- **Performance Impact:** Every filter change, category selection, or search query triggers full screen re-render including all template cards.
+
+### Finding 4: HabitEditScreen - Form Screen
+
+- **File:** `src/screens/HabitEditScreen.tsx`
+- **Line(s):** 1-1071
+- **Pattern Found:** 1,071 LOC form component with validation and multiple form sections combined
+- **Context:** Form for editing habits with multiple input fields. Each keystroke in any field triggers full form re-render.
+- **Performance Impact:** Input latency accumulates as all form sections re-render on each keystroke.
+
+### Finding 5: FullsizeTemplatePreview - Template Preview Component
+
+- **File:** `src/components/FullsizeTemplatePreview.tsx`
+- **Line(s):** 1-1046
+- **Pattern Found:** 1,046 LOC preview component with rich template display
+- **Context:** Displays template details with animations and interactive elements. Large component tree rendered inline.
+- **Performance Impact:** Complex animations and state within a large component tree can cause frame drops.
+
+### Finding 6: Workshop Section Components - Duplicated Patterns
+
+- **Files:**
+  - `src/components/MotivationSystem/Workshop/LettersSection.tsx` (1,336 LOC, 11 useState, 8 internal components)
+  - `src/components/MotivationSystem/Workshop/AffirmationsSection.tsx` (1,147 LOC)
+  - `src/components/MotivationSystem/Workshop/VoiceNotesSection.tsx` (982 LOC)
+  - `src/components/MotivationSystem/Workshop/VisionBoardSection.tsx` (954 LOC)
+- **Pattern Found:** Each Workshop component is a mini-monolith with internal components (SectionCard, AnimatedSection, modals) defined inline
+- **Context:** These components follow the same anti-pattern as HabitDetailScreen - internal function components not memoized, multiple useState hooks, inline component definitions
+- **Performance Impact:** Combined 4,419 LOC that could benefit from extracting shared components and memoization. PulsingIcon and CompletionCheckmark are already documented as duplicated in earlier candidates.
+
+### Finding 7: CelebrationScreen - Reward Animation
+
+- **File:** `src/components/MotivationSystem/Reward/CelebrationScreen.tsx`
+- **Line(s):** 1-913
+- **Pattern Found:** 913 LOC celebration component with complex animation logic
+- **Context:** Displays celebration animations on habit completion. Heavy animation work should run on UI thread via worklets.
+- **Performance Impact:** Large component with animations - potential for JS thread blocking if animations not properly optimized.
+
+### Finding 8: ShareCardGenerator - Card Generation
+
+- **File:** `src/components/ShareCardGenerator.tsx`
+- **Line(s):** 1-732
+- **Pattern Found:** 732 LOC component for generating shareable habit cards
+- **Context:** Generates visual cards for sharing. Contains image processing and rendering logic.
+- **Performance Impact:** Image processing and canvas operations can block the main thread if not properly optimized.
+
+### Tactic Summary
+
+- **Issues Found:** 8 mega-components identified with performance-impacting patterns
+- **Files Affected:** 11 files
+- **Total LOC in Mega-Components:** ~12,600 lines
+- **Key Anti-Patterns:**
+  1. Internal function components not wrapped in React.memo or extracted
+  2. Excessive useState hooks causing cascading re-renders (36+ in HabitDetailScreen alone)
+  3. State not grouped by concern (modal states mixed with form states)
+  4. Date object recreation inside render functions
+  5. Legacy Animated API with useNativeDriver: false
+- **Recommended Actions:**
+  1. Extract internal components to separate files with React.memo
+  2. Group related state into custom hooks (useModalState, useFormState)
+  3. Extract Date computations to useMemo with stable dependencies
+  4. Migrate remaining Animated API to Reanimated worklets
+- **Status:** EXECUTED
