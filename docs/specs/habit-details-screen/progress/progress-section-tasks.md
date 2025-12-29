@@ -531,18 +531,94 @@
 
 ### 8.4 Quick Month Navigation
 
-- [ ] Add swipe gesture handler
-- [ ] Implement month picker modal
-- [ ] Add pinch-to-zoom between views
-- [ ] Add "Today" quick jump button
-- [ ] Animate transitions
+- [x] Add swipe gesture handler
+  - **COMPLETED**: Implemented in `SwipeableMonthGrid.tsx` with:
+    - Pan gesture handler using `react-native-gesture-handler` with configurable thresholds
+    - Distance threshold (50px) and velocity threshold (500px/s) for swipe recognition
+    - Visual feedback with real-time translateX during swipe
+    - 80% resistance when reaching navigation boundaries (minDate/maxDate)
+    - Spring animation on successful swipe with damping: 20, stiffness: 200
+    - Haptic feedback (light impact) on successful navigation
+    - Grid entry animations (fade/slideIn) for new month content
+    - Full accessibility support with swipe direction actions
+    - Comprehensive test suite: 31 test cases covering gesture handling, edge cases, accessibility
+- [x] Implement month picker modal
+  - **COMPLETED**: Implemented in `MonthPickerSheet.tsx` with:
+    - Modal presentation with year navigation arrows
+    - 12-month grid display for selected year
+    - minDate/maxDate constraints with disabled styling
+    - Jump to Today button with date awareness
+    - Animated year transitions (FadeInLeft/FadeInRight)
+    - Year text slide animation on navigation
+    - Haptic feedback (light impact for nav, selection for month)
+    - Full accessibility support (roles, labels, announcements)
+    - Comprehensive test suite: 60+ test cases covering all scenarios
+- [x] Add pinch-to-zoom between views
+  - **COMPLETED**: Implemented in `PinchToZoomContainer.tsx` with:
+    - Pinch gesture handler with scale thresholds (zoom in: 1.4, zoom out: 0.7)
+    - Visual spring feedback during gesture (scale 0.5-1.5 clamped)
+    - Premium gating for Year view with Crown badge and upsell callback
+    - Haptic feedback (medium impact) on successful zoom
+    - Warning haptic when attempting locked Year view
+    - VIEW_ZOOM_ORDER: week → month → 3m → year
+    - Accessibility actions (increment/decrement) for VoiceOver zoom
+    - Reduce motion support
+    - Comprehensive test suite: 55+ test cases covering gestures, premium gating, accessibility
+- [x] Add "Today" quick jump button
+  - **COMPLETED**: Implemented in `TodayJumpButton.tsx` with:
+    - 3 variants: pill (with label), icon (compact), floating (FAB style)
+    - Visibility logic: hidden when current month selected, respects minDate/maxDate
+    - Animated entrance (ZoomIn.springify) with configurable variants
+    - Haptic feedback (selection for pill/icon, light impact for floating)
+    - Full accessibility support (role, label, hint, announcement on press)
+    - Reduce motion support for animations
+    - Customizable label text
+    - Comprehensive test suite: 40+ test cases covering all variants, visibility, accessibility
+- [x] Animate transitions
+  - **COMPLETED**: Implemented in `AnimatedViewTransition.tsx` with:
+    - 3 animation types: fade (opacity), scale (zoom in/out), slide (horizontal)
+    - Automatic direction detection (in vs out zoom)
+    - View-specific accessibility labels (Week/Month/3 Months/Year view)
+    - Optional accessibility announcements on view change
+    - Transition complete callback support
+    - Reduce motion support (instant transitions when enabled)
+    - Comprehensive test suite: 33 test cases covering animations, accessibility, reduce motion
 
 ### 8.5 Undo Feature
 
-- [ ] Design undo toast UI
-- [ ] Implement 3-second undo window
-- [ ] Queue undo across rapid toggles
-- [ ] Handle undo after navigation
+- [x] Design undo toast UI
+  - **COMPLETED**: Created comprehensive `ToggleUndoToast` component at `src/components/ToggleUndoToast/ToggleUndoToast.tsx` with:
+    - Animated slide-up entry with spring physics (damping: 15, stiffness: 150)
+    - Visual progress bar countdown (linear easing for duration)
+    - Emerald color scheme for completion actions, stone for un-completion
+    - Swipe-down gesture to trigger undo (50px threshold or 500px/s velocity)
+    - UNDO button with press state styling
+    - Full accessibility support (alert role, polite live region, accessible labels)
+    - Safe area inset handling for bottom positioning
+    - 41 unit tests covering all rendering, interaction, and edge cases
+- [x] Implement 3-second undo window
+  - **COMPLETED**: Implemented via `useToggleUndo` hook at `src/components/ToggleUndoToast/useToggleUndo.ts` with:
+    - `DEFAULT_UNDO_WINDOW_MS = 3000` (configurable via `undoWindowMs` option)
+    - Optimistic UI pattern: visual state updates immediately, backend commit delayed
+    - Auto-commit on timer expiry via `commitToggleById()` with async error handling
+    - Timer cleanup on undo to prevent stale commits
+    - Date label formatting (e.g., "Dec 28") via date-fns
+- [x] Queue undo across rapid toggles
+  - **COMPLETED**: Full queue-based system in `useToggleUndo` hook with:
+    - `pendingToggles[]` array with independent timers per toggle
+    - `maxQueueSize` option (default: 10) with oldest-first eviction
+    - Same habit+date replacement logic (new toggle replaces existing)
+    - `undoToggle()` pops most recent, `undoAll()` clears entire queue
+    - `dismissToast()` hides toast but timers continue
+    - `forceCommit()` for immediate commit of all pending toggles
+    - `hasPendingToggle()` and `getPendingToggle()` for state queries
+- [x] Handle undo after navigation
+  - **COMPLETED**: Navigation-aware commit system with:
+    - `commitOnUnmount` option (default: true) - commits all pending on component unmount
+    - `commitOnBackground` option (default: true) - commits when app goes to background/inactive
+    - AppState listener for background detection with proper cleanup
+    - `onNavigationCommit` callback with reason ('unmount' | 'background') and affected toggles
+    - 100+ unit tests covering all scenarios including combined navigation events
 
 ---
 
