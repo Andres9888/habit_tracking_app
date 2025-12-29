@@ -25,6 +25,7 @@ import Animated, {
 import { Clock, MapPin, Link, Plus, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
+import { PulsingIcon, CompletionCheckmark } from '../../animations';
 
 export interface CueTriggerData {
   /** Time of day for the habit (e.g., "7:00 AM" or "Morning") */
@@ -50,147 +51,7 @@ export interface CueTriggerSectionProps {
 
 // Animation spring configs
 const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
 const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
-const STAGGER_DELAY = 80;
-const BASE_CHECKMARK_DELAY = 600;
-
-/**
- * PulsingIcon Component for Empty State Icons
- * Wraps icons with subtle opacity + scale pulse animation
- */
-function PulsingIcon({
-  children,
-  reduceMotion = false,
-}: {
-  children: React.ReactNode;
-  reduceMotion?: boolean;
-}) {
-  const opacity = useSharedValue(1);
-  const scale = useSharedValue(1);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      opacity.value = 1;
-      scale.value = 1;
-      return;
-    }
-
-    // Create infinite pulse animation
-    const pulseOpacity = () => {
-      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
-        if (finished) {
-          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseOpacity)();
-            }
-          });
-        }
-      });
-    };
-
-    const pulseScale = () => {
-      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
-        if (finished) {
-          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseScale)();
-            }
-          });
-        }
-      });
-    };
-
-    pulseOpacity();
-    pulseScale();
-
-    return () => {
-      // Animation cleanup happens automatically when component unmounts
-    };
-  }, [reduceMotion, opacity, scale]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
-}
-
-/**
- * CompletionCheckmark Component
- * Animated checkmark badge that pops in when the section is filled
- */
-function CompletionCheckmark({
-  isVisible,
-  sectionIndex,
-  shouldAnimate,
-  reduceMotion = false,
-}: {
-  isVisible: boolean;
-  sectionIndex: number;
-  shouldAnimate: boolean;
-  reduceMotion?: boolean;
-}) {
-  const scale = useSharedValue(
-    isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
-  );
-  const opacity = useSharedValue(
-    isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
-  );
-
-  useEffect(() => {
-    if (!isVisible) {
-      scale.value = 0;
-      opacity.value = 0;
-      return;
-    }
-
-    if (!shouldAnimate || reduceMotion) {
-      scale.value = 1;
-      opacity.value = 1;
-      return;
-    }
-
-    // Calculate delay: section stagger + base checkmark delay
-    const delay = sectionIndex * STAGGER_DELAY + BASE_CHECKMARK_DELAY;
-
-    const timeout = setTimeout(() => {
-      // Pop-in animation: 0 → 1.2 → 1 using Springs.bouncy
-      scale.value = withSequence(
-        withSpring(1.2, SPRING_BOUNCY),
-        withSpring(1, { damping: 15, stiffness: 200 })
-      );
-      opacity.value = withTiming(1, { duration: 150 });
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [isVisible, shouldAnimate, reduceMotion, sectionIndex, scale, opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  if (!isVisible) return null;
-
-  return (
-    <Animated.View
-      style={[
-        animatedStyle,
-        {
-          position: 'absolute',
-          right: -4,
-          top: -4,
-        },
-      ]}
-    >
-      <View className='h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm'>
-        <Check className='text-white' size={12} strokeWidth={3} />
-      </View>
-    </Animated.View>
-  );
-}
 
 /**
  * SectionCard Component for consistent styling with press animation
