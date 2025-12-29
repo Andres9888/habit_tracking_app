@@ -27,12 +27,15 @@ describe('WeekGrid', () => {
   const mockOnDayPress = jest.fn();
 
   // Helper to create a week of CalendarDay objects
-  const createWeek = (options: {
-    startDate?: string;
-    completedDays?: number[];
-    todayIndex?: number;
-    habitCreatedIndex?: number;
-  } = {}): CalendarDay[] => {
+  // Uses noon UTC to avoid timezone boundary issues
+  const createWeek = (
+    options: {
+      startDate?: string;
+      completedDays?: number[];
+      todayIndex?: number;
+      habitCreatedIndex?: number;
+    } = {}
+  ): CalendarDay[] => {
     const {
       startDate = '2025-12-21',
       completedDays = [],
@@ -40,12 +43,13 @@ describe('WeekGrid', () => {
       habitCreatedIndex = 0,
     } = options;
 
-    const baseDate = new Date(startDate);
+    // Parse date as noon UTC to avoid timezone boundary issues
+    const baseDate = new Date(`${startDate}T12:00:00Z`);
     return Array.from({ length: 7 }, (_, i) => {
       const date = new Date(baseDate);
-      date.setDate(baseDate.getDate() + i);
+      date.setUTCDate(baseDate.getUTCDate() + i);
       const dateStr = date.toISOString().split('T')[0];
-      const dayOfMonth = date.getDate();
+      const dayOfMonth = date.getUTCDate();
       const isFuture = i > todayIndex && todayIndex >= 0;
       const isBeforeCreation = i < habitCreatedIndex;
 
@@ -118,7 +122,11 @@ describe('WeekGrid', () => {
       const customColor = '#ff5500';
 
       const { getByLabelText } = render(
-        <WeekGrid week={week} habitColor={customColor} onDayPress={mockOnDayPress} />
+        <WeekGrid
+          week={week}
+          habitColor={customColor}
+          onDayPress={mockOnDayPress}
+        />
       );
 
       // The cell should render with custom color
@@ -136,7 +144,9 @@ describe('WeekGrid', () => {
 
       // Check accessibility hint indicates toggle behavior
       const sundayCell = getByLabelText(/Sunday/);
-      expect(sundayCell.props.accessibilityHint).toBe('Tap to toggle completion');
+      expect(sundayCell.props.accessibilityHint).toBe(
+        'Tap to toggle completion'
+      );
     });
 
     it('should trigger haptic feedback on press', () => {
@@ -150,7 +160,9 @@ describe('WeekGrid', () => {
       const sundayCell = getByLabelText(/Sunday/);
       fireEvent.press(sundayCell);
 
-      expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Medium);
+      expect(Haptics.impactAsync).toHaveBeenCalledWith(
+        Haptics.ImpactFeedbackStyle.Medium
+      );
     });
 
     it('should call onDayPress with date and current completion status when toggling', () => {
@@ -223,7 +235,11 @@ describe('WeekGrid', () => {
       const week = createWeek({ todayIndex: 3 });
 
       const { getByLabelText } = render(
-        <WeekGrid week={week} onDayPress={mockOnDayPress} instantToggle={false} />
+        <WeekGrid
+          week={week}
+          onDayPress={mockOnDayPress}
+          instantToggle={false}
+        />
       );
 
       const sundayCell = getByLabelText(/Sunday/);
@@ -234,7 +250,11 @@ describe('WeekGrid', () => {
       const week = createWeek();
 
       const { getByLabelText } = render(
-        <WeekGrid week={week} onDayPress={mockOnDayPress} instantToggle={false} />
+        <WeekGrid
+          week={week}
+          onDayPress={mockOnDayPress}
+          instantToggle={false}
+        />
       );
 
       const sundayCell = getByLabelText(/Sunday/);
@@ -248,13 +268,19 @@ describe('WeekGrid', () => {
       const week = createWeek();
 
       const { getByLabelText } = render(
-        <WeekGrid week={week} onDayPress={mockOnDayPress} instantToggle={false} />
+        <WeekGrid
+          week={week}
+          onDayPress={mockOnDayPress}
+          instantToggle={false}
+        />
       );
 
       const sundayCell = getByLabelText(/Sunday/);
       fireEvent.press(sundayCell);
 
-      expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Medium);
+      expect(Haptics.impactAsync).toHaveBeenCalledWith(
+        Haptics.ImpactFeedbackStyle.Medium
+      );
     });
   });
 
@@ -314,9 +340,7 @@ describe('WeekGrid', () => {
     it('should work without onDayPress callback', () => {
       const week = createWeek();
 
-      const { getByLabelText } = render(
-        <WeekGrid week={week} />
-      );
+      const { getByLabelText } = render(<WeekGrid week={week} />);
 
       const sundayCell = getByLabelText(/Sunday/);
 
@@ -329,9 +353,7 @@ describe('WeekGrid', () => {
     it('should have staggered entry animations', () => {
       const week = createWeek();
 
-      render(
-        <WeekGrid week={week} onDayPress={mockOnDayPress} />
-      );
+      render(<WeekGrid week={week} onDayPress={mockOnDayPress} />);
 
       // Animation behavior is tested implicitly through rendering
       // Each cell has a delay of index * 50ms
@@ -388,7 +410,7 @@ describe('WeekGrid', () => {
     it('should include day name, day of month, and status in accessibility label', () => {
       const week = createWeek({
         completedDays: [0],
-        todayIndex: 0
+        todayIndex: 0,
       }); // Sunday is completed and today
 
       const { getByLabelText } = render(
@@ -403,16 +425,28 @@ describe('WeekGrid', () => {
       const week = createWeek();
 
       const { getByLabelText, rerender } = render(
-        <WeekGrid week={week} onDayPress={mockOnDayPress} instantToggle={true} />
+        <WeekGrid
+          week={week}
+          onDayPress={mockOnDayPress}
+          instantToggle={true}
+        />
       );
 
-      expect(getByLabelText(/Sunday/).props.accessibilityHint).toBe('Tap to toggle completion');
+      expect(getByLabelText(/Sunday/).props.accessibilityHint).toBe(
+        'Tap to toggle completion'
+      );
 
       rerender(
-        <WeekGrid week={week} onDayPress={mockOnDayPress} instantToggle={false} />
+        <WeekGrid
+          week={week}
+          onDayPress={mockOnDayPress}
+          instantToggle={false}
+        />
       );
 
-      expect(getByLabelText(/Sunday/).props.accessibilityHint).toBe('Tap to view details');
+      expect(getByLabelText(/Sunday/).props.accessibilityHint).toBe(
+        'Tap to view details'
+      );
     });
   });
 

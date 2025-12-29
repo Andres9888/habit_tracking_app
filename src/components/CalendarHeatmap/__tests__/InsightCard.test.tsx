@@ -195,7 +195,7 @@ describe('InsightCard', () => {
       const stats = createDayStats([50, 80, 80, 80, 80, 80, 80]);
       const weakestDay = { day: 'Sunday', rate: 50 };
 
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <InsightCard
           dayOfWeekStats={stats}
           weakestDay={weakestDay}
@@ -205,10 +205,9 @@ describe('InsightCard', () => {
         />
       );
 
-      // Weakest day should be highlighted
-      // This is tested through className which includes 'bg-violet-400'
-      const sundayPercentage = getByText('50%');
-      expect(sundayPercentage).toBeTruthy();
+      // Weakest day should be highlighted - verify via accessibility label
+      // (visual styling is tested through className which includes 'bg-violet-400')
+      expect(getByLabelText('Sunday: 50% completion rate')).toBeTruthy();
     });
   });
 
@@ -485,7 +484,7 @@ describe('InsightCard', () => {
       const stats = createDayStats([0, 80, 80, 80, 80, 80, 80]);
       const weakestDay = { day: 'Sunday', rate: 0 };
 
-      const { getByText } = render(
+      const { getByText, getByLabelText } = render(
         <InsightCard
           dayOfWeekStats={stats}
           weakestDay={weakestDay}
@@ -496,14 +495,15 @@ describe('InsightCard', () => {
       );
 
       expect(getByText(/0% of the time/)).toBeTruthy();
-      expect(getByText('0%')).toBeTruthy();
+      // Use accessibility label since text nodes may be split in RN
+      expect(getByLabelText('Sunday: 0% completion rate')).toBeTruthy();
     });
 
     it('should handle low completion rates with minimum bar height', () => {
       const stats = createDayStats([2, 80, 80, 80, 80, 80, 80]);
       const weakestDay = { day: 'Sunday', rate: 2 };
 
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <InsightCard
           dayOfWeekStats={stats}
           weakestDay={weakestDay}
@@ -514,14 +514,15 @@ describe('InsightCard', () => {
       );
 
       // Should still render with minimum height (5%)
-      expect(getByText('2%')).toBeTruthy();
+      // Use accessibility label since text nodes may be split in RN
+      expect(getByLabelText('Sunday: 2% completion rate')).toBeTruthy();
     });
 
     it('should handle 100% completion rate', () => {
       const stats = createDayStats([60, 100, 100, 100, 100, 100, 100]);
       const weakestDay = { day: 'Sunday', rate: 60 };
 
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <InsightCard
           dayOfWeekStats={stats}
           weakestDay={weakestDay}
@@ -531,7 +532,8 @@ describe('InsightCard', () => {
         />
       );
 
-      expect(getByText('100%')).toBeTruthy();
+      // Use accessibility label since text nodes may be split in RN
+      expect(getByLabelText('Monday: 100% completion rate')).toBeTruthy();
     });
 
     it('should handle different weak days correctly', () => {

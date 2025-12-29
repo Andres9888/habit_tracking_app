@@ -575,7 +575,11 @@ describe('generateMonthGrid', () => {
 
     describe('completed dates with week start customization', () => {
       it('marks completed dates correctly with Monday start', () => {
-        const completedDates = new Set(['2025-12-05', '2025-12-15', '2025-12-25']);
+        const completedDates = new Set([
+          '2025-12-05',
+          '2025-12-15',
+          '2025-12-25',
+        ]);
         const grid = generateMonthGrid(2025, 11, completedDates, undefined, 1);
 
         const completedDays = grid.flat().filter((d) => d.completed);
@@ -594,7 +598,9 @@ describe('generateMonthGrid', () => {
         const habitCreatedAt = new Date(2025, 11, 15).getTime();
         const grid = generateMonthGrid(2025, 11, new Set(), habitCreatedAt, 1);
 
-        const beforeCreationDays = grid.flat().filter((d) => d.isBeforeCreation);
+        const beforeCreationDays = grid
+          .flat()
+          .filter((d) => d.isBeforeCreation);
         // Days 1-14 should be before creation
         expect(beforeCreationDays.length).toBe(14);
       });
@@ -622,7 +628,11 @@ describe('generateMonthGrid', () => {
     describe('padding calculation edge cases', () => {
       it('handles month starting on week start day (no padding)', () => {
         // Test each week start day with a month that starts on that day
-        const testCases: Array<{ month: number; year: number; startDay: 0 | 1 | 2 | 3 | 4 | 5 | 6 }> = [
+        const testCases: Array<{
+          month: number;
+          year: number;
+          startDay: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+        }> = [
           { month: 5, year: 2025, startDay: 0 }, // June 2025 starts on Sunday
           { month: 11, year: 2025, startDay: 1 }, // December 2025 starts on Monday
           { month: 6, year: 2025, startDay: 2 }, // July 2025 starts on Tuesday
@@ -633,7 +643,13 @@ describe('generateMonthGrid', () => {
         ];
 
         for (const { month, year, startDay } of testCases) {
-          const grid = generateMonthGrid(year, month, new Set(), undefined, startDay);
+          const grid = generateMonthGrid(
+            year,
+            month,
+            new Set(),
+            undefined,
+            startDay
+          );
           const firstWeek = grid[0];
 
           // First cell should be the 1st of the month (no padding)
@@ -645,14 +661,30 @@ describe('generateMonthGrid', () => {
       it('handles month starting one day after week start (1 padding cell)', () => {
         // December 2025 starts on Monday
         // With Sunday (0) start: 1 padding cell (Sunday)
-        const gridSundayStart = generateMonthGrid(2025, 11, new Set(), undefined, 0);
-        let paddingCount = gridSundayStart[0].filter((d) => d.date === null).length;
+        const gridSundayStart = generateMonthGrid(
+          2025,
+          11,
+          new Set(),
+          undefined,
+          0
+        );
+        let paddingCount = gridSundayStart[0].filter(
+          (d) => d.date === null
+        ).length;
         expect(paddingCount).toBe(1);
 
         // With Saturday (6) start: December 1st (Monday) is 2 days after Saturday
         // Calculation: (1 - 6 + 7) % 7 = 2 padding cells
-        const gridSaturdayStart = generateMonthGrid(2025, 11, new Set(), undefined, 6);
-        paddingCount = gridSaturdayStart[0].filter((d) => d.date === null).length;
+        const gridSaturdayStart = generateMonthGrid(
+          2025,
+          11,
+          new Set(),
+          undefined,
+          6
+        );
+        paddingCount = gridSaturdayStart[0].filter(
+          (d) => d.date === null
+        ).length;
         expect(paddingCount).toBe(2);
       });
 
@@ -1604,6 +1636,18 @@ describe('getDayAccessibilityLabel', () => {
 });
 
 describe('calculateDayOfWeekStats', () => {
+  // Freeze time to 2025-12-21T12:00:00Z for consistent test results
+  const FROZEN_DATE = new Date('2025-12-21T12:00:00Z');
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(FROZEN_DATE);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('basic statistics', () => {
     it('returns stats for all 7 days of week', () => {
       const completedDates = new Set<string>();
@@ -1623,11 +1667,12 @@ describe('calculateDayOfWeekStats', () => {
 
     it('calculates 100% rate when all occurrences completed', () => {
       // Create a habit from a Sunday and complete every Sunday
-      const habitCreatedAt = new Date('2025-12-07').getTime(); // Sunday
+      // Use UTC noon (Z suffix) to match frozen time
+      const habitCreatedAt = new Date('2025-12-07T12:00:00Z').getTime(); // Sunday
       const completedDates = new Set([
         '2025-12-07', // Sunday
         '2025-12-14', // Sunday
-        '2025-12-21', // Sunday (today)
+        '2025-12-21', // Sunday (today in frozen time)
       ]);
 
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
@@ -1652,10 +1697,11 @@ describe('calculateDayOfWeekStats', () => {
     });
 
     it('calculates 50% rate correctly', () => {
-      // Habit created on Sunday Dec 7, today is Sunday Dec 21
+      // Habit created on Sunday Dec 7, today is Sunday Dec 21 (frozen time)
       // 3 Sundays total: 7th, 14th, 21st
       // Complete 7th and 21st (2/3 = 66.67%, rounds to 67%)
-      const habitCreatedAt = new Date('2025-12-07').getTime();
+      // Use UTC noon (Z suffix) to match frozen time
+      const habitCreatedAt = new Date('2025-12-07T12:00:00Z').getTime();
       const completedDates = new Set(['2025-12-07', '2025-12-21']);
 
       const stats = calculateDayOfWeekStats(completedDates, habitCreatedAt);
@@ -1958,23 +2004,40 @@ describe('detectWeakDay', () => {
 });
 
 describe('calculateStreakPosition', () => {
+  // Freeze time to 2025-12-21T12:00:00Z for consistent test results
+  const FROZEN_DATE = new Date('2025-12-21T12:00:00Z');
+
+  // Helper to format date as YYYY-MM-DD in local time
+  const formatLocalDate = (date: Date): string => {
+    return format(date, 'yyyy-MM-dd');
+  };
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(FROZEN_DATE);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('valid streak detection', () => {
     it('returns correct position in ongoing streak', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       // Create a 5-day streak ending today
       const completedDates = new Set<string>();
       for (let i = 0; i < 5; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        completedDates.add(date.toISOString().split('T')[0]);
+        completedDates.add(formatLocalDate(date));
       }
 
       // Check position of each day in streak
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayStr = formatLocalDate(yesterday);
 
       expect(calculateStreakPosition(todayStr, completedDates)).toBe(5); // Most recent
       expect(calculateStreakPosition(yesterdayStr, completedDates)).toBe(4);
@@ -1982,7 +2045,7 @@ describe('calculateStreakPosition', () => {
 
     it('returns 1 for first day of streak', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
       const completedDates = new Set([todayStr]);
 
       expect(calculateStreakPosition(todayStr, completedDates)).toBe(1);
@@ -1992,11 +2055,11 @@ describe('calculateStreakPosition', () => {
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayStr = formatLocalDate(yesterday);
 
       const twoDaysAgo = new Date(today);
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-      const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];
+      const twoDaysAgoStr = formatLocalDate(twoDaysAgo);
 
       const completedDates = new Set([yesterdayStr, twoDaysAgoStr]);
 
@@ -2014,7 +2077,7 @@ describe('calculateStreakPosition', () => {
     it('returns 0 when streak is broken (no today or yesterday)', () => {
       const twoDaysAgo = new Date();
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-      const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];
+      const twoDaysAgoStr = formatLocalDate(twoDaysAgo);
 
       const completedDates = new Set([twoDaysAgoStr]);
 
@@ -2023,7 +2086,7 @@ describe('calculateStreakPosition', () => {
 
     it('returns 0 for date in old completed streak', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       // New streak today
       const completedDates = new Set([
@@ -2041,11 +2104,11 @@ describe('calculateStreakPosition', () => {
   describe('future dates', () => {
     it('returns 0 for future dates', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
-      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      const tomorrowStr = formatLocalDate(tomorrow);
 
       const completedDates = new Set([todayStr, tomorrowStr]);
 
@@ -2056,7 +2119,7 @@ describe('calculateStreakPosition', () => {
   describe('habit creation date handling', () => {
     it('stops streak calculation at habit creation date', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       // Habit created 3 days ago
       const habitCreatedAt = new Date(today);
@@ -2067,7 +2130,7 @@ describe('calculateStreakPosition', () => {
       for (let i = 0; i < 10; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        completedDates.add(date.toISOString().split('T')[0]);
+        completedDates.add(formatLocalDate(date));
       }
 
       // Streak should only count from habit creation (4 days including creation day)
@@ -2083,15 +2146,15 @@ describe('calculateStreakPosition', () => {
     it('includes habit creation day in streak', () => {
       const creationDate = new Date();
       creationDate.setDate(creationDate.getDate() - 2);
-      const creationDateStr = creationDate.toISOString().split('T')[0];
+      const creationDateStr = formatLocalDate(creationDate);
       const habitCreatedAt = creationDate.getTime();
 
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayStr = formatLocalDate(yesterday);
 
       const completedDates = new Set([todayStr, yesterdayStr, creationDateStr]);
 
@@ -2105,13 +2168,13 @@ describe('calculateStreakPosition', () => {
 
     it('handles undefined habitCreatedAt', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       const completedDates = new Set<string>();
       for (let i = 0; i < 5; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        completedDates.add(date.toISOString().split('T')[0]);
+        completedDates.add(formatLocalDate(date));
       }
 
       // Should calculate full streak without creation date restriction
@@ -2122,7 +2185,7 @@ describe('calculateStreakPosition', () => {
   describe('edge cases', () => {
     it('handles single day streak', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
       const completedDates = new Set([todayStr]);
 
       expect(calculateStreakPosition(todayStr, completedDates)).toBe(1);
@@ -2130,14 +2193,14 @@ describe('calculateStreakPosition', () => {
 
     it('handles long streak', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       // 30-day streak
       const completedDates = new Set<string>();
       for (let i = 0; i < 30; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        completedDates.add(date.toISOString().split('T')[0]);
+        completedDates.add(formatLocalDate(date));
       }
 
       expect(calculateStreakPosition(todayStr, completedDates)).toBe(30);
@@ -2145,20 +2208,20 @@ describe('calculateStreakPosition', () => {
 
     it('handles streak with gaps in the past', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatLocalDate(today);
 
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayStr = formatLocalDate(yesterday);
 
       const twoDaysAgo = new Date(today);
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-      const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];
+      const twoDaysAgoStr = formatLocalDate(twoDaysAgo);
 
       // Gap at 3 days ago
       const fiveDaysAgo = new Date(today);
       fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
-      const fiveDaysAgoStr = fiveDaysAgo.toISOString().split('T')[0];
+      const fiveDaysAgoStr = formatLocalDate(fiveDaysAgo);
 
       const completedDates = new Set([
         todayStr,
@@ -2308,6 +2371,18 @@ describe('generateHorizontalGrid', () => {
   });
 
   describe('today detection', () => {
+    // Freeze time to avoid timezone issues
+    const FROZEN_DATE = new Date('2025-12-21T12:00:00Z');
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(FROZEN_DATE);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
     it('marks exactly one day as today', () => {
       const today = new Date();
       const { weeks } = generateHorizontalGrid(today, new Set());
@@ -2318,7 +2393,8 @@ describe('generateHorizontalGrid', () => {
 
     it('marks today with correct date', () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      // Use date-fns format to get local date, matching how the component formats
+      const todayStr = format(today, 'yyyy-MM-dd');
       const { weeks } = generateHorizontalGrid(today, new Set());
 
       const todayDay = weeks.flat().find((d) => d.isToday);

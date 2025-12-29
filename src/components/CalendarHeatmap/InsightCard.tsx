@@ -26,66 +26,66 @@ export function InsightCard({
 
   return (
     <Animated.View
-      className="mt-4 overflow-hidden rounded-xl shadow-sm shadow-stone-200/50"
-      entering={FadeInDown.delay(400).springify()}
-      accessible={true}
-      accessibilityRole="none"
+      accessible
       accessibilityLabel={`Insight: ${weakestDay.day}s are your challenge day at ${weakestDay.rate}% completion`}
+      accessibilityRole='none'
+      className='mt-4 overflow-hidden rounded-xl shadow-sm shadow-stone-200/50'
+      entering={FadeInDown.delay(400).springify()}
     >
       {/* Gradient Background */}
-      <View className="absolute inset-0 bg-gradient-to-br from-violet-50/50 via-white to-purple-50/50" />
+      <View className='absolute inset-0 bg-gradient-to-br from-violet-50/50 via-white to-purple-50/50' />
 
-      <View className="p-4">
+      <View className='p-4'>
         {/* Header with icon and dismiss button */}
-        <View className="flex-row items-start justify-between mb-3">
-          <View className="flex-row items-center gap-2 flex-1">
-            <View className="h-7 w-7 items-center justify-center rounded-lg bg-violet-100">
-              <Lightbulb className="text-violet-500" size={14} />
+        <View className='mb-3 flex-row items-start justify-between'>
+          <View className='flex-1 flex-row items-center gap-2'>
+            <View className='h-7 w-7 items-center justify-center rounded-lg bg-violet-100'>
+              <Lightbulb className='text-violet-500' size={14} />
             </View>
-            <Text className="text-sm font-semibold text-stone-800 flex-1">
+            <Text className='flex-1 text-sm font-semibold text-stone-800'>
               {weakestDay.day}s need focus
             </Text>
           </View>
 
           {onDismiss && (
             <Pressable
+              accessible
+              accessibilityHint='Hide this insight card'
+              accessibilityLabel='Dismiss insight'
+              accessibilityRole='button'
+              className='rounded-lg p-1 active:bg-stone-100'
               onPress={onDismiss}
-              className="p-1 rounded-lg active:bg-stone-100"
-              accessible={true}
-              accessibilityRole="button"
-              accessibilityLabel="Dismiss insight"
-              accessibilityHint="Hide this insight card"
             >
-              <X className="text-stone-400" size={16} />
+              <X className='text-stone-400' size={16} />
             </Pressable>
           )}
         </View>
 
         {/* Pattern message */}
-        <Text className="text-xs text-stone-600 mb-3">
-          You complete habits on {weakestDay.day}s only {weakestDay.rate}% of the time
-          {avgRate > 0 && ` (${Math.round(avgRate - weakestDay.rate)}% below average)`}
+        <Text className='mb-3 text-xs text-stone-600'>
+          You complete habits on {weakestDay.day}s only {weakestDay.rate}% of
+          the time
+          {avgRate > 0 &&
+            ` (${Math.round(avgRate - weakestDay.rate)}% below average)`}
         </Text>
 
         {/* Mini day-of-week bar chart */}
-        <View className="mb-4">
-          <View className="flex-row justify-between mb-1">
+        <View className='mb-4'>
+          <View className='mb-1 flex-row justify-between'>
             {dayOfWeekStats.map((stat) => (
               <View
                 key={stat.day}
-                className="flex-1 items-center"
-                accessible={true}
-                accessibilityRole="none"
-                accessibilityLabel={`${stat.day}: ${stat.rate}% completion rate`}
+                className='flex-1 items-center'
+                importantForAccessibility='no-hide-descendants'
               >
-                <Text className="text-[10px] text-stone-400 mb-1">
+                <Text className='mb-1 text-[10px] text-stone-400'>
                   {stat.day.charAt(0)}
                 </Text>
               </View>
             ))}
           </View>
 
-          <View className="flex-row justify-between items-end h-12">
+          <View className='h-12 flex-row items-end justify-between'>
             {dayOfWeekStats.map((stat) => {
               const isWeakest = stat.day === weakestDay.day;
               const height = Math.max(stat.rate, 5); // Minimum 5% height for visibility
@@ -93,10 +93,10 @@ export function InsightCard({
               return (
                 <View
                   key={stat.day}
-                  className="flex-1 items-center px-0.5"
-                  accessible={true}
-                  accessibilityRole="none"
+                  accessible
                   accessibilityLabel={`${stat.day}: ${stat.rate}% completion rate`}
+                  accessibilityRole='none'
+                  className='flex-1 items-center px-0.5'
                 >
                   <View
                     className={`w-full rounded-t ${
@@ -109,14 +109,16 @@ export function InsightCard({
             })}
           </View>
 
-          <View className="flex-row justify-between mt-1">
+          <View className='mt-1 flex-row justify-between'>
             {dayOfWeekStats.map((stat) => (
-              <View key={stat.day} className="flex-1 items-center">
+              <View key={stat.day} className='flex-1 items-center'>
                 <Text
                   className={`text-[9px] font-medium ${
-                    stat.day === weakestDay.day ? 'text-violet-600' : 'text-stone-400'
+                    stat.day === weakestDay.day
+                      ? 'text-violet-600'
+                      : 'text-stone-400'
                   }`}
-                  importantForAccessibility="no-hide-descendants"
+                  importantForAccessibility='no-hide-descendants'
                 >
                   {stat.rate}%
                 </Text>
@@ -126,18 +128,18 @@ export function InsightCard({
         </View>
 
         {/* Action buttons */}
-        <View className="flex-row gap-2">
+        <View className='flex-row gap-2'>
           {onSetReminder && (
             <Pressable
-              onPress={() => onSetReminder(weakestDay.day)}
-              className="flex-1 flex-row items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-violet-100 active:bg-violet-200"
-              accessible={true}
-              accessibilityRole="button"
+              accessible
+              accessibilityHint='Opens time picker to set a reminder'
               accessibilityLabel={`Set reminder for ${weakestDay.day}s`}
-              accessibilityHint="Opens time picker to set a reminder"
+              accessibilityRole='button'
+              className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg bg-violet-100 px-3 py-2.5 active:bg-violet-200'
+              onPress={() => onSetReminder(weakestDay.day)}
             >
-              <Bell className="text-violet-600" size={14} />
-              <Text className="text-xs font-medium text-violet-600">
+              <Bell className='text-violet-600' size={14} />
+              <Text className='text-xs font-medium text-violet-600'>
                 Set Reminder
               </Text>
             </Pressable>
@@ -145,15 +147,15 @@ export function InsightCard({
 
           {onSeeTips && (
             <Pressable
-              onPress={() => onSeeTips(weakestDay.day)}
-              className="flex-1 flex-row items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-violet-100 active:bg-violet-200"
-              accessible={true}
-              accessibilityRole="button"
+              accessible
+              accessibilityHint='Opens tips modal with strategies'
               accessibilityLabel={`See tips for ${weakestDay.day}s`}
-              accessibilityHint="Opens tips modal with strategies"
+              accessibilityRole='button'
+              className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg bg-violet-100 px-3 py-2.5 active:bg-violet-200'
+              onPress={() => onSeeTips(weakestDay.day)}
             >
-              <HelpCircle className="text-violet-600" size={14} />
-              <Text className="text-xs font-medium text-violet-600">Tips</Text>
+              <HelpCircle className='text-violet-600' size={14} />
+              <Text className='text-xs font-medium text-violet-600'>Tips</Text>
             </Pressable>
           )}
         </View>
