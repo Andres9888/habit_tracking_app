@@ -17,33 +17,25 @@ jest.mock('../../../hooks/useReduceMotion', () => ({
   useReduceMotion: jest.fn(() => mockReduceMotion),
 }));
 
-// Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const actual = jest.requireActual('react-native-reanimated/mock');
-  return {
-    ...actual,
-    useSharedValue: jest.fn((initial) => ({ value: initial })),
-    useAnimatedStyle: jest.fn(() => ({})),
-    withTiming: jest.fn((toValue) => toValue),
-    withSpring: jest.fn((toValue) => toValue),
-    runOnJS: jest.fn((fn) => fn),
-    Easing: {
-      out: jest.fn(() => jest.fn()),
-      ease: 'ease',
-    },
-  };
-});
-
-// Mock AccessibilityInfo
-const mockAnnounceForAccessibility = jest.fn();
+// Mock AccessibilityInfo module
 jest.mock(
   'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo',
   () => ({
-    announceForAccessibility: mockAnnounceForAccessibility,
+    __esModule: true,
+    default: {
+      announceForAccessibility: jest.fn(),
+      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeEventListener: jest.fn(),
+    },
+    announceForAccessibility: jest.fn(),
     isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
     addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeEventListener: jest.fn(),
   })
 );
+
+import { AccessibilityInfo } from 'react-native';
 
 describe('AnimatedViewTransition', () => {
   beforeEach(() => {
@@ -54,7 +46,7 @@ describe('AnimatedViewTransition', () => {
   describe('Basic Rendering', () => {
     it('should render children correctly', () => {
       const { getByText } = render(
-        <AnimatedViewTransition currentView="month">
+        <AnimatedViewTransition currentView='month'>
           <Text>Month View Content</Text>
         </AnimatedViewTransition>
       );
@@ -64,7 +56,7 @@ describe('AnimatedViewTransition', () => {
 
     it('should have correct accessibility label', () => {
       const { getByLabelText } = render(
-        <AnimatedViewTransition currentView="week">
+        <AnimatedViewTransition currentView='week'>
           <View />
         </AnimatedViewTransition>
       );
@@ -74,7 +66,7 @@ describe('AnimatedViewTransition', () => {
 
     it('should update accessibility label when view changes', async () => {
       const { rerender, getByLabelText } = render(
-        <AnimatedViewTransition currentView="week">
+        <AnimatedViewTransition currentView='week'>
           <View />
         </AnimatedViewTransition>
       );
@@ -82,7 +74,7 @@ describe('AnimatedViewTransition', () => {
       expect(getByLabelText('Week view')).toBeTruthy();
 
       rerender(
-        <AnimatedViewTransition currentView="month">
+        <AnimatedViewTransition currentView='month'>
           <View />
         </AnimatedViewTransition>
       );
@@ -96,7 +88,7 @@ describe('AnimatedViewTransition', () => {
   describe('Animation Types', () => {
     it('should accept fade animation type', () => {
       const { getByLabelText } = render(
-        <AnimatedViewTransition currentView="month" animationType="fade">
+        <AnimatedViewTransition currentView='month' animationType='fade'>
           <View />
         </AnimatedViewTransition>
       );
@@ -106,7 +98,7 @@ describe('AnimatedViewTransition', () => {
 
     it('should accept scale animation type', () => {
       const { getByLabelText } = render(
-        <AnimatedViewTransition currentView="month" animationType="scale">
+        <AnimatedViewTransition currentView='month' animationType='scale'>
           <View />
         </AnimatedViewTransition>
       );
@@ -116,7 +108,7 @@ describe('AnimatedViewTransition', () => {
 
     it('should accept slide animation type', () => {
       const { getByLabelText } = render(
-        <AnimatedViewTransition currentView="month" animationType="slide">
+        <AnimatedViewTransition currentView='month' animationType='slide'>
           <View />
         </AnimatedViewTransition>
       );
@@ -131,7 +123,7 @@ describe('AnimatedViewTransition', () => {
 
       const { rerender } = render(
         <AnimatedViewTransition
-          currentView="week"
+          currentView='week'
           onTransitionComplete={onTransitionComplete}
         >
           <View />
@@ -140,7 +132,7 @@ describe('AnimatedViewTransition', () => {
 
       rerender(
         <AnimatedViewTransition
-          currentView="month"
+          currentView='month'
           onTransitionComplete={onTransitionComplete}
         >
           <View />
@@ -158,13 +150,13 @@ describe('AnimatedViewTransition', () => {
 
     it('should handle view change from month to 3m', async () => {
       const { rerender, getByLabelText } = render(
-        <AnimatedViewTransition currentView="month">
+        <AnimatedViewTransition currentView='month'>
           <View />
         </AnimatedViewTransition>
       );
 
       rerender(
-        <AnimatedViewTransition currentView="3m">
+        <AnimatedViewTransition currentView='3m'>
           <View />
         </AnimatedViewTransition>
       );
@@ -176,13 +168,13 @@ describe('AnimatedViewTransition', () => {
 
     it('should handle view change from 3m to year', async () => {
       const { rerender, getByLabelText } = render(
-        <AnimatedViewTransition currentView="3m">
+        <AnimatedViewTransition currentView='3m'>
           <View />
         </AnimatedViewTransition>
       );
 
       rerender(
-        <AnimatedViewTransition currentView="year">
+        <AnimatedViewTransition currentView='year'>
           <View />
         </AnimatedViewTransition>
       );
@@ -196,13 +188,13 @@ describe('AnimatedViewTransition', () => {
   describe('Accessibility Announcements', () => {
     it('should announce view changes when enabled', async () => {
       const { rerender } = render(
-        <AnimatedViewTransition currentView="week" announceViewChanges>
+        <AnimatedViewTransition currentView='week' announceViewChanges>
           <View />
         </AnimatedViewTransition>
       );
 
       rerender(
-        <AnimatedViewTransition currentView="month" announceViewChanges>
+        <AnimatedViewTransition currentView='month' announceViewChanges>
           <View />
         </AnimatedViewTransition>
       );
@@ -216,22 +208,16 @@ describe('AnimatedViewTransition', () => {
     });
 
     it('should not announce when announceViewChanges is false', async () => {
-      mockAnnounceForAccessibility.mockClear();
+      jest.clearAllMocks();
 
       const { rerender } = render(
-        <AnimatedViewTransition
-          currentView="week"
-          announceViewChanges={false}
-        >
+        <AnimatedViewTransition currentView='week' announceViewChanges={false}>
           <View />
         </AnimatedViewTransition>
       );
 
       rerender(
-        <AnimatedViewTransition
-          currentView="month"
-          announceViewChanges={false}
-        >
+        <AnimatedViewTransition currentView='month' announceViewChanges={false}>
           <View />
         </AnimatedViewTransition>
       );
@@ -249,7 +235,7 @@ describe('AnimatedViewTransition', () => {
 
       const { rerender } = render(
         <AnimatedViewTransition
-          currentView="week"
+          currentView='week'
           onTransitionComplete={onTransitionComplete}
         >
           <View />
@@ -258,7 +244,7 @@ describe('AnimatedViewTransition', () => {
 
       rerender(
         <AnimatedViewTransition
-          currentView="month"
+          currentView='month'
           onTransitionComplete={onTransitionComplete}
         >
           <View />
@@ -275,7 +261,7 @@ describe('AnimatedViewTransition', () => {
   describe('Custom Duration', () => {
     it('should accept custom duration', () => {
       const { getByLabelText } = render(
-        <AnimatedViewTransition currentView="month" duration={300}>
+        <AnimatedViewTransition currentView='month' duration={300}>
           <View />
         </AnimatedViewTransition>
       );
@@ -289,7 +275,7 @@ describe('AnimatedViewTransition', () => {
       const customStyle = { backgroundColor: 'red' };
 
       const { getByLabelText } = render(
-        <AnimatedViewTransition currentView="month" style={customStyle}>
+        <AnimatedViewTransition currentView='month' style={customStyle}>
           <View />
         </AnimatedViewTransition>
       );
@@ -358,7 +344,7 @@ describe('AnimatedViewTransition', () => {
 
       const { rerender } = render(
         <AnimatedViewTransition
-          currentView="month"
+          currentView='month'
           onTransitionComplete={onTransitionComplete}
         >
           <View />
@@ -368,7 +354,7 @@ describe('AnimatedViewTransition', () => {
       // Re-render with the same view
       rerender(
         <AnimatedViewTransition
-          currentView="month"
+          currentView='month'
           onTransitionComplete={onTransitionComplete}
         >
           <View />

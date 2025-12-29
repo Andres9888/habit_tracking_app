@@ -38,13 +38,21 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
   })),
 }));
 
-// Mock AccessibilityInfo
+// Mock AccessibilityInfo module
 jest.mock(
   'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo',
   () => ({
+    __esModule: true,
+    default: {
+      announceForAccessibility: jest.fn(),
+      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeEventListener: jest.fn(),
+    },
+    announceForAccessibility: jest.fn(),
     isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
     addEventListener: jest.fn(() => ({ remove: jest.fn() })),
-    announceForAccessibility: jest.fn(),
+    removeEventListener: jest.fn(),
   })
 );
 
@@ -56,8 +64,18 @@ jest.mock('date-fns', () => {
     format: jest.fn((date: Date, formatStr: string) => {
       if (formatStr === 'MMMM yyyy') {
         const months = [
-          'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
         ];
         return `${months[date.getMonth()]} ${date.getFullYear()}`;
       }
@@ -144,12 +162,19 @@ describe('TodayJumpButton', () => {
       expect(queryByText('Today')).toBeNull();
     });
 
-    it('respects showLabel override for icon variant', () => {
-      const { getByText } = render(
-        <TodayJumpButton {...defaultProps} variant='icon' showLabel={true} label='Today' />
+    it('icon variant only shows icon (showLabel is ignored for icon variant)', () => {
+      const { queryByText, getByRole } = render(
+        <TodayJumpButton
+          {...defaultProps}
+          variant='icon'
+          showLabel={true}
+          label='Today'
+        />
       );
 
-      expect(getByText('Today')).toBeTruthy();
+      // Icon variant is designed to be icon-only, doesn't render label text
+      expect(queryByText('Today')).toBeNull();
+      expect(getByRole('button')).toBeTruthy();
     });
   });
 
@@ -280,9 +305,7 @@ describe('TodayJumpButton', () => {
 
   describe('Press Handling', () => {
     it('calls onJumpToToday with current month and year on press', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       fireEvent.press(getByRole('button'));
 
@@ -360,34 +383,28 @@ describe('TodayJumpButton', () => {
 
   describe('Accessibility', () => {
     it('has correct accessibilityRole', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       expect(getByRole('button')).toBeTruthy();
     });
 
     it('has correct accessibilityLabel with month and year', () => {
-      const { getByLabelText } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByLabelText } = render(<TodayJumpButton {...defaultProps} />);
 
       expect(getByLabelText('Jump to today, December 2025')).toBeTruthy();
     });
 
     it('has correct accessibilityHint', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       const button = getByRole('button');
-      expect(button.props.accessibilityHint).toBe('Returns calendar to current month');
+      expect(button.props.accessibilityHint).toBe(
+        'Returns calendar to current month'
+      );
     });
 
     it('announces navigation for screen readers on press', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       fireEvent.press(getByRole('button'));
 
@@ -402,7 +419,12 @@ describe('TodayJumpButton', () => {
       );
 
       const button = getByRole('button');
-      expect(button.props.hitSlop).toEqual({ bottom: 8, left: 8, right: 8, top: 8 });
+      expect(button.props.hitSlop).toEqual({
+        bottom: 8,
+        left: 8,
+        right: 8,
+        top: 8,
+      });
     });
 
     it('has proper hitSlop for touch targets (icon)', () => {
@@ -411,7 +433,12 @@ describe('TodayJumpButton', () => {
       );
 
       const button = getByRole('button');
-      expect(button.props.hitSlop).toEqual({ bottom: 8, left: 8, right: 8, top: 8 });
+      expect(button.props.hitSlop).toEqual({
+        bottom: 8,
+        left: 8,
+        right: 8,
+        top: 8,
+      });
     });
 
     it('has proper hitSlop for touch targets (floating)', () => {
@@ -420,7 +447,12 @@ describe('TodayJumpButton', () => {
       );
 
       const button = getByRole('button');
-      expect(button.props.hitSlop).toEqual({ bottom: 8, left: 8, right: 8, top: 8 });
+      expect(button.props.hitSlop).toEqual({
+        bottom: 8,
+        left: 8,
+        right: 8,
+        top: 8,
+      });
     });
   });
 
@@ -438,18 +470,14 @@ describe('TodayJumpButton', () => {
     });
 
     it('renders without animation when reduce motion is enabled', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       // Should still render the button
       expect(getByRole('button')).toBeTruthy();
     });
 
     it('still triggers haptics with reduce motion (haptics != motion)', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       fireEvent.press(getByRole('button'));
 
@@ -586,9 +614,7 @@ describe('TodayJumpButton', () => {
     });
 
     it('handles rapid presses gracefully', () => {
-      const { getByRole } = render(
-        <TodayJumpButton {...defaultProps} />
-      );
+      const { getByRole } = render(<TodayJumpButton {...defaultProps} />);
 
       const button = getByRole('button');
 

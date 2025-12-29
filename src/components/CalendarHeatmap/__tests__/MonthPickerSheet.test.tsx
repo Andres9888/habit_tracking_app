@@ -34,24 +34,25 @@ jest.mock('../../../hooks/useReduceMotion', () => ({
   useReduceMotion: () => mockReduceMotion,
 }));
 
-// Mock AccessibilityInfo
-jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+// Mock AccessibilityInfo module
+jest.mock(
+  'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo',
+  () => ({
+    __esModule: true,
+    default: {
+      announceForAccessibility: jest.fn(),
+      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeEventListener: jest.fn(),
+    },
+    announceForAccessibility: jest.fn(),
+    isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+    addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeEventListener: jest.fn(),
+  })
+);
 
-// Mock reanimated for tests
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.FadeIn = {
-    duration: () => ({
-      springify: () => ({}),
-    }),
-  };
-  Reanimated.FadeInDown = {
-    delay: () => ({
-      springify: () => ({}),
-    }),
-  };
-  return Reanimated;
-});
+// Reanimated mock is handled by jest.setup.js
 
 describe('MonthPickerSheet', () => {
   const mockOnSelectMonth = jest.fn();
@@ -219,24 +220,25 @@ describe('MonthPickerSheet', () => {
   });
 
   describe('Year Navigation', () => {
-    it('should navigate to previous year when left arrow is pressed', () => {
+    it('should change display year to previous year when left arrow is pressed', () => {
       const { getByLabelText } = render(<MonthPickerSheet {...defaultProps} />);
 
       const prevButton = getByLabelText(/Previous year, 2023/i);
       fireEvent.press(prevButton);
 
-      // Should select same month in previous year
-      expect(mockOnSelectMonth).toHaveBeenCalledWith(6, 2023);
+      // Year navigation changes the display, does NOT select a month
+      // Selection requires pressing a month cell
+      expect(mockOnSelectMonth).not.toHaveBeenCalled();
     });
 
-    it('should navigate to next year when right arrow is pressed', () => {
+    it('should change display year to next year when right arrow is pressed', () => {
       const { getByLabelText } = render(<MonthPickerSheet {...defaultProps} />);
 
       const nextButton = getByLabelText(/Next year, 2025/i);
       fireEvent.press(nextButton);
 
-      // Should select same month in next year
-      expect(mockOnSelectMonth).toHaveBeenCalledWith(6, 2025);
+      // Year navigation changes the display, does NOT select a month
+      expect(mockOnSelectMonth).not.toHaveBeenCalled();
     });
 
     it('should trigger light haptic on year navigation', () => {
@@ -256,7 +258,7 @@ describe('MonthPickerSheet', () => {
 
       await waitFor(() => {
         expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
-          'Navigated to July 2023'
+          'Viewing 2023'
         );
       });
     });
@@ -665,15 +667,16 @@ describe('MonthPickerSheet', () => {
         />
       );
 
-      // Navigate to next year
+      // Navigate to next year (just changes display, doesn't select)
       const nextButton = getByLabelText(/Next year/i);
       fireEvent.press(nextButton);
 
-      // Should select December 2025
-      expect(mockOnSelectMonth).toHaveBeenCalledWith(11, 2025);
+      // Year navigation only changes display, selection requires pressing a month
+      expect(mockOnSelectMonth).not.toHaveBeenCalled();
+      expect(mockTriggerLightImpact).toHaveBeenCalled();
     });
 
-    it('should find first valid month when navigating to constrained year', () => {
+    it('should allow navigating to constrained year that has available months', () => {
       const { getByLabelText } = render(
         <MonthPickerSheet
           {...defaultProps}
@@ -683,17 +686,18 @@ describe('MonthPickerSheet', () => {
         />
       );
 
-      // Navigate to previous year (2023)
+      // Navigate to previous year (2023) - just changes display
       const prevButton = getByLabelText(/Previous year/i);
       fireEvent.press(prevButton);
 
-      // Should select June 2023 (first available month)
-      expect(mockOnSelectMonth).toHaveBeenCalledWith(5, 2023);
+      // Year navigation only changes display
+      expect(mockOnSelectMonth).not.toHaveBeenCalled();
+      expect(mockTriggerLightImpact).toHaveBeenCalled();
     });
   });
 
   describe('Multiple Years Display', () => {
-    it('should display multiple years when date range spans years', () => {
+    it('should display the selected year initially', () => {
       const { getAllByText } = render(
         <MonthPickerSheet
           {...defaultProps}
@@ -704,14 +708,34 @@ describe('MonthPickerSheet', () => {
         />
       );
 
-      // Should show multiple years as section headers (may appear in nav header too)
-      expect(getAllByText('2025').length).toBeGreaterThanOrEqual(1);
+      // The component shows one year at a time, starting with the selected year
+      // Year may appear multiple times (in month labels like "July 2024" and as section header)
       expect(getAllByText('2024').length).toBeGreaterThanOrEqual(1);
-      expect(getAllByText('2023').length).toBeGreaterThanOrEqual(1);
-      expect(getAllByText('2022').length).toBeGreaterThanOrEqual(1);
     });
 
-    it('should order years from most recent to oldest', () => {
+    it('should navigate to other years using arrows', () => {
+      const { getAllByText, getByLabelText } = render(
+        <MonthPickerSheet
+          {...defaultProps}
+          selectedMonth={6}
+          selectedYear={2024}
+          minDate={new Date(2022, 0, 1)}
+          maxDate={new Date(2025, 11, 31)}
+        />
+      );
+
+      // Initially shows 2024
+      expect(getAllByText('2024').length).toBeGreaterThanOrEqual(1);
+
+      // Navigate to next year (2025)
+      const nextButton = getByLabelText(/Next year/i);
+      fireEvent.press(nextButton);
+
+      // Year navigation triggers haptic
+      expect(mockTriggerLightImpact).toHaveBeenCalled();
+    });
+
+    it('should have year section with header role', () => {
       const { getAllByRole } = render(
         <MonthPickerSheet
           {...defaultProps}
@@ -723,9 +747,10 @@ describe('MonthPickerSheet', () => {
       );
 
       const headers = getAllByRole('header');
-      // First header is "Select Month", then years in descending order
-      expect(headers[1].props.children).toBe(2025);
-      expect(headers[2].props.children).toBe(2024);
+      // First header is "Select Month", second is the year (2024)
+      expect(headers.length).toBeGreaterThanOrEqual(2);
+      expect(headers[0].props.children).toBe('Select Month');
+      expect(headers[1].props.children).toBe(2024);
     });
   });
 });

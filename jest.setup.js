@@ -12,6 +12,10 @@ if (typeof global.structuredClone === 'undefined') {
   global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
 }
 
+// AccessibilityInfo is exported from react-native directly.
+// We'll mock it using Object.defineProperty after require to ensure the mock is applied.
+// The actual mock is applied by patching the module after jest processes imports.
+
 // Mock Expo modules
 jest.mock('expo-font');
 jest.mock('expo-asset');
@@ -273,6 +277,26 @@ jest.mock('react-native-reanimated', () => {
     SlideOutRight: {
       duration: jest.fn().mockReturnThis(),
     },
+    FadeInLeft: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      springify: jest.fn().mockReturnThis(),
+    },
+    FadeInRight: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      springify: jest.fn().mockReturnThis(),
+    },
+    ZoomIn: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      springify: jest.fn().mockReturnThis(),
+    },
+    ZoomOut: {
+      delay: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      springify: jest.fn().mockReturnThis(),
+    },
 
     // Layout animations
     LinearTransition: {
@@ -303,17 +327,20 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedScrollHandler: () => ({}),
     useAnimatedGestureHandler: () => ({}),
     useReducedMotion: () => false,
-    interpolateColor: (value, inputRange, outputRange) => outputRange[Math.round(value)],
+    interpolateColor: (value, inputRange, outputRange) =>
+      outputRange[Math.round(value)],
 
     // Interpolate function (used by ParticleBurst)
     interpolate: (value, inputRange, outputRange) => {
       // Simple linear interpolation for testing
       if (value <= inputRange[0]) return outputRange[0];
-      if (value >= inputRange[inputRange.length - 1]) return outputRange[outputRange.length - 1];
+      if (value >= inputRange[inputRange.length - 1])
+        return outputRange[outputRange.length - 1];
       // Find the appropriate segment
       for (let i = 0; i < inputRange.length - 1; i++) {
         if (value >= inputRange[i] && value <= inputRange[i + 1]) {
-          const ratio = (value - inputRange[i]) / (inputRange[i + 1] - inputRange[i]);
+          const ratio =
+            (value - inputRange[i]) / (inputRange[i + 1] - inputRange[i]);
           return outputRange[i] + ratio * (outputRange[i + 1] - outputRange[i]);
         }
       }

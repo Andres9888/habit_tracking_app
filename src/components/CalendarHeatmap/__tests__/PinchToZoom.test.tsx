@@ -17,53 +17,33 @@ import {
 } from '../PinchToZoomTypes';
 import type { CalendarViewMode, ZoomDirection } from '../PinchToZoomTypes';
 
-// Mock dependencies
-jest.mock('expo-haptics', () => ({
-  impactAsync: jest.fn(),
-  notificationAsync: jest.fn(),
-  ImpactFeedbackStyle: { Medium: 'medium', Light: 'light' },
-  NotificationFeedbackType: { Warning: 'warning' },
-}));
+// Mock dependencies - using global mocks from jest.setup.js for:
+// - react-native-reanimated
+// - react-native-gesture-handler
+// - expo-haptics
 
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.useSharedValue = (initial: number) => ({ value: initial });
-  Reanimated.default.useAnimatedStyle = (fn: () => object) => fn();
-  Reanimated.default.withSpring = (value: number) => value;
-  Reanimated.default.runOnJS = (fn: Function) => fn;
-  return Reanimated;
-});
-
-jest.mock('react-native-gesture-handler', () => {
-  const View = require('react-native').View;
-  return {
-    Gesture: {
-      Pinch: jest.fn(() => ({
-        enabled: jest.fn().mockReturnThis(),
-        onUpdate: jest.fn().mockReturnThis(),
-        onEnd: jest.fn().mockReturnThis(),
-      })),
-    },
-    GestureDetector: ({ children }: { children: React.ReactNode }) => (
-      <View testID="gesture-detector">{children}</View>
-    ),
-  };
-});
-
+// Only define test-specific mocks here
 jest.mock('../../../hooks/useReduceMotion', () => ({
   useReduceMotion: () => false,
 }));
 
-// Mock AccessibilityInfo
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    AccessibilityInfo: {
+// Mock AccessibilityInfo module
+jest.mock(
+  'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo',
+  () => ({
+    __esModule: true,
+    default: {
       announceForAccessibility: jest.fn(),
+      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeEventListener: jest.fn(),
     },
-  };
-});
+    announceForAccessibility: jest.fn(),
+    isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+    addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeEventListener: jest.fn(),
+  })
+);
 
 import { AccessibilityInfo } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -204,7 +184,7 @@ describe('PinchToZoom', () => {
     };
 
     const MockChild = () => (
-      <View testID="mock-child">
+      <View testID='mock-child'>
         <Text>Calendar Content</Text>
       </View>
     );
@@ -220,14 +200,14 @@ describe('PinchToZoom', () => {
         expect(getByTestId('mock-child')).toBeDefined();
       });
 
-      it('should render gesture detector wrapper', () => {
+      it('should render pinch zoom container', () => {
         const { getByTestId } = render(
           <PinchToZoomContainer {...defaultProps}>
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        expect(getByTestId('gesture-detector')).toBeDefined();
+        // The GestureDetector wrapper is transparent in mocks, just verify the inner container
         expect(getByTestId('pinch-zoom-container')).toBeDefined();
       });
 
@@ -252,13 +232,15 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         expect(container).toBeDefined();
       });
 
       it('should have accessibility label with current view', () => {
         const { getByLabelText } = render(
-          <PinchToZoomContainer {...defaultProps} currentView="month">
+          <PinchToZoomContainer {...defaultProps} currentView='month'>
             <MockChild />
           </PinchToZoomContainer>
         );
@@ -281,7 +263,7 @@ describe('PinchToZoom', () => {
 
       it('should have accessibility hint when pinch enabled', () => {
         const { getByA11yHint } = render(
-          <PinchToZoomContainer {...defaultProps} currentView="month">
+          <PinchToZoomContainer {...defaultProps} currentView='month'>
             <MockChild />
           </PinchToZoomContainer>
         );
@@ -309,7 +291,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         expect(container.props.accessibilityActions).toEqual([
           { name: 'increment', label: 'Zoom in' },
           { name: 'decrement', label: 'Zoom out' },
@@ -321,14 +305,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'increment' },
@@ -343,14 +329,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -365,14 +353,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'increment' },
@@ -389,14 +379,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -414,7 +406,7 @@ describe('PinchToZoom', () => {
         const { getByA11yHint } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="3m"
+            currentView='3m'
             isPremium={false}
           >
             <MockChild />
@@ -432,7 +424,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="3m"
+            currentView='3m'
             isPremium={false}
             onPremiumUpsell={onPremiumUpsell}
             onViewChange={onViewChange}
@@ -441,7 +433,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -457,7 +451,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="3m"
+            currentView='3m'
             isPremium={true}
             onViewChange={onViewChange}
           >
@@ -465,7 +459,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -480,7 +476,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="3m"
+            currentView='3m'
             isPremium={false}
             onPremiumUpsell={onPremiumUpsell}
           >
@@ -488,7 +484,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -505,14 +503,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'increment' },
@@ -527,7 +527,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
             disableHaptics={true}
           >
@@ -535,7 +535,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'increment' },
@@ -553,14 +555,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="week"
+            currentView='week'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'increment' },
@@ -575,14 +579,16 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="year"
+            currentView='year'
             onViewChange={onViewChange}
           >
             <MockChild />
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -597,7 +603,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="3m"
+            currentView='3m'
             isPremium={false}
             onViewChange={onViewChange}
             // onPremiumUpsell not provided
@@ -606,7 +612,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
 
         // Should not throw
         expect(() => {
@@ -638,7 +646,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="3m"
+            currentView='3m'
             onViewChange={onViewChange}
             // isPremium not provided
           >
@@ -646,7 +654,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'decrement' },
@@ -662,7 +672,7 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps } = render(
           <PinchToZoomContainer
             {...defaultProps}
-            currentView="month"
+            currentView='month'
             onViewChange={onViewChange}
             // disableHaptics not provided
           >
@@ -670,7 +680,9 @@ describe('PinchToZoom', () => {
           </PinchToZoomContainer>
         );
 
-        const container = UNSAFE_getByProps({ accessibilityRole: 'adjustable' });
+        const container = UNSAFE_getByProps({
+          accessibilityRole: 'adjustable',
+        });
         act(() => {
           container.props.onAccessibilityAction({
             nativeEvent: { actionName: 'increment' },
@@ -690,8 +702,8 @@ describe('PinchToZoom', () => {
         const { UNSAFE_getByProps, rerender } = render(
           <PinchToZoomContainer
             currentView={currentView}
-            onViewChange={(newView) => {
-              onViewChange(newView);
+            onViewChange={(newView, direction) => {
+              onViewChange(newView, direction);
               currentView = newView;
             }}
           >
@@ -711,9 +723,9 @@ describe('PinchToZoom', () => {
         // Rerender with new view
         rerender(
           <PinchToZoomContainer
-            currentView="month"
-            onViewChange={(newView) => {
-              onViewChange(newView);
+            currentView='month'
+            onViewChange={(newView, direction) => {
+              onViewChange(newView, direction);
               currentView = newView;
             }}
           >
@@ -733,9 +745,9 @@ describe('PinchToZoom', () => {
         // Rerender with new view
         rerender(
           <PinchToZoomContainer
-            currentView="3m"
-            onViewChange={(newView) => {
-              onViewChange(newView);
+            currentView='3m'
+            onViewChange={(newView, direction) => {
+              onViewChange(newView, direction);
               currentView = newView;
             }}
           >
@@ -757,7 +769,7 @@ describe('PinchToZoom', () => {
         const onViewChange = jest.fn();
 
         const { UNSAFE_getByProps, rerender } = render(
-          <PinchToZoomContainer currentView="year" onViewChange={onViewChange}>
+          <PinchToZoomContainer currentView='year' onViewChange={onViewChange}>
             <MockChild />
           </PinchToZoomContainer>
         );
@@ -773,7 +785,7 @@ describe('PinchToZoom', () => {
 
         // Rerender and zoom in from 3m → month
         rerender(
-          <PinchToZoomContainer currentView="3m" onViewChange={onViewChange}>
+          <PinchToZoomContainer currentView='3m' onViewChange={onViewChange}>
             <MockChild />
           </PinchToZoomContainer>
         );
@@ -787,7 +799,7 @@ describe('PinchToZoom', () => {
 
         // Rerender and zoom in from month → week
         rerender(
-          <PinchToZoomContainer currentView="month" onViewChange={onViewChange}>
+          <PinchToZoomContainer currentView='month' onViewChange={onViewChange}>
             <MockChild />
           </PinchToZoomContainer>
         );
