@@ -476,16 +476,58 @@
     - Full integration via `GridThemeContext` - DayCell, WeekGrid, MonthGrid consume theme correctly
     - 30+ test cases in `GridThemeIntegration.test.tsx` covering preset values, scanline rendering, glow effects, and grid integration
     - Exported from `CalendarHeatmap/index.ts` as `PIXELS_THEME` preset
-- [ ] Add theme picker UI
-- [ ] Persist to AsyncStorage
+- [x] Add theme picker UI
+  - **COMPLETED**: Integrated theme picker into CalendarHeatmap and CollapsibleCalendar:
+    - Added `showThemeButton` and `onThemePress` props to `CalendarHeatmapProps` in types.ts
+    - Added Palette button to CalendarHeatmap header with haptic feedback and accessibility
+    - Created `CollapsibleCalendarContent` inner component that consumes `useGridTheme` context
+    - Wrapped CollapsibleCalendar with `GridThemeProvider` (persistSelection enabled)
+    - Integrated existing `ThemePickerSheet` modal for theme selection
+    - Theme button appears in expanded calendar header next to trend badge
+    - Full accessibility support (labels, hints, button role)
+    - Haptic feedback on button press (light impact)
+    - Created comprehensive integration test suite (`ThemePickerIntegration.test.tsx`) with 15+ test cases
+- [x] Persist to AsyncStorage
+  - **COMPLETED**: AsyncStorage persistence was already implemented in previous work:
+    - `gridThemePreferences.ts` handles save/load/clear operations
+    - `GridThemeContext` loads saved theme on mount when `persistSelection=true`
+    - Theme changes are persisted immediately via fire-and-forget pattern
+    - Integration verified through ThemePickerIntegration tests
 
 ### 8.3 Week Start Customization
 
-- [ ] Add user preference setting
-- [ ] Update `generateWeekGrid()`
-- [ ] Update `generateMonthGrid()`
-- [ ] Update `DAY_LABELS` ordering
-- [ ] Persist to user settings
+- [x] Add user preference setting
+  - **COMPLETED**: Created comprehensive `WeekStartContext` provider (`WeekStartContext.tsx`) with:
+    - `WeekStartProvider` component with `initialWeekStart` and `persistSelection` props
+    - `useWeekStart()` hook for components requiring context (throws if not in provider)
+    - `useWeekStartOptional()` hook for graceful fallback outside provider
+    - `isWeekStartReady` flag for hydration safety
+    - Full TypeScript types: `WeekStartDay` (0-6), `WeekStartDayName`, `WeekStartContextValue`
+    - Default week start: Sunday (0)
+- [x] Update `generateWeekGrid()`
+  - **COMPLETED**: Updated function signature to accept `weekStartDay` parameter (default: 0)
+  - Uses modulo arithmetic: `daysToSubtract = (todayDayOfWeek - weekStartDay + 7) % 7`
+  - Returns 7-day array starting from configured week start day
+  - Handles timezone edge cases with midnight reset
+- [x] Update `generateMonthGrid()`
+  - **COMPLETED**: Updated function signature to accept `weekStartDay` parameter (default: 0)
+  - Calculates padding with: `startPadding = (firstDayOfWeek - weekStartDay + 7) % 7`
+  - Aligns first day of month correctly based on configured week start
+  - Maintains consistent 7-day week structure in 2D array output
+- [x] Update `DAY_LABELS` ordering
+  - **COMPLETED**: Created rotation utilities in `types.ts`:
+    - `getRotatedDayLabels(weekStartDay)` - Returns single-letter labels in correct order
+    - `getRotatedDayNamesFull(weekStartDay)` - Returns full day names in correct order
+    - Example: `getRotatedDayLabels(1)` returns `['M', 'T', 'W', 'T', 'F', 'S', 'S']` (Monday start)
+  - `MonthGrid` and `WeekGrid` consume these via `useWeekStartOptional()` hook
+- [x] Persist to user settings
+  - **COMPLETED**: Created `weekStartDayPreferences.ts` with AsyncStorage persistence:
+    - `getWeekStartDay()` - Retrieves saved preference (returns 0-6 or null)
+    - `saveWeekStartDay(day)` - Saves preference with validation
+    - `clearWeekStartDay()` - Removes preference to revert to default
+    - Storage key: `@habit_app:week_start_day`
+    - Validates stored values and clears corrupted data
+    - Comprehensive test coverage: 94 tests passing in `weekStart.test.ts` and `weekStartDayPreferences.test.ts`
 
 ### 8.4 Quick Month Navigation
 
