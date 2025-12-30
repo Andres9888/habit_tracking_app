@@ -5,10 +5,10 @@
  * daily habit completion data.
  */
 
-// Component exports (to be added as components are created)
+// Component exports
 // export { BinaryHeatmap } from './BinaryHeatmap';
 // export { BinaryHeatmapGrid } from './BinaryHeatmapGrid';
-// export { BinaryCell } from './BinaryCell';
+export { BinaryCell } from './BinaryCell';
 // export { TimeRangeToggle } from './TimeRangeToggle';
 // export { HeatmapLegend } from './HeatmapLegend';
 // export { HeatmapTooltip } from './HeatmapTooltip';
