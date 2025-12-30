@@ -3,10 +3,10 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** {{AGENT_NAME}}
-- **Project:** {{AGENT_PATH}}
-- **Auto Run Folder:** {{AUTORUN_FOLDER}}
-- **Loop:** {{LOOP_NUMBER}}
+- **Agent:** code-refactor
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
+- **Loop:** 00001
 
 ## Objective
 
@@ -14,14 +14,22 @@ Using the attack surface map, systematically search for specific security vulner
 
 ## Instructions
 
-1. **Read the attack surface** from `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_ATTACK_SURFACE.md`
+1. **Read the attack surface** from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`
 2. **Search for vulnerabilities** using the investigation tactics
 3. **Document each finding** with location, type, and evidence
-4. **Output findings** to `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_VULNERABILITIES.md`
+4. **Output findings** to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
 
 ## Discovery Checklist
 
-- [ ] **Find vulnerabilities**: Using the attack surface map and tactics, search for injection flaws, hardcoded secrets, auth issues, XSS, and insecure dependencies. Document each finding with file path, line number, vulnerability type, and evidence. Output to `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_VULNERABILITIES.md`.
+- [x] **Find vulnerabilities**: Using the attack surface map and tactics, search for injection flaws, hardcoded secrets, auth issues, XSS, and insecure dependencies. Document each finding with file path, line number, vulnerability type, and evidence. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`.
+  - **Completed 2025-12-29**: Found 16 vulnerabilities (2 Critical, 6 High, 6 Medium, 2 Low). Key findings include:
+    - CRITICAL: Hardcoded Figma token in `.env.mcp` tracked in git
+    - CRITICAL: Unauthenticated file upload in `convex/storage.ts`
+    - HIGH: Multiple IDOR vulnerabilities in habits, visionBoardImages, voiceNotes (missing ownership validation)
+    - HIGH: Cross-user data exposure in `listRecent` queries
+    - MEDIUM: AI prompt injection risk in affirmations
+    - MEDIUM: Weak randomness (Math.random) for ID generation
+    - Full report: `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
 
 ## Vulnerability Search Patterns
 
@@ -90,10 +98,10 @@ Look for:
 
 ## Output Format
 
-Create/update `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_VULNERABILITIES.md` with:
+Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md` with:
 
 ```markdown
-# Security Vulnerabilities - Loop {{LOOP_NUMBER}}
+# Security Vulnerabilities - Loop 00001
 
 ## Summary
 
