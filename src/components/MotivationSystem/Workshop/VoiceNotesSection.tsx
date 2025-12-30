@@ -42,7 +42,13 @@ import {
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
 import {
   useAudioRecording,
   RecordingState,
@@ -89,10 +95,6 @@ export interface VoiceNotesSectionProps {
   /** Section index for staggered animation timing */
   sectionIndex?: number;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
 
 // Premium limits
 const FREE_TIER_MAX_NOTES = 1;

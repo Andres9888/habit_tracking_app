@@ -47,9 +47,7 @@ import {
   PlaybackSpeed,
   PLAYBACK_SPEEDS,
 } from '../../../hooks/useAudioPlayback';
-
-// Animation spring config
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
+import { SPRING_BUTTON } from '../../animations';
 
 export interface VoiceNotePlaybackUIProps {
   /** URI of the audio file to play */

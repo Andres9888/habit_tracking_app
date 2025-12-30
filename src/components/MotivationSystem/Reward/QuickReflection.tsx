@@ -25,7 +25,13 @@ import Animated, {
 import { Smile, Plus, Check, MessageSquare } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
 
 export type EmojiType = 'frustrated' | 'neutral' | 'happy' | 'fire';
 
@@ -51,10 +57,6 @@ export interface QuickReflectionProps {
   /** Whether the component is in compact mode (for inline use) */
   compact?: boolean;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, stiffness: 180, mass: 1.2 };
 
 // Emoji configuration
 const EMOJI_OPTIONS: { emoji: string; type: EmojiType; label: string }[] = [

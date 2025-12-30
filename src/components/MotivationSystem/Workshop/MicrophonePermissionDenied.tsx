@@ -21,9 +21,7 @@ import Animated, {
 import { MicOff, Settings, RefreshCw, AlertCircle } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
+import { SPRING_BUTTON } from '../../animations';
 
 export interface MicrophonePermissionDeniedProps {
   /** Whether the user can be asked again for permission (false if "Don't ask again" was selected) */

@@ -57,7 +57,13 @@ import {
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
 import {
   useImagePicker,
   type PickedImage,
@@ -97,10 +103,6 @@ export interface VisionBoardSectionProps {
   /** Section index for staggered animation timing */
   sectionIndex?: number;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
 
 // Maximum images per habit (4-image grid as per spec)
 const MAX_IMAGES = 4;

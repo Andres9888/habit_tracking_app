@@ -57,7 +57,13 @@ import {
 } from '@/utils/notifications';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
 import { AffirmationScheduleModal } from './AffirmationScheduleModal';
 import { GenerateAffirmationsButton } from './GenerateAffirmationsButton';
 
@@ -125,10 +131,6 @@ export interface AffirmationsSectionProps {
   /** Section index for staggered animation timing */
   sectionIndex?: number;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
 
 // Content limits (matching Convex validation)
 const MAX_TEXT_LENGTH = 200;

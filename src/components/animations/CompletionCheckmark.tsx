@@ -21,11 +21,11 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-
-// Animation constants (shared across all Workshop/Reward sections)
-const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-const STAGGER_DELAY = 80;
-const BASE_CHECKMARK_DELAY = 600;
+import {
+  SPRING_BOUNCY,
+  STAGGER_DELAY,
+  BASE_CHECKMARK_DELAY,
+} from './constants';
 
 export interface CompletionCheckmarkProps {
   /** Whether the checkmark should be visible */

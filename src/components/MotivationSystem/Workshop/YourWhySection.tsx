@@ -24,7 +24,13 @@ import Animated, {
 import { Heart, Plus, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
 
 export interface YourWhySectionProps {
   /** The habit's "why" statement (undefined if not set) */
@@ -38,10 +44,6 @@ export interface YourWhySectionProps {
   /** Section index for staggered animation timing */
   sectionIndex?: number;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, stiffness: 180, mass: 1.2 };
 
 /**
  * SectionCard Component for consistent styling with press animation

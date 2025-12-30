@@ -26,7 +26,13 @@ import Animated, {
 import { Target, Plus, Check, HelpCircle, X } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
 
 export interface WOOPData {
   /** Wish - what you want to achieve */
@@ -51,10 +57,6 @@ export interface WOOPSectionProps {
   /** Section index for staggered animation timing */
   sectionIndex?: number;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
 
 /**
  * SectionCard Component for consistent styling with press animation

@@ -52,7 +52,14 @@ import {
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
-import { PulsingIcon, CompletionCheckmark } from '../../animations';
+import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  SPRING_BOUNCY,
+  STAGGER_DELAY,
+} from '../../animations';
 
 export interface LetterSummary {
   id: string;
@@ -93,10 +100,6 @@ export interface LettersSectionProps {
   /** Optional habit name to display in letter reading modal */
   habitName?: string;
 }
-
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
 
 // Content limits (matching Convex validation)
 const MAX_CONTENT_LENGTH = 5000;
