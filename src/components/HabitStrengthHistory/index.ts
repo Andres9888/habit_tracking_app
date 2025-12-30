@@ -27,8 +27,11 @@ export {
   getStrengthLabel,
 } from './strengthUtils';
 
-// Note: Component exports will be added when UI components are created
+// UI Components
+export { StrengthComparisonCards } from './StrengthComparisonCards';
+export type { StrengthComparisonCardsProps } from './StrengthComparisonCards';
+
+// Note: Additional component exports will be added when implemented
 // export { HabitStrengthHistory } from './HabitStrengthHistory';
-// export { StrengthComparisonCards } from './StrengthComparisonCards';
 // export { StrengthTimelineChart } from './StrengthTimelineChart';
 // export { StrengthInsightsRow } from './StrengthInsightsRow';
