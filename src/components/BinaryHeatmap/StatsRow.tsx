@@ -31,7 +31,7 @@ import Animated, {
 import { Settings, Flame } from 'lucide-react-native';
 
 import type { StatsRowProps } from './types';
-import { COLORS } from './constants';
+import { COLORS, FOCUS } from './constants';
 
 /**
  * Configuration for the stats row
@@ -186,7 +186,11 @@ export const StatsRow = memo(function StatsRow({
           accessibilityLabel='Habit settings'
           accessibilityRole='button'
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
-          style={[styles.settingsButton, settingsAnimatedStyle]}
+          style={({ focused }: { focused: boolean }) => [
+            styles.settingsButton,
+            settingsAnimatedStyle,
+            Platform.OS === 'web' && focused && styles.webFocus,
+          ]}
           testID='stats-row-settings-button'
           onPress={onSettingsPress}
           onPressIn={handleSettingsPressIn}
@@ -253,6 +257,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   } as TextStyle,
+  // Web-specific focus styles for keyboard navigation
+  webFocus: {
+    outlineColor: FOCUS.RING_COLOR,
+    outlineOffset: FOCUS.RING_OFFSET,
+    outlineStyle: 'solid',
+    outlineWidth: FOCUS.RING_WIDTH,
+  } as ViewStyle,
 });
 
 export default StatsRow;

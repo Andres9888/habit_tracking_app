@@ -23,7 +23,13 @@ import Animated, {
 
 import type { BinaryCellProps } from './types';
 import { getCellState, getBinaryCellAccessibilityLabel } from './utils';
-import { CELL_SIZE, CELL_BORDER_RADIUS, ANIMATION, COLORS } from './constants';
+import {
+  CELL_SIZE,
+  CELL_BORDER_RADIUS,
+  ANIMATION,
+  COLORS,
+  FOCUS,
+} from './constants';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -147,22 +153,27 @@ export const BinaryCell = memo(function BinaryCell({
   }
 
   // Interactive cells (done, missed, today)
+  // Create dynamic style function for focus states on web
+  const getPressableStyle = ({ focused }: { focused: boolean }) => [
+    animatedStyle,
+    styles.cell,
+    Platform.OS === 'web' && styles.webHover,
+    // Add focus ring for keyboard navigation on web
+    Platform.OS === 'web' && focused && styles.webFocus,
+  ];
+
   return (
     <AnimatedPressable
+      accessible
       accessibilityHint={day.isToday ? 'Today' : 'Tap to toggle completion'}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
-      accessible={true}
+      accessibilityState={{ selected: day.completed }}
       entering={fadeInAnimation}
-      style={[animatedStyle, styles.cell]}
+      style={getPressableStyle}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      accessibilityState={{ selected: day.completed }}
-      // Web hover effect using style prop
-      {...(Platform.OS === 'web' && {
-        style: [animatedStyle, styles.cell, styles.webHover],
-      })}
     >
       <View
         style={[
@@ -201,6 +212,17 @@ const styles = StyleSheet.create({
   },
   futureCell: {
     opacity: 0.4,
+  },
+  // Web-specific focus styles for keyboard navigation
+  webFocus: {
+    borderColor: FOCUS.RING_COLOR,
+    borderRadius: CELL_BORDER_RADIUS + FOCUS.RING_OFFSET,
+    borderWidth: FOCUS.RING_WIDTH,
+    // Use outline instead of border on web for better focus visibility
+    outlineColor: FOCUS.RING_COLOR,
+    outlineOffset: FOCUS.RING_OFFSET,
+    outlineStyle: 'solid',
+    outlineWidth: FOCUS.RING_WIDTH,
   },
   // Web-specific hover styles (applied via spread)
   webHover: {

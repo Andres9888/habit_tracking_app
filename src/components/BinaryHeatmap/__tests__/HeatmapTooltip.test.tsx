@@ -27,8 +27,9 @@ jest.mock('react-native-reanimated', () => {
 });
 
 // Mock useReduceMotion hook
+const mockUseReduceMotion = jest.fn(() => false);
 jest.mock('../../../hooks/useReduceMotion', () => ({
-  useReduceMotion: () => false,
+  useReduceMotion: () => mockUseReduceMotion(),
 }));
 
 describe('HeatmapTooltip', () => {
@@ -432,9 +433,13 @@ describe('HeatmapTooltip', () => {
   });
 
   describe('Reduced motion support', () => {
+    afterEach(() => {
+      // Reset mock to default after each test
+      mockUseReduceMotion.mockReturnValue(false);
+    });
+
     it('should render correctly when reduced motion is enabled', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      mockUseReduceMotion.mockReturnValue(true);
 
       const { getByRole, getByText } = render(
         <HeatmapTooltip {...defaultProps} day={completedDay} />
@@ -443,14 +448,10 @@ describe('HeatmapTooltip', () => {
       // Should still render the tooltip with correct content
       expect(getByRole('tooltip')).toBeTruthy();
       expect(getByText('Dec 15: Done ✓')).toBeTruthy();
-
-      // Reset mock
-      useReduceMotion.mockReturnValue(false);
     });
 
     it('should handle visibility changes with reduced motion enabled', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      mockUseReduceMotion.mockReturnValue(true);
 
       const { queryByRole, rerender } = render(
         <HeatmapTooltip {...defaultProps} visible={true} />
@@ -460,14 +461,10 @@ describe('HeatmapTooltip', () => {
 
       rerender(<HeatmapTooltip {...defaultProps} visible={false} />);
       expect(queryByRole('tooltip')).toBeNull();
-
-      // Reset mock
-      useReduceMotion.mockReturnValue(false);
     });
 
     it('should handle onClose callback with reduced motion enabled', () => {
-      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
-      useReduceMotion.mockReturnValue(true);
+      mockUseReduceMotion.mockReturnValue(true);
 
       const onClose = jest.fn();
       const { getByLabelText } = render(
@@ -478,9 +475,6 @@ describe('HeatmapTooltip', () => {
       fireEvent.press(backdrop);
 
       expect(onClose).toHaveBeenCalledTimes(1);
-
-      // Reset mock
-      useReduceMotion.mockReturnValue(false);
     });
   });
 });

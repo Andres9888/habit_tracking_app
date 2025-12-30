@@ -180,3 +180,18 @@ export const TOOLTIP = {
 
   PADDING_Y: 6,
 } as const;
+
+/**
+ * Accessibility focus indicator configuration
+ * Used for keyboard navigation on web
+ */
+export const FOCUS = {
+  /** Focus ring color (uses a high-contrast blue) */
+  RING_COLOR: '#2563eb', // blue-600
+
+  /** Focus ring offset from element */
+  RING_OFFSET: 2,
+
+  /** Focus ring width */
+  RING_WIDTH: 2,
+} as const;

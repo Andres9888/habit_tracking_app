@@ -12,7 +12,7 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { View, Pressable, Text, StyleSheet } from 'react-native';
+import { View, Pressable, Text, StyleSheet, Platform } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -20,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { TimeRange, TimeRangeToggleProps } from './types';
-import { TIME_RANGE_CONFIG, COLORS } from './constants';
+import { TIME_RANGE_CONFIG, COLORS, FOCUS } from './constants';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -93,13 +93,21 @@ const TimeRangeButton = memo(function TimeRangeButton({
     onPress(range);
   }, [onPress, range]);
 
+  // Dynamic style function for focus states on web
+  const getButtonStyle = ({ focused }: { focused: boolean }) => [
+    animatedStyle,
+    styles.button,
+    isActive && styles.buttonActive,
+    Platform.OS === 'web' && focused && styles.webFocus,
+  ];
+
   return (
     <AnimatedPressable
       accessible
       accessibilityLabel={getTimeRangeAccessibilityLabel(range)}
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
-      style={[animatedStyle, styles.button, isActive && styles.buttonActive]}
+      style={getButtonStyle}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -191,6 +199,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: 'row',
     padding: 2,
+  },
+  // Web-specific focus styles for keyboard navigation
+  webFocus: {
+    outlineColor: FOCUS.RING_COLOR,
+    outlineOffset: FOCUS.RING_OFFSET,
+    outlineStyle: 'solid',
+    outlineWidth: FOCUS.RING_WIDTH,
   },
 });
 
