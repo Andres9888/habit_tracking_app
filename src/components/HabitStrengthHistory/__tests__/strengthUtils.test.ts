@@ -173,27 +173,29 @@ describe('getStrengthLabel', () => {
 });
 
 describe('getStrengthColor', () => {
-  it('returns red for weak strength', () => {
+  // Colors updated to WCAG AA compliant variants (4.5:1 contrast minimum)
+  it('returns red-600 for weak strength (WCAG AA compliant)', () => {
     const color = getStrengthColor(15);
-    expect(color).toBe('#ef4444');
+    expect(color).toBe('#dc2626'); // Red-600
   });
 
-  it('returns amber for developing strength', () => {
+  it('returns amber-700 for developing strength (WCAG AA compliant)', () => {
     const color = getStrengthColor(50);
-    expect(color).toBe('#f59e0b');
+    expect(color).toBe('#b45309'); // Amber-700
   });
 
-  it('returns emerald for strong strength', () => {
+  it('returns emerald-700 for strong strength (WCAG AA compliant)', () => {
     const color = getStrengthColor(85);
-    expect(color).toBe('#10b981');
+    expect(color).toBe('#047857'); // Emerald-700
   });
 });
 
 describe('getStrengthColors', () => {
+  // Primary colors updated to WCAG AA compliant variants
   it('returns full color palette for weak strength', () => {
     const colors = getStrengthColors(15);
     expect(colors).toEqual({
-      primary: '#ef4444',
+      primary: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
       background: '#fef2f2',
       ring: '#fca5a5',
     });
@@ -202,7 +204,7 @@ describe('getStrengthColors', () => {
   it('returns full color palette for developing strength', () => {
     const colors = getStrengthColors(50);
     expect(colors).toEqual({
-      primary: '#f59e0b',
+      primary: '#b45309', // Amber-700 (WCAG AA: 5.02:1)
       background: '#fffbeb',
       ring: '#fcd34d',
     });
@@ -211,7 +213,7 @@ describe('getStrengthColors', () => {
   it('returns full color palette for strong strength', () => {
     const colors = getStrengthColors(85);
     expect(colors).toEqual({
-      primary: '#10b981',
+      primary: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
       background: '#ecfdf5',
       ring: '#6ee7b7',
     });

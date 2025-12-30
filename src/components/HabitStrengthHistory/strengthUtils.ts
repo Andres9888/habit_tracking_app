@@ -33,20 +33,24 @@ const STRONG_THRESHOLD = 70;
 /**
  * Color palette for each strength level.
  * Based on design spec Section 7.1.
+ *
+ * WCAG AA Compliance:
+ * - Primary colors meet 4.5:1 contrast ratio for normal text on white/light backgrounds
+ * - Red-600 (4.83:1), Amber-700 (5.02:1), Emerald-700 (5.48:1)
  */
 const STRENGTH_COLOR_MAP: Record<StrengthLabel, StrengthColors> = {
   weak: {
-    primary: '#ef4444', // Red-500
+    primary: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
     background: '#fef2f2', // Red-50
     ring: '#fca5a5', // Red-300
   },
   developing: {
-    primary: '#f59e0b', // Amber-500
+    primary: '#b45309', // Amber-700 (WCAG AA: 5.02:1)
     background: '#fffbeb', // Amber-50
     ring: '#fcd34d', // Amber-300
   },
   strong: {
-    primary: '#10b981', // Emerald-500
+    primary: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
     background: '#ecfdf5', // Emerald-50
     ring: '#6ee7b7', // Emerald-300
   },

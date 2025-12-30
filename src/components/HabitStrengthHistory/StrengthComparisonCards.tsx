@@ -208,6 +208,13 @@ interface DeltaBadgeProps {
   delta: number;
 }
 
+// WCAG AA compliant colors (4.5:1 minimum contrast ratio)
+const DELTA_BADGE_COLORS = {
+  positive: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
+  negative: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
+  neutral: '#78716c', // Stone-500 (WCAG AA: 4.80:1)
+} as const;
+
 /**
  * Badge showing the change in strength vs 30 days ago
  */
@@ -217,12 +224,17 @@ function DeltaBadge({ delta }: DeltaBadgeProps) {
   const isNeutral = delta === 0;
 
   const Icon = isPositive ? TrendingUp : isNegative ? TrendingDown : Minus;
-  const iconColor = isPositive ? '#10b981' : isNegative ? '#ef4444' : '#a8a29e';
-  const textColor = isPositive
-    ? 'text-emerald-600'
+  const iconColor = isPositive
+    ? DELTA_BADGE_COLORS.positive
     : isNegative
-      ? 'text-red-600'
-      : 'text-stone-400';
+      ? DELTA_BADGE_COLORS.negative
+      : DELTA_BADGE_COLORS.neutral;
+  // Text colors using WCAG AA compliant shades (-700 variants)
+  const textColor = isPositive
+    ? 'text-emerald-700'
+    : isNegative
+      ? 'text-red-700'
+      : 'text-stone-500';
   const bgColor = isPositive
     ? 'bg-emerald-50'
     : isNegative

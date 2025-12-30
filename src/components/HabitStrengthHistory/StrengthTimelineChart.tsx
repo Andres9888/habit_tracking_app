@@ -54,8 +54,8 @@ const PULSE_DURATION = 1500;
 const DOT_RADIUS = 5;
 const ESTIMATED_PATH_LENGTH = 1500; // Approximate max path length for animation
 
-// Default emerald color if none provided
-const DEFAULT_CHART_COLOR = '#10b981';
+// Default emerald color if none provided (WCAG AA compliant)
+const DEFAULT_CHART_COLOR = '#047857'; // Emerald-700 (WCAG AA: 5.48:1)
 
 export interface StrengthTimelineChartProps {
   /** Array of strength snapshots for the timeline */

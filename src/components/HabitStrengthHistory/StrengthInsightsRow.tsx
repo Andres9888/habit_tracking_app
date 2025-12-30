@@ -94,6 +94,13 @@ function InsightCard({
   );
 }
 
+// WCAG AA compliant colors (4.5:1 minimum contrast ratio)
+const DELTA_COLORS = {
+  positive: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
+  negative: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
+  neutral: '#78716c', // Stone-500 (WCAG AA: 4.80:1)
+} as const;
+
 /**
  * Get the appropriate icon for the delta value
  */
@@ -101,22 +108,32 @@ function getDeltaIcon(delta: number): React.ReactNode {
   const size = 18;
 
   if (delta > 0) {
-    return <TrendingUp color='#10b981' size={size} testID='icon-trending-up' />;
+    return (
+      <TrendingUp
+        color={DELTA_COLORS.positive}
+        size={size}
+        testID='icon-trending-up'
+      />
+    );
   } else if (delta < 0) {
     return (
-      <TrendingDown color='#ef4444' size={size} testID='icon-trending-down' />
+      <TrendingDown
+        color={DELTA_COLORS.negative}
+        size={size}
+        testID='icon-trending-down'
+      />
     );
   }
-  return <Minus color='#a8a29e' size={size} testID='icon-minus' />;
+  return <Minus color={DELTA_COLORS.neutral} size={size} testID='icon-minus' />;
 }
 
 /**
  * Get the color for the delta value text
  */
 function getDeltaColor(delta: number): string {
-  if (delta > 0) return '#10b981'; // emerald-500
-  if (delta < 0) return '#ef4444'; // red-500
-  return '#a8a29e'; // stone-400
+  if (delta > 0) return DELTA_COLORS.positive;
+  if (delta < 0) return DELTA_COLORS.negative;
+  return DELTA_COLORS.neutral;
 }
 
 /**

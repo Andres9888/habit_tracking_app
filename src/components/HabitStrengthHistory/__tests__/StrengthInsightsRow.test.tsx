@@ -297,33 +297,35 @@ describe('StrengthInsightsRow', () => {
   });
 
   describe('Icon Props', () => {
-    it('should have correct color for positive delta icon', () => {
+    // Delta icon colors updated to WCAG AA compliant variants
+    it('should have correct color for positive delta icon (WCAG AA)', () => {
       const { getByTestId } = render(
         <StrengthInsightsRow {...defaultProps} deltaVsMonth={10} />
       );
       const icon = getByTestId('icon-trending-up');
-      expect(icon.props.color).toBe('#10b981'); // emerald-500
+      expect(icon.props.color).toBe('#047857'); // emerald-700 (WCAG AA: 5.48:1)
     });
 
-    it('should have correct color for negative delta icon', () => {
+    it('should have correct color for negative delta icon (WCAG AA)', () => {
       const { getByTestId } = render(
         <StrengthInsightsRow {...defaultProps} deltaVsMonth={-10} />
       );
       const icon = getByTestId('icon-trending-down');
-      expect(icon.props.color).toBe('#ef4444'); // red-500
+      expect(icon.props.color).toBe('#dc2626'); // red-600 (WCAG AA: 4.83:1)
     });
 
-    it('should have correct color for zero delta icon', () => {
+    it('should have correct color for zero delta icon (WCAG AA)', () => {
       const { getByTestId } = render(
         <StrengthInsightsRow {...defaultProps} deltaVsMonth={0} />
       );
       const icon = getByTestId('icon-minus');
-      expect(icon.props.color).toBe('#a8a29e'); // stone-400
+      expect(icon.props.color).toBe('#78716c'); // stone-500 (WCAG AA: 4.80:1)
     });
 
     it('should have correct color for trophy icon', () => {
       const { getByTestId } = render(<StrengthInsightsRow {...defaultProps} />);
       const icon = getByTestId('icon-trophy');
+      // Trophy is decorative (paired with text label), amber-500 retained for visual appeal
       expect(icon.props.color).toBe('#f59e0b'); // amber-500
     });
 
