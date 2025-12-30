@@ -34,6 +34,8 @@ export type { StrengthComparisonCardsProps } from './StrengthComparisonCards';
 export { StrengthTimelineChart } from './StrengthTimelineChart';
 export type { StrengthTimelineChartProps } from './StrengthTimelineChart';
 
+export { StrengthInsightsRow } from './StrengthInsightsRow';
+export type { StrengthInsightsRowProps } from './StrengthInsightsRow';
+
 // Note: Additional component exports will be added when implemented
 // export { HabitStrengthHistory } from './HabitStrengthHistory';
-// export { StrengthInsightsRow } from './StrengthInsightsRow';
