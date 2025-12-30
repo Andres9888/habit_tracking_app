@@ -32,6 +32,7 @@ import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
 import { CollapsibleCalendar } from '../components/CalendarHeatmap';
+import { HabitStrengthHistory } from '../components/HabitStrengthHistory';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -895,6 +896,16 @@ function ProgressTabContent({
           // Future: Could open day detail or allow editing past dates
         }}
       />
+
+      {/* Habit Strength History - exponential smoothing visualization */}
+      {habitCreatedAt && (
+        <HabitStrengthHistory
+          habitId={habit._id}
+          completedDates={completedDates}
+          habitCreatedAt={habitCreatedAt}
+          habitColor={habit.iconColor}
+        />
+      )}
 
       {/* Consolidated Progress Section - unified design with improved visual hierarchy */}
       <ProgressSectionConsolidated
