@@ -11,6 +11,7 @@ export { BinaryHeatmapGrid } from './BinaryHeatmapGrid';
 export { BinaryCell } from './BinaryCell';
 export { TimeRangeToggle } from './TimeRangeToggle';
 export { HeatmapLegend } from './HeatmapLegend';
+export { MonthLabelsRow } from './MonthLabelsRow';
 // export { HeatmapTooltip } from './HeatmapTooltip';
 
 // Type exports
@@ -44,6 +45,7 @@ export {
   GRID,
   LEGEND_INDICATOR_SIZE,
   TOOLTIP,
+  MONTH_LABEL,
 } from './constants';
 
 // Utility exports

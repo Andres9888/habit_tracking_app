@@ -16,6 +16,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
 import type { BinaryHeatmapGridProps, BinaryDay } from './types';
 import { BinaryCell } from './BinaryCell';
+import { MonthLabelsRow } from './MonthLabelsRow';
 import {
   CELL_SIZE,
   CELL_GAP,
@@ -23,6 +24,7 @@ import {
   DAY_LABELS,
   COLORS,
   GRID,
+  MONTH_LABEL,
 } from './constants';
 import { calculateCellAnimationDelay } from './utils';
 
@@ -40,7 +42,7 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
   habitColor,
   onCellPress,
 }: BinaryHeatmapGridProps) {
-  const { weeks } = gridData;
+  const { weeks, monthLabels } = gridData;
 
   // Transform week-based data to row-based for rendering
   // weeks[weekIndex][dayIndex] -> rows[dayIndex][weekIndex]
@@ -78,6 +80,9 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
     <View style={styles.container}>
       {/* Day labels column */}
       <View style={styles.dayLabelsColumn}>
+        {/* Spacer for month labels row alignment */}
+        <View style={styles.monthLabelSpacer} />
+
         {DAY_LABELS.map((label, index) => (
           <View key={`label-${index}`} style={styles.dayLabelCell}>
             <Text
@@ -103,38 +108,47 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
         ]}
         showsHorizontalScrollIndicator={false}
       >
-        <View style={styles.gridContainer}>
-          {rows.map((row, dayIndex) => (
-            <View
-              key={`row-${dayIndex}`}
-              accessibilityRole='row'
-              style={styles.gridRow}
-            >
-              {row.map((day, weekIndex) => {
-                // Calculate the animation delay for staggered effect
-                // Animate left-to-right, top-to-bottom
-                const animationIndex = calculateCellAnimationDelay(
-                  weekIndex,
-                  dayIndex,
-                  1 // Returns the linear index, we multiply by stagger delay in BinaryCell
-                );
+        <View style={styles.gridContentContainer}>
+          {/* Month labels row above the grid */}
+          <MonthLabelsRow
+            gridWidth={gridContentWidth}
+            monthLabels={monthLabels}
+          />
 
-                return (
-                  <View
-                    key={`cell-${dayIndex}-${weekIndex}`}
-                    style={styles.cellWrapper}
-                  >
-                    <BinaryCell
-                      day={day}
-                      habitColor={habitColor}
-                      index={animationIndex}
-                      onPress={handleCellPress}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-          ))}
+          {/* Grid cells */}
+          <View style={styles.gridContainer}>
+            {rows.map((row, dayIndex) => (
+              <View
+                key={`row-${dayIndex}`}
+                accessibilityRole='row'
+                style={styles.gridRow}
+              >
+                {row.map((day, weekIndex) => {
+                  // Calculate the animation delay for staggered effect
+                  // Animate left-to-right, top-to-bottom
+                  const animationIndex = calculateCellAnimationDelay(
+                    weekIndex,
+                    dayIndex,
+                    1 // Returns the linear index, we multiply by stagger delay in BinaryCell
+                  );
+
+                  return (
+                    <View
+                      key={`cell-${dayIndex}-${weekIndex}`}
+                      style={styles.cellWrapper}
+                    >
+                      <BinaryCell
+                        day={day}
+                        habitColor={habitColor}
+                        index={animationIndex}
+                        onPress={handleCellPress}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -183,12 +197,18 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'column',
   },
+  gridContentContainer: {
+    flexDirection: 'column',
+  },
   gridRow: {
     flexDirection: 'row',
     marginBottom: CELL_GAP,
   },
   gridScrollContent: {
     flexGrow: 1,
+  },
+  monthLabelSpacer: {
+    height: MONTH_LABEL.HEIGHT + CELL_GAP,
   },
 });
 

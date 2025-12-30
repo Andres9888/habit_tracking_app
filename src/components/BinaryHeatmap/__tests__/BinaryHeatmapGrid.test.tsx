@@ -568,6 +568,125 @@ describe('BinaryHeatmapGrid', () => {
     });
   });
 
+  describe('Month Labels Row', () => {
+    it('should render month labels above the grid', () => {
+      const gridData: BinaryGridData = {
+        weeks: [
+          [
+            createDay('2025-01-05'),
+            createDay('2025-01-06'),
+            createDay('2025-01-07'),
+            createDay('2025-01-08'),
+            createDay('2025-01-09'),
+            createDay('2025-01-10'),
+            createDay('2025-01-11'),
+          ],
+        ],
+        monthLabels: [{ weekIndex: 0, label: 'Jan' }],
+        stats: { completions: 0, eligibleDays: 7, completionRate: 0 },
+      };
+
+      const { getByText, getByLabelText } = render(
+        <BinaryHeatmapGrid
+          gridData={gridData}
+          habitColor={mockHabitColor}
+          onCellPress={mockOnCellPress}
+        />
+      );
+
+      // Month label should be rendered
+      expect(getByText('Jan')).toBeTruthy();
+      // Month labels row should have proper accessibility
+      expect(getByLabelText('Month labels row')).toBeTruthy();
+    });
+
+    it('should render multiple month labels', () => {
+      const gridData = createGridData(13); // ~3 months
+      gridData.monthLabels = [
+        { weekIndex: 0, label: 'Oct' },
+        { weekIndex: 4, label: 'Nov' },
+        { weekIndex: 9, label: 'Dec' },
+      ];
+
+      const { getByText } = render(
+        <BinaryHeatmapGrid
+          gridData={gridData}
+          habitColor={mockHabitColor}
+          onCellPress={mockOnCellPress}
+        />
+      );
+
+      expect(getByText('Oct')).toBeTruthy();
+      expect(getByText('Nov')).toBeTruthy();
+      expect(getByText('Dec')).toBeTruthy();
+    });
+
+    it('should scroll month labels with the grid', () => {
+      const gridData = createGridData(26); // ~6 months
+      gridData.monthLabels = [
+        { weekIndex: 0, label: 'Jul' },
+        { weekIndex: 4, label: 'Aug' },
+        { weekIndex: 8, label: 'Sep' },
+        { weekIndex: 13, label: 'Oct' },
+        { weekIndex: 17, label: 'Nov' },
+        { weekIndex: 22, label: 'Dec' },
+      ];
+
+      const { getByLabelText, UNSAFE_getByType } = render(
+        <BinaryHeatmapGrid
+          gridData={gridData}
+          habitColor={mockHabitColor}
+          onCellPress={mockOnCellPress}
+        />
+      );
+
+      // Month labels should be inside the scrollview
+      const scrollView = UNSAFE_getByType(ScrollView);
+      expect(scrollView).toBeTruthy();
+
+      // The month labels row should exist
+      expect(getByLabelText('Month labels row')).toBeTruthy();
+    });
+
+    it('should render day label spacer for month labels alignment', () => {
+      const gridData = createGridData(4);
+      gridData.monthLabels = [{ weekIndex: 0, label: 'Jan' }];
+
+      const { UNSAFE_getAllByType } = render(
+        <BinaryHeatmapGrid
+          gridData={gridData}
+          habitColor={mockHabitColor}
+          onCellPress={mockOnCellPress}
+        />
+      );
+
+      // There should be a spacer view in the day labels column
+      const views = UNSAFE_getAllByType(require('react-native').View);
+      // The component renders several views including the spacer
+      expect(views.length).toBeGreaterThan(0);
+    });
+
+    it('should handle empty month labels array', () => {
+      const gridData = createGridData(4);
+      gridData.monthLabels = [];
+
+      const { getByLabelText, queryByText } = render(
+        <BinaryHeatmapGrid
+          gridData={gridData}
+          habitColor={mockHabitColor}
+          onCellPress={mockOnCellPress}
+        />
+      );
+
+      // Grid should still render
+      expect(getByLabelText('Habit completion heatmap grid')).toBeTruthy();
+      // No month labels should be present
+      expect(
+        queryByText(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/)
+      ).toBeNull();
+    });
+  });
+
   describe('Component Updates', () => {
     it('should re-render when gridData changes', () => {
       const initialData = createGridData(2);

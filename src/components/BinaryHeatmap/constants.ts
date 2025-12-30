@@ -37,11 +37,11 @@ export const ANIMATION = {
   /** Duration of hover scale animation (ms) */
   HOVER_DURATION: 150,
 
-  /** Duration of tap feedback animation (ms) */
-  TAP_DURATION: 100,
-
   /** Scale factor on hover */
   HOVER_SCALE: 1.4,
+
+  /** Duration of tap feedback animation (ms) */
+  TAP_DURATION: 100,
 
   /** Scale factor on tap */
   TAP_SCALE: 0.9,
@@ -51,23 +51,25 @@ export const ANIMATION = {
  * Time range configurations
  */
 export const TIME_RANGE_CONFIG = {
+  '1y': {
+    days: 365,
+    label: '1y',
+    weeks: 52,
+  },
   '3m': {
     /** Number of days to display */
     days: 91,
-    /** Number of weeks (approximate) */
-    weeks: 13,
+
     /** Label for display */
     label: '3m',
+
+    /** Number of weeks (approximate) */
+    weeks: 13,
   },
   '6m': {
     days: 182,
-    weeks: 26,
     label: '6m',
-  },
-  '1y': {
-    days: 365,
-    weeks: 52,
-    label: '1y',
+    weeks: 26,
   },
 } as const;
 
@@ -75,25 +77,31 @@ export const TIME_RANGE_CONFIG = {
  * Default colors (using design system tokens)
  */
 export const COLORS = {
-  /** Empty/missed cell background */
-  CELL_EMPTY: '#e7e5e4', // stone-200
-
-  /** Future cell background */
-  CELL_FUTURE: '#f5f5f4', // stone-100
-
-  /** Before creation cell background */
-  CELL_BEFORE_CREATION: '#fafaf9', // stone-50
-
-  /** Today cell ring color (will use habit color at runtime) */
-  TODAY_RING_WIDTH: 2,
-
   /** Card background */
   CARD_BACKGROUND: '#ffffff',
 
+  // stone-100
+  /** Before creation cell background */
+  CELL_BEFORE_CREATION: '#fafaf9',
+
+  /** Empty/missed cell background */
+  CELL_EMPTY: '#e7e5e4',
+
+  // stone-200
+  /** Future cell background */
+  CELL_FUTURE: '#f5f5f4',
+
   /** Text colors */
-  TEXT_PRIMARY: '#1f2937', // gray-800
-  TEXT_SECONDARY: '#78716c', // stone-500
-  TEXT_TERTIARY: '#9ca3af', // gray-400
+  TEXT_PRIMARY: '#1f2937',
+
+  // gray-800
+  TEXT_SECONDARY: '#78716c',
+
+  // stone-500
+  TEXT_TERTIARY: '#9ca3af',
+  // stone-50
+  /** Today cell ring color (will use habit color at runtime) */
+  TODAY_RING_WIDTH: 2, // gray-400
 
   /** Tooltip */
   TOOLTIP_BACKGROUND: '#1c1917', // stone-900
@@ -122,14 +130,14 @@ export const DAY_NAMES_FULL = [
  * Grid layout constants
  */
 export const GRID = {
-  /** Number of rows (days of week) */
-  ROWS: 7,
+  /** Maximum number of weeks to display */
+  MAX_WEEKS: 53,
 
   /** Minimum number of weeks to display */
   MIN_WEEKS: 4,
 
-  /** Maximum number of weeks to display */
-  MAX_WEEKS: 53,
+  /** Number of rows (days of week) */
+  ROWS: 7,
 } as const;
 
 /**
@@ -138,12 +146,25 @@ export const GRID = {
 export const LEGEND_INDICATOR_SIZE = 8;
 
 /**
+ * Month label row configuration
+ */
+export const MONTH_LABEL = {
+  /** Font size for month labels */
+  FONT_SIZE: 10,
+
+  /** Height of the month labels row (in pixels) */
+  HEIGHT: 16,
+
+  /** Minimum width for a month label (in pixels) */
+  MIN_WIDTH: 24,
+} as const;
+
+/**
  * Tooltip configuration
  */
 export const TOOLTIP = {
-  /** Padding inside tooltip */
-  PADDING_X: 10,
-  PADDING_Y: 6,
+  /** Arrow size */
+  ARROW_SIZE: 6,
 
   /** Border radius */
   BORDER_RADIUS: 6,
@@ -151,9 +172,11 @@ export const TOOLTIP = {
   /** Font size */
   FONT_SIZE: 11,
 
-  /** Arrow size */
-  ARROW_SIZE: 6,
-
   /** Offset from cell */
   OFFSET: 8,
+
+  /** Padding inside tooltip */
+  PADDING_X: 10,
+
+  PADDING_Y: 6,
 } as const;
