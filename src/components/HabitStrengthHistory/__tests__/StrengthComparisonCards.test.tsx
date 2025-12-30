@@ -19,8 +19,9 @@ import { StrengthComparisonCards } from '../StrengthComparisonCards';
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
 
-  // Mock useReducedMotion to return false by default
-  Reanimated.useReducedMotion = jest.fn(() => false);
+  // Mock useReducedMotion to return TRUE in tests so animations don't affect values
+  // This ensures displayed values show immediately without animation
+  Reanimated.useReducedMotion = jest.fn(() => true);
 
   // Mock FadeIn entering animation
   Reanimated.FadeIn = {
@@ -28,6 +29,13 @@ jest.mock('react-native-reanimated', () => {
       duration: jest.fn(() => ({})),
     })),
   };
+
+  // Mock runOnJS to execute the function immediately
+  Reanimated.runOnJS = jest.fn((fn) => fn);
+
+  // Mock useAnimatedReaction as a no-op to avoid infinite loops
+  // When useReducedMotion is true, the component sets the value directly via useState
+  Reanimated.useAnimatedReaction = jest.fn(() => {});
 
   return Reanimated;
 });
@@ -101,7 +109,8 @@ describe('StrengthComparisonCards', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     const Reanimated = require('react-native-reanimated');
-    Reanimated.useReducedMotion.mockReturnValue(false);
+    // Use reduced motion in tests so values appear immediately without animation
+    Reanimated.useReducedMotion.mockReturnValue(true);
   });
 
   describe('Component Rendering', () => {
@@ -375,7 +384,9 @@ describe('StrengthComparisonCards', () => {
         <StrengthComparisonCards {...defaultProps} />
       );
       // The container should have an accessibility label
-      const container = getByLabelText('Habit strength comparison across timeframes');
+      const container = getByLabelText(
+        'Habit strength comparison across timeframes'
+      );
       expect(container).toBeTruthy();
     });
 
@@ -383,7 +394,9 @@ describe('StrengthComparisonCards', () => {
       const { getByLabelText } = render(
         <StrengthComparisonCards {...defaultProps} />
       );
-      const container = getByLabelText('Habit strength comparison across timeframes');
+      const container = getByLabelText(
+        'Habit strength comparison across timeframes'
+      );
       expect(container.props.accessible).toBe(true);
     });
   });

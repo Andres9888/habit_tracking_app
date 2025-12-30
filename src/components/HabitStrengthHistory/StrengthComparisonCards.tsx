@@ -13,13 +13,15 @@
  * - Color coding based on strength level
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
   Easing,
   FadeIn,
+  runOnJS,
   useAnimatedProps,
+  useAnimatedReaction,
   useReducedMotion,
   useSharedValue,
   withTiming,
@@ -33,6 +35,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 // Animation constants
 const RING_ANIMATION_DURATION = 1000;
+const NUMBER_COUNT_UP_DURATION = 800;
 const RING_SIZE = 56;
 const RING_STROKE_WIDTH = 4;
 
@@ -84,15 +87,31 @@ function StrengthCard({
   // Animated progress value (0 to strength/100)
   const progress = useSharedValue(0);
 
+  // State for displaying the animated number count
+  const [displayedValue, setDisplayedValue] = useState(
+    shouldReduceMotion ? Math.round(strength) : 0
+  );
+
+  // Update displayed value using animated reaction (count-up effect)
+  useAnimatedReaction(
+    () => progress.value,
+    (currentProgress) => {
+      const currentValue = Math.round(currentProgress * 100);
+      runOnJS(setDisplayedValue)(currentValue);
+    },
+    [progress]
+  );
+
   useEffect(() => {
     if (shouldReduceMotion) {
       progress.value = strength / 100;
+      setDisplayedValue(Math.round(strength));
       return;
     }
 
-    // Animate from 0 to the target strength
+    // Animate from 0 to the target strength (controls both ring and number)
     progress.value = withTiming(strength / 100, {
-      duration: RING_ANIMATION_DURATION,
+      duration: NUMBER_COUNT_UP_DURATION,
       easing: Easing.out(Easing.cubic),
     });
   }, [strength, progress, shouldReduceMotion]);
@@ -109,31 +128,31 @@ function StrengthCard({
 
   return (
     <Animated.View
-      entering={FadeIn.delay(animationDelay).duration(400)}
+      accessible
+      accessibilityLabel={`${timeLabel}: ${Math.round(strength)}% strength, ${labelText}`}
+      accessibilityRole='none'
       className={`flex-1 items-center rounded-xl p-3 ${
         isHighlighted
           ? 'border-2 border-emerald-200 bg-white shadow-sm'
           : 'bg-stone-50'
       }`}
-      accessible={true}
-      accessibilityRole="none"
-      accessibilityLabel={`${timeLabel}: ${Math.round(strength)}% strength, ${labelText}`}
+      entering={FadeIn.delay(animationDelay).duration(400)}
     >
       {/* Circular Progress Ring */}
       <View
-        className="relative mb-2"
-        accessible={true}
-        accessibilityRole="progressbar"
-        accessibilityValue={{ min: 0, max: 100, now: Math.round(strength) }}
+        accessible
+        accessibilityRole='progressbar'
+        accessibilityValue={{ max: 100, min: 0, now: Math.round(strength) }}
+        className='relative mb-2'
       >
-        <Svg width={RING_SIZE} height={RING_SIZE}>
+        <Svg height={RING_SIZE} width={RING_SIZE}>
           {/* Background circle (gray track) */}
           <Circle
             cx={center}
             cy={center}
+            fill='none'
             r={radius}
-            fill="none"
-            stroke="#e7e5e4" // stone-200
+            stroke='#e7e5e4' // stone-200
             strokeWidth={RING_STROKE_WIDTH}
           />
 
@@ -142,37 +161,38 @@ function StrengthCard({
             animatedProps={animatedProps}
             cx={center}
             cy={center}
+            fill='none'
+            origin={`${center}, ${center}`}
             r={radius}
-            fill="none"
+            rotation='-90'
             stroke={colors.ring}
-            strokeWidth={RING_STROKE_WIDTH}
             strokeDasharray={circumference}
             strokeDashoffset={circumference}
-            strokeLinecap="round"
-            rotation="-90"
-            origin={`${center}, ${center}`}
+            strokeLinecap='round'
+            strokeWidth={RING_STROKE_WIDTH}
           />
         </Svg>
 
-        {/* Percentage text in center */}
-        <View className="absolute inset-0 items-center justify-center">
+        {/* Percentage text in center - animates from 0 to final value */}
+        <View className='absolute inset-0 items-center justify-center'>
           <Text
-            className="text-sm font-bold"
+            className='text-sm font-bold'
             style={{ color: colors.primary }}
+            testID={`strength-value-${timeLabel.toLowerCase().replaceAll(/\s+/g, '-')}`}
           >
-            {Math.round(strength)}%
+            {displayedValue}%
           </Text>
         </View>
       </View>
 
       {/* Time label */}
-      <Text className="mb-0.5 text-xs font-medium uppercase tracking-wide text-stone-500">
+      <Text className='mb-0.5 text-xs font-medium uppercase tracking-wide text-stone-500'>
         {timeLabel}
       </Text>
 
       {/* Strength label */}
       <Text
-        className="text-xs font-semibold capitalize"
+        className='text-xs font-semibold capitalize'
         style={{ color: colors.primary }}
       >
         {labelText}
@@ -211,11 +231,11 @@ function DeltaBadge({ delta }: DeltaBadgeProps) {
 
   return (
     <View
-      className={`mt-1.5 flex-row items-center gap-0.5 rounded-full px-2 py-0.5 ${bgColor}`}
-      accessible={true}
+      accessible
       accessibilityLabel={`${isPositive ? 'Up' : isNegative ? 'Down' : 'No change'} ${Math.abs(delta)}% vs last month`}
+      className={`mt-1.5 flex-row items-center gap-0.5 rounded-full px-2 py-0.5 ${bgColor}`}
     >
-      <Icon size={10} color={iconColor} />
+      <Icon color={iconColor} size={10} />
       <Text className={`text-[10px] font-semibold ${textColor}`}>
         {isPositive ? '+' : ''}
         {delta.toFixed(1)}%
@@ -229,12 +249,15 @@ function DeltaBadge({ delta }: DeltaBadgeProps) {
  */
 function getLabelText(label: StrengthLabel): string {
   switch (label) {
-    case 'weak':
+    case 'weak': {
       return 'Weak';
-    case 'developing':
+    }
+    case 'developing': {
       return 'Developing';
-    case 'strong':
+    }
+    case 'strong': {
       return 'Strong';
+    }
   }
 }
 
@@ -258,32 +281,32 @@ export function StrengthComparisonCards({
 
   return (
     <View
-      className="flex-row gap-2"
-      accessible={true}
-      accessibilityRole="none"
-      accessibilityLabel="Habit strength comparison across timeframes"
+      accessible
+      accessibilityLabel='Habit strength comparison across timeframes'
+      accessibilityRole='none'
+      className='flex-row gap-2'
     >
       {/* Now Card - Highlighted */}
       <StrengthCard
-        strength={current}
-        timeLabel="Now"
-        isHighlighted={true}
-        delta={deltaVsMonth}
+        isHighlighted
         animationDelay={0}
+        delta={deltaVsMonth}
+        strength={current}
+        timeLabel='Now'
       />
 
       {/* 30 Days Ago Card */}
       <StrengthCard
+        animationDelay={100}
         strength={thirtyDaysStrength}
         timeLabel={thirtyDaysLabel}
-        animationDelay={100}
       />
 
       {/* 1 Year Ago Card */}
       <StrengthCard
+        animationDelay={200}
         strength={oneYearStrength}
         timeLabel={oneYearLabel}
-        animationDelay={200}
       />
     </View>
   );
