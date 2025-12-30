@@ -37,5 +37,5 @@ export type { StrengthTimelineChartProps } from './StrengthTimelineChart';
 export { StrengthInsightsRow } from './StrengthInsightsRow';
 export type { StrengthInsightsRowProps } from './StrengthInsightsRow';
 
-// Note: Additional component exports will be added when implemented
-// export { HabitStrengthHistory } from './HabitStrengthHistory';
+// Main container component
+export { HabitStrengthHistory } from './HabitStrengthHistory';
