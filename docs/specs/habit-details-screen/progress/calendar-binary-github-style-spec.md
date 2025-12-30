@@ -592,3 +592,71 @@ Compare implementation against mockup:
 - `date-fns` for date calculations
 - Existing `colors.ts` theme
 - Existing habit tracking mutations
+
+---
+
+## CodeRabbit Review Checklist
+
+### Pre-Implementation Review (Spec)
+
+- [ ] Data model matches existing `completions` table structure
+- [ ] Props interface covers all required use cases
+- [ ] Edge cases documented (empty data, habit created today, future dates)
+- [ ] Accessibility requirements are WCAG AA compliant
+- [ ] Animation specs include reduced motion fallbacks
+- [ ] Color system uses existing design tokens
+
+### Post-Implementation Review (Code)
+
+#### Architecture
+
+- [ ] Components follow single responsibility principle
+- [ ] Proper separation of concerns (utils vs components)
+- [ ] Barrel exports configured correctly
+- [ ] No circular dependencies
+
+#### TypeScript
+
+- [ ] All props have proper types (no `any`)
+- [ ] Interfaces exported for external use
+- [ ] Strict null checks handled
+
+#### Performance
+
+- [ ] `React.memo()` on cell components
+- [ ] `useMemo()` for grid generation
+- [ ] `useCallback()` for event handlers
+- [ ] No unnecessary re-renders on parent updates
+
+#### Accessibility
+
+- [ ] All cells have `accessibilityLabel`
+- [ ] Color contrast verified (WCAG AA 4.5:1)
+- [ ] Focus indicators visible
+- [ ] Screen reader tested
+
+#### Testing
+
+- [ ] Unit tests for `generateBinaryGrid()`
+- [ ] Unit tests for cell state logic
+- [ ] Component render tests
+- [ ] Integration test for day toggle
+
+#### Code Quality
+
+- [ ] No hardcoded colors (use CSS variables)
+- [ ] No magic numbers (use constants)
+- [ ] Consistent naming conventions
+- [ ] No dead code or commented-out code
+
+### Review Request Template
+
+```markdown
+@coderabbitai please review focusing on:
+
+1. TypeScript type safety
+2. React performance patterns (memo, useMemo, useCallback)
+3. Accessibility compliance
+4. Edge case handling
+5. Test coverage
+```
