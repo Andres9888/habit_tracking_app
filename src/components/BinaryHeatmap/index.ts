@@ -46,5 +46,17 @@ export {
   TOOLTIP,
 } from './constants';
 
-// Utility exports (to be added when utils.ts is created)
-// export { generateBinaryGrid } from './utils';
+// Utility exports
+export {
+  generateBinaryGrid,
+  calculateBinaryGridStats,
+  getTimeRangeDays,
+  getCellState,
+  formatDateForAccessibility,
+  getBinaryCellAccessibilityLabel,
+  formatTooltipText,
+  getTotalCellCount,
+  calculateCellAnimationDelay,
+  isValidDateString,
+  formatDateString,
+} from './utils';
