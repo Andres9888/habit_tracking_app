@@ -355,69 +355,134 @@ Compare implementation against mockup:
 
 #### Task 1.1: Create component structure and types
 
-- [ ] Create `src/components/BinaryHeatmap/` directory
-- [ ] Create `types.ts` with interfaces:
+- [x] Create `src/components/BinaryHeatmap/` directory
+- [x] Create `types.ts` with interfaces:
   - `BinaryDay` (date, completed, isToday, isFuture, isBeforeCreation)
   - `BinaryHeatmapProps`
   - `TimeRange` type
-- [ ] Create `constants.ts` with:
+- [x] Create `constants.ts` with:
   - Cell dimensions (10x10px)
   - Gap sizes (3px)
   - Animation timing
-- [ ] Create `index.ts` barrel export
+- [x] Create `index.ts` barrel export
 
 **Acceptance:** TypeScript compiles with no errors
+
+**Completed:** Created `src/components/BinaryHeatmap/` with:
+
+- `types.ts`: 13 interfaces/types including `BinaryDay`, `BinaryHeatmapProps`, `TimeRange`, `BinaryCellState`, `BinaryGridData`, `BinaryGridStats`, and props for all sub-components
+- `constants.ts`: Cell dimensions (10x10px), gaps (3px), animation timing (5ms stagger), colors, day labels, grid config, tooltip config
+- `index.ts`: Barrel export with all types and constants
 
 ---
 
 #### Task 1.2: Implement grid generation utility
 
-- [ ] Create `utils.ts` with `generateBinaryGrid()` function
-- [ ] Support 3m, 6m, 1y time ranges
-- [ ] Generate month labels with correct week indices
-- [ ] Handle habit creation date (cells before = disabled)
-- [ ] Handle future dates
-- [ ] Write unit tests for grid generation
+- [x] Create `utils.ts` with `generateBinaryGrid()` function
+- [x] Support 3m, 6m, 1y time ranges
+- [x] Generate month labels with correct week indices
+- [x] Handle habit creation date (cells before = disabled)
+- [x] Handle future dates
+- [x] Write unit tests for grid generation
 
 **Acceptance:** Grid generates correct number of weeks for each time range
+
+**Completed:** Created `src/components/BinaryHeatmap/utils.ts` with:
+
+- `generateBinaryGrid()`: Main function that generates grid data for 3m (91 days), 6m (182 days), or 1y (365 days)
+- `calculateBinaryGridStats()`: Calculates completions, eligible days, and completion rate
+- `getCellState()`: Determines cell visual state (done/missed/today/future/beforeCreation)
+- `formatDateForAccessibility()`: Formats dates for screen readers
+- `getBinaryCellAccessibilityLabel()`: Generates accessibility labels for cells
+- `formatTooltipText()`: Formats tooltip content
+- Helper functions: `getTimeRangeDays()`, `getTotalCellCount()`, `calculateCellAnimationDelay()`, `isValidDateString()`, `formatDateString()`
+
+Created `src/components/BinaryHeatmap/__tests__/utils.test.ts` with 89 comprehensive unit tests covering:
+
+- Time range day counts
+- Cell state determination
+- Grid structure for all time ranges (3m/6m/1y)
+- Day-of-week alignment (Sunday-Saturday)
+- Date formatting
+- Completed dates tracking
+- Today detection
+- Future dates handling
+- habitCreatedAt handling
+- Month label generation
+- Statistics calculation
+- Edge cases (month boundaries, leap years, year boundaries)
 
 ---
 
 #### Task 1.3: Create BinaryCell component
 
-- [ ] Create `BinaryCell.tsx`
-- [ ] Implement 4 states: done, missed, today, future
-- [ ] Use CSS variables for dynamic habit color
-- [ ] Add staggered fade-in animation
-- [ ] Add hover scale effect (web)
-- [ ] Add tap feedback (mobile)
-- [ ] Add accessibility label
+- [x] Create `BinaryCell.tsx`
+- [x] Implement 4 states: done, missed, today, future
+- [x] Use CSS variables for dynamic habit color
+- [x] Add staggered fade-in animation
+- [x] Add hover scale effect (web)
+- [x] Add tap feedback (mobile)
+- [x] Add accessibility label
 
 **Acceptance:** Cells render correctly with all 4 states
+
+**Completed:** Created `src/components/BinaryHeatmap/BinaryCell.tsx` with:
+
+- 5 visual states: done (habit color), missed (gray), today (ring outline), future (faded), beforeCreation (very faded)
+- Memoized component using `React.memo()` for performance
+- Dynamic habit color via props (not CSS variables - more appropriate for React Native)
+- Staggered FadeIn animation using react-native-reanimated with `ANIMATION.CELL_STAGGER_DELAY` (5ms per cell)
+- Web hover cursor support via Platform.OS check
+- Mobile tap feedback via withSpring scale animation (0.9 scale on press)
+- Full accessibility: labels, roles (button/text), hints, selected state
+- 34 comprehensive unit tests covering all states, interactions, animations, and accessibility
 
 ---
 
 #### Task 1.4: Create TimeRangeToggle component
 
-- [ ] Create `TimeRangeToggle.tsx`
-- [ ] Implement 3m/6m/1y buttons
-- [ ] Style active/inactive states per spec
-- [ ] Add press animation
-- [ ] Call `onTimeRangeChange` callback
+- [x] Create `TimeRangeToggle.tsx`
+- [x] Implement 3m/6m/1y buttons
+- [x] Style active/inactive states per spec
+- [x] Add press animation
+- [x] Call `onTimeRangeChange` callback
 
 **Acceptance:** Toggle switches between ranges with visual feedback
+
+**Completed:** Created `src/components/BinaryHeatmap/TimeRangeToggle.tsx` with:
+
+- Pill-style segmented control with 3m/6m/1y buttons
+- Memoized component using `React.memo()` for performance
+- Active state: white background with shadow, dark text (stone-900)
+- Inactive state: transparent background, gray text (stone-500)
+- Spring-based press animation using react-native-reanimated (0.95 scale on press)
+- `useReduceMotion` hook integration to respect accessibility preferences
+- Full accessibility: `tablist` role on container, `tab` role on buttons, `selected` state
+- Human-readable accessibility labels ("3 months", "6 months", "1 year")
+- 23 comprehensive unit tests covering rendering, interactions, value updates, accessibility, and animations
 
 ---
 
 #### Task 1.5: Create HeatmapLegend component
 
-- [ ] Create `HeatmapLegend.tsx`
-- [ ] Show "Missed" indicator (gray square)
-- [ ] Show "Done" indicator (habit color square)
-- [ ] Show completion percentage
-- [ ] Use dynamic habit color
+- [x] Create `HeatmapLegend.tsx`
+- [x] Show "Missed" indicator (gray square)
+- [x] Show "Done" indicator (habit color square)
+- [x] Show completion percentage
+- [x] Use dynamic habit color
 
 **Acceptance:** Legend displays correctly with dynamic color
+
+**Completed:** Created `src/components/BinaryHeatmap/HeatmapLegend.tsx` with:
+
+- Memoized component using `React.memo()` for performance
+- Binary legend showing "Missed" (gray square) and "Done" (habit color square) indicators
+- Completion percentage displayed in the habit's accent color
+- 8x8px indicator squares using `LEGEND_INDICATOR_SIZE` constant
+- Full accessibility: container label, indicator labels, percentage label, all with `text` role
+- Dynamic habit color support via props
+- `formatCompletionRate()` helper for proper percentage rounding
+- 31 comprehensive unit tests covering rendering, percentage formatting, dynamic colors, accessibility, component updates, and edge cases
 
 ---
 
@@ -425,35 +490,81 @@ Compare implementation against mockup:
 
 #### Task 2.1: Create BinaryHeatmapGrid component
 
-- [ ] Create `BinaryHeatmapGrid.tsx`
-- [ ] Render 7 rows (S/M/T/W/T/F/S)
-- [ ] Render day labels column
-- [ ] Map weeks to cell columns
-- [ ] Apply staggered animation delays
+- [x] Create `BinaryHeatmapGrid.tsx`
+- [x] Render 7 rows (S/M/T/W/T/F/S)
+- [x] Render day labels column
+- [x] Map weeks to cell columns
+- [x] Apply staggered animation delays
 
 **Acceptance:** Full 7-row grid renders with correct layout
+
+**Completed:** Created `src/components/BinaryHeatmap/BinaryHeatmapGrid.tsx` with:
+
+- Memoized component using `React.memo()` for performance
+- 7 rows representing Sunday through Saturday with proper S/M/T/W/T/F/S labels
+- Day labels column on the left side with full accessibility labels (e.g., "Sunday row")
+- Horizontal `ScrollView` for grid content to handle larger time ranges (6m, 1y)
+- Week-to-row transposition: transforms `weeks[weekIndex][dayIndex]` to `rows[dayIndex][weekIndex]` for proper layout
+- Staggered animation delays calculated via `calculateCellAnimationDelay()` for left-to-right, top-to-bottom reveal
+- Full accessibility: `grid` role on container, `row` role on each day row
+- 24 comprehensive unit tests covering grid structure, cell rendering, row transposition, cell press handling, animations, empty grids, large grids (26/52 weeks), mixed cell states, accessibility, and horizontal scrolling
 
 ---
 
 #### Task 2.2: Add month labels row
 
-- [ ] Render month labels above grid
-- [ ] Position labels at correct week indices
-- [ ] Handle edge cases (month spanning multiple weeks)
+- [x] Render month labels above grid
+- [x] Position labels at correct week indices
+- [x] Handle edge cases (month spanning multiple weeks)
 
 **Acceptance:** Month labels align with their starting weeks
+
+**Completed:** Created `src/components/BinaryHeatmap/MonthLabelsRow.tsx` with:
+
+- Memoized component using `React.memo()` for performance
+- Month labels positioned absolutely based on week indices using `left` positioning
+- Dynamic width calculation: each label extends to the next month's start or grid end
+- Minimum width constraint (`MONTH_LABEL.MIN_WIDTH = 24px`) for narrow month spans
+- Full accessibility: container has `header` role, individual labels have full month names for screen readers
+- Updated `BinaryHeatmapGrid.tsx` to integrate month labels:
+  - Added `MonthLabelsRow` above the grid cells inside the ScrollView
+  - Added spacer in day labels column for proper vertical alignment
+  - Month labels scroll horizontally with the grid
+- Added `MONTH_LABEL` constants (HEIGHT: 16px, FONT_SIZE: 10px, MIN_WIDTH: 24px)
+- 26 unit tests for MonthLabelsRow covering rendering, positioning, accessibility, edge cases
+- 5 integration tests in BinaryHeatmapGrid for month labels functionality
 
 ---
 
 #### Task 2.3: Create HeatmapTooltip component
 
-- [ ] Create `HeatmapTooltip.tsx`
-- [ ] Show on hover (web) or long-press (mobile)
-- [ ] Display date and status
-- [ ] Position above cell with arrow
-- [ ] Style per spec (dark background, white text)
+- [x] Create `HeatmapTooltip.tsx`
+- [x] Show on hover (web) or long-press (mobile)
+- [x] Display date and status
+- [x] Position above cell with arrow
+- [x] Style per spec (dark background, white text)
 
 **Acceptance:** Tooltip appears on interaction with correct content
+
+**Completed:** Created `src/components/BinaryHeatmap/HeatmapTooltip.tsx` with:
+
+- Memoized component using `React.memo()` for performance
+- Modal-based tooltip that displays above the target cell with an arrow pointing down
+- Tooltip content formatted via `formatTooltipText()` utility function showing:
+  - "Dec 15: Done ✓" for completed days
+  - "Jul 7: Missed" for missed days
+  - "Dec 30: Today" for current day
+  - "Jan 5: Future" for future days
+  - "Jan 1: Before tracking" for pre-creation days
+- Fade-in/out and scale animations using react-native-reanimated
+- `useReduceMotion` hook integration to respect accessibility preferences
+- Dark background (#1c1917 / stone-900) with white text (11px, font-weight 500)
+- 6px arrow pointing down to the cell below
+- Full accessibility: `tooltip` role, `accessibilityLiveRegion="polite"`, close button with proper labels
+- Transparent backdrop that dismisses tooltip on tap
+- Modal's `onRequestClose` handler for Android back button support
+- Updated `index.ts` to export `HeatmapTooltip`
+- 33 comprehensive unit tests covering rendering, positioning, interactions, accessibility, date formatting, and edge cases
 
 ---
 
@@ -461,24 +572,76 @@ Compare implementation against mockup:
 
 #### Task 3.1: Create BinaryHeatmap container
 
-- [ ] Create `BinaryHeatmap.tsx`
-- [ ] Compose: header, grid, legend
-- [ ] Manage time range state
-- [ ] Pass habit color as CSS variable
-- [ ] Handle `onDayPress` callback
+- [x] Create `BinaryHeatmap.tsx`
+- [x] Compose: header, grid, legend
+- [x] Manage time range state
+- [x] Pass habit color as CSS variable
+- [x] Handle `onDayPress` callback
 
 **Acceptance:** Full heatmap card renders with all sub-components
+
+**Completed:** Created `src/components/BinaryHeatmap/BinaryHeatmap.tsx` with:
+
+- Main container component wrapping all sub-components (header, grid, legend, tooltip)
+- Memoized using `React.memo()` for performance optimization
+- Time range state management supporting both controlled and uncontrolled modes:
+  - When `timeRange` prop is provided: controlled mode (parent manages state)
+  - When `timeRange` prop is undefined: uncontrolled mode (internal state, defaults to '3m')
+- Grid data generation via `useMemo()` with `generateBinaryGrid()` - re-generates only when `timeRange`, `completedDates`, or `habitCreatedAt` change
+- Tooltip state management: `tooltipDay`, `tooltipPosition`, `tooltipVisible`
+- Cell press handling: Shows tooltip and propagates `onDayPress` callback to parent
+- Header row with "Activity" title and `TimeRangeToggle` component
+- Grid wrapper with `BinaryHeatmapGrid` component
+- `HeatmapLegend` showing Missed/Done indicators and completion percentage
+- Conditional `HeatmapTooltip` rendering when a cell is pressed
+- Full accessibility: `accessibilityLabel="Habit completion heatmap"`, `accessibilityRole="summary"`, `accessible=true`
+- Styling: white card background, 12px border radius, 16px padding
+
+Updated `index.ts` to export `BinaryHeatmap` component.
+
+Created `__tests__/BinaryHeatmap.test.tsx` with 35 comprehensive unit tests covering:
+
+- Rendering (container, header, toggle, legend, grid)
+- Time range state (uncontrolled mode, controlled mode, callbacks)
+- Grid data generation and regeneration
+- Day press handling
+- Legend integration
+- Accessibility (roles, labels)
+- Component composition
+- Edge cases (empty completedDates, future/past habitCreatedAt)
+- Props propagation
+- Memoization behavior
+- Styling verification
 
 ---
 
 #### Task 3.2: Add stats row
 
-- [ ] Create stats row below heatmap card
-- [ ] Show frequency badge ("Daily")
-- [ ] Show streak badge with fire icon
-- [ ] Add settings button
+- [x] Create stats row below heatmap card
+- [x] Show frequency badge ("Daily")
+- [x] Show streak badge with fire icon
+- [x] Add settings button
 
 **Acceptance:** Stats row matches mockup layout
+
+**Completed:** Created `src/components/BinaryHeatmap/StatsRow.tsx` with:
+
+- Memoized component using `React.memo()` for performance optimization
+- Frequency badge with stone-100 background and stone-900 text
+- Streak badge with dynamic habit color theming:
+  - `getHabitColor50()` utility generates light tint for badge background
+  - Fire icon (🔥) from lucide-react-native with habit color
+  - Streak text with singular/plural handling ("1 day streak" vs "N day streak")
+  - Only displayed when `currentStreak > 0`
+- Settings button (36x36px circular) with:
+  - Spring-based press animation using react-native-reanimated
+  - `useReducedMotion` hook integration for accessibility
+  - Settings icon from lucide-react-native
+  - Only rendered when `onSettingsPress` callback is provided
+- Full accessibility support with proper roles, labels, and hints
+- Updated `types.ts` to add `habitColor` to `StatsRowProps`
+- Updated `index.ts` to export `StatsRow` component
+- 35 comprehensive unit tests covering rendering, interactions, dynamic colors, accessibility, and edge cases
 
 ---
 
@@ -486,22 +649,39 @@ Compare implementation against mockup:
 
 #### Task 4.1: Integrate with HabitDetailScreen
 
-- [ ] Replace `CalendarHeatmapWithViews` with `BinaryHeatmap`
-- [ ] Pass required props (habitId, completedDates, etc.)
-- [ ] Connect to habit color from `habit.iconColor`
-- [ ] Wire up day press handler
+- [x] Replace `CalendarHeatmapWithViews` with `BinaryHeatmap`
+- [x] Pass required props (habitId, completedDates, etc.)
+- [x] Connect to habit color from `habit.iconColor`
+- [x] Wire up day press handler
 
 **Acceptance:** New heatmap renders in habit detail screen
+
+**Completed:** Integrated `BinaryHeatmap` and `StatsRow` components into `HabitDetailScreen.tsx`:
+
+- Replaced `CollapsibleCalendar` import with `BinaryHeatmap, StatsRow` from `../components/BinaryHeatmap`
+- Replaced the `CollapsibleCalendar` usage in `ProgressTabContent` with:
+  - `BinaryHeatmap` component with all required props: `habitId`, `completedDates`, `habitCreatedAt`, `habitColor`, `currentStreak`, `onDayPress`
+  - `StatsRow` component with `frequency="Daily"`, `currentStreak`, and `habitColor` props
+- Updated `BinaryHeatmap.tsx` to properly destructure all required props (`habitId`, `currentStreak`) to satisfy TypeScript interface
 
 ---
 
 #### Task 4.2: Connect time range to data fetching
 
-- [ ] Update data query to respect time range
-- [ ] Fetch appropriate date range (3m/6m/1y)
-- [ ] Optimize query performance
+- [x] Update data query to respect time range
+- [x] Fetch appropriate date range (3m/6m/1y)
+- [x] Optimize query performance
 
 **Acceptance:** Changing time range updates displayed data
+
+**Completed:** The architecture was designed with time range in mind:
+
+- `useHabitsAppState.ts` fetches 12 months of tracking data upfront via `api.habits.getTracking` with `extendedDateStrings` (lines 141-153)
+- The full `completedDates` Set is passed to `BinaryHeatmap` component
+- Time range filtering happens client-side in `generateBinaryGrid()` utility function (utils.ts lines 66-171)
+- When users toggle between 3m/6m/1y, the grid regenerates via `useMemo` dependency on `timeRange`
+- Performance is optimized: single data fetch, O(n) grid generation where n = days in range
+- No additional backend changes needed - all time ranges (91/182/365 days) are subsets of the pre-fetched 365-day data
 
 ---
 
