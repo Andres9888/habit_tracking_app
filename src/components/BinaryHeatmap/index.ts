@@ -10,7 +10,7 @@
 // export { BinaryHeatmapGrid } from './BinaryHeatmapGrid';
 export { BinaryCell } from './BinaryCell';
 export { TimeRangeToggle } from './TimeRangeToggle';
-// export { HeatmapLegend } from './HeatmapLegend';
+export { HeatmapLegend } from './HeatmapLegend';
 // export { HeatmapTooltip } from './HeatmapTooltip';
 
 // Type exports
