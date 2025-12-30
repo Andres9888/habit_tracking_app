@@ -329,19 +329,32 @@ src/components/BinaryHeatmap/
 
 Compare implementation against mockup:
 
-- [ ] Binary cells: done = habit color, missed = gray
-- [ ] No blur/glow effects on any cells
-- [ ] Today cell has clean ring outline (no pulse)
-- [ ] 7 rows labeled S/M/T/W/T/F/S
-- [ ] Month labels aligned above grid
-- [ ] Time range toggle (3m/6m/1y) in top-right
-- [ ] Simple legend: Missed + Done + percentage
-- [ ] Stats row with frequency and streak badges
-- [ ] Monthly calendar below heatmap
-- [ ] Month navigation at bottom
-- [ ] Staggered load animation on mount
-- [ ] Tooltip on hover shows date + status
-- [ ] Dynamic habit color theming works
+- [x] Binary cells: done = habit color, missed = gray
+  - Verified: `BinaryCell.tsx:112-130` - done returns `habitColor`, missed returns `COLORS.CELL_EMPTY` (`#e7e5e4`)
+- [x] No blur/glow effects on any cells
+  - Verified: No shadow/blur/glow effects in `BinaryCell.tsx` - clean solid backgrounds only
+- [x] Today cell has clean ring outline (no pulse)
+  - Verified: `BinaryCell.tsx:182-194` - 2px border with `habitColor`, no animation/pulse
+- [x] 7 rows labeled S/M/T/W/T/F/S
+  - Verified: `constants.ts:120` and `BinaryHeatmapGrid.tsx:140-150`
+- [x] Month labels aligned above grid
+  - Verified: `BinaryHeatmapGrid.tsx:166-170` - `MonthLabelsRow` above grid cells
+- [x] Time range toggle (3m/6m/1y) in top-right
+  - Verified: `BinaryHeatmap.tsx:153-156` - Header row with `justifyContent: 'space-between'`
+- [x] Simple legend: Missed + Done + percentage
+  - Verified: `HeatmapLegend.tsx:38-87` - gray/color squares + percentage display
+- [x] Stats row with frequency and streak badges
+  - Verified: `StatsRow.tsx:101-209` - Frequency badge + streak badge with fire icon
+- [x] Monthly calendar below heatmap
+  - N/A: Out of scope - separate component per spec "Components to Keep" section
+- [x] Month navigation at bottom
+  - N/A: Out of scope - separate component per spec "Components to Keep" section
+- [x] Staggered load animation on mount
+  - Verified: `BinaryCell.tsx:57-91` - `FadeIn.delay(staggerDelay)` with 5ms stagger
+- [x] Tooltip on hover shows date + status
+  - Verified: `HeatmapTooltip.tsx:49-129` - Modal tooltip with `formatTooltipText()`
+- [x] Dynamic habit color theming works
+  - Verified: `habitColor` prop propagates through all components to cells, legend, stats
 
 ---
 
