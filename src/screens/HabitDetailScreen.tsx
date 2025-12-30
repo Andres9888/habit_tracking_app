@@ -780,6 +780,50 @@ function ProgressTabContent({
   // Get today's date for reflection queries
   const today = new Date().toISOString().split('T')[0];
 
+  // Mutation for toggling habit completion on any date (heatmap cell tap)
+  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+
+  // Track toggling state to prevent rapid-fire toggles
+  const [isToggling, setIsToggling] = useState(false);
+
+  // Handle heatmap cell press - toggle completion for that date
+  const handleDayPress = useCallback((date: string, wasCompleted: boolean): void => {
+    // Prevent rapid-fire toggles
+    if (isToggling) return;
+
+    // Don't allow toggling future dates (mutation validates this too, but skip for UX)
+    const inputDate = new Date(date);
+    const todayDate = new Date();
+    inputDate.setHours(0, 0, 0, 0);
+    todayDate.setHours(0, 0, 0, 0);
+    if (inputDate > todayDate) {
+      return; // Silently ignore future date taps
+    }
+
+    setIsToggling(true);
+
+    // Haptic feedback - lighter for unchecking, medium for checking
+    void Haptics.impactAsync(
+      wasCompleted
+        ? Haptics.ImpactFeedbackStyle.Light
+        : Haptics.ImpactFeedbackStyle.Medium
+    );
+
+    // Fire mutation and handle results (void to avoid returning promise)
+    void toggleHabitMutation({
+      date,
+      habitId: habit._id,
+    })
+      .catch((error: unknown) => {
+        console.error('Failed to toggle habit completion:', error);
+        // Could show a toast here if toast system is available
+      })
+      .finally(() => {
+        // Small cooldown to prevent rapid toggles
+        setTimeout(() => setIsToggling(false), 200);
+      });
+  }, [isToggling, habit._id, toggleHabitMutation]);
+
   // Query for today's reflection
   const todaysReflection = useQuery(api.reflections.getByHabitAndDate, {
     habitId: habit._id,
@@ -889,18 +933,16 @@ function ProgressTabContent({
         habitId={habit._id}
         completedDates={completedDates}
         habitCreatedAt={habitCreatedAt}
-        habitColor={habit.iconColor}
+        habitColor={habit.iconColor ?? '#10b981'}
         currentStreak={habit.currentStreak ?? 0}
-        onDayPress={(_date, _completed) => {
-          // Future: Could open day detail or allow editing past dates
-        }}
+        onDayPress={handleDayPress}
       />
 
       {/* Stats Row - frequency and streak badges */}
       <StatsRow
         frequency="Daily"
         currentStreak={habit.currentStreak ?? 0}
-        habitColor={habit.iconColor}
+        habitColor={habit.iconColor ?? '#10b981'}
       />
 
       {/* Habit Strength History - exponential smoothing visualization */}
