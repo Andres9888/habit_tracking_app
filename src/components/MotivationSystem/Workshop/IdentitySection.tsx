@@ -22,7 +22,7 @@ import Animated, {
   interpolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { User, Plus, Check } from 'lucide-react-native';
+import { Plus, Check, Pencil } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import {
@@ -48,6 +48,7 @@ export interface IdentitySectionProps {
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -61,7 +62,7 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -71,21 +72,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -99,13 +100,13 @@ function SectionCard({
       <Animated.View
         style={[
           animatedStyle,
-          { shadowColor: '#78716c' }, // stone-500
+          { shadowColor: '#000' },
         ]}
       >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -119,9 +120,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -213,61 +221,47 @@ export function IdentitySection({
         className='border-l-4 border-l-indigo-400'
         onPress={onPress}
       >
-        <View className='flex-row items-start gap-3'>
-          {/* Icon with completion checkmark */}
-          <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-indigo-100'>
-            {hasIdentity ? (
-              <User className='text-indigo-500' size={20} />
-            ) : (
-              <PulsingIcon reduceMotion={reduceMotion}>
-                <User className='text-indigo-500' size={20} />
-              </PulsingIcon>
-            )}
-            <CompletionCheckmark
-              isVisible={hasIdentity}
-              reduceMotion={reduceMotion}
-              sectionIndex={sectionIndex}
-              shouldAnimate={shouldAnimate}
-            />
+        {/* Header row: icon + title on left, action on right */}
+        <View className='mb-1.5 flex-row items-center justify-between'>
+          <View className='flex-row items-center gap-2'>
+            <Text className="text-base">🎭</Text>
+            <Text className='text-xs font-semibold text-indigo-600'>
+              Identity Statement
+            </Text>
           </View>
-
-          {/* Content area */}
-          <View className='flex-1'>
-            {hasIdentity ? (
-              /* Filled state */
-              <>
-                <Text className='mb-1 font-semibold text-stone-800'>
-                  Identity
-                </Text>
-                <Text className='text-sm font-medium text-indigo-700'>
-                  "{formattedIdentity}"
-                </Text>
-                <Text className='mt-1 text-xs text-stone-400'>
-                  Not "I run" — who you ARE
-                </Text>
-              </>
-            ) : (
-              /* Empty state */
-              <>
-                <View className='mb-1 flex-row items-center justify-between'>
-                  <Text className='font-semibold text-stone-800'>Identity</Text>
-                  <View className='flex-row items-center gap-1'>
-                    <Plus className='text-indigo-600' size={12} />
-                    <Text className='text-xs font-medium text-indigo-600'>
-                      Set up
-                    </Text>
-                  </View>
-                </View>
-                <Text className='text-sm text-stone-500'>
-                  Define who you're becoming
-                </Text>
-                <Text className='mt-1 text-xs text-stone-400'>
-                  Not "I run" — who you ARE
-                </Text>
-              </>
-            )}
-          </View>
+          {hasIdentity ? (
+            <Pencil className='text-stone-400' size={14} />
+          ) : (
+            <View className='flex-row items-center gap-1'>
+              <Plus className='text-indigo-600' size={12} />
+              <Text className='text-xs font-medium text-indigo-600'>Set up</Text>
+            </View>
+          )}
         </View>
+
+        {/* Content */}
+        {hasIdentity ? (
+          <>
+            <Text className='text-sm font-semibold text-stone-900'>
+              "{formattedIdentity}"
+            </Text>
+            <Text className='mt-1 text-xs text-stone-500'>
+              Not "I run" — who you ARE
+            </Text>
+          </>
+        ) : (
+          <Text className='text-sm text-stone-500'>
+            Define who you're becoming
+          </Text>
+        )}
+
+        {/* Completion checkmark */}
+        <CompletionCheckmark
+          isVisible={hasIdentity}
+          reduceMotion={reduceMotion}
+          sectionIndex={sectionIndex}
+          shouldAnimate={shouldAnimate}
+        />
       </SectionCard>
     </AnimatedSection>
   );

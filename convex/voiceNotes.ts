@@ -322,7 +322,7 @@ export const getFromBestStreak = query({
     // Get tracking history to find the best streak period dates
     const tracking = await ctx.db
       .query('tracking')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
     // Find the date range of the best streak

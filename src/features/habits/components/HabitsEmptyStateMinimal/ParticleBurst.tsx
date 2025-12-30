@@ -115,8 +115,9 @@ function Particle({ angle, color, delay, duration, distance }: ParticleProps) {
   }, [delay, duration, progress]);
 
   // Calculate X and Y translation based on angle
-  const translateX = Math.cos(angle) * distance;
-  const translateY = Math.sin(angle) * distance;
+  // Round to avoid "Loss of precision during arithmetic conversion" error
+  const translateX = Math.round(Math.cos(angle) * distance);
+  const translateY = Math.round(Math.sin(angle) * distance);
 
   const animatedStyle = useAnimatedStyle(() => {
     const p = progress.value;

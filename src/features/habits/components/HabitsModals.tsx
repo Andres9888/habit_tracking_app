@@ -201,6 +201,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       <HabitDetailScreen
         habit={selectedHabit}
         initialTab={habitDetailInitialTab}
+        isPremium={settings?.hasPremium ?? false}
         onArchive={(habitId) => handleArchive(habitId)}
         onClose={closeHabitDetail}
         onDelete={onDeleteHabit}

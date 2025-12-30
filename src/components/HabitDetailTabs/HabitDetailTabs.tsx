@@ -31,7 +31,7 @@ const TABS: TabConfig[] = [
 const PILL_SPRING_CONFIG = {
   damping: 18,
   stiffness: 180,
-  mass: 0.8,
+  mass: 1,
 };
 
 // Padding inside the container

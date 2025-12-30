@@ -22,7 +22,7 @@ import Animated, {
   interpolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { Clock, MapPin, Link, Plus, Check } from 'lucide-react-native';
+import { Plus, Check, Pencil } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import {
@@ -57,6 +57,7 @@ export interface CueTriggerSectionProps {
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -70,7 +71,7 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -80,21 +81,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -108,13 +109,13 @@ function SectionCard({
       <Animated.View
         style={[
           animatedStyle,
-          { shadowColor: '#78716c' }, // stone-500
+          { shadowColor: '#000' },
         ]}
       >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -128,9 +129,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -184,25 +192,23 @@ function AnimatedSection({
 }
 
 /**
- * CueField Component - Individual cue field display
+ * CueField Component - Individual cue field display with emoji icons
+ * Matches mockup: sky-500 icon color, stone-600 label, stone-900 value
  */
 function CueField({
-  icon: Icon,
+  emoji,
   label,
   value,
-  iconColorClass = 'text-sky-500',
 }: {
-  icon: typeof Clock;
+  emoji: string;
   label: string;
   value?: string;
-  iconColorClass?: string;
 }) {
   return (
     <View className='flex-row items-center gap-2'>
-      <Icon className={iconColorClass} size={14} />
-      <Text className='text-xs text-stone-500'>{label}:</Text>
-      <Text className='flex-1 text-xs font-medium text-stone-700'>
-        {value || '—'}
+      <Text className='text-sky-500'>{emoji}</Text>
+      <Text className='text-xs text-stone-600'>
+        {label}: <Text className='font-medium text-stone-900'>{value || '—'}</Text>
       </Text>
     </View>
   );
@@ -243,7 +249,6 @@ export function CueTriggerSection({
   sectionIndex = 2,
 }: CueTriggerSectionProps) {
   const hasCue = hasCueData(cue);
-  const intentionPreview = cue ? formatIntentionPreview(cue) : null;
 
   return (
     <AnimatedSection
@@ -256,83 +261,50 @@ export function CueTriggerSection({
         className='border-l-4 border-l-sky-400'
         onPress={onPress}
       >
-        <View className='flex-row items-start gap-3'>
-          {/* Icon with completion checkmark */}
-          <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-sky-100'>
-            {hasCue ? (
-              <Link className='text-sky-500' size={20} />
-            ) : (
-              <PulsingIcon reduceMotion={reduceMotion}>
-                <Link className='text-sky-500' size={20} />
-              </PulsingIcon>
-            )}
-            <CompletionCheckmark
-              isVisible={hasCue}
-              reduceMotion={reduceMotion}
-              sectionIndex={sectionIndex}
-              shouldAnimate={shouldAnimate}
-            />
+        {/* Header row: icon + title on left, action on right */}
+        <View className='mb-2 flex-row items-center justify-between'>
+          <View className='flex-row items-center gap-2'>
+            <Text className="text-base">🔔</Text>
+            <Text className='text-xs font-semibold text-sky-600'>
+              Cue / Trigger
+            </Text>
           </View>
-
-          {/* Content area */}
-          <View className='flex-1'>
-            {hasCue ? (
-              /* Filled state */
-              <>
-                <Text className='mb-2 font-semibold text-stone-800'>
-                  Cue / Trigger
-                </Text>
-                <View className='gap-1.5'>
-                  {cue?.time && (
-                    <CueField icon={Clock} label='When' value={cue.time} />
-                  )}
-                  {cue?.location && (
-                    <CueField
-                      icon={MapPin}
-                      label='Where'
-                      value={cue.location}
-                    />
-                  )}
-                  {cue?.afterBehavior && (
-                    <CueField
-                      icon={Link}
-                      label='After'
-                      value={cue.afterBehavior}
-                    />
-                  )}
-                </View>
-                {intentionPreview && (
-                  <View className='mt-2 rounded-lg bg-sky-50 px-2 py-1.5'>
-                    <Text className='text-xs italic text-sky-700'>
-                      "{intentionPreview}"
-                    </Text>
-                  </View>
-                )}
-              </>
-            ) : (
-              /* Empty state */
-              <>
-                <View className='mb-1 flex-row items-center justify-between'>
-                  <Text className='font-semibold text-stone-800'>
-                    Cue / Trigger
-                  </Text>
-                  <View className='flex-row items-center gap-1'>
-                    <Plus className='text-sky-600' size={12} />
-                    <Text className='text-xs font-medium text-sky-600'>
-                      Set up
-                    </Text>
-                  </View>
-                </View>
-                <Text className='text-sm text-stone-500'>
-                  When, where, and after what
-                </Text>
-                <Text className='mt-1 text-xs text-stone-400'>
-                  Habits with cues are 2x more likely to stick
-                </Text>
-              </>
-            )}
-          </View>
+          {hasCue ? (
+            <Pencil className='text-stone-400' size={14} />
+          ) : (
+            <View className='flex-row items-center gap-1'>
+              <Plus className='text-sky-600' size={12} />
+              <Text className='text-xs font-medium text-sky-600'>Set up</Text>
+            </View>
+          )}
         </View>
+
+        {/* Content */}
+        {hasCue ? (
+          <View className='gap-1.5'>
+            {cue?.time && (
+              <CueField emoji='⏰' label='When' value={cue.time} />
+            )}
+            {cue?.location && (
+              <CueField emoji='📍' label='Where' value={cue.location} />
+            )}
+            {cue?.afterBehavior && (
+              <CueField emoji='⚡' label='After' value={cue.afterBehavior} />
+            )}
+          </View>
+        ) : (
+          <Text className='text-sm text-stone-500'>
+            When, where, and after what
+          </Text>
+        )}
+
+        {/* Completion checkmark */}
+        <CompletionCheckmark
+          isVisible={hasCue}
+          reduceMotion={reduceMotion}
+          sectionIndex={sectionIndex}
+          shouldAnimate={shouldAnimate}
+        />
       </SectionCard>
     </AnimatedSection>
   );

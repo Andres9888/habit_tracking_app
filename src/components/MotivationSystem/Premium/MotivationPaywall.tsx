@@ -49,7 +49,7 @@ import Animated, {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
-import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { MotivationPremiumFeature } from './PremiumFeatureLock';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');

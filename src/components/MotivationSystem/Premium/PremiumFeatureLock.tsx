@@ -28,7 +28,7 @@ import Animated, {
   useSharedValue,
   runOnJS,
 } from 'react-native-reanimated';
-import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 /**
  * Premium feature tiers for the Motivation System

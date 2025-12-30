@@ -68,9 +68,9 @@ function ConfettiParticle({
       return;
     }
 
-    // Random horizontal drift
-    const drift = (Math.random() - 0.5) * 100;
-    const startX = (Math.random() - 0.5) * 200;
+    // Random horizontal drift - round to avoid Reanimated precision errors
+    const drift = Math.round((Math.random() - 0.5) * 100);
+    const startX = Math.round((Math.random() - 0.5) * 200);
 
     translateX.value = startX;
     translateY.value = 50;
@@ -95,7 +95,7 @@ function ConfettiParticle({
     );
     rotation.value = withDelay(
       delay,
-      withTiming(Math.random() * 360, { duration: CONFETTI_CONFIG.duration })
+      withTiming(Math.round(Math.random() * 360), { duration: CONFETTI_CONFIG.duration })
     );
     scale.value = withDelay(
       delay + 200,
@@ -116,7 +116,8 @@ function ConfettiParticle({
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
-      { rotate: `${rotation.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(rotation.value)}deg` },
       { scale: scale.value },
     ],
   }));

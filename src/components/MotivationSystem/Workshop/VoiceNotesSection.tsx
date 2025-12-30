@@ -102,6 +102,7 @@ const MAX_RECORDING_DURATION = 300; // 5 minutes
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -117,7 +118,7 @@ function SectionCard({
   disabled?: boolean;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -127,21 +128,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -152,12 +153,12 @@ function SectionCard({
 
   if (onPress) {
     return (
-      <Animated.View style={[animatedStyle, { shadowColor: '#78716c' }]}>
+      <Animated.View style={[animatedStyle, { shadowColor: '#000' }]}>
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
           accessibilityState={{ disabled }}
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           disabled={disabled}
           onPress={handlePress}
           onPressIn={handlePressIn}
@@ -172,9 +173,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -602,7 +610,8 @@ function VoiceNoteItem({
   }));
 
   const iconStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotateIcon.value * 180}deg` }],
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    transform: [{ rotate: `${Math.round(rotateIcon.value * 180)}deg` }],
   }));
 
   const hasPlayback = !!note.audioUrl;
@@ -852,65 +861,52 @@ export function VoiceNotesSection({
         disabled={isRecording || isPaused}
         onPress={handleSectionPress}
       >
-        <View className='flex-row items-start gap-3'>
-          {/* Icon with completion checkmark */}
-          <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-teal-100'>
-            {hasVoiceNotes ? (
-              <Mic className='text-teal-500' size={20} />
-            ) : (
-              <PulsingIcon reduceMotion={reduceMotion}>
-                <Mic className='text-teal-500' size={20} />
-              </PulsingIcon>
-            )}
-            <CompletionCheckmark
-              isVisible={hasVoiceNotes}
-              reduceMotion={reduceMotion}
-              sectionIndex={sectionIndex}
-              shouldAnimate={shouldAnimate}
-            />
-          </View>
-
-          {/* Content area */}
-          <View className='flex-1'>
-            <View className='mb-1 flex-row items-center justify-between'>
-              <Text className='font-semibold text-stone-800'>Voice Notes</Text>
+        {/* Header row: icon + title on left, premium badge on right */}
+        <View className='mb-2 flex-row items-center gap-2'>
+          <Text className='text-base'>🎙️</Text>
+          <Text className='text-xs font-semibold text-teal-600'>Voice Notes</Text>
+          {isPremium ? (
+            <View className='rounded-full bg-emerald-100 px-1.5 py-0.5'>
+              <Text className='text-[9px] font-bold text-emerald-700'>PREMIUM</Text>
+            </View>
+          ) : (
+            <View className='ml-auto flex-row items-center gap-1'>
               {!hasVoiceNotes && !isRecording && (
-                <View className='flex-row items-center gap-1'>
+                <>
                   <Plus className='text-teal-600' size={12} />
-                  <Text className='text-xs font-medium text-teal-600'>
-                    Record
-                  </Text>
-                </View>
-              )}
-              {!isPremium && (
-                <View className='rounded-full bg-amber-100 px-2 py-0.5'>
-                  <Text className='text-xs font-medium text-amber-700'>
-                    {voiceNoteCount}/{FREE_TIER_MAX_NOTES} Free
-                  </Text>
-                </View>
+                  <Text className='text-xs font-medium text-teal-600'>Record</Text>
+                </>
               )}
             </View>
-
-            {/* Description when not recording */}
-            {!isRecording && !isPaused && !hasVoiceNotes && (
-              <Text className='text-sm text-stone-500'>
-                Record your motivation for powerful recall
-              </Text>
-            )}
-
-            {/* Waveform visualization during recording */}
-            {(isRecording || isPaused) && (
-              <View className='mt-2'>
-                <WaveformVisualization
-                  isPaused={isPaused}
-                  isRecording={isRecording}
-                  meteringLevel={status.meteringLevel}
-                  reduceMotion={reduceMotion}
-                />
-              </View>
-            )}
-          </View>
+          )}
         </View>
+
+        {/* Description when not recording */}
+        {!isRecording && !isPaused && !hasVoiceNotes && (
+          <Text className='text-sm text-stone-500'>
+            Record your motivation for powerful recall
+          </Text>
+        )}
+
+        {/* Waveform visualization during recording */}
+        {(isRecording || isPaused) && (
+          <View className='mt-2'>
+            <WaveformVisualization
+              isPaused={isPaused}
+              isRecording={isRecording}
+              meteringLevel={status.meteringLevel}
+              reduceMotion={reduceMotion}
+            />
+          </View>
+        )}
+
+        {/* Completion checkmark */}
+        <CompletionCheckmark
+          isVisible={hasVoiceNotes}
+          reduceMotion={reduceMotion}
+          sectionIndex={sectionIndex}
+          shouldAnimate={shouldAnimate}
+        />
 
         {/* Recording controls */}
         {(isRecording ||

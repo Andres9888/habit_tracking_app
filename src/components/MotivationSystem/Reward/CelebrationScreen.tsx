@@ -58,7 +58,7 @@ import { QuickReflection, type EmojiType } from './QuickReflection';
 // Animation spring configs
 const SPRING_BUTTON = { damping: 15, stiffness: 300 };
 const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
+const SPRING_GENTLE = { damping: 28, mass: 1, stiffness: 180 };
 const STAGGER_DELAY = 60;
 
 // Confetti particle config
@@ -183,9 +183,10 @@ function ConfettiParticle({
   reduceMotion?: boolean;
 }) {
   const progress = useSharedValue(0);
-  const distance = 100 + Math.random() * 60;
-  const rotation = Math.random() * 720;
-  const size = 6 + Math.random() * 6;
+  // Round all values to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+  const distance = Math.round(100 + Math.random() * 60);
+  const rotation = Math.round(Math.random() * 720);
+  const size = Math.round(6 + Math.random() * 6);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -193,8 +194,9 @@ function ConfettiParticle({
     progress.value = withDelay(delay, withTiming(1, { duration: 1200 }));
   }, [delay, reduceMotion, progress]);
 
-  const translateX = Math.cos(angle) * distance;
-  const translateY = Math.sin(angle) * distance - 50; // Bias upward
+  // Round to avoid precision errors in Reanimated's native layer
+  const translateX = Math.round(Math.cos(angle) * distance);
+  const translateY = Math.round(Math.sin(angle) * distance) - 50; // Bias upward
 
   const animatedStyle = useAnimatedStyle(() => {
     const p = progress.value;
@@ -337,7 +339,8 @@ function CelebrationHeader({
   const iconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: iconScale.value },
-      { rotate: `${iconRotate.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(iconRotate.value)}deg` },
     ],
   }));
 

@@ -58,7 +58,7 @@ import {
 // Animation spring configs
 const SPRING_BUTTON = { damping: 15, stiffness: 300 };
 const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
+const SPRING_GENTLE = { damping: 28, mass: 1, stiffness: 180 };
 const STAGGER_DELAY = 60;
 
 /**

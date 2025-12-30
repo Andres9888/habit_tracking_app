@@ -285,8 +285,9 @@ const ConfettiParticle = React.memo(function ConfettiParticle({
 
   useEffect(() => {
     if (isActive) {
-      const targetX = Math.cos(angle) * distance;
-      const targetY = Math.sin(angle) * distance - 30; // Bias upward
+      // Round to avoid "Loss of precision during arithmetic conversion" error
+      const targetX = Math.round(Math.cos(angle) * distance);
+      const targetY = Math.round(Math.sin(angle) * distance) - 30; // Bias upward
 
       // Reset to center
       translateX.value = 0;
@@ -297,11 +298,11 @@ const ConfettiParticle = React.memo(function ConfettiParticle({
       // Animate outward with spring physics
       translateX.value = withDelay(
         delay,
-        withSpring(targetX, { damping: 12, mass: 0.5, stiffness: 200 })
+        withSpring(targetX, { damping: 12, mass: 1, stiffness: 200 })
       );
       translateY.value = withDelay(
         delay,
-        withSpring(targetY, { damping: 12, mass: 0.5, stiffness: 200 })
+        withSpring(targetY, { damping: 12, mass: 1, stiffness: 200 })
       );
       scale.value = withDelay(
         delay,
@@ -363,6 +364,7 @@ const ConfettiParticle = React.memo(function ConfettiParticle({
  */
 function ConfettiBurst({ isActive }: { isActive: boolean }) {
   // Create particle configurations (stable across renders)
+  // Round all values to avoid "Loss of precision during arithmetic conversion" error in Reanimated
   const particles = useMemo(
     () =>
       Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => ({
@@ -371,9 +373,9 @@ function ConfettiBurst({ isActive }: { isActive: boolean }) {
           (Math.random() * 0.3 - 0.15),
         color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
         delay: i * 20, // Stagger particles slightly
-        distance: 50 + Math.random() * 40,
+        distance: Math.round(50 + Math.random() * 40),
         id: i,
-        size: 5 + Math.random() * 5,
+        size: Math.round(5 + Math.random() * 5),
       })),
     []
   );

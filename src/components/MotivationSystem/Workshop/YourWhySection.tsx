@@ -21,7 +21,7 @@ import Animated, {
   interpolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { Heart, Plus, Check } from 'lucide-react-native';
+import { Plus, Check, Pencil } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import {
@@ -47,6 +47,7 @@ export interface YourWhySectionProps {
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -60,13 +61,13 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     shadowOffset: {
       width: 0,
       height: interpolate(elevation.value, [1, 2], [1, 2]),
@@ -77,14 +78,14 @@ function SectionCard({
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -98,13 +99,13 @@ function SectionCard({
       <Animated.View
         style={[
           animatedStyle,
-          { shadowColor: '#78716c' }, // stone-500
+          { shadowColor: '#000' },
         ]}
       >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="button"
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -118,9 +119,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -202,53 +210,42 @@ export function YourWhySection({
         onPress={onPress}
         className="border-l-4 border-l-rose-400"
       >
-        <View className="flex-row items-start gap-3">
-          {/* Icon with completion checkmark */}
-          <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
-            {hasWhy ? (
-              <Heart className="text-rose-500" size={20} />
-            ) : (
-              <PulsingIcon reduceMotion={reduceMotion}>
-                <Heart className="text-rose-500" size={20} />
-              </PulsingIcon>
-            )}
-            <CompletionCheckmark
-              isVisible={hasWhy}
-              sectionIndex={sectionIndex}
-              shouldAnimate={shouldAnimate}
-              reduceMotion={reduceMotion}
-            />
+        {/* Header row: icon + title on left, action on right */}
+        <View className="mb-1.5 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <Text className="text-base">❤️</Text>
+            <Text className="text-xs font-semibold text-rose-600">
+              Your Why
+            </Text>
           </View>
-
-          {/* Content area */}
-          <View className="flex-1">
-            {hasWhy ? (
-              /* Filled state */
-              <>
-                <Text className="mb-1 font-semibold text-stone-800">
-                  Your Why
-                </Text>
-                <Text className="text-sm italic text-stone-600">"{why}"</Text>
-              </>
-            ) : (
-              /* Empty state */
-              <>
-                <View className="mb-1 flex-row items-center justify-between">
-                  <Text className="font-semibold text-stone-800">Your Why</Text>
-                  <View className="flex-row items-center gap-1">
-                    <Plus className="text-rose-600" size={12} />
-                    <Text className="text-xs font-medium text-rose-600">
-                      Set up
-                    </Text>
-                  </View>
-                </View>
-                <Text className="text-sm text-stone-500">
-                  Define your deeper motivation
-                </Text>
-              </>
-            )}
-          </View>
+          {hasWhy ? (
+            <Pencil className="text-stone-400" size={14} />
+          ) : (
+            <View className="flex-row items-center gap-1">
+              <Plus className="text-rose-600" size={12} />
+              <Text className="text-xs font-medium text-rose-600">Set up</Text>
+            </View>
+          )}
         </View>
+
+        {/* Content */}
+        {hasWhy ? (
+          <Text className="text-sm italic leading-relaxed text-stone-700">
+            "{why}"
+          </Text>
+        ) : (
+          <Text className="text-sm text-stone-500">
+            Define your deeper motivation
+          </Text>
+        )}
+
+        {/* Completion checkmark */}
+        <CompletionCheckmark
+          isVisible={hasWhy}
+          sectionIndex={sectionIndex}
+          shouldAnimate={shouldAnimate}
+          reduceMotion={reduceMotion}
+        />
       </SectionCard>
     </AnimatedSection>
   );

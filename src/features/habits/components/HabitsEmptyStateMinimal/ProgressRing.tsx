@@ -82,7 +82,8 @@ export function ProgressRing({
   // Animated props for the progress circle
   const animatedProps = useAnimatedProps(() => {
     // strokeDashoffset goes from circumference (empty) to 0 (full)
-    const strokeDashoffset = circumference * (1 - progress.value);
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    const strokeDashoffset = Math.round(circumference * (1 - progress.value));
     return {
       strokeDashoffset,
     };

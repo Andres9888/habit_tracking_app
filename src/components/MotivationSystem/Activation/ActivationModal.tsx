@@ -47,7 +47,7 @@ import { Springs } from '../../../constants/motion';
 // Animation spring configs
 const SPRING_BUTTON = { damping: 15, stiffness: 300 };
 const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, stiffness: 180, mass: 1.2 };
+const SPRING_GENTLE = { damping: 28, stiffness: 180, mass: 1 };
 const STAGGER_DELAY = 60; // Slightly faster stagger for modal content
 
 /**

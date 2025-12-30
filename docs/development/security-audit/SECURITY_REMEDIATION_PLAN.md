@@ -3,7 +3,8 @@
 ## Summary
 
 - **Total Findings:** 16
-- **Auto-Remediate (PENDING):** 12
+- **IMPLEMENTED:** 1
+- **Auto-Remediate (PENDING):** 11
 - **Manual Review:** 1
 - **Won't Do / False Positive:** 3
 
@@ -22,7 +23,8 @@
 
 ### SEC-001: Hardcoded Figma Access Token in Version Control
 
-- **Status:** `PENDING`
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
 - **Vuln ID:** VULN-001
 - **Severity:** CRITICAL
 - **Remediability:** EASY
@@ -34,7 +36,12 @@
   2. Remove the file from git tracking with `git rm --cached .env.mcp`
   3. Create `.env.mcp.example` with placeholder `FIGMA_ACCESS_TOKEN=your_token_here`
   4. Document that users should copy `.env.mcp.example` to `.env.mcp` and fill in their token
-- **Verification:** Confirm `.env.mcp` is no longer tracked in git (`git ls-files .env.mcp` returns nothing)
+- **Fix Applied:**
+  - Added `.env.mcp` to `.gitignore`
+  - Removed `.env.mcp` from git tracking with `git rm --cached`
+  - Created `.env.mcp.example` with placeholder and documentation
+- **Files Modified:** `.gitignore`, `.env.mcp.example` (new)
+- **Verified:** `git ls-files .env.mcp` returns nothing - file is no longer tracked
 - **Note:** Token revocation and history cleanup should be performed manually by the repository owner
 
 ---

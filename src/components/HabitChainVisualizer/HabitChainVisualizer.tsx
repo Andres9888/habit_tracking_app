@@ -37,9 +37,9 @@ interface DayConnectorProps {
  * Features strength-based evolution:
  * - Day 1-2: Subtle connection (1.5px, 35% opacity)
  * - Day 3-4: Growing strength (1.8px, 45% opacity)
- * - Day 5-6: Stronger chain (2.1px, 55% opacity)
- * - Day 7-13: Strong chain (2.4px, 65% opacity)
- * - Day 14-20: Very strong (2.7px, 75% opacity)
+ * - Day 5-6: Stronger chain (2.1px, 55% opacity, accent glow begins)
+ * - Day 7-13: Strong chain (2.4px, 65% opacity, accent glow)
+ * - Day 14-20: Very strong (2.7px, 75% opacity, accent glow)
  * - Day 21+: Legendary status (3px, 85% opacity, accent glow)
  */
 const getStrengthConfig = (streak: number) => {
@@ -64,7 +64,7 @@ const getStrengthConfig = (streak: number) => {
       height: 2.1,
       maxOpacity: 0.55,
       shimmerSpeed: 2000,
-      useAccent: false,
+      useAccent: true,
     };
   if (streak >= 3)
     return { height: 1.8, maxOpacity: 0.45, shimmerSpeed: 0, useAccent: false };

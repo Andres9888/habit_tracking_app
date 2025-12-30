@@ -3,10 +3,10 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** {{AGENT_NAME}}
-- **Project:** {{AGENT_PATH}}
-- **Auto Run Folder:** {{AUTORUN_FOLDER}}
-- **Loop:** {{LOOP_NUMBER}}
+- **Agent:** code-refactor
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
+- **Loop:** 00001
 
 ## Objective
 
@@ -14,16 +14,17 @@ Implement fixes for `PENDING` security vulnerabilities from the evaluation phase
 
 ## Instructions
 
-1. **Read the plan** from `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_PLAN.md`
+1. **Read the plan** from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
 2. **Find all `PENDING` items** (not `IMPLEMENTED`, `WON'T DO`, or `PENDING - MANUAL REVIEW`)
 3. **Implement the fix** following the fix strategy
 4. **Verify the fix** works and doesn't break functionality
 5. **Update status** to `IMPLEMENTED` in the plan file
-6. **Log changes** to `{{AUTORUN_FOLDER}}/SECURITY_LOG_{{AGENT_NAME}}_{{DATE}}.md`
+6. **Log changes** to `/Users/andres/Code/habit_tracking_app/docs/SECURITY_LOG_code-refactor_2025-12-30.md`
 
 ## Implementation Checklist
 
-- [ ] **Fix vulnerability**: Read LOOP\_{{LOOP_NUMBER}}\_PLAN.md, implement the fix for ONE `PENDING` item with CRITICAL or HIGH severity and EASY or MEDIUM remediability. Follow secure coding practices. Verify the fix. Update status to `IMPLEMENTED` in the plan. Log to SECURITY_LOG. Only fix ONE vulnerability per task.
+- [x] **Fix vulnerability**: Read LOOP\_00001\_PLAN.md, implement the fix for ONE `PENDING` item with CRITICAL or HIGH severity and EASY or MEDIUM remediability. Follow secure coding practices. Verify the fix. Update status to `IMPLEMENTED` in the plan. Log to SECURITY_LOG. Only fix ONE vulnerability per task.
+  - **Fixed SEC-001:** Hardcoded Figma Access Token - Added `.env.mcp` to `.gitignore`, removed from git tracking, created `.env.mcp.example` with placeholder. Token should be rotated by repository owner.
 
 ## Remediation Patterns
 
@@ -90,13 +91,13 @@ After each fix:
 
 ## Update Plan Status
 
-After implementing each fix, update `LOOP_{{LOOP_NUMBER}}_PLAN.md`:
+After implementing each fix, update `LOOP_00001_PLAN.md`:
 
 ```markdown
 ### SEC-001: [Vulnerability Name]
 
 - **Status:** `IMPLEMENTED` ← Changed from PENDING
-- **Implemented In:** Loop {{LOOP_NUMBER}}
+- **Implemented In:** Loop 00001
 - **Fix Applied:** [Brief description of what was changed]
 - **Files Modified:** `[list of files]`
 - **Verified:** [How you verified it works]
@@ -104,10 +105,10 @@ After implementing each fix, update `LOOP_{{LOOP_NUMBER}}_PLAN.md`:
 
 ## Log Format
 
-Append to `{{AUTORUN_FOLDER}}/SECURITY_LOG_{{AGENT_NAME}}_{{DATE}}.md`:
+Append to `/Users/andres/Code/habit_tracking_app/docs/SECURITY_LOG_code-refactor_2025-12-30.md`:
 
 ```markdown
-## Loop {{LOOP_NUMBER}} - [Timestamp]
+## Loop 00001 - [Timestamp]
 
 ### Vulnerabilities Remediated
 

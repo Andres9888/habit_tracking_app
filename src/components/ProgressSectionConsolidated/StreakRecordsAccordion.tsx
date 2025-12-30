@@ -185,7 +185,8 @@ export const StreakRecordsAccordion = React.memo(
 
     // Animated style for chevron rotation
     const chevronAnimatedStyle = useAnimatedStyle(() => ({
-      transform: [{ rotate: `${chevronRotation.value}deg` }],
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      transform: [{ rotate: `${Math.round(chevronRotation.value)}deg` }],
     }));
 
     // Animated style for pulse effect on current streak

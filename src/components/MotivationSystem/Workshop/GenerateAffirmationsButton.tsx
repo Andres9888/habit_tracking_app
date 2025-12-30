@@ -93,7 +93,8 @@ function SparkleAnimation({
   }, [reduceMotion, rotation, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotation.value}deg` }, { scale: scale.value }],
+    // Round rotation to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    transform: [{ rotate: `${Math.round(rotation.value)}deg` }, { scale: scale.value }],
   }));
 
   return (

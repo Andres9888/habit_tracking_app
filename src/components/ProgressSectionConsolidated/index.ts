@@ -30,6 +30,8 @@ export { CompactStrengthRing } from './CompactStrengthRing';
 export { StatCard } from './StatCard';
 export { MilestoneProgress } from './MilestoneProgress';
 export { TipQuickActionsSheet } from './TipQuickActionsSheet';
+export { ConsistencyIndexCard } from './ConsistencyIndexCard';
+export { WeeklyComparisonCard } from './WeeklyComparisonCard';
 
 // Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';

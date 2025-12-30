@@ -69,7 +69,7 @@ export interface ContextAwareVizProps {
 
 // Animation spring configs
 const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
+const SPRING_GENTLE = { damping: 28, mass: 1, stiffness: 180 };
 
 /**
  * VizField - Individual visualization field with icon

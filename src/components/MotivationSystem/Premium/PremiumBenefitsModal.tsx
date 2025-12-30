@@ -47,7 +47,7 @@ import Animated, {
   Extrapolation,
   runOnJS,
 } from 'react-native-reanimated';
-import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 
 const { height: screenHeight } = Dimensions.get('window');
 

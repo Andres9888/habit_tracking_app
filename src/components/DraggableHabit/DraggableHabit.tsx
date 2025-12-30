@@ -20,7 +20,7 @@ import ReAnimated, {
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { TrendingUp, Archive } from 'lucide-react-native';
+import { TrendingUp, Archive, ChevronRight } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { PhaseTag } from '../PhaseTag';
 import * as Haptics from 'expo-haptics';
@@ -561,12 +561,16 @@ export default function DraggableHabit({
     opacity: strengthEmojiOpacity.value,
     transform: [
       { scale: strengthEmojiScale.value },
-      { rotate: `${strengthEmojiRotation.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(strengthEmojiRotation.value)}deg` },
     ],
   }));
 
   const habitCard = (
     <Pressable
+      accessibilityHint='Tap to view habit details, long press for quick actions'
+      accessibilityLabel={`${habit.name}, ${streak} day streak, ${Math.round(strengthPercent)}% strength`}
+      accessibilityRole='button'
       style={({ pressed }) => ({
         opacity: pressed ? 0.92 : 1,
       })}
@@ -685,6 +689,14 @@ export default function DraggableHabit({
                 {habit.preferredTime && (
                   <PhaseTag compact preferredTime={habit.preferredTime} />
                 )}
+                {/* Chevron indicator for tap-to-view-details affordance */}
+                <View className='ml-auto'>
+                  <ChevronRight
+                    color={highContrastMode ? '#facc15' : '#a8a29e'}
+                    size={18}
+                    strokeWidth={2}
+                  />
+                </View>
               </View>
               {bestStreak > 0 &&
                 bestStreak > streak &&

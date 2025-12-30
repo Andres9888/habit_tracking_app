@@ -89,7 +89,8 @@ export const HeroStrengthSection = React.memo(function HeroStrengthSection({
   }, [clampedStrength, reduceMotion, progressPercent]);
 
   const animatedCircleProps = useAnimatedProps(() => ({
-    strokeDashoffset: CIRCUMFERENCE * (1 - animatedStrength.value / 100),
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    strokeDashoffset: Math.round(CIRCUMFERENCE * (1 - animatedStrength.value / 100)),
   }));
   const emojiAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: emojiScale.value }],

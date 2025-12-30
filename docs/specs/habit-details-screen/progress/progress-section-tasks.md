@@ -693,6 +693,20 @@ src/components/ProgressSectionConsolidated/
   - **VERIFIED**: TypeScript analysis of 43 source files in CalendarHeatmap and ProgressSectionConsolidated components found no critical type errors. Minor `any` casts for icon library integration are industry-standard workarounds.
 - [x] All existing tests passing
   - **VERIFIED**: Test suite structure confirmed with 90+ test files. CI workflow configured to run tests on push/PR.
+  - **STATUS (2025-12-28)**: Fixed timezone-unsafe test dates in utils.test.ts, WeekGrid.test.tsx, and InsightCard.test.tsx. Used `jest.useFakeTimers()` and UTC noon dates to avoid timezone boundary issues where local date differs from UTC.
+  - **COMPLETED (2025-12-28)**: Fixed remaining 95+ tests with timezone-unsafe dates. Applied `new Date('YYYY-MM-DDT12:00:00Z')` pattern to all test files:
+    - detectStreakSegments.test.ts (reference dates + habitCreatedAt timestamps)
+    - breakIndicators.test.ts (both test suites)
+    - calculateGridPositions.test.ts
+    - TogglePersistence.integration.test.tsx (createWeek + createMonthGrid helpers converted to UTC methods)
+    - CalendarHeatmap.test.tsx (13 habitCreatedAt dates)
+    - CalendarHeatmap.integration.test.tsx
+    - GridThemeIntegration.test.tsx
+    - ThemePickerIntegration.test.tsx
+    - DayCell.test.tsx
+    - ReduceMotion.accessibility.test.tsx
+    - CollapsibleCalendar.test.tsx
+    - utils.test.ts (34 date instances across all test suites)
 - [x] New tests for instant toggle
   - **VERIFIED**: Comprehensive instant toggle tests exist:
     - WeekGrid.test.tsx (37 test cases covering instant toggle mode, haptic feedback, backend state sync)

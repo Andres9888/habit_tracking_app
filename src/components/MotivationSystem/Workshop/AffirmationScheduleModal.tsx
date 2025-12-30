@@ -37,7 +37,7 @@ import {
   formatDaysOfWeek,
   getNextAffirmationDeliveryRelativeTime,
   type AffirmationFrequency,
-} from '@/utils/notifications';
+} from '../../../utils/notifications';
 
 export interface AffirmationScheduleData {
   scheduledTime?: string; // "HH:MM" 24-hour format

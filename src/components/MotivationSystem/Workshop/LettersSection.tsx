@@ -115,6 +115,7 @@ export const UNLOCK_DURATION_OPTIONS = [
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -130,7 +131,7 @@ function SectionCard({
   disabled?: boolean;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -140,21 +141,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -165,12 +166,12 @@ function SectionCard({
 
   if (onPress) {
     return (
-      <Animated.View style={[animatedStyle, { shadowColor: '#78716c' }]}>
+      <Animated.View style={[animatedStyle, { shadowColor: '#000' }]}>
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
           accessibilityState={{ disabled }}
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           disabled={disabled}
           onPress={handlePress}
           onPressIn={handlePressIn}
@@ -185,9 +186,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -1220,74 +1228,47 @@ export function LettersSection({
           className='border-l-4 border-l-violet-400'
           onPress={handleSectionPress}
         >
-          <View className='flex-row items-start gap-3'>
-            {/* Icon with completion checkmark */}
-            <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-violet-100'>
-              {hasLetters ? (
-                <Mail className='text-violet-500' size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Mail className='text-violet-500' size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={hasLetters}
-                reduceMotion={reduceMotion}
-                sectionIndex={sectionIndex}
-                shouldAnimate={shouldAnimate}
-              />
-            </View>
-
-            {/* Content area */}
-            <View className='flex-1'>
-              <View className='mb-1 flex-row items-center justify-between'>
-                <View className='flex-row items-center gap-2'>
-                  <Text className='font-semibold text-stone-800'>
-                    Letters to Self
-                  </Text>
-                  {!isPremium && (
-                    <View className='rounded-full bg-amber-100 px-2 py-0.5'>
-                      <Text className='text-xs font-medium text-amber-700'>
-                        PRO
-                      </Text>
-                    </View>
-                  )}
+          {/* Header row: icon + title on left, action on right */}
+          <View className='mb-2 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-2'>
+              <Text className="text-base">✉️</Text>
+              <Text className='text-xs font-semibold text-violet-600'>
+                Letters to Self
+              </Text>
+              {!isPremium && (
+                <View className='rounded-full bg-amber-100 px-1.5 py-0.5'>
+                  <Text className='text-[9px] font-bold text-amber-700'>PRO</Text>
                 </View>
-                {hasLetters && unreadCount > 0 && (
-                  <View className='rounded-full bg-violet-500 px-2 py-0.5'>
-                    <Text className='text-xs font-semibold text-white'>
-                      {unreadCount} new
-                    </Text>
-                  </View>
-                )}
-                {!hasLetters && (
-                  <View className='flex-row items-center gap-1'>
-                    <Plus className='text-violet-600' size={12} />
-                    <Text className='text-xs font-medium text-violet-600'>
-                      Write
-                    </Text>
-                  </View>
-                )}
-              </View>
-
-              {/* Description */}
-              {!hasLetters && (
-                <Text className='text-sm text-stone-500'>
-                  Send motivation to your future self
+              )}
+            </View>
+            {hasLetters && unreadCount > 0 ? (
+              <View className='rounded-full bg-violet-500 px-2 py-0.5'>
+                <Text className='text-[10px] font-semibold text-white'>
+                  {unreadCount} new
                 </Text>
-              )}
-
-              {/* Science tip */}
-              {!hasLetters && (
-                <View className='mt-2 flex-row items-start gap-1.5 rounded-lg bg-violet-50 px-2 py-1.5'>
-                  <Sparkles className='mt-0.5 text-violet-500' size={12} />
-                  <Text className='flex-1 text-xs text-violet-700'>
-                    Time-locked messages create powerful emotional anchors
-                  </Text>
-                </View>
-              )}
-            </View>
+              </View>
+            ) : !hasLetters ? (
+              <View className='flex-row items-center gap-1'>
+                <Plus className='text-violet-600' size={12} />
+                <Text className='text-xs font-medium text-violet-600'>Write</Text>
+              </View>
+            ) : null}
           </View>
+
+          {/* Description */}
+          {!hasLetters && (
+            <Text className='text-sm text-stone-500'>
+              Send motivation to your future self
+            </Text>
+          )}
+
+          {/* Completion checkmark */}
+          <CompletionCheckmark
+            isVisible={hasLetters}
+            reduceMotion={reduceMotion}
+            sectionIndex={sectionIndex}
+            shouldAnimate={shouldAnimate}
+          />
 
           {/* Write letter button */}
           {isPremium && (

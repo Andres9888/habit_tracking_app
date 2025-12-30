@@ -183,12 +183,14 @@ export function OfflinePendingBanner({
 
   const chevronAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
-      { rotate: `${interpolate(expandProgress.value, [0, 1], [0, 180])}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(interpolate(expandProgress.value, [0, 1], [0, 180]))}deg` },
     ],
   }));
 
   const spinAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${spinProgress.value * 360}deg` }],
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    transform: [{ rotate: `${Math.round(spinProgress.value * 360)}deg` }],
   }));
 
   const pulseAnimatedStyle = useAnimatedStyle(() => ({

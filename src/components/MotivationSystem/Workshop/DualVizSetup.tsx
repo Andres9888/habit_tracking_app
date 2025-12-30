@@ -28,13 +28,14 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import {
-  Eye,
   Plus,
   Check,
   HelpCircle,
   X,
   Sparkles,
   AlertTriangle,
+  Pencil,
+  Eye,
 } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
@@ -76,6 +77,7 @@ export interface DualVizSetupProps {
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -89,7 +91,7 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -99,21 +101,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -127,13 +129,13 @@ function SectionCard({
       <Animated.View
         style={[
           animatedStyle,
-          { shadowColor: '#78716c' }, // stone-500
+          { shadowColor: '#000' },
         ]}
       >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -147,9 +149,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -559,95 +568,72 @@ export function DualVizSetup({
           accessibilityLabel={
             hasViz ? 'Edit your visualizations' : 'Add your visualizations'
           }
+          className='border-l-4 border-l-violet-400'
           onPress={onPress}
         >
-          <View className='flex-row items-start gap-3'>
-            {/* Icon with completion checkmark */}
-            <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-rose-100'>
-              {hasViz ? (
-                <Eye className='text-stone-700' size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Eye className='text-stone-700' size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={isComplete}
-                reduceMotion={reduceMotion}
-                sectionIndex={sectionIndex}
-                shouldAnimate={shouldAnimate}
-              />
+          {/* Header row: icon + title on left, action on right */}
+          <View className='mb-2 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-2'>
+              <Text className="text-base">👁️</Text>
+              <View>
+                <Text className='text-xs font-semibold text-violet-600'>
+                  Visualization Setup
+                </Text>
+                <Text className='text-[10px] text-stone-400'>
+                  Huberman Protocol
+                </Text>
+              </View>
             </View>
-
-            {/* Content area */}
-            <View className='flex-1'>
+            <View className='flex-row items-center gap-2'>
+              <Pressable
+                accessibilityLabel='Learn about dual visualization'
+                className='h-6 w-6 items-center justify-center rounded-full'
+                hitSlop={8}
+                onPress={handleHelpPress}
+              >
+                <HelpCircle className='text-stone-400' size={16} />
+              </Pressable>
               {hasViz ? (
-                /* Filled state */
-                <>
-                  <View className='mb-2 flex-row items-center justify-between'>
-                    <Text className='font-semibold text-stone-800'>
-                      Dual Visualization
-                    </Text>
-                    <Pressable
-                      accessibilityLabel='Learn about dual visualization'
-                      className='h-6 w-6 items-center justify-center rounded-full'
-                      hitSlop={8}
-                      onPress={handleHelpPress}
-                    >
-                      <HelpCircle className='text-stone-400' size={16} />
-                    </Pressable>
-                  </View>
-
-                  {/* Side-by-side previews */}
-                  <View className='flex-row gap-2'>
-                    <VizPreview
-                      body={visualization?.successBody}
-                      emotion={visualization?.successEmotion}
-                      mind={visualization?.successMind}
-                      type='success'
-                    />
-                    <VizPreview
-                      body={visualization?.failureBody}
-                      emotion={visualization?.failureEmotion}
-                      mind={visualization?.failureMind}
-                      type='failure'
-                    />
-                  </View>
-                </>
+                <Pencil className='text-stone-400' size={14} />
               ) : (
-                /* Empty state */
-                <>
-                  <View className='mb-1 flex-row items-center justify-between'>
-                    <Text className='font-semibold text-stone-800'>
-                      Dual Visualization
-                    </Text>
-                    <View className='flex-row items-center gap-2'>
-                      <Pressable
-                        accessibilityLabel='Learn about dual visualization'
-                        className='h-6 w-6 items-center justify-center rounded-full'
-                        hitSlop={8}
-                        onPress={handleHelpPress}
-                      >
-                        <HelpCircle className='text-stone-400' size={16} />
-                      </Pressable>
-                      <View className='flex-row items-center gap-1'>
-                        <Plus className='text-emerald-600' size={12} />
-                        <Text className='text-xs font-medium text-emerald-600'>
-                          Set up
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <Text className='text-sm text-stone-500'>
-                    Success + Failure feelings
-                  </Text>
-                  <Text className='mt-1 text-xs text-stone-400'>
-                    Fear moves you 2x better when unmotivated
-                  </Text>
-                </>
+                <View className='flex-row items-center gap-1'>
+                  <Plus className='text-violet-600' size={12} />
+                  <Text className='text-xs font-medium text-violet-600'>Set up</Text>
+                </View>
               )}
             </View>
           </View>
+
+          {/* Content */}
+          {hasViz ? (
+            /* Side-by-side previews */
+            <View className='flex-row gap-2'>
+              <VizPreview
+                body={visualization?.successBody}
+                emotion={visualization?.successEmotion}
+                mind={visualization?.successMind}
+                type='success'
+              />
+              <VizPreview
+                body={visualization?.failureBody}
+                emotion={visualization?.failureEmotion}
+                mind={visualization?.failureMind}
+                type='failure'
+              />
+            </View>
+          ) : (
+            <Text className='text-sm text-stone-500'>
+              Success + Failure feelings
+            </Text>
+          )}
+
+          {/* Completion checkmark */}
+          <CompletionCheckmark
+            isVisible={isComplete}
+            reduceMotion={reduceMotion}
+            sectionIndex={sectionIndex}
+            shouldAnimate={shouldAnimate}
+          />
         </SectionCard>
       </AnimatedSection>
 

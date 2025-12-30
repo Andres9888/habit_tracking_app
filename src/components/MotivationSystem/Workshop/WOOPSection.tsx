@@ -23,7 +23,7 @@ import Animated, {
   interpolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { Target, Plus, Check, HelpCircle, X } from 'lucide-react-native';
+import { Target, Plus, Check, HelpCircle, X, Pencil } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import {
@@ -60,6 +60,7 @@ export interface WOOPSectionProps {
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -73,7 +74,7 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -83,21 +84,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -111,13 +112,13 @@ function SectionCard({
       <Animated.View
         style={[
           animatedStyle,
-          { shadowColor: '#78716c' }, // stone-500
+          { shadowColor: '#000' },
         ]}
       >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -131,9 +132,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -407,113 +415,77 @@ export function WOOPSection({
           accessibilityLabel={hasWoop ? 'Edit your WOOP plan' : 'Add your WOOP plan'}
           onPress={onPress}
         >
-          <View className='flex-row items-start gap-3'>
-            {/* Icon with completion checkmark */}
-            <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-amber-100'>
-              {hasWoop ? (
-                <Target className='text-amber-600' size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Target className='text-amber-600' size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={isComplete}
-                reduceMotion={reduceMotion}
-                sectionIndex={sectionIndex}
-                shouldAnimate={shouldAnimate}
-              />
+          {/* Header row: icon + title on left, action on right */}
+          <View className='mb-2 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-2'>
+              <Text className="text-base">🎯</Text>
+              <Text className='text-xs font-semibold text-stone-800'>
+                WOOP Plan
+              </Text>
             </View>
-
-            {/* Content area */}
-            <View className='flex-1'>
+            <View className='flex-row items-center gap-2'>
+              <Pressable
+                accessibilityLabel='Learn about WOOP'
+                className='h-6 w-6 items-center justify-center rounded-full'
+                hitSlop={8}
+                onPress={handleHelpPress}
+              >
+                <HelpCircle className='text-stone-400' size={16} />
+              </Pressable>
               {hasWoop ? (
-                /* Filled state */
-                <>
-                  <View className='mb-2 flex-row items-center justify-between'>
-                    <Text className='font-semibold text-stone-800'>
-                      WOOP Plan
-                    </Text>
-                    <Pressable
-                      accessibilityLabel='Learn about WOOP'
-                      className='h-6 w-6 items-center justify-center rounded-full'
-                      hitSlop={8}
-                      onPress={handleHelpPress}
-                    >
-                      <HelpCircle className='text-stone-400' size={16} />
-                    </Pressable>
-                  </View>
-                  <View className='gap-1.5'>
-                    <WOOPField
-                      label='Wish'
-                      letter='W'
-                      letterColorClass='text-amber-500'
-                      value={woop?.wish}
-                    />
-                    <WOOPField
-                      label='Outcome'
-                      letter='O'
-                      letterColorClass='text-amber-500'
-                      value={woop?.outcome}
-                    />
-                    <WOOPField
-                      label='Obstacle'
-                      letter='O'
-                      letterColorClass='text-rose-500'
-                      value={woop?.obstacle}
-                    />
-                    <WOOPField
-                      isBold
-                      label='Plan'
-                      letter='P'
-                      letterColorClass='text-emerald-500'
-                      value={woop?.plan}
-                      valueColorClass='text-stone-900'
-                    />
-                  </View>
-                  {/* IF-THEN Highlight */}
-                  {ifThenPreview && (
-                    <View className='mt-2 rounded-lg bg-gradient-to-r from-amber-50 to-emerald-50 px-3 py-2'>
-                      <Text className='text-xs font-medium italic text-stone-700'>
-                        "{ifThenPreview}"
-                      </Text>
-                    </View>
-                  )}
-                </>
+                <Pencil className='text-stone-400' size={14} />
               ) : (
-                /* Empty state */
-                <>
-                  <View className='mb-1 flex-row items-center justify-between'>
-                    <Text className='font-semibold text-stone-800'>
-                      WOOP Plan
-                    </Text>
-                    <View className='flex-row items-center gap-2'>
-                      <Pressable
-                        accessibilityLabel='Learn about WOOP'
-                        className='h-6 w-6 items-center justify-center rounded-full'
-                        hitSlop={8}
-                        onPress={handleHelpPress}
-                      >
-                        <HelpCircle className='text-stone-400' size={16} />
-                      </Pressable>
-                      <View className='flex-row items-center gap-1'>
-                        <Plus className='text-amber-600' size={12} />
-                        <Text className='text-xs font-medium text-amber-600'>
-                          Set up
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <Text className='text-sm text-stone-500'>
-                    Wish-Outcome-Obstacle-Plan
-                  </Text>
-                  <Text className='mt-1 text-xs text-stone-400'>
-                    Proven to double goal achievement
-                  </Text>
-                </>
+                <View className='flex-row items-center gap-1'>
+                  <Plus className='text-stone-600' size={12} />
+                  <Text className='text-xs font-medium text-stone-600'>Set up</Text>
+                </View>
               )}
             </View>
           </View>
+
+          {/* Content */}
+          {hasWoop ? (
+            <View className='gap-1.5'>
+              <WOOPField
+                label='Wish'
+                letter='W'
+                letterColorClass='text-amber-500'
+                value={woop?.wish}
+              />
+              <WOOPField
+                label='Outcome'
+                letter='O'
+                letterColorClass='text-amber-500'
+                value={woop?.outcome}
+              />
+              <WOOPField
+                label='Obstacle'
+                letter='O'
+                letterColorClass='text-rose-500'
+                value={woop?.obstacle}
+              />
+              <WOOPField
+                isBold
+                label='Plan'
+                letter='P'
+                letterColorClass='text-emerald-500'
+                value={woop?.plan}
+                valueColorClass='text-stone-900'
+              />
+            </View>
+          ) : (
+            <Text className='text-sm text-stone-500'>
+              Wish-Outcome-Obstacle-Plan framework
+            </Text>
+          )}
+
+          {/* Completion checkmark */}
+          <CompletionCheckmark
+            isVisible={isComplete}
+            reduceMotion={reduceMotion}
+            sectionIndex={sectionIndex}
+            shouldAnimate={shouldAnimate}
+          />
         </SectionCard>
       </AnimatedSection>
 

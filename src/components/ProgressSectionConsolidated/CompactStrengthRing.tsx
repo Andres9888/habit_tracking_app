@@ -79,7 +79,8 @@ export const CompactStrengthRing = React.memo(function CompactStrengthRing({
 
   // Animated props for the progress circle
   const animatedCircleProps = useAnimatedProps(() => ({
-    strokeDashoffset: CIRCUMFERENCE * (1 - animatedStrength.value / 100),
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    strokeDashoffset: Math.round(CIRCUMFERENCE * (1 - animatedStrength.value / 100)),
   }));
 
   // Trend badge configuration

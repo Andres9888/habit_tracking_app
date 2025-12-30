@@ -116,6 +116,7 @@ const IMAGE_SIZE = (SCREEN_WIDTH - 64) / 2; // 2 columns with padding
 
 /**
  * SectionCard Component for consistent styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  */
 function SectionCard({
   children,
@@ -131,7 +132,7 @@ function SectionCard({
   disabled?: boolean;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -141,21 +142,21 @@ function SectionCard({
       width: 0,
     },
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = useCallback(() => {
     'worklet';
     scale.value = withSpring(0.98, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.04, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
     elevation.value = withSpring(1, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
   const handlePressOut = useCallback(() => {
     'worklet';
     scale.value = withSpring(1, SPRING_BUTTON);
-    shadowOpacity.value = withSpring(0.08, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
     elevation.value = withSpring(2, SPRING_BUTTON);
   }, [scale, shadowOpacity, elevation]);
 
@@ -166,12 +167,12 @@ function SectionCard({
 
   if (onPress) {
     return (
-      <Animated.View style={[animatedStyle, { shadowColor: '#78716c' }]}>
+      <Animated.View style={[animatedStyle, { shadowColor: '#000' }]}>
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
           accessibilityState={{ disabled }}
-          className={clsx('rounded-2xl bg-white p-4', className)}
+          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
           disabled={disabled}
           onPress={handlePress}
           onPressIn={handlePressIn}
@@ -186,9 +187,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -837,72 +845,45 @@ export function VisionBoardSection({
           className='border-l-4 border-l-fuchsia-400'
           onPress={handleSectionPress}
         >
-          <View className='flex-row items-start gap-3'>
-            {/* Icon with completion checkmark */}
-            <View className='relative h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-100'>
-              {hasImages ? (
-                <Grid3x3 className='text-fuchsia-500' size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <ImageIcon className='text-fuchsia-500' size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={hasImages}
-                reduceMotion={reduceMotion}
-                sectionIndex={sectionIndex}
-                shouldAnimate={shouldAnimate}
-              />
-            </View>
-
-            {/* Content area */}
-            <View className='flex-1'>
-              <View className='mb-1 flex-row items-center justify-between'>
-                <View className='flex-row items-center gap-2'>
-                  <Text className='font-semibold text-stone-800'>
-                    Vision Board
-                  </Text>
-                  {!isPremium && (
-                    <View className='rounded-full bg-amber-100 px-2 py-0.5'>
-                      <Text className='text-xs font-medium text-amber-700'>
-                        PRO
-                      </Text>
-                    </View>
-                  )}
+          {/* Header row: icon + title on left, action on right */}
+          <View className='mb-2 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-2'>
+              <Text className="text-base">🖼️</Text>
+              <Text className='text-xs font-semibold text-fuchsia-600'>
+                Vision Board
+              </Text>
+              {!isPremium && (
+                <View className='rounded-full bg-amber-100 px-1.5 py-0.5'>
+                  <Text className='text-[9px] font-bold text-amber-700'>PRO</Text>
                 </View>
-                {hasImages && (
-                  <Text className='text-xs font-medium text-fuchsia-600'>
-                    {imageCount}/{MAX_IMAGES}
-                  </Text>
-                )}
-                {!hasImages && (
-                  <View className='flex-row items-center gap-1'>
-                    <Plus className='text-fuchsia-600' size={12} />
-                    <Text className='text-xs font-medium text-fuchsia-600'>
-                      Add
-                    </Text>
-                  </View>
-                )}
+              )}
+            </View>
+            {hasImages ? (
+              <Text className='text-xs font-medium text-fuchsia-600'>
+                {imageCount}/{MAX_IMAGES}
+              </Text>
+            ) : (
+              <View className='flex-row items-center gap-1'>
+                <Plus className='text-fuchsia-600' size={12} />
+                <Text className='text-xs font-medium text-fuchsia-600'>Add</Text>
               </View>
-
-              {/* Description */}
-              {!hasImages && (
-                <Text className='text-sm text-stone-500'>
-                  Add photos that inspire your habit journey
-                </Text>
-              )}
-
-              {/* Science tip */}
-              {!hasImages && (
-                <View className='mt-2 flex-row items-start gap-1.5 rounded-lg bg-fuchsia-50 px-2 py-1.5'>
-                  <Sparkles className='mt-0.5 text-fuchsia-500' size={12} />
-                  <Text className='flex-1 text-xs text-fuchsia-700'>
-                    Visual cues activate mirror neurons and reinforce motivation
-                  </Text>
-                </View>
-              )}
-            </View>
+            )}
           </View>
+
+          {/* Description */}
+          {!hasImages && (
+            <Text className='text-sm text-stone-500'>
+              Add photos that inspire your habit journey
+            </Text>
+          )}
+
+          {/* Completion checkmark */}
+          <CompletionCheckmark
+            isVisible={hasImages}
+            reduceMotion={reduceMotion}
+            sectionIndex={sectionIndex}
+            shouldAnimate={shouldAnimate}
+          />
 
           {/* Image Grid */}
           {isPremium && (

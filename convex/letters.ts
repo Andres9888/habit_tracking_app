@@ -105,9 +105,10 @@ export const getUpcomingUnlocks = query({
     let letters;
 
     if (args.habitId) {
+      const habitId = args.habitId;
       letters = await ctx.db
         .query('letters')
-        .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+        .withIndex('by_habit', (q) => q.eq('habitId', habitId))
         .collect();
     } else if (args.userId) {
       letters = await ctx.db
