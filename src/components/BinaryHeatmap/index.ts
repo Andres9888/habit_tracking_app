@@ -7,7 +7,7 @@
 
 // Component exports
 // export { BinaryHeatmap } from './BinaryHeatmap';
-// export { BinaryHeatmapGrid } from './BinaryHeatmapGrid';
+export { BinaryHeatmapGrid } from './BinaryHeatmapGrid';
 export { BinaryCell } from './BinaryCell';
 export { TimeRangeToggle } from './TimeRangeToggle';
 export { HeatmapLegend } from './HeatmapLegend';
