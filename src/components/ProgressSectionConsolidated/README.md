@@ -21,7 +21,7 @@ The Progress tab has been redesigned with the following new components:
 - **StatsGrid** - Compact 2x2 stats layout with embedded strength ring (replaces HeroStrengthSection + InsightChips)
 - **MilestoneProgress** - Gamification component with 9 milestone tiers (3→365 days)
 - **TipQuickActionsSheet** - Bottom sheet with contextual quick actions for tips
-- **CollapsibleCalendar** - Wrapper for CalendarHeatmap with expand/collapse and mini preview
+- **BinaryHeatmap** - GitHub-style binary (on/off) heatmap for habit completion visualization
 
 See: `docs/specs/habit-details-screen/progress-tab-improvements-spec.md`
 
