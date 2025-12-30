@@ -3,10 +3,10 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** {{AGENT_NAME}}
-- **Project:** {{AGENT_PATH}}
-- **Auto Run Folder:** {{AUTORUN_FOLDER}}
-- **Loop:** {{LOOP_NUMBER}}
+- **Agent:** code-refactor
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
+- **Loop:** 00001
 
 ## Objective
 
@@ -14,14 +14,21 @@ Evaluate each security finding from the discovery phase and assign severity and 
 
 ## Instructions
 
-1. **Read the vulnerabilities** from `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_VULNERABILITIES.md`
+1. **Read the vulnerabilities** from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
 2. **Rate each finding** for severity and ease of remediation
 3. **Assign status** based on ratings
-4. **Output prioritized plan** to `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_PLAN.md`
+4. **Output prioritized plan** to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
 
 ## Evaluation Checklist
 
-- [ ] **Evaluate findings**: Read LOOP*{{LOOP_NUMBER}}\_VULNERABILITIES.md, rate each finding by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD). Mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix. Output to `{{AUTORUN_FOLDER}}/LOOP*{{LOOP_NUMBER}}\_PLAN.md`.
+- [x] **Evaluate findings**: Read LOOP*00001_VULNERABILITIES.md, rate each finding by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD). Mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP*00001_PLAN.md`.
+
+**Completed 2025-12-29:** Evaluated all 16 security findings. Created prioritized remediation plan at `SECURITY_REMEDIATION_PLAN.md`:
+
+- **12 findings** marked PENDING for auto-remediation (2 CRITICAL, 6 HIGH, 4 MEDIUM)
+- **1 finding** (AI prompt injection) marked for MANUAL REVIEW due to complex sanitization requirements
+- **3 findings** marked WON'T DO (1 design choice, 2 low-risk accepted)
+- Plan includes fix strategies, verification steps, and recommended execution order grouped by code locality
 
 ## Rating Criteria
 
@@ -66,10 +73,10 @@ Vulnerabilities marked `WON'T DO` if:
 
 ## Output Format
 
-Create/update `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_PLAN.md` with:
+Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md` with:
 
 ```markdown
-# Security Remediation Plan - Loop {{LOOP_NUMBER}}
+# Security Remediation Plan - Loop 00001
 
 ## Summary
 
