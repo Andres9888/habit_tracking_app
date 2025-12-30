@@ -23,7 +23,12 @@ export type TimeRange = '3m' | '6m' | '1y';
  * - 'future': Future date (faded)
  * - 'beforeCreation': Before habit was created (disabled)
  */
-export type BinaryCellState = 'done' | 'missed' | 'today' | 'future' | 'beforeCreation';
+export type BinaryCellState =
+  | 'done'
+  | 'missed'
+  | 'today'
+  | 'future'
+  | 'beforeCreation';
 
 /**
  * Represents a single day in the binary heatmap grid
@@ -192,6 +197,9 @@ export interface StatsRowProps {
 
   /** Current streak count */
   currentStreak: number;
+
+  /** Habit's accent color (hex) for theming streak badge */
+  habitColor: string;
 
   /** Callback when settings button is pressed */
   onSettingsPress?: () => void;

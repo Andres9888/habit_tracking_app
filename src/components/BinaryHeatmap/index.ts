@@ -13,6 +13,7 @@ export { TimeRangeToggle } from './TimeRangeToggle';
 export { HeatmapLegend } from './HeatmapLegend';
 export { MonthLabelsRow } from './MonthLabelsRow';
 export { HeatmapTooltip } from './HeatmapTooltip';
+export { StatsRow } from './StatsRow';
 
 // Type exports
 export type {
