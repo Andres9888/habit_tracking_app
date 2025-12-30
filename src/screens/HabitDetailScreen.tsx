@@ -31,7 +31,7 @@ import {
 import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { CollapsibleCalendar } from '../components/CalendarHeatmap';
+import { BinaryHeatmap, StatsRow } from '../components/BinaryHeatmap';
 import { HabitStrengthHistory } from '../components/HabitStrengthHistory';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
@@ -884,17 +884,23 @@ function ProgressTabContent({
         lastWeekCompleted={lastWeekCompleted}
       />
 
-      {/* Collapsible Calendar - visual history of completions with collapse support */}
-      <CollapsibleCalendar
+      {/* Binary Heatmap - GitHub-style visual history of completions */}
+      <BinaryHeatmap
         habitId={habit._id}
         completedDates={completedDates}
         habitCreatedAt={habitCreatedAt}
         habitColor={habit.iconColor}
-        defaultExpanded={false}
-        showMiniPreview={true}
+        currentStreak={habit.currentStreak ?? 0}
         onDayPress={(_date, _completed) => {
           // Future: Could open day detail or allow editing past dates
         }}
+      />
+
+      {/* Stats Row - frequency and streak badges */}
+      <StatsRow
+        frequency="Daily"
+        currentStreak={habit.currentStreak ?? 0}
+        habitColor={habit.iconColor}
       />
 
       {/* Habit Strength History - exponential smoothing visualization */}

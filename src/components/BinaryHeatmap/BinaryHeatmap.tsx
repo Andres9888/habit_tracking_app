@@ -48,9 +48,13 @@ const DEFAULT_TIME_RANGE: TimeRange = '3m';
  * - Full accessibility support
  */
 export const BinaryHeatmap = memo(function BinaryHeatmap({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  habitId: _habitId,
   completedDates,
   habitCreatedAt,
   habitColor,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  currentStreak: _currentStreak,
   timeRange: controlledTimeRange,
   onDayPress,
   onTimeRangeChange,
