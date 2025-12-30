@@ -12,7 +12,7 @@ export { BinaryCell } from './BinaryCell';
 export { TimeRangeToggle } from './TimeRangeToggle';
 export { HeatmapLegend } from './HeatmapLegend';
 export { MonthLabelsRow } from './MonthLabelsRow';
-// export { HeatmapTooltip } from './HeatmapTooltip';
+export { HeatmapTooltip } from './HeatmapTooltip';
 
 // Type exports
 export type {
