@@ -4,9 +4,9 @@
  *
  * Features:
  * - Hero section with icon, name, and Quick Complete button (sticky)
- * - CalendarHeatmapWithViews - full calendar with view toggle (Week/Month/3M/Year)
+ * - BinaryHeatmap - GitHub-style binary (on/off) calendar with 3m/6m/1y toggle
  * - Instant tap-to-toggle for marking completions
- * - Stats summary, weekly pattern chart, and weak day insights
+ * - Stats summary with streak badges
  */
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
@@ -2187,18 +2187,20 @@ export default function HabitDetailScreen({
           contentContainerClassName="p-4 pb-8"
           showsVerticalScrollIndicator={false}
         >
-          <CalendarHeatmapWithViews
+          <BinaryHeatmap
             habitId={habit._id}
             completedDates={completedDates}
             habitCreatedAt={habitCreatedAt}
-            habitColor={habit.iconColor}
+            habitColor={habit.iconColor ?? '#10b981'}
             currentStreak={habit.currentStreak ?? 0}
-            bestStreak={habit.bestStreak ?? 0}
-            initialView="3m"
-            instantToggle={true}
             onDayPress={(_date, _completed) => {
               // Future: Could open day detail or allow editing past dates
             }}
+          />
+          <StatsRow
+            frequency="Daily"
+            currentStreak={habit.currentStreak ?? 0}
+            habitColor={habit.iconColor ?? '#10b981'}
           />
         </ScrollView>
       </View>
