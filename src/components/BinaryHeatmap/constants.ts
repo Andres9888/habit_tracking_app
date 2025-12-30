@@ -2,6 +2,12 @@
  * Constants for BinaryHeatmap Component
  *
  * Centralized configuration for dimensions, colors, and animation timing.
+ *
+ * Performance Notes:
+ * - Cell count: 3m=91 days (~13 weeks), 6m=182 days (~26 weeks), 1y=365 days (~52 weeks)
+ * - Max cells rendered: 52 weeks × 7 days = 364 cells
+ * - Virtualization not needed: 364 lightweight cells render efficiently
+ * - Animation stagger: 5ms per cell = ~1.8s total animation time for 1y view
  */
 
 /**

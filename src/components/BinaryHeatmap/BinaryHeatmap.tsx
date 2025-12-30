@@ -10,9 +10,16 @@
  * - Grid data generation
  * - Tooltip visibility and positioning
  * - Day press event propagation
+ *
+ * Performance Optimizations:
+ * - Uses React.memo() to prevent unnecessary re-renders
+ * - Memoizes grid data generation via useMemo() (only regenerates on data/range change)
+ * - Creates O(1) lookup map for tooltip day retrieval
+ * - Stable handleCellPress callback using refs (prevents grid re-renders)
+ * - All child components (Grid, Legend, Toggle) are also memoized
  */
 
-import React, { memo, useState, useMemo, useCallback } from 'react';
+import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
 import type { BinaryHeatmapProps, TimeRange, BinaryDay } from './types';
@@ -48,12 +55,11 @@ const DEFAULT_TIME_RANGE: TimeRange = '3m';
  * - Full accessibility support
  */
 export const BinaryHeatmap = memo(function BinaryHeatmap({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   habitId: _habitId,
   completedDates,
   habitCreatedAt,
   habitColor,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   currentStreak: _currentStreak,
   timeRange: controlledTimeRange,
   onDayPress,
@@ -75,6 +81,29 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
     [timeRange, completedDates, habitCreatedAt]
   );
 
+  // Create a lookup map for fast day retrieval by date
+  // This is memoized separately to allow efficient tooltip lookups
+  const dayLookupMap = useMemo(() => {
+    const map = new Map<string, BinaryDay>();
+    for (const week of gridData.weeks) {
+      for (const day of week) {
+        if (day !== null) {
+          map.set(day.date, day);
+        }
+      }
+    }
+    return map;
+  }, [gridData.weeks]);
+
+  // Store onDayPress in a ref to keep handleCellPress stable
+  // This prevents unnecessary re-renders of the entire grid when onDayPress changes
+  const onDayPressRef = useRef(onDayPress);
+  onDayPressRef.current = onDayPress;
+
+  // Store dayLookupMap in a ref for stable callback
+  const dayLookupMapRef = useRef(dayLookupMap);
+  dayLookupMapRef.current = dayLookupMap;
+
   // Handle time range change
   const handleTimeRangeChange = useCallback(
     (newRange: TimeRange) => {
@@ -89,26 +118,23 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   );
 
   // Handle cell press - show tooltip and propagate event
-  const handleCellPress = useCallback(
-    (date: string, completed: boolean) => {
-      // Find the day data for the pressed cell
-      const day = gridData.weeks
-        .flat()
-        .find((d): d is BinaryDay => d !== null && d.date === date);
+  // This callback is now stable (no dependencies that change frequently)
+  // which prevents unnecessary re-renders of the BinaryHeatmapGrid
+  const handleCellPress = useCallback((date: string, completed: boolean) => {
+    // Find the day data for the pressed cell using O(1) lookup
+    const day = dayLookupMapRef.current.get(date);
 
-      if (day) {
-        // Show tooltip for the pressed cell
-        // Position will be updated by the cell's onLayout or measure
-        setTooltipDay(day);
-        setTooltipPosition({ x: 100, y: 50 }); // Default position, updated by cell
-        setTooltipVisible(true);
-      }
+    if (day) {
+      // Show tooltip for the pressed cell
+      // Position will be updated by the cell's onLayout or measure
+      setTooltipDay(day);
+      setTooltipPosition({ x: 100, y: 50 }); // Default position, updated by cell
+      setTooltipVisible(true);
+    }
 
-      // Propagate the press event to parent
-      onDayPress?.(date, completed);
-    },
-    [gridData.weeks, onDayPress]
-  );
+    // Propagate the press event to parent
+    onDayPressRef.current?.(date, completed);
+  }, []);
 
   // Close tooltip
   const handleTooltipClose = useCallback(() => {

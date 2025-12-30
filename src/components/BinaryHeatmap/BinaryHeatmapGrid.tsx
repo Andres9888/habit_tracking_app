@@ -9,6 +9,13 @@
  * - Day labels column (S/M/T/W/T/F/S) on the left
  * - Horizontally scrollable grid of BinaryCell components
  * - Cells are organized by row (day-of-week) for proper layout
+ *
+ * Performance Optimizations:
+ * - Uses React.memo() on GridRow and BinaryHeatmapGrid components
+ * - Memoizes row transformation via useMemo()
+ * - Stable callback references via useCallback()
+ * - Key stability: uses date strings or stable position-based keys
+ * - No virtualization needed: max 364 cells (1y) is well within efficient render limits
  */
 
 import React, { memo, useMemo, useCallback } from 'react';
@@ -27,6 +34,53 @@ import {
   MONTH_LABEL,
 } from './constants';
 import { calculateCellAnimationDelay } from './utils';
+
+/**
+ * Memoized row component to prevent unnecessary re-renders of entire rows
+ * when only a single cell changes. Each row renders cells for a specific
+ * day of the week (Sunday=0 through Saturday=6).
+ */
+interface GridRowProps {
+  dayIndex: number;
+  row: (BinaryDay | null)[];
+  habitColor: string;
+  onCellPress: (date: string, completed: boolean) => void;
+}
+
+const GridRow = memo(function GridRow({
+  dayIndex,
+  row,
+  habitColor,
+  onCellPress,
+}: GridRowProps) {
+  return (
+    <View accessibilityRole='row' style={styles.gridRow}>
+      {row.map((day, weekIndex) => {
+        // Calculate the animation delay for staggered effect
+        // Animate left-to-right, top-to-bottom
+        const animationIndex = calculateCellAnimationDelay(
+          weekIndex,
+          dayIndex,
+          1 // Returns the linear index, we multiply by stagger delay in BinaryCell
+        );
+
+        return (
+          <View
+            key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
+            style={styles.cellWrapper}
+          >
+            <BinaryCell
+              day={day}
+              habitColor={habitColor}
+              index={animationIndex}
+              onPress={onCellPress}
+            />
+          </View>
+        );
+      })}
+    </View>
+  );
+});
 
 /**
  * BinaryHeatmapGrid - The main grid component for the binary heatmap
@@ -118,35 +172,13 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
           {/* Grid cells */}
           <View style={styles.gridContainer}>
             {rows.map((row, dayIndex) => (
-              <View
+              <GridRow
                 key={`row-${dayIndex}`}
-                accessibilityRole='row'
-                style={styles.gridRow}
-              >
-                {row.map((day, weekIndex) => {
-                  // Calculate the animation delay for staggered effect
-                  // Animate left-to-right, top-to-bottom
-                  const animationIndex = calculateCellAnimationDelay(
-                    weekIndex,
-                    dayIndex,
-                    1 // Returns the linear index, we multiply by stagger delay in BinaryCell
-                  );
-
-                  return (
-                    <View
-                      key={`cell-${dayIndex}-${weekIndex}`}
-                      style={styles.cellWrapper}
-                    >
-                      <BinaryCell
-                        day={day}
-                        habitColor={habitColor}
-                        index={animationIndex}
-                        onPress={handleCellPress}
-                      />
-                    </View>
-                  );
-                })}
-              </View>
+                dayIndex={dayIndex}
+                habitColor={habitColor}
+                row={row}
+                onCellPress={handleCellPress}
+              />
             ))}
           </View>
         </View>
