@@ -8,6 +8,7 @@
 import { addDays, subDays } from 'date-fns';
 
 import {
+  calculateCompletionRate,
   calculateDelta,
   calculateStrengthAtDate,
   calculateStrengthExtremes,
@@ -16,6 +17,7 @@ import {
   getStrengthColor,
   getStrengthColors,
   getStrengthLabel,
+  isPerfectStreak,
 } from '../strengthUtils';
 import type { StrengthSnapshot } from '../types';
 
@@ -37,7 +39,11 @@ describe('calculateStrengthAtDate', () => {
     const habitCreatedAt = new Date('2024-01-01');
     const targetDate = new Date('2024-01-10');
 
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // 10 days of decay: 0 * 0.95^10 = 0
     expect(strength).toBe(0);
@@ -54,7 +60,11 @@ describe('calculateStrengthAtDate', () => {
     ]);
     const targetDate = new Date('2024-01-05');
 
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // After 5 consecutive completions, should be ~22.6%
     expect(strength).toBeGreaterThan(20);
@@ -87,7 +97,10 @@ describe('calculateStrengthAtDate', () => {
 
     expect(strengthAfterDecay).toBeLessThan(strengthAfterCompletions);
     // After 5 days of decay at 0.95, should be ~77.4% of original
-    expect(strengthAfterDecay).toBeCloseTo(strengthAfterCompletions * Math.pow(0.95, 5), 0);
+    expect(strengthAfterDecay).toBeCloseTo(
+      strengthAfterCompletions * Math.pow(0.95, 5),
+      0
+    );
   });
 
   it('reaches approximately 95%+ after 60 perfect days', () => {
@@ -100,7 +113,11 @@ describe('calculateStrengthAtDate', () => {
     }
 
     const targetDate = addDays(habitCreatedAt, 59);
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // Should be approaching 100% asymptotically
     expect(strength).toBeGreaterThan(95);
@@ -116,7 +133,11 @@ describe('calculateStrengthAtDate', () => {
     }
 
     const targetDate = addDays(habitCreatedAt, 89);
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // Should be very close to 100%
     expect(strength).toBeGreaterThan(99);
@@ -127,7 +148,11 @@ describe('calculateStrengthAtDate', () => {
     const habitCreatedAt = new Date('2024-01-05');
     const targetDate = new Date('2024-01-01');
 
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     expect(strength).toBe(0);
   });
@@ -137,7 +162,11 @@ describe('calculateStrengthAtDate', () => {
     const completedDates = new Set(['2024-01-01']);
     const targetDate = new Date('2024-01-01');
 
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // First completion: 0 + (1 - 0) * 0.05 = 0.05 = 5%
     expect(strength).toBe(5);
@@ -225,7 +254,11 @@ describe('generateStrengthTimeline', () => {
     const habitCreatedAt = subDays(new Date(), 30);
     const completedDates = new Set<string>();
 
-    const timeline = generateStrengthTimeline(completedDates, habitCreatedAt, 100);
+    const timeline = generateStrengthTimeline(
+      completedDates,
+      habitCreatedAt,
+      100
+    );
 
     expect(timeline.length).toBe(31); // 30 days + today
   });
@@ -234,7 +267,11 @@ describe('generateStrengthTimeline', () => {
     const habitCreatedAt = subDays(new Date(), 365);
     const completedDates = new Set<string>();
 
-    const timeline = generateStrengthTimeline(completedDates, habitCreatedAt, 50);
+    const timeline = generateStrengthTimeline(
+      completedDates,
+      habitCreatedAt,
+      50
+    );
 
     expect(timeline.length).toBe(50);
   });
@@ -243,13 +280,19 @@ describe('generateStrengthTimeline', () => {
     const habitCreatedAt = subDays(new Date(), 200);
     const completedDates = new Set<string>();
 
-    const timeline = generateStrengthTimeline(completedDates, habitCreatedAt, 50);
+    const timeline = generateStrengthTimeline(
+      completedDates,
+      habitCreatedAt,
+      50
+    );
 
     // First point should be from habit creation date
     expect(timeline[0].dateString).toBe(formatDateString(habitCreatedAt));
 
     // Last point should be today
-    expect(timeline[timeline.length - 1].dateString).toBe(formatDateString(new Date()));
+    expect(timeline[timeline.length - 1].dateString).toBe(
+      formatDateString(new Date())
+    );
   });
 
   it('returns snapshots with all required fields', () => {
@@ -296,10 +339,30 @@ describe('calculateStrengthExtremes', () => {
 
   it('finds peak from multiple entries', () => {
     const snapshots: StrengthSnapshot[] = [
-      { date: new Date('2024-01-01'), dateString: '2024-01-01', strength: 10, label: 'weak' },
-      { date: new Date('2024-01-02'), dateString: '2024-01-02', strength: 50, label: 'developing' },
-      { date: new Date('2024-01-03'), dateString: '2024-01-03', strength: 80, label: 'strong' },
-      { date: new Date('2024-01-04'), dateString: '2024-01-04', strength: 60, label: 'developing' },
+      {
+        date: new Date('2024-01-01'),
+        dateString: '2024-01-01',
+        strength: 10,
+        label: 'weak',
+      },
+      {
+        date: new Date('2024-01-02'),
+        dateString: '2024-01-02',
+        strength: 50,
+        label: 'developing',
+      },
+      {
+        date: new Date('2024-01-03'),
+        dateString: '2024-01-03',
+        strength: 80,
+        label: 'strong',
+      },
+      {
+        date: new Date('2024-01-04'),
+        dateString: '2024-01-04',
+        strength: 60,
+        label: 'developing',
+      },
     ];
 
     const { peak } = calculateStrengthExtremes(snapshots);
@@ -310,10 +373,30 @@ describe('calculateStrengthExtremes', () => {
 
   it('excludes first day when finding lowest', () => {
     const snapshots: StrengthSnapshot[] = [
-      { date: new Date('2024-01-01'), dateString: '2024-01-01', strength: 0, label: 'weak' },
-      { date: new Date('2024-01-02'), dateString: '2024-01-02', strength: 5, label: 'weak' },
-      { date: new Date('2024-01-03'), dateString: '2024-01-03', strength: 10, label: 'weak' },
-      { date: new Date('2024-01-04'), dateString: '2024-01-04', strength: 8, label: 'weak' },
+      {
+        date: new Date('2024-01-01'),
+        dateString: '2024-01-01',
+        strength: 0,
+        label: 'weak',
+      },
+      {
+        date: new Date('2024-01-02'),
+        dateString: '2024-01-02',
+        strength: 5,
+        label: 'weak',
+      },
+      {
+        date: new Date('2024-01-03'),
+        dateString: '2024-01-03',
+        strength: 10,
+        label: 'weak',
+      },
+      {
+        date: new Date('2024-01-04'),
+        dateString: '2024-01-04',
+        strength: 8,
+        label: 'weak',
+      },
     ];
 
     const { lowest } = calculateStrengthExtremes(snapshots);
@@ -355,6 +438,90 @@ describe('calculateDelta', () => {
   });
 });
 
+describe('calculateCompletionRate', () => {
+  it('returns 100 for full completion', () => {
+    const completedDates = new Set(['2024-01-01', '2024-01-02', '2024-01-03']);
+    const rate = calculateCompletionRate(completedDates, 3);
+    expect(rate).toBe(100);
+  });
+
+  it('returns 50 for half completion', () => {
+    const completedDates = new Set(['2024-01-01', '2024-01-03']);
+    const rate = calculateCompletionRate(completedDates, 4);
+    expect(rate).toBe(50);
+  });
+
+  it('returns 0 for no completions', () => {
+    const completedDates = new Set<string>();
+    const rate = calculateCompletionRate(completedDates, 10);
+    expect(rate).toBe(0);
+  });
+
+  it('returns 0 when habitAgeDays is 0', () => {
+    const completedDates = new Set(['2024-01-01']);
+    const rate = calculateCompletionRate(completedDates, 0);
+    expect(rate).toBe(0);
+  });
+
+  it('returns 0 when habitAgeDays is negative', () => {
+    const completedDates = new Set(['2024-01-01']);
+    const rate = calculateCompletionRate(completedDates, -5);
+    expect(rate).toBe(0);
+  });
+
+  it('rounds to nearest integer', () => {
+    const completedDates = new Set(['2024-01-01', '2024-01-02']);
+    const rate = calculateCompletionRate(completedDates, 3);
+    expect(rate).toBe(67); // 2/3 = 66.666... rounds to 67
+  });
+});
+
+describe('isPerfectStreak', () => {
+  it('returns true when all days are completed (>= 3 days)', () => {
+    const completedDates = new Set(['2024-01-01', '2024-01-02', '2024-01-03']);
+    expect(isPerfectStreak(completedDates, 3)).toBe(true);
+  });
+
+  it('returns true when completions exceed habit age', () => {
+    // Edge case: more completions than days (shouldn't happen but defensive)
+    const completedDates = new Set([
+      '2024-01-01',
+      '2024-01-02',
+      '2024-01-03',
+      '2024-01-04',
+    ]);
+    expect(isPerfectStreak(completedDates, 3)).toBe(true);
+  });
+
+  it('returns false when not all days are completed', () => {
+    const completedDates = new Set(['2024-01-01', '2024-01-03']);
+    expect(isPerfectStreak(completedDates, 3)).toBe(false);
+  });
+
+  it('returns false for habits younger than 3 days (1 day)', () => {
+    const completedDates = new Set(['2024-01-01']);
+    expect(isPerfectStreak(completedDates, 1)).toBe(false);
+  });
+
+  it('returns false for habits younger than 3 days (2 days)', () => {
+    const completedDates = new Set(['2024-01-01', '2024-01-02']);
+    expect(isPerfectStreak(completedDates, 2)).toBe(false);
+  });
+
+  it('returns false for empty completedDates', () => {
+    const completedDates = new Set<string>();
+    expect(isPerfectStreak(completedDates, 5)).toBe(false);
+  });
+
+  it('works for long streaks', () => {
+    const completedDates = new Set<string>();
+    for (let i = 1; i <= 100; i++) {
+      completedDates.add(`2024-01-${String(i).padStart(2, '0')}`);
+    }
+    expect(isPerfectStreak(completedDates, 100)).toBe(true);
+  });
+});
+
 describe('Algorithm Behavior', () => {
   /**
    * These tests verify the algorithm matches Loop Habit Tracker's behavior.
@@ -370,7 +537,11 @@ describe('Algorithm Behavior', () => {
     }
 
     const targetDate = addDays(habitCreatedAt, 59);
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // With 50% completion rate, equilibrium should be around 50%
     // The exact value depends on the algorithm, but should stabilize
@@ -391,7 +562,11 @@ describe('Algorithm Behavior', () => {
     }
 
     const targetDate = addDays(habitCreatedAt, 55);
-    const strength = calculateStrengthAtDate(completedDates, habitCreatedAt, targetDate);
+    const strength = calculateStrengthAtDate(
+      completedDates,
+      habitCreatedAt,
+      targetDate
+    );
 
     // 2/7 = ~28.5% completion rate, equilibrium should be around 25-35%
     expect(strength).toBeGreaterThan(20);

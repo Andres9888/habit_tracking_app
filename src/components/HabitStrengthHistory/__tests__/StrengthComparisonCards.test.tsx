@@ -94,6 +94,8 @@ jest.mock('lucide-react-native', () => {
       React.createElement(View, { testID: 'icon-trending-down', ...props }),
     Minus: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: 'icon-minus', ...props }),
+    Sparkles: (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: 'icon-sparkles', ...props }),
   };
 });
 
@@ -435,6 +437,120 @@ describe('StrengthComparisonCards', () => {
       expect(circles[1].props.strokeLinecap).toBe('round');
       expect(circles[3].props.strokeLinecap).toBe('round');
       expect(circles[5].props.strokeLinecap).toBe('round');
+    });
+  });
+
+  describe('Perfect Badge', () => {
+    it('should show Perfect badge when completedDates covers all habit days (>= 3 days)', () => {
+      // Create a Set with 5 consecutive dates (100% completion for 5 days)
+      const completedDates = new Set([
+        '2024-12-25',
+        '2024-12-26',
+        '2024-12-27',
+        '2024-12-28',
+        '2024-12-29',
+      ]);
+
+      const { getByTestId, getByText } = render(
+        <StrengthComparisonCards
+          {...defaultProps}
+          completedDates={completedDates}
+          habitAgeDays={5}
+        />
+      );
+
+      expect(getByTestId('perfect-badge')).toBeTruthy();
+      expect(getByText('Perfect!')).toBeTruthy();
+      expect(getByTestId('icon-sparkles')).toBeTruthy();
+    });
+
+    it('should not show Perfect badge for habits younger than 3 days', () => {
+      const completedDates = new Set(['2024-12-28', '2024-12-29']);
+
+      const { queryByTestId, queryByText } = render(
+        <StrengthComparisonCards
+          {...defaultProps}
+          completedDates={completedDates}
+          habitAgeDays={2}
+        />
+      );
+
+      expect(queryByTestId('perfect-badge')).toBeNull();
+      expect(queryByText('Perfect!')).toBeNull();
+    });
+
+    it('should not show Perfect badge when completion rate is less than 100%', () => {
+      // 3 completions out of 5 days = 60% completion
+      const completedDates = new Set([
+        '2024-12-25',
+        '2024-12-27',
+        '2024-12-29',
+      ]);
+
+      const { queryByTestId, queryByText } = render(
+        <StrengthComparisonCards
+          {...defaultProps}
+          completedDates={completedDates}
+          habitAgeDays={5}
+        />
+      );
+
+      expect(queryByTestId('perfect-badge')).toBeNull();
+      expect(queryByText('Perfect!')).toBeNull();
+    });
+
+    it('should not show Perfect badge when completedDates is undefined', () => {
+      const { queryByTestId, queryByText } = render(
+        <StrengthComparisonCards {...defaultProps} />
+      );
+
+      expect(queryByTestId('perfect-badge')).toBeNull();
+      expect(queryByText('Perfect!')).toBeNull();
+    });
+
+    it('should show both delta badge and Perfect badge when conditions are met', () => {
+      const completedDates = new Set([
+        '2024-12-26',
+        '2024-12-27',
+        '2024-12-28',
+        '2024-12-29',
+      ]);
+
+      const { getByTestId, getByText } = render(
+        <StrengthComparisonCards
+          {...defaultProps}
+          completedDates={completedDates}
+          habitAgeDays={4}
+          deltaVsMonth={25}
+        />
+      );
+
+      // Should have both badges
+      expect(getByTestId('perfect-badge')).toBeTruthy();
+      expect(getByText('Perfect!')).toBeTruthy();
+      expect(getByTestId('icon-trending-up')).toBeTruthy();
+      expect(getByText('+25.0%')).toBeTruthy();
+    });
+
+    it('should have correct accessibility label on Perfect badge', () => {
+      const completedDates = new Set([
+        '2024-12-27',
+        '2024-12-28',
+        '2024-12-29',
+      ]);
+
+      const { getByTestId } = render(
+        <StrengthComparisonCards
+          {...defaultProps}
+          completedDates={completedDates}
+          habitAgeDays={3}
+        />
+      );
+
+      const perfectBadge = getByTestId('perfect-badge');
+      expect(perfectBadge.props.accessibilityLabel).toBe(
+        'Perfect streak! You have completed every day since starting this habit'
+      );
     });
   });
 });

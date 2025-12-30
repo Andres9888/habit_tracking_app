@@ -26,9 +26,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
+import { TrendingUp, TrendingDown, Minus, Sparkles } from 'lucide-react-native';
 
-import { getStrengthColors, getStrengthLabel } from './strengthUtils';
+import {
+  getStrengthColors,
+  getStrengthLabel,
+  isPerfectStreak,
+} from './strengthUtils';
 import type { StrengthColors, StrengthLabel } from './types';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -50,6 +54,8 @@ export interface StrengthComparisonCardsProps {
   deltaVsMonth: number;
   /** Number of days since habit was created */
   habitAgeDays: number;
+  /** Set of completed dates for calculating completion rate */
+  completedDates?: Set<string>;
 }
 
 interface StrengthCardProps {
@@ -63,6 +69,8 @@ interface StrengthCardProps {
   delta?: number;
   /** Animation delay in ms */
   animationDelay?: number;
+  /** Whether to show the "Perfect!" celebration badge */
+  showPerfectBadge?: boolean;
 }
 
 /**
@@ -74,6 +82,7 @@ function StrengthCard({
   isHighlighted = false,
   delta,
   animationDelay = 0,
+  showPerfectBadge = false,
 }: StrengthCardProps) {
   const shouldReduceMotion = useReducedMotion();
   const colors = getStrengthColors(strength);
@@ -200,7 +209,27 @@ function StrengthCard({
 
       {/* Delta badge (only for Now card) */}
       {delta !== undefined && <DeltaBadge delta={delta} />}
+
+      {/* Perfect badge (only for Now card with 100% completion) */}
+      {showPerfectBadge && <PerfectBadge />}
     </Animated.View>
+  );
+}
+
+/**
+ * Celebration badge shown when user has 100% completion rate
+ */
+function PerfectBadge() {
+  return (
+    <View
+      accessible
+      accessibilityLabel='Perfect streak! You have completed every day since starting this habit'
+      className='mt-1.5 flex-row items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5'
+      testID='perfect-badge'
+    >
+      <Sparkles color='#d97706' size={10} />
+      <Text className='text-[10px] font-bold text-amber-700'>Perfect!</Text>
+    </View>
   );
 }
 
@@ -210,9 +239,11 @@ interface DeltaBadgeProps {
 
 // WCAG AA compliant colors (4.5:1 minimum contrast ratio)
 const DELTA_BADGE_COLORS = {
-  positive: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
-  negative: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
-  neutral: '#78716c', // Stone-500 (WCAG AA: 4.80:1)
+  // Emerald-700 (WCAG AA: 5.48:1)
+  negative: '#dc2626',
+  // Red-600 (WCAG AA: 4.83:1)
+  neutral: '#78716c',
+  positive: '#047857', // Stone-500 (WCAG AA: 4.80:1)
 } as const;
 
 /**
@@ -282,6 +313,7 @@ export function StrengthComparisonCards({
   oneYearAgo,
   deltaVsMonth,
   habitAgeDays,
+  completedDates,
 }: StrengthComparisonCardsProps) {
   // Determine labels for past timeframes based on habit age
   const thirtyDaysLabel = habitAgeDays >= 30 ? '30 Days' : 'Start';
@@ -290,6 +322,11 @@ export function StrengthComparisonCards({
   // Use start strength (0) if habit is too young for the timeframe
   const thirtyDaysStrength = thirtyDaysAgo ?? 0;
   const oneYearStrength = oneYearAgo ?? 0;
+
+  // Check for perfect completion streak
+  const showPerfect = completedDates
+    ? isPerfectStreak(completedDates, habitAgeDays)
+    : false;
 
   return (
     <View
@@ -303,6 +340,7 @@ export function StrengthComparisonCards({
         isHighlighted
         animationDelay={0}
         delta={deltaVsMonth}
+        showPerfectBadge={showPerfect}
         strength={current}
         timeLabel='Now'
       />

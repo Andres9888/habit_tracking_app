@@ -39,20 +39,23 @@ const STRONG_THRESHOLD = 70;
  * - Red-600 (4.83:1), Amber-700 (5.02:1), Emerald-700 (5.48:1)
  */
 const STRENGTH_COLOR_MAP: Record<StrengthLabel, StrengthColors> = {
-  weak: {
-    primary: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
-    background: '#fef2f2', // Red-50
-    ring: '#fca5a5', // Red-300
-  },
   developing: {
-    primary: '#b45309', // Amber-700 (WCAG AA: 5.02:1)
-    background: '#fffbeb', // Amber-50
+    // Amber-700 (WCAG AA: 5.02:1)
+    background: '#fffbeb',
+    primary: '#b45309', // Amber-50
     ring: '#fcd34d', // Amber-300
   },
   strong: {
-    primary: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
-    background: '#ecfdf5', // Emerald-50
+    // Emerald-700 (WCAG AA: 5.48:1)
+    background: '#ecfdf5',
+    primary: '#047857', // Emerald-50
     ring: '#6ee7b7', // Emerald-300
+  },
+  weak: {
+    // Red-600 (WCAG AA: 4.83:1)
+    background: '#fef2f2',
+    primary: '#dc2626', // Red-50
+    ring: '#fca5a5', // Red-300
   },
 };
 
@@ -108,13 +111,10 @@ export function calculateStrengthAtDate(
   while (currentDate <= endDate) {
     const dateStr = formatDateString(currentDate);
 
-    if (completedDates.has(dateStr)) {
-      // Growth on completion: approaches 100% asymptotically
-      strength = strength + (1 - strength) * growthRate;
-    } else {
-      // Decay on miss: exponential decay toward 0
-      strength = strength * decayRate;
-    }
+    // Growth on completion (approaches 100% asymptotically), decay on miss (exponential toward 0)
+    strength = completedDates.has(dateStr)
+      ? strength + (1 - strength) * growthRate
+      : strength * decayRate;
 
     currentDate = addDays(currentDate, 1);
   }
@@ -217,19 +217,17 @@ function generateFullTimeline(
   while (currentDate <= endDate) {
     const dateStr = formatDateString(currentDate);
 
-    if (completedDates.has(dateStr)) {
-      strength = strength + (1 - strength) * DEFAULT_GROWTH_RATE;
-    } else {
-      strength = strength * DEFAULT_DECAY_RATE;
-    }
+    strength = completedDates.has(dateStr)
+      ? strength + (1 - strength) * DEFAULT_GROWTH_RATE
+      : strength * DEFAULT_DECAY_RATE;
 
     const strengthPercent = Math.round(strength * 1000) / 10;
 
     timeline.push({
       date: new Date(currentDate),
       dateString: dateStr,
-      strength: strengthPercent,
       label: getStrengthLabel(strengthPercent),
+      strength: strengthPercent,
     });
 
     currentDate = addDays(currentDate, 1);
@@ -257,11 +255,9 @@ function generateSampledTimeline(
   while (currentDate <= endDate) {
     const dateStr = formatDateString(currentDate);
 
-    if (completedDates.has(dateStr)) {
-      strength = strength + (1 - strength) * DEFAULT_GROWTH_RATE;
-    } else {
-      strength = strength * DEFAULT_DECAY_RATE;
-    }
+    strength = completedDates.has(dateStr)
+      ? strength + (1 - strength) * DEFAULT_GROWTH_RATE
+      : strength * DEFAULT_DECAY_RATE;
 
     fullStrengths.push({
       date: new Date(currentDate),
@@ -282,8 +278,8 @@ function generateSampledTimeline(
     timeline.push({
       date: sample.date,
       dateString: formatDateString(sample.date),
-      strength: sample.strength,
       label: getStrengthLabel(sample.strength),
+      strength: sample.strength,
     });
   }
 
@@ -307,10 +303,10 @@ export function calculateStrengthExtremes(
     const emptySnapshot: StrengthSnapshot = {
       date: now,
       dateString: formatDateString(now),
-      strength: 0,
       label: 'weak',
+      strength: 0,
     };
-    return { peak: emptySnapshot, lowest: emptySnapshot };
+    return { lowest: emptySnapshot, peak: emptySnapshot };
   }
 
   // Find peak
@@ -322,14 +318,15 @@ export function calculateStrengthExtremes(
   }
 
   // Find lowest (excluding first day)
-  let lowest = strengthHistory.length > 1 ? strengthHistory[1] : strengthHistory[0];
+  let lowest =
+    strengthHistory.length > 1 ? strengthHistory[1] : strengthHistory[0];
   for (let i = 1; i < strengthHistory.length; i++) {
     if (strengthHistory[i].strength < lowest.strength) {
       lowest = strengthHistory[i];
     }
   }
 
-  return { peak, lowest };
+  return { lowest, peak };
 }
 
 /**
@@ -342,4 +339,40 @@ export function calculateStrengthExtremes(
  */
 export function calculateDelta(current: number, previous: number): number {
   return Math.round((current - previous) * 10) / 10;
+}
+
+/**
+ * Calculate the completion rate as a percentage.
+ *
+ * @param completedDates - Set of completed dates in YYYY-MM-DD format
+ * @param habitAgeDays - Number of days since habit creation
+ * @returns Completion rate as percentage (0-100)
+ */
+export function calculateCompletionRate(
+  completedDates: Set<string>,
+  habitAgeDays: number
+): number {
+  if (habitAgeDays <= 0) {
+    return 0;
+  }
+  const completedCount = completedDates.size;
+  return Math.round((completedCount / habitAgeDays) * 100);
+}
+
+/**
+ * Check if the user has a perfect completion streak (100% completion rate).
+ *
+ * @param completedDates - Set of completed dates in YYYY-MM-DD format
+ * @param habitAgeDays - Number of days since habit creation
+ * @returns True if the user has completed every day since habit creation
+ */
+export function isPerfectStreak(
+  completedDates: Set<string>,
+  habitAgeDays: number
+): boolean {
+  // Need at least 3 days to show "Perfect!" badge (to avoid trivial cases)
+  if (habitAgeDays < 3) {
+    return false;
+  }
+  return completedDates.size >= habitAgeDays;
 }

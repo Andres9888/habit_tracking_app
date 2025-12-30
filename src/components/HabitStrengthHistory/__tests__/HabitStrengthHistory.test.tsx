@@ -52,6 +52,8 @@ jest.mock('lucide-react-native', () => {
       React.createElement(View, { testID: 'icon-trophy', ...props }),
     BarChart3: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: 'icon-chart', ...props }),
+    Zap: (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: 'icon-zap', ...props }),
   };
 });
 
@@ -413,7 +415,7 @@ describe('HabitStrengthHistory', () => {
   });
 
   describe('Edge Cases', () => {
-    it('should handle empty completedDates', () => {
+    it('should show empty state when completedDates is empty', () => {
       mockUseHabitStrength.mockReturnValue({
         ...mockStrengthData,
         currentStrength: 0,
@@ -424,18 +426,65 @@ describe('HabitStrengthHistory', () => {
           deltaVsMonth: 0,
           peak: 0,
           lowest: 0,
+          habitAgeDays: 10,
         },
       });
 
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByText, queryByTestId } = render(
         <HabitStrengthHistory
           {...defaultProps}
           completedDates={new Set<string>()}
         />
       );
 
+      // Should show empty state, not the regular component
+      expect(getByTestId('habit-strength-history-empty')).toBeTruthy();
+      expect(queryByTestId('habit-strength-history')).toBeNull();
+
+      // Should show encouraging message
+      expect(getByText('Ready to Build Strength')).toBeTruthy();
+      expect(
+        getByText('Complete today to start building your habit strength!')
+      ).toBeTruthy();
+
+      // Should show Zap icon
+      expect(getByTestId('icon-zap')).toBeTruthy();
+    });
+
+    it('should show different message for day 1 habits with no completions', () => {
+      mockUseHabitStrength.mockReturnValue({
+        ...mockStrengthData,
+        currentStrength: 0,
+        strengthHistory: [],
+        metrics: {
+          ...mockStrengthData.metrics,
+          current: 0,
+          deltaVsMonth: 0,
+          peak: 0,
+          lowest: 0,
+          habitAgeDays: 1,
+        },
+      });
+
+      const { getByText } = render(
+        <HabitStrengthHistory
+          {...defaultProps}
+          completedDates={new Set<string>()}
+        />
+      );
+
+      expect(
+        getByText('Complete your first day to start building strength!')
+      ).toBeTruthy();
+    });
+
+    it('should show regular content when there are completions', () => {
+      const { getByTestId, queryByTestId } = render(
+        <HabitStrengthHistory {...defaultProps} />
+      );
+
       expect(getByTestId('habit-strength-history')).toBeTruthy();
-      expect(getByText('Current: 0')).toBeTruthy();
+      expect(queryByTestId('habit-strength-history-empty')).toBeNull();
     });
 
     it('should handle null thirtyDaysAgo', () => {
