@@ -430,4 +430,57 @@ describe('HeatmapTooltip', () => {
       expect(getByRole('tooltip')).toBeTruthy();
     });
   });
+
+  describe('Reduced motion support', () => {
+    it('should render correctly when reduced motion is enabled', () => {
+      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
+      useReduceMotion.mockReturnValue(true);
+
+      const { getByRole, getByText } = render(
+        <HeatmapTooltip {...defaultProps} day={completedDay} />
+      );
+
+      // Should still render the tooltip with correct content
+      expect(getByRole('tooltip')).toBeTruthy();
+      expect(getByText('Dec 15: Done ✓')).toBeTruthy();
+
+      // Reset mock
+      useReduceMotion.mockReturnValue(false);
+    });
+
+    it('should handle visibility changes with reduced motion enabled', () => {
+      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
+      useReduceMotion.mockReturnValue(true);
+
+      const { queryByRole, rerender } = render(
+        <HeatmapTooltip {...defaultProps} visible={true} />
+      );
+
+      expect(queryByRole('tooltip')).toBeTruthy();
+
+      rerender(<HeatmapTooltip {...defaultProps} visible={false} />);
+      expect(queryByRole('tooltip')).toBeNull();
+
+      // Reset mock
+      useReduceMotion.mockReturnValue(false);
+    });
+
+    it('should handle onClose callback with reduced motion enabled', () => {
+      const { useReduceMotion } = require('../../../hooks/useReduceMotion');
+      useReduceMotion.mockReturnValue(true);
+
+      const onClose = jest.fn();
+      const { getByLabelText } = render(
+        <HeatmapTooltip {...defaultProps} onClose={onClose} />
+      );
+
+      const backdrop = getByLabelText('Close tooltip');
+      fireEvent.press(backdrop);
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+
+      // Reset mock
+      useReduceMotion.mockReturnValue(false);
+    });
+  });
 });

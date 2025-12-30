@@ -25,7 +25,6 @@ import Animated, {
   useSharedValue,
   withTiming,
   withSpring,
-  runOnJS,
 } from 'react-native-reanimated';
 
 import type { HeatmapTooltipProps } from './types';
@@ -64,12 +63,15 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
   useEffect(() => {
     if (visible) {
       opacity.value = withTiming(1, { duration: animationDuration });
-      scale.value = withSpring(1, { damping: 20, stiffness: 300 });
+      // Use withTiming when reduced motion is enabled, withSpring otherwise
+      scale.value = reduceMotion
+        ? withTiming(1, { duration: 0 })
+        : withSpring(1, { damping: 20, stiffness: 300 });
     } else {
       opacity.value = withTiming(0, { duration: animationDuration });
       scale.value = withTiming(0.9, { duration: animationDuration });
     }
-  }, [visible, opacity, scale, animationDuration]);
+  }, [visible, opacity, scale, animationDuration, reduceMotion]);
 
   // Animated styles for fade and scale
   const animatedStyle = useAnimatedStyle(() => ({
