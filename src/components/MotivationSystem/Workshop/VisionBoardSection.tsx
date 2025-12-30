@@ -58,6 +58,13 @@ import {
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import {
+  PulsingIcon,
+  CompletionCheckmark,
+  SPRING_BUTTON,
+  SPRING_GENTLE,
+  STAGGER_DELAY,
+} from '../../animations';
+import {
   useImagePicker,
   type PickedImage,
 } from '../../../hooks/useImagePicker';
@@ -97,13 +104,6 @@ export interface VisionBoardSectionProps {
   sectionIndex?: number;
 }
 
-// Animation spring configs
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
-const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-const SPRING_GENTLE = { damping: 28, mass: 1.2, stiffness: 180 };
-const STAGGER_DELAY = 80;
-const BASE_CHECKMARK_DELAY = 600;
-
 // Maximum images per habit (4-image grid as per spec)
 const MAX_IMAGES = 4;
 
@@ -113,134 +113,6 @@ const MAX_CAPTION_LENGTH = 200;
 // Get screen width for image sizing
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IMAGE_SIZE = (SCREEN_WIDTH - 64) / 2; // 2 columns with padding
-
-/**
- * PulsingIcon Component for Empty State Icons
- */
-function PulsingIcon({
-  children,
-  reduceMotion = false,
-}: {
-  children: React.ReactNode;
-  reduceMotion?: boolean;
-}) {
-  const opacity = useSharedValue(1);
-  const scale = useSharedValue(1);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      opacity.value = 1;
-      scale.value = 1;
-      return;
-    }
-
-    const pulseOpacity = () => {
-      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
-        if (finished) {
-          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseOpacity)();
-            }
-          });
-        }
-      });
-    };
-
-    const pulseScale = () => {
-      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
-        if (finished) {
-          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseScale)();
-            }
-          });
-        }
-      });
-    };
-
-    pulseOpacity();
-    pulseScale();
-  }, [reduceMotion, opacity, scale]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
-}
-
-/**
- * CompletionCheckmark Component
- */
-function CompletionCheckmark({
-  isVisible,
-  sectionIndex,
-  shouldAnimate,
-  reduceMotion = false,
-}: {
-  isVisible: boolean;
-  sectionIndex: number;
-  shouldAnimate: boolean;
-  reduceMotion?: boolean;
-}) {
-  const scale = useSharedValue(
-    isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
-  );
-  const opacity = useSharedValue(
-    isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
-  );
-
-  useEffect(() => {
-    if (!isVisible) {
-      scale.value = 0;
-      opacity.value = 0;
-      return;
-    }
-
-    if (!shouldAnimate || reduceMotion) {
-      scale.value = 1;
-      opacity.value = 1;
-      return;
-    }
-
-    const delay = sectionIndex * STAGGER_DELAY + BASE_CHECKMARK_DELAY;
-
-    const timeout = setTimeout(() => {
-      scale.value = withSequence(
-        withSpring(1.2, SPRING_BOUNCY),
-        withSpring(1, { damping: 15, stiffness: 200 })
-      );
-      opacity.value = withTiming(1, { duration: 150 });
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [isVisible, shouldAnimate, reduceMotion, sectionIndex, scale, opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  if (!isVisible) return null;
-
-  return (
-    <Animated.View
-      style={[
-        animatedStyle,
-        {
-          position: 'absolute',
-          right: -4,
-          top: -4,
-        },
-      ]}
-    >
-      <View className='h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm'>
-        <Check className='text-white' size={12} strokeWidth={3} />
-      </View>
-    </Animated.View>
-  );
-}
 
 /**
  * SectionCard Component for consistent styling with press animation

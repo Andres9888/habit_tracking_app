@@ -24,9 +24,9 @@ import Animated, {
 import { Sparkles, Wand2, Crown, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
+import { SPRING_BUTTON } from '../../animations';
 
 // Animation constants
-const SPRING_BUTTON = { damping: 15, stiffness: 300 };
 const SPARKLE_DURATION = 1500;
 
 export interface GeneratedAffirmation {
