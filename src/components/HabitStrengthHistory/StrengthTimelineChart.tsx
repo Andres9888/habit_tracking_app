@@ -158,7 +158,7 @@ function generateAreaPath(
   }
 
   // Close the path along the bottom
-  const lastPoint = points.at(-1);
+  const lastPoint = points.at(-1)!;
   path += ` L ${lastPoint.x} ${bottomY}`;
   path += ' Z';
 
@@ -261,7 +261,7 @@ function calculateTrendDescription(data: StrengthSnapshot[]): string {
   if (data.length < 2) return 'Not enough data to determine trend';
 
   const first = data[0].strength;
-  const last = data.at(-1).strength;
+  const last = data.at(-1)!.strength;
   const diff = last - first;
 
   if (diff > 10)
@@ -303,7 +303,7 @@ export function StrengthTimelineChart({
   const chartColor = useMemo(() => {
     if (habitColor) return habitColor;
     if (strengthHistory.length > 0) {
-      return getStrengthColor(strengthHistory.at(-1).strength);
+      return getStrengthColor(strengthHistory.at(-1)!.strength);
     }
     return DEFAULT_CHART_COLOR;
   }, [habitColor, strengthHistory]);
@@ -318,7 +318,7 @@ export function StrengthTimelineChart({
     const line = generateLinePath(strengthHistory, dimensions);
     const last = dataToSvg(
       strengthHistory.length - 1,
-      strengthHistory.at(-1).strength,
+      strengthHistory.at(-1)!.strength,
       strengthHistory.length,
       dimensions
     );
