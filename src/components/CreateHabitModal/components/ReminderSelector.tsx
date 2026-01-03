@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import STRINGS from '../../../constants/strings';
 
 /**
@@ -92,33 +93,62 @@ interface ReminderOptionButtonProps {
   option: ReminderOption;
   isSelected: boolean;
   onPress: () => void;
+  reduceMotion: boolean;
 }
 
+/**
+ * V11 Task 8: Respects reduced motion preference
+ */
 const ReminderOptionButtonComponent = ({
   option,
   isSelected,
   onPress,
+  reduceMotion,
 }: ReminderOptionButtonProps) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
   const optionInfo = REMINDER_OPTIONS[option];
 
   const handlePressIn = useCallback(() => {
+    if (reduceMotion) return;
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
       toValue: 0.96,
       useNativeDriver: true,
     }).start();
-  }, [scaleAnim]);
+  }, [scaleAnim, reduceMotion]);
 
   const handlePressOut = useCallback(() => {
+    if (reduceMotion) {
+      // No animation in reduced motion mode
+      scaleAnim.setValue(1);
+      slideAnim.setValue(0);
+      return;
+    }
+    // V11 Spec: Slide up animation (translateY -2px) with spring
+    // Sequence: quick slide up, then spring back to normal, then scale back
+    Animated.sequence([
+      Animated.timing(slideAnim, {
+        toValue: -2,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Scale back to normal simultaneously
     Animated.spring(scaleAnim, {
       friction: 10,
       tension: 300,
       toValue: 1,
       useNativeDriver: true,
     }).start();
-  }, [scaleAnim]);
+  }, [scaleAnim, slideAnim, reduceMotion]);
 
   const accessibilityLabel = optionInfo.time
     ? `${optionInfo.label} at ${optionInfo.time}`
@@ -142,7 +172,14 @@ const ReminderOptionButtonComponent = ({
             backgroundColor: isSelected ? '#ECFDF5' : '#fafaf9',
             borderColor: isSelected ? '#10B981' : '#e7e5e4', // #e7e5e4 = stone-200
             borderWidth: isSelected ? 2 : 1,
-            transform: [{ scale: scaleAnim }],
+            // V11: Combined transform for scale (press) and translateY (slide up)
+            transform: [{ scale: scaleAnim }, { translateY: slideAnim }],
+            // V11: Subtle shadow increase on selection
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: isSelected ? 2 : 0 },
+            shadowOpacity: isSelected ? 0.1 : 0,
+            shadowRadius: isSelected ? 3 : 0,
+            elevation: isSelected ? 2 : 0, // Android shadow
           },
         ]}
       >
@@ -184,12 +221,15 @@ interface ReminderSelectorProps {
  *
  * Replaces the separate TimeOfDaySelector and ReminderSection components
  * from the V5 design for a simpler, unified UX.
+ *
+ * V11 Task 8: Reduced motion support
  */
 const ReminderSelectorComponent = ({
   selectedOption,
   onSelectOption,
 }: ReminderSelectorProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const reduceMotion = useReduceMotion(); // V11 Task 8: Reduced motion support
 
   const handleSelectOption = useCallback(
     (option: ReminderOption) => {
@@ -225,6 +265,7 @@ const ReminderSelectorComponent = ({
             isSelected={selectedOption === option}
             option={option}
             onPress={() => handleSelectOption(option)}
+            reduceMotion={reduceMotion}
           />
         ))}
       </View>

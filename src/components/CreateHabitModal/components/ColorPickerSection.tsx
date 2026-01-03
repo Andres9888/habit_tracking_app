@@ -5,9 +5,11 @@ import {
   Text,
   TouchableOpacity,
   View,
+  StyleSheet,
 } from 'react-native';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import STRINGS from '../../../constants/strings';
 import { Motion } from '../../../constants/motion';
 import { getColorName } from '../constants';
@@ -40,14 +42,19 @@ interface ColorButtonProps {
   color: string;
   isSelected: boolean;
   onSelect: (color: string) => void;
+  reduceMotion: boolean;
 }
 
 /**
  * Individual color swatch button with selection animation
  * V9 Spec: 36x36px base, scale(1.15) when selected, box-shadow ring
+ * V11 Spec: Added ripple animation (scale + opacity fade outward) on selection
+ * V11 Task 8: Respects reduced motion preference
  */
-const ColorButtonComponent = ({ color, isSelected, onSelect }: ColorButtonProps) => {
+const ColorButtonComponent = ({ color, isSelected, onSelect, reduceMotion }: ColorButtonProps) => {
   const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
+  const rippleScale = useRef(new Animated.Value(0)).current;
+  const rippleOpacity = useRef(new Animated.Value(1)).current;
   const wasSelected = useRef(isSelected);
   const { triggerSelection } = useHapticFeedback();
   const colorName = getColorName(color);
@@ -55,7 +62,10 @@ const ColorButtonComponent = ({ color, isSelected, onSelect }: ColorButtonProps)
   // Animate scale when selection changes
   useEffect(() => {
     if (isSelected !== wasSelected.current) {
-      if (isSelected) {
+      if (reduceMotion) {
+        // V11 Task 8: No animation in reduced motion mode
+        scale.setValue(isSelected ? 1.15 : 1);
+      } else if (isSelected) {
         // Animate to selected scale with spring
         Animated.spring(scale, {
           damping: 12,
@@ -74,63 +84,116 @@ const ColorButtonComponent = ({ color, isSelected, onSelect }: ColorButtonProps)
       }
       wasSelected.current = isSelected;
     }
-  }, [isSelected, scale]);
+  }, [isSelected, scale, reduceMotion]);
 
   const handlePress = useCallback(() => {
     triggerSelection();
+
+    if (!reduceMotion) {
+      // V11 Spec: Trigger ripple animation on selection (skip if reduced motion)
+      // Reset ripple values
+      rippleScale.setValue(0);
+      rippleOpacity.setValue(1);
+
+      // Animate ripple: scale 0 → 2, opacity 1 → 0 over 300ms
+      Animated.parallel([
+        Animated.timing(rippleScale, {
+          toValue: 2,
+          duration: 300,
+          easing: Motion.easing.outEase,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rippleOpacity, {
+          toValue: 0,
+        duration: 300,
+        easing: Motion.easing.outEase,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    }
+
     onSelect(color);
     // Announce color selection with human-readable name for screen readers
     AccessibilityInfo.announceForAccessibility(`Selected ${colorName} color`);
-  }, [color, colorName, onSelect, triggerSelection]);
+  }, [color, colorName, onSelect, triggerSelection, rippleScale, rippleOpacity, reduceMotion]);
 
   const handlePressIn = useCallback(() => {
+    if (reduceMotion) return;
     Animated.timing(scale, {
       duration: Motion.duration.fast,
       easing: Motion.easing.inEase,
       toValue: isSelected ? 1.08 : 0.96,
       useNativeDriver: true,
     }).start();
-  }, [isSelected, scale]);
+  }, [isSelected, scale, reduceMotion]);
 
   const handlePressOut = useCallback(() => {
+    if (reduceMotion) return;
     Animated.timing(scale, {
       duration: Motion.duration.base,
       easing: Motion.easing.outEase,
       toValue: isSelected ? 1.15 : 1,
       useNativeDriver: true,
     }).start();
-  }, [isSelected, scale]);
+  }, [isSelected, scale, reduceMotion]);
 
   return (
-    <Animated.View style={{ transform: [{ scale }] }}>
-      <TouchableOpacity
-        accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
-        accessibilityRole='button'
-        accessibilityState={{ selected: isSelected }}
-        style={{
-          alignItems: 'center',
-          backgroundColor: color,
-          borderRadius: 999,
-          height: 36,
-          justifyContent: 'center',
-          width: 36,
-          // V9: Box-shadow ring instead of border for cleaner selection
-          shadowColor: isSelected ? color : 'transparent',
-          shadowOffset: { width: 0, height: 0 },
-          shadowOpacity: isSelected ? 1 : 0,
-          shadowRadius: isSelected ? 0 : 0,
-          // Outer ring effect using elevation on Android, shadow on iOS
-          ...(isSelected && {
-            borderWidth: 3,
-            borderColor: '#ffffff',
-          }),
-        }}
-        testID={`color-swatch-${color.replace('#', '')}`}
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      />
-    </Animated.View>
+    <View style={{ position: 'relative' }}>
+      {/* V11: Ripple effect layer - positioned absolutely behind the button */}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            alignItems: 'center',
+            justifyContent: 'center',
+            transform: [{ scale: rippleScale }],
+            opacity: rippleOpacity,
+          },
+        ]}
+      >
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 999,
+            backgroundColor: color,
+          }}
+        />
+      </Animated.View>
+
+      {/* Main color button */}
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <TouchableOpacity
+          accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
+          accessibilityRole='button'
+          accessibilityState={{ selected: isSelected }}
+          style={{
+            alignItems: 'center',
+            backgroundColor: color,
+            borderRadius: 999,
+            height: 36,
+            justifyContent: 'center',
+            width: 36,
+            // V9: Box-shadow ring instead of border for cleaner selection
+            shadowColor: isSelected ? color : 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: isSelected ? 1 : 0,
+            shadowRadius: isSelected ? 0 : 0,
+            // Outer ring effect using elevation on Android, shadow on iOS
+            ...(isSelected && {
+              borderWidth: 3,
+              borderColor: '#ffffff',
+            }),
+          }}
+          testID={`color-swatch-${color.replace('#', '')}`}
+          onPress={handlePress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+        />
+      </Animated.View>
+    </View>
   );
 };
 
@@ -197,6 +260,7 @@ const CustomColorButton = memo(CustomColorButtonComponent);
  * V8 Color Picker - 12 colors in a single row
  * Responsive sizing to fit iPhone 14/15 Pro (390px width)
  * Uses justify-between for even spacing
+ * V11 Task 8: Reduced motion support
  */
 const ColorPickerContent = ({
   colors,
@@ -204,8 +268,10 @@ const ColorPickerContent = ({
   onSelectColor,
   onCustomPress,
 }: ColorPickerSectionProps) => {
+  const reduceMotion = useReduceMotion(); // V11 Task 8: Reduced motion support
+
   return (
-    <View className='mb-6'>
+    <View className='mb-5'>
       <Text
         accessibilityRole='text'
         className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
@@ -227,6 +293,7 @@ const ColorPickerContent = ({
             color={color}
             isSelected={selectedColor === color}
             onSelect={onSelectColor}
+            reduceMotion={reduceMotion}
           />
         ))}
         <CustomColorButton onPress={onCustomPress} />

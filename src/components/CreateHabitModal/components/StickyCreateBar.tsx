@@ -48,7 +48,7 @@ const StickyCreateBarComponent = ({
 }: StickyCreateBarProps) => {
   const insets = useSafeAreaInsets();
   const { isKeyboardVisible, keyboardHeight } = useKeyboardState();
-  const { triggerSuccess } = useHapticFeedback();
+  const { triggerSuccess, triggerMediumImpact } = useHapticFeedback();
   const scale = useRef(new Animated.Value(1)).current;
 
   // Animation for smooth color transitions
@@ -56,6 +56,9 @@ const StickyCreateBarComponent = ({
   const previousColorRef = useRef<string>(
     selectedColor ?? DEFAULT_BUTTON_COLOR
   );
+
+  // V11: Track previous disabled state for enable animation
+  const wasDisabled = useRef(disabled);
 
   // Animate color transitions when selectedColor changes
   useEffect(() => {
@@ -79,6 +82,31 @@ const StickyCreateBarComponent = ({
       previousColorRef.current = currentColor;
     }
   }, [selectedColor, colorOpacity]);
+
+  // V11: Bounce animation + haptic when button becomes enabled
+  useEffect(() => {
+    if (wasDisabled.current && !disabled) {
+      // Button just became enabled - play bounce animation + haptic
+      // V11 Task 8: Medium impact haptic for button enable
+      triggerMediumImpact();
+
+      Animated.sequence([
+        Animated.timing(scale, {
+          duration: 100,
+          easing: Motion.easing.outEase,
+          toValue: 1.02,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          duration: 100,
+          easing: Motion.easing.inEase,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+    wasDisabled.current = disabled;
+  }, [disabled, scale, triggerMediumImpact]);
 
   const bottom = useMemo(() => {
     // Keep bar above keyboard if visible; otherwise rest on safe area
@@ -158,9 +186,14 @@ const StickyCreateBarComponent = ({
             style={{ opacity: colorOpacity, transform: [{ scale }] }}
           >
             <Pressable
-              accessibilityLabel={STRINGS.CREATE_HABIT.createAction}
+              accessibilityLabel={
+                disabled
+                  ? 'Create habit, disabled. Enter at least 2 characters.'
+                  : STRINGS.CREATE_HABIT.createAction
+              }
               accessibilityRole='button'
               accessibilityState={{ disabled }}
+              accessibilityHint={disabled ? 'Enter a habit name to enable' : 'Tap to create your new habit'}
               disabled={disabled}
               onPress={handlePress}
               onPressIn={handlePressIn}
