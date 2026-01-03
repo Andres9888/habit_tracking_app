@@ -79,7 +79,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             showsVerticalScrollIndicator={false}
             onScroll={template.handleMainScroll}
           >
-            {/* V9 Layout: Name input first (hero position), no QuickPicks */}
+            {/* V11: Progressive spacing - Input (mb-3), Emojis (mb-4), Colors (mb-5), Reminders (mb-6) */}
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
             >
