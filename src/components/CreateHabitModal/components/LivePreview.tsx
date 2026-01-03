@@ -34,12 +34,22 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
   const displayName = habitName.trim() || 'Your new habit';
   const displayColor = color || '#10b981'; // emerald-500 default
 
+  // V11 Task 8: Accessibility label for VoiceOver
+  const accessibilityLabel = `Preview: ${displayEmoji} ${displayName}`;
+
   return (
-    <View className='mb-3 mt-3 flex-row items-center rounded-2xl bg-white p-3 shadow-sm'>
+    <View
+      accessible
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole='text'
+      accessibilityHint='This shows how your habit will appear in the list'
+      className='mb-3 mt-3 flex-row items-center rounded-2xl bg-white p-3 shadow-sm'
+    >
       {/* Emoji Icon with Color Background */}
       <View
         className='h-10 w-10 items-center justify-center rounded-xl'
         style={{ backgroundColor: displayColor }}
+        accessible={false}
       >
         <Text className='text-2xl'>{displayEmoji}</Text>
       </View>
@@ -49,6 +59,7 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
         className='ml-3 flex-1 text-[15px] font-medium text-stone-700'
         numberOfLines={1}
         ellipsizeMode='tail'
+        accessible={false}
       >
         {displayName}
       </Text>
