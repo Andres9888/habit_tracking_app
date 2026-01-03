@@ -835,7 +835,7 @@ const FEATURES = {
   - Warning state at 30 chars ✓
   - Error state at 40 chars ✓
   - Shake animation when exceeding max ✓
-- [ ] Write unit tests for validation logic
+- [x] Write unit tests for validation logic ✓
 
 **Files to modify**:
 
@@ -855,6 +855,13 @@ const FEATURES = {
 - Shake animation implemented using react-native-reanimated for smooth 60fps performance
 - Input border turns red when character limit (40) exceeded, providing clear visual feedback
 - All components use existing haptic feedback hooks for tactile responses
+- Comprehensive V11 unit tests added in `HabitNameField.v11.test.tsx`:
+  - 40+ test cases covering counter visibility thresholds (0-20, 21+)
+  - Color state transitions (normal/warning/error at 30/40 char thresholds)
+  - Shake animation trigger verification
+  - Accessibility label validation
+  - Edge cases: emoji handling, whitespace, rapid typing, threshold crossings
+  - Button validation integration tests (2+ character requirement)
 
 ---
 
