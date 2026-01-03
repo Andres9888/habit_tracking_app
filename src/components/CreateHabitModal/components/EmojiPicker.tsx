@@ -39,18 +39,24 @@ interface EmojiChipProps {
 
 /**
  * Individual emoji chip with press animation and green ring when selected
+ * V11 Spec: Scale 1.0 → 1.15 → 1.0 with spring animation (200ms total)
  */
 const EmojiChipComponent = ({ emoji, isSelected, onPress }: EmojiChipProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
+    'worklet';
+    // Quick press down to 96% scale
     scale.value = withTiming(0.96, { duration: 50 });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
+    'worklet';
+    // V11 Spec: Celebratory scale 1.0 → 1.15 → 1.0 with spring
+    // Total duration: ~200ms for snappy feel
     scale.value = withSequence(
-      withSpring(1.1, { damping: 10, stiffness: 400 }),
-      withSpring(1, { damping: 15, stiffness: 300 })
+      withTiming(1.15, { duration: 100 }),
+      withSpring(1, { damping: 3, stiffness: 300 })
     );
   }, [scale]);
 
