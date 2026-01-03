@@ -205,7 +205,7 @@ const ColorPickerContent = ({
   onCustomPress,
 }: ColorPickerSectionProps) => {
   return (
-    <View className='mb-6'>
+    <View className='mb-5'>
       <Text
         accessibilityRole='text'
         className='mb-3 text-[13px] font-semibold uppercase text-stone-500'

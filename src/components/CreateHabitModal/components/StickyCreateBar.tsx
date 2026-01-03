@@ -57,6 +57,9 @@ const StickyCreateBarComponent = ({
     selectedColor ?? DEFAULT_BUTTON_COLOR
   );
 
+  // V11: Track previous disabled state for enable animation
+  const wasDisabled = useRef(disabled);
+
   // Animate color transitions when selectedColor changes
   useEffect(() => {
     const currentColor = selectedColor ?? DEFAULT_BUTTON_COLOR;
@@ -79,6 +82,28 @@ const StickyCreateBarComponent = ({
       previousColorRef.current = currentColor;
     }
   }, [selectedColor, colorOpacity]);
+
+  // V11: Bounce animation when button becomes enabled
+  useEffect(() => {
+    if (wasDisabled.current && !disabled) {
+      // Button just became enabled - play bounce animation
+      Animated.sequence([
+        Animated.timing(scale, {
+          duration: 100,
+          easing: Motion.easing.outEase,
+          toValue: 1.02,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          duration: 100,
+          easing: Motion.easing.inEase,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+    wasDisabled.current = disabled;
+  }, [disabled, scale]);
 
   const bottom = useMemo(() => {
     // Keep bar above keyboard if visible; otherwise rest on safe area

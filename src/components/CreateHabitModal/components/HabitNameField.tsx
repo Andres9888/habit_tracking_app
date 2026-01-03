@@ -17,6 +17,9 @@ interface HabitNameFieldProps {
 }
 
 const MAX_LENGTH = 50;
+const MAX_CHARS = 40; // V11: Soft limit for character counter
+const WARNING_THRESHOLD = 30;
+const SHOW_THRESHOLD = 20;
 
 const HabitNameFieldComponent = ({
   value,
@@ -24,13 +27,18 @@ const HabitNameFieldComponent = ({
   autoFocus,
 }: HabitNameFieldProps) => {
   const charCount = value.length;
-  const isNearLimit = charCount > 40;
+  const showCounter = charCount > SHOW_THRESHOLD;
+  const isWarning = charCount > WARNING_THRESHOLD;
+  const isError = charCount > MAX_CHARS;
   const [isFocused, setIsFocused] = useState(false);
   const { triggerWarning } = useHapticFeedback();
   const previousCount = useRef(charCount);
 
   // Animation values for focus state
   const focusProgress = useSharedValue(0);
+
+  // V11: Shake animation for character limit
+  const shakeTranslate = useSharedValue(0);
 
   // Update focus animation
   useEffect(() => {
@@ -42,45 +50,51 @@ const HabitNameFieldComponent = ({
     borderColor:
       focusProgress.value > 0.5
         ? '#10B981' // primary.500 - emerald
-        : '#e7e5e4',
+        : isError
+          ? '#EF4444' // red-500
+          : '#e7e5e4', // stone-200
     borderWidth: 2,
     elevation: focusProgress.value * 2,
-    // stone-200
     shadowColor: '#10B981',
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: focusProgress.value * 0.1,
     shadowRadius: focusProgress.value * 3,
+    transform: [{ translateX: shakeTranslate.value }],
   }));
 
-  // Trigger haptic when hitting character limit
+  // V11: Trigger haptic and shake when exceeding MAX_CHARS
   useEffect(() => {
-    if (charCount === 50 && previousCount.current < 50) {
+    // Trigger haptic at hard limit (50)
+    if (charCount === MAX_LENGTH && previousCount.current < MAX_LENGTH) {
       triggerWarning();
     }
+    // V11: Shake animation when exceeding soft limit (40)
+    if (charCount > MAX_CHARS && previousCount.current <= MAX_CHARS) {
+      triggerWarning();
+      // Shake animation: 10px right, 10px left, 10px right, center
+      shakeTranslate.value = withTiming(10, { duration: 50 }, () => {
+        shakeTranslate.value = withTiming(-10, { duration: 50 }, () => {
+          shakeTranslate.value = withTiming(10, { duration: 50 }, () => {
+            shakeTranslate.value = withTiming(0, { duration: 50 });
+          });
+        });
+      });
+    }
     previousCount.current = charCount;
-  }, [charCount, triggerWarning]);
+  }, [charCount, triggerWarning, shakeTranslate]);
 
   const handleFocus = useCallback(() => setIsFocused(true), []);
   const handleBlur = useCallback(() => setIsFocused(false), []);
 
+  // V11: Determine counter color based on character count
+  const counterColor = isError
+    ? '#EF4444' // red-500
+    : isWarning
+      ? '#F59E0B' // amber-500
+      : '#78716c'; // stone-500
+
   return (
-    <View className='mb-6'>
-      <View className='mb-1 flex-row items-center justify-between'>
-        <Text
-          accessibilityRole='text'
-          className='text-[13px] font-semibold uppercase text-stone-500'
-          style={{ letterSpacing: 0.5 }}
-        >
-          {STRINGS.CREATE_HABIT.nameLabel}
-        </Text>
-        <Text
-          accessibilityLabel={`${charCount} of ${MAX_LENGTH} characters used${isNearLimit ? ', approaching limit' : ''}`}
-          accessibilityRole='text'
-          className={`text-xs ${isNearLimit ? 'text-amber-500' : 'text-stone-400'}`}
-        >
-          {charCount}/{MAX_LENGTH}
-        </Text>
-      </View>
+    <View className='mb-3'>
       <AnimatedTextInput
         blurOnSubmit
         accessibilityHint='Enter a name for your habit, up to 50 characters'
@@ -97,12 +111,18 @@ const HabitNameFieldComponent = ({
         onChangeText={onChange}
         onFocus={handleFocus}
       />
-      <Text
-        accessibilityRole='text'
-        className='mt-2 text-xs text-stone-400'
-      >
-        {STRINGS.CREATE_HABIT.nameHelper}
-      </Text>
+
+      {/* V11: Character counter - only show when > 20 chars */}
+      {showCounter && (
+        <Text
+          accessibilityLabel={`${charCount} of ${MAX_CHARS} characters used${isWarning ? ', approaching limit' : ''}${isError ? ', limit exceeded' : ''}`}
+          accessibilityRole='text'
+          className='mt-1 text-center text-xs'
+          style={{ color: counterColor }}
+        >
+          {charCount}/{MAX_CHARS}
+        </Text>
+      )}
     </View>
   );
 };

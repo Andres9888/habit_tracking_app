@@ -143,7 +143,7 @@ const EmojiPickerComponent = ({
   );
 
   return (
-    <View className='mb-6'>
+    <View className='mb-4'>
       {/* Section label */}
       <Text
         accessibilityRole='text'

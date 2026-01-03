@@ -131,7 +131,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             onPress={template.handleReminderPress}
           />
           <StickyCreateBar
-            disabled={form.habitName.trim().length === 0}
+            disabled={form.habitName.trim().length < 2}
             selectedColor={form.selectedColor}
             onPress={handleCreate}
           />
