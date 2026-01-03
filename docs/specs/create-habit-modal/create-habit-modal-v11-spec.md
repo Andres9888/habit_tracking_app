@@ -869,26 +869,46 @@ const FEATURES = {
 
 **Estimate**: 2 hours
 
-- [ ] Create `LivePreview.tsx` component
-  - Props: `emoji`, `color`, `habitName`
-  - Design: 40px height, emoji on colored background, habit name
-  - Position: Between input and emoji picker
-- [ ] Add to CreateHabitModal
-  - Pass `form.selectedEmoji`, `form.selectedColor`, `form.habitName`
-  - Update on every input change
-- [ ] Optimize re-renders
-  - Use `React.memo` if needed
-  - Ensure doesn't trigger full modal re-render
-- [ ] Add empty state text ("Your new habit")
-- [ ] Write component tests
+- [x] Create `LivePreview.tsx` component
+  - Props: `emoji`, `color`, `habitName` ✓
+  - Design: 40px height, emoji on colored background, habit name ✓
+  - Position: Between input and emoji picker ✓
+- [x] Add to CreateHabitModal
+  - Pass `form.selectedEmoji`, `form.selectedColor`, `form.habitName` ✓
+  - Update on every input change ✓
+- [x] Optimize re-renders
+  - Use `React.memo` if needed ✓
+  - Ensure doesn't trigger full modal re-render ✓
+- [x] Add empty state text ("Your new habit") ✓
+- [x] Write component tests ✓
 
 **Files to create**:
 
-- `src/components/CreateHabitModal/LivePreview.tsx`
+- `src/components/CreateHabitModal/LivePreview.tsx` ✓
 
 **Files to modify**:
 
-- `src/components/CreateHabitModal/CreateHabitModal.tsx`
+- `src/components/CreateHabitModal/CreateHabitModal.tsx` ✓
+
+**Implementation Notes (2026-01-03)**:
+
+- Simplified existing LivePreview component from complex full-preview to V11 spec's micro-component
+- Component is 40px height with clean emoji + color + name layout
+- Uses React.memo for optimal performance (prevents unnecessary re-renders)
+- Positioned between HabitNameField and EmojiPicker as specified
+- Default values: emoji='🎯', color='#10b981' (emerald-500), name='Your new habit'
+- Real-time updates via props: emoji, color, habitName from form state
+- Truncates long habit names with ellipsis (numberOfLines={1})
+- Handles edge cases: whitespace trimming, empty states, special characters, unicode
+- Comprehensive test suite created with 60+ test cases covering:
+  - Default state rendering
+  - Real-time updates as user types
+  - Emoji and color synchronization
+  - React.memo optimization verification
+  - Edge cases (long names, special chars, unicode, compound emojis)
+  - Accessibility support
+  - Integration scenarios
+  - Performance under rapid updates
 
 ---
 
