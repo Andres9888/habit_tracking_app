@@ -9,6 +9,7 @@ import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
 import { HabitNameField } from './components/HabitNameField';
+import { LivePreview } from './components/LivePreview';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
@@ -88,6 +89,12 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
                 autoFocus={visible && !isEditMode}
                 value={form.habitName}
                 onChange={handleNameChange}
+              />
+              {/* V11: Live Preview positioned between input and emoji picker */}
+              <LivePreview
+                emoji={form.selectedEmoji}
+                color={form.selectedColor}
+                habitName={form.habitName}
               />
             </Animated.View>
             <Animated.View
