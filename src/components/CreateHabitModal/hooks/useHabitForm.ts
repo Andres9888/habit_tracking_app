@@ -11,6 +11,7 @@ import {
   getReminderTimeForOption,
   REMINDER_OPTIONS,
 } from '../components/ReminderSelector';
+import { getSmartReminderDefault } from '../../../utils/reminderDefaults';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -135,6 +136,9 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   }, [habitToEdit, parsed]);
 
   const resetForm = useCallback(() => {
+    // V11: Use time-aware smart default for reminder selection
+    const smartDefault = getSmartReminderDefault();
+
     setHabitName('');
     setSelectedEmoji(null);
     setSelectedColor(DEFAULT_COLOR);
@@ -145,7 +149,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setReminderSound(DEFAULT_SOUND);
     setFrequency('');
     setDayPhase(null);
-    setReminderOptionState('none');
+    setReminderOptionState(smartDefault);
   }, []);
 
   return {
