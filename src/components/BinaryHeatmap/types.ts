@@ -108,14 +108,8 @@ export interface BinaryHeatmapProps {
   /** Current streak count */
   currentStreak: number;
 
-  /** Initial time range to display */
-  timeRange?: TimeRange;
-
   /** Callback when a day cell is tapped */
   onDayPress?: (date: string, completed: boolean) => void;
-
-  /** Callback when time range changes */
-  onTimeRangeChange?: (range: TimeRange) => void;
 }
 
 /**

@@ -22,6 +22,7 @@ import React, { memo, useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
 import type { BinaryHeatmapGridProps, BinaryDay } from './types';
+// Force Metro rebuild - timestamp: 2025-12-30T22:00
 import { BinaryCell } from './BinaryCell';
 import { MonthLabelsRow } from './MonthLabelsRow';
 import {
@@ -47,6 +48,7 @@ interface GridRowProps {
   onCellPress: (date: string, completed: boolean) => void;
 }
 
+// Inline cell rendering to bypass Metro caching issues with BinaryCell
 const GridRow = memo(function GridRow({
   dayIndex,
   row,
@@ -56,26 +58,37 @@ const GridRow = memo(function GridRow({
   return (
     <View accessibilityRole='row' style={styles.gridRow}>
       {row.map((day, weekIndex) => {
-        // Calculate the animation delay for staggered effect
-        // Animate left-to-right, top-to-bottom
-        const animationIndex = calculateCellAnimationDelay(
-          weekIndex,
-          dayIndex,
-          1 // Returns the linear index, we multiply by stagger delay in BinaryCell
-        );
+        // Determine background color inline
+        let bgColor = COLORS.CELL_EMPTY;
+        if (day === null) {
+          bgColor = 'transparent';
+        } else if (day.isBeforeCreation) {
+          bgColor = COLORS.CELL_BEFORE_CREATION;
+        } else if (day.isFuture) {
+          bgColor = COLORS.CELL_FUTURE;
+        } else if (day.completed) {
+          bgColor = habitColor;
+        }
 
         return (
           <View
             key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
-            style={styles.cellWrapper}
-          >
-            <BinaryCell
-              day={day}
-              habitColor={habitColor}
-              index={animationIndex}
-              onPress={onCellPress}
-            />
-          </View>
+            style={[
+              styles.cellWrapper,
+              {
+                width: CELL_SIZE,
+                height: CELL_SIZE,
+                borderRadius: 2,
+                backgroundColor: bgColor,
+                opacity: day?.isFuture ? 0.4 : 1,
+              },
+              // Today ring
+              day?.isToday && {
+                borderWidth: 2,
+                borderColor: habitColor,
+              },
+            ]}
+          />
         );
       })}
     </View>

@@ -4,8 +4,8 @@
  *
  * Features:
  * - Hero section with icon, name, and Quick Complete button (sticky)
- * - BinaryHeatmap - GitHub-style binary (on/off) calendar with 3m/6m/1y toggle
- * - Instant tap-to-toggle for marking completions
+ * - HabitStrengthHistory - Strength metrics, chart, and historical comparison
+ * - MonthlyCalendarGrid - Monthly calendar view with tap-to-toggle
  * - Stats summary with streak badges
  */
 
@@ -30,8 +30,8 @@ import {
 import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { BinaryHeatmap, StatsRow } from '../components/BinaryHeatmap';
-import { HabitStrengthHistory } from '../components/HabitStrengthHistory';
+import { MonthlyCalendarGrid } from '../components/BinaryHeatmap';
+import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
@@ -943,32 +943,25 @@ function ProgressTabContent({
         lastWeekCompleted={lastWeekCompleted}
       />
 
-      {/* Binary Heatmap - GitHub-style visual history of completions */}
-      <BinaryHeatmap
-        habitId={habit._id}
-        completedDates={completedDates}
-        habitCreatedAt={habitCreatedAt}
-        habitColor={habit.iconColor ?? '#10b981'}
-        currentStreak={habit.currentStreak ?? 0}
-        onDayPress={handleDayPress}
-      />
-
-      {/* Stats Row - frequency and streak badges */}
-      <StatsRow
-        frequency="Daily"
-        currentStreak={habit.currentStreak ?? 0}
-        habitColor={habit.iconColor ?? '#10b981'}
-      />
-
-      {/* Habit Strength History - replaces ProgressSectionConsolidated */}
+      {/* Habit Strength Section - strength ring, chart, and stats */}
       {habitCreatedAt && (
-        <HabitStrengthHistory
+        <HabitStrengthSection
           habitId={habit._id}
           completedDates={completedDates}
           habitCreatedAt={habitCreatedAt}
           habitColor={habit.iconColor}
+          habitStrength={habit.strength}
         />
       )}
+
+      {/* Monthly Calendar Grid - detailed month view with day cells */}
+      <MonthlyCalendarGrid
+        habitId={habit._id}
+        completedDates={completedDates}
+        habitCreatedAt={habitCreatedAt}
+        habitColor={habit.iconColor ?? '#10b981'}
+        onDayPress={handleDayPress}
+      />
     </View>
   );
 }
@@ -2187,20 +2180,25 @@ export default function HabitDetailScreen({
           contentContainerClassName="p-4 pb-8"
           showsVerticalScrollIndicator={false}
         >
-          <BinaryHeatmap
+          {/* Habit Strength Section - strength ring, chart, and stats */}
+          {habitCreatedAt && (
+            <HabitStrengthSection
+              habitId={habit._id}
+              completedDates={completedDates}
+              habitCreatedAt={habitCreatedAt}
+              habitColor={habit.iconColor}
+              habitStrength={habit.strength}
+            />
+          )}
+
+          <MonthlyCalendarGrid
             habitId={habit._id}
             completedDates={completedDates}
             habitCreatedAt={habitCreatedAt}
             habitColor={habit.iconColor ?? '#10b981'}
-            currentStreak={habit.currentStreak ?? 0}
             onDayPress={(_date, _completed) => {
               // Future: Could open day detail or allow editing past dates
             }}
-          />
-          <StatsRow
-            frequency="Daily"
-            currentStreak={habit.currentStreak ?? 0}
-            habitColor={habit.iconColor ?? '#10b981'}
           />
         </ScrollView>
       </View>

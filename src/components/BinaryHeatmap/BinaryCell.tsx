@@ -109,25 +109,18 @@ export const BinaryCell = memo(function BinaryCell({
   // Get the background color based on state
   const getBackgroundColor = (): string => {
     switch (cellState) {
-      case 'done': {
+      case 'done':
         return habitColor;
-      }
-      case 'today': {
-        // Today shows the habit color if completed, otherwise transparent for ring effect
+      case 'today':
         return day.completed ? habitColor : 'transparent';
-      }
-      case 'missed': {
+      case 'missed':
         return COLORS.CELL_EMPTY;
-      }
-      case 'future': {
+      case 'future':
         return COLORS.CELL_FUTURE;
-      }
-      case 'beforeCreation': {
+      case 'beforeCreation':
         return COLORS.CELL_BEFORE_CREATION;
-      }
-      default: {
+      default:
         return COLORS.CELL_EMPTY;
-      }
     }
   };
 
@@ -153,48 +146,29 @@ export const BinaryCell = memo(function BinaryCell({
   }
 
   // Interactive cells (done, missed, today)
-  // Create dynamic style function for focus states on web
-  const getPressableStyle = ({ focused }: { focused: boolean }) => [
-    animatedStyle,
-    styles.cell,
-    Platform.OS === 'web' && styles.webHover,
-    // Add focus ring for keyboard navigation on web
-    Platform.OS === 'web' && focused && styles.webFocus,
-  ];
+  // Simplified rendering - apply background directly to avoid nested View issues
+  const bgColor = getBackgroundColor();
 
   return (
-    <AnimatedPressable
+    <Animated.View
       accessible
       accessibilityHint={day.isToday ? 'Today' : 'Tap to toggle completion'}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
       accessibilityState={{ selected: day.completed }}
       entering={fadeInAnimation}
-      style={getPressableStyle}
-      onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
-      <View
-        style={[
-          styles.cellInner,
-          { backgroundColor: getBackgroundColor() },
-          // Today ring effect (clean inset border, no pulse)
-          cellState === 'today' &&
-            !day.completed && {
-              backgroundColor: COLORS.CARD_BACKGROUND,
-              borderColor: habitColor,
-              borderWidth: COLORS.TODAY_RING_WIDTH,
-            },
-          // Today completed - show habit color with ring
-          cellState === 'today' &&
-            day.completed && {
-              borderColor: habitColor,
-              borderWidth: COLORS.TODAY_RING_WIDTH,
-            },
-        ]}
-      />
-    </AnimatedPressable>
+      style={[
+        styles.cell,
+        styles.cellInner,
+        { backgroundColor: bgColor },
+        // Today ring effect
+        cellState === 'today' && {
+          borderColor: habitColor,
+          borderWidth: COLORS.TODAY_RING_WIDTH,
+          backgroundColor: day.completed ? bgColor : COLORS.CARD_BACKGROUND,
+        },
+      ]}
+    />
   );
 });
 
@@ -218,7 +192,6 @@ const styles = StyleSheet.create({
     borderColor: FOCUS.RING_COLOR,
     borderRadius: CELL_BORDER_RADIUS + FOCUS.RING_OFFSET,
     borderWidth: FOCUS.RING_WIDTH,
-    // Use outline instead of border on web for better focus visibility
     outlineColor: FOCUS.RING_COLOR,
     outlineOffset: FOCUS.RING_OFFSET,
     outlineStyle: 'solid',

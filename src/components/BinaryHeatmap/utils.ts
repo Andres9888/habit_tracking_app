@@ -102,9 +102,14 @@ export function generateBinaryGrid(
     const isInRange = iterDate >= startDate && iterDate <= endDate;
     const isToday = dateStr === todayStr;
     const isFuture = isAfter(iterDate, today) && !isToday;
+    // A day is "before creation" ONLY if:
+    // 1. It's before the habit creation date AND
+    // 2. There's no completion data for that date (allows backdated entries)
+    const hasCompletionData = completedDates.has(dateStr);
     const isBeforeCreation = habitCreatedDate
       ? isBefore(iterDate, habitCreatedDate) &&
-        !isSameDay(iterDate, habitCreatedDate)
+        !isSameDay(iterDate, habitCreatedDate) &&
+        !hasCompletionData
       : false;
 
     // Track month changes for labels (only for dates in range)

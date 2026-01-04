@@ -6,7 +6,7 @@
  */
 
 // Component exports
-export { BinaryHeatmap } from './BinaryHeatmap';
+export { BinaryHeatmap } from './BinaryHeatmapNew';
 export { BinaryHeatmapGrid } from './BinaryHeatmapGrid';
 export { BinaryCell } from './BinaryCell';
 export { TimeRangeToggle } from './TimeRangeToggle';
@@ -14,6 +14,7 @@ export { HeatmapLegend } from './HeatmapLegend';
 export { MonthLabelsRow } from './MonthLabelsRow';
 export { HeatmapTooltip } from './HeatmapTooltip';
 export { StatsRow } from './StatsRow';
+export { MonthlyCalendarGrid } from './MonthlyCalendarGrid';
 
 // Type exports
 export type {
