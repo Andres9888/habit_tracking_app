@@ -733,6 +733,7 @@ export function HabitsList({
       <DraggableFlatList
         activationDistance={isReorderingEnabled ? 12 : 9999}
         contentContainerStyle={{
+          flexGrow: 1,
           paddingBottom: contentPadding.paddingBottom,
           paddingHorizontal: contentPadding.paddingHorizontal,
           paddingTop: 0,

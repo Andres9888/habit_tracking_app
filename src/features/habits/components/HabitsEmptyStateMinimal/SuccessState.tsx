@@ -460,7 +460,7 @@ export function SuccessState({
       accessibilityHint='Skip the celebration and view your habit list'
       accessibilityLabel='Tap to continue to your habits'
       accessibilityRole='button'
-      style={{ flex: 1 }}
+      style={{ flex: 1, width: '100%' }}
       onPress={handleTapToSkip}
     >
       <Animated.View
@@ -470,6 +470,7 @@ export function SuccessState({
             alignItems: 'center',
             flex: 1,
             justifyContent: 'center',
+            width: '100%',
           },
         ]}
       >
