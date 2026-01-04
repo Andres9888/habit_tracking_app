@@ -16,6 +16,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useKeyboardVisible } from '../../../../hooks/useKeyboardVisible';
@@ -53,6 +54,18 @@ export function HabitsEmptyStateMinimal({
   const { triggerSuccess } = useHapticFeedback();
   const { isKeyboardVisible } = useKeyboardVisible();
   const shouldReduceMotion = useReducedMotion();
+  const insets = useSafeAreaInsets();
+
+  // Extract bottom inset for use in worklet (capture at mount)
+  const bottomInset = insets.bottom;
+
+  // Debug: Log the inset value
+  console.log(
+    '[HabitsEmptyStateMinimal] Safe area bottom inset:',
+    bottomInset,
+    'Keyboard visible:',
+    isKeyboardVisible
+  );
 
   // Timing config for keyboard-aware transitions
   const timingConfig = {
@@ -63,6 +76,10 @@ export function HabitsEmptyStateMinimal({
   // Animated styles for keyboard-aware compact mode
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     justifyContent: isKeyboardVisible ? 'flex-start' : 'center',
+    paddingBottom: withTiming(
+      isKeyboardVisible ? 0 : bottomInset + 20, // +20 for breathing room above safe area
+      timingConfig
+    ),
     paddingTop: withTiming(
       isKeyboardVisible ? KEYBOARD_LAYOUT.topPadding : 0,
       timingConfig
@@ -235,6 +252,7 @@ export function HabitsEmptyStateMinimal({
         {
           alignItems: 'center',
           flex: 1,
+          minHeight: '100%',
           paddingHorizontal: 24,
         },
         containerAnimatedStyle,
