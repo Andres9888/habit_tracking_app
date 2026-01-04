@@ -87,12 +87,18 @@ describe('HabitsEmptyStateMinimal', () => {
       expect(getByText(COPY.ctaButton)).toBeDefined();
     });
 
-    it('should render secondary links', () => {
-      const { getByText } = render(
+    it('should render inline hint with navigation links', () => {
+      const { getByText, getByLabelText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
-      expect(getByText(COPY.browseTemplates)).toBeDefined();
-      expect(getByText(COPY.createCustom)).toBeDefined();
+      // Check for inline hint base text
+      expect(getByText('or explore')).toBeDefined();
+      expect(getByText('templates')).toBeDefined();
+      expect(getByText('custom options')).toBeDefined();
+
+      // Check for accessible links
+      expect(getByLabelText('Browse habit templates')).toBeDefined();
+      expect(getByLabelText('Create custom habit')).toBeDefined();
     });
 
     it('should render all 6 suggestion chips', () => {
@@ -353,22 +359,24 @@ describe('HabitsEmptyStateMinimal', () => {
   });
 
   describe('Secondary Links', () => {
-    it('should call openTemplatesScreen when "Browse templates" is pressed', () => {
-      const { getByText } = render(
+    it('should call openTemplatesScreen when "Browse templates" link is pressed', () => {
+      const { getByLabelText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      fireEvent.press(getByText(COPY.browseTemplates));
+      // InlineHint uses accessibility label instead of visible text
+      fireEvent.press(getByLabelText('Browse habit templates'));
 
       expect(defaultProps.openTemplatesScreen).toHaveBeenCalled();
     });
 
-    it('should call openCreateHabitScreen when "Create custom habit" is pressed', () => {
-      const { getByText } = render(
+    it('should call openCreateHabitScreen when "Create custom habit" link is pressed', () => {
+      const { getByLabelText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      fireEvent.press(getByText(COPY.createCustom));
+      // InlineHint uses accessibility label instead of visible text
+      fireEvent.press(getByLabelText('Create custom habit'));
 
       expect(defaultProps.openCreateHabitScreen).toHaveBeenCalled();
     });
@@ -655,15 +663,20 @@ describe('HabitsEmptyStateMinimal', () => {
       });
     });
 
-    it('should render secondary links when keyboard is hidden', () => {
+    it('should render inline hint when keyboard is hidden', () => {
       mockKeyboardVisible = false;
 
-      const { getByText } = render(
+      const { getByText, getByLabelText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      expect(getByText(COPY.browseTemplates)).toBeDefined();
-      expect(getByText(COPY.createCustom)).toBeDefined();
+      // Check for inline hint base text
+      expect(getByText('or explore')).toBeDefined();
+      expect(getByText('templates')).toBeDefined();
+
+      // Check for accessible links
+      expect(getByLabelText('Browse habit templates')).toBeDefined();
+      expect(getByLabelText('Create custom habit')).toBeDefined();
     });
 
     it('should hide chips from accessibility tree when keyboard is visible', () => {
@@ -680,7 +693,7 @@ describe('HabitsEmptyStateMinimal', () => {
       expect(true).toBe(true); // Layout changes are applied via reanimated
     });
 
-    it('should hide secondary links from accessibility tree when keyboard is visible', () => {
+    it('should hide inline hint from accessibility tree when keyboard is visible', () => {
       mockKeyboardVisible = true;
       mockKeyboardHeight = 300;
 
@@ -688,14 +701,14 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      // Secondary links wrapper and chips wrapper should both have accessibility hidden when keyboard visible
-      // We expect multiple elements (chips + secondary links) to be hidden from accessibility tree
+      // Inline hint wrapper and chips wrapper should both have accessibility hidden when keyboard visible
+      // We expect multiple elements (chips + inline hint) to be hidden from accessibility tree
       const hiddenWrappers = UNSAFE_getAllByProps({
         accessibilityElementsHidden: true,
         importantForAccessibility: 'no-hide-descendants',
       });
 
-      // At least 2 wrappers (chips and secondary links) should be hidden from accessibility
+      // At least 2 wrappers (chips and inline hint) should be hidden from accessibility
       expect(hiddenWrappers.length).toBeGreaterThanOrEqual(2);
     });
 
