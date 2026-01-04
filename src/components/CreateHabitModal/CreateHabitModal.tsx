@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -13,18 +13,17 @@ import TemplateScienceModal from '../TemplateScienceModal';
 import { HABIT_COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
-import { ModalHeader } from './components/ModalHeader';
+import { ModalHeaderV1 } from './components/ModalHeaderV1';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
-import { HabitNameField } from './components/HabitNameField';
-import { LivePreview } from './components/LivePreview';
-import { EmojiPicker } from './components/EmojiPicker';
-import { ColorPickerSection } from './components/ColorPickerSection';
+import { BasicInfoCard } from './components/BasicInfoCard';
+import { AppearanceCard } from './components/AppearanceCard';
+import { ScheduleCard } from './components/ScheduleCard';
+import { LivePreviewCard } from './components/LivePreviewCard';
 import { StickyCreateBar } from './components/StickyCreateBar';
-import {
-  ReminderSelector,
-  type ReminderOption,
-} from './components/ReminderSelector';
+import { useFormCompletion } from './hooks/useFormCompletion';
+import { formatReminderTime } from '../../utils/notifications';
 // V9: TemplatesLinkSection removed from modal for focused flow (component retained for potential future use)
+// Cards V1: Switched to card-based components with progress tracking
 
 // Stagger delay between section animations (ms)
 const ANIMATION_STAGGER_DELAY = 50;
@@ -38,6 +37,20 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, template, science, handleCreate } =
     useCreateHabitModal(props);
+
+  // Cards V1: Selected days state (Sun-Sat boolean array)
+  // Default: Daily (all days selected)
+  const [selectedDays, setSelectedDays] = useState<boolean[]>([
+    true, true, true, true, true, true, true,
+  ]);
+
+  // Cards V1: Form completion tracking
+  const completion = useFormCompletion(
+    form.habitName,
+    form.selectedEmoji,
+    form.selectedColor,
+    selectedDays
+  );
 
   // V11: Swipe dismissal gesture state
   const translateY = useSharedValue(0);
@@ -79,6 +92,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
     transform: [{ translateY: translateY.value }],
   }));
 
+  // Cards V1: Callback handlers for card components
   const handleNameChange = useCallback(
     (value: string) => {
       form.setHabitName(value);
@@ -100,11 +114,32 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
     [form]
   );
 
-  const handleReminderSelect = useCallback(
-    (option: ReminderOption) => {
-      form.setReminderOption(option);
+  const handleTimeOfDayChange = useCallback(
+    (phase: typeof form.dayPhase) => {
+      form.setDayPhase(phase);
     },
     [form]
+  );
+
+  const handleReminderToggle = useCallback(
+    (enabled: boolean) => {
+      form.setRemindersEnabled(enabled);
+    },
+    [form]
+  );
+
+  const handleReminderTimePress = useCallback(() => {
+    form.setShowTimePicker(true);
+  }, [form]);
+
+  const handleFrequencyChange = useCallback((days: boolean[]) => {
+    setSelectedDays(days);
+  }, []);
+
+  // Format reminder time for display
+  const reminderTimeString = useMemo(
+    () => formatReminderTime(form.reminderTime),
+    [form.reminderTime]
   );
 
   return (
@@ -120,11 +155,11 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             style={animatedStyle}
             className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
           >
-            <ModalHeader
-              habitName={form.habitName}
-              isEditMode={isEditMode}
+            {/* Cards V1: New header with progress tracking */}
+            <ModalHeaderV1
               onClose={onClose}
-              onSave={handleCreate}
+              completedSections={completion.completedCount}
+              totalSections={completion.totalCount}
             />
             <ScrollView
               className='flex-1 px-4'
@@ -134,65 +169,80 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               showsVerticalScrollIndicator={false}
               onScroll={template.handleMainScroll}
             >
-            {/* V11: Progressive spacing - Input (mb-3), Emojis (mb-4), Colors (mb-5), Reminders (mb-6) */}
+            {/* Cards V1: Live Preview Card - shows real-time habit preview */}
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
             >
-              <View className='mt-4' />
-              <HabitNameField
-                autoFocus={visible && !isEditMode}
-                value={form.habitName}
-                onChange={handleNameChange}
-              />
-              {/* V11: Live Preview positioned between input and emoji picker */}
-              <LivePreview
+              <LivePreviewCard
+                habitName={form.habitName}
                 emoji={form.selectedEmoji}
                 color={form.selectedColor}
-                habitName={form.habitName}
+                timeOfDay={form.dayPhase}
+                selectedDays={selectedDays}
+                reminderEnabled={form.remindersEnabled}
+                reminderTime={reminderTimeString}
               />
             </Animated.View>
+
+            {/* Cards V1: Basic Info Card - habit name input */}
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(
                 ANIMATION_STAGGER_DELAY
               )}
             >
-              <EmojiPicker
+              <BasicInfoCard
                 habitName={form.habitName}
-                selectedEmoji={form.selectedEmoji}
-                onSelect={handleEmojiSelect}
+                onHabitNameChange={handleNameChange}
+                isComplete={completion.basicInfoComplete}
+                autoFocus={visible && !isEditMode}
               />
             </Animated.View>
+
+            {/* Cards V1: Appearance Card - emoji and color selection */}
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(
                 ANIMATION_STAGGER_DELAY * 2
               )}
             >
-              <ColorPickerSection
-                colors={HABIT_COLORS}
+              <AppearanceCard
+                selectedEmoji={form.selectedEmoji}
                 selectedColor={form.selectedColor}
-                onCustomPress={form.openColorPicker}
-                onSelectColor={handleColorSelect}
+                habitName={form.habitName}
+                colors={HABIT_COLORS}
+                onEmojiChange={handleEmojiSelect}
+                onColorChange={handleColorSelect}
+                onCustomColorPress={form.openColorPicker}
+                isComplete={completion.appearanceComplete}
               />
             </Animated.View>
+
+            {/* Cards V1: Schedule Card - time, reminder, frequency */}
             <Animated.View
               entering={FadeInUp.duration(ANIMATION_DURATION).delay(
                 ANIMATION_STAGGER_DELAY * 3
               )}
             >
-              <ReminderSelector
-                selectedOption={form.reminderOption}
-                onSelectOption={handleReminderSelect}
+              <ScheduleCard
+                timeOfDay={form.dayPhase}
+                reminderEnabled={form.remindersEnabled}
+                reminderTime={reminderTimeString}
+                selectedDays={selectedDays}
+                onTimeOfDayChange={handleTimeOfDayChange}
+                onReminderToggle={handleReminderToggle}
+                onReminderTimePress={handleReminderTimePress}
+                onFrequencyChange={handleFrequencyChange}
+                isComplete={completion.scheduleComplete}
               />
             </Animated.View>
-            {/* V9: Templates Link Section removed for focused flow */}
           </ScrollView>
           <TemplateReminderPrompt
             bottomOffset={template.reminderBottomOffset}
             visible={template.shouldShowTemplateReminder}
             onPress={template.handleReminderPress}
           />
+          {/* Cards V1: Updated to use completion state instead of just habit name */}
           <StickyCreateBar
-            disabled={form.habitName.trim().length < 2}
+            disabled={!completion.isFormComplete}
             selectedColor={form.selectedColor}
             onPress={handleCreate}
           />
