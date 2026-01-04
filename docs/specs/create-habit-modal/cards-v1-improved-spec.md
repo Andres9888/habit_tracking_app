@@ -12,12 +12,14 @@
 This spec defines the implementation of an improved card-based Create Habit Modal interface featuring enhanced visual hierarchy, progress tracking, quick presets, and smart contextual hints. The design builds upon the existing V4 implementation while introducing significant UX improvements focused on reducing friction and providing clear completion feedback.
 
 ### Goals
+
 - **Reduce form completion friction** through intelligent presets and defaults
 - **Increase completion confidence** via real-time progress tracking and visual feedback
 - **Improve perceived intelligence** with contextual hints and smart suggestions
 - **Maintain accessibility** while enhancing visual polish
 
 ### Non-Goals
+
 - Template-based habit creation (future enhancement)
 - Multi-step wizard flow (covered in separate spec)
 - Reordering/customizing card order
@@ -27,18 +29,21 @@ This spec defines the implementation of an improved card-based Create Habit Moda
 ## 🎨 Design Philosophy
 
 ### Card-Based Information Architecture
+
 - **3 logical sections**: Basic Info, Appearance, Schedule
 - Each card groups related fields with clear visual boundaries
 - Icon headers provide instant visual categorization
 - Required vs Optional badges set clear expectations
 
 ### Progress Psychology
+
 - Leverages **Zeigarnik effect** (incomplete tasks create tension → motivation to complete)
 - Visual completion states (checkmarks) provide positive reinforcement
 - Progress bar shows overall form completion percentage
 - Creates "mini-game" feeling rather than tedious form-filling
 
 ### Friction Reduction
+
 - **Quick presets** (Daily/Weekdays/Weekends) reduce 7 taps to 1
 - **Smart defaults** based on context (Morning→7AM, Afternoon→12PM, etc.)
 - **Character counter** provides guidance without blocking
@@ -49,6 +54,7 @@ This spec defines the implementation of an improved card-based Create Habit Moda
 ## 🏗️ Component Architecture
 
 ### File Structure
+
 ```
 src/components/CreateHabitModal/
 ├── CreateHabitModal.tsx                 # Main modal orchestrator
@@ -66,6 +72,7 @@ src/components/CreateHabitModal/
 ```
 
 ### Component Hierarchy
+
 ```
 CreateHabitModal
 ├── ModalHeader (progress: 2/3, progressBar)
@@ -99,27 +106,31 @@ CreateHabitModal
 **Purpose:** Display modal title, close button, and progress tracking
 
 **Props:**
+
 ```typescript
 interface ModalHeaderProps {
   onClose: () => void;
-  completedSections: number;  // 0-3
-  totalSections: number;      // Always 3
+  completedSections: number; // 0-3
+  totalSections: number; // Always 3
 }
 ```
 
 **Visual Elements:**
+
 - Close button (X icon, top-left)
 - Title: "New Habit" (centered)
 - Progress text: "{completedSections} of {totalSections} complete" (centered, below title, emerald-600)
 - Progress bar: 3px height, gradient showing completion percentage
 
 **Progress Bar Calculation:**
+
 ```typescript
 const progressPercentage = (completedSections / totalSections) * 100;
 // Visual: gradient from emerald-500 (0%) to emerald-500 (progressPercentage%) to stone-200 (progressPercentage% to 100%)
 ```
 
 **Styling:**
+
 - Background: white
 - Border-bottom: 1px stone-100
 - Padding: px-5 py-4
@@ -132,6 +143,7 @@ const progressPercentage = (completedSections / totalSections) * 100;
 **File:** `src/components/CreateHabitModal/components/LivePreviewCard.tsx`
 
 **Changes from Current:**
+
 1. Add gradient background: `linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)`
 2. Add 2px border: border-stone-200
 3. Add "Preview" label with "Live" indicator
@@ -139,24 +151,27 @@ const progressPercentage = (completedSections / totalSections) * 100;
 5. Increase spacing: mt-5 mb-5 (was mt-4 mb-4)
 
 **New Visual Elements:**
+
 ```tsx
-<View className="flex-row items-center justify-between mb-2">
-  <Text className="text-xs font-bold text-stone-500 uppercase tracking-wide">
+<View className='mb-2 flex-row items-center justify-between'>
+  <Text className='text-xs font-bold uppercase tracking-wide text-stone-500'>
     Preview
   </Text>
-  <View className="flex-row items-center gap-1">
-    <Sparkles size={12} color="#f59e0b" />
-    <Text className="text-xs text-amber-600 font-medium">Live</Text>
+  <View className='flex-row items-center gap-1'>
+    <Sparkles size={12} color='#f59e0b' />
+    <Text className='text-xs font-medium text-amber-600'>Live</Text>
   </View>
 </View>
 ```
 
 **Badge Layout (updated):**
+
 ```
 [Daily] • [☀️ Afternoon] • [🔔 12:00 PM]
 ```
 
 **New Props:**
+
 ```typescript
 interface LivePreviewCardProps {
   habitName: string;
@@ -164,8 +179,8 @@ interface LivePreviewCardProps {
   color: string;
   timeOfDay: TimeOfDay;
   selectedDays: boolean[];
-  reminderEnabled: boolean;    // NEW
-  reminderTime: string;         // NEW
+  reminderEnabled: boolean; // NEW
+  reminderTime: string; // NEW
 }
 ```
 
@@ -178,31 +193,33 @@ interface LivePreviewCardProps {
 **Purpose:** Card wrapper for habit name input with completion state
 
 **Props:**
+
 ```typescript
 interface BasicInfoCardProps {
   habitName: string;
   onHabitNameChange: (name: string) => void;
-  isComplete: boolean;  // true if habitName.trim().length > 0
+  isComplete: boolean; // true if habitName.trim().length > 0
 }
 ```
 
 **Structure:**
+
 ```tsx
-<View className="mb-5 p-4 rounded-2xl bg-white shadow-sm">
+<View className='mb-5 rounded-2xl bg-white p-4 shadow-sm'>
   {/* Card Header */}
-  <View className="flex-row items-center justify-between mb-4">
-    <View className="flex-row items-center gap-2">
-      <Edit3 size={18} color="#10B981" />
-      <Text className="text-sm font-bold text-stone-900 uppercase tracking-wide">
+  <View className='mb-4 flex-row items-center justify-between'>
+    <View className='flex-row items-center gap-2'>
+      <Edit3 size={18} color='#10B981' />
+      <Text className='text-sm font-bold uppercase tracking-wide text-stone-900'>
         Basic Info
       </Text>
     </View>
-    <View className="flex-row items-center gap-2">
-      <CompletionBadge type="required" />
+    <View className='flex-row items-center gap-2'>
+      <CompletionBadge type='required' />
       {isComplete ? (
-        <CheckCircle size={20} color="#10B981" className="completion-check" />
+        <CheckCircle size={20} color='#10B981' className='completion-check' />
       ) : (
-        <Circle size={20} color="#D6D3D1" />
+        <Circle size={20} color='#D6D3D1' />
       )}
     </View>
   </View>
@@ -217,6 +234,7 @@ interface BasicInfoCardProps {
 ```
 
 **Completion Logic:**
+
 ```typescript
 const isComplete = habitName.trim().length > 0;
 ```
@@ -230,18 +248,20 @@ const isComplete = habitName.trim().length > 0;
 **Purpose:** Card wrapper for emoji and color selection
 
 **Props:**
+
 ```typescript
 interface AppearanceCardProps {
   selectedEmoji: string | null;
   selectedColor: string;
-  habitName: string;  // For smart emoji suggestions
+  habitName: string; // For smart emoji suggestions
   onEmojiChange: (emoji: string) => void;
   onColorChange: (color: string) => void;
-  isComplete: boolean;  // true if both emoji and color selected
+  isComplete: boolean; // true if both emoji and color selected
 }
 ```
 
 **Smart Emoji Suggestion Logic:**
+
 ```typescript
 const getSmartSuggestion = (habitName: string): string | null => {
   const keywords = {
@@ -265,18 +285,22 @@ const getSmartSuggestion = (habitName: string): string | null => {
 ```
 
 **Smart Hint Display:**
+
 ```tsx
-{smartSuggestion && (
-  <View className="flex-row items-center gap-1 mt-2">
-    <Lightbulb size={12} color="#10B981" />
-    <Text className="text-xs text-emerald-600 font-medium">
-      {smartSuggestion}
-    </Text>
-  </View>
-)}
+{
+  smartSuggestion && (
+    <View className='mt-2 flex-row items-center gap-1'>
+      <Lightbulb size={12} color='#10B981' />
+      <Text className='text-xs font-medium text-emerald-600'>
+        {smartSuggestion}
+      </Text>
+    </View>
+  );
+}
 ```
 
 **Completion Logic:**
+
 ```typescript
 const isComplete = selectedEmoji !== null && selectedColor.length > 0;
 ```
@@ -290,6 +314,7 @@ const isComplete = selectedEmoji !== null && selectedColor.length > 0;
 **Purpose:** Card wrapper for time, reminder, and frequency selection
 
 **Props:**
+
 ```typescript
 interface ScheduleCardProps {
   timeOfDay: TimeOfDay;
@@ -300,18 +325,19 @@ interface ScheduleCardProps {
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimePress: () => void;
   onFrequencyChange: (days: boolean[]) => void;
-  isComplete: boolean;  // true if at least one day selected
+  isComplete: boolean; // true if at least one day selected
 }
 ```
 
 **Structure:**
+
 ```tsx
-<View className="mb-5 p-4 rounded-2xl bg-white shadow-sm">
+<View className='mb-5 rounded-2xl bg-white p-4 shadow-sm'>
   {/* Card Header with completion state */}
   <CardHeader
-    icon={<Calendar size={18} color="#10B981" />}
-    title="Schedule"
-    badge={<CompletionBadge type="required" />}
+    icon={<Calendar size={18} color='#10B981' />}
+    title='Schedule'
+    badge={<CompletionBadge type='required' />}
     isComplete={isComplete}
   />
 
@@ -331,16 +357,14 @@ interface ScheduleCardProps {
     selectedDays={selectedDays}
     onPresetSelect={handlePresetSelect}
   />
-  <FrequencySelector
-    selectedDays={selectedDays}
-    onChange={onFrequencyChange}
-  />
+  <FrequencySelector selectedDays={selectedDays} onChange={onFrequencyChange} />
 </View>
 ```
 
 **Completion Logic:**
+
 ```typescript
-const isComplete = selectedDays.some(day => day);
+const isComplete = selectedDays.some((day) => day);
 ```
 
 ---
@@ -352,6 +376,7 @@ const isComplete = selectedDays.some(day => day);
 **Purpose:** Display required/optional/complete status badges
 
 **Props:**
+
 ```typescript
 interface CompletionBadgeProps {
   type: 'required' | 'optional' | 'complete';
@@ -359,6 +384,7 @@ interface CompletionBadgeProps {
 ```
 
 **Styling Map:**
+
 ```typescript
 const badgeStyles = {
   required: {
@@ -380,13 +406,14 @@ const badgeStyles = {
 ```
 
 **Implementation:**
+
 ```tsx
 <View
-  className="px-2 py-0.5 rounded-full"
+  className='rounded-full px-2 py-0.5'
   style={{ backgroundColor: badgeStyles[type].bg }}
 >
   <Text
-    className="text-[10px] font-semibold uppercase tracking-wider"
+    className='text-[10px] font-semibold uppercase tracking-wider'
     style={{ color: badgeStyles[type].text }}
   >
     {badgeStyles[type].label}
@@ -403,6 +430,7 @@ const badgeStyles = {
 **Purpose:** Quick preset buttons for common frequency patterns
 
 **Props:**
+
 ```typescript
 interface FrequencyPresetsProps {
   selectedDays: boolean[];
@@ -411,41 +439,47 @@ interface FrequencyPresetsProps {
 ```
 
 **Preset Definitions:**
+
 ```typescript
 const PRESETS = {
-  daily: [true, true, true, true, true, true, true],      // All days
+  daily: [true, true, true, true, true, true, true], // All days
   weekdays: [false, true, true, true, true, true, false], // Mon-Fri
   weekends: [true, false, false, false, false, false, true], // Sat-Sun
 };
 ```
 
 **Active Preset Detection:**
+
 ```typescript
 const getActivePreset = (selectedDays: boolean[]): string | null => {
-  if (JSON.stringify(selectedDays) === JSON.stringify(PRESETS.daily)) return 'daily';
-  if (JSON.stringify(selectedDays) === JSON.stringify(PRESETS.weekdays)) return 'weekdays';
-  if (JSON.stringify(selectedDays) === JSON.stringify(PRESETS.weekends)) return 'weekends';
+  if (JSON.stringify(selectedDays) === JSON.stringify(PRESETS.daily))
+    return 'daily';
+  if (JSON.stringify(selectedDays) === JSON.stringify(PRESETS.weekdays))
+    return 'weekdays';
+  if (JSON.stringify(selectedDays) === JSON.stringify(PRESETS.weekends))
+    return 'weekends';
   return null;
 };
 ```
 
 **UI Layout:**
+
 ```tsx
-<View className="flex-row items-center justify-between mb-2">
-  <Text className="text-xs font-medium text-stone-500">Repeat on</Text>
-  <View className="flex-row gap-1.5">
+<View className='mb-2 flex-row items-center justify-between'>
+  <Text className='text-xs font-medium text-stone-500'>Repeat on</Text>
+  <View className='flex-row gap-1.5'>
     <PresetButton
-      label="Daily"
+      label='Daily'
       active={activePreset === 'daily'}
       onPress={() => onPresetSelect('daily')}
     />
     <PresetButton
-      label="Weekdays"
+      label='Weekdays'
       active={activePreset === 'weekdays'}
       onPress={() => onPresetSelect('weekdays')}
     />
     <PresetButton
-      label="Weekends"
+      label='Weekends'
       active={activePreset === 'weekends'}
       onPress={() => onPresetSelect('weekends')}
     />
@@ -454,12 +488,14 @@ const getActivePreset = (selectedDays: boolean[]): string | null => {
 ```
 
 **PresetButton Styling:**
+
 ```typescript
 // Active state
-className="px-2.5 py-1 rounded-lg bg-emerald-500 text-white shadow-sm"
+className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-white shadow-sm';
 
 // Inactive state
-className="px-2.5 py-1 rounded-lg bg-stone-100 border border-stone-200 text-stone-600"
+className =
+  'px-2.5 py-1 rounded-lg bg-stone-100 border border-stone-200 text-stone-600';
 ```
 
 ---
@@ -471,6 +507,7 @@ className="px-2.5 py-1 rounded-lg bg-stone-100 border border-stone-200 text-ston
 **Purpose:** Track completion state of all form sections
 
 **Interface:**
+
 ```typescript
 interface FormCompletionState {
   basicInfoComplete: boolean;
@@ -486,10 +523,11 @@ function useFormCompletion(
   selectedEmoji: string | null,
   selectedColor: string,
   selectedDays: boolean[]
-): FormCompletionState
+): FormCompletionState;
 ```
 
 **Implementation:**
+
 ```typescript
 export function useFormCompletion(
   habitName: string,
@@ -508,7 +546,7 @@ export function useFormCompletion(
   );
 
   const scheduleComplete = useMemo(
-    () => selectedDays.some(day => day),
+    () => selectedDays.some((day) => day),
     [selectedDays]
   );
 
@@ -543,11 +581,13 @@ export function useFormCompletion(
 ### Phase 1: Foundation (Tasks 1-3)
 
 #### Task 1: Create useFormCompletion Hook
+
 **File:** `src/components/CreateHabitModal/hooks/useFormCompletion.ts`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [x] Hook correctly calculates completion state for all 3 sections
 - [x] Returns `completedCount` (0-3) and `isFormComplete` boolean
 - [x] Uses `useMemo` for performance optimization
@@ -555,6 +595,7 @@ export function useFormCompletion(
 - [x] Unit tests cover all completion scenarios
 
 **Implementation Notes:**
+
 - Created `src/components/CreateHabitModal/hooks/useFormCompletion.ts` with comprehensive TypeScript types
 - Hook uses `useMemo` for all derived values to prevent unnecessary recalculations
 - Completion logic: Basic Info requires non-empty habitName, Appearance requires both emoji and color, Schedule requires at least one selected day
@@ -568,6 +609,7 @@ export function useFormCompletion(
   - Reactivity to prop changes
 
 **Implementation Notes:**
+
 ```typescript
 // Test cases to cover:
 describe('useFormCompletion', () => {
@@ -582,11 +624,13 @@ describe('useFormCompletion', () => {
 ---
 
 #### Task 2: Create CompletionBadge Component
+
 **File:** `src/components/CreateHabitModal/components/CompletionBadge.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [x] Renders 3 badge types: required, optional, complete
 - [x] Correct colors for each type (red for required, blue for optional, green for complete)
 - [x] Text is uppercase, 10px, semibold with letter-spacing
@@ -594,6 +638,7 @@ describe('useFormCompletion', () => {
 - [x] Accessible label for screen readers
 
 **Implementation Notes:**
+
 - Created `CompletionBadge.tsx` with TypeScript types exported for reusability
 - Component is memoized with `React.memo` for performance optimization
 - All three badge types (required, optional, complete) implemented with exact color specifications from design tokens
@@ -611,6 +656,7 @@ describe('useFormCompletion', () => {
 - Snapshot tests created for visual regression testing
 
 **Styling Reference:**
+
 ```typescript
 // Required: bg-red-50 (#FEE2E2), text-red-900 (#991B1B)
 // Optional: bg-indigo-50 (#E0E7FF), text-indigo-900 (#3730A3)
@@ -620,27 +666,49 @@ describe('useFormCompletion', () => {
 ---
 
 #### Task 3: Create ModalHeader Component
-**File:** `src/components/CreateHabitModal/components/ModalHeader.tsx`
+
+**File:** `src/components/CreateHabitModal/components/ModalHeaderV1.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
-- [ ] Displays close button, title, and progress text
-- [ ] Progress bar animates smoothly (300ms transition)
-- [ ] Progress bar gradient calculated correctly (0%, 33%, 66%, 100%)
-- [ ] Accessible close button with proper label
-- [ ] Matches design spec styling exactly
+
+- [x] Displays close button, title, and progress text
+- [x] Progress bar animates smoothly (300ms transition)
+- [x] Progress bar gradient calculated correctly (0%, 33%, 66%, 100%)
+- [x] Accessible close button with proper label
+- [x] Matches design spec styling exactly
+
+**Implementation Notes:**
+
+- Created `ModalHeaderV1.tsx` to avoid conflicts with existing ModalHeader component
+- Uses React Native Reanimated for smooth 300ms progress bar animation with cubic easing
+- Progress bar animates width percentage based on completedSections / totalSections
+- Accessible implementation with proper roles (header, button, progressbar) and labels
+- Memoized with React.memo for performance optimization
+- Comprehensive test suite created with 60+ test cases covering:
+  - Rendering and visual elements (title, close button, progress text)
+  - Close button interaction and accessibility
+  - Progress text formatting and updates (0/3, 1/3, 2/3, 3/3)
+  - Progress bar accessibility and value updates
+  - Styling verification (colors, fonts, spacing)
+  - Progress calculation (0%, 33%, 66%, 100%)
+  - Reactivity to prop changes
+  - Component memoization
+  - Animation behavior
+  - Comprehensive accessibility testing
 
 **Animation Implementation:**
+
 ```typescript
 // Use Animated.View for progress bar
 const animatedWidth = useSharedValue(0);
 
 useEffect(() => {
-  animatedWidth.value = withTiming(
-    (completedSections / totalSections) * 100,
-    { duration: 300, easing: Easing.out(Easing.cubic) }
-  );
+  animatedWidth.value = withTiming((completedSections / totalSections) * 100, {
+    duration: 300,
+    easing: Easing.out(Easing.cubic),
+  });
 }, [completedSections, totalSections]);
 ```
 
@@ -649,11 +717,13 @@ useEffect(() => {
 ### Phase 2: Card Components (Tasks 4-6)
 
 #### Task 4: Create BasicInfoCard Component
+
 **File:** `src/components/CreateHabitModal/components/BasicInfoCard.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** Task 2 (CompletionBadge)
 
 **Acceptance Criteria:**
+
 - [ ] Card wrapper with proper shadow and border-radius
 - [ ] Header displays icon, title, required badge, and completion state
 - [ ] Integrates existing HabitNameField component
@@ -662,6 +732,7 @@ useEffect(() => {
 - [ ] Character counter displays in emerald-600 when valid
 
 **Character Counter Logic:**
+
 ```typescript
 const characterCount = habitName.trim().length;
 const isValid = characterCount > 0;
@@ -671,11 +742,13 @@ const isValid = characterCount > 0;
 ---
 
 #### Task 5: Create AppearanceCard Component
+
 **File:** `src/components/CreateHabitModal/components/AppearanceCard.tsx`
 **Estimated Complexity:** Medium
 **Dependencies:** Task 2 (CompletionBadge), Task 7 (SmartHintText)
 
 **Acceptance Criteria:**
+
 - [ ] Card wrapper matches BasicInfoCard styling
 - [ ] Header displays palette icon, title, optional badge, completion state
 - [ ] Integrates existing EmojiPicker component
@@ -685,27 +758,43 @@ const isValid = characterCount > 0;
 - [ ] Completion checkmark appears when both emoji + color selected
 
 **Smart Suggestion Keywords (Initial Set):**
+
 ```typescript
 const EMOJI_KEYWORDS = {
-  read: '📖', book: '📚', study: '📝', write: '✍️',
-  exercise: '💪', workout: '🏋️', run: '🏃', yoga: '🧘',
-  meditate: '🧘', mindful: '🧘',
-  water: '💧', hydrate: '💧',
-  sleep: '😴', rest: '😴',
-  code: '💻', program: '💻', dev: '💻',
-  clean: '🧹', organize: '📦',
-  cook: '🍳', meal: '🍽️',
+  read: '📖',
+  book: '📚',
+  study: '📝',
+  write: '✍️',
+  exercise: '💪',
+  workout: '🏋️',
+  run: '🏃',
+  yoga: '🧘',
+  meditate: '🧘',
+  mindful: '🧘',
+  water: '💧',
+  hydrate: '💧',
+  sleep: '😴',
+  rest: '😴',
+  code: '💻',
+  program: '💻',
+  dev: '💻',
+  clean: '🧹',
+  organize: '📦',
+  cook: '🍳',
+  meal: '🍽️',
 };
 ```
 
 ---
 
 #### Task 6: Create ScheduleCard Component
+
 **File:** `src/components/CreateHabitModal/components/ScheduleCard.tsx`
 **Estimated Complexity:** Medium
 **Dependencies:** Task 2 (CompletionBadge), Task 8 (FrequencyPresets)
 
 **Acceptance Criteria:**
+
 - [ ] Card wrapper matches other card styling
 - [ ] Header displays calendar icon, title, required badge, completion state
 - [ ] Integrates existing TimeOfDaySelector component
@@ -715,6 +804,7 @@ const EMOJI_KEYWORDS = {
 - [ ] All components properly spaced with mb-4
 
 **Layout Order:**
+
 1. Card Header (with completion state)
 2. TimeOfDaySelector
 3. ReminderSelector
@@ -726,11 +816,13 @@ const EMOJI_KEYWORDS = {
 ### Phase 3: Enhanced Features (Tasks 7-9)
 
 #### Task 7: Create SmartHintText Component
+
 **File:** `src/components/CreateHabitModal/components/SmartHintText.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [ ] Displays icon + text in a flex row
 - [ ] Supports custom icon component (Lightbulb, Info, etc.)
 - [ ] Text is emerald-600, 12px, medium weight
@@ -738,6 +830,7 @@ const EMOJI_KEYWORDS = {
 - [ ] Optional `variant` prop for different colors (info, success, warning)
 
 **Props Interface:**
+
 ```typescript
 interface SmartHintTextProps {
   icon: React.ReactNode;
@@ -747,10 +840,11 @@ interface SmartHintTextProps {
 ```
 
 **Variant Colors:**
+
 ```typescript
 const variantColors = {
   success: { icon: '#10B981', text: '#10B981' }, // emerald
-  info: { icon: '#3B82F6', text: '#3B82F6' },    // blue
+  info: { icon: '#3B82F6', text: '#3B82F6' }, // blue
   warning: { icon: '#F59E0B', text: '#F59E0B' }, // amber
 };
 ```
@@ -758,11 +852,13 @@ const variantColors = {
 ---
 
 #### Task 8: Create FrequencyPresets Component
+
 **File:** `src/components/CreateHabitModal/components/FrequencyPresets.tsx`
 **Estimated Complexity:** Medium
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [ ] Displays 3 preset buttons: Daily, Weekdays, Weekends
 - [ ] Active preset is visually distinct (emerald-500 bg, white text, shadow)
 - [ ] Inactive presets have stone-100 bg, stone-600 text, border
@@ -772,31 +868,40 @@ const variantColors = {
 - [ ] Preset buttons have hover effect (translateY -1px, shadow)
 
 **Preset Button Interaction:**
+
 ```typescript
-const handlePresetPress = useCallback((preset: PresetType) => {
-  triggerSelection(); // Haptic feedback
-  onPresetSelect(PRESETS[preset]);
-}, [onPresetSelect, triggerSelection]);
+const handlePresetPress = useCallback(
+  (preset: PresetType) => {
+    triggerSelection(); // Haptic feedback
+    onPresetSelect(PRESETS[preset]);
+  },
+  [onPresetSelect, triggerSelection]
+);
 ```
 
 **Active Detection Logic:**
+
 ```typescript
 const activePreset = useMemo(() => {
   const presetEntries = Object.entries(PRESETS) as [PresetType, boolean[]][];
-  return presetEntries.find(([_, days]) =>
-    JSON.stringify(days) === JSON.stringify(selectedDays)
-  )?.[0] ?? null;
+  return (
+    presetEntries.find(
+      ([_, days]) => JSON.stringify(days) === JSON.stringify(selectedDays)
+    )?.[0] ?? null
+  );
 }, [selectedDays]);
 ```
 
 ---
 
 #### Task 9: Update LivePreviewCard Component
+
 **File:** `src/components/CreateHabitModal/components/LivePreviewCard.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [ ] Add gradient background: linear-gradient(135deg, #FFF 0%, #F9FAFB 100%)
 - [ ] Add 2px border in stone-200
 - [ ] Add "Preview" label + "Live" badge at top
@@ -805,6 +910,7 @@ const activePreset = useMemo(() => {
 - [ ] Badge layout: [Daily] • [☀️ Afternoon] • [🔔 12:00 PM]
 
 **New Badge Row Logic:**
+
 ```typescript
 <View className="flex-row items-center gap-1.5 mt-1">
   <Text className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
@@ -830,11 +936,13 @@ const activePreset = useMemo(() => {
 ### Phase 4: Integration (Tasks 10-12)
 
 #### Task 10: Update CreateHabitModal Main Component
+
 **File:** `src/components/CreateHabitModal/CreateHabitModal.tsx`
 **Estimated Complexity:** High
 **Dependencies:** Tasks 1-9
 
 **Acceptance Criteria:**
+
 - [ ] Integrate useFormCompletion hook
 - [ ] Replace inline sections with new card components
 - [ ] Pass completion states to card components
@@ -845,6 +953,7 @@ const activePreset = useMemo(() => {
 - [ ] All animations preserved (FadeInUp with stagger)
 
 **Component Structure:**
+
 ```tsx
 const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
   // ... existing state ...
@@ -911,11 +1020,13 @@ const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
 ---
 
 #### Task 11: Update HabitNameField Component
+
 **File:** `src/components/CreateHabitModal/components/HabitNameField.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [ ] Add `showCharacterCount` prop (boolean, default false)
 - [ ] When enabled, display character count below input
 - [ ] Character count shows: "{count} chars" in emerald-600 when count > 0
@@ -924,15 +1035,18 @@ const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
 - [ ] Border color changes to emerald-500 when input has value
 
 **Character Counter Layout:**
+
 ```tsx
-<View className="flex-row items-center justify-between mt-1.5">
-  <Text className="text-xs text-stone-400">
+<View className='mt-1.5 flex-row items-center justify-between'>
+  <Text className='text-xs text-stone-400'>
     Make it specific and actionable
   </Text>
   {showCharacterCount && (
-    <Text className={`text-xs font-medium ${
-      characterCount > 0 ? 'text-emerald-600' : 'text-stone-400'
-    }`}>
+    <Text
+      className={`text-xs font-medium ${
+        characterCount > 0 ? 'text-emerald-600' : 'text-stone-400'
+      }`}
+    >
       {characterCount} chars
     </Text>
   )}
@@ -942,11 +1056,13 @@ const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
 ---
 
 #### Task 12: Add Gradient Fade to Sticky Footer
+
 **File:** `src/components/CreateHabitModal/CreateHabitModal.tsx`
 **Estimated Complexity:** Low
 **Dependencies:** None
 
 **Acceptance Criteria:**
+
 - [ ] Sticky footer background uses gradient fade
 - [ ] Gradient: `linear-gradient(to top, white, white, transparent)`
 - [ ] Border-top remains stone-100
@@ -954,6 +1070,7 @@ const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
 - [ ] Home indicator bar remains below button
 
 **Gradient Implementation:**
+
 ```tsx
 // Use LinearGradient from expo-linear-gradient if available
 // Otherwise use View with overlay strategy
@@ -961,7 +1078,7 @@ const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
   colors={['#FFFFFF', '#FFFFFF', 'rgba(255,255,255,0)']}
   start={{ x: 0, y: 1 }}
   end={{ x: 0, y: 0 }}
-  className="p-5 border-t border-stone-100"
+  className='border-t border-stone-100 p-5'
 >
   {/* Create button */}
   {/* Home indicator */}
@@ -975,11 +1092,20 @@ const CreateHabitModal = ({ visible, onClose, editingHabit }) => {
 ### Unit Tests
 
 #### useFormCompletion Hook
+
 ```typescript
 describe('useFormCompletion', () => {
   it('returns all sections incomplete initially', () => {
     const { result } = renderHook(() =>
-      useFormCompletion('', null, '', [false, false, false, false, false, false, false])
+      useFormCompletion('', null, '', [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ])
     );
     expect(result.current.completedCount).toBe(0);
     expect(result.current.isFormComplete).toBe(false);
@@ -987,7 +1113,15 @@ describe('useFormCompletion', () => {
 
   it('marks basic info complete with non-empty habitName', () => {
     const { result } = renderHook(() =>
-      useFormCompletion('Read daily', null, '', [false, false, false, false, false, false, false])
+      useFormCompletion('Read daily', null, '', [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ])
     );
     expect(result.current.basicInfoComplete).toBe(true);
     expect(result.current.completedCount).toBe(1);
@@ -995,7 +1129,15 @@ describe('useFormCompletion', () => {
 
   it('marks appearance complete with emoji and color', () => {
     const { result } = renderHook(() =>
-      useFormCompletion('', '📖', '#10B981', [false, false, false, false, false, false, false])
+      useFormCompletion('', '📖', '#10B981', [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ])
     );
     expect(result.current.appearanceComplete).toBe(true);
     expect(result.current.completedCount).toBe(1);
@@ -1003,7 +1145,15 @@ describe('useFormCompletion', () => {
 
   it('marks schedule complete with at least one day selected', () => {
     const { result } = renderHook(() =>
-      useFormCompletion('', null, '', [true, false, false, false, false, false, false])
+      useFormCompletion('', null, '', [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ])
     );
     expect(result.current.scheduleComplete).toBe(true);
     expect(result.current.completedCount).toBe(1);
@@ -1011,7 +1161,15 @@ describe('useFormCompletion', () => {
 
   it('considers form complete without appearance (optional)', () => {
     const { result } = renderHook(() =>
-      useFormCompletion('Read daily', null, '', [true, true, true, true, true, true, true])
+      useFormCompletion('Read daily', null, '', [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+      ])
     );
     expect(result.current.isFormComplete).toBe(true);
     expect(result.current.appearanceComplete).toBe(false);
@@ -1020,6 +1178,7 @@ describe('useFormCompletion', () => {
 ```
 
 #### FrequencyPresets Component
+
 ```typescript
 describe('FrequencyPresets', () => {
   it('highlights Daily when all days selected', () => {
@@ -1059,6 +1218,7 @@ describe('FrequencyPresets', () => {
 ```
 
 #### CompletionBadge Component
+
 ```typescript
 describe('CompletionBadge', () => {
   it('renders required badge with correct styles', () => {
@@ -1157,6 +1317,7 @@ describe('CreateHabitModal - Cards V1 Integration', () => {
 ### Manual QA Checklist
 
 #### Visual Verification
+
 - [ ] Progress bar animates smoothly from 0% → 33% → 66% → 100%
 - [ ] Completion checkmarks appear/disappear based on state
 - [ ] Card shadows and borders match design spec
@@ -1167,6 +1328,7 @@ describe('CreateHabitModal - Cards V1 Integration', () => {
 - [ ] Preset buttons highlight correctly based on selection
 
 #### Interaction Testing
+
 - [ ] Tapping "Daily" preset selects all 7 days instantly
 - [ ] Tapping "Weekdays" selects Mon-Fri only
 - [ ] Tapping "Weekends" selects Sat-Sun only
@@ -1177,6 +1339,7 @@ describe('CreateHabitModal - Cards V1 Integration', () => {
 - [ ] Checkmarks animate in/out smoothly
 
 #### Accessibility Testing
+
 - [ ] Screen reader announces "2 of 3 complete" in header
 - [ ] Required/Optional badges have accessible labels
 - [ ] All buttons have proper accessibility roles
@@ -1184,6 +1347,7 @@ describe('CreateHabitModal - Cards V1 Integration', () => {
 - [ ] Form completion state is announced to screen readers
 
 #### Edge Cases
+
 - [ ] Empty habitName doesn't mark Basic Info complete
 - [ ] Whitespace-only habitName doesn't mark complete
 - [ ] Deselecting all days removes Schedule checkmark
@@ -1196,6 +1360,7 @@ describe('CreateHabitModal - Cards V1 Integration', () => {
 ## 🎨 Design Tokens
 
 ### Colors
+
 ```typescript
 export const CARDS_V1_COLORS = {
   // Badge colors
@@ -1216,7 +1381,7 @@ export const CARDS_V1_COLORS = {
 
   // Progress bar
   progress: {
-    complete: '#10B981',  // emerald-500
+    complete: '#10B981', // emerald-500
     incomplete: '#E5E7EB', // stone-200
   },
 
@@ -1236,17 +1401,19 @@ export const CARDS_V1_COLORS = {
 ```
 
 ### Spacing
+
 ```typescript
 export const CARDS_V1_SPACING = {
-  cardGap: 20,        // mb-5 between cards
-  cardPadding: 16,    // p-4 inside cards
-  headerGap: 16,      // mb-4 for card headers
-  sectionGap: 16,     // mb-4 between sections within cards
+  cardGap: 20, // mb-5 between cards
+  cardPadding: 16, // p-4 inside cards
+  headerGap: 16, // mb-4 for card headers
+  sectionGap: 16, // mb-4 between sections within cards
   progressBarHeight: 3,
 };
 ```
 
 ### Typography
+
 ```typescript
 export const CARDS_V1_TYPOGRAPHY = {
   cardTitle: {
@@ -1273,6 +1440,7 @@ export const CARDS_V1_TYPOGRAPHY = {
 ```
 
 ### Animations
+
 ```typescript
 export const CARDS_V1_ANIMATIONS = {
   progressBar: {
@@ -1300,6 +1468,7 @@ export const CARDS_V1_ANIMATIONS = {
 ## 📊 Code Review Checklist (Code Rabbit)
 
 ### Architecture & Structure
+
 - [ ] All new components follow existing folder structure
 - [ ] Hook follows React hooks conventions (use prefix, proper dependencies)
 - [ ] Components are properly memoized with React.memo where appropriate
@@ -1308,6 +1477,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] Components are small and focused (single responsibility)
 
 ### Performance
+
 - [ ] useFormCompletion uses useMemo for all derived values
 - [ ] No unnecessary re-renders (verified with React DevTools)
 - [ ] Preset detection memoized to avoid recalculation on every render
@@ -1315,6 +1485,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] All callback functions use useCallback with correct dependencies
 
 ### Code Quality
+
 - [ ] No console.log statements in production code
 - [ ] All functions have proper error handling
 - [ ] TypeScript strict mode passes without errors
@@ -1324,6 +1495,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] All strings are properly escaped and sanitized
 
 ### Accessibility
+
 - [ ] All interactive elements have accessibility labels
 - [ ] Screen reader announcements for progress updates
 - [ ] Color contrast meets WCAG AA standards (4.5:1 minimum)
@@ -1332,6 +1504,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] Keyboard navigation works correctly (if applicable)
 
 ### Testing
+
 - [ ] Unit tests cover all hook logic paths
 - [ ] Component tests verify UI rendering
 - [ ] Integration tests cover main user flows
@@ -1340,6 +1513,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] All tests pass in CI/CD pipeline
 
 ### State Management
+
 - [ ] Completion state properly derived from form state
 - [ ] No duplicate state (single source of truth)
 - [ ] State updates are batched appropriately
@@ -1347,6 +1521,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] No state mutations (immutable updates only)
 
 ### UI/UX
+
 - [ ] Animations are smooth (60fps)
 - [ ] Transitions match design spec timing (300ms)
 - [ ] Haptic feedback triggers on all button presses
@@ -1355,6 +1530,7 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] Form validation provides clear feedback
 
 ### Documentation
+
 - [ ] All new components have JSDoc comments
 - [ ] Complex logic includes inline comments
 - [ ] Props interfaces have descriptive comments
@@ -1362,18 +1538,21 @@ export const CARDS_V1_ANIMATIONS = {
 - [ ] CHANGELOG updated with changes
 
 ### Security
+
 - [ ] No XSS vulnerabilities (all user input sanitized)
 - [ ] No sensitive data logged
 - [ ] Form data validated before submission
 - [ ] No hardcoded secrets or API keys
 
 ### Backwards Compatibility
+
 - [ ] Existing form state structure maintained
 - [ ] Database mutation calls unchanged
 - [ ] Edit mode continues to work correctly
 - [ ] No breaking changes to parent components
 
 ### Code Smells to Watch For
+
 - [ ] No overly long functions (> 50 lines)
 - [ ] No deeply nested conditionals (> 3 levels)
 - [ ] No duplicated code blocks
@@ -1386,23 +1565,27 @@ export const CARDS_V1_ANIMATIONS = {
 ## 🚀 Deployment Plan
 
 ### Pre-Deployment
+
 1. **Code Review**: All tasks reviewed and approved by Code Rabbit
 2. **Testing**: All unit, integration, and manual tests pass
 3. **Performance**: No regression in app startup time or memory usage
 4. **Accessibility**: WCAG AA compliance verified
 
 ### Deployment Strategy
+
 1. **Feature Flag**: Deploy behind feature flag `CARDS_V1_ENABLED`
 2. **Gradual Rollout**: 10% → 25% → 50% → 100% over 1 week
 3. **A/B Testing**: Compare completion rates vs V4 baseline
 4. **Monitoring**: Track crash rates, completion time, and user feedback
 
 ### Success Metrics
+
 - **Primary**: Habit creation completion rate increases by 10%+
 - **Secondary**: Time to create habit decreases by 15%+
 - **Tertiary**: User satisfaction score (NPS) increases by 5+ points
 
 ### Rollback Plan
+
 - If completion rate drops > 5% or crashes increase > 2%, rollback to V4
 - Feature flag allows instant rollback without app update
 - Monitor first 48 hours closely for critical issues
@@ -1412,12 +1595,14 @@ export const CARDS_V1_ANIMATIONS = {
 ## 📝 Notes
 
 ### Design Decisions
+
 1. **Why 3 cards?** Cognitive load research shows 3-4 chunks is optimal for working memory
 2. **Why optional appearance?** Not all users care about aesthetics; requiring it creates friction
 3. **Why presets?** 80% of habits are daily, weekday, or weekend patterns
 4. **Why progress bar?** Visual progress increases completion rates by ~15% (based on form UX research)
 
 ### Future Enhancements (Not in Scope)
+
 - Template library (Morning Routine, Evening Routine, etc.)
 - AI-powered emoji/color suggestions based on ML
 - Smart time suggestions based on user's existing habits
@@ -1426,6 +1611,7 @@ export const CARDS_V1_ANIMATIONS = {
 - Swipe gestures between sections
 
 ### Known Limitations
+
 - Character counter doesn't prevent > 100 chars (only provides guidance)
 - Smart emoji suggestions limited to 20 keywords initially
 - Progress bar doesn't account for partial completion within sections
