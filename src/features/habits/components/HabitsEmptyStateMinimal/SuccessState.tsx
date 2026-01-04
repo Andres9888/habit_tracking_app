@@ -95,7 +95,9 @@ function ConfettiParticle({
     );
     rotation.value = withDelay(
       delay,
-      withTiming(Math.round(Math.random() * 360), { duration: CONFETTI_CONFIG.duration })
+      withTiming(Math.round(Math.random() * 360), {
+        duration: CONFETTI_CONFIG.duration,
+      })
     );
     scale.value = withDelay(
       delay + 200,
@@ -468,7 +470,6 @@ export function SuccessState({
             alignItems: 'center',
             flex: 1,
             justifyContent: 'center',
-            paddingHorizontal: 24,
           },
         ]}
       >
