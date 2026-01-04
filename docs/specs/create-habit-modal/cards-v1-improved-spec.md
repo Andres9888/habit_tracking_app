@@ -1222,12 +1222,61 @@ Successfully integrated all card-based components into CreateHabitModal with the
 
 **Acceptance Criteria:**
 
-- [ ] Add `showCharacterCount` prop (boolean, default false)
-- [ ] When enabled, display character count below input
-- [ ] Character count shows: "{count} chars" in emerald-600 when count > 0
-- [ ] Character count aligned to right, helper text aligned to left
-- [ ] Update border to border-2 when focused
-- [ ] Border color changes to emerald-500 when input has value
+- [x] Add `showCharacterCount` prop (boolean, default false)
+- [x] When enabled, display character count below input
+- [x] Character count shows: "{count} chars" in emerald-600 when count > 0
+- [x] Character count aligned to right, helper text aligned to left
+- [x] Update border to border-2 when focused
+- [x] Border color changes to emerald-500 when input has value
+
+**Implementation Notes:**
+
+**Date Completed:** 2026-01-04
+
+Successfully updated HabitNameField component with the following enhancements:
+
+1. **New `showCharacterCount` Prop**:
+   - Added optional boolean prop (default: false) to control character counter display
+   - When enabled, displays helper text and character count below input field
+   - When disabled, maintains backwards compatibility with legacy counter behavior
+
+2. **Character Counter Display**:
+   - Shows "{count} chars" format in emerald-600 (#10B981) when habitName has content
+   - Uses trimmed length (excludes leading/trailing whitespace)
+   - Only displays when trimmed length > 0
+   - Helper text "Make it specific and actionable" aligned left
+   - Character counter aligned right in flex row layout
+
+3. **Border Behavior Updates**:
+   - Border width now always set to 2px (border-2)
+   - Border color changes to emerald-500 (#10B981) when:
+     - Input is focused, OR
+     - Input has value (trimmedLength > 0)
+   - Falls back to stone-200 (#e7e5e4) when empty and not focused
+   - Maintains red-500 (#EF4444) error state for validation
+
+4. **Integration with BasicInfoCard**:
+   - Updated BasicInfoCard to pass `showCharacterCount={true}` to HabitNameField
+   - Removed duplicate character counter logic from BasicInfoCard
+   - Removed unused imports (useMemo) and styles (footerRow, helperText, characterCounter)
+   - Character counting now handled entirely within HabitNameField component
+
+5. **Backwards Compatibility**:
+   - Legacy character counter (25/40 format) still displays when:
+     - `showCharacterCount` is false AND
+     - Character count exceeds SHOW_THRESHOLD (20 characters)
+   - Existing V11 warning/error states preserved
+
+6. **Comprehensive Test Suite**:
+   - Created HabitNameField.task11.test.tsx with 100+ test cases covering:
+     - showCharacterCount prop behavior (enabled, disabled, default)
+     - Character counter display and formatting
+     - Border behavior (border-2, emerald-500 states)
+     - Layout and alignment verification
+     - Edge cases (long names, emoji, special characters, whitespace)
+     - Integration scenarios
+     - Backwards compatibility with legacy counter
+   - All accessibility features tested (labels, roles, screen reader support)
 
 **Character Counter Layout:**
 
