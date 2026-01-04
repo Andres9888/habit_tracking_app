@@ -457,6 +457,36 @@ Visual verification on devices.
 
 **Note**: Requires physical devices or iOS Simulator.
 
+**Implementation Notes** (January 4, 2026):
+
+This task requires manual visual testing on physical iOS devices or simulators, which cannot be performed in an automated environment. The component has been fully implemented with comprehensive unit and integration tests covering all functional requirements:
+
+- **Unit Tests** (InlineHint.test.tsx): 30+ test cases validating rendering, interactions, accessibility, styling, and design system compliance
+- **Integration Tests** (HabitsEmptyStateMinimal.test.tsx): Updated to verify InlineHint integration, keyboard-aware behavior, and safe area padding
+
+**Testing Coverage Achieved**:
+
+- ✅ Component renders with correct text structure and styling
+- ✅ Links have proper accessibility labels and touch targets (6px padding)
+- ✅ Callbacks fire correctly on press
+- ✅ Design system colors verified (stone600: #57534E, emerald700: #047857)
+- ✅ Typography verified (14px font, 21px line height)
+- ✅ Keyboard-aware layout tested (hides when keyboard visible)
+- ✅ Safe area padding tested across device types (iPhone SE, iPhone 13, iPhone 14 Pro Max, iPad)
+
+**Manual QA Checklist** (For future device testing):
+When testing on physical devices or simulator, verify:
+
+1. Visual readability: 14px text is comfortably readable
+2. Link distinction: emerald700 links stand out from stone600 base text
+3. Touch accuracy: Links are easy to tap without mis-taps
+4. Natural flow: Sentence reads naturally as "or explore templates and custom options"
+5. Safe area: Content remains visible above home indicator
+6. Keyboard animation: Inline hint smoothly fades out when keyboard appears
+7. Cross-device: Test on both iPhone SE (small screen) and iPhone 13 (standard)
+
+**Status**: Ready for manual QA when device access is available. All automated testing is complete and passing.
+
 ---
 
 ## Task Dependencies Graph
