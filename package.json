@@ -76,6 +76,7 @@
     "reanimated-color-picker": "^4.1.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.1.0",
+    "vibe-kanban-web-companion": "^0.0.5",
     "victory-native": "^41.20.1"
   },
   "overrides": {

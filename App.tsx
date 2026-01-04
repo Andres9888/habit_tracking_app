@@ -6,6 +6,7 @@ import { colorScheme } from 'nativewind';
 colorScheme.set('light');
 
 import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo';
+import { VibeKanbanWebCompanion } from 'vibe-kanban-web-companion';
 import {
   ConvexProvider,
   ConvexReactClient,
@@ -21,7 +22,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, Text, TextInput, View } from 'react-native';
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -483,7 +484,11 @@ function HabitsApp() {
 function Providers({ children }: { children: ReactNode }) {
   return (
     <PaperProvider theme={extendedTheme}>
-      <ConvexProvider client={convex}>{children}</ConvexProvider>
+      <ConvexProvider client={convex}>
+        {children}
+        {/* Render Vibe Kanban Web Companion only on web platform */}
+        {Platform.OS === 'web' && <VibeKanbanWebCompanion />}
+      </ConvexProvider>
     </PaperProvider>
   );
 }
