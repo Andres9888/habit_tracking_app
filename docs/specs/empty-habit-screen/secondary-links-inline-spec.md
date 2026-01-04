@@ -356,14 +356,28 @@ Test InlineHint component rendering and interactions.
 
 **Acceptance Criteria**:
 
-- [ ] Renders correct text: "or explore ... and ..."
-- [ ] Both links render with correct labels
-- [ ] onBrowseTemplates callback fires on first link press
-- [ ] onCreateCustom callback fires on second link press
-- [ ] Accessibility labels are correct
-- [ ] Touch targets are min 44pt
+- [x] Renders correct text: "or explore ... and ..."
+- [x] Both links render with correct labels
+- [x] onBrowseTemplates callback fires on first link press
+- [x] onCreateCustom callback fires on second link press
+- [x] Accessibility labels are correct
+- [x] Touch targets are min 44pt
 
 **Files**: Create `InlineHint.test.tsx`
+
+**Implementation Notes** (January 4, 2026):
+
+- Created comprehensive test suite with 30+ test cases covering:
+  - Component rendering and text structure
+  - Link press behavior and callbacks
+  - Accessibility labels, hints, and roles
+  - Touch target sizing (6px padding)
+  - Press state styling (0.7 opacity when pressed)
+  - Layout (flexbox with wrap for inline flow)
+  - Design system compliance (colors, font sizes, line heights)
+- Test file follows project patterns from `CtaButton.test.tsx`
+- All acceptance criteria met and expanded upon
+- File location: `src/features/habits/components/HabitsEmptyStateMinimal/__tests__/InlineHint.test.tsx`
 
 **Test Cases**:
 
@@ -405,12 +419,23 @@ Update HabitsEmptyStateMinimal tests to use InlineHint.
 
 **Acceptance Criteria**:
 
-- [ ] Tests still pass after SecondaryLinks → InlineHint swap
-- [ ] Can find "templates" link by accessibility label
-- [ ] Can find "custom options" link by accessibility label
-- [ ] Callbacks still work correctly
+- [x] Tests still pass after SecondaryLinks → InlineHint swap
+- [x] Can find "templates" link by accessibility label
+- [x] Can find "custom options" link by accessibility label
+- [x] Callbacks still work correctly
 
 **Files**: `HabitsEmptyStateMinimal.test.tsx`
+
+**Implementation Notes** (January 4, 2026):
+
+- Updated integration tests to use `getByLabelText` instead of `getByText` for finding links
+- Changed "Browse templates" to accessibility label "Browse habit templates"
+- Changed "Create custom habit" to accessibility label "Create custom habit"
+- Updated test in "Component Rendering" section to check for inline hint text elements
+- Updated test in "Keyboard-Aware Layout" section to check for inline hint instead of secondary links
+- Updated test descriptions to reflect "inline hint" instead of "secondary links"
+- All test changes maintain backwards compatibility with existing behavior
+- Tests verify that inline hint displays: "or explore [templates] and [custom options]"
 
 ---
 
