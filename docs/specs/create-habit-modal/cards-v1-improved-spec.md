@@ -724,12 +724,36 @@ useEffect(() => {
 
 **Acceptance Criteria:**
 
-- [ ] Card wrapper with proper shadow and border-radius
-- [ ] Header displays icon, title, required badge, and completion state
-- [ ] Integrates existing HabitNameField component
-- [ ] Shows character count (dynamic, updates on typing)
-- [ ] Completion checkmark appears when habitName.trim().length > 0
-- [ ] Character counter displays in emerald-600 when valid
+- [x] Card wrapper with proper shadow and border-radius
+- [x] Header displays icon, title, required badge, and completion state
+- [x] Integrates existing HabitNameField component
+- [x] Shows character count (dynamic, updates on typing)
+- [x] Completion checkmark appears when habitName.trim().length > 0
+- [x] Character counter displays in emerald-600 when valid
+
+**Implementation Notes:**
+
+- Created `BasicInfoCard.tsx` component with comprehensive TypeScript types
+- Component is memoized with `React.memo` for performance optimization
+- Card design includes proper shadow, rounded corners (16px), and padding
+- Header includes Edit3 icon (emerald-500), "BASIC INFO" title, CompletionBadge, and completion state indicator
+- Integrates HabitNameField component with autoFocus prop support
+- Character counter displays "{count} chars" in emerald-600 when habitName is non-empty
+- Helper text "Make it specific and actionable" displayed below input
+- Completion state shows CheckCircle (filled emerald) when complete, Circle (stone-300) when incomplete
+- Comprehensive test suite created with 50+ test cases covering:
+  - Component rendering and structure
+  - Completion state transitions
+  - Character counter display and calculations
+  - HabitNameField integration and prop passing
+  - Styling verification (colors, spacing, shadows)
+  - Accessibility (roles, labels, screen reader support)
+  - Edge cases (whitespace, special characters, emoji, long names)
+  - Component memoization
+- Snapshot tests created for visual regression testing covering all states
+- Character counter uses `useMemo` for performance optimization
+- Properly trimmed character count calculation (excludes leading/trailing whitespace)
+- Accessible labels for all interactive elements and state indicators
 
 **Character Counter Logic:**
 
