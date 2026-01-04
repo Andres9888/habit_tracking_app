@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
   },
   ctaContainer: {
     width: '100%',

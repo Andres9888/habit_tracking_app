@@ -235,7 +235,6 @@ export function HabitsEmptyStateMinimal({
         {
           alignItems: 'center',
           flex: 1,
-          paddingHorizontal: 24,
         },
         containerAnimatedStyle,
       ]}

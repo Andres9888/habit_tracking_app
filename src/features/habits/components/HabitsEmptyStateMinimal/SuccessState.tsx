@@ -468,7 +468,6 @@ export function SuccessState({
             alignItems: 'center',
             flex: 1,
             justifyContent: 'center',
-            paddingHorizontal: 24,
           },
         ]}
       >
