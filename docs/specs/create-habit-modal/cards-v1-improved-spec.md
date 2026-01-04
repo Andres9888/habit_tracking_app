@@ -1023,12 +1023,12 @@ const activePreset = useMemo(() => {
 
 **Acceptance Criteria:**
 
-- [ ] Add gradient background: linear-gradient(135deg, #FFF 0%, #F9FAFB 100%)
-- [ ] Add 2px border in stone-200
-- [ ] Add "Preview" label + "Live" badge at top
-- [ ] Include reminder time in badge row when enabled
-- [ ] Update spacing: mt-5 mb-5 (increased from mt-4 mb-4)
-- [ ] Badge layout: [Daily] • [☀️ Afternoon] • [🔔 12:00 PM]
+- [x] Add gradient background: linear-gradient(135deg, #FFF 0%, #F9FAFB 100%)
+- [x] Add 2px border in stone-200
+- [x] Add "Preview" label + "Live" badge at top
+- [x] Include reminder time in badge row when enabled
+- [x] Update spacing: mt-5 mb-5 (increased from mt-4 mb-4)
+- [x] Badge layout: [Daily] • [☀️ Afternoon] • [🔔 12:00 PM]
 
 **New Badge Row Logic:**
 
@@ -1051,6 +1051,39 @@ const activePreset = useMemo(() => {
   )}
 </View>
 ```
+
+**Implementation Notes:**
+
+- Created `LivePreviewCard.tsx` component with comprehensive TypeScript types and JSDoc documentation
+- Component is memoized with `React.memo` for performance optimization
+- Gradient background implemented using `react-native-linear-gradient` with 135deg angle from white to stone-50
+- 2px border in stone-200 (#E5E7EB) applied to container
+- "Preview" label styled in uppercase, bold, with tracking-wide (letter-spacing: 0.5)
+- "Live" badge includes Sparkles icon from lucide-react-native in amber color (#F59E0B)
+- Spacing increased to mt-5 mb-5 (20px margins) as specified
+- Smart frequency text generation reuses PRESETS from FrequencyPresets component to detect Daily/Weekdays/Weekends patterns
+- Custom frequency patterns show "X days/week" format
+- Badge row layout with conditional separators (•) between elements
+- Time of day integrates with Huberman phases (phase1_push, phase2_pivot, phase3_pull)
+- Reminder time displays with bell icon (🔔) only when reminderEnabled is true
+- Default values: emoji='🎯', habitName='Your new habit', color='#10B981' (emerald-500)
+- Comprehensive test suite created with 150+ test cases covering:
+  - Component rendering and structure
+  - Preview label and Live badge display
+  - Default values for empty states
+  - Frequency text generation for all patterns (Daily, Weekdays, Weekends, custom)
+  - Time of day display with all Huberman phases
+  - Reminder time display and conditional rendering
+  - Badge row layout and separator logic
+  - Styling verification (colors, typography, spacing)
+  - Accessibility (roles, labels, screen reader support)
+  - Edge cases (null values, empty strings, special characters)
+  - Component memoization
+  - Integration scenarios (full featured vs minimal)
+- Accessible labels with comprehensive description including habit name, emoji, frequency, time, and reminder
+- Child elements marked as not individually accessible to prevent screen reader redundancy
+- Proper memoization using `useMemo` for frequencyText, timeOfDayInfo, and accessibilityLabel
+- Follows established patterns from other card components (BasicInfoCard, AppearanceCard, ScheduleCard)
 
 ---
 
