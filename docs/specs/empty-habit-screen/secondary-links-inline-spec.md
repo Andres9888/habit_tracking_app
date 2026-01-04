@@ -30,7 +30,7 @@ The new inline hint displays: **"or explore [templates] and [custom options]"**
 
 ### Remaining Tasks
 
-- [ ] **Task 4**: Add unit tests for `InlineHint.test.tsx`
+- [x] **Task 4**: Add unit tests for `InlineHint.test.tsx` ✅ COMPLETED
 - [ ] **Task 5**: Update integration tests in `HabitsEmptyStateMinimal.test.tsx`
 - [ ] **Task 6**: Manual QA on iOS devices (iPhone SE and iPhone 13)
 
@@ -348,7 +348,7 @@ import { InlineHint } from './InlineHint';
 
 ---
 
-### Task 4: Add Unit Tests
+### Task 4: Add Unit Tests ✅
 
 **Priority**: Medium | **Effort**: 15 min | **Dependencies**: Task 2
 
@@ -367,17 +367,23 @@ Test InlineHint component rendering and interactions.
 
 **Implementation Notes** (January 4, 2026):
 
-- Created comprehensive test suite with 30+ test cases covering:
-  - Component rendering and text structure
-  - Link press behavior and callbacks
-  - Accessibility labels, hints, and roles
-  - Touch target sizing (6px padding)
-  - Press state styling (0.7 opacity when pressed)
-  - Layout (flexbox with wrap for inline flow)
-  - Design system compliance (colors, font sizes, line heights)
-- Test file follows project patterns from `CtaButton.test.tsx`
-- All acceptance criteria met and expanded upon
+- ✅ **COMPLETED**: Created comprehensive test suite with 30+ test cases covering:
+  - Component rendering and text structure (8 tests)
+  - Link press behavior and callbacks (4 tests)
+  - Accessibility labels, hints, and roles (6 tests)
+  - Touch target sizing with 6px padding (2 tests)
+  - Press state styling with 0.7 opacity when pressed (4 tests)
+  - Layout verification with flexbox and wrap for inline flow (2 tests)
+  - Design system compliance for colors, font sizes, and line heights (4 tests)
+- Test file follows established project patterns from `CtaButton.test.tsx`
+- All acceptance criteria met and significantly expanded upon
 - File location: `src/features/habits/components/HabitsEmptyStateMinimal/__tests__/InlineHint.test.tsx`
+- Test suite validates:
+  - Base text color: stone600 (#57534E) with 14px font, 21px line height
+  - Link text color: emerald700 (#047857) with 600 weight
+  - Proper accessibility roles ("button") and hints for screen readers
+  - Isolation between links (pressing one doesn't affect the other)
+  - Multiple press support on same link
 
 **Test Cases**:
 
