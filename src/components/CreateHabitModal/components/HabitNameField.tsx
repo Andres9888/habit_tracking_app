@@ -14,6 +14,11 @@ interface HabitNameFieldProps {
   value: string;
   onChange: (text: string) => void;
   autoFocus: boolean;
+  /**
+   * Whether to show character count below the input
+   * @default false
+   */
+  showCharacterCount?: boolean;
 }
 
 const MAX_LENGTH = 50;
@@ -25,8 +30,10 @@ const HabitNameFieldComponent = ({
   value,
   onChange,
   autoFocus,
+  showCharacterCount = false,
 }: HabitNameFieldProps) => {
   const charCount = value.length;
+  const trimmedLength = value.trim().length;
   const showCounter = charCount > SHOW_THRESHOLD;
   const isWarning = charCount > WARNING_THRESHOLD;
   const isError = charCount > MAX_CHARS;
@@ -46,21 +53,28 @@ const HabitNameFieldComponent = ({
   }, [isFocused, focusProgress]);
 
   // Animated style for input focus
-  const animatedInputStyle = useAnimatedStyle(() => ({
-    borderColor:
-      focusProgress.value > 0.5
-        ? '#10B981' // primary.500 - emerald
-        : isError
-          ? '#EF4444' // red-500
-          : '#e7e5e4', // stone-200
-    borderWidth: 2,
-    elevation: focusProgress.value * 2,
-    shadowColor: '#10B981',
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: focusProgress.value * 0.1,
-    shadowRadius: focusProgress.value * 3,
-    transform: [{ translateX: shakeTranslate.value }],
-  }));
+  // Task 11: border-2 when focused, emerald-500 when input has value
+  const animatedInputStyle = useAnimatedStyle(() => {
+    const hasValue = trimmedLength > 0;
+    const isFocusedState = focusProgress.value > 0.5;
+
+    return {
+      borderColor: isFocusedState
+        ? '#10B981' // emerald-500 when focused
+        : hasValue
+          ? '#10B981' // emerald-500 when has value
+          : isError
+            ? '#EF4444' // red-500 when error
+            : '#e7e5e4', // stone-200 default
+      borderWidth: 2, // Always border-2
+      elevation: focusProgress.value * 2,
+      shadowColor: '#10B981',
+      shadowOffset: { height: 0, width: 0 },
+      shadowOpacity: focusProgress.value * 0.1,
+      shadowRadius: focusProgress.value * 3,
+      transform: [{ translateX: shakeTranslate.value }],
+    };
+  });
 
   // V11: Trigger haptic and shake when exceeding MAX_CHARS
   useEffect(() => {
@@ -112,8 +126,42 @@ const HabitNameFieldComponent = ({
         onFocus={handleFocus}
       />
 
-      {/* V11: Character counter - only show when > 20 chars */}
-      {showCounter && (
+      {/* Task 11: Optional character counter with helper text */}
+      {showCharacterCount && (
+        <View
+          style={{
+            marginTop: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 12,
+              color: '#A8A29E', // stone-400
+            }}
+          >
+            Make it specific and actionable
+          </Text>
+          {trimmedLength > 0 && (
+            <Text
+              accessibilityLabel={`${trimmedLength} characters entered`}
+              accessibilityRole='text'
+              style={{
+                fontSize: 12,
+                fontWeight: '500',
+                color: '#10B981', // emerald-600
+              }}
+            >
+              {trimmedLength} chars
+            </Text>
+          )}
+        </View>
+      )}
+
+      {/* V11: Legacy character counter - only show when > 20 chars and showCharacterCount is false */}
+      {!showCharacterCount && showCounter && (
         <Text
           accessibilityLabel={`${charCount} of ${MAX_CHARS} characters used${isWarning ? ', approaching limit' : ''}${isError ? ', limit exceeded' : ''}`}
           accessibilityRole='text'

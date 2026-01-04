@@ -10,7 +10,7 @@
  * - Completion checkmark appears when habitName.trim().length > 0
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Edit3, CheckCircle, Circle } from 'lucide-react-native';
 import { CompletionBadge } from './CompletionBadge';
@@ -47,7 +47,7 @@ export interface BasicInfoCardProps {
  * Design specs:
  * - Card wrapper with shadow and rounded corners
  * - Header with Edit3 icon, "BASIC INFO" title, required badge, and completion state
- * - Character counter shows "{count} chars" in emerald-600 when valid
+ * - Character counter shows "{count} chars" in emerald-600 when valid (handled by HabitNameField)
  * - Completion checkmark appears when habitName is non-empty
  *
  * @param props - BasicInfoCard component props
@@ -55,12 +55,6 @@ export interface BasicInfoCardProps {
  */
 export const BasicInfoCard = React.memo<BasicInfoCardProps>(
   ({ habitName, onHabitNameChange, isComplete, autoFocus = false }) => {
-    // Calculate character count for display
-    const characterCount = useMemo(
-      () => habitName.trim().length,
-      [habitName]
-    );
-
     return (
       <View
         style={styles.card}
@@ -103,22 +97,8 @@ export const BasicInfoCard = React.memo<BasicInfoCardProps>(
             value={habitName}
             onChange={onHabitNameChange}
             autoFocus={autoFocus}
+            showCharacterCount={true}
           />
-
-          {/* Helper text and character counter row */}
-          <View style={styles.footerRow}>
-            <Text style={styles.helperText}>
-              Make it specific and actionable
-            </Text>
-            {characterCount > 0 && (
-              <Text
-                style={styles.characterCounter}
-                accessibilityLabel={`${characterCount} characters entered`}
-              >
-                {characterCount} chars
-              </Text>
-            )}
-          </View>
         </View>
       </View>
     );
@@ -165,20 +145,5 @@ const styles = StyleSheet.create({
   },
   content: {
     // Content area styles
-  },
-  footerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 6, // mt-1.5
-  },
-  helperText: {
-    fontSize: 12,
-    color: '#A8A29E', // stone-400
-  },
-  characterCounter: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#10B981', // emerald-600
   },
 });
