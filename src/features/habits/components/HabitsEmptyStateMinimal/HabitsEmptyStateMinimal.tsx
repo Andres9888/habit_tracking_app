@@ -27,8 +27,8 @@ import { CtaButton } from './CtaButton';
 import { ErrorMessage } from './ErrorMessage';
 import { HabitInput } from './HabitInput';
 import { HeroIcon } from './HeroIcon';
+import { InlineHint } from './InlineHint';
 import { LoadingSkeleton } from './LoadingSkeleton';
-import { SecondaryLinks } from './SecondaryLinks';
 import { SuccessState } from './SuccessState';
 import { SuggestionChips } from './SuggestionChips';
 import type { HabitsEmptyStateMinimalProps, SuggestionChip } from './types';
@@ -325,7 +325,7 @@ export function HabitsEmptyStateMinimal({
         <ErrorMessage message={errorMessage} onDismiss={handleDismissError} />
       )}
 
-      {/* Secondary Links - fades out when keyboard visible */}
+      {/* Inline Hint - fades out when keyboard visible */}
       <Animated.View
         accessibilityElementsHidden={isKeyboardVisible}
         importantForAccessibility={
@@ -334,7 +334,7 @@ export function HabitsEmptyStateMinimal({
         style={secondaryLinksAnimatedStyle}
       >
         <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
-          <SecondaryLinks
+          <InlineHint
             onBrowseTemplates={openTemplatesScreen}
             onCreateCustom={openCreateHabitScreen}
           />

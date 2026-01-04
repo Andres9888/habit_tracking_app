@@ -99,6 +99,16 @@ export interface SecondaryLinksProps {
 }
 
 /**
+ * InlineHint component props
+ */
+export interface InlineHintProps {
+  /** Callback to open templates screen */
+  onBrowseTemplates: () => void;
+  /** Callback to open create habit modal */
+  onCreateCustom: () => void;
+}
+
+/**
  * SuccessState component props
  */
 export interface SuccessStateProps {

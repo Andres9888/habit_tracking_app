@@ -14,6 +14,7 @@ export { HabitInput } from './HabitInput';
 export { SuggestionChips } from './SuggestionChips';
 export { CtaButton } from './CtaButton';
 export { SecondaryLinks } from './SecondaryLinks';
+export { InlineHint } from './InlineHint';
 export { SuccessState } from './SuccessState';
 export { AnimatedEntrance } from './AnimatedEntrance';
 export { ProgressRing } from './ProgressRing';
@@ -30,6 +31,7 @@ export type {
   SuggestionChipsProps,
   CtaButtonProps,
   SecondaryLinksProps,
+  InlineHintProps,
   SuccessStateProps,
   EmptyStateState,
   ErrorMessageProps,
