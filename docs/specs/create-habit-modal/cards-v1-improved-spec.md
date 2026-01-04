@@ -773,13 +773,40 @@ const isValid = characterCount > 0;
 
 **Acceptance Criteria:**
 
-- [ ] Card wrapper matches BasicInfoCard styling
-- [ ] Header displays palette icon, title, optional badge, completion state
-- [ ] Integrates existing EmojiPicker component
-- [ ] Integrates existing ColorPickerSection component
-- [ ] Smart emoji suggestion appears when keyword detected in habitName
-- [ ] Suggestion includes lightbulb icon + contextual text
-- [ ] Completion checkmark appears when both emoji + color selected
+- [x] Card wrapper matches BasicInfoCard styling
+- [x] Header displays palette icon, title, optional badge, completion state
+- [x] Integrates existing EmojiPicker component
+- [x] Integrates existing ColorPickerSection component
+- [x] Smart emoji suggestion appears when keyword detected in habitName
+- [x] Suggestion includes lightbulb icon + contextual text
+- [x] Completion checkmark appears when both emoji + color selected
+
+**Implementation Notes:**
+
+- Created `AppearanceCard.tsx` component with comprehensive TypeScript types and JSDoc documentation
+- Component is memoized with `React.memo` for performance optimization
+- Card design matches BasicInfoCard with proper shadow, rounded corners (16px), and padding
+- Header includes Palette icon (emerald-500), "APPEARANCE" title, CompletionBadge (optional), and completion state indicator
+- Integrates EmojiPicker component with habitName prop for smart suggestions
+- Integrates ColorPickerSection component with all required props
+- Smart emoji suggestion system with 30+ keyword mappings (read, exercise, meditation, water, code, etc.)
+- Lightbulb icon + contextual text displays when keyword detected in habit name
+- Case-insensitive keyword matching with support for partial matches
+- Completion state shows CheckCircle (filled emerald) when both emoji and color selected, Circle (stone-300) otherwise
+- Comprehensive test suite created with 100+ test cases covering:
+  - Component rendering and structure
+  - Completion state transitions
+  - Smart emoji suggestions for all keywords
+  - EmojiPicker and ColorPickerSection integration
+  - Styling verification (colors, spacing, shadows)
+  - Accessibility (roles, labels, screen reader support)
+  - Edge cases (null values, empty strings, long names, special characters)
+  - Component memoization
+  - Keyword coverage for all 30+ supported keywords
+- Snapshot tests created for visual regression testing covering all states
+- Smart hint uses inline implementation (lightbulb icon + text) instead of separate SmartHintText component
+- Accessible labels for all interactive elements and state indicators
+- Properly structured with useMemo for smart suggestion calculation
 
 **Smart Suggestion Keywords (Initial Set):**
 
