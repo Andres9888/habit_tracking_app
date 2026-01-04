@@ -78,6 +78,8 @@ export const COLORS = {
 
   stone500: '#78716C',
 
+  stone600: '#57534E',
+
   stone700: '#44403C',
 
   // Text colors - Stone palette
