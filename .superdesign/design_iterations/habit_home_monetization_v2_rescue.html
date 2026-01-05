@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Home - Evening Rescue Mode Focus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif !important;
+        }
+        body {
+            background: linear-gradient(to bottom, #1c1917 0%, #292524 50%, #1c1917 100%);
+        }
+        .habit-card {
+            transition: all 0.2s ease;
+        }
+        .habit-card:hover {
+            transform: translateY(-2px);
+        }
+        .urgent-pulse {
+            animation: urgent-pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes urgent-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+                transform: scale(1.02);
+            }
+        }
+        .countdown-flash {
+            animation: countdown-flash 2s ease-in-out infinite;
+        }
+        @keyframes countdown-flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .rescue-glow {
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.3), 0 0 80px rgba(239, 68, 68, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-6">
+    <div class="max-w-md mx-auto space-y-4">
+
+        <!-- Header - Evening State -->
+        <div class="flex items-center justify-between pt-8">
+            <div>
+                <h1 class="text-2xl font-bold text-white">Tonight</h1>
+                <p class="text-sm text-stone-400">1 habit left • 3h until midnight</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="px-3 py-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs font-semibold flex items-center gap-1">
+                    <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+                    Go Premium
+                </button>
+            </div>
+        </div>
+
+        <!-- MONETIZATION ELEMENT 1: Urgent Rescue Mode Alert -->
+        <!-- MONETARY REASON: Duolingo's streak saves generate $200M+ annually, 40% of premium revenue -->
+        <!-- TIME-BASED URGENCY: Evening = highest conversion time for streak protection -->
+        <div class="urgent-pulse rescue-glow bg-gradient-to-br from-rose-900 via-red-800 to-orange-900 rounded-2xl p-5 border-2 border-red-500">
+            <div class="flex items-start gap-3 mb-4">
+                <div class="bg-red-500 rounded-full p-2.5">
+                    <i data-lucide="alert-triangle" class="w-6 h-6 text-white"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <p class="font-bold text-xl text-white">Rescue Mode</p>
+                        <span class="bg-red-500 text-white text-xs px-2.5 py-1 rounded-full font-bold countdown-flash">3h left</span>
+                    </div>
+                    <p class="text-sm text-red-100">Your 12-day Morning Run streak ends at midnight</p>
+                </div>
+            </div>
+
+            <!-- Rescue CTA -->
+            <div class="bg-black/20 backdrop-blur-sm rounded-xl p-4 mb-4 border border-red-500/30">
+                <p class="text-xs text-red-200 mb-3 font-semibold uppercase tracking-wide">Premium Rescue Features</p>
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-sm text-white">
+                        <i data-lucide="shield" class="w-4 h-4 text-red-400"></i>
+                        <span>Save your streak with 1-tap protection</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-white">
+                        <i data-lucide="rewind" class="w-4 h-4 text-red-400"></i>
+                        <span>Restore broken streaks (last 7 days)</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-white">
+                        <i data-lucide="calendar-check" class="w-4 h-4 text-red-400"></i>
+                        <span>2 streak freezes per month included</span>
+                    </div>
+                </div>
+                <button class="w-full bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition">
+                    Unlock Rescue Mode - $6.99/mo
+                </button>
+            </div>
+
+            <!-- Quick Action (Free) -->
+            <button class="w-full bg-white/10 backdrop-blur-sm text-white font-semibold py-2.5 rounded-lg border border-white/20 hover:bg-white/20 transition">
+                Just do 2 minutes instead
+            </button>
+        </div>
+
+        <!-- MONETIZATION ELEMENT 2: Milestone Celebration Teaser -->
+        <!-- MONETARY REASON: Milestone achievements drive 3x higher premium conversion (Strava Premium data) -->
+        <div class="bg-gradient-to-br from-amber-900 to-yellow-900 rounded-2xl p-5 border border-amber-500/50">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="bg-amber-500 rounded-full p-2">
+                    <i data-lucide="trophy" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="font-bold text-amber-100">You're close to something special</p>
+                </div>
+            </div>
+            <div class="bg-black/20 backdrop-blur-sm rounded-lg p-3 mb-3 border border-amber-500/30">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-amber-200">14-day milestone</span>
+                    <span class="text-xs font-bold text-amber-400">2 days away</span>
+                </div>
+                <div class="h-2 bg-black/30 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full" style="width: 85.7%"></div>
+                </div>
+            </div>
+            <div class="flex items-start gap-2 mb-3">
+                <i data-lucide="lock" class="w-4 h-4 text-amber-400 mt-0.5"></i>
+                <p class="text-xs text-amber-200">Premium members unlock milestone badges, stats, and celebration videos</p>
+            </div>
+            <button class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-amber-950 font-bold py-2.5 rounded-lg hover:shadow-lg transition">
+                See What You'll Earn
+            </button>
+        </div>
+
+        <!-- Calendar Timeline - Dark Mode -->
+        <div class="bg-stone-800 rounded-2xl p-4 shadow-xl border border-stone-700">
+            <div class="flex items-center justify-between mb-3">
+                <button class="p-1 hover:bg-stone-700 rounded">
+                    <i data-lucide="chevron-left" class="w-5 h-5 text-stone-400"></i>
+                </button>
+                <p class="text-sm font-semibold text-stone-300">Dec 29 - Jan 4</p>
+                <button class="p-1 hover:bg-stone-700 rounded">
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-stone-400"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-7 gap-2">
+                <div class="text-center">
+                    <p class="text-xs text-stone-500 mb-1">S</p>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-900/50 border border-emerald-700 flex items-center justify-center">
+                        <span class="text-xs font-semibold text-emerald-400">2/3</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-stone-500 mb-1">M</p>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center">
+                        <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-stone-500 mb-1">T</p>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center">
+                        <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-stone-500 mb-1">W</p>
+                    <div class="w-10 h-10 rounded-lg bg-stone-700 flex items-center justify-center">
+                        <span class="text-xs text-stone-500">1/3</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-stone-500 mb-1">T</p>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center">
+                        <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-stone-500 mb-1">F</p>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-900/50 border border-emerald-700 flex items-center justify-center">
+                        <span class="text-xs font-semibold text-emerald-400">2/3</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs font-bold text-red-400 mb-1">S</p>
+                    <div class="w-10 h-10 rounded-lg bg-red-900/30 border-2 border-red-500 flex items-center justify-center">
+                        <span class="text-xs font-bold text-red-400">2/3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habit Cards - Dark Mode -->
+
+        <!-- Habit 1: At Risk -->
+        <div class="habit-card bg-gradient-to-br from-stone-800 to-stone-900 rounded-2xl p-4 shadow-xl border-2 border-red-500/50">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-start gap-3 flex-1">
+                    <div class="text-3xl">🏃</div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="font-bold text-white">Morning Run</h4>
+                            <span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">AT RISK</span>
+                        </div>
+                        <p class="text-xs text-rose-400 italic">"To have energy for my kids"</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+                                <span class="text-sm font-bold text-orange-400">12 days</span>
+                            </div>
+                            <span class="text-xs text-stone-600">•</span>
+                            <span class="text-xs text-amber-500 font-semibold">73% strong</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-8 h-8 rounded-full border-2 border-red-500 bg-red-500/20 flex items-center justify-center">
+                    <i data-lucide="circle" class="w-5 h-5 text-red-400"></i>
+                </button>
+            </div>
+
+            <div class="flex gap-2 pl-12 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-stone-700"></div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-red-900/30 border-2 border-red-500"></div>
+            </div>
+
+            <button class="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-2.5 rounded-lg">
+                Complete Now • Save Streak
+            </button>
+        </div>
+
+        <!-- Habit 2: Complete -->
+        <div class="habit-card bg-stone-800 rounded-2xl p-4 shadow-lg border border-stone-700">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-start gap-3 flex-1">
+                    <div class="text-3xl">📖</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-white">Read 20 min</h4>
+                        <p class="text-xs text-rose-400 italic mt-0.5">"To expand my perspective"</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+                                <span class="text-sm font-bold text-orange-400">8 days</span>
+                            </div>
+                            <span class="text-xs text-stone-600">•</span>
+                            <span class="text-xs text-amber-500 font-semibold">61% strong</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </button>
+            </div>
+
+            <div class="flex gap-2 pl-12">
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-stone-700"></div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-stone-700"></div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habit 3: Complete -->
+        <div class="habit-card bg-stone-800 rounded-2xl p-4 shadow-lg border border-stone-700">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-start gap-3 flex-1">
+                    <div class="text-3xl">🧘</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-white">Meditate</h4>
+                        <p class="text-xs text-rose-400 italic mt-0.5">"To reduce anxiety"</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+                                <span class="text-sm font-bold text-orange-400">21 days</span>
+                            </div>
+                            <span class="text-xs text-stone-600">•</span>
+                            <span class="text-xs text-emerald-500 font-semibold">85% strong</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </button>
+            </div>
+
+            <div class="flex gap-2 pl-12">
+                <div class="w-8 h-8 rounded-lg bg-stone-700"></div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- MONETIZATION ELEMENT 3: Your Past Self Message -->
+        <!-- MONETARY REASON: Voice notes = Reflectly's $2M ARR business model, 40% higher emotional recall -->
+        <div class="bg-gradient-to-br from-teal-900 to-cyan-900 rounded-2xl p-5 border border-teal-500/50">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="bg-teal-500 rounded-full p-2">
+                    <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="font-bold text-teal-100 mb-1">A message from your past self</p>
+                    <p class="text-xs text-teal-300">Recorded on Day 1 of your streak</p>
+                </div>
+                <span class="bg-violet-600 text-white text-xs px-2 py-0.5 rounded-full font-semibold">PRO</span>
+            </div>
+
+            <div class="bg-black/20 backdrop-blur-sm rounded-lg p-4 mb-3 border border-teal-500/30">
+                <div class="flex items-center gap-3 mb-2">
+                    <button class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center">
+                        <i data-lucide="play" class="w-5 h-5 text-white"></i>
+                    </button>
+                    <div class="flex-1 h-1.5 bg-teal-950 rounded-full overflow-hidden">
+                        <div class="h-full bg-teal-400 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span class="text-xs text-teal-300">0:42</span>
+                </div>
+                <p class="text-xs text-teal-200 italic">"Remember why you started this..."</p>
+            </div>
+
+            <button class="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-teal-950 font-bold py-2.5 rounded-lg">
+                Unlock Voice Notes
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Streak at Risk - Paywall Modal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34D399', 500: '#10B981', 600: '#059669', 700: '#047857' },
+            premium: { 50: '#f5f3ff', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' },
+            surface: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c', 800: '#292524', 900: '#1c1917' },
+            warning: { 50: '#fffbeb', 500: '#F59E0B', 600: '#D97706' },
+            error: { 50: '#fef2f2', 500: '#EF4444', 600: '#DC2626' },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #1c1917; min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+    .phone-frame { width: 390px; height: 844px; background: #fafaf9; border-radius: 50px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 0 0 12px #1c1917; position: relative; }
+    .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 160px; height: 34px; background: #1c1917; border-radius: 0 0 24px 24px; z-index: 100; }
+    .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 100px; z-index: 100; }
+
+    /* Urgent pulse */
+    @keyframes urgent-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+    }
+    .urgent-pulse { animation: urgent-pulse 1.5s ease-in-out infinite; }
+
+    /* Flame shake */
+    @keyframes flame-shake {
+      0%, 100% { transform: rotate(-5deg) scale(1); }
+      25% { transform: rotate(5deg) scale(1.1); }
+      50% { transform: rotate(-5deg) scale(1); }
+      75% { transform: rotate(5deg) scale(1.05); }
+    }
+    .flame-shake { animation: flame-shake 0.5s ease-in-out infinite; }
+
+    /* Countdown pulse */
+    @keyframes countdown-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    .countdown-pulse { animation: countdown-pulse 1s ease-in-out infinite; }
+
+    /* Shield glow */
+    @keyframes shield-glow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5)); }
+      50% { filter: drop-shadow(0 0 25px rgba(139, 92, 246, 0.8)); }
+    }
+    .shield-glow { animation: shield-glow 2s ease-in-out infinite; }
+
+    /* Fade in up */
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fade-in-up 0.4s ease-out forwards; }
+    .delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .delay-4 { animation-delay: 0.4s; opacity: 0; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="home-indicator"></div>
+
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-black/60 z-40"></div>
+
+    <!-- Modal -->
+    <div class="absolute inset-x-4 top-24 bottom-20 bg-white rounded-3xl z-50 flex flex-col overflow-hidden shadow-2xl">
+
+      <!-- Urgent Header -->
+      <div class="bg-gradient-to-br from-error-500 to-rose-600 px-6 py-8 text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50"></div>
+
+        <div class="relative">
+          <div class="flame-shake text-6xl mb-3">🔥</div>
+          <h1 class="fade-in-up text-white text-2xl font-bold mb-2">Your Streak is at Risk!</h1>
+          <p class="fade-in-up delay-1 text-white/80 text-sm">14 days of hard work could disappear</p>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1 px-6 py-5 overflow-y-auto">
+
+        <!-- Countdown -->
+        <div class="fade-in-up delay-2 bg-error-50 border-2 border-error-200 rounded-2xl p-4 mb-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-error-600 text-sm font-medium">Time remaining</p>
+              <p class="text-surface-500 text-xs">Before streak resets to 0</p>
+            </div>
+            <div class="countdown-pulse text-right">
+              <p class="text-error-600 text-3xl font-bold">2:34:12</p>
+              <p class="text-error-500 text-xs">hours left</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- What you'll lose -->
+        <div class="fade-in-up delay-3 mb-5">
+          <h3 class="text-surface-900 font-semibold mb-3 flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-warning-500"></i>
+            What you'll lose
+          </h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 bg-surface-50 rounded-xl p-3">
+              <span class="text-2xl">🔥</span>
+              <div class="flex-1">
+                <p class="text-surface-900 font-medium">14-Day Streak</p>
+                <p class="text-surface-500 text-xs">Your longest streak ever</p>
+              </div>
+              <span class="text-error-500 font-bold">→ 0</span>
+            </div>
+            <div class="flex items-center gap-3 bg-surface-50 rounded-xl p-3">
+              <span class="text-2xl">📊</span>
+              <div class="flex-1">
+                <p class="text-surface-900 font-medium">Motivation Score</p>
+                <p class="text-surface-500 text-xs">847 points built up</p>
+              </div>
+              <span class="text-error-500 font-bold">-150</span>
+            </div>
+            <div class="flex items-center gap-3 bg-surface-50 rounded-xl p-3">
+              <span class="text-2xl">💪</span>
+              <div class="flex-1">
+                <p class="text-surface-900 font-medium">Momentum</p>
+                <p class="text-surface-500 text-xs">Top 8% of users</p>
+              </div>
+              <span class="text-error-500 font-bold">Lost</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Protection Option -->
+        <div class="fade-in-up delay-4 bg-gradient-to-br from-premium-50 to-violet-50 border-2 border-premium-200 rounded-2xl p-5 relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-premium-200 rounded-full opacity-30"></div>
+
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="shield-glow w-14 h-14 rounded-2xl bg-gradient-to-br from-premium-500 to-premium-600 flex items-center justify-center">
+                <i data-lucide="shield" class="w-7 h-7 text-white"></i>
+              </div>
+              <div>
+                <h3 class="text-surface-900 font-bold text-lg">Streak Protection</h3>
+                <p class="text-premium-600 text-sm font-medium">Save your 14-day streak</p>
+              </div>
+            </div>
+
+            <ul class="space-y-2 mb-4">
+              <li class="flex items-center gap-2 text-sm text-surface-700">
+                <i data-lucide="check" class="w-4 h-4 text-premium-500"></i>
+                <span><strong>3 Streak Freezes</strong> per month</span>
+              </li>
+              <li class="flex items-center gap-2 text-sm text-surface-700">
+                <i data-lucide="check" class="w-4 h-4 text-premium-500"></i>
+                <span><strong>AI-Powered Rescue</strong> when struggling</span>
+              </li>
+              <li class="flex items-center gap-2 text-sm text-surface-700">
+                <i data-lucide="check" class="w-4 h-4 text-premium-500"></i>
+                <span><strong>Unlimited Voice Notes</strong> & Letters</span>
+              </li>
+              <li class="flex items-center gap-2 text-sm text-surface-700">
+                <i data-lucide="check" class="w-4 h-4 text-premium-500"></i>
+                <span><strong>Pattern Insights</strong> to prevent future fails</span>
+              </li>
+            </ul>
+
+            <div class="flex items-center justify-between mb-4 pb-4 border-b border-premium-200">
+              <div>
+                <p class="text-surface-500 text-xs line-through">$9.99/month</p>
+                <p class="text-surface-900 font-bold text-xl">$6.99<span class="text-surface-500 text-sm font-normal">/month</span></p>
+              </div>
+              <div class="bg-warning-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                SAVE 30%
+              </div>
+            </div>
+
+            <button class="urgent-pulse w-full bg-gradient-to-r from-premium-500 to-premium-600 text-white font-bold py-4 rounded-xl text-base shadow-lg flex items-center justify-center gap-2">
+              <i data-lucide="shield" class="w-5 h-5"></i>
+              Protect My Streak
+            </button>
+
+            <p class="text-center text-surface-400 text-xs mt-3">Cancel anytime • Instant activation</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Actions -->
+      <div class="px-6 py-4 border-t border-surface-100 bg-surface-50">
+        <div class="flex gap-3">
+          <button class="flex-1 py-3 rounded-xl border-2 border-surface-200 text-surface-600 font-medium text-sm">
+            Do Habit Now
+          </button>
+          <button class="flex-1 py-3 rounded-xl text-surface-400 font-medium text-sm">
+            Let Streak Reset
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

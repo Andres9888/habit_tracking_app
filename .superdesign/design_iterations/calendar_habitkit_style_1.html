@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar MVP - HabitKit + Competitor Best Practices</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; -webkit-tap-highlight-color: transparent; }
+    body { background: #0f0f0f !important; min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .screen-content {
+      padding: 60px 16px 24px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    /* Header - Compact like HabitKit */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #1a1a1a;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .habit-icon-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .habit-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .settings-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #1a1a1a;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Stats Row - HabitKit 3-column style */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .stat-icon { font-size: 18px; margin-bottom: 2px; }
+    .stat-value { font-size: 20px; font-weight: 700; color: #fff; }
+    .stat-label { font-size: 10px; color: #666; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+    /* Habit Strength - Loop Habit Tracker unique feature */
+    .strength-section {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .strength-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .strength-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .strength-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .strength-bar-container {
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .strength-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    .strength-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .strength-info strong { color: #10b981; }
+
+    /* GitHub-Style Heatmap - Core HabitKit feature */
+    .heatmap-section {
+      margin-bottom: 16px;
+    }
+
+    .heatmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .heatmap-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .week-start-badge {
+      font-size: 9px;
+      color: #666;
+      background: #1a1a1a;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .heatmap-toggle {
+      display: flex;
+      background: #1a1a1a;
+      border-radius: 6px;
+      padding: 2px;
+    }
+
+    .heatmap-toggle-btn {
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #666;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .heatmap-toggle-btn.active {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    /* Month Labels */
+    .month-labels {
+      display: flex;
+      padding-left: 22px;
+      margin-bottom: 3px;
+    }
+
+    .month-label {
+      font-size: 9px;
+      color: #666;
+      width: calc((9px + 2px) * 4.33);
+    }
+
+    /* Heatmap Grid */
+    .heatmap-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .heatmap-row {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .day-label {
+      width: 18px;
+      font-size: 8px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .heatmap-cell {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: #1a1a1a;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+
+    .heatmap-cell:hover { transform: scale(1.4); z-index: 10; }
+    .heatmap-cell.future { background: #0d0d0d; cursor: default; }
+    .heatmap-cell.level-1 { background: rgba(16, 185, 129, 0.25); }
+    .heatmap-cell.level-2 { background: rgba(16, 185, 129, 0.5); }
+    .heatmap-cell.level-3 { background: rgba(16, 185, 129, 0.75); }
+    .heatmap-cell.level-4 { background: #10b981; }
+    .heatmap-cell.today { outline: 2px solid #f59e0b; outline-offset: 1px; }
+
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 3px;
+      margin-top: 8px;
+      font-size: 9px;
+      color: #666;
+    }
+
+    .legend-cell {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+    }
+
+    /* Year View Premium - Blurred with CTA */
+    .year-premium-overlay {
+      position: relative;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(245, 158, 11, 0.02) 100%);
+      border: 1px dashed rgba(245, 158, 11, 0.25);
+      border-radius: 12px;
+    }
+
+    .year-preview-blurred {
+      filter: blur(4px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .year-premium-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .year-premium-icon { font-size: 28px; margin-bottom: 6px; }
+    .year-premium-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .year-premium-desc { font-size: 12px; color: #888; margin-bottom: 10px; }
+
+    .year-premium-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Calendar Section - Traditional Month View */
+    .calendar-section {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .calendar-month {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .calendar-nav-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: #2a2a2a;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .calendar-nav-btn:hover { color: #fff; }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      margin-bottom: 6px;
+    }
+
+    .calendar-weekday {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #666;
+      padding: 3px 0;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      color: #888;
+      background: transparent;
+    }
+
+    .calendar-day.empty { cursor: default; }
+    .calendar-day.completed { background: #10b981; color: #fff; }
+    .calendar-day.missed { background: #2a2a2a; color: #666; }
+    .calendar-day.future { color: #333; cursor: default; }
+    .calendar-day.today { border: 2px solid #f59e0b; }
+    .calendar-day.today.incomplete { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .calendar-day:hover:not(.empty):not(.future) { transform: scale(0.9); }
+    .calendar-day:active:not(.empty):not(.future) { transform: scale(0.8); }
+
+    /* Multi-completion - HabitKit feature */
+    .calendar-day .multi-count {
+      position: absolute;
+      top: 1px;
+      right: 2px;
+      font-size: 7px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Note indicator - Pixels style */
+    .calendar-day.has-note::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 4px;
+      height: 4px;
+      background: #f59e0b;
+      border-radius: 50%;
+    }
+
+    /* Consistency Chart - Habitify style */
+    .consistency-section {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .consistency-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .consistency-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .consistency-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 5px;
+    }
+
+    .consistency-chart {
+      height: 60px;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      padding: 8px 0;
+    }
+
+    .consistency-bar {
+      flex: 1;
+      background: #10b981;
+      border-radius: 2px 2px 0 0;
+      transition: height 0.3s ease;
+      min-height: 3px;
+    }
+
+    .consistency-bar.current {
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .consistency-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #666;
+    }
+
+    /* Premium Feature CTAs */
+    .premium-cta {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, transparent 100%);
+      border: 1px dashed rgba(245, 158, 11, 0.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .premium-cta:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, transparent 100%);
+    }
+
+    .premium-cta-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .premium-cta-content { flex: 1; }
+    .premium-cta-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .premium-cta-desc { font-size: 11px; color: #888; margin-top: 1px; }
+    .premium-cta-arrow { color: #f59e0b; font-size: 16px; }
+
+    /* Widget Preview - Streaks style */
+    .widget-section {
+      margin-bottom: 16px;
+    }
+
+    .widget-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .widget-preview {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .widget-card {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .widget-card.premium { opacity: 0.6; }
+
+    .widget-card.premium::after {
+      content: 'PRO';
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 7px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    .widget-name { font-size: 10px; color: #666; margin-bottom: 6px; }
+    .widget-value { font-size: 20px; font-weight: 700; color: #fff; }
+    .widget-mini-grid { display: flex; gap: 2px; margin-top: 6px; }
+    .widget-mini-cell { width: 5px; height: 5px; border-radius: 1px; background: #2a2a2a; }
+    .widget-mini-cell.filled { background: #10b981; }
+
+    /* Shield CTA - Habitify/Duolingo */
+    .shield-cta {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.03) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .shield-icon { font-size: 24px; }
+    .shield-content { flex: 1; }
+    .shield-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .shield-desc { font-size: 11px; color: #888; margin-top: 1px; }
+
+    .shield-btn {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Export CTA - Pixels style */
+    .export-cta {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .export-icon { font-size: 20px; }
+    .export-content { flex: 1; }
+    .export-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .export-desc { font-size: 11px; color: #888; margin-top: 1px; }
+    .export-badge {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+    }
+
+    /* View containers */
+    .view-container { display: none; }
+    .view-container.active { display: block; }
+
+    /* Confetti */
+    .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; display: none; }
+    .confetti.active { display: block; }
+    .confetti-piece { position: absolute; width: 10px; height: 10px; opacity: 0; }
+    @keyframes confetti-fall {
+      0% { opacity: 1; top: 40%; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; top: 100%; transform: translateY(100px) rotate(720deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="notch"></div>
+      <div class="screen-content">
+
+        <!-- Header - Compact like HabitKit -->
+        <div class="header">
+          <button class="back-btn">‹</button>
+          <div class="header-title">
+            <div class="habit-icon-small" id="habit-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">💪</div>
+            <span class="habit-name">Morning Exercise</span>
+          </div>
+          <button class="settings-btn">⚙️</button>
+        </div>
+
+        <!-- Stats Row - HabitKit 3-column (FREE) -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-value">12</div>
+            <div class="stat-label">Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">21</div>
+            <div class="stat-label">Best</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value">267</div>
+            <div class="stat-label">Total</div>
+          </div>
+        </div>
+
+        <!-- Habit Strength - Loop unique feature (PREMIUM differentiator) -->
+        <div class="strength-section">
+          <div class="strength-header">
+            <span class="strength-title">Habit Strength</span>
+            <span class="strength-badge">Strong 💪</span>
+          </div>
+          <div class="strength-bar-container">
+            <div class="strength-bar" style="width: 73%;"></div>
+          </div>
+          <div class="strength-info">
+            <span>Since Oct 15</span>
+            <span><strong>73%</strong> strength</span>
+          </div>
+        </div>
+
+        <!-- GitHub-Style Heatmap - Core HabitKit feature (FREE with Year PREMIUM) -->
+        <div class="heatmap-section">
+          <div class="heatmap-header">
+            <div class="heatmap-title">
+              Activity
+              <span class="week-start-badge">Mon</span>
+            </div>
+            <div class="heatmap-toggle">
+              <button class="heatmap-toggle-btn active" data-view="3month">3M</button>
+              <button class="heatmap-toggle-btn" data-view="year">Year</button>
+            </div>
+          </div>
+
+          <!-- 3-Month View (FREE) -->
+          <div id="heatmap-3month" class="view-container active">
+            <div class="month-labels">
+              <div class="month-label">Oct</div>
+              <div class="month-label">Nov</div>
+              <div class="month-label">Dec</div>
+            </div>
+            <div class="heatmap-grid" id="heatmap-grid-3m"></div>
+            <div class="heatmap-legend">
+              <span>Less</span>
+              <div class="legend-cell" style="background: #1a1a1a;"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.25);"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.5);"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.75);"></div>
+              <div class="legend-cell" style="background: #10b981;"></div>
+              <span>More</span>
+            </div>
+          </div>
+
+          <!-- Year View (PREMIUM - drives subscription) -->
+          <div id="heatmap-year" class="view-container">
+            <div class="year-premium-overlay">
+              <div class="year-preview-blurred">
+                <div class="heatmap-grid" id="heatmap-grid-year"></div>
+              </div>
+              <div class="year-premium-content">
+                <div class="year-premium-icon">📅</div>
+                <div class="year-premium-title">See Your Full Year</div>
+                <div class="year-premium-desc">365 days of progress at a glance</div>
+                <button class="year-premium-btn">Unlock PRO</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Section - Traditional Month View (FREE) -->
+        <div class="calendar-section">
+          <div class="calendar-header">
+            <span class="calendar-month">December 2025</span>
+            <div class="calendar-nav">
+              <button class="calendar-nav-btn">‹</button>
+              <button class="calendar-nav-btn">›</button>
+            </div>
+          </div>
+          <div class="calendar-weekdays">
+            <div class="calendar-weekday">M</div>
+            <div class="calendar-weekday">T</div>
+            <div class="calendar-weekday">W</div>
+            <div class="calendar-weekday">T</div>
+            <div class="calendar-weekday">F</div>
+            <div class="calendar-weekday">S</div>
+            <div class="calendar-weekday">S</div>
+          </div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+
+        <!-- Consistency Chart - Habitify style (PREMIUM) -->
+        <div class="consistency-section">
+          <div class="consistency-header">
+            <span class="consistency-title">30-Day Trend</span>
+            <span class="consistency-badge">↑ 12%</span>
+          </div>
+          <div class="consistency-chart" id="consistency-chart"></div>
+          <div class="consistency-labels">
+            <span>4 weeks ago</span>
+            <span>This week</span>
+          </div>
+        </div>
+
+        <!-- Week Comparison - PREMIUM teaser -->
+        <div class="premium-cta" onclick="alert('PRO Feature: Compare this week vs last week, see your best days, and get trend predictions!')">
+          <div class="premium-cta-icon">📊</div>
+          <div class="premium-cta-content">
+            <div class="premium-cta-title">Week Comparison</div>
+            <div class="premium-cta-desc">This week vs last week</div>
+          </div>
+          <span class="premium-cta-arrow">›</span>
+        </div>
+
+        <!-- Widget Preview - Streaks style (PREMIUM) -->
+        <div class="widget-section">
+          <div class="widget-title">Home Screen Widgets</div>
+          <div class="widget-preview">
+            <div class="widget-card">
+              <div class="widget-name">Streak</div>
+              <div class="widget-value">🔥 12</div>
+            </div>
+            <div class="widget-card premium">
+              <div class="widget-name">Mini Heatmap</div>
+              <div class="widget-mini-grid">
+                <div class="widget-mini-cell filled"></div>
+                <div class="widget-mini-cell filled"></div>
+                <div class="widget-mini-cell"></div>
+                <div class="widget-mini-cell filled"></div>
+                <div class="widget-mini-cell filled"></div>
+                <div class="widget-mini-cell filled"></div>
+                <div class="widget-mini-cell filled"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak Shield - Habitify/Duolingo (PREMIUM - high conversion) -->
+        <div class="shield-cta" onclick="alert('🛡️ Streak Shield\n\nMissed a day? Protect your streak!\n\n• 1 free freeze per month\n• Apply retroactively\n• Never lose progress\n\nIncluded with PRO')">
+          <span class="shield-icon">🛡️</span>
+          <div class="shield-content">
+            <div class="shield-title">Streak Shield</div>
+            <div class="shield-desc">Protect if you miss a day</div>
+          </div>
+          <button class="shield-btn">Get PRO</button>
+        </div>
+
+        <!-- Export as Image - Pixels style (PREMIUM) -->
+        <div class="export-cta" onclick="alert('📸 Export Your Year\n\nDownload your heatmap as a beautiful image to share!\n\nIncluded with PRO')">
+          <span class="export-icon">📸</span>
+          <div class="export-content">
+            <div class="export-title">Share Progress</div>
+            <div class="export-desc">Export heatmap image</div>
+          </div>
+          <span class="export-badge">PRO</span>
+        </div>
+
+      </div>
+
+      <div class="confetti" id="confetti"></div>
+    </div>
+  </div>
+
+  <script>
+    // Generate 3-month heatmap
+    const grid3m = document.getElementById('heatmap-grid-3m');
+    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+    days.forEach(function(day) {
+      const row = document.createElement('div');
+      row.className = 'heatmap-row';
+
+      const label = document.createElement('div');
+      label.className = 'day-label';
+      label.textContent = day;
+      row.appendChild(label);
+
+      for (let week = 0; week < 13; week++) {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+
+        if (week === 12 && day === 'S') {
+          cell.classList.add('today');
+        }
+
+        const rand = Math.random();
+        if (rand > 0.25) {
+          const level = Math.ceil(Math.random() * 4);
+          cell.classList.add('level-' + level);
+        }
+
+        cell.addEventListener('click', function() {
+          const levels = ['', 'level-1', 'level-2', 'level-3', 'level-4'];
+          let currentLevel = 0;
+          levels.forEach(function(l, i) { if (cell.classList.contains(l)) currentLevel = i; });
+          levels.forEach(function(l) { cell.classList.remove(l); });
+          const nextLevel = (currentLevel + 1) % 5;
+          if (nextLevel > 0) cell.classList.add(levels[nextLevel]);
+        });
+
+        row.appendChild(cell);
+      }
+
+      grid3m.appendChild(row);
+    });
+
+    // Generate blurred year preview
+    const gridYear = document.getElementById('heatmap-grid-year');
+    days.forEach(function(day) {
+      const row = document.createElement('div');
+      row.className = 'heatmap-row';
+
+      const label = document.createElement('div');
+      label.className = 'day-label';
+      label.textContent = day;
+      row.appendChild(label);
+
+      for (let week = 0; week < 52; week++) {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+
+        const rand = Math.random();
+        if (rand > 0.3) {
+          const level = Math.ceil(Math.random() * 4);
+          cell.classList.add('level-' + level);
+        }
+
+        row.appendChild(cell);
+      }
+
+      gridYear.appendChild(row);
+    });
+
+    // Generate calendar
+    const calendarGrid = document.getElementById('calendar-grid');
+    const daysInMonth = [
+      { day: 1, completed: true },
+      { day: 2, completed: true, hasNote: true },
+      { day: 3, completed: false },
+      { day: 4, completed: true },
+      { day: 5, completed: true },
+      { day: 6, completed: false },
+      { day: 7, completed: true },
+      { day: 8, completed: true, multi: 2 },
+      { day: 9, completed: true },
+      { day: 10, completed: false },
+      { day: 11, completed: true },
+      { day: 12, completed: true },
+      { day: 13, completed: true },
+      { day: 14, completed: true },
+      { day: 15, completed: true },
+      { day: 16, completed: true },
+      { day: 17, completed: true, hasNote: true },
+      { day: 18, completed: true },
+      { day: 19, completed: false },
+      { day: 20, completed: true },
+      { day: 21, completed: true },
+      { day: 22, completed: true },
+      { day: 23, completed: true },
+      { day: 24, completed: true },
+      { day: 25, completed: true },
+      { day: 26, completed: true },
+      { day: 27, completed: true },
+      { day: 28, completed: true },
+      { day: 29, completed: false, isToday: true },
+      { day: 30, future: true },
+      { day: 31, future: true },
+    ];
+
+    daysInMonth.forEach(function(d) {
+      const cell = document.createElement('div');
+      cell.className = 'calendar-day';
+      cell.textContent = d.day;
+
+      if (d.future) {
+        cell.classList.add('future');
+      } else if (d.isToday) {
+        cell.classList.add('today', 'incomplete');
+      } else if (d.completed) {
+        cell.classList.add('completed');
+      } else {
+        cell.classList.add('missed');
+      }
+
+      if (d.hasNote) cell.classList.add('has-note');
+
+      if (d.multi) {
+        const count = document.createElement('span');
+        count.className = 'multi-count';
+        count.textContent = 'x' + d.multi;
+        cell.appendChild(count);
+      }
+
+      if (!d.future) {
+        cell.addEventListener('click', function() {
+          if (cell.classList.contains('completed')) {
+            cell.classList.remove('completed');
+            cell.classList.add('missed');
+          } else if (cell.classList.contains('missed') || cell.classList.contains('incomplete')) {
+            cell.classList.remove('missed', 'incomplete');
+            cell.classList.add('completed');
+          }
+        });
+      }
+
+      calendarGrid.appendChild(cell);
+    });
+
+    // Generate consistency chart
+    const consistencyChart = document.getElementById('consistency-chart');
+    const weeklyData = [65, 70, 55, 80, 72, 68, 75, 90, 85, 78, 82, 70, 88, 92, 85, 80, 95, 88, 78, 85, 90, 92, 88, 95, 82, 90, 88, 92, 85, 40];
+
+    weeklyData.forEach(function(val, i) {
+      const bar = document.createElement('div');
+      bar.className = 'consistency-bar';
+      bar.style.height = val + '%';
+      if (i === weeklyData.length - 1) bar.classList.add('current');
+      consistencyChart.appendChild(bar);
+    });
+
+    // Heatmap view toggle
+    document.querySelectorAll('.heatmap-toggle-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.heatmap-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        document.querySelectorAll('.heatmap-section .view-container').forEach(function(v) { v.classList.remove('active'); });
+        document.getElementById('heatmap-' + btn.dataset.view).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

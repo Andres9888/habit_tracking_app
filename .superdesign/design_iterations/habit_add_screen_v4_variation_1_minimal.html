@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V4 Variation 1: Minimal & Clean</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    .preview-card {
+      background: linear-gradient(135deg, #FAFAF9 0%, #F5F5F4 100%);
+    }
+    .pressable:active {
+      transform: scale(0.98);
+    }
+    .emoji-chip.selected {
+      background: #ECFDF5;
+      border-color: #10B981;
+    }
+    .color-swatch.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body class="bg-stone-100 min-h-screen flex items-end justify-center p-4">
+
+  <!-- Phone Frame -->
+  <div class="w-full max-w-[390px] h-[844px] bg-black rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
+
+    <!-- Screen -->
+    <div class="w-full h-full rounded-[40px] overflow-hidden relative bg-white">
+
+      <!-- Modal Sheet -->
+      <div class="absolute bottom-0 left-0 right-0 h-[92%] bg-white rounded-t-3xl flex flex-col shadow-2xl">
+
+        <!-- Minimal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-stone-100">
+          <button class="pressable" aria-label="Close">
+            <i data-lucide="x" class="w-6 h-6 text-stone-400"></i>
+          </button>
+          <h1 class="text-base font-semibold text-stone-900">New Habit</h1>
+          <div class="w-6"></div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto px-6 pb-6">
+
+          <!-- Live Preview - Minimal -->
+          <div class="mt-6 mb-6 p-4 rounded-2xl preview-card">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: #10B981;">
+                <span class="text-3xl">📖</span>
+              </div>
+              <div class="flex-1">
+                <p class="text-lg font-semibold text-stone-900">Read daily</p>
+                <p class="text-sm text-stone-500 mt-0.5">Every day • Afternoon</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Name - Borderless -->
+          <div class="mb-6">
+            <input
+              type="text"
+              value="Read daily"
+              class="w-full text-xl font-medium text-stone-900 placeholder-stone-400 bg-transparent border-b-2 border-stone-200 focus:border-emerald-500 pb-3 outline-none transition-colors"
+              placeholder="Habit name"
+            />
+          </div>
+
+          <!-- Emoji Row - Minimal -->
+          <div class="mb-6">
+            <p class="text-xs font-medium text-stone-400 uppercase tracking-wide mb-3">Icon</p>
+            <div class="flex gap-2">
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border-2 border-stone-200 flex items-center justify-center pressable selected">
+                <span class="text-2xl">📖</span>
+              </button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border-2 border-stone-200 flex items-center justify-center pressable">
+                <span class="text-2xl">📚</span>
+              </button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border-2 border-stone-200 flex items-center justify-center pressable">
+                <span class="text-2xl">✍️</span>
+              </button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border-2 border-stone-200 flex items-center justify-center pressable">
+                <span class="text-2xl">🎯</span>
+              </button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border-2 border-stone-200 flex items-center justify-center pressable">
+                <span class="text-2xl">✨</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Color Picker - Compact -->
+          <div class="mb-6">
+            <p class="text-xs font-medium text-stone-400 uppercase tracking-wide mb-3">Color</p>
+            <div class="flex gap-2">
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable" style="background: #EF4444;"></button>
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable" style="background: #F97316;"></button>
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable" style="background: #FBBF24;"></button>
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable selected" style="background: #10B981;"></button>
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable" style="background: #3B82F6;"></button>
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable" style="background: #8B5CF6;"></button>
+              <button class="relative color-swatch w-10 h-10 rounded-full pressable" style="background: #EC4899;"></button>
+            </div>
+          </div>
+
+          <!-- Time - Simple Pills -->
+          <div class="mb-6">
+            <p class="text-xs font-medium text-stone-400 uppercase tracking-wide mb-3">When</p>
+            <div class="flex gap-2">
+              <button class="flex-1 py-3 rounded-full bg-stone-100 text-sm font-medium text-stone-600 pressable">Morning</button>
+              <button class="flex-1 py-3 rounded-full bg-emerald-500 text-sm font-medium text-white pressable">Afternoon</button>
+              <button class="flex-1 py-3 rounded-full bg-stone-100 text-sm font-medium text-stone-600 pressable">Evening</button>
+            </div>
+          </div>
+
+          <!-- Reminder - Inline Toggle -->
+          <div class="mb-6 flex items-center justify-between py-3">
+            <div>
+              <p class="text-sm font-medium text-stone-900">Reminder</p>
+              <p class="text-xs text-stone-500 mt-0.5">12:00 PM</p>
+            </div>
+            <button class="w-12 h-7 rounded-full bg-emerald-500 p-0.5 pressable relative">
+              <div class="w-6 h-6 rounded-full bg-white shadow-sm absolute right-0.5 top-0.5"></div>
+            </button>
+          </div>
+
+          <!-- Frequency - Minimal Chips -->
+          <div class="mb-6">
+            <p class="text-xs font-medium text-stone-400 uppercase tracking-wide mb-3">Repeat</p>
+            <div class="flex gap-1.5">
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">S</button>
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">M</button>
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">T</button>
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">W</button>
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">T</button>
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">F</button>
+              <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">S</button>
+            </div>
+          </div>
+
+          <div class="h-24"></div>
+        </div>
+
+        <!-- Minimal Sticky Button -->
+        <div class="p-6 bg-white border-t border-stone-100">
+          <button class="w-full h-12 rounded-full bg-emerald-500 text-white font-semibold pressable shadow-lg">
+            Create Habit
+          </button>
+          <div class="flex justify-center mt-3">
+            <div class="w-32 h-1 rounded-full bg-stone-200"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

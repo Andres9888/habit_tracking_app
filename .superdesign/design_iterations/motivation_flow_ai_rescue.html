@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI-Powered Rescue Flow (Premium)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34D399', 500: '#10B981', 600: '#059669', 700: '#047857' },
+            premium: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' },
+            surface: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c', 800: '#292524', 900: '#1c1917' },
+            warning: { 500: '#F59E0B' },
+            error: { 500: '#EF4444' },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #1c1917; min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+    .phone-frame { width: 390px; height: 844px; background: #0f0a19; border-radius: 50px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 0 0 12px #1c1917; position: relative; }
+    .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 160px; height: 34px; background: #0f0a19; border-radius: 0 0 24px 24px; z-index: 100; }
+    .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 100px; z-index: 100; }
+    .screen { height: 100%; overflow-y: auto; scrollbar-width: none; padding-top: 54px; padding-bottom: 40px; }
+    .screen::-webkit-scrollbar { display: none; }
+
+    /* Breathing circle */
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+    .breathe { animation: breathe 4s ease-in-out infinite; }
+
+    /* Heart pulse */
+    @keyframes heart-pulse {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.2); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.15); }
+    }
+    .heart-pulse { animation: heart-pulse 1.5s ease-in-out infinite; }
+
+    /* Fade in up */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fade-up 0.6s ease-out forwards; }
+    .delay-1 { animation-delay: 0.3s; opacity: 0; }
+    .delay-2 { animation-delay: 0.6s; opacity: 0; }
+    .delay-3 { animation-delay: 0.9s; opacity: 0; }
+    .delay-4 { animation-delay: 1.2s; opacity: 0; }
+    .delay-5 { animation-delay: 1.5s; opacity: 0; }
+
+    /* Waveform */
+    @keyframes wave {
+      0%, 100% { height: 8px; }
+      50% { height: 28px; }
+    }
+    .wave-bar { animation: wave 0.8s ease-in-out infinite; }
+    .wave-bar:nth-child(1) { animation-delay: 0s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.25s; }
+    .wave-bar:nth-child(6) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(7) { animation-delay: 0.2s; }
+
+    /* AI typing */
+    @keyframes typing {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    .typing-dot { animation: typing 1s ease-in-out infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    /* Glow */
+    @keyframes soft-glow {
+      0%, 100% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+      50% { box-shadow: 0 0 50px rgba(139, 92, 246, 0.5); }
+    }
+    .soft-glow { animation: soft-glow 3s ease-in-out infinite; }
+
+    /* Button pulse */
+    @keyframes btn-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+    }
+    .btn-pulse { animation: btn-pulse 2s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="home-indicator"></div>
+
+    <div class="screen bg-gradient-to-b from-[#0f0a19] via-[#1a1025] to-[#0f0a19] relative">
+
+      <!-- Ambient background -->
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="breathe absolute top-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-premium-600 rounded-full opacity-20 blur-3xl"></div>
+        <div class="breathe absolute bottom-40 left-1/4 w-48 h-48 bg-teal-500 rounded-full opacity-10 blur-3xl" style="animation-delay: 1s;"></div>
+      </div>
+
+      <div class="relative z-10 px-6">
+
+        <!-- Close -->
+        <div class="flex justify-end mb-4">
+          <button class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+            <i data-lucide="x" class="w-4 h-4 text-white/60"></i>
+          </button>
+        </div>
+
+        <!-- Breathing Heart -->
+        <div class="text-center mb-6">
+          <div class="fade-up inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-premium-500/20 to-rose-500/20 border border-premium-500/30 soft-glow">
+            <div class="heart-pulse text-5xl">❤️</div>
+          </div>
+          <p class="fade-up delay-1 text-white/60 text-sm mt-4">Take a breath. I'm here to help.</p>
+        </div>
+
+        <!-- AI Message -->
+        <div class="fade-up delay-2 bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-5 mb-5">
+          <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-premium-500 to-purple-600 flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <p class="text-white font-semibold text-sm">AI Coach</p>
+              <p class="text-white/40 text-xs">Personalized for you</p>
+            </div>
+          </div>
+
+          <p class="text-white/90 text-base leading-relaxed mb-4">
+            Hey, I noticed you're having a tough moment. That's completely okay - <strong class="text-premium-400">everyone struggles sometimes</strong>.
+          </p>
+          <p class="text-white/90 text-base leading-relaxed mb-4">
+            Remember on <strong class="text-teal-400">Day 3</strong> when you almost quit? You pushed through and said it was the best decision. You have that same strength now.
+          </p>
+          <p class="text-white/90 text-base leading-relaxed">
+            Your WOOP plan says: <strong class="text-amber-400">"If tired, just do 2 minutes."</strong> Can we try that?
+          </p>
+        </div>
+
+        <!-- Playing Your Voice -->
+        <div class="fade-up delay-3 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 border border-teal-500/30 rounded-2xl p-4 mb-5">
+          <p class="text-teal-400 text-xs font-medium mb-3 flex items-center gap-2">
+            <i data-lucide="mic" class="w-4 h-4"></i>
+            Playing your voice from Day 1...
+          </p>
+
+          <div class="flex items-center gap-4">
+            <button class="w-12 h-12 rounded-full bg-teal-500 flex items-center justify-center shadow-lg">
+              <i data-lucide="pause" class="w-5 h-5 text-white"></i>
+            </button>
+            <div class="flex-1 flex items-end justify-center gap-1 h-8">
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1.5 bg-teal-400 rounded-full"></div>
+            </div>
+            <span class="text-teal-300 text-sm font-medium">0:23</span>
+          </div>
+
+          <p class="text-white/60 text-sm italic mt-3 text-center">
+            "I'm starting this because I want to be healthy for my kids..."
+          </p>
+        </div>
+
+        <!-- Your Why -->
+        <div class="fade-up delay-4 bg-gradient-to-br from-rose-500/10 to-pink-500/10 border border-rose-500/20 rounded-2xl p-4 mb-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">❤️</span>
+            <p class="text-rose-400 text-sm font-semibold">Your Why</p>
+          </div>
+          <p class="text-white/80 text-base italic leading-relaxed">
+            "I want to be healthy enough to play with my grandchildren and have the energy to enjoy life fully."
+          </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="fade-up delay-5 space-y-3">
+          <button class="btn-pulse w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-4 rounded-2xl text-base shadow-lg flex items-center justify-center gap-3">
+            <i data-lucide="play" class="w-5 h-5"></i>
+            Do Just 2 Minutes
+          </button>
+
+          <div class="grid grid-cols-2 gap-3">
+            <button class="bg-white/10 border border-white/20 text-white font-medium py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+              Read Letter
+            </button>
+            <button class="bg-white/10 border border-white/20 text-white font-medium py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+              More Voice
+            </button>
+          </div>
+
+          <button class="w-full py-3 text-white/40 text-sm">
+            Skip Today (Break Streak)
+          </button>
+        </div>
+
+        <!-- Rescue Stats -->
+        <div class="mt-6 text-center">
+          <p class="text-white/30 text-xs">
+            Rescue has helped you <strong class="text-primary-400">5 times</strong> • Success rate: <strong class="text-primary-400">80%</strong>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

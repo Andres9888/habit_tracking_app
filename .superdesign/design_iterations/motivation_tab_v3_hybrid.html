@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Motivation Tab V3 - Premium Dark + Time Machine Hybrid</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'DM Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 0 0 12px #1a1a1a;
+      position: relative;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 34px;
+      background: #0f0f1a;
+      border-radius: 0 0 24px 24px;
+      z-index: 100;
+    }
+
+    .screen {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 54px;
+      padding-bottom: 34px;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 100px;
+    }
+
+    /* Gold shimmer */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .gold-shimmer {
+      background: linear-gradient(90deg, #d4af37 0%, #f4e5b0 25%, #d4af37 50%, #f4e5b0 75%, #d4af37 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+    }
+
+    /* Breathing animation */
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.01); opacity: 1; }
+    }
+
+    .breathe {
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    /* Rescue button pulse */
+    @keyframes rescue-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4), 0 0 30px rgba(239, 68, 68, 0.2); }
+      50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0), 0 0 40px rgba(239, 68, 68, 0.4); }
+    }
+
+    .rescue-pulse {
+      animation: rescue-pulse 2s ease-in-out infinite;
+    }
+
+    /* Timeline glow */
+    @keyframes timeline-glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .timeline-glow {
+      animation: timeline-glow 2s ease-in-out infinite;
+    }
+
+    /* Seal shimmer */
+    @keyframes seal-shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .seal-shimmer::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(from 0deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+      border-radius: inherit;
+      animation: seal-shimmer 3s linear infinite;
+      z-index: -1;
+    }
+
+    /* Audio EQ */
+    @keyframes eq {
+      0%, 100% { height: 4px; }
+      50% { height: 18px; }
+    }
+
+    .eq-bar {
+      animation: eq 0.8s ease-in-out infinite;
+    }
+    .eq-bar:nth-child(1) { animation-delay: 0s; }
+    .eq-bar:nth-child(2) { animation-delay: 0.1s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.2s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.15s; }
+    .eq-bar:nth-child(5) { animation-delay: 0.25s; }
+
+    /* Premium card */
+    .premium-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+
+    .premium-card:active {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
+      transform: scale(0.98);
+    }
+
+    /* Gold border */
+    .gold-border {
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="home-indicator"></div>
+
+    <div class="screen">
+      <!-- Header -->
+      <div class="px-6 pb-4 flex items-center justify-between">
+        <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-white/60"></i>
+        </button>
+        <div class="text-center">
+          <p class="text-white/40 text-xs uppercase tracking-widest">Motivation</p>
+        </div>
+        <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+          <i data-lucide="settings-2" class="w-5 h-5 text-white/60"></i>
+        </button>
+      </div>
+
+      <!-- Hero: Habit Info + Rescue Button -->
+      <div class="px-6 mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-amber-400 text-xs font-medium bg-amber-500/20 px-2 py-0.5 rounded-full">Day 18</span>
+              <span class="text-white/30">•</span>
+              <span class="text-orange-400 text-xs">🔥 6 day streak</span>
+            </div>
+            <h1 class="text-white text-2xl font-bold">Morning Exercise</h1>
+          </div>
+
+          <!-- RESCUE ME Button -->
+          <button class="rescue-pulse w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center">
+            <i data-lucide="heart-pulse" class="w-7 h-7 text-white"></i>
+          </button>
+        </div>
+        <p class="text-white/30 text-xs mt-1">Tap ❤️ when struggling for instant motivation</p>
+      </div>
+
+      <!-- Time Machine Timeline -->
+      <div class="px-6 mb-6">
+        <div class="relative">
+          <!-- Timeline bar -->
+          <div class="h-1 bg-white/10 rounded-full relative overflow-hidden">
+            <div class="absolute left-0 top-0 h-full w-1/3 bg-gradient-to-r from-teal-500 to-teal-400 rounded-full"></div>
+            <div class="absolute left-1/3 top-0 h-full w-1/6 bg-gradient-to-r from-teal-400 to-amber-400 rounded-full timeline-glow"></div>
+          </div>
+
+          <!-- Timeline markers -->
+          <div class="flex justify-between mt-2">
+            <div class="text-center">
+              <div class="w-3 h-3 rounded-full bg-teal-500 mx-auto mb-1"></div>
+              <p class="text-white/40 text-[10px]">Day 1</p>
+              <p class="text-teal-400 text-[10px]">Past You</p>
+            </div>
+            <div class="text-center">
+              <div class="w-4 h-4 rounded-full bg-amber-400 mx-auto mb-1 ring-4 ring-amber-400/20"></div>
+              <p class="text-white text-[10px] font-bold">Day 18</p>
+              <p class="text-amber-400 text-[10px]">Now</p>
+            </div>
+            <div class="text-center">
+              <div class="w-3 h-3 rounded-full bg-white/20 mx-auto mb-1"></div>
+              <p class="text-white/40 text-[10px]">Day 30</p>
+              <p class="text-white/30 text-[10px]">Future</p>
+            </div>
+            <div class="text-center">
+              <div class="w-3 h-3 rounded-full bg-white/10 mx-auto mb-1"></div>
+              <p class="text-white/30 text-[10px]">Day 90</p>
+              <p class="text-white/20 text-[10px]">Goal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="px-5 pb-8 space-y-4">
+
+        <!-- FOUNDATION: Your Why -->
+        <div class="premium-card gold-border rounded-3xl p-5 breathe">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500/30 to-rose-600/30 flex items-center justify-center">
+              <i data-lucide="heart" class="w-6 h-6 text-rose-400"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="gold-shimmer font-bold text-lg">Your Why</h3>
+              <p class="text-white/30 text-xs">The foundation</p>
+            </div>
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+          </div>
+
+          <div class="bg-white/5 rounded-xl p-4 relative">
+            <div class="absolute -left-1 top-2 text-2xl text-amber-500/40 font-serif">"</div>
+            <p class="text-white/80 text-sm leading-relaxed pl-3 pr-3 italic">
+              I do this because I want to be healthy enough to play with my grandchildren and have the energy to enjoy life fully.
+            </p>
+            <div class="absolute -right-1 bottom-2 text-2xl text-amber-500/40 font-serif rotate-180">"</div>
+          </div>
+        </div>
+
+        <!-- Two Column: Identity + Cue -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="premium-card rounded-2xl p-4">
+            <div class="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center mb-3">
+              <i data-lucide="sparkles" class="w-5 h-5 text-violet-400"></i>
+            </div>
+            <h3 class="text-white font-semibold text-sm mb-1">Identity</h3>
+            <p class="text-white/50 text-xs leading-relaxed italic">
+              "I am someone who takes care of my body"
+            </p>
+          </div>
+
+          <div class="premium-card rounded-2xl p-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-3">
+              <i data-lucide="target" class="w-5 h-5 text-amber-400"></i>
+            </div>
+            <h3 class="text-white font-semibold text-sm mb-1">Trigger</h3>
+            <p class="text-white/50 text-xs leading-relaxed">
+              After coffee ☕ • Kitchen • 7:30am
+            </p>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-4 py-1">
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+          <span class="text-white/20 text-[10px] uppercase tracking-widest">Time Machine</span>
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        </div>
+
+        <!-- Voice Notes (From Past You) -->
+        <div class="premium-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 flex items-center justify-center">
+                <i data-lucide="mic" class="w-6 h-6 text-teal-400"></i>
+              </div>
+              <div>
+                <h3 class="text-white font-semibold">Voice from Past You</h3>
+                <p class="text-teal-400/60 text-xs">3 recordings • Hear your motivation</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audio Player -->
+          <div class="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 rounded-xl p-4 border border-teal-500/20">
+            <div class="flex items-center gap-4">
+              <button class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-500/30">
+                <i data-lucide="play" class="w-5 h-5 text-black ml-0.5"></i>
+              </button>
+              <div class="flex-1">
+                <div class="flex items-end justify-center gap-1 h-6 mb-2">
+                  <div class="eq-bar w-1 bg-teal-400 rounded-full"></div>
+                  <div class="eq-bar w-1 bg-teal-400 rounded-full"></div>
+                  <div class="eq-bar w-1 bg-teal-400 rounded-full"></div>
+                  <div class="eq-bar w-1 bg-teal-400 rounded-full"></div>
+                  <div class="eq-bar w-1 bg-teal-400 rounded-full"></div>
+                </div>
+                <p class="text-white/60 text-xs text-center">"Day 1 Commitment" • 0:45</p>
+              </div>
+              <div class="text-right">
+                <p class="text-teal-400 text-xs font-medium">Day 1</p>
+                <p class="text-white/30 text-[10px]">Dec 9</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick record -->
+          <button class="w-full mt-3 py-3 rounded-xl bg-white/5 text-white/40 text-sm font-medium flex items-center justify-center gap-2 border border-white/5">
+            <i data-lucide="mic" class="w-4 h-4"></i>
+            Record for Future You
+          </button>
+        </div>
+
+        <!-- Letters to Self (Time Capsules) -->
+        <div class="premium-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500/30 to-rose-500/30 flex items-center justify-center">
+                <i data-lucide="mail" class="w-6 h-6 text-pink-400"></i>
+              </div>
+              <div>
+                <h3 class="text-white font-semibold">Letters Across Time</h3>
+                <p class="text-pink-400/60 text-xs">2 open • 1 sealed capsule</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <!-- From Past -->
+            <div class="bg-white/5 rounded-xl p-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+                <i data-lucide="arrow-left" class="w-4 h-4 text-teal-400"></i>
+              </div>
+              <div class="flex-1">
+                <p class="text-white/80 text-sm font-medium">"Why I Started"</p>
+                <p class="text-teal-400/60 text-xs">From Day 1 You → Now</p>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-white/20"></i>
+            </div>
+
+            <!-- Sealed Time Capsule -->
+            <div class="relative rounded-xl overflow-hidden">
+              <div class="seal-shimmer absolute inset-0 rounded-xl"></div>
+              <div class="relative bg-gradient-to-r from-amber-500/20 to-pink-500/20 rounded-xl p-3 flex items-center gap-3 border border-amber-500/30">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/30 flex items-center justify-center">
+                  <i data-lucide="lock" class="w-4 h-4 text-amber-400"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-amber-300 text-sm font-medium">🎉 30-Day Celebration</p>
+                  <p class="text-white/40 text-xs">Sealed by Past You • Opens Day 30</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-amber-400 text-lg font-bold">12</p>
+                  <p class="text-white/30 text-[10px]">days</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- To Future -->
+            <div class="bg-white/5 rounded-xl p-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center">
+                <i data-lucide="arrow-right" class="w-4 h-4 text-violet-400"></i>
+              </div>
+              <div class="flex-1">
+                <p class="text-white/80 text-sm font-medium">"Keep Going"</p>
+                <p class="text-violet-400/60 text-xs">From Past You → Open anytime</p>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-white/20"></i>
+            </div>
+          </div>
+
+          <button class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-pink-500/20 to-violet-500/20 text-white/60 text-sm font-medium flex items-center justify-center gap-2 border border-pink-500/20">
+            <i data-lucide="pen-line" class="w-4 h-4"></i>
+            Write to Future You
+          </button>
+        </div>
+
+        <!-- Quick Access: Vision + Affirmations -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="premium-card rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+                <i data-lucide="eye" class="w-4 h-4 text-white/60"></i>
+              </div>
+              <span class="text-white/30 text-xs">4/6</span>
+            </div>
+            <h3 class="text-white font-semibold text-sm">Vision Board</h3>
+            <div class="grid grid-cols-2 gap-1 mt-2">
+              <div class="aspect-square bg-violet-500/20 rounded-lg"></div>
+              <div class="aspect-square bg-rose-500/20 rounded-lg"></div>
+            </div>
+          </div>
+
+          <div class="premium-card rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i>
+              </div>
+              <button class="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center">
+                <i data-lucide="shuffle" class="w-3 h-3 text-white/40"></i>
+              </button>
+            </div>
+            <h3 class="text-white font-semibold text-sm mb-1">Affirmations</h3>
+            <p class="text-emerald-400/60 text-xs italic">"I am worthy"</p>
+          </div>
+        </div>
+
+        <!-- Journal -->
+        <div class="premium-card rounded-2xl p-4 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-amber-500/20 flex items-center justify-center">
+            <i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-white font-semibold text-sm">Journal</h3>
+            <p class="text-white/30 text-xs">12 entries • Last: Yesterday</p>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-white/20"></i>
+        </div>
+
+        <!-- Bottom Quote -->
+        <div class="text-center pt-4 pb-2">
+          <p class="text-white/20 text-xs italic">"Your past self is cheering you on."</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

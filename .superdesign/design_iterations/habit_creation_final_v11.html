@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Creation - Final Design with Subtle More Label</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .phone-frame { width: 390px; height: 844px; background: #000; border-radius: 50px; padding: 12px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); position: relative; }
+    .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #000; border-radius: 0 0 20px 20px; z-index: 10; }
+    .phone-screen { width: 100%; height: 100%; background: #faf9f7; border-radius: 40px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+    input[type="text"] { width: 100%; padding: 20px 24px; border: 2px solid #e7e5e4; border-radius: 16px; font-size: 20px; text-align: center; outline: none; transition: all 0.2s ease; background: white; }
+    input[type="text"]:focus { border-color: #10B981; background: #f9fafb; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+    input[type="text"]::placeholder { color: #A8A29E; font-weight: 400; }
+    .home-indicator { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 128px; height: 4px; background: #d6d3d1; border-radius: 2px; }
+    .emoji-chip { width: 48px; height: 48px; border-radius: 12px; background: #f5f5f4; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; }
+    .emoji-chip:hover { background: #e7e5e4; transform: scale(1.05); }
+    .emoji-chip.selected { border-color: #10B981; background: #ECFDF5; transform: scale(1.05); }
+    .plus-button-labeled { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+    .plus-button-labeled .icon-container { width: 48px; height: 48px; border-radius: 12px; background: #f5f5f4; border: 2px dashed #a8a29e; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .plus-button-labeled:hover .icon-container { background: #e7e5e4; }
+    .plus-button-labeled .label { font-size: 10px; font-weight: 600; color: #78716c; text-transform: uppercase; letter-spacing: 0.3px; }
+    .color-chip { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: all 0.2s ease; position: relative; }
+    .color-chip:hover { transform: scale(1.1); }
+    .color-chip.selected { transform: scale(1.15); box-shadow: 0 0 0 3px white, 0 0 0 5px currentColor; }
+    .color-chip.custom { background: white; border: 2px dashed #a8a29e; display: flex; align-items: center; justify-content: center; }
+    .switch { position: relative; width: 51px; height: 31px; background: #d6d3d1; border-radius: 16px; cursor: pointer; transition: background 0.3s ease; }
+    .switch.on { background: #10B981; }
+    .switch-thumb { position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; background: white; border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    .switch.on .switch-thumb { transform: translateX(20px); }
+    .scrollable { overflow-y: auto; flex: 1; }
+    .scrollable::-webkit-scrollbar { width: 4px; }
+    .scrollable::-webkit-scrollbar-track { background: transparent; }
+    .scrollable::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 2px; }
+    .emoji-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .color-grid { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <div style="background: white; padding: 16px 24px; border-bottom: 1px solid #e7e5e4; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 style="font-size: 20px; font-weight: 600; color: #1c1917;">Create Habit</h2>
+          <button onclick="resetForm()" style="background: #f5f5f4; border: none; color: #78716c; font-size: 20px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+      </div>
+      <div class="scrollable" style="padding: 24px;">
+        <div style="text-align: center; margin-bottom: 32px; margin-top: 16px;">
+          <h1 style="font-size: 30px; font-weight: 700; color: #1c1917; margin-bottom: 12px; line-height: 1.3;">What habit do you<br>want to build?</h1>
+          <input type="text" id="habitInput" placeholder="e.g., Read for 20 minutes" maxlength="50" oninput="updateForm()" onkeydown="handleKeyDown(event)" autofocus />
+          <div style="margin-top: 8px;"><span id="charCount" style="font-size: 12px; color: #a8a29e;">0/50 characters</span></div>
+        </div>
+        <div style="text-align: center; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 600; color: #78716c; letter-spacing: 0.5px;">CUSTOMIZE (OPTIONAL)</span></div>
+        <div style="margin-bottom: 32px;"><div class="emoji-grid" id="emojiGrid"></div></div>
+        <div style="margin-bottom: 32px;"><div class="color-grid" id="colorGrid"></div></div>
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-radius: 12px; border: 1px solid #e7e5e4; background: white; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FEF3C7; display: flex; align-items: center; justify-content: center;"><i data-lucide="bell" style="width: 16px; height: 16px; color: #f59e0b;"></i></div>
+              <div><div style="font-size: 14px; font-weight: 500; color: #1c1917;">Remind me</div><div id="reminderTime" style="font-size: 12px; font-weight: 500; color: #10B981;">12:00 PM</div></div>
+            </div>
+            <div id="reminderSwitch" class="switch" onclick="toggleReminder()"><div class="switch-thumb"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background: white; border-top: 1px solid #e7e5e4; padding: 16px 24px 24px; flex-shrink: 0;">
+        <button id="createBtn" onclick="createHabit()" disabled style="width: 100%; padding: 16px; border: none; border-radius: 16px; font-size: 17px; font-weight: 600; background: #d6d3d1; color: white; opacity: 0.5; cursor: not-allowed; transition: all 0.2s ease;">Enter a habit name</button>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+  <script>
+    let habitName = '', selectedEmoji = null, selectedColor = '#EF4444', reminderEnabled = false;
+    const emojiMap = {read:'📚',book:'📚',meditate:'🧘',meditation:'🧘',exercise:'💪',workout:'💪',gym:'💪',run:'🏃',running:'🏃',water:'💧',drink:'💧',write:'✍️',journal:'✍️',yoga:'🧘',sleep:'😴',walk:'🚶',code:'💻',study:'📖',clean:'🧹',cook:'🍳'};
+    const defaultEmojis = ['🎯','✨','💪','📖','🧘','💧'];
+    const colors = ['#EF4444','#F97316','#F59E0B','#EAB308','#84CC16','#10B981','#14B8A6','#06B6D4','#3B82F6','#6366F1','#8B5CF6','#EC4899'];
+    function detectEmojis(name){const lower=name.toLowerCase(),suggestions=[];for(const[k,e]of Object.entries(emojiMap))if(lower.includes(k)&&!suggestions.includes(e))suggestions.push(e);return[...suggestions,...defaultEmojis.filter(e=>!suggestions.includes(e))].slice(0,6);}
+    function renderEmojis(){const emojis=habitName.length>=2?detectEmojis(habitName):defaultEmojis,grid=document.getElementById('emojiGrid');while(grid.firstChild)grid.removeChild(grid.firstChild);emojis.forEach(emoji=>{const chip=document.createElement('div');chip.className='emoji-chip'+(selectedEmoji===emoji?' selected':'');chip.textContent=emoji;chip.onclick=()=>selectEmoji(emoji);grid.appendChild(chip);});const btn=document.createElement('div');btn.className='plus-button-labeled';const ic=document.createElement('div');ic.className='icon-container';const icon=document.createElement('i');icon.setAttribute('data-lucide','plus');icon.style.width=icon.style.height='20px';icon.style.color='#a8a29e';ic.appendChild(icon);const lbl=document.createElement('span');lbl.className='label';lbl.textContent='More';btn.appendChild(ic);btn.appendChild(lbl);btn.onclick=()=>alert('Full emoji picker');grid.appendChild(btn);lucide.createIcons();}
+    function renderColors(){const grid=document.getElementById('colorGrid');while(grid.firstChild)grid.removeChild(grid.firstChild);colors.forEach(color=>{const chip=document.createElement('div');chip.className='color-chip'+(selectedColor===color?' selected':'');chip.style.background=color;if(selectedColor===color)chip.style.color=color;chip.onclick=()=>selectColor(color);grid.appendChild(chip);});const custom=document.createElement('div');custom.className='color-chip custom';const icon=document.createElement('i');icon.setAttribute('data-lucide','plus');icon.style.width=icon.style.height='18px';icon.style.color='#a8a29e';custom.appendChild(icon);custom.onclick=()=>alert('Custom color');grid.appendChild(custom);lucide.createIcons();}
+    function selectEmoji(e){selectedEmoji=e;renderEmojis();}
+    function selectColor(c){selectedColor=c;renderColors();}
+    function toggleReminder(){reminderEnabled=!reminderEnabled;document.getElementById('reminderSwitch').classList.toggle('on',reminderEnabled);}
+    function updateForm(){habitName=document.getElementById('habitInput').value;document.getElementById('charCount').textContent=habitName.length+'/50 characters';const valid=habitName.trim().length>=2,btn=document.getElementById('createBtn');btn.disabled=!valid;btn.style.background=valid?'#10B981':'#d6d3d1';btn.style.opacity=valid?'1':'0.5';btn.style.cursor=valid?'pointer':'not-allowed';btn.textContent=valid?'Create Habit':'Enter a habit name';renderEmojis();}
+    function handleKeyDown(e){if(e.key==='Enter'&&habitName.trim().length>=2)createHabit();}
+    function createHabit(){if(habitName.trim().length<2)return;alert('✓ Habit Created!\n\nName: '+habitName+'\nEmoji: '+(selectedEmoji||'🎯 (auto)')+'\nColor: '+selectedColor+'\nReminder: '+(reminderEnabled?'12:00 PM':'Off'));resetForm();}
+    function resetForm(){habitName='';selectedEmoji=null;selectedColor='#EF4444';reminderEnabled=false;document.getElementById('habitInput').value='';document.getElementById('reminderSwitch').classList.remove('on');updateForm();}
+    renderEmojis();renderColors();lucide.createIcons();
+  </script>
+</body>
+</html>

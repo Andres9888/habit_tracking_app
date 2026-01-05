@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Strength Charts - Design Options</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif !important;
+      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+      min-height: 100vh;
+    }
+    .card {
+      background: #fafaf9;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .chart-area {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.02) 100%);
+    }
+    .sparkline {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 2s ease-out forwards;
+    }
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+    }
+    .pulse-dot {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .progress-ring {
+      transition: stroke-dashoffset 1s ease-out;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <div class="max-w-md mx-auto space-y-8">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-white mb-2">Habit Strength Charts</h1>
+      <p class="text-stone-400">Design options for premium features</p>
+    </div>
+
+    <!-- OPTION A: Time Range Switcher -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded">OPTION A</span>
+        <span class="text-white font-medium">Time Range Switcher</span>
+      </div>
+      <div class="card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold text-stone-700">Strength History</h3>
+          <!-- Time Range Pills -->
+          <div class="flex bg-stone-100 rounded-lg p-1 gap-1">
+            <button class="px-3 py-1 text-xs font-medium text-stone-500 rounded-md">1W</button>
+            <button class="px-3 py-1 text-xs font-medium text-stone-500 rounded-md">1M</button>
+            <button class="px-3 py-1 text-xs font-medium bg-white text-stone-900 rounded-md shadow-sm">1Y</button>
+            <button class="px-3 py-1 text-xs font-medium text-stone-500 rounded-md">All</button>
+          </div>
+        </div>
+
+        <!-- Current Strength Hero -->
+        <div class="flex items-center gap-4 mb-4">
+          <div class="relative">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" fill="none" stroke="#e7e5e4" stroke-width="6"/>
+              <circle cx="36" cy="36" r="30" fill="none" stroke="#10b981" stroke-width="6"
+                      stroke-dasharray="188.5" stroke-dashoffset="56.5" stroke-linecap="round"
+                      transform="rotate(-90 36 36)" class="progress-ring"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-xl font-bold text-emerald-600">70%</span>
+            </div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-stone-800">Strong</div>
+            <div class="flex items-center gap-1 text-emerald-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+              <span class="text-sm font-medium">+12% vs last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="h-32 rounded-xl chart-area relative overflow-hidden">
+          <svg width="100%" height="100%" viewBox="0 0 320 120" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <line x1="0" y1="30" x2="320" y2="30" stroke="#e7e5e4" stroke-dasharray="4"/>
+            <line x1="0" y1="60" x2="320" y2="60" stroke="#e7e5e4" stroke-dasharray="4"/>
+            <line x1="0" y1="90" x2="320" y2="90" stroke="#e7e5e4" stroke-dasharray="4"/>
+            <!-- Area fill -->
+            <path d="M0 100 Q40 95, 80 85 T160 70 T240 50 T320 36 V120 H0 Z" fill="url(#gradient1)" opacity="0.3"/>
+            <!-- Line -->
+            <path d="M0 100 Q40 95, 80 85 T160 70 T240 50 T320 36" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" class="sparkline"/>
+            <!-- Current dot -->
+            <circle cx="320" cy="36" r="6" fill="#10b981" class="pulse-dot"/>
+            <circle cx="320" cy="36" r="4" fill="white"/>
+            <defs>
+              <linearGradient id="gradient1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <!-- X-axis labels -->
+          <div class="absolute bottom-1 left-2 text-[10px] text-stone-400">Jan</div>
+          <div class="absolute bottom-1 left-1/4 text-[10px] text-stone-400">Apr</div>
+          <div class="absolute bottom-1 left-1/2 text-[10px] text-stone-400">Jul</div>
+          <div class="absolute bottom-1 left-3/4 text-[10px] text-stone-400">Oct</div>
+          <div class="absolute bottom-1 right-2 text-[10px] text-stone-400">Now</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION B: Strength Breakdown -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="bg-violet-500 text-white text-xs font-bold px-2 py-1 rounded">OPTION B</span>
+        <span class="text-white font-medium">Strength Breakdown</span>
+        <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded">PREMIUM</span>
+      </div>
+      <div class="card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold text-stone-700">Habit Health</h3>
+          <div class="flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-full">
+            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <span class="text-xs font-semibold text-emerald-700">Healthy</span>
+          </div>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="text-center mb-4">
+          <div class="text-4xl font-bold text-stone-800">72<span class="text-xl text-stone-400">/100</span></div>
+          <div class="text-sm text-stone-500">Overall Habit Score</div>
+        </div>
+
+        <!-- Breakdown Bars -->
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-stone-600 font-medium">Consistency</span>
+              <span class="text-stone-800 font-semibold">78%</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full" style="width: 78%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-stone-600 font-medium">Recovery Speed</span>
+              <span class="text-stone-800 font-semibold">65%</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full" style="width: 65%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-stone-600 font-medium">Stability</span>
+              <span class="text-stone-800 font-semibold">82%</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full" style="width: 82%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-stone-600 font-medium">Longevity</span>
+              <span class="text-stone-800 font-semibold">62%</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full" style="width: 62%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION C: Comparison Cards with Sparklines -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">OPTION C</span>
+        <span class="text-white font-medium">Comparison with Sparklines</span>
+      </div>
+      <div class="card">
+        <h3 class="text-base font-semibold text-stone-700 mb-4">Strength Over Time</h3>
+
+        <div class="grid grid-cols-3 gap-3">
+          <!-- Since Start -->
+          <div class="bg-stone-50 rounded-xl p-3 text-center">
+            <div class="h-10 mb-2">
+              <svg width="100%" height="100%" viewBox="0 0 80 40" preserveAspectRatio="none">
+                <path d="M0 35 Q20 32, 40 25 T80 8" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="text-lg font-bold text-stone-800">+70%</div>
+            <div class="text-[10px] text-stone-500 uppercase tracking-wide">Since Start</div>
+          </div>
+
+          <!-- Last Month -->
+          <div class="bg-emerald-50 rounded-xl p-3 text-center border-2 border-emerald-200">
+            <div class="h-10 mb-2">
+              <svg width="100%" height="100%" viewBox="0 0 80 40" preserveAspectRatio="none">
+                <path d="M0 30 Q20 28, 40 22 T80 12" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="text-lg font-bold text-emerald-600">+12%</div>
+            <div class="text-[10px] text-stone-500 uppercase tracking-wide">Last Month</div>
+          </div>
+
+          <!-- Last Week -->
+          <div class="bg-stone-50 rounded-xl p-3 text-center">
+            <div class="h-10 mb-2">
+              <svg width="100%" height="100%" viewBox="0 0 80 40" preserveAspectRatio="none">
+                <path d="M0 20 Q20 18, 40 20 T80 15" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="text-lg font-bold text-stone-800">+3%</div>
+            <div class="text-[10px] text-stone-500 uppercase tracking-wide">Last Week</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION D: Minimal Large Number -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="bg-rose-500 text-white text-xs font-bold px-2 py-1 rounded">OPTION D</span>
+        <span class="text-white font-medium">Minimal Hero Style</span>
+      </div>
+      <div class="card">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-sm text-stone-500 mb-1">Your Habit Strength</div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-5xl font-bold text-stone-800">70</span>
+              <span class="text-2xl text-stone-400">%</span>
+              <span class="text-sm font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Strong</span>
+            </div>
+            <div class="flex items-center gap-4 mt-2 text-sm text-stone-500">
+              <span>📈 +12% this month</span>
+              <span>🔥 Peak: 78%</span>
+            </div>
+          </div>
+          <div class="w-24 h-16">
+            <svg width="100%" height="100%" viewBox="0 0 100 60" preserveAspectRatio="none">
+              <path d="M0 50 Q25 45, 50 35 T100 15" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" class="sparkline"/>
+              <circle cx="100" cy="15" r="4" fill="#10b981" class="pulse-dot"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION E: Journey Milestones -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="bg-cyan-500 text-white text-xs font-bold px-2 py-1 rounded">OPTION E</span>
+        <span class="text-white font-medium">Journey Milestones</span>
+        <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded">PREMIUM</span>
+      </div>
+      <div class="card">
+        <h3 class="text-base font-semibold text-stone-700 mb-4">Your Strength Journey</h3>
+
+        <!-- Timeline Chart with Milestones -->
+        <div class="h-28 relative mb-4">
+          <svg width="100%" height="100%" viewBox="0 0 320 100" preserveAspectRatio="none">
+            <!-- Area -->
+            <path d="M0 90 Q40 85, 80 70 T160 50 T240 35 T320 25 V100 H0 Z" fill="url(#gradient2)" opacity="0.3"/>
+            <!-- Line -->
+            <path d="M0 90 Q40 85, 80 70 T160 50 T240 35 T320 25" fill="none" stroke="#10b981" stroke-width="2.5"/>
+            <!-- Milestone dots -->
+            <circle cx="80" cy="70" r="8" fill="white" stroke="#10b981" stroke-width="2"/>
+            <circle cx="160" cy="50" r="8" fill="white" stroke="#10b981" stroke-width="2"/>
+            <circle cx="240" cy="35" r="8" fill="white" stroke="#f59e0b" stroke-width="2"/>
+            <circle cx="320" cy="25" r="6" fill="#10b981"/>
+            <defs>
+              <linearGradient id="gradient2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <!-- Milestone labels -->
+          <div class="absolute left-[23%] top-[60%] transform -translate-x-1/2">
+            <div class="text-[10px] text-stone-500 text-center">7-day<br/>streak</div>
+          </div>
+          <div class="absolute left-[48%] top-[38%] transform -translate-x-1/2">
+            <div class="text-[10px] text-stone-500 text-center">30-day<br/>streak</div>
+          </div>
+          <div class="absolute left-[73%] top-[22%] transform -translate-x-1/2">
+            <div class="text-[10px] text-amber-600 font-medium text-center">🏆 Peak<br/>78%</div>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="flex justify-between text-center border-t border-stone-100 pt-3">
+          <div>
+            <div class="text-lg font-bold text-stone-800">127</div>
+            <div class="text-[10px] text-stone-500">Days Active</div>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-emerald-600">70%</div>
+            <div class="text-[10px] text-stone-500">Current</div>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-amber-600">78%</div>
+            <div class="text-[10px] text-stone-500">All-Time Peak</div>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-stone-800">12%</div>
+            <div class="text-[10px] text-stone-500">Lowest</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center pt-4 pb-8">
+      <p class="text-stone-500 text-sm">Which design resonates most with your vision?</p>
+    </div>
+  </div>
+</body>
+</html>
