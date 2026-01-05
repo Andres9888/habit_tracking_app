@@ -19,6 +19,7 @@ interface ColorPickerSectionProps {
   selectedColor: string;
   onSelectColor: (color: string) => void;
   onCustomPress: () => void;
+  hideLabel?: boolean; // Hide section label for cleaner centered modal design
 }
 
 const ColorPickerSectionComponent = ({
@@ -26,9 +27,11 @@ const ColorPickerSectionComponent = ({
   selectedColor,
   onSelectColor,
   onCustomPress,
+  hideLabel = false,
 }: ColorPickerSectionProps) => (
   <ColorPickerContent
     colors={colors}
+    hideLabel={hideLabel}
     selectedColor={selectedColor}
     onCustomPress={onCustomPress}
     onSelectColor={onSelectColor}
@@ -51,7 +54,12 @@ interface ColorButtonProps {
  * V11 Spec: Added ripple animation (scale + opacity fade outward) on selection
  * V11 Task 8: Respects reduced motion preference
  */
-const ColorButtonComponent = ({ color, isSelected, onSelect, reduceMotion }: ColorButtonProps) => {
+const ColorButtonComponent = ({
+  color,
+  isSelected,
+  onSelect,
+  reduceMotion,
+}: ColorButtonProps) => {
   const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
   const rippleScale = useRef(new Animated.Value(0)).current;
   const rippleOpacity = useRef(new Animated.Value(1)).current;
@@ -98,25 +106,32 @@ const ColorButtonComponent = ({ color, isSelected, onSelect, reduceMotion }: Col
       // Animate ripple: scale 0 → 2, opacity 1 → 0 over 300ms
       Animated.parallel([
         Animated.timing(rippleScale, {
-          toValue: 2,
           duration: 300,
           easing: Motion.easing.outEase,
+          toValue: 2,
           useNativeDriver: true,
         }),
         Animated.timing(rippleOpacity, {
+          duration: 300,
+          easing: Motion.easing.outEase,
           toValue: 0,
-        duration: 300,
-        easing: Motion.easing.outEase,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
+          useNativeDriver: true,
+        }),
+      ]).start();
     }
 
     onSelect(color);
     // Announce color selection with human-readable name for screen readers
     AccessibilityInfo.announceForAccessibility(`Selected ${colorName} color`);
-  }, [color, colorName, onSelect, triggerSelection, rippleScale, rippleOpacity, reduceMotion]);
+  }, [
+    color,
+    colorName,
+    onSelect,
+    triggerSelection,
+    rippleScale,
+    rippleOpacity,
+    reduceMotion,
+  ]);
 
   const handlePressIn = useCallback(() => {
     if (reduceMotion) return;
@@ -142,23 +157,23 @@ const ColorButtonComponent = ({ color, isSelected, onSelect, reduceMotion }: Col
     <View style={{ position: 'relative' }}>
       {/* V11: Ripple effect layer - positioned absolutely behind the button */}
       <Animated.View
-        pointerEvents="none"
+        pointerEvents='none'
         style={[
           StyleSheet.absoluteFill,
           {
             alignItems: 'center',
             justifyContent: 'center',
-            transform: [{ scale: rippleScale }],
             opacity: rippleOpacity,
+            transform: [{ scale: rippleScale }],
           },
         ]}
       >
         <View
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 999,
             backgroundColor: color,
+            borderRadius: 999,
+            height: 36,
+            width: 36,
           }}
         />
       </Animated.View>
@@ -175,16 +190,17 @@ const ColorButtonComponent = ({ color, isSelected, onSelect, reduceMotion }: Col
             borderRadius: 999,
             height: 36,
             justifyContent: 'center',
-            width: 36,
             // V9: Box-shadow ring instead of border for cleaner selection
             shadowColor: isSelected ? color : 'transparent',
-            shadowOffset: { width: 0, height: 0 },
+
+            shadowOffset: { height: 0, width: 0 },
             shadowOpacity: isSelected ? 1 : 0,
             shadowRadius: isSelected ? 0 : 0,
+            width: 36,
             // Outer ring effect using elevation on Android, shadow on iOS
             ...(isSelected && {
-              borderWidth: 3,
               borderColor: '#ffffff',
+              borderWidth: 3,
             }),
           }}
           testID={`color-swatch-${color.replace('#', '')}`}
@@ -267,18 +283,21 @@ const ColorPickerContent = ({
   selectedColor,
   onSelectColor,
   onCustomPress,
+  hideLabel = false,
 }: ColorPickerSectionProps) => {
   const reduceMotion = useReduceMotion(); // V11 Task 8: Reduced motion support
 
   return (
     <View className='mb-5'>
-      <Text
-        accessibilityRole='text'
-        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
-        style={{ letterSpacing: 0.5 }}
-      >
-        {STRINGS.CREATE_HABIT.colorLabel}
-      </Text>
+      {!hideLabel && (
+        <Text
+          accessibilityRole='text'
+          className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+          style={{ letterSpacing: 0.5 }}
+        >
+          {STRINGS.CREATE_HABIT.colorLabel}
+        </Text>
+      )}
       {/* 12 colors + custom button = 13 items, justify-between for even spacing */}
       <View
         style={{
@@ -292,8 +311,8 @@ const ColorPickerContent = ({
             key={color}
             color={color}
             isSelected={selectedColor === color}
-            onSelect={onSelectColor}
             reduceMotion={reduceMotion}
+            onSelect={onSelectColor}
           />
         ))}
         <CustomColorButton onPress={onCustomPress} />

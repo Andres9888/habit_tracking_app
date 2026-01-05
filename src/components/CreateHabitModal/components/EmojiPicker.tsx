@@ -30,6 +30,7 @@ interface EmojiPickerProps {
   selectedEmoji: string | null;
   onSelect: (emoji: string | null) => void;
   habitName?: string;
+  hideLabel?: boolean; // Hide section label for cleaner centered modal design
 }
 
 interface EmojiChipProps {
@@ -44,7 +45,12 @@ interface EmojiChipProps {
  * V11 Spec: Scale 1.0 → 1.15 → 1.0 with spring animation (200ms total)
  * V11 Task 8: Respects reduced motion preference
  */
-const EmojiChipComponent = ({ emoji, isSelected, onPress, reduceMotion }: EmojiChipProps) => {
+const EmojiChipComponent = ({
+  emoji,
+  isSelected,
+  onPress,
+  reduceMotion,
+}: EmojiChipProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -97,6 +103,7 @@ const EmojiPickerComponent = ({
   selectedEmoji,
   onSelect,
   habitName,
+  hideLabel = false,
 }: EmojiPickerProps) => {
   const { triggerSelection } = useHapticFeedback();
   const reduceMotion = useReduceMotion(); // V11 Task 8: Reduced motion support
@@ -161,14 +168,16 @@ const EmojiPickerComponent = ({
   return (
     <View className='mb-4'>
       {/* Section label - V11 Task 8: Enhanced accessibility */}
-      <Text
-        accessibilityRole='text'
-        accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
-        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
-        style={{ letterSpacing: 0.5 }}
-      >
-        {STRINGS.CREATE_HABIT.iconLabel}
-      </Text>
+      {!hideLabel && (
+        <Text
+          accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
+          accessibilityRole='text'
+          className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+          style={{ letterSpacing: 0.5 }}
+        >
+          {STRINGS.CREATE_HABIT.iconLabel}
+        </Text>
+      )}
 
       {/* Emoji chips row with "+" button */}
       <Animated.View
@@ -185,8 +194,8 @@ const EmojiPickerComponent = ({
             <EmojiChip
               emoji={emoji}
               isSelected={selectedEmoji === emoji}
-              onPress={() => handleEmojiSelect(emoji)}
               reduceMotion={reduceMotion}
+              onPress={() => handleEmojiSelect(emoji)}
             />
           </Animated.View>
         ))}

@@ -63,36 +63,39 @@ const CreateHabitFormCenteredComponent = ({
   }, [canSubmit, onSubmit]);
 
   return (
-    <View className="flex-1 px-6">
+    <View className='flex-1 px-6'>
       {/* Centered top section - name input */}
-      <View className="items-center" style={{ marginTop: 40, marginBottom: 32 }}>
-        <Text className="text-3xl font-bold text-stone-900 mb-3 text-center">
+      <View
+        className='items-center'
+        style={{ marginBottom: 32, marginTop: 40 }}
+      >
+        <Text className='mb-3 text-center text-3xl font-bold text-stone-900'>
           What habit do you{'\n'}want to build?
         </Text>
 
         <TextInput
           autoFocus={autoFocus}
+          className='w-full rounded-2xl border-2 border-stone-200 bg-white px-6 py-5 text-center text-xl text-stone-900'
+          maxLength={50}
+          placeholder='e.g., Read for 20 minutes'
+          placeholderTextColor='#A8A29E'
+          returnKeyType='done'
           value={habitName}
           onChangeText={onHabitNameChange}
-          placeholder="e.g., Read for 20 minutes"
-          placeholderTextColor="#A8A29E"
-          className="bg-white border-2 border-stone-200 rounded-2xl px-6 py-5 text-xl text-stone-900 text-center w-full"
-          maxLength={50}
-          returnKeyType="done"
           onSubmitEditing={handleSubmit}
         />
 
         {/* Character counter */}
-        <Text className="text-xs text-stone-400 mt-2">
+        <Text className='mt-2 text-xs text-stone-400'>
           {habitName.length}/50 characters
         </Text>
       </View>
 
       {/* Optional fields section - scrollable */}
-      <View className="flex-1">
+      <View className='flex-1'>
         {/* Section label */}
         <Text
-          className="text-xs font-semibold text-stone-500 mb-4 text-center"
+          className='mb-4 text-center text-xs font-semibold text-stone-500'
           style={{ letterSpacing: 0.5 }}
         >
           CUSTOMIZE (OPTIONAL)
@@ -100,25 +103,27 @@ const CreateHabitFormCenteredComponent = ({
 
         {/* Emoji picker */}
         <EmojiPicker
+          hideLabel
+          habitName={habitName}
           selectedEmoji={selectedEmoji}
           onSelect={onEmojiSelect}
-          habitName={habitName}
         />
 
         {/* Color picker */}
         <ColorPickerSection
+          hideLabel
           colors={colors}
           selectedColor={selectedColor}
-          onSelectColor={onColorSelect}
           onCustomPress={onCustomColorPress}
+          onSelectColor={onColorSelect}
         />
 
         {/* Reminder toggle */}
         <MinimalReminderToggle
           enabled={reminderEnabled}
           time={reminderTime}
-          onToggle={onReminderToggle}
           onTimePress={onReminderTimePress}
+          onToggle={onReminderToggle}
         />
       </View>
     </View>
