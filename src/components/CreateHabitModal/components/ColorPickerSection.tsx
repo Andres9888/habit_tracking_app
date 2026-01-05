@@ -298,11 +298,13 @@ const ColorPickerContent = ({
           {STRINGS.CREATE_HABIT.colorLabel}
         </Text>
       )}
-      {/* 12 colors + custom button = 13 items, justify-between for even spacing */}
+      {/* 12 colors + custom button = 13 items, centered with wrapping */}
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 8,
+          justifyContent: 'center',
         }}
         testID='color-picker-row'
       >

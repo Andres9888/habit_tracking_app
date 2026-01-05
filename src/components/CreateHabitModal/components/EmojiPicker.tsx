@@ -181,7 +181,7 @@ const EmojiPickerComponent = ({
 
       {/* Emoji chips row with "+" button */}
       <Animated.View
-        className='flex-row gap-2'
+        className='flex-row flex-wrap justify-center gap-2'
         layout={LinearTransition.springify().damping(15).stiffness(120)}
       >
         {suggestedEmojis.map((emoji) => (
