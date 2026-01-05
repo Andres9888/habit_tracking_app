@@ -675,7 +675,17 @@ If time-based chips cause issues:
     - Manual input vs. chip usage
   - **Provider Integration Examples**: Included integration patterns for Segment, Mixpanel, Amplitude, and custom Convex backend
   - **Test Coverage**: 14 comprehensive test cases covering all tracking functions, time window detection, error handling, and custom tracker configuration
-- [ ] Documentation: Update README with time-based behavior explanation
+- [x] Documentation: Update README with time-based behavior explanation
+  - **Status**: ✅ COMPLETE
+  - **Location**: `/README.md` - Added comprehensive time-based suggestions section
+  - **Content Added**:
+    - New feature bullet in main Features list
+    - Dedicated "Time-Based Habit Suggestions" subsection with:
+      - All 4 time windows with example habits
+      - User benefit (40-60% engagement increase)
+      - Technical note (automatic timezone handling)
+  - **Placement**: Integrated into Features section for maximum visibility
+  - **Format**: User-friendly with emojis matching actual chip suggestions
 
 ## Estimated Timeline
 

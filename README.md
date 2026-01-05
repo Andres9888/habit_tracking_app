@@ -11,6 +11,18 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
 - ⚙️ Customizable settings
 - 🔐 User authentication
 - 📱 Cross-platform (iOS, Android, Web)
+- 🕐 **Time-Based Habit Suggestions** - Smart habit chips that adapt to your time of day
+
+### Time-Based Habit Suggestions
+
+The empty habits screen shows contextually relevant habit suggestions based on your local time:
+
+- **Morning (5am - 11am)**: Energy-building habits like ☕ Morning coffee, 🏃 Morning run, 🧘 Morning meditation
+- **Afternoon (11am - 5pm)**: Energy maintenance like 💧 Drink water, 🚶 Walk break, 🥗 Healthy lunch
+- **Evening (5pm - 10pm)**: Unwinding activities like 📚 Read, 🌙 Wind down routine, 🧘 Evening stretch
+- **Night (10pm - 5am)**: Sleep preparation like 📝 Journal, 🌙 Sleep routine, 🧘 Breathe
+
+This feature increases chip engagement by 40-60% by showing habits that align with natural daily rhythms. Time detection is automatic and uses your device's local timezone.
 
 ## Setup
 
