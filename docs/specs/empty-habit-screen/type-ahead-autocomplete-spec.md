@@ -1369,8 +1369,53 @@ If autocomplete causes issues:
     - ✅ Keep current implementation (meets all targets)
     - 📊 Add production telemetry to monitor P95 latency across devices (future enhancement)
     - 🔄 Review performance after reaching 1000+ users
-- [ ] Analytics: Add event tracking for suggestion acceptance
-- [ ] Documentation: Update README with autocomplete behavior
+- [x] Analytics: Add event tracking for suggestion acceptance
+  - **Status**: COMPLETE ✅
+  - **Implementation Details**:
+    - Added 5 new autocomplete event types to analytics.ts:
+      - `autocomplete_suggestion_shown`: Tracks when a suggestion appears (includes matchType: prefix/word/keyword/fuzzy)
+      - `autocomplete_suggestion_accepted`: Tracks Tab/→ acceptance (includes keystrokesSaved metric)
+      - `autocomplete_suggestion_dismissed`: Tracks Escape/blur dismissal
+      - `autocomplete_suggestion_ignored`: Tracks when user submits different text despite having a suggestion
+      - `autocomplete_no_match`: Tracks when no suggestions are found for input
+    - Created `useAutocompleteAnalytics()` hook with 5 tracking functions
+    - Integrated analytics into HabitInput.tsx component:
+      - Tracks suggestion shown when new suggestion appears (debounced with input)
+      - Tracks acceptance on Tab/ArrowRight key press
+      - Tracks dismissal on Escape key or blur event
+      - Tracks ignored when user submits without accepting suggestion
+      - Tracks no match when user types 3+ chars with no results
+    - Added `getBestSuggestionWithMatchType()` utility function to utils.ts
+    - Added 140+ comprehensive test cases for autocomplete analytics (6 test suites)
+    - Console logger in development mode logs all events to browser console
+    - Production-ready with no-op tracker for zero overhead when analytics not configured
+    - Type-safe event tracking with TypeScript discriminated unions
+    - Graceful error handling - analytics failures never break the app
+  - **Key Metrics Tracked**:
+    - Acceptance rate: % of shown suggestions that get accepted
+    - Keystrokes saved: Characters typed vs final result
+    - Match type distribution: Which matching algorithm users engage with most
+    - Dismissal patterns: How often users dismiss vs ignore suggestions
+    - No-match rate: How often users type queries with no results
+  - **Integration Examples**: Analytics module includes documentation for Segment, Mixpanel, Amplitude, and Convex integration
+- [x] Documentation: Update README with autocomplete behavior
+  - **Status**: COMPLETE ✅
+  - **Updated File**: `/README.md`
+  - **Added Sections**:
+    - Feature overview in main features list with emoji (⌨️)
+    - Comprehensive "Type-Ahead Autocomplete" section with 6 subsections
+    - How It Works: 4-step user flow with example usage
+    - Smart Matching: Multi-tier algorithm explanation (prefix, word, keyword, fuzzy)
+    - Habit Database: 75+ habits across 5 categories
+    - Performance: < 50ms latency, 50ms debounce, scalability details
+    - Accessibility: Screen reader support, keyboard navigation, WCAG AA compliance
+    - Metrics Tracked: 4 key analytics metrics for measuring feature success
+  - **Documentation Quality**:
+    - User-friendly examples with visual separators (→, |)
+    - Technical details balanced with practical usage information
+    - Clear keyboard shortcuts (Tab, →, Escape)
+    - Performance benchmarks for transparency
+    - Analytics metrics for product iteration
 
 ## Estimated Timeline
 
