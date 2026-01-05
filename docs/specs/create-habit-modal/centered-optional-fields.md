@@ -695,11 +695,62 @@ const suggestedEmojis = useMemo(() => {
 
 **Acceptance Criteria**:
 
-- [ ] Integration guide includes centered layout option
-- [ ] Quick start updated with new component
-- [ ] Styling guide has centered layout section
-- [ ] Code examples accurate
-- [ ] Screenshots updated (if applicable)
+- [x] Integration guide includes centered layout option
+- [x] Quick start updated with new component
+- [x] Styling guide has centered layout section
+- [x] Code examples accurate
+- [x] Screenshots updated (if applicable)
+
+**Implementation Notes**:
+
+- Created comprehensive `INTEGRATION_GUIDE.md` (650+ lines):
+  - Quick start section for basic integration
+  - Three integration options (Direct Import, Feature Flag, Environment-Based)
+  - Complete props interface documentation
+  - Feature flag configuration examples
+  - State management details with `useCreateHabitModal` hook
+  - Multiple real-world examples (basic create, edit mode, analytics integration)
+  - Migration guide from original modal to centered layout
+  - A/B testing patterns with user segmentation
+  - Troubleshooting section covering common issues
+  - Advanced topics: custom styling, analytics, testing strategies
+
+- Created detailed `QUICK_START.md` (400+ lines):
+  - Step-by-step integration guide
+  - Layout comparison (original vs centered)
+  - Complete working example with state management
+  - Props reference table
+  - Smart defaults explanation with keyword-based emoji suggestions
+  - User experience flow breakdown (5-second creation)
+  - Three common usage patterns (create only, create/edit, with confirmation)
+  - Customization quick reference for colors, defaults, emoji keywords
+  - Manual and automated testing checklists
+  - FAQ section addressing common questions
+  - Troubleshooting table
+  - Minimal quick reference code snippet
+
+- Created comprehensive `STYLING_GUIDE.md` (700+ lines):
+  - Design tokens: color palette, neutral colors, semantic colors
+  - Centered layout visual hierarchy breakdown with exact measurements
+  - Component-by-component styling details (heading, input, emoji picker, color picker, etc.)
+  - Color customization guide with palette extension examples
+  - Typography system: font families, sizes, weights, line heights
+  - Spacing & layout: container spacing, gaps, padding, border radius
+  - Component styling: modal container, swipe indicator, shadows
+  - Theme integration: light/dark mode, design system tokens
+  - Accessibility considerations: color contrast, text sizing, touch targets, reduced motion
+  - Four complete theming examples (pastel, dark, compact, branded)
+  - Best practices section
+  - External resources and references
+
+All three guides include:
+
+- Complete code examples with TypeScript types
+- Real-world usage patterns
+- Accessibility guidelines
+- Best practices and recommendations
+- Cross-references to other documentation files
+- Files located in: `/docs/specs/create-habit-modal/`
 
 ---
 
