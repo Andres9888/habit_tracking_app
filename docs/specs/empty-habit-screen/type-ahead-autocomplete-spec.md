@@ -197,68 +197,278 @@ export interface HabitSuggestion {
 }
 
 const PHYSICAL_HABITS: HabitSuggestion[] = [
-  { text: 'Exercise 10 minutes', category: 'physical', emoji: '🏃', keywords: ['workout', 'gym', 'fitness'] },
+  {
+    text: 'Exercise 10 minutes',
+    category: 'physical',
+    emoji: '🏃',
+    keywords: ['workout', 'gym', 'fitness'],
+  },
   { text: 'Exercise 30 minutes', category: 'physical', emoji: '🏃' },
   { text: 'Walk 5 minutes', category: 'physical', emoji: '🚶' },
   { text: 'Walk 10 minutes', category: 'physical', emoji: '🚶' },
-  { text: 'Run 1 mile', category: 'physical', emoji: '🏃', keywords: ['jog', 'running'] },
-  { text: 'Stretch for 5 minutes', category: 'physical', emoji: '🤸', keywords: ['flexibility', 'yoga'] },
+  {
+    text: 'Run 1 mile',
+    category: 'physical',
+    emoji: '🏃',
+    keywords: ['jog', 'running'],
+  },
+  {
+    text: 'Stretch for 5 minutes',
+    category: 'physical',
+    emoji: '🤸',
+    keywords: ['flexibility', 'yoga'],
+  },
   { text: 'Yoga for 10 minutes', category: 'physical', emoji: '🧘' },
-  { text: 'Drink 8 glasses of water', category: 'physical', emoji: '💧', keywords: ['hydrate', 'water'] },
-  { text: 'Take vitamins', category: 'physical', emoji: '💊', keywords: ['supplements', 'pills'] },
-  { text: 'Go to bed by 10pm', category: 'physical', emoji: '🛌', keywords: ['sleep', 'bedtime'] },
+  {
+    text: 'Drink 8 glasses of water',
+    category: 'physical',
+    emoji: '💧',
+    keywords: ['hydrate', 'water'],
+  },
+  {
+    text: 'Take vitamins',
+    category: 'physical',
+    emoji: '💊',
+    keywords: ['supplements', 'pills'],
+  },
+  {
+    text: 'Go to bed by 10pm',
+    category: 'physical',
+    emoji: '🛌',
+    keywords: ['sleep', 'bedtime'],
+  },
 ];
 
 const MENTAL_HABITS: HabitSuggestion[] = [
-  { text: 'Meditate for 5 minutes', category: 'mental', emoji: '🧘', keywords: ['mindfulness', 'breathe'] },
+  {
+    text: 'Meditate for 5 minutes',
+    category: 'mental',
+    emoji: '🧘',
+    keywords: ['mindfulness', 'breathe'],
+  },
   { text: 'Meditate for 10 minutes', category: 'mental', emoji: '🧘' },
-  { text: 'Breathe deeply for 2 minutes', category: 'mental', emoji: '🌬️', keywords: ['breathing', 'calm'] },
-  { text: 'Practice gratitude', category: 'mental', emoji: '🙏', keywords: ['thankful', 'grateful'] },
-  { text: 'Journal for 10 minutes', category: 'mental', emoji: '📝', keywords: ['write', 'diary'] },
-  { text: 'Read 5 pages', category: 'mental', emoji: '📚', keywords: ['book', 'reading'] },
+  {
+    text: 'Breathe deeply for 2 minutes',
+    category: 'mental',
+    emoji: '🌬️',
+    keywords: ['breathing', 'calm'],
+  },
+  {
+    text: 'Practice gratitude',
+    category: 'mental',
+    emoji: '🙏',
+    keywords: ['thankful', 'grateful'],
+  },
+  {
+    text: 'Journal for 10 minutes',
+    category: 'mental',
+    emoji: '📝',
+    keywords: ['write', 'diary'],
+  },
+  {
+    text: 'Read 5 pages',
+    category: 'mental',
+    emoji: '📚',
+    keywords: ['book', 'reading'],
+  },
   { text: 'Read 10 pages', category: 'mental', emoji: '📚' },
   { text: 'Read 20 pages', category: 'mental', emoji: '📚' },
-  { text: 'No phone for 1 hour', category: 'mental', emoji: '📱', keywords: ['digital detox', 'unplug'] },
-  { text: 'Digital detox after 9pm', category: 'mental', emoji: '📵', keywords: ['phone off', 'screen time'] },
+  {
+    text: 'No phone for 1 hour',
+    category: 'mental',
+    emoji: '📱',
+    keywords: ['digital detox', 'unplug'],
+  },
+  {
+    text: 'Digital detox after 9pm',
+    category: 'mental',
+    emoji: '📵',
+    keywords: ['phone off', 'screen time'],
+  },
 ];
 
 const PRODUCTIVITY_HABITS: HabitSuggestion[] = [
-  { text: 'Write for 10 minutes', category: 'productivity', emoji: '✍️', keywords: ['writing', 'compose'] },
-  { text: 'Learn something new', category: 'productivity', emoji: '🧠', keywords: ['study', 'education'] },
-  { text: 'Practice language for 15 minutes', category: 'productivity', emoji: '🗣️', keywords: ['spanish', 'french', 'duolingo'] },
-  { text: 'Review daily goals', category: 'productivity', emoji: '🎯', keywords: ['planning', 'goals'] },
-  { text: 'Plan tomorrow', category: 'productivity', emoji: '📅', keywords: ['organize', 'schedule'] },
-  { text: 'Clean workspace', category: 'productivity', emoji: '🧹', keywords: ['tidy', 'organize'] },
-  { text: 'Inbox zero', category: 'productivity', emoji: '📧', keywords: ['email', 'messages'] },
-  { text: 'One focused work session', category: 'productivity', emoji: '🎯', keywords: ['deep work', 'focus'] },
-  { text: 'No social media before noon', category: 'productivity', emoji: '📵', keywords: ['focus', 'productivity'] },
-  { text: 'Morning routine completed', category: 'productivity', emoji: '☀️', keywords: ['routine'] },
+  {
+    text: 'Write for 10 minutes',
+    category: 'productivity',
+    emoji: '✍️',
+    keywords: ['writing', 'compose'],
+  },
+  {
+    text: 'Learn something new',
+    category: 'productivity',
+    emoji: '🧠',
+    keywords: ['study', 'education'],
+  },
+  {
+    text: 'Practice language for 15 minutes',
+    category: 'productivity',
+    emoji: '🗣️',
+    keywords: ['spanish', 'french', 'duolingo'],
+  },
+  {
+    text: 'Review daily goals',
+    category: 'productivity',
+    emoji: '🎯',
+    keywords: ['planning', 'goals'],
+  },
+  {
+    text: 'Plan tomorrow',
+    category: 'productivity',
+    emoji: '📅',
+    keywords: ['organize', 'schedule'],
+  },
+  {
+    text: 'Clean workspace',
+    category: 'productivity',
+    emoji: '🧹',
+    keywords: ['tidy', 'organize'],
+  },
+  {
+    text: 'Inbox zero',
+    category: 'productivity',
+    emoji: '📧',
+    keywords: ['email', 'messages'],
+  },
+  {
+    text: 'One focused work session',
+    category: 'productivity',
+    emoji: '🎯',
+    keywords: ['deep work', 'focus'],
+  },
+  {
+    text: 'No social media before noon',
+    category: 'productivity',
+    emoji: '📵',
+    keywords: ['focus', 'productivity'],
+  },
+  {
+    text: 'Morning routine completed',
+    category: 'productivity',
+    emoji: '☀️',
+    keywords: ['routine'],
+  },
 ];
 
 const NUTRITION_HABITS: HabitSuggestion[] = [
-  { text: 'Eat vegetables with lunch', category: 'nutrition', emoji: '🥗', keywords: ['healthy', 'veggies'] },
+  {
+    text: 'Eat vegetables with lunch',
+    category: 'nutrition',
+    emoji: '🥗',
+    keywords: ['healthy', 'veggies'],
+  },
   { text: 'Eat vegetables with dinner', category: 'nutrition', emoji: '🥗' },
-  { text: 'Healthy breakfast', category: 'nutrition', emoji: '🍳', keywords: ['morning meal'] },
-  { text: 'No sugar today', category: 'nutrition', emoji: '🍬', keywords: ['diet', 'sweets'] },
-  { text: 'Prep meals for tomorrow', category: 'nutrition', emoji: '🍱', keywords: ['meal prep', 'cooking'] },
-  { text: 'Drink green tea', category: 'nutrition', emoji: '🍵', keywords: ['tea', 'beverage'] },
-  { text: 'Eat slowly (20 min meals)', category: 'nutrition', emoji: '🍽️', keywords: ['mindful eating'] },
-  { text: 'No eating after 8pm', category: 'nutrition', emoji: '🚫', keywords: ['fasting', 'diet'] },
-  { text: 'Track calories', category: 'nutrition', emoji: '📊', keywords: ['diet', 'nutrition'] },
-  { text: 'Cook at home', category: 'nutrition', emoji: '👨‍🍳', keywords: ['cooking', 'homemade'] },
+  {
+    text: 'Healthy breakfast',
+    category: 'nutrition',
+    emoji: '🍳',
+    keywords: ['morning meal'],
+  },
+  {
+    text: 'No sugar today',
+    category: 'nutrition',
+    emoji: '🍬',
+    keywords: ['diet', 'sweets'],
+  },
+  {
+    text: 'Prep meals for tomorrow',
+    category: 'nutrition',
+    emoji: '🍱',
+    keywords: ['meal prep', 'cooking'],
+  },
+  {
+    text: 'Drink green tea',
+    category: 'nutrition',
+    emoji: '🍵',
+    keywords: ['tea', 'beverage'],
+  },
+  {
+    text: 'Eat slowly (20 min meals)',
+    category: 'nutrition',
+    emoji: '🍽️',
+    keywords: ['mindful eating'],
+  },
+  {
+    text: 'No eating after 8pm',
+    category: 'nutrition',
+    emoji: '🚫',
+    keywords: ['fasting', 'diet'],
+  },
+  {
+    text: 'Track calories',
+    category: 'nutrition',
+    emoji: '📊',
+    keywords: ['diet', 'nutrition'],
+  },
+  {
+    text: 'Cook at home',
+    category: 'nutrition',
+    emoji: '👨‍🍳',
+    keywords: ['cooking', 'homemade'],
+  },
 ];
 
 const SOCIAL_HABITS: HabitSuggestion[] = [
-  { text: 'Call a friend', category: 'social', emoji: '📞', keywords: ['phone', 'connect'] },
-  { text: 'Text someone I love', category: 'social', emoji: '💬', keywords: ['message', 'family'] },
-  { text: 'Practice instrument for 15 minutes', category: 'social', emoji: '🎸', keywords: ['music', 'guitar', 'piano'] },
-  { text: 'Learn new skill for 20 minutes', category: 'social', emoji: '🎓', keywords: ['hobby', 'practice'] },
-  { text: 'Spend time with family', category: 'social', emoji: '👨‍👩‍👧', keywords: ['family time'] },
-  { text: 'Express appreciation', category: 'social', emoji: '💝', keywords: ['gratitude', 'thank'] },
-  { text: 'Random act of kindness', category: 'social', emoji: '💕', keywords: ['help', 'kind'] },
-  { text: 'Listen without interrupting', category: 'social', emoji: '👂', keywords: ['active listening'] },
-  { text: 'Take a photo', category: 'social', emoji: '📷', keywords: ['photography', 'picture'] },
-  { text: 'Create something', category: 'social', emoji: '🎨', keywords: ['art', 'creative'] },
+  {
+    text: 'Call a friend',
+    category: 'social',
+    emoji: '📞',
+    keywords: ['phone', 'connect'],
+  },
+  {
+    text: 'Text someone I love',
+    category: 'social',
+    emoji: '💬',
+    keywords: ['message', 'family'],
+  },
+  {
+    text: 'Practice instrument for 15 minutes',
+    category: 'social',
+    emoji: '🎸',
+    keywords: ['music', 'guitar', 'piano'],
+  },
+  {
+    text: 'Learn new skill for 20 minutes',
+    category: 'social',
+    emoji: '🎓',
+    keywords: ['hobby', 'practice'],
+  },
+  {
+    text: 'Spend time with family',
+    category: 'social',
+    emoji: '👨‍👩‍👧',
+    keywords: ['family time'],
+  },
+  {
+    text: 'Express appreciation',
+    category: 'social',
+    emoji: '💝',
+    keywords: ['gratitude', 'thank'],
+  },
+  {
+    text: 'Random act of kindness',
+    category: 'social',
+    emoji: '💕',
+    keywords: ['help', 'kind'],
+  },
+  {
+    text: 'Listen without interrupting',
+    category: 'social',
+    emoji: '👂',
+    keywords: ['active listening'],
+  },
+  {
+    text: 'Take a photo',
+    category: 'social',
+    emoji: '📷',
+    keywords: ['photography', 'picture'],
+  },
+  {
+    text: 'Create something',
+    category: 'social',
+    emoji: '🎨',
+    keywords: ['art', 'creative'],
+  },
 ];
 
 /**
@@ -301,7 +511,12 @@ export const MAX_SUGGESTIONS_SHOWN = 5;
 **Add matching functions**:
 
 ```typescript
-import { HABIT_SUGGESTIONS, MIN_CHARS_FOR_SUGGESTIONS, MAX_SUGGESTIONS_SHOWN, type HabitSuggestion } from './habitSuggestions';
+import {
+  HABIT_SUGGESTIONS,
+  MIN_CHARS_FOR_SUGGESTIONS,
+  MAX_SUGGESTIONS_SHOWN,
+  type HabitSuggestion,
+} from './habitSuggestions';
 
 /**
  * Match score for ranking suggestions
@@ -357,7 +572,9 @@ export function getAutocompleteSuggestions(
       matchType = 'word';
     }
     // 3. Keyword match: score = 60
-    else if (suggestion.keywords?.some(kw => kw.toLowerCase().includes(query))) {
+    else if (
+      suggestion.keywords?.some((kw) => kw.toLowerCase().includes(query))
+    ) {
       score = 60;
       matchType = 'keyword';
     }
@@ -379,7 +596,7 @@ export function getAutocompleteSuggestions(
   return matches
     .sort((a, b) => b.score - a.score)
     .slice(0, maxResults)
-    .map(m => m.suggestion);
+    .map((m) => m.suggestion);
 }
 
 /**
@@ -587,7 +804,9 @@ const cycleToNextSuggestion = useCallback(() => {
   const suggestions = getAutocompleteSuggestions(value, 3);
   if (suggestions.length === 0) return;
 
-  const currentIndex = suggestions.findIndex(s => s.text === inlineSuggestion);
+  const currentIndex = suggestions.findIndex(
+    (s) => s.text === inlineSuggestion
+  );
   const nextIndex = (currentIndex + 1) % suggestions.length;
   setInlineSuggestion(suggestions[nextIndex].text);
 }, [value, inlineSuggestion]);
@@ -702,19 +921,19 @@ describe('Autocomplete - getAutocompleteSuggestions', () => {
 
   it('matches word boundaries', () => {
     const results = getAutocompleteSuggestions('morning');
-    expect(results.some(s => s.text.includes('Morning'))).toBe(true);
+    expect(results.some((s) => s.text.includes('Morning'))).toBe(true);
   });
 
   it('matches keywords', () => {
     const results = getAutocompleteSuggestions('workout');
     // "workout" keyword should match "Exercise"
-    expect(results.some(s => s.text.includes('Exercise'))).toBe(true);
+    expect(results.some((s) => s.text.includes('Exercise'))).toBe(true);
   });
 
   it('performs fuzzy matching', () => {
     const results = getAutocompleteSuggestions('excs');
     // Should fuzzy match "Exercise" (e-x-c-s)
-    expect(results.some(s => s.text.includes('Exercise'))).toBe(true);
+    expect(results.some((s) => s.text.includes('Exercise'))).toBe(true);
   });
 
   it('respects maxResults parameter', () => {
@@ -883,34 +1102,29 @@ describe('HabitInput - Autocomplete', () => {
 **Test Plan**:
 
 1. **Basic Autocomplete**
-
    - Type "exe" → Should show "Exercise 10 minutes" preview
    - Type "read" → Should show "Read 5 pages" preview
    - Type "zzz" → No preview (no matches)
    - Type "ex" (2 chars) → No preview (too short)
 
 2. **Keyboard Navigation**
-
    - Type "exe" → Press Tab → Input filled with "Exercise 10 minutes"
    - Type "exe" → Press → → Input filled with suggestion
    - Type "exe" → Press Escape → Preview dismissed
    - Type "exe" → Press ↓ → Cycles to "Exercise 30 minutes"
 
 3. **Visual Alignment**
-
    - Preview text aligns correctly with cursor position
    - No text overlap or misalignment
    - Gray preview text clearly distinguishable from input
    - Preview updates smoothly (no flicker)
 
 4. **Performance**
-
    - No lag when typing quickly
    - Debounce prevents excessive suggestion updates
    - Smooth on low-end devices (iPhone SE, budget Android)
 
 5. **Accessibility**
-
    - VoiceOver announces: "Suggestion available: [text]. Press Tab to accept."
    - Preview text not read separately by screen reader
    - Keyboard navigation works without mouse
@@ -1011,13 +1225,13 @@ class TrieNode {
 
 ## Risks & Mitigation
 
-| Risk                                    | Impact | Mitigation                                                   |
-| --------------------------------------- | ------ | ------------------------------------------------------------ |
+| Risk                                       | Impact | Mitigation                                                  |
+| ------------------------------------------ | ------ | ----------------------------------------------------------- |
 | Suggestion database needs frequent updates | Medium | Separate file (`habitSuggestions.ts`), easy to edit         |
-| Matching algorithm too slow             | Low    | Debouncing + complexity analysis (< 1ms per keystroke)      |
-| Preview text misalignment               | Medium | Use invisible spacer technique, test on multiple devices    |
-| Keyboard shortcuts conflict with system | Low    | Use non-standard keys (Tab for accept, not Command/Control) |
-| Users ignore autocomplete               | Medium | Track usage metrics, iterate on UX if adoption < 30%        |
+| Matching algorithm too slow                | Low    | Debouncing + complexity analysis (< 1ms per keystroke)      |
+| Preview text misalignment                  | Medium | Use invisible spacer technique, test on multiple devices    |
+| Keyboard shortcuts conflict with system    | Low    | Use non-standard keys (Tab for accept, not Command/Control) |
+| Users ignore autocomplete                  | Medium | Track usage metrics, iterate on UX if adoption < 30%        |
 
 ## Success Metrics
 
@@ -1045,8 +1259,13 @@ If autocomplete causes issues:
 
 ## Implementation Checklist
 
-- [ ] Task 1: Create habit suggestions database (70+ habits across 5 categories)
-- [ ] Task 2: Implement matching logic (prefix, word, keyword, fuzzy)
+- [x] Task 1: Create habit suggestions database (70+ habits across 5 categories)
+- [x] Task 2: Implement matching logic (prefix, word, keyword, fuzzy)
+  - Added `getAutocompleteSuggestions()` with 4-tier scoring system (prefix: 100, word: 80, keyword: 60, fuzzy: 40)
+  - Implemented `fuzzyMatch()` for character-sequence matching
+  - Added `getBestSuggestion()` for inline preview selection
+  - Added `getInlinePreview()` to extract completion text
+  - All functions handle edge cases and use MIN_CHARS_FOR_SUGGESTIONS (3 chars) threshold
 - [ ] Task 3: Add inline preview to HabitInput component
 - [ ] Task 4: Add keyboard navigation (Tab, Escape, Arrow keys)
 - [ ] Task 5: Add accessibility announcements (live region, hints)
