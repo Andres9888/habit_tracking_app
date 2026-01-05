@@ -9,7 +9,9 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
-import CreateHabitModal from '../../../components/CreateHabitModal';
+import CreateHabitModal, {
+  CreateHabitModalCentered,
+} from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../screens/HabitDetailScreen';
 import HabitEditScreen from '../../../screens/HabitEditScreen';
@@ -26,6 +28,19 @@ import type { ShareCardData } from '../types';
 import type { HabitsModalsState } from '../hooks/useHabitsApp';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/**
+ * Feature flag: Toggle between original and centered habit creation modal
+ *
+ * Original modal:  All fields visible upfront with equal visual weight
+ * Centered modal:  Progressive disclosure - name required, customization optional
+ *
+ * To enable centered layout: Set to `true`
+ * To use original layout:   Set to `false` (default)
+ *
+ * Both modals are fully functional and use identical props (CreateHabitModalProps)
+ */
+const USE_CENTERED_HABIT_MODAL = true;
 
 interface HabitsModalsProps {
   state: HabitsModalsState;
@@ -159,11 +174,19 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         visible={showSettings}
       />
 
-      <CreateHabitModal
-        habitToEdit={habitToEdit || undefined}
-        visible={showCreateHabit}
-        onClose={closeCreateHabit}
-      />
+      {USE_CENTERED_HABIT_MODAL ? (
+        <CreateHabitModalCentered
+          habitToEdit={habitToEdit || undefined}
+          visible={showCreateHabit}
+          onClose={closeCreateHabit}
+        />
+      ) : (
+        <CreateHabitModal
+          habitToEdit={habitToEdit || undefined}
+          visible={showCreateHabit}
+          onClose={closeCreateHabit}
+        />
+      )}
 
       <Modal
         animationType='slide'
