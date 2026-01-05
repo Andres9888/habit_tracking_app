@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Creation Wizard - Interactive Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #faf9f7;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .step-content {
+      display: none;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .progress-bar-fill {
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .time-button {
+      transition: all 0.2s ease;
+    }
+
+    .time-button:hover:not(.selected) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .time-button.selected {
+      border: 2px solid #10B981;
+      background: #D1FAE5;
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    .emoji-item {
+      font-size: 28px;
+      padding: 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .emoji-item:hover {
+      background: #f5f5f4;
+      transform: scale(1.1);
+    }
+
+    .emoji-item.selected {
+      background: #D1FAE5;
+      border: 2px solid #10B981;
+    }
+
+    .color-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 3px solid transparent;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.15);
+    }
+
+    .color-swatch.selected {
+      border: 3px solid #1f2937;
+      transform: scale(1.2);
+    }
+
+    .btn-primary {
+      background: #10B981;
+      color: white;
+      font-weight: 600;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-primary:disabled {
+      background: #d6d3d1;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #78716c;
+      font-weight: 500;
+      padding: 12px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      color: #57534e;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #78716c;
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+      color: #57534e;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      font-size: 17px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #10B981;
+      background: #f9fafb;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 128px;
+      height: 4px;
+      background: #d6d3d1;
+      border-radius: 2px;
+    }
+
+    .success-animation {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .success-animation.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+
+      <!-- Header -->
+      <div style="background: white; padding: 16px 24px; border-bottom: 1px solid #e7e5e4;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 style="font-size: 20px; font-weight: 600; color: #1c1917;">Create Habit</h2>
+          <button onclick="resetFlow()" style="background: none; border: none; color: #78716c; font-size: 28px; cursor: pointer; line-height: 1;">×</button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div style="padding: 16px 24px 8px;">
+        <div style="height: 4px; background: #e7e5e4; border-radius: 2px; overflow: hidden;">
+          <div id="progressBar" class="progress-bar-fill" style="height: 100%; background: #10B981; width: 33%;"></div>
+        </div>
+        <p style="font-size: 12px; color: #a8a29e; margin-top: 8px;">
+          Step <span id="currentStepNumber">1</span> of 3
+        </p>
+      </div>
+
+      <!-- Back Button (hidden on Step 1) -->
+      <div id="backButtonContainer" style="padding: 0 24px; display: none;">
+        <button class="back-button" onclick="goBack()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back
+        </button>
+      </div>
+
+      <!-- Content Area -->
+      <div style="padding: 24px; flex: 1; overflow-y: auto; height: calc(100% - 180px);">
+
+        <!-- Step 1: Name -->
+        <div id="step1" class="step-content active">
+          <h1 style="font-size: 24px; font-weight: 700; color: #1c1917; margin-bottom: 8px;">
+            What habit do you want to build?
+          </h1>
+          <p style="font-size: 16px; color: #78716c; margin-bottom: 24px;">
+            Keep it simple and specific
+          </p>
+
+          <input
+            type="text"
+            id="habitNameInput"
+            placeholder="e.g., Read for 20 minutes"
+            maxlength="50"
+            oninput="updateHabitName()"
+          />
+
+          <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+            <span id="charCount" style="font-size: 12px; color: #a8a29e;">0/50 characters</span>
+            <span id="minCharsWarning" style="font-size: 12px; color: #d97706; display: none;">At least 2 characters</span>
+          </div>
+        </div>
+
+        <!-- Step 2: When -->
+        <div id="step2" class="step-content">
+          <h1 style="font-size: 24px; font-weight: 700; color: #1c1917; margin-bottom: 8px;">
+            When will you do this?
+          </h1>
+          <p style="font-size: 16px; color: #78716c; margin-bottom: 24px;">
+            Choose the time that works best for you
+          </p>
+
+          <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+            <button class="time-button" onclick="selectTime('morning')" style="flex: 1; padding: 12px; border: 1px solid #e7e5e4; border-radius: 12px; background: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <span style="font-size: 20px;">🌅</span>
+              <span style="font-size: 14px; font-weight: 500; color: #57534e;">Morning</span>
+            </button>
+            <button class="time-button selected" onclick="selectTime('afternoon')" style="flex: 1; padding: 12px; border: 1px solid #e7e5e4; border-radius: 12px; background: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <span style="font-size: 20px;">☀️</span>
+              <span style="font-size: 14px; font-weight: 500; color: #10B981;">Afternoon</span>
+            </button>
+            <button class="time-button" onclick="selectTime('evening')" style="flex: 1; padding: 12px; border: 1px solid #e7e5e4; border-radius: 12px; background: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <span style="font-size: 20px;">🌙</span>
+              <span style="font-size: 14px; font-weight: 500; color: #57534e;">Evening</span>
+            </button>
+          </div>
+
+          <div style="padding: 16px; background: #D1FAE5; border-radius: 12px; border: 1px solid #10B981;">
+            <p style="font-size: 14px; color: #065f46;">
+              <strong>✓ Reminder set</strong><br>
+              <span id="reminderText">We'll send you a friendly nudge during your afternoon time</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3: Customize -->
+        <div id="step3" class="step-content">
+          <h1 style="font-size: 24px; font-weight: 700; color: #1c1917; margin-bottom: 8px;">
+            Pick your vibe
+          </h1>
+          <p style="font-size: 16px; color: #78716c; margin-bottom: 24px;">
+            Make it yours (or skip this step!)
+          </p>
+
+          <div style="margin-bottom: 24px;">
+            <p style="font-size: 12px; font-weight: 500; color: #78716c; margin-bottom: 12px;">EMOJI</p>
+            <div class="emoji-grid">
+              <div class="emoji-item" onclick="selectEmoji('📚')">📚</div>
+              <div class="emoji-item" onclick="selectEmoji('💪')">💪</div>
+              <div class="emoji-item" onclick="selectEmoji('🧘')">🧘</div>
+              <div class="emoji-item" onclick="selectEmoji('🏃')">🏃</div>
+              <div class="emoji-item" onclick="selectEmoji('💧')">💧</div>
+              <div class="emoji-item" onclick="selectEmoji('🎯')">🎯</div>
+              <div class="emoji-item" onclick="selectEmoji('✍️')">✍️</div>
+              <div class="emoji-item" onclick="selectEmoji('🎨')">🎨</div>
+              <div class="emoji-item" onclick="selectEmoji('🎵')">🎵</div>
+              <div class="emoji-item" onclick="selectEmoji('🌱')">🌱</div>
+              <div class="emoji-item" onclick="selectEmoji('⭐')">⭐</div>
+              <div class="emoji-item" onclick="selectEmoji('🔥')">🔥</div>
+            </div>
+          </div>
+
+          <div>
+            <p style="font-size: 12px; font-weight: 500; color: #78716c; margin-bottom: 12px;">COLOR</p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <div class="color-swatch selected" onclick="selectColor(this)" style="background: #EF4444;"></div>
+              <div class="color-swatch" onclick="selectColor(this)" style="background: #F59E0B;"></div>
+              <div class="color-swatch" onclick="selectColor(this)" style="background: #10B981;"></div>
+              <div class="color-swatch" onclick="selectColor(this)" style="background: #3B82F6;"></div>
+              <div class="color-swatch" onclick="selectColor(this)" style="background: #8B5CF6;"></div>
+              <div class="color-swatch" onclick="selectColor(this)" style="background: #EC4899;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div style="background: white; padding: 16px 24px 24px; border-top: 1px solid #e7e5e4;">
+        <div id="footer1" style="display: block;">
+          <button id="continueBtn1" class="btn-primary" onclick="goToStep2()" disabled>
+            Continue
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="footer2" style="display: none;">
+          <button class="btn-primary" onclick="goToStep3()">
+            Continue
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="footer3" style="display: none;">
+          <button class="btn-primary" onclick="createHabit()">
+            Create Habit
+          </button>
+          <button class="btn-secondary" onclick="createHabit()">
+            Skip and create
+          </button>
+        </div>
+      </div>
+
+      <!-- Home Indicator -->
+      <div class="home-indicator"></div>
+
+      <!-- Success Animation -->
+      <div id="successAnimation" class="success-animation">
+        <div class="checkmark">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+        <h2 style="font-size: 24px; font-weight: 700; color: #1c1917;">Habit Created!</h2>
+        <p style="font-size: 16px; color: #78716c; text-align: center; max-width: 280px;">
+          <span id="createdHabitName">Your habit</span> is ready to track
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    let habitName = '';
+    let selectedTime = 'afternoon';
+    let selectedEmoji = null;
+    let selectedColor = '#EF4444';
+
+    function updateHabitName() {
+      const input = document.getElementById('habitNameInput');
+      habitName = input.value;
+      const charCount = document.getElementById('charCount');
+      const warning = document.getElementById('minCharsWarning');
+      const continueBtn = document.getElementById('continueBtn1');
+
+      charCount.textContent = `${habitName.length}/50 characters`;
+
+      if (habitName.trim().length >= 2) {
+        continueBtn.disabled = false;
+        warning.style.display = 'none';
+      } else {
+        continueBtn.disabled = true;
+        if (habitName.length > 0 && habitName.length < 2) {
+          warning.style.display = 'block';
+        } else {
+          warning.style.display = 'none';
+        }
+      }
+    }
+
+    function goToStep2() {
+      if (habitName.trim().length < 2) return;
+
+      currentStep = 2;
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step2').classList.add('active');
+      document.getElementById('footer1').style.display = 'none';
+      document.getElementById('footer2').style.display = 'block';
+      document.getElementById('backButtonContainer').style.display = 'block';
+      document.getElementById('progressBar').style.width = '66%';
+      document.getElementById('currentStepNumber').textContent = '2';
+    }
+
+    function goToStep3() {
+      currentStep = 3;
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step3').classList.add('active');
+      document.getElementById('footer2').style.display = 'none';
+      document.getElementById('footer3').style.display = 'block';
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('currentStepNumber').textContent = '3';
+    }
+
+    function goBack() {
+      if (currentStep === 2) {
+        currentStep = 1;
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step1').classList.add('active');
+        document.getElementById('footer2').style.display = 'none';
+        document.getElementById('footer1').style.display = 'block';
+        document.getElementById('backButtonContainer').style.display = 'none';
+        document.getElementById('progressBar').style.width = '33%';
+        document.getElementById('currentStepNumber').textContent = '1';
+      } else if (currentStep === 3) {
+        currentStep = 2;
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+        document.getElementById('footer3').style.display = 'none';
+        document.getElementById('footer2').style.display = 'block';
+        document.getElementById('progressBar').style.width = '66%';
+        document.getElementById('currentStepNumber').textContent = '2';
+      }
+    }
+
+    function selectTime(time) {
+      selectedTime = time;
+      const buttons = document.querySelectorAll('.time-button');
+      buttons.forEach(btn => {
+        btn.classList.remove('selected');
+        const span = btn.querySelector('span:last-child');
+        span.style.color = '#57534e';
+      });
+
+      const selectedBtn = event.currentTarget;
+      selectedBtn.classList.add('selected');
+      selectedBtn.querySelector('span:last-child').style.color = '#10B981';
+
+      const reminderText = document.getElementById('reminderText');
+      reminderText.textContent = `We'll send you a friendly nudge during your ${time} time`;
+    }
+
+    function selectEmoji(emoji) {
+      selectedEmoji = emoji;
+      const items = document.querySelectorAll('.emoji-item');
+      items.forEach(item => item.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+    }
+
+    function selectColor(element) {
+      const swatches = document.querySelectorAll('.color-swatch');
+      swatches.forEach(swatch => swatch.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedColor = element.style.background;
+    }
+
+    function createHabit() {
+      document.getElementById('createdHabitName').textContent = habitName;
+      document.getElementById('successAnimation').classList.add('active');
+
+      setTimeout(() => {
+        resetFlow();
+      }, 2500);
+    }
+
+    function resetFlow() {
+      document.getElementById('successAnimation').classList.remove('active');
+
+      setTimeout(() => {
+        currentStep = 1;
+        habitName = '';
+        selectedTime = 'afternoon';
+        selectedEmoji = null;
+
+        document.getElementById('habitNameInput').value = '';
+        document.getElementById('charCount').textContent = '0/50 characters';
+        document.getElementById('continueBtn1').disabled = true;
+
+        document.getElementById('step1').classList.add('active');
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step3').classList.remove('active');
+
+        document.getElementById('footer1').style.display = 'block';
+        document.getElementById('footer2').style.display = 'none';
+        document.getElementById('footer3').style.display = 'none';
+
+        document.getElementById('backButtonContainer').style.display = 'none';
+        document.getElementById('progressBar').style.width = '33%';
+        document.getElementById('currentStepNumber').textContent = '1';
+
+        const emojiItems = document.querySelectorAll('.emoji-item');
+        emojiItems.forEach(item => item.classList.remove('selected'));
+
+        const colorSwatches = document.querySelectorAll('.color-swatch');
+        colorSwatches.forEach((swatch, i) => {
+          if (i === 0) swatch.classList.add('selected');
+          else swatch.classList.remove('selected');
+        });
+      }, 300);
+    }
+
+    // Initialize
+    document.getElementById('habitNameInput').focus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unified Motivation System - Full Flow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34D399', 500: '#10B981', 600: '#059669', 700: '#047857' },
+            accent: { 400: '#fbbf24', 500: '#F59E0B', 600: '#D97706' },
+            surface: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c', 800: '#292524', 900: '#1c1917' },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(135deg, #1c1917 0%, #292524 50%, #1c1917 100%); min-height: 100vh; padding: 40px 20px; }
+
+    .phone-frame {
+      width: 320px;
+      height: 693px;
+      background: #fafaf9;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.4), inset 0 0 0 10px #1c1917;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 130px; height: 28px; background: #1c1917; border-radius: 0 0 20px 20px; z-index: 100; }
+    .home-indicator { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; background: rgba(0,0,0,0.2); border-radius: 100px; z-index: 100; }
+    .screen { height: 100%; overflow-y: auto; scrollbar-width: none; }
+    .screen::-webkit-scrollbar { display: none; }
+
+    @keyframes flame { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.1) rotate(2deg); } }
+    .flame { animation: flame 0.8s ease-in-out infinite; }
+
+    @keyframes coin-shine { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; transform: scale(1.05); } }
+    .coin-shine { animation: coin-shine 2s ease-in-out infinite; }
+
+    @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.4); opacity: 0; } }
+    .pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
+
+    @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0; } }
+    .breathe { animation: breathe 2s ease-in-out infinite; }
+
+    @keyframes wave {
+      0%, 100% { height: 6px; }
+      50% { height: 16px; }
+    }
+    .wave { animation: wave 0.5s ease-in-out infinite; }
+    .wave:nth-child(1) { animation-delay: 0s; }
+    .wave:nth-child(2) { animation-delay: 0.1s; }
+    .wave:nth-child(3) { animation-delay: 0.2s; }
+    .wave:nth-child(4) { animation-delay: 0.15s; }
+    .wave:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); } 50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.5); } }
+    .glow { animation: glow 2s ease-in-out infinite; }
+
+    @keyframes breathe-circle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .breathe-circle { animation: breathe-circle 4s ease-in-out infinite; }
+
+    .flow-arrow {
+      width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .flow-arrow::after {
+      content: '→';
+      font-size: 32px;
+      color: #10B981;
+      opacity: 0.6;
+    }
+
+    .gradient-border {
+      background: linear-gradient(135deg, #10B981, #34D399, #F59E0B);
+      padding: 2px;
+      border-radius: 16px;
+    }
+    .gradient-border-inner {
+      background: #292524;
+      border-radius: 14px;
+    }
+
+    .label {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 600;
+      color: #a8a29e;
+    }
+    .label-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #10B981;
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-7xl mx-auto">
+    <!-- Title -->
+    <div class="text-center mb-12">
+      <h1 class="text-white text-3xl font-bold mb-2">Unified Motivation System</h1>
+      <p class="text-surface-400 text-lg">Single-tier economy with consumable coins</p>
+      <div class="flex items-center justify-center gap-6 mt-6">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🪙</span>
+          <span class="text-amber-400 font-medium">Earn coins by completing habits</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🛡️</span>
+          <span class="text-surface-300 font-medium">Spend on shields & boosts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow Container -->
+    <div class="flex items-start justify-center gap-0 overflow-x-auto pb-16">
+
+      <!-- Screen 1: Motivation Workshop -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-surface-900">
+            <!-- Header -->
+            <div class="pt-12 px-4 pb-3">
+              <div class="flex items-center justify-between">
+                <button class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <i data-lucide="chevron-left" class="w-4 h-4 text-white"></i>
+                </button>
+                <h1 class="text-white font-bold text-base">Morning Run</h1>
+                <div class="flex items-center gap-1 bg-amber-500/20 px-2 py-1 rounded-full">
+                  <span class="coin-shine text-sm">🪙</span>
+                  <span class="text-amber-400 font-bold text-xs">47</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fuel Gauge -->
+            <div class="px-4 mb-4">
+              <div class="gradient-border">
+                <div class="gradient-border-inner p-3">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xl">⛽</span>
+                      <p class="text-white font-bold text-xs">Motivation Fuel</p>
+                    </div>
+                    <p class="text-primary-400 font-bold text-lg">78%</p>
+                  </div>
+                  <div class="h-3 bg-surface-700 rounded-full overflow-hidden">
+                    <div class="w-3/4 h-full bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="px-4 mb-3">
+              <div class="flex bg-surface-800 rounded-lg p-1">
+                <button class="flex-1 py-2 rounded-md bg-white/10 text-white font-medium text-xs">Motivation</button>
+                <button class="flex-1 py-2 rounded-md text-surface-400 text-xs">Progress</button>
+                <button class="flex-1 py-2 rounded-md text-surface-400 text-xs">Manage</button>
+              </div>
+            </div>
+
+            <!-- Streak + Shields -->
+            <div class="px-4 mb-3">
+              <div class="flex gap-2">
+                <div class="flex-1 bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-xl p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="flame text-2xl">🔥</span>
+                    <div>
+                      <p class="text-white font-bold text-xl">14</p>
+                      <p class="text-amber-400 text-xs">Streak</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-1 bg-surface-800 border border-surface-700 rounded-xl p-3">
+                  <div class="flex items-center gap-2">
+                    <div class="relative">
+                      <span class="text-2xl">🛡️</span>
+                      <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-bold">2</span>
+                      </div>
+                    </div>
+                    <div>
+                      <p class="text-white font-bold text-sm">Shields</p>
+                      <p class="text-surface-400 text-xs">10 🪙 each</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Voice Note -->
+            <div class="px-4 mb-3">
+              <div class="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/20 rounded-xl p-3">
+                <div class="flex items-center gap-3">
+                  <button class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="play" class="w-4 h-4 text-white"></i>
+                  </button>
+                  <div class="flex-1">
+                    <p class="text-teal-400 text-xs font-medium mb-1">Your Voice (Day 1)</p>
+                    <div class="flex items-end gap-1 h-4">
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Your Why -->
+            <div class="px-4 mb-3">
+              <div class="bg-gradient-to-br from-rose-500/10 to-pink-500/10 border border-rose-500/20 rounded-xl p-3">
+                <div class="flex items-start gap-2">
+                  <span class="text-lg">❤️</span>
+                  <div>
+                    <p class="text-rose-400 text-xs font-medium mb-1">Your Why</p>
+                    <p class="text-white/90 text-xs italic">"Be healthy for my grandchildren"</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WOOP -->
+            <div class="px-4 mb-3">
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-base">🎯</span>
+                  <p class="text-white font-semibold text-xs">Today's Plan</p>
+                  <span class="text-xs bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full ml-auto">WOOP</span>
+                </div>
+                <p class="text-surface-300 text-xs"><span class="text-primary-400">IF</span> tired → <span class="text-accent-400">walk 5 min</span></p>
+              </div>
+            </div>
+
+            <!-- Bottom padding -->
+            <div class="h-6"></div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">1</span>Workshop</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 2: Activation Moment -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-gradient-to-b from-surface-900 via-surface-800 to-surface-900">
+            <!-- Header -->
+            <div class="pt-12 px-4 pb-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-surface-400 text-xs">7:00 AM</p>
+                  <p class="text-white text-lg font-bold">Time for your habit</p>
+                </div>
+                <div class="flex items-center gap-1 bg-amber-500/20 px-2 py-1 rounded-full">
+                  <span class="flame text-base">🔥</span>
+                  <span class="text-amber-400 font-bold text-sm">14</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Card -->
+            <div class="px-4 mb-4">
+              <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-emerald-600 flex items-center justify-center text-xl">
+                    🏃
+                  </div>
+                  <div>
+                    <h2 class="text-white font-bold">Morning Run</h2>
+                    <p class="text-surface-400 text-xs">30 min • Outdoor</p>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="bg-white/5 rounded-lg p-2 text-center">
+                    <p class="text-primary-400 font-bold text-sm">85%</p>
+                    <p class="text-surface-500 text-xs">Rate</p>
+                  </div>
+                  <div class="bg-white/5 rounded-lg p-2 text-center">
+                    <p class="text-amber-400 font-bold text-sm">14</p>
+                    <p class="text-surface-500 text-xs">Streak</p>
+                  </div>
+                  <div class="bg-white/5 rounded-lg p-2 text-center">
+                    <p class="text-teal-400 font-bold text-sm">+3</p>
+                    <p class="text-surface-500 text-xs">🪙 Coins</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Motivation Pull -->
+            <div class="px-4 mb-4">
+              <div class="bg-gradient-to-r from-rose-500/10 to-pink-500/10 border border-rose-500/20 rounded-xl p-3">
+                <p class="text-rose-400 text-xs font-medium mb-1">❤️ Your Why</p>
+                <p class="text-white/90 text-sm italic">"Be healthy for my grandchildren"</p>
+              </div>
+            </div>
+
+            <!-- WOOP Reminder -->
+            <div class="px-4 mb-4">
+              <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+                <p class="text-amber-400 text-xs font-medium mb-1">🎯 Remember your plan</p>
+                <p class="text-white/80 text-sm"><strong class="text-primary-400">IF</strong> tired → <strong class="text-accent-400">just walk 5 min</strong></p>
+              </div>
+            </div>
+
+            <!-- Dual Viz -->
+            <div class="px-4 mb-5">
+              <div class="grid grid-cols-2 gap-2">
+                <div class="bg-primary-500/10 border border-primary-500/20 rounded-lg p-2">
+                  <p class="text-primary-400 text-xs mb-1">✨ Do it...</p>
+                  <p class="text-white/70 text-xs">Feel unstoppable</p>
+                </div>
+                <div class="bg-surface-800 border border-surface-600 rounded-lg p-2">
+                  <p class="text-surface-400 text-xs mb-1">😔 Skip...</p>
+                  <p class="text-white/50 text-xs">Regret all day</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main CTA -->
+            <div class="px-4 mb-3">
+              <div class="relative">
+                <div class="breathe absolute inset-0 bg-primary-500 rounded-xl"></div>
+                <button class="glow relative w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-4 rounded-xl text-base flex items-center justify-center gap-2">
+                  <i data-lucide="play" class="w-5 h-5"></i>
+                  Start Now
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="px-4 pb-6">
+              <div class="flex gap-2">
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3"></i>
+                  Snooze
+                </button>
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center gap-1">
+                  <i data-lucide="zap" class="w-3 h-3"></i>
+                  Just 2 Min
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">2</span>Activation</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 3: Rescue (Struggling) -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-gradient-to-b from-surface-900 via-indigo-950/30 to-surface-900">
+            <!-- Header -->
+            <div class="pt-12 px-4 pb-3">
+              <div class="flex items-center justify-between">
+                <button class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <i data-lucide="x" class="w-4 h-4 text-white"></i>
+                </button>
+                <div class="flex items-center gap-1 bg-amber-500/20 px-2 py-1 rounded-full">
+                  <span class="flame text-base">🔥</span>
+                  <span class="text-amber-400 font-bold text-sm">14</span>
+                  <span class="text-amber-400/60 text-xs">at risk</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Rescue Header -->
+            <div class="px-4 mb-4 text-center">
+              <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
+                <span class="text-3xl">🤖</span>
+              </div>
+              <h2 class="text-white text-lg font-bold mb-1">Rescue Mode</h2>
+              <p class="text-surface-400 text-sm">I've got your motivation ready</p>
+            </div>
+
+            <!-- Breathing Animation -->
+            <div class="px-4 mb-4">
+              <div class="relative h-28 flex items-center justify-center">
+                <div class="breathe-circle absolute w-24 h-24 rounded-full border-2 border-teal-500/30"></div>
+                <div class="breathe-circle absolute w-20 h-20 rounded-full border-2 border-teal-500/50" style="animation-delay: 0.5s;"></div>
+                <div class="w-16 h-16 rounded-full bg-teal-500/20 flex items-center justify-center">
+                  <span class="text-2xl">🫁</span>
+                </div>
+              </div>
+              <p class="text-center text-teal-400 text-sm">Breathe with me...</p>
+            </div>
+
+            <!-- Voice Playback -->
+            <div class="px-4 mb-4">
+              <div class="bg-gradient-to-r from-teal-500/15 to-cyan-500/15 border border-teal-500/30 rounded-xl p-4">
+                <p class="text-teal-400 text-xs font-medium mb-2">🎙️ Listen to yourself from Day 1</p>
+                <div class="flex items-center gap-3">
+                  <button class="w-12 h-12 rounded-full bg-teal-500 flex items-center justify-center relative">
+                    <div class="absolute inset-0 rounded-full bg-teal-500 pulse-ring"></div>
+                    <i data-lucide="play" class="w-5 h-5 text-white relative z-10"></i>
+                  </button>
+                  <div class="flex-1 flex items-end gap-1 h-5">
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                  </div>
+                  <span class="text-teal-300 text-xs">0:23</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Your Why -->
+            <div class="px-4 mb-4">
+              <div class="bg-rose-500/10 border border-rose-500/20 rounded-xl p-3">
+                <p class="text-rose-400 text-xs font-medium mb-1">❤️ Remember why you started</p>
+                <p class="text-white/90 text-sm italic">"Be healthy for my grandchildren"</p>
+              </div>
+            </div>
+
+            <!-- Rescue Actions -->
+            <div class="px-4 mb-4">
+              <button class="w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mb-2">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                Do Just 2 Minutes
+              </button>
+              <div class="flex gap-2">
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-lg text-xs">
+                  📖 Read Letter
+                </button>
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-lg text-xs">
+                  🎙️ More Voice
+                </button>
+              </div>
+            </div>
+
+            <!-- Use Shield Option -->
+            <div class="px-4 pb-6">
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">🛡️</span>
+                    <div>
+                      <p class="text-white text-sm font-medium">Use a Shield?</p>
+                      <p class="text-surface-400 text-xs">Skip today, keep streak</p>
+                    </div>
+                  </div>
+                  <button class="bg-amber-500/20 text-amber-400 font-medium text-xs px-3 py-1.5 rounded-full">
+                    Use (2 left)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">3</span>Rescue</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 4: Completion + Coins -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-gradient-to-b from-surface-900 via-primary-950/30 to-surface-900">
+            <!-- Celebration -->
+            <div class="pt-20 px-4 text-center">
+              <!-- Confetti placeholder -->
+              <div class="text-6xl mb-4">🎉</div>
+              <h1 class="text-white text-2xl font-bold mb-2">You Did It!</h1>
+              <p class="text-surface-400 mb-6">Day 15 complete</p>
+
+              <!-- Streak -->
+              <div class="inline-flex items-center gap-2 bg-amber-500/20 px-4 py-2 rounded-full mb-6">
+                <span class="flame text-2xl">🔥</span>
+                <span class="text-amber-400 font-bold text-xl">15 Day Streak</span>
+              </div>
+            </div>
+
+            <!-- Coins Earned -->
+            <div class="px-4 mb-4">
+              <div class="bg-gradient-to-r from-amber-500/15 to-yellow-500/15 border border-amber-500/30 rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <p class="text-white font-semibold">Coins Earned</p>
+                  <div class="flex items-center gap-1">
+                    <span class="coin-shine text-xl">🪙</span>
+                    <span class="text-amber-400 font-bold text-xl">+8</span>
+                  </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-surface-400">Habit complete</span>
+                    <span class="text-amber-400">+3 🪙</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-surface-400">15-day streak bonus</span>
+                    <span class="text-amber-400">+5 🪙</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-amber-500/20 flex justify-between">
+                  <span class="text-surface-300 font-medium">Total balance</span>
+                  <span class="text-white font-bold">55 🪙</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fuel Increase -->
+            <div class="px-4 mb-4">
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">⛽</span>
+                    <span class="text-white font-medium text-sm">Motivation Fuel</span>
+                  </div>
+                  <span class="text-primary-400 font-bold">+5%</span>
+                </div>
+                <div class="h-2 bg-surface-700 rounded-full overflow-hidden">
+                  <div class="w-4/5 h-full bg-gradient-to-r from-primary-600 to-accent-500 rounded-full"></div>
+                </div>
+                <p class="text-surface-500 text-xs mt-1">83% → Keep adding fuel!</p>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="px-4 mb-4">
+              <button class="w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm mb-2">
+                Done
+              </button>
+              <div class="flex gap-2">
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center gap-1">
+                  <span>🎙️</span> Record Voice
+                </button>
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center gap-1">
+                  <span>✉️</span> Write Letter
+                </button>
+              </div>
+            </div>
+
+            <!-- Coin Shop Teaser -->
+            <div class="px-4 pb-6">
+              <div class="bg-surface-800/50 rounded-xl p-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🛒</span>
+                  <p class="text-surface-300 text-xs">You can afford a Shield!</p>
+                </div>
+                <button class="text-primary-400 text-xs font-medium">Shop →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">4</span>Reward</div>
+      </div>
+
+    </div>
+
+    <!-- Economy Summary -->
+    <div class="max-w-2xl mx-auto mt-8 bg-surface-800/50 border border-surface-700 rounded-2xl p-6">
+      <h3 class="text-white font-bold text-lg mb-4 text-center">🪙 Coin Economy (No Tiers)</h3>
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <p class="text-primary-400 font-semibold mb-3">Earn Coins</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-surface-300">Complete habit</span><span class="text-amber-400">+3 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">7-day streak</span><span class="text-amber-400">+10 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">14-day streak</span><span class="text-amber-400">+15 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">Record voice note</span><span class="text-amber-400">+5 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">Write letter</span><span class="text-amber-400">+5 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">Add vision photo</span><span class="text-amber-400">+3 🪙</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="text-accent-400 font-semibold mb-3">Spend Coins</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-surface-300">🛡️ Streak Shield</span><span class="text-amber-400">10 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">🚀 AI Rescue Boost</span><span class="text-amber-400">15 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">✨ Custom Theme</span><span class="text-amber-400">25 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">🎨 Habit Icon Pack</span><span class="text-amber-400">20 🪙</span></div>
+            <div class="flex justify-between"><span class="text-surface-300">📊 Advanced Stats</span><span class="text-amber-400">30 🪙</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-surface-700 text-center">
+        <p class="text-surface-400 text-sm">Users can also <span class="text-amber-400 font-medium">purchase coins</span> to accelerate, but everything is earnable through consistency.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

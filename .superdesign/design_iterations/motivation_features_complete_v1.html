@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Feature Set - Motivation System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34D399', 500: '#10B981', 600: '#059669', 700: '#047857' },
+            accent: { 400: '#fbbf24', 500: '#F59E0B', 600: '#D97706' },
+            surface: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c', 800: '#292524', 900: '#1c1917' },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(135deg, #1c1917 0%, #292524 50%, #1c1917 100%); min-height: 100vh; padding: 30px 15px; }
+
+    .phone-frame {
+      width: 280px;
+      height: 607px;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 8px #1c1917;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 110px; height: 24px; background: #1c1917; border-radius: 0 0 18px 18px; z-index: 100; }
+    .home-indicator { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 100px; height: 4px; background: rgba(0,0,0,0.2); border-radius: 100px; z-index: 100; }
+    .screen { height: 100%; overflow-y: auto; scrollbar-width: none; }
+    .screen::-webkit-scrollbar { display: none; }
+
+    @keyframes flame { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.1) rotate(2deg); } }
+    .flame { animation: flame 0.8s ease-in-out infinite; }
+
+    @keyframes coin-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    .coin-float { animation: coin-float 2s ease-in-out infinite; }
+
+    @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 0; } }
+    .pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
+
+    @keyframes wave { 0%, 100% { height: 5px; } 50% { height: 14px; } }
+    .wave { animation: wave 0.5s ease-in-out infinite; }
+    .wave:nth-child(1) { animation-delay: 0s; }
+    .wave:nth-child(2) { animation-delay: 0.1s; }
+    .wave:nth-child(3) { animation-delay: 0.2s; }
+    .wave:nth-child(4) { animation-delay: 0.15s; }
+    .wave:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0; } }
+    .breathe { animation: breathe 2s ease-in-out infinite; }
+
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); } 50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); } }
+    .glow { animation: glow 2s ease-in-out infinite; }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+    .shake { animation: shake 0.4s ease-in-out infinite; }
+
+    .flow-arrow {
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .flow-arrow::after {
+      content: '→';
+      font-size: 24px;
+      color: #10B981;
+      opacity: 0.5;
+    }
+
+    .label {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 600;
+      color: #a8a29e;
+    }
+    .label-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #10B981;
+      color: white;
+      border-radius: 50%;
+      font-size: 10px;
+      margin-right: 5px;
+    }
+
+    .feature-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-full mx-auto overflow-x-auto">
+    <!-- Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-white text-2xl font-bold mb-2">Complete Feature Set</h1>
+      <p class="text-surface-400">Single-tier coin economy with all motivation features</p>
+    </div>
+
+    <!-- Feature Legend -->
+    <div class="flex justify-center flex-wrap gap-3 mb-8 px-4">
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">🎙️</span>
+        <span class="text-surface-300 text-xs">Voice Notes</span>
+      </div>
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">✉️</span>
+        <span class="text-surface-300 text-xs">Letters to Self</span>
+      </div>
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">❤️</span>
+        <span class="text-surface-300 text-xs">Your Why</span>
+      </div>
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">🎯</span>
+        <span class="text-surface-300 text-xs">WOOP</span>
+      </div>
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">👁️</span>
+        <span class="text-surface-300 text-xs">Dual Viz</span>
+      </div>
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">📸</span>
+        <span class="text-surface-300 text-xs">Vision Board</span>
+      </div>
+      <div class="flex items-center gap-2 bg-surface-800 px-3 py-1.5 rounded-full">
+        <span class="text-sm">🪙</span>
+        <span class="text-surface-300 text-xs">Coin Economy</span>
+      </div>
+    </div>
+
+    <!-- Flow Container -->
+    <div class="flex items-start justify-start gap-0 pb-14 px-4" style="min-width: max-content;">
+
+      <!-- Screen 1: Motivation Workshop (Full Feature Tab) -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-surface-900">
+            <!-- Header -->
+            <div class="pt-10 px-3 pb-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-emerald-600 flex items-center justify-center text-sm">🏃</div>
+                  <div>
+                    <p class="text-white font-bold text-xs">Morning Run</p>
+                    <p class="text-surface-500 text-xs">30 min</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 bg-amber-500/20 px-2 py-1 rounded-full">
+                  <span class="coin-float text-xs">🪙</span>
+                  <span class="text-amber-400 font-bold text-xs">47</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="px-3 mb-3">
+              <div class="flex bg-surface-800 rounded-lg p-0.5">
+                <button class="flex-1 py-1.5 rounded-md text-surface-400 text-xs">Progress</button>
+                <button class="flex-1 py-1.5 rounded-md bg-white/10 text-white font-medium text-xs">Motivation</button>
+                <button class="flex-1 py-1.5 rounded-md text-surface-400 text-xs">Manage</button>
+              </div>
+            </div>
+
+            <!-- Streak + Shield Row -->
+            <div class="px-3 mb-2">
+              <div class="flex gap-2">
+                <div class="flex-1 bg-amber-500/10 border border-amber-500/20 rounded-xl p-2">
+                  <div class="flex items-center gap-2">
+                    <span class="flame text-lg">🔥</span>
+                    <div>
+                      <p class="text-white font-bold text-sm">14</p>
+                      <p class="text-amber-400 text-xs">Streak</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-1 bg-surface-800 border border-surface-700 rounded-xl p-2">
+                  <div class="flex items-center gap-2">
+                    <div class="relative">
+                      <span class="text-lg">🛡️</span>
+                      <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-primary-500 rounded-full text-white text-xs flex items-center justify-center font-bold">2</span>
+                    </div>
+                    <div>
+                      <p class="text-white font-bold text-xs">Shields</p>
+                      <p class="text-surface-500 text-xs">10🪙 ea</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- YOUR WHY -->
+            <div class="px-3 mb-2">
+              <div class="bg-gradient-to-br from-rose-500/10 to-pink-500/10 border border-rose-500/20 rounded-xl p-2.5">
+                <div class="flex items-center justify-between mb-1">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm">❤️</span>
+                    <span class="text-rose-400 text-xs font-semibold">Your Why</span>
+                  </div>
+                  <button class="text-surface-500">
+                    <i data-lucide="pencil" class="w-3 h-3"></i>
+                  </button>
+                </div>
+                <p class="text-white/90 text-xs italic leading-relaxed">"I want to be healthy enough to play with my grandchildren."</p>
+              </div>
+            </div>
+
+            <!-- VOICE NOTES -->
+            <div class="px-3 mb-2">
+              <div class="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/20 rounded-xl p-2.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm">🎙️</span>
+                    <span class="text-teal-400 text-xs font-semibold">Voice Notes</span>
+                  </div>
+                  <span class="feature-tag bg-amber-500/20 text-amber-400">+5🪙</span>
+                </div>
+                <!-- Voice list -->
+                <div class="space-y-1.5 mb-2">
+                  <div class="flex items-center gap-2 bg-white/5 rounded-lg p-1.5">
+                    <button class="w-7 h-7 rounded-full bg-teal-500 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="play" class="w-3 h-3 text-white"></i>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white text-xs truncate">Day 1 - Why I'm starting</p>
+                    </div>
+                    <span class="text-surface-500 text-xs">0:23</span>
+                  </div>
+                  <div class="flex items-center gap-2 bg-white/5 rounded-lg p-1.5">
+                    <button class="w-7 h-7 rounded-full bg-teal-500/50 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="play" class="w-3 h-3 text-white"></i>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white text-xs truncate">Day 7 - First week done!</p>
+                    </div>
+                    <span class="text-surface-500 text-xs">0:18</span>
+                  </div>
+                </div>
+                <button class="w-full bg-teal-500/20 hover:bg-teal-500/30 text-teal-400 text-xs font-medium py-1.5 rounded-lg flex items-center justify-center gap-1 transition">
+                  <i data-lucide="mic" class="w-3 h-3"></i>
+                  Record New
+                </button>
+              </div>
+            </div>
+
+            <!-- LETTERS TO SELF -->
+            <div class="px-3 mb-2">
+              <div class="bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/20 rounded-xl p-2.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm">✉️</span>
+                    <span class="text-violet-400 text-xs font-semibold">Letters to Self</span>
+                  </div>
+                  <span class="feature-tag bg-amber-500/20 text-amber-400">+5🪙</span>
+                </div>
+                <!-- Letters -->
+                <div class="space-y-1.5 mb-2">
+                  <div class="flex items-center gap-2 bg-white/5 rounded-lg p-1.5">
+                    <span class="text-base">🔓</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white text-xs">Day 1 Letter</p>
+                      <p class="text-surface-500 text-xs">Unlocked</p>
+                    </div>
+                    <button class="text-violet-400 text-xs">Read</button>
+                  </div>
+                  <div class="flex items-center gap-2 bg-white/5 rounded-lg p-1.5 opacity-70">
+                    <span class="text-base">🔒</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white text-xs">30-Day Letter</p>
+                      <p class="text-surface-500 text-xs">Opens in 16 days</p>
+                    </div>
+                  </div>
+                </div>
+                <button class="w-full bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 text-xs font-medium py-1.5 rounded-lg flex items-center justify-center gap-1 transition">
+                  <i data-lucide="pen-line" class="w-3 h-3"></i>
+                  Write Letter
+                </button>
+              </div>
+            </div>
+
+            <!-- WOOP PLAN -->
+            <div class="px-3 mb-2">
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-2.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm">🎯</span>
+                    <span class="text-white text-xs font-semibold">WOOP Plan</span>
+                  </div>
+                  <span class="feature-tag bg-amber-500/20 text-amber-400">WOOP</span>
+                </div>
+                <div class="space-y-1.5 text-xs">
+                  <div class="flex gap-2">
+                    <span class="text-amber-400 font-bold w-4">W</span>
+                    <p class="text-surface-300">Run 30 min every morning</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-amber-400 font-bold w-4">O</span>
+                    <p class="text-surface-300">Feel energized, proud</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-rose-400 font-bold w-4">O</span>
+                    <p class="text-surface-300">Too tired in morning</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-primary-400 font-bold w-4">P</span>
+                    <p class="text-white">If tired → walk 5 min first</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- HUBERMAN DUAL VIZ -->
+            <div class="px-3 mb-2">
+              <div class="flex items-center gap-1.5 mb-1.5 px-0.5">
+                <span class="text-sm">👁️</span>
+                <span class="text-surface-400 text-xs font-medium">Dual Visualization</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="bg-gradient-to-br from-primary-500/15 to-emerald-500/15 border border-primary-500/30 rounded-xl p-2">
+                  <p class="text-primary-400 text-xs font-medium mb-1">✨ If I do this</p>
+                  <p class="text-white/80 text-xs leading-relaxed">Energized all day, proud of myself, crushing goals</p>
+                </div>
+                <div class="bg-surface-800 border border-surface-600 rounded-xl p-2">
+                  <p class="text-surface-400 text-xs font-medium mb-1">😔 If I skip</p>
+                  <p class="text-white/50 text-xs leading-relaxed">Sluggish, regret, falling behind on health</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- VISION BOARD -->
+            <div class="px-3 mb-3">
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-2.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm">📸</span>
+                    <span class="text-white text-xs font-semibold">Vision Board</span>
+                  </div>
+                  <span class="feature-tag bg-amber-500/20 text-amber-400">+3🪙</span>
+                </div>
+                <div class="grid grid-cols-4 gap-1.5">
+                  <div class="aspect-square rounded-lg bg-surface-700 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="">
+                  </div>
+                  <div class="aspect-square rounded-lg bg-surface-700 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="">
+                  </div>
+                  <div class="aspect-square rounded-lg bg-surface-700 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="">
+                  </div>
+                  <div class="aspect-square rounded-lg bg-surface-700 border-2 border-dashed border-surface-600 flex items-center justify-center">
+                    <i data-lucide="plus" class="w-4 h-4 text-surface-500"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom padding -->
+            <div class="h-4"></div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">1</span>Workshop</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 2: Activation Moment -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-gradient-to-b from-surface-900 via-surface-800 to-surface-900">
+            <!-- Header -->
+            <div class="pt-10 px-3 pb-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-surface-400 text-xs">7:00 AM</p>
+                  <p class="text-white text-base font-bold">Time for your habit</p>
+                </div>
+                <div class="flex items-center gap-1 bg-amber-500/20 px-2 py-1 rounded-full">
+                  <span class="flame text-sm">🔥</span>
+                  <span class="text-amber-400 font-bold text-xs">14</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Card -->
+            <div class="px-3 mb-3">
+              <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-3">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-emerald-600 flex items-center justify-center text-xl">🏃</div>
+                  <div class="flex-1">
+                    <h2 class="text-white font-bold text-sm">Morning Run</h2>
+                    <p class="text-surface-400 text-xs">30 min • Outdoor</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-amber-400 font-bold text-sm">+3🪙</p>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="bg-white/5 rounded-lg p-1.5 text-center">
+                    <p class="text-primary-400 font-bold text-xs">85%</p>
+                    <p class="text-surface-500 text-xs">Rate</p>
+                  </div>
+                  <div class="bg-white/5 rounded-lg p-1.5 text-center">
+                    <p class="text-amber-400 font-bold text-xs">14</p>
+                    <p class="text-surface-500 text-xs">Streak</p>
+                  </div>
+                  <div class="bg-white/5 rounded-lg p-1.5 text-center">
+                    <p class="text-teal-400 font-bold text-xs">47</p>
+                    <p class="text-surface-500 text-xs">🪙 Coins</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- YOUR WHY - Featured -->
+            <div class="px-3 mb-2">
+              <div class="bg-gradient-to-br from-rose-500/15 to-pink-500/15 border border-rose-500/30 rounded-xl p-3">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-base">❤️</span>
+                  <span class="text-rose-400 text-xs font-semibold">Your Why</span>
+                </div>
+                <p class="text-white text-sm italic leading-relaxed">"I want to be healthy enough to play with my grandchildren."</p>
+              </div>
+            </div>
+
+            <!-- VOICE - Quick Play -->
+            <div class="px-3 mb-2">
+              <div class="bg-teal-500/10 border border-teal-500/20 rounded-xl p-2.5">
+                <div class="flex items-center gap-2">
+                  <button class="w-9 h-9 rounded-full bg-teal-500 flex items-center justify-center relative flex-shrink-0">
+                    <div class="absolute inset-0 rounded-full bg-teal-500 pulse-ring"></div>
+                    <i data-lucide="play" class="w-4 h-4 text-white relative z-10"></i>
+                  </button>
+                  <div class="flex-1">
+                    <p class="text-teal-400 text-xs font-medium">🎙️ Hear your Day 1 voice</p>
+                    <div class="flex items-end gap-0.5 h-3 mt-1">
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                      <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    </div>
+                  </div>
+                  <span class="text-teal-300 text-xs">0:23</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- WOOP Quick Reminder -->
+            <div class="px-3 mb-2">
+              <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-2.5">
+                <p class="text-amber-400 text-xs font-medium mb-1">🎯 Your Plan</p>
+                <p class="text-white/90 text-xs"><span class="text-primary-400 font-medium">IF</span> tired → <span class="text-accent-400 font-medium">walk 5 min first</span></p>
+              </div>
+            </div>
+
+            <!-- DUAL VIZ - Compact -->
+            <div class="px-3 mb-3">
+              <div class="grid grid-cols-2 gap-2">
+                <div class="bg-primary-500/10 border border-primary-500/20 rounded-lg p-2">
+                  <p class="text-primary-400 text-xs mb-1">✨ Do it</p>
+                  <p class="text-white/70 text-xs">Energized, proud</p>
+                </div>
+                <div class="bg-surface-800 border border-surface-600 rounded-lg p-2">
+                  <p class="text-surface-400 text-xs mb-1">😔 Skip</p>
+                  <p class="text-white/50 text-xs">Regret all day</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Start Button -->
+            <div class="px-3 mb-2">
+              <div class="relative">
+                <div class="breathe absolute inset-0 bg-primary-500 rounded-xl"></div>
+                <button class="glow relative w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2">
+                  <i data-lucide="play" class="w-5 h-5"></i>
+                  Start Now
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="px-3">
+              <div class="flex gap-2">
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2 rounded-lg text-xs flex items-center justify-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3"></i>
+                  Snooze 10m
+                </button>
+                <button class="flex-1 bg-white/10 border border-white/20 text-white font-medium py-2 rounded-lg text-xs flex items-center justify-center gap-1">
+                  <i data-lucide="zap" class="w-3 h-3"></i>
+                  Just 2 Min
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">2</span>Activation</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 3: Rescue Mode -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-gradient-to-b from-surface-900 via-indigo-950/30 to-surface-900">
+            <!-- Header -->
+            <div class="pt-10 px-3 pb-2">
+              <div class="flex items-center justify-between">
+                <button class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                  <i data-lucide="x" class="w-4 h-4 text-white"></i>
+                </button>
+                <div class="flex items-center gap-1 bg-rose-500/20 px-2 py-1 rounded-full">
+                  <span class="shake text-sm">🔥</span>
+                  <span class="text-rose-400 font-bold text-xs">14 at risk</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rescue Header -->
+            <div class="px-3 mb-4 text-center">
+              <div class="w-14 h-14 mx-auto mb-2 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-2xl">
+                🆘
+              </div>
+              <h2 class="text-white text-lg font-bold mb-1">Rescue Mode</h2>
+              <p class="text-surface-400 text-xs">Your motivation is ready</p>
+            </div>
+
+            <!-- VOICE PLAYBACK - Primary -->
+            <div class="px-3 mb-3">
+              <div class="bg-gradient-to-r from-teal-500/15 to-cyan-500/15 border border-teal-500/30 rounded-xl p-3">
+                <p class="text-teal-400 text-xs font-medium mb-2">🎙️ Hear yourself from Day 1</p>
+                <div class="flex items-center gap-3">
+                  <button class="w-12 h-12 rounded-full bg-teal-500 flex items-center justify-center relative">
+                    <div class="absolute inset-0 rounded-full bg-teal-500 pulse-ring"></div>
+                    <i data-lucide="play" class="w-5 h-5 text-white relative z-10"></i>
+                  </button>
+                  <div class="flex-1 flex items-end gap-1 h-5">
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                    <div class="wave w-1 bg-teal-400 rounded-full"></div>
+                  </div>
+                  <span class="text-teal-300 text-xs">0:23</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- YOUR WHY - Emphasized -->
+            <div class="px-3 mb-3">
+              <div class="bg-gradient-to-br from-rose-500/20 to-pink-500/20 border border-rose-500/30 rounded-xl p-3">
+                <p class="text-rose-400 text-xs font-medium mb-1">❤️ Remember why you started</p>
+                <p class="text-white text-sm italic leading-relaxed">"I want to be healthy enough to play with my grandchildren."</p>
+              </div>
+            </div>
+
+            <!-- LETTER - Read option -->
+            <div class="px-3 mb-3">
+              <div class="bg-violet-500/10 border border-violet-500/20 rounded-xl p-2.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">✉️</span>
+                    <div>
+                      <p class="text-white text-xs font-medium">Letter from Day 1</p>
+                      <p class="text-violet-400 text-xs">Read what you wrote</p>
+                    </div>
+                  </div>
+                  <button class="bg-violet-500/20 text-violet-400 text-xs font-medium px-3 py-1.5 rounded-full">
+                    Read
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- DUAL VIZ - Fear focus -->
+            <div class="px-3 mb-3">
+              <div class="bg-surface-800 border border-surface-600 rounded-xl p-2.5">
+                <p class="text-surface-400 text-xs font-medium mb-1">😔 If you skip today...</p>
+                <p class="text-white/60 text-xs">Break 14-day streak. Feel regret all day. Fall further from your grandchildren goal.</p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="px-3 mb-3">
+              <button class="w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-2">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                Just Do 2 Minutes
+              </button>
+              <div class="flex gap-2">
+                <button class="flex-1 bg-white/10 border border-white/20 text-white py-2 rounded-lg text-xs">🎙️ More Voice</button>
+                <button class="flex-1 bg-white/10 border border-white/20 text-white py-2 rounded-lg text-xs">📸 Vision</button>
+              </div>
+            </div>
+
+            <!-- Shield Option -->
+            <div class="px-3">
+              <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-2.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🛡️</span>
+                    <div>
+                      <p class="text-white text-xs font-medium">Use a Streak Shield</p>
+                      <p class="text-amber-400/70 text-xs">Skip today, keep streak</p>
+                    </div>
+                  </div>
+                  <button class="bg-amber-500 text-surface-900 text-xs font-bold px-3 py-1.5 rounded-full">
+                    10 🪙
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">3</span>Rescue</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 4: Completion & Coins -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-gradient-to-b from-surface-900 via-primary-950/30 to-surface-900">
+            <!-- Celebration -->
+            <div class="pt-14 px-3 text-center">
+              <div class="text-5xl mb-3">🎉</div>
+              <h1 class="text-white text-xl font-bold mb-1">You Did It!</h1>
+              <p class="text-surface-400 text-sm mb-4">Day 15 complete</p>
+
+              <!-- Streak -->
+              <div class="inline-flex items-center gap-2 bg-amber-500/20 px-4 py-2 rounded-full mb-4">
+                <span class="flame text-xl">🔥</span>
+                <span class="text-amber-400 font-bold text-lg">15 Day Streak</span>
+              </div>
+            </div>
+
+            <!-- Coins Earned -->
+            <div class="px-3 mb-3">
+              <div class="bg-gradient-to-r from-amber-500/15 to-yellow-500/15 border border-amber-500/30 rounded-2xl p-3">
+                <div class="flex items-center justify-between mb-2">
+                  <p class="text-white font-semibold text-sm">Coins Earned</p>
+                  <div class="flex items-center gap-1">
+                    <span class="coin-float text-xl">🪙</span>
+                    <span class="text-amber-400 font-bold text-xl">+8</span>
+                  </div>
+                </div>
+                <div class="space-y-1.5 text-xs">
+                  <div class="flex justify-between">
+                    <span class="text-surface-400">Habit complete</span>
+                    <span class="text-amber-400">+3 🪙</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-surface-400">15-day milestone</span>
+                    <span class="text-amber-400">+5 🪙</span>
+                  </div>
+                </div>
+                <div class="mt-2 pt-2 border-t border-amber-500/20 flex justify-between text-sm">
+                  <span class="text-surface-300">Total balance</span>
+                  <span class="text-white font-bold">55 🪙</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Motivation - Earn More -->
+            <div class="px-3 mb-3">
+              <p class="text-surface-400 text-xs mb-2 px-1">Boost your motivation bank:</p>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="bg-teal-500/10 border border-teal-500/20 rounded-xl p-2.5 text-left">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-base">🎙️</span>
+                    <span class="text-amber-400 text-xs font-medium">+5🪙</span>
+                  </div>
+                  <p class="text-white text-xs font-medium">Record Voice</p>
+                  <p class="text-surface-500 text-xs">Capture this feeling</p>
+                </button>
+                <button class="bg-violet-500/10 border border-violet-500/20 rounded-xl p-2.5 text-left">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-base">✉️</span>
+                    <span class="text-amber-400 text-xs font-medium">+5🪙</span>
+                  </div>
+                  <p class="text-white text-xs font-medium">Write Letter</p>
+                  <p class="text-surface-500 text-xs">To future you</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Shop Teaser -->
+            <div class="px-3 mb-3">
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-2.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🛒</span>
+                    <div>
+                      <p class="text-white text-xs font-medium">Coin Shop</p>
+                      <p class="text-surface-500 text-xs">You can afford a Shield!</p>
+                    </div>
+                  </div>
+                  <button class="text-primary-400 text-xs font-medium">Browse →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Done Button -->
+            <div class="px-3">
+              <button class="w-full bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-bold py-3 rounded-xl text-sm">
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-num">4</span>Reward</div>
+      </div>
+
+      <div class="flow-arrow"></div>
+
+      <!-- Screen 5: Coin Shop -->
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="home-indicator"></div>
+          <div class="screen bg-surface-900">
+            <!-- Header -->
+            <div class="pt-10 px-3 pb-3">
+              <div class="flex items-center justify-between">
+                <button class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                  <i data-lucide="chevron-left" class="w-4 h-4 text-white"></i>
+                </button>
+                <h1 class="text-white font-bold text-sm">Coin Shop</h1>
+                <div class="flex items-center gap-1 bg-amber-500/20 px-2 py-1 rounded-full">
+                  <span class="coin-float text-xs">🪙</span>
+                  <span class="text-amber-400 font-bold text-xs">55</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="px-3 mb-4">
+              <div class="bg-gradient-to-r from-amber-500/15 to-yellow-500/15 border border-amber-500/30 rounded-2xl p-4 text-center">
+                <p class="text-surface-400 text-xs mb-1">Your Balance</p>
+                <div class="flex items-center justify-center gap-2">
+                  <span class="coin-float text-3xl">🪙</span>
+                  <span class="text-amber-400 font-bold text-3xl">55</span>
+                </div>
+                <button class="mt-3 bg-amber-500 text-surface-900 font-bold text-xs px-4 py-2 rounded-full">
+                  Get More Coins
+                </button>
+              </div>
+            </div>
+
+            <!-- Protection -->
+            <div class="px-3 mb-3">
+              <p class="text-surface-400 text-xs font-medium mb-2 px-1">Protection</p>
+              <div class="space-y-2">
+                <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <span class="text-2xl">🛡️</span>
+                      <div>
+                        <p class="text-white font-medium text-sm">Streak Shield</p>
+                        <p class="text-surface-500 text-xs">Skip a day, keep streak</p>
+                      </div>
+                    </div>
+                    <button class="bg-primary-500 text-white font-bold text-xs px-3 py-1.5 rounded-full">
+                      10 🪙
+                    </button>
+                  </div>
+                </div>
+                <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <span class="text-2xl">🚀</span>
+                      <div>
+                        <p class="text-white font-medium text-sm">AI Rescue Boost</p>
+                        <p class="text-surface-500 text-xs">Enhanced motivation when stuck</p>
+                      </div>
+                    </div>
+                    <button class="bg-primary-500 text-white font-bold text-xs px-3 py-1.5 rounded-full">
+                      15 🪙
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customization -->
+            <div class="px-3 mb-3">
+              <p class="text-surface-400 text-xs font-medium mb-2 px-1">Customization</p>
+              <div class="space-y-2">
+                <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <span class="text-2xl">✨</span>
+                      <div>
+                        <p class="text-white font-medium text-sm">Premium Theme</p>
+                        <p class="text-surface-500 text-xs">Dark mode, custom colors</p>
+                      </div>
+                    </div>
+                    <button class="bg-surface-700 text-white font-bold text-xs px-3 py-1.5 rounded-full">
+                      25 🪙
+                    </button>
+                  </div>
+                </div>
+                <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <span class="text-2xl">🎨</span>
+                      <div>
+                        <p class="text-white font-medium text-sm">Icon Pack</p>
+                        <p class="text-surface-500 text-xs">50+ custom habit icons</p>
+                      </div>
+                    </div>
+                    <button class="bg-surface-700 text-white font-bold text-xs px-3 py-1.5 rounded-full">
+                      20 🪙
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div class="px-3 mb-4">
+              <p class="text-surface-400 text-xs font-medium mb-2 px-1">Features</p>
+              <div class="bg-surface-800 border border-surface-700 rounded-xl p-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-2xl">📊</span>
+                    <div>
+                      <p class="text-white font-medium text-sm">Advanced Stats</p>
+                      <p class="text-surface-500 text-xs">Deep insights & trends</p>
+                    </div>
+                  </div>
+                  <button class="bg-surface-700 text-white font-bold text-xs px-3 py-1.5 rounded-full">
+                    30 🪙
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="label"><span class="label-num">5</span>Shop</div>
+      </div>
+
+    </div>
+
+    <!-- Feature Summary Table -->
+    <div class="max-w-4xl mx-auto mt-8 bg-surface-800/50 border border-surface-700 rounded-2xl p-5 overflow-x-auto">
+      <h3 class="text-white font-bold text-lg mb-4 text-center">📋 Complete Feature Matrix</h3>
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-surface-700">
+            <th class="text-left text-surface-400 font-medium py-2 px-2">Feature</th>
+            <th class="text-center text-surface-400 font-medium py-2 px-2">Workshop</th>
+            <th class="text-center text-surface-400 font-medium py-2 px-2">Activation</th>
+            <th class="text-center text-surface-400 font-medium py-2 px-2">Rescue</th>
+            <th class="text-center text-surface-400 font-medium py-2 px-2">Reward</th>
+            <th class="text-right text-surface-400 font-medium py-2 px-2">Earns</th>
+          </tr>
+        </thead>
+        <tbody class="text-white">
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">🎙️ Voice Notes</td>
+            <td class="text-center py-2 px-2">Record/List</td>
+            <td class="text-center py-2 px-2">Quick play</td>
+            <td class="text-center py-2 px-2 text-primary-400">Primary</td>
+            <td class="text-center py-2 px-2">Record new</td>
+            <td class="text-right py-2 px-2 text-amber-400">+5 🪙</td>
+          </tr>
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">✉️ Letters to Self</td>
+            <td class="text-center py-2 px-2">Write/Read</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-center py-2 px-2">Read option</td>
+            <td class="text-center py-2 px-2">Write new</td>
+            <td class="text-right py-2 px-2 text-amber-400">+5 🪙</td>
+          </tr>
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">❤️ Your Why</td>
+            <td class="text-center py-2 px-2">Edit</td>
+            <td class="text-center py-2 px-2 text-primary-400">Featured</td>
+            <td class="text-center py-2 px-2 text-primary-400">Emphasized</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-right py-2 px-2 text-surface-500">Free</td>
+          </tr>
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">🎯 WOOP Plan</td>
+            <td class="text-center py-2 px-2">Full edit</td>
+            <td class="text-center py-2 px-2">If-Then</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-right py-2 px-2 text-surface-500">Free</td>
+          </tr>
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">👁️ Dual Viz</td>
+            <td class="text-center py-2 px-2">Both sides</td>
+            <td class="text-center py-2 px-2">Compact</td>
+            <td class="text-center py-2 px-2">Fear focus</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-right py-2 px-2 text-surface-500">Free</td>
+          </tr>
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">📸 Vision Board</td>
+            <td class="text-center py-2 px-2">Gallery</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-center py-2 px-2">View option</td>
+            <td class="text-center py-2 px-2">Add photo</td>
+            <td class="text-right py-2 px-2 text-amber-400">+3 🪙</td>
+          </tr>
+          <tr class="border-b border-surface-700/50">
+            <td class="py-2 px-2">🛡️ Streak Shield</td>
+            <td class="text-center py-2 px-2">Count</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-center py-2 px-2">Use option</td>
+            <td class="text-center py-2 px-2">—</td>
+            <td class="text-right py-2 px-2 text-rose-400">-10 🪙</td>
+          </tr>
+          <tr>
+            <td class="py-2 px-2">🪙 Coins</td>
+            <td class="text-center py-2 px-2">Balance</td>
+            <td class="text-center py-2 px-2">Potential</td>
+            <td class="text-center py-2 px-2">Spend</td>
+            <td class="text-center py-2 px-2 text-primary-400">Earn!</td>
+            <td class="text-right py-2 px-2 text-amber-400">+3-8 🪙</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

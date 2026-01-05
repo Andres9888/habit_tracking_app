@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar View MVP v4 - Enhanced UX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #1a1a1a !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .screen-content {
+      padding: 60px 20px 100px;
+      height: 100%;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* Habit Header with Reminder */
+    .habit-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .habit-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      position: relative;
+    }
+
+    .habit-info {
+      flex: 1;
+    }
+
+    .habit-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .habit-meta {
+      font-size: 13px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reminder-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .reminder-badge-icon {
+      font-size: 10px;
+    }
+
+    /* Streak Risk Warning */
+    .streak-risk {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: risk-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes risk-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .streak-risk-icon {
+      font-size: 24px;
+    }
+
+    .streak-risk-content {
+      flex: 1;
+    }
+
+    .streak-risk-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ef4444;
+    }
+
+    .streak-risk-desc {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .streak-risk-action {
+      background: #ef4444;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .streak-risk.hidden {
+      display: none;
+    }
+
+    /* View Toggle with Gesture Hint */
+    .view-toggle-container {
+      position: relative;
+    }
+
+    .gesture-hint {
+      position: absolute;
+      top: -20px;
+      right: 0;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .gesture-hint-icon {
+      font-size: 12px;
+    }
+
+    .view-toggle {
+      display: flex;
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .view-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .view-btn.active {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .pro-badge {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Calendar Grid */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-header {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      padding: 8px 0;
+      text-transform: uppercase;
+    }
+
+    .day-cell {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      cursor: default;
+    }
+
+    .day-cell.future {
+      background: #1a1a1a;
+      color: #333;
+      cursor: default;
+    }
+
+    .day-cell.missed {
+      background: #1a1a1a;
+      color: #666;
+    }
+
+    .day-cell.completed {
+      background: #10b981;
+      color: #fff;
+    }
+
+    /* Checkmark for accessibility */
+    .day-cell.completed::after {
+      content: '✓';
+      position: absolute;
+      font-size: 9px;
+      font-weight: 700;
+      bottom: 2px;
+      right: 4px;
+      opacity: 0.7;
+    }
+
+    /* Note indicator */
+    .day-cell.has-note::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 5px;
+      height: 5px;
+      background: #f59e0b;
+      border-radius: 50%;
+    }
+
+    .day-cell.today {
+      position: relative;
+    }
+
+    .day-cell.today.incomplete {
+      background: linear-gradient(135deg, #292524 0%, #1c1917 100%);
+      color: #fbbf24;
+      border: 2px solid #f59e0b;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .day-cell.today.completed {
+      border: 2px solid #f59e0b;
+      background: #10b981;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+    }
+
+    .day-cell:hover:not(.empty):not(.future) {
+      transform: scale(0.95);
+    }
+
+    .day-cell:active:not(.empty):not(.future) {
+      transform: scale(0.85);
+    }
+
+    /* Long press indicator */
+    .day-cell.pressing {
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    /* Streak Card */
+    .streak-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .streak-visual {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .streak-visual::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 3px solid #f59e0b;
+      border-right-color: transparent;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .streak-fire { font-size: 28px; }
+    .streak-info { flex: 1; }
+    .streak-number { font-size: 36px; font-weight: 800; color: #fff; line-height: 1; }
+    .streak-label { font-size: 14px; color: #666; margin-top: 2px; }
+    .streak-best { font-size: 12px; color: #f59e0b; margin-top: 6px; }
+
+    .streak-shield {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .streak-shield:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    .streak-shield-icon { font-size: 20px; }
+    .streak-shield-text { font-size: 9px; font-weight: 600; color: #f59e0b; text-transform: uppercase; }
+
+    /* Month Header with Gesture */
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .month-title { font-size: 18px; font-weight: 600; color: #fff; }
+
+    .month-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat-item {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat-value { font-size: 18px; font-weight: 700; color: #fff; }
+    .stat-label { font-size: 11px; color: #666; margin-top: 2px; text-transform: uppercase; }
+
+    /* Social Proof */
+    .social-proof {
+      background: rgba(16, 185, 129, 0.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .social-proof-avatars { display: flex; }
+
+    .social-proof-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #333;
+      border: 2px solid #0a0a0a;
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .social-proof-avatar:first-child { margin-left: 0; }
+    .social-proof-text { font-size: 12px; color: #888; }
+    .social-proof-text strong { color: #10b981; }
+
+    /* Floating Complete Button */
+    .floating-complete {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+
+    .complete-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 18px 24px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .complete-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5);
+    }
+
+    .complete-btn:active {
+      transform: scale(0.98);
+    }
+
+    .complete-btn.completed {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border: 2px solid #10b981;
+      color: #10b981;
+      box-shadow: none;
+    }
+
+    /* Toast / Undo Notification */
+    .toast {
+      position: absolute;
+      bottom: 100px;
+      left: 20px;
+      right: 20px;
+      background: #2a2a2a;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast-text {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .toast-undo {
+      background: transparent;
+      border: none;
+      color: #10b981;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .toast-undo:hover {
+      text-decoration: underline;
+    }
+
+    /* Day Detail Modal (Long Press) */
+    .day-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .day-modal-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .day-modal {
+      background: #1a1a1a;
+      border-radius: 20px;
+      padding: 24px;
+      width: 280px;
+      transform: scale(0.9);
+      transition: transform 0.2s ease;
+    }
+
+    .day-modal-overlay.visible .day-modal {
+      transform: scale(1);
+    }
+
+    .day-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .day-modal-date {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .day-modal-status {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .day-modal-status.completed {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .day-modal-status.missed {
+      background: rgba(107, 114, 128, 0.2);
+      color: #9ca3af;
+    }
+
+    .day-modal-note {
+      margin-bottom: 16px;
+    }
+
+    .day-modal-note-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .day-modal-note-input {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      font-size: 14px;
+      resize: none;
+      height: 80px;
+    }
+
+    .day-modal-note-input:focus {
+      outline: none;
+      border-color: #10b981;
+    }
+
+    .day-modal-note-input::placeholder {
+      color: #666;
+    }
+
+    .day-modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .day-modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .day-modal-btn.primary {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .day-modal-btn.secondary {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .day-modal-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Premium Note Badge */
+    .premium-note-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: #f59e0b;
+      margin-left: 8px;
+    }
+
+    /* Section spacing */
+    .section { margin-bottom: 20px; }
+
+    /* View containers */
+    .view-container { display: none; }
+    .view-container.active { display: block; }
+
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+      display: none;
+    }
+
+    .confetti.active { display: block; }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+    }
+
+    @keyframes confetti-fall {
+      0% { opacity: 1; top: 40%; transform: translateY(0) rotate(0deg) scale(1); }
+      100% { opacity: 0; top: 100%; transform: translateY(100px) rotate(720deg) scale(0); }
+    }
+
+    /* Weekly goal */
+    .weekly-goal {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.02) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .weekly-goal-text { font-size: 14px; color: #fff; }
+    .weekly-goal-text span { color: #10b981; font-weight: 700; }
+    .weekly-goal-badge { font-size: 20px; }
+
+    /* Week grid */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .week-day {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .week-day.completed { background: #10b981; }
+    .week-day.today { background: #292524; border: 2px solid #f59e0b; }
+    .week-day-name { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; }
+    .week-day.completed .week-day-name { color: rgba(255,255,255,0.7); }
+    .week-day-num { font-size: 20px; font-weight: 700; color: #fff; margin: 8px 0; }
+    .week-day.today.incomplete .week-day-num { color: #fbbf24; }
+
+    .week-day-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    .week-day.completed .week-day-status {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .week-day.completed .week-day-status::after {
+      content: '✓';
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .week-day.today.incomplete .week-day-status {
+      background: #f59e0b;
+      animation: pulse-today 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-today {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Accessibility: Focus styles */
+    .day-cell:focus-visible,
+    .complete-btn:focus-visible,
+    .view-btn:focus-visible {
+      outline: 2px solid #10b981;
+      outline-offset: 2px;
+    }
+
+    /* Reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="notch"></div>
+      <div class="screen-content">
+
+        <!-- Habit Header with Reminder -->
+        <div class="habit-header">
+          <div class="habit-icon" id="habit-icon">💪</div>
+          <div class="habit-info">
+            <div class="habit-name">Morning Exercise</div>
+            <div class="habit-meta">
+              Daily · 75 days
+              <span class="reminder-badge">
+                <span class="reminder-badge-icon">🔔</span>
+                7:00 AM
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak Risk Warning (hidden by default, shows at 8pm) -->
+        <div class="streak-risk hidden" id="streak-risk">
+          <span class="streak-risk-icon">⚠️</span>
+          <div class="streak-risk-content">
+            <div class="streak-risk-title">Don't lose your 12-day streak!</div>
+            <div class="streak-risk-desc">Complete before midnight to keep going</div>
+          </div>
+          <button class="streak-risk-action" id="risk-complete">Do it</button>
+        </div>
+
+        <!-- Streak Card -->
+        <div class="section">
+          <div class="streak-card">
+            <div class="streak-visual">
+              <span class="streak-fire">🔥</span>
+            </div>
+            <div class="streak-info">
+              <div class="streak-number">12</div>
+              <div class="streak-label">day streak</div>
+              <div class="streak-best">🏆 Best: 21 days</div>
+            </div>
+            <div class="streak-shield" id="shield-btn">
+              <span class="streak-shield-icon">🛡️</span>
+              <span class="streak-shield-text">Shield</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="section view-toggle-container">
+          <div class="gesture-hint">
+            <span class="gesture-hint-icon">👆</span>
+            Swipe to navigate
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn" data-view="week">Week</button>
+            <button class="view-btn active" data-view="month">Month</button>
+            <button class="view-btn" data-view="year">Year <span class="pro-badge">PRO</span></button>
+          </div>
+        </div>
+
+        <!-- Week View -->
+        <div id="week-view" class="view-container">
+          <div class="month-header">
+            <div class="month-title">This Week</div>
+            <div style="font-size: 13px; color: #666;">Dec 23 - 29</div>
+          </div>
+          <div class="week-grid">
+            <div class="week-day completed"><div class="week-day-name">Sun</div><div class="week-day-num">23</div><div class="week-day-status"></div></div>
+            <div class="week-day completed"><div class="week-day-name">Mon</div><div class="week-day-num">24</div><div class="week-day-status"></div></div>
+            <div class="week-day completed"><div class="week-day-name">Tue</div><div class="week-day-num">25</div><div class="week-day-status"></div></div>
+            <div class="week-day completed"><div class="week-day-name">Wed</div><div class="week-day-num">26</div><div class="week-day-status"></div></div>
+            <div class="week-day completed"><div class="week-day-name">Thu</div><div class="week-day-num">27</div><div class="week-day-status"></div></div>
+            <div class="week-day completed"><div class="week-day-name">Fri</div><div class="week-day-num">28</div><div class="week-day-status"></div></div>
+            <div class="week-day today incomplete" id="today-week"><div class="week-day-name">Sat</div><div class="week-day-num">29</div><div class="week-day-status"></div></div>
+          </div>
+          <div class="weekly-goal">
+            <div class="weekly-goal-text"><span>6/7</span> days · 1 more for perfect week!</div>
+            <div class="weekly-goal-badge">🎯</div>
+          </div>
+        </div>
+
+        <!-- Month View -->
+        <div id="month-view" class="view-container active">
+          <div class="month-header">
+            <div class="month-title">December 2025</div>
+            <div class="month-nav">
+              <button class="nav-btn" id="prev-month">‹</button>
+              <button class="nav-btn" id="next-month">›</button>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calendar-grid">
+            <div class="day-header">S</div>
+            <div class="day-header">M</div>
+            <div class="day-header">T</div>
+            <div class="day-header">W</div>
+            <div class="day-header">T</div>
+            <div class="day-header">F</div>
+            <div class="day-header">S</div>
+
+            <div class="day-cell empty"></div>
+            <div class="day-cell completed" data-day="1">1</div>
+            <div class="day-cell completed has-note" data-day="2">2</div>
+            <div class="day-cell missed" data-day="3">3</div>
+            <div class="day-cell completed" data-day="4">4</div>
+            <div class="day-cell completed" data-day="5">5</div>
+            <div class="day-cell missed" data-day="6">6</div>
+
+            <div class="day-cell completed" data-day="7">7</div>
+            <div class="day-cell completed" data-day="8">8</div>
+            <div class="day-cell completed has-note" data-day="9">9</div>
+            <div class="day-cell missed" data-day="10">10</div>
+            <div class="day-cell completed" data-day="11">11</div>
+            <div class="day-cell completed" data-day="12">12</div>
+            <div class="day-cell completed" data-day="13">13</div>
+
+            <div class="day-cell completed" data-day="14">14</div>
+            <div class="day-cell completed" data-day="15">15</div>
+            <div class="day-cell completed" data-day="16">16</div>
+            <div class="day-cell completed has-note" data-day="17">17</div>
+            <div class="day-cell completed" data-day="18">18</div>
+            <div class="day-cell missed" data-day="19">19</div>
+            <div class="day-cell completed" data-day="20">20</div>
+
+            <div class="day-cell completed" data-day="21">21</div>
+            <div class="day-cell completed" data-day="22">22</div>
+            <div class="day-cell completed" data-day="23">23</div>
+            <div class="day-cell completed" data-day="24">24</div>
+            <div class="day-cell completed" data-day="25">25</div>
+            <div class="day-cell completed" data-day="26">26</div>
+            <div class="day-cell completed" data-day="27">27</div>
+
+            <div class="day-cell completed" data-day="28">28</div>
+            <div class="day-cell today incomplete" id="today-month" data-day="29">29</div>
+            <div class="day-cell future" data-day="30">30</div>
+            <div class="day-cell future" data-day="31">31</div>
+            <div class="day-cell empty"></div>
+            <div class="day-cell empty"></div>
+            <div class="day-cell empty"></div>
+          </div>
+
+          <div class="social-proof">
+            <div class="social-proof-avatars">
+              <div class="social-proof-avatar">👤</div>
+              <div class="social-proof-avatar">👤</div>
+              <div class="social-proof-avatar">👤</div>
+              <div class="social-proof-avatar">+</div>
+            </div>
+            <div class="social-proof-text"><strong>2,847 people</strong> completed today</div>
+          </div>
+        </div>
+
+        <!-- Year View Placeholder -->
+        <div id="year-view" class="view-container">
+          <div style="text-align: center; padding: 60px 20px; color: #666;">
+            <div style="font-size: 48px; margin-bottom: 16px;">📅</div>
+            <div style="font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 8px;">Year View</div>
+            <div style="font-size: 14px;">Unlock with PRO to see your full year</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section" style="margin-top: 20px;">
+          <div class="stats-bar">
+            <div class="stat-item">
+              <div class="stat-value">22/29</div>
+              <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">76%</div>
+              <div class="stat-label">Success Rate</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Floating Complete Button -->
+      <div class="floating-complete">
+        <button class="complete-btn" id="complete-btn">
+          <span>✓</span>
+          <span id="complete-btn-text">Complete Today</span>
+        </button>
+      </div>
+
+      <!-- Undo Toast -->
+      <div class="toast" id="toast">
+        <span class="toast-text" id="toast-text">Marked as incomplete</span>
+        <button class="toast-undo" id="toast-undo">Undo</button>
+      </div>
+
+      <!-- Day Detail Modal -->
+      <div class="day-modal-overlay" id="day-modal-overlay">
+        <div class="day-modal">
+          <div class="day-modal-header">
+            <div class="day-modal-date" id="modal-date">December 2</div>
+            <div class="day-modal-status completed" id="modal-status">Completed</div>
+          </div>
+          <div class="day-modal-note">
+            <div class="day-modal-note-label">
+              Add a note
+              <span class="premium-note-badge">✨ PRO: Add photos</span>
+            </div>
+            <textarea class="day-modal-note-input" id="modal-note" placeholder="How did it go? (e.g., 30 min yoga, felt great!)"></textarea>
+          </div>
+          <div class="day-modal-actions">
+            <button class="day-modal-btn secondary" id="modal-close">Cancel</button>
+            <button class="day-modal-btn primary" id="modal-save">Save Note</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confetti -->
+      <div class="confetti" id="confetti"></div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let isCompleted = false;
+    let lastAction = null;
+    let toastTimeout = null;
+    let longPressTimer = null;
+    let selectedDay = null;
+
+    // Elements
+    const completeBtn = document.getElementById('complete-btn');
+    const completeBtnText = document.getElementById('complete-btn-text');
+    const todayMonth = document.getElementById('today-month');
+    const todayWeek = document.getElementById('today-week');
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+    const toastUndo = document.getElementById('toast-undo');
+    const dayModalOverlay = document.getElementById('day-modal-overlay');
+    const streakRisk = document.getElementById('streak-risk');
+    const confetti = document.getElementById('confetti');
+
+    // View toggle
+    document.querySelectorAll('.view-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.view-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        document.querySelectorAll('.view-container').forEach(function(v) { v.classList.remove('active'); });
+        document.getElementById(btn.dataset.view + '-view').classList.add('active');
+      });
+    });
+
+    // Complete button
+    completeBtn.addEventListener('click', function() {
+      isCompleted = !isCompleted;
+      updateTodayState();
+      if (isCompleted) {
+        triggerConfetti();
+        streakRisk.classList.add('hidden');
+      }
+    });
+
+    // Risk complete button
+    document.getElementById('risk-complete').addEventListener('click', function() {
+      isCompleted = true;
+      updateTodayState();
+      triggerConfetti();
+      streakRisk.classList.add('hidden');
+    });
+
+    function updateTodayState() {
+      if (isCompleted) {
+        completeBtn.classList.add('completed');
+        completeBtnText.textContent = 'Completed! 🎉';
+        todayMonth.classList.remove('incomplete');
+        todayMonth.classList.add('completed');
+        todayWeek.classList.remove('incomplete');
+        todayWeek.classList.add('completed');
+      } else {
+        completeBtn.classList.remove('completed');
+        completeBtnText.textContent = 'Complete Today';
+        todayMonth.classList.remove('completed');
+        todayMonth.classList.add('incomplete');
+        todayWeek.classList.remove('completed');
+        todayWeek.classList.add('incomplete');
+      }
+    }
+
+    // Day cell interactions with long press
+    document.querySelectorAll('.day-cell:not(.empty):not(.future)').forEach(function(cell) {
+      // Long press for modal
+      cell.addEventListener('mousedown', function(e) {
+        if (cell.classList.contains('today')) return;
+        cell.classList.add('pressing');
+        longPressTimer = setTimeout(function() {
+          cell.classList.remove('pressing');
+          openDayModal(cell);
+        }, 500);
+      });
+
+      cell.addEventListener('mouseup', function() {
+        cell.classList.remove('pressing');
+        clearTimeout(longPressTimer);
+      });
+
+      cell.addEventListener('mouseleave', function() {
+        cell.classList.remove('pressing');
+        clearTimeout(longPressTimer);
+      });
+
+      // Tap to toggle (only if not long press)
+      cell.addEventListener('click', function() {
+        if (cell.classList.contains('today')) return;
+
+        const wasCompleted = cell.classList.contains('completed');
+
+        if (wasCompleted) {
+          cell.classList.remove('completed');
+          cell.classList.add('missed');
+          showToast('Marked as incomplete', { cell: cell, wasCompleted: true });
+        } else {
+          cell.classList.remove('missed');
+          cell.classList.add('completed');
+          showToast('Marked as complete', { cell: cell, wasCompleted: false });
+        }
+      });
+    });
+
+    // Toast with undo
+    function showToast(message, action) {
+      lastAction = action;
+      toastText.textContent = message;
+      toast.classList.add('visible');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(function() {
+        toast.classList.remove('visible');
+        lastAction = null;
+      }, 3000);
+    }
+
+    toastUndo.addEventListener('click', function() {
+      if (lastAction) {
+        if (lastAction.wasCompleted) {
+          lastAction.cell.classList.remove('missed');
+          lastAction.cell.classList.add('completed');
+        } else {
+          lastAction.cell.classList.remove('completed');
+          lastAction.cell.classList.add('missed');
+        }
+        toast.classList.remove('visible');
+        lastAction = null;
+      }
+    });
+
+    // Day modal
+    function openDayModal(cell) {
+      selectedDay = cell;
+      const day = cell.dataset.day;
+      document.getElementById('modal-date').textContent = 'December ' + day;
+
+      const status = document.getElementById('modal-status');
+      if (cell.classList.contains('completed')) {
+        status.textContent = 'Completed';
+        status.className = 'day-modal-status completed';
+      } else {
+        status.textContent = 'Missed';
+        status.className = 'day-modal-status missed';
+      }
+
+      // Pre-fill note if exists
+      const existingNote = cell.dataset.note || '';
+      document.getElementById('modal-note').value = existingNote;
+
+      dayModalOverlay.classList.add('visible');
+    }
+
+    document.getElementById('modal-close').addEventListener('click', function() {
+      dayModalOverlay.classList.remove('visible');
+    });
+
+    document.getElementById('modal-save').addEventListener('click', function() {
+      const note = document.getElementById('modal-note').value.trim();
+      if (note && selectedDay) {
+        selectedDay.dataset.note = note;
+        selectedDay.classList.add('has-note');
+      }
+      dayModalOverlay.classList.remove('visible');
+    });
+
+    dayModalOverlay.addEventListener('click', function(e) {
+      if (e.target === dayModalOverlay) {
+        dayModalOverlay.classList.remove('visible');
+      }
+    });
+
+    // Shield button
+    document.getElementById('shield-btn').addEventListener('click', function() {
+      alert('🛡️ Streak Shield\n\nProtect your streak when life happens!\n\n• 1 free pass per month\n• Use it on any missed day\n• Keep your streak alive\n\nIncluded with PRO subscription');
+    });
+
+    // Confetti
+    function triggerConfetti() {
+      while (confetti.firstChild) confetti.removeChild(confetti.firstChild);
+      confetti.classList.add('active');
+
+      const colors = ['#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#8b5cf6'];
+
+      for (let i = 0; i < 50; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animation = 'confetti-fall ' + (1 + Math.random()) + 's ease-out forwards';
+        piece.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.appendChild(piece);
+      }
+
+      setTimeout(function() { confetti.classList.remove('active'); }, 2000);
+    }
+
+    // Simulate streak risk warning (click to toggle for demo)
+    document.querySelector('.streak-card').addEventListener('dblclick', function() {
+      streakRisk.classList.toggle('hidden');
+    });
+
+    // Swipe gesture for month navigation (simplified)
+    let touchStartX = 0;
+    const calendarGrid = document.getElementById('calendar-grid');
+
+    calendarGrid.addEventListener('touchstart', function(e) {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    calendarGrid.addEventListener('touchend', function(e) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          // Swipe left - next month
+          document.querySelector('.month-title').textContent = 'January 2026';
+        } else {
+          // Swipe right - previous month
+          document.querySelector('.month-title').textContent = 'November 2025';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Features - Value Drivers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #1c1917; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1c1917;
+      border-radius: 0 0 20px 20px;
+      z-index: 100;
+    }
+
+    .scroll-content {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 44px;
+      padding-bottom: 34px;
+    }
+
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    /* Feature callout */
+    .callout {
+      position: absolute;
+      background: #292524;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      line-height: 1.4;
+      max-width: 200px;
+      border: 1px solid #44403c;
+    }
+
+    .callout-left::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid #292524;
+    }
+
+    .callout-right::after {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 8px solid #292524;
+    }
+
+    .value-tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .tag-retention { background: #84cc16; color: #1a2e05; }
+    .tag-engagement { background: #f59e0b; color: #78350f; }
+    .tag-validated { background: #06b6d4; color: #083344; }
+
+    /* Heatmap cells */
+    .heat-cell {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    /* Ring animation */
+    @keyframes ring-fill {
+      from { stroke-dashoffset: 251; }
+      to { stroke-dashoffset: 55; }
+    }
+    .ring-progress {
+      animation: ring-fill 1.5s ease-out forwards;
+    }
+
+    /* Shield pulse */
+    @keyframes shield-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.4); }
+      50% { box-shadow: 0 0 12px 4px rgba(132, 204, 22, 0.3); }
+    }
+    .shield-glow { animation: shield-glow 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+
+  <div class="relative">
+
+    <!-- LEFT CALLOUTS -->
+
+    <!-- Callout 1: Streak Protection -->
+    <div class="callout callout-left" style="left: -220px; top: 120px;">
+      <span class="value-tag tag-retention">RETENTION</span>
+      <div class="font-semibold mb-1">Streak Protection</div>
+      <div class="text-stone-400 text-[10px]">Miss 1 day without losing streak. Reduces churn from "I broke my streak, why bother?" psychology.</div>
+    </div>
+
+    <!-- Callout 2: View Toggle -->
+    <div class="callout callout-left" style="left: -220px; top: 280px;">
+      <span class="value-tag tag-validated">VALIDATED</span>
+      <div class="font-semibold mb-1">Multi-Scale Views</div>
+      <div class="text-stone-400 text-[10px]">Week/Month/3M/Year views. HabitKit users demanded Year view back after removal.</div>
+    </div>
+
+    <!-- Callout 3: Consistency Index -->
+    <div class="callout callout-left" style="left: -220px; top: 500px;">
+      <span class="value-tag tag-retention">RETENTION</span>
+      <div class="font-semibold mb-1">Consistency Index</div>
+      <div class="text-stone-400 text-[10px]">Rolling 30/60/90-day averages. Doesn't punish single misses like streaks do.</div>
+    </div>
+
+    <!-- RIGHT CALLOUTS -->
+
+    <!-- Callout 4: Today's Focus -->
+    <div class="callout callout-right" style="right: -220px; top: 120px;">
+      <span class="value-tag tag-engagement">ENGAGEMENT</span>
+      <div class="font-semibold mb-1">Contextual Motivation</div>
+      <div class="text-stone-400 text-[10px]">Dynamic messages based on state (streak at risk, milestone close, etc).</div>
+    </div>
+
+    <!-- Callout 5: Heatmap -->
+    <div class="callout callout-right" style="right: -220px; top: 360px;">
+      <span class="value-tag tag-validated">VALIDATED</span>
+      <div class="font-semibold mb-1">GitHub-Style Heatmap</div>
+      <div class="text-stone-400 text-[10px]">Visual history at a glance. Used by HabitKit, Habitify, Loop Habit Tracker.</div>
+    </div>
+
+    <!-- Callout 6: Habit Strength -->
+    <div class="callout callout-right" style="right: -220px; top: 620px;">
+      <span class="value-tag tag-engagement">ENGAGEMENT</span>
+      <div class="font-semibold mb-1">Habit Strength Levels</div>
+      <div class="text-stone-400 text-[10px]">Gamification: 🌱→🌿→💪→⚡. Progress toward "automatic" keeps users invested.</div>
+    </div>
+
+    <!-- PHONE FRAME -->
+    <div class="phone-frame">
+      <div class="notch"></div>
+
+      <div class="scroll-content">
+        <!-- Header -->
+        <div class="px-4 pt-2 pb-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+              <span class="text-lg">🏃</span>
+            </div>
+            <div>
+              <div class="font-semibold text-stone-900 text-sm">Morning Run</div>
+              <div class="text-xs text-stone-500">Day 47</div>
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-lime-500 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="px-4 pb-3">
+          <div class="flex bg-stone-100 rounded-lg p-1">
+            <div class="flex-1 py-1.5 bg-lime-500 rounded-md">
+              <div class="text-xs text-center font-medium text-stone-900">Progress</div>
+            </div>
+            <div class="flex-1 py-1.5">
+              <div class="text-xs text-center font-medium text-stone-400">Motivation</div>
+            </div>
+            <div class="flex-1 py-1.5">
+              <div class="text-xs text-center font-medium text-stone-400">Manage</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-4 space-y-3">
+
+          <!-- 1. Streak Protection Card (NEW) -->
+          <div class="bg-gradient-to-br from-lime-50 to-emerald-50 rounded-2xl p-4 border border-lime-200 shield-glow">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-lime-500 flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">🛡️</span>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-stone-900 text-sm">12 Day Streak</span>
+                  <span class="text-lg">🔥</span>
+                </div>
+                <div class="text-xs text-lime-700 mt-0.5">Shield ready • 1 free skip available</div>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl">🛡️</div>
+                <div class="text-[10px] text-lime-600 font-medium">Protected</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Today's Focus Card -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <span class="text-xl">✨</span>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-stone-900 text-sm">2 more days to 2 weeks!</div>
+                <div class="text-xs text-stone-500 mt-0.5">You're building serious momentum. Keep showing up!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Weekly Summary Strip -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-sm font-semibold text-stone-900">This Week</div>
+              <div class="text-xs text-lime-600 font-medium">6/7 days</div>
+            </div>
+            <div class="flex justify-between">
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Mon</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Tue</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Wed</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-stone-100 border-2 border-dashed border-stone-300 flex items-center justify-center">
+                  <span class="text-stone-300 text-xs">🛡️</span>
+                </div>
+                <div class="text-[10px] text-stone-400">Thu</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Fri</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Sat</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center ring-2 ring-lime-300 ring-offset-1">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] font-medium text-lime-600">Today</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Calendar Heatmap with View Toggle -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <!-- View Toggle -->
+            <div class="flex bg-stone-100 rounded-lg p-1 mb-4">
+              <div class="flex-1 py-1.5 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-400">Week</div>
+              </div>
+              <div class="flex-1 py-1.5 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-400">Month</div>
+              </div>
+              <div class="flex-1 py-1.5 bg-lime-500 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-900">3M</div>
+              </div>
+              <div class="flex-1 py-1.5 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-400">Year</div>
+              </div>
+            </div>
+
+            <!-- 3-Month Heatmap Grid -->
+            <div class="mb-3">
+              <div class="flex justify-between text-[9px] text-stone-400 mb-2 px-1">
+                <span>Oct</span>
+                <span>Nov</span>
+                <span>Dec</span>
+              </div>
+
+              <div class="space-y-[2px]">
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500 ring-1 ring-stone-400"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex items-center justify-end gap-1 text-[9px] text-stone-400">
+              <span>Less</span>
+              <div class="w-2 h-2 rounded-sm bg-stone-100"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-200"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-300"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-400"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-500"></div>
+              <span>More</span>
+            </div>
+          </div>
+
+          <!-- 5. Consistency Index Card -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div class="text-sm font-semibold text-stone-900">Consistency Index</div>
+                <div class="w-4 h-4 rounded-full bg-stone-100 flex items-center justify-center">
+                  <svg class="w-2.5 h-2.5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-emerald-600">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                </svg>
+                <span class="text-xs font-medium">+3%</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <!-- Ring Chart -->
+              <div class="relative w-20 h-20 flex-shrink-0">
+                <svg class="w-20 h-20 -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#e7e5e4" stroke-width="8"/>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#84cc16" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="55" class="ring-progress"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-xl font-bold text-stone-900">78%</div>
+                </div>
+              </div>
+
+              <!-- Breakdown -->
+              <div class="flex-1 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-lime-500"></div>
+                    <span class="text-xs text-stone-600">30-day</span>
+                  </div>
+                  <span class="text-xs font-semibold text-stone-900">82%</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-lime-400"></div>
+                    <span class="text-xs text-stone-600">60-day</span>
+                  </div>
+                  <span class="text-xs font-semibold text-stone-900">76%</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-lime-300"></div>
+                    <span class="text-xs text-stone-600">90-day</span>
+                  </div>
+                  <span class="text-xs font-semibold text-stone-900">74%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Habit Strength Card -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="relative w-14 h-14 flex-shrink-0">
+                <svg class="w-14 h-14 -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#e7e5e4" stroke-width="8"/>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#22c55e" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="83"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-xl">💪</span>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-semibold">Strong</span>
+                  <span class="text-xs text-stone-500">67%</span>
+                </div>
+                <div class="text-xs text-stone-500">Habit is well-established!</div>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                  <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-100">
+                    <div class="h-full rounded-full bg-green-500" style="width: 35%"></div>
+                  </div>
+                  <span class="text-[10px] text-stone-400">13% to ⚡</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. Focus Day Card -->
+          <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                <span class="text-lg">📅</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-sm font-semibold text-amber-900">Thursday needs work</div>
+                <div class="text-xs text-amber-700 mt-0.5">Only 45% completion rate</div>
+              </div>
+              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Spacer -->
+          <div class="h-4"></div>
+
+        </div>
+      </div>
+
+      <!-- Home indicator -->
+      <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-stone-900 rounded-full"></div>
+    </div>
+
+    <!-- Feature Summary Legend -->
+    <div class="absolute -bottom-16 left-1/2 -translate-x-1/2 flex gap-4 text-xs">
+      <div class="flex items-center gap-1.5">
+        <span class="value-tag tag-retention">RETENTION</span>
+        <span class="text-stone-400">Keeps users from churning</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="value-tag tag-engagement">ENGAGEMENT</span>
+        <span class="text-stone-400">Drives daily opens</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="value-tag tag-validated">VALIDATED</span>
+        <span class="text-stone-400">Proven by competitors</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

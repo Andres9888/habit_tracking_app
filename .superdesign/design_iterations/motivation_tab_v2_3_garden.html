@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Motivation Tab V2.3 - Growth Garden (Forest/Acorns Style)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Quicksand', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(180deg, #1a2f1a 0%, #0d1f0d 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: linear-gradient(180deg, #87CEAB 0%, #4a9068 50%, #2d5a3d 100%);
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 0 0 12px #1a1a1a;
+      position: relative;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 34px;
+      background: #1a1a1a;
+      border-radius: 0 0 24px 24px;
+      z-index: 100;
+    }
+
+    .screen {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 54px;
+      padding-bottom: 34px;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 100px;
+    }
+
+    /* Tree sway animation */
+    @keyframes sway {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    .tree-sway {
+      animation: sway 4s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    /* Leaf float animation */
+    @keyframes float-leaf {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+    }
+
+    .floating-leaf {
+      animation: float-leaf 5s ease-in-out infinite;
+    }
+
+    /* Glow for completed items */
+    @keyframes nature-glow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(134, 239, 172, 0.3)); }
+      50% { filter: drop-shadow(0 0 20px rgba(134, 239, 172, 0.6)); }
+    }
+
+    .nature-glow {
+      animation: nature-glow 3s ease-in-out infinite;
+    }
+
+    /* Water ripple */
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    .ripple {
+      animation: ripple 2s ease-out infinite;
+    }
+
+    /* Growth animation */
+    @keyframes grow {
+      0% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+
+    .grow-up {
+      animation: grow 1s ease-out forwards;
+      transform-origin: bottom;
+    }
+
+    /* Seed card */
+    .seed-card {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .seed-card:active {
+      transform: scale(0.98);
+      background: rgba(255,255,255,0.25);
+    }
+
+    .seed-card.planted {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="home-indicator"></div>
+
+    <div class="screen">
+      <!-- Sky gradient header -->
+      <div class="relative h-64 bg-gradient-to-b from-[#87CEEB] via-[#98D8C8] to-transparent">
+        <!-- Sun -->
+        <div class="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full shadow-lg" style="box-shadow: 0 0 60px rgba(253, 224, 71, 0.6);"></div>
+
+        <!-- Clouds -->
+        <div class="absolute top-12 left-8 flex gap-1 opacity-80">
+          <div class="w-10 h-6 bg-white rounded-full"></div>
+          <div class="w-8 h-8 bg-white rounded-full -ml-3 -mt-1"></div>
+          <div class="w-6 h-5 bg-white rounded-full -ml-2 mt-1"></div>
+        </div>
+
+        <!-- Header content -->
+        <div class="px-5 pt-2 flex items-center justify-between relative z-10">
+          <button class="w-10 h-10 rounded-full bg-white/30 backdrop-blur flex items-center justify-center">
+            <i data-lucide="chevron-left" class="w-5 h-5 text-white"></i>
+          </button>
+          <div class="text-center">
+            <h1 class="text-white font-bold text-lg drop-shadow-lg">Motivation Garden</h1>
+            <p class="text-white/80 text-sm">Growing for 18 days 🌱</p>
+          </div>
+          <button class="w-10 h-10 rounded-full bg-white/30 backdrop-blur flex items-center justify-center">
+            <i data-lucide="settings" class="w-5 h-5 text-white"></i>
+          </button>
+        </div>
+
+        <!-- Main Tree Visualization -->
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 tree-sway">
+          <!-- Tree trunk -->
+          <div class="w-8 h-24 bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 rounded-t-lg mx-auto"></div>
+          <!-- Tree foliage layers -->
+          <div class="relative -mt-16">
+            <div class="w-32 h-32 bg-gradient-to-b from-green-400 to-green-500 rounded-full mx-auto nature-glow"></div>
+            <div class="absolute top-8 left-1/2 -translate-x-1/2 w-40 h-28 bg-gradient-to-b from-green-500 to-green-600 rounded-full"></div>
+            <div class="absolute top-16 left-1/2 -translate-x-1/2 w-48 h-24 bg-gradient-to-b from-green-600 to-green-700 rounded-full"></div>
+          </div>
+          <!-- Fruits/achievements on tree -->
+          <div class="absolute top-4 left-4 w-6 h-6 bg-gradient-to-br from-rose-400 to-rose-500 rounded-full shadow-lg flex items-center justify-center">
+            <span class="text-xs">❤️</span>
+          </div>
+          <div class="absolute top-12 right-6 w-6 h-6 bg-gradient-to-br from-violet-400 to-violet-500 rounded-full shadow-lg flex items-center justify-center">
+            <span class="text-xs">✨</span>
+          </div>
+          <div class="absolute top-20 left-8 w-6 h-6 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full shadow-lg flex items-center justify-center">
+            <span class="text-xs">🎯</span>
+          </div>
+        </div>
+
+        <!-- Floating leaves decoration -->
+        <div class="absolute top-20 left-20 text-2xl floating-leaf" style="animation-delay: 0s;">🍃</div>
+        <div class="absolute top-32 right-16 text-xl floating-leaf" style="animation-delay: 1.5s;">🍃</div>
+      </div>
+
+      <!-- Ground/Content area -->
+      <div class="bg-gradient-to-b from-[#4a7c59] to-[#3d6b4a] min-h-[500px] -mt-8 rounded-t-[40px] px-5 pt-6 pb-8 relative">
+        <!-- Grass texture at top -->
+        <div class="absolute top-0 left-0 right-0 h-8 flex justify-around">
+          <div class="text-2xl -mt-3">🌿</div>
+          <div class="text-xl -mt-2">🌱</div>
+          <div class="text-2xl -mt-4">🌿</div>
+          <div class="text-xl -mt-2">🌱</div>
+          <div class="text-2xl -mt-3">🌿</div>
+        </div>
+
+        <!-- Growth Stats -->
+        <div class="bg-white/10 backdrop-blur rounded-2xl p-4 mb-5 border border-white/20">
+          <div class="flex items-center justify-between">
+            <div class="text-center flex-1">
+              <p class="text-white/70 text-xs mb-1">Seeds Planted</p>
+              <p class="text-white font-bold text-2xl">5/8</p>
+            </div>
+            <div class="w-px h-10 bg-white/20"></div>
+            <div class="text-center flex-1">
+              <p class="text-white/70 text-xs mb-1">Tree Health</p>
+              <p class="text-green-300 font-bold text-2xl">87%</p>
+            </div>
+            <div class="w-px h-10 bg-white/20"></div>
+            <div class="text-center flex-1">
+              <p class="text-white/70 text-xs mb-1">Next Bloom</p>
+              <p class="text-amber-300 font-bold text-2xl">3d</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="text-white font-bold text-lg mb-4 flex items-center gap-2">
+          🌱 Plant Your Seeds
+        </h2>
+
+        <div class="space-y-3">
+          <!-- Seed 1: Why - PLANTED -->
+          <div class="seed-card planted rounded-2xl p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-400 to-rose-500 flex items-center justify-center shadow-lg relative">
+                <i data-lucide="heart" class="w-7 h-7 text-white"></i>
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center border-2 border-green-700">
+                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold">Root of Purpose</h3>
+                <p class="text-green-300 text-sm">Your Why is planted & growing!</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div class="h-full w-full bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
+                  </div>
+                  <span class="text-green-300 text-xs font-bold">100%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seed 2: Identity - PLANTED -->
+          <div class="seed-card planted rounded-2xl p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-400 to-violet-500 flex items-center justify-center shadow-lg relative">
+                <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center border-2 border-green-700">
+                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold">Identity Bloom</h3>
+                <p class="text-green-300 text-sm">Your identity is taking root!</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div class="h-full w-full bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
+                  </div>
+                  <span class="text-green-300 text-xs font-bold">100%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seed 3: Voice - GROWING -->
+          <div class="seed-card rounded-2xl p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-400 to-teal-500 flex items-center justify-center shadow-lg relative">
+                <i data-lucide="mic" class="w-7 h-7 text-white"></i>
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-amber-400 rounded-full flex items-center justify-center border-2 border-amber-600 animate-pulse">
+                  <span class="text-[10px]">🌱</span>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold">Voice Vine</h3>
+                <p class="text-amber-300 text-sm">Sprouting... record to grow!</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div class="h-full w-1/3 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"></div>
+                  </div>
+                  <span class="text-amber-300 text-xs font-bold">33%</span>
+                </div>
+              </div>
+              <button class="bg-amber-500 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg">
+                Water 💧
+              </button>
+            </div>
+          </div>
+
+          <!-- Seed 4: Letter - NOT PLANTED -->
+          <div class="seed-card rounded-2xl p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center shadow-lg opacity-60">
+                <i data-lucide="mail" class="w-7 h-7 text-white"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold">Time Capsule Flower</h3>
+                <p class="text-white/60 text-sm">Ready to plant 🌰</p>
+              </div>
+              <button class="bg-white/20 text-white px-4 py-2 rounded-xl font-bold text-sm border border-white/30">
+                Plant 🌱
+              </button>
+            </div>
+          </div>
+
+          <!-- Seed 5: Vision - NOT PLANTED -->
+          <div class="seed-card rounded-2xl p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-stone-400 to-stone-500 flex items-center justify-center shadow-lg opacity-60">
+                <i data-lucide="eye" class="w-7 h-7 text-white"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold">Vision Tree</h3>
+                <p class="text-white/60 text-sm">Ready to plant 🌰</p>
+              </div>
+              <button class="bg-white/20 text-white px-4 py-2 rounded-xl font-bold text-sm border border-white/30">
+                Plant 🌱
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Garden Tip -->
+        <div class="mt-6 bg-gradient-to-r from-amber-500/30 to-orange-500/30 rounded-2xl p-4 border border-amber-400/30">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🌻</span>
+            <div>
+              <h4 class="text-amber-200 font-bold text-sm">Garden Wisdom</h4>
+              <p class="text-white/80 text-sm mt-1">
+                Plants watered daily grow 3x faster! Record a voice motivation to watch your garden flourish.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
