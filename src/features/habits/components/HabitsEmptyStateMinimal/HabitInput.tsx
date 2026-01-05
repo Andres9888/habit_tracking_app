@@ -1,5 +1,5 @@
 /**
- * HabitInput - Text input with animated focus states
+ * HabitInput - Text input with animated focus states and autocomplete
  *
  * Features:
  * - Blue border on focus (per app pattern)
@@ -11,10 +11,21 @@
  * - Keyboard submit support
  * - Forwarded ref for external focus control
  * - Proper accessibility labels
+ * - **Inline autocomplete**: Shows gray preview text as you type (3+ chars)
+ * - **Tab/→ to accept**: Accept suggestion with Tab or Right Arrow key
+ * - **Escape to dismiss**: Clear suggestion preview
+ * - **Debounced updates**: 50ms delay for smooth performance
  */
 
-import { forwardRef, useCallback, useMemo, useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  NativeSyntheticEvent,
+  Pressable,
+  Text,
+  TextInput,
+  TextInputKeyPressEventData,
+  View,
+} from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -32,6 +43,7 @@ import {
   TOUCH_TARGETS,
 } from './constants';
 import type { HabitInputProps } from './types';
+import { getBestSuggestion, getInlinePreview } from './utils';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -97,6 +109,9 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     ref
   ) {
     const [isFocused, setIsFocused] = useState(false);
+    const [inlineSuggestion, setInlineSuggestion] = useState<string | null>(
+      null
+    );
     const focusProgress = useSharedValue(0);
     const showClearButton = value.length > 0;
     const { triggerLightImpact } = useHapticFeedback();
@@ -107,6 +122,25 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
       () => getCharacterCounterColor(value.length),
       [value.length]
     );
+
+    // Update suggestion on input change (debounced for performance)
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        if (value.length >= 3) {
+          const suggestion = getBestSuggestion(value);
+          setInlineSuggestion(suggestion);
+        } else {
+          setInlineSuggestion(null);
+        }
+      }, 50); // 50ms debounce - feels instant but prevents excessive updates
+
+      return () => clearTimeout(timer);
+    }, [value]);
+
+    // Get preview text (the part that extends beyond user input)
+    const previewText = inlineSuggestion
+      ? getInlinePreview(value, inlineSuggestion)
+      : '';
 
     const handleFocus = useCallback(() => {
       setIsFocused(true);
@@ -120,6 +154,25 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
       focusProgress.value = withTiming(0, TIMING_CONFIGS.inputFocus);
       onBlur?.();
     }, [focusProgress, onBlur]);
+
+    // Handle keyboard shortcuts for accepting suggestions
+    const handleKeyPress = useCallback(
+      (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
+        const key = e.nativeEvent.key;
+
+        // Accept suggestion on Tab or Right Arrow
+        if ((key === 'Tab' || key === 'ArrowRight') && inlineSuggestion) {
+          e.preventDefault();
+          onChangeText(inlineSuggestion);
+          setInlineSuggestion(null);
+        }
+        // Dismiss suggestions on Escape
+        else if (key === 'Escape') {
+          setInlineSuggestion(null);
+        }
+      },
+      [inlineSuggestion, onChangeText]
+    );
 
     const containerStyle = useAnimatedStyle(() => ({
       borderColor: interpolateColor(
@@ -154,9 +207,33 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           },
         ]}
       >
+        {/* Inline preview (gray text behind input) - positioned absolutely */}
+        {previewText && (
+          <Text
+            accessibilityElementsHidden
+            importantForAccessibility='no'
+            pointerEvents='none'
+            style={{
+              color: COLORS.stone400,
+              fontSize: 16,
+              fontWeight: '500',
+              left: 20,
+              position: 'absolute',
+            }}
+          >
+            {/* Invisible spacer to align preview with cursor position */}
+            <Text style={{ opacity: 0 }}>{value}</Text>
+            {previewText}
+          </Text>
+        )}
+
         <TextInput
           ref={ref}
-          accessibilityHint={`Type a habit you want to track daily, maximum ${CHARACTER_LIMIT.max} characters`}
+          accessibilityHint={
+            inlineSuggestion
+              ? `Suggestion available: ${inlineSuggestion}. Press Tab to accept.`
+              : `Type a habit you want to track daily, maximum ${CHARACTER_LIMIT.max} characters`
+          }
           accessibilityLabel='Enter your habit name'
           autoCapitalize='sentences'
           autoCorrect={false}
@@ -175,6 +252,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           onBlur={handleBlur}
           onChangeText={onChangeText}
           onFocus={handleFocus}
+          onKeyPress={handleKeyPress}
           onSubmitEditing={onSubmitEditing}
         />
         {showClearButton && (
