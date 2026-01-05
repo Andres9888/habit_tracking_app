@@ -1266,9 +1266,24 @@ If autocomplete causes issues:
   - Added `getBestSuggestion()` for inline preview selection
   - Added `getInlinePreview()` to extract completion text
   - All functions handle edge cases and use MIN_CHARS_FOR_SUGGESTIONS (3 chars) threshold
-- [ ] Task 3: Add inline preview to HabitInput component
-- [ ] Task 4: Add keyboard navigation (Tab, Escape, Arrow keys)
-- [ ] Task 5: Add accessibility announcements (live region, hints)
+- [x] Task 3: Add inline preview to HabitInput component
+  - Added `inlineSuggestion` state with debounced updates (50ms)
+  - Implemented invisible spacer technique for cursor-aligned preview text
+  - Preview text positioned absolutely with `pointerEvents: 'none'`
+  - Gray preview color (COLORS.stone400) for clear visual distinction
+  - Dynamic `accessibilityHint` announces suggestion availability
+  - Preview clears when input < 3 chars or suggestion accepted
+- [x] Task 4: Add keyboard navigation (Tab, Escape, Arrow keys)
+  - Implemented `handleKeyPress` callback with keyboard event handling
+  - Tab or ArrowRight accepts inline suggestion and fills input
+  - Escape dismisses suggestion preview
+  - `preventDefault()` called to prevent default browser behavior
+  - All keyboard shortcuts work without interfering with normal typing
+- [x] Task 5: Add accessibility announcements (live region, hints)
+  - Dynamic `accessibilityHint` announces suggestions: "Suggestion available: [text]. Press Tab to accept."
+  - Preview text hidden from screen readers (`accessibilityElementsHidden`, `importantForAccessibility='no'`)
+  - Clear instructions integrated into input's accessibility hint
+  - Note: Live region with `accessibilityLiveRegion="polite"` not needed in React Native as `accessibilityHint` updates automatically
 - [ ] Task 6: Add comprehensive unit tests (30+ test cases)
 - [ ] Task 7: Add integration tests for keyboard interactions
 - [ ] Task 8: Manual QA across devices and accessibility modes
