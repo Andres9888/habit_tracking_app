@@ -85,43 +85,50 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     if (visible && !isEditMode) {
       form.resetForm();
     }
-  }, [visible, isEditMode, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, isEditMode]);
 
   const handleEmojiSelect = useCallback(
     (emoji: string | null) => {
       form.setSelectedEmoji(emoji);
     },
-    [form]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handleColorSelect = useCallback(
     (color: string) => {
       form.setSelectedColor(color);
     },
-    [form]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handleCustomColorPress = useCallback(() => {
     form.openColorPicker();
-  }, [form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleNameChange = useCallback(
     (value: string) => {
       form.setHabitName(value);
     },
-    [form]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handleReminderToggle = useCallback(
     (enabled: boolean) => {
       form.setRemindersEnabled(enabled);
     },
-    [form]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handleReminderTimePress = useCallback(() => {
     form.setShowTimePicker(true);
-  }, [form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Wrap async handleCreate to satisfy void return type requirement
   const handleSubmit = useCallback(() => {
