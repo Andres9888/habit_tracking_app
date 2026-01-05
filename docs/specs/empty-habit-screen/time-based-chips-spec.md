@@ -627,11 +627,11 @@ If time-based chips cause issues:
 
 ## Implementation Checklist
 
-- [ ] Task 1: Define time-based chip constants (MORNING/AFTERNOON/EVENING/NIGHT)
-- [ ] Task 2: Create `getTimeBasedChips()` utility function with feature flag
-- [ ] Task 3: Integrate time-based logic in `SuggestionChips` component
-- [ ] Task 4: Add comprehensive unit tests (30+ test cases)
-- [ ] Task 5: Update integration tests with time-based mocks
+- [x] Task 1: Define time-based chip constants (MORNING/AFTERNOON/EVENING/NIGHT)
+- [x] Task 2: Create `getTimeBasedChips()` utility function with feature flag
+- [x] Task 3: Integrate time-based logic in `SuggestionChips` component
+- [x] Task 4: Add comprehensive unit tests (30+ test cases)
+- [x] Task 5: Update integration tests with time-based mocks
 - [ ] Task 6: Manual QA across time windows and devices
 - [ ] Code review: Verify chip content quality and cultural neutrality
 - [ ] Analytics: Add event tracking for chip selections by time window

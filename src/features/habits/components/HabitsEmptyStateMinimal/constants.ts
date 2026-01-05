@@ -21,6 +21,64 @@ export const SUGGESTION_CHIPS: SuggestionChip[] = [
 ];
 
 /**
+ * Morning chip suggestions (5am - 11am)
+ * Focus: Energy-building and day-starting habits
+ */
+export const MORNING_CHIPS: SuggestionChip[] = [
+  { emoji: '☕', fullName: 'Morning coffee', label: 'Coffee' },
+  { emoji: '🏃', fullName: 'Morning run', label: 'Run' },
+  { emoji: '🧘', fullName: 'Morning meditation', label: 'Meditate' },
+  { emoji: '📝', fullName: 'Journal 5 minutes', label: 'Journal' },
+  { emoji: '💧', fullName: 'Drink water', label: 'Water' },
+  { emoji: '📚', fullName: 'Read 5 pages', label: 'Read' },
+];
+
+/**
+ * Afternoon chip suggestions (11am - 5pm)
+ * Focus: Energy maintenance and productivity breaks
+ */
+export const AFTERNOON_CHIPS: SuggestionChip[] = [
+  { emoji: '💧', fullName: 'Drink water', label: 'Water' },
+  { emoji: '🚶', fullName: 'Walk 10 minutes', label: 'Walk' },
+  { emoji: '🥗', fullName: 'Healthy lunch', label: 'Lunch' },
+  { emoji: '🧘', fullName: 'Breathe for 2 minutes', label: 'Breathe' },
+  { emoji: '👀', fullName: 'Eye rest break', label: 'Eye rest' },
+  { emoji: '🧠', fullName: 'Learn something new', label: 'Learn' },
+];
+
+/**
+ * Evening chip suggestions (5pm - 10pm)
+ * Focus: Unwinding and reflection
+ */
+export const EVENING_CHIPS: SuggestionChip[] = [
+  { emoji: '📚', fullName: 'Read 10 pages', label: 'Read' },
+  { emoji: '🌙', fullName: 'Wind down routine', label: 'Wind down' },
+  { emoji: '🧘', fullName: 'Evening stretch', label: 'Stretch' },
+  { emoji: '📝', fullName: 'Write one line', label: 'Write' },
+  { emoji: '🎨', fullName: 'Creative time', label: 'Create' },
+  { emoji: '🤸', fullName: 'Light exercise', label: 'Move' },
+];
+
+/**
+ * Night chip suggestions (10pm - 5am)
+ * Focus: Sleep preparation and completion
+ */
+export const NIGHT_CHIPS: SuggestionChip[] = [
+  { emoji: '📝', fullName: 'Journal', label: 'Journal' },
+  { emoji: '🌙', fullName: 'Sleep routine', label: 'Sleep prep' },
+  { emoji: '📱', fullName: 'Phone off', label: 'Phone off' },
+  { emoji: '🧘', fullName: 'Breathe for 5 minutes', label: 'Breathe' },
+  { emoji: '📖', fullName: 'Gratitude practice', label: 'Gratitude' },
+  { emoji: '🛌', fullName: 'Bedtime prep', label: 'Bedtime' },
+];
+
+/**
+ * Legacy static chips (fallback)
+ * Kept for backward compatibility and testing
+ */
+export const STATIC_CHIPS: SuggestionChip[] = SUGGESTION_CHIPS;
+
+/**
  * Copy strings for the minimal empty state
  */
 export const COPY = {

@@ -29,13 +29,9 @@ import {
   ENTRANCE_DELAYS,
   SPRING_CONFIGS,
 } from './animations';
-import {
-  BORDER_RADIUS,
-  COLORS,
-  SUGGESTION_CHIPS,
-  TOUCH_TARGETS,
-} from './constants';
+import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from './constants';
 import type { SuggestionChip, SuggestionChipsProps } from './types';
+import { getTimeBasedChips } from './utils';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -239,18 +235,21 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
  * Pyramid layout of suggestion chips (3-2-1 formation)
  *
  * Stagger delays per spec:
- * - Row 1 (Water, Walk, Write): 0ms, 50ms, 100ms
- * - Row 2 (Breathe, Read): 150ms, 200ms
- * - Row 3 (Stretch): 250ms
+ * - Row 1: 0ms, 50ms, 100ms
+ * - Row 2: 150ms, 200ms
+ * - Row 3: 250ms
  */
 export function SuggestionChips({
   selectedIndex,
   onSelect,
 }: SuggestionChipsProps) {
+  // Get time-appropriate chips dynamically
+  const chips = getTimeBasedChips();
+
   // Split chips into rows: 3, 2, 1
-  const row1 = SUGGESTION_CHIPS.slice(0, 3); // Water, Walk, Write
-  const row2 = SUGGESTION_CHIPS.slice(3, 5); // Breathe, Read
-  const row3 = SUGGESTION_CHIPS.slice(5, 6); // Stretch
+  const row1 = chips.slice(0, 3);
+  const row2 = chips.slice(3, 5);
+  const row3 = chips.slice(5, 6);
 
   return (
     <View style={{ alignItems: 'center', gap: 8 }}>
