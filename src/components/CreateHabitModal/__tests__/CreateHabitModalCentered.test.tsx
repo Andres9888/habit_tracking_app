@@ -411,4 +411,36 @@ describe('CreateHabitModalCentered', () => {
       expect(getByText('Create Habit')).toBeTruthy();
     });
   });
+
+  describe('Snapshot Tests', () => {
+    it('should match snapshot in create mode', () => {
+      const { toJSON } = render(
+        <CreateHabitModalCentered {...defaultProps} />
+      );
+      expect(toJSON()).toMatchSnapshot();
+    });
+
+    it('should match snapshot in edit mode', () => {
+      const habitToEdit = {
+        _id: 'habit-1',
+        _creationTime: Date.now(),
+        userId: 'user-1',
+        name: 'Test Habit',
+        iconColor: '#EF4444',
+        icon: '💪',
+      };
+
+      const { toJSON } = render(
+        <CreateHabitModalCentered {...defaultProps} habitToEdit={habitToEdit} />
+      );
+      expect(toJSON()).toMatchSnapshot();
+    });
+
+    it('should match snapshot when not visible', () => {
+      const { toJSON } = render(
+        <CreateHabitModalCentered {...defaultProps} visible={false} />
+      );
+      expect(toJSON()).toMatchSnapshot();
+    });
+  });
 });

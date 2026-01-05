@@ -327,4 +327,31 @@ describe('CreateHabitFormCentered', () => {
       expect(mockOnHabitNameChange).toHaveBeenCalledWith('Read 📚 daily');
     });
   });
+
+  describe('Snapshot Tests', () => {
+    it('should match snapshot with default props', () => {
+      const { toJSON } = render(<CreateHabitFormCentered {...defaultProps} />);
+      expect(toJSON()).toMatchSnapshot();
+    });
+
+    it('should match snapshot with filled form', () => {
+      const { toJSON } = render(
+        <CreateHabitFormCentered
+          {...defaultProps}
+          habitName='Read for 20 minutes'
+          selectedEmoji='📚'
+          selectedColor='#8B5CF6'
+          reminderOption='morning'
+        />
+      );
+      expect(toJSON()).toMatchSnapshot();
+    });
+
+    it('should match snapshot with disabled submit button', () => {
+      const { toJSON } = render(
+        <CreateHabitFormCentered {...defaultProps} habitName='a' />
+      );
+      expect(toJSON()).toMatchSnapshot();
+    });
+  });
 });
