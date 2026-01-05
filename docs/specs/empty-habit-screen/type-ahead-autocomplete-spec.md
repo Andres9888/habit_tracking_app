@@ -1284,7 +1284,19 @@ If autocomplete causes issues:
   - Preview text hidden from screen readers (`accessibilityElementsHidden`, `importantForAccessibility='no'`)
   - Clear instructions integrated into input's accessibility hint
   - Note: Live region with `accessibilityLiveRegion="polite"` not needed in React Native as `accessibilityHint` updates automatically
-- [ ] Task 6: Add comprehensive unit tests (30+ test cases)
+- [x] Task 6: Add comprehensive unit tests (30+ test cases)
+  - Added 60+ comprehensive test cases for autocomplete functionality
+  - Tests cover all matching algorithms: prefix, word boundary, keyword, fuzzy
+  - Input validation tests: minimum length, whitespace handling, trimming
+  - Case sensitivity tests: lowercase, uppercase, mixed case
+  - Edge cases: empty input, special characters, very long input, multiple spaces
+  - Real-world usage patterns: common exercise, wellness, productivity queries
+  - `getAutocompleteSuggestions()`: 40+ test cases across 10 test suites
+  - `getBestSuggestion()`: 15+ test cases for top match selection
+  - `getInlinePreview()`: 20+ test cases for preview text extraction
+  - All tests validate scoring system, ranking, and maxResults parameter
+  - Progressive typing tests ensure correct preview updates
+  - Consistency tests between functions ensure unified behavior
 - [ ] Task 7: Add integration tests for keyboard interactions
 - [ ] Task 8: Manual QA across devices and accessibility modes
 - [ ] Code review: Verify suggestion quality and matching accuracy
