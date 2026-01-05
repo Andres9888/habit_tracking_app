@@ -368,4 +368,259 @@ describe('Time-Based Chip Analytics', () => {
       expect(customTrackSpy).toHaveBeenCalledWith(event);
     });
   });
+
+  describe('Autocomplete Analytics', () => {
+    let mockTracker: jest.Mocked<import('../analytics').AutocompleteAnalyticsTracker>;
+    let trackSpy: jest.Mock;
+
+    beforeEach(() => {
+      trackSpy = jest.fn();
+      mockTracker = { track: trackSpy };
+      import('../analytics').then((module) => {
+        module.setAutocompleteAnalyticsTracker(mockTracker);
+      });
+    });
+
+    it('tracks autocomplete_suggestion_shown event', async () => {
+      const { setAutocompleteAnalyticsTracker, trackAutocompleteEvent } =
+        await import('../analytics');
+
+      setAutocompleteAnalyticsTracker(mockTracker);
+
+      trackAutocompleteEvent({
+        type: 'autocomplete_suggestion_shown',
+        userInput: 'exe',
+        suggestion: 'Exercise 10 minutes',
+        inputLength: 3,
+        matchType: 'prefix',
+        timestamp: Date.now(),
+      });
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_shown',
+          userInput: 'exe',
+          suggestion: 'Exercise 10 minutes',
+          matchType: 'prefix',
+        })
+      );
+    });
+
+    it('tracks autocomplete_suggestion_accepted event', async () => {
+      const { setAutocompleteAnalyticsTracker, trackAutocompleteEvent } =
+        await import('../analytics');
+
+      setAutocompleteAnalyticsTracker(mockTracker);
+
+      trackAutocompleteEvent({
+        type: 'autocomplete_suggestion_accepted',
+        userInput: 'exe',
+        suggestion: 'Exercise 10 minutes',
+        acceptMethod: 'tab',
+        inputLength: 3,
+        keystrokesSaved: 17,
+        timestamp: Date.now(),
+      });
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_accepted',
+          acceptMethod: 'tab',
+          keystrokesSaved: 17,
+        })
+      );
+    });
+
+    it('tracks autocomplete_suggestion_dismissed event', async () => {
+      const { setAutocompleteAnalyticsTracker, trackAutocompleteEvent } =
+        await import('../analytics');
+
+      setAutocompleteAnalyticsTracker(mockTracker);
+
+      trackAutocompleteEvent({
+        type: 'autocomplete_suggestion_dismissed',
+        userInput: 'exe',
+        suggestion: 'Exercise 10 minutes',
+        dismissMethod: 'escape',
+        timestamp: Date.now(),
+      });
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_dismissed',
+          dismissMethod: 'escape',
+        })
+      );
+    });
+
+    it('tracks autocomplete_suggestion_ignored event', async () => {
+      const { setAutocompleteAnalyticsTracker, trackAutocompleteEvent } =
+        await import('../analytics');
+
+      setAutocompleteAnalyticsTracker(mockTracker);
+
+      trackAutocompleteEvent({
+        type: 'autocomplete_suggestion_ignored',
+        userInput: 'exe',
+        suggestion: 'Exercise 10 minutes',
+        finalInput: 'Something else',
+        timestamp: Date.now(),
+      });
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_ignored',
+          finalInput: 'Something else',
+        })
+      );
+    });
+
+    it('tracks autocomplete_no_match event', async () => {
+      const { setAutocompleteAnalyticsTracker, trackAutocompleteEvent } =
+        await import('../analytics');
+
+      setAutocompleteAnalyticsTracker(mockTracker);
+
+      trackAutocompleteEvent({
+        type: 'autocomplete_no_match',
+        userInput: 'zzz',
+        inputLength: 3,
+        timestamp: Date.now(),
+      });
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_no_match',
+          userInput: 'zzz',
+        })
+      );
+    });
+
+    it('handles tracker errors gracefully', async () => {
+      const { setAutocompleteAnalyticsTracker, trackAutocompleteEvent } =
+        await import('../analytics');
+
+      const errorTracker = {
+        track: () => {
+          throw new Error('Tracker error');
+        },
+      };
+      setAutocompleteAnalyticsTracker(errorTracker);
+
+      // Should not throw
+      expect(() =>
+        trackAutocompleteEvent({
+          type: 'autocomplete_no_match',
+          userInput: 'test',
+          inputLength: 4,
+          timestamp: Date.now(),
+        })
+      ).not.toThrow();
+    });
+  });
+
+  describe('useAutocompleteAnalytics', () => {
+    let mockTracker: jest.Mocked<import('../analytics').AutocompleteAnalyticsTracker>;
+    let trackSpy: jest.Mock;
+
+    beforeEach(async () => {
+      trackSpy = jest.fn();
+      mockTracker = { track: trackSpy };
+      const { setAutocompleteAnalyticsTracker } = await import('../analytics');
+      setAutocompleteAnalyticsTracker(mockTracker);
+    });
+
+    it('provides trackSuggestionShown function', async () => {
+      const { useAutocompleteAnalytics } = await import('../analytics');
+      const { result } = renderHook(() => useAutocompleteAnalytics());
+
+      result.current.trackSuggestionShown('exe', 'Exercise 10 minutes', 'prefix');
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_shown',
+          userInput: 'exe',
+          suggestion: 'Exercise 10 minutes',
+          matchType: 'prefix',
+          inputLength: 3,
+        })
+      );
+    });
+
+    it('provides trackSuggestionAccepted function', async () => {
+      const { useAutocompleteAnalytics } = await import('../analytics');
+      const { result } = renderHook(() => useAutocompleteAnalytics());
+
+      result.current.trackSuggestionAccepted(
+        'exe',
+        'Exercise 10 minutes',
+        'tab'
+      );
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_accepted',
+          userInput: 'exe',
+          suggestion: 'Exercise 10 minutes',
+          acceptMethod: 'tab',
+          keystrokesSaved: 17, // "Exercise 10 minutes" - "exe" = 17 chars
+        })
+      );
+    });
+
+    it('provides trackSuggestionDismissed function', async () => {
+      const { useAutocompleteAnalytics } = await import('../analytics');
+      const { result } = renderHook(() => useAutocompleteAnalytics());
+
+      result.current.trackSuggestionDismissed(
+        'exe',
+        'Exercise 10 minutes',
+        'escape'
+      );
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_dismissed',
+          userInput: 'exe',
+          suggestion: 'Exercise 10 minutes',
+          dismissMethod: 'escape',
+        })
+      );
+    });
+
+    it('provides trackSuggestionIgnored function', async () => {
+      const { useAutocompleteAnalytics } = await import('../analytics');
+      const { result } = renderHook(() => useAutocompleteAnalytics());
+
+      result.current.trackSuggestionIgnored(
+        'exe',
+        'Exercise 10 minutes',
+        'Custom habit'
+      );
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_suggestion_ignored',
+          userInput: 'exe',
+          suggestion: 'Exercise 10 minutes',
+          finalInput: 'Custom habit',
+        })
+      );
+    });
+
+    it('provides trackNoMatch function', async () => {
+      const { useAutocompleteAnalytics } = await import('../analytics');
+      const { result } = renderHook(() => useAutocompleteAnalytics());
+
+      result.current.trackNoMatch('zzz');
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'autocomplete_no_match',
+          userInput: 'zzz',
+          inputLength: 3,
+        })
+      );
+    });
+  });
 });

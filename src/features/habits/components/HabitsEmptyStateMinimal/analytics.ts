@@ -73,11 +73,66 @@ export type TimeBasedChipEvent =
     };
 
 /**
+ * Analytics event types for Autocomplete feature
+ */
+export type AutocompleteEvent =
+  | {
+      type: 'autocomplete_suggestion_shown';
+      userInput: string;
+      suggestion: string;
+      inputLength: number;
+      matchType: 'prefix' | 'word' | 'keyword' | 'fuzzy';
+      timestamp: number;
+    }
+  | {
+      type: 'autocomplete_suggestion_accepted';
+      userInput: string;
+      suggestion: string;
+      acceptMethod: 'tab' | 'arrow_right';
+      inputLength: number;
+      keystrokesSaved: number; // suggestion.length - userInput.length
+      timestamp: number;
+    }
+  | {
+      type: 'autocomplete_suggestion_dismissed';
+      userInput: string;
+      suggestion: string;
+      dismissMethod: 'escape' | 'continue_typing' | 'blur';
+      timestamp: number;
+    }
+  | {
+      type: 'autocomplete_suggestion_ignored';
+      userInput: string;
+      suggestion: string;
+      finalInput: string; // what user actually submitted
+      timestamp: number;
+    }
+  | {
+      type: 'autocomplete_no_match';
+      userInput: string;
+      inputLength: number;
+      timestamp: number;
+    };
+
+/**
+ * Combined analytics event type
+ */
+export type AnalyticsEvent = TimeBasedChipEvent | AutocompleteEvent;
+
+/**
  * Analytics tracker interface
  * Implement this interface to connect to your analytics provider
  */
 export interface TimeBasedChipAnalyticsTracker {
   track(event: TimeBasedChipEvent): void;
+}
+
+/**
+ * Autocomplete analytics tracker interface
+ * Implement this interface to connect to your analytics provider
+ */
+export interface AutocompleteAnalyticsTracker {
+  track(event: AutocompleteEvent): void;
 }
 
 /**
@@ -104,10 +159,41 @@ class ConsoleTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTrac
 }
 
 /**
+ * Console logger for autocomplete analytics in development
+ */
+class ConsoleAutocompleteAnalyticsTracker implements AutocompleteAnalyticsTracker {
+  private enabled: boolean;
+
+  constructor() {
+    this.enabled = __DEV__;
+  }
+
+  track(event: AutocompleteEvent): void {
+    if (!this.enabled) return;
+
+    // eslint-disable-next-line no-console
+    console.log('[Analytics] Autocomplete:', {
+      timestamp: new Date(event.timestamp).toISOString(),
+      type: event.type,
+      ...event,
+    });
+  }
+}
+
+/**
  * No-op tracker for production when no analytics provider configured
  */
 class NoOpTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTracker {
   track(_event: TimeBasedChipEvent): void {
+    // No-op
+  }
+}
+
+/**
+ * No-op tracker for autocomplete in production
+ */
+class NoOpAutocompleteAnalyticsTracker implements AutocompleteAnalyticsTracker {
+  track(_event: AutocompleteEvent): void {
     // No-op
   }
 }
@@ -119,6 +205,14 @@ class NoOpTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTracker
 let analyticsTracker: TimeBasedChipAnalyticsTracker = __DEV__
   ? new ConsoleTimeBasedChipAnalyticsTracker()
   : new NoOpTimeBasedChipAnalyticsTracker();
+
+/**
+ * Global autocomplete analytics tracker instance
+ * Override with setAutocompleteAnalyticsTracker() to connect your analytics provider
+ */
+let autocompleteTracker: AutocompleteAnalyticsTracker = __DEV__
+  ? new ConsoleAutocompleteAnalyticsTracker()
+  : new NoOpAutocompleteAnalyticsTracker();
 
 /**
  * Set custom analytics tracker
@@ -143,6 +237,28 @@ export function setTimeBasedChipAnalyticsTracker(
 }
 
 /**
+ * Set custom autocomplete analytics tracker
+ * Call this early in your app initialization to connect your analytics provider
+ *
+ * @example
+ * ```ts
+ * import { setAutocompleteAnalyticsTracker } from '@/features/habits/components/HabitsEmptyStateMinimal/analytics';
+ * import analytics from '@/lib/analytics';
+ *
+ * setAutocompleteAnalyticsTracker({
+ *   track: (event) => {
+ *     analytics.track(event.type, event);
+ *   }
+ * });
+ * ```
+ */
+export function setAutocompleteAnalyticsTracker(
+  tracker: AutocompleteAnalyticsTracker
+): void {
+  autocompleteTracker = tracker;
+}
+
+/**
  * Track analytics event
  * Type-safe wrapper around the global analytics tracker
  */
@@ -153,6 +269,21 @@ export function trackTimeBasedChipEvent(event: TimeBasedChipEvent): void {
     // Silently fail - don't let analytics errors break the app
     if (__DEV__) {
       console.error('[Analytics] Error tracking time-based chip event:', error);
+    }
+  }
+}
+
+/**
+ * Track autocomplete event
+ * Type-safe wrapper around the global autocomplete analytics tracker
+ */
+export function trackAutocompleteEvent(event: AutocompleteEvent): void {
+  try {
+    autocompleteTracker.track(event);
+  } catch (error) {
+    // Silently fail - don't let analytics errors break the app
+    if (__DEV__) {
+      console.error('[Analytics] Error tracking autocomplete event:', error);
     }
   }
 }
@@ -313,6 +444,128 @@ export function useTimeBasedChipAnalytics() {
     trackChipsDisplayed: createTrackChipsDisplayed(),
     trackChipSelected: createTrackChipSelected(),
     trackManualInputAfterChipView: createTrackManualInputAfterChipView(),
+  };
+}
+
+/**
+ * Track when autocomplete suggestion is shown
+ */
+function createTrackAutocompleteSuggestionShown() {
+  return (
+    userInput: string,
+    suggestion: string,
+    matchType: 'prefix' | 'word' | 'keyword' | 'fuzzy'
+  ) => {
+    trackAutocompleteEvent({
+      inputLength: userInput.length,
+      matchType,
+      suggestion,
+      timestamp: Date.now(),
+      type: 'autocomplete_suggestion_shown',
+      userInput,
+    });
+  };
+}
+
+/**
+ * Track when user accepts autocomplete suggestion
+ */
+function createTrackAutocompleteSuggestionAccepted() {
+  return (
+    userInput: string,
+    suggestion: string,
+    acceptMethod: 'tab' | 'arrow_right'
+  ) => {
+    const keystrokesSaved = suggestion.length - userInput.length;
+    trackAutocompleteEvent({
+      acceptMethod,
+      inputLength: userInput.length,
+      keystrokesSaved,
+      suggestion,
+      timestamp: Date.now(),
+      type: 'autocomplete_suggestion_accepted',
+      userInput,
+    });
+  };
+}
+
+/**
+ * Track when user dismisses autocomplete suggestion
+ */
+function createTrackAutocompleteSuggestionDismissed() {
+  return (
+    userInput: string,
+    suggestion: string,
+    dismissMethod: 'escape' | 'continue_typing' | 'blur'
+  ) => {
+    trackAutocompleteEvent({
+      dismissMethod,
+      suggestion,
+      timestamp: Date.now(),
+      type: 'autocomplete_suggestion_dismissed',
+      userInput,
+    });
+  };
+}
+
+/**
+ * Track when user ignores suggestion and submits different text
+ */
+function createTrackAutocompleteSuggestionIgnored() {
+  return (userInput: string, suggestion: string, finalInput: string) => {
+    trackAutocompleteEvent({
+      finalInput,
+      suggestion,
+      timestamp: Date.now(),
+      type: 'autocomplete_suggestion_ignored',
+      userInput,
+    });
+  };
+}
+
+/**
+ * Track when no autocomplete match is found
+ */
+function createTrackAutocompleteNoMatch() {
+  return (userInput: string) => {
+    trackAutocompleteEvent({
+      inputLength: userInput.length,
+      timestamp: Date.now(),
+      type: 'autocomplete_no_match',
+      userInput,
+    });
+  };
+}
+
+/**
+ * Hook for tracking Autocomplete analytics
+ * Use this hook in HabitInput component to track autocomplete interactions
+ *
+ * @example
+ * ```tsx
+ * const autocompleteAnalytics = useAutocompleteAnalytics();
+ *
+ * // Track suggestion shown
+ * useEffect(() => {
+ *   if (suggestion) {
+ *     autocompleteAnalytics.trackSuggestionShown(input, suggestion, 'prefix');
+ *   }
+ * }, [suggestion]);
+ *
+ * // Track suggestion accepted
+ * const handleTabPress = () => {
+ *   autocompleteAnalytics.trackSuggestionAccepted(input, suggestion, 'tab');
+ *   onChangeText(suggestion);
+ * };
+ * ```
+ */
+export function useAutocompleteAnalytics() {
+  return {
+    trackNoMatch: createTrackAutocompleteNoMatch(),
+    trackSuggestionAccepted: createTrackAutocompleteSuggestionAccepted(),
+    trackSuggestionDismissed: createTrackAutocompleteSuggestionDismissed(),
+    trackSuggestionIgnored: createTrackAutocompleteSuggestionIgnored(),
+    trackSuggestionShown: createTrackAutocompleteSuggestionShown(),
   };
 }
 

@@ -198,6 +198,73 @@ export function getBestSuggestion(input: string): string | null {
 }
 
 /**
+ * Get the best suggestion with its match type for analytics
+ *
+ * @param input - User's input text
+ * @returns Object with suggestion text and match type, or null if no matches
+ *
+ * @example
+ * getBestSuggestionWithMatchType("exe") // { suggestion: "Exercise 10 minutes", matchType: "prefix" }
+ * getBestSuggestionWithMatchType("x") // null (too short)
+ */
+export function getBestSuggestionWithMatchType(
+  input: string
+): { suggestion: string; matchType: 'prefix' | 'word' | 'keyword' | 'fuzzy' } | null {
+  // Return null if input too short
+  if (input.length < MIN_CHARS_FOR_SUGGESTIONS) {
+    return null;
+  }
+
+  const query = input.toLowerCase().trim();
+  const matches: MatchResult[] = [];
+
+  for (const suggestion of HABIT_SUGGESTIONS) {
+    const text = suggestion.text.toLowerCase();
+    let score = 0;
+    let matchType: MatchResult['matchType'] = 'fuzzy';
+
+    // 1. Prefix match (highest priority): score = 100
+    if (text.startsWith(query)) {
+      score = 100;
+      matchType = 'prefix';
+    }
+    // 2. Word boundary match: score = 80
+    else if (text.includes(` ${query}`)) {
+      score = 80;
+      matchType = 'word';
+    }
+    // 3. Keyword match: score = 60
+    else if (suggestion.keywords?.some((kw) => kw.toLowerCase().includes(query))) {
+      score = 60;
+      matchType = 'keyword';
+    }
+    // 4. Fuzzy match (contains all characters in order): score = 40
+    else if (fuzzyMatch(query, text)) {
+      score = 40;
+      matchType = 'fuzzy';
+    }
+
+    // Boost score for shorter suggestions (more concise = better)
+    if (score > 0) {
+      const lengthPenalty = Math.max(0, suggestion.text.length - 20) * 0.1;
+      score -= lengthPenalty;
+      matches.push({ suggestion, score, matchType });
+    }
+  }
+
+  // Return best match or null
+  if (matches.length === 0) {
+    return null;
+  }
+
+  const best = matches.sort((a, b) => b.score - a.score)[0];
+  return {
+    matchType: best.matchType,
+    suggestion: best.suggestion.text,
+  };
+}
+
+/**
  * Get the inline preview text (grayed out completion)
  *
  * Returns only the part of the suggestion that extends beyond user input

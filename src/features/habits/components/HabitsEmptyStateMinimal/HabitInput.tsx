@@ -17,7 +17,7 @@
  * - **Debounced updates**: 50ms delay for smooth performance
  */
 
-import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   NativeSyntheticEvent,
   Pressable,
@@ -34,6 +34,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useAutocompleteAnalytics } from './analytics';
 import { TIMING_CONFIGS } from './animations';
 import {
   BORDER_RADIUS,
@@ -43,7 +44,7 @@ import {
   TOUCH_TARGETS,
 } from './constants';
 import type { HabitInputProps } from './types';
-import { getBestSuggestion, getInlinePreview } from './utils';
+import { getBestSuggestion, getBestSuggestionWithMatchType, getInlinePreview } from './utils';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -112,9 +113,14 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     const [inlineSuggestion, setInlineSuggestion] = useState<string | null>(
       null
     );
+    const [matchType, setMatchType] = useState<'prefix' | 'word' | 'keyword' | 'fuzzy' | null>(
+      null
+    );
+    const previousSuggestionRef = useRef<string | null>(null);
     const focusProgress = useSharedValue(0);
     const showClearButton = value.length > 0;
     const { triggerLightImpact } = useHapticFeedback();
+    const autocompleteAnalytics = useAutocompleteAnalytics();
 
     // Character counter: visible when focused or has text
     const showCharacterCounter = isFocused || value.length > 0;
@@ -127,15 +133,38 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     useEffect(() => {
       const timer = setTimeout(() => {
         if (value.length >= 3) {
-          const suggestion = getBestSuggestion(value);
-          setInlineSuggestion(suggestion);
+          const result = getBestSuggestionWithMatchType(value);
+          if (result) {
+            setInlineSuggestion(result.suggestion);
+            setMatchType(result.matchType);
+
+            // Track suggestion shown (only if it's a new suggestion)
+            if (result.suggestion !== previousSuggestionRef.current) {
+              autocompleteAnalytics.trackSuggestionShown(
+                value,
+                result.suggestion,
+                result.matchType
+              );
+              previousSuggestionRef.current = result.suggestion;
+            }
+          } else {
+            // No match found
+            if (previousSuggestionRef.current !== null) {
+              autocompleteAnalytics.trackNoMatch(value);
+            }
+            setInlineSuggestion(null);
+            setMatchType(null);
+            previousSuggestionRef.current = null;
+          }
         } else {
           setInlineSuggestion(null);
+          setMatchType(null);
+          previousSuggestionRef.current = null;
         }
       }, 50); // 50ms debounce - feels instant but prevents excessive updates
 
       return () => clearTimeout(timer);
-    }, [value]);
+    }, [value, autocompleteAnalytics]);
 
     // Get preview text (the part that extends beyond user input)
     const previewText = inlineSuggestion
@@ -152,8 +181,18 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     const handleBlur = useCallback(() => {
       setIsFocused(false);
       focusProgress.value = withTiming(0, TIMING_CONFIGS.inputFocus);
+
+      // Track suggestion dismissed if user blurred with an active suggestion
+      if (inlineSuggestion && value !== inlineSuggestion) {
+        autocompleteAnalytics.trackSuggestionDismissed(
+          value,
+          inlineSuggestion,
+          'blur'
+        );
+      }
+
       onBlur?.();
-    }, [focusProgress, onBlur]);
+    }, [focusProgress, onBlur, inlineSuggestion, value, autocompleteAnalytics]);
 
     // Handle keyboard shortcuts for accepting suggestions
     const handleKeyPress = useCallback(
@@ -163,16 +202,49 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
         // Accept suggestion on Tab or Right Arrow
         if ((key === 'Tab' || key === 'ArrowRight') && inlineSuggestion) {
           e.preventDefault();
+
+          // Track suggestion accepted
+          autocompleteAnalytics.trackSuggestionAccepted(
+            value,
+            inlineSuggestion,
+            key === 'Tab' ? 'tab' : 'arrow_right'
+          );
+
           onChangeText(inlineSuggestion);
           setInlineSuggestion(null);
+          setMatchType(null);
+          previousSuggestionRef.current = null;
         }
         // Dismiss suggestions on Escape
-        else if (key === 'Escape') {
+        else if (key === 'Escape' && inlineSuggestion) {
+          // Track suggestion dismissed
+          autocompleteAnalytics.trackSuggestionDismissed(
+            value,
+            inlineSuggestion,
+            'escape'
+          );
+
           setInlineSuggestion(null);
+          setMatchType(null);
+          previousSuggestionRef.current = null;
         }
       },
-      [inlineSuggestion, onChangeText]
+      [inlineSuggestion, value, onChangeText, autocompleteAnalytics]
     );
+
+    // Wrap onSubmitEditing to track ignored suggestions
+    const handleSubmitEditing = useCallback(() => {
+      // If user submits with a suggestion visible but didn't accept it, track as ignored
+      if (inlineSuggestion && value !== inlineSuggestion) {
+        autocompleteAnalytics.trackSuggestionIgnored(
+          value,
+          inlineSuggestion,
+          value // final input is what they submitted
+        );
+      }
+
+      onSubmitEditing?.();
+    }, [inlineSuggestion, value, onSubmitEditing, autocompleteAnalytics]);
 
     const containerStyle = useAnimatedStyle(() => ({
       borderColor: interpolateColor(
@@ -253,7 +325,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           onChangeText={onChangeText}
           onFocus={handleFocus}
           onKeyPress={handleKeyPress}
-          onSubmitEditing={onSubmitEditing}
+          onSubmitEditing={handleSubmitEditing}
         />
         {showClearButton && (
           <Pressable
