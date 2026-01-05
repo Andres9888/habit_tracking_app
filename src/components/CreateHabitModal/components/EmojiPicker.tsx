@@ -190,16 +190,24 @@ const EmojiPickerComponent = ({
             />
           </Animated.View>
         ))}
-        {/* Plus button to open full emoji picker */}
-        <Pressable
-          accessibilityHint='Opens full emoji picker'
-          accessibilityLabel='Browse all icons'
-          accessibilityRole='button'
-          className='h-12 w-12 items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-100'
-          onPress={handleMorePress}
-        >
-          <Plus color='#a8a29e' size={20} />
-        </Pressable>
+        {/* Plus button with "More" label to open full emoji picker */}
+        <View className='items-center gap-1'>
+          <Pressable
+            accessibilityHint='Opens full emoji picker'
+            accessibilityLabel='Browse all icons'
+            accessibilityRole='button'
+            className='h-12 w-12 items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-100'
+            onPress={handleMorePress}
+          >
+            <Plus color='#a8a29e' size={20} />
+          </Pressable>
+          <Text
+            className='text-[10px] font-semibold uppercase text-stone-500'
+            style={{ letterSpacing: 0.3 }}
+          >
+            More
+          </Text>
+        </View>
       </Animated.View>
 
       <EmojiPickerSheet

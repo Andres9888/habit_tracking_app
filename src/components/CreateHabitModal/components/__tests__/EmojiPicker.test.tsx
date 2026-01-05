@@ -240,6 +240,12 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       );
     });
 
+    it('should render "More" label below the "+" button', () => {
+      const { getByText } = render(<EmojiPicker {...defaultProps} />);
+
+      expect(getByText('More')).toBeDefined();
+    });
+
     it('should have role="button" for emoji chips', () => {
       const { getAllByRole } = render(<EmojiPicker {...defaultProps} />);
 
@@ -261,6 +267,38 @@ describe('EmojiPicker - V8 Smart Suggestions', () => {
       expect(nonSelectedButton.props.accessibilityState).toEqual(
         expect.objectContaining({ selected: false })
       );
+    });
+  });
+
+  describe('"More" Label Enhancement (Task 2.1)', () => {
+    it('should render "More" label below the "+" button', () => {
+      const { getByText } = render(<EmojiPicker {...defaultProps} />);
+
+      const moreLabel = getByText('More');
+      expect(moreLabel).toBeDefined();
+    });
+
+    it('should preserve existing functionality with "More" label', () => {
+      const { getByLabelText, getByText } = render(
+        <EmojiPicker {...defaultProps} />
+      );
+
+      // "More" label should be present
+      expect(getByText('More')).toBeDefined();
+
+      // "+" button should still be accessible and functional
+      const plusButton = getByLabelText('Browse all icons');
+      expect(plusButton).toBeDefined();
+
+      // Pressing the button should still work
+      fireEvent.press(plusButton);
+      const { EmojiPickerSheet } = require('../../../EmojiPickerV2');
+      expect(EmojiPickerSheet).toHaveBeenCalled();
+    });
+
+    it('should match snapshot with "More" label', () => {
+      const { toJSON } = render(<EmojiPicker {...defaultProps} />);
+      expect(toJSON()).toMatchSnapshot();
     });
   });
 
