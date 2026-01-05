@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 5.9.0"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "channel": "production"
+    },
+    "beta": {
+      "extends": "production",
+      "distribution": "internal",
+      "channel": "beta",
+      "env": {
+        "APP_VARIANT": "beta"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

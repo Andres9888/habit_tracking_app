@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar View MVP v3 - Enhanced UX + Monetization</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    body {
+      background: #1a1a1a !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .screen-content {
+      padding: 60px 20px 100px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .view-toggle {
+      display: flex;
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .view-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .view-btn.active {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .view-btn:hover:not(.active) {
+      color: #999;
+    }
+
+    .pro-badge {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-header {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      padding: 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .day-cell {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      cursor: default;
+    }
+
+    .day-cell.future {
+      background: #1a1a1a;
+      color: #333;
+      cursor: default;
+    }
+
+    .day-cell.missed {
+      background: #1a1a1a;
+      color: #666;
+    }
+
+    .day-cell.completed {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .day-cell.today {
+      position: relative;
+      grid-column: span 1;
+    }
+
+    .day-cell.today.incomplete {
+      background: linear-gradient(135deg, #292524 0%, #1c1917 100%);
+      color: #fbbf24;
+      border: 2px solid #f59e0b;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .day-cell.today.completed {
+      border: 2px solid #f59e0b;
+      background: #10b981;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+      }
+    }
+
+    .day-cell:hover:not(.empty):not(.future) {
+      transform: scale(0.95);
+    }
+
+    .day-cell:active:not(.empty):not(.future) {
+      transform: scale(0.9);
+    }
+
+    .streak-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid #2a2a2a;
+      position: relative;
+    }
+
+    .streak-visual {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .streak-visual::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 3px solid #f59e0b;
+      border-right-color: transparent;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .streak-fire {
+      font-size: 28px;
+    }
+
+    .streak-info {
+      flex: 1;
+    }
+
+    .streak-number {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-size: 14px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .streak-best {
+      font-size: 12px;
+      color: #f59e0b;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .streak-shield {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .streak-shield:hover {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .streak-shield-icon {
+      font-size: 20px;
+    }
+
+    .streak-shield-text {
+      font-size: 9px;
+      font-weight: 600;
+      color: #f59e0b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat-item {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .month-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .month-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .week-day {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .week-day.today {
+      background: #292524;
+      border: 2px solid #f59e0b;
+    }
+
+    .week-day.completed {
+      background: #10b981;
+    }
+
+    .week-day-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .week-day.completed .week-day-name,
+    .week-day.today .week-day-name {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .week-day-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 8px 0;
+    }
+
+    .week-day.today.incomplete .week-day-num {
+      color: #fbbf24;
+    }
+
+    .week-day-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .week-day.completed .week-day-status {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .week-day.completed .week-day-status::after {
+      content: '✓';
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .week-day.missed .week-day-status {
+      background: #2a2a2a;
+    }
+
+    .week-day.today.incomplete .week-day-status {
+      background: #f59e0b;
+      animation: pulse-today 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-today {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .weekly-goal {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.02) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .weekly-goal-text {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .weekly-goal-text span {
+      color: #10b981;
+      font-weight: 700;
+    }
+
+    .weekly-goal-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .year-view-locked {
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .year-grid-blurred {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      filter: blur(6px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .year-row {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .year-day-label {
+      width: 20px;
+      font-size: 9px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .year-cell {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: #1a1a1a;
+    }
+
+    .year-cell.completed-1 { background: rgba(16, 185, 129, 0.3); }
+    .year-cell.completed-2 { background: rgba(16, 185, 129, 0.5); }
+    .year-cell.completed-3 { background: rgba(16, 185, 129, 0.7); }
+    .year-cell.completed-4 { background: #10b981; }
+
+    .premium-unlock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .premium-unlock-card {
+      background: linear-gradient(135deg, rgba(20, 20, 20, 0.97) 0%, rgba(10, 10, 10, 0.99) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 24px;
+      padding: 28px 24px;
+      text-align: center;
+      max-width: 300px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .premium-unlock-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 28px;
+    }
+
+    .premium-unlock-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .premium-unlock-desc {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .pricing-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .pricing-option {
+      background: #1a1a1a;
+      border: 2px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pricing-option:hover {
+      border-color: #444;
+    }
+
+    .pricing-option.recommended {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .pricing-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pricing-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pricing-option.recommended .pricing-radio {
+      border-color: #f59e0b;
+      background: #f59e0b;
+    }
+
+    .pricing-option.recommended .pricing-radio::after {
+      content: '✓';
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pricing-period {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .pricing-right {
+      text-align: right;
+    }
+
+    .pricing-amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .pricing-save {
+      font-size: 11px;
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    .pricing-original {
+      font-size: 12px;
+      color: #666;
+      text-decoration: line-through;
+    }
+
+    .popular-badge {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 8px;
+    }
+
+    .premium-unlock-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 16px 28px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .premium-unlock-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    .premium-note {
+      font-size: 11px;
+      color: #666;
+      margin-top: 12px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .habit-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .habit-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .habit-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .habit-meta {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .view-container {
+      display: none;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    .screen-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .customize-section {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .customize-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .customize-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .color-picker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      border: 3px solid transparent;
+    }
+
+    .color-dot:hover {
+      transform: scale(1.1);
+    }
+
+    .color-dot.active {
+      border-color: #fff;
+    }
+
+    .more-colors-btn {
+      font-size: 12px;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 600;
+    }
+
+    .more-colors-btn:hover {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .floating-complete {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+
+    .complete-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 18px 24px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .complete-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5);
+    }
+
+    .complete-btn.completed {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border: 2px solid #10b981;
+      color: #10b981;
+      box-shadow: none;
+    }
+
+    .complete-btn-icon {
+      font-size: 20px;
+    }
+
+    .social-proof {
+      background: rgba(16, 185, 129, 0.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .social-proof-avatars {
+      display: flex;
+    }
+
+    .social-proof-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #333;
+      border: 2px solid #0a0a0a;
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .social-proof-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .social-proof-text {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .social-proof-text strong {
+      color: #10b981;
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+      display: none;
+    }
+
+    .confetti.active {
+      display: block;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 1;
+        top: 40%;
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        top: 100%;
+        transform: translateY(100px) rotate(720deg) scale(0);
+      }
+    }
+
+    .premium-stats-teaser {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(217, 119, 6, 0.03) 100%);
+      border: 1px dashed rgba(245, 158, 11, 0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .premium-stats-teaser:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.06) 100%);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .premium-stats-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .premium-stats-content {
+      flex: 1;
+    }
+
+    .premium-stats-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .premium-stats-desc {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .premium-stats-arrow {
+      color: #f59e0b;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="notch"></div>
+      <div class="screen-content">
+
+        <!-- Habit Header -->
+        <div class="habit-header">
+          <div class="habit-icon" id="habit-icon">💪</div>
+          <div>
+            <div class="habit-name">Morning Exercise</div>
+            <div class="habit-meta">Daily · 75 days tracked</div>
+          </div>
+        </div>
+
+        <!-- Streak Card Enhanced -->
+        <div class="section">
+          <div class="streak-card">
+            <div class="streak-visual">
+              <span class="streak-fire">🔥</span>
+            </div>
+            <div class="streak-info">
+              <div class="streak-number">12</div>
+              <div class="streak-label">day streak</div>
+              <div class="streak-best">🏆 Best: 21 days</div>
+            </div>
+            <div class="streak-shield" id="shield-btn">
+              <span class="streak-shield-icon">🛡️</span>
+              <span class="streak-shield-text">Shield</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="section">
+          <div class="view-toggle">
+            <button class="view-btn" data-view="week">Week</button>
+            <button class="view-btn active" data-view="month">Month</button>
+            <button class="view-btn" data-view="year">Year <span class="pro-badge">PRO</span></button>
+          </div>
+        </div>
+
+        <!-- Week View Enhanced -->
+        <div id="week-view" class="view-container">
+          <div class="month-header">
+            <div class="month-title">This Week</div>
+            <div style="font-size: 13px; color: #666;">Dec 23 - 29</div>
+          </div>
+          <div class="week-grid">
+            <div class="week-day completed">
+              <div class="week-day-name">Sun</div>
+              <div class="week-day-num">23</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Mon</div>
+              <div class="week-day-num">24</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Tue</div>
+              <div class="week-day-num">25</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Wed</div>
+              <div class="week-day-num">26</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Thu</div>
+              <div class="week-day-num">27</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Fri</div>
+              <div class="week-day-num">28</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day today incomplete" id="today-week">
+              <div class="week-day-name">Sat</div>
+              <div class="week-day-num">29</div>
+              <div class="week-day-status"></div>
+            </div>
+          </div>
+
+          <!-- Weekly Goal -->
+          <div class="weekly-goal">
+            <div class="weekly-goal-text"><span>6/7</span> days completed · 1 more for perfect week!</div>
+            <div class="weekly-goal-badge">🎯</div>
+          </div>
+        </div>
+
+        <!-- Month View -->
+        <div id="month-view" class="view-container active">
+          <div class="month-header">
+            <div class="month-title">December 2025</div>
+            <div class="month-nav">
+              <button class="nav-btn">‹</button>
+              <button class="nav-btn">›</button>
+            </div>
+          </div>
+          <div class="calendar-grid">
+            <div class="day-header">S</div>
+            <div class="day-header">M</div>
+            <div class="day-header">T</div>
+            <div class="day-header">W</div>
+            <div class="day-header">T</div>
+            <div class="day-header">F</div>
+            <div class="day-header">S</div>
+
+            <div class="day-cell empty"></div>
+            <div class="day-cell completed">1</div>
+            <div class="day-cell completed">2</div>
+            <div class="day-cell missed">3</div>
+            <div class="day-cell completed">4</div>
+            <div class="day-cell completed">5</div>
+            <div class="day-cell missed">6</div>
+
+            <div class="day-cell completed">7</div>
+            <div class="day-cell completed">8</div>
+            <div class="day-cell completed">9</div>
+            <div class="day-cell missed">10</div>
+            <div class="day-cell completed">11</div>
+            <div class="day-cell completed">12</div>
+            <div class="day-cell completed">13</div>
+
+            <div class="day-cell completed">14</div>
+            <div class="day-cell completed">15</div>
+            <div class="day-cell completed">16</div>
+            <div class="day-cell completed">17</div>
+            <div class="day-cell completed">18</div>
+            <div class="day-cell missed">19</div>
+            <div class="day-cell completed">20</div>
+
+            <div class="day-cell completed">21</div>
+            <div class="day-cell completed">22</div>
+            <div class="day-cell completed">23</div>
+            <div class="day-cell completed">24</div>
+            <div class="day-cell completed">25</div>
+            <div class="day-cell completed">26</div>
+            <div class="day-cell completed">27</div>
+
+            <div class="day-cell completed">28</div>
+            <div class="day-cell today incomplete" id="today-month">29</div>
+            <div class="day-cell future">30</div>
+            <div class="day-cell future">31</div>
+            <div class="day-cell empty"></div>
+            <div class="day-cell empty"></div>
+            <div class="day-cell empty"></div>
+          </div>
+
+          <!-- Social Proof -->
+          <div class="social-proof">
+            <div class="social-proof-avatars">
+              <div class="social-proof-avatar">👤</div>
+              <div class="social-proof-avatar">👤</div>
+              <div class="social-proof-avatar">👤</div>
+              <div class="social-proof-avatar">+</div>
+            </div>
+            <div class="social-proof-text"><strong>2,847 people</strong> completed their exercise today</div>
+          </div>
+        </div>
+
+        <!-- Year View - Locked/Blurred -->
+        <div id="year-view" class="view-container">
+          <div class="year-view-locked">
+            <div class="year-grid-blurred" id="year-grid"></div>
+            <div class="premium-unlock-overlay">
+              <div class="premium-unlock-card">
+                <div class="premium-unlock-icon">📅</div>
+                <div class="premium-unlock-title">See Your Full Year</div>
+                <div class="premium-unlock-desc">Track patterns, celebrate milestones, and share your 365-day journey.</div>
+
+                <div class="pricing-options">
+                  <div class="pricing-option" id="monthly-option">
+                    <div class="pricing-left">
+                      <div class="pricing-radio"></div>
+                      <div class="pricing-period">Monthly</div>
+                    </div>
+                    <div class="pricing-right">
+                      <div class="pricing-amount">$2.99/mo</div>
+                    </div>
+                  </div>
+                  <div class="pricing-option recommended" id="yearly-option">
+                    <div class="pricing-left">
+                      <div class="pricing-radio"></div>
+                      <div class="pricing-period">Yearly <span class="popular-badge">Best Value</span></div>
+                    </div>
+                    <div class="pricing-right">
+                      <div class="pricing-original">$35.88</div>
+                      <div class="pricing-amount">$19.99/yr</div>
+                      <div class="pricing-save">Save 44%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="premium-unlock-btn">Start 7-Day Free Trial</button>
+                <div class="premium-note">Cancel anytime · Less than a coffee per month ☕</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="section" style="margin-top: 20px;">
+          <div class="stats-bar">
+            <div class="stat-item">
+              <div class="stat-value">22/29</div>
+              <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">76%</div>
+              <div class="stat-label">Success Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium Stats Upsell -->
+        <div class="section">
+          <div class="premium-stats-teaser" id="stats-teaser">
+            <div class="premium-stats-icon">📊</div>
+            <div class="premium-stats-content">
+              <div class="premium-stats-title">Unlock Smart Insights</div>
+              <div class="premium-stats-desc">Trends, patterns & predictions</div>
+            </div>
+            <span class="premium-stats-arrow">›</span>
+          </div>
+        </div>
+
+        <!-- Customize Section -->
+        <div class="section">
+          <div class="customize-section">
+            <div class="customize-header">
+              <span class="customize-title">Theme</span>
+            </div>
+            <div class="color-picker">
+              <div class="color-dot active" style="background: #10b981;" data-color="#10b981"></div>
+              <div class="color-dot" style="background: #3b82f6;" data-color="#3b82f6"></div>
+              <div class="color-dot" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
+              <div class="color-dot" style="background: #ec4899;" data-color="#ec4899"></div>
+              <div class="color-dot" style="background: #f59e0b;" data-color="#f59e0b"></div>
+              <button class="more-colors-btn" id="more-colors">+15 PRO</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Floating Complete Button -->
+      <div class="floating-complete">
+        <button class="complete-btn" id="complete-btn">
+          <span class="complete-btn-icon">✓</span>
+          <span id="complete-btn-text">Complete Today</span>
+        </button>
+      </div>
+
+      <!-- Confetti Container -->
+      <div class="confetti" id="confetti"></div>
+    </div>
+  </div>
+
+  <script>
+    // View toggle functionality
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const viewContainers = document.querySelectorAll('.view-container');
+
+    viewBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const view = btn.dataset.view;
+
+        viewBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        viewContainers.forEach(function(v) { v.classList.remove('active'); });
+        document.getElementById(view + '-view').classList.add('active');
+      });
+    });
+
+    // Generate year grid (blurred) using DOM methods
+    const yearGrid = document.getElementById('year-grid');
+    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+    days.forEach(function(day) {
+      const row = document.createElement('div');
+      row.className = 'year-row';
+
+      const label = document.createElement('div');
+      label.className = 'year-day-label';
+      label.textContent = day;
+      row.appendChild(label);
+
+      for (let week = 0; week < 52; week++) {
+        const cell = document.createElement('div');
+        cell.className = 'year-cell';
+
+        const rand = Math.random();
+        if (rand > 0.3) {
+          const level = Math.ceil(Math.random() * 4);
+          cell.classList.add('completed-' + level);
+        }
+
+        row.appendChild(cell);
+      }
+
+      yearGrid.appendChild(row);
+    });
+
+    // Day cell click interaction
+    document.querySelectorAll('.day-cell:not(.empty):not(.future):not(.today)').forEach(function(cell) {
+      cell.addEventListener('click', function() {
+        if (cell.classList.contains('completed')) {
+          cell.classList.remove('completed');
+          cell.classList.add('missed');
+        } else {
+          cell.classList.remove('missed');
+          cell.classList.add('completed');
+        }
+      });
+    });
+
+    // Week day click interaction (except today)
+    document.querySelectorAll('.week-day:not(.today)').forEach(function(day) {
+      day.addEventListener('click', function() {
+        if (day.classList.contains('completed')) {
+          day.classList.remove('completed');
+          day.classList.add('missed');
+        } else {
+          day.classList.remove('missed');
+          day.classList.add('completed');
+        }
+      });
+    });
+
+    // Complete today button
+    let isCompleted = false;
+    const completeBtn = document.getElementById('complete-btn');
+    const completeBtnText = document.getElementById('complete-btn-text');
+    const todayMonth = document.getElementById('today-month');
+    const todayWeek = document.getElementById('today-week');
+
+    completeBtn.addEventListener('click', function() {
+      isCompleted = !isCompleted;
+
+      if (isCompleted) {
+        completeBtn.classList.add('completed');
+        completeBtnText.textContent = 'Completed! 🎉';
+
+        todayMonth.classList.remove('incomplete');
+        todayMonth.classList.add('completed');
+
+        todayWeek.classList.remove('incomplete');
+        todayWeek.classList.add('completed');
+
+        triggerConfetti();
+      } else {
+        completeBtn.classList.remove('completed');
+        completeBtnText.textContent = 'Complete Today';
+
+        todayMonth.classList.remove('completed');
+        todayMonth.classList.add('incomplete');
+
+        todayWeek.classList.remove('completed');
+        todayWeek.classList.add('incomplete');
+      }
+    });
+
+    // Confetti animation using DOM methods
+    function triggerConfetti() {
+      const confetti = document.getElementById('confetti');
+      while (confetti.firstChild) {
+        confetti.removeChild(confetti.firstChild);
+      }
+      confetti.classList.add('active');
+
+      const colors = ['#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#8b5cf6'];
+
+      for (let i = 0; i < 50; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+        piece.style.animation = 'confetti-fall ' + (1 + Math.random()) + 's ease-out forwards';
+        piece.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.appendChild(piece);
+      }
+
+      setTimeout(function() {
+        confetti.classList.remove('active');
+      }, 2000);
+    }
+
+    // Color picker
+    document.querySelectorAll('.color-dot').forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        const color = dot.dataset.color;
+        if (!color) return;
+
+        document.querySelectorAll('.color-dot').forEach(function(d) { d.classList.remove('active'); });
+        dot.classList.add('active');
+
+        document.querySelectorAll('.day-cell.completed').forEach(function(cell) {
+          cell.style.background = color;
+        });
+        document.querySelectorAll('.week-day.completed').forEach(function(cell) {
+          cell.style.background = color;
+        });
+        document.getElementById('habit-icon').style.background = 'linear-gradient(135deg, ' + color + ' 0%, ' + color + ' 100%)';
+
+        if (isCompleted) {
+          completeBtn.style.background = 'linear-gradient(135deg, ' + color + ' 0%, ' + color + ' 100%)';
+        }
+      });
+    });
+
+    // Pricing selection
+    document.getElementById('monthly-option').addEventListener('click', function() {
+      document.querySelectorAll('.pricing-option').forEach(function(o) { o.classList.remove('recommended'); });
+      this.classList.add('recommended');
+    });
+
+    document.getElementById('yearly-option').addEventListener('click', function() {
+      document.querySelectorAll('.pricing-option').forEach(function(o) { o.classList.remove('recommended'); });
+      this.classList.add('recommended');
+    });
+
+    // Shield modal
+    document.getElementById('shield-btn').addEventListener('click', function() {
+      alert('🛡️ Streak Shield\n\nProtect your streak when life happens!\n\n• 1 free pass per month\n• Use it on any missed day\n• Keep your streak alive\n\nIncluded with PRO subscription');
+    });
+
+    // Stats teaser
+    document.getElementById('stats-teaser').addEventListener('click', function() {
+      alert('Unlock trends, weak day analysis, and AI predictions with PRO!');
+    });
+
+    // More colors button
+    document.getElementById('more-colors').addEventListener('click', function() {
+      alert('Unlock 15+ premium colors, gradients & seasonal themes!');
+    });
+  </script>
+</body>
+</html>

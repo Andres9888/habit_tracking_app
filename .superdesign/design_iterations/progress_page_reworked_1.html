@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Page - Reworked Design</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #1c1917; }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* Notch */
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1c1917;
+      border-radius: 0 0 20px 20px;
+      z-index: 100;
+    }
+
+    /* Scrollable content */
+    .scroll-content {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 44px;
+      padding-bottom: 34px;
+    }
+
+    /* Annotation callouts */
+    .annotation {
+      position: absolute;
+      background: linear-gradient(135deg, #84cc16, #65a30d);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 11px;
+      line-height: 1.4;
+      max-width: 220px;
+      box-shadow: 0 10px 25px -5px rgba(132, 204, 22, 0.4);
+    }
+
+    .annotation::before {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+
+    .annotation-left::before {
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid #84cc16;
+    }
+
+    .annotation-right::before {
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 8px solid #84cc16;
+    }
+
+    .annotation-bottom::before {
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid #84cc16;
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    /* Crown badge pulse */
+    @keyframes pulse-crown {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .crown-badge {
+      animation: pulse-crown 2s ease-in-out infinite;
+    }
+
+    /* Heatmap cells */
+    .heat-cell {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    /* Ring animation */
+    @keyframes ring-fill {
+      from { stroke-dashoffset: 251; }
+      to { stroke-dashoffset: 55; }
+    }
+    .ring-progress {
+      animation: ring-fill 1.5s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+
+  <div class="relative">
+    <!-- Annotations - Left Side -->
+
+    <!-- Annotation 1: View Toggle -->
+    <div class="annotation annotation-left" style="left: -240px; top: 280px;">
+      <span class="tag">VALIDATED</span>
+      <div class="font-semibold mb-1">Multi-Scale Calendar Views</div>
+      <div class="opacity-90">HabitKit has Week/Month/3M/Year views. Users demand granularity - their Year In Review was removed then <strong>restored after backlash</strong>.</div>
+    </div>
+
+    <!-- Annotation 2: Premium Crown -->
+    <div class="annotation annotation-left" style="left: -240px; top: 380px;">
+      <span class="tag">REVENUE</span>
+      <div class="font-semibold mb-1">Premium Gate = FOMO</div>
+      <div class="opacity-90">Year view locked with crown badge creates <strong>upgrade desire</strong>. Users see the option but can't access it - proven conversion pattern.</div>
+    </div>
+
+    <!-- Annotation 3: Consistency Index -->
+    <div class="annotation annotation-left" style="left: -240px; top: 560px;">
+      <span class="tag">RETENTION</span>
+      <div class="font-semibold mb-1">Forgiving Metric</div>
+      <div class="opacity-90">Unlike streaks that reset to 0 on one miss, Consistency Index uses <strong>rolling averages</strong>. Users stay motivated, not demoralized.</div>
+    </div>
+
+    <!-- Annotations - Right Side -->
+
+    <!-- Annotation 4: Today's Focus -->
+    <div class="annotation annotation-right" style="right: -240px; top: 140px;">
+      <span class="tag">ENGAGEMENT</span>
+      <div class="font-semibold mb-1">Contextual Motivation</div>
+      <div class="opacity-90">Shows different messages based on state (completed, streak at risk, etc). <strong>Personalization increases DAU</strong>.</div>
+    </div>
+
+    <!-- Annotation 5: Weekly Strip -->
+    <div class="annotation annotation-right" style="right: -240px; top: 230px;">
+      <span class="tag">VALIDATED</span>
+      <div class="font-semibold mb-1">7-Day Quick Glance</div>
+      <div class="opacity-90">Every top habit app (Streaks, Habitify, HabitKit) has this. <strong>Table stakes feature</strong> - users expect it.</div>
+    </div>
+
+    <!-- Annotation 6: GitHub-style Heatmap -->
+    <div class="annotation annotation-right" style="right: -240px; top: 460px;">
+      <span class="tag">VALIDATED</span>
+      <div class="font-semibold mb-1">GitHub-Style Heatmap</div>
+      <div class="opacity-90">52-week horizontal grid. <strong>HabitKit & Habitify both use this</strong>. Compact visualization shows entire year at glance.</div>
+    </div>
+
+    <!-- Annotation 7: 30/60/90 Breakdown -->
+    <div class="annotation annotation-right" style="right: -240px; top: 650px;">
+      <span class="tag">RETENTION</span>
+      <div class="font-semibold mb-1">Multi-Window Analysis</div>
+      <div class="opacity-90">Shows 30/60/90-day trends separately. <strong>Habitify charges $29.99/year</strong> for detailed stats like this.</div>
+    </div>
+
+    <!-- Phone Frame -->
+    <div class="phone-frame">
+      <div class="notch"></div>
+
+      <div class="scroll-content">
+        <!-- Header -->
+        <div class="px-4 pt-2 pb-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+              <span class="text-lg">🏃</span>
+            </div>
+            <div>
+              <div class="font-semibold text-stone-900 text-sm">Morning Run</div>
+              <div class="text-xs text-stone-500">Day 47 • 12 streak</div>
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-lime-500 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="px-4 pb-3">
+          <div class="flex bg-stone-100 rounded-lg p-1">
+            <div class="flex-1 py-1.5 bg-lime-500 rounded-md">
+              <div class="text-xs text-center font-medium text-stone-900">Progress</div>
+            </div>
+            <div class="flex-1 py-1.5">
+              <div class="text-xs text-center font-medium text-stone-400">Motivation</div>
+            </div>
+            <div class="flex-1 py-1.5">
+              <div class="text-xs text-center font-medium text-stone-400">Manage</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-4 space-y-3">
+
+          <!-- Today's Focus Card -->
+          <div class="bg-gradient-to-br from-lime-50 to-emerald-50 rounded-2xl p-4 border border-lime-200">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-lime-500 flex items-center justify-center flex-shrink-0">
+                <span class="text-xl">🔥</span>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-stone-900 text-sm">Keep the momentum!</div>
+                <div class="text-xs text-stone-600 mt-0.5">You're on a 12-day streak. Tomorrow marks 2 weeks straight!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly Summary Strip -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-sm font-semibold text-stone-900">This Week</div>
+              <div class="text-xs text-lime-600 font-medium">6/7 days</div>
+            </div>
+            <div class="flex justify-between">
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Mon</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Tue</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Wed</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-stone-100 border-2 border-dashed border-stone-300"></div>
+                <div class="text-[10px] text-stone-500">Thu</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Fri</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] text-stone-500">Sat</div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center ring-2 ring-lime-300 ring-offset-1">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="text-[10px] font-medium text-lime-600">Today</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Heatmap with View Toggle -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <!-- View Toggle -->
+            <div class="flex bg-stone-100 rounded-lg p-1 mb-4">
+              <div class="flex-1 py-1.5 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-400">Week</div>
+              </div>
+              <div class="flex-1 py-1.5 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-400">Month</div>
+              </div>
+              <div class="flex-1 py-1.5 bg-lime-500 rounded-md">
+                <div class="text-xs text-center font-medium text-stone-900">3M</div>
+              </div>
+              <div class="flex-1 py-1.5 rounded-md relative">
+                <div class="text-xs text-center font-medium text-stone-400">Year</div>
+                <!-- Premium Crown Badge -->
+                <div class="crown-badge absolute -top-1 -right-0 w-4 h-4 bg-amber-400 rounded-full flex items-center justify-center shadow-sm">
+                  <svg class="w-2.5 h-2.5 text-amber-800" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01L12 1z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3-Month Heatmap Grid -->
+            <div class="mb-3">
+              <div class="flex justify-between text-[9px] text-stone-400 mb-2 px-1">
+                <span>Oct</span>
+                <span>Nov</span>
+                <span>Dec</span>
+              </div>
+
+              <!-- Heatmap rows (7 days per row for weeks) -->
+              <div class="flex gap-[2px] flex-wrap">
+                <!-- Generate ~13 weeks of cells -->
+                <script>
+                  // We'll use inline styles since this is static HTML
+                </script>
+                <!-- Row 1 - Sunday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <!-- Row 2 - Monday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <!-- Row 3 - Tuesday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <!-- Row 4 - Wednesday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <!-- Row 5 - Thursday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <!-- Row 6 - Friday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-400"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                </div>
+                <!-- Row 7 - Saturday -->
+                <div class="flex gap-[2px]">
+                  <div class="heat-cell bg-lime-200"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-300"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-stone-100"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500"></div>
+                  <div class="heat-cell bg-lime-500 ring-1 ring-stone-400"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex items-center justify-end gap-1 text-[9px] text-stone-400">
+              <span>Less</span>
+              <div class="w-2 h-2 rounded-sm bg-stone-100"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-200"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-300"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-400"></div>
+              <div class="w-2 h-2 rounded-sm bg-lime-500"></div>
+              <span>More</span>
+            </div>
+          </div>
+
+          <!-- Consistency Index Card -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div class="text-sm font-semibold text-stone-900">Consistency Index</div>
+                <div class="w-4 h-4 rounded-full bg-stone-100 flex items-center justify-center">
+                  <svg class="w-2.5 h-2.5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-emerald-600">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                </svg>
+                <span class="text-xs font-medium">+3%</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <!-- Ring Chart -->
+              <div class="relative w-20 h-20 flex-shrink-0">
+                <svg class="w-20 h-20 -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background ring -->
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#e7e5e4" stroke-width="8"/>
+                  <!-- Progress ring -->
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#84cc16" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="55" class="ring-progress"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-stone-900">78%</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Breakdown -->
+              <div class="flex-1 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-lime-500"></div>
+                    <span class="text-xs text-stone-600">30-day</span>
+                  </div>
+                  <span class="text-xs font-semibold text-stone-900">82%</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-lime-400"></div>
+                    <span class="text-xs text-stone-600">60-day</span>
+                  </div>
+                  <span class="text-xs font-semibold text-stone-900">76%</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-lime-300"></div>
+                    <span class="text-xs text-stone-600">90-day</span>
+                  </div>
+                  <span class="text-xs font-semibold text-stone-900">74%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-stone-100">
+              <div class="text-xs text-stone-500">You're building a strong foundation. Keep showing up!</div>
+            </div>
+          </div>
+
+          <!-- Habit Strength Card -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-sm font-semibold text-stone-900">Habit Strength</div>
+              <div class="text-xs text-stone-500">67%</div>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style="width: 67%"></div>
+            </div>
+            <div class="mt-2 text-xs text-stone-500">Based on streak, success rate & consistency</div>
+          </div>
+
+          <!-- Quick Stats Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white rounded-2xl p-4 border border-stone-200">
+              <div class="text-xs text-stone-500 mb-1">Current Streak</div>
+              <div class="text-2xl font-bold text-stone-900">12</div>
+              <div class="text-[10px] text-lime-600 mt-0.5">Best: 18 days</div>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-stone-200">
+              <div class="text-xs text-stone-500 mb-1">Success Rate</div>
+              <div class="text-2xl font-bold text-stone-900">78%</div>
+              <div class="text-[10px] text-stone-400 mt-0.5">35 of 45 days</div>
+            </div>
+          </div>
+
+          <!-- Focus Day Card -->
+          <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                <span class="text-lg">📅</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-sm font-semibold text-amber-900">Thursday needs attention</div>
+                <div class="text-xs text-amber-700 mt-0.5">Only 45% completion. Try setting a reminder!</div>
+              </div>
+              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Spacer for bottom safe area -->
+          <div class="h-4"></div>
+
+        </div>
+      </div>
+
+      <!-- Home indicator -->
+      <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-stone-900 rounded-full"></div>
+    </div>
+
+    <!-- Legend Box -->
+    <div class="absolute -bottom-20 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-6 py-4 rounded-xl text-center max-w-md">
+      <div class="text-sm font-semibold mb-1">Revenue Strategy Summary</div>
+      <div class="text-xs text-stone-300">Premium Year View ($9.99/mo) • Unlimited Habits • Advanced Analytics</div>
+      <div class="text-[10px] text-lime-400 mt-2">Validated by: HabitKit, Habitify ($29.99/yr), Streaks</div>
+    </div>
+  </div>
+
+</body>
+</html>

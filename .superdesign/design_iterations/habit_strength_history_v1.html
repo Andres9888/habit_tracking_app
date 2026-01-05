@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout Comparison: Calendar First vs Strength First</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; -webkit-tap-highlight-color: transparent; }
+    body { background: #0f0f0f !important; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 20px; gap: 30px; flex-wrap: wrap; }
+
+    .comparison-label {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .comparison-label.alt {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    }
+
+    .phone-wrapper {
+      position: relative;
+      margin-top: 50px;
+    }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #000;
+      border-radius: 48px;
+      padding: 10px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .notch {
+      width: 140px;
+      height: 32px;
+      background: #000;
+      border-radius: 0 0 18px 18px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .screen-content {
+      padding: 54px 14px 20px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .back-btn, .settings-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: #1a1a1a;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .habit-icon-small {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .habit-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: #1a1a1a;
+      border-radius: 11px;
+      padding: 9px 6px;
+      text-align: center;
+    }
+
+    .stat-icon { font-size: 14px; margin-bottom: 1px; }
+    .stat-value { font-size: 16px; font-weight: 700; color: #fff; }
+    .stat-label { font-size: 8px; color: #666; margin-top: 1px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+    /* Habit Strength History */
+    .strength-history-section {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .section-title-icon { font-size: 12px; }
+
+    .current-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .strength-comparison {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .strength-card {
+      background: #0d0d0d;
+      border-radius: 10px;
+      padding: 8px 4px;
+      text-align: center;
+      position: relative;
+      border: 1px solid #2a2a2a;
+    }
+
+    .strength-card.current {
+      border-color: #10b981;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, #0d0d0d 100%);
+    }
+
+    .strength-card-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .strength-ring-container {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 4px;
+      position: relative;
+    }
+
+    .strength-ring {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .strength-ring-bg { fill: none; stroke: #2a2a2a; stroke-width: 4; }
+    .strength-ring-progress { fill: none; stroke-width: 4; stroke-linecap: round; }
+    .strength-ring-value {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .strength-card-status {
+      font-size: 7px;
+      font-weight: 600;
+      padding: 2px 5px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .strength-card-status.strong { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .strength-card-status.developing { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .strength-card-status.weak { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    .strength-card-delta {
+      font-size: 8px;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .strength-card-delta.positive { color: #10b981; }
+    .strength-card-delta.neutral { color: #666; }
+
+    .strength-timeline { margin-bottom: 10px; }
+
+    .strength-timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .strength-timeline-title {
+      font-size: 9px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .strength-timeline-range {
+      font-size: 8px;
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    .strength-chart {
+      height: 55px;
+      position: relative;
+      background: #0d0d0d;
+      border-radius: 8px;
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .strength-chart-grid {
+      position: absolute;
+      inset: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .strength-chart-line { height: 1px; background: #1a1a1a; }
+
+    .strength-chart-svg {
+      position: absolute;
+      inset: 8px;
+      width: calc(100% - 16px);
+      height: calc(100% - 16px);
+    }
+
+    .strength-chart-path { fill: none; stroke: #10b981; stroke-width: 2; stroke-linecap: round; }
+    .strength-chart-area { fill: url(#strengthGradient); }
+    .strength-chart-dot { fill: #10b981; stroke: #0d0d0d; stroke-width: 2; }
+    .strength-chart-dot.current { fill: #f59e0b; }
+
+    .strength-chart-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-size: 7px;
+      color: #666;
+    }
+
+    .strength-insights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+
+    .strength-insight {
+      background: #0d0d0d;
+      border-radius: 6px;
+      padding: 6px 4px;
+      text-align: center;
+      border: 1px solid #1a1a1a;
+    }
+
+    .strength-insight-icon { font-size: 10px; margin-bottom: 1px; }
+    .strength-insight-value { font-size: 10px; font-weight: 700; color: #fff; }
+    .strength-insight-label { font-size: 6px; color: #666; text-transform: uppercase; }
+
+    /* Heatmap */
+    .heatmap-section { margin-bottom: 12px; }
+
+    .heatmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .heatmap-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .week-start-badge {
+      font-size: 7px;
+      color: #666;
+      background: #1a1a1a;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    .heatmap-toggle {
+      display: flex;
+      background: #1a1a1a;
+      border-radius: 5px;
+      padding: 2px;
+    }
+
+    .heatmap-toggle-btn {
+      padding: 3px 7px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 500;
+      color: #666;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .heatmap-toggle-btn.active { background: #2a2a2a; color: #fff; }
+
+    .month-labels {
+      display: flex;
+      padding-left: 16px;
+      margin-bottom: 2px;
+    }
+
+    .month-label {
+      font-size: 7px;
+      color: #666;
+      width: calc((7px + 2px) * 4.33);
+    }
+
+    .heatmap-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .heatmap-row {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .day-label {
+      width: 14px;
+      font-size: 6px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .heatmap-cell {
+      width: 7px;
+      height: 7px;
+      border-radius: 1.5px;
+      background: #1a1a1a;
+      cursor: pointer;
+    }
+
+    .heatmap-cell:hover { transform: scale(1.3); }
+    .heatmap-cell.level-1 { background: rgba(16, 185, 129, 0.25); }
+    .heatmap-cell.level-2 { background: rgba(16, 185, 129, 0.5); }
+    .heatmap-cell.level-3 { background: rgba(16, 185, 129, 0.75); }
+    .heatmap-cell.level-4 { background: #10b981; }
+    .heatmap-cell.today { outline: 2px solid #f59e0b; outline-offset: 1px; }
+
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 2px;
+      margin-top: 5px;
+      font-size: 7px;
+      color: #666;
+    }
+
+    .legend-cell { width: 7px; height: 7px; border-radius: 1.5px; }
+
+    /* Calendar */
+    .calendar-section {
+      background: #1a1a1a;
+      border-radius: 11px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .calendar-month { font-size: 13px; font-weight: 600; color: #fff; }
+
+    .calendar-nav { display: flex; gap: 4px; }
+
+    .calendar-nav-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: #2a2a2a;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 3px;
+    }
+
+    .calendar-weekday {
+      text-align: center;
+      font-size: 8px;
+      font-weight: 600;
+      color: #666;
+      padding: 2px 0;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      color: #888;
+      background: transparent;
+    }
+
+    .calendar-day.completed { background: #10b981; color: #fff; }
+    .calendar-day.missed { background: #2a2a2a; color: #666; }
+    .calendar-day.future { color: #333; cursor: default; }
+    .calendar-day.today { border: 2px solid #f59e0b; }
+    .calendar-day.today.incomplete { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .calendar-day:hover:not(.empty):not(.future) { transform: scale(0.9); }
+
+    .calendar-day .multi-count {
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      font-size: 5px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .calendar-day.has-note::after {
+      content: '';
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 3px;
+      height: 3px;
+      background: #f59e0b;
+      border-radius: 50%;
+    }
+
+    .view-container { display: none; }
+    .view-container.active { display: block; }
+
+    .recommendation-badge {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: #10b981;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- OPTION A: Calendar First -->
+  <div class="phone-wrapper">
+    <div class="comparison-label">A: CALENDAR FIRST</div>
+    <div class="recommendation-badge">✓ Recommended</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="notch"></div>
+        <div class="screen-content">
+          <!-- Header -->
+          <div class="header">
+            <button class="back-btn">‹</button>
+            <div class="header-title">
+              <div class="habit-icon-small" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">💪</div>
+              <span class="habit-name">Morning Exercise</span>
+            </div>
+            <button class="settings-btn">⚙️</button>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon">🔥</div>
+              <div class="stat-value">12</div>
+              <div class="stat-label">Streak</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🏆</div>
+              <div class="stat-value">21</div>
+              <div class="stat-label">Best</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">✅</div>
+              <div class="stat-value">267</div>
+              <div class="stat-label">Total</div>
+            </div>
+          </div>
+
+          <!-- CALENDAR FIRST -->
+          <!-- Heatmap -->
+          <div class="heatmap-section">
+            <div class="heatmap-header">
+              <div class="heatmap-title">Activity <span class="week-start-badge">Mon</span></div>
+              <div class="heatmap-toggle">
+                <button class="heatmap-toggle-btn active">3M</button>
+                <button class="heatmap-toggle-btn">Year</button>
+              </div>
+            </div>
+            <div class="month-labels" id="month-labels-a"></div>
+            <div class="heatmap-grid" id="heatmap-grid-a"></div>
+            <div class="heatmap-legend">
+              <span>Less</span>
+              <div class="legend-cell" style="background: #1a1a1a;"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.25);"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.5);"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.75);"></div>
+              <div class="legend-cell" style="background: #10b981;"></div>
+              <span>More</span>
+            </div>
+          </div>
+
+          <!-- Calendar -->
+          <div class="calendar-section">
+            <div class="calendar-header">
+              <span class="calendar-month">December 2025</span>
+              <div class="calendar-nav">
+                <button class="calendar-nav-btn">‹</button>
+                <button class="calendar-nav-btn">›</button>
+              </div>
+            </div>
+            <div class="calendar-weekdays">
+              <div class="calendar-weekday">M</div>
+              <div class="calendar-weekday">T</div>
+              <div class="calendar-weekday">W</div>
+              <div class="calendar-weekday">T</div>
+              <div class="calendar-weekday">F</div>
+              <div class="calendar-weekday">S</div>
+              <div class="calendar-weekday">S</div>
+            </div>
+            <div class="calendar-grid" id="calendar-grid-a"></div>
+          </div>
+
+          <!-- THEN Strength -->
+          <div class="strength-history-section">
+            <div class="section-header">
+              <div class="section-title"><span class="section-title-icon">💪</span> Habit Strength</div>
+              <div class="current-badge">Strong</div>
+            </div>
+            <div class="strength-comparison">
+              <div class="strength-card current">
+                <div class="strength-card-label">Now</div>
+                <div class="strength-ring-container">
+                  <svg class="strength-ring" viewBox="0 0 36 36">
+                    <circle class="strength-ring-bg" cx="18" cy="18" r="15.9"/>
+                    <circle class="strength-ring-progress" cx="18" cy="18" r="15.9" stroke="#10b981" stroke-dasharray="100" stroke-dashoffset="27"/>
+                  </svg>
+                  <div class="strength-ring-value">73%</div>
+                </div>
+                <div class="strength-card-status strong">Strong</div>
+                <div class="strength-card-delta positive">↑ +28%</div>
+              </div>
+              <div class="strength-card">
+                <div class="strength-card-label">30 Days</div>
+                <div class="strength-ring-container">
+                  <svg class="strength-ring" viewBox="0 0 36 36">
+                    <circle class="strength-ring-bg" cx="18" cy="18" r="15.9"/>
+                    <circle class="strength-ring-progress" cx="18" cy="18" r="15.9" stroke="#f59e0b" stroke-dasharray="100" stroke-dashoffset="55"/>
+                  </svg>
+                  <div class="strength-ring-value">45%</div>
+                </div>
+                <div class="strength-card-status developing">Developing</div>
+                <div class="strength-card-delta neutral">Nov 29</div>
+              </div>
+              <div class="strength-card">
+                <div class="strength-card-label">1 Year</div>
+                <div class="strength-ring-container">
+                  <svg class="strength-ring" viewBox="0 0 36 36">
+                    <circle class="strength-ring-bg" cx="18" cy="18" r="15.9"/>
+                    <circle class="strength-ring-progress" cx="18" cy="18" r="15.9" stroke="#666" stroke-dasharray="100" stroke-dashoffset="78"/>
+                  </svg>
+                  <div class="strength-ring-value">22%</div>
+                </div>
+                <div class="strength-card-status weak">Weak</div>
+                <div class="strength-card-delta positive">↑ +51%</div>
+              </div>
+            </div>
+            <div class="strength-timeline">
+              <div class="strength-timeline-header">
+                <span class="strength-timeline-title">Your Journey</span>
+                <span class="strength-timeline-range">Since Oct 15</span>
+              </div>
+              <div class="strength-chart">
+                <div class="strength-chart-grid">
+                  <div class="strength-chart-line"></div>
+                  <div class="strength-chart-line"></div>
+                  <div class="strength-chart-line"></div>
+                </div>
+                <svg class="strength-chart-svg" viewBox="0 0 320 40" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="strengthGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.3"/>
+                      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0"/>
+                    </linearGradient>
+                  </defs>
+                  <path class="strength-chart-area" d="M0,35 C80,32 160,25 240,18 C280,12 300,14 320,12 L320,40 L0,40 Z"/>
+                  <path class="strength-chart-path" d="M0,35 C80,32 160,25 240,18 C280,12 300,14 320,12"/>
+                  <circle class="strength-chart-dot" cx="0" cy="35" r="3"/>
+                  <circle class="strength-chart-dot current" cx="320" cy="12" r="4"/>
+                </svg>
+              </div>
+              <div class="strength-chart-labels">
+                <span>Oct</span><span>Nov</span><span>Dec</span><span>Now</span>
+              </div>
+            </div>
+            <div class="strength-insights">
+              <div class="strength-insight">
+                <div class="strength-insight-icon">📈</div>
+                <div class="strength-insight-value">+28%</div>
+                <div class="strength-insight-label">vs Month</div>
+              </div>
+              <div class="strength-insight">
+                <div class="strength-insight-icon">🏆</div>
+                <div class="strength-insight-value">89%</div>
+                <div class="strength-insight-label">Peak</div>
+              </div>
+              <div class="strength-insight">
+                <div class="strength-insight-icon">📉</div>
+                <div class="strength-insight-value">12%</div>
+                <div class="strength-insight-label">Lowest</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION B: Strength First -->
+  <div class="phone-wrapper">
+    <div class="comparison-label alt">B: STRENGTH FIRST</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="notch"></div>
+        <div class="screen-content">
+          <!-- Header -->
+          <div class="header">
+            <button class="back-btn">‹</button>
+            <div class="header-title">
+              <div class="habit-icon-small" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">💪</div>
+              <span class="habit-name">Morning Exercise</span>
+            </div>
+            <button class="settings-btn">⚙️</button>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon">🔥</div>
+              <div class="stat-value">12</div>
+              <div class="stat-label">Streak</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🏆</div>
+              <div class="stat-value">21</div>
+              <div class="stat-label">Best</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">✅</div>
+              <div class="stat-value">267</div>
+              <div class="stat-label">Total</div>
+            </div>
+          </div>
+
+          <!-- STRENGTH FIRST -->
+          <div class="strength-history-section">
+            <div class="section-header">
+              <div class="section-title"><span class="section-title-icon">💪</span> Habit Strength</div>
+              <div class="current-badge">Strong</div>
+            </div>
+            <div class="strength-comparison">
+              <div class="strength-card current">
+                <div class="strength-card-label">Now</div>
+                <div class="strength-ring-container">
+                  <svg class="strength-ring" viewBox="0 0 36 36">
+                    <circle class="strength-ring-bg" cx="18" cy="18" r="15.9"/>
+                    <circle class="strength-ring-progress" cx="18" cy="18" r="15.9" stroke="#10b981" stroke-dasharray="100" stroke-dashoffset="27"/>
+                  </svg>
+                  <div class="strength-ring-value">73%</div>
+                </div>
+                <div class="strength-card-status strong">Strong</div>
+                <div class="strength-card-delta positive">↑ +28%</div>
+              </div>
+              <div class="strength-card">
+                <div class="strength-card-label">30 Days</div>
+                <div class="strength-ring-container">
+                  <svg class="strength-ring" viewBox="0 0 36 36">
+                    <circle class="strength-ring-bg" cx="18" cy="18" r="15.9"/>
+                    <circle class="strength-ring-progress" cx="18" cy="18" r="15.9" stroke="#f59e0b" stroke-dasharray="100" stroke-dashoffset="55"/>
+                  </svg>
+                  <div class="strength-ring-value">45%</div>
+                </div>
+                <div class="strength-card-status developing">Developing</div>
+                <div class="strength-card-delta neutral">Nov 29</div>
+              </div>
+              <div class="strength-card">
+                <div class="strength-card-label">1 Year</div>
+                <div class="strength-ring-container">
+                  <svg class="strength-ring" viewBox="0 0 36 36">
+                    <circle class="strength-ring-bg" cx="18" cy="18" r="15.9"/>
+                    <circle class="strength-ring-progress" cx="18" cy="18" r="15.9" stroke="#666" stroke-dasharray="100" stroke-dashoffset="78"/>
+                  </svg>
+                  <div class="strength-ring-value">22%</div>
+                </div>
+                <div class="strength-card-status weak">Weak</div>
+                <div class="strength-card-delta positive">↑ +51%</div>
+              </div>
+            </div>
+            <div class="strength-timeline">
+              <div class="strength-timeline-header">
+                <span class="strength-timeline-title">Your Journey</span>
+                <span class="strength-timeline-range">Since Oct 15</span>
+              </div>
+              <div class="strength-chart">
+                <div class="strength-chart-grid">
+                  <div class="strength-chart-line"></div>
+                  <div class="strength-chart-line"></div>
+                  <div class="strength-chart-line"></div>
+                </div>
+                <svg class="strength-chart-svg" viewBox="0 0 320 40" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="strengthGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.3"/>
+                      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0"/>
+                    </linearGradient>
+                  </defs>
+                  <path class="strength-chart-area" d="M0,35 C80,32 160,25 240,18 C280,12 300,14 320,12 L320,40 L0,40 Z" style="fill: url(#strengthGradient2);"/>
+                  <path class="strength-chart-path" d="M0,35 C80,32 160,25 240,18 C280,12 300,14 320,12"/>
+                  <circle class="strength-chart-dot" cx="0" cy="35" r="3"/>
+                  <circle class="strength-chart-dot current" cx="320" cy="12" r="4"/>
+                </svg>
+              </div>
+              <div class="strength-chart-labels">
+                <span>Oct</span><span>Nov</span><span>Dec</span><span>Now</span>
+              </div>
+            </div>
+            <div class="strength-insights">
+              <div class="strength-insight">
+                <div class="strength-insight-icon">📈</div>
+                <div class="strength-insight-value">+28%</div>
+                <div class="strength-insight-label">vs Month</div>
+              </div>
+              <div class="strength-insight">
+                <div class="strength-insight-icon">🏆</div>
+                <div class="strength-insight-value">89%</div>
+                <div class="strength-insight-label">Peak</div>
+              </div>
+              <div class="strength-insight">
+                <div class="strength-insight-icon">📉</div>
+                <div class="strength-insight-value">12%</div>
+                <div class="strength-insight-label">Lowest</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- THEN Calendar -->
+          <!-- Heatmap -->
+          <div class="heatmap-section">
+            <div class="heatmap-header">
+              <div class="heatmap-title">Activity <span class="week-start-badge">Mon</span></div>
+              <div class="heatmap-toggle">
+                <button class="heatmap-toggle-btn active">3M</button>
+                <button class="heatmap-toggle-btn">Year</button>
+              </div>
+            </div>
+            <div class="month-labels" id="month-labels-b"></div>
+            <div class="heatmap-grid" id="heatmap-grid-b"></div>
+            <div class="heatmap-legend">
+              <span>Less</span>
+              <div class="legend-cell" style="background: #1a1a1a;"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.25);"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.5);"></div>
+              <div class="legend-cell" style="background: rgba(16, 185, 129, 0.75);"></div>
+              <div class="legend-cell" style="background: #10b981;"></div>
+              <span>More</span>
+            </div>
+          </div>
+
+          <!-- Calendar -->
+          <div class="calendar-section">
+            <div class="calendar-header">
+              <span class="calendar-month">December 2025</span>
+              <div class="calendar-nav">
+                <button class="calendar-nav-btn">‹</button>
+                <button class="calendar-nav-btn">›</button>
+              </div>
+            </div>
+            <div class="calendar-weekdays">
+              <div class="calendar-weekday">M</div>
+              <div class="calendar-weekday">T</div>
+              <div class="calendar-weekday">W</div>
+              <div class="calendar-weekday">T</div>
+              <div class="calendar-weekday">F</div>
+              <div class="calendar-weekday">S</div>
+              <div class="calendar-weekday">S</div>
+            </div>
+            <div class="calendar-grid" id="calendar-grid-b"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    const months3m = ['Oct', 'Nov', 'Dec'];
+
+    function generateHeatmap(gridId, labelsId) {
+      const labels = document.getElementById(labelsId);
+      months3m.forEach(function(m) {
+        const label = document.createElement('div');
+        label.className = 'month-label';
+        label.textContent = m;
+        labels.appendChild(label);
+      });
+
+      const grid = document.getElementById(gridId);
+      days.forEach(function(day) {
+        const row = document.createElement('div');
+        row.className = 'heatmap-row';
+
+        const label = document.createElement('div');
+        label.className = 'day-label';
+        label.textContent = day;
+        row.appendChild(label);
+
+        for (let week = 0; week < 13; week++) {
+          const cell = document.createElement('div');
+          cell.className = 'heatmap-cell';
+
+          if (week === 12 && day === 'S') {
+            cell.classList.add('today');
+          }
+
+          const rand = Math.random();
+          if (rand > 0.25) {
+            const level = Math.ceil(Math.random() * 4);
+            cell.classList.add('level-' + level);
+          }
+
+          row.appendChild(cell);
+        }
+
+        grid.appendChild(row);
+      });
+    }
+
+    function generateCalendar(gridId) {
+      const grid = document.getElementById(gridId);
+      const daysInMonth = [
+        { day: 1, completed: true },
+        { day: 2, completed: true, hasNote: true },
+        { day: 3, completed: false },
+        { day: 4, completed: true },
+        { day: 5, completed: true },
+        { day: 6, completed: false },
+        { day: 7, completed: true },
+        { day: 8, completed: true, multi: 2 },
+        { day: 9, completed: true },
+        { day: 10, completed: false },
+        { day: 11, completed: true },
+        { day: 12, completed: true },
+        { day: 13, completed: true },
+        { day: 14, completed: true },
+        { day: 15, completed: true },
+        { day: 16, completed: true },
+        { day: 17, completed: true, hasNote: true },
+        { day: 18, completed: true },
+        { day: 19, completed: false },
+        { day: 20, completed: true },
+        { day: 21, completed: true },
+        { day: 22, completed: true },
+        { day: 23, completed: true },
+        { day: 24, completed: true },
+        { day: 25, completed: true },
+        { day: 26, completed: true },
+        { day: 27, completed: true },
+        { day: 28, completed: true },
+        { day: 29, completed: false, isToday: true },
+        { day: 30, future: true },
+        { day: 31, future: true },
+      ];
+
+      daysInMonth.forEach(function(d) {
+        const cell = document.createElement('div');
+        cell.className = 'calendar-day';
+        cell.textContent = d.day;
+
+        if (d.future) {
+          cell.classList.add('future');
+        } else if (d.isToday) {
+          cell.classList.add('today', 'incomplete');
+        } else if (d.completed) {
+          cell.classList.add('completed');
+        } else {
+          cell.classList.add('missed');
+        }
+
+        if (d.hasNote) cell.classList.add('has-note');
+
+        if (d.multi) {
+          const count = document.createElement('span');
+          count.className = 'multi-count';
+          count.textContent = 'x' + d.multi;
+          cell.appendChild(count);
+        }
+
+        grid.appendChild(cell);
+      });
+    }
+
+    // Generate both versions
+    generateHeatmap('heatmap-grid-a', 'month-labels-a');
+    generateCalendar('calendar-grid-a');
+    generateHeatmap('heatmap-grid-b', 'month-labels-b');
+    generateCalendar('calendar-grid-b');
+  </script>
+</body>
+</html>

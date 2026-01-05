@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Smart Chips & Confetti Upgrade</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
+    body { margin: 0; background: #1a1a1a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; gap: 40px; }
+    
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #FAFAF9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    
+    .screen { padding: 60px 24px 40px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    
+    /* Hero Icon */
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      animation: breathe 3s ease-in-out infinite;
+    }
+    
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    
+    .headline {
+      margin-top: 32px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1C1917;
+      text-align: center;
+    }
+    
+    /* Time indicator */
+    .time-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: #FEF3C7;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #92400E;
+    }
+    
+    .time-indicator.evening {
+      background: #EDE9FE;
+      color: #5B21B6;
+    }
+    
+    .time-indicator.night {
+      background: #E0E7FF;
+      color: #3730A3;
+    }
+    
+    /* Input */
+    .input-container {
+      width: 100%;
+      margin-top: 24px;
+    }
+    
+    .habit-input {
+      width: 100%;
+      height: 56px;
+      border: 2px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 0 20px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1C1917;
+      background: white;
+      outline: none;
+    }
+    
+    .habit-input::placeholder { color: #A8A29E; }
+    
+    /* Smart Chips */
+    .chips-section {
+      margin-top: 24px;
+      width: 100%;
+    }
+    
+    .chips-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #78716C;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .chips-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .chip-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: white;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #44403C;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .chip.morning { border-color: #FCD34D; background: #FFFBEB; }
+    .chip.evening { border-color: #A78BFA; background: #F5F3FF; }
+    .chip.night { border-color: #818CF8; background: #EEF2FF; }
+    
+    /* CTA Button */
+    .cta-button {
+      width: 100%;
+      height: 56px;
+      margin-top: 32px;
+      background: #047857;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+    }
+    
+    .cta-button.disabled { opacity: 0.4; }
+    
+    /* Success Screen */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      position: relative;
+    }
+    
+    .success-icon {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .success-circle {
+      width: 96px;
+      height: 96px;
+      background: #D1FAE5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      animation: successPop 0.5s ease;
+      z-index: 10;
+    }
+    
+    @keyframes successPop {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Upgraded Confetti */
+    .confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .confetti {
+      position: absolute;
+      animation: confettiFall 3s ease-out forwards;
+    }
+    
+    .confetti.circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .confetti.star {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 12px solid currentColor;
+      background: transparent !important;
+    }
+    
+    .confetti.heart {
+      width: 12px;
+      height: 12px;
+      background: currentColor;
+      transform: rotate(-45deg);
+      position: relative;
+    }
+    
+    .confetti.heart::before,
+    .confetti.heart::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: inherit;
+      border-radius: 50%;
+      position: absolute;
+    }
+    
+    .confetti.heart::before { top: -6px; left: 0; }
+    .confetti.heart::after { top: 0; left: 6px; }
+    
+    .confetti.sparkle {
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+    
+    .confetti.ribbon {
+      width: 4px;
+      height: 20px;
+      border-radius: 2px;
+    }
+    
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-400px) rotate(720deg) scale(0.5);
+        opacity: 0;
+      }
+    }
+    
+    /* Particle Burst */
+    .particle-burst {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+    }
+    
+    .burst-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      animation: burstOut 0.8s ease-out forwards;
+    }
+    
+    @keyframes burstOut {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0.5); opacity: 0; }
+    }
+    
+    .success-title {
+      margin-top: 24px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1C1917;
+    }
+    
+    .success-subtitle {
+      margin-top: 8px;
+      font-size: 16px;
+      color: #78716C;
+    }
+    
+    .tap-hint {
+      margin-top: 24px;
+      font-size: 13px;
+      color: #A8A29E;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    /* State badge */
+    .state-badge {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 16px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    /* Demo Controls */
+    .demo-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 700px;
+      z-index: 100;
+    }
+    
+    .demo-btn {
+      padding: 10px 20px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .demo-btn:hover { background: #444; }
+    .demo-btn.active { background: #10B981; }
+  </style>
+</head>
+<body>
+  <!-- Phone 1: Smart Chips -->
+  <div class="phone-frame">
+    <div class="state-badge" id="stateBadge1">Morning Suggestions (6 AM - 12 PM)</div>
+    
+    <div class="screen" id="chipsScreen">
+      <div class="hero-icon">🌱</div>
+      <h1 class="headline">What habit do you<br>want to build?</h1>
+      
+      <div class="time-indicator" id="timeIndicator">
+        <span>☀️</span>
+        <span>Good morning! Here are habits for your AM routine</span>
+      </div>
+      
+      <div class="input-container">
+        <input type="text" class="habit-input" placeholder="e.g., Drink water, Meditate...">
+      </div>
+      
+      <div class="chips-section">
+        <div class="chips-label" id="chipsLabel">
+          <span>✨</span>
+          <span>Suggested for morning</span>
+        </div>
+        <div class="chips-container" id="chipsContainer">
+          <!-- Chips populated by JS -->
+        </div>
+      </div>
+      
+      <button class="cta-button disabled">Start This Habit</button>
+    </div>
+  </div>
+  
+  <!-- Phone 2: Confetti Upgrade -->
+  <div class="phone-frame">
+    <div class="state-badge">Upgraded Confetti (Stars, Hearts, Sparkles)</div>
+    
+    <div class="screen" id="defaultScreen2" style="display: none;">
+      <div class="hero-icon">🌱</div>
+      <h1 class="headline">What habit do you<br>want to build?</h1>
+    </div>
+    
+    <div class="success-screen" id="successScreen" style="display: flex;">
+      <div class="confetti-container" id="confettiContainer"></div>
+      
+      <div class="success-icon">
+        <div class="particle-burst" id="particleBurst"></div>
+        <div class="success-circle">💧</div>
+      </div>
+      
+      <h2 class="success-title">You're on your way!</h2>
+      <p class="success-subtitle">"Drink water" added to your habits</p>
+      <p class="tap-hint">Tap anywhere to continue</p>
+    </div>
+  </div>
+  
+  <div class="demo-controls">
+    <button class="demo-btn active" onclick="setTimeOfDay('morning')">🌅 Morning (6-12)</button>
+    <button class="demo-btn" onclick="setTimeOfDay('afternoon')">☀️ Afternoon (12-5)</button>
+    <button class="demo-btn" onclick="setTimeOfDay('evening')">🌆 Evening (5-9)</button>
+    <button class="demo-btn" onclick="setTimeOfDay('night')">🌙 Night (9-6)</button>
+    <button class="demo-btn" onclick="replayConfetti()">🎉 Replay Confetti</button>
+  </div>
+  
+  <script>
+    const chipSuggestions = {
+      morning: [
+        { emoji: '💧', label: 'Water', full: 'Drink a glass of water' },
+        { emoji: '🧘', label: 'Meditate', full: '5 min morning meditation' },
+        { emoji: '📝', label: 'Journal', full: 'Morning journal entry' },
+        { emoji: '🏃', label: 'Exercise', full: '20 min morning workout' },
+        { emoji: '🥗', label: 'Healthy breakfast', full: 'Eat a healthy breakfast' },
+      ],
+      afternoon: [
+        { emoji: '🚶', label: 'Walk', full: 'Take a 10 min walk' },
+        { emoji: '💧', label: 'Hydrate', full: 'Drink water midday' },
+        { emoji: '🧘', label: 'Stretch', full: '5 min desk stretches' },
+        { emoji: '🍎', label: 'Healthy snack', full: 'Eat fruit or nuts' },
+        { emoji: '📵', label: 'Screen break', full: '5 min away from screens' },
+      ],
+      evening: [
+        { emoji: '📚', label: 'Read', full: 'Read for 20 minutes' },
+        { emoji: '🧘', label: 'Wind down', full: 'Evening relaxation routine' },
+        { emoji: '📝', label: 'Reflect', full: 'Write 3 gratitudes' },
+        { emoji: '🚫', label: 'No screens', full: 'No screens after 9pm' },
+        { emoji: '🍵', label: 'Herbal tea', full: 'Drink calming tea' },
+      ],
+      night: [
+        { emoji: '😴', label: 'Sleep prep', full: 'Prepare for bed by 10pm' },
+        { emoji: '📱', label: 'Phone away', full: 'Put phone in another room' },
+        { emoji: '🧘', label: 'Breathe', full: '4-7-8 breathing exercise' },
+        { emoji: '📖', label: 'Light read', full: 'Read fiction before sleep' },
+        { emoji: '🌙', label: 'Gratitude', full: 'Name 3 good things today' },
+      ],
+    };
+    
+    const timeConfig = {
+      morning: { 
+        label: 'Suggested for morning', 
+        badge: 'Morning Suggestions (6 AM - 12 PM)',
+        indicator: '☀️ Good morning! Here are habits for your AM routine',
+        indicatorClass: ''
+      },
+      afternoon: { 
+        label: 'Suggested for afternoon', 
+        badge: 'Afternoon Suggestions (12 PM - 5 PM)',
+        indicator: '☀️ Good afternoon! Perfect time for these habits',
+        indicatorClass: ''
+      },
+      evening: { 
+        label: 'Suggested for evening', 
+        badge: 'Evening Suggestions (5 PM - 9 PM)',
+        indicator: '🌆 Good evening! Wind down with these habits',
+        indicatorClass: 'evening'
+      },
+      night: { 
+        label: 'Suggested for night', 
+        badge: 'Night Suggestions (9 PM - 6 AM)',
+        indicator: '🌙 Time to rest. Try these bedtime habits',
+        indicatorClass: 'night'
+      },
+    };
+    
+    function setTimeOfDay(time) {
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const config = timeConfig[time];
+      const chips = chipSuggestions[time];
+      
+      document.getElementById('stateBadge1').textContent = config.badge;
+      document.getElementById('chipsLabel').innerHTML = `<span>✨</span><span>${config.label}</span>`;
+      
+      const indicator = document.getElementById('timeIndicator');
+      indicator.className = 'time-indicator ' + config.indicatorClass;
+      indicator.innerHTML = config.indicator;
+      
+      const container = document.getElementById('chipsContainer');
+      container.innerHTML = '';
+      
+      // Row 1: 3 chips
+      const row1 = document.createElement('div');
+      row1.className = 'chip-row';
+      chips.slice(0, 3).forEach((chip, i) => {
+        const el = document.createElement('div');
+        el.className = `chip ${time}`;
+        el.innerHTML = `<span>${chip.emoji}</span><span>${chip.label}</span>`;
+        el.style.animationDelay = `${i * 50}ms`;
+        row1.appendChild(el);
+      });
+      container.appendChild(row1);
+      
+      // Row 2: 2 chips
+      const row2 = document.createElement('div');
+      row2.className = 'chip-row';
+      chips.slice(3, 5).forEach((chip, i) => {
+        const el = document.createElement('div');
+        el.className = `chip ${time}`;
+        el.innerHTML = `<span>${chip.emoji}</span><span>${chip.label}</span>`;
+        el.style.animationDelay = `${(i + 3) * 50}ms`;
+        row2.appendChild(el);
+      });
+      container.appendChild(row2);
+    }
+    
+    function createConfetti() {
+      const container = document.getElementById('confettiContainer');
+      container.innerHTML = '';
+      
+      const colors = ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6', '#F43F5E'];
+      const shapes = ['circle', 'star', 'heart', 'sparkle', 'ribbon'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        confetti.className = `confetti ${shape}`;
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.bottom = '40%';
+        confetti.style.backgroundColor = shape !== 'star' ? color : 'transparent';
+        confetti.style.color = color;
+        confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+        confetti.style.animationDuration = `${2 + Math.random() * 2}s`;
+        
+        container.appendChild(confetti);
+      }
+      
+      // Particle burst
+      const burst = document.getElementById('particleBurst');
+      burst.innerHTML = '';
+      
+      for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const particle = document.createElement('div');
+        particle.className = 'burst-particle';
+        particle.style.backgroundColor = colors[i % colors.length];
+        particle.style.setProperty('--tx', `${Math.cos(angle) * 60}px`);
+        particle.style.setProperty('--ty', `${Math.sin(angle) * 60}px`);
+        particle.style.animationDelay = `${i * 25}ms`;
+        burst.appendChild(particle);
+      }
+    }
+    
+    function replayConfetti() {
+      createConfetti();
+    }
+    
+    // Initialize
+    setTimeOfDay('morning');
+    createConfetti();
+  </script>
+</body>
+</html>

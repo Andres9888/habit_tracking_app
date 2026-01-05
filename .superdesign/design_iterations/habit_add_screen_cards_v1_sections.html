@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards V1: Section-Based Organization</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    .pressable:active {
+      transform: scale(0.98);
+    }
+    .card {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-icon {
+      width: 20px;
+      height: 20px;
+      color: #10B981;
+    }
+    .emoji-chip.selected {
+      background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+      border-color: #10B981;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+    }
+    .color-swatch {
+      position: relative;
+      transition: transform 0.15s ease;
+    }
+    .color-swatch:hover {
+      transform: scale(1.1);
+    }
+    .color-swatch.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="bg-stone-100 min-h-screen flex items-end justify-center p-4">
+
+  <!-- Phone Frame -->
+  <div class="w-full max-w-[390px] h-[844px] bg-black rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
+
+    <!-- Screen -->
+    <div class="w-full h-full rounded-[40px] overflow-hidden relative bg-stone-50">
+
+      <!-- Modal Sheet -->
+      <div class="absolute bottom-0 left-0 right-0 h-[92%] bg-stone-50 rounded-t-3xl flex flex-col shadow-2xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-4 bg-white border-b border-stone-100">
+          <button class="pressable" aria-label="Close">
+            <i data-lucide="x" class="w-6 h-6 text-stone-400"></i>
+          </button>
+          <h1 class="text-lg font-semibold text-stone-900">New Habit</h1>
+          <div class="w-6"></div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto px-4 pb-6">
+
+          <!-- Live Preview Card -->
+          <div class="mt-4 mb-4 p-4 rounded-2xl card">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-xl flex items-center justify-center shadow-md" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                <span class="text-3xl">📖</span>
+              </div>
+              <div class="flex-1">
+                <p class="text-lg font-bold text-stone-900">Read for 20 minutes</p>
+                <div class="flex items-center gap-1.5 mt-1">
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">Daily</span>
+                  <span class="text-stone-300">•</span>
+                  <span class="text-xs text-stone-500">☀️ Afternoon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Info Card -->
+          <div class="mb-4 p-4 rounded-2xl card">
+            <div class="card-header mb-4">
+              <i data-lucide="edit-3" class="card-icon"></i>
+              <h2 class="text-sm font-bold text-stone-900 uppercase tracking-wide">Basic Info</h2>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-stone-500 mb-2">Habit Name</label>
+              <input
+                type="text"
+                value="Read for 20 minutes"
+                class="w-full text-base font-semibold text-stone-900 placeholder-stone-400 bg-stone-50 rounded-xl px-4 py-3 border border-stone-200 focus:border-emerald-500 outline-none transition-colors"
+                placeholder="What do you want to do?"
+              />
+              <p class="text-xs text-stone-400 mt-1.5">Make it specific and actionable</p>
+            </div>
+          </div>
+
+          <!-- Appearance Card -->
+          <div class="mb-4 p-4 rounded-2xl card">
+            <div class="card-header mb-4">
+              <i data-lucide="palette" class="card-icon"></i>
+              <h2 class="text-sm font-bold text-stone-900 uppercase tracking-wide">Appearance</h2>
+            </div>
+
+            <!-- Emoji Selection -->
+            <div class="mb-4">
+              <label class="block text-xs font-medium text-stone-500 mb-2">Icon</label>
+              <div class="flex gap-2">
+                <button class="emoji-chip w-11 h-11 rounded-xl bg-stone-50 border-2 border-stone-200 flex items-center justify-center pressable selected">
+                  <span class="text-xl">📖</span>
+                </button>
+                <button class="emoji-chip w-11 h-11 rounded-xl bg-stone-50 border-2 border-stone-200 flex items-center justify-center pressable">
+                  <span class="text-xl">📚</span>
+                </button>
+                <button class="emoji-chip w-11 h-11 rounded-xl bg-stone-50 border-2 border-stone-200 flex items-center justify-center pressable">
+                  <span class="text-xl">📰</span>
+                </button>
+                <button class="emoji-chip w-11 h-11 rounded-xl bg-stone-50 border-2 border-stone-200 flex items-center justify-center pressable">
+                  <span class="text-xl">✍️</span>
+                </button>
+                <button class="emoji-chip w-11 h-11 rounded-xl bg-stone-50 border-2 border-stone-200 flex items-center justify-center pressable">
+                  <span class="text-xl">🎯</span>
+                </button>
+                <button class="emoji-chip w-11 h-11 rounded-xl bg-stone-50 border-2 border-stone-200 flex items-center justify-center pressable">
+                  <span class="text-xl">✨</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Color Selection -->
+            <div>
+              <label class="block text-xs font-medium text-stone-500 mb-2">Color Theme</label>
+              <div class="flex gap-2">
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable" style="background: #EF4444;"></button>
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable" style="background: #F97316;"></button>
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable" style="background: #FBBF24;"></button>
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable selected" style="background: #10B981;"></button>
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable" style="background: #14B8A6;"></button>
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable" style="background: #3B82F6;"></button>
+                <button class="relative color-swatch w-10 h-10 rounded-lg pressable" style="background: #8B5CF6;"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Schedule Card -->
+          <div class="mb-4 p-4 rounded-2xl card">
+            <div class="card-header mb-4">
+              <i data-lucide="calendar" class="card-icon"></i>
+              <h2 class="text-sm font-bold text-stone-900 uppercase tracking-wide">Schedule</h2>
+            </div>
+
+            <!-- Time of Day -->
+            <div class="mb-4">
+              <label class="block text-xs font-medium text-stone-500 mb-2">Best time of day</label>
+              <div class="grid grid-cols-3 gap-2">
+                <button class="py-3 rounded-xl bg-stone-50 border border-stone-200 text-sm font-medium text-stone-600 pressable">
+                  <div class="text-lg mb-0.5">🌅</div>
+                  <div>Morning</div>
+                </button>
+                <button class="py-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 text-sm font-bold text-emerald-700 pressable">
+                  <div class="text-lg mb-0.5">☀️</div>
+                  <div>Afternoon</div>
+                </button>
+                <button class="py-3 rounded-xl bg-stone-50 border border-stone-200 text-sm font-medium text-stone-600 pressable">
+                  <div class="text-lg mb-0.5">🌙</div>
+                  <div>Evening</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Reminder Toggle -->
+            <div class="mb-4">
+              <label class="block text-xs font-medium text-stone-500 mb-2">Reminder</label>
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-amber-50 border border-amber-200">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                    <i data-lucide="bell" class="w-4 h-4 text-amber-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-stone-900">Daily reminder</p>
+                    <p class="text-xs text-amber-700 font-medium">12:00 PM</p>
+                  </div>
+                </div>
+                <button class="w-11 h-6 rounded-full bg-emerald-500 p-0.5 pressable relative">
+                  <div class="w-5 h-5 rounded-full bg-white shadow-sm absolute right-0.5 top-0.5"></div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Frequency -->
+            <div>
+              <label class="block text-xs font-medium text-stone-500 mb-2">Repeat on</label>
+              <div class="flex gap-1.5 mb-2">
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">S</button>
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">M</button>
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">T</button>
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">W</button>
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">T</button>
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">F</button>
+                <button class="w-9 h-9 rounded-full bg-emerald-500 text-white text-xs font-bold pressable">S</button>
+              </div>
+              <p class="text-xs text-stone-400">Every day of the week</p>
+            </div>
+          </div>
+
+          <div class="h-20"></div>
+        </div>
+
+        <!-- Sticky Button -->
+        <div class="p-5 bg-white border-t border-stone-100">
+          <button class="w-full h-14 rounded-2xl bg-emerald-500 text-white font-bold text-base pressable shadow-lg flex items-center justify-center gap-2">
+            <i data-lucide="check" class="w-5 h-5"></i>
+            Create Habit
+          </button>
+          <div class="flex justify-center mt-3">
+            <div class="w-32 h-1 rounded-full bg-stone-200"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

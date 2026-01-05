@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar - GitHub-Style Enhanced</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    /* Design System CSS Variables */
+    :root {
+      --color-background: #faf9f7;
+      --color-card: #ffffff;
+      --color-border: #e7e5e4;
+      --color-text-primary: #1F2937;
+      --color-text-secondary: #78716c;
+      --color-text-tertiary: #9CA3AF;
+      --radius: 0.5rem;
+
+      /* Dynamic habit color (emerald default) */
+      --habit-color: #10B981;
+      --habit-color-50: #ECFDF5;
+      --habit-color-100: #D1FAE5;
+      --habit-color-200: #A7F3D0;
+      --habit-color-300: #6EE7B7;
+      --habit-color-400: #34D399;
+      --habit-color-500: #10B981;
+      --habit-color-600: #059669;
+    }
+
+    body { background: #78716c; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: var(--color-background);
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: #1c1917;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    /* Card styling */
+    .ds-card {
+      background: var(--color-card);
+      border-radius: calc(var(--radius) * 2);
+      border: 1px solid var(--color-border);
+    }
+
+    /* GitHub-style heatmap cell */
+    .gh-cell {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      cursor: pointer;
+      position: relative;
+      /* Staggered animation */
+      opacity: 0;
+      animation: fadeInCell 0.3s ease forwards;
+    }
+
+    @keyframes fadeInCell {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .gh-cell:hover {
+      transform: scale(1.4);
+      box-shadow: 0 0 6px rgba(0,0,0,0.25);
+      z-index: 20;
+    }
+
+    /* Intensity levels */
+    .gh-0 { background: #f5f5f4; }
+    .gh-1 { background: var(--habit-color-100); }
+    .gh-2 { background: var(--habit-color-200); }
+    .gh-3 { background: var(--habit-color-300); }
+    .gh-4 { background: var(--habit-color-400); }
+    .gh-5 { background: var(--habit-color-500); }
+
+    /* Streak glow effect for recent completions */
+    .gh-streak {
+      box-shadow: 0 0 4px var(--habit-color-400), 0 0 8px var(--habit-color-200);
+    }
+
+    /* Today indicator */
+    .gh-today {
+      box-shadow: inset 0 0 0 2px var(--habit-color-600), 0 0 6px var(--habit-color-300);
+      background: var(--color-card);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: inset 0 0 0 2px var(--habit-color-600), 0 0 6px var(--habit-color-300); }
+      50% { box-shadow: inset 0 0 0 2px var(--habit-color-600), 0 0 12px var(--habit-color-400); }
+    }
+
+    /* Future cell */
+    .gh-future {
+      background: #fafafa;
+      opacity: 0.4;
+    }
+
+    /* Best streak start marker */
+    .gh-best::after {
+      content: '⭐';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 8px;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: fixed;
+      background: #1c1917;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 1000;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #1c1917;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+    }
+
+    /* Month separator */
+    .month-sep {
+      width: 1px;
+      height: 100%;
+      background: var(--color-border);
+      margin: 0 1px;
+      opacity: 0.5;
+    }
+
+    /* Calendar day cell */
+    .cal-day {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      position: relative;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--color-text-primary);
+    }
+
+    .cal-day:hover {
+      background: #f5f5f4;
+    }
+
+    .cal-day.completed {
+      background: var(--habit-color-50);
+    }
+
+    .cal-day.completed::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--habit-color);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 6px;
+    }
+
+    .cal-day.today {
+      font-weight: 700;
+      box-shadow: inset 0 0 0 2px var(--habit-color);
+    }
+
+    .cal-day.other-month {
+      color: #d6d3d1;
+    }
+
+    .cal-day.future {
+      color: var(--color-text-tertiary);
+    }
+
+    /* Badge styling */
+    .ds-badge {
+      border-radius: 9999px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Button styling */
+    .ds-btn {
+      border-radius: 9999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .ds-btn:hover {
+      background: #f5f5f4;
+    }
+
+    .ds-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Insight card */
+    .insight-card {
+      background: linear-gradient(135deg, var(--habit-color-50) 0%, var(--color-card) 100%);
+      border: 1px solid var(--habit-color-200);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+    }
+
+    /* Time range toggle */
+    .time-toggle {
+      display: flex;
+      background: #f5f5f4;
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .time-toggle button {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      border-radius: 6px;
+      color: var(--color-text-secondary);
+      transition: all 0.15s ease;
+    }
+
+    .time-toggle button.active {
+      background: white;
+      color: var(--color-text-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Trend indicator */
+    .trend-up {
+      color: #059669;
+      background: #ECFDF5;
+    }
+
+    .trend-down {
+      color: #DC2626;
+      background: #FEF2F2;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+
+  <!-- Tooltip element -->
+  <div id="tooltip" class="tooltip"></div>
+
+  <div class="phone-frame">
+    <div class="notch"></div>
+
+    <!-- Content -->
+    <div class="pt-14 px-4 h-full flex flex-col">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between py-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: var(--habit-color-100);">
+            <svg class="w-5 h-5" style="color: var(--habit-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg" style="color: var(--color-text-primary);">Morning Run</h1>
+            <p class="text-sm" style="color: var(--color-text-secondary);">Exercise daily</p>
+          </div>
+        </div>
+        <button class="ds-btn w-10 h-10">
+          <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- GitHub-Style Heatmap Enhanced -->
+      <div class="ds-card p-4 mt-2 shadow-sm">
+
+        <!-- Header Row: Title + Time Range Toggle -->
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium" style="color: var(--color-text-secondary);">Activity</span>
+          <div class="time-toggle">
+            <button>3m</button>
+            <button class="active">6m</button>
+            <button>1y</button>
+          </div>
+        </div>
+
+        <!-- Month Labels -->
+        <div class="flex text-[10px] mb-1.5 pl-5" style="color: var(--color-text-tertiary);">
+          <span style="width: 52px;">Jul</span>
+          <span style="width: 52px;">Aug</span>
+          <span style="width: 52px;">Sep</span>
+          <span style="width: 52px;">Oct</span>
+          <span style="width: 52px;">Nov</span>
+          <span style="width: 36px;">Dec</span>
+        </div>
+
+        <!-- 7-Row Heatmap Grid with Staggered Animation -->
+        <div class="flex flex-col gap-[3px]" id="heatmap">
+          <!-- Sunday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">S</span>
+            <div class="gh-cell gh-0" data-date="Jul 7" data-status="missed"></div>
+            <div class="gh-cell gh-1" data-date="Jul 14" data-status="1 completion"></div>
+            <div class="gh-cell gh-0" data-date="Jul 21" data-status="missed"></div>
+            <div class="gh-cell gh-1" data-date="Jul 28" data-status="1 completion"></div>
+            <div class="gh-cell gh-1" data-date="Aug 4" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Aug 11" data-status="2 completions"></div>
+            <div class="gh-cell gh-1" data-date="Aug 18" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Aug 25" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 1" data-status="3 completions"></div>
+            <div class="gh-cell gh-2" data-date="Sep 8" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 15" data-status="3 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 22" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 29" data-status="4 completions"></div>
+            <div class="gh-cell gh-4" data-date="Oct 6" data-status="4 completions"></div>
+            <div class="gh-cell gh-4 gh-best" data-date="Oct 13" data-status="Best streak start!"></div>
+            <div class="gh-cell gh-5" data-date="Oct 20" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 27" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Nov 3" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 10" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 17" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 24" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 1" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 8" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 15" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 22" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 29" data-status="Completed ✓"></div>
+          </div>
+
+          <!-- Monday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">M</span>
+            <div class="gh-cell gh-1" data-date="Jul 1" data-status="1 completion"></div>
+            <div class="gh-cell gh-0" data-date="Jul 8" data-status="missed"></div>
+            <div class="gh-cell gh-1" data-date="Jul 15" data-status="1 completion"></div>
+            <div class="gh-cell gh-0" data-date="Jul 22" data-status="missed"></div>
+            <div class="gh-cell gh-2" data-date="Jul 29" data-status="2 completions"></div>
+            <div class="gh-cell gh-1" data-date="Aug 5" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Aug 12" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 19" data-status="3 completions"></div>
+            <div class="gh-cell gh-2" data-date="Aug 26" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 2" data-status="3 completions"></div>
+            <div class="gh-cell gh-2" data-date="Sep 9" data-status="2 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 16" data-status="4 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 23" data-status="3 completions"></div>
+            <div class="gh-cell gh-5" data-date="Sep 30" data-status="5 completions"></div>
+            <div class="gh-cell gh-4" data-date="Oct 7" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 14" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 21" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 28" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 4" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 11" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 18" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 25" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 2" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 9" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 16" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 23" data-status="5 completions"></div>
+            <div class="gh-cell gh-today" data-date="Dec 30" data-status="Today - not yet"></div>
+          </div>
+
+          <!-- Tuesday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">T</span>
+            <div class="gh-cell gh-0" data-date="Jul 2" data-status="missed"></div>
+            <div class="gh-cell gh-1" data-date="Jul 9" data-status="1 completion"></div>
+            <div class="gh-cell gh-1" data-date="Jul 16" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Jul 23" data-status="2 completions"></div>
+            <div class="gh-cell gh-1" data-date="Jul 30" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Aug 6" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 13" data-status="3 completions"></div>
+            <div class="gh-cell gh-2" data-date="Aug 20" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 27" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 3" data-status="4 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 10" data-status="3 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 17" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 24" data-status="4 completions"></div>
+            <div class="gh-cell gh-4" data-date="Oct 1" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 8" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 15" data-status="5 completions"></div>
+            <div class="gh-cell gh-4" data-date="Oct 22" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 29" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 5" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 12" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 19" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 26" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 3" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 10" data-status="5 completions"></div>
+            <div class="gh-cell gh-future" data-date="Dec 31" data-status="Future"></div>
+            <div class="gh-cell gh-future" data-date="Jan 7" data-status="Future"></div>
+          </div>
+
+          <!-- Wednesday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">W</span>
+            <div class="gh-cell gh-1" data-date="Jul 3" data-status="1 completion"></div>
+            <div class="gh-cell gh-0" data-date="Jul 10" data-status="missed"></div>
+            <div class="gh-cell gh-2" data-date="Jul 17" data-status="2 completions"></div>
+            <div class="gh-cell gh-1" data-date="Jul 24" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Jul 31" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 7" data-status="3 completions"></div>
+            <div class="gh-cell gh-2" data-date="Aug 14" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 21" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Aug 28" data-status="4 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 4" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 11" data-status="4 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 18" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Sep 25" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 2" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 9" data-status="5 completions"></div>
+            <div class="gh-cell gh-4" data-date="Oct 16" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 23" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 30" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 6" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 13" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 20" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 27" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 4" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 11" data-status="5 completions"></div>
+            <div class="gh-cell gh-future" data-date="Jan 1" data-status="Future"></div>
+            <div class="gh-cell gh-future" data-date="Jan 8" data-status="Future"></div>
+          </div>
+
+          <!-- Thursday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">T</span>
+            <div class="gh-cell gh-0" data-date="Jul 4" data-status="missed"></div>
+            <div class="gh-cell gh-1" data-date="Jul 11" data-status="1 completion"></div>
+            <div class="gh-cell gh-1" data-date="Jul 18" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Jul 25" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 1" data-status="3 completions"></div>
+            <div class="gh-cell gh-2" data-date="Aug 8" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 15" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Aug 22" data-status="4 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 29" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 5" data-status="4 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 12" data-status="3 completions"></div>
+            <div class="gh-cell gh-5" data-date="Sep 19" data-status="5 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 26" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 3" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 10" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 17" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 24" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 31" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 7" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 14" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 21" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 28" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 5" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 12" data-status="5 completions"></div>
+            <div class="gh-cell gh-future" data-date="Jan 2" data-status="Future"></div>
+            <div class="gh-cell gh-future" data-date="Jan 9" data-status="Future"></div>
+          </div>
+
+          <!-- Friday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">F</span>
+            <div class="gh-cell gh-1" data-date="Jul 5" data-status="1 completion"></div>
+            <div class="gh-cell gh-0" data-date="Jul 12" data-status="missed"></div>
+            <div class="gh-cell gh-2" data-date="Jul 19" data-status="2 completions"></div>
+            <div class="gh-cell gh-1" data-date="Jul 26" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Aug 2" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 9" data-status="3 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 16" data-status="3 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 23" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Aug 30" data-status="4 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 6" data-status="4 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 13" data-status="4 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 20" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Sep 27" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 4" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 11" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 18" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 25" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Nov 1" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 8" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 15" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 22" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 29" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 6" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 13" data-status="5 completions"></div>
+            <div class="gh-cell gh-future" data-date="Jan 3" data-status="Future"></div>
+            <div class="gh-cell gh-future" data-date="Jan 10" data-status="Future"></div>
+          </div>
+
+          <!-- Saturday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">S</span>
+            <div class="gh-cell gh-0" data-date="Jul 6" data-status="missed"></div>
+            <div class="gh-cell gh-1" data-date="Jul 13" data-status="1 completion"></div>
+            <div class="gh-cell gh-1" data-date="Jul 20" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Jul 27" data-status="2 completions"></div>
+            <div class="gh-cell gh-1" data-date="Aug 3" data-status="1 completion"></div>
+            <div class="gh-cell gh-2" data-date="Aug 10" data-status="2 completions"></div>
+            <div class="gh-cell gh-2" data-date="Aug 17" data-status="2 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 24" data-status="3 completions"></div>
+            <div class="gh-cell gh-3" data-date="Aug 31" data-status="3 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 7" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 14" data-status="4 completions"></div>
+            <div class="gh-cell gh-3" data-date="Sep 21" data-status="3 completions"></div>
+            <div class="gh-cell gh-4" data-date="Sep 28" data-status="4 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 5" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 12" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 19" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Oct 26" data-status="5 completions"></div>
+            <div class="gh-cell gh-5" data-date="Nov 2" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 9" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 16" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 23" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Nov 30" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 7" data-status="5 completions"></div>
+            <div class="gh-cell gh-5 gh-streak" data-date="Dec 14" data-status="5 completions"></div>
+            <div class="gh-cell gh-future" data-date="Jan 4" data-status="Future"></div>
+            <div class="gh-cell gh-future" data-date="Jan 11" data-status="Future"></div>
+          </div>
+        </div>
+
+        <!-- Legend + Stats Row -->
+        <div class="flex items-center justify-between mt-3 pt-3" style="border-top: 1px solid var(--color-border);">
+          <div class="flex items-center gap-1 text-[9px]" style="color: var(--color-text-tertiary);">
+            <span>Less</span>
+            <div class="gh-cell gh-0" style="width:8px;height:8px;opacity:1;animation:none;"></div>
+            <div class="gh-cell gh-1" style="width:8px;height:8px;opacity:1;animation:none;"></div>
+            <div class="gh-cell gh-2" style="width:8px;height:8px;opacity:1;animation:none;"></div>
+            <div class="gh-cell gh-3" style="width:8px;height:8px;opacity:1;animation:none;"></div>
+            <div class="gh-cell gh-4" style="width:8px;height:8px;opacity:1;animation:none;"></div>
+            <div class="gh-cell gh-5" style="width:8px;height:8px;opacity:1;animation:none;"></div>
+            <span>More</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold" style="color: var(--habit-color);">86%</span>
+            <span class="text-[10px]" style="color: var(--color-text-tertiary);">avg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insights Row -->
+      <div class="flex gap-2 mt-3">
+        <!-- Trend Card -->
+        <div class="insight-card flex-1">
+          <div class="flex items-center gap-1.5">
+            <span class="text-lg font-bold" style="color: var(--habit-color);">↑ 32%</span>
+          </div>
+          <div class="text-[10px] mt-0.5" style="color: var(--color-text-secondary);">vs last 6 months</div>
+        </div>
+
+        <!-- Best Streak Card -->
+        <div class="insight-card flex-1">
+          <div class="flex items-center gap-1.5">
+            <span class="text-lg font-bold" style="color: var(--color-text-primary);">🏆 54</span>
+          </div>
+          <div class="text-[10px] mt-0.5" style="color: var(--color-text-secondary);">best streak (Oct-Dec)</div>
+        </div>
+
+        <!-- Weak Day Card -->
+        <div class="insight-card flex-1" style="background: linear-gradient(135deg, #FEF2F2 0%, var(--color-card) 100%); border-color: #FECACA;">
+          <div class="flex items-center gap-1.5">
+            <span class="text-lg font-bold" style="color: #DC2626;">Wed</span>
+          </div>
+          <div class="text-[10px] mt-0.5" style="color: var(--color-text-secondary);">needs work (68%)</div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="flex items-center gap-2 mt-3 px-1">
+        <span class="ds-badge" style="background: #f5f5f4; color: var(--color-text-primary);">Daily</span>
+        <span class="ds-badge flex items-center gap-1" style="background: var(--habit-color-50); color: var(--habit-color);">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+          </svg>
+          54 day streak
+        </span>
+        <div class="flex-1"></div>
+        <button class="ds-btn w-9 h-9">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="h-px mt-3" style="background: var(--color-border);"></div>
+
+      <!-- Calendar Grid (Smaller to fit) -->
+      <div class="flex-1 mt-2 overflow-hidden">
+        <div class="grid grid-cols-7 mb-1">
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">M</div>
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">T</div>
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">W</div>
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">T</div>
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">F</div>
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">S</div>
+          <div class="text-center text-[11px] font-medium" style="color: var(--color-text-tertiary);">S</div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-y-0.5">
+          <div class="cal-day other-month" style="width:40px;height:40px;font-size:13px;">25</div>
+          <div class="cal-day other-month" style="width:40px;height:40px;font-size:13px;">26</div>
+          <div class="cal-day other-month" style="width:40px;height:40px;font-size:13px;">27</div>
+          <div class="cal-day other-month" style="width:40px;height:40px;font-size:13px;">28</div>
+          <div class="cal-day other-month" style="width:40px;height:40px;font-size:13px;">29</div>
+          <div class="cal-day other-month" style="width:40px;height:40px;font-size:13px;">30</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">1</div>
+
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">2</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">3</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">4</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">5</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">6</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">7</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">8</div>
+
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">9</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">10</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">11</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">12</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">13</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">14</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">15</div>
+
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">16</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">17</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">18</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">19</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">20</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">21</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">22</div>
+
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">23</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">24</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">25</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">26</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">27</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">28</div>
+          <div class="cal-day completed" style="width:40px;height:40px;font-size:13px;">29</div>
+
+          <div class="cal-day today" style="width:40px;height:40px;font-size:13px;">30</div>
+          <div class="cal-day future" style="width:40px;height:40px;font-size:13px;">31</div>
+          <div class="cal-day other-month future" style="width:40px;height:40px;font-size:13px;">1</div>
+          <div class="cal-day other-month future" style="width:40px;height:40px;font-size:13px;">2</div>
+          <div class="cal-day other-month future" style="width:40px;height:40px;font-size:13px;">3</div>
+          <div class="cal-day other-month future" style="width:40px;height:40px;font-size:13px;">4</div>
+          <div class="cal-day other-month future" style="width:40px;height:40px;font-size:13px;">5</div>
+        </div>
+      </div>
+
+      <!-- Month Navigation -->
+      <div class="flex items-center justify-between py-3" style="border-top: 1px solid var(--color-border);">
+        <button class="ds-btn flex items-center gap-2 px-3 py-1.5">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span class="font-semibold text-sm" style="color: var(--color-text-primary);">Dec 2024</span>
+        </button>
+        <div class="flex gap-2">
+          <button class="ds-btn w-9 h-9">
+            <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <button class="ds-btn w-9 h-9">
+            <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Color Theme Switcher -->
+  <div class="fixed bottom-4 right-4 bg-white rounded-xl shadow-lg p-4 border border-stone-200">
+    <p class="text-sm font-medium text-stone-700 mb-2">Habit Color:</p>
+    <div class="flex gap-2">
+      <button onclick="setTheme('emerald')" class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('blue')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('purple')" class="w-8 h-8 rounded-full bg-violet-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('orange')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('pink')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white shadow"></button>
+    </div>
+  </div>
+
+  <script>
+    // Staggered animation for heatmap cells
+    document.querySelectorAll('.gh-cell').forEach((cell, index) => {
+      cell.style.animationDelay = `${index * 5}ms`;
+    });
+
+    // Tooltip functionality
+    const tooltip = document.getElementById('tooltip');
+
+    document.querySelectorAll('.gh-cell[data-date]').forEach(cell => {
+      cell.addEventListener('mouseenter', (e) => {
+        const date = cell.dataset.date;
+        const status = cell.dataset.status;
+        tooltip.textContent = `${date}: ${status}`;
+        tooltip.classList.add('visible');
+      });
+
+      cell.addEventListener('mousemove', (e) => {
+        tooltip.style.left = `${e.clientX - tooltip.offsetWidth / 2}px`;
+        tooltip.style.top = `${e.clientY - tooltip.offsetHeight - 12}px`;
+      });
+
+      cell.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+    });
+
+    // Theme switcher
+    const themes = {
+      emerald: { main: '#10B981', 50: '#ECFDF5', 100: '#D1FAE5', 200: '#A7F3D0', 300: '#6EE7B7', 400: '#34D399', 500: '#10B981', 600: '#059669' },
+      blue: { main: '#3B82F6', 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB' },
+      purple: { main: '#8B5CF6', 50: '#F5F3FF', 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED' },
+      orange: { main: '#F97316', 50: '#FFF7ED', 100: '#FFEDD5', 200: '#FED7AA', 300: '#FDBA74', 400: '#FB923C', 500: '#F97316', 600: '#EA580C' },
+      pink: { main: '#EC4899', 50: '#FDF2F8', 100: '#FCE7F3', 200: '#FBCFE8', 300: '#F9A8D4', 400: '#F472B6', 500: '#EC4899', 600: '#DB2777' }
+    };
+
+    function setTheme(color) {
+      const theme = themes[color];
+      const root = document.documentElement;
+      root.style.setProperty('--habit-color', theme.main);
+      root.style.setProperty('--habit-color-50', theme[50]);
+      root.style.setProperty('--habit-color-100', theme[100]);
+      root.style.setProperty('--habit-color-200', theme[200]);
+      root.style.setProperty('--habit-color-300', theme[300]);
+      root.style.setProperty('--habit-color-400', theme[400]);
+      root.style.setProperty('--habit-color-500', theme[500]);
+      root.style.setProperty('--habit-color-600', theme[600]);
+    }
+  </script>
+
+</body>
+</html>

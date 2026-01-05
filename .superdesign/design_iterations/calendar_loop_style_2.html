@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar - Loop Style (Design System Aligned)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    /* Design System CSS Variables (from src/index.css) */
+    :root {
+      --background: 30 2% 95%;
+      --foreground: 240 6% 10%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 6% 10%;
+      --muted: 0 0% 92%;
+      --muted-foreground: 240 5% 42%;
+      --border: 240 6% 90%;
+      --radius: 0.5rem;
+
+      /* Theme colors from colors.ts */
+      --color-background: #faf9f7;
+      --color-card: #ffffff;
+      --color-border: #e7e5e4;
+      --color-text-primary: #1F2937;
+      --color-text-secondary: #78716c;
+      --color-text-tertiary: #9CA3AF;
+
+      /* Primary (Emerald) - Growth & Progress */
+      --color-primary-400: #34D399;
+      --color-primary-500: #10B981;
+      --color-primary-600: #059669;
+      --color-primary-700: #047857;
+
+      /* Strength gradient (green-based) */
+      --color-strength-starting: #86EFAC;
+      --color-strength-building: #10B981;
+      --color-strength-developing: #059669;
+      --color-strength-strong: #047857;
+      --color-strength-automatic: #065F46;
+
+      /* Dynamic habit color - simulating user-selected color */
+      --habit-color: #10B981;
+      --habit-color-light: #D1FAE5;
+      --habit-color-100: #ECFDF5;
+      --habit-color-200: #D1FAE5;
+      --habit-color-300: #A7F3D0;
+      --habit-color-400: #6EE7B7;
+      --habit-color-500: #34D399;
+      --habit-color-600: #10B981;
+    }
+
+    body { background: #78716c; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: var(--color-background);
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: #1c1917;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    /* Heatmap cell - using design system radius */
+    .heat-cell {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* Heatmap intensity levels using habit color */
+    .heat-0 { background: #f5f5f4; } /* Empty - stone-100 */
+    .heat-1 { background: var(--habit-color-100); }
+    .heat-2 { background: var(--habit-color-200); }
+    .heat-3 { background: var(--habit-color-300); }
+    .heat-4 { background: var(--habit-color-400); }
+    .heat-5 { background: var(--habit-color-500); }
+    .heat-6 { background: var(--habit-color-600); }
+
+    /* Calendar day cell - using design system radius (8px = rounded-lg) */
+    .cal-day {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: calc(var(--radius) * 1); /* 8px - matches design system */
+      position: relative;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--color-text-primary);
+    }
+
+    .cal-day:hover {
+      background: #f5f5f4;
+    }
+
+    .cal-day.completed {
+      background: var(--habit-color-100);
+    }
+
+    .cal-day.completed::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--habit-color);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 6px;
+    }
+
+    .cal-day.today {
+      font-weight: 700;
+      box-shadow: inset 0 0 0 2px var(--habit-color);
+    }
+
+    .cal-day.other-month {
+      color: #d6d3d1;
+    }
+
+    .cal-day.future {
+      color: var(--color-text-tertiary);
+    }
+
+    /* Card styling - design system aligned */
+    .ds-card {
+      background: var(--color-card);
+      border-radius: calc(var(--radius) * 2); /* 16px for cards */
+      border: 1px solid var(--color-border);
+    }
+
+    /* Badge/pill styling */
+    .ds-badge {
+      border-radius: 9999px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Button styling - design system */
+    .ds-btn {
+      border-radius: 9999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ds-btn-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .ds-btn-sm {
+      width: 36px;
+      height: 36px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+
+  <div class="phone-frame">
+    <div class="notch"></div>
+
+    <!-- Content -->
+    <div class="pt-14 px-4 h-full flex flex-col">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between py-3">
+        <div class="flex items-center gap-3">
+          <!-- Habit Icon - uses habit color -->
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: var(--habit-color-100);">
+            <svg class="w-5 h-5" style="color: var(--habit-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg" style="color: var(--color-text-primary);">Morning Run</h1>
+            <p class="text-sm" style="color: var(--color-text-secondary);">Exercise daily</p>
+          </div>
+        </div>
+        <button class="ds-btn ds-btn-icon">
+          <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Compact Heatmap (6 months) - Design System Card -->
+      <div class="ds-card p-4 mt-2 shadow-sm">
+        <!-- Month Labels -->
+        <div class="flex text-xs mb-2 ml-8" style="color: var(--color-text-tertiary);">
+          <span class="flex-1">Jul</span>
+          <span class="flex-1">Aug</span>
+          <span class="flex-1">Sep</span>
+          <span class="flex-1">Oct</span>
+          <span class="flex-1">Nov</span>
+          <span class="flex-1">Dec</span>
+        </div>
+
+        <!-- Heatmap Grid - Using habit color intensity -->
+        <div class="flex flex-col gap-1">
+          <!-- Row 1: Tue -->
+          <div class="flex items-center gap-1">
+            <span class="text-xs w-6" style="color: var(--color-text-tertiary);">Tu</span>
+            <div class="flex gap-[3px] flex-1">
+              <!-- July - starting weak -->
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-1"></div>
+              <!-- August -->
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-3"></div>
+              <!-- September -->
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-4"></div>
+              <!-- October -->
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <!-- November -->
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <!-- December -->
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-0"></div>
+            </div>
+          </div>
+
+          <!-- Row 2: Thu -->
+          <div class="flex items-center gap-1">
+            <span class="text-xs w-6" style="color: var(--color-text-tertiary);">Th</span>
+            <div class="flex gap-[3px] flex-1">
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-6"></div>
+            </div>
+          </div>
+
+          <!-- Row 3: Sat -->
+          <div class="flex items-center gap-1">
+            <span class="text-xs w-6" style="color: var(--color-text-tertiary);">Sa</span>
+            <div class="flex gap-[3px] flex-1">
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-1"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-2"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-3"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-4"></div>
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-5"></div>
+              <div class="heat-cell heat-6"></div>
+              <div class="heat-cell heat-6"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="flex items-center gap-2 mt-3 px-1">
+        <span class="ds-badge" style="background: #f5f5f4; color: var(--color-text-primary);">Daily</span>
+        <span class="ds-badge flex items-center gap-1" style="background: var(--habit-color-100); color: var(--habit-color);">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          12
+        </span>
+        <div class="flex-1"></div>
+        <button class="ds-btn ds-btn-sm">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+        </button>
+        <button class="ds-btn ds-btn-sm">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="h-px mt-3" style="background: var(--color-border);"></div>
+
+      <!-- Calendar Grid -->
+      <div class="flex-1 mt-3">
+        <!-- Day Headers -->
+        <div class="grid grid-cols-7 mb-2">
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Mon</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Tue</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Wed</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Thu</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Fri</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Sat</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Sun</div>
+        </div>
+
+        <!-- Calendar Days -->
+        <div class="grid grid-cols-7 gap-y-1">
+          <!-- Week 1 -->
+          <div class="cal-day other-month">25</div>
+          <div class="cal-day other-month">26</div>
+          <div class="cal-day other-month">27</div>
+          <div class="cal-day other-month">28</div>
+          <div class="cal-day other-month">29</div>
+          <div class="cal-day other-month">30</div>
+          <div class="cal-day completed">1</div>
+
+          <!-- Week 2 -->
+          <div class="cal-day completed">2</div>
+          <div class="cal-day completed">3</div>
+          <div class="cal-day completed">4</div>
+          <div class="cal-day completed">5</div>
+          <div class="cal-day">6</div>
+          <div class="cal-day completed">7</div>
+          <div class="cal-day completed">8</div>
+
+          <!-- Week 3 -->
+          <div class="cal-day completed">9</div>
+          <div class="cal-day completed">10</div>
+          <div class="cal-day">11</div>
+          <div class="cal-day completed">12</div>
+          <div class="cal-day completed">13</div>
+          <div class="cal-day">14</div>
+          <div class="cal-day completed">15</div>
+
+          <!-- Week 4 -->
+          <div class="cal-day completed">16</div>
+          <div class="cal-day completed">17</div>
+          <div class="cal-day completed">18</div>
+          <div class="cal-day completed">19</div>
+          <div class="cal-day completed">20</div>
+          <div class="cal-day completed">21</div>
+          <div class="cal-day completed">22</div>
+
+          <!-- Week 5 -->
+          <div class="cal-day completed">23</div>
+          <div class="cal-day completed">24</div>
+          <div class="cal-day completed">25</div>
+          <div class="cal-day completed">26</div>
+          <div class="cal-day completed">27</div>
+          <div class="cal-day completed">28</div>
+          <div class="cal-day completed">29</div>
+
+          <!-- Week 6 -->
+          <div class="cal-day today">30</div>
+          <div class="cal-day future">31</div>
+          <div class="cal-day other-month future">1</div>
+          <div class="cal-day other-month future">2</div>
+          <div class="cal-day other-month future">3</div>
+          <div class="cal-day other-month future">4</div>
+          <div class="cal-day other-month future">5</div>
+        </div>
+      </div>
+
+      <!-- Month Navigation -->
+      <div class="flex items-center justify-between py-4" style="border-top: 1px solid var(--color-border);">
+        <button class="ds-btn flex items-center gap-2 px-4 py-2">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span class="font-semibold" style="color: var(--color-text-primary);">Dec 2024</span>
+        </button>
+        <div class="flex gap-2">
+          <button class="ds-btn ds-btn-icon">
+            <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <button class="ds-btn ds-btn-icon">
+            <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Color Theme Switcher Demo -->
+  <div class="fixed bottom-4 right-4 bg-white rounded-xl shadow-lg p-4 border border-stone-200">
+    <p class="text-sm font-medium text-stone-700 mb-2">Habit Color Theme:</p>
+    <div class="flex gap-2">
+      <button onclick="setTheme('emerald')" class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('blue')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('purple')" class="w-8 h-8 rounded-full bg-violet-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('orange')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('pink')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white shadow"></button>
+    </div>
+  </div>
+
+  <script>
+    const themes = {
+      emerald: {
+        main: '#10B981',
+        100: '#ECFDF5',
+        200: '#D1FAE5',
+        300: '#A7F3D0',
+        400: '#6EE7B7',
+        500: '#34D399',
+        600: '#10B981'
+      },
+      blue: {
+        main: '#3B82F6',
+        100: '#EFF6FF',
+        200: '#DBEAFE',
+        300: '#BFDBFE',
+        400: '#93C5FD',
+        500: '#60A5FA',
+        600: '#3B82F6'
+      },
+      purple: {
+        main: '#8B5CF6',
+        100: '#F5F3FF',
+        200: '#EDE9FE',
+        300: '#DDD6FE',
+        400: '#C4B5FD',
+        500: '#A78BFA',
+        600: '#8B5CF6'
+      },
+      orange: {
+        main: '#F97316',
+        100: '#FFF7ED',
+        200: '#FFEDD5',
+        300: '#FED7AA',
+        400: '#FDBA74',
+        500: '#FB923C',
+        600: '#F97316'
+      },
+      pink: {
+        main: '#EC4899',
+        100: '#FDF2F8',
+        200: '#FCE7F3',
+        300: '#FBCFE8',
+        400: '#F9A8D4',
+        500: '#F472B6',
+        600: '#EC4899'
+      }
+    };
+
+    function setTheme(color) {
+      const theme = themes[color];
+      const root = document.documentElement;
+      root.style.setProperty('--habit-color', theme.main);
+      root.style.setProperty('--habit-color-light', theme[200]);
+      root.style.setProperty('--habit-color-100', theme[100]);
+      root.style.setProperty('--habit-color-200', theme[200]);
+      root.style.setProperty('--habit-color-300', theme[300]);
+      root.style.setProperty('--habit-color-400', theme[400]);
+      root.style.setProperty('--habit-color-500', theme[500]);
+      root.style.setProperty('--habit-color-600', theme[600]);
+    }
+  </script>
+
+</body>
+</html>
