@@ -645,7 +645,36 @@ If time-based chips cause issues:
   - **Minor Issue**: "Morning coffee" has Western cultural bias
   - **Recommendation**: Replace with "Morning beverage" or "Morning ritual"
   - **All Other Criteria Met**: Emoji compatibility, label brevity, actionable language, appropriate durations
-- [ ] Analytics: Add event tracking for chip selections by time window
+- [x] Analytics: Add event tracking for chip selections by time window
+  - **Implementation Status**: ✅ COMPLETE
+  - **Files Created**:
+    - `analytics.ts`: Comprehensive analytics tracking utility with type-safe event tracking
+    - `__tests__/analytics.test.ts`: 100% test coverage with 14 test cases
+  - **Integration Points**:
+    - `SuggestionChips.tsx`: Tracks chip display, selection, and deselection events
+    - `HabitsEmptyStateMinimal.tsx`: Tracks chip-to-habit conversion and manual input after chip view
+  - **Events Tracked**:
+    1. `chips_displayed`: When time-based chips are shown (includes time window, hour, chip labels)
+    2. `chip_selected`: When user selects a chip (includes chip data, index, time window)
+    3. `chip_deselected`: When user deselects a chip
+    4. `chip_converted_to_habit`: When selected chip becomes a habit (includes time-to-conversion metric)
+    5. `manual_input_after_chip_view`: When user types manually instead of using chips
+    6. `time_window_distribution`: Time window engagement tracking (hour, day of week)
+  - **Features**:
+    - Console logging in development mode (**DEV**)
+    - No-op tracker in production (silent by default)
+    - Pluggable analytics provider (supports Segment, Mixpanel, Amplitude, Convex)
+    - Error handling (analytics failures don't break app)
+    - Type-safe event definitions
+    - Time-to-conversion tracking (measures display timestamp → habit creation)
+  - **Key Metrics Supported**:
+    - Chip selection rate by time window
+    - Time to first habit creation
+    - Chip-to-habit conversion rate
+    - Time window engagement distribution
+    - Manual input vs. chip usage
+  - **Provider Integration Examples**: Included integration patterns for Segment, Mixpanel, Amplitude, and custom Convex backend
+  - **Test Coverage**: 14 comprehensive test cases covering all tracking functions, time window detection, error handling, and custom tracker configuration
 - [ ] Documentation: Update README with time-based behavior explanation
 
 ## Estimated Timeline

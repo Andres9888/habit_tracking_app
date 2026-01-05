@@ -9,7 +9,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
-import { Keyboard, Text, TextInput, View } from 'react-native';
+import { Keyboard, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
@@ -20,6 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useKeyboardVisible } from '../../../../hooks/useKeyboardVisible';
+import { useTimeBasedChipAnalytics } from './analytics';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS, KEYBOARD_LAYOUT } from './animations';
 import { COLORS, COPY } from './constants';
@@ -32,6 +33,7 @@ import { LoadingSkeleton } from './LoadingSkeleton';
 import { SuccessState } from './SuccessState';
 import { SuggestionChips } from './SuggestionChips';
 import type { HabitsEmptyStateMinimalProps, SuggestionChip } from './types';
+import { getTimeBasedChips } from './utils';
 
 /**
  * Minimal empty state for habits screen
@@ -58,14 +60,6 @@ export function HabitsEmptyStateMinimal({
 
   // Extract bottom inset for use in worklet (capture at mount)
   const bottomInset = insets.bottom;
-
-  // Debug: Log the inset value
-  console.log(
-    '[HabitsEmptyStateMinimal] Safe area bottom inset:',
-    bottomInset,
-    'Keyboard visible:',
-    isKeyboardVisible
-  );
 
   // Timing config for keyboard-aware transitions
   const timingConfig = {
@@ -130,6 +124,11 @@ export function HabitsEmptyStateMinimal({
   const [successEmoji, setSuccessEmoji] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Analytics tracking
+  const analytics = useTimeBasedChipAnalytics();
+  const displayTimestampRef = useRef<number>(Date.now());
+  const selectedChipDataRef = useRef<SuggestionChip | null>(null);
+
   // Handle chip selection - populates input with full habit name
   // Tapping a selected chip deselects it and clears input
   const handleChipSelect = useCallback(
@@ -139,10 +138,12 @@ export function HabitsEmptyStateMinimal({
         setSelectedChipIndex(null);
         setSelectedEmoji(null);
         setInputValue('');
+        selectedChipDataRef.current = null;
       } else {
         setSelectedChipIndex(index);
         setSelectedEmoji(chip.emoji);
         setInputValue(chip.fullName);
+        selectedChipDataRef.current = chip;
       }
     },
     [selectedChipIndex]
@@ -156,9 +157,16 @@ export function HabitsEmptyStateMinimal({
       if (selectedChipIndex !== null) {
         setSelectedChipIndex(null);
         setSelectedEmoji(null);
+        selectedChipDataRef.current = null;
+
+        // Track manual input after viewing chips
+        if (text.trim().length > 0) {
+          const chips = getTimeBasedChips();
+          analytics.trackManualInputAfterChipView(text, chips);
+        }
       }
     },
-    [selectedChipIndex]
+    [selectedChipIndex, analytics]
   );
 
   // Handle CTA button press - creates the habit
@@ -174,6 +182,15 @@ export function HabitsEmptyStateMinimal({
       triggerSuccess();
       setSuccessHabitName(inputValue.trim());
       setSuccessEmoji(selectedEmoji); // Save emoji for success state
+
+      // Track chip-to-habit conversion if a chip was selected
+      if (selectedChipDataRef.current && selectedChipIndex !== null) {
+        analytics.trackChipConvertedToHabit(
+          selectedChipDataRef.current,
+          selectedChipIndex,
+          displayTimestampRef.current
+        );
+      }
     } catch (error) {
       setIsCreating(false);
       setErrorMessage(
@@ -188,6 +205,8 @@ export function HabitsEmptyStateMinimal({
     onQuickCreateHabit,
     triggerSuccess,
     selectedEmoji,
+    selectedChipIndex,
+    analytics,
   ]);
 
   // Handle keyboard submit (Done button)

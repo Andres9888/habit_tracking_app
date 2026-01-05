@@ -9,7 +9,7 @@
  * - Staggered entrance animation (50ms between each chip)
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
@@ -23,6 +23,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useTimeBasedChipAnalytics } from './analytics';
 import {
   CHIP_STAGGER,
   CHIP_TRANSFORMS,
@@ -246,6 +247,41 @@ export function SuggestionChips({
   // Get time-appropriate chips dynamically
   const chips = getTimeBasedChips();
 
+  // Analytics tracking
+  const analytics = useTimeBasedChipAnalytics();
+  const displayTimestampRef = useRef<number>(0);
+  const previousSelectedChipRef = useRef<{
+    chip: SuggestionChip;
+    index: number;
+  } | null>(null);
+
+  // Track chips displayed on mount
+  useEffect(() => {
+    displayTimestampRef.current = Date.now();
+    analytics.trackChipsDisplayed(chips);
+  }, [chips, analytics]);
+
+  // Handle chip selection with analytics
+  const handleChipSelect = useCallback(
+    (index: number, chip: SuggestionChip) => {
+      // Track deselection if a chip was previously selected
+      if (previousSelectedChipRef.current && selectedIndex !== null) {
+        analytics.trackChipDeselected(
+          previousSelectedChipRef.current.chip,
+          previousSelectedChipRef.current.index
+        );
+      }
+
+      // Track new selection
+      analytics.trackChipSelected(chip, index);
+      previousSelectedChipRef.current = { chip, index };
+
+      // Call original onSelect handler
+      onSelect(index, chip);
+    },
+    [analytics, onSelect, selectedIndex]
+  );
+
   // Split chips into rows: 3, 2, 1
   const row1 = chips.slice(0, 3);
   const row2 = chips.slice(3, 5);
@@ -262,7 +298,7 @@ export function SuggestionChips({
             index={i}
             isSelected={selectedIndex === i}
             staggerDelay={i * CHIP_STAGGER.delay}
-            onPress={() => onSelect(i, chip)}
+            onPress={() => handleChipSelect(i, chip)}
           />
         ))}
       </View>
@@ -279,7 +315,7 @@ export function SuggestionChips({
               index={index}
               isSelected={selectedIndex === index}
               staggerDelay={staggerIndex * CHIP_STAGGER.delay}
-              onPress={() => onSelect(index, chip)}
+              onPress={() => handleChipSelect(index, chip)}
             />
           );
         })}
@@ -297,7 +333,7 @@ export function SuggestionChips({
               index={index}
               isSelected={selectedIndex === index}
               staggerDelay={staggerIndex * CHIP_STAGGER.delay}
-              onPress={() => onSelect(index, chip)}
+              onPress={() => handleChipSelect(index, chip)}
             />
           );
         })}
