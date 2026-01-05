@@ -1314,7 +1314,41 @@ Full list in `src/utils/emojiKeywords.ts`
 - [x] Update `INTEGRATION_GUIDE.md` with centered layout option
 - [x] Update `QUICK_START.md` with new component usage
 - [x] Add section to `STYLING_GUIDE.md` for centered layout
-- [ ] Update screenshots in documentation
+- [ ] Update screenshots in documentation ⚠️ **REQUIRES MANUAL WORK**
+
+**Status**: INTENTIONALLY SKIPPED - This task requires manual interaction with the running application on physical devices or simulators.
+
+**Manual Steps Required**:
+1. Enable centered modal by setting `USE_CENTERED_HABIT_MODAL = true` in `src/features/habits/components/HabitsModals.tsx:35`
+2. Run the app on iOS simulator: `npm run ios` or `npx expo start` → press 'i'
+3. Run the app on Android emulator: `npm run android` or `npx expo start` → press 'a'
+4. Navigate to habit creation flow and open the centered modal
+5. Capture screenshots at key states:
+   - Initial modal open (empty state)
+   - Name input focused with keyboard
+   - Emoji suggestions updating dynamically
+   - "CUSTOMIZE (OPTIONAL)" section visible
+   - "More" label on emoji picker button
+   - Color selection with ring indicator
+   - Reminder toggle enabled/disabled
+   - Filled form ready to submit
+   - Swipe-to-dismiss gesture in action (if possible to capture)
+6. Save screenshots to `/docs/specs/create-habit-modal/screenshots/centered/`
+7. Update documentation files to reference screenshots:
+   - Add screenshot references to `QUICK_START_CENTERED.md`
+   - Add visual examples to `INTEGRATION_GUIDE_CENTERED.md`
+   - Add UI component screenshots to `STYLING_GUIDE_CENTERED.md`
+8. Commit screenshots with descriptive names (e.g., `centered-modal-empty.png`, `centered-modal-filled.png`)
+
+**Recommended Screenshot States**:
+- `centered-modal-initial.png` - Modal just opened, name input focused
+- `centered-modal-typing.png` - User typing, emoji suggestions visible
+- `centered-modal-emoji-selected.png` - Emoji selected with green ring
+- `centered-modal-color-selected.png` - Color selected with outer ring
+- `centered-modal-reminder-enabled.png` - Reminder toggle on, time visible
+- `centered-modal-filled.png` - Complete form ready to submit
+- `centered-modal-more-label.png` - Close-up of "More" label on emoji picker
+- `centered-modal-swipe-gesture.png` - (Optional) Gesture in action if capturable
 
 **Implementation Notes:**
 
