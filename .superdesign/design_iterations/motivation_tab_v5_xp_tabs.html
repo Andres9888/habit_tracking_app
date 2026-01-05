@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Motivation Tab V5 - XP with Original Tabs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34D399',
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+            },
+            premium: {
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            },
+            surface: {
+              50: '#fafaf9',
+              100: '#f5f5f4',
+              200: '#e7e5e4',
+              300: '#d6d3d1',
+              400: '#a8a29e',
+              500: '#78716c',
+              600: '#57534e',
+              700: '#44403c',
+              800: '#292524',
+              900: '#1c1917',
+            },
+            warning: {
+              500: '#F59E0B',
+              600: '#D97706',
+            },
+            error: {
+              500: '#EF4444',
+            },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #1c1917;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #fafaf9;
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 0 0 12px #1c1917;
+      position: relative;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 34px;
+      background: #1c1917;
+      border-radius: 0 0 24px 24px;
+      z-index: 100;
+    }
+
+    .screen {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 54px;
+      padding-bottom: 34px;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 100px;
+    }
+
+    /* Tab pill animation */
+    .tab-pill {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* XP bar animation */
+    @keyframes xp-fill {
+      from { width: 0%; }
+      to { width: 68%; }
+    }
+    .xp-fill { animation: xp-fill 1s ease-out forwards; }
+
+    /* Flame flicker */
+    @keyframes flame {
+      0%, 100% { transform: scale(1) rotate(-2deg); }
+      50% { transform: scale(1.08) rotate(2deg); }
+    }
+    .flame { animation: flame 0.6s ease-in-out infinite; }
+
+    /* Heartbeat for Why */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.1); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+    }
+    .heartbeat { animation: heartbeat 2s ease-in-out infinite; }
+
+    /* Check pop */
+    @keyframes check-pop {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .check-pop { animation: check-pop 0.4s ease-out forwards; }
+
+    /* Soft pulse for incomplete */
+    @keyframes soft-pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    .soft-pulse { animation: soft-pulse 2s ease-in-out infinite; }
+
+    /* Waveform */
+    @keyframes wave {
+      0%, 100% { height: 4px; }
+      50% { height: 16px; }
+    }
+    .wave-bar { animation: wave 0.7s ease-in-out infinite; }
+    .wave-bar:nth-child(1) { animation-delay: 0s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.25s; }
+
+    /* Seal glow */
+    @keyframes seal-glow {
+      0%, 100% { box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
+      50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+    }
+    .seal-glow { animation: seal-glow 2s ease-in-out infinite; }
+
+    /* Card press */
+    .card-press {
+      transition: transform 0.15s ease;
+    }
+    .card-press:active {
+      transform: scale(0.98);
+    }
+
+    /* Floating rescue button */
+    .rescue-float {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      z-index: 50;
+    }
+
+    @keyframes rescue-pulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 4px 30px rgba(239, 68, 68, 0.6); }
+    }
+    .rescue-pulse { animation: rescue-pulse 2s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="home-indicator"></div>
+
+    <div class="screen bg-surface-50">
+
+      <!-- Header -->
+      <div class="px-4 pb-3 flex items-center justify-between">
+        <button class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-surface-200">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-surface-600"></i>
+        </button>
+        <div class="text-center">
+          <h1 class="text-surface-900 font-bold text-lg">Morning Exercise</h1>
+          <div class="flex items-center justify-center gap-2 mt-0.5">
+            <span class="text-surface-500 text-xs">Day 18</span>
+            <span class="text-surface-300">•</span>
+            <span class="flame text-sm">🔥</span>
+            <span class="text-warning-600 text-xs font-semibold">6 day streak</span>
+          </div>
+        </div>
+        <button class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-surface-200">
+          <i data-lucide="more-horizontal" class="w-5 h-5 text-surface-600"></i>
+        </button>
+      </div>
+
+      <!-- XP Strip (Compact) -->
+      <div class="mx-4 mb-3">
+        <div class="bg-white rounded-xl p-3 shadow-sm border border-surface-200 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-premium-500 to-premium-600 flex items-center justify-center shadow">
+            <span class="text-white font-bold text-sm">Lv7</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-surface-600 text-xs font-medium">Motivation XP</span>
+              <span class="text-primary-600 text-xs font-semibold">2,450 / 3,000</span>
+            </div>
+            <div class="h-2 bg-surface-100 rounded-full overflow-hidden">
+              <div class="xp-fill h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full"></div>
+            </div>
+          </div>
+          <div class="text-center px-2 border-l border-surface-200">
+            <p class="text-primary-500 font-bold text-sm">+85</p>
+            <p class="text-surface-400 text-[10px]">today</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Bar: Progress | Motivation | Manage -->
+      <div class="px-4 mb-4">
+        <div class="bg-surface-100 rounded-xl p-1 flex relative">
+          <!-- Animated pill indicator -->
+          <div class="tab-pill absolute top-1 bottom-1 bg-white rounded-lg shadow-sm" style="width: calc(33.333% - 4px); left: calc(33.333% + 2px);"></div>
+          <button class="flex-1 py-2.5 text-surface-500 font-medium text-sm relative z-10">Progress</button>
+          <button class="flex-1 py-2.5 text-surface-900 font-semibold text-sm relative z-10">Motivation</button>
+          <button class="flex-1 py-2.5 text-surface-500 font-medium text-sm relative z-10">Manage</button>
+        </div>
+      </div>
+
+      <!-- Motivation Tab Content -->
+      <div class="px-4 pb-24 space-y-3">
+
+        <!-- Your Why - Hero -->
+        <div class="card-press bg-white rounded-2xl p-4 shadow-sm border border-rose-100 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+
+          <div class="flex items-start gap-3 relative">
+            <div class="relative">
+              <div class="heartbeat w-12 h-12 rounded-xl bg-gradient-to-br from-rose-400 to-rose-500 flex items-center justify-center shadow-md">
+                <i data-lucide="heart" class="w-6 h-6 text-white"></i>
+              </div>
+              <div class="check-pop absolute -bottom-1 -right-1 w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center border-2 border-white">
+                <i data-lucide="check" class="w-3 h-3 text-white"></i>
+              </div>
+            </div>
+
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-surface-900 font-semibold">Your Why</h3>
+                <span class="text-[10px] font-semibold text-primary-600 bg-primary-50 px-1.5 py-0.5 rounded">+150 XP</span>
+              </div>
+              <p class="text-surface-600 text-sm leading-relaxed">
+                "I want to be healthy enough to play with my grandchildren..."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column: Identity + Cue -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Identity -->
+          <div class="card-press bg-white rounded-xl p-3 shadow-sm border border-violet-100">
+            <div class="flex items-center justify-between mb-2">
+              <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-400 to-violet-500 flex items-center justify-center shadow">
+                <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+              </div>
+              <div class="check-pop w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center">
+                <i data-lucide="check" class="w-3 h-3 text-white"></i>
+              </div>
+            </div>
+            <h3 class="text-surface-900 font-semibold text-sm">Identity</h3>
+            <p class="text-surface-500 text-xs mt-0.5">"I am someone who..."</p>
+            <span class="text-[10px] text-primary-600 font-medium">+100 XP</span>
+          </div>
+
+          <!-- Cue -->
+          <div class="card-press bg-white rounded-xl p-3 shadow-sm border border-amber-100">
+            <div class="flex items-center justify-between mb-2">
+              <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow">
+                <i data-lucide="target" class="w-4 h-4 text-white"></i>
+              </div>
+              <div class="check-pop w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center">
+                <i data-lucide="check" class="w-3 h-3 text-white"></i>
+              </div>
+            </div>
+            <h3 class="text-surface-900 font-semibold text-sm">Your Cue</h3>
+            <p class="text-surface-500 text-xs mt-0.5">After coffee ☕</p>
+            <span class="text-[10px] text-primary-600 font-medium">+80 XP</span>
+          </div>
+        </div>
+
+        <!-- Voice Motivation -->
+        <div class="card-press bg-white rounded-xl p-4 shadow-sm border border-teal-100">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="relative">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-400 to-teal-500 flex items-center justify-center shadow-md">
+                <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+              </div>
+              <div class="absolute -top-1 -right-1 w-4 h-4 bg-teal-500 rounded-full flex items-center justify-center border-2 border-white text-[8px] text-white font-bold">3</div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <h3 class="text-surface-900 font-semibold">Voice Motivation</h3>
+                <span class="text-[10px] font-semibold text-primary-600 bg-primary-50 px-1.5 py-0.5 rounded">+40 XP each</span>
+              </div>
+              <p class="text-surface-500 text-xs">3 recordings • Hear your motivation</p>
+            </div>
+          </div>
+
+          <!-- Audio player -->
+          <div class="bg-teal-50 rounded-lg p-3 flex items-center gap-3">
+            <button class="w-9 h-9 rounded-full bg-teal-500 flex items-center justify-center shadow">
+              <i data-lucide="play" class="w-4 h-4 text-white ml-0.5"></i>
+            </button>
+            <div class="flex-1 flex items-end gap-0.5 h-5">
+              <div class="wave-bar w-1 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1 bg-teal-400 rounded-full"></div>
+              <div class="wave-bar w-1 bg-teal-400 rounded-full"></div>
+            </div>
+            <span class="text-teal-600 text-xs font-medium">0:45</span>
+            <button class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+              <i data-lucide="plus" class="w-4 h-4 text-teal-600"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Letters to Self -->
+        <div class="card-press bg-white rounded-xl p-4 shadow-sm border border-pink-100">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center shadow-md">
+              <i data-lucide="mail" class="w-5 h-5 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <h3 class="text-surface-900 font-semibold">Letters to Self</h3>
+                <span class="text-[10px] font-semibold text-primary-600 bg-primary-50 px-1.5 py-0.5 rounded">+60 XP each</span>
+              </div>
+              <p class="text-surface-500 text-xs">2 open • 1 sealed</p>
+            </div>
+          </div>
+
+          <!-- Letters list -->
+          <div class="space-y-2">
+            <div class="bg-surface-50 rounded-lg p-2.5 flex items-center gap-2">
+              <i data-lucide="mail-open" class="w-4 h-4 text-pink-500"></i>
+              <span class="text-surface-700 text-sm flex-1">"Keep Going"</span>
+              <span class="text-surface-400 text-xs">Dec 15</span>
+            </div>
+
+            <div class="seal-glow bg-gradient-to-r from-premium-50 to-pink-50 rounded-lg p-2.5 flex items-center gap-2 border border-premium-200">
+              <i data-lucide="lock" class="w-4 h-4 text-premium-500"></i>
+              <span class="text-premium-700 text-sm flex-1">30-Day Celebration</span>
+              <span class="text-premium-500 text-xs font-semibold">12 days</span>
+            </div>
+          </div>
+
+          <button class="w-full mt-3 py-2 rounded-lg bg-pink-50 text-pink-600 text-sm font-medium flex items-center justify-center gap-2">
+            <i data-lucide="pen-line" class="w-4 h-4"></i>
+            Write New Letter
+          </button>
+        </div>
+
+        <!-- Two Column: Vision + Affirmations -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Vision Board -->
+          <div class="card-press bg-white rounded-xl p-3 shadow-sm border border-surface-200">
+            <div class="flex items-center justify-between mb-2">
+              <div class="w-9 h-9 rounded-lg bg-surface-200 flex items-center justify-center">
+                <i data-lucide="eye" class="w-4 h-4 text-surface-500"></i>
+              </div>
+              <span class="text-surface-400 text-xs">4/6</span>
+            </div>
+            <h3 class="text-surface-900 font-semibold text-sm">Vision Board</h3>
+            <div class="grid grid-cols-2 gap-1 mt-2">
+              <div class="aspect-square bg-violet-100 rounded"></div>
+              <div class="aspect-square bg-rose-100 rounded"></div>
+            </div>
+            <span class="text-[10px] text-primary-600 font-medium mt-1 block">+20 XP each</span>
+          </div>
+
+          <!-- Affirmations -->
+          <div class="card-press bg-white rounded-xl p-3 shadow-sm border border-emerald-100">
+            <div class="flex items-center justify-between mb-2">
+              <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center shadow">
+                <i data-lucide="zap" class="w-4 h-4 text-white"></i>
+              </div>
+              <button class="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center">
+                <i data-lucide="shuffle" class="w-3 h-3 text-emerald-600"></i>
+              </button>
+            </div>
+            <h3 class="text-surface-900 font-semibold text-sm">Affirmations</h3>
+            <p class="text-emerald-600 text-xs italic mt-0.5">"I am worthy..."</p>
+            <span class="text-[10px] text-primary-600 font-medium">+15 XP each</span>
+          </div>
+        </div>
+
+        <!-- Journal -->
+        <div class="card-press bg-white rounded-xl p-3 shadow-sm border border-amber-100 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow">
+            <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-surface-900 font-semibold text-sm">Reflection Journal</h3>
+            <p class="text-surface-500 text-xs">12 entries • +10 XP each</p>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-surface-300"></i>
+        </div>
+
+        <!-- Daily XP Bonus -->
+        <div class="bg-gradient-to-r from-primary-500 to-emerald-500 rounded-xl p-4 relative overflow-hidden">
+          <div class="absolute right-2 top-1/2 -translate-y-1/2 text-5xl opacity-20">✨</div>
+          <div class="relative flex items-center justify-between">
+            <div>
+              <h3 class="text-white font-bold">Daily Motivation Bonus</h3>
+              <p class="text-white/80 text-sm">Add to any section today</p>
+            </div>
+            <div class="text-right">
+              <p class="text-white font-black text-xl">+50 XP</p>
+              <p class="text-white/70 text-xs">BONUS</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Floating Rescue Button -->
+      <div class="rescue-float">
+        <button class="rescue-pulse w-14 h-14 rounded-2xl bg-gradient-to-br from-error-500 to-rose-500 flex items-center justify-center shadow-xl">
+          <i data-lucide="heart-pulse" class="w-7 h-7 text-white"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

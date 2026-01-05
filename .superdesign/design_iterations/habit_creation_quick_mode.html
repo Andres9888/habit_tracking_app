@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Creation - Quick Mode (Minimal Taps)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #faf9f7;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .suggestion-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: white;
+      border: 2px solid #e7e5e4;
+      border-radius: 20px;
+      font-size: 15px;
+      color: #44403c;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .suggestion-chip:hover {
+      border-color: #10B981;
+      background: #D1FAE5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .time-chip {
+      flex: 1;
+      padding: 12px;
+      background: white;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .time-chip:hover {
+      border-color: #10B981;
+      background: #D1FAE5;
+      transform: translateY(-2px);
+    }
+
+    .time-chip.selected {
+      border-color: #10B981;
+      background: #D1FAE5;
+    }
+
+    .success-animation {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .success-animation.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 128px;
+      height: 4px;
+      background: #d6d3d1;
+      border-radius: 2px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      font-size: 18px;
+      outline: none;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    input[type="text"]:focus {
+      border-color: #10B981;
+      background: #f9fafb;
+    }
+
+    .tap-count {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #10B981;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 36px; font-weight: 800; color: white; margin-bottom: 8px;">
+        Quick Mode: Minimal Taps
+      </h1>
+      <p style="font-size: 16px; color: #cbd5e1;">
+        Tap a suggestion → Tap a time → Done! (2 taps total)
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="tap-count">
+        <span id="tapCount">0</span> taps
+      </div>
+      <div class="phone-screen">
+
+        <!-- Header -->
+        <div style="background: white; padding: 16px 24px; border-bottom: 1px solid #e7e5e4;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2 style="font-size: 20px; font-weight: 600; color: #1c1917;">Quick Add</h2>
+            <button onclick="resetFlow()" style="background: none; border: none; color: #78716c; font-size: 28px; cursor: pointer; line-height: 1;">×</button>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 24px; height: calc(100% - 70px); overflow-y: auto;">
+
+          <!-- Quick Instructions -->
+          <div style="background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%); padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #10B981;">
+            <p style="font-size: 14px; color: #065f46; font-weight: 600; text-align: center;">
+              ⚡ Tap a habit below, then pick a time — that's it!
+            </p>
+          </div>
+
+          <!-- Smart Suggestions (One-Tap Create) -->
+          <div style="margin-bottom: 32px;">
+            <h3 style="font-size: 16px; font-weight: 700; color: #1c1917; margin-bottom: 16px;">
+              Quick Start
+            </h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <div class="suggestion-chip" onclick="selectHabit('📚 Read for 20 min')">
+                <span style="font-size: 20px;">📚</span>
+                <span>Read for 20 min</span>
+              </div>
+              <div class="suggestion-chip" onclick="selectHabit('🧘 Meditate')">
+                <span style="font-size: 20px;">🧘</span>
+                <span>Meditate</span>
+              </div>
+              <div class="suggestion-chip" onclick="selectHabit('💪 Exercise')">
+                <span style="font-size: 20px;">💪</span>
+                <span>Exercise</span>
+              </div>
+              <div class="suggestion-chip" onclick="selectHabit('💧 Drink water')">
+                <span style="font-size: 20px;">💧</span>
+                <span>Drink water</span>
+              </div>
+              <div class="suggestion-chip" onclick="selectHabit('✍️ Journal')">
+                <span style="font-size: 20px;">✍️</span>
+                <span>Journal</span>
+              </div>
+              <div class="suggestion-chip" onclick="selectHabit('🌱 Gratitude')">
+                <span style="font-size: 20px;">🌱</span>
+                <span>Gratitude</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 32px;">
+            <div style="flex: 1; height: 1px; background: #e7e5e4;"></div>
+            <span style="font-size: 12px; color: #a8a29e; font-weight: 600;">OR TYPE YOUR OWN</span>
+            <div style="flex: 1; height: 1px; background: #e7e5e4;"></div>
+          </div>
+
+          <!-- Custom Habit Input -->
+          <div id="customSection" style="margin-bottom: 32px;">
+            <input
+              type="text"
+              id="habitInput"
+              placeholder="Type habit name..."
+              oninput="handleCustomInput()"
+            />
+            <p style="font-size: 12px; color: #a8a29e; margin-top: 8px; text-align: center;">
+              Then tap a time below ↓
+            </p>
+          </div>
+
+          <!-- Time Selection (Always Visible) -->
+          <div id="timeSection" style="opacity: 0.3; pointer-events: none; transition: all 0.3s;">
+            <h3 style="font-size: 16px; font-weight: 700; color: #1c1917; margin-bottom: 16px;">
+              When?
+            </h3>
+            <div style="display: flex; gap: 10px;">
+              <div class="time-chip" onclick="createHabit('morning')">
+                <div style="font-size: 24px; margin-bottom: 4px;">🌅</div>
+                <div style="font-size: 14px; font-weight: 600; color: #57534e;">Morning</div>
+              </div>
+              <div class="time-chip" onclick="createHabit('afternoon')">
+                <div style="font-size: 24px; margin-bottom: 4px;">☀️</div>
+                <div style="font-size: 14px; font-weight: 600; color: #57534e;">Afternoon</div>
+              </div>
+              <div class="time-chip" onclick="createHabit('evening')">
+                <div style="font-size: 24px; margin-bottom: 4px;">🌙</div>
+                <div style="font-size: 14px; font-weight: 600; color: #57534e;">Evening</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tap Counter Info -->
+          <div style="margin-top: 40px; padding: 16px; background: #f5f5f4; border-radius: 12px; border: 1px solid #e7e5e4;">
+            <p style="font-size: 13px; color: #78716c; line-height: 1.6;">
+              <strong style="color: #1c1917;">How it works:</strong><br>
+              • Tap a suggested habit (1 tap)<br>
+              • Tap a time slot (2 taps total)<br>
+              • Habit created! ✓
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Success Animation -->
+        <div id="successAnimation" class="success-animation">
+          <div class="checkmark">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <h2 style="font-size: 24px; font-weight: 700; color: #1c1917;">Habit Created!</h2>
+          <p style="font-size: 16px; color: #78716c; text-align: center; max-width: 280px;">
+            <span id="createdHabitName">Your habit</span> is ready to track
+          </p>
+          <div style="background: #D1FAE5; padding: 12px 24px; border-radius: 20px; border: 1px solid #10B981;">
+            <p style="font-size: 14px; color: #065f46; font-weight: 600;">
+              ⚡ Only <span id="finalTapCount">2</span> taps!
+            </p>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- Comparison Stats -->
+    <div style="margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 20px; text-align: center;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">WIZARD MODE</div>
+        <div style="font-size: 32px; font-weight: 800; color: #F59E0B;">3-4</div>
+        <div style="font-size: 14px; color: #94a3b8;">taps to create</div>
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.2); backdrop-filter: blur(10px); border: 2px solid #10B981; border-radius: 16px; padding: 20px; text-align: center;">
+        <div style="font-size: 12px; color: #D1FAE5; margin-bottom: 4px;">QUICK MODE</div>
+        <div style="font-size: 32px; font-weight: 800; color: #10B981;">2</div>
+        <div style="font-size: 14px; color: #D1FAE5; font-weight: 600;">taps to create ⚡</div>
+      </div>
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 20px; text-align: center;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">IMPROVEMENT</div>
+        <div style="font-size: 32px; font-weight: 800; color: #10B981;">50%</div>
+        <div style="font-size: 14px; color: #94a3b8;">fewer taps</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let tapCount = 0;
+    let selectedHabit = '';
+
+    function incrementTaps() {
+      tapCount++;
+      document.getElementById('tapCount').textContent = tapCount;
+    }
+
+    function selectHabit(habitName) {
+      incrementTaps();
+      selectedHabit = habitName;
+      document.getElementById('habitInput').value = habitName;
+      enableTimeSelection();
+    }
+
+    function handleCustomInput() {
+      const input = document.getElementById('habitInput').value;
+      if (input.trim().length >= 2) {
+        selectedHabit = input;
+        enableTimeSelection();
+      } else {
+        disableTimeSelection();
+      }
+    }
+
+    function enableTimeSelection() {
+      const timeSection = document.getElementById('timeSection');
+      timeSection.style.opacity = '1';
+      timeSection.style.pointerEvents = 'auto';
+    }
+
+    function disableTimeSelection() {
+      const timeSection = document.getElementById('timeSection');
+      timeSection.style.opacity = '0.3';
+      timeSection.style.pointerEvents = 'none';
+    }
+
+    function createHabit(time) {
+      if (!selectedHabit) return;
+
+      incrementTaps();
+
+      // Show success
+      document.getElementById('createdHabitName').textContent = selectedHabit;
+      document.getElementById('finalTapCount').textContent = tapCount;
+      document.getElementById('successAnimation').classList.add('active');
+
+      // Auto-reset
+      setTimeout(() => {
+        resetFlow();
+      }, 3000);
+    }
+
+    function resetFlow() {
+      document.getElementById('successAnimation').classList.remove('active');
+
+      setTimeout(() => {
+        tapCount = 0;
+        selectedHabit = '';
+        document.getElementById('tapCount').textContent = '0';
+        document.getElementById('habitInput').value = '';
+        disableTimeSelection();
+      }, 300);
+    }
+
+    // Initialize
+    disableTimeSelection();
+  </script>
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar View MVP - HabitKit Inspired</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    body {
+      background: #1a1a1a !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .screen-content {
+      padding: 60px 20px 20px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    /* View Toggle */
+    .view-toggle {
+      display: flex;
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .view-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .view-btn.active {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .view-btn:hover:not(.active) {
+      color: #999;
+    }
+
+    /* Calendar Grid */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-header {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      padding: 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .day-cell {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      cursor: default;
+    }
+
+    .day-cell.future {
+      background: #1a1a1a;
+      color: #333;
+      cursor: default;
+    }
+
+    .day-cell.missed {
+      background: #1a1a1a;
+      color: #666;
+    }
+
+    .day-cell.completed {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .day-cell.completed.light {
+      background: rgba(16, 185, 129, 0.4);
+    }
+
+    .day-cell.completed.medium {
+      background: rgba(16, 185, 129, 0.7);
+    }
+
+    .day-cell.today {
+      position: relative;
+    }
+
+    .day-cell.today::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 13px;
+      border: 2px solid #f59e0b;
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+
+    .day-cell.today.incomplete {
+      background: #292524;
+      color: #fbbf24;
+      border: 2px solid #f59e0b;
+    }
+
+    .day-cell.today.completed {
+      border: 2px solid #f59e0b;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
+
+    .day-cell:hover:not(.empty):not(.future) {
+      transform: scale(0.95);
+    }
+
+    .day-cell:active:not(.empty):not(.future) {
+      transform: scale(0.9);
+    }
+
+    /* Streak Card */
+    .streak-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid #2a2a2a;
+    }
+
+    .streak-number {
+      font-size: 56px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .streak-fire {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat-item {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* Month Header */
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .month-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .month-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    /* Week View */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .week-day {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .week-day.today {
+      background: #292524;
+      border: 2px solid #f59e0b;
+    }
+
+    .week-day.completed {
+      background: #10b981;
+    }
+
+    .week-day-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .week-day.completed .week-day-name,
+    .week-day.today .week-day-name {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .week-day-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 8px 0;
+    }
+
+    .week-day.today.incomplete .week-day-num {
+      color: #fbbf24;
+    }
+
+    .week-day-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .week-day.completed .week-day-status {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .week-day.completed .week-day-status::after {
+      content: '✓';
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .week-day.missed .week-day-status {
+      background: #2a2a2a;
+    }
+
+    .week-day.today.incomplete .week-day-status {
+      background: #f59e0b;
+      animation: pulse-today 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-today {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Year View */
+    .year-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .year-row {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .year-day-label {
+      width: 20px;
+      font-size: 9px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .year-cell {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: #1a1a1a;
+    }
+
+    .year-cell.completed-1 { background: rgba(16, 185, 129, 0.3); }
+    .year-cell.completed-2 { background: rgba(16, 185, 129, 0.5); }
+    .year-cell.completed-3 { background: rgba(16, 185, 129, 0.7); }
+    .year-cell.completed-4 { background: #10b981; }
+
+    .year-months {
+      display: flex;
+      margin-left: 24px;
+      margin-bottom: 8px;
+    }
+
+    .year-month-label {
+      font-size: 10px;
+      color: #666;
+      width: calc((8px + 3px) * 4.33);
+    }
+
+    .year-legend {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 12px;
+      font-size: 10px;
+      color: #666;
+    }
+
+    .legend-cell {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* Section spacing */
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    /* Habit header */
+    .habit-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .habit-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .habit-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .habit-meta {
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* View containers */
+    .view-container {
+      display: none;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    /* Hide scrollbar */
+    .screen-content::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="notch"></div>
+      <div class="screen-content">
+
+        <!-- Habit Header -->
+        <div class="habit-header">
+          <div class="habit-icon">💪</div>
+          <div>
+            <div class="habit-name">Morning Exercise</div>
+            <div class="habit-meta">Daily · Started Oct 15</div>
+          </div>
+        </div>
+
+        <!-- Streak Card -->
+        <div class="section">
+          <div class="streak-card">
+            <div class="streak-fire">🔥</div>
+            <div class="streak-number">12</div>
+            <div class="streak-label">day streak</div>
+          </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="section">
+          <div class="view-toggle">
+            <button class="view-btn" data-view="week">Week</button>
+            <button class="view-btn active" data-view="month">Month</button>
+            <button class="view-btn" data-view="year">Year</button>
+          </div>
+        </div>
+
+        <!-- Week View -->
+        <div id="week-view" class="view-container">
+          <div class="month-header">
+            <div class="month-title">This Week</div>
+            <div style="font-size: 13px; color: #666;">Dec 23 - 29</div>
+          </div>
+          <div class="week-grid">
+            <div class="week-day completed">
+              <div class="week-day-name">Sun</div>
+              <div class="week-day-num">23</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Mon</div>
+              <div class="week-day-num">24</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Tue</div>
+              <div class="week-day-num">25</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Wed</div>
+              <div class="week-day-num">26</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Thu</div>
+              <div class="week-day-num">27</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day completed">
+              <div class="week-day-name">Fri</div>
+              <div class="week-day-num">28</div>
+              <div class="week-day-status"></div>
+            </div>
+            <div class="week-day today incomplete">
+              <div class="week-day-name">Sat</div>
+              <div class="week-day-num">29</div>
+              <div class="week-day-status"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Month View -->
+        <div id="month-view" class="view-container active">
+          <div class="month-header">
+            <div class="month-title">December 2025</div>
+            <div class="month-nav">
+              <button class="nav-btn">‹</button>
+              <button class="nav-btn">›</button>
+            </div>
+          </div>
+          <div class="calendar-grid">
+            <!-- Day headers -->
+            <div class="day-header">S</div>
+            <div class="day-header">M</div>
+            <div class="day-header">T</div>
+            <div class="day-header">W</div>
+            <div class="day-header">T</div>
+            <div class="day-header">F</div>
+            <div class="day-header">S</div>
+
+            <!-- Week 1 -->
+            <div class="day-cell empty"></div>
+            <div class="day-cell completed">1</div>
+            <div class="day-cell completed">2</div>
+            <div class="day-cell missed">3</div>
+            <div class="day-cell completed">4</div>
+            <div class="day-cell completed">5</div>
+            <div class="day-cell missed">6</div>
+
+            <!-- Week 2 -->
+            <div class="day-cell completed">7</div>
+            <div class="day-cell completed">8</div>
+            <div class="day-cell completed">9</div>
+            <div class="day-cell missed">10</div>
+            <div class="day-cell completed">11</div>
+            <div class="day-cell completed">12</div>
+            <div class="day-cell completed">13</div>
+
+            <!-- Week 3 -->
+            <div class="day-cell completed">14</div>
+            <div class="day-cell completed">15</div>
+            <div class="day-cell completed">16</div>
+            <div class="day-cell completed">17</div>
+            <div class="day-cell completed light">18</div>
+            <div class="day-cell missed">19</div>
+            <div class="day-cell completed">20</div>
+
+            <!-- Week 4 -->
+            <div class="day-cell completed">21</div>
+            <div class="day-cell completed">22</div>
+            <div class="day-cell completed">23</div>
+            <div class="day-cell completed">24</div>
+            <div class="day-cell completed">25</div>
+            <div class="day-cell completed">26</div>
+            <div class="day-cell completed">27</div>
+
+            <!-- Week 5 -->
+            <div class="day-cell completed">28</div>
+            <div class="day-cell today incomplete">29</div>
+            <div class="day-cell future">30</div>
+            <div class="day-cell future">31</div>
+            <div class="day-cell empty"></div>
+            <div class="day-cell empty"></div>
+            <div class="day-cell empty"></div>
+          </div>
+        </div>
+
+        <!-- Year View -->
+        <div id="year-view" class="view-container">
+          <div class="month-header">
+            <div class="month-title">2025</div>
+            <div style="font-size: 13px; color: #666;">267 completions</div>
+          </div>
+
+          <div class="year-months">
+            <div class="year-month-label">Jan</div>
+            <div class="year-month-label">Feb</div>
+            <div class="year-month-label">Mar</div>
+            <div class="year-month-label">Apr</div>
+            <div class="year-month-label">May</div>
+            <div class="year-month-label">Jun</div>
+            <div class="year-month-label">Jul</div>
+            <div class="year-month-label">Aug</div>
+            <div class="year-month-label">Sep</div>
+            <div class="year-month-label">Oct</div>
+            <div class="year-month-label">Nov</div>
+            <div class="year-month-label">Dec</div>
+          </div>
+
+          <div class="year-grid" id="year-grid">
+            <!-- Generated by JS -->
+          </div>
+
+          <div class="year-legend">
+            <span>Less</span>
+            <div class="legend-cell" style="background: #1a1a1a;"></div>
+            <div class="legend-cell" style="background: rgba(16, 185, 129, 0.3);"></div>
+            <div class="legend-cell" style="background: rgba(16, 185, 129, 0.5);"></div>
+            <div class="legend-cell" style="background: rgba(16, 185, 129, 0.7);"></div>
+            <div class="legend-cell" style="background: #10b981;"></div>
+            <span>More</span>
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="section" style="margin-top: 24px;">
+          <div class="stats-bar">
+            <div class="stat-item">
+              <div class="stat-value">22/29</div>
+              <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">🏆 21</div>
+              <div class="stat-label">Best Streak</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">76%</div>
+              <div class="stat-label">Success</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // View toggle functionality
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const viewContainers = document.querySelectorAll('.view-container');
+
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+
+        // Update buttons
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Update views
+        viewContainers.forEach(v => v.classList.remove('active'));
+        document.getElementById(`${view}-view`).classList.add('active');
+      });
+    });
+
+    // Generate year grid
+    const yearGrid = document.getElementById('year-grid');
+    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+    days.forEach((day, dayIndex) => {
+      const row = document.createElement('div');
+      row.className = 'year-row';
+
+      const label = document.createElement('div');
+      label.className = 'year-day-label';
+      label.textContent = day;
+      row.appendChild(label);
+
+      // 52 weeks
+      for (let week = 0; week < 52; week++) {
+        const cell = document.createElement('div');
+        cell.className = 'year-cell';
+
+        // Random completion level for demo
+        const rand = Math.random();
+        if (rand > 0.3) {
+          const level = Math.ceil(Math.random() * 4);
+          cell.classList.add(`completed-${level}`);
+        }
+
+        row.appendChild(cell);
+      }
+
+      yearGrid.appendChild(row);
+    });
+
+    // Day cell click interaction
+    document.querySelectorAll('.day-cell:not(.empty):not(.future)').forEach(cell => {
+      cell.addEventListener('click', () => {
+        if (cell.classList.contains('completed')) {
+          cell.classList.remove('completed', 'light', 'medium');
+          cell.classList.add('missed');
+        } else {
+          cell.classList.remove('missed');
+          cell.classList.add('completed');
+        }
+      });
+    });
+
+    // Week day click interaction
+    document.querySelectorAll('.week-day').forEach(day => {
+      day.addEventListener('click', () => {
+        if (day.classList.contains('completed')) {
+          day.classList.remove('completed');
+          if (day.classList.contains('today')) {
+            day.classList.add('incomplete');
+          } else {
+            day.classList.add('missed');
+          }
+        } else {
+          day.classList.remove('missed', 'incomplete');
+          day.classList.add('completed');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heatmap Design Options Comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    :root {
+      --color-background: #faf9f7;
+      --color-card: #ffffff;
+      --color-border: #e7e5e4;
+      --color-text-primary: #1F2937;
+      --color-text-secondary: #78716c;
+      --color-text-tertiary: #9CA3AF;
+
+      /* Dynamic habit color */
+      --habit-color: #10B981;
+      --habit-color-50: #ECFDF5;
+      --habit-color-100: #D1FAE5;
+      --habit-color-200: #A7F3D0;
+      --habit-color-300: #6EE7B7;
+      --habit-color-400: #34D399;
+      --habit-color-500: #10B981;
+      --habit-color-600: #059669;
+    }
+
+    body {
+      background: #78716c;
+      padding: 24px;
+    }
+
+    .phone-frame {
+      width: 375px;
+      background: var(--color-background);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      padding: 20px 16px;
+    }
+
+    .option-label {
+      background: var(--habit-color);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .ds-card {
+      background: var(--color-card);
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+      padding: 16px;
+    }
+
+    /* ===== OPTION A: GitHub Style ===== */
+    .github-cell {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+    .gh-0 { background: #f5f5f4; }
+    .gh-1 { background: var(--habit-color-100); }
+    .gh-2 { background: var(--habit-color-200); }
+    .gh-3 { background: var(--habit-color-300); }
+    .gh-4 { background: var(--habit-color-400); }
+    .gh-5 { background: var(--habit-color-500); }
+
+    /* ===== OPTION B: Streak Timeline ===== */
+    .streak-segment {
+      height: 8px;
+      border-radius: 4px;
+    }
+    .streak-active {
+      background: linear-gradient(90deg, var(--habit-color-300), var(--habit-color-500));
+    }
+    .streak-break {
+      background: #e5e5e5;
+    }
+    .streak-current {
+      background: linear-gradient(90deg, var(--habit-color-400), var(--habit-color-600));
+      box-shadow: 0 0 8px var(--habit-color-400);
+    }
+
+    /* ===== OPTION C: Mini-Month Blocks ===== */
+    .mini-month {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 8px;
+      width: 52px;
+    }
+    .mini-day {
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+    }
+    .md-empty { background: #f0f0f0; }
+    .md-done { background: var(--habit-color-500); }
+    .md-partial { background: var(--habit-color-200); }
+
+    /* ===== OPTION D: Density Wave ===== */
+    .wave-bar {
+      width: 10px;
+      border-radius: 2px 2px 0 0;
+      background: linear-gradient(to top, var(--habit-color-300), var(--habit-color-500));
+      transition: height 0.3s ease;
+    }
+    .wave-bar:hover {
+      background: var(--habit-color-600);
+    }
+
+    /* ===== OPTION E: Hybrid ===== */
+    .hybrid-cell {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+    }
+    .month-divider {
+      width: 1px;
+      height: 100%;
+      background: var(--color-border);
+      margin: 0 2px;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <h1 class="text-2xl font-bold text-white mb-6 text-center">Heatmap Design Options</h1>
+
+  <div class="flex flex-wrap gap-6 justify-center">
+
+    <!-- ===== OPTION A: GitHub-Style 7 Rows ===== -->
+    <div class="phone-frame">
+      <span class="option-label">A: GitHub-Style (7 Rows)</span>
+      <p class="text-xs text-stone-500 mb-3">Shows ALL days • Most complete data</p>
+
+      <div class="ds-card">
+        <!-- Month Labels -->
+        <div class="flex text-[10px] mb-1.5 pl-6" style="color: var(--color-text-tertiary);">
+          <span style="width: 52px;">Jul</span>
+          <span style="width: 52px;">Aug</span>
+          <span style="width: 52px;">Sep</span>
+          <span style="width: 52px;">Oct</span>
+          <span style="width: 52px;">Nov</span>
+          <span style="width: 40px;">Dec</span>
+        </div>
+
+        <!-- 7-Row Grid -->
+        <div class="flex flex-col gap-[3px]">
+          <!-- Sun -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">S</span>
+            <div class="github-cell gh-0"></div><div class="github-cell gh-1"></div><div class="github-cell gh-0"></div><div class="github-cell gh-1"></div>
+            <div class="github-cell gh-1"></div><div class="github-cell gh-2"></div><div class="github-cell gh-1"></div><div class="github-cell gh-2"></div>
+            <div class="github-cell gh-2"></div><div class="github-cell gh-3"></div><div class="github-cell gh-3"></div><div class="github-cell gh-4"></div>
+            <div class="github-cell gh-4"></div><div class="github-cell gh-4"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+          </div>
+          <!-- Mon -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">M</span>
+            <div class="github-cell gh-1"></div><div class="github-cell gh-0"></div><div class="github-cell gh-1"></div><div class="github-cell gh-0"></div>
+            <div class="github-cell gh-2"></div><div class="github-cell gh-1"></div><div class="github-cell gh-2"></div><div class="github-cell gh-3"></div>
+            <div class="github-cell gh-3"></div><div class="github-cell gh-2"></div><div class="github-cell gh-4"></div><div class="github-cell gh-3"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-4"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-0"></div>
+          </div>
+          <!-- Tue -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">T</span>
+            <div class="github-cell gh-0"></div><div class="github-cell gh-1"></div><div class="github-cell gh-1"></div><div class="github-cell gh-2"></div>
+            <div class="github-cell gh-1"></div><div class="github-cell gh-2"></div><div class="github-cell gh-3"></div><div class="github-cell gh-2"></div>
+            <div class="github-cell gh-4"></div><div class="github-cell gh-3"></div><div class="github-cell gh-3"></div><div class="github-cell gh-4"></div>
+            <div class="github-cell gh-4"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-4"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-0"></div><div class="github-cell gh-0"></div>
+          </div>
+          <!-- Wed -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">W</span>
+            <div class="github-cell gh-1"></div><div class="github-cell gh-0"></div><div class="github-cell gh-2"></div><div class="github-cell gh-1"></div>
+            <div class="github-cell gh-2"></div><div class="github-cell gh-3"></div><div class="github-cell gh-2"></div><div class="github-cell gh-3"></div>
+            <div class="github-cell gh-3"></div><div class="github-cell gh-4"></div><div class="github-cell gh-4"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-4"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-0"></div><div class="github-cell gh-0"></div>
+          </div>
+          <!-- Thu -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">T</span>
+            <div class="github-cell gh-0"></div><div class="github-cell gh-1"></div><div class="github-cell gh-1"></div><div class="github-cell gh-2"></div>
+            <div class="github-cell gh-3"></div><div class="github-cell gh-2"></div><div class="github-cell gh-3"></div><div class="github-cell gh-4"></div>
+            <div class="github-cell gh-4"></div><div class="github-cell gh-3"></div><div class="github-cell gh-5"></div><div class="github-cell gh-4"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-0"></div><div class="github-cell gh-0"></div>
+          </div>
+          <!-- Fri -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">F</span>
+            <div class="github-cell gh-1"></div><div class="github-cell gh-0"></div><div class="github-cell gh-2"></div><div class="github-cell gh-1"></div>
+            <div class="github-cell gh-2"></div><div class="github-cell gh-3"></div><div class="github-cell gh-3"></div><div class="github-cell gh-3"></div>
+            <div class="github-cell gh-4"></div><div class="github-cell gh-4"></div><div class="github-cell gh-4"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-0"></div><div class="github-cell gh-0"></div>
+          </div>
+          <!-- Sat -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">S</span>
+            <div class="github-cell gh-0"></div><div class="github-cell gh-1"></div><div class="github-cell gh-1"></div><div class="github-cell gh-2"></div>
+            <div class="github-cell gh-1"></div><div class="github-cell gh-2"></div><div class="github-cell gh-2"></div><div class="github-cell gh-3"></div>
+            <div class="github-cell gh-3"></div><div class="github-cell gh-4"></div><div class="github-cell gh-3"></div><div class="github-cell gh-4"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-5"></div>
+            <div class="github-cell gh-5"></div><div class="github-cell gh-5"></div><div class="github-cell gh-0"></div><div class="github-cell gh-0"></div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex items-center justify-end gap-1 mt-3 text-[10px]" style="color: var(--color-text-tertiary);">
+          <span>Less</span>
+          <div class="github-cell gh-0"></div>
+          <div class="github-cell gh-1"></div>
+          <div class="github-cell gh-2"></div>
+          <div class="github-cell gh-3"></div>
+          <div class="github-cell gh-4"></div>
+          <div class="github-cell gh-5"></div>
+          <span>More</span>
+        </div>
+      </div>
+
+      <div class="mt-3 text-xs text-stone-500">
+        <span class="font-medium text-stone-700">Pros:</span> Complete data, familiar pattern<br>
+        <span class="font-medium text-stone-700">Cons:</span> Taller (~91px vs ~47px)
+      </div>
+    </div>
+
+    <!-- ===== OPTION B: Streak Timeline ===== -->
+    <div class="phone-frame">
+      <span class="option-label">B: Streak Timeline</span>
+      <p class="text-xs text-stone-500 mb-3">Emphasizes continuity • Ultra compact</p>
+
+      <div class="ds-card">
+        <!-- Timeline -->
+        <div class="flex items-center gap-1 mb-3">
+          <div class="streak-segment streak-active" style="width: 24px;"></div>
+          <div class="streak-segment streak-break" style="width: 8px;"></div>
+          <div class="streak-segment streak-active" style="width: 16px;"></div>
+          <div class="streak-segment streak-break" style="width: 4px;"></div>
+          <div class="streak-segment streak-active" style="width: 32px;"></div>
+          <div class="streak-segment streak-break" style="width: 4px;"></div>
+          <div class="streak-segment streak-active" style="width: 48px;"></div>
+          <div class="streak-segment streak-break" style="width: 4px;"></div>
+          <div class="streak-segment streak-current flex-1"></div>
+          <div class="w-2 h-2 rounded-full bg-white shadow" style="margin-left: -6px;"></div>
+        </div>
+
+        <!-- Month Labels -->
+        <div class="flex text-[10px] mb-3" style="color: var(--color-text-tertiary);">
+          <span style="flex: 1;">Jul</span>
+          <span style="flex: 1;">Aug</span>
+          <span style="flex: 1;">Sep</span>
+          <span style="flex: 1;">Oct</span>
+          <span style="flex: 1;">Nov</span>
+          <span style="flex: 0.7;">Dec</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: var(--habit-color);">
+              28
+            </div>
+            <div>
+              <div class="text-sm font-semibold" style="color: var(--color-text-primary);">Current Streak</div>
+              <div class="text-xs" style="color: var(--color-text-tertiary);">🔥 On fire!</div>
+            </div>
+          </div>
+          <div class="h-8 w-px" style="background: var(--color-border);"></div>
+          <div>
+            <div class="text-sm font-semibold" style="color: var(--color-text-primary);">45 days</div>
+            <div class="text-xs" style="color: var(--color-text-tertiary);">Best streak</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 text-xs text-stone-500">
+        <span class="font-medium text-stone-700">Pros:</span> Ultra compact, streak focus<br>
+        <span class="font-medium text-stone-700">Cons:</span> Loses individual day detail
+      </div>
+    </div>
+
+    <!-- ===== OPTION C: Mini-Month Blocks ===== -->
+    <div class="phone-frame">
+      <span class="option-label">C: Mini-Month Blocks</span>
+      <p class="text-xs text-stone-500 mb-3">Monthly comparison • Calendar mental model</p>
+
+      <div class="ds-card">
+        <div class="flex gap-1.5 justify-between">
+          <!-- July -->
+          <div class="mini-month">
+            <div class="text-[9px] font-medium text-center mb-1" style="color: var(--color-text-secondary);">Jul</div>
+            <div class="grid grid-cols-7 gap-[2px]">
+              <div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-partial"></div><div class="mini-day md-empty"></div><div class="mini-day md-done"></div><div class="mini-day md-empty"></div><div class="mini-day md-partial"></div><div class="mini-day md-empty"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-empty"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-empty"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+            </div>
+            <div class="text-[9px] font-medium text-center mt-1" style="color: var(--habit-color);">52%</div>
+          </div>
+
+          <!-- August -->
+          <div class="mini-month">
+            <div class="text-[9px] font-medium text-center mb-1" style="color: var(--color-text-secondary);">Aug</div>
+            <div class="grid grid-cols-7 gap-[2px]">
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-partial"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+            </div>
+            <div class="text-[9px] font-medium text-center mt-1" style="color: var(--habit-color);">78%</div>
+          </div>
+
+          <!-- September -->
+          <div class="mini-month">
+            <div class="text-[9px] font-medium text-center mb-1" style="color: var(--color-text-secondary);">Sep</div>
+            <div class="grid grid-cols-7 gap-[2px]">
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-partial"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+            </div>
+            <div class="text-[9px] font-medium text-center mt-1" style="color: var(--habit-color);">92%</div>
+          </div>
+
+          <!-- October -->
+          <div class="mini-month">
+            <div class="text-[9px] font-medium text-center mb-1" style="color: var(--color-text-secondary);">Oct</div>
+            <div class="grid grid-cols-7 gap-[2px]">
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+            </div>
+            <div class="text-[9px] font-medium text-center mt-1" style="color: var(--habit-color);">98%</div>
+          </div>
+
+          <!-- November -->
+          <div class="mini-month">
+            <div class="text-[9px] font-medium text-center mb-1" style="color: var(--color-text-secondary);">Nov</div>
+            <div class="grid grid-cols-7 gap-[2px]">
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+            </div>
+            <div class="text-[9px] font-medium text-center mt-1" style="color: var(--habit-color);">100%</div>
+          </div>
+
+          <!-- December -->
+          <div class="mini-month" style="border: 2px solid var(--habit-color);">
+            <div class="text-[9px] font-medium text-center mb-1" style="color: var(--habit-color);">Dec</div>
+            <div class="grid grid-cols-7 gap-[2px]">
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-done"></div>
+              <div class="mini-day md-done"></div><div class="mini-day md-done"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div><div class="mini-day md-empty"></div>
+            </div>
+            <div class="text-[9px] font-medium text-center mt-1" style="color: var(--habit-color);">96%</div>
+          </div>
+        </div>
+
+        <!-- Trend indicator -->
+        <div class="flex items-center justify-center gap-2 mt-3 text-xs" style="color: var(--habit-color);">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+          <span class="font-medium">+44% since July</span>
+        </div>
+      </div>
+
+      <div class="mt-3 text-xs text-stone-500">
+        <span class="font-medium text-stone-700">Pros:</span> Clear monthly %, calendar mental model<br>
+        <span class="font-medium text-stone-700">Cons:</span> Horizontal space, small cells
+      </div>
+    </div>
+
+    <!-- ===== OPTION D: Density Wave ===== -->
+    <div class="phone-frame">
+      <span class="option-label">D: Density Wave</span>
+      <p class="text-xs text-stone-500 mb-3">Weekly completion % • Modern & compact</p>
+
+      <div class="ds-card">
+        <!-- Wave Chart -->
+        <div class="flex items-end gap-[3px] h-16 mb-2">
+          <div class="wave-bar" style="height: 20%;"></div>
+          <div class="wave-bar" style="height: 35%;"></div>
+          <div class="wave-bar" style="height: 25%;"></div>
+          <div class="wave-bar" style="height: 40%;"></div>
+          <div class="wave-bar" style="height: 50%;"></div>
+          <div class="wave-bar" style="height: 45%;"></div>
+          <div class="wave-bar" style="height: 55%;"></div>
+          <div class="wave-bar" style="height: 60%;"></div>
+          <div class="wave-bar" style="height: 70%;"></div>
+          <div class="wave-bar" style="height: 65%;"></div>
+          <div class="wave-bar" style="height: 75%;"></div>
+          <div class="wave-bar" style="height: 80%;"></div>
+          <div class="wave-bar" style="height: 85%;"></div>
+          <div class="wave-bar" style="height: 90%;"></div>
+          <div class="wave-bar" style="height: 85%;"></div>
+          <div class="wave-bar" style="height: 95%;"></div>
+          <div class="wave-bar" style="height: 100%;"></div>
+          <div class="wave-bar" style="height: 95%;"></div>
+          <div class="wave-bar" style="height: 100%;"></div>
+          <div class="wave-bar" style="height: 100%;"></div>
+          <div class="wave-bar" style="height: 100%;"></div>
+          <div class="wave-bar" style="height: 100%;"></div>
+          <div class="wave-bar" style="height: 100%;"></div>
+          <div class="wave-bar" style="height: 100%; background: var(--habit-color-600); box-shadow: 0 0 8px var(--habit-color-400);"></div>
+        </div>
+
+        <!-- Month Labels -->
+        <div class="flex text-[10px]" style="color: var(--color-text-tertiary);">
+          <span style="flex: 1;">Jul</span>
+          <span style="flex: 1;">Aug</span>
+          <span style="flex: 1;">Sep</span>
+          <span style="flex: 1;">Oct</span>
+          <span style="flex: 1;">Nov</span>
+          <span style="flex: 0.7;">Dec</span>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="flex items-center justify-between mt-3 pt-3" style="border-top: 1px solid var(--color-border);">
+          <div>
+            <div class="text-2xl font-bold" style="color: var(--habit-color);">100%</div>
+            <div class="text-[10px]" style="color: var(--color-text-tertiary);">This week</div>
+          </div>
+          <div class="flex items-center gap-1 px-2 py-1 rounded-full" style="background: #ECFDF5; color: #059669;">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+            </svg>
+            <span class="text-xs font-medium">+48%</span>
+          </div>
+          <div class="text-right">
+            <div class="text-sm font-semibold" style="color: var(--color-text-primary);">86%</div>
+            <div class="text-[10px]" style="color: var(--color-text-tertiary);">6-mo avg</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 text-xs text-stone-500">
+        <span class="font-medium text-stone-700">Pros:</span> Ultra compact, shows trends clearly<br>
+        <span class="font-medium text-stone-700">Cons:</span> Abstract, less intuitive
+      </div>
+    </div>
+
+    <!-- ===== OPTION E: Hybrid (Improved Current) ===== -->
+    <div class="phone-frame">
+      <span class="option-label">E: Hybrid (Enhanced)</span>
+      <p class="text-xs text-stone-500 mb-3">Current layout + improvements</p>
+
+      <div class="ds-card">
+        <!-- Month Labels with Dividers -->
+        <div class="flex text-[10px] mb-1.5 pl-6" style="color: var(--color-text-tertiary);">
+          <span class="flex-1 text-center">Jul</span>
+          <span class="flex-1 text-center">Aug</span>
+          <span class="flex-1 text-center">Sep</span>
+          <span class="flex-1 text-center">Oct</span>
+          <span class="flex-1 text-center">Nov</span>
+          <span class="flex-1 text-center">Dec</span>
+        </div>
+
+        <!-- 3-Row Grid with Month Dividers -->
+        <div class="flex flex-col gap-1">
+          <!-- Tue -->
+          <div class="flex items-center">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">Tu</span>
+            <div class="flex items-center flex-1">
+              <!-- Jul -->
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-1"></div><div class="hybrid-cell gh-0"></div><div class="hybrid-cell gh-1"></div><div class="hybrid-cell gh-2"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <!-- Aug -->
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-2"></div><div class="hybrid-cell gh-3"></div><div class="hybrid-cell gh-2"></div><div class="hybrid-cell gh-3"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <!-- Sep -->
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-4"></div><div class="hybrid-cell gh-3"></div><div class="hybrid-cell gh-4"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <!-- Oct -->
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <!-- Nov -->
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <!-- Dec -->
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell" style="border: 1.5px solid var(--habit-color); background: white;"></div></div>
+            </div>
+          </div>
+
+          <!-- Thu -->
+          <div class="flex items-center">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">Th</span>
+            <div class="flex items-center flex-1">
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-0"></div><div class="hybrid-cell gh-1"></div><div class="hybrid-cell gh-1"></div><div class="hybrid-cell gh-2"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-3"></div><div class="hybrid-cell gh-2"></div><div class="hybrid-cell gh-3"></div><div class="hybrid-cell gh-4"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-4"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-4"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-0"></div></div>
+            </div>
+          </div>
+
+          <!-- Sat -->
+          <div class="flex items-center">
+            <span class="text-[10px] w-5" style="color: var(--color-text-tertiary);">Sa</span>
+            <div class="flex items-center flex-1">
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-1"></div><div class="hybrid-cell gh-1"></div><div class="hybrid-cell gh-2"></div><div class="hybrid-cell gh-1"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-2"></div><div class="hybrid-cell gh-3"></div><div class="hybrid-cell gh-3"></div><div class="hybrid-cell gh-4"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-4"></div><div class="hybrid-cell gh-4"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div></div>
+              <div class="month-divider" style="height: 11px;"></div>
+              <div class="flex gap-[2px]"><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-5"></div><div class="hybrid-cell gh-0"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Completion Badges -->
+        <div class="flex mt-3 pl-5 text-[9px] font-medium" style="color: var(--habit-color);">
+          <span class="flex-1 text-center">52%</span>
+          <span class="flex-1 text-center">78%</span>
+          <span class="flex-1 text-center">92%</span>
+          <span class="flex-1 text-center">98%</span>
+          <span class="flex-1 text-center">100%</span>
+          <span class="flex-1 text-center">96%</span>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex items-center justify-end gap-1 mt-2 text-[9px]" style="color: var(--color-text-tertiary);">
+          <span>Less</span>
+          <div class="hybrid-cell gh-0" style="width:8px;height:8px;"></div>
+          <div class="hybrid-cell gh-1" style="width:8px;height:8px;"></div>
+          <div class="hybrid-cell gh-3" style="width:8px;height:8px;"></div>
+          <div class="hybrid-cell gh-5" style="width:8px;height:8px;"></div>
+          <span>More</span>
+          <span class="ml-2">◯ Today</span>
+        </div>
+      </div>
+
+      <div class="mt-3 text-xs text-stone-500">
+        <span class="font-medium text-stone-700">Pros:</span> Keeps compact size, adds clarity<br>
+        <span class="font-medium text-stone-700">Cons:</span> Still only ~43% of days shown
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Color Theme Switcher -->
+  <div class="fixed bottom-4 right-4 bg-white rounded-xl shadow-lg p-4 border border-stone-200">
+    <p class="text-sm font-medium text-stone-700 mb-2">Habit Color:</p>
+    <div class="flex gap-2">
+      <button onclick="setTheme('emerald')" class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('blue')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('purple')" class="w-8 h-8 rounded-full bg-violet-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('orange')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('pink')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white shadow"></button>
+    </div>
+  </div>
+
+  <script>
+    const themes = {
+      emerald: { main: '#10B981', 50: '#ECFDF5', 100: '#D1FAE5', 200: '#A7F3D0', 300: '#6EE7B7', 400: '#34D399', 500: '#10B981', 600: '#059669' },
+      blue: { main: '#3B82F6', 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB' },
+      purple: { main: '#8B5CF6', 50: '#F5F3FF', 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED' },
+      orange: { main: '#F97316', 50: '#FFF7ED', 100: '#FFEDD5', 200: '#FED7AA', 300: '#FDBA74', 400: '#FB923C', 500: '#F97316', 600: '#EA580C' },
+      pink: { main: '#EC4899', 50: '#FDF2F8', 100: '#FCE7F3', 200: '#FBCFE8', 300: '#F9A8D4', 400: '#F472B6', 500: '#EC4899', 600: '#DB2777' }
+    };
+
+    function setTheme(color) {
+      const theme = themes[color];
+      const root = document.documentElement;
+      root.style.setProperty('--habit-color', theme.main);
+      root.style.setProperty('--habit-color-50', theme[50]);
+      root.style.setProperty('--habit-color-100', theme[100]);
+      root.style.setProperty('--habit-color-200', theme[200]);
+      root.style.setProperty('--habit-color-300', theme[300]);
+      root.style.setProperty('--habit-color-400', theme[400]);
+      root.style.setProperty('--habit-color-500', theme[500]);
+      root.style.setProperty('--habit-color-600', theme[600]);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Creation - Single Page (No Wizard)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #faf9f7;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .time-button {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .time-button:hover:not(.selected) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .time-button.selected {
+      border: 2px solid #10B981;
+      background: #D1FAE5;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      font-size: 18px;
+      outline: none;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    input[type="text"]:focus {
+      border-color: #10B981;
+      background: #f9fafb;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 128px;
+      height: 4px;
+      background: #d6d3d1;
+      border-radius: 2px;
+    }
+
+    .success-animation {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .success-animation.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 36px; font-weight: 800; color: white; margin-bottom: 8px;">
+        Single-Page Form
+      </h1>
+      <p style="font-size: 16px; color: #cbd5e1;">
+        All fields visible • No wizard steps • Minimal taps
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+
+        <!-- Header -->
+        <div style="background: white; padding: 16px 24px; border-bottom: 1px solid #e7e5e4;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2 style="font-size: 20px; font-weight: 600; color: #1c1917;">Create Habit</h2>
+            <button onclick="resetFlow()" style="background: none; border: none; color: #78716c; font-size: 28px; cursor: pointer; line-height: 1;">×</button>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 24px; height: calc(100% - 180px); overflow-y: auto;">
+
+          <!-- Title -->
+          <h1 style="font-size: 24px; font-weight: 700; color: #1c1917; margin-bottom: 8px;">
+            Create a new habit
+          </h1>
+          <p style="font-size: 16px; color: #78716c; margin-bottom: 32px;">
+            What do you want to build?
+          </p>
+
+          <!-- Habit Name -->
+          <div style="margin-bottom: 24px;">
+            <label style="display: block; font-size: 12px; font-weight: 500; color: #78716c; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+              Habit Name
+            </label>
+            <input
+              type="text"
+              id="habitInput"
+              placeholder="e.g., Read for 20 minutes"
+              maxlength="50"
+              oninput="updateForm()"
+            />
+            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+              <span id="charCount" style="font-size: 12px; color: #a8a29e;">0/50 characters</span>
+              <span id="minCharsWarning" style="font-size: 12px; color: #d97706; display: none;">At least 2 characters</span>
+            </div>
+          </div>
+
+          <!-- Time of Day -->
+          <div style="margin-bottom: 24px;">
+            <label style="display: block; font-size: 12px; font-weight: 500; color: #78716c; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+              Best Time
+            </label>
+            <div style="display: flex; gap: 10px;">
+              <div id="timeMorning" class="time-button" onclick="selectTime('morning')" style="flex: 1; padding: 12px; border: 2px solid #e7e5e4; border-radius: 12px; background: white; text-align: center;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🌅</div>
+                <div style="font-size: 14px; font-weight: 600; color: #57534e;">Morning</div>
+              </div>
+              <div id="timeAfternoon" class="time-button selected" onclick="selectTime('afternoon')" style="flex: 1; padding: 12px; border: 2px solid #10B981; border-radius: 12px; background: #D1FAE5; text-align: center;">
+                <div style="font-size: 24px; margin-bottom: 4px;">☀️</div>
+                <div style="font-size: 14px; font-weight: 600; color: #10B981;">Afternoon</div>
+              </div>
+              <div id="timeEvening" class="time-button" onclick="selectTime('evening')" style="flex: 1; padding: 12px; border: 2px solid #e7e5e4; border-radius: 12px; background: white; text-align: center;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🌙</div>
+                <div style="font-size: 14px; font-weight: 600; color: #57534e;">Evening</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info Box -->
+          <div style="padding: 16px; background: #D1FAE5; border-radius: 12px; border: 1px solid #10B981;">
+            <p style="font-size: 14px; color: #065f46; line-height: 1.6;">
+              <strong>✓ Default settings applied</strong><br>
+              <span id="reminderInfo">• Reminder: 12:00 PM</span><br>
+              • Frequency: Daily<br>
+              • You can customize these in settings later
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: white; padding: 16px 24px 24px; border-top: 1px solid #e7e5e4;">
+          <button id="createBtn" onclick="createHabit()" disabled style="width: 100%; padding: 16px; background: #d6d3d1; color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.5; cursor: not-allowed;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            Create Habit
+          </button>
+        </div>
+
+        <!-- Success Animation -->
+        <div id="successAnimation" class="success-animation">
+          <div class="checkmark">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <h2 style="font-size: 24px; font-weight: 700; color: #1c1917;">Habit Created!</h2>
+          <p style="font-size: 16px; color: #78716c; text-align: center; max-width: 280px;">
+            <span id="createdHabitName">Your habit</span> is ready to track
+          </p>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- Comparison Stats -->
+    <div style="margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 20px; text-align: center;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">WIZARD MODE</div>
+        <div style="font-size: 32px; font-weight: 800; color: #F59E0B;">3-4</div>
+        <div style="font-size: 14px; color: #94a3b8;">taps to create</div>
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.2); backdrop-filter: blur(10px); border: 2px solid #10B981; border-radius: 16px; padding: 20px; text-align: center;">
+        <div style="font-size: 12px; color: #D1FAE5; margin-bottom: 4px;">SINGLE PAGE</div>
+        <div style="font-size: 32px; font-weight: 800; color: #10B981;">1-2</div>
+        <div style="font-size: 14px; color: #D1FAE5; font-weight: 600;">taps to create ⚡</div>
+      </div>
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 20px; text-align: center;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 4px;">TIME SAVED</div>
+        <div style="font-size: 32px; font-weight: 800; color: #10B981;">50%</div>
+        <div style="font-size: 14px; color: #94a3b8;">faster flow</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let habitName = '';
+    let selectedTime = 'afternoon';
+
+    function updateForm() {
+      const input = document.getElementById('habitInput');
+      habitName = input.value;
+      const charCount = document.getElementById('charCount');
+      const warning = document.getElementById('minCharsWarning');
+      const createBtn = document.getElementById('createBtn');
+
+      charCount.textContent = `${habitName.length}/50 characters`;
+
+      if (habitName.trim().length >= 2) {
+        createBtn.disabled = false;
+        createBtn.style.background = '#10B981';
+        createBtn.style.opacity = '1';
+        createBtn.style.cursor = 'pointer';
+        warning.style.display = 'none';
+      } else {
+        createBtn.disabled = true;
+        createBtn.style.background = '#d6d3d1';
+        createBtn.style.opacity = '0.5';
+        createBtn.style.cursor = 'not-allowed';
+        if (habitName.length > 0 && habitName.length < 2) {
+          warning.style.display = 'block';
+        } else {
+          warning.style.display = 'none';
+        }
+      }
+    }
+
+    function selectTime(time) {
+      selectedTime = time;
+
+      // Update UI
+      const buttons = ['timeMorning', 'timeAfternoon', 'timeEvening'];
+      buttons.forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        const textEl = btn.querySelector('div:last-child');
+
+        if (btnId === 'time' + time.charAt(0).toUpperCase() + time.slice(1)) {
+          btn.classList.add('selected');
+          btn.style.border = '2px solid #10B981';
+          btn.style.background = '#D1FAE5';
+          textEl.style.color = '#10B981';
+        } else {
+          btn.classList.remove('selected');
+          btn.style.border = '2px solid #e7e5e4';
+          btn.style.background = 'white';
+          textEl.style.color = '#57534e';
+        }
+      });
+
+      // Update reminder info
+      const reminderInfo = document.getElementById('reminderInfo');
+      const times = {
+        morning: '7:00 AM',
+        afternoon: '12:00 PM',
+        evening: '8:00 PM'
+      };
+      reminderInfo.textContent = `• Reminder: ${times[time]}`;
+    }
+
+    function createHabit() {
+      if (habitName.trim().length < 2) return;
+
+      // Show success
+      document.getElementById('createdHabitName').textContent = habitName;
+      document.getElementById('successAnimation').classList.add('active');
+
+      // Auto-reset
+      setTimeout(() => {
+        resetFlow();
+      }, 2500);
+    }
+
+    function resetFlow() {
+      document.getElementById('successAnimation').classList.remove('active');
+
+      setTimeout(() => {
+        habitName = '';
+        selectedTime = 'afternoon';
+        document.getElementById('habitInput').value = '';
+        document.getElementById('charCount').textContent = '0/50 characters';
+        document.getElementById('createBtn').disabled = true;
+        document.getElementById('createBtn').style.background = '#d6d3d1';
+        document.getElementById('createBtn').style.opacity = '0.5';
+
+        // Reset time selection
+        selectTime('afternoon');
+      }, 300);
+    }
+
+    // Initialize
+    document.getElementById('habitInput').focus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar - GitHub-Style Heatmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    /* Design System CSS Variables */
+    :root {
+      --color-background: #faf9f7;
+      --color-card: #ffffff;
+      --color-border: #e7e5e4;
+      --color-text-primary: #1F2937;
+      --color-text-secondary: #78716c;
+      --color-text-tertiary: #9CA3AF;
+      --radius: 0.5rem;
+
+      /* Dynamic habit color (emerald default) */
+      --habit-color: #10B981;
+      --habit-color-50: #ECFDF5;
+      --habit-color-100: #D1FAE5;
+      --habit-color-200: #A7F3D0;
+      --habit-color-300: #6EE7B7;
+      --habit-color-400: #34D399;
+      --habit-color-500: #10B981;
+      --habit-color-600: #059669;
+    }
+
+    body { background: #78716c; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: var(--color-background);
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: #1c1917;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    /* Card styling */
+    .ds-card {
+      background: var(--color-card);
+      border-radius: calc(var(--radius) * 2);
+      border: 1px solid var(--color-border);
+    }
+
+    /* GitHub-style heatmap cell */
+    .gh-cell {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      cursor: pointer;
+    }
+
+    .gh-cell:hover {
+      transform: scale(1.3);
+      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Intensity levels */
+    .gh-0 { background: #f5f5f4; }
+    .gh-1 { background: var(--habit-color-100); }
+    .gh-2 { background: var(--habit-color-200); }
+    .gh-3 { background: var(--habit-color-300); }
+    .gh-4 { background: var(--habit-color-400); }
+    .gh-5 { background: var(--habit-color-500); }
+
+    /* Today indicator */
+    .gh-today {
+      box-shadow: inset 0 0 0 2px var(--habit-color-600);
+      background: var(--color-card);
+    }
+
+    /* Future cell */
+    .gh-future {
+      background: #fafafa;
+      opacity: 0.5;
+    }
+
+    /* Calendar day cell */
+    .cal-day {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      position: relative;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--color-text-primary);
+    }
+
+    .cal-day:hover {
+      background: #f5f5f4;
+    }
+
+    .cal-day.completed {
+      background: var(--habit-color-50);
+    }
+
+    .cal-day.completed::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--habit-color);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 6px;
+    }
+
+    .cal-day.today {
+      font-weight: 700;
+      box-shadow: inset 0 0 0 2px var(--habit-color);
+    }
+
+    .cal-day.other-month {
+      color: #d6d3d1;
+    }
+
+    .cal-day.future {
+      color: var(--color-text-tertiary);
+    }
+
+    /* Badge styling */
+    .ds-badge {
+      border-radius: 9999px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Button styling */
+    .ds-btn {
+      border-radius: 9999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .ds-btn:hover {
+      background: #f5f5f4;
+    }
+
+    .ds-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+
+  <div class="phone-frame">
+    <div class="notch"></div>
+
+    <!-- Content -->
+    <div class="pt-14 px-4 h-full flex flex-col">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between py-3">
+        <div class="flex items-center gap-3">
+          <!-- Habit Icon -->
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: var(--habit-color-100);">
+            <svg class="w-5 h-5" style="color: var(--habit-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg" style="color: var(--color-text-primary);">Morning Run</h1>
+            <p class="text-sm" style="color: var(--color-text-secondary);">Exercise daily</p>
+          </div>
+        </div>
+        <button class="ds-btn w-10 h-10">
+          <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- GitHub-Style Heatmap (6 months, 7 rows) -->
+      <div class="ds-card p-4 mt-2 shadow-sm">
+        <!-- Month Labels -->
+        <div class="flex text-[10px] mb-1.5 pl-5" style="color: var(--color-text-tertiary);">
+          <span style="width: 52px;">Jul</span>
+          <span style="width: 52px;">Aug</span>
+          <span style="width: 52px;">Sep</span>
+          <span style="width: 52px;">Oct</span>
+          <span style="width: 52px;">Nov</span>
+          <span style="width: 36px;">Dec</span>
+        </div>
+
+        <!-- 7-Row Heatmap Grid -->
+        <div class="flex flex-col gap-[3px]">
+          <!-- Sunday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">S</span>
+            <!-- July -->
+            <div class="gh-cell gh-0"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-0"></div><div class="gh-cell gh-1"></div>
+            <!-- August -->
+            <div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div>
+            <!-- September -->
+            <div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div>
+            <!-- October -->
+            <div class="gh-cell gh-4"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <!-- November -->
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <!-- December -->
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+          </div>
+
+          <!-- Monday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">M</span>
+            <div class="gh-cell gh-1"></div><div class="gh-cell gh-0"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-0"></div>
+            <div class="gh-cell gh-2"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-2"></div>
+            <div class="gh-cell gh-3"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-3"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-today"></div>
+          </div>
+
+          <!-- Tuesday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">T</span>
+            <div class="gh-cell gh-0"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div>
+            <div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div>
+            <div class="gh-cell gh-4"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div>
+            <div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-future"></div><div class="gh-cell gh-future"></div>
+          </div>
+
+          <!-- Wednesday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">W</span>
+            <div class="gh-cell gh-1"></div><div class="gh-cell gh-0"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-1"></div>
+            <div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div>
+            <div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-future"></div><div class="gh-cell gh-future"></div>
+          </div>
+
+          <!-- Thursday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">T</span>
+            <div class="gh-cell gh-0"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div>
+            <div class="gh-cell gh-3"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-3"></div>
+            <div class="gh-cell gh-4"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-4"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-future"></div><div class="gh-cell gh-future"></div>
+          </div>
+
+          <!-- Friday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">F</span>
+            <div class="gh-cell gh-1"></div><div class="gh-cell gh-0"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-1"></div>
+            <div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div>
+            <div class="gh-cell gh-4"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-future"></div><div class="gh-cell gh-future"></div>
+          </div>
+
+          <!-- Saturday -->
+          <div class="flex items-center gap-[3px]">
+            <span class="text-[9px] w-4" style="color: var(--color-text-tertiary);">S</span>
+            <div class="gh-cell gh-0"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div>
+            <div class="gh-cell gh-1"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-2"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-3"></div>
+            <div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div><div class="gh-cell gh-3"></div><div class="gh-cell gh-4"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div>
+            <div class="gh-cell gh-5"></div><div class="gh-cell gh-5"></div><div class="gh-cell gh-future"></div><div class="gh-cell gh-future"></div>
+          </div>
+        </div>
+
+        <!-- Legend + Stats Row -->
+        <div class="flex items-center justify-between mt-3 pt-3" style="border-top: 1px solid var(--color-border);">
+          <!-- Legend -->
+          <div class="flex items-center gap-1 text-[9px]" style="color: var(--color-text-tertiary);">
+            <span>Less</span>
+            <div class="gh-cell gh-0" style="width:8px;height:8px;"></div>
+            <div class="gh-cell gh-1" style="width:8px;height:8px;"></div>
+            <div class="gh-cell gh-2" style="width:8px;height:8px;"></div>
+            <div class="gh-cell gh-3" style="width:8px;height:8px;"></div>
+            <div class="gh-cell gh-4" style="width:8px;height:8px;"></div>
+            <div class="gh-cell gh-5" style="width:8px;height:8px;"></div>
+            <span>More</span>
+          </div>
+
+          <!-- Completion Rate -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold" style="color: var(--habit-color);">86%</span>
+            <span class="text-[10px]" style="color: var(--color-text-tertiary);">6-month avg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="flex items-center gap-2 mt-3 px-1">
+        <span class="ds-badge" style="background: #f5f5f4; color: var(--color-text-primary);">Daily</span>
+        <span class="ds-badge flex items-center gap-1" style="background: var(--habit-color-50); color: var(--habit-color);">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+          </svg>
+          28 day streak
+        </span>
+        <div class="flex-1"></div>
+        <button class="ds-btn w-9 h-9">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="h-px mt-3" style="background: var(--color-border);"></div>
+
+      <!-- Calendar Grid -->
+      <div class="flex-1 mt-3 overflow-hidden">
+        <!-- Day Headers -->
+        <div class="grid grid-cols-7 mb-2">
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Mon</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Tue</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Wed</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Thu</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Fri</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Sat</div>
+          <div class="text-center text-sm font-medium" style="color: var(--color-text-secondary);">Sun</div>
+        </div>
+
+        <!-- Calendar Days -->
+        <div class="grid grid-cols-7 gap-y-1">
+          <!-- Week 1 -->
+          <div class="cal-day other-month">25</div>
+          <div class="cal-day other-month">26</div>
+          <div class="cal-day other-month">27</div>
+          <div class="cal-day other-month">28</div>
+          <div class="cal-day other-month">29</div>
+          <div class="cal-day other-month">30</div>
+          <div class="cal-day completed">1</div>
+
+          <!-- Week 2 -->
+          <div class="cal-day completed">2</div>
+          <div class="cal-day completed">3</div>
+          <div class="cal-day completed">4</div>
+          <div class="cal-day completed">5</div>
+          <div class="cal-day">6</div>
+          <div class="cal-day completed">7</div>
+          <div class="cal-day completed">8</div>
+
+          <!-- Week 3 -->
+          <div class="cal-day completed">9</div>
+          <div class="cal-day completed">10</div>
+          <div class="cal-day">11</div>
+          <div class="cal-day completed">12</div>
+          <div class="cal-day completed">13</div>
+          <div class="cal-day">14</div>
+          <div class="cal-day completed">15</div>
+
+          <!-- Week 4 -->
+          <div class="cal-day completed">16</div>
+          <div class="cal-day completed">17</div>
+          <div class="cal-day completed">18</div>
+          <div class="cal-day completed">19</div>
+          <div class="cal-day completed">20</div>
+          <div class="cal-day completed">21</div>
+          <div class="cal-day completed">22</div>
+
+          <!-- Week 5 -->
+          <div class="cal-day completed">23</div>
+          <div class="cal-day completed">24</div>
+          <div class="cal-day completed">25</div>
+          <div class="cal-day completed">26</div>
+          <div class="cal-day completed">27</div>
+          <div class="cal-day completed">28</div>
+          <div class="cal-day completed">29</div>
+
+          <!-- Week 6 -->
+          <div class="cal-day today">30</div>
+          <div class="cal-day future">31</div>
+          <div class="cal-day other-month future">1</div>
+          <div class="cal-day other-month future">2</div>
+          <div class="cal-day other-month future">3</div>
+          <div class="cal-day other-month future">4</div>
+          <div class="cal-day other-month future">5</div>
+        </div>
+      </div>
+
+      <!-- Month Navigation -->
+      <div class="flex items-center justify-between py-4" style="border-top: 1px solid var(--color-border);">
+        <button class="ds-btn flex items-center gap-2 px-4 py-2">
+          <svg class="w-4 h-4" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span class="font-semibold" style="color: var(--color-text-primary);">Dec 2024</span>
+        </button>
+        <div class="flex gap-2">
+          <button class="ds-btn w-10 h-10">
+            <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <button class="ds-btn w-10 h-10">
+            <svg class="w-5 h-5" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Color Theme Switcher -->
+  <div class="fixed bottom-4 right-4 bg-white rounded-xl shadow-lg p-4 border border-stone-200">
+    <p class="text-sm font-medium text-stone-700 mb-2">Habit Color:</p>
+    <div class="flex gap-2">
+      <button onclick="setTheme('emerald')" class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('blue')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('purple')" class="w-8 h-8 rounded-full bg-violet-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('orange')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white shadow"></button>
+      <button onclick="setTheme('pink')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white shadow"></button>
+    </div>
+  </div>
+
+  <script>
+    const themes = {
+      emerald: { main: '#10B981', 50: '#ECFDF5', 100: '#D1FAE5', 200: '#A7F3D0', 300: '#6EE7B7', 400: '#34D399', 500: '#10B981', 600: '#059669' },
+      blue: { main: '#3B82F6', 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB' },
+      purple: { main: '#8B5CF6', 50: '#F5F3FF', 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED' },
+      orange: { main: '#F97316', 50: '#FFF7ED', 100: '#FFEDD5', 200: '#FED7AA', 300: '#FDBA74', 400: '#FB923C', 500: '#F97316', 600: '#EA580C' },
+      pink: { main: '#EC4899', 50: '#FDF2F8', 100: '#FCE7F3', 200: '#FBCFE8', 300: '#F9A8D4', 400: '#F472B6', 500: '#EC4899', 600: '#DB2777' }
+    };
+
+    function setTheme(color) {
+      const theme = themes[color];
+      const root = document.documentElement;
+      root.style.setProperty('--habit-color', theme.main);
+      root.style.setProperty('--habit-color-50', theme[50]);
+      root.style.setProperty('--habit-color-100', theme[100]);
+      root.style.setProperty('--habit-color-200', theme[200]);
+      root.style.setProperty('--habit-color-300', theme[300]);
+      root.style.setProperty('--habit-color-400', theme[400]);
+      root.style.setProperty('--habit-color-500', theme[500]);
+      root.style.setProperty('--habit-color-600', theme[600]);
+    }
+  </script>
+
+</body>
+</html>
