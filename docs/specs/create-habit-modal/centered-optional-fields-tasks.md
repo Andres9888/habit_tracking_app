@@ -168,11 +168,11 @@
 
 #### Task 4.3: Manual QA Testing
 
-**Checklist**: See "Manual QA Checklist" in spec
+**Checklist**: See `/docs/Working/manual-qa-testing-guide.md` for comprehensive testing guide
 
 **Acceptance Criteria**:
 
-- [ ] All QA checklist items pass
+- [ ] All QA checklist items pass (25 test cases)
 - [ ] Tested on iOS simulator
 - [ ] Tested on Android emulator
 - [ ] Tested on physical device (if available)
@@ -184,6 +184,22 @@
 **Dependencies**: Task 4.1
 
 **Test Coverage**: N/A (manual QA)
+
+**Implementation Notes**:
+
+- ✅ **Documentation Complete**: Created comprehensive manual QA testing guide at `/docs/Working/manual-qa-testing-guide.md`
+- **Guide Contents**:
+  - 25 detailed test cases with step-by-step instructions
+  - Platform-specific testing procedures for iOS and Android
+  - VoiceOver and TalkBack accessibility testing guides
+  - Common issues troubleshooting section
+  - Test results summary template for formal QA sign-off
+- **Note**: Manual tests require human tester with device/simulator access - cannot be executed by AI agent
+- **Status**: Ready for manual execution by QA team or developer
+- **To Enable Feature**: Set `USE_CENTERED_HABIT_MODAL = true` in `src/features/habits/components/HabitsModals.tsx:35`
+- **To Run**:
+  - iOS: `npx expo start --ios`
+  - Android: `npx expo start --android`
 
 ---
 
