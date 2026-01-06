@@ -145,7 +145,7 @@ export function HabitsEmptyState({
   const timeContext = getTimeBasedHabits();
 
   return (
-    <View className='w-full gap-4 bg-transparent py-4'>
+    <View className='gap-4 bg-transparent py-4' style={{ alignSelf: 'stretch' }}>
       {/* Welcome Hero */}
       <WelcomeHero greeting={timeContext.greeting} period={timeContext.period} />
 
@@ -337,7 +337,7 @@ function WelcomeHero({ greeting, period }: { greeting: string; period: string })
   return (
     <Animated.View
       entering={FadeInDown.delay(0).springify().damping(18)}
-      className='relative items-center gap-2.5 overflow-hidden rounded-2xl border border-amber-200 px-5 py-5'
+      className='relative w-full items-center gap-2.5 overflow-hidden rounded-2xl border border-amber-200 px-5 py-5'
       style={{
         backgroundColor: '#fffbeb', // amber-50
         shadowColor: '#f59e0b',
@@ -847,7 +847,7 @@ function CompactHelperRow({
   return (
     <Animated.View
       entering={FadeInDown.delay(400).springify().damping(18)}
-      className='flex-row items-center justify-center gap-6 rounded-3xl bg-stone-100/60 px-4 py-3'
+      className='w-full flex-row items-center justify-center gap-6 rounded-3xl bg-stone-100/60 px-4 py-3'
     >
       {onNeedHelpQuiz && (
         <Pressable
