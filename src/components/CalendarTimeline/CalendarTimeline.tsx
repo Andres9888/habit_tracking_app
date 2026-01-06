@@ -33,6 +33,12 @@ export interface CalendarTimelineProps {
   completionByDay?: Record<string, DayCompletionStatus>;
   /** Whether to reduce motion */
   reduceMotion?: boolean;
+  /** Callback when a day is tapped. Receives the date. */
+  onDayPress?: (date: Date) => void;
+  /** Whether day tapping is enabled (default: true when onDayPress provided) */
+  isDayPressEnabled?: boolean;
+  /** Disable tap on future dates (default: true) */
+  disableFutureDayPress?: boolean;
 }
 
 /** Animated completion indicator dot */
@@ -51,9 +57,9 @@ const CompletionDot: React.FC<{
     }
 
     const springAnim = Animated.spring(scaleAnim, {
-      toValue: 1,
       friction: 6,
       tension: 200,
+      toValue: 1,
       useNativeDriver: true,
     });
     springAnim.start();
@@ -64,15 +70,15 @@ const CompletionDot: React.FC<{
       pulseAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
-            toValue: 1.3,
             duration: 1000,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1.3,
             useNativeDriver: true,
           }),
           Animated.timing(pulseAnim, {
-            toValue: 1,
             duration: 1000,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1,
             useNativeDriver: true,
           }),
         ])
@@ -92,16 +98,21 @@ const CompletionDot: React.FC<{
 
   const getColor = () => {
     switch (status) {
-      case 'complete':
-        return '#10b981'; // emerald-500
-      case 'partial':
-        return '#f59e0b'; // amber-500
-      case 'none':
-        return '#e7e5e4'; // stone-200
-      case 'future':
-        return '#f5f5f4'; // stone-100
-      default:
+      case 'complete': {
+        return '#10b981';
+      } // emerald-500
+      case 'partial': {
+        return '#f59e0b';
+      } // amber-500
+      case 'none': {
         return '#e7e5e4';
+      } // stone-200
+      case 'future': {
+        return '#f5f5f4';
+      } // stone-100
+      default: {
+        return '#e7e5e4';
+      }
     }
   };
 
@@ -114,21 +125,21 @@ const CompletionDot: React.FC<{
   return (
     <Animated.View
       style={{
-        width: getSize(),
-        height: getSize(),
-        borderRadius: getSize() / 2,
         backgroundColor: getColor(),
+        borderRadius: getSize() / 2,
+        height: getSize(),
         transform: [
           { scale: scaleAnim },
           { scale: isToday && status !== 'complete' ? pulseAnim : 1 },
         ],
+        width: getSize(),
         // Glow effect for complete days
         ...(status === 'complete' && {
+          elevation: 2,
           shadowColor: '#10b981',
-          shadowOffset: { width: 0, height: 0 },
+          shadowOffset: { height: 0, width: 0 },
           shadowOpacity: 0.5,
           shadowRadius: 4,
-          elevation: 2,
         }),
       }}
     />
@@ -146,11 +157,16 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onDateSelect: _onDateSelect,
   completionByDay = {},
   reduceMotion = false,
+  onDayPress,
+  isDayPressEnabled,
+  disableFutureDayPress = true,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
 
   // Helper to get completion status for a date
-  const getCompletionStatus = (date: Date): 'complete' | 'partial' | 'none' | 'future' => {
+  const getCompletionStatus = (
+    date: Date
+  ): 'complete' | 'partial' | 'none' | 'future' => {
     if (isFuture(date)) return 'future';
 
     const dateString = format(date, 'yyyy-MM-dd');
@@ -169,7 +185,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
 
   // Get date range text (first and last date) - safe array access
   const firstDate = dates[0];
-  const lastDate = dates[dates.length - 1];
+  const lastDate = dates.at(-1);
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   const colors = highContrastMode
@@ -201,12 +217,13 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         backgroundColor: highContrastMode ? 'transparent' : '#ffffff',
         borderColor: highContrastMode ? 'transparent' : '#f5f5f4', // stone-100
         borderWidth: highContrastMode ? 0 : 1,
+
+        elevation: 1,
         // Subtle shadow for elevation
         shadowColor: '#78716c',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.04,
         shadowRadius: 8,
-        elevation: 1,
       }}
     >
       {/* Week Navigation Header */}
@@ -215,7 +232,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityLabel='Previous week'
           accessibilityRole='button'
           className='h-9 w-7 items-center justify-center rounded-full'
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
           onPress={onPreviousWeek}
         >
           <ChevronLeft color={colors.icon} size={18} strokeWidth={2} />
@@ -234,7 +251,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           accessibilityState={{ disabled: !canNavigateForward }}
           className={`h-9 w-7 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
           onPress={onNextWeek}
         >
           <ChevronRight color={colors.icon} size={18} strokeWidth={2} />
@@ -250,20 +267,38 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           const isUpcoming = isFuture(date);
 
           const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
-          const accessibilityLabel = isCurrentDay
-            ? `Today, ${baseLabel}`
-            : baseLabel;
 
+          // Determine if this day is pressable
+          const dayPressEnabled = isDayPressEnabled ?? !!onDayPress;
+          const isDayDisabled = isUpcoming && disableFutureDayPress;
+          const canPressDay = dayPressEnabled && onDayPress && !isDayDisabled;
+
+          // Build accessibility label with context
           const completionStatus = getCompletionStatus(date);
+          const statusText =
+            completionStatus === 'complete'
+              ? 'all habits complete'
+              : completionStatus === 'partial'
+                ? 'some habits complete'
+                : completionStatus === 'future'
+                  ? 'upcoming'
+                  : 'no habits complete';
+
+          const accessibilityLabel = isCurrentDay
+            ? `Today, ${baseLabel}, ${statusText}`
+            : `${baseLabel}, ${statusText}`;
+
+          const accessibilityHint = canPressDay
+            ? 'Double tap to view and edit habits for this day'
+            : isDayDisabled
+              ? 'Cannot edit habits for future dates'
+              : undefined;
+
           const hasCompletionData = Object.keys(completionByDay).length > 0;
 
-          return (
-            <View
-              key={`timeline-day-${index}`}
-              accessibilityLabel={accessibilityLabel}
-              accessibilityRole='text'
-              className='flex-1 items-center gap-0.5'
-            >
+          // Day content (shared between View and Pressable)
+          const dayContent = (pressed: boolean = false) => (
+            <>
               {/* Weekday label */}
               <Text
                 className='text-center text-[13px] font-normal leading-[18px]'
@@ -281,15 +316,29 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                     : colors.dayBackground,
                   borderColor: isCurrentDay
                     ? '#f59e0b' // amber-500 - gold border for today
-                    : (highContrastMode ? colors.dayBorder : 'transparent'),
-                  borderWidth: isCurrentDay ? 2 : (highContrastMode && !isCurrentDay ? 2 : 0),
+                    : highContrastMode
+                      ? colors.dayBorder
+                      : 'transparent',
+                  borderWidth: isCurrentDay
+                    ? 2
+                    : highContrastMode && !isCurrentDay
+                      ? 2
+                      : 0,
                   // Warm shadow for today
                   ...(isCurrentDay && {
+                    elevation: 2,
                     shadowColor: '#f59e0b',
-                    shadowOffset: { width: 0, height: 2 },
+                    shadowOffset: { height: 2, width: 0 },
                     shadowOpacity: 0.2,
                     shadowRadius: 4,
-                    elevation: 2,
+                  }),
+                  // Press state visual feedback
+                  ...(pressed &&
+                    !reduceMotion && {
+                      transform: [{ scale: 0.95 }],
+                    }),
+                  ...(pressed && {
+                    opacity: 0.7,
                   }),
                 }}
               >
@@ -318,6 +367,38 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
                   />
                 </View>
               )}
+            </>
+          );
+
+          // Render as Pressable when onDayPress is provided, otherwise as View
+          if (onDayPress) {
+            return (
+              <Pressable
+                key={`timeline-day-${index}`}
+                accessibilityHint={accessibilityHint}
+                accessibilityLabel={accessibilityLabel}
+                accessibilityRole='button'
+                accessibilityState={{ disabled: isDayDisabled }}
+                className='flex-1 items-center gap-0.5'
+                disabled={isDayDisabled}
+                style={({ pressed }) => ({
+                  opacity: isDayDisabled ? 0.5 : 1,
+                })}
+                onPress={() => onDayPress(date)}
+              >
+                {({ pressed }) => dayContent(pressed)}
+              </Pressable>
+            );
+          }
+
+          return (
+            <View
+              key={`timeline-day-${index}`}
+              accessibilityLabel={accessibilityLabel}
+              accessibilityRole='text'
+              className='flex-1 items-center gap-0.5'
+            >
+              {dayContent()}
             </View>
           );
         })}
