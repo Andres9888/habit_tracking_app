@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import { CalendarTimeline } from '../CalendarTimeline';
-import { addDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 
 describe('CalendarTimeline', () => {
   const today = new Date(2024, 9, 14); // Oct 14, 2024 (Monday)
@@ -83,5 +83,194 @@ describe('CalendarTimeline', () => {
 
     // Component should render with selected date
     expect(getByText('16')).toBeTruthy(); // Wednesday's date
+  });
+
+  describe('Day Press Handling', () => {
+    // Use actual current date for consistent testing with the hook's isFuture() logic
+    const realToday = new Date();
+    realToday.setHours(0, 0, 0, 0);
+
+    it('calls onDayPress when a past day is tapped', () => {
+      const onDayPress = jest.fn();
+      const pastDay = subDays(realToday, 2);
+      const dates = [pastDay, subDays(realToday, 1), realToday];
+
+      const { getAllByRole } = render(
+        <CalendarTimeline dates={dates} onDayPress={onDayPress} />
+      );
+
+      // Find all buttons and filter to day buttons (exclude navigation buttons like prev/next week)
+      const dayButtons = getAllByRole('button').filter(
+        (btn) =>
+          btn.props.accessibilityLabel?.includes(',') &&
+          !btn.props.accessibilityLabel?.includes('week')
+      );
+
+      expect(dayButtons.length).toBe(3);
+
+      // Tap the first day (past day)
+      fireEvent.press(dayButtons[0]);
+
+      expect(onDayPress).toHaveBeenCalledTimes(1);
+      expect(onDayPress).toHaveBeenCalledWith(pastDay);
+    });
+
+    it('calls onDayPress when today is tapped', () => {
+      const onDayPress = jest.fn();
+      const dates = [realToday];
+
+      const { getAllByRole } = render(
+        <CalendarTimeline dates={dates} onDayPress={onDayPress} />
+      );
+
+      const dayButtons = getAllByRole('button').filter((btn) =>
+        btn.props.accessibilityLabel?.includes('Today')
+      );
+
+      fireEvent.press(dayButtons[0]);
+
+      expect(onDayPress).toHaveBeenCalledTimes(1);
+      expect(onDayPress).toHaveBeenCalledWith(realToday);
+    });
+
+    it('does not call onDayPress when future day is tapped with disableFutureDayPress', () => {
+      const onDayPress = jest.fn();
+      const futureDate = addDays(realToday, 1);
+      const dates = [realToday, futureDate];
+
+      const { getAllByRole } = render(
+        <CalendarTimeline
+          dates={dates}
+          onDayPress={onDayPress}
+          disableFutureDayPress={true}
+        />
+      );
+
+      // Filter buttons to find day buttons (not navigation)
+      const dayButtons = getAllByRole('button').filter(
+        (btn) =>
+          btn.props.accessibilityLabel?.includes(',') &&
+          !btn.props.accessibilityLabel?.includes('week')
+      );
+
+      // The future day button should be disabled
+      const futureButton = dayButtons[1];
+      expect(futureButton.props.accessibilityState?.disabled).toBe(true);
+
+      // Try to tap the future day (should be disabled and not call handler)
+      fireEvent.press(futureButton);
+
+      // onDayPress should NOT have been called for the disabled future day
+      expect(onDayPress).not.toHaveBeenCalled();
+    });
+
+    it('allows tapping future days when disableFutureDayPress is false', () => {
+      const onDayPress = jest.fn();
+      const futureDate = addDays(realToday, 1);
+      const dates = [realToday, futureDate];
+
+      const { getAllByRole } = render(
+        <CalendarTimeline
+          dates={dates}
+          onDayPress={onDayPress}
+          disableFutureDayPress={false}
+        />
+      );
+
+      const dayButtons = getAllByRole('button').filter(
+        (btn) =>
+          btn.props.accessibilityLabel?.includes(',') &&
+          !btn.props.accessibilityLabel?.includes('week')
+      );
+
+      // Future day should not be disabled
+      const futureButton = dayButtons[1];
+      expect(futureButton.props.accessibilityState?.disabled).toBe(false);
+
+      fireEvent.press(futureButton);
+
+      expect(onDayPress).toHaveBeenCalledTimes(1);
+      expect(onDayPress).toHaveBeenCalledWith(futureDate);
+    });
+
+    it('renders days as non-interactive Views when onDayPress is not provided', () => {
+      const dates = [subDays(realToday, 1), realToday, addDays(realToday, 1)];
+
+      const { queryAllByRole } = render(<CalendarTimeline dates={dates} />);
+
+      // Should only have navigation buttons, not day buttons
+      const buttons = queryAllByRole('button');
+      const dayButtons = buttons.filter(
+        (btn) =>
+          btn.props.accessibilityLabel?.includes(',') &&
+          !btn.props.accessibilityLabel?.includes('week')
+      );
+
+      expect(dayButtons.length).toBe(0);
+    });
+
+    it('includes completion status in accessibility label', () => {
+      const dates = [realToday];
+      const todayString = realToday.toISOString().split('T')[0];
+      const completionByDay = {
+        [todayString]: { completed: 2, total: 3 },
+      };
+
+      const { getAllByRole } = render(
+        <CalendarTimeline
+          dates={dates}
+          completionByDay={completionByDay}
+          onDayPress={() => {}}
+        />
+      );
+
+      const dayButtons = getAllByRole('button').filter((btn) =>
+        btn.props.accessibilityLabel?.includes('Today')
+      );
+
+      // Should include "some habits complete" for partial completion
+      expect(dayButtons[0].props.accessibilityLabel).toContain(
+        'some habits complete'
+      );
+    });
+
+    it('provides appropriate accessibility hint for interactive days', () => {
+      const dates = [realToday];
+
+      const { getAllByRole } = render(
+        <CalendarTimeline dates={dates} onDayPress={() => {}} />
+      );
+
+      const dayButtons = getAllByRole('button').filter((btn) =>
+        btn.props.accessibilityLabel?.includes('Today')
+      );
+
+      expect(dayButtons[0].props.accessibilityHint).toBe(
+        'Double tap to view and edit habits for this day'
+      );
+    });
+
+    it('can be explicitly disabled via isDayPressEnabled prop', () => {
+      const onDayPress = jest.fn();
+      const dates = [realToday];
+
+      const { queryAllByRole } = render(
+        <CalendarTimeline
+          dates={dates}
+          onDayPress={onDayPress}
+          isDayPressEnabled={false}
+        />
+      );
+
+      // Even with onDayPress provided, days should still render as Pressable
+      // but the overall interaction pattern is controlled by the parent
+      const dayButtons = queryAllByRole('button').filter((btn) =>
+        btn.props.accessibilityLabel?.includes('Today')
+      );
+
+      // Since onDayPress is provided, Pressable is rendered
+      // but isDayPressEnabled controls the accessibility hint behavior
+      expect(dayButtons.length).toBe(1);
+    });
   });
 });

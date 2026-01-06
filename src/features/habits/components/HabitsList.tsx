@@ -17,6 +17,7 @@ import {
   CalendarTimeline,
   type DayCompletionStatus,
 } from '../../../components/CalendarTimeline';
+import { DayHabitsBottomSheet } from '../../../components/DayHabitsBottomSheet';
 
 const PREMIUM_BENEFITS = [
   {
@@ -466,6 +467,22 @@ export function HabitsList({
     setIsSortSheetOpen(false);
   }, []);
 
+  // State for DayHabitsBottomSheet visibility (day tap-to-toggle feature)
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [isDaySheetOpen, setIsDaySheetOpen] = useState(false);
+
+  /** Handle day press from CalendarTimeline - opens day habits bottom sheet */
+  const handleDayPress = useCallback((date: Date) => {
+    setSelectedDay(date);
+    setIsDaySheetOpen(true);
+  }, []);
+
+  /** Close the day habits bottom sheet and clear selection */
+  const handleCloseDaySheet = useCallback(() => {
+    setIsDaySheetOpen(false);
+    setSelectedDay(null);
+  }, []);
+
   const handleChangeHabitSortMode = useCallback(
     (value: typeof habitSortMode) => {
       void onSettingsChange({
@@ -719,11 +736,13 @@ export function HabitsList({
             }}
           >
             <CalendarTimeline
+              disableFutureDayPress
               showSeparator
               canNavigateForward={canNavigateForward}
               completionByDay={completionByDay}
               dates={weekDates}
               reduceMotion={reduceMotionPreference}
+              onDayPress={handleDayPress}
               onNextWeek={onNextWeek}
               onPreviousWeek={onPreviousWeek}
             />
@@ -733,6 +752,7 @@ export function HabitsList({
     );
   }, [
     handleAddHabitPress,
+    handleDayPress,
     handleOpenSortSheet,
     openSettings,
     openTemplatesScreen,
@@ -832,6 +852,15 @@ export function HabitsList({
         visible={isSortSheetOpen}
         onClose={handleCloseSortSheet}
         onSelectSortMode={handleChangeHabitSortMode}
+      />
+      <DayHabitsBottomSheet
+        date={selectedDay}
+        getHabitStatus={getHabitStatus}
+        habits={habits}
+        reduceMotion={reduceMotionPreference}
+        toggleHabit={toggleHabit}
+        visible={isDaySheetOpen}
+        onClose={handleCloseDaySheet}
       />
     </View>
   );
