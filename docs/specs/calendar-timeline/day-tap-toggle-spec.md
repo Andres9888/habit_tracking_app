@@ -539,9 +539,38 @@ Normal State:        Pressed State:
 - All interactive elements have `accessibilityLabel`, `accessibilityHint`, and appropriate `accessibilityRole`
 - `accessibilityState` correctly communicates `disabled` and `checked` states
 - `reduceMotion` prop is properly implemented in all animated components
-- All tests passing (45 unit tests across CalendarTimeline and DayHabitsBottomSheet)
+- All tests passing (64 tests across CalendarTimeline, DayHabitsBottomSheet, and HabitsList integration)
 
 **Awaiting manual QA by human tester** for VoiceOver/TalkBack verification and device testing.
+
+**Manual QA Checklist for Human Tester (2026-01-06)**:
+
+1. **VoiceOver (iOS)**:
+   - Navigate to CalendarTimeline, verify each day cell announces: weekday, date, completion status
+   - Verify day cells announce "tap to view habits" hint
+   - Open DayHabitsBottomSheet, verify habit rows announce name and completion status
+   - Verify checkbox role is announced for habit toggle rows
+
+2. **TalkBack (Android)**:
+   - Same verification points as VoiceOver
+   - Test double-tap to toggle habit completion
+
+3. **Reduce Motion**:
+   - Enable "Reduce Motion" in iOS Settings > Accessibility > Motion
+   - Verify sheet appears/disappears instantly (no slide animation)
+   - Verify checkbox toggles instantly (no spring animation)
+   - Verify press feedback uses opacity only (no scale)
+
+4. **Device Sizes**:
+   - Test on iPhone SE (small screen)
+   - Test on iPhone Pro Max (large screen)
+   - Test on iPad (verify max-height constraint works)
+
+5. **Performance with 20+ Habits**:
+   - Create 20+ habits and tap a day in CalendarTimeline
+   - Verify sheet opens within 50ms (should feel instant)
+   - Verify scrolling through habit list is smooth (no frame drops)
+   - Use React DevTools Profiler if available
 
 ---
 
