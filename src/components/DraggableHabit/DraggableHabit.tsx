@@ -24,6 +24,10 @@ import { TrendingUp, Archive, ChevronRight } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { PhaseTag } from '../PhaseTag';
 import * as Haptics from 'expo-haptics';
+import {
+  useHabitCardEntrance,
+  type HabitCardEntranceVariant,
+} from '../HabitCard/useHabitCardEntrance';
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -51,12 +55,26 @@ interface DraggableHabitProps {
   celebrationsEnabled: boolean;
   completionIcon?: 'chain' | 'checkbox';
   dayShape?: 'circle' | 'square';
+  /**
+   * Delay before entrance animation starts (for stagger effects).
+   * @default 0
+   */
+  entranceDelay?: number;
+  /**
+   * Animation variant for card entrance.
+   * @default 'accentSlideDown'
+   */
+  entranceVariant?: HabitCardEntranceVariant;
   habit: Habit;
   highContrastMode?: boolean;
   isCompactMode?: boolean;
   isConnectedToPreviousWeek?: boolean;
   isJustCreated?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
+  /**
+   * Callback fired when entrance animation completes.
+   */
+  onEntranceComplete?: () => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   onPress?: (habit: Habit) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
@@ -66,6 +84,11 @@ interface DraggableHabitProps {
   showHabitStrengthPercentage?: boolean;
   streak: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
+  /**
+   * Whether to trigger entrance animation.
+   * @default true
+   */
+  triggerEntrance?: boolean;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
 }
@@ -74,12 +97,15 @@ export default function DraggableHabit({
   celebrationsEnabled,
   completionIcon = 'chain',
   dayShape = 'square',
+  entranceDelay = 0,
+  entranceVariant = 'accentSlideDown',
   habit,
   highContrastMode = false,
   isCompactMode: _isCompactMode = false,
   isConnectedToPreviousWeek = false,
   isJustCreated = false,
   onArchive,
+  onEntranceComplete,
   onLongPress,
   onPress,
   onWeekComplete,
@@ -89,10 +115,23 @@ export default function DraggableHabit({
   showHabitStrengthPercentage = false,
   streak,
   toggleHabit,
+  triggerEntrance = true,
   weekDateStrings,
   weekStatus,
 }: DraggableHabitProps) {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
+
+  // Entrance animation hook for the accent bar and content
+  const {
+    cardStyle: entranceCardStyle,
+    accentStyle: entranceAccentStyle,
+    contentStyle: entranceContentStyle,
+  } = useHabitCardEntrance({
+    variant: entranceVariant,
+    delay: entranceDelay,
+    autoTrigger: triggerEntrance,
+    onAnimationComplete: onEntranceComplete,
+  });
 
   const fade = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(12)).current;
@@ -627,18 +666,21 @@ export default function DraggableHabit({
           transform: [{ translateY }, { scale: cardScale }], // Android
         }}
       >
-        {/* Color accent left border */}
-        <View
-          style={{
-            backgroundColor: borderAccentColor,
-            borderBottomLeftRadius: 24,
-            borderTopLeftRadius: 24,
-            width: 4,
-          }}
+        {/* Color accent left border - animated for entrance effect */}
+        <ReAnimated.View
+          style={[
+            {
+              backgroundColor: borderAccentColor,
+              borderBottomLeftRadius: 24,
+              borderTopLeftRadius: 24,
+              width: 4,
+            },
+            entranceAccentStyle,
+          ]}
         />
 
-        {/* Main card content wrapper */}
-        <View className='flex-1'>
+        {/* Main card content wrapper - animated for entrance effect */}
+        <ReAnimated.View className='flex-1' style={entranceContentStyle}>
           {/* Archive flash overlay - amber for organizational action */}
           <Animated.View
             pointerEvents='none'
@@ -924,7 +966,7 @@ export default function DraggableHabit({
               </View>
             )}
           </View>
-        </View>
+        </ReAnimated.View>
       </Animated.View>
     </Pressable>
   );

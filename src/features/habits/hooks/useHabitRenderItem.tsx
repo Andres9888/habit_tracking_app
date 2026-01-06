@@ -5,6 +5,7 @@ import { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-fl
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitStatus } from '../types';
+import type { HabitCardEntranceVariant } from '../../../components/HabitCard/useHabitCardEntrance';
 
 interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;
@@ -22,6 +23,30 @@ interface UseHabitRenderItemArgs {
   showHabitStrengthPercentage: boolean;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
   weekDateStrings: string[];
+  /**
+   * Animation variant for habit card entrance.
+   * @default 'accentSlideDown'
+   */
+  entranceVariant?: HabitCardEntranceVariant;
+  /**
+   * Base stagger delay per card (multiplied by index).
+   * @default 100
+   */
+  entranceStaggerDelay?: number;
+  /**
+   * Whether entrance animation should trigger.
+   * Set to true after success transition completes.
+   * @default false
+   */
+  shouldTriggerEntrance?: boolean;
+  /**
+   * Set of habit IDs that have already appeared (to prevent re-animation).
+   */
+  seenHabitIds?: Set<string>;
+  /**
+   * Callback to mark a habit as "seen" after its entrance animation.
+   */
+  onHabitEntranceComplete?: (habitId: Id<'habits'>) => void;
 }
 
 export function useHabitRenderItem({
@@ -40,9 +65,23 @@ export function useHabitRenderItem({
   showHabitStrengthPercentage,
   toggleHabit,
   weekDateStrings,
+  entranceVariant = 'accentSlideDown',
+  entranceStaggerDelay = 100,
+  shouldTriggerEntrance = false,
+  seenHabitIds,
+  onHabitEntranceComplete,
 }: UseHabitRenderItemArgs) {
   return useCallback(
-    ({ item, drag, isActive }: RenderItemParams<Habit>) => {
+    ({ item, drag, isActive, getIndex }: RenderItemParams<Habit>) => {
+      // Calculate stagger delay based on item index
+      const index = getIndex?.() ?? 0;
+      const entranceDelay = index * entranceStaggerDelay;
+
+      // Only trigger entrance if:
+      // 1. shouldTriggerEntrance is true (post success transition)
+      // 2. This habit hasn't been seen before (prevents re-animation on re-renders)
+      const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
+      const triggerEntrance = shouldTriggerEntrance && !hasBeenSeen;
       const weekStatus = weekDateStrings.map((dateString) =>
         getHabitStatus(item._id, dateString)
       );
@@ -75,10 +114,13 @@ export function useHabitRenderItem({
               celebrationsEnabled={celebrationsEnabled}
               completionIcon={completionIcon}
               dayShape={dayShape}
+              entranceDelay={entranceDelay}
+              entranceVariant={entranceVariant}
               habit={item}
               isConnectedToPreviousWeek={isConnectedToPreviousWeek}
               isJustCreated={highlightHabitId === item._id}
               onArchive={handleArchive}
+              onEntranceComplete={() => onHabitEntranceComplete?.(item._id)}
               onLongPress={isReorderingEnabled ? drag : undefined}
               onPress={handleHabitPress}
               onWeekComplete={({ completedDate }) =>
@@ -89,6 +131,7 @@ export function useHabitRenderItem({
               showHabitStrengthPercentage={showHabitStrengthPercentage}
               streak={streak}
               toggleHabit={toggleHabit}
+              triggerEntrance={triggerEntrance}
               weekDateStrings={weekDateStrings}
               weekStatus={weekStatus}
             />
@@ -100,6 +143,8 @@ export function useHabitRenderItem({
       celebrationsEnabled,
       completionIcon,
       dayShape,
+      entranceStaggerDelay,
+      entranceVariant,
       getHabitStatus,
       getStreak,
       handleArchive,
@@ -107,7 +152,10 @@ export function useHabitRenderItem({
       highlightHabitId,
       isReorderingEnabled,
       notifyWeekCompletion,
+      onHabitEntranceComplete,
       reduceMotionPreference,
+      seenHabitIds,
+      shouldTriggerEntrance,
       showConnectors,
       showHabitStrengthPercentage,
       toggleHabit,

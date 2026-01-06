@@ -4,6 +4,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { HabitCardEntranceVariant } from '../../../components/HabitCard/useHabitCardEntrance';
 
 import { HabitsEmptyStateMinimal } from './HabitsEmptyStateMinimal';
 import type { HabitsListState } from '../hooks/useHabitsApp';
@@ -481,6 +482,16 @@ export function HabitsList({
   // Track if we're in the success celebration phase (before transition)
   const [isInSuccessCelebration, setIsInSuccessCelebration] = useState(false);
 
+  // === Habit Card Entrance Animation State ===
+  // Track which habit IDs have already animated in (prevents re-animation on re-render)
+  const seenHabitIdsRef = useRef<Set<string>>(new Set());
+  // Controls when entrance animations should trigger (after success transition)
+  const [shouldTriggerHabitEntrance, setShouldTriggerHabitEntrance] = useState(false);
+  // Animation variant (can be changed for A/B testing)
+  const entranceVariant: HabitCardEntranceVariant = 'accentSlideDown';
+  // Stagger delay between cards (matches existing 100ms stagger)
+  const ENTRANCE_STAGGER_DELAY = 100;
+
   // Staggered entrance animation for header elements
   // Start visible (1, 0) - will be reset to hidden before animating when coming from success state
   const headerOpacity = useRef(new Animated.Value(1)).current;
@@ -559,7 +570,15 @@ export function HabitsList({
         Animated.timing(habitRowOpacity, { ...animationConfig, toValue: 1 }),
         Animated.timing(habitRowTranslateY, { ...animationConfig, toValue: 0 }),
       ]),
-    ]).start();
+    ]).start(() => {
+      // After header/calendar/row entrance completes, trigger habit card entrance animations
+      // Delay slightly to coordinate with the habit row fade-in (300ms stagger position + 350ms duration = 650ms)
+      // But we start after the row starts animating, so ~400ms is enough
+      setTimeout(() => {
+        console.log('[HabitsList] Triggering habit card entrance animations');
+        setShouldTriggerHabitEntrance(true);
+      }, 200);
+    });
   }, [
     headerOpacity,
     headerTranslateY,
@@ -578,10 +597,18 @@ export function HabitsList({
     return () => clearTimeout(timeout);
   }, [justCreatedHabitId]);
 
+  // Callback to mark a habit as "seen" after its entrance animation completes
+  // This prevents re-animation on subsequent re-renders
+  const handleHabitEntranceComplete = useCallback((habitId: Id<'habits'>) => {
+    seenHabitIdsRef.current.add(habitId);
+  }, []);
+
   const renderItem = useHabitRenderItem({
     celebrationsEnabled,
     completionIcon: habitCompletionIcon,
     dayShape,
+    entranceStaggerDelay: ENTRANCE_STAGGER_DELAY,
+    entranceVariant,
     getHabitStatus,
     getStreak,
     handleArchive,
@@ -589,7 +616,10 @@ export function HabitsList({
     highlightHabitId: justCreatedHabitId,
     isReorderingEnabled,
     notifyWeekCompletion,
+    onHabitEntranceComplete: handleHabitEntranceComplete,
     reduceMotionPreference,
+    seenHabitIds: seenHabitIdsRef.current,
+    shouldTriggerEntrance: shouldTriggerHabitEntrance,
     showHabitStrengthPercentage,
     toggleHabit,
     weekDateStrings,
