@@ -145,7 +145,7 @@ export function HabitsEmptyState({
   const timeContext = getTimeBasedHabits();
 
   return (
-    <View className='flex-1 gap-4 bg-transparent px-4 py-4'>
+    <View className='flex-1 gap-4 bg-transparent px-6 py-4'>
       {/* Welcome Hero */}
       <WelcomeHero greeting={timeContext.greeting} period={timeContext.period} />
 
