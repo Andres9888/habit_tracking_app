@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Card Color Accents - Design Options</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: 'Inter', sans-serif !important;
+      }
+      body {
+        background: #f5f5f4;
+      }
+
+      /* Breathing animation for accents */
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.85;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .accent-breathe {
+        animation: breathe 3s ease-in-out infinite;
+      }
+
+      /* Gradient shimmer for premium option */
+      @keyframes shimmer {
+        0% {
+          background-position: -200% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+      .gradient-shimmer {
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-8">
+    <!-- Header -->
+    <div class="mx-auto mb-12 max-w-4xl">
+      <div class="mb-8 text-center">
+        <span
+          class="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium uppercase tracking-[4px] text-violet-600"
+          >Design Exploration</span
+        >
+        <h1 class="mt-4 text-3xl font-bold text-stone-800">
+          Habit Card Color Accents
+        </h1>
+        <p class="mt-2 text-stone-500">
+          Visual polish options to make habits more personal and recognizable
+        </p>
+      </div>
+
+      <!-- ROI Callout -->
+      <div
+        class="mb-8 rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-5"
+      >
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">💰</span>
+          <div>
+            <h3 class="font-bold text-emerald-800">Monetization ROI</h3>
+            <p class="mt-1 text-sm text-emerald-700">
+              <strong>Free users:</strong> 5 preset colors &nbsp;→&nbsp;
+              <strong>Premium:</strong> Custom colors + gradients
+              <br />
+              Creates clear visual differentiation and upgrade incentive for
+              personalization-focused users.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Design (Baseline) -->
+    <div class="mx-auto mb-16 max-w-md">
+      <h2 class="mb-4 flex items-center gap-2 text-lg font-bold text-stone-700">
+        <span class="h-2 w-2 rounded-full bg-stone-400"></span>
+        Current Design (Baseline)
+      </h2>
+      <p class="mb-4 text-sm text-stone-500">
+        Color only visible as subtle emoji background tint
+      </p>
+
+      <!-- Current Card -->
+      <div
+        class="mb-3 rounded-3xl border border-stone-100 bg-white p-4 shadow-sm"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-200/30 bg-violet-100/80"
+          >
+            <span class="text-2xl">🧘</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-stone-800">Morning Meditation</span>
+              <span
+                class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700"
+                >AM</span
+              >
+            </div>
+            <span class="text-xs text-stone-400">Best: 14 days</span>
+          </div>
+          <svg
+            class="h-5 w-5 text-stone-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+        <!-- Chain visualizer placeholder -->
+        <div class="mt-4 flex justify-between px-1">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+          >
+            <span class="text-sm text-white">✓</span>
+          </div>
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+          >
+            <span class="text-sm text-white">✓</span>
+          </div>
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+          >
+            <span class="text-sm text-white">✓</span>
+          </div>
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+          >
+            <span class="text-sm text-white">✓</span>
+          </div>
+          <div
+            class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+          ></div>
+          <div
+            class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+          ></div>
+          <div
+            class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+          ></div>
+        </div>
+      </div>
+      <p class="text-center text-xs text-stone-400">
+        ⚠️ Problem: Habit color isn't prominently visible, cards look generic
+      </p>
+    </div>
+
+    <!-- Option Grid -->
+    <div class="mx-auto max-w-5xl">
+      <h2 class="mb-6 text-center text-xl font-bold text-stone-800">
+        Color Accent Options
+      </h2>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        <!-- Option A: Left Border Accent -->
+        <div class="rounded-3xl border border-stone-200 bg-white/50 p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="font-bold text-stone-700">Option A: Left Border</h3>
+            <span
+              class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700"
+              >⭐ Recommended</span
+            >
+          </div>
+          <p class="mb-4 text-sm text-stone-500">
+            4px colored left border - subtle but distinctive
+          </p>
+
+          <!-- Card with left border -->
+          <div
+            class="mb-3 overflow-hidden rounded-3xl border border-stone-100 bg-white shadow-sm"
+          >
+            <div class="flex">
+              <div class="w-1 rounded-l-3xl bg-violet-500"></div>
+              <div class="flex-1 p-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100/80"
+                  >
+                    <span class="text-2xl">🧘</span>
+                  </div>
+                  <div class="flex-1">
+                    <span class="font-bold text-stone-800"
+                      >Morning Meditation</span
+                    >
+                  </div>
+                  <svg
+                    class="h-5 w-5 text-stone-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+                <div class="mt-4 flex justify-between px-1">
+                  <div
+                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                  >
+                    <span class="text-sm text-white">✓</span>
+                  </div>
+                  <div
+                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                  >
+                    <span class="text-sm text-white">✓</span>
+                  </div>
+                  <div
+                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                  >
+                    <span class="text-sm text-white">✓</span>
+                  </div>
+                  <div
+                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                  >
+                    <span class="text-sm text-white">✓</span>
+                  </div>
+                  <div
+                    class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                  ></div>
+                  <div
+                    class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                  ></div>
+                  <div
+                    class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- More examples with different colors -->
+          <div class="space-y-2">
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-emerald-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100/80 text-xl"
+                    >
+                      🏃
+                    </div>
+                    <span class="text-sm font-semibold text-stone-800"
+                      >Evening Run</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-amber-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100/80 text-xl"
+                    >
+                      📖
+                    </div>
+                    <span class="text-sm font-semibold text-stone-800"
+                      >Read 20 Pages</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-stone-50 p-3">
+            <p class="text-xs text-stone-600">
+              <strong>Pros:</strong> Clean, professional, widely used pattern
+              (Notion, Linear)
+            </p>
+            <p class="mt-1 text-xs text-stone-500">
+              <strong>Effort:</strong> ~2 hours - add View wrapper with
+              borderLeftWidth
+            </p>
+          </div>
+        </div>
+
+        <!-- Option B: Top Gradient Banner -->
+        <div class="rounded-3xl border border-stone-200 bg-white/50 p-6">
+          <h3 class="mb-2 font-bold text-stone-700">
+            Option B: Top Gradient Banner
+          </h3>
+          <p class="mb-4 text-sm text-stone-500">
+            Colored gradient strip at top of card
+          </p>
+
+          <!-- Card with top gradient -->
+          <div
+            class="mb-3 overflow-hidden rounded-3xl border border-stone-100 bg-white shadow-sm"
+          >
+            <div
+              class="h-1.5 bg-gradient-to-r from-violet-400 to-violet-600"
+            ></div>
+            <div class="p-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100/80"
+                >
+                  <span class="text-2xl">🧘</span>
+                </div>
+                <div class="flex-1">
+                  <span class="font-bold text-stone-800"
+                    >Morning Meditation</span
+                  >
+                </div>
+                <svg
+                  class="h-5 w-5 text-stone-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+              <div class="mt-4 flex justify-between px-1">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                ></div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                ></div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- More examples -->
+          <div class="space-y-2">
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div
+                class="h-1 bg-gradient-to-r from-emerald-400 to-teal-500"
+              ></div>
+              <div class="flex items-center gap-3 p-3">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100/80 text-xl"
+                >
+                  🏃
+                </div>
+                <span class="text-sm font-semibold text-stone-800"
+                  >Evening Run</span
+                >
+              </div>
+            </div>
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div
+                class="h-1 bg-gradient-to-r from-amber-400 to-orange-500"
+              ></div>
+              <div class="flex items-center gap-3 p-3">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100/80 text-xl"
+                >
+                  📖
+                </div>
+                <span class="text-sm font-semibold text-stone-800"
+                  >Read 20 Pages</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-stone-50 p-3">
+            <p class="text-xs text-stone-600">
+              <strong>Pros:</strong> More visual impact, great for premium
+              gradient feature
+            </p>
+            <p class="mt-1 text-xs text-stone-500">
+              <strong>Cons:</strong> Takes vertical space, may feel heavy with
+              many habits
+            </p>
+          </div>
+        </div>
+
+        <!-- Option C: Colored Border Full -->
+        <div class="rounded-3xl border border-stone-200 bg-white/50 p-6">
+          <h3 class="mb-2 font-bold text-stone-700">
+            Option C: Full Colored Border
+          </h3>
+          <p class="mb-4 text-sm text-stone-500">
+            Entire card border in habit color (subtle)
+          </p>
+
+          <!-- Card with colored border -->
+          <div
+            class="mb-3 overflow-hidden rounded-3xl bg-white shadow-sm"
+            style="border: 2px solid rgba(139, 92, 246, 0.4)"
+          >
+            <div class="p-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100/80"
+                >
+                  <span class="text-2xl">🧘</span>
+                </div>
+                <div class="flex-1">
+                  <span class="font-bold text-stone-800"
+                    >Morning Meditation</span
+                  >
+                </div>
+                <svg
+                  class="h-5 w-5 text-stone-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+              <div class="mt-4 flex justify-between px-1">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                ></div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                ></div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-stone-100"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- More examples -->
+          <div class="space-y-2">
+            <div
+              class="overflow-hidden rounded-2xl bg-white p-3 shadow-sm"
+              style="border: 2px solid rgba(16, 185, 129, 0.4)"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100/80 text-xl"
+                >
+                  🏃
+                </div>
+                <span class="text-sm font-semibold text-stone-800"
+                  >Evening Run</span
+                >
+              </div>
+            </div>
+            <div
+              class="overflow-hidden rounded-2xl bg-white p-3 shadow-sm"
+              style="border: 2px solid rgba(245, 158, 11, 0.4)"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100/80 text-xl"
+                >
+                  📖
+                </div>
+                <span class="text-sm font-semibold text-stone-800"
+                  >Read 20 Pages</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-stone-50 p-3">
+            <p class="text-xs text-stone-600">
+              <strong>Pros:</strong> Very distinctive, great for "completed
+              week" state
+            </p>
+            <p class="mt-1 text-xs text-stone-500">
+              <strong>Cons:</strong> Can feel busy with many habits, border
+              competes with content
+            </p>
+          </div>
+        </div>
+
+        <!-- Option D: Background Tint -->
+        <div class="rounded-3xl border border-stone-200 bg-white/50 p-6">
+          <h3 class="mb-2 font-bold text-stone-700">
+            Option D: Background Tint
+          </h3>
+          <p class="mb-4 text-sm text-stone-500">
+            Subtle colored background tint for entire card
+          </p>
+
+          <!-- Card with background tint -->
+          <div
+            class="mb-3 overflow-hidden rounded-3xl border border-violet-200/50 shadow-sm"
+            style="
+              background: linear-gradient(
+                135deg,
+                rgba(237, 233, 254, 0.5),
+                rgba(255, 255, 255, 1)
+              );
+            "
+          >
+            <div class="p-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100"
+                >
+                  <span class="text-2xl">🧘</span>
+                </div>
+                <div class="flex-1">
+                  <span class="font-bold text-stone-800"
+                    >Morning Meditation</span
+                  >
+                </div>
+                <svg
+                  class="h-5 w-5 text-stone-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+              <div class="mt-4 flex justify-between px-1">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500"
+                >
+                  <span class="text-sm text-white">✓</span>
+                </div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-white/80"
+                ></div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-white/80"
+                ></div>
+                <div
+                  class="h-8 w-8 rounded-lg border-2 border-dashed border-stone-300 bg-white/80"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- More examples -->
+          <div class="space-y-2">
+            <div
+              class="overflow-hidden rounded-2xl border border-emerald-200/50 p-3 shadow-sm"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(209, 250, 229, 0.5),
+                  rgba(255, 255, 255, 1)
+                );
+              "
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-xl"
+                >
+                  🏃
+                </div>
+                <span class="text-sm font-semibold text-stone-800"
+                  >Evening Run</span
+                >
+              </div>
+            </div>
+            <div
+              class="overflow-hidden rounded-2xl border border-amber-200/50 p-3 shadow-sm"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(254, 243, 199, 0.5),
+                  rgba(255, 255, 255, 1)
+                );
+              "
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-xl"
+                >
+                  📖
+                </div>
+                <span class="text-sm font-semibold text-stone-800"
+                  >Read 20 Pages</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-stone-50 p-3">
+            <p class="text-xs text-stone-600">
+              <strong>Pros:</strong> Very premium feel, immersive color
+              experience
+            </p>
+            <p class="mt-1 text-xs text-stone-500">
+              <strong>Cons:</strong> More complex to implement with gradients,
+              may affect readability
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full List Comparison -->
+    <div class="mx-auto mb-16 mt-16 max-w-md">
+      <h2 class="mb-6 text-center text-xl font-bold text-stone-800">
+        Full List View Comparison
+      </h2>
+      <p class="mb-6 text-center text-sm text-stone-500">
+        How Option A (left border) looks in context
+      </p>
+
+      <!-- Mock phone frame -->
+      <div class="rounded-[3rem] bg-stone-800 p-3 shadow-2xl">
+        <div class="overflow-hidden rounded-[2.5rem] bg-stone-100">
+          <!-- Status bar -->
+          <div class="flex items-center justify-between bg-white px-6 py-3">
+            <span class="text-sm font-medium text-stone-800">9:41</span>
+            <div class="flex gap-1">
+              <div class="h-2 w-4 rounded-sm bg-stone-800"></div>
+              <div class="h-2 w-4 rounded-sm bg-stone-800"></div>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="bg-white px-5 pb-4">
+            <div class="flex items-center justify-between">
+              <h1 class="text-2xl font-bold text-stone-800">Today</h1>
+              <div class="flex gap-2">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100"
+                >
+                  <svg
+                    class="h-4 w-4 text-stone-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <p class="mt-1 text-sm text-stone-500">3 of 5 completed</p>
+          </div>
+
+          <!-- Habit list with color accents -->
+          <div class="space-y-3 px-4 pb-8">
+            <!-- Habit 1 - Violet -->
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-violet-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100/80 text-xl"
+                    >
+                      🧘
+                    </div>
+                    <div class="flex-1">
+                      <span class="text-sm font-semibold text-stone-800"
+                        >Morning Meditation</span
+                      >
+                      <div class="mt-1 flex gap-1">
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-violet-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-violet-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-violet-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-violet-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit 2 - Emerald -->
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-emerald-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100/80 text-xl"
+                    >
+                      🏃
+                    </div>
+                    <div class="flex-1">
+                      <span class="text-sm font-semibold text-stone-800"
+                        >Evening Run</span
+                      >
+                      <div class="mt-1 flex gap-1">
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-emerald-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-emerald-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit 3 - Amber -->
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-amber-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100/80 text-xl"
+                    >
+                      📖
+                    </div>
+                    <div class="flex-1">
+                      <span class="text-sm font-semibold text-stone-800"
+                        >Read 20 Pages</span
+                      >
+                      <div class="mt-1 flex gap-1">
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-amber-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-amber-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div
+                          class="flex h-5 w-5 items-center justify-center rounded bg-amber-500"
+                        >
+                          <span class="text-[10px] text-white">✓</span>
+                        </div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit 4 - Cyan -->
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-cyan-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-100/80 text-xl"
+                    >
+                      💧
+                    </div>
+                    <div class="flex-1">
+                      <span class="text-sm font-semibold text-stone-800"
+                        >Drink 8 Glasses</span
+                      >
+                      <div class="mt-1 flex gap-1">
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit 5 - Pink -->
+            <div
+              class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
+            >
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-pink-500"></div>
+                <div class="flex-1 p-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-100/80 text-xl"
+                    >
+                      🎸
+                    </div>
+                    <div class="flex-1">
+                      <span class="text-sm font-semibold text-stone-800"
+                        >Practice Guitar</span
+                      >
+                      <div class="mt-1 flex gap-1">
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                        <div class="h-5 w-5 rounded bg-stone-100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium Upsell Section -->
+    <div class="mx-auto mb-16 mt-16 max-w-2xl">
+      <h2 class="mb-6 text-center text-xl font-bold text-stone-800">
+        💎 Premium Color Features
+      </h2>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- Free Colors -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-5">
+          <h3 class="mb-3 font-bold text-stone-700">Free Plan</h3>
+          <div class="mb-4 flex flex-wrap gap-2">
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-violet-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-emerald-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-amber-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-cyan-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-pink-500 shadow"
+            ></div>
+          </div>
+          <p class="text-sm text-stone-500">
+            5 preset colors to categorize your habits
+          </p>
+        </div>
+
+        <!-- Premium Colors -->
+        <div
+          class="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-amber-50 p-5"
+        >
+          <h3 class="mb-3 flex items-center gap-2 font-bold text-violet-700">
+            <span>✨</span> Premium Plan
+          </h3>
+          <div class="mb-4 flex flex-wrap gap-2">
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-violet-400 to-pink-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-emerald-400 to-cyan-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-amber-400 to-red-500 shadow"
+            ></div>
+            <div
+              class="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-blue-400 to-purple-500 shadow"
+            ></div>
+            <div
+              class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-stone-300 text-xs text-stone-400"
+            >
+              +
+            </div>
+          </div>
+          <p class="text-sm text-violet-700">
+            Custom colors, gradients, and seasonal themes
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implementation Summary -->
+    <div
+      class="mx-auto mb-8 mt-16 max-w-2xl rounded-2xl bg-stone-800 p-6 text-white"
+    >
+      <h2 class="mb-4 text-lg font-bold">📋 Recommendation Summary</h2>
+      <table class="w-full text-sm">
+        <tr class="border-b border-stone-600">
+          <td class="py-2 font-medium">Recommended Option</td>
+          <td class="py-2 text-emerald-400">Option A: Left Border</td>
+        </tr>
+        <tr class="border-b border-stone-600">
+          <td class="py-2 font-medium">Implementation Effort</td>
+          <td class="py-2">~2-3 hours</td>
+        </tr>
+        <tr class="border-b border-stone-600">
+          <td class="py-2 font-medium">File to Modify</td>
+          <td class="py-2 font-mono text-xs">DraggableHabit.tsx</td>
+        </tr>
+        <tr class="border-b border-stone-600">
+          <td class="py-2 font-medium">Premium Upsell</td>
+          <td class="py-2">Custom colors + gradients</td>
+        </tr>
+        <tr>
+          <td class="py-2 font-medium">ROI Impact</td>
+          <td class="py-2 text-amber-400">
+            Visual polish → Brand differentiation → Upgrade incentive
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
