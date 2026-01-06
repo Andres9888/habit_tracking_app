@@ -382,7 +382,7 @@ const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
               {
                 scale: completion.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0.5, 1],
+                  outputRange: [0.8, 1],
                 }),
               },
             ],
