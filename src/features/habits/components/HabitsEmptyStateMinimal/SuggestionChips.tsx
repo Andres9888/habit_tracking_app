@@ -105,11 +105,17 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
 
   // Update selection progress when isSelected prop changes
   // Using useEffect ensures animation always syncs with prop, even during mid-animation
+  // Deselection is instant (no animation) for snappier feel; only selection animates
   useEffect(() => {
-    const targetValue = isSelected ? 1 : 0;
-    selectionProgress.value = shouldReduceMotion
-      ? targetValue
-      : withSpring(targetValue, SPRING_CONFIGS.chipPress);
+    if (isSelected) {
+      // Animate selection
+      selectionProgress.value = shouldReduceMotion
+        ? 1
+        : withSpring(1, SPRING_CONFIGS.chipPress);
+    } else {
+      // Instant deselection - no animation
+      selectionProgress.value = 0;
+    }
   }, [isSelected, selectionProgress, shouldReduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
