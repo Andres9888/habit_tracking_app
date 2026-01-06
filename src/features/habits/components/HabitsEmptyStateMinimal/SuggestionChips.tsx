@@ -201,11 +201,11 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           borderWidth: 1,
           elevation: 1,
           flexDirection: 'row',
-          gap: 6,
+          gap: 5,
           minHeight: TOUCH_TARGETS.chipHeight,
-          paddingHorizontal: 16,
+          paddingHorizontal: 12,
 
-          paddingVertical: 10,
+          paddingVertical: 8,
           // Base shadow properties - subtle (opacity animates on hover)
           shadowColor: '#000000',
           shadowOffset: { height: 1, width: 0 },
@@ -216,12 +216,12 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text style={{ fontSize: 18 }}>{chip.emoji}</Text>
+      <Text style={{ fontSize: 16 }}>{chip.emoji}</Text>
       <Animated.Text
         style={[
           textStyle,
           {
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: '600',
           },
         ]}
@@ -288,9 +288,23 @@ export function SuggestionChips({
   const row3 = chips.slice(5, 6);
 
   return (
-    <View style={{ alignItems: 'center', gap: 8 }}>
+    <View
+      style={{
+        alignItems: 'center',
+        gap: 8,
+        paddingHorizontal: 8,
+        width: '100%',
+      }}
+    >
       {/* Row 1: 3 chips - delays 0, 50, 100ms */}
-      <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 8,
+          justifyContent: 'center',
+        }}
+      >
         {row1.map((chip, i) => (
           <Chip
             key={chip.label}
@@ -303,7 +317,14 @@ export function SuggestionChips({
         ))}
       </View>
       {/* Row 2: 2 chips - delays 150, 200ms */}
-      <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 8,
+          justifyContent: 'center',
+        }}
+      >
         {row2.map((chip, i) => {
           const index = i + 3;
           // Continue stagger from row 1 (indices 3, 4)
@@ -321,7 +342,14 @@ export function SuggestionChips({
         })}
       </View>
       {/* Row 3: 1 chip - delay 250ms */}
-      <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 8,
+          justifyContent: 'center',
+        }}
+      >
         {row3.map((chip, i) => {
           const index = i + 5;
           // Continue stagger from row 2 (index 5)

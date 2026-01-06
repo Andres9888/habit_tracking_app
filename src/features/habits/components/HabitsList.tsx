@@ -486,9 +486,8 @@ export function HabitsList({
   // Track which habit IDs have already animated in (prevents re-animation on re-render)
   const seenHabitIdsRef = useRef<Set<string>>(new Set());
   // Controls when entrance animations should trigger (after success transition)
-  const [shouldTriggerHabitEntrance, setShouldTriggerHabitEntrance] = useState(false);
-  // Animation variant from dev settings (can be changed for A/B testing)
-  const { entranceAnimationVariant } = modals;
+  const [shouldTriggerHabitEntrance, setShouldTriggerHabitEntrance] =
+    useState(false);
   // Stagger delay between cards (matches existing 100ms stagger)
   const ENTRANCE_STAGGER_DELAY = 100;
 
@@ -597,6 +596,31 @@ export function HabitsList({
     return () => clearTimeout(timeout);
   }, [justCreatedHabitId]);
 
+  // Enable entrance animations on mount for regular habit display (not coming from success celebration)
+  // This ensures cards animate in when the list first renders with existing habits
+  useEffect(() => {
+    // Skip if already triggered (e.g., from success celebration flow)
+    if (shouldTriggerHabitEntrance) {
+      return;
+    }
+    // Skip if in success celebration (will be triggered by handleSuccessTransitionComplete)
+    if (isInSuccessCelebration) {
+      return;
+    }
+    // Skip if no habits to display
+    if (habits.length === 0) {
+      return;
+    }
+    // Small delay to ensure list has mounted before triggering animations
+    const timeout = setTimeout(() => {
+      console.log(
+        '[HabitsList] Initial mount - triggering habit card entrance animations'
+      );
+      setShouldTriggerHabitEntrance(true);
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [habits.length, isInSuccessCelebration, shouldTriggerHabitEntrance]);
+
   // Callback to mark a habit as "seen" after its entrance animation completes
   // This prevents re-animation on subsequent re-renders
   const handleHabitEntranceComplete = useCallback((habitId: Id<'habits'>) => {
@@ -608,7 +632,6 @@ export function HabitsList({
     completionIcon: habitCompletionIcon,
     dayShape,
     entranceStaggerDelay: ENTRANCE_STAGGER_DELAY,
-    entranceVariant: entranceAnimationVariant,
     getHabitStatus,
     getStreak,
     handleArchive,

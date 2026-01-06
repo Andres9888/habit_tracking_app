@@ -1,10 +1,10 @@
 /**
- * InlineHint - Inline text with embedded link pressables
+ * InlineHint - Vertical stack with navigation buttons
  *
  * Features:
- * - Natural sentence flow: "or explore X and Y"
- * - Inline pressable links with proper touch targets
- * - Improved contrast and font size
+ * - Vertical layout that never overflows horizontally
+ * - Two pill buttons side-by-side below "or explore" text
+ * - Works on all screen sizes (320pt minimum)
  */
 
 import { Pressable, Text, View } from 'react-native';
@@ -13,10 +13,11 @@ import { COLORS } from './constants';
 import type { InlineHintProps } from './types';
 
 /**
- * Inline hint with embedded navigation links
+ * Hint section with navigation links in a vertical stack layout
  *
- * Displays: "or explore [templates] and [custom options]"
- * where the bracketed words are pressable links
+ * Layout:
+ *   "or explore"
+ *   [📋 templates]  [✨ custom]
  */
 export function InlineHint({
   onBrowseTemplates,
@@ -26,80 +27,89 @@ export function InlineHint({
     <View
       style={{
         alignItems: 'center',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
         marginTop: 16,
+        width: '100%',
       }}
     >
+      {/* Row 1: "or explore" text */}
       <Text
         style={{
           color: COLORS.stone600,
-          fontSize: 14,
-          lineHeight: 21,
+          fontSize: 13,
+          lineHeight: 18,
+          marginBottom: 10,
           textAlign: 'center',
         }}
       >
-        or explore{' '}
+        or explore
       </Text>
 
-      <Pressable
-        accessibilityHint='Opens screen with pre-made habit templates'
-        accessibilityLabel='Browse habit templates'
-        accessibilityRole='button'
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.7 : 1,
-          paddingHorizontal: 6,
-          paddingVertical: 6,
-        })}
-        onPress={onBrowseTemplates}
-      >
-        <Text
-          style={{
-            color: COLORS.emerald700,
-            fontSize: 14,
-            fontWeight: '600',
-            lineHeight: 21,
-          }}
-        >
-          templates
-        </Text>
-      </Pressable>
-
-      <Text
+      {/* Row 2: Buttons side-by-side with gap */}
+      <View
         style={{
-          color: COLORS.stone600,
-          fontSize: 14,
-          lineHeight: 21,
-          textAlign: 'center',
+          flexDirection: 'row',
+          gap: 12,
+          justifyContent: 'center',
         }}
       >
-        {' '}
-        and{' '}
-      </Text>
-
-      <Pressable
-        accessibilityHint='Opens full habit creation screen'
-        accessibilityLabel='Create custom habit'
-        accessibilityRole='button'
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.7 : 1,
-          paddingHorizontal: 6,
-          paddingVertical: 6,
-        })}
-        onPress={onCreateCustom}
-      >
-        <Text
-          style={{
-            color: COLORS.emerald700,
-            fontSize: 14,
-            fontWeight: '600',
-            lineHeight: 21,
-          }}
+        <Pressable
+          accessibilityHint='Opens screen with pre-made habit templates'
+          accessibilityLabel='Browse habit templates'
+          accessibilityRole='button'
+          style={({ pressed }) => ({
+            backgroundColor: pressed
+              ? COLORS.emerald100
+              : 'rgba(209, 250, 229, 0.5)',
+            borderColor: 'rgba(167, 243, 208, 0.8)',
+            borderRadius: 9999,
+            borderWidth: 1,
+            opacity: pressed ? 0.9 : 1,
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+          })}
+          onPress={onBrowseTemplates}
         >
-          custom options
-        </Text>
-      </Pressable>
+          <Text
+            style={{
+              color: COLORS.emerald700,
+              fontSize: 13,
+              fontWeight: '600',
+              lineHeight: 18,
+            }}
+          >
+            📋 templates
+          </Text>
+        </Pressable>
+
+        <Pressable
+          accessibilityHint='Opens full habit creation screen'
+          accessibilityLabel='Create custom habit'
+          accessibilityRole='button'
+          style={({ pressed }) => ({
+            backgroundColor: pressed
+              ? COLORS.emerald100
+              : 'rgba(209, 250, 229, 0.5)',
+            borderColor: 'rgba(167, 243, 208, 0.8)',
+            borderRadius: 9999,
+            borderWidth: 1,
+            opacity: pressed ? 0.9 : 1,
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+          })}
+          onPress={onCreateCustom}
+        >
+          <Text
+            style={{
+              color: COLORS.emerald700,
+              fontSize: 13,
+              fontWeight: '600',
+              lineHeight: 18,
+            }}
+          >
+            ✨ custom
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
