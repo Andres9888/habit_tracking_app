@@ -4,6 +4,7 @@ import {
   Check,
   ChevronLeft,
   Circle,
+  Sparkles,
 } from 'lucide-react-native';
 import React from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -12,6 +13,7 @@ import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
+import type { HabitCardEntranceVariant } from '../HabitCard';
 
 interface SettingsModalProps {
   celebrationsEnabled?: boolean;
@@ -38,17 +40,30 @@ interface SettingsModalProps {
   onClose: () => void;
   showCharacterScreen?: boolean;
   visible: boolean;
+  /**
+   * Current entrance animation variant (dev only).
+   * @default 'accentSlideDown'
+   */
+  entranceAnimationVariant?: HabitCardEntranceVariant;
+  /**
+   * Callback when entrance animation variant changes (dev only).
+   */
+  onChangeEntranceAnimationVariant?: (
+    value: HabitCardEntranceVariant
+  ) => void | Promise<void>;
 }
 
 export default function SettingsModal({
   celebrationsEnabled = true,
   dayShape = 'square',
+  entranceAnimationVariant = 'accentSlideDown',
   habitCompletionIcon = 'chain',
   isCompact = false,
   isHighContrastActive = false,
   onChangeCompact = () => {},
   onChangeCelebrationsEnabled,
   onChangeDayShape = () => {},
+  onChangeEntranceAnimationVariant,
   onChangeHabitCompletionIcon = () => {},
   onChangeShowCharacterScreen = () => {},
   showHabitStrengthPercentage = true,
@@ -183,6 +198,96 @@ export default function SettingsModal({
                 }
               />
             </SettingsSection>
+
+            {/* DEV ONLY: Animation Testing */}
+            {__DEV__ && onChangeEntranceAnimationVariant && (
+              <SettingsSection
+                highContrastMode={isHighContrastActive}
+                title='🧪 Dev: Animation Testing'
+              >
+                <View className='px-4 py-3'>
+                  <Text
+                    className='mb-3 text-[13px] leading-[18px]'
+                    style={{ color: colors.mutedText }}
+                  >
+                    Test different entrance animation variants for A/B testing. Changes apply to newly created habit cards.
+                  </Text>
+                  {/* Animation variant options */}
+                  {([
+                    { value: 'accentSlideDown' as const, label: 'Accent Slide Down', description: 'Recommended - accent bar slides from top' },
+                    { value: 'fadeUp' as const, label: 'Fade Up', description: 'Simple fade + translate up' },
+                    { value: 'widthExpansion' as const, label: 'Width Expansion', description: 'Accent bar grows from 0 to 6px' },
+                    { value: 'none' as const, label: 'No Animation', description: 'Instant appearance' },
+                  ]).map((option, index) => (
+                    <TouchableOpacity
+                      key={option.value}
+                      accessibilityLabel={`Select ${option.label} animation`}
+                      accessibilityRole='radio'
+                      accessibilityState={{ selected: entranceAnimationVariant === option.value }}
+                      className={`flex-row items-center py-3 ${
+                        index < 3 ? 'border-b' : ''
+                      }`}
+                      style={{
+                        borderColor: colors.cardBorder,
+                      }}
+                      onPress={() => void onChangeEntranceAnimationVariant(option.value)}
+                    >
+                      <View
+                        className='mr-3 size-10 items-center justify-center rounded-lg'
+                        style={{
+                          backgroundColor: entranceAnimationVariant === option.value
+                            ? (isHighContrastActive ? '#facc15' : '#dcfce7')
+                            : (isHighContrastActive ? '#1f1f1f' : '#f5f5f4'),
+                        }}
+                      >
+                        <Sparkles
+                          color={entranceAnimationVariant === option.value
+                            ? (isHighContrastActive ? '#000000' : '#16a34a')
+                            : (isHighContrastActive ? '#facc15' : '#78716c')
+                          }
+                          size={16}
+                        />
+                      </View>
+                      <View className='flex-1'>
+                        <Text
+                          className='text-[15px] font-semibold'
+                          style={{ color: colors.headerText }}
+                        >
+                          {option.label}
+                          {option.value === 'accentSlideDown' && ' ⭐'}
+                        </Text>
+                        <Text
+                          className='text-[13px]'
+                          style={{ color: colors.mutedText }}
+                        >
+                          {option.description}
+                        </Text>
+                      </View>
+                      <View
+                        className='size-6 items-center justify-center rounded-full border-2'
+                        style={{
+                          borderColor: entranceAnimationVariant === option.value
+                            ? (isHighContrastActive ? '#facc15' : '#16a34a')
+                            : colors.cardBorder,
+                          backgroundColor: entranceAnimationVariant === option.value
+                            ? (isHighContrastActive ? '#facc15' : '#16a34a')
+                            : 'transparent',
+                        }}
+                      >
+                        {entranceAnimationVariant === option.value && (
+                          <Check
+                            color={isHighContrastActive ? '#000000' : '#ffffff'}
+                            size={14}
+                            strokeWidth={3}
+                          />
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </SettingsSection>
+            )}
+
             {/* Habit Management */}
             <SettingsSection
               highContrastMode={isHighContrastActive}

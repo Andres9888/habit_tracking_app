@@ -487,8 +487,8 @@ export function HabitsList({
   const seenHabitIdsRef = useRef<Set<string>>(new Set());
   // Controls when entrance animations should trigger (after success transition)
   const [shouldTriggerHabitEntrance, setShouldTriggerHabitEntrance] = useState(false);
-  // Animation variant (can be changed for A/B testing)
-  const entranceVariant: HabitCardEntranceVariant = 'accentSlideDown';
+  // Animation variant from dev settings (can be changed for A/B testing)
+  const { entranceAnimationVariant } = modals;
   // Stagger delay between cards (matches existing 100ms stagger)
   const ENTRANCE_STAGGER_DELAY = 100;
 
@@ -608,7 +608,7 @@ export function HabitsList({
     completionIcon: habitCompletionIcon,
     dayShape,
     entranceStaggerDelay: ENTRANCE_STAGGER_DELAY,
-    entranceVariant,
+    entranceVariant: entranceAnimationVariant,
     getHabitStatus,
     getStreak,
     handleArchive,

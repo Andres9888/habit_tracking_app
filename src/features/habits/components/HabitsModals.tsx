@@ -122,6 +122,8 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     handleArchive,
     onChangeCelebrationsEnabled,
     reduceMotionPreference,
+    entranceAnimationVariant,
+    onChangeEntranceAnimationVariant,
   } = state;
 
   // Today's date for toggle completion
@@ -145,11 +147,13 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       <SettingsModal
         celebrationsEnabled={celebrationsEnabled}
         dayShape={settings?.dayShape ?? 'square'}
+        entranceAnimationVariant={entranceAnimationVariant}
         habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
         isHighContrastActive={settings?.highContrastMode ?? false}
         onChangeDayShape={(value) =>
           onSettingsChange({ dayShape: value })
         }
+        onChangeEntranceAnimationVariant={onChangeEntranceAnimationVariant}
         onChangeHabitCompletionIcon={(value) =>
           onSettingsChange({ habitCompletionIcon: value })
         }
