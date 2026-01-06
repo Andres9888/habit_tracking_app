@@ -1,4 +1,4 @@
-import { Pressable, Switch, Text, View } from 'react-native';
+import { Keyboard, Pressable, Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
@@ -29,33 +29,34 @@ export const MinimalReminderToggle = ({
 
   return (
     <View
-      className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3.5"
+      className='flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3.5'
       style={{
+        elevation: 1,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
+        shadowOffset: { height: 1, width: 0 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
-        elevation: 1,
       }}
     >
       {/* Icon + Label Section */}
-      <View className="flex-1 flex-row items-center gap-3">
+      <View className='flex-1 flex-row items-center gap-3'>
         {/* Bell Icon in amber circle */}
-        <View className="h-9 w-9 items-center justify-center rounded-full bg-amber-100">
-          <Bell color="#f59e0b" size={16} />
+        <View className='h-9 w-9 items-center justify-center rounded-full bg-amber-100'>
+          <Bell color='#f59e0b' size={16} />
         </View>
 
         {/* Label and Time */}
-        <View className="flex-1">
-          <Text className="text-sm font-medium text-stone-900">Remind me</Text>
+        <View className='flex-1'>
+          <Text className='text-sm font-medium text-stone-900'>Remind me</Text>
           <Pressable
+            disabled={!enabled}
             onPress={() => {
               if (enabled && onTimePress) {
+                Keyboard.dismiss();
                 triggerSelection();
                 onTimePress();
               }
             }}
-            disabled={!enabled}
           >
             <Text
               className={`text-xs font-medium ${
@@ -71,12 +72,13 @@ export const MinimalReminderToggle = ({
       {/* Toggle Switch */}
       <Switch
         accessibilityLabel={enabled ? 'Disable reminder' : 'Enable reminder'}
-        accessibilityRole="switch"
-        ios_backgroundColor="#d6d3d1"
-        thumbColor="#ffffff"
+        accessibilityRole='switch'
+        ios_backgroundColor='#d6d3d1'
+        thumbColor='#ffffff'
         trackColor={{ false: '#d6d3d1', true: '#10B981' }}
         value={enabled}
         onValueChange={(val) => {
+          Keyboard.dismiss();
           triggerSelection();
           onToggle(val);
         }}

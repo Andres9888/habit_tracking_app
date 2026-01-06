@@ -1,5 +1,11 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Keyboard,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -144,6 +150,8 @@ const EmojiPickerComponent = ({
 
   const handleEmojiSelect = useCallback(
     (emoji: string) => {
+      // Dismiss keyboard to reveal full picker and signal interactivity
+      Keyboard.dismiss();
       triggerSelection();
       onSelect(emoji);
       // Announce emoji selection for screen readers
@@ -153,6 +161,7 @@ const EmojiPickerComponent = ({
   );
 
   const handleMorePress = useCallback(() => {
+    Keyboard.dismiss();
     triggerSelection();
     setIsModalVisible(true);
   }, [triggerSelection]);

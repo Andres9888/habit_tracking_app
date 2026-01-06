@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react-native';
 import {
   AccessibilityInfo,
   Animated,
+  Keyboard,
   Text,
   TouchableOpacity,
   View,
@@ -95,6 +96,8 @@ const ColorButtonComponent = ({
   }, [isSelected, scale, reduceMotion]);
 
   const handlePress = useCallback(() => {
+    // Dismiss keyboard to reveal full picker and signal interactivity
+    Keyboard.dismiss();
     triggerSelection();
 
     if (!reduceMotion) {
@@ -222,6 +225,7 @@ const CustomColorButtonComponent = ({ onPress }: { onPress: () => void }) => {
   const { triggerSelection } = useHapticFeedback();
 
   const handlePress = useCallback(() => {
+    Keyboard.dismiss();
     triggerSelection();
     onPress();
   }, [onPress, triggerSelection]);
