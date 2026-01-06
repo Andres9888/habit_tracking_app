@@ -241,7 +241,7 @@ export const SuccessAnimation = ({
 
           {/* Success Text */}
           <Animated.View className="items-center" style={{ opacity: textOpacity }}>
-            <Text className="mb-2 text-center text-2xl font-bold text-stone-800">
+            <Text className="mb-2 text-center text-2xl font-bold tracking-tight text-stone-800">
               {habitName}
             </Text>
             <Text className="text-center text-lg text-stone-500">created! 🎉</Text>

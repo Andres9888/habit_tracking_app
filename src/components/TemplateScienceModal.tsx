@@ -152,15 +152,16 @@ const ConfettiParticle = ({
     scale.value = withDelay(delay, withSpring(1, { damping: 8 }));
     translateY.value = withDelay(
       delay,
-      withTiming(SCREEN_HEIGHT * 0.4, { duration: 2000, easing: Easing.out(Easing.quad) })
+      withTiming(Math.round(SCREEN_HEIGHT * 0.4), { duration: 2000, easing: Easing.out(Easing.quad) })
     );
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
     translateX.value = withDelay(
       delay,
-      withTiming(startX + (Math.random() - 0.5) * 200, { duration: 2000 })
+      withTiming(Math.round(startX + (Math.random() - 0.5) * 200), { duration: 2000 })
     );
     rotate.value = withDelay(
       delay,
-      withTiming(Math.random() * 720 - 360, { duration: 2000 })
+      withTiming(Math.round(Math.random() * 720 - 360), { duration: 2000 })
     );
     opacity.value = withDelay(
       delay + 1500,
@@ -173,7 +174,8 @@ const ConfettiParticle = ({
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
-      { rotate: `${rotate.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(rotate.value)}deg` },
       { scale: scale.value },
     ],
   }));

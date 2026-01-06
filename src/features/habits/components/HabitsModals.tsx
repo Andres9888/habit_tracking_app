@@ -9,7 +9,9 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
-import CreateHabitModal from '../../../components/CreateHabitModal';
+import CreateHabitModal, {
+  CreateHabitModalCentered,
+} from '../../../components/CreateHabitModal';
 import HabitCalendarModal from '../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../screens/HabitDetailScreen';
 import HabitEditScreen from '../../../screens/HabitEditScreen';
@@ -20,10 +22,25 @@ import HapticTest from '../../../components/HapticTest';
 import TemplatesScreen from '../../../screens/TemplatesScreen';
 import { QuickActionsSheet } from '../../../components/QuickActionsSheet';
 import { VisualizationExercise } from '../../../components/VisualizationExercise';
+import { ActivationModal } from '../../../components/MotivationSystem/Activation/ActivationModal';
+import type { ActivationHabitData } from '../../../components/MotivationSystem/Activation/ActivationModal';
 import type { ShareCardData } from '../types';
 import type { HabitsModalsState } from '../hooks/useHabitsApp';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/**
+ * Feature flag: Toggle between original and centered habit creation modal
+ *
+ * Original modal:  All fields visible upfront with equal visual weight
+ * Centered modal:  Progressive disclosure - name required, customization optional
+ *
+ * To enable centered layout: Set to `true`
+ * To use original layout:   Set to `false` (default)
+ *
+ * Both modals are fully functional and use identical props (CreateHabitModalProps)
+ */
+const USE_CENTERED_HABIT_MODAL = true;
 
 interface HabitsModalsProps {
   state: HabitsModalsState;
@@ -69,6 +86,8 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     showTemplatesScreen,
     showQuickActions,
     showVisualizationExercise,
+    showActivationModal,
+    activationModalHabit,
     habitToEdit,
     habitToPause,
     selectedHabit,
@@ -89,6 +108,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     closeQuickActions,
     closeVisualizationExercise,
     openVisualizationExercise,
+    closeActivationModal,
     setShowHabitStrengthPercentage,
     onSettingsChange,
     onDeleteHabit,
@@ -154,11 +174,19 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         visible={showSettings}
       />
 
-      <CreateHabitModal
-        habitToEdit={habitToEdit || undefined}
-        visible={showCreateHabit}
-        onClose={closeCreateHabit}
-      />
+      {USE_CENTERED_HABIT_MODAL ? (
+        <CreateHabitModalCentered
+          habitToEdit={habitToEdit || undefined}
+          visible={showCreateHabit}
+          onClose={closeCreateHabit}
+        />
+      ) : (
+        <CreateHabitModal
+          habitToEdit={habitToEdit || undefined}
+          visible={showCreateHabit}
+          onClose={closeCreateHabit}
+        />
+      )}
 
       <Modal
         animationType='slide'
@@ -196,6 +224,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       <HabitDetailScreen
         habit={selectedHabit}
         initialTab={habitDetailInitialTab}
+        isPremium={settings?.hasPremium ?? false}
         onArchive={(habitId) => handleArchive(habitId)}
         onClose={closeHabitDetail}
         onDelete={onDeleteHabit}
@@ -384,6 +413,46 @@ export function HabitsModals({ state }: HabitsModalsProps) {
           </View>
         </View>
       </CustomModal>
+
+      {/* Activation Modal (T7.8: Trigger from notification tap) */}
+      <ActivationModal
+        visible={showActivationModal}
+        onClose={closeActivationModal}
+        habit={activationModalHabit ? {
+          id: activationModalHabit._id,
+          name: activationModalHabit.name,
+          icon: activationModalHabit.icon,
+          currentStreak: activationModalHabit.currentStreak ?? 0,
+          totalCompletions: activationModalHabit.completedDays ?? 0,
+          why: activationModalHabit.why,
+          woopObstacle: activationModalHabit.woopObstacle,
+          woopPlan: activationModalHabit.woopPlan,
+          cueTime: activationModalHabit.cueTime,
+          cueLocation: activationModalHabit.cueLocation,
+          cueAfterBehavior: activationModalHabit.cueAfterBehavior,
+          vizSuccessBody: activationModalHabit.vizSuccessBody,
+          vizSuccessMind: activationModalHabit.vizSuccessMind,
+          vizSuccessEmotion: activationModalHabit.vizSuccessEmotion,
+          vizFailureBody: activationModalHabit.vizFailureBody,
+          vizFailureMind: activationModalHabit.vizFailureMind,
+          vizFailureEmotion: activationModalHabit.vizFailureEmotion,
+        } : null}
+        onStartNow={() => {
+          // Mark habit as started/in-progress and close modal
+          if (activationModalHabit) {
+            toggleHabit({ habitId: activationModalHabit._id, date: today });
+          }
+        }}
+        onSnooze={() => {
+          // Snooze for 10 minutes (future enhancement: schedule delayed notification)
+          console.log('Snooze habit:', activationModalHabit?.name);
+        }}
+        onJustTwoMin={() => {
+          // Start "Just 2 Min" mode - closes modal and user commits to 2 min
+          console.log('Just 2 min mode for:', activationModalHabit?.name);
+        }}
+        reduceMotion={reduceMotionPreference}
+      />
     </>
   );
 }

@@ -191,8 +191,10 @@ export const EmojiPickerSheet = memo(
         translateY.value = Math.max(context.value.y + event.translationY, 0);
       })
       .onEnd((event) => {
+        // Use Math.round on velocity to avoid precision loss error in Reanimated
+        const velocityY = Math.round(event.velocityY);
         // If dragged more than 25% down or velocity is high, dismiss
-        if (translateY.value > SHEET_HEIGHT * 0.25 || event.velocityY > 500) {
+        if (translateY.value > SHEET_HEIGHT * 0.25 || velocityY > 500) {
           runOnJS(closeSheet)();
         } else {
           translateY.value = withSpring(0, {
@@ -434,7 +436,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: '#1c1917', // stone-800
   },
   suggestionsContainer: {
     marginHorizontal: 20,
@@ -495,7 +497,7 @@ const styles = StyleSheet.create({
   noIconText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#4b5563',
+    color: '#78716c', // stone-500
   },
 });
 

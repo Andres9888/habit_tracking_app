@@ -453,7 +453,8 @@ export function HabitCard({
   const checkmarkAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: checkmarkScale.value },
-      { rotate: `${checkmarkRotate.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(checkmarkRotate.value)}deg` },
     ],
   }));
 

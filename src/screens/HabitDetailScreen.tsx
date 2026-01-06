@@ -1,12 +1,12 @@
 /**
  * HabitDetailScreen Component
- * Tabbed Habit Detail Page with Quick Complete
+ * Calendar-focused Habit Detail Page
  *
  * Features:
  * - Hero section with icon, name, and Quick Complete button (sticky)
- * - Quick Stats Strip (streak, strength, success rate)
- * - Tabbed navigation (Progress, Motivation, Manage)
- * - Tab content with scroll position preservation
+ * - HabitStrengthHistory - Strength metrics, chart, and historical comparison
+ * - MonthlyCalendarGrid - Monthly calendar view with tap-to-toggle
+ * - Stats summary with streak badges
  */
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
@@ -14,8 +14,7 @@ import { View, Text, Pressable, Alert, ScrollView, Modal as RNModal, TextInput, 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, FadeInDown, FadeOut, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, runOnJS, type SharedValue, LinearTransition } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeInDown, FadeOut, useAnimatedStyle, useSharedValue, withSpring, withSequence, withTiming, Easing, interpolate, Extrapolation, type SharedValue, LinearTransition } from 'react-native-reanimated';
 import { Modal } from '../components/Modal';
 import { VisualizationGuide } from '../components/NotesSection/VisualizationGuide';
 import { VisualizationExercise } from '../components/VisualizationExercise';
@@ -23,16 +22,20 @@ import { VisualizationExercise } from '../components/VisualizationExercise';
 // The new ProgressSection combines HabitStrengthSection + InsightsSection into 3 always-visible cards.
 // import { HabitStrengthSection } from '../components/HabitStrengthSection';
 // import { InsightsSection } from '../components/InsightsSection';
-import { ProgressSectionConsolidated } from '../components/ProgressSectionConsolidated';
+import {
+  ProgressSectionConsolidated,
+  TodaysFocusCard,
+  WeeklySummaryStrip,
+} from '../components/ProgressSectionConsolidated';
+import type { WeekDayData } from '../components/ProgressSectionConsolidated';
 // REMOVED: StreakChainSection - redundant with Personal Bests card
 // import { StreakChainSection } from '../components/StreakChainSection/StreakChainSection';
-import { CalendarHeatmap } from '../components/CalendarHeatmap';
+import { MonthlyCalendarGrid } from '../components/BinaryHeatmap';
+import { HabitStrengthSection } from '../components/HabitStrengthSection';
 import NotesList from '../components/StatsNotesModal/NotesList';
 import NoteEditor from '../components/StatsNotesModal/NoteEditor';
 import { Toast } from '../components/Toast';
-import { HabitDetailTabs, type TabType } from '../components/HabitDetailTabs';
 import { HabitNotesSection } from '../components/HabitNotesSection';
-import { QuickStatsStrip } from '../components/QuickStatsStrip';
 import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickCompleteButton';
 import { HeaderCompleteToggle } from '../components/HeaderCompleteToggle';
 import { format, parseISO } from 'date-fns';
@@ -77,6 +80,18 @@ import { ArchiveUndoToast } from '../components/ArchiveUndoToast';
 import { VisionBoardPreview } from '../components/VisionBoardPreview';
 import { useReduceMotion } from '../hooks/useReduceMotion';
 import { useKeyboardState } from '../components/CreateHabitModal/hooks/useKeyboardState';
+import { QuickReflection, type EmojiType } from '../components/MotivationSystem/Reward';
+import { PulsingIcon, CompletionCheckmark } from '../components/animations';
+import {
+  YourWhySection,
+  IdentitySection,
+  CueTriggerSection,
+  DualVizSetup,
+  VoiceNotesSection,
+  LettersSection,
+  type CueTriggerData,
+  type VisualizationData,
+} from '../components/MotivationSystem/Workshop';
 
 // Types
 type Habit = HabitDoc & {
@@ -87,8 +102,6 @@ type Habit = HabitDoc & {
 
 interface HabitDetailScreenProps {
   habit: Habit | null;
-  /** Initial tab to show when opening (defaults to 'progress') */
-  initialTab?: TabType;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
@@ -143,12 +156,12 @@ function HeroSection({
     iconScale.value = withSpring(1, {
       damping: 8,
       stiffness: 150,
-      mass: 0.8,
+      mass: 1,
     });
     iconTranslateY.value = withSpring(0, {
       damping: 8,
       stiffness: 150,
-      mass: 0.8,
+      mass: 1,
     });
 
     // Streak badge entrance animation (delayed after icon bounce) (T1.2)
@@ -159,7 +172,7 @@ function HeroSection({
         badgeScale.value = withSpring(1, {
           damping: 10,
           stiffness: 200,
-          mass: 0.6,
+          mass: 1,
         });
       }, 400);
     }
@@ -342,7 +355,7 @@ function ActionButton({
 
 /**
  * Section Card Component for consistent styling
- * Includes animated press state (scale 0.98) with Springs.button for tappable cards
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
  * T4: Press feedback with scale animation and shadow elevation change
  */
 function SectionCard({
@@ -357,14 +370,14 @@ function SectionCard({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.08);
+  const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
     // Shadow properties for iOS
     shadowOpacity: shadowOpacity.value,
-    shadowRadius: interpolate(elevation.value, [1, 2], [2, 4]),
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
     shadowOffset: {
       width: 0,
       height: interpolate(elevation.value, [1, 2], [1, 2]),
@@ -378,7 +391,7 @@ function SectionCard({
     // T4.1: Use Springs.button (damping: 15, stiffness: 300)
     scale.value = withSpring(0.98, { damping: 15, stiffness: 300 });
     // T4.3: Reduce shadow/elevation on press for pressed-in effect
-    shadowOpacity.value = withSpring(0.04, { damping: 15, stiffness: 300 });
+    shadowOpacity.value = withSpring(0.02, { damping: 15, stiffness: 300 });
     elevation.value = withSpring(1, { damping: 15, stiffness: 300 });
   }, [scale, shadowOpacity, elevation]);
 
@@ -387,7 +400,7 @@ function SectionCard({
     // T4.1: Use Springs.button for release
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
     // T4.3: Restore shadow/elevation
-    shadowOpacity.value = withSpring(0.08, { damping: 15, stiffness: 300 });
+    shadowOpacity.value = withSpring(0.05, { damping: 15, stiffness: 300 });
     elevation.value = withSpring(2, { damping: 15, stiffness: 300 });
   }, [scale, shadowOpacity, elevation]);
 
@@ -396,14 +409,14 @@ function SectionCard({
       <Animated.View
         style={[
           animatedStyle,
-          { shadowColor: '#78716c' } // stone-500 for shadow color
+          { shadowColor: '#000' }
         ]}
       >
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="button"
           className={clsx(
-            'rounded-2xl bg-white p-4',
+            'rounded-xl border border-stone-200 bg-white p-3',
             className
           )}
           onPress={onPress}
@@ -423,9 +436,16 @@ function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-xl border border-stone-200 bg-white p-3',
         className
       )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
     >
       {children}
     </View>
@@ -475,7 +495,7 @@ function AnimatedSection({
       translateY.value = withSpring(0, {
         damping: 28,    // Springs.gentle
         stiffness: 180, // Springs.gentle
-        mass: 1.2,      // Springs.gentle - slight overshoot
+        mass: 1,        // Springs.gentle - integer to avoid precision errors
       });
       opacity.value = withTiming(1, { duration: 300 });
     }, delay);
@@ -495,176 +515,6 @@ function AnimatedSection({
   );
 }
 
-/**
- * CompletionCheckmark Component
- * Animated checkmark badge that pops in when a section is filled
- *
- * Design spec (T2 Progress Checkmarks):
- * - Positioned at top-right of section icon
- * - Emerald-500 background with white check icon
- * - Pop-in animation: scale 0 → 1.2 → 1 (Springs.bouncy)
- * - Delayed 600ms after section entrance animation
- *
- * @param isVisible - Whether the checkmark should be shown (section is filled)
- * @param sectionIndex - Section index for staggered delay calculation
- * @param shouldAnimate - Whether entrance animation should run (first tab visit)
- * @param reduceMotion - Whether to skip animations for accessibility
- */
-function CompletionCheckmark({
-  isVisible,
-  sectionIndex,
-  shouldAnimate,
-  reduceMotion = false,
-}: {
-  isVisible: boolean;
-  sectionIndex: number;
-  shouldAnimate: boolean;
-  reduceMotion?: boolean;
-}) {
-  const STAGGER_DELAY = 80;
-  const BASE_CHECKMARK_DELAY = 600; // Wait for section entrance
-
-  const scale = useSharedValue(isVisible && shouldAnimate && !reduceMotion ? 0 : (isVisible ? 1 : 0));
-  const opacity = useSharedValue(isVisible && shouldAnimate && !reduceMotion ? 0 : (isVisible ? 1 : 0));
-
-  useEffect(() => {
-    if (!isVisible) {
-      scale.value = 0;
-      opacity.value = 0;
-      return;
-    }
-
-    if (!shouldAnimate || reduceMotion) {
-      scale.value = 1;
-      opacity.value = 1;
-      return;
-    }
-
-    // Calculate delay: section stagger + base checkmark delay
-    const delay = (sectionIndex * STAGGER_DELAY) + BASE_CHECKMARK_DELAY;
-
-    const timeout = setTimeout(() => {
-      // Pop-in animation: 0 → 1.2 → 1 using Springs.bouncy
-      scale.value = withSequence(
-        withSpring(1.2, {
-          damping: 8,    // Springs.bouncy
-          stiffness: 300, // Springs.bouncy
-        }),
-        withSpring(1, {
-          damping: 15,   // Settle down
-          stiffness: 300,
-        })
-      );
-      opacity.value = withTiming(1, { duration: 150 });
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [isVisible, shouldAnimate, reduceMotion, sectionIndex, scale, opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-  }));
-
-  if (!isVisible) return null;
-
-  return (
-    <Animated.View
-      style={[
-        animatedStyle,
-        {
-          position: 'absolute',
-          top: -4,
-          right: -4,
-        },
-      ]}
-    >
-      <View className="h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
-        <Check className="text-white" size={12} strokeWidth={3} />
-      </View>
-    </Animated.View>
-  );
-}
-
-/**
- * PulsingIcon Component for Empty State Icons (T3.1)
- * Wraps icons with subtle opacity + scale pulse animation
- *
- * Design spec (T3 Improved Empty States):
- * - Opacity: 0.5 → 1 → 0.5 (2000ms loop)
- * - Scale: 1 → 1.05 → 1 (synced with opacity)
- * - Only animates when reduceMotion is false
- *
- * @param children - The icon element to wrap
- * @param reduceMotion - Whether to skip animations for accessibility
- */
-function PulsingIcon({
-  children,
-  reduceMotion = false,
-}: {
-  children: React.ReactNode;
-  reduceMotion?: boolean;
-}) {
-  const opacity = useSharedValue(1);
-  const scale = useSharedValue(1);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      opacity.value = 1;
-      scale.value = 1;
-      return;
-    }
-
-    // Create infinite pulse animation
-    const pulseOpacity = () => {
-      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
-        if (finished) {
-          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseOpacity)();
-            }
-          });
-        }
-      });
-    };
-
-    const pulseScale = () => {
-      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
-        if (finished) {
-          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseScale)();
-            }
-          });
-        }
-      });
-    };
-
-    pulseOpacity();
-    pulseScale();
-
-    return () => {
-      // Cleanup - reset to default values
-      opacity.value = 1;
-      scale.value = 1;
-    };
-  }, [reduceMotion, opacity, scale]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  if (reduceMotion) {
-    return <>{children}</>;
-  }
-
-  return (
-    <Animated.View style={animatedStyle}>
-      {children}
-    </Animated.View>
-  );
-}
 
 /**
  * Danger Zone Section Component (T4.3)
@@ -909,73 +759,217 @@ function AffirmationsSection({
 }
 
 /**
+ * @deprecated Tab navigation has been removed - screen is now calendar-only.
+ * This function is kept for reference but is no longer used.
+ *
  * Progress Tab Content
+ *
+ * Phase 1 redesign includes:
+ * - TodaysFocusCard: Contextual motivation at top
+ * - WeeklySummaryStrip: Visual 7-day progress view
+ * - StatsGrid: Compact 2x2 stats layout (replaces InsightChips)
+ *
+ * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 function ProgressTabContent({
   completedDates,
   habit,
   habitCreatedAt,
+  isCompletedToday,
   strengthPercent,
   tracking,
+  weekData,
+  lastWeekCompleted,
+  reduceMotion = false,
 }: {
   completedDates: Set<string>;
   habit: Habit;
   habitCreatedAt: number | undefined;
+  isCompletedToday: boolean;
   strengthPercent: number;
   tracking: HabitTrackingEntry[];
+  weekData: WeekDayData[];
+  lastWeekCompleted: number;
+  reduceMotion?: boolean;
 }) {
+  // Get today's date for reflection queries
+  const today = new Date().toISOString().split('T')[0];
+
+  // Mutation for toggling habit completion on any date (heatmap cell tap)
+  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+
+  // Track toggling state to prevent rapid-fire toggles
+  const [isToggling, setIsToggling] = useState(false);
+
+  // Handle heatmap cell press - toggle completion for that date
+  const handleDayPress = useCallback((date: string, wasCompleted: boolean): void => {
+    // Prevent rapid-fire toggles
+    if (isToggling) return;
+
+    // Don't allow toggling future dates (mutation validates this too, but skip for UX)
+    const inputDate = new Date(date);
+    const todayDate = new Date();
+    inputDate.setHours(0, 0, 0, 0);
+    todayDate.setHours(0, 0, 0, 0);
+    if (inputDate > todayDate) {
+      return; // Silently ignore future date taps
+    }
+
+    setIsToggling(true);
+
+    // Haptic feedback - lighter for unchecking, medium for checking
+    void Haptics.impactAsync(
+      wasCompleted
+        ? Haptics.ImpactFeedbackStyle.Light
+        : Haptics.ImpactFeedbackStyle.Medium
+    );
+
+    // Fire mutation and handle results (void to avoid returning promise)
+    void toggleHabitMutation({
+      date,
+      habitId: habit._id,
+    })
+      .catch((error: unknown) => {
+        console.error('Failed to toggle habit completion:', error);
+        // Could show a toast here if toast system is available
+      })
+      .finally(() => {
+        // Small cooldown to prevent rapid toggles
+        setTimeout(() => setIsToggling(false), 200);
+      });
+  }, [isToggling, habit._id, toggleHabitMutation]);
+
+  // Query for today's reflection
+  const todaysReflection = useQuery(api.reflections.getByHabitAndDate, {
+    habitId: habit._id,
+    date: today,
+  });
+
+  // Mutation to upsert reflection
+  const upsertReflection = useMutation(api.reflections.upsert);
+
+  // Local state for reflection
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | undefined>(
+    todaysReflection?.emoji
+  );
+  const [reflectionNote, setReflectionNote] = useState(todaysReflection?.note ?? '');
+
+  // Sync local state with fetched reflection
+  useEffect(() => {
+    if (todaysReflection) {
+      setSelectedEmoji(todaysReflection.emoji);
+      setReflectionNote(todaysReflection.note ?? '');
+    }
+  }, [todaysReflection]);
+
+  // Handle emoji selection
+  const handleEmojiSelect = useCallback(async (emoji: EmojiType) => {
+    setSelectedEmoji(emoji);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    try {
+      await upsertReflection({
+        habitId: habit._id,
+        date: today,
+        emoji,
+        note: reflectionNote || undefined,
+      });
+    } catch (error) {
+      console.error('Failed to save reflection:', error);
+    }
+  }, [habit._id, today, reflectionNote, upsertReflection]);
+
+  // Handle note change with debounced save
+  const handleNoteChange = useCallback((note: string) => {
+    setReflectionNote(note);
+  }, []);
+
+  // Handle note submit
+  const handleNoteSubmit = useCallback(async () => {
+    if (!selectedEmoji) return;
+    try {
+      await upsertReflection({
+        habitId: habit._id,
+        date: today,
+        emoji: selectedEmoji,
+        note: reflectionNote || undefined,
+      });
+    } catch (error) {
+      console.error('Failed to save reflection note:', error);
+    }
+  }, [habit._id, today, selectedEmoji, reflectionNote, upsertReflection]);
+
+  // Calculate habit age in days
+  const habitAge = useMemo(() => {
+    if (!habitCreatedAt) return 0;
+    const createdDate = new Date(habitCreatedAt);
+    const todayDate = new Date();
+    return Math.floor((todayDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+  }, [habitCreatedAt]);
+
+  // Calculate weekly completion count for TodaysFocusCard
+  const weeklyCompletion = useMemo(() => {
+    return weekData.filter((d) => d.completed).length;
+  }, [weekData]);
+
   return (
     <View className="gap-4">
-      {/* Calendar Heatmap - visual history of completions */}
-      <CalendarHeatmap
+      {/* Phase 1: Today's Focus Card - contextual motivation */}
+      <TodaysFocusCard
+        currentStreak={habit.currentStreak ?? 0}
+        isCompletedToday={isCompletedToday}
+        weeklyCompletion={weeklyCompletion}
+        habitAge={habitAge}
+        bestStreak={habit.bestStreak ?? 0}
+      />
+
+      {/* Quick Reflection - shown when habit is completed today (T6) */}
+      {isCompletedToday && (
+        <QuickReflection
+          selectedEmoji={selectedEmoji}
+          note={reflectionNote}
+          onEmojiSelect={handleEmojiSelect}
+          onNoteChange={handleNoteChange}
+          onSubmit={handleNoteSubmit}
+          showNoteInput={true}
+          shouldAnimate={true}
+          reduceMotion={reduceMotion}
+          sectionIndex={1}
+        />
+      )}
+
+      {/* Phase 1: Weekly Summary Strip - 7-day progress view */}
+      <WeeklySummaryStrip
+        weekData={weekData}
+        lastWeekCompleted={lastWeekCompleted}
+      />
+
+      {/* Habit Strength Section - strength ring, chart, and stats */}
+      {habitCreatedAt && (
+        <HabitStrengthSection
+          habitId={habit._id}
+          completedDates={completedDates}
+          habitCreatedAt={habitCreatedAt}
+          habitColor={habit.iconColor}
+          habitStrength={habit.strength}
+        />
+      )}
+
+      {/* Monthly Calendar Grid - detailed month view with day cells */}
+      <MonthlyCalendarGrid
         habitId={habit._id}
         completedDates={completedDates}
         habitCreatedAt={habitCreatedAt}
-        habitColor={habit.iconColor}
-        onDayPress={(date, completed) => {
-          // Future: Could open day detail or allow editing past dates
-        }}
-      />
-
-      {/* Consolidated Progress Section - unified design with improved visual hierarchy */}
-      <ProgressSectionConsolidated
-        tracking={tracking}
-        habitCreatedAt={habitCreatedAt ? new Date(habitCreatedAt).toISOString() : new Date().toISOString()}
-        strength={strengthPercent}
-        onInfoPress={() => {
-          Alert.alert(
-            'What is Habit Strength?',
-            'Habit strength measures how automatic your habit has become. It\'s calculated based on:\n\n' +
-            '🔥 Current Streak - Consecutive days completed\n\n' +
-            '📊 Success Rate - % of days you\'ve completed\n\n' +
-            '📅 Consistency - How regular your habit is\n\n' +
-            'The stronger your habit, the easier it becomes to maintain!',
-            [{ text: 'Got it' }]
-          );
-        }}
-        onFocusDayPress={() => {
-          Alert.alert(
-            'Focus Day',
-            'This is your lowest-performing day. Tips to improve:\n\n' +
-            '⏰ Set a reminder for this specific day\n\n' +
-            '📍 Stack it after an existing habit\n\n' +
-            '🎯 Start with a smaller version on tough days\n\n' +
-            '🤝 Find an accountability partner',
-            [{ text: 'Got it' }]
-          );
-        }}
-        onSeeAllPress={() => {
-          // Future: Navigate to full analytics screen
-        }}
-        onTipPress={() => {
-          // Future: Navigate to tips or guidance screen
-        }}
+        habitColor={habit.iconColor ?? '#10b981'}
+        onDayPress={handleDayPress}
       />
     </View>
   );
 }
 
 /**
+ * @deprecated Tab navigation has been removed - screen is now calendar-only.
+ * This function is kept for reference but is no longer used.
+ *
  * Motivation Tab Content
  * Features staggered entrance animations on first tab visit (T1)
  */
@@ -1041,191 +1035,73 @@ function MotivationTabContent({
   /** Whether to animate entrance (first tab visit only) */
   shouldAnimate?: boolean;
 }) {
+  // Build cue data object for CueTriggerSection
+  const cueData: CueTriggerData | undefined = hasCue
+    ? {
+        time: habitCueTime,
+        location: habitCueLocation,
+        afterBehavior: habitCueAfterBehavior,
+      }
+    : undefined;
+
+  // Build visualization data object for DualVizSetup
+  const vizData: VisualizationData | undefined =
+    habit.vizSuccessBody ||
+    habit.vizSuccessMind ||
+    habit.vizSuccessEmotion ||
+    habit.vizFailureBody ||
+    habit.vizFailureMind ||
+    habit.vizFailureEmotion
+      ? {
+          successBody: habit.vizSuccessBody,
+          successMind: habit.vizSuccessMind,
+          successEmotion: habit.vizSuccessEmotion,
+          failureBody: habit.vizFailureBody,
+          failureMind: habit.vizFailureMind,
+          failureEmotion: habit.vizFailureEmotion,
+        }
+      : undefined;
+
   return (
     <View className="gap-4">
-      {/* Your Why Section - Index 0 */}
-      <AnimatedSection index={0} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
-        <SectionCard
-          accessibilityLabel={habit.why ? 'Edit your why' : 'Add your why'}
-          onPress={onOpenWhyEditor}
-          className="border-l-4 border-rose-400"
-        >
-          <View className="flex-row items-start gap-3">
-            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-rose-100">
-              {habit.why ? (
-                <Heart className="text-rose-500" size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Heart className="text-rose-500" size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={!!habit.why}
-                sectionIndex={0}
-                shouldAnimate={shouldAnimate ?? false}
-                reduceMotion={reduceMotion}
-              />
-            </View>
-            <View className="flex-1">
-              {habit.why ? (
-                <>
-                  <Text className="mb-1 font-semibold text-stone-800">Your Why</Text>
-                  <Text className="text-sm text-stone-600">"{habit.why}"</Text>
-                </>
-              ) : (
-                <>
-                  <View className="mb-1 flex-row items-center justify-between">
-                    <Text className="font-semibold text-stone-800">Your Why</Text>
-                    <View className="flex-row items-center gap-1">
-                      <Plus className="text-rose-600" size={12} />
-                      <Text className="text-xs font-medium text-rose-600">Set up</Text>
-                    </View>
-                  </View>
-                  <Text className="text-sm text-stone-500">
-                    Define your deeper motivation
-                  </Text>
-                </>
-              )}
-            </View>
-          </View>
-        </SectionCard>
-      </AnimatedSection>
+      {/* Your Why Section - Index 0 - Using Workshop component */}
+      <YourWhySection
+        why={habit.why}
+        onPress={onOpenWhyEditor}
+        shouldAnimate={shouldAnimate}
+        reduceMotion={reduceMotion}
+        sectionIndex={0}
+      />
 
-      {/* Your Identity Section - Index 1 */}
-      <AnimatedSection index={1} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
-        <SectionCard
-          accessibilityLabel={habitIdentity ? 'Edit your identity' : 'Add your identity'}
-          onPress={onOpenIdentityEditor}
-          className="border-l-4 border-violet-400"
-        >
-          <View className="flex-row items-start gap-3">
-            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
-              {habitIdentity ? (
-                <Sparkles className="text-violet-500" size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Sparkles className="text-violet-500" size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={!!habitIdentity}
-                sectionIndex={1}
-                shouldAnimate={shouldAnimate ?? false}
-                reduceMotion={reduceMotion}
-              />
-            </View>
-            <View className="flex-1">
-              {habitIdentity ? (
-                <>
-                  <View className="mb-1 flex-row items-center gap-2">
-                    <Text className="font-semibold text-stone-800">Your Identity</Text>
-                    <View className="rounded-full bg-violet-100 px-2 py-0.5">
-                      <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
-                    </View>
-                  </View>
-                  <Text className="text-sm text-stone-600">"I am {habitIdentity}"</Text>
-                </>
-              ) : (
-                <>
-                  <View className="mb-1 flex-row items-center justify-between">
-                    <View className="flex-row items-center gap-2">
-                      <Text className="font-semibold text-stone-800">Your Identity</Text>
-                      <View className="rounded-full bg-violet-100 px-2 py-0.5">
-                        <Text className="text-[10px] font-medium text-violet-700">Most powerful</Text>
-                      </View>
-                    </View>
-                    <View className="flex-row items-center gap-1">
-                      <Plus className="text-violet-600" size={12} />
-                      <Text className="text-xs font-medium text-violet-600">Set up</Text>
-                    </View>
-                  </View>
-                  <Text className="text-sm text-stone-500">
-                    Who are you becoming?
-                  </Text>
-                </>
-              )}
-            </View>
-          </View>
-        </SectionCard>
-      </AnimatedSection>
+      {/* Your Identity Section - Index 1 - Using Workshop component */}
+      <IdentitySection
+        identity={habitIdentity}
+        onPress={onOpenIdentityEditor}
+        shouldAnimate={shouldAnimate}
+        reduceMotion={reduceMotion}
+        sectionIndex={1}
+      />
 
-      {/* Your Cue Section - Index 2 */}
-      <AnimatedSection index={2} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
-        <SectionCard
-          accessibilityLabel={hasCue ? 'Edit your cue' : 'Add a cue'}
-          onPress={onOpenCueEditor}
-          className="border-l-4 border-amber-400"
-        >
-          <View className="flex-row items-start gap-3">
-            <View className="relative h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
-              {hasCue ? (
-                <Target className="text-amber-500" size={20} />
-              ) : (
-                <PulsingIcon reduceMotion={reduceMotion}>
-                  <Target className="text-amber-500" size={20} />
-                </PulsingIcon>
-              )}
-              <CompletionCheckmark
-                isVisible={hasCue}
-                sectionIndex={2}
-                shouldAnimate={shouldAnimate ?? false}
-                reduceMotion={reduceMotion}
-              />
-            </View>
-            <View className="flex-1">
-              {hasCue ? (
-                <>
-                  <Text className="mb-1 font-semibold text-stone-800">Your Cue</Text>
-                  {habitCueAfterBehavior && (
-                    <Text className="text-sm text-stone-600">
-                      After I {habitCueAfterBehavior}, I will {habit.name}
-                    </Text>
-                  )}
-                  {(habitCueLocation || habitCueTime) && (
-                    <View className="mt-2 flex-row flex-wrap gap-2">
-                      {habitCueLocation && (
-                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
-                          <MapPin className="text-amber-500" size={12} />
-                          <Text className="text-xs text-amber-700">{habitCueLocation}</Text>
-                        </View>
-                      )}
-                      {habitCueTime && (
-                        <View className="flex-row items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5">
-                          <Clock className="text-amber-500" size={12} />
-                          <Text className="text-xs text-amber-700">{habitCueTime}</Text>
-                        </View>
-                      )}
-                    </View>
-                  )}
-                </>
-              ) : (
-                <>
-                  <View className="mb-1 flex-row items-center justify-between">
-                    <Text className="font-semibold text-stone-800">Your Cue</Text>
-                    <View className="flex-row items-center gap-1">
-                      <Plus className="text-amber-600" size={12} />
-                      <Text className="text-xs font-medium text-amber-600">Set up</Text>
-                    </View>
-                  </View>
-                  <Text className="text-sm text-stone-500">
-                    Link this habit to an existing routine
-                  </Text>
-                  {/* T3.2: Helpful tip for empty Cue section */}
-                  <View className="mt-2 flex-row items-center gap-1.5 rounded-lg bg-amber-50 px-2 py-1.5">
-                    <Lightbulb className="text-amber-600" size={12} />
-                    <Text className="flex-1 text-xs text-amber-700">
-                      Habits with cues are 2x more likely to stick
-                    </Text>
-                  </View>
-                </>
-              )}
-            </View>
-          </View>
-        </SectionCard>
-      </AnimatedSection>
+      {/* Your Cue Section - Index 2 - Using Workshop component */}
+      <CueTriggerSection
+        cue={cueData}
+        onPress={onOpenCueEditor}
+        shouldAnimate={shouldAnimate}
+        reduceMotion={reduceMotion}
+        sectionIndex={2}
+      />
 
-      {/* Vision Board Section - Index 3 */}
-      <AnimatedSection index={3} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+      {/* Dual Visualization Section - Index 3 - NEW: Huberman Protocol */}
+      <DualVizSetup
+        visualization={vizData}
+        onPress={onOpenVisualizationGuide}
+        shouldAnimate={shouldAnimate}
+        reduceMotion={reduceMotion}
+        sectionIndex={3}
+      />
+
+      {/* Vision Board Section - Index 4 - Keep inline for now (complex props) */}
+      <AnimatedSection index={4} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
         <SectionCard>
           <View className="mb-3 flex-row items-center justify-between">
             <View className="flex-row items-center gap-2">
@@ -1296,8 +1172,8 @@ function MotivationTabContent({
         </SectionCard>
       </AnimatedSection>
 
-      {/* Affirmations Section - Index 4 - T4.2: Shuffle feature */}
-      <AnimatedSection index={4} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+      {/* Affirmations Section - Index 5 */}
+      <AnimatedSection index={5} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
         <AffirmationsSection
           affirmations={affirmations}
           affirmationFlipAnim={affirmationFlipAnim}
@@ -1310,8 +1186,8 @@ function MotivationTabContent({
         />
       </AnimatedSection>
 
-      {/* Mental Exercises Section - Index 5 */}
-      <AnimatedSection index={5} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+      {/* Mental Exercises Section - Index 6 */}
+      <AnimatedSection index={6} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
         <SectionCard>
           <View className="mb-3 flex-row items-center gap-2">
             <Brain className="text-stone-500" size={18} />
@@ -1349,8 +1225,8 @@ function MotivationTabContent({
         </SectionCard>
       </AnimatedSection>
 
-      {/* Notes Section - Index 6 - Story 1.9.3 */}
-      <AnimatedSection index={6} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
+      {/* Notes Section - Index 7 - Story 1.9.3 */}
+      <AnimatedSection index={7} shouldAnimate={shouldAnimate} reduceMotion={reduceMotion}>
         <HabitNotesSection
           notes={habitNotes}
           onAddNote={onAddNote}
@@ -1363,6 +1239,9 @@ function MotivationTabContent({
 }
 
 /**
+ * @deprecated Tab navigation has been removed - screen is now calendar-only.
+ * This function is kept for reference but is no longer used.
+ *
  * Manage Tab Content
  */
 function ManageTabContent({
@@ -1416,14 +1295,14 @@ function ManageTabContent({
       <SectionCard>
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
-            <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
-              <Bell className="text-blue-500" size={20} />
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-stone-100">
+              <Bell className="text-stone-500" size={20} />
             </View>
             <View>
               <Text className="font-semibold text-stone-800">Reminders</Text>
               <Text className={clsx(
                 "text-sm",
-                habit.remindersEnabled ? "text-blue-600 font-medium" : "text-stone-500"
+                habit.remindersEnabled ? "text-emerald-600 font-medium" : "text-stone-500"
               )}>
                 {nextReminderText}
               </Text>
@@ -1531,7 +1410,6 @@ function ManageTabContent({
  */
 export default function HabitDetailScreen({
   habit,
-  initialTab = 'progress',
   onArchive,
   onClose,
   onDelete,
@@ -1557,43 +1435,8 @@ export default function HabitDetailScreen({
   // ScrollView ref for Why Editor auto-scroll
   const whyEditorScrollRef = useRef<ScrollView>(null);
 
-  // Tab state - use initialTab when provided
-  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
-
-  // Animation key - increments when modal opens to trigger animations
-  const [statsAnimationKey, setStatsAnimationKey] = useState(0);
-
-  // Track if Motivation tab has been visited (T1.5: only animate on first visit)
-  const [hasVisitedMotivation, setHasVisitedMotivation] = useState(
-    initialTab === 'motivation' // If starting on Motivation, mark as visited
-  );
-
-  // Why Editor state - declared here to be available for useEffect below
+  // Why Editor state
   const [isWhyEditorOpen, setIsWhyEditorOpen] = useState(false);
-
-  // Determine if Motivation tab should animate (first visit only)
-  const shouldAnimateMotivation = activeTab === 'motivation' && !hasVisitedMotivation;
-
-  // Mark Motivation tab as visited when first switched to (T1.5)
-  useEffect(() => {
-    if (activeTab === 'motivation' && !hasVisitedMotivation) {
-      // Delay marking as visited to allow animation to trigger
-      const timeout = setTimeout(() => {
-        setHasVisitedMotivation(true);
-      }, 100);
-      return () => clearTimeout(timeout);
-    }
-  }, [activeTab, hasVisitedMotivation]);
-
-  // Reset to initialTab when modal opens with a different tab
-  useEffect(() => {
-    if (visible) {
-      setActiveTab(initialTab);
-      setStatsAnimationKey(prev => prev + 1); // Trigger stats animation
-      // Reset Motivation visited state when modal reopens (T1.5)
-      setHasVisitedMotivation(initialTab === 'motivation');
-    }
-  }, [visible, initialTab]);
 
   // Animate Why Editor intro text when keyboard visibility changes (T4)
   useEffect(() => {
@@ -1612,51 +1455,6 @@ export default function HabitDetailScreen({
       ]).start();
     }
   }, [isKeyboardVisible, isWhyEditorOpen, whyEditorIntroOpacity, whyEditorIntroHeight]);
-
-  // Scroll refs for each tab to preserve position
-  const progressScrollRef = useRef<ScrollView>(null);
-  const motivationScrollRef = useRef<ScrollView>(null);
-  const manageScrollRef = useRef<ScrollView>(null);
-
-  // Tab order for swipe navigation
-  const TABS: TabType[] = ['progress', 'motivation', 'manage'];
-
-  // Swipe gesture handler for tab switching (T2.2)
-  const handleSwipeTab = useCallback((direction: 'left' | 'right') => {
-    const currentIndex = TABS.indexOf(activeTab);
-    if (direction === 'left' && currentIndex < TABS.length - 1) {
-      // Swipe left = go to next tab
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      setActiveTab(TABS[currentIndex + 1]);
-    } else if (direction === 'right' && currentIndex > 0) {
-      // Swipe right = go to previous tab
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      setActiveTab(TABS[currentIndex - 1]);
-    }
-  }, [activeTab, setActiveTab]);
-
-  // Pan gesture for horizontal swipe detection
-  // Uses velocity-based detection (not just distance) as per spec
-  const tabSwipeGesture = Gesture.Pan()
-    .activeOffsetX([-20, 20]) // Only activate after 20px horizontal movement
-    .failOffsetY([-15, 15]) // Fail if vertical movement exceeds 15px (allow scrolling)
-    .onEnd((event) => {
-      'worklet';
-      const { velocityX, translationX } = event;
-      // Velocity-based detection: require minimum velocity for swipe
-      // Also consider translation for slower but deliberate swipes
-      const VELOCITY_THRESHOLD = 500; // pixels per second
-      const TRANSLATION_THRESHOLD = 80; // pixels
-
-      const isSwipeByVelocity = Math.abs(velocityX) > VELOCITY_THRESHOLD;
-      const isSwipeByDistance = Math.abs(translationX) > TRANSLATION_THRESHOLD;
-
-      if (isSwipeByVelocity || isSwipeByDistance) {
-        // Determine direction: negative velocityX = swipe left, positive = swipe right
-        const direction = velocityX < 0 || (velocityX === 0 && translationX < 0) ? 'left' : 'right';
-        runOnJS(handleSwipeTab)(direction);
-      }
-    });
 
   // Modal states
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);
@@ -1784,6 +1582,58 @@ export default function HabitDetailScreen({
     const completedLastThirty = lastThirtyDays.filter((day) => day.completed).length;
     return (completedLastThirty / 30) * 100;
   }, [lastThirtyDays]);
+
+  /**
+   * Calculate week data for WeeklySummaryStrip (Phase 1)
+   * Returns array of 7 days (Monday to Sunday) for the current week
+   */
+  const weekData = useMemo<WeekDayData[]>(() => {
+    const todayDate = new Date();
+    const dayOfWeek = todayDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    // Convert to Monday-based (0 = Monday, 6 = Sunday)
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    const monday = new Date(todayDate);
+    monday.setDate(todayDate.getDate() - mondayOffset);
+    monday.setHours(0, 0, 0, 0);
+
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+      const dateKey = date.toISOString().split('T')[0];
+      const isTodayDate = dateKey === today;
+
+      return {
+        completed: isTodayDate ? isCompletedToday : completedDates.has(dateKey),
+        date: dateKey,
+        isToday: isTodayDate,
+      };
+    });
+  }, [today, isCompletedToday, completedDates]);
+
+  /**
+   * Calculate last week's completion count for trend comparison (Phase 1)
+   */
+  const lastWeekCompleted = useMemo(() => {
+    const todayDate = new Date();
+    const dayOfWeek = todayDate.getDay();
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    // Get last week's Monday
+    const lastMonday = new Date(todayDate);
+    lastMonday.setDate(todayDate.getDate() - mondayOffset - 7);
+    lastMonday.setHours(0, 0, 0, 0);
+
+    let count = 0;
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(lastMonday);
+      date.setDate(lastMonday.getDate() + i);
+      const dateKey = date.toISOString().split('T')[0];
+      if (completedDates.has(dateKey)) {
+        count++;
+      }
+    }
+    return count;
+  }, [completedDates]);
 
   useEffect(() => {
     setWhyDraft(habitWhy ?? '');
@@ -2318,119 +2168,39 @@ export default function HabitDetailScreen({
           </View>
         </View>
 
-        {/* Hero Section (sticky) */}
+        {/* Hero Section */}
         <View className="bg-gradient-to-b from-stone-50 via-amber-50/30 to-transparent px-4">
           <HeroSection currentStreak={habit.currentStreak ?? 0} habit={habit} isCompletedToday={isCompletedToday} onWhyPress={handleOpenWhyEditor} reduceMotion={reduceMotion} />
-
-          {/* Quick Stats Strip - hidden on Progress tab to reduce redundancy with ProgressSectionConsolidated */}
-          {activeTab !== 'progress' && (
-            <Animated.View
-              className="mb-4"
-              entering={FadeIn.duration(200)}
-              exiting={FadeOut.duration(150)}
-              layout={LinearTransition.springify().damping(15).stiffness(150)}
-            >
-              <QuickStatsStrip
-                animationKey={statsAnimationKey}
-                currentStreak={habit.currentStreak ?? 0}
-                habitStrength={habitStrength}
-                successRate={successRate}
-                onStatPress={handleStatPress}
-              />
-            </Animated.View>
-          )}
         </View>
 
-        {/* Tab Bar (sticky) */}
-        <HabitDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Calendar Content - full calendar view without collapsible wrapper */}
+        <ScrollView
+          bounces
+          className="flex-1"
+          contentContainerClassName="p-4 pb-8"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Habit Strength Section - strength ring, chart, and stats */}
+          {habitCreatedAt && (
+            <HabitStrengthSection
+              habitId={habit._id}
+              completedDates={completedDates}
+              habitCreatedAt={habitCreatedAt}
+              habitColor={habit.iconColor}
+              habitStrength={habit.strength}
+            />
+          )}
 
-        {/* Tab Content Area - Wrapped in GestureDetector for swipe navigation (T2.2) */}
-        <GestureDetector gesture={tabSwipeGesture}>
-          <View className="flex-1">
-            {activeTab === 'progress' && (
-              <ScrollView
-                ref={progressScrollRef}
-                bounces
-                className="flex-1"
-                contentContainerClassName="gap-4 p-4 pb-8"
-                showsVerticalScrollIndicator={false}
-              >
-                <ProgressTabContent
-                  completedDates={completedDates}
-                  habit={habit}
-                  habitCreatedAt={habitCreatedAt}
-                  strengthPercent={strengthPercent}
-                  tracking={tracking}
-                />
-              </ScrollView>
-            )}
-
-            {activeTab === 'motivation' && (
-              <ScrollView
-                ref={motivationScrollRef}
-                bounces
-                className="flex-1"
-                contentContainerClassName="gap-4 p-4 pb-8"
-                showsVerticalScrollIndicator={false}
-              >
-                <MotivationTabContent
-                  affirmations={affirmations}
-                  affirmationFlipAnim={affirmationFlipAnim}
-                  habit={habit}
-                  habitCueAfterBehavior={habitCueAfterBehavior}
-                  habitCueLocation={habitCueLocation}
-                  habitCueTime={habitCueTime}
-                  habitIdentity={habitIdentity}
-                  habitNotes={habitNotes}
-                  hasCue={hasCue}
-                  onAddNote={handleOpenNotesEditor}
-                  onEditNote={handleEditNote}
-                  onOpenAffirmationEditor={handleOpenAffirmationEditor}
-                  onOpenCueEditor={handleOpenCueEditor}
-                  onOpenIdentityEditor={handleOpenIdentityEditor}
-                  onShuffleAffirmation={handleShuffleAffirmation}
-                  onOpenVisualizationExercise={handleOpenVisualizationExercise}
-                  onOpenVisualizationGuide={handleOpenVisualizationGuide}
-                  onOpenVisionBoardEditor={handleOpenVisionBoardEditor}
-                  onOpenVisionBoardPreview={handleOpenVisionBoardPreview}
-                  onOpenWhyEditor={handleOpenWhyEditor}
-                  onConfirmDeleteAffirmation={handleConfirmDeleteAffirmation}
-                  onConfirmDeleteVisionBoardItem={handleConfirmDeleteVisionBoardItem}
-                  onSetAffirmationsListOpen={setIsAffirmationsListOpen}
-                  onSetVisionBoardListOpen={setIsVisionBoardListOpen}
-                  onViewAllNotes={handleOpenNotesList}
-                  shuffledAffirmationIndex={shuffledAffirmationIndex}
-                  visionBoardItems={visionBoardItems}
-                  reduceMotion={reduceMotion}
-                  shouldAnimate={shouldAnimateMotivation}
-                />
-              </ScrollView>
-            )}
-
-            {activeTab === 'manage' && (
-              <ScrollView
-                ref={manageScrollRef}
-                bounces
-                className="flex-1"
-                contentContainerClassName="gap-4 p-4 pb-8"
-                showsVerticalScrollIndicator={false}
-              >
-                <ManageTabContent
-                  habit={habit}
-                  habitNotes={habitNotes}
-                  onArchive={handleArchive}
-                  onDelete={handleDelete}
-                  onOpenCalendar={handleOpenCalendar}
-                  onOpenNotesList={() => setIsNotesListOpen(true)}
-                  onOpenNotesEditor={() => setIsNotesEditorOpen(true)}
-                  onPause={handlePause}
-                  onSwipeDelete={handleSwipeDelete}
-                  onSwipeArchive={handleSwipeArchive}
-                />
-              </ScrollView>
-            )}
-          </View>
-        </GestureDetector>
+          <MonthlyCalendarGrid
+            habitId={habit._id}
+            completedDates={completedDates}
+            habitCreatedAt={habitCreatedAt}
+            habitColor={habit.iconColor ?? '#10b981'}
+            onDayPress={(_date, _completed) => {
+              // Future: Could open day detail or allow editing past dates
+            }}
+          />
+        </ScrollView>
       </View>
 
       {/* Visualization Guide Modal */}
@@ -2592,7 +2362,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-rose-500 py-4 active:bg-rose-600"
               onPress={handleSaveWhy}
             >
-              <Text className="text-base font-bold text-white">Save My Why</Text>
+              <Text className="text-[15px] font-semibold text-white">Save My Why</Text>
             </Pressable>
           </RNAnimated.View>
         </View>
@@ -2706,7 +2476,7 @@ export default function HabitDetailScreen({
               className="items-center rounded-2xl bg-violet-600 py-4 shadow-lg shadow-violet-100 active:bg-violet-700"
               onPress={handleSaveIdentity}
             >
-              <Text className="text-base font-bold text-white">Claim My Identity</Text>
+              <Text className="text-[15px] font-semibold text-white">Claim My Identity</Text>
             </Pressable>
           </View>
         </View>
@@ -3002,9 +2772,9 @@ export default function HabitDetailScreen({
             </Animated.View>
 
             {/* Explanation */}
-            <View className="mb-4 flex-row items-start gap-2 rounded-xl bg-blue-50 p-3">
-              <Sparkles className="mt-0.5 text-blue-500" size={14} />
-              <Text className="flex-1 text-xs leading-relaxed text-blue-700">
+            <View className="mb-4 flex-row items-start gap-2 rounded-xl bg-stone-50 p-3">
+              <Sparkles className="mt-0.5 text-stone-500" size={14} />
+              <Text className="flex-1 text-xs leading-relaxed text-stone-600">
                 Link your habit to an existing behavior. Research shows this increases follow-through by{' '}
                 <Text className="font-bold">2-3x</Text>.
               </Text>

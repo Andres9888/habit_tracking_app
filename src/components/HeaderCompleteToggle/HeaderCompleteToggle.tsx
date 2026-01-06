@@ -64,17 +64,19 @@ function MiniConfettiBurst({ isActive }: { isActive: boolean }) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     translateY: useSharedValue(0),
     angle: (i / PARTICLE_COUNT) * Math.PI * 2 + (Math.random() * 0.3 - 0.15),
-    distance: 25 + Math.random() * 20,
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    distance: Math.round(25 + Math.random() * 20),
     color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-    size: 3 + Math.random() * 3,
+    size: Math.round(3 + Math.random() * 3),
   }));
 
   React.useEffect(() => {
     if (isActive) {
       particles.forEach((particle, i) => {
         const delay = i * 10;
-        const targetX = Math.cos(particle.angle) * particle.distance;
-        const targetY = Math.sin(particle.angle) * particle.distance - 15;
+        // Round to avoid "Loss of precision during arithmetic conversion" error
+        const targetX = Math.round(Math.cos(particle.angle) * particle.distance);
+        const targetY = Math.round(Math.sin(particle.angle) * particle.distance) - 15;
 
         particle.translateX.value = 0;
         particle.translateY.value = 0;
@@ -83,11 +85,11 @@ function MiniConfettiBurst({ isActive }: { isActive: boolean }) {
 
         particle.translateX.value = withDelay(
           delay,
-          withSpring(targetX, { damping: 12, stiffness: 200, mass: 0.5 })
+          withSpring(targetX, { damping: 12, stiffness: 200, mass: 1 })
         );
         particle.translateY.value = withDelay(
           delay,
-          withSpring(targetY, { damping: 12, stiffness: 200, mass: 0.5 })
+          withSpring(targetY, { damping: 12, stiffness: 200, mass: 1 })
         );
         particle.scale.value = withDelay(
           delay,

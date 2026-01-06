@@ -124,7 +124,9 @@ export function ArchiveUndoToast({
       }
     })
     .onEnd((event) => {
-      if (event.translationY > DISMISS_THRESHOLD || event.velocityY > 500) {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
+      if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleDismiss)();
       } else {
         // Spring back to visible position

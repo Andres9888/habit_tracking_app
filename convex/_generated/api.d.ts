@@ -25,20 +25,25 @@ import type * as habitStrength from "../habitStrength.js";
 import type * as habits from "../habits.js";
 import type * as http from "../http.js";
 import type * as initializeAllHabitsStrength from "../initializeAllHabitsStrength.js";
+import type * as letters from "../letters.js";
 import type * as migrateHabitsToUser from "../migrateHabitsToUser.js";
 import type * as migration from "../migration.js";
 import type * as notes from "../notes.js";
 import type * as predictions from "../predictions.js";
 import type * as quickFix from "../quickFix.js";
 import type * as recalculateAllHabitsStrength from "../recalculateAllHabitsStrength.js";
+import type * as reflections from "../reflections.js";
 import type * as router from "../router.js";
 import type * as settings from "../settings.js";
+import type * as storage from "../storage.js";
 import type * as streakUtils from "../streakUtils.js";
 import type * as templates from "../templates.js";
 import type * as testStrength from "../testStrength.js";
 import type * as tracking from "../tracking.js";
 import type * as users from "../users.js";
 import type * as visionBoard from "../visionBoard.js";
+import type * as visionBoardImages from "../visionBoardImages.js";
+import type * as voiceNotes from "../voiceNotes.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -61,20 +66,25 @@ declare const fullApi: ApiFromModules<{
   habits: typeof habits;
   http: typeof http;
   initializeAllHabitsStrength: typeof initializeAllHabitsStrength;
+  letters: typeof letters;
   migrateHabitsToUser: typeof migrateHabitsToUser;
   migration: typeof migration;
   notes: typeof notes;
   predictions: typeof predictions;
   quickFix: typeof quickFix;
   recalculateAllHabitsStrength: typeof recalculateAllHabitsStrength;
+  reflections: typeof reflections;
   router: typeof router;
   settings: typeof settings;
+  storage: typeof storage;
   streakUtils: typeof streakUtils;
   templates: typeof templates;
   testStrength: typeof testStrength;
   tracking: typeof tracking;
   users: typeof users;
   visionBoard: typeof visionBoard;
+  visionBoardImages: typeof visionBoardImages;
+  voiceNotes: typeof voiceNotes;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

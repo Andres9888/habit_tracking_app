@@ -1,112 +1,203 @@
+import { useCallback } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  FadeInUp,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
-import { COLORS } from './constants';
+import { HABIT_COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
-import { TemplateBrowser } from './components/TemplateBrowser';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
-import { HabitPreview } from './components/HabitPreview';
 import { HabitNameField } from './components/HabitNameField';
-import { NameSuggestions } from './components/NameSuggestions';
+import { LivePreview } from './components/LivePreview';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
-import { ReminderSection } from './components/ReminderSection';
-import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
-import { PhaseSelector } from './components/PhaseSelector';
-import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
+import {
+  ReminderSelector,
+  type ReminderOption,
+} from './components/ReminderSelector';
+// V9: TemplatesLinkSection removed from modal for focused flow (component retained for potential future use)
+
+// Stagger delay between section animations (ms)
+const ANIMATION_STAGGER_DELAY = 50;
+// Base animation duration (ms)
+const ANIMATION_DURATION = 300;
+// V11: Swipe dismissal constants
+const SWIPE_DISMISS_THRESHOLD = 100; // pixels
+const SWIPE_VELOCITY_THRESHOLD = 500; // pixels per second
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
-  const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
-  const { triggerSelection } = useHapticFeedback();
+  const { isEditMode, form, template, science, handleCreate } =
+    useCreateHabitModal(props);
+
+  // V11: Swipe dismissal gesture state
+  const translateY = useSharedValue(0);
+  const context = useSharedValue({ startY: 0 });
+
+  // V11: Pan gesture for swipe-to-dismiss
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
+      context.value = { startY: translateY.value };
+    })
+    .onUpdate((event) => {
+      // Only allow downward swipes
+      const newTranslateY = context.value.startY + event.translationY;
+      if (newTranslateY >= 0) {
+        translateY.value = newTranslateY;
+      }
+    })
+    .onEnd((event) => {
+      const shouldDismiss =
+        translateY.value > SWIPE_DISMISS_THRESHOLD ||
+        event.velocityY > SWIPE_VELOCITY_THRESHOLD;
+
+      if (shouldDismiss) {
+        // Dismiss modal
+        runOnJS(onClose)();
+        // Reset position for next open
+        translateY.value = 0;
+      } else {
+        // Spring back to original position
+        translateY.value = withSpring(0, {
+          damping: 20,
+          stiffness: 300,
+        });
+      }
+    });
+
+  // V11: Animated style for swipe translation
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  const handleNameChange = useCallback(
+    (value: string) => {
+      form.setHabitName(value);
+    },
+    [form]
+  );
+
+  const handleEmojiSelect = useCallback(
+    (emoji: string | null) => {
+      form.setSelectedEmoji(emoji);
+    },
+    [form]
+  );
+
+  const handleColorSelect = useCallback(
+    (color: string) => {
+      form.setSelectedColor(color);
+    },
+    [form]
+  );
+
+  const handleReminderSelect = useCallback(
+    (option: ReminderOption) => {
+      form.setReminderOption(option);
+    },
+    [form]
+  );
 
   return (
-    <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
+    <Modal
+      transparent
+      animationType='slide'
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View className='flex-1 bg-black/50'>
-        <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'>
-          <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
-          <ScrollView
-            ref={template.scrollViewRef}
-            className='flex-1 px-4'
-            contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}
-            keyboardShouldPersistTaps='handled'
-            scrollEventThrottle={16}
-            showsVerticalScrollIndicator={false}
-            onScroll={template.handleMainScroll}
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            style={animatedStyle}
+            className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
           >
-            <TemplateBrowser isEditMode={isEditMode} template={template} onViewScience={science.open} />
-            <HabitPreview
+            <ModalHeader
               habitName={form.habitName}
-              selectedEmoji={form.selectedEmoji}
-              selectedColor={form.selectedColor}
-              frequencyLabel={form.frequency}
+              isEditMode={isEditMode}
+              onClose={onClose}
+              onSave={handleCreate}
             />
-            <NameSuggestions
-              query={form.habitName}
-              onPick={(emoji, name, color) => {
-                form.setHabitName(name);
-                form.setSelectedEmoji(emoji);
-                if (color) form.setSelectedColor(color);
-                triggerSelection();
-              }}
-            />
-            <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
-            <PhaseSelector
-              selectedPhase={form.dayPhase}
-              onSelect={form.setDayPhase}
-            />
-            {/* Emoji Picker - uses the new modal picker */}
-            <EmojiPicker
-              selectedEmoji={form.selectedEmoji}
-              onSelect={form.setSelectedEmoji}
-              habitName={form.habitName}
-            />
-            <CollapsibleAdvancedOptions>
+            <ScrollView
+              className='flex-1 px-4'
+              contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}
+              keyboardShouldPersistTaps='handled'
+              scrollEventThrottle={16}
+              showsVerticalScrollIndicator={false}
+              onScroll={template.handleMainScroll}
+            >
+            {/* V11: Progressive spacing - Input (mb-3), Emojis (mb-4), Colors (mb-5), Reminders (mb-6) */}
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
+            >
+              <View className='mt-4' />
+              <HabitNameField
+                autoFocus={visible && !isEditMode}
+                value={form.habitName}
+                onChange={handleNameChange}
+              />
+              {/* V11: Live Preview positioned between input and emoji picker */}
+              <LivePreview
+                emoji={form.selectedEmoji}
+                color={form.selectedColor}
+                habitName={form.habitName}
+              />
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY
+              )}
+            >
+              <EmojiPicker
+                habitName={form.habitName}
+                selectedEmoji={form.selectedEmoji}
+                onSelect={handleEmojiSelect}
+              />
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 2
+              )}
+            >
               <ColorPickerSection
-                colors={COLORS}
+                colors={HABIT_COLORS}
                 selectedColor={form.selectedColor}
-                onSelectColor={form.setSelectedColor}
                 onCustomPress={form.openColorPicker}
+                onSelectColor={handleColorSelect}
               />
-              <ReminderSection
-                remindersEnabled={form.remindersEnabled}
-                onToggle={form.setRemindersEnabled}
-                reminderTime={form.reminderTime}
-                onTimePress={() => form.setShowTimePicker(true)}
-                reminderSound={form.reminderSound}
-                onQuickTimeSelect={form.setReminderTime}
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                ANIMATION_STAGGER_DELAY * 3
+              )}
+            >
+              <ReminderSelector
+                selectedOption={form.reminderOption}
+                onSelectOption={handleReminderSelect}
               />
-            </CollapsibleAdvancedOptions>
+            </Animated.View>
+            {/* V9: Templates Link Section removed for focused flow */}
           </ScrollView>
           <TemplateReminderPrompt
-            visible={template.shouldShowTemplateReminder}
             bottomOffset={template.reminderBottomOffset}
+            visible={template.shouldShowTemplateReminder}
             onPress={template.handleReminderPress}
           />
           <StickyCreateBar
-            disabled={!form.habitName.trim().length}
+            disabled={form.habitName.trim().length < 2}
+            selectedColor={form.selectedColor}
             onPress={handleCreate}
           />
-          {form.showTimePicker && (
-            <DateTimePicker
-              display='spinner'
-              is24Hour={false}
-              mode='time'
-              value={form.reminderTime}
-              onChange={(_event, selected) => {
-                form.setShowTimePicker(false);
-                if (selected) {
-                  triggerSelection();
-                  form.setReminderTime(selected);
-                }
-              }}
-            />
-          )}
-        </View>
+        </Animated.View>
+      </GestureDetector>
       </View>
       <ColorPickerSheet
         value={form.selectedColor}

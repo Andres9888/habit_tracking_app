@@ -1,12 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, View, Text, Pressable, StyleSheet } from 'react-native';
+import {
+  Animated,
+  Easing,
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+} from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import ReAnimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withSequence,
+  withTiming,
+  withDelay,
+  Easing as ReanimatedEasing,
+} from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useDraggableHabitLogic } from './DraggableHabit.hooks';
-import { TrendingUp, Archive } from 'lucide-react-native';
+import { TrendingUp, Archive, ChevronRight } from 'lucide-react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { StrengthProgressBar } from '../StrengthProgressBar';
 import { PhaseTag } from '../PhaseTag';
 import * as Haptics from 'expo-haptics';
 
@@ -91,16 +106,22 @@ export default function DraggableHabit({
 
   const [showNewRecord, setShowNewRecord] = useState(false);
 
-  const { triggerSelection, triggerWarning, triggerSuccess } = useHapticFeedback({
-    isEnabled: celebrationsEnabled,
-    preference: reduceMotionPreference,
-  });
+  const { triggerSelection, triggerWarning, triggerSuccess } =
+    useHapticFeedback({
+      isEnabled: celebrationsEnabled,
+      preference: reduceMotionPreference,
+    });
 
   // Calculate if week is complete for visual reward
-  const weekCompleteCount = weekStatus.filter(status => status === 'done').length;
+  const weekCompleteCount = weekStatus.filter(
+    (status) => status === 'done'
+  ).length;
   const isWeekComplete = weekCompleteCount === 7;
   const bestStreak = habit.bestStreak || 0;
-  const isNewPersonalRecord = previousStreak !== undefined && streak > bestStreak && streak > (previousStreak || 0);
+  const isNewPersonalRecord =
+    previousStreak !== undefined &&
+    streak > bestStreak &&
+    streak > (previousStreak || 0);
   const hasSignificantStreak = streak >= 7;
 
   useEffect(() => {
@@ -125,37 +146,62 @@ export default function DraggableHabit({
       highlightGlow.setValue(0);
       return;
     }
+
+    // Enhanced highlight animation for newly created habits
+    // Delay slightly to coordinate with the shared element transition
+    const animationDelay = 200;
+
     highlightGlow.setValue(0);
-    Animated.parallel([
-      Animated.sequence([
-        Animated.spring(cardScale, {
-          toValue: 1.035,
-          useNativeDriver: true,
-          damping: 16,
-          stiffness: 250,
-        }),
-        Animated.spring(cardScale, {
-          toValue: 1,
-          useNativeDriver: true,
-          damping: 18,
-          stiffness: 250,
-        }),
-      ]),
-      Animated.sequence([
-        Animated.timing(highlightGlow, {
-          duration: 220,
-          easing: Easing.out(Easing.ease),
-          toValue: 1,
-          useNativeDriver: false,
-        }),
-        Animated.timing(highlightGlow, {
-          duration: 320,
-          easing: Easing.in(Easing.ease),
-          toValue: 0,
-          useNativeDriver: false,
-        }),
-      ]),
-    ]).start();
+    cardScale.setValue(0.95); // Start smaller for entrance effect
+
+    const timeout = setTimeout(() => {
+      Animated.parallel([
+        // Scale entrance: 0.95 → 1.04 → 1.0 (bouncy)
+        Animated.sequence([
+          Animated.spring(cardScale, {
+            damping: 12,
+            stiffness: 200,
+            toValue: 1.04,
+            useNativeDriver: true,
+          }),
+          Animated.spring(cardScale, {
+            damping: 15,
+            stiffness: 250,
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Glow pulse: 0 → 1 → 0.6 → 1 → 0 (double pulse)
+        Animated.sequence([
+          Animated.timing(highlightGlow, {
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            toValue: 1,
+            useNativeDriver: false,
+          }),
+          Animated.timing(highlightGlow, {
+            duration: 400,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 0.5,
+            useNativeDriver: false,
+          }),
+          Animated.timing(highlightGlow, {
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            toValue: 1,
+            useNativeDriver: false,
+          }),
+          Animated.timing(highlightGlow, {
+            duration: 500,
+            easing: Easing.in(Easing.ease),
+            toValue: 0,
+            useNativeDriver: false,
+          }),
+        ]),
+      ]).start();
+    }, animationDelay);
+
+    return () => clearTimeout(timeout);
   }, [cardScale, highlightGlow, isJustCreated, reduceMotionPreference]);
 
   // Pulse animation for icon when week is complete
@@ -164,15 +210,15 @@ export default function DraggableHabit({
       Animated.loop(
         Animated.sequence([
           Animated.timing(iconPulse, {
-            toValue: 1.05,
             duration: 1000,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1.05,
             useNativeDriver: true,
           }),
           Animated.timing(iconPulse, {
-            toValue: 1,
             duration: 1000,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1,
             useNativeDriver: true,
           }),
         ])
@@ -188,15 +234,15 @@ export default function DraggableHabit({
       Animated.loop(
         Animated.sequence([
           Animated.timing(streakBadgeGlow, {
-            toValue: 1,
             duration: 1500,
             easing: Easing.inOut(Easing.ease),
+            toValue: 1,
             useNativeDriver: false,
           }),
           Animated.timing(streakBadgeGlow, {
-            toValue: 0.3,
             duration: 1500,
             easing: Easing.inOut(Easing.ease),
+            toValue: 0.3,
             useNativeDriver: false,
           }),
         ])
@@ -215,28 +261,28 @@ export default function DraggableHabit({
       // Animate the "New Record!" badge
       Animated.parallel([
         Animated.spring(newRecordScale, {
-          toValue: 1,
           friction: 5,
           tension: 200,
+          toValue: 1,
           useNativeDriver: true,
         }),
         Animated.timing(newRecordOpacity, {
-          toValue: 1,
           duration: 200,
+          toValue: 1,
           useNativeDriver: true,
         }),
         // Extra bounce on card
         Animated.sequence([
           Animated.spring(cardScale, {
-            toValue: 1.03,
             friction: 8,
             tension: 200,
+            toValue: 1.03,
             useNativeDriver: true,
           }),
           Animated.spring(cardScale, {
-            toValue: 1,
             friction: 10,
             tension: 200,
+            toValue: 1,
             useNativeDriver: true,
           }),
         ]),
@@ -246,13 +292,13 @@ export default function DraggableHabit({
       const timeout = setTimeout(() => {
         Animated.parallel([
           Animated.timing(newRecordScale, {
-            toValue: 0,
             duration: 200,
+            toValue: 0,
             useNativeDriver: true,
           }),
           Animated.timing(newRecordOpacity, {
-            toValue: 0,
             duration: 200,
+            toValue: 0,
             useNativeDriver: true,
           }),
         ]).start(() => setShowNewRecord(false));
@@ -260,7 +306,14 @@ export default function DraggableHabit({
 
       return () => clearTimeout(timeout);
     }
-  }, [isNewPersonalRecord, reduceMotionPreference, triggerSuccess, newRecordScale, newRecordOpacity, cardScale]);
+  }, [
+    isNewPersonalRecord,
+    reduceMotionPreference,
+    triggerSuccess,
+    newRecordScale,
+    newRecordOpacity,
+    cardScale,
+  ]);
 
   const renderRightActions = (
     progress: Animated.AnimatedInterpolation<number>,
@@ -276,7 +329,7 @@ export default function DraggableHabit({
     const iconScale = dragX.interpolate({
       extrapolate: 'clamp',
       inputRange: [-100, -60, -30, 0],
-      outputRange: [1.1, 1.0, 0.85, 0.8],
+      outputRange: [1.1, 1, 0.85, 0.8],
     });
 
     // Progressive opacity for icon (0.6 → 1.0)
@@ -293,13 +346,17 @@ export default function DraggableHabit({
       >
         <View
           style={{
-            height: '100%',
-            width: 100,
             alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f59e0b', // amber-500
-            borderTopRightRadius: 24,
+            backgroundColor: '#f59e0b',
             borderBottomRightRadius: 24,
+            // amber-500
+            borderTopRightRadius: 24,
+
+            height: '100%',
+
+            justifyContent: 'center',
+
+            width: 100,
           }}
         >
           <Animated.View
@@ -316,8 +373,8 @@ export default function DraggableHabit({
                 color: 'white',
                 fontSize: 11,
                 fontWeight: '600',
-                marginTop: 4,
                 letterSpacing: 0.2,
+                marginTop: 4,
               }}
             >
               Archive
@@ -381,20 +438,20 @@ export default function DraggableHabit({
   const handlePressIn = () => {
     // Enhanced press feedback - more noticeable scale
     Animated.spring(cardScale, {
-      toValue: 0.97,
-      useNativeDriver: true,
       damping: 12,
       stiffness: 200,
+      toValue: 0.97,
+      useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     // Smooth spring back with subtle bounce
     Animated.spring(cardScale, {
-      toValue: 1,
-      useNativeDriver: true,
       damping: 10,
       stiffness: 180,
+      toValue: 1,
+      useNativeDriver: true,
     }).start();
   };
 
@@ -403,12 +460,21 @@ export default function DraggableHabit({
     if (highContrastMode) return colors.iconContainer;
 
     const colorMap: Record<string, string> = {
-      '#2563eb': 'rgba(219, 234, 254, 0.85)', // blue-100
-      '#ea580c': 'rgba(255, 237, 213, 0.85)', // orange-100
-      '#059669': 'rgba(209, 250, 229, 0.85)', // emerald-100
-      '#7c3aed': 'rgba(237, 233, 254, 0.85)', // violet-100
-      '#0891b2': 'rgba(207, 250, 254, 0.85)', // cyan-100
-      '#db2777': 'rgba(252, 231, 243, 0.85)', // pink-100
+      // violet-100
+      '#0891b2': 'rgba(207, 250, 254, 0.85)',
+
+      // orange-100
+      '#059669': 'rgba(209, 250, 229, 0.85)',
+
+      // emerald-100
+      '#7c3aed': 'rgba(237, 233, 254, 0.85)',
+
+      '#2563eb': 'rgba(219, 234, 254, 0.85)',
+
+      // cyan-100
+      '#db2777': 'rgba(252, 231, 243, 0.85)',
+      // blue-100
+      '#ea580c': 'rgba(255, 237, 213, 0.85)', // pink-100
     };
     return colorMap[accentColor] || 'rgba(254, 249, 195, 0.85)'; // yellow-100 default
   };
@@ -426,17 +492,107 @@ export default function DraggableHabit({
   // Get strength as percentage (0-100) from decimal (0-1)
   const strengthPercent = (habit.strength ?? 0) * 100;
 
-  // Get strength color based on percentage
-  const getStrengthColor = () => {
-    if (strengthPercent >= 80) return '#22c55e'; // green-500 (Automatic)
-    if (strengthPercent >= 60) return '#84cc16'; // lime-500 (Strong)
-    if (strengthPercent >= 40) return '#eab308'; // yellow-500 (Developing)
-    if (strengthPercent >= 20) return '#f97316'; // orange-500 (Building)
-    return '#ef4444'; // red-500 (Starting)
+  // Get strength emoji based on percentage (matches StrengthProgressBar levels)
+  const getStrengthEmoji = () => {
+    if (strengthPercent >= 80) return '⚡'; // Automatic
+    if (strengthPercent >= 60) return '💪'; // Strong
+    if (strengthPercent >= 40) return '🌳'; // Developing
+    if (strengthPercent >= 20) return '🌿'; // Building
+    return '🌱'; // Starting
   };
+
+  const getStrengthLabel = () => {
+    if (strengthPercent >= 80) return 'Automatic';
+    if (strengthPercent >= 60) return 'Strong';
+    if (strengthPercent >= 40) return 'Developing';
+    if (strengthPercent >= 20) return 'Building';
+    return 'Starting';
+  };
+
+  // Animated emoji for strength indicator
+  const strengthEmojiScale = useSharedValue(1);
+  const strengthEmojiOpacity = useSharedValue(1);
+  const strengthEmojiRotation = useSharedValue(0);
+  const previousStrengthLevelRef = useRef(getStrengthLabel());
+
+  useEffect(() => {
+    const currentLabel = getStrengthLabel();
+    const levelChanged = previousStrengthLevelRef.current !== currentLabel;
+    previousStrengthLevelRef.current = currentLabel;
+
+    if (reduceMotionPreference) return;
+
+    if (levelChanged) {
+      // Level-up animation: fade out + shrink, then fade in + grow with wobble
+      strengthEmojiOpacity.value = withTiming(0.3, {
+        duration: 150,
+        easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+      });
+      strengthEmojiScale.value = withTiming(0.6, {
+        duration: 150,
+        easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+      });
+      strengthEmojiRotation.value = withSequence(
+        withTiming(-8, {
+          duration: 80,
+          easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
+        }),
+        withTiming(8, {
+          duration: 80,
+          easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
+        }),
+        withTiming(0, {
+          duration: 60,
+          easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+        })
+      );
+      strengthEmojiOpacity.value = withDelay(
+        150,
+        withTiming(1, {
+          duration: 200,
+          easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+        })
+      );
+      strengthEmojiScale.value = withDelay(
+        150,
+        withSequence(
+          withSpring(1.4, { damping: 6, stiffness: 120 }),
+          withSpring(1, { damping: 10, stiffness: 180 })
+        )
+      );
+    } else {
+      // Subtle pulse for regular updates
+      strengthEmojiScale.value = withSequence(
+        withTiming(1.08, {
+          duration: 100,
+          easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+        }),
+        withSpring(1, { damping: 15, stiffness: 200 })
+      );
+    }
+  }, [strengthPercent, reduceMotionPreference]);
+
+  const strengthEmojiAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: strengthEmojiOpacity.value,
+    transform: [
+      { scale: strengthEmojiScale.value },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(strengthEmojiRotation.value)}deg` },
+    ],
+  }));
+
+  // Default accent color fallback (violet-500)
+  const DEFAULT_ACCENT_COLOR = '#8b5cf6';
+  const effectiveAccentColor = accentColor || DEFAULT_ACCENT_COLOR;
+
+  // In high contrast mode, use yellow accent for visibility
+  const borderAccentColor = highContrastMode ? '#facc15' : effectiveAccentColor;
 
   const habitCard = (
     <Pressable
+      accessibilityHint='Tap to view habit details, long press for quick actions'
+      accessibilityLabel={`${habit.name}, ${streak} day streak, ${Math.round(strengthPercent)}% strength`}
+      accessibilityRole='button'
       style={({ pressed }) => ({
         opacity: pressed ? 0.92 : 1,
       })}
@@ -446,83 +602,117 @@ export default function DraggableHabit({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='overflow-hidden rounded-3xl'
+        className='flex-row overflow-hidden rounded-3xl'
         style={{
           // Celebratory green tint for perfect week, otherwise default white
-          backgroundColor: isWeekComplete && !highContrastMode
-            ? 'rgba(220, 252, 231, 0.3)' // emerald-50 with 30% opacity
-            : colors.cardBackground,
-          borderColor: isWeekComplete && !highContrastMode
-            ? '#86efac' // emerald-300 for completed habits
-            : colors.border,
+          backgroundColor:
+            isWeekComplete && !highContrastMode
+              ? 'rgba(220, 252, 231, 0.3)' // emerald-50 with 30% opacity
+              : colors.cardBackground,
+          borderColor:
+            isWeekComplete && !highContrastMode
+              ? '#86efac' // emerald-300 for completed habits
+              : colors.border,
           borderWidth: highContrastMode ? 2 : 1,
+          elevation: 3,
+
           opacity: fade,
-          transform: [{ translateY }, { scale: cardScale }],
+
           // Enhanced shadow for perfect week
-          shadowColor: isWeekComplete ? '#10b981' : '#78716c', // emerald-500 or stone-500
-          shadowOffset: { width: 0, height: 4 },
+          shadowColor: isWeekComplete ? '#10b981' : '#78716c',
+          // emerald-500 or stone-500
+          shadowOffset: { height: 4, width: 0 },
           shadowOpacity: isWeekComplete ? 0.12 : 0.06,
           shadowRadius: 12,
-          elevation: 3, // Android
+          transform: [{ translateY }, { scale: cardScale }], // Android
         }}
       >
-        {/* Archive flash overlay - amber for organizational action */}
-        <Animated.View
-          pointerEvents='none'
+        {/* Color accent left border */}
+        <View
           style={{
-            backgroundColor: 'rgba(245, 158, 11, 0.18)',
-            borderRadius: 24,
-            opacity: archiveFlash,
-            ...StyleSheet.absoluteFillObject,
-          }}
-        />
-        {/* Just-created highlight glow */}
-        <Animated.View
-          pointerEvents='none'
-          style={{
-            borderColor: accentColor ?? '#a855f7',
-            borderRadius: 24,
-            borderWidth: 2,
-            opacity: highlightGlow,
-            ...StyleSheet.absoluteFillObject,
+            backgroundColor: borderAccentColor,
+            borderBottomLeftRadius: 24,
+            borderTopLeftRadius: 24,
+            width: 4,
           }}
         />
 
-        {/* Main card content with increased padding */}
-        <View className='px-5 pb-5 pt-4'>
-          {/* Title row with icon and streak */}
-          <View className='mb-3 flex-row items-center justify-between'>
-            <View className='flex-1 flex-row items-center gap-3'>
-              {/* Icon container - larger and more prominent */}
-              <Animated.View
-                style={{
-                  transform: [{ scale: iconPulse }],
-                }}
-              >
-                <View
-                  className='h-11 w-11 items-center justify-center rounded-xl'
+        {/* Main card content wrapper */}
+        <View className='flex-1'>
+          {/* Archive flash overlay - amber for organizational action */}
+          <Animated.View
+            pointerEvents='none'
+            style={{
+              backgroundColor: 'rgba(245, 158, 11, 0.18)',
+              borderRadius: 24,
+              opacity: archiveFlash,
+              ...StyleSheet.absoluteFillObject,
+            }}
+          />
+          {/* Just-created highlight glow */}
+          <Animated.View
+            pointerEvents='none'
+            style={{
+              borderColor: accentColor ?? '#a855f7',
+              borderRadius: 24,
+              borderWidth: 2,
+              opacity: highlightGlow,
+              ...StyleSheet.absoluteFillObject,
+            }}
+          />
+
+          {/* Main card content - header section */}
+          <View className='pt-4'>
+            {/* Title row - 5-column grid matching calendar/chain visualizer exactly */}
+            <View className='relative mb-3 flex-row items-center justify-between px-3'>
+              {/* Column 1: emoji centered (aligns with first calendar date & habit circle) */}
+              <View className='flex-1 items-center'>
+                <Animated.View
                   style={{
-                    backgroundColor: getIconBackground(),
-                    borderColor: highContrastMode ? '#111111' : 'rgba(0,0,0,0.04)',
-                    borderWidth: highContrastMode ? 2 : 1,
-                    // Subtle inner glow
-                    shadowColor: accentColor,
-                    shadowOffset: { width: 0, height: 0 },
-                    shadowOpacity: 0.15,
-                    shadowRadius: 4,
+                    transform: [{ scale: iconPulse }],
                   }}
                 >
-                  <Text className='text-[26px] leading-[30px]'>{emoji}</Text>
-                </View>
-              </Animated.View>
-
-              {/* Habit name with better typography */}
-              <View className='flex-1'>
+                  <View
+                    className='h-9 w-9 items-center justify-center rounded-xl'
+                    style={{
+                      backgroundColor: getIconBackground(),
+                      borderColor: highContrastMode
+                        ? '#111111'
+                        : 'rgba(0,0,0,0.04)',
+                      borderWidth: highContrastMode ? 2 : 1,
+                      shadowColor: accentColor,
+                      shadowOffset: { height: 0, width: 0 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 4,
+                    }}
+                  >
+                    <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
+                  </View>
+                </Animated.View>
+              </View>
+              {/* Columns 2-5: empty flex spacers to maintain 5-column grid */}
+              <View className='flex-1' />
+              <View className='flex-1' />
+              <View className='flex-1' />
+              <View className='flex-1' />
+              {/* Title overlay - positioned from column 2 to end */}
+              <View
+                style={{
+                  bottom: 0,
+                  justifyContent: 'center',
+                  left: '20%',
+                  paddingLeft: 8,
+                  paddingRight: 12,
+                  position: 'absolute',
+                  right: 12,
+                  top: 0,
+                }}
+              >
                 <View className='flex-row items-center gap-2'>
                   <Text
-                    numberOfLines={1}
+                    className='shrink text-[17px] font-bold leading-[22px]'
                     ellipsizeMode='tail'
-                    className='flex-1 text-[17px] font-bold leading-[22px]'
+                    numberOfLines={1}
                     style={{
                       color: colors.primaryText,
                       letterSpacing: -0.3,
@@ -530,106 +720,210 @@ export default function DraggableHabit({
                   >
                     {name || habit.name}
                   </Text>
-                  {/* Huberman Day Phase Tag */}
                   {habit.preferredTime && (
                     <PhaseTag compact preferredTime={habit.preferredTime} />
                   )}
+                  {/* Chevron indicator for tap-to-view-details affordance */}
+                  <View className='ml-auto'>
+                    <ChevronRight
+                      color={highContrastMode ? '#facc15' : '#a8a29e'}
+                      size={18}
+                      strokeWidth={2}
+                    />
+                  </View>
                 </View>
-                {/* Best streak hint (only if not showing strength bar) */}
-                {bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage && (
-                  <Text
-                    className='mt-0.5 text-[13px] font-medium'
-                    style={{ color: '#a8a29e' }} // stone-400
-                  >
-                    Best: {bestStreak} days
-                  </Text>
-                )}
+                {bestStreak > 0 &&
+                  bestStreak > streak &&
+                  !showHabitStrengthPercentage && (
+                    <Text
+                      className='mt-0.5 text-[13px] font-medium'
+                      style={{ color: '#a8a29e' }}
+                    >
+                      Best: {bestStreak} days
+                    </Text>
+                  )}
               </View>
             </View>
+
+            {/* New Personal Record celebration badge */}
+            {showNewRecord && (
+              <Animated.View
+                className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full bg-gradient-to-r py-2'
+                style={{
+                  backgroundColor: '#fef3c7', // amber-100
+                  borderColor: '#fcd34d', // amber-300
+                  borderWidth: 1,
+                  opacity: newRecordOpacity,
+                  transform: [{ scale: newRecordScale }],
+                }}
+              >
+                <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
+                <Text
+                  className='text-[13px] font-bold uppercase tracking-wide'
+                  style={{ color: '#b45309' }} // amber-700
+                >
+                  New Personal Record! 🎉
+                </Text>
+              </Animated.View>
+            )}
+
+            {/* Strength Progress Bar - 5-column grid for alignment */}
+            {showHabitStrengthPercentage && (
+              <View className='relative mb-3 flex-row items-center justify-between px-3'>
+                {/* Column 1: Animated plant emoji centered (aligns with first habit circle) */}
+                <View className='flex-1 items-center justify-center'>
+                  <ReAnimated.Text
+                    style={[
+                      { fontSize: 20, textAlign: 'center' },
+                      strengthEmojiAnimatedStyle,
+                    ]}
+                  >
+                    {getStrengthEmoji()}
+                  </ReAnimated.Text>
+                </View>
+                {/* Column 2 */}
+                <View className='flex-1' />
+                {/* Column 3 */}
+                <View className='flex-1' />
+                {/* Column 4 */}
+                <View className='flex-1' />
+                {/* Column 5: Percentage centered (aligns with last habit circle) */}
+                <View className='flex-1 items-center'>
+                  <Text
+                    className='text-[13px] font-bold'
+                    style={{ color: '#65a30d', marginLeft: 12 }}
+                  >
+                    {Math.round(strengthPercent)}%
+                  </Text>
+                </View>
+                {/* Progress bar overlay spanning columns 2-4 */}
+                <View
+                  pointerEvents='none'
+                  style={{
+                    bottom: 0,
+                    justifyContent: 'center',
+                    left: '20%',
+                    position: 'absolute',
+                    right: '20%',
+                    top: 0,
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: '#e5e7eb',
+                      borderRadius: 4,
+                      height: 8,
+                      marginHorizontal: 8,
+                      overflow: 'hidden',
+                      position: 'relative',
+                      width: '100%',
+                    }}
+                  >
+                    {/* Progress fill */}
+                    <View
+                      style={{
+                        backgroundColor: '#65a30d',
+                        borderRadius: 4,
+                        height: '100%',
+                        width: `${strengthPercent}%`,
+                      }}
+                    />
+                    {/* Dividers at 20%, 40%, 60%, 80% */}
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '20%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '40%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '60%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '80%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            )}
+            {/* Fallback divider when strength is hidden - using stone-100 for consistency */}
+            {!showHabitStrengthPercentage && (
+              <View
+                className='mx-3 mb-3 h-[1.5px] rounded-full'
+                style={{
+                  backgroundColor: '#f5f5f4', // stone-100
+                }}
+              />
+            )}
           </View>
 
-          {/* New Personal Record celebration badge */}
-          {showNewRecord && (
-            <Animated.View
-              className='mb-3 flex-row items-center justify-center gap-1.5 rounded-full bg-gradient-to-r py-2'
-              style={{
-                backgroundColor: '#fef3c7', // amber-100
-                borderColor: '#fcd34d', // amber-300
-                borderWidth: 1,
-                opacity: newRecordOpacity,
-                transform: [{ scale: newRecordScale }],
-              }}
-            >
-              <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
-              <Text
-                className='text-[13px] font-bold uppercase tracking-wide'
-                style={{ color: '#b45309' }} // amber-700
-              >
-                New Personal Record! 🎉
-              </Text>
-            </Animated.View>
-          )}
-
-          {/* Strength Progress Bar as divider - full width with milestone markers */}
-          {showHabitStrengthPercentage && (
-            <View className='mb-3'>
-              <StrengthProgressBar
-                showDividers
-                showNextLevel={false}
-                showPercentage
-                size='large'
-                strength={strengthPercent}
-              />
-            </View>
-          )}
-          {/* Fallback divider when strength is hidden - using stone-100 for consistency */}
-          {!showHabitStrengthPercentage && (
-            <View
-              className='mb-3 h-[1.5px] rounded-full'
-              style={{
-                backgroundColor: '#f5f5f4', // stone-100
-              }}
+          {/* Week status visualizer - px-3 to align with CalendarTimeline dates */}
+          <View className='px-3 pb-5'>
+            <HabitChainVisualizer
+              accentColor={accentColor}
+              celebrationsEnabled={celebrationsEnabled}
+              completionIcon={completionIcon}
+              currentStreak={streak}
+              habitId={habit._id}
+              highContrastMode={highContrastMode}
+              isConnectedToPreviousWeek={isConnectedToPreviousWeek}
+              reduceMotionPreference={reduceMotionPreference}
+              shape={dayShape}
+              showConnectors={showConnectors}
+              weekDateStrings={weekDateStrings}
+              weekStatus={weekStatus}
+              onToggle={toggleHabit}
+              onWeekComplete={({ completedDate }) =>
+                onWeekComplete?.({ completedDate, habit })
+              }
             />
-          )}
 
-          {/* Week status visualizer - full width */}
-          <HabitChainVisualizer
-            accentColor={accentColor}
-            celebrationsEnabled={celebrationsEnabled}
-            completionIcon={completionIcon}
-            currentStreak={streak}
-            habitId={habit._id}
-            highContrastMode={highContrastMode}
-            isConnectedToPreviousWeek={isConnectedToPreviousWeek}
-            onToggle={toggleHabit}
-            onWeekComplete={({ completedDate }) =>
-              onWeekComplete?.({ completedDate, habit })
-            }
-            reduceMotionPreference={reduceMotionPreference}
-            shape={dayShape}
-            showConnectors={showConnectors}
-            weekDateStrings={weekDateStrings}
-            weekStatus={weekStatus}
-          />
-
-          {/* Completion reward indicator - enhanced */}
-          {isWeekComplete && (
-            <View
-              className='mt-3 flex-row items-center justify-center gap-1.5 rounded-full py-1.5'
-              style={{
-                backgroundColor: `${accentColor}15`, // 15% opacity accent color
-              }}
-            >
-              <Text className='text-[10px]'>✨</Text>
-              <Text
-                className='text-[10px] font-medium uppercase tracking-wider'
-                style={{ color: accentColor }}
+            {/* Completion reward indicator - enhanced */}
+            {isWeekComplete && (
+              <View
+                className='mt-3 flex-row items-center justify-center gap-1.5 rounded-full py-1.5'
+                style={{
+                  backgroundColor: `${effectiveAccentColor}15`, // 15% opacity accent color
+                }}
               >
-                Perfect Week
-              </Text>
-              <Text className='text-[10px]'>✨</Text>
-            </View>
-          )}
+                <Text className='text-[10px]'>✨</Text>
+                <Text
+                  className='text-[10px] font-medium uppercase tracking-wider'
+                  style={{ color: effectiveAccentColor }}
+                >
+                  Perfect Week
+                </Text>
+                <Text className='text-[10px]'>✨</Text>
+              </View>
+            )}
+          </View>
         </View>
       </Animated.View>
     </Pressable>

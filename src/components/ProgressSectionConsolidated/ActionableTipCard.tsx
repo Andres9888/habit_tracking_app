@@ -12,12 +12,14 @@
  * - Chevron for tap affordance
  * - Press animation with spring
  * - Haptic feedback on tap
+ * - Quick actions bottom sheet on press
  * - Full accessibility support
  *
  * @see docs/specs/habit-details-screen/progress-consolidated-redesign.md
+ * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -33,29 +35,43 @@ import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { Springs } from '../../constants/motion';
 
 import type { ActionableTipCardProps } from './types';
+import { TipQuickActionsSheet } from './TipQuickActionsSheet';
+import {
+  determineTipTypeFromText,
+  type QuickAction,
+} from './TipQuickActionsSheetTypes';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /** Duration of entrance animation (ms) */
 const ENTRANCE_DURATION = 400;
 
-/** Entrance animation delay (ms) - after other sections */
-const ENTRANCE_DELAY = 200;
-
 /**
  * ActionableTipCard Component
  *
  * Displays a personalized actionable tip with gradient background,
  * icon, and chevron for tap affordance.
+ * Now includes a quick actions bottom sheet for immediate user action.
  * Memoized to prevent re-renders when parent updates unrelated props.
  */
 export const ActionableTipCard = React.memo(function ActionableTipCard({
   tip,
   subtitle,
+  currentStreak = 0,
   onPress,
+  onQuickAction,
 }: ActionableTipCardProps) {
   const reduceMotion = useReduceMotion();
   const { triggerLightImpact } = useHapticFeedback();
+
+  // Quick actions sheet state
+  const [isSheetVisible, setIsSheetVisible] = useState(false);
+
+  // Determine tip type and focus day from tip text
+  const { tipType, focusDayName } = useMemo(
+    () => determineTipTypeFromText(tip, currentStreak),
+    [tip, currentStreak]
+  );
 
   // Entrance animation values
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
@@ -84,21 +100,34 @@ export const ActionableTipCard = React.memo(function ActionableTipCard({
   }, [reduceMotion, opacity, translateY]);
 
   // Press handlers
-  const handlePressIn = () => {
-    if (!onPress) return;
+  const handlePressIn = useCallback(() => {
     pressScale.value = withSpring(0.98, Springs.button);
-  };
+  }, [pressScale]);
 
-  const handlePressOut = () => {
-    if (!onPress) return;
+  const handlePressOut = useCallback(() => {
     pressScale.value = withSpring(1, Springs.button);
-  };
+  }, [pressScale]);
 
-  const handlePress = () => {
-    if (!onPress) return;
+  const handlePress = useCallback(() => {
     triggerLightImpact();
-    onPress();
-  };
+    // If onQuickAction is provided, show the quick actions sheet
+    if (onQuickAction) {
+      setIsSheetVisible(true);
+    }
+    // Also call legacy onPress if provided
+    onPress?.();
+  }, [triggerLightImpact, onQuickAction, onPress]);
+
+  const handleSheetClose = useCallback(() => {
+    setIsSheetVisible(false);
+  }, []);
+
+  const handleQuickAction = useCallback(
+    (action: QuickAction) => {
+      onQuickAction?.(action);
+    },
+    [onQuickAction]
+  );
 
   // Animated styles
   const containerStyle = useAnimatedStyle(() => ({
@@ -106,79 +135,98 @@ export const ActionableTipCard = React.memo(function ActionableTipCard({
     transform: [{ translateY: translateY.value }, { scale: pressScale.value }],
   }));
 
-  const isInteractive = !!onPress;
+  // The card is interactive if onPress or onQuickAction is provided
+  const isInteractive = !!onPress || !!onQuickAction;
 
   const accessibilityLabel = subtitle
     ? `Tip: ${tip}. ${subtitle}`
     : `Tip: ${tip}`;
   const accessibilityHint = isInteractive
-    ? 'Double tap to view details'
+    ? onQuickAction
+      ? 'Double tap to view quick actions'
+      : 'Double tap to open this tip'
     : undefined;
 
   return (
-    <AnimatedPressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={isInteractive ? 'button' : 'text'}
-      disabled={!isInteractive}
-      style={containerStyle}
-      onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
-      <View
-        className='flex-row items-center gap-3 rounded-xl border border-violet-100 p-3'
-        style={{
-          // Gradient from violet-50 to indigo-50
-          // Since RN doesn't support linear-gradient natively, we use a solid background
-          // that matches the design intent (light violet/indigo tint)
-          backgroundColor: '#f5f3ff', // violet-50
-        }}
+    <>
+      <AnimatedPressable
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole={isInteractive ? 'button' : 'text'}
+        disabled={!isInteractive}
+        style={containerStyle}
+        testID='actionable-tip-card'
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
-        {/* Icon Container */}
         <View
-          accessibilityElementsHidden
-          className='h-10 w-10 flex-shrink-0 items-center justify-center rounded-full'
-          importantForAccessibility='no-hide-descendants'
-          style={{ backgroundColor: '#ede9fe' }} // violet-100
+          className='flex-row items-center gap-3 rounded-xl border border-violet-100 p-3'
+          style={{
+            // Gradient from violet-50 to indigo-50
+            // Since RN doesn't support linear-gradient natively, we use a solid background
+            // that matches the design intent (light violet/indigo tint)
+            backgroundColor: '#f5f3ff', // violet-50
+          }}
         >
-          <Text className='text-lg'>💡</Text>
-        </View>
-
-        {/* Text Content */}
-        <View className='flex-1'>
-          <Text
-            className='text-sm font-medium'
-            style={{ color: '#4c1d95' }} // violet-900
-          >
-            {tip}
-          </Text>
-          {subtitle && (
-            <Text
-              className='mt-0.5 text-xs'
-              style={{ color: '#7c3aed' }} // violet-600
-            >
-              {subtitle}
-            </Text>
-          )}
-        </View>
-
-        {/* Chevron (only when interactive) */}
-        {isInteractive && (
+          {/* Icon Container */}
           <View
             accessibilityElementsHidden
+            className='h-10 w-10 flex-shrink-0 items-center justify-center rounded-full'
             importantForAccessibility='no-hide-descendants'
+            style={{ backgroundColor: '#ede9fe' }} // violet-100
           >
-            <Ionicons
-              color='#a78bfa' // violet-400
-              name='chevron-forward'
-              size={20}
-              style={{ flexShrink: 0 }}
-            />
+            <Text className='text-lg'>💡</Text>
           </View>
-        )}
-      </View>
-    </AnimatedPressable>
+
+          {/* Text Content */}
+          <View className='flex-1'>
+            <Text
+              className='text-sm font-medium'
+              style={{ color: '#4c1d95' }} // violet-900
+            >
+              {tip}
+            </Text>
+            {subtitle && (
+              <Text
+                className='mt-0.5 text-xs'
+                style={{ color: '#7c3aed' }} // violet-600
+              >
+                {subtitle}
+              </Text>
+            )}
+          </View>
+
+          {/* Chevron (only when interactive) */}
+          {isInteractive && (
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility='no-hide-descendants'
+            >
+              <Ionicons
+                color='#a78bfa' // violet-400
+                name='chevron-forward'
+                size={20}
+                style={{ flexShrink: 0 }}
+              />
+            </View>
+          )}
+        </View>
+      </AnimatedPressable>
+
+      {/* Quick Actions Bottom Sheet */}
+      {onQuickAction && (
+        <TipQuickActionsSheet
+          currentStreak={currentStreak}
+          focusDayName={focusDayName}
+          tipText={tip}
+          tipType={tipType}
+          visible={isSheetVisible}
+          onActionPress={handleQuickAction}
+          onClose={handleSheetClose}
+        />
+      )}
+    </>
   );
 });
 

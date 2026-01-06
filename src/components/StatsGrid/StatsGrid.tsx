@@ -107,14 +107,14 @@ export function StatsGrid({
             valueColor="text-emerald-700"
           />
           <StatCard
-            bgColor="bg-blue-50"
+            bgColor="bg-stone-50"
             delay={80}
-            icon={<TrendingUp className="text-blue-600" size={20} />}
-            iconBgColor="bg-blue-100"
+            icon={<TrendingUp className="text-stone-600" size={20} />}
+            iconBgColor="bg-stone-100"
             label="Success Rate"
             suffix="%"
             value={displayRate}
-            valueColor="text-blue-700"
+            valueColor="text-stone-700"
           />
         </View>
 

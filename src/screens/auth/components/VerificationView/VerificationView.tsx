@@ -19,10 +19,10 @@ export function VerificationView({
   return (
     <View className='flex-1 bg-white'>
       <View className='pt-15 flex-1 px-6'>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-900'>
+        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
           Verify Email
         </Text>
-        <Text className='mb-10 text-base text-stone-500'>
+        <Text className='mb-10 text-base text-slate-500'>
           We've sent a verification code to {emailAddress}
         </Text>
 

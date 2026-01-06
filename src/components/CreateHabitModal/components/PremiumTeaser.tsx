@@ -32,7 +32,10 @@ const getAISuggestions = (name: string): string[] => {
     return ['Best time: 5 PM after work', 'Pair with: Protein shake 🥤'];
   }
 
-  return ['Personalized timing suggestions', 'Smart habit pairing recommendations'];
+  return [
+    'Personalized timing suggestions',
+    'Smart habit pairing recommendations',
+  ];
 };
 
 export const PremiumTeaser = ({ habitName, onUpgrade }: PremiumTeaserProps) => {
@@ -95,58 +98,60 @@ export const PremiumTeaser = ({ habitName, onUpgrade }: PremiumTeaserProps) => {
 
   return (
     <Animated.View
-      className="mb-6"
+      className='mb-6'
       style={{
         opacity: opacityAnim,
         transform: [{ translateY: slideAnim }],
       }}
     >
       <Pressable
-        accessibilityLabel="Unlock AI suggestions with Premium"
-        accessibilityRole="button"
-        className="overflow-hidden rounded-2xl"
+        accessibilityLabel='Unlock AI suggestions with Premium'
+        accessibilityRole='button'
+        className='overflow-hidden rounded-2xl'
         onPress={() => {
           triggerSelection();
           onUpgrade();
         }}
       >
         {/* Background with gradient effect */}
-        <View className="bg-gradient-to-r from-amber-50 to-orange-50 p-4">
+        <View className='bg-gradient-to-r from-violet-50 to-indigo-50 p-4'>
           {/* Shimmer overlay */}
           <Animated.View
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-200/30 to-transparent"
+            className='absolute inset-0 bg-gradient-to-r from-transparent via-violet-200/30 to-transparent'
             style={{ opacity: shimmerOpacity }}
           />
 
           {/* Content */}
-          <View className="relative">
+          <View className='relative'>
             {/* Header */}
-            <View className="mb-3 flex-row items-center justify-between">
-              <View className="flex-row items-center">
-                <Sparkles color="#f59e0b" size={18} />
-                <Text className="ml-2 text-sm font-bold text-amber-700">
+            <View className='mb-3 flex-row items-center justify-between'>
+              <View className='flex-row items-center'>
+                <Sparkles color='#7c3aed' size={18} />
+                <Text className='ml-2 text-sm font-bold text-violet-700'>
                   AI Suggestions
                 </Text>
               </View>
-              <View className="flex-row items-center rounded-full bg-amber-100 px-2 py-1">
-                <Lock color="#b45309" size={12} />
-                <Text className="ml-1 text-[10px] font-bold text-amber-700">PRO</Text>
+              <View className='flex-row items-center rounded-full bg-violet-100 px-2 py-1'>
+                <Lock color='#6d28d9' size={12} />
+                <Text className='ml-1 text-[10px] font-bold text-violet-700'>
+                  PRO
+                </Text>
               </View>
             </View>
 
             {/* Blurred suggestions preview */}
-            <View className="mb-3">
+            <View className='mb-3'>
               {suggestions.map((suggestion, index) => (
                 <View
                   key={index}
-                  className="mb-1 flex-row items-center"
+                  className='mb-1 flex-row items-center'
                   style={{ opacity: 0.7 }}
                 >
-                  <Text className="mr-2 text-amber-500">•</Text>
+                  <Text className='mr-2 text-violet-500'>•</Text>
                   <Text
-                    className="text-sm text-amber-800"
+                    className='text-sm text-violet-800'
                     style={{
-                      textShadowColor: 'rgba(245, 158, 11, 0.5)',
+                      textShadowColor: 'rgba(124, 58, 237, 0.5)',
                       textShadowOffset: { height: 0, width: 0 },
                       textShadowRadius: 4,
                     }}
@@ -158,11 +163,13 @@ export const PremiumTeaser = ({ habitName, onUpgrade }: PremiumTeaserProps) => {
             </View>
 
             {/* CTA */}
-            <View className="flex-row items-center justify-between rounded-xl bg-amber-500/20 px-3 py-2">
-              <Text className="text-xs font-medium text-amber-700">
+            <View className='flex-row items-center justify-between rounded-xl bg-violet-500/20 px-3 py-2'>
+              <Text className='text-xs font-medium text-violet-700'>
                 Unlock personalized insights
               </Text>
-              <Text className="text-xs font-bold text-amber-600">Try Premium →</Text>
+              <Text className='text-xs font-bold text-violet-600'>
+                Try Premium →
+              </Text>
             </View>
           </View>
         </View>

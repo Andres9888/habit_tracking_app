@@ -75,8 +75,9 @@ export const SparkleBurst = ({
     >
       {Array.from({ length: DOT_COUNT }).map((_, index) => {
         const angle = (index / DOT_COUNT) * Math.PI * 2;
-        const translateX = Math.cos(angle) * (size / 2.2);
-        const translateY = Math.sin(angle) * (size / 2.2);
+        // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+        const translateX = Math.round(Math.cos(angle) * (size / 2.2));
+        const translateY = Math.round(Math.sin(angle) * (size / 2.2));
 
         return (
           <Animated.View

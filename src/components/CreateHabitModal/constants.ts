@@ -1,44 +1,61 @@
 export const DEFAULT_EMOJI = '💪';
-export const DEFAULT_COLOR = '#DBEAFE';
+export const DEFAULT_COLOR = '#10B981'; // Emerald - V8 default
 
-export const EMOJIS = Array.from(
-  new Set(
+export const EMOJIS = [
+  ...new Set(
     '💪 🧘 📖 💧 🎨 🏃 🍎 🥗 ☕ 💤 🎯 ✍️ 🚴 🧠 🎵 🌞 🌙 ⚡ 🔥 🌱 🏋️ 🚶 🧘‍♀️ 🎨 📝 💼 📚 🎓 💡 🏆'.split(
       ' '
     )
-  )
-);
+  ),
+];
 
-export const COLORS = [
-  // Row 1: Core vibrant colors (8 colors)
+/**
+ * V8 Habit Colors - 12 vibrant colors for the color picker
+ * Order matches design spec for visual flow
+ */
+export const HABIT_COLORS = [
   '#EF4444', // Red
   '#F97316', // Orange
-  '#EAB308', // Yellow
-  '#22C55E', // Green
-  '#3B82F6', // Blue
-  '#8B5CF6', // Purple
-  '#EC4899', // Pink
-  '#1E293B', // Slate (dark)
-
-  // Row 2: Softer/alternative tones (8 colors)
-  '#06B6D4', // Cyan
-  '#F472B6', // Light Pink
-  '#FB923C', // Light Orange
-  '#4ADE80', // Light Green
-  '#A78BFA', // Light Purple
-  '#78716C', // Stone (neutral)
-  '#0EA5E9', // Sky Blue
   '#FBBF24', // Amber
-
-  // Row 3: Additional variety (8 colors)
-  '#DC2626', // Dark Red
-  '#C2410C', // Burnt Orange
   '#84CC16', // Lime
+  '#10B981', // Emerald (default)
   '#14B8A6', // Teal
-  '#6366F1', // Indigo
-  '#D946EF', // Fuchsia
-  '#F43F5E', // Rose
-  '#57534e', // Slate Gray
-];
+  '#06B6D4', // Cyan
+  '#3B82F6', // Blue
+  '#8B5CF6', // Violet
+  '#A855F7', // Purple
+  '#EC4899', // Pink
+  '#78716C', // Stone
+] as const;
+
+/**
+ * Human-readable color names for accessibility (VoiceOver)
+ * Maps hex values to descriptive names
+ */
+export const COLOR_NAMES: Record<string, string> = {
+  '#EF4444': 'Red',
+  '#F97316': 'Orange',
+  '#FBBF24': 'Amber',
+  '#84CC16': 'Lime',
+  '#10B981': 'Emerald',
+  '#14B8A6': 'Teal',
+  '#06B6D4': 'Cyan',
+  '#3B82F6': 'Blue',
+  '#8B5CF6': 'Violet',
+  '#A855F7': 'Purple',
+  '#EC4899': 'Pink',
+  '#78716C': 'Stone',
+} as const;
+
+/**
+ * Get human-readable color name for accessibility
+ * Returns the hex value if no name is found
+ */
+export const getColorName = (hex: string): string => {
+  return COLOR_NAMES[hex.toUpperCase()] || COLOR_NAMES[hex] || hex;
+};
+
+/** @deprecated Use HABIT_COLORS instead - kept for backward compatibility */
+export const COLORS = HABIT_COLORS;
 
 export const HABIT_NAME_REGEX = /^(\p{Emoji})\s+(.+)$/u;

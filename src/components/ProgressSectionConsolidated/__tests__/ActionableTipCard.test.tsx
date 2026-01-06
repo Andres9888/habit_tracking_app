@@ -105,6 +105,61 @@ jest.mock('@expo/vector-icons', () => {
   };
 });
 
+// Mock react-native-safe-area-context
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return {
+    SafeAreaProvider: ({ children }: { children: React.ReactNode }) => children,
+    SafeAreaView: ({ children }: { children: React.ReactNode }) =>
+      React.createElement(View, null, children),
+    useSafeAreaInsets: () => ({
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    }),
+  };
+});
+
+// Mock Modal component
+jest.mock('../../Modal', () => {
+  const React = require('react');
+  const { View, Text, Pressable } = require('react-native');
+
+  return {
+    __esModule: true,
+    Modal: ({
+      visible,
+      onClose,
+      children,
+      title,
+    }: {
+      visible: boolean;
+      onClose: () => void;
+      children: React.ReactNode;
+      title?: string;
+    }) => {
+      if (!visible) return null;
+      return React.createElement(View, { testID: 'mock-modal' }, [
+        title &&
+          React.createElement(
+            Text,
+            { key: 'title', testID: 'modal-title' },
+            title
+          ),
+        children,
+        React.createElement(
+          Pressable,
+          { key: 'close', onPress: onClose, testID: 'modal-close' },
+          'Close'
+        ),
+      ]);
+    },
+  };
+});
+
 describe('ActionableTipCard', () => {
   const defaultProps = {
     tip: 'Complete Tuesday to level up!',
@@ -246,12 +301,26 @@ describe('ActionableTipCard', () => {
       ).toBeTruthy();
     });
 
-    it('has accessibility hint when interactive', () => {
+    it('has accessibility hint when interactive with onPress only', () => {
       const { getByLabelText } = render(
         <ActionableTipCard {...defaultProps} onPress={() => {}} />
       );
       const card = getByLabelText(/Tip: Complete Tuesday to level up!/);
-      expect(card.props.accessibilityHint).toBe('Double tap to view details');
+      expect(card.props.accessibilityHint).toBe('Double tap to open this tip');
+    });
+
+    it('has quick actions accessibility hint when onQuickAction is provided', () => {
+      const { getByLabelText } = render(
+        <ActionableTipCard
+          {...defaultProps}
+          currentStreak={5}
+          onQuickAction={() => {}}
+        />
+      );
+      const card = getByLabelText(/Tip: Complete Tuesday to level up!/);
+      expect(card.props.accessibilityHint).toBe(
+        'Double tap to view quick actions'
+      );
     });
 
     it('has no accessibility hint when not interactive', () => {

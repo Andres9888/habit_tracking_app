@@ -277,12 +277,12 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     fontWeight: '500',
-    color: '#1a1a1a',
+    color: '#1c1917', // stone-800
   },
   emptyStateSubtitle: {
     marginTop: 4,
     fontSize: 14,
-    color: '#9ca3af',
+    color: '#a8a29e', // stone-400
   },
 });
 

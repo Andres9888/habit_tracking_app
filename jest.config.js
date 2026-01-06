@@ -12,6 +12,7 @@ export default {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
@@ -19,5 +20,9 @@ export default {
     '!**/coverage/**',
     '!**/*.d.ts',
   ],
-  testPathIgnorePatterns: ['/node_modules/', '/__tests__/.*\\.snap$', '/tests/.*\\.snap$'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/__tests__/.*\\.snap$',
+    '/tests/.*\\.snap$',
+  ],
 };

@@ -12,9 +12,9 @@ const LEGEND_ITEMS = [
     textClassName: 'text-rose-500',
   },
   {
-    indicatorClassName: 'bg-blue-500',
+    indicatorClassName: 'bg-emerald-500',
     label: 'Today',
-    textClassName: 'text-blue-600',
+    textClassName: 'text-emerald-600',
   },
   {
     indicatorClassName: 'bg-stone-300',

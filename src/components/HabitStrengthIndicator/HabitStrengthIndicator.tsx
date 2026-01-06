@@ -238,7 +238,8 @@ export default function HabitStrengthIndicator({
     opacity: emojiOpacity.value,
     transform: [
       { scale: emojiScale.value },
-      { rotate: `${emojiRotation.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(emojiRotation.value)}deg` },
     ],
   }));
 

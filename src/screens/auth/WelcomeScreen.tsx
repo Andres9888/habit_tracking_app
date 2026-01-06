@@ -11,12 +11,12 @@ export default function WelcomeScreen() {
   if (mode === 'signin') {
     return (
       <View className='flex-1 bg-white'>
-        <SignInScreen onNavigateToSignUp={() => setMode('signup')} />
+        <SignInScreen />
         <TouchableOpacity
           className='absolute left-6 top-[60px] z-10'
           onPress={() => setMode('welcome')}
         >
-          <Text className='text-base font-semibold text-stone-900'>← Back</Text>
+          <Text className='text-base font-semibold text-stone-800'>← Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -30,7 +30,7 @@ export default function WelcomeScreen() {
           className='absolute left-6 top-[60px] z-10'
           onPress={() => setMode('welcome')}
         >
-          <Text className='text-base font-semibold text-stone-900'>← Back</Text>
+          <Text className='text-base font-semibold text-stone-800'>← Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
       <View className='flex-1 justify-between px-6 pb-[60px] pt-[100px]'>
         <View className='items-center gap-4'>
           <Text className='mb-4 text-[80px]'>✓</Text>
-          <Text className='text-center text-[40px] font-extrabold tracking-tight text-stone-900'>
+          <Text className='text-center text-[40px] font-extrabold tracking-tight text-stone-800'>
             Habit Tracker
           </Text>
           <Text className='text-center text-lg leading-7 text-stone-500'>
@@ -51,10 +51,10 @@ export default function WelcomeScreen() {
 
         <View className='gap-4'>
           <TouchableOpacity
-            className='items-center rounded-3xl bg-stone-900 py-[18px]'
+            className='items-center rounded-3xl bg-stone-800 py-[18px]'
             onPress={() => setMode('signup')}
           >
-            <Text className='text-[13px] font-bold tracking-[3px] text-white'>
+            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
               GET STARTED
             </Text>
           </TouchableOpacity>
@@ -63,7 +63,7 @@ export default function WelcomeScreen() {
             className='items-center rounded-3xl border border-stone-200 py-[18px]'
             onPress={() => setMode('signin')}
           >
-            <Text className='text-[13px] font-bold tracking-[3px] text-stone-900'>
+            <Text className='text-[15px] font-semibold tracking-[3px] text-stone-800'>
               SIGN IN
             </Text>
           </TouchableOpacity>

@@ -161,7 +161,8 @@ export function MiniTemplateCard({
     shadowOpacity: interpolate(shadowElevation.value, [3, 8], [0.08, 0.15]),
     transform: [
       { scale: pressScale.value },
-      { rotate: `${pressRotation.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(pressRotation.value)}deg` },
     ],
   }));
 

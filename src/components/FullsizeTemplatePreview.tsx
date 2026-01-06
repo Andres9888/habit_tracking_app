@@ -268,7 +268,7 @@ export default function FullsizeTemplatePreview({
         // Phase 4: Checkmark bounce in with rotation (100ms delay)
         checkmarkScale.value = withDelay(
           100,
-          withSpring(1, { damping: 6, stiffness: 180, mass: 0.8 })
+          withSpring(1, { damping: 6, stiffness: 180, mass: 1 })
         );
         checkmarkRotation.value = withDelay(
           100,
@@ -379,7 +379,8 @@ export default function FullsizeTemplatePreview({
     opacity: checkmarkScale.value,
     transform: [
       { scale: checkmarkScale.value },
-      { rotate: `${checkmarkRotation.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(checkmarkRotation.value)}deg` },
     ],
   }));
 

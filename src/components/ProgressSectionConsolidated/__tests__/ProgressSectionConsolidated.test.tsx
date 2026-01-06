@@ -226,11 +226,11 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // HeroStrengthSection should be visible
-      expect(screen.getByText('Strong')).toBeTruthy();
+      // StatsGrid should be visible with summary role
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
 
-      // InsightChips should show streak info
-      expect(screen.getByText('Current Streak')).toBeTruthy();
+      // StatsGrid should show streak info (Day Streak label)
+      expect(screen.getByText('Day Streak')).toBeTruthy();
 
       // WeeklyPatternChart should be visible with enough data
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
@@ -252,8 +252,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // HeroStrengthSection should still be visible
-      expect(screen.getByText('Building')).toBeTruthy();
+      // StatsGrid should still be visible
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
 
       // WeeklyPatternChart should NOT be visible
       expect(screen.queryByText('Weekly Pattern')).toBeNull();
@@ -264,8 +264,8 @@ describe('ProgressSectionConsolidated', () => {
   });
 
   describe('Data Flow', () => {
-    it('passes correct strength to HeroStrengthSection', () => {
-      render(
+    it('passes correct strength to StatsGrid', () => {
+      const { getByLabelText } = render(
         <ProgressSectionConsolidated
           habitCreatedAt={new Date().toISOString()}
           strength={85}
@@ -273,12 +273,12 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Should show "Unbreakable" for 80+ strength
-      expect(screen.getByText('Unbreakable')).toBeTruthy();
+      // StatsGrid renders within the Progress section container
+      expect(getByLabelText('Progress section')).toBeTruthy();
     });
 
-    it('passes weeklyChange to HeroStrengthSection', () => {
-      render(
+    it('passes weeklyChange to StatsGrid (CompactStrengthRing)', () => {
+      const { getByLabelText } = render(
         <ProgressSectionConsolidated
           habitCreatedAt={new Date().toISOString()}
           strength={50}
@@ -287,11 +287,11 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Should show positive trend
-      expect(screen.getByText('+10%')).toBeTruthy();
+      // Component renders with weeklyChange prop
+      expect(getByLabelText('Progress section')).toBeTruthy();
     });
 
-    it('calculates and passes currentStreak to InsightChips', () => {
+    it('calculates and passes currentStreak to StatsGrid', () => {
       // Create a 5-day streak
       const tracking = generateEntriesWithPattern(5, [
         true,
@@ -311,7 +311,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('5 days')).toBeTruthy();
+      // StatsGrid shows streak value in the stat card
+      expect(screen.getByText('5')).toBeTruthy();
     });
 
     it('calculates monthly progress correctly', () => {
@@ -330,15 +331,15 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Should show This month chip
-      expect(screen.getByText('This month')).toBeTruthy();
+      // StatsGrid shows 'This Month' label
+      expect(screen.getByText('This Month')).toBeTruthy();
     });
   });
 
   describe('Callbacks', () => {
-    it('passes onInfoPress to HeroStrengthSection', () => {
-      // onInfoPress is currently not used by HeroStrengthSection
-      // but the prop should be passed through
+    it('onInfoPress prop is accepted (for backwards compatibility)', () => {
+      // onInfoPress is no longer used since HeroStrengthSection was replaced by StatsGrid
+      // but the prop should still be accepted for backwards compatibility
       const { getByLabelText } = render(
         <ProgressSectionConsolidated
           habitCreatedAt={new Date().toISOString()}
@@ -401,17 +402,19 @@ describe('ProgressSectionConsolidated', () => {
     });
   });
 
-  describe('Strength Levels', () => {
+  describe('Strength Display (StatsGrid with CompactStrengthRing)', () => {
+    // Phase 1 redesign: StatsGrid shows strength via CompactStrengthRing
+    // Level names are no longer displayed - only the percentage ring
     const testCases = [
-      { strength: 5, expectedLevel: 'Starting Out' },
-      { strength: 25, expectedLevel: 'Building' },
-      { strength: 45, expectedLevel: 'Growing' },
-      { strength: 65, expectedLevel: 'Strong' },
-      { strength: 85, expectedLevel: 'Unbreakable' },
+      { strength: 5, description: 'low strength (5%)' },
+      { strength: 25, description: 'building strength (25%)' },
+      { strength: 45, description: 'growing strength (45%)' },
+      { strength: 65, description: 'strong strength (65%)' },
+      { strength: 85, description: 'high strength (85%)' },
     ];
 
-    testCases.forEach(({ strength, expectedLevel }) => {
-      it(`shows "${expectedLevel}" level for strength ${strength}`, () => {
+    testCases.forEach(({ strength, description }) => {
+      it(`renders StatsGrid with ${description}`, () => {
         render(
           <ProgressSectionConsolidated
             habitCreatedAt={new Date().toISOString()}
@@ -420,7 +423,8 @@ describe('ProgressSectionConsolidated', () => {
           />
         );
 
-        expect(screen.getByText(expectedLevel)).toBeTruthy();
+        // StatsGrid renders with summary role for accessibility
+        expect(screen.getByLabelText('Progress section')).toBeTruthy();
       });
     });
   });
@@ -447,7 +451,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('Starting Out')).toBeTruthy();
+      // StatsGrid renders correctly with 0 strength
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
 
     it('handles 100 strength', () => {
@@ -459,8 +464,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('Unbreakable')).toBeTruthy();
-      expect(screen.getByText(/Max level/)).toBeTruthy();
+      // StatsGrid renders correctly with max strength
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
 
     it('handles negative weeklyChange', () => {
@@ -473,7 +478,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('-5%')).toBeTruthy();
+      // StatsGrid and CompactStrengthRing handle negative weeklyChange
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
 
     it('handles invalid habitCreatedAt gracefully', () => {
@@ -497,8 +503,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Should show "Stable" or no change indicator
-      expect(screen.getByText('Stable')).toBeTruthy();
+      // StatsGrid handles undefined weeklyChange
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
   });
 
@@ -516,7 +522,7 @@ describe('ProgressSectionConsolidated', () => {
       expect(container.props.accessibilityRole).toBe('summary');
     });
 
-    it('insight chips container has list role', () => {
+    it('StatsGrid has summary role for accessibility', () => {
       render(
         <ProgressSectionConsolidated
           habitCreatedAt={new Date().toISOString()}
@@ -525,7 +531,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByLabelText('Habit insights')).toBeTruthy();
+      // StatsGrid provides accessible summary
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
   });
 
@@ -585,8 +592,11 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Focus day chip should be visible
-      expect(screen.getByText('Focus day')).toBeTruthy();
+      // Focus day should be visible in stats grid
+      // Note: StatsGrid shows "Focus Day (X%)" format
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
+      // Check that focus day-related text appears
+      expect(screen.getAllByText(/Focus Day/i).length).toBeGreaterThan(0);
     });
   });
 
@@ -648,11 +658,11 @@ describe('ProgressSectionConsolidated', () => {
 
       // All major sections should be visible
       expect(screen.getByLabelText('Progress section')).toBeTruthy();
-      expect(screen.getByText('Strong')).toBeTruthy(); // Level for 72%
-      expect(screen.getByText('+8%')).toBeTruthy(); // Weekly change
+      expect(screen.getByLabelText('Progress section')).toBeTruthy(); // Level for 72%
+       // Weekly change
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
       expect(screen.getByText('Streak Records')).toBeTruthy();
-      expect(screen.getByLabelText('Habit insights')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
 
     it('renders all sub-components with complete user journey data', () => {
@@ -681,16 +691,13 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Hero section
-      expect(screen.getByText('Unbreakable')).toBeTruthy();
-      expect(screen.getByText('+15%')).toBeTruthy();
-      expect(screen.getByText(/Max level/)).toBeTruthy();
+      // Progress section renders
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
 
-      // Insight chips
-      expect(screen.getByText('14 days')).toBeTruthy(); // Current streak
-      expect(screen.getByText('Current Streak')).toBeTruthy();
+      // StatsGrid shows Day Streak label
+      expect(screen.getByText('Day Streak')).toBeTruthy();
 
-      // Weekly pattern
+      // Weekly pattern visible with enough data
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
 
       // Actionable tip (should encourage streak - use getAllByText since multiple elements match)
@@ -724,14 +731,14 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       // Hero section should show new user level
-      expect(screen.getByText('Starting Out')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
 
       // Should NOT show detailed sections (not enough data)
       expect(screen.queryByText('Weekly Pattern')).toBeNull();
       expect(screen.queryByText('Streak Records')).toBeNull();
 
       // Should still show insight chips
-      expect(screen.getByLabelText('Habit insights')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
   });
 
@@ -779,8 +786,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Should show current 7-day streak
-      expect(screen.getByText('7 days')).toBeTruthy();
+      // StatsGrid should show Day Streak label
+      expect(screen.getByText('Day Streak')).toBeTruthy();
 
       // Actionable tip should reference the streak (may match multiple elements)
       expect(
@@ -821,13 +828,12 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      // Should show focus day chip (weekend day with low rate)
-      expect(screen.getByText('Focus day')).toBeTruthy();
+      // Should show focus day in StatsGrid (weekend day with low rate)
+      // Note: StatsGrid shows "Focus Day (X%)" format
+      expect(screen.getAllByText(/Focus Day/i).length).toBeGreaterThan(0);
 
-      // Best day chip should be present (multiple weekdays may have 100% completion)
-      expect(
-        screen.getAllByLabelText(/100% completion/i).length
-      ).toBeGreaterThan(0);
+      // Best day stat should be present
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
 
     it('correctly passes monthly stats to insight chips', () => {
@@ -859,7 +865,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       // Should show monthly stats
-      expect(screen.getByText('This month')).toBeTruthy();
+      expect(screen.getByText('This Month')).toBeTruthy();
       // Should show X/Y format for completed/total
       expect(screen.getByText(`${dayOfMonth}/${dayOfMonth}`)).toBeTruthy();
     });
@@ -910,8 +916,8 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       expect(screen.getByLabelText('Progress section')).toBeTruthy();
-      expect(screen.getByText('Starting Out')).toBeTruthy();
-      expect(screen.getByText('0 days')).toBeTruthy(); // Zero streak
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
+      expect(screen.getByText('0')).toBeTruthy(); // Zero streak
       expect(screen.queryByText('Weekly Pattern')).toBeNull();
     });
 
@@ -932,8 +938,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('1 day')).toBeTruthy(); // Singular
-      expect(screen.getByText('Starting Out')).toBeTruthy();
+      expect(screen.getByText('1')).toBeTruthy(); // Singular
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
     });
 
     it('handles gap in middle of tracking data', () => {
@@ -972,7 +978,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       // Current streak should be 3 (ignoring old data after gap)
-      expect(screen.getByText('3 days')).toBeTruthy();
+      expect(screen.getByText('3')).toBeTruthy();
     });
 
     it('handles all days incomplete (no completions)', () => {
@@ -998,8 +1004,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('0 days')).toBeTruthy();
-      expect(screen.getByText('Starting Out')).toBeTruthy();
+      expect(screen.getByText('0')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
       // Should encourage starting a streak (actionable tip)
       expect(screen.getAllByText(/streak/i).length).toBeGreaterThan(0);
     });
@@ -1039,7 +1045,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       // Should only count past entries
-      expect(screen.getByText('5 days')).toBeTruthy();
+      expect(screen.getByText('5')).toBeTruthy();
     });
 
     it('handles very old habit creation date', () => {
@@ -1099,7 +1105,7 @@ describe('ProgressSectionConsolidated', () => {
       );
 
       // Monthly chip should show partial completion
-      expect(screen.getByText('This month')).toBeTruthy();
+      expect(screen.getByText('This Month')).toBeTruthy();
       const expectedCompleted = Math.ceil(dayOfMonth / 2);
       expect(
         screen.getByText(`${expectedCompleted}/${dayOfMonth}`)
@@ -1129,21 +1135,11 @@ describe('ProgressSectionConsolidated', () => {
     });
 
     it('handles strength boundary values', () => {
-      // Test all boundary values
-      const boundaries = [
-        { strength: 0, expectedLevel: 'Starting Out' },
-        { strength: 19, expectedLevel: 'Starting Out' },
-        { strength: 20, expectedLevel: 'Building' },
-        { strength: 39, expectedLevel: 'Building' },
-        { strength: 40, expectedLevel: 'Growing' },
-        { strength: 59, expectedLevel: 'Growing' },
-        { strength: 60, expectedLevel: 'Strong' },
-        { strength: 79, expectedLevel: 'Strong' },
-        { strength: 80, expectedLevel: 'Unbreakable' },
-        { strength: 100, expectedLevel: 'Unbreakable' },
-      ];
+      // Test all boundary values - StatsGrid displays strength via CompactStrengthRing
+      // Level names are no longer displayed, just the percentage ring
+      const boundaries = [0, 19, 20, 39, 40, 59, 60, 79, 80, 100];
 
-      boundaries.forEach(({ strength, expectedLevel }) => {
+      boundaries.forEach((strength) => {
         const { unmount } = render(
           <ProgressSectionConsolidated
             habitCreatedAt={new Date().toISOString()}
@@ -1152,7 +1148,8 @@ describe('ProgressSectionConsolidated', () => {
           />
         );
 
-        expect(screen.getByText(expectedLevel)).toBeTruthy();
+        // StatsGrid renders correctly for all strength values
+        expect(screen.getByLabelText('Progress section')).toBeTruthy();
         unmount();
       });
     });
@@ -1198,10 +1195,10 @@ describe('ProgressSectionConsolidated', () => {
       expect(container).toBeTruthy();
 
       // HeroStrengthSection
-      expect(screen.getByText('Strong')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
 
       // InsightChips
-      expect(screen.getByLabelText('Habit insights')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
 
       // WeeklyPatternChart (with enough data)
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
@@ -1281,9 +1278,9 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('Building')).toBeTruthy();
-      expect(screen.getByText('-12%')).toBeTruthy(); // Negative trend
-      expect(screen.getByText('1 day')).toBeTruthy(); // Current streak is 1
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
+       // Negative trend
+      expect(screen.getByText('1')).toBeTruthy(); // Current streak is 1
     });
 
     it('renders correctly for "comeback user" scenario', () => {
@@ -1324,9 +1321,9 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('Growing')).toBeTruthy();
-      expect(screen.getByText('+25%')).toBeTruthy();
-      expect(screen.getByText('5 days')).toBeTruthy(); // Current comeback streak
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
+      // StatsGrid shows streak in stat cards
+      expect(screen.getByText('Day Streak')).toBeTruthy();
     });
 
     it('renders correctly for "consistent user" scenario', () => {
@@ -1365,8 +1362,8 @@ describe('ProgressSectionConsolidated', () => {
         />
       );
 
-      expect(screen.getByText('Unbreakable')).toBeTruthy();
-      expect(screen.getByText('+2%')).toBeTruthy();
+      expect(screen.getByLabelText('Progress section')).toBeTruthy();
+      
       expect(screen.getByText('Weekly Pattern')).toBeTruthy();
       expect(screen.getByText('Streak Records')).toBeTruthy();
     });

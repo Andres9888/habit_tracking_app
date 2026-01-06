@@ -1,7 +1,8 @@
 import { useAuth } from '@clerk/clerk-expo';
-import { useMutation, useQuery } from 'convex/react';
-import { useEffect, useState } from 'react';
+import { useMutation } from 'convex/react';
+import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
@@ -31,7 +32,11 @@ export function AuthGate() {
 
   // Show welcome/auth screens if not signed in
   if (!isSignedIn) {
-    return <WelcomeScreen />;
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <WelcomeScreen />
+      </GestureHandlerRootView>
+    );
   }
 
   // Show main app - let HabitsApp handle its own loading states

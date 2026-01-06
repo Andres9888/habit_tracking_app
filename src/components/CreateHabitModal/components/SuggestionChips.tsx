@@ -63,7 +63,7 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         className="mr-2 mb-2 flex-row items-center rounded-full bg-white px-3 py-2"
         style={{
           borderWidth: 1,
-          borderColor: '#e7e5e4',
+          borderColor: '#e7e5e4', // stone-200
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.05,

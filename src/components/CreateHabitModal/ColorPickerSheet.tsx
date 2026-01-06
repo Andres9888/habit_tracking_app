@@ -302,7 +302,7 @@ export function ColorPickerSheet({
           <View className='mb-4 flex-row items-center justify-between'>
             <Text
               accessibilityRole='header'
-              className='text-lg font-semibold text-[#1a1a1a]'
+              className='text-lg font-semibold text-stone-800'
             >
               Pick a color
             </Text>
@@ -310,7 +310,7 @@ export function ColorPickerSheet({
               accessibilityHint='Applies the selected color and closes the picker'
               accessibilityLabel={`Done. Apply ${currentColorName} color`}
               accessibilityRole='button'
-              className='rounded-full bg-[#1a1a1a] px-4 py-2'
+              className='rounded-full bg-stone-800 px-4 py-2'
               onPress={handleDone}
             >
               <Text className='text-sm font-semibold text-white'>Done</Text>
@@ -375,7 +375,7 @@ export function ColorPickerSheet({
               className='items-center justify-center'
               style={{ height: 400 }}
             >
-              <ActivityIndicator color='#1a1a1a' size='large' />
+              <ActivityIndicator color='#1c1917' size='large' />
               <Text className='mt-4 text-sm text-stone-500'>
                 Loading color picker...
               </Text>

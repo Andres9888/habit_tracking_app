@@ -28,13 +28,13 @@ import {
   calculateDayOfWeekStats,
   calculateCurrentStreak,
   calculateStreakRecords,
-  calculateTrendComparison,
   generateActionableTip,
   getBestAndWorstDays,
 } from '../ProgressSection/utils';
+import { calculateMonthlyChangeForStatsGrid } from '../../utils/trendCalculations';
 
-import { HeroStrengthSection } from './HeroStrengthSection';
-import { InsightChips } from './InsightChips';
+import { StatsGrid } from './StatsGrid';
+import { MilestoneProgress } from './MilestoneProgress';
 import { WeeklyPatternChart } from './WeeklyPatternChart';
 import { ActionableTipCard } from './ActionableTipCard';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
@@ -50,10 +50,11 @@ export function ProgressSectionConsolidated({
   habitCreatedAt,
   strength,
   weeklyChange = 0,
-  onInfoPress,
+  onInfoPress: _onInfoPress, // Kept for backwards compatibility
   onFocusDayPress,
   onSeeAllPress,
   onTipPress,
+  onTipQuickAction,
 }: ProgressSectionConsolidatedProps) {
   // Convert habitCreatedAt string to timestamp for utils
   const habitCreatedTimestamp = useMemo(() => {
@@ -83,8 +84,11 @@ export function ProgressSectionConsolidated({
     [tracking, currentStreak]
   );
 
-  // Calculate trend comparison (this month vs last month)
-  const trend = useMemo(() => calculateTrendComparison(tracking), [tracking]);
+  // Calculate monthly change for trend indicator
+  const monthlyChange = useMemo(
+    () => calculateMonthlyChangeForStatsGrid(tracking),
+    [tracking]
+  );
 
   // Get best and worst performing days
   const { bestDay, worstDay } = useMemo(
@@ -161,30 +165,22 @@ export function ProgressSectionConsolidated({
           shadowRadius: 3,
         }}
       >
-        {/* Section 1: Hero Strength Section */}
-        <HeroStrengthSection
-          strength={strength}
-          weeklyChange={weeklyChange}
-          onInfoPress={onInfoPress}
-        />
-
-        {/* Divider between Hero and Insights */}
-        <View className='mb-4 h-px bg-stone-100' />
-
-        {/* Section 2: Insight Chips (horizontal scroll) */}
-        <View className='mb-2'>
-          <Text className='text-[10px] font-semibold uppercase tracking-wider text-stone-400'>
-            Key Insights
-          </Text>
-        </View>
-        <InsightChips
+        {/* Section 1: Stats Grid (replaces HeroStrengthSection + InsightChips) */}
+        {/* Phase 1 redesign: Compact 2x2 grid with embedded strength ring */}
+        <StatsGrid
           bestDay={bestDayData}
           currentStreak={currentStreak}
           focusDay={focusDayData}
+          monthlyChange={monthlyChange}
           monthlyCompleted={monthlyCompleted}
           monthlyTotal={monthlyTotal}
+          strength={strength}
+          weeklyChange={weeklyChange}
           onFocusDayPress={onFocusDayPress}
         />
+
+        {/* Section 2: Milestone Progress (Phase 2 gamification) */}
+        <MilestoneProgress currentStreak={currentStreak} />
 
         {/* Section 3: Weekly Pattern Chart (only with enough data) */}
         {hasEnoughData && (
@@ -194,8 +190,9 @@ export function ProgressSectionConsolidated({
           />
         )}
 
-        {/* Section 4: Actionable Tip */}
+        {/* Section 4: Actionable Tip with Quick Actions */}
         <ActionableTipCard
+          currentStreak={currentStreak}
           subtitle={
             currentStreak > 0
               ? `${currentStreak} day streak${currentStreak === 1 ? '' : 's'} and counting!`
@@ -203,6 +200,7 @@ export function ProgressSectionConsolidated({
           }
           tip={actionableTip}
           onPress={onTipPress}
+          onQuickAction={onTipQuickAction}
         />
 
         {/* Section 5: Streak Records Accordion (only with enough data) */}

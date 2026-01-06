@@ -71,9 +71,10 @@ function ConfettiBurst({ isActive }: { isActive: boolean }) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     translateY: useSharedValue(0),
     angle: (i / PARTICLE_COUNT) * Math.PI * 2 + (Math.random() * 0.3 - 0.15),
-    distance: 40 + Math.random() * 30,
+    // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+    distance: Math.round(40 + Math.random() * 30),
     color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-    size: 4 + Math.random() * 4,
+    size: Math.round(4 + Math.random() * 4),
   }));
 
   React.useEffect(() => {
@@ -81,8 +82,9 @@ function ConfettiBurst({ isActive }: { isActive: boolean }) {
       // Animate each particle outward with burst effect
       particles.forEach((particle, i) => {
         const delay = i * 15; // Stagger particles slightly
-        const targetX = Math.cos(particle.angle) * particle.distance;
-        const targetY = Math.sin(particle.angle) * particle.distance - 20; // Bias upward
+        // Round to avoid "Loss of precision during arithmetic conversion" error
+        const targetX = Math.round(Math.cos(particle.angle) * particle.distance);
+        const targetY = Math.round(Math.sin(particle.angle) * particle.distance) - 20; // Bias upward
 
         // Reset to center
         particle.translateX.value = 0;
@@ -93,11 +95,11 @@ function ConfettiBurst({ isActive }: { isActive: boolean }) {
         // Animate outward with spring physics
         particle.translateX.value = withDelay(
           delay,
-          withSpring(targetX, { damping: 12, stiffness: 200, mass: 0.5 })
+          withSpring(targetX, { damping: 12, stiffness: 200, mass: 1 })
         );
         particle.translateY.value = withDelay(
           delay,
-          withSpring(targetY, { damping: 12, stiffness: 200, mass: 0.5 })
+          withSpring(targetY, { damping: 12, stiffness: 200, mass: 1 })
         );
         particle.scale.value = withDelay(
           delay,
@@ -244,7 +246,8 @@ export function QuickCompleteButton({
   const checkAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: checkScale.value },
-      { rotate: `${checkRotation.value}deg` },
+      // Round to avoid "Loss of precision during arithmetic conversion" error in Reanimated
+      { rotate: `${Math.round(checkRotation.value)}deg` },
     ],
     opacity: checkScale.value,
   }));
@@ -289,7 +292,7 @@ export function QuickCompleteButton({
         </View>
 
         <Text
-          className={`text-lg font-bold ${
+          className={`text-[15px] font-semibold ${
             localCompleted ? 'text-emerald-700' : 'text-white'
           }`}
         >

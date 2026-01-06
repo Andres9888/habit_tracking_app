@@ -51,22 +51,20 @@ const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const FULLSCREEN_ORGANIC_SPRING = {
   ...Springs.sheet,
   overshootClamping: false,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
 };
 
 // Exit spring - slightly faster for dismissal
 const EXIT_SPRING_CONFIG = {
   damping: 26,
   stiffness: 420,
-  mass: 0.9,
+  mass: 1,
 };
 
 // Snappy spring for interactive gestures
 const GESTURE_SPRING_CONFIG = {
   damping: 20,
   stiffness: 450,
-  mass: 0.8,
+  mass: 1,
 };
 
 // Organic spring for bottom sheet - based on Springs.button with adjusted stiffness
@@ -253,7 +251,9 @@ export function Modal({
       }
     })
     .onEnd((event) => {
-      if (event.translationY > DISMISS_THRESHOLD || event.velocityY > VELOCITY_THRESHOLD) {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
+      if (event.translationY > DISMISS_THRESHOLD || velocityY > VELOCITY_THRESHOLD) {
         translateY.value = withSpring(SCREEN_HEIGHT, BOTTOM_SHEET_SPRING_CONFIG);
         runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
         runOnJS(onClose)();
@@ -274,7 +274,9 @@ export function Modal({
       }
     })
     .onEnd((event) => {
-      if (event.translationY > DISMISS_THRESHOLD || event.velocityY > VELOCITY_THRESHOLD) {
+      // Use Math.round on velocity to avoid precision loss error in Reanimated
+      const velocityY = Math.round(event.velocityY);
+      if (event.translationY > DISMISS_THRESHOLD || velocityY > VELOCITY_THRESHOLD) {
         // Dismiss
         fullScreenProgress.value = withSpring(0, EXIT_SPRING_CONFIG);
         fullScreenGestureY.value = withSpring(0, GESTURE_SPRING_CONFIG);
