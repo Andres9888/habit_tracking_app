@@ -512,7 +512,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   );
 
   return (
-    <View className='flex-row items-center justify-between'>
+    <View className='flex-row items-center justify-between' style={{ overflow: 'hidden' }}>
       {/* Visual link to previous week if streak continues */}
       {showConnectors && isConnectedToPreviousWeek && isCompleted(0) && (
         <View
