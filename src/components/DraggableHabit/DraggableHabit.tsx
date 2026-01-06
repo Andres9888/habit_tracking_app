@@ -533,13 +533,25 @@ export default function DraggableHabit({
         easing: ReanimatedEasing.out(ReanimatedEasing.ease),
       });
       strengthEmojiRotation.value = withSequence(
-        withTiming(-8, { duration: 80, easing: ReanimatedEasing.inOut(ReanimatedEasing.ease) }),
-        withTiming(8, { duration: 80, easing: ReanimatedEasing.inOut(ReanimatedEasing.ease) }),
-        withTiming(0, { duration: 60, easing: ReanimatedEasing.out(ReanimatedEasing.ease) })
+        withTiming(-8, {
+          duration: 80,
+          easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
+        }),
+        withTiming(8, {
+          duration: 80,
+          easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
+        }),
+        withTiming(0, {
+          duration: 60,
+          easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+        })
       );
       strengthEmojiOpacity.value = withDelay(
         150,
-        withTiming(1, { duration: 200, easing: ReanimatedEasing.out(ReanimatedEasing.ease) })
+        withTiming(1, {
+          duration: 200,
+          easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+        })
       );
       strengthEmojiScale.value = withDelay(
         150,
@@ -551,7 +563,10 @@ export default function DraggableHabit({
     } else {
       // Subtle pulse for regular updates
       strengthEmojiScale.value = withSequence(
-        withTiming(1.08, { duration: 100, easing: ReanimatedEasing.out(ReanimatedEasing.ease) }),
+        withTiming(1.08, {
+          duration: 100,
+          easing: ReanimatedEasing.out(ReanimatedEasing.ease),
+        }),
         withSpring(1, { damping: 15, stiffness: 200 })
       );
     }
@@ -565,6 +580,13 @@ export default function DraggableHabit({
       { rotate: `${Math.round(strengthEmojiRotation.value)}deg` },
     ],
   }));
+
+  // Default accent color fallback (violet-500)
+  const DEFAULT_ACCENT_COLOR = '#8b5cf6';
+  const effectiveAccentColor = accentColor || DEFAULT_ACCENT_COLOR;
+
+  // In high contrast mode, use yellow accent for visibility
+  const borderAccentColor = highContrastMode ? '#facc15' : effectiveAccentColor;
 
   const habitCard = (
     <Pressable
@@ -580,7 +602,7 @@ export default function DraggableHabit({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='overflow-hidden rounded-3xl'
+        className='flex-row overflow-hidden rounded-3xl'
         style={{
           // Celebratory green tint for perfect week, otherwise default white
           backgroundColor:
@@ -605,290 +627,303 @@ export default function DraggableHabit({
           transform: [{ translateY }, { scale: cardScale }], // Android
         }}
       >
-        {/* Archive flash overlay - amber for organizational action */}
-        <Animated.View
-          pointerEvents='none'
+        {/* Color accent left border */}
+        <View
           style={{
-            backgroundColor: 'rgba(245, 158, 11, 0.18)',
-            borderRadius: 24,
-            opacity: archiveFlash,
-            ...StyleSheet.absoluteFillObject,
-          }}
-        />
-        {/* Just-created highlight glow */}
-        <Animated.View
-          pointerEvents='none'
-          style={{
-            borderColor: accentColor ?? '#a855f7',
-            borderRadius: 24,
-            borderWidth: 2,
-            opacity: highlightGlow,
-            ...StyleSheet.absoluteFillObject,
+            backgroundColor: borderAccentColor,
+            borderBottomLeftRadius: 24,
+            borderTopLeftRadius: 24,
+            width: 4,
           }}
         />
 
-        {/* Main card content - header section */}
-        <View className='pt-4'>
-          {/* Title row - 5-column grid matching calendar/chain visualizer exactly */}
-          <View className='relative mb-3 flex-row items-center justify-between px-3'>
-            {/* Column 1: emoji centered (aligns with first calendar date & habit circle) */}
-            <View className='flex-1 items-center'>
-              <Animated.View
-                style={{
-                  transform: [{ scale: iconPulse }],
-                }}
-              >
-                <View
-                  className='h-9 w-9 items-center justify-center rounded-xl'
-                  style={{
-                    backgroundColor: getIconBackground(),
-                    borderColor: highContrastMode
-                      ? '#111111'
-                      : 'rgba(0,0,0,0.04)',
-                    borderWidth: highContrastMode ? 2 : 1,
-                    shadowColor: accentColor,
-                    shadowOffset: { height: 0, width: 0 },
-                    shadowOpacity: 0.15,
-                    shadowRadius: 4,
-                  }}
-                >
-                  <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
-                </View>
-              </Animated.View>
-            </View>
-            {/* Columns 2-5: empty flex spacers to maintain 5-column grid */}
-            <View className='flex-1' />
-            <View className='flex-1' />
-            <View className='flex-1' />
-            <View className='flex-1' />
-            {/* Title overlay - positioned from column 2 to end */}
-            <View
-              style={{
-                bottom: 0,
-                justifyContent: 'center',
-                left: '20%',
-                paddingLeft: 8,
-                paddingRight: 12,
-                position: 'absolute',
-                right: 12,
-                top: 0,
-              }}
-            >
-              <View className='flex-row items-center gap-2'>
-                <Text
-                  className='shrink text-[17px] font-bold leading-[22px]'
-                  ellipsizeMode='tail'
-                  numberOfLines={1}
-                  style={{
-                    color: colors.primaryText,
-                    letterSpacing: -0.3,
-                  }}
-                >
-                  {name || habit.name}
-                </Text>
-                {habit.preferredTime && (
-                  <PhaseTag compact preferredTime={habit.preferredTime} />
-                )}
-                {/* Chevron indicator for tap-to-view-details affordance */}
-                <View className='ml-auto'>
-                  <ChevronRight
-                    color={highContrastMode ? '#facc15' : '#a8a29e'}
-                    size={18}
-                    strokeWidth={2}
-                  />
-                </View>
-              </View>
-              {bestStreak > 0 &&
-                bestStreak > streak &&
-                !showHabitStrengthPercentage && (
-                  <Text
-                    className='mt-0.5 text-[13px] font-medium'
-                    style={{ color: '#a8a29e' }}
-                  >
-                    Best: {bestStreak} days
-                  </Text>
-                )}
-            </View>
-          </View>
+        {/* Main card content wrapper */}
+        <View className='flex-1'>
+          {/* Archive flash overlay - amber for organizational action */}
+          <Animated.View
+            pointerEvents='none'
+            style={{
+              backgroundColor: 'rgba(245, 158, 11, 0.18)',
+              borderRadius: 24,
+              opacity: archiveFlash,
+              ...StyleSheet.absoluteFillObject,
+            }}
+          />
+          {/* Just-created highlight glow */}
+          <Animated.View
+            pointerEvents='none'
+            style={{
+              borderColor: accentColor ?? '#a855f7',
+              borderRadius: 24,
+              borderWidth: 2,
+              opacity: highlightGlow,
+              ...StyleSheet.absoluteFillObject,
+            }}
+          />
 
-          {/* New Personal Record celebration badge */}
-          {showNewRecord && (
-            <Animated.View
-              className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full bg-gradient-to-r py-2'
-              style={{
-                backgroundColor: '#fef3c7', // amber-100
-                borderColor: '#fcd34d', // amber-300
-                borderWidth: 1,
-                opacity: newRecordOpacity,
-                transform: [{ scale: newRecordScale }],
-              }}
-            >
-              <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
-              <Text
-                className='text-[13px] font-bold uppercase tracking-wide'
-                style={{ color: '#b45309' }} // amber-700
-              >
-                New Personal Record! 🎉
-              </Text>
-            </Animated.View>
-          )}
-
-          {/* Strength Progress Bar - 5-column grid for alignment */}
-          {showHabitStrengthPercentage && (
+          {/* Main card content - header section */}
+          <View className='pt-4'>
+            {/* Title row - 5-column grid matching calendar/chain visualizer exactly */}
             <View className='relative mb-3 flex-row items-center justify-between px-3'>
-              {/* Column 1: Animated plant emoji centered (aligns with first habit circle) */}
-              <View className='flex-1 items-center justify-center'>
-                <ReAnimated.Text
-                  style={[
-                    { fontSize: 20, textAlign: 'center' },
-                    strengthEmojiAnimatedStyle,
-                  ]}
-                >
-                  {getStrengthEmoji()}
-                </ReAnimated.Text>
-              </View>
-              {/* Column 2 */}
-              <View className='flex-1' />
-              {/* Column 3 */}
-              <View className='flex-1' />
-              {/* Column 4 */}
-              <View className='flex-1' />
-              {/* Column 5: Percentage centered (aligns with last habit circle) */}
+              {/* Column 1: emoji centered (aligns with first calendar date & habit circle) */}
               <View className='flex-1 items-center'>
-                <Text
-                  className='text-[13px] font-bold'
-                  style={{ color: '#65a30d', marginLeft: 12 }}
+                <Animated.View
+                  style={{
+                    transform: [{ scale: iconPulse }],
+                  }}
                 >
-                  {Math.round(strengthPercent)}%
-                </Text>
+                  <View
+                    className='h-9 w-9 items-center justify-center rounded-xl'
+                    style={{
+                      backgroundColor: getIconBackground(),
+                      borderColor: highContrastMode
+                        ? '#111111'
+                        : 'rgba(0,0,0,0.04)',
+                      borderWidth: highContrastMode ? 2 : 1,
+                      shadowColor: accentColor,
+                      shadowOffset: { height: 0, width: 0 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 4,
+                    }}
+                  >
+                    <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
+                  </View>
+                </Animated.View>
               </View>
-              {/* Progress bar overlay spanning columns 2-4 */}
+              {/* Columns 2-5: empty flex spacers to maintain 5-column grid */}
+              <View className='flex-1' />
+              <View className='flex-1' />
+              <View className='flex-1' />
+              <View className='flex-1' />
+              {/* Title overlay - positioned from column 2 to end */}
               <View
-                pointerEvents='none'
                 style={{
                   bottom: 0,
                   justifyContent: 'center',
                   left: '20%',
+                  paddingLeft: 8,
+                  paddingRight: 12,
                   position: 'absolute',
-                  right: '20%',
+                  right: 12,
                   top: 0,
                 }}
               >
-                <View
-                  style={{
-                    backgroundColor: '#e5e7eb',
-                    borderRadius: 4,
-                    height: 8,
-                    marginHorizontal: 8,
-                    overflow: 'hidden',
-                    position: 'relative',
-                    width: '100%',
-                  }}
-                >
-                  {/* Progress fill */}
-                  <View
+                <View className='flex-row items-center gap-2'>
+                  <Text
+                    className='shrink text-[17px] font-bold leading-[22px]'
+                    ellipsizeMode='tail'
+                    numberOfLines={1}
                     style={{
-                      backgroundColor: '#65a30d',
-                      borderRadius: 4,
-                      height: '100%',
-                      width: `${strengthPercent}%`,
+                      color: colors.primaryText,
+                      letterSpacing: -0.3,
                     }}
-                  />
-                  {/* Dividers at 20%, 40%, 60%, 80% */}
-                  <View
-                    style={{
-                      backgroundColor: 'rgba(0,0,0,0.15)',
-                      height: '100%',
-                      left: '20%',
-                      position: 'absolute',
-                      top: 0,
-                      width: 1,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: 'rgba(0,0,0,0.15)',
-                      height: '100%',
-                      left: '40%',
-                      position: 'absolute',
-                      top: 0,
-                      width: 1,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: 'rgba(0,0,0,0.15)',
-                      height: '100%',
-                      left: '60%',
-                      position: 'absolute',
-                      top: 0,
-                      width: 1,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: 'rgba(0,0,0,0.15)',
-                      height: '100%',
-                      left: '80%',
-                      position: 'absolute',
-                      top: 0,
-                      width: 1,
-                    }}
-                  />
+                  >
+                    {name || habit.name}
+                  </Text>
+                  {habit.preferredTime && (
+                    <PhaseTag compact preferredTime={habit.preferredTime} />
+                  )}
+                  {/* Chevron indicator for tap-to-view-details affordance */}
+                  <View className='ml-auto'>
+                    <ChevronRight
+                      color={highContrastMode ? '#facc15' : '#a8a29e'}
+                      size={18}
+                      strokeWidth={2}
+                    />
+                  </View>
                 </View>
+                {bestStreak > 0 &&
+                  bestStreak > streak &&
+                  !showHabitStrengthPercentage && (
+                    <Text
+                      className='mt-0.5 text-[13px] font-medium'
+                      style={{ color: '#a8a29e' }}
+                    >
+                      Best: {bestStreak} days
+                    </Text>
+                  )}
               </View>
             </View>
-          )}
-          {/* Fallback divider when strength is hidden - using stone-100 for consistency */}
-          {!showHabitStrengthPercentage && (
-            <View
-              className='mx-3 mb-3 h-[1.5px] rounded-full'
-              style={{
-                backgroundColor: '#f5f5f4', // stone-100
-              }}
-            />
-          )}
-        </View>
 
-        {/* Week status visualizer - px-3 to align with CalendarTimeline dates */}
-        <View className='px-3 pb-5'>
-          <HabitChainVisualizer
-            accentColor={accentColor}
-            celebrationsEnabled={celebrationsEnabled}
-            completionIcon={completionIcon}
-            currentStreak={streak}
-            habitId={habit._id}
-            highContrastMode={highContrastMode}
-            isConnectedToPreviousWeek={isConnectedToPreviousWeek}
-            reduceMotionPreference={reduceMotionPreference}
-            shape={dayShape}
-            showConnectors={showConnectors}
-            weekDateStrings={weekDateStrings}
-            weekStatus={weekStatus}
-            onToggle={toggleHabit}
-            onWeekComplete={({ completedDate }) =>
-              onWeekComplete?.({ completedDate, habit })
-            }
-          />
-
-          {/* Completion reward indicator - enhanced */}
-          {isWeekComplete && (
-            <View
-              className='mt-3 flex-row items-center justify-center gap-1.5 rounded-full py-1.5'
-              style={{
-                backgroundColor: `${accentColor}15`, // 15% opacity accent color
-              }}
-            >
-              <Text className='text-[10px]'>✨</Text>
-              <Text
-                className='text-[10px] font-medium uppercase tracking-wider'
-                style={{ color: accentColor }}
+            {/* New Personal Record celebration badge */}
+            {showNewRecord && (
+              <Animated.View
+                className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full bg-gradient-to-r py-2'
+                style={{
+                  backgroundColor: '#fef3c7', // amber-100
+                  borderColor: '#fcd34d', // amber-300
+                  borderWidth: 1,
+                  opacity: newRecordOpacity,
+                  transform: [{ scale: newRecordScale }],
+                }}
               >
-                Perfect Week
-              </Text>
-              <Text className='text-[10px]'>✨</Text>
-            </View>
-          )}
+                <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
+                <Text
+                  className='text-[13px] font-bold uppercase tracking-wide'
+                  style={{ color: '#b45309' }} // amber-700
+                >
+                  New Personal Record! 🎉
+                </Text>
+              </Animated.View>
+            )}
+
+            {/* Strength Progress Bar - 5-column grid for alignment */}
+            {showHabitStrengthPercentage && (
+              <View className='relative mb-3 flex-row items-center justify-between px-3'>
+                {/* Column 1: Animated plant emoji centered (aligns with first habit circle) */}
+                <View className='flex-1 items-center justify-center'>
+                  <ReAnimated.Text
+                    style={[
+                      { fontSize: 20, textAlign: 'center' },
+                      strengthEmojiAnimatedStyle,
+                    ]}
+                  >
+                    {getStrengthEmoji()}
+                  </ReAnimated.Text>
+                </View>
+                {/* Column 2 */}
+                <View className='flex-1' />
+                {/* Column 3 */}
+                <View className='flex-1' />
+                {/* Column 4 */}
+                <View className='flex-1' />
+                {/* Column 5: Percentage centered (aligns with last habit circle) */}
+                <View className='flex-1 items-center'>
+                  <Text
+                    className='text-[13px] font-bold'
+                    style={{ color: '#65a30d', marginLeft: 12 }}
+                  >
+                    {Math.round(strengthPercent)}%
+                  </Text>
+                </View>
+                {/* Progress bar overlay spanning columns 2-4 */}
+                <View
+                  pointerEvents='none'
+                  style={{
+                    bottom: 0,
+                    justifyContent: 'center',
+                    left: '20%',
+                    position: 'absolute',
+                    right: '20%',
+                    top: 0,
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: '#e5e7eb',
+                      borderRadius: 4,
+                      height: 8,
+                      marginHorizontal: 8,
+                      overflow: 'hidden',
+                      position: 'relative',
+                      width: '100%',
+                    }}
+                  >
+                    {/* Progress fill */}
+                    <View
+                      style={{
+                        backgroundColor: '#65a30d',
+                        borderRadius: 4,
+                        height: '100%',
+                        width: `${strengthPercent}%`,
+                      }}
+                    />
+                    {/* Dividers at 20%, 40%, 60%, 80% */}
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '20%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '40%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '60%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        height: '100%',
+                        left: '80%',
+                        position: 'absolute',
+                        top: 0,
+                        width: 1,
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            )}
+            {/* Fallback divider when strength is hidden - using stone-100 for consistency */}
+            {!showHabitStrengthPercentage && (
+              <View
+                className='mx-3 mb-3 h-[1.5px] rounded-full'
+                style={{
+                  backgroundColor: '#f5f5f4', // stone-100
+                }}
+              />
+            )}
+          </View>
+
+          {/* Week status visualizer - px-3 to align with CalendarTimeline dates */}
+          <View className='px-3 pb-5'>
+            <HabitChainVisualizer
+              accentColor={accentColor}
+              celebrationsEnabled={celebrationsEnabled}
+              completionIcon={completionIcon}
+              currentStreak={streak}
+              habitId={habit._id}
+              highContrastMode={highContrastMode}
+              isConnectedToPreviousWeek={isConnectedToPreviousWeek}
+              reduceMotionPreference={reduceMotionPreference}
+              shape={dayShape}
+              showConnectors={showConnectors}
+              weekDateStrings={weekDateStrings}
+              weekStatus={weekStatus}
+              onToggle={toggleHabit}
+              onWeekComplete={({ completedDate }) =>
+                onWeekComplete?.({ completedDate, habit })
+              }
+            />
+
+            {/* Completion reward indicator - enhanced */}
+            {isWeekComplete && (
+              <View
+                className='mt-3 flex-row items-center justify-center gap-1.5 rounded-full py-1.5'
+                style={{
+                  backgroundColor: `${effectiveAccentColor}15`, // 15% opacity accent color
+                }}
+              >
+                <Text className='text-[10px]'>✨</Text>
+                <Text
+                  className='text-[10px] font-medium uppercase tracking-wider'
+                  style={{ color: effectiveAccentColor }}
+                >
+                  Perfect Week
+                </Text>
+                <Text className='text-[10px]'>✨</Text>
+              </View>
+            )}
+          </View>
         </View>
       </Animated.View>
     </Pressable>
