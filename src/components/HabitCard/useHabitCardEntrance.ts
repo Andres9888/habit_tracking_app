@@ -104,16 +104,19 @@ const ACCENT_SPRING_CONFIG = {
  * All durations are designed to feel snappy but not rushed.
  */
 const TIMING = {
-  /** Card container fade-in duration */
-  cardFadeIn: 150,
   /** Accent bar slide/scale duration */
   accentSlide: 250,
+
+  /** Card container fade-in duration */
+  cardFadeIn: 150,
   /** Content fade-in duration */
   contentFadeIn: 300,
-  /** Width expansion duration */
-  widthExpansion: 200,
+
   /** Simple fade-up duration (baseline) */
   fadeUp: 350,
+
+  /** Width expansion duration */
+  widthExpansion: 200,
 } as const;
 
 /**
@@ -187,16 +190,28 @@ export function useHabitCardEntrance({
     const duration = TIMING.fadeUp;
 
     // Everything fades in and translates together
-    cardOpacity.value = withTiming(1, { duration, easing: Easing.out(Easing.cubic) });
-    cardTranslateY.value = withTiming(0, { duration, easing: Easing.out(Easing.cubic) });
+    cardOpacity.value = withTiming(1, {
+      duration,
+      easing: Easing.out(Easing.cubic),
+    });
+    cardTranslateY.value = withTiming(0, {
+      duration,
+      easing: Easing.out(Easing.cubic),
+    });
 
     // Accent bar is visible immediately
     accentScaleY.value = 1;
     accentWidth.value = 6;
-    accentOpacity.value = withTiming(1, { duration, easing: Easing.out(Easing.cubic) });
+    accentOpacity.value = withTiming(1, {
+      duration,
+      easing: Easing.out(Easing.cubic),
+    });
 
     // Content fades in with card
-    contentOpacity.value = withTiming(1, { duration, easing: Easing.out(Easing.cubic) });
+    contentOpacity.value = withTiming(1, {
+      duration,
+      easing: Easing.out(Easing.cubic),
+    });
     contentTranslateX.value = 0;
 
     // Mark animation complete after duration
@@ -366,6 +381,12 @@ export function useHabitCardEntrance({
    * Trigger the entrance animation based on the selected variant.
    */
   const triggerEntrance = useCallback(() => {
+    if (__DEV__) {
+      console.log(
+        `[useHabitCardEntrance] triggerEntrance called, variant=${variant}, reduceMotion=${reduceMotion}`
+      );
+    }
+
     // Respect reduce motion preference
     if (reduceMotion || variant === 'none') {
       setInstantVisible();
@@ -380,25 +401,32 @@ export function useHabitCardEntrance({
     const executeAnimation = () => {
       'worklet';
       switch (variant) {
-        case 'fadeUp':
+        case 'fadeUp': {
           runFadeUp();
           break;
-        case 'accentSlideDown':
+        }
+        case 'accentSlideDown': {
           runAccentSlideDown();
           break;
-        case 'widthExpansion':
+        }
+        case 'widthExpansion': {
           runWidthExpansion();
           break;
-        default:
+        }
+        default: {
           runAccentSlideDown();
+        }
       }
     };
 
     if (delay > 0) {
       // Use withDelay to defer the animation start
-      cardOpacity.value = withDelay(delay, withTiming(0, { duration: 0 }, () => {
-        executeAnimation();
-      }));
+      cardOpacity.value = withDelay(
+        delay,
+        withTiming(0, { duration: 0 }, () => {
+          executeAnimation();
+        })
+      );
       // Actually start after delay
       setTimeout(() => {
         executeAnimation();
@@ -475,17 +503,19 @@ export function useHabitCardEntrance({
     // For scaleY with origin at top, we need to adjust translateY
     // When scaleY is 0, bar should be at top; when 1, at normal position
     // This creates the "slide down from top" effect
-    const translateYOffset = variant === 'accentSlideDown'
-      ? (1 - accentScaleY.value) * -50 // Adjust based on bar height
-      : 0;
+    // Note: accentScaleY is 1 for non-slideDown variants, so offset is 0
+    const translateYOffset = (1 - accentScaleY.value) * -50;
 
     return {
       opacity: accentOpacity.value,
-      width: variant === 'widthExpansion' ? accentWidth.value : 6,
+
       transform: [
         { scaleY: accentScaleY.value },
         { translateY: translateYOffset },
       ],
+      // Always use accentWidth.value - each animation variant sets it appropriately
+      // (widthExpansion animates 0→6, others set 6 immediately)
+      width: accentWidth.value,
     };
   });
 
@@ -503,9 +533,24 @@ export function useHabitCardEntrance({
   // ============================================
 
   useEffect(() => {
+    if (__DEV__) {
+      console.log(
+        `[useHabitCardEntrance] useEffect: autoTrigger=${autoTrigger}, hasTriggered=${hasTriggered.current}`
+      );
+    }
+
     if (autoTrigger && !hasTriggered.current) {
+      // Trigger animation for new cards
       hasTriggered.current = true;
       triggerEntrance();
+    } else if (!autoTrigger && !hasTriggered.current) {
+      // For cards that shouldn't animate (already seen), make them instantly visible
+      if (__DEV__) {
+        console.log(
+          `[useHabitCardEntrance] Setting instant visible (autoTrigger=false)`
+        );
+      }
+      setInstantVisible();
     }
 
     // Cleanup on unmount
@@ -518,15 +563,15 @@ export function useHabitCardEntrance({
       cancelAnimation(contentOpacity);
       cancelAnimation(contentTranslateX);
     };
-  }, [autoTrigger, triggerEntrance]);
+  }, [autoTrigger, triggerEntrance, setInstantVisible]);
 
   return {
-    cardStyle,
     accentStyle,
+    cardStyle,
     contentStyle,
-    triggerEntrance,
-    resetAnimation,
     isAnimating,
+    resetAnimation,
+    triggerEntrance,
   };
 }
 

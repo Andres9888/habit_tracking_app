@@ -1,0 +1,29 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read(./**)",
+      "Write(./**)",
+      "Edit(./**)",
+      "Glob(./**)",
+      "Grep(./**)",
+      "Read(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Write(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Edit(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Glob(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Grep(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Read(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/.auto-claude/specs/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Write(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/.auto-claude/specs/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Edit(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/.auto-claude/specs/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "mcp__context7__resolve-library-id(*)",
+      "mcp__context7__get-library-docs(*)"
+    ]
+  }
+}

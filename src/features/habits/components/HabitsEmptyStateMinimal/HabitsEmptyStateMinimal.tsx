@@ -272,6 +272,8 @@ export function HabitsEmptyStateMinimal({
           alignItems: 'center',
           flex: 1,
           minHeight: '100%',
+          paddingHorizontal: 16,
+          width: '100%',
         },
         containerAnimatedStyle,
       ]}
@@ -301,7 +303,7 @@ export function HabitsEmptyStateMinimal({
       </AnimatedEntrance>
 
       {/* Text Input - full width */}
-      <View style={{ marginBottom: 24, width: '100%' }}>
+      <View style={{ marginBottom: 24, maxWidth: 343, width: '100%' }}>
         <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
           <HabitInput
             ref={inputRef}
@@ -320,7 +322,7 @@ export function HabitsEmptyStateMinimal({
         importantForAccessibility={
           isKeyboardVisible ? 'no-hide-descendants' : 'auto'
         }
-        style={[{ width: '100%' }, chipsAnimatedStyle]}
+        style={[{ maxWidth: 343, width: '100%' }, chipsAnimatedStyle]}
       >
         <SuggestionChips
           selectedIndex={selectedChipIndex}
@@ -329,7 +331,7 @@ export function HabitsEmptyStateMinimal({
       </Animated.View>
 
       {/* Primary CTA Button - full width */}
-      <View style={{ width: '100%' }}>
+      <View style={{ maxWidth: 343, width: '100%' }}>
         <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
           <CtaButton
             disabled={isCtaDisabled}
