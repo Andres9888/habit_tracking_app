@@ -44,6 +44,10 @@ import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicat
 import { StrengthProgressBar } from '../StrengthProgressBar/StrengthProgressBar';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
+import {
+  useHabitCardEntrance,
+  type HabitCardEntranceVariant,
+} from './useHabitCardEntrance';
 
 export interface HabitCardProps {
   /** Habit ID */
@@ -90,6 +94,30 @@ export interface HabitCardProps {
 
   /** Custom style */
   style?: ViewStyle;
+
+  /**
+   * Animation variant for card entrance.
+   * @default 'accentSlideDown'
+   */
+  entranceVariant?: HabitCardEntranceVariant;
+
+  /**
+   * Delay before entrance animation starts (for stagger effects).
+   * @default 0
+   */
+  entranceDelay?: number;
+
+  /**
+   * Whether to trigger entrance animation on mount.
+   * Set to false to manually trigger via triggerEntrance callback.
+   * @default true
+   */
+  triggerEntrance?: boolean;
+
+  /**
+   * Callback fired when entrance animation completes.
+   */
+  onEntranceComplete?: () => void;
 }
 
 const SWIPE_THRESHOLD = -100; // Distance to reveal actions
@@ -111,10 +139,26 @@ export function HabitCard({
   onEdit,
   onDelete,
   style,
+  entranceVariant = 'accentSlideDown',
+  entranceDelay = 0,
+  triggerEntrance: shouldTriggerEntrance = true,
+  onEntranceComplete,
 }: HabitCardProps) {
   const theme = useAppTheme();
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
+
+  // Entrance animation hook
+  const {
+    cardStyle: entranceCardStyle,
+    accentStyle: entranceAccentStyle,
+    contentStyle: entranceContentStyle,
+  } = useHabitCardEntrance({
+    variant: entranceVariant,
+    delay: entranceDelay,
+    autoTrigger: shouldTriggerEntrance,
+    onAnimationComplete: onEntranceComplete,
+  });
 
   // Strength fill animation - fills card background based on habit strength percentage
   const strengthFillWidth = useSharedValue(strength);
@@ -542,6 +586,7 @@ export function HabitCard({
               shadowRadius: 12,
             },
             disabled && styles.disabled,
+            entranceCardStyle,
             cardAnimatedStyle,
           ]}
         >
@@ -571,8 +616,8 @@ export function HabitCard({
             />
           </Animated.View>
 
-          {/* Color Accent Bar (Left edge) */}
-          <View
+          {/* Color Accent Bar (Left edge) - Animated for entrance effect */}
+          <Animated.View
             style={[
               styles.accentBar,
               {
@@ -580,11 +625,12 @@ export function HabitCard({
                 borderBottomLeftRadius: theme.custom.borderRadius.large,
                 borderTopLeftRadius: theme.custom.borderRadius.large,
               },
+              entranceAccentStyle,
             ]}
           />
 
-          {/* Card Content */}
-          <View style={styles.content}>
+          {/* Card Content - Animated for entrance effect */}
+          <Animated.View style={[styles.content, entranceContentStyle]}>
             {/* Top Row: Icon, Name, Status */}
             <View style={styles.topRow}>
               <View style={styles.habitInfo}>
@@ -668,7 +714,7 @@ export function HabitCard({
                 strength={strength}
               />
             </View>
-          </View>
+          </Animated.View>
         </Animated.View>
       </GestureDetector>
 
