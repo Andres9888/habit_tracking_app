@@ -103,17 +103,14 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     totalEntranceDelay,
   ]);
 
-  // Update selection progress when prop changes
-  if (
-    (isSelected && selectionProgress.value === 0) ||
-    (!isSelected && selectionProgress.value === 1)
-  ) {
+  // Update selection progress when isSelected prop changes
+  // Using useEffect ensures animation always syncs with prop, even during mid-animation
+  useEffect(() => {
+    const targetValue = isSelected ? 1 : 0;
     selectionProgress.value = shouldReduceMotion
-      ? isSelected
-        ? 1
-        : 0
-      : withSpring(isSelected ? 1 : 0, SPRING_CONFIGS.chipPress);
-  }
+      ? targetValue
+      : withSpring(targetValue, SPRING_CONFIGS.chipPress);
+  }, [isSelected, selectionProgress, shouldReduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     // Using emerald-700 (#047857) for WCAG AA contrast (5.21:1 with white text)

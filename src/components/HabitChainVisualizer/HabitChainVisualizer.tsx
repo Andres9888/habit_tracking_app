@@ -579,25 +579,25 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               <View
                 pointerEvents='none'
                 style={{
-                  // Extend 18px into next flex-1 container
                   height: 3,
 
-                  // Start at center + half circle width (right edge of circle)
-                  // left: 50% + 18px, right: -18px (into next container to its circle's left edge)
+                  // Position horizontally: start after this button, end before next button
+                  // Button is 36px (h-9), so radius = 18px from center
+                  // Add 2px gap on each side to prevent overlap
                   left: '50%',
+                  marginLeft: 20,
 
-                  marginLeft: 18,
+                  marginTop: -1.5,
 
+                  // -18px (into next container) + 2px gap = -16px
                   position: 'absolute',
 
-                  // Half of 36px circle
-                  right: -18,
-
+                  // 18px (half button) + 2px gap
+                  right: -16,
                   // Center vertically: 50% positions top edge at center,
                   // marginTop: -1.5 shifts up by half connector height (3px/2) for true center
                   top: '50%',
-                  marginTop: -1.5,
-                  zIndex: 1,
+                  zIndex: -1, // Behind buttons, not in front
                 }}
               >
                 <DayConnector
