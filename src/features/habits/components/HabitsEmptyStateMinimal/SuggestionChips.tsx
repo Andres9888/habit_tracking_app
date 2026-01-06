@@ -103,17 +103,16 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     totalEntranceDelay,
   ]);
 
-  // Update selection progress when prop changes
-  if (
-    (isSelected && selectionProgress.value === 0) ||
-    (!isSelected && selectionProgress.value === 1)
-  ) {
+  // Update selection progress when isSelected prop changes
+  // Using useEffect ensures animation triggers regardless of current animation state
+  // This fixes the race condition where rapid tapping could leave multiple chips selected
+  useEffect(() => {
     selectionProgress.value = shouldReduceMotion
       ? isSelected
         ? 1
         : 0
       : withSpring(isSelected ? 1 : 0, SPRING_CONFIGS.chipPress);
-  }
+  }, [isSelected, selectionProgress, shouldReduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     // Using emerald-700 (#047857) for WCAG AA contrast (5.21:1 with white text)
