@@ -18,6 +18,8 @@ import Animated, {
   useReducedMotion,
   useSharedValue,
   withDelay,
+  withRepeat,
+  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -25,6 +27,7 @@ import Animated, {
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useTimeBasedChipAnalytics } from './analytics';
 import {
+  BREATHING_CONFIG,
   CHIP_STAGGER,
   CHIP_TRANSFORMS,
   ENTRANCE_DELAYS,
@@ -43,6 +46,8 @@ interface ChipProps {
   onPress: () => void;
   /** Stagger delay for entrance animation (ms) */
   staggerDelay: number;
+  /** Whether user is idle (for breathing animation) */
+  isIdle: boolean;
 }
 
 /**
@@ -53,8 +58,9 @@ interface ChipProps {
  * - Hover (onPressIn): translateY -2px, scale 1.05
  * - Press (onPress): triggers selection, brief scale down
  * - Release (onPressOut): animate back to rest state
+ * - Breathing: gentle scale pulse when idle (1.0 → 1.02 → 1.0)
  */
-function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
+function Chip({ chip, isSelected, onPress, staggerDelay, isIdle }: ChipProps) {
   const { triggerSelection } = useHapticFeedback();
   const shouldReduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
@@ -67,6 +73,9 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
   const entranceTranslateY = useSharedValue(
     shouldReduceMotion ? 0 : CHIP_STAGGER.translateY
   );
+
+  // Breathing animation value
+  const breathingScale = useSharedValue(1);
 
   // Calculate total entrance delay: base chips delay + individual stagger
   const totalEntranceDelay = ENTRANCE_DELAYS.chips + staggerDelay;
@@ -103,6 +112,38 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     totalEntranceDelay,
   ]);
 
+  // Trigger breathing animation when idle
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      breathingScale.value = 1;
+      return;
+    }
+
+    if (isIdle && !isSelected) {
+      // Start breathing with stagger delay
+      breathingScale.value = withDelay(
+        staggerDelay * BREATHING_CONFIG.staggerDelay,
+        withRepeat(
+          withSequence(
+            withTiming(BREATHING_CONFIG.maxScale, {
+              duration: BREATHING_CONFIG.duration / 2,
+              easing: BREATHING_CONFIG.easing,
+            }),
+            withTiming(1, {
+              duration: BREATHING_CONFIG.duration / 2,
+              easing: BREATHING_CONFIG.easing,
+            })
+          ),
+          -1, // Infinite repeat
+          false // Don't reverse (sequence already goes up and down)
+        )
+      );
+    } else {
+      // Stop breathing immediately
+      breathingScale.value = withTiming(1, { duration: 200 });
+    }
+  }, [isIdle, isSelected, shouldReduceMotion, breathingScale, staggerDelay]);
+
   // Update selection progress when prop changes
   if (
     (isSelected && selectionProgress.value === 0) ||
@@ -135,10 +176,12 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     // Shadow increases on hover
     shadowOpacity: shadowOpacity.value,
 
-    // Combine entrance translateY with interaction translateY
+    // Combine ALL transforms: entrance + interaction + breathing
     transform: [
       { translateY: entranceTranslateY.value + translateY.value },
-      { scale: scale.value },
+      {
+        scale: scale.value * breathingScale.value, // Multiply scales
+      },
     ],
   }));
 
@@ -243,6 +286,7 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
 export function SuggestionChips({
   selectedIndex,
   onSelect,
+  isIdle = false, // Default false for backward compatibility
 }: SuggestionChipsProps) {
   // Get time-appropriate chips dynamically
   const chips = getTimeBasedChips();
@@ -298,6 +342,7 @@ export function SuggestionChips({
             index={i}
             isSelected={selectedIndex === i}
             staggerDelay={i * CHIP_STAGGER.delay}
+            isIdle={isIdle}
             onPress={() => handleChipSelect(i, chip)}
           />
         ))}
@@ -315,6 +360,7 @@ export function SuggestionChips({
               index={index}
               isSelected={selectedIndex === index}
               staggerDelay={staggerIndex * CHIP_STAGGER.delay}
+              isIdle={isIdle}
               onPress={() => handleChipSelect(index, chip)}
             />
           );
@@ -333,6 +379,7 @@ export function SuggestionChips({
               index={index}
               isSelected={selectedIndex === index}
               staggerDelay={staggerIndex * CHIP_STAGGER.delay}
+              isIdle={isIdle}
               onPress={() => handleChipSelect(index, chip)}
             />
           );

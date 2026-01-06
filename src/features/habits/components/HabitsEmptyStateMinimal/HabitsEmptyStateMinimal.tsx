@@ -8,7 +8,7 @@
  * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -123,16 +123,44 @@ export function HabitsEmptyStateMinimal({
   const [successHabitName, setSuccessHabitName] = useState<string | null>(null);
   const [successEmoji, setSuccessEmoji] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isIdle, setIsIdle] = useState(false);
+  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Analytics tracking
   const analytics = useTimeBasedChipAnalytics();
   const displayTimestampRef = useRef<number>(Date.now());
   const selectedChipDataRef = useRef<SuggestionChip | null>(null);
 
+  // Idle timer reset function
+  const resetIdleTimer = useCallback(() => {
+    setIsIdle(false);
+
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+    }
+
+    // Start new idle timer (5 seconds)
+    idleTimerRef.current = setTimeout(() => {
+      setIsIdle(true);
+    }, 5000);
+  }, []);
+
+  // Initialize idle timer and clean up on unmount
+  useEffect(() => {
+    resetIdleTimer();
+    return () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+    };
+  }, [resetIdleTimer]);
+
   // Handle chip selection - populates input with full habit name
   // Tapping a selected chip deselects it and clears input
   const handleChipSelect = useCallback(
     (index: number, chip: SuggestionChip) => {
+      resetIdleTimer(); // Reset idle timer on chip interaction
+
       if (selectedChipIndex === index) {
         // Deselect if tapping the same chip
         setSelectedChipIndex(null);
@@ -146,13 +174,15 @@ export function HabitsEmptyStateMinimal({
         selectedChipDataRef.current = chip;
       }
     },
-    [selectedChipIndex]
+    [selectedChipIndex, resetIdleTimer]
   );
 
   // Handle text input changes - deselects chips when typing
   const handleInputChange = useCallback(
     (text: string) => {
       setInputValue(text);
+      resetIdleTimer(); // Reset idle timer on user typing
+
       // Deselect chips when user types manually
       if (selectedChipIndex !== null) {
         setSelectedChipIndex(null);
@@ -166,7 +196,7 @@ export function HabitsEmptyStateMinimal({
         }
       }
     },
-    [selectedChipIndex, analytics]
+    [selectedChipIndex, analytics, resetIdleTimer]
   );
 
   // Handle CTA button press - creates the habit
@@ -325,6 +355,7 @@ export function HabitsEmptyStateMinimal({
         <SuggestionChips
           selectedIndex={selectedChipIndex}
           onSelect={handleChipSelect}
+          isIdle={isIdle}
         />
       </Animated.View>
 

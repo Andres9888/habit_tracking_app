@@ -267,3 +267,24 @@ export const ERROR_ANIMATION = {
   shakeDuration: 500,
   shakeOscillations: 3,
 } as const;
+
+/**
+ * Breathing animation configuration for idle state
+ * Creates gentle "alive" feeling when user is thinking/reading
+ */
+export const BREATHING_CONFIG = {
+  /** Duration of one complete breath cycle (in → out) */
+  duration: 3000, // 3s (breathing rhythm, calming)
+
+  /** Maximum scale during breath (1.02 = 2% growth) */
+  maxScale: 1.02,
+
+  /** Delay before breathing starts after becoming idle */
+  idleDelay: 5000, // 5s (user has time to read/think)
+
+  /** Stagger delay between chips for wave effect */
+  staggerDelay: 250, // 250ms between chips
+
+  /** Easing for breathing motion */
+  easing: Easing.inOut(Easing.ease), // Natural breathing curve
+} as const;
