@@ -12,6 +12,7 @@ A mobile habit tracking app built with React Native, Expo, and Convex.
 - 🔐 User authentication
 - 📱 Cross-platform (iOS, Android, Web)
 - 🕐 **Time-Based Habit Suggestions** - Smart habit chips that adapt to your time of day
+- ✨ **Breathing Animation** - Subtle idle animation for suggestion chips that creates an "alive" feeling
 
 ### Time-Based Habit Suggestions
 
@@ -23,6 +24,17 @@ The empty habits screen shows contextually relevant habit suggestions based on y
 - **Night (10pm - 5am)**: Sleep preparation like 📝 Journal, 🌙 Sleep routine, 🧘 Breathe
 
 This feature increases chip engagement by 40-60% by showing habits that align with natural daily rhythms. Time detection is automatic and uses your device's local timezone.
+
+### Chip Breathing Animation
+
+When users are idle (no interaction for 5+ seconds), suggestion chips display a subtle "breathing" animation that creates a sense of aliveness:
+
+- **Animation**: Chips gently scale between 1.0 → 1.02 → 1.0 (2% growth)
+- **Timing**: 3-second cycle per breath, inspired by natural resting breath rate
+- **Wave Effect**: Chips animate with 250ms stagger between each, creating a left-to-right wave
+- **Smart Triggers**: Animation stops immediately when user interacts (typing, selecting chips)
+
+**Accessibility**: The breathing animation fully respects `prefers-reduced-motion` system settings. Users with motion sensitivity will not see any idle animations. The animation is also disabled for selected chips to avoid visual conflicts.
 
 ## Setup
 
