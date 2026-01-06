@@ -551,8 +551,17 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         const showConnector =
           showConnectors && !isLastItem && completed && isCompleted(index + 1);
 
+        // First day gets flex 1.5, others get flex 1 to align with 5-column title row
+        // This makes first circle align with emoji icon in column 1 (20% width)
+        // while days 2-7 share remaining 80% (~13.33% each)
+        const isFirstDay = index === 0;
+
         return (
-          <View key={dateString} className='relative flex-1 items-center'>
+          <View
+            key={dateString}
+            className='relative items-center'
+            style={{ flex: isFirstDay ? 1.5 : 1 }}
+          >
             <HabitDayToggle
               accentColor={accentColor}
               accessibilityHint={accessibilityHint}
