@@ -139,7 +139,7 @@ export function HabitCard({
   onEdit,
   onDelete,
   style,
-  entranceVariant = 'accentSlideDown',
+  entranceVariant = 'widthExpansion',
   entranceDelay = 0,
   triggerEntrance: shouldTriggerEntrance = true,
   onEntranceComplete,
@@ -732,7 +732,8 @@ export function HabitCard({
 
 const styles = StyleSheet.create({
   accentBar: {
-    width: 6,
+    // Width is controlled by entrance animation (accentWidth shared value)
+    // Default is 6px, animated from 0 for widthExpansion variant
   },
   // Strength fill - absolute positioned background that fills based on strength %
   strengthFill: {

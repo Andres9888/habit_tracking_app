@@ -1,6 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSettings, HabitSettingsUpdate, HabitSortMode, HabitStatus, HabitTrackingEntry, RewardToastData, ShareCardData } from '../types';
-import type { HabitCardEntranceVariant } from '../../../components/HabitCard';
 
 export interface LastUpdatedHabit {
   id: string;
@@ -105,15 +104,6 @@ export interface HabitsModalsState {
   getStreak: (habitId: string) => number;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
   reduceMotionPreference: boolean;
-  /**
-   * Current entrance animation variant for habit cards (dev only).
-   * @default 'accentSlideDown'
-   */
-  entranceAnimationVariant: HabitCardEntranceVariant;
-  /**
-   * Callback to change entrance animation variant (dev only).
-   */
-  onChangeEntranceAnimationVariant: (value: HabitCardEntranceVariant) => void;
 }
 
 export interface UseHabitsAppResult {

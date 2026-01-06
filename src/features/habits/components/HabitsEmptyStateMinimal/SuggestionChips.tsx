@@ -201,9 +201,9 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           borderWidth: 1,
           elevation: 1,
           flexDirection: 'row',
-          gap: 5,
+          gap: 4,
           minHeight: TOUCH_TARGETS.chipHeight,
-          paddingHorizontal: 12,
+          paddingHorizontal: 10,
 
           paddingVertical: 8,
           // Base shadow properties - subtle (opacity animates on hover)
@@ -216,12 +216,12 @@ function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text style={{ fontSize: 16 }}>{chip.emoji}</Text>
+      <Text style={{ fontSize: 15 }}>{chip.emoji}</Text>
       <Animated.Text
         style={[
           textStyle,
           {
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: '600',
           },
         ]}
@@ -291,8 +291,7 @@ export function SuggestionChips({
     <View
       style={{
         alignItems: 'center',
-        gap: 8,
-        paddingHorizontal: 8,
+        gap: 6,
         width: '100%',
       }}
     >
@@ -300,8 +299,7 @@ export function SuggestionChips({
       <View
         style={{
           flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: 8,
+          gap: 6,
           justifyContent: 'center',
         }}
       >
@@ -320,8 +318,7 @@ export function SuggestionChips({
       <View
         style={{
           flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: 8,
+          gap: 6,
           justifyContent: 'center',
         }}
       >

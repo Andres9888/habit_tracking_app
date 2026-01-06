@@ -16,7 +16,7 @@ jest.mock('../utils', () => ({
 }));
 
 // Mock haptic feedback hook
-jest.mock('../../../../hooks/useHapticFeedback', () => ({
+jest.mock('../../../../../hooks/useHapticFeedback', () => ({
   useHapticFeedback: () => ({
     triggerSelection: jest.fn(),
   }),

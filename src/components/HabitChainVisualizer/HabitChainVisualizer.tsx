@@ -593,7 +593,10 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
                   // Half of 36px circle
                   right: -18,
 
-                  top: 16,
+                  // Center vertically: 50% positions top edge at center,
+                  // marginTop: -1.5 shifts up by half connector height (3px/2) for true center
+                  top: '50%',
+                  marginTop: -1.5,
                   zIndex: 1,
                 }}
               >

@@ -271,7 +271,11 @@ function HabitsApp() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <ScrollView
         style={{ flex: 1, backgroundColor: theme.background }}
-        contentContainerStyle={{ backgroundColor: theme.background }}
+        contentContainerStyle={{
+          backgroundColor: theme.background,
+          alignItems: 'center',
+          minHeight: '100%'
+        }}
       >
         <View className='mx-auto w-full max-w-[375px] px-4 pb-24 pt-4'>
           {/* Header Section - Clean & Focused */}

@@ -2,6 +2,9 @@
 
 **Status: IMPLEMENTED** ✅
 
+> **Note**: This spec covers the InlineHint component (the "or explore" section with templates/custom buttons).
+> For the SuggestionChips component (habit quick-add buttons), a separate fix maintains the 3-2-1 pyramid layout with compact chip sizing to fit 320pt screens.
+
 ## Problem Statement
 
 The "or explore 📋 templates and ✨ custom habit" row on the empty habits page is being cut off at the left and right edges of the screen. This is a **recurring issue** that has been attempted to be fixed multiple times but keeps reappearing.

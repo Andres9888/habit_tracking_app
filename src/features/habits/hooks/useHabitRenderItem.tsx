@@ -65,7 +65,7 @@ export function useHabitRenderItem({
   showHabitStrengthPercentage,
   toggleHabit,
   weekDateStrings,
-  entranceVariant = 'accentSlideDown',
+  entranceVariant = 'widthExpansion',
   entranceStaggerDelay = 100,
   shouldTriggerEntrance = false,
   seenHabitIds,
@@ -82,6 +82,12 @@ export function useHabitRenderItem({
       // 2. This habit hasn't been seen before (prevents re-animation on re-renders)
       const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
       const triggerEntrance = shouldTriggerEntrance && !hasBeenSeen;
+
+      // Debug logging for animation trigger
+      if (__DEV__) {
+        console.log(`[RenderItem] ${item.name}: shouldTrigger=${shouldTriggerEntrance}, hasBeenSeen=${hasBeenSeen}, triggerEntrance=${triggerEntrance}`);
+      }
+
       const weekStatus = weekDateStrings.map((dateString) =>
         getHabitStatus(item._id, dateString)
       );
