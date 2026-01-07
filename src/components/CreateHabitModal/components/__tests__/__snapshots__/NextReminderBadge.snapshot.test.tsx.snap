@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NextReminderBadge Snapshots Disabled State returns null when disabled 1`] = `null`;
+
+exports[`NextReminderBadge Snapshots Enabled State renders badge for future time today 1`] = `
+<View
+  accessibilityLabel="Next reminder: Today at 2:00 PM (in 4 hours)"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Today at 2:00 PM (in 4 hours)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Enabled State renders badge for past time (shows tomorrow) 1`] = `
+<View
+  accessibilityLabel="Next reminder: Tomorrow at 8:00 AM"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Tomorrow at 8:00 AM
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Enabled State renders badge showing hours and minutes 1`] = `
+<View
+  accessibilityLabel="Next reminder: Today at 2:30 PM (in 4h 30m)"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Today at 2:30 PM (in 4h 30m)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Enabled State renders badge showing only hours 1`] = `
+<View
+  accessibilityLabel="Next reminder: Today at 1:00 PM (in 3 hours)"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Today at 1:00 PM (in 3 hours)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Enabled State renders badge showing only minutes 1`] = `
+<View
+  accessibilityLabel="Next reminder: Today at 10:30 AM (in 30 minutes)"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Today at 10:30 AM (in 30 minutes)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Time Formats renders custom time with minutes (6:30 AM) 1`] = `
+<View
+  accessibilityLabel="Next reminder: Tomorrow at 6:30 AM"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Tomorrow at 6:30 AM
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Time Formats renders evening preset time (8:00 PM) 1`] = `
+<View
+  accessibilityLabel="Next reminder: Today at 8:00 PM (in 10 hours)"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Today at 8:00 PM (in 10 hours)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Time Formats renders midday preset time (12:00 PM) 1`] = `
+<View
+  accessibilityLabel="Next reminder: Today at 12:00 PM (in 2 hours)"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Today at 12:00 PM (in 2 hours)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NextReminderBadge Snapshots Time Formats renders morning preset time (7:00 AM) 1`] = `
+<View
+  accessibilityLabel="Next reminder: Tomorrow at 7:00 AM"
+  accessibilityRole="text"
+  entering={{}}
+  exiting={{}}
+  testID="next-reminder-badge"
+>
+  <View
+    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+  >
+    <View
+      accessibilityLabel="Clock 12px #92400E"
+      testID="clock-icon"
+    />
+    <Text
+      className="text-xs font-medium text-amber-800"
+    >
+      Next: 
+      Tomorrow at 7:00 AM
+    </Text>
+  </View>
+</View>
+`;
