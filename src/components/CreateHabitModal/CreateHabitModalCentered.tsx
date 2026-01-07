@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { useCallback, useEffect } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -8,7 +7,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { ColorPickerSheet } from './ColorPickerSheet';
 import { HABIT_COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
@@ -104,11 +102,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     []
   );
 
-  const handleCustomColorPress = useCallback(() => {
-    form.openColorPicker();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleNameChange = useCallback(
     (value: string) => {
       form.setHabitName(value);
@@ -153,10 +146,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
       onRequestClose={onClose}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          className='flex-1 bg-stone-50'
-          style={animatedStyle}
-        >
+        <Animated.View className='flex-1 bg-stone-50' style={animatedStyle}>
           {/* Header */}
           <ModalHeader
             habitName={form.habitName}
@@ -181,22 +171,13 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
               selectedColor={form.selectedColor}
               selectedEmoji={form.selectedEmoji}
               onColorSelect={handleColorSelect}
-              onCustomColorPress={handleCustomColorPress}
               onEmojiSelect={handleEmojiSelect}
               onHabitNameChange={handleNameChange}
-              onReminderToggle={handleReminderToggle}
               onReminderTimePress={handleReminderTimePress}
+              onReminderToggle={handleReminderToggle}
               onSubmit={handleSubmit}
             />
           </ScrollView>
-
-          {/* Custom Color Picker Modal */}
-          <ColorPickerSheet
-            selectedColor={form.selectedColor}
-            visible={form.isColorPickerVisible}
-            onClose={form.closeColorPicker}
-            onSelectColor={handleColorSelect}
-          />
         </Animated.View>
       </GestureDetector>
     </Modal>

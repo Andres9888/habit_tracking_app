@@ -19,7 +19,7 @@ interface ColorPickerSectionProps {
   colors: readonly string[];
   selectedColor: string;
   onSelectColor: (color: string) => void;
-  onCustomPress: () => void;
+  onCustomPress?: () => void; // Optional - if not provided, custom color button is hidden
   hideLabel?: boolean; // Hide section label for cleaner centered modal design
 }
 
@@ -51,7 +51,7 @@ interface ColorButtonProps {
 
 /**
  * Individual color swatch button with selection animation
- * V9 Spec: 36x36px base, scale(1.15) when selected, box-shadow ring
+ * V9 Spec: 36x36px base, scale(1.08) when selected, box-shadow ring
  * V11 Spec: Added ripple animation (scale + opacity fade outward) on selection
  * V11 Task 8: Respects reduced motion preference
  */
@@ -61,7 +61,7 @@ const ColorButtonComponent = ({
   onSelect,
   reduceMotion,
 }: ColorButtonProps) => {
-  const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
+  const scale = useRef(new Animated.Value(isSelected ? 1.08 : 1)).current;
   const rippleScale = useRef(new Animated.Value(0)).current;
   const rippleOpacity = useRef(new Animated.Value(1)).current;
   const wasSelected = useRef(isSelected);
@@ -73,13 +73,13 @@ const ColorButtonComponent = ({
     if (isSelected !== wasSelected.current) {
       if (reduceMotion) {
         // V11 Task 8: No animation in reduced motion mode
-        scale.setValue(isSelected ? 1.15 : 1);
+        scale.setValue(isSelected ? 1.08 : 1);
       } else if (isSelected) {
         // Animate to selected scale with spring
         Animated.spring(scale, {
           damping: 12,
           stiffness: 180,
-          toValue: 1.15,
+          toValue: 1.08,
           useNativeDriver: true,
         }).start();
       } else {
@@ -151,7 +151,7 @@ const ColorButtonComponent = ({
     Animated.timing(scale, {
       duration: Motion.duration.base,
       easing: Motion.easing.outEase,
-      toValue: isSelected ? 1.15 : 1,
+      toValue: isSelected ? 1.08 : 1,
       useNativeDriver: true,
     }).start();
   }, [isSelected, scale, reduceMotion]);
@@ -181,37 +181,73 @@ const ColorButtonComponent = ({
         />
       </Animated.View>
 
-      {/* Main color button */}
-      <Animated.View style={{ transform: [{ scale }] }}>
-        <TouchableOpacity
-          accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
-          accessibilityRole='button'
-          accessibilityState={{ selected: isSelected }}
-          style={{
-            alignItems: 'center',
-            backgroundColor: color,
-            borderRadius: 999,
-            height: 36,
-            justifyContent: 'center',
-            // V9: Box-shadow ring instead of border for cleaner selection
-            shadowColor: isSelected ? color : 'transparent',
-
-            shadowOffset: { height: 0, width: 0 },
-            shadowOpacity: isSelected ? 1 : 0,
-            shadowRadius: isSelected ? 0 : 0,
-            width: 36,
-            // Outer ring effect using elevation on Android, shadow on iOS
-            ...(isSelected && {
-              borderColor: '#ffffff',
-              borderWidth: 3,
-            }),
-          }}
-          testID={`color-swatch-${color.replace('#', '')}`}
-          onPress={handlePress}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-        />
-      </Animated.View>
+      {/* Main color button with outer ring for selection */}
+      {/* Fixed 44px container to prevent layout shift */}
+      <View
+        style={{
+          alignItems: 'center',
+          height: 44,
+          justifyContent: 'center',
+          width: 44,
+        }}
+      >
+        <Animated.View
+          style={[
+            { transform: [{ scale }] },
+            // Shadow for selected state
+            isSelected && {
+              elevation: 6,
+              shadowColor: '#000000',
+              shadowOffset: { height: 2, width: 0 },
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+            },
+          ]}
+        >
+          {/* Outer ring - only visible when selected */}
+          <View
+            style={{
+              alignItems: 'center',
+              backgroundColor: isSelected ? color : 'transparent',
+              borderRadius: 999,
+              height: isSelected ? 44 : 36,
+              justifyContent: 'center',
+              width: isSelected ? 44 : 36,
+            }}
+          >
+            {/* White gap ring - only visible when selected */}
+            <View
+              style={{
+                alignItems: 'center',
+                backgroundColor: isSelected ? '#ffffff' : 'transparent',
+                borderRadius: 999,
+                height: isSelected ? 40 : 36,
+                justifyContent: 'center',
+                width: isSelected ? 40 : 36,
+              }}
+            >
+              {/* Inner color circle - always 36px */}
+              <TouchableOpacity
+                accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
+                accessibilityRole='button'
+                accessibilityState={{ selected: isSelected }}
+                style={{
+                  alignItems: 'center',
+                  backgroundColor: color,
+                  borderRadius: 999,
+                  height: 36,
+                  justifyContent: 'center',
+                  width: 36,
+                }}
+                testID={`color-swatch-${color.replace('#', '')}`}
+                onPress={handlePress}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+              />
+            </View>
+          </View>
+        </Animated.View>
+      </View>
     </View>
   );
 };
@@ -302,12 +338,12 @@ const ColorPickerContent = ({
           {STRINGS.CREATE_HABIT.colorLabel}
         </Text>
       )}
-      {/* 12 colors + custom button = 13 items, centered with wrapping */}
+      {/* 12 colors, centered with wrapping */}
+      {/* No gap needed - each swatch has fixed 44px container with 36px content, providing built-in spacing */}
       <View
         style={{
           flexDirection: 'row',
           flexWrap: 'wrap',
-          gap: 8,
           justifyContent: 'center',
         }}
         testID='color-picker-row'
@@ -321,7 +357,7 @@ const ColorPickerContent = ({
             onSelect={onSelectColor}
           />
         ))}
-        <CustomColorButton onPress={onCustomPress} />
+        {onCustomPress && <CustomColorButton onPress={onCustomPress} />}
       </View>
     </View>
   );

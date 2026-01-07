@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
@@ -12,7 +12,6 @@ interface CreateHabitFormCenteredProps {
   colors: readonly string[];
   selectedColor: string;
   onColorSelect: (color: string) => void;
-  onCustomColorPress: () => void;
   reminderEnabled: boolean;
   reminderTime: string;
   onReminderToggle: (enabled: boolean) => void;
@@ -46,7 +45,6 @@ const CreateHabitFormCenteredComponent = ({
   colors,
   selectedColor,
   onColorSelect,
-  onCustomColorPress,
   reminderEnabled,
   reminderTime,
   onReminderToggle,
@@ -54,14 +52,6 @@ const CreateHabitFormCenteredComponent = ({
   onSubmit,
   autoFocus = false,
 }: CreateHabitFormCenteredProps) => {
-  const canSubmit = habitName.trim().length >= 2;
-
-  const handleSubmit = useCallback(() => {
-    if (!canSubmit) return;
-    Keyboard.dismiss();
-    onSubmit();
-  }, [canSubmit, onSubmit]);
-
   return (
     <View className='flex-1 px-6'>
       {/* Centered top section - name input */}
@@ -82,7 +72,7 @@ const CreateHabitFormCenteredComponent = ({
           returnKeyType='done'
           value={habitName}
           onChangeText={onHabitNameChange}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={Keyboard.dismiss}
         />
 
         {/* Character counter */}
@@ -109,12 +99,11 @@ const CreateHabitFormCenteredComponent = ({
           onSelect={onEmojiSelect}
         />
 
-        {/* Color picker */}
+        {/* Color picker - preset colors only, no custom color picker */}
         <ColorPickerSection
           hideLabel
           colors={colors}
           selectedColor={selectedColor}
-          onCustomPress={onCustomColorPress}
           onSelectColor={onColorSelect}
         />
 

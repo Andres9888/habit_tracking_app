@@ -16,15 +16,14 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { Plus } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import STRINGS from '../../../constants/strings';
 import { EmojiPickerSheet } from '../../EmojiPickerV2';
 import { suggestEmojisForHabitName } from '../../../utils/emojiKeywords';
 
-// Default emojis to show when no habit name is entered
-const DEFAULT_EMOJIS = ['🎯', '✨', '💪', '📖', '🧘', '💧'];
+// Default emojis to show when no habit name is entered (9 for 5-4 triangle layout)
+const DEFAULT_EMOJIS = ['🎯', '✨', '💪', '📖', '🧘', '💧', '🏃', '🍎', '😴'];
 
 // Debounce delay for suggestion updates (ms)
 const SUGGESTION_DEBOUNCE_MS = 300;
@@ -48,7 +47,7 @@ interface EmojiChipProps {
 
 /**
  * Individual emoji chip with press animation and green ring when selected
- * V11 Spec: Scale 1.0 → 1.15 → 1.0 with spring animation (200ms total)
+ * Scale 1.0 → 1.08 → 1.0 with spring animation (200ms total)
  * V11 Task 8: Respects reduced motion preference
  */
 const EmojiChipComponent = ({
@@ -73,10 +72,10 @@ const EmojiChipComponent = ({
       scale.value = 1;
       return;
     }
-    // V11 Spec: Celebratory scale 1.0 → 1.15 → 1.0 with spring
+    // Celebratory scale 1.0 → 1.08 → 1.0 with spring
     // Total duration: ~200ms for snappy feel
     scale.value = withSequence(
-      withTiming(1.15, { duration: 100 }),
+      withTiming(1.08, { duration: 100 }),
       withSpring(1, { damping: 3, stiffness: 300 })
     );
   }, [scale, reduceMotion]);
@@ -86,20 +85,41 @@ const EmojiChipComponent = ({
   }));
 
   return (
-    <AnimatedPressable
-      accessibilityLabel={`Select emoji ${emoji}`}
-      accessibilityRole='button'
-      accessibilityState={{ selected: isSelected }}
-      className={`h-12 w-12 items-center justify-center rounded-xl ${
-        isSelected ? 'border-2 border-[#10B981] bg-[#ECFDF5]' : 'bg-stone-100'
-      }`}
-      style={animatedStyle}
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+    // Fixed 56px container to prevent layout shift during scale animation (48px * 1.08 ≈ 52px)
+    <View
+      style={{
+        alignItems: 'center',
+        height: 56,
+        justifyContent: 'center',
+        width: 56,
+      }}
     >
-      <Text className='text-2xl'>{emoji}</Text>
-    </AnimatedPressable>
+      <AnimatedPressable
+        accessibilityLabel={`Select emoji ${emoji}`}
+        accessibilityRole='button'
+        accessibilityState={{ selected: isSelected }}
+        className={`h-12 w-12 items-center justify-center rounded-xl ${
+          isSelected
+            ? 'border-2 border-[#059669] bg-[#D1FAE5]'
+            : 'border border-stone-200 bg-stone-100'
+        }`}
+        style={[
+          animatedStyle,
+          isSelected && {
+            elevation: 4,
+            shadowColor: '#059669',
+            shadowOffset: { height: 2, width: 0 },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+          },
+        ]}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+      >
+        <Text className='text-2xl'>{emoji}</Text>
+      </AnimatedPressable>
+    </View>
   );
 };
 
@@ -134,16 +154,16 @@ const EmojiPickerComponent = ({
     };
   }, [habitName]);
 
-  // Compute suggested emojis based on debounced habit name
+  // Compute suggested emojis based on debounced habit name (9 for 5-4 triangle layout)
   const suggestedEmojis = useMemo(() => {
     if (!debouncedHabitName.trim()) {
       return DEFAULT_EMOJIS;
     }
-    const suggestions = suggestEmojisForHabitName(debouncedHabitName, 6);
-    // If we have fewer than 6 suggestions, pad with defaults (avoiding duplicates)
-    if (suggestions.length < 6) {
+    const suggestions = suggestEmojisForHabitName(debouncedHabitName, 9);
+    // If we have fewer than 9 suggestions, pad with defaults (avoiding duplicates)
+    if (suggestions.length < 9) {
       const remaining = DEFAULT_EMOJIS.filter((e) => !suggestions.includes(e));
-      return [...suggestions, ...remaining].slice(0, 6);
+      return [...suggestions, ...remaining].slice(0, 9);
     }
     return suggestions;
   }, [debouncedHabitName]);
@@ -188,37 +208,66 @@ const EmojiPickerComponent = ({
         </Text>
       )}
 
-      {/* Emoji chips row with "+" button */}
-      <Animated.View
-        className='flex-row flex-wrap justify-center gap-2'
-        layout={LinearTransition.springify().damping(15).stiffness(120)}
-      >
-        {suggestedEmojis.map((emoji) => (
-          <Animated.View
-            key={emoji}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(150)}
-            layout={LinearTransition.springify().damping(15).stiffness(120)}
-          >
-            <EmojiChip
-              emoji={emoji}
-              isSelected={selectedEmoji === emoji}
-              reduceMotion={reduceMotion}
-              onPress={() => handleEmojiSelect(emoji)}
-            />
-          </Animated.View>
-        ))}
-        {/* Plus button to open full emoji picker */}
-        <Pressable
-          accessibilityHint='Opens full emoji picker'
-          accessibilityLabel='Browse all icons'
-          accessibilityRole='button'
-          className='h-12 w-12 items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-100'
-          onPress={handleMorePress}
+      {/* Emoji chips in 5-4 triangle layout */}
+      <View className='items-center'>
+        {/* Row 1: First 5 emojis */}
+        <Animated.View
+          className='flex-row justify-center'
+          layout={LinearTransition.springify().damping(15).stiffness(120)}
         >
-          <Plus color='#a8a29e' size={20} />
-        </Pressable>
-      </Animated.View>
+          {suggestedEmojis.slice(0, 5).map((emoji) => (
+            <Animated.View
+              key={emoji}
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(150)}
+              layout={LinearTransition.springify().damping(15).stiffness(120)}
+            >
+              <EmojiChip
+                emoji={emoji}
+                isSelected={selectedEmoji === emoji}
+                reduceMotion={reduceMotion}
+                onPress={() => handleEmojiSelect(emoji)}
+              />
+            </Animated.View>
+          ))}
+        </Animated.View>
+
+        {/* Row 2: Last 4 emojis */}
+        <Animated.View
+          className='flex-row justify-center'
+          layout={LinearTransition.springify().damping(15).stiffness(120)}
+        >
+          {suggestedEmojis.slice(5, 9).map((emoji) => (
+            <Animated.View
+              key={emoji}
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(150)}
+              layout={LinearTransition.springify().damping(15).stiffness(120)}
+            >
+              <EmojiChip
+                emoji={emoji}
+                isSelected={selectedEmoji === emoji}
+                reduceMotion={reduceMotion}
+                onPress={() => handleEmojiSelect(emoji)}
+              />
+            </Animated.View>
+          ))}
+        </Animated.View>
+      </View>
+
+      {/* Browse more emojis link */}
+      <Pressable
+        accessibilityHint='Opens full emoji picker with hundreds of options'
+        accessibilityLabel='Browse more emojis'
+        accessibilityRole='button'
+        className='mt-2 flex-row items-center justify-center py-1'
+        onPress={handleMorePress}
+      >
+        <Text className='text-sm font-medium text-emerald-600'>
+          Browse more emojis
+        </Text>
+        <Text className='ml-1 text-emerald-600'>→</Text>
+      </Pressable>
 
       <EmojiPickerSheet
         habitName={habitName || ''}
