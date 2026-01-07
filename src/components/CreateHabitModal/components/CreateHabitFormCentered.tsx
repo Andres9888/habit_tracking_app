@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
-import { MinimalReminderToggle } from './MinimalReminderToggle';
+import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 
 interface CreateHabitFormCenteredProps {
   habitName: string;
@@ -14,9 +14,11 @@ interface CreateHabitFormCenteredProps {
   onColorSelect: (color: string) => void;
   onCustomColorPress: () => void;
   reminderEnabled: boolean;
-  reminderTime: string;
+  /** Reminder time as Date object for EnhancedReminderSelector */
+  reminderTime: Date;
   onReminderToggle: (enabled: boolean) => void;
-  onReminderTimePress?: () => void;
+  /** Called when reminder time changes (preset or custom selection) */
+  onReminderTimeChange: (time: Date) => void;
   onSubmit: () => void;
   autoFocus?: boolean;
 }
@@ -50,7 +52,7 @@ const CreateHabitFormCenteredComponent = ({
   reminderEnabled,
   reminderTime,
   onReminderToggle,
-  onReminderTimePress,
+  onReminderTimeChange,
   onSubmit,
   autoFocus = false,
 }: CreateHabitFormCenteredProps) => {
@@ -118,11 +120,11 @@ const CreateHabitFormCenteredComponent = ({
           onSelectColor={onColorSelect}
         />
 
-        {/* Reminder toggle */}
-        <MinimalReminderToggle
+        {/* Reminder selector with presets and custom time */}
+        <EnhancedReminderSelector
           enabled={reminderEnabled}
-          time={reminderTime}
-          onTimePress={onReminderTimePress}
+          reminderTime={reminderTime}
+          onTimeChange={onReminderTimeChange}
           onToggle={onReminderToggle}
         />
       </View>

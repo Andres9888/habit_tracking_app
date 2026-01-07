@@ -14,7 +14,6 @@ import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
 import { CreateHabitFormCentered } from './components/CreateHabitFormCentered';
-import { formatReminderTime } from '../../utils/notifications';
 
 // V11: Swipe dismissal constants
 const SWIPE_DISMISS_THRESHOLD = 100; // pixels
@@ -125,10 +124,13 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     []
   );
 
-  const handleReminderTimePress = useCallback(() => {
-    form.setShowTimePicker(true);
+  const handleReminderTimeChange = useCallback(
+    (time: Date) => {
+      form.setReminderTime(time);
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    []
+  );
 
   // Wrap async handleCreate to satisfy void return type requirement
   const handleSubmit = useCallback(() => {
@@ -139,11 +141,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     void handleCreate();
   }, [handleCreate]);
 
-  // Format reminder time as string for display
-  const reminderTimeString = form.reminderTime
-    ? formatReminderTime(form.reminderTime)
-    : '12:00 PM';
-
   return (
     <Modal
       animationType='slide'
@@ -153,10 +150,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
       onRequestClose={onClose}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          className='flex-1 bg-stone-50'
-          style={animatedStyle}
-        >
+        <Animated.View className='flex-1 bg-stone-50' style={animatedStyle}>
           {/* Header */}
           <ModalHeader
             habitName={form.habitName}
@@ -177,15 +171,15 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
               colors={HABIT_COLORS}
               habitName={form.habitName}
               reminderEnabled={form.remindersEnabled}
-              reminderTime={reminderTimeString}
+              reminderTime={form.reminderTime}
               selectedColor={form.selectedColor}
               selectedEmoji={form.selectedEmoji}
               onColorSelect={handleColorSelect}
               onCustomColorPress={handleCustomColorPress}
               onEmojiSelect={handleEmojiSelect}
               onHabitNameChange={handleNameChange}
+              onReminderTimeChange={handleReminderTimeChange}
               onReminderToggle={handleReminderToggle}
-              onReminderTimePress={handleReminderTimePress}
               onSubmit={handleSubmit}
             />
           </ScrollView>
