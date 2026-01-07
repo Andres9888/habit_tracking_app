@@ -20,10 +20,7 @@ import { LivePreview } from './components/LivePreview';
 import { EmojiPicker } from './components/EmojiPicker';
 import { ColorPickerSection } from './components/ColorPickerSection';
 import { StickyCreateBar } from './components/StickyCreateBar';
-import {
-  ReminderSelector,
-  type ReminderOption,
-} from './components/ReminderSelector';
+import { EnhancedReminderSelector } from './components/EnhancedReminderSelector';
 // V9: TemplatesLinkSection removed from modal for focused flow (component retained for potential future use)
 
 // Stagger delay between section animations (ms)
@@ -100,9 +97,42 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
     [form]
   );
 
-  const handleReminderSelect = useCallback(
-    (option: ReminderOption) => {
-      form.setReminderOption(option);
+  const handleReminderToggle = useCallback(
+    (enabled: boolean) => {
+      // Toggle by setting 'none' or using smart default
+      if (enabled) {
+        // When enabling, use the existing reminderTime's hour to pick a phase
+        // or default to morning
+        const hour = form.reminderTime.getHours();
+        if (hour >= 5 && hour < 10) {
+          form.setReminderOption('morning');
+        } else if (hour >= 10 && hour < 16) {
+          form.setReminderOption('midday');
+        } else {
+          form.setReminderOption('evening');
+        }
+      } else {
+        form.setReminderOption('none');
+      }
+    },
+    [form]
+  );
+
+  const handleReminderTimeChange = useCallback(
+    (time: Date) => {
+      form.setReminderTime(time);
+      // Also enable reminders if not already enabled
+      if (form.reminderOption === 'none') {
+        // Pick phase based on the new time
+        const hour = time.getHours();
+        if (hour >= 5 && hour < 10) {
+          form.setReminderOption('morning');
+        } else if (hour >= 10 && hour < 16) {
+          form.setReminderOption('midday');
+        } else {
+          form.setReminderOption('evening');
+        }
+      }
     },
     [form]
   );
@@ -117,8 +147,8 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       <View className='flex-1 bg-black/50'>
         <GestureDetector gesture={panGesture}>
           <Animated.View
-            style={animatedStyle}
             className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
+            style={animatedStyle}
           >
             <ModalHeader
               habitName={form.habitName}
@@ -134,70 +164,72 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               showsVerticalScrollIndicator={false}
               onScroll={template.handleMainScroll}
             >
-            {/* V11: Progressive spacing - Input (mb-3), Emojis (mb-4), Colors (mb-5), Reminders (mb-6) */}
-            <Animated.View
-              entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
-            >
-              <View className='mt-4' />
-              <HabitNameField
-                autoFocus={visible && !isEditMode}
-                value={form.habitName}
-                onChange={handleNameChange}
-              />
-              {/* V11: Live Preview positioned between input and emoji picker */}
-              <LivePreview
-                emoji={form.selectedEmoji}
-                color={form.selectedColor}
-                habitName={form.habitName}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY
-              )}
-            >
-              <EmojiPicker
-                habitName={form.habitName}
-                selectedEmoji={form.selectedEmoji}
-                onSelect={handleEmojiSelect}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY * 2
-              )}
-            >
-              <ColorPickerSection
-                colors={HABIT_COLORS}
-                selectedColor={form.selectedColor}
-                onCustomPress={form.openColorPicker}
-                onSelectColor={handleColorSelect}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-                ANIMATION_STAGGER_DELAY * 3
-              )}
-            >
-              <ReminderSelector
-                selectedOption={form.reminderOption}
-                onSelectOption={handleReminderSelect}
-              />
-            </Animated.View>
-            {/* V9: Templates Link Section removed for focused flow */}
-          </ScrollView>
-          <TemplateReminderPrompt
-            bottomOffset={template.reminderBottomOffset}
-            visible={template.shouldShowTemplateReminder}
-            onPress={template.handleReminderPress}
-          />
-          <StickyCreateBar
-            disabled={form.habitName.trim().length < 2}
-            selectedColor={form.selectedColor}
-            onPress={handleCreate}
-          />
-        </Animated.View>
-      </GestureDetector>
+              {/* V11: Progressive spacing - Input (mb-3), Emojis (mb-4), Colors (mb-5), Reminders (mb-6) */}
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}
+              >
+                <View className='mt-4' />
+                <HabitNameField
+                  autoFocus={visible && !isEditMode}
+                  value={form.habitName}
+                  onChange={handleNameChange}
+                />
+                {/* V11: Live Preview positioned between input and emoji picker */}
+                <LivePreview
+                  color={form.selectedColor}
+                  emoji={form.selectedEmoji}
+                  habitName={form.habitName}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                  ANIMATION_STAGGER_DELAY
+                )}
+              >
+                <EmojiPicker
+                  habitName={form.habitName}
+                  selectedEmoji={form.selectedEmoji}
+                  onSelect={handleEmojiSelect}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                  ANIMATION_STAGGER_DELAY * 2
+                )}
+              >
+                <ColorPickerSection
+                  colors={HABIT_COLORS}
+                  selectedColor={form.selectedColor}
+                  onCustomPress={form.openColorPicker}
+                  onSelectColor={handleColorSelect}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.duration(ANIMATION_DURATION).delay(
+                  ANIMATION_STAGGER_DELAY * 3
+                )}
+              >
+                <EnhancedReminderSelector
+                  enabled={form.reminderOption !== 'none'}
+                  reminderTime={form.reminderTime}
+                  onTimeChange={handleReminderTimeChange}
+                  onToggle={handleReminderToggle}
+                />
+              </Animated.View>
+              {/* V9: Templates Link Section removed for focused flow */}
+            </ScrollView>
+            <TemplateReminderPrompt
+              bottomOffset={template.reminderBottomOffset}
+              visible={template.shouldShowTemplateReminder}
+              onPress={template.handleReminderPress}
+            />
+            <StickyCreateBar
+              disabled={form.habitName.trim().length < 2}
+              selectedColor={form.selectedColor}
+              onPress={handleCreate}
+            />
+          </Animated.View>
+        </GestureDetector>
       </View>
       <ColorPickerSheet
         value={form.selectedColor}
