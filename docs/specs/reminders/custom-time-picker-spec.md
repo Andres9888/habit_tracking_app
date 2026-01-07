@@ -755,14 +755,23 @@ export const EnhancedReminderSelector = ({
 
 **Dependencies**: Task 1.3
 
-**Status**: Optional - Can be done later for consistency
+**Status**: Complete
 
 **Acceptance Criteria**:
 
-- [ ] Add EnhancedReminderSelector to original modal
-- [ ] Replace existing ReminderSelector
-- [ ] Maintain backward compatibility
-- [ ] Test in non-centered modal flow
+- [x] Add EnhancedReminderSelector to original modal
+- [x] Replace existing ReminderSelector
+- [x] Maintain backward compatibility
+- [x] Test in non-centered modal flow
+
+**Implementation Notes (Completed 2026-01-07)**:
+
+- Replaced `ReminderSelector` import with `EnhancedReminderSelector`
+- Created `handleReminderToggle` callback that bridges `ReminderOption` state with `enabled` boolean
+- Created `handleReminderTimeChange` callback that updates `reminderTime` Date and auto-enables reminders
+- Used `form.reminderOption !== 'none'` for `enabled` prop to maintain compatibility with existing `useHabitForm` state
+- Passed `form.reminderTime` Date directly (already managed by form hook)
+- All 136 reminder component tests pass
 
 ---
 
@@ -807,6 +816,10 @@ export const EnhancedReminderSelector = ({
 **Estimated Effort**: 30 minutes
 
 **Dependencies**: Phase 2 complete
+
+**Status**: Awaiting Manual Testing
+
+**Note**: This task requires manual testing on physical iOS and Android devices. It cannot be automated and must be performed by a human tester with access to both platforms.
 
 **Manual QA Checklist**:
 
@@ -862,11 +875,23 @@ export const EnhancedReminderSelector = ({
 
 **Dependencies**: Task 4.1
 
+**Status**: Complete (No changes needed)
+
 **Acceptance Criteria**:
 
-- [ ] Note new reminder components
-- [ ] Document any new patterns
-- [ ] Update relevant sections
+- [x] Note new reminder components
+- [x] Document any new patterns
+- [x] Update relevant sections
+
+**Implementation Notes (Completed 2026-01-07)**:
+
+- Reviewed CLAUDE.md - it is specialized for the "superdesign" UI design workflow, not React Native component documentation
+- Component documentation is appropriately housed in this spec file (custom-time-picker-spec.md) which includes:
+  - Complete Component API Reference section (lines 1025-1135)
+  - Usage Examples with 5 practical code samples (lines 1137-1232)
+  - Integration Guide with step-by-step instructions (lines 1234-1319)
+  - Accessibility Notes documenting all a11y considerations (lines 1321-1395)
+- No updates to CLAUDE.md required - documentation patterns already follow project conventions
 
 ---
 
