@@ -30,7 +30,6 @@ import { getStrengthLabel } from '../HabitStrengthHistory/strengthUtils';
 import { COLORS } from './constants';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
-import { StrengthStatsRow } from './StrengthStatsRow';
 import { TimeRangeToggle } from './TimeRangeToggle';
 import type { HabitStrengthSectionProps, TimeRange } from './types';
 import { calculateExtendedMetrics, generateChartDataFromCompletions, sampleHistoryForChart } from './utils';
@@ -42,7 +41,7 @@ import { calculateExtendedMetrics, generateChartDataFromCompletions, sampleHisto
  * into a cohesive card with shadow and rounded corners.
  */
 export const HabitStrengthSection = React.memo(function HabitStrengthSection({
-  habitId,
+  habitId: _habitId,
   completedDates,
   habitCreatedAt,
   habitColor,
@@ -128,17 +127,18 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
         elevation: 2,
       }}
     >
-      <View className="p-5">
+      {/* Compact padding (p-4 instead of p-5) for above-fold layout */}
+      <View className="p-4">
         {/* Header with Time Range Switcher */}
-        <View className="mb-4 flex-row items-center justify-between">
-          <Text className="text-lg font-bold text-stone-800">
+        <View className="mb-3 flex-row items-center justify-between">
+          <Text className="text-base font-bold text-stone-800">
             Habit Strength
           </Text>
           <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
         </View>
 
         {/* Hero Section - Ring + Status */}
-        <View className="mb-4">
+        <View className="mb-3">
           <StrengthHero
             strength={currentStrength}
             label={strengthLabel}
@@ -148,8 +148,8 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           />
         </View>
 
-        {/* Full-Width Chart */}
-        <View className="mb-4 -mx-5">
+        {/* Full-Width Chart - compact margins */}
+        <View className="mb-3 -mx-4">
           <StrengthChart
             data={chartData}
             timeRange={timeRange}
@@ -158,12 +158,6 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           />
         </View>
 
-        {/* Stats Row */}
-        <StrengthStatsRow
-          sinceStart={extendedMetrics.sinceStart}
-          lastMonth={extendedMetrics.deltaVsMonth}
-          lastWeek={extendedMetrics.deltaVsWeek}
-        />
       </View>
     </Animated.View>
   );
