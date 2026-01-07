@@ -12,7 +12,6 @@ import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { ModalHeader } from './components/ModalHeader';
 import { CreateHabitFormCentered } from './components/CreateHabitFormCentered';
-import { formatReminderTime } from '../../utils/notifications';
 
 // V11: Swipe dismissal constants
 const SWIPE_DISMISS_THRESHOLD = 100; // pixels
@@ -118,10 +117,13 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     []
   );
 
-  const handleReminderTimePress = useCallback(() => {
-    form.setShowTimePicker(true);
+  const handleReminderTimeChange = useCallback(
+    (time: Date) => {
+      form.setReminderTime(time);
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    []
+  );
 
   // Wrap async handleCreate to satisfy void return type requirement
   const handleSubmit = useCallback(() => {
@@ -131,11 +133,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const handleSave = useCallback(() => {
     void handleCreate();
   }, [handleCreate]);
-
-  // Format reminder time as string for display
-  const reminderTimeString = form.reminderTime
-    ? formatReminderTime(form.reminderTime)
-    : '12:00 PM';
 
   return (
     <Modal
@@ -167,13 +164,13 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
               colors={HABIT_COLORS}
               habitName={form.habitName}
               reminderEnabled={form.remindersEnabled}
-              reminderTime={reminderTimeString}
+              reminderTime={form.reminderTime}
               selectedColor={form.selectedColor}
               selectedEmoji={form.selectedEmoji}
               onColorSelect={handleColorSelect}
               onEmojiSelect={handleEmojiSelect}
               onHabitNameChange={handleNameChange}
-              onReminderTimePress={handleReminderTimePress}
+              onReminderTimeChange={handleReminderTimeChange}
               onReminderToggle={handleReminderToggle}
               onSubmit={handleSubmit}
             />
