@@ -80,7 +80,9 @@ export default function HabitEditScreen({
     if (!habitId || !habitName.trim()) return;
 
     const trimmedName = habitName.trim();
-    const fullName = selectedEmoji ? `${selectedEmoji} ${trimmedName}` : trimmedName;
+    const fullName = selectedEmoji
+      ? `${selectedEmoji} ${trimmedName}`
+      : trimmedName;
     const reminderTimeString = formatReminderTime(reminderTime);
 
     let enableReminders = remindersEnabled;
@@ -123,7 +125,17 @@ export default function HabitEditScreen({
 
     triggerSuccess();
     onClose();
-  }, [habitId, habitName, selectedEmoji, selectedColor, remindersEnabled, reminderTime, updateHabit, triggerSuccess, onClose]);
+  }, [
+    habitId,
+    habitName,
+    selectedEmoji,
+    selectedColor,
+    remindersEnabled,
+    reminderTime,
+    updateHabit,
+    triggerSuccess,
+    onClose,
+  ]);
 
   const handleDelete = useCallback(() => {
     if (!habitId) return;
@@ -132,16 +144,16 @@ export default function HabitEditScreen({
       'Delete Habit',
       'This action cannot be undone. All your progress and history will be permanently deleted.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { style: 'cancel', text: 'Cancel' },
         {
-          text: 'Delete',
-          style: 'destructive',
           onPress: () => {
             void removeHabit({ habitId }).then(() => {
               triggerSelection();
               onClose();
             });
           },
+          style: 'destructive',
+          text: 'Delete',
         },
       ]
     );
@@ -154,15 +166,15 @@ export default function HabitEditScreen({
       'Archive Habit',
       'This habit will be hidden but your progress will be preserved. You can restore it anytime from Settings.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { style: 'cancel', text: 'Cancel' },
         {
-          text: 'Archive',
           onPress: () => {
             void archiveHabit({ habitId }).then(() => {
               triggerSelection();
               onClose();
             });
           },
+          text: 'Archive',
         },
       ]
     );
@@ -172,10 +184,13 @@ export default function HabitEditScreen({
     setSelectedEmoji(emoji);
   }, []);
 
-  const handleColorSelect = useCallback((color: string) => {
-    triggerSelection();
-    setSelectedColor(color);
-  }, [triggerSelection]);
+  const handleColorSelect = useCallback(
+    (color: string) => {
+      triggerSelection();
+      setSelectedColor(color);
+    },
+    [triggerSelection]
+  );
 
   const handleReminderToggle = useCallback((enabled: boolean) => {
     setRemindersEnabled(enabled);
@@ -208,10 +223,6 @@ export default function HabitEditScreen({
           >
             <ChevronLeft color='#1c1917' size={24} strokeWidth={2} />
           </Pressable>
-
-          <Text className='text-[17px] font-semibold text-stone-900'>
-            Edit Habit
-          </Text>
 
           <Pressable
             accessibilityLabel='Save changes'
