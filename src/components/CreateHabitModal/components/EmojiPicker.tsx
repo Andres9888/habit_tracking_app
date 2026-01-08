@@ -85,20 +85,20 @@ const EmojiChipComponent = ({
   }));
 
   return (
-    // Fixed 56px container to prevent layout shift during scale animation (48px * 1.08 ≈ 52px)
+    // Fixed 64px container to prevent layout shift during scale animation (56px * 1.08 ≈ 60px)
     <View
       style={{
         alignItems: 'center',
-        height: 56,
+        height: 64,
         justifyContent: 'center',
-        width: 56,
+        width: 64,
       }}
     >
       <AnimatedPressable
         accessibilityLabel={`Select emoji ${emoji}`}
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
-        className={`h-12 w-12 items-center justify-center rounded-xl ${
+        className={`h-14 w-14 items-center justify-center rounded-2xl ${
           isSelected
             ? 'border-2 border-[#059669] bg-[#D1FAE5]'
             : 'border border-stone-200 bg-stone-100'
@@ -117,7 +117,7 @@ const EmojiChipComponent = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <Text className='text-2xl'>{emoji}</Text>
+        <Text className='text-3xl'>{emoji}</Text>
       </AnimatedPressable>
     </View>
   );

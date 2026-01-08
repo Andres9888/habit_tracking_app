@@ -1,5 +1,6 @@
-import { useCallback, useEffect } from 'react';
-import { Modal, ScrollView } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Keyboard, Modal, Pressable, ScrollView } from 'react-native';
+import type { ScrollView as ScrollViewType } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -36,6 +37,12 @@ const SWIPE_VELOCITY_THRESHOLD = 500; // pixels per second
 export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
+
+  // ScrollView ref for auto-scrolling to reminder section
+  const scrollViewRef = useRef<ScrollViewType>(null);
+
+  // Validation error state
+  const [showNameError, setShowNameError] = useState(false);
 
   // Swipe dismissal gesture state
   const translateY = useSharedValue(0);
@@ -81,6 +88,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   useEffect(() => {
     if (visible && !isEditMode) {
       form.resetForm();
+      setShowNameError(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, isEditMode]);
@@ -104,14 +112,28 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const handleNameChange = useCallback(
     (value: string) => {
       form.setHabitName(value);
+      // Clear error when user starts typing
+      if (value.trim().length > 0) {
+        setShowNameError(false);
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  const handleValidationError = useCallback(() => {
+    setShowNameError(true);
+  }, []);
+
   const handleReminderToggle = useCallback(
     (enabled: boolean) => {
       form.setRemindersEnabled(enabled);
+      // Auto-scroll to show reminder options when enabled
+      if (enabled) {
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 100); // Small delay to allow UI to expand
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -150,30 +172,36 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
             isEditMode={isEditMode}
             onClose={onClose}
             onSave={handleSave}
+            onValidationError={handleValidationError}
           />
 
           {/* Scrollable Centered Form */}
           <ScrollView
+            ref={scrollViewRef}
             className='flex-1'
             contentContainerStyle={{ paddingBottom: 120 }}
+            keyboardDismissMode='on-drag'
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
           >
-            <CreateHabitFormCentered
-              autoFocus
-              colors={HABIT_COLORS}
-              habitName={form.habitName}
-              reminderEnabled={form.remindersEnabled}
-              reminderTime={form.reminderTime}
-              selectedColor={form.selectedColor}
-              selectedEmoji={form.selectedEmoji}
-              onColorSelect={handleColorSelect}
-              onEmojiSelect={handleEmojiSelect}
-              onHabitNameChange={handleNameChange}
-              onReminderTimeChange={handleReminderTimeChange}
-              onReminderToggle={handleReminderToggle}
-              onSubmit={handleSubmit}
-            />
+            <Pressable onPress={Keyboard.dismiss}>
+              <CreateHabitFormCentered
+                autoFocus
+                colors={HABIT_COLORS}
+                habitName={form.habitName}
+                reminderEnabled={form.remindersEnabled}
+                reminderTime={form.reminderTime}
+                selectedColor={form.selectedColor}
+                selectedEmoji={form.selectedEmoji}
+                showNameError={showNameError}
+                onColorSelect={handleColorSelect}
+                onEmojiSelect={handleEmojiSelect}
+                onHabitNameChange={handleNameChange}
+                onReminderTimeChange={handleReminderTimeChange}
+                onReminderToggle={handleReminderToggle}
+                onSubmit={handleSubmit}
+              />
+            </Pressable>
           </ScrollView>
         </Animated.View>
       </GestureDetector>

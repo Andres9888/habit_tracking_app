@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Bell, Clock, ChevronRight } from 'lucide-react-native';
+import { Bell, Clock } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { formatReminderTime } from '../../../utils/notifications';
@@ -108,8 +108,9 @@ const PresetButtonComponent = ({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
+      {/* V12: Larger preset buttons (py-3.5) for better touch targets and premium feel */}
       <Animated.View
-        className='items-center justify-center rounded-xl px-2 py-2.5'
+        className='items-center justify-center rounded-2xl px-3 py-3.5'
         style={[
           {
             backgroundColor: isSelected ? '#ECFDF5' : '#f5f5f4', // emerald-50 / stone-100
@@ -119,9 +120,9 @@ const PresetButtonComponent = ({
           },
         ]}
       >
-        <Text className='mb-0.5 text-base'>{preset.emoji}</Text>
+        <Text className='mb-1 text-lg'>{preset.emoji}</Text>
         <Text
-          className='text-xs font-medium'
+          className='text-sm font-medium'
           style={{ color: isSelected ? '#059669' : '#57534e' }} // emerald-600 / stone-600
         >
           {preset.label}
@@ -146,6 +147,12 @@ const PresetButton = memo(PresetButtonComponent);
  * - Keyboard dismissed on any interaction
  * - All elements have accessibility labels
  * - Haptic feedback on selection
+ *
+ * V12 Updates:
+ * - Larger toggle row (py-4, h-10 icon)
+ * - Larger preset buttons (py-3.5, text-lg emoji)
+ * - More spacing between elements (gap-3, mt-4)
+ * - Larger touch targets for premium feel
  *
  * Usage:
  * ```tsx
@@ -243,10 +250,10 @@ const EnhancedReminderSelectorComponent = ({
   );
 
   return (
-    <View className='mb-4' testID='enhanced-reminder-selector'>
-      {/* Toggle Row */}
+    <View className='mb-6' testID='enhanced-reminder-selector'>
+      {/* Toggle Row - V12: Larger padding and icon for premium feel */}
       <View
-        className='flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3'
+        className='flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4'
         style={{
           elevation: 1,
           shadowColor: '#000',
@@ -255,12 +262,12 @@ const EnhancedReminderSelectorComponent = ({
           shadowRadius: 2,
         }}
       >
-        {/* Bell Icon + Label */}
+        {/* Bell Icon + Label - V12: Larger icon container (h-10 w-10) */}
         <View className='flex-row items-center gap-3'>
-          <View className='h-9 w-9 items-center justify-center rounded-full bg-amber-100'>
-            <Bell color='#f59e0b' size={16} />
+          <View className='h-10 w-10 items-center justify-center rounded-full bg-amber-100'>
+            <Bell color='#f59e0b' size={18} />
           </View>
-          <Text className='text-sm font-medium text-stone-900'>
+          <Text className='text-base font-medium text-stone-900'>
             Daily Reminder
           </Text>
         </View>
@@ -280,9 +287,9 @@ const EnhancedReminderSelectorComponent = ({
 
       {/* Time Selection UI (shown when enabled) */}
       {enabled && (
-        <View className='mt-3'>
-          {/* Preset Buttons Row */}
-          <View className='mb-3 flex-row gap-2' testID='preset-buttons'>
+        <View className='mt-4'>
+          {/* Preset Buttons Row - V12: Larger gap (gap-3) for better spacing */}
+          <View className='mb-4 flex-row gap-3' testID='preset-buttons'>
             {presets.map((preset) => (
               <PresetButton
                 key={preset.id}
@@ -294,7 +301,7 @@ const EnhancedReminderSelectorComponent = ({
             ))}
           </View>
 
-          {/* Custom Time Button */}
+          {/* Custom Time Link - V12: Larger touch target (py-3) */}
           <Pressable
             accessibilityHint='Opens time picker'
             accessibilityLabel={
@@ -303,37 +310,28 @@ const EnhancedReminderSelectorComponent = ({
                 : 'Set a custom reminder time'
             }
             accessibilityRole='button'
-            className='mb-3'
+            className='mb-4 flex-row items-center justify-center py-3'
             testID='custom-time-button'
             onPress={handleCustomTimePress}
           >
-            <View
-              className='flex-row items-center justify-between rounded-xl border px-3.5 py-3'
-              style={{
-                backgroundColor: isCustomTime ? '#ECFDF5' : '#ffffff', // emerald-50 / white
-                borderColor: isCustomTime ? '#10B981' : '#e7e5e4', // emerald-500 / stone-200
-                borderWidth: isCustomTime ? 2 : 1,
-              }}
-            >
-              <View className='flex-row items-center gap-2.5'>
-                <Clock
-                  color={isCustomTime ? '#047857' : '#78716c'} // emerald-700 / stone-500
-                  size={16}
-                />
-                <Text
-                  className='text-sm font-medium'
-                  style={{
-                    color: isCustomTime ? '#047857' : '#1c1917', // emerald-700 / stone-900
-                  }}
-                >
+            {isCustomTime ? (
+              <>
+                <Clock color='#059669' size={16} />
+                <Text className='ml-1.5 text-sm font-medium text-emerald-600'>
                   {customTimeLabel}
                 </Text>
-              </View>
-              <ChevronRight
-                color={isCustomTime ? '#047857' : '#a8a29e'} // emerald-700 / stone-400
-                size={18}
-              />
-            </View>
+                <Text className='ml-1 text-sm text-emerald-600'>
+                  (tap to change)
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text className='text-sm font-medium text-emerald-600'>
+                  Pick a different time
+                </Text>
+                <Text className='ml-1 text-emerald-600'>→</Text>
+              </>
+            )}
           </Pressable>
 
           {/* Next Reminder Badge */}

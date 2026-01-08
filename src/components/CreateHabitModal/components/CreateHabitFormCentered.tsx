@@ -20,6 +20,8 @@ interface CreateHabitFormCenteredProps {
   onReminderTimeChange: (time: Date) => void;
   onSubmit: () => void;
   autoFocus?: boolean;
+  /** Whether to show validation error for empty habit name */
+  showNameError?: boolean;
 }
 
 /**
@@ -53,21 +55,24 @@ const CreateHabitFormCenteredComponent = ({
   onReminderTimeChange,
   onSubmit,
   autoFocus = false,
+  showNameError = false,
 }: CreateHabitFormCenteredProps) => {
   return (
     <View className='flex-1 px-6'>
       {/* Centered top section - name input */}
       <View
         className='items-center'
-        style={{ marginBottom: 32, marginTop: 40 }}
+        style={{ marginBottom: 48, marginTop: 32 }}
       >
-        <Text className='mb-3 text-center text-3xl font-bold text-stone-900'>
-          What habit do you{'\n'}want to build?
+        <Text className='mb-6 text-center text-4xl font-bold leading-tight text-stone-900'>
+          What habit do you want to build?
         </Text>
 
         <TextInput
           autoFocus={autoFocus}
-          className='w-full rounded-2xl border-2 border-stone-200 bg-white px-6 py-5 text-center text-xl text-stone-900'
+          className={`w-full rounded-2xl border-2 bg-white px-6 py-6 text-center text-xl text-stone-900 ${
+            showNameError ? 'border-red-400' : 'border-stone-200'
+          }`}
           maxLength={50}
           placeholder='e.g., Read for 20 minutes'
           placeholderTextColor='#A8A29E'
@@ -77,20 +82,26 @@ const CreateHabitFormCenteredComponent = ({
           onSubmitEditing={Keyboard.dismiss}
         />
 
-        {/* Character counter */}
-        <Text className='mt-2 text-xs text-stone-400'>
-          {habitName.length}/50 characters
-        </Text>
+        {/* Error message or character counter */}
+        {showNameError ? (
+          <Text className='mt-3 text-xs font-medium text-red-500'>
+            Please enter a habit name
+          </Text>
+        ) : (
+          <Text className='mt-3 text-xs text-stone-400'>
+            {habitName.length}/50 characters
+          </Text>
+        )}
       </View>
 
       {/* Optional fields section - scrollable */}
       <View className='flex-1'>
         {/* Section label */}
         <Text
-          className='mb-4 text-center text-xs font-semibold text-stone-500'
-          style={{ letterSpacing: 0.5 }}
+          className='mb-8 text-center text-xs font-semibold text-stone-400'
+          style={{ letterSpacing: 1 }}
         >
-          CUSTOMIZE (OPTIONAL)
+          CUSTOMIZE
         </Text>
 
         {/* Emoji picker */}

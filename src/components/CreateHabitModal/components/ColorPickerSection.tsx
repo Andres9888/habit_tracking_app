@@ -54,6 +54,7 @@ interface ColorButtonProps {
  * V9 Spec: 36x36px base, scale(1.08) when selected, box-shadow ring
  * V11 Spec: Added ripple animation (scale + opacity fade outward) on selection
  * V11 Task 8: Respects reduced motion preference
+ * V12: Increased to 44px base with 52px container for better touch targets
  */
 const ColorButtonComponent = ({
   color,
@@ -175,20 +176,20 @@ const ColorButtonComponent = ({
           style={{
             backgroundColor: color,
             borderRadius: 999,
-            height: 36,
-            width: 36,
+            height: 44,
+            width: 44,
           }}
         />
       </Animated.View>
 
       {/* Main color button with outer ring for selection */}
-      {/* Fixed 44px container to prevent layout shift */}
+      {/* Fixed 52px container to prevent layout shift (44px * 1.08 ≈ 47px) */}
       <View
         style={{
           alignItems: 'center',
-          height: 44,
+          height: 52,
           justifyContent: 'center',
-          width: 44,
+          width: 52,
         }}
       >
         <Animated.View
@@ -210,9 +211,9 @@ const ColorButtonComponent = ({
               alignItems: 'center',
               backgroundColor: isSelected ? color : 'transparent',
               borderRadius: 999,
-              height: isSelected ? 44 : 36,
+              height: isSelected ? 52 : 44,
               justifyContent: 'center',
-              width: isSelected ? 44 : 36,
+              width: isSelected ? 52 : 44,
             }}
           >
             {/* White gap ring - only visible when selected */}
@@ -221,12 +222,12 @@ const ColorButtonComponent = ({
                 alignItems: 'center',
                 backgroundColor: isSelected ? '#ffffff' : 'transparent',
                 borderRadius: 999,
-                height: isSelected ? 40 : 36,
+                height: isSelected ? 48 : 44,
                 justifyContent: 'center',
-                width: isSelected ? 40 : 36,
+                width: isSelected ? 48 : 44,
               }}
             >
-              {/* Inner color circle - always 36px */}
+              {/* Inner color circle - always 44px (increased from 36px) */}
               <TouchableOpacity
                 accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
                 accessibilityRole='button'
@@ -235,9 +236,9 @@ const ColorButtonComponent = ({
                   alignItems: 'center',
                   backgroundColor: color,
                   borderRadius: 999,
-                  height: 36,
+                  height: 44,
                   justifyContent: 'center',
-                  width: 36,
+                  width: 44,
                 }}
                 testID={`color-swatch-${color.replace('#', '')}`}
                 onPress={handlePress}
@@ -256,6 +257,7 @@ const ColorButton = memo(ColorButtonComponent);
 
 // Custom color button with dashed border and plus icon
 // V9: Updated to 36px to match color swatches
+// V12: Updated to 44px to match larger color swatches
 const CustomColorButtonComponent = ({ onPress }: { onPress: () => void }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
@@ -285,38 +287,48 @@ const CustomColorButtonComponent = ({ onPress }: { onPress: () => void }) => {
   }, [scale]);
 
   return (
-    <Animated.View style={{ transform: [{ scale }] }}>
-      <TouchableOpacity
-        accessibilityLabel='Choose custom color'
-        accessibilityRole='button'
-        style={{
-          alignItems: 'center',
-          borderColor: '#a8a29e', // stone-400
-          borderRadius: 999,
-          borderStyle: 'dashed',
-          borderWidth: 2,
-          height: 36,
-          justifyContent: 'center',
-          width: 36,
-        }}
-        testID='color-swatch-custom'
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      >
-        <Plus color='#a8a29e' size={18} />
-      </TouchableOpacity>
-    </Animated.View>
+    // Fixed 52px container to match color swatches
+    <View
+      style={{
+        alignItems: 'center',
+        height: 52,
+        justifyContent: 'center',
+        width: 52,
+      }}
+    >
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <TouchableOpacity
+          accessibilityLabel='Choose custom color'
+          accessibilityRole='button'
+          style={{
+            alignItems: 'center',
+            borderColor: '#a8a29e', // stone-400
+            borderRadius: 999,
+            borderStyle: 'dashed',
+            borderWidth: 2,
+            height: 44,
+            justifyContent: 'center',
+            width: 44,
+          }}
+          testID='color-swatch-custom'
+          onPress={handlePress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+        >
+          <Plus color='#a8a29e' size={20} />
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
   );
 };
 
 const CustomColorButton = memo(CustomColorButtonComponent);
 
 /**
- * V8 Color Picker - 12 colors in a single row
+ * V8 Color Picker - 12 colors with wrapping
  * Responsive sizing to fit iPhone 14/15 Pro (390px width)
- * Uses justify-between for even spacing
  * V11 Task 8: Reduced motion support
+ * V12: Increased touch targets (44px swatches in 52px containers) for premium feel
  */
 const ColorPickerContent = ({
   colors,
@@ -328,7 +340,7 @@ const ColorPickerContent = ({
   const reduceMotion = useReduceMotion(); // V11 Task 8: Reduced motion support
 
   return (
-    <View className='mb-5'>
+    <View className='mb-6'>
       {!hideLabel && (
         <Text
           accessibilityRole='text'
@@ -339,7 +351,7 @@ const ColorPickerContent = ({
         </Text>
       )}
       {/* 12 colors, centered with wrapping */}
-      {/* No gap needed - each swatch has fixed 44px container with 36px content, providing built-in spacing */}
+      {/* Each swatch has fixed 52px container with 44px content, providing built-in spacing */}
       <View
         style={{
           flexDirection: 'row',

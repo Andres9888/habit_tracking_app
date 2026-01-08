@@ -13,6 +13,8 @@ interface ModalHeaderProps {
   onSave: () => void;
   isKeyboardVisible?: boolean;
   onDismissKeyboard?: () => void;
+  /** Called when user taps Save with empty habit name */
+  onValidationError?: () => void;
 }
 
 export const ModalHeader = ({
@@ -22,12 +24,47 @@ export const ModalHeader = ({
   onSave,
   isKeyboardVisible = false,
   onDismissKeyboard,
+  onValidationError,
 }: ModalHeaderProps) => {
   const insets = useSafeAreaInsets();
   const canSave = habitName.trim().length > 0;
   const saveScale = useRef(new Animated.Value(1)).current;
+  const saveShake = useRef(new Animated.Value(0)).current;
   const doneScale = useRef(new Animated.Value(1)).current;
-  const { triggerSelection } = useHapticFeedback();
+  const { triggerSelection, triggerWarning } = useHapticFeedback();
+
+  // Shake animation for validation error
+  const triggerShake = useCallback(() => {
+    triggerWarning();
+    onValidationError?.();
+    Animated.sequence([
+      Animated.timing(saveShake, {
+        duration: 50,
+        toValue: 10,
+        useNativeDriver: true,
+      }),
+      Animated.timing(saveShake, {
+        duration: 50,
+        toValue: -10,
+        useNativeDriver: true,
+      }),
+      Animated.timing(saveShake, {
+        duration: 50,
+        toValue: 8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(saveShake, {
+        duration: 50,
+        toValue: -8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(saveShake, {
+        duration: 50,
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [saveShake, triggerWarning, onValidationError]);
 
   const handleDismissKeyboard = useCallback(() => {
     triggerSelection();
@@ -38,35 +75,36 @@ export const ModalHeader = ({
     }
   }, [triggerSelection, onDismissKeyboard]);
 
-  // Compact padding when keyboard is visible
+  // Compact padding - reduced for more form space
   const headerPadding = isKeyboardVisible
-    ? Math.max(insets.top + 4, 12)
-    : Math.max(insets.top + 8, 16);
+    ? Math.max(insets.top + 2, 10)
+    : Math.max(insets.top + 4, 12);
 
   return (
     <View
-      className='flex-row items-center justify-between px-4 pb-3'
+      className='flex-row items-center justify-between px-4 pb-2'
       style={{ paddingTop: headerPadding }}
     >
+      {/* Close button - 44px to meet HIG touch target minimum */}
       <TouchableOpacity
         accessibilityLabel={STRINGS.CREATE_HABIT.close}
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full'
+        className='h-11 w-11 items-center justify-center rounded-full'
         onPress={onClose}
       >
-        <X color='#44403c' size={24} strokeWidth={2} />
+        <X color='#44403c' size={22} strokeWidth={2} />
       </TouchableOpacity>
-      <Text className='text-[24px] font-bold tracking-tight text-stone-900'>
-        {isEditMode ? 'Edit Habit' : STRINGS.CREATE_HABIT.title}
-      </Text>
+      {/* Spacer to center-align nothing (keeps buttons at edges) */}
+      <View className='flex-1' />
 
       {/* Show "Done" button when keyboard is visible, otherwise show Save button */}
+      {/* Both buttons use 44px height to meet HIG touch target minimum */}
       {isKeyboardVisible ? (
         <Animated.View style={{ transform: [{ scale: doneScale }] }}>
           <TouchableOpacity
             accessibilityLabel='Done editing'
             accessibilityRole='button'
-            className='h-9 items-center justify-center rounded-full px-4'
+            className='h-11 items-center justify-center rounded-full px-5'
             onPress={handleDismissKeyboard}
             onPressIn={() => {
               Animated.timing(doneScale, {
@@ -89,7 +127,11 @@ export const ModalHeader = ({
           </TouchableOpacity>
         </Animated.View>
       ) : (
-        <Animated.View style={{ transform: [{ scale: saveScale }] }}>
+        <Animated.View
+          style={{
+            transform: [{ scale: saveScale }, { translateX: saveShake }],
+          }}
+        >
           <TouchableOpacity
             accessibilityHint={canSave ? '' : 'Enter a habit name first'}
             accessibilityLabel={
@@ -99,26 +141,29 @@ export const ModalHeader = ({
             }
             accessibilityRole='button'
             accessibilityState={{ disabled: !canSave }}
-            className={`h-9 items-center justify-center rounded-full px-6 ${
+            className={`h-11 items-center justify-center rounded-full px-6 ${
               canSave ? 'bg-stone-800' : 'bg-stone-400'
             }`}
-            disabled={!canSave}
-            onPress={onSave}
+            onPress={canSave ? onSave : triggerShake}
             onPressIn={() => {
-              Animated.timing(saveScale, {
-                duration: Motion.duration.fast,
-                easing: Motion.easing.inEase,
-                toValue: 0.96,
-                useNativeDriver: true,
-              }).start();
+              if (canSave) {
+                Animated.timing(saveScale, {
+                  duration: Motion.duration.fast,
+                  easing: Motion.easing.inEase,
+                  toValue: 0.96,
+                  useNativeDriver: true,
+                }).start();
+              }
             }}
             onPressOut={() => {
-              Animated.timing(saveScale, {
-                duration: Motion.duration.base,
-                easing: Motion.easing.outEase,
-                toValue: 1,
-                useNativeDriver: true,
-              }).start();
+              if (canSave) {
+                Animated.timing(saveScale, {
+                  duration: Motion.duration.base,
+                  easing: Motion.easing.outEase,
+                  toValue: 1,
+                  useNativeDriver: true,
+                }).start();
+              }
             }}
           >
             <Text className='text-sm font-semibold text-white'>
