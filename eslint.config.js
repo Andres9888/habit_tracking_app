@@ -144,5 +144,29 @@ export default tseslint.config(
       'unicorn/no-array-sort': 'off', // toSorted() not supported in React Native (ES2023)
       'unicorn/no-array-reverse': 'off', // toReversed() not supported in React Native (ES2023)
     },
+  },
+  // === max-lines Rule Exemptions ===
+  // Data files: Static data arrays/objects that are inherently large
+  // Example/Debug files: Development utilities not subject to production constraints
+  {
+    files: [
+      // Data files - static emoji, template, and configuration data
+      '**/emojiData/categories.ts',
+      '**/emojiKeywords/habitNameMap.ts',
+      '**/emojiKeywords/keywords.ts',
+      '**/templatesDataSeed.ts',
+      // Example and debug files - development utilities
+      '**/*Example.tsx',
+      '**/*Example.ts',
+      '**/*Debug.tsx',
+      '**/*Debug.ts',
+      '**/examples/**',
+      // Theme files - large style configurations
+      '**/theme/index.ts',
+    ],
+    rules: {
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+    },
   }
 );
