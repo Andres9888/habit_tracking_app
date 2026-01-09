@@ -166,6 +166,9 @@ export default tseslint.config(
       '**/*Debug.tsx',
       '**/*Debug.ts',
       '**/examples/**/*.{ts,tsx}',
+      // Diagnostic/test components (not unit tests - those are in __tests__)
+      'src/components/HapticTest.tsx',
+      'src/components/NativeWindTest.tsx',
       // Theme files - large style configurations
       '**/theme/index.ts',
       // Test setup files - configuration, not production code
