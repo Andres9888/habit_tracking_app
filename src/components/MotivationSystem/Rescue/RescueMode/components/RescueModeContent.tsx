@@ -2,25 +2,14 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { PreviousStreakVoiceNotes } from '../../PreviousStreakVoiceNotes';
-import type { RescueHabitData } from '../RescueMode.types';
 import { AnimatedContent } from './AnimatedContent';
 import { StreakAtRiskHeader } from './StreakAtRiskHeader';
 import { FeaturedWhy } from './FeaturedWhy';
 import { FeaturedVoiceNote } from './FeaturedVoiceNote';
 import { FailureVizSection } from './FailureVizSection';
 import { ScienceTipSection } from './ScienceTipSection';
-
-interface RescueModeContentProps {
-  habit: RescueHabitData;
-  visible: boolean;
-  reduceMotion: boolean;
-  hasStreak: boolean;
-  hasWhy: boolean;
-  hasVoiceNote: boolean;
-  hasPreviousStreakNotes: boolean;
-  onVoiceNotePlayStart?: () => void;
-  onVoiceNotePlayFinish?: () => void;
-}
+import { getAnimationIndex } from './useAnimationIndex';
+import type { RescueModeContentProps } from './RescueModeContent.types';
 
 export function RescueModeContent({
   habit,
@@ -33,9 +22,10 @@ export function RescueModeContent({
   onVoiceNotePlayStart,
   onVoiceNotePlayFinish,
 }: RescueModeContentProps) {
+  const flags = { hasPreviousStreakNotes, hasStreak, hasVoiceNote, hasWhy };
+
   return (
     <>
-      {/* Streak at Risk Header */}
       {hasStreak && (
         <AnimatedContent
           index={0}
@@ -49,11 +39,9 @@ export function RescueModeContent({
           />
         </AnimatedContent>
       )}
-
-      {/* Featured Your Why */}
       {hasWhy && (
         <AnimatedContent
-          index={hasStreak ? 1 : 0}
+          index={getAnimationIndex(flags, ['streak'])}
           reduceMotion={reduceMotion}
           visible={visible}
         >
@@ -62,11 +50,9 @@ export function RescueModeContent({
           </View>
         </AnimatedContent>
       )}
-
-      {/* Featured Day 1 Voice Note */}
       {hasVoiceNote && (
         <AnimatedContent
-          index={(hasStreak ? 1 : 0) + (hasWhy ? 1 : 0)}
+          index={getAnimationIndex(flags, ['streak', 'why'])}
           reduceMotion={reduceMotion}
           visible={visible}
         >
@@ -80,13 +66,9 @@ export function RescueModeContent({
           </View>
         </AnimatedContent>
       )}
-
-      {/* Previous Streak Voice Notes */}
       {hasPreviousStreakNotes && (
         <AnimatedContent
-          index={
-            (hasStreak ? 1 : 0) + (hasWhy ? 1 : 0) + (hasVoiceNote ? 1 : 0)
-          }
+          index={getAnimationIndex(flags, ['streak', 'why', 'voiceNote'])}
           reduceMotion={reduceMotion}
           visible={visible}
         >
@@ -101,8 +83,6 @@ export function RescueModeContent({
           </View>
         </AnimatedContent>
       )}
-
-      {/* Failure Visualization & Science tip */}
       <FailureVizSection
         habit={habit}
         hasPreviousStreakNotes={hasPreviousStreakNotes}

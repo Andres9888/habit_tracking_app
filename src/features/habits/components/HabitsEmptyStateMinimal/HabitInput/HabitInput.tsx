@@ -1,33 +1,21 @@
 /**
  * HabitInput - Text input with animated focus states
- *
- * Features:
- * - Blue border on focus (per app pattern)
- * - Animated border color transition
- * - Light haptic feedback on focus
- * - Clear button (X) when text is present
- * - Character counter with color warnings (35+ chars: amber, 45+: red)
- * - Max length enforcement (50 characters)
- * - Keyboard submit support
- * - Forwarded ref for external focus control
- * - Proper accessibility labels
  */
 
 import { forwardRef, useMemo } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-
-import {
-  BORDER_RADIUS,
-  CHARACTER_LIMIT,
-  COLORS,
-  COPY,
-  TOUCH_TARGETS,
-} from '../constants';
+import { CHARACTER_LIMIT, COLORS, COPY } from '../constants';
 import type { HabitInputProps } from '../types';
 import { ClearIcon } from './ClearIcon';
 import { getCharacterCounterColor } from './helpers';
 import { useInputAnimations } from './useInputAnimations';
+import {
+  getContainerStyle,
+  inputTextStyle,
+  clearButtonPressedStyle,
+  characterCounterStyle,
+} from './inputStyles';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -47,25 +35,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     );
 
     return (
-      <AnimatedView
-        style={[
-          containerStyle,
-          {
-            alignItems: 'center',
-            backgroundColor: '#ffffff',
-            borderRadius: BORDER_RADIUS.input,
-            borderWidth: 2,
-            elevation: isFocused ? 2 : 0,
-            flexDirection: 'row',
-            height: TOUCH_TARGETS.inputHeight,
-            paddingHorizontal: 20,
-            shadowColor: COLORS.blue500,
-            shadowOffset: { height: 0, width: 0 },
-            shadowRadius: 8,
-            width: '100%',
-          },
-        ]}
-      >
+      <AnimatedView style={[containerStyle, getContainerStyle({ isFocused })]}>
         <TextInput
           ref={ref}
           accessibilityHint={`Type a habit you want to track daily, maximum ${CHARACTER_LIMIT.max} characters`}
@@ -77,12 +47,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           placeholderTextColor={COLORS.stone400}
           returnKeyType='done'
           selectionColor={COLORS.emeraldCaret}
-          style={{
-            color: COLORS.stone800,
-            flex: 1,
-            fontSize: 16,
-            fontWeight: '500',
-          }}
+          style={inputTextStyle}
           value={value}
           onBlur={handleBlur}
           onChangeText={onChangeText}
@@ -94,10 +59,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
             accessibilityLabel='Clear input'
             accessibilityRole='button'
             hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
-            style={({ pressed }) => ({
-              marginLeft: 8,
-              opacity: pressed ? 0.6 : 1,
-            })}
+            style={({ pressed }) => clearButtonPressedStyle(pressed)}
             onPress={onClear}
           >
             <ClearIcon />
@@ -107,12 +69,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           <Text
             accessibilityElementsHidden
             importantForAccessibility='no'
-            style={{
-              color: characterCounterColor,
-              fontSize: 12,
-              fontWeight: '500',
-              marginLeft: 8,
-            }}
+            style={characterCounterStyle(characterCounterColor)}
           >
             {value.length}/{CHARACTER_LIMIT.max}
           </Text>

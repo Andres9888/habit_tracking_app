@@ -11,3 +11,4 @@ export { MetadataPills } from './MetadataPills';
 export { ScienceBox } from './ScienceBox';
 export { TemplateCardContent } from './TemplateCardContent';
 export { TemplateIcon } from './TemplateIcon';
+export { ScrollRevealWrapper } from './ScrollRevealWrapper';

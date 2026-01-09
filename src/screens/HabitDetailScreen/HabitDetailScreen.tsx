@@ -1,16 +1,12 @@
-/**
- * HabitDetailScreen Component
- * Calendar-focused Habit Detail Page - Main orchestration file
- */
+/** HabitDetailScreen - Calendar-focused Habit Detail Page */
 
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Modal } from '../../components/Modal';
-import { MonthlyCalendarGrid } from '../../components/BinaryHeatmap';
-import { HabitStrengthSection } from '../../components/HabitStrengthSection';
 import {
   DetailHeader,
+  HabitDetailContent,
   NotesListModal,
   NotesEditorModal,
   UndoToasts,
@@ -79,32 +75,12 @@ export default function HabitDetailScreen({
           onClose={onClose}
           onEdit={notesHandlers.handleEdit}
         />
-
-        <ScrollView
-          bounces
-          className='flex-1'
-          contentContainerClassName='p-4 pb-8'
-          showsVerticalScrollIndicator={false}
-        >
-          {habit.createdAt && (
-            <HabitStrengthSection
-              completedDates={state.completedDates}
-              habitColor={habit.iconColor}
-              habitCreatedAt={habit.createdAt}
-              habitId={habit._id}
-              habitStrength={habit.strength}
-            />
-          )}
-          <MonthlyCalendarGrid
-            completedDates={state.completedDates}
-            habitColor={habit.iconColor ?? '#10b981'}
-            habitCreatedAt={habit.createdAt}
-            habitId={habit._id}
-            onDayPress={calendarHandlers.handleCalendarDayPress}
-          />
-        </ScrollView>
+        <HabitDetailContent
+          completedDates={state.completedDates}
+          habit={habit}
+          onDayPress={calendarHandlers.handleCalendarDayPress}
+        />
       </View>
-
       <NotesListModal
         habitId={habit._id}
         insets={insets}
@@ -118,7 +94,6 @@ export default function HabitDetailScreen({
         isOpen={state.isNotesEditorOpen}
         onClose={notesHandlers.handleCloseNotesEditor}
       />
-
       <UndoToasts
         habitName={habit.name}
         pendingArchive={state.pendingArchive}

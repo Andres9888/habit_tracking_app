@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
 import type { CreateHabitModalProps, HabitTemplate } from '../types';
 import { useHabitForm } from './useHabitForm';
 import { useScienceModal } from './useScienceModal';
@@ -7,6 +7,11 @@ import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { extractTemplateDetails } from '../utils';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
+import {
+  useVisibilityReset,
+  useHabitData,
+  useModalCleanup,
+} from './useCreateHabitModalEffects';
 
 export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { visible, onClose, habitToEdit } = props;
@@ -14,33 +19,16 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const form = useHabitForm({ habitToEdit });
   const { triggerSuccess } = useHapticFeedback();
   const { handleEdit, handleCreate: createNewHabit } = useCreateHabitHandlers();
-  const {
-    closeColorPicker,
-    dayPhase,
-    fullHabitName,
-    habitName,
-    reminderSound,
-    reminderTime,
-    remindersEnabled,
-    resetForm,
-    selectedColor,
-    selectedEmoji,
-    setFrequency,
-    setHabitName,
-    setSelectedColor,
-    setSelectedEmoji,
-    setShowTimePicker,
-  } = form;
 
   const applyTemplate = useCallback(
     (template: HabitTemplate) => {
       const { emoji, name } = extractTemplateDetails(template);
-      setSelectedEmoji(emoji);
-      setHabitName(name);
-      if (template.iconColor) setSelectedColor(template.iconColor);
-      if (template.frequency) setFrequency(template.frequency);
+      form.setSelectedEmoji(emoji);
+      form.setHabitName(name);
+      if (template.iconColor) form.setSelectedColor(template.iconColor);
+      if (template.frequency) form.setFrequency(template.frequency);
     },
-    [setHabitName, setSelectedColor, setSelectedEmoji, setFrequency]
+    [form]
   );
 
   const template = useTemplateBrowser({
@@ -50,55 +38,38 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   });
   const science = useScienceModal({ onSelectTemplate: applyTemplate });
 
-  useEffect(() => {
-    if (!visible || isEditMode) return;
-    resetForm();
-    template.reset();
-    template.closeTemplateBrowser();
-    science.close();
-  }, [visible, isEditMode, resetForm, template, science]);
-
-  const habitData = useMemo(
-    () => ({
-      dayPhase,
-      fullHabitName: fullHabitName,
-      reminderSound,
-      reminderTime,
-      selectedColor,
-      selectedEmoji,
-    }),
-    [
-      dayPhase,
-      fullHabitName,
-      reminderSound,
-      reminderTime,
-      selectedColor,
-      selectedEmoji,
-    ]
-  );
-
-  const cleanup = useCallback(() => {
-    resetForm();
-    closeColorPicker();
-    setShowTimePicker(false);
-    template.reset();
-    template.closeTemplateBrowser();
-    science.close();
-    triggerSuccess();
-    onClose();
-  }, [
-    resetForm,
-    closeColorPicker,
-    setShowTimePicker,
-    template,
+  useVisibilityReset({
+    isEditMode,
+    resetForm: form.resetForm,
     science,
-    triggerSuccess,
+    template,
+    visible,
+  });
+
+  const habitData = useHabitData({
+    dayPhase: form.dayPhase,
+    fullHabitName: form.fullHabitName,
+    reminderSound: form.reminderSound,
+    reminderTime: form.reminderTime,
+    selectedColor: form.selectedColor,
+    selectedEmoji: form.selectedEmoji,
+  });
+
+  const cleanup = useModalCleanup({
+    closeColorPicker: form.closeColorPicker,
     onClose,
-  ]);
+    resetForm: form.resetForm,
+    science,
+    setShowTimePicker: form.setShowTimePicker,
+    template,
+    triggerSuccess,
+  });
 
   const handleCreate = useCallback(async () => {
-    if (!habitName.trim() || !fullHabitName) return;
-    const { hasReminders } = await checkReminderPermissions(remindersEnabled);
+    if (!form.habitName.trim() || !form.fullHabitName) return;
+    const { hasReminders } = await checkReminderPermissions(
+      form.remindersEnabled
+    );
     const data = { ...habitData, hasReminders };
 
     await (isEditMode && habitToEdit
@@ -106,12 +77,10 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       : createNewHabit(data));
     cleanup();
   }, [
-    habitName,
-    fullHabitName,
-    remindersEnabled,
+    form,
+    habitData,
     isEditMode,
     habitToEdit,
-    habitData,
     handleEdit,
     createNewHabit,
     cleanup,

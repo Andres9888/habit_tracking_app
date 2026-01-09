@@ -1,14 +1,10 @@
 /**
  * useSuccessExitAnimation - Exit animation for SuccessState
- *
- * Handles the shared element transition when exiting success state.
  */
 
 import { useCallback, useRef } from 'react';
+import type { SharedValue } from 'react-native-reanimated';
 import {
-  SharedValue,
-  useSharedValue,
-  useAnimatedStyle,
   withDelay,
   withTiming,
   withSpring,
@@ -18,6 +14,8 @@ import {
 
 import { EXIT_TRANSITION, EXIT_SPRING_CONFIG } from './animations';
 import { useAutoTransitionTimer } from './useAutoTransitionTimer';
+import { useExitAnimationValues } from './useExitAnimationValues';
+import { useExitAnimationStyles } from './useExitAnimationStyles';
 
 interface UseSuccessExitAnimationParams {
   shouldReduceMotion: boolean | null;
@@ -35,41 +33,30 @@ export function useSuccessExitAnimation({
   contentOpacity,
 }: UseSuccessExitAnimationParams) {
   const isExiting = useRef(false);
-  const autoTransitionTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  const iconTranslateY = useSharedValue(0);
-  const iconExitScale = useSharedValue(1);
-  const containerOpacity = useSharedValue(1);
-  const ringOpacity = useSharedValue(1);
-  const burstOpacity = useSharedValue(1);
+  const values = useExitAnimationValues();
 
   const triggerExitAnimation = useCallback(() => {
     if (isExiting.current) return;
     isExiting.current = true;
-
-    if (autoTransitionTimeout.current) {
-      clearTimeout(autoTransitionTimeout.current);
-      autoTransitionTimeout.current = null;
-    }
 
     if (shouldReduceMotion) {
       onTransitionComplete?.();
       return;
     }
 
-    ringOpacity.value = withTiming(0, {
+    values.ringOpacity.value = withTiming(0, {
       duration: EXIT_TRANSITION.content.duration,
       easing: Easing.out(Easing.ease),
     });
-    burstOpacity.value = withTiming(0, {
+    values.burstOpacity.value = withTiming(0, {
       duration: EXIT_TRANSITION.content.duration,
       easing: Easing.out(Easing.ease),
     });
-    iconTranslateY.value = withSpring(
+    values.iconTranslateY.value = withSpring(
       EXIT_TRANSITION.icon.translateY,
       EXIT_SPRING_CONFIG
     );
-    iconExitScale.value = withTiming(EXIT_TRANSITION.icon.scale, {
+    values.iconExitScale.value = withTiming(EXIT_TRANSITION.icon.scale, {
       duration: EXIT_TRANSITION.icon.duration,
       easing: Easing.out(Easing.cubic),
     });
@@ -77,7 +64,7 @@ export function useSuccessExitAnimation({
       duration: EXIT_TRANSITION.content.duration,
       easing: Easing.out(Easing.ease),
     });
-    containerOpacity.value = withDelay(
+    values.containerOpacity.value = withDelay(
       EXIT_TRANSITION.onCompleteDelay,
       withTiming(0, { duration: 200 }, (finished) => {
         if (finished && onTransitionComplete) {
@@ -85,43 +72,21 @@ export function useSuccessExitAnimation({
         }
       })
     );
-  }, [
-    shouldReduceMotion,
-    onTransitionComplete,
-    iconTranslateY,
-    iconExitScale,
-    contentOpacity,
-    containerOpacity,
-    ringOpacity,
-    burstOpacity,
-  ]);
+  }, [shouldReduceMotion, onTransitionComplete, contentOpacity, values]);
 
   useAutoTransitionTimer({
     autoTransition,
-    containerOpacity,
-    iconExitScale,
-    iconTranslateY,
+    containerOpacity: values.containerOpacity,
+    iconExitScale: values.iconExitScale,
+    iconTranslateY: values.iconTranslateY,
     onTransitionComplete,
     triggerExitAnimation,
   });
 
-  const iconStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: iconScale.value * iconExitScale.value },
-      { translateY: iconTranslateY.value },
-    ],
-  }));
-  const containerStyle = useAnimatedStyle(() => ({
-    opacity: containerOpacity.value,
-  }));
-  const ringStyle = useAnimatedStyle(() => ({ opacity: ringOpacity.value }));
-  const burstStyle = useAnimatedStyle(() => ({ opacity: burstOpacity.value }));
+  const styles = useExitAnimationStyles({
+    ...values,
+    iconScale,
+  });
 
-  return {
-    burstStyle,
-    containerStyle,
-    iconStyle,
-    ringStyle,
-    triggerExitAnimation,
-  };
+  return { ...styles, triggerExitAnimation };
 }

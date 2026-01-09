@@ -1,24 +1,32 @@
 import type { HabitsModalsProps } from './HabitsModals.types';
-import { SettingsModalSection } from './SettingsModalSection';
+import { ActivationModalSection } from './ActivationModalSection';
+import { CalendarAndDetailModals } from './CalendarAndDetailModals';
 import { CreateHabitModalSection } from './CreateHabitModalSection';
 import { HapticTestModalSection } from './HapticTestModalSection';
-import { CalendarAndDetailModals } from './CalendarAndDetailModals';
+import { QuickActionsSection } from './QuickActionsSection';
+import { SettingsModalSection } from './SettingsModalSection';
 import { ShareAndPauseModals } from './ShareAndPauseModals';
 import { TemplatesModalSection } from './TemplatesModalSection';
-import { QuickActionsSection } from './QuickActionsSection';
 import { VisualizationModalSection } from './VisualizationModalSection';
-import { ActivationModalSection } from './ActivationModalSection';
-
 /** HabitsModals - Orchestrator component for all habit-related modals */
 export function HabitsModals({ state }: HabitsModalsProps) {
-  const { selectedHabit, habitToEdit, tracking, toggleHabit } = state;
-  const { openHabitDetail, openEditHabit, openPauseModal, openHabitCalendar } =
-    state;
-  const { showSettings, showCreateHabit, showHapticTest, showHabitCalendar } =
-    state;
-  const { showHabitDetail, showEditScreen, showShareCard, showPauseModal } =
-    state;
   const {
+    selectedHabit,
+    habitToEdit,
+    tracking,
+    toggleHabit,
+    openHabitDetail,
+    openEditHabit,
+    openPauseModal,
+    openHabitCalendar,
+    showSettings,
+    showCreateHabit,
+    showHapticTest,
+    showHabitCalendar,
+    showHabitDetail,
+    showEditScreen,
+    showShareCard,
+    showPauseModal,
     showTemplatesScreen,
     showQuickActions,
     showVisualizationExercise,
@@ -106,5 +114,4 @@ export function HabitsModals({ state }: HabitsModalsProps) {
     </>
   );
 }
-
 export default HabitsModals;

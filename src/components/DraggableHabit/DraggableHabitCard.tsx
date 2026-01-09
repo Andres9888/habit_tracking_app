@@ -5,6 +5,7 @@ import ReAnimated from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
+import { buildCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 
 export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
@@ -16,24 +17,14 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     props.accentColor
   );
 
-  const cardStyle = {
-    backgroundColor:
-      props.isWeekComplete && !props.highContrastMode
-        ? 'rgba(220, 252, 231, 0.3)'
-        : props.colors.cardBackground,
-    borderColor:
-      props.isWeekComplete && !props.highContrastMode
-        ? '#86efac'
-        : props.colors.border,
-    borderWidth: props.highContrastMode ? 2 : 1,
-    elevation: 3,
-    opacity: props.fade,
-    shadowColor: props.isWeekComplete ? '#10b981' : '#78716c',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: props.isWeekComplete ? 0.12 : 0.06,
-    shadowRadius: 12,
-    transform: [{ translateY: props.translateY }, { scale: props.cardScale }],
-  };
+  const cardStyle = buildCardStyle({
+    cardScale: props.cardScale,
+    colors: props.colors,
+    fade: props.fade,
+    highContrastMode: props.highContrastMode,
+    isWeekComplete: props.isWeekComplete,
+    translateY: props.translateY,
+  });
 
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>

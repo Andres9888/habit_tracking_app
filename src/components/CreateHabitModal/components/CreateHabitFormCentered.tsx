@@ -3,43 +3,11 @@ import { Keyboard, Text, TextInput, View } from 'react-native';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
-
-interface CreateHabitFormCenteredProps {
-  habitName: string;
-  onHabitNameChange: (value: string) => void;
-  selectedEmoji: string | null;
-  onEmojiSelect: (emoji: string | null) => void;
-  colors: readonly string[];
-  selectedColor: string;
-  onColorSelect: (color: string) => void;
-  reminderEnabled: boolean;
-  /** Reminder time as Date object for EnhancedReminderSelector */
-  reminderTime: Date;
-  onReminderToggle: (enabled: boolean) => void;
-  /** Called when reminder time changes (preset or custom selection) */
-  onReminderTimeChange: (time: Date) => void;
-  onSubmit: () => void;
-  autoFocus?: boolean;
-  /** Whether to show validation error for empty habit name */
-  showNameError?: boolean;
-}
+import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
 /**
- * Centered habit creation form with optional fields
- *
- * Design Philosophy:
- * - Name input is required and prominently centered at top
- * - Optional fields (emoji, color, reminder) appear below in order of importance
- * - All fields are visible but emphasis is on the name
- * - Smart defaults reduce cognitive load while maintaining customization
- *
- * Field Order Rationale:
- * 1. Name - Core identity (required)
- * 2. Emoji - Visual identity (auto-suggested, optional)
- * 3. Color - Visual reinforcement (optional)
- * 4. Reminder - Behavioral nudge (optional)
- *
- * This follows "identity before behavior" in habit formation psychology.
+ * Centered habit creation form with optional fields.
+ * Follows "identity before behavior" in habit formation psychology.
  */
 const CreateHabitFormCenteredComponent = ({
   habitName,

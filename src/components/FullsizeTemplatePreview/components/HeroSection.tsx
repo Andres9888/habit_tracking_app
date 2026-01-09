@@ -14,6 +14,7 @@ import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
 } from '../FullsizeTemplatePreview.constants';
+import { MetadataPill } from './MetadataPill';
 import type { HeroSectionProps } from './HeroSection.types';
 
 export function HeroSection({
@@ -64,47 +65,19 @@ export function HeroSection({
         </Text>
 
         <View style={heroStyles.pillsRow}>
-          <View
-            style={[
-              heroStyles.metadataPill,
-              {
-                backgroundColor: `${iconColor}10`,
-                borderColor: `${iconColor}20`,
-              },
-            ]}
+          <MetadataPill
+            icon={<Clock color={iconColor} size={14} strokeWidth={2} />}
+            iconColor={iconColor}
           >
-            <Clock color={iconColor} size={14} strokeWidth={2} />
-            <Text style={[heroStyles.metadataPillText, { color: iconColor }]}>
-              {formattedFrequency}
-            </Text>
-          </View>
-          <View
-            style={[
-              heroStyles.metadataPill,
-              {
-                backgroundColor: `${iconColor}10`,
-                borderColor: `${iconColor}20`,
-              },
-            ]}
+            {formattedFrequency}
+          </MetadataPill>
+          <MetadataPill
+            icon={<Sparkles color={iconColor} size={14} strokeWidth={2} />}
+            iconColor={iconColor}
           >
-            <Sparkles color={iconColor} size={14} strokeWidth={2} />
-            <Text style={[heroStyles.metadataPillText, { color: iconColor }]}>
-              {formattedCategory}
-            </Text>
-          </View>
-          <View
-            style={[
-              heroStyles.metadataPill,
-              {
-                backgroundColor: `${iconColor}10`,
-                borderColor: `${iconColor}20`,
-              },
-            ]}
-          >
-            <Text style={[heroStyles.metadataPillText, { color: iconColor }]}>
-              ⏱️ 5-10 min
-            </Text>
-          </View>
+            {formattedCategory}
+          </MetadataPill>
+          <MetadataPill iconColor={iconColor}>⏱️ 5-10 min</MetadataPill>
         </View>
       </View>
     </LinearGradient>

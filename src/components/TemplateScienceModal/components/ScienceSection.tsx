@@ -3,16 +3,14 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
-import { sectionStyles, scienceStyles } from '../styles';
-import { AnimatedBorderBox } from './AnimatedBorderBox';
+import { sectionStyles } from '../styles';
 import { getWhyItWorksText } from '../TemplateScienceModal.utils';
 import type { ScienceSectionProps } from '../TemplateScienceModal.types';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import { ResearchCitation } from './ResearchCitation';
+import { WhyItWorks } from './WhyItWorks';
 
 export const ScienceSection = ({
   animatedStyle,
@@ -52,74 +50,16 @@ export const ScienceSection = ({
         </Text>
       </View>
 
-      <AnimatedBorderBox baseColor={baseColor}>
-        <View style={scienceStyles.citationHeader}>
-          <View style={scienceStyles.citationDot} />
-          <Text
-            style={[
-              scienceStyles.citationLabel,
-              { fontFamily: theme.custom.fontFamilies.primary.text },
-            ]}
-          >
-            Research Citation
-          </Text>
-        </View>
-        <Text
-          style={[
-            scienceStyles.citationText,
-            { fontFamily: theme.custom.fontFamilies.primary.text },
-          ]}
-        >
-          "{scientificReference}"
-        </Text>
+      <ResearchCitation
+        baseColor={baseColor}
+        linkButtonAnimatedStyle={linkButtonAnimatedStyle}
+        pressHandlers={pressHandlers}
+        scientificLink={scientificLink}
+        scientificReference={scientificReference}
+        onLinkPress={onLinkPress}
+      />
 
-        {scientificLink && (
-          <AnimatedPressable
-            accessibilityHint='Opens research paper in your browser'
-            accessibilityLabel='Read the full research paper'
-            accessibilityRole='link'
-            style={[scienceStyles.linkButton, linkButtonAnimatedStyle]}
-            onPress={onLinkPress}
-            {...pressHandlers}
-          >
-            <ExternalLink color='#3B82F6' size={16} strokeWidth={2.5} />
-            <Text
-              style={[
-                scienceStyles.linkText,
-                { fontFamily: theme.custom.fontFamilies.primary.text },
-              ]}
-            >
-              Read Full Research Paper
-            </Text>
-          </AnimatedPressable>
-        )}
-      </AnimatedBorderBox>
-
-      <View
-        accessible
-        accessibilityRole='text'
-        style={scienceStyles.whyItWorksContainer}
-      >
-        <View style={scienceStyles.whyItWorksHeader}>
-          <Text style={scienceStyles.whyItWorksEmoji}>💡</Text>
-          <Text
-            style={[
-              scienceStyles.whyItWorksTitle,
-              { fontFamily: theme.custom.fontFamilies.primary.text },
-            ]}
-          >
-            Why This Habit Works
-          </Text>
-        </View>
-        <Text
-          style={[
-            scienceStyles.whyItWorksText,
-            { fontFamily: theme.custom.fontFamilies.primary.text },
-          ]}
-        >
-          {whyItWorksText}
-        </Text>
-      </View>
+      <WhyItWorks whyItWorksText={whyItWorksText} />
     </Animated.View>
   );
 };

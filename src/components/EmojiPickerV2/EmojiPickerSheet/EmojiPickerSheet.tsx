@@ -4,18 +4,15 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { Modal, View, Text, Pressable } from 'react-native';
+import { Modal, View, Pressable } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { addRecentEmoji } from '../../../utils/recentEmojis';
-import { CategoryPills } from '../CategoryPills';
-import { EmojiGrid } from '../EmojiGrid';
 import type { EmojiPickerSheetProps } from './EmojiPickerSheet.types';
 import { styles } from './EmojiPickerSheet.styles';
 import { useEmojiPickerState } from './useEmojiPickerState';
 import { useSheetAnimations } from './useSheetAnimations';
-import { SearchBar } from './SearchBar';
-import { SuggestionsSection } from './SuggestionsSection';
+import { SheetContent } from './SheetContent';
 
 export const EmojiPickerSheet = memo(
   ({
@@ -67,60 +64,24 @@ export const EmojiPickerSheet = memo(
               accessibilityViewIsModal
               style={[styles.sheet, animations.sheetAnimatedStyle]}
             >
-              <View
-                accessibilityLabel='Drag to dismiss'
-                accessibilityRole='adjustable'
-                style={styles.handleContainer}
-              >
-                <View style={styles.handle} />
-              </View>
-
-              <SearchBar
-                animatedStyle={animations.searchBarAnimatedStyle}
+              <SheetContent
+                currentCategoryName={state.currentCategoryName}
+                displayedEmojis={state.displayedEmojis}
+                habitName={habitName}
+                handleCategorySelect={state.handleCategorySelect}
+                handleClearSearch={state.handleClearSearch}
                 isSearchFocused={state.isSearchFocused}
+                searchBarAnimatedStyle={animations.searchBarAnimatedStyle}
                 searchFocusAnim={animations.searchFocusAnim}
-                setIsSearchFocused={state.setIsSearchFocused}
-                value={state.searchQuery}
-                onChange={state.setSearchQuery}
-                onClear={state.handleClearSearch}
-              />
-
-              {!state.searchQuery && (
-                <SuggestionsSection
-                  habitName={habitName}
-                  selectedEmoji={selectedEmoji}
-                  suggestedEmojis={state.suggestedEmojis}
-                  onEmojiSelect={handleEmojiSelect}
-                />
-              )}
-
-              {!state.searchQuery && (
-                <CategoryPills
-                  selectedCategory={state.selectedCategory}
-                  onCategorySelect={state.handleCategorySelect}
-                />
-              )}
-
-              <EmojiGrid
-                categoryName={
-                  state.searchQuery ? undefined : state.currentCategoryName
-                }
-                emojis={state.displayedEmojis}
+                searchQuery={state.searchQuery}
+                selectedCategory={state.selectedCategory}
                 selectedEmoji={selectedEmoji}
-                showCategoryHeader={!state.searchQuery}
+                setIsSearchFocused={state.setIsSearchFocused}
+                setSearchQuery={state.setSearchQuery}
+                suggestedEmojis={state.suggestedEmojis}
                 onEmojiSelect={handleEmojiSelect}
+                onNoIcon={handleNoIcon}
               />
-
-              <View style={styles.noIconContainer}>
-                <Pressable
-                  accessibilityLabel='Select no icon for this habit'
-                  accessibilityRole='button'
-                  style={styles.noIconButton}
-                  onPress={handleNoIcon}
-                >
-                  <Text style={styles.noIconText}>No icon</Text>
-                </Pressable>
-              </View>
             </Animated.View>
           </GestureDetector>
         </View>

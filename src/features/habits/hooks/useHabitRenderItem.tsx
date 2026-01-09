@@ -1,8 +1,4 @@
-/**
- * useHabitRenderItem Hook
- *
- * Provides the render function for habit items in the draggable list.
- */
+/** useHabitRenderItem - Provides the render function for habit items in the draggable list */
 
 import { useCallback } from 'react';
 import { View } from 'react-native';
@@ -43,7 +39,6 @@ export function useHabitRenderItem({
       const entranceDelay = index * entranceStaggerDelay;
       const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
       const triggerEntrance = shouldTriggerEntrance && !hasBeenSeen;
-
       const weekStatus = weekDateStrings.map((dateString) =>
         getHabitStatus(item._id, dateString)
       );

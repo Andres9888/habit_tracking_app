@@ -10,6 +10,7 @@ import { useReminderOptionSync } from './useReminderOptionSync';
 import { useHabitFormState } from './useHabitFormState';
 import { useHabitFormInit } from './useHabitFormInit';
 import { useHabitFormReset } from './useHabitFormReset';
+import { buildHabitFormReturn } from './useHabitFormReturn';
 
 interface UseHabitFormOptions {
   habitToEdit?: HabitDoc | null;
@@ -17,105 +18,60 @@ interface UseHabitFormOptions {
 
 export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   const state = useHabitFormState({ habitToEdit });
-  const {
-    dayPhase,
-    frequency,
-    habitName,
-    isColorPickerVisible,
-    parsed,
-    reminderOption,
-    remindersEnabled,
-    reminderSound,
-    reminderTime,
-    selectedColor,
-    selectedEmoji,
-    setColorPickerVisible,
-    setDayPhase,
-    setFrequency,
-    setHabitName,
-    setReminderOptionState,
-    setRemindersEnabled,
-    setReminderSound,
-    setReminderTime,
-    setSelectedColor,
-    setSelectedEmoji,
-    setShowTimePicker,
-    showTimePicker,
-  } = state;
 
   const fullHabitName = useMemo(
-    () => buildHabitName(selectedEmoji, habitName),
-    [selectedEmoji, habitName]
+    () => buildHabitName(state.selectedEmoji, state.habitName),
+    [state.selectedEmoji, state.habitName]
   );
+
   const syncReminderOption = useReminderOptionSync({
-    setDayPhase,
-    setRemindersEnabled,
-    setReminderTime,
+    setDayPhase: state.setDayPhase,
+    setRemindersEnabled: state.setRemindersEnabled,
+    setReminderTime: state.setReminderTime,
   });
 
   const setReminderOption = useCallback(
     (option: ReminderOption) => {
-      setReminderOptionState(option);
+      state.setReminderOptionState(option);
       syncReminderOption(option);
     },
-    [setReminderOptionState, syncReminderOption]
+    [state, syncReminderOption]
   );
 
   useHabitFormInit({
     habitToEdit,
-    parsed,
+    parsed: state.parsed,
     setters: {
-      setDayPhase,
-      setFrequency,
-      setHabitName,
-      setReminderOptionState,
-      setRemindersEnabled,
-      setReminderSound,
-      setReminderTime,
-      setSelectedColor,
-      setSelectedEmoji,
+      setDayPhase: state.setDayPhase,
+      setFrequency: state.setFrequency,
+      setHabitName: state.setHabitName,
+      setReminderOptionState: state.setReminderOptionState,
+      setRemindersEnabled: state.setRemindersEnabled,
+      setReminderSound: state.setReminderSound,
+      setReminderTime: state.setReminderTime,
+      setSelectedColor: state.setSelectedColor,
+      setSelectedEmoji: state.setSelectedEmoji,
     },
   });
 
   const resetForm = useHabitFormReset({
-    setColorPickerVisible,
-    setDayPhase,
-    setFrequency,
-    setHabitName,
-    setReminderOptionState,
-    setRemindersEnabled,
-    setReminderSound,
-    setReminderTime,
-    setSelectedColor,
-    setSelectedEmoji,
-    setShowTimePicker,
+    setColorPickerVisible: state.setColorPickerVisible,
+    setDayPhase: state.setDayPhase,
+    setFrequency: state.setFrequency,
+    setHabitName: state.setHabitName,
+    setReminderOptionState: state.setReminderOptionState,
+    setRemindersEnabled: state.setRemindersEnabled,
+    setReminderSound: state.setReminderSound,
+    setReminderTime: state.setReminderTime,
+    setSelectedColor: state.setSelectedColor,
+    setSelectedEmoji: state.setSelectedEmoji,
+    setShowTimePicker: state.setShowTimePicker,
   });
 
-  return {
-    closeColorPicker: () => setColorPickerVisible(false),
-    dayPhase,
-    frequency,
+  return buildHabitFormReturn({
     fullHabitName,
-    habitName,
-    isColorPickerVisible,
-    openColorPicker: () => setColorPickerVisible(true),
-    reminderOption,
-    remindersEnabled,
-    reminderSound,
-    reminderTime,
     resetForm,
-    selectedColor,
-    selectedEmoji,
-    setDayPhase,
-    setFrequency,
-    setHabitName,
     setReminderOption,
-    setRemindersEnabled,
-    setReminderSound,
-    setReminderTime,
-    setSelectedColor,
-    setSelectedEmoji,
-    setShowTimePicker,
-    showTimePicker,
-  };
+    state,
+  });
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { DayConnector } from './DayConnector';
 import { ChainDayItem } from './ChainDayItem';
+import { ChainConnector } from './ChainConnector';
 import { useChainVisualizerState } from './useChainVisualizerState';
 import type { HabitChainVisualizerProps } from './types';
 
@@ -50,24 +50,12 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
   return (
     <View className='flex-row items-center justify-between'>
-      {showConnectors && isConnectedToPreviousWeek && isCompleted(0) && (
-        <View
-          style={{
-            left: -10,
-            marginTop: -1,
-            position: 'absolute',
-            top: '50%',
-            zIndex: -1,
-          }}
-        >
-          <DayConnector
-            visible
-            accentColor={accentColor}
-            baseColor={connectorColor}
-            currentStreak={currentStreak}
-          />
-        </View>
-      )}
+      <ChainConnector
+        accentColor={accentColor}
+        connectorColor={connectorColor}
+        currentStreak={currentStreak}
+        visible={showConnectors && isConnectedToPreviousWeek && isCompleted(0)}
+      />
 
       {weekDateStrings.map((dateString, index) => {
         const completed = isCompleted(index);

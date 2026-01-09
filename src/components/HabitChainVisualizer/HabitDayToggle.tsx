@@ -1,8 +1,6 @@
 import React from 'react';
 import { Animated, Pressable } from 'react-native';
 import clsx from 'clsx';
-import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
-import { Check } from 'lucide-react-native';
 import type { HabitDayToggleProps } from './types';
 import { useHabitDayToggleAnimations } from './useHabitDayToggleAnimations';
 import { useHabitDayToggleHandlers } from './useHabitDayToggleHandlers';
@@ -12,6 +10,7 @@ import {
   getBackgroundColor,
   getBorderColor,
 } from './habitDayToggleStyles';
+import { AnimatedCompletionIcon } from './AnimatedCompletionIcon';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,17 +27,9 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   shape,
 }) => {
   const { completion, buttonScale, combinedScale } =
-    useHabitDayToggleAnimations({
-      completed,
-      isToday,
-    });
-
+    useHabitDayToggleAnimations({ completed, isToday });
   const { handlePressIn, handlePressOut, handlePress } =
-    useHabitDayToggleHandlers({
-      buttonScale,
-      completed,
-      onPress,
-    });
+    useHabitDayToggleHandlers({ buttonScale, completed, onPress });
 
   const isCircle = shape === 'circle';
   const borderRadius = isCircle ? 20 : 9;
@@ -83,25 +74,10 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <Animated.View
-          style={{
-            opacity: completion,
-            transform: [
-              {
-                scale: completion.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.5, 1],
-                }),
-              },
-            ],
-          }}
-        >
-          {completionIcon === 'checkbox' ? (
-            <Check color='#ffffff' size={20} strokeWidth={2.25} />
-          ) : (
-            <ChainLinkIcon color='#ffffff' size={20} variant='stroke' />
-          )}
-        </Animated.View>
+        <AnimatedCompletionIcon
+          completion={completion}
+          completionIcon={completionIcon}
+        />
       </AnimatedPressable>
     </Animated.View>
   );

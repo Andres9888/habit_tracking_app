@@ -3,7 +3,7 @@
  * Pressable container with animations for MiniTemplateCard
  */
 import React from 'react';
-import { Pressable, Text, View, ViewStyle } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import Animated from 'react-native-reanimated';
 
@@ -11,28 +11,9 @@ import { CardHeader } from './CardHeader';
 import { ImportButton } from './ImportButton';
 import { styles } from './MiniTemplateCard.styles';
 import { SUCCESS_COLOR } from './constants';
+import type { MiniCardContainerProps } from './MiniCardContainer.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-interface MiniCardContainerProps {
-  name: string;
-  description?: string;
-  icon: string;
-  iconColor: string;
-  hasResearch?: boolean;
-  isImporting?: boolean;
-  isImported?: boolean;
-  animatedCardStyle: ViewStyle;
-  glowStyle: ViewStyle;
-  chevronStyle: ViewStyle;
-  scienceBadgeStyle: ViewStyle;
-  importButtonStyle: ViewStyle;
-  checkmarkStyle: ViewStyle;
-  onPress: () => void;
-  onPressIn: () => void;
-  onPressOut: () => void;
-  onImport?: () => void;
-}
 
 export function MiniCardContainer({
   name,

@@ -1,38 +1,19 @@
 /**
  * FailureViz Component
- * Dedicated failure visualization for Rescue Mode
- *
- * Part of the Motivation System - Rescue phase
- * Story T8.4: Create `FailureViz` component (always shows failure)
- *
- * Scientific Basis:
- * - Andrew Huberman (Stanford) Dual Visualization Protocol
- * - Key insight: In Rescue Mode, ALWAYS show failure (user is struggling)
- * - Loss aversion (Kahneman & Tversky, Nobel Prize): Losses hurt 2x more
- *
- * Differences from ContextAwareViz:
- * - Always shows failure visualization (no motivation check)
- * - More dramatic, urgent styling
- * - Includes streak loss preview
- * - Designed for emotional impact
+ * Dedicated failure visualization for Rescue Mode.
+ * Uses loss aversion psychology to motivate habit completion.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-import { AlertTriangle, Brain, Heart, User } from 'lucide-react-native';
+import Animated from 'react-native-reanimated';
+import { AlertTriangle } from 'lucide-react-native';
 import { clsx } from 'clsx';
 
 import type { FailureVizProps } from './FailureViz.types';
-import { SPRING_GENTLE } from './FailureViz.constants';
-import { VizField } from './VizField';
+import { VizFieldsList } from './VizFieldsList';
 import { StreakLossPreview } from './StreakLossPreview';
-import { EmptyVizState } from './EmptyVizState';
+import { useFailureVizAnimation } from './useFailureVizAnimation';
 
 export function FailureViz({
   visualization,
@@ -40,29 +21,7 @@ export function FailureViz({
   reduceMotion = false,
   className,
 }: FailureVizProps) {
-  const scale = useSharedValue(reduceMotion ? 1 : 0.95);
-  const opacity = useSharedValue(reduceMotion ? 1 : 0);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      scale.value = 1;
-      opacity.value = 1;
-      return;
-    }
-
-    scale.value = withSpring(1, SPRING_GENTLE);
-    opacity.value = withTiming(1, { duration: 300 });
-  }, [reduceMotion, scale, opacity]);
-
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  const hasAnyField =
-    visualization?.failureBody ||
-    visualization?.failureMind ||
-    visualization?.failureEmotion;
+  const containerAnimatedStyle = useFailureVizAnimation(reduceMotion);
 
   return (
     <Animated.View
@@ -86,39 +45,12 @@ export function FailureViz({
         </View>
       </View>
 
-      {hasAnyField ? (
-        <View className='gap-1'>
-          {visualization?.failureBody && (
-            <VizField
-              icon={<User className='text-rose-500' size={16} />}
-              index={0}
-              label='Body'
-              reduceMotion={reduceMotion}
-              value={visualization.failureBody}
-            />
-          )}
-          {visualization?.failureMind && (
-            <VizField
-              icon={<Brain className='text-rose-500' size={16} />}
-              index={1}
-              label='Mind'
-              reduceMotion={reduceMotion}
-              value={visualization.failureMind}
-            />
-          )}
-          {visualization?.failureEmotion && (
-            <VizField
-              icon={<Heart className='text-rose-500' size={16} />}
-              index={2}
-              label='Emotion'
-              reduceMotion={reduceMotion}
-              value={visualization.failureEmotion}
-            />
-          )}
-        </View>
-      ) : (
-        <EmptyVizState />
-      )}
+      <VizFieldsList
+        failureBody={visualization?.failureBody}
+        failureEmotion={visualization?.failureEmotion}
+        failureMind={visualization?.failureMind}
+        reduceMotion={reduceMotion}
+      />
 
       {streakCount !== undefined && streakCount > 0 && (
         <StreakLossPreview
@@ -129,8 +61,7 @@ export function FailureViz({
 
       <View className='mt-3 rounded-lg bg-rose-100/50 px-3 py-2'>
         <Text className='text-center text-xs text-rose-600'>
-          💡 Loss aversion: This feeling moves you 2x more effectively than
-          rewards
+          Loss aversion: This feeling moves you 2x more effectively than rewards
         </Text>
       </View>
     </Animated.View>

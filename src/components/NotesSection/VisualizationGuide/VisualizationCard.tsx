@@ -5,14 +5,9 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
-import {
-  Brain,
-  ChevronDown,
-  ChevronUp,
-  Lightbulb,
-  AlertTriangle,
-} from 'lucide-react-native';
+import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { TechniqueApproach } from './TechniqueApproach';
 import type { VisualizationCardProps } from './VisualizationGuide.types';
 
 export function VisualizationCard({ technique }: VisualizationCardProps) {
@@ -56,56 +51,20 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
           className='border-t border-stone-100 bg-stone-50/50 px-4 pb-4'
           entering={FadeIn.duration(200)}
         >
-          <View className='mt-4'>
-            <View className='mb-2 flex-row items-center gap-2'>
-              {technique.good.icon}
-              <Text className='text-sm font-semibold text-emerald-700'>
-                ✓ Effective Approach
-              </Text>
-            </View>
-            <View className='rounded-xl bg-emerald-50 p-3'>
-              <Text className='text-sm leading-relaxed text-stone-700'>
-                {technique.good.description}
-              </Text>
-              <View className='mt-3 rounded-lg bg-white/80 p-2.5'>
-                <Text className='text-xs italic text-stone-600'>
-                  {technique.good.example}
-                </Text>
-              </View>
-              <View className='mt-2 flex-row items-start gap-2'>
-                <Lightbulb className='mt-0.5 text-amber-500' size={14} />
-                <Text className='flex-1 text-xs text-stone-600'>
-                  <Text className='font-medium'>Why it works: </Text>
-                  {technique.good.why}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View className='mt-4'>
-            <View className='mb-2 flex-row items-center gap-2'>
-              {technique.bad.icon}
-              <Text className='text-sm font-semibold text-rose-700'>
-                ✗ Common Mistake
-              </Text>
-            </View>
-            <View className='rounded-xl bg-rose-50 p-3'>
-              <Text className='text-sm leading-relaxed text-stone-700'>
-                {technique.bad.description}
-              </Text>
-              <View className='mt-3 rounded-lg bg-white/80 p-2.5'>
-                <Text className='text-xs italic text-stone-600'>
-                  {technique.bad.example}
-                </Text>
-              </View>
-              <View className='mt-2 flex-row items-start gap-2'>
-                <AlertTriangle className='mt-0.5 text-rose-500' size={14} />
-                <Text className='flex-1 text-xs text-stone-600'>
-                  <Text className='font-medium'>Why to avoid: </Text>
-                  {technique.bad.why}
-                </Text>
-              </View>
-            </View>
-          </View>
+          <TechniqueApproach
+            description={technique.good.description}
+            example={technique.good.example}
+            icon={technique.good.icon}
+            type='effective'
+            why={technique.good.why}
+          />
+          <TechniqueApproach
+            description={technique.bad.description}
+            example={technique.bad.example}
+            icon={technique.bad.icon}
+            type='mistake'
+            why={technique.bad.why}
+          />
         </Animated.View>
       )}
     </Animated.View>

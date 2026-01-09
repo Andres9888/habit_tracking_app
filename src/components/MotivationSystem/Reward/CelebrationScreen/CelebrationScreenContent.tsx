@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-
 import { QuickReflection } from '../QuickReflection';
 import {
   AnimatedContent,
@@ -11,19 +10,7 @@ import {
   StatsRow,
   StreakDisplay,
 } from './components';
-import type { CelebrationScreenContentProps } from './types';
-
-interface CelebrationScreenContentPropsExtended extends CelebrationScreenContentProps {
-  hasStreak: boolean;
-  hasStats: boolean;
-  localNote: string;
-  localEmoji: string | null;
-  handleEmojiSelect: (emoji: string) => void;
-  handleNoteChange: (note: string) => void;
-  handleRecordVoice: () => void;
-  handleWriteLetter: () => void;
-  onReflectionSubmit?: () => void;
-}
+import type { CelebrationScreenContentPropsExtended } from './CelebrationScreenContent.types';
 
 export function CelebrationScreenContent({
   habit,
@@ -59,7 +46,6 @@ export function CelebrationScreenContent({
           reduceMotion={reduceMotion}
         />
       </AnimatedContent>
-
       {hasStreak && (
         <AnimatedSection
           index={idx++}
@@ -72,7 +58,6 @@ export function CelebrationScreenContent({
           />
         </AnimatedSection>
       )}
-
       {hasStats && (
         <AnimatedSection
           index={idx++}
@@ -86,7 +71,6 @@ export function CelebrationScreenContent({
           />
         </AnimatedSection>
       )}
-
       <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
@@ -105,7 +89,6 @@ export function CelebrationScreenContent({
           onSubmit={onReflectionSubmit}
         />
       </AnimatedSection>
-
       <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
@@ -116,7 +99,6 @@ export function CelebrationScreenContent({
           onWriteLetter={handleWriteLetter}
         />
       </AnimatedSection>
-
       <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
