@@ -4,7 +4,7 @@
  * Props interfaces for child components within ProgressSectionConsolidated.
  */
 
-import type { QuickAction } from '../TipQuickActionsSheetTypes';
+import type { QuickAction } from '../TipQuickActionsSheet';
 
 /**
  * Props for InsightChips component

@@ -8,7 +8,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
-import type { QuickAction } from '../TipQuickActionsSheetTypes';
+import type { QuickAction } from './types';
 import { ICON_MAP, ACTION_COLORS } from './constants';
 import { styles } from './styles';
 

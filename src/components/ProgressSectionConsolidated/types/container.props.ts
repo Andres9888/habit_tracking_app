@@ -5,7 +5,7 @@
  */
 
 import type { HabitTrackingEntry } from '../../../features/habits/types';
-import type { QuickAction } from '../TipQuickActionsSheetTypes';
+import type { QuickAction } from '../TipQuickActionsSheet';
 
 /**
  * Props for the main ProgressSectionConsolidated container

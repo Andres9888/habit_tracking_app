@@ -39,7 +39,7 @@ import { TipQuickActionsSheet } from './TipQuickActionsSheet';
 import {
   determineTipTypeFromText,
   type QuickAction,
-} from './TipQuickActionsSheetTypes';
+} from './TipQuickActionsSheet';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

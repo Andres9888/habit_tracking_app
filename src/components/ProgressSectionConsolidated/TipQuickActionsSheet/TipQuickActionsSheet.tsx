@@ -10,11 +10,8 @@ import { X } from 'lucide-react-native';
 import { Modal } from '../../Modal';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import type {
-  TipQuickActionsSheetProps,
-  QuickAction,
-} from '../TipQuickActionsSheetTypes';
-import { getQuickActionsForTipType } from '../TipQuickActionsSheetTypes';
+import type { TipQuickActionsSheetProps, QuickAction } from './types';
+import { getQuickActionsForTipType } from './getQuickActionsForTipType';
 import { QuickActionItem } from './QuickActionItem';
 import { styles } from './styles';
 
