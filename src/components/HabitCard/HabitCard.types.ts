@@ -1,0 +1,79 @@
+/**
+ * HabitCard Types
+ * Type definitions for the HabitCard component
+ */
+
+import type { ViewStyle } from 'react-native';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import type { HabitCardEntranceVariant } from './useHabitCardEntrance';
+
+export interface HabitCardProps {
+  /** Habit ID */
+  id: Id<'habits'>;
+
+  /** Habit name */
+  name: string;
+
+  /** Habit icon/emoji */
+  icon?: string;
+
+  /** Habit color (hex) */
+  color?: string;
+
+  /** Habit strength (0-100) */
+  strength: number;
+
+  /** Current streak (Story 1.4) */
+  currentStreak?: number;
+
+  /** Best streak (Story 1.4) */
+  bestStreak?: number;
+
+  /** Is completed today */
+  completed?: boolean;
+
+  /** Is at risk (prediction <40%) */
+  atRisk?: boolean;
+
+  /** Disabled state */
+  disabled?: boolean;
+
+  /** On tap handler (complete habit) - DEPRECATED: Component now calls toggleCompletion mutation directly */
+  onPress?: () => void;
+
+  /** On long press handler (quick actions menu) */
+  onLongPress?: () => void;
+
+  /** On edit handler (swipe action) */
+  onEdit?: () => void;
+
+  /** On delete handler (swipe action) */
+  onDelete?: () => void;
+
+  /** Custom style */
+  style?: ViewStyle;
+
+  /**
+   * Animation variant for card entrance.
+   * @default 'accentSlideDown'
+   */
+  entranceVariant?: HabitCardEntranceVariant;
+
+  /**
+   * Delay before entrance animation starts (for stagger effects).
+   * @default 0
+   */
+  entranceDelay?: number;
+
+  /**
+   * Whether to trigger entrance animation on mount.
+   * Set to false to manually trigger via triggerEntrance callback.
+   * @default true
+   */
+  triggerEntrance?: boolean;
+
+  /**
+   * Callback fired when entrance animation completes.
+   */
+  onEntranceComplete?: () => void;
+}

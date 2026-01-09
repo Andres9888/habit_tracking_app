@@ -294,7 +294,14 @@ None. All work is internal code organization.
 
 ### Phase 3: Large Files (501-1000 lines)
 
-- [ ] Decompose 33 large files (see Appendix for full list)
+- [ ] Decompose remaining 28 large files (see Appendix for full list)
+- [x] `VoiceNotesSection.tsx` (980 → 22 files, all ≤100 lines)
+- [x] `notifications.ts` (978 → 11 files, all ≤100 lines)
+- [x] `DraggableHabit.tsx` (970 → 14 files, all ≤100 lines)
+- [x] `VisionBoardSection.tsx` (937 → 19 files, all ≤100 lines)
+- [x] `CelebrationScreen.tsx` (916 → 20 files, all ≤100 lines)
+- [x] `HabitCard.tsx` (894 → 34 files, all ≤100 lines)
+- [x] `HabitsList.tsx` (869 → 16 files, all ≤100 lines)
 
 ### Phase 4: Medium Files (301-500 lines)
 
