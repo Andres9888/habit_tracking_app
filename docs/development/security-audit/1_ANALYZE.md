@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -21,8 +21,8 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 
 ## Analysis Checklist
 
-- [x] **Map attack surface**: Identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
-  - **Completed 2025-12-29**: Full attack surface map generated covering 13+ Convex files, 100+ API endpoints (queries/mutations/actions), authentication flows (Clerk + Convex Auth), file storage operations, and external integrations (OpenAI, Expo Notifications). Identified 6 high-risk areas including missing authorization checks on mutations, unauthenticated file uploads, and IDOR vulnerabilities. Secret scanning found 0 leaked credentials. npm audit was unavailable in the execution environment.
+- [x] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
+  > **Completed (2026-01-08):** Attack surface map already exists with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Skipped regeneration per instructions.
 
 ## What to Identify
 
