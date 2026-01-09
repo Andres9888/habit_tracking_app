@@ -326,9 +326,28 @@ None. All work is internal code organization.
 - [x] `templates/constants.ts` (111 lines → 4 files, all ≤100 lines)
 - [ ] Address remaining small overages
 - [ ] Convert ESLint `max-lines` from "warn" to "error"
+  - **BLOCKED**: 127 production files still violate max-lines rule (updated 2026-01-09).
+  - **ESLint config improvements (2026-01-09)**:
+    - Added exemptions for: `convex/schema.ts` (database schema), `src/utils/emojiData/keywords.ts`
+    - Fixed lint scripts to respect config exemptions (removed `--rule` override)
+    - Added exemptions for duplicate/backup files pending cleanup
+  - **Current violations breakdown**: 13 critical (>200 lines), 39 high (150-199), 24 medium (125-149), 51 low (101-124).
+  - **Top 10 violators**:
+    1. `CalendarTimelineWithPulse.tsx` (234 lines)
+    2. `StrengthDistributionChart.tsx` (231 lines)
+    3. `DailyMomentumMeter.tsx` (228 lines)
+    4. `OfflineQueueProcessor.tsx` (223 lines)
+    5. `HeaderCompleteToggle.tsx` (220 lines)
+    6. `CreateHabitModal/ReminderSelector.tsx` (220 lines)
+    7. `ProgressSection/utils.ts` (217 lines)
+    8. `PreviousStreakVoiceNotes.tsx` (217 lines)
+    9. `InlineEmojiInput.tsx` (215 lines)
+    10. `FullsizeTemplatePreview.tsx` (212 lines)
+  - **Key hotspots**: `CreateHabitModal` (13 files), `ProgressSection` (12+ files), `MotivationSystem` (8+ files).
+  - **Path forward**: Decompose remaining 127 files before enabling error-level enforcement.
 - [ ] Final lint enforcement
 
-**Status Update (2026-01-09):** After decomposition work, only `categories.ts` (1433 lines) remains violating in `/src/` - this is a data seed file marked as an exception (similar to `templatesDataSeed.ts`).
+**Status Update (2026-01-09):** ESLint exemptions expanded. Violations reduced from 139 to 127. Key exemptions: convex/schema.ts (database schema), emoji data files, example/debug files, duplicate backup files pending cleanup.
 
 ---
 

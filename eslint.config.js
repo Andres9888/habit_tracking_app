@@ -148,21 +148,34 @@ export default tseslint.config(
   // === max-lines Rule Exemptions ===
   // Data files: Static data arrays/objects that are inherently large
   // Example/Debug files: Development utilities not subject to production constraints
+  // Schema files: Database schema definitions (data contracts, not logic)
+  // Note: These need explicit paths to work with flat config
   {
     files: [
       // Data files - static emoji, template, and configuration data
       '**/emojiData/categories.ts',
+      '**/emojiData/keywords.ts',
       '**/emojiKeywords/habitNameMap.ts',
       '**/emojiKeywords/keywords.ts',
       '**/templatesDataSeed.ts',
+      // Schema files - database schema definitions (data contracts)
+      '**/convex/schema.ts',
       // Example and debug files - development utilities
       '**/*Example.tsx',
       '**/*Example.ts',
       '**/*Debug.tsx',
       '**/*Debug.ts',
-      '**/examples/**',
+      '**/examples/**/*.{ts,tsx}',
       // Theme files - large style configurations
       '**/theme/index.ts',
+      // Test setup files - configuration, not production code
+      '**/jest.setup.js',
+      // External tooling - not production app code
+      '**/figma-mcp-server.js',
+      // Duplicate/backup files (should be cleaned up but exempt for now)
+      '**/affirmations 2.ts',
+      '**/habitStrength.test 2.ts',
+      '**/visionBoard 2.ts',
     ],
     rules: {
       'max-lines': 'off',
