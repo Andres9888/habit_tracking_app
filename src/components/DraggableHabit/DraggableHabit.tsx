@@ -139,7 +139,6 @@ export default function DraggableHabit({
   const cardScale = useRef(new Animated.Value(1)).current;
   const iconPulse = useRef(new Animated.Value(1)).current;
   const highlightGlow = useRef(new Animated.Value(0)).current;
-  const streakBadgeGlow = useRef(new Animated.Value(0)).current;
   const newRecordScale = useRef(new Animated.Value(0)).current;
   const newRecordOpacity = useRef(new Animated.Value(0)).current;
 
@@ -161,7 +160,6 @@ export default function DraggableHabit({
     previousStreak !== undefined &&
     streak > bestStreak &&
     streak > (previousStreak || 0);
-  const hasSignificantStreak = streak >= 7;
 
   useEffect(() => {
     Animated.parallel([
@@ -211,30 +209,31 @@ export default function DraggableHabit({
           }),
         ]),
         // Glow pulse: 0 → 1 → 0.6 → 1 → 0 (double pulse)
+        // Uses native driver - highlightGlow only animates opacity
         Animated.sequence([
           Animated.timing(highlightGlow, {
             duration: 300,
             easing: Easing.out(Easing.ease),
             toValue: 1,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
           Animated.timing(highlightGlow, {
             duration: 400,
             easing: Easing.inOut(Easing.ease),
             toValue: 0.5,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
           Animated.timing(highlightGlow, {
             duration: 300,
             easing: Easing.out(Easing.ease),
             toValue: 1,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
           Animated.timing(highlightGlow, {
             duration: 500,
             easing: Easing.in(Easing.ease),
             toValue: 0,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
         ]),
       ]).start();
@@ -266,30 +265,6 @@ export default function DraggableHabit({
       iconPulse.setValue(1);
     }
   }, [isWeekComplete, iconPulse, reduceMotionPreference]);
-
-  // Streak badge glow animation for significant streaks (7+ days)
-  useEffect(() => {
-    if (hasSignificantStreak && !reduceMotionPreference) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(streakBadgeGlow, {
-            duration: 1500,
-            easing: Easing.inOut(Easing.ease),
-            toValue: 1,
-            useNativeDriver: false,
-          }),
-          Animated.timing(streakBadgeGlow, {
-            duration: 1500,
-            easing: Easing.inOut(Easing.ease),
-            toValue: 0.3,
-            useNativeDriver: false,
-          }),
-        ])
-      ).start();
-    } else {
-      streakBadgeGlow.setValue(0);
-    }
-  }, [hasSignificantStreak, streakBadgeGlow, reduceMotionPreference]);
 
   // New personal record celebration
   useEffect(() => {
@@ -428,18 +403,19 @@ export default function DraggableHabit({
     // Success haptic instead of warning - archive is organizational, not destructive
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
+    // Uses native driver - archiveFlash only animates opacity
     Animated.sequence([
       Animated.timing(archiveFlash, {
         duration: 120,
         easing: Easing.out(Easing.ease),
         toValue: 1,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(archiveFlash, {
         duration: 220,
         easing: Easing.out(Easing.ease),
         toValue: 0,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start();
     if (onArchive) {
@@ -668,13 +644,14 @@ export default function DraggableHabit({
           }}
         >
           {/* Color accent left border - animated for entrance effect */}
+          {/* Width is controlled by entranceAccentStyle for the expansion animation */}
           <ReAnimated.View
             style={[
               {
+                alignSelf: 'stretch',
                 backgroundColor: borderAccentColor,
                 borderBottomLeftRadius: 24,
                 borderTopLeftRadius: 24,
-                width: 4,
               },
               entranceAccentStyle,
             ]}

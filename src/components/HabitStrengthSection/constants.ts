@@ -11,17 +11,17 @@ import type { StrengthLabel } from '../HabitStrengthHistory/types';
 // Layout & Sizing
 // ============================================================================
 
-/** Circular progress ring dimensions */
-export const RING_SIZE = 72;
-export const RING_STROKE_WIDTH = 6;
+/** Circular progress ring dimensions (compact for above-fold layout) */
+export const RING_SIZE = 64; // Reduced from 72 to fit above fold
+export const RING_STROKE_WIDTH = 5; // Slightly thinner for smaller ring
 export const RING_RADIUS = (RING_SIZE - RING_STROKE_WIDTH) / 2;
 export const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
-/** Chart dimensions */
-export const CHART_HEIGHT = 112;
+/** Chart dimensions (compact for above-fold layout) */
+export const CHART_HEIGHT = 88; // Reduced from 112 to fit above fold
 export const CHART_PADDING_X = 16;
-export const CHART_PADDING_TOP = 8;
-export const CHART_PADDING_BOTTOM = 24; // Space for X-axis labels
+export const CHART_PADDING_TOP = 6; // Reduced from 8
+export const CHART_PADDING_BOTTOM = 20; // Reduced from 24, space for X-axis labels
 
 /** Grid line configuration */
 export const GRID_LINE_COUNT = 3; // 0%, 50%, 100%
@@ -122,15 +122,15 @@ export const ANIMATION = {
 /** Time range toggle options */
 export const TIME_RANGE_OPTIONS = [
   { value: '1m' as const, label: '1M' },
+  { value: '3m' as const, label: '3M' },
   { value: '1y' as const, label: '1Y' },
-  { value: 'all' as const, label: 'All' },
 ];
 
 /** Days for each time range */
 export const TIME_RANGE_DAYS = {
   '1m': 30,
+  '3m': 90,
   '1y': 365,
-  all: Infinity,
 };
 
 // ============================================================================

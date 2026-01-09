@@ -79,4 +79,4 @@ dev-debug.log
 # tasks/ 
 
 # Auto Claude data directory
-.auto-claude/
+.auto-claude/.worktrees/

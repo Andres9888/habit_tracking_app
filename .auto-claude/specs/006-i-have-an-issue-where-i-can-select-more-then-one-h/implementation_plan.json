@@ -1,0 +1,72 @@
+{
+  "feature": "fix-habit-chip-single-select",
+  "description": "Fix bug where multiple habit chips appear selected simultaneously - only one chip should be selectable at a time",
+  "created_at": "2026-01-06T03:22:54.972Z",
+  "updated_at": "2026-01-06T03:56:37.789Z",
+  "status": "human_review",
+  "planStatus": "review",
+  "spec_name": "fix-habit-chip-multi-select",
+  "workflow_type": "simple",
+  "total_phases": 1,
+  "recommended_workers": 1,
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Fix Selection Animation",
+      "description": "Move selection progress update to useEffect for reliable state sync",
+      "depends_on": [],
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Fix Chip selection animation in SuggestionChips.tsx - move selectionProgress update from render to useEffect that responds to isSelected prop changes",
+          "service": "main",
+          "status": "completed",
+          "files_to_create": [],
+          "files_to_modify": [
+            "src/features/habits/components/HabitsEmptyStateMinimal/SuggestionChips.tsx"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "run": "Test in app: tap chip A, then chip B - only chip B should be selected"
+          },
+          "notes": "Moved selectionProgress update from render-time if-check to useEffect hook. This ensures the animation triggers on every isSelected prop change, regardless of current animation state, fixing the race condition that allowed multiple chips to appear selected.",
+          "updated_at": "2026-01-06T03:38:57.667929+00:00"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "complexity": "simple",
+    "estimated_sessions": 1
+  },
+  "last_updated": "2026-01-06T03:41:37.882399+00:00",
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 0,
+    "issues_found": [
+      {
+        "description": "None"
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-01-06T03:41:37.882382+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-06T03:41:48.310248+00:00",
+      "issues": [],
+      "duration_seconds": 154.39
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  },
+  "recoveryNote": "Task recovered from stuck state at 2026-01-06T03:56:37.789Z"
+}

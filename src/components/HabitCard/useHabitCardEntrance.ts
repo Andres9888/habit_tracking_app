@@ -113,11 +113,19 @@ const TIMING = {
   contentFadeIn: 300,
 
   /** Simple fade-up duration (baseline) */
-  fadeUp: 350,
+  fadeUp: 280,
 
   /** Width expansion duration */
-  widthExpansion: 200,
+  widthExpansion: 320,
+
+  /** Delay before width expansion starts (after card appears) */
+  widthExpansionDelay: 80,
 } as const;
+
+/**
+ * Target width for the accent bar (in pixels).
+ */
+const ACCENT_TARGET_WIDTH = 4;
 
 /**
  * Hook to manage habit card entrance animation state.
@@ -167,7 +175,7 @@ export function useHabitCardEntrance({
     cardOpacity.value = 1;
     cardTranslateY.value = 0;
     accentScaleY.value = 1;
-    accentWidth.value = 6;
+    accentWidth.value = ACCENT_TARGET_WIDTH;
     accentOpacity.value = 1;
     contentOpacity.value = 1;
     contentTranslateX.value = 0;
@@ -201,7 +209,7 @@ export function useHabitCardEntrance({
 
     // Accent bar is visible immediately
     accentScaleY.value = 1;
-    accentWidth.value = 6;
+    accentWidth.value = ACCENT_TARGET_WIDTH;
     accentOpacity.value = withTiming(1, {
       duration,
       easing: Easing.out(Easing.cubic),
@@ -257,7 +265,7 @@ export function useHabitCardEntrance({
       duration: TIMING.cardFadeIn,
       easing: Easing.out(Easing.cubic),
     });
-    accentWidth.value = 6; // Full width from start
+    accentWidth.value = ACCENT_TARGET_WIDTH; // Full width from start
 
     // Phase 2: Accent bar slides down (scaleY from 0 to 1, origin top)
     // Delayed by card fade-in duration
@@ -285,7 +293,6 @@ export function useHabitCardEntrance({
     );
 
     // Mark animation complete after all phases
-    const totalDuration = contentDelay + TIMING.contentFadeIn;
     contentOpacity.value = withDelay(
       contentDelay,
       withTiming(1, { duration: TIMING.contentFadeIn }, (finished) => {
@@ -310,53 +317,50 @@ export function useHabitCardEntrance({
   ]);
 
   /**
-   * Variation 6: Width expansion.
+   * Variation 6: Width expansion from left side.
    * Sequence:
-   * 1. Card fades up normally (350ms)
-   * 2. Accent bar width grows 0 → 6px (200ms, spring with ease-out-back feel)
+   * 1. Card fades up with slight slide (280ms)
+   * 2. Accent bar width grows 0 → 4px with spring bounce (320ms)
+   *
+   * The accent bar expands from the left edge, creating a "paint stroke"
+   * effect that draws attention to the habit's color identity.
    */
   const runWidthExpansion = useCallback(() => {
     'worklet';
 
-    // Phase 1: Card fades up normally
+    // Phase 1: Card fades up with subtle slide
     cardOpacity.value = withTiming(1, {
       duration: TIMING.fadeUp,
       easing: Easing.out(Easing.cubic),
     });
-    cardTranslateY.value = withTiming(0, {
-      duration: TIMING.fadeUp,
-      easing: Easing.out(Easing.cubic),
+    cardTranslateY.value = withSpring(0, {
+      damping: 20,
+      stiffness: 200,
     });
 
-    // Accent bar visible but zero width
+    // Accent bar starts with zero width but full height
     accentScaleY.value = 1;
-    accentOpacity.value = withTiming(1, {
-      duration: TIMING.fadeUp,
-      easing: Easing.out(Easing.cubic),
-    });
+    accentOpacity.value = 1; // Visible immediately (width will reveal it)
 
-    // Content fades in with card
-    contentOpacity.value = withTiming(1, {
-      duration: TIMING.fadeUp,
-      easing: Easing.out(Easing.cubic),
-    });
-    contentTranslateX.value = 0;
-
-    // Phase 2: Accent bar width expands
-    // Delayed by fade-up duration
-    accentWidth.value = withDelay(
-      TIMING.fadeUp,
-      withSpring(6, {
-        ...Springs.gentle,
-        damping: 20, // More bounce for subtle ease-out-back feel
+    // Content fades in slightly delayed for layered effect
+    contentOpacity.value = withDelay(
+      TIMING.widthExpansionDelay,
+      withTiming(1, {
+        duration: TIMING.fadeUp,
+        easing: Easing.out(Easing.cubic),
       })
     );
+    contentTranslateX.value = 0;
 
-    // Mark animation complete
-    const totalDuration = TIMING.fadeUp + TIMING.widthExpansion;
+    // Phase 2: Accent bar width expands from left with spring bounce
+    // This creates the signature "color accent reveal" effect
     accentWidth.value = withDelay(
-      TIMING.fadeUp,
-      withSpring(6, { ...Springs.gentle, damping: 20 }, (finished) => {
+      TIMING.widthExpansionDelay,
+      withSpring(ACCENT_TARGET_WIDTH, {
+        damping: 12, // Lower damping for noticeable overshoot
+        stiffness: 180,
+        mass: 0.8,
+      }, (finished) => {
         if (finished) {
           isAnimating.value = false;
           if (onAnimationComplete) {
@@ -497,7 +501,12 @@ export function useHabitCardEntrance({
   /**
    * Animated styles for the accent bar.
    * Handles scaleY (slide-down), width (expansion), and opacity.
-   * Note: transformOrigin 'top' is simulated by translateY adjustment.
+   *
+   * For the width expansion variant, we animate width directly from 0 to target.
+   * The bar naturally expands from left since it's positioned on the left edge
+   * of the card with flex layout.
+   *
+   * Note: transformOrigin 'top' for scaleY is simulated by translateY adjustment.
    */
   const accentStyle = useAnimatedStyle(() => {
     // For scaleY with origin at top, we need to adjust translateY
@@ -508,13 +517,13 @@ export function useHabitCardEntrance({
 
     return {
       opacity: accentOpacity.value,
-
       transform: [
         { scaleY: accentScaleY.value },
         { translateY: translateYOffset },
       ],
-      // Always use accentWidth.value - each animation variant sets it appropriately
-      // (widthExpansion animates 0→6, others set 6 immediately)
+      // Width animation - starts at 0 for widthExpansion variant
+      // The accent bar is positioned at the left edge of the card,
+      // so animating width creates a natural left-to-right expansion
       width: accentWidth.value,
     };
   });

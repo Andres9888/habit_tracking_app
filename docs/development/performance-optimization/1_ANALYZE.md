@@ -1,10 +1,9 @@
 # Performance Analysis - Codebase Survey
 
 ## Context
-
 - **Playbook:** Performance
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -26,11 +25,7 @@ Analyze the codebase to identify **categories of potential performance issues** 
 
 ## Analysis Checklist
 
-- [x] **Survey codebase**: Examine project structure, identify framework(s) and language(s) used, find main entry points and largest files. Note any performance-related libraries or patterns already in use.
-  - **Completed**: Surveyed React Native Expo ~54.0 / TypeScript codebase with Convex backend
-  - **Key findings**: 556 TS/TSX files, 154K+ LOC, HabitDetailScreen.tsx (127KB) as critical target
-  - **Performance libraries found**: React Native Reanimated, DraggableFlatList, React Native Skia
-  - **Game plan created**: `/docs/LOOP_00001_GAME_PLAN.md` with 10 investigation tactics
+- [ ] **Survey codebase (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md` already exists with at least one tactic defined. If it does, skip the survey and mark this task complete—the game plan is already in place. If it doesn't exist, examine project structure, identify framework(s) and language(s) used, find main entry points and largest files. Note any performance-related libraries or patterns already in use.
 
 ## Output Format
 
@@ -40,7 +35,6 @@ Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.m
 # Performance Game Plan
 
 ## Codebase Profile
-
 - **Language/Framework:** [e.g., Python/Django, TypeScript/Node, Go, etc.]
 - **Size:** [Approximate LOC or file count]
 - **Key Directories:** [List main source directories]
@@ -51,14 +45,12 @@ Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.m
 Each tactic is a specific, actionable search pattern for finding performance issues.
 
 ### Tactic 1: [Name]
-
 - **Target:** [What type of issue this finds]
 - **Search Pattern:** [Specific grep/glob patterns or code patterns to look for]
 - **Files to Check:** [Specific files or glob patterns]
 - **Why It Matters:** [Brief explanation of performance impact]
 
 ### Tactic 2: [Name]
-
 ...
 ```
 
@@ -67,42 +59,36 @@ Each tactic is a specific, actionable search pattern for finding performance iss
 When creating tactics, consider these common performance issue categories:
 
 ### Algorithmic Complexity
-
 - O(n²) or worse algorithms in hot paths
 - Repeated searches through unsorted data
 - Unnecessary sorting or re-computation
 - Suboptimal data structures for the access pattern
 
 ### Memory Usage
-
 - Unbounded collection growth
 - Memory leaks from unclosed resources
 - Large object allocations in loops
 - Missing cleanup of temporary data
 
 ### I/O Operations
-
 - Synchronous I/O in performance-critical paths
 - N+1 query patterns (database or API)
 - Missing caching for repeated reads
 - Inefficient batch sizes
 
 ### Concurrency
-
 - Lock contention in hot paths
 - Unnecessary serialization
 - Missing parallelization opportunities
 - Thread pool exhaustion
 
 ### Network & External Services
-
 - Redundant API calls
 - Missing request batching
 - No timeout handling
 - Unbounded retry loops
 
 ### Rendering & UI (if applicable)
-
 - Expensive computations in render loops
 - Unnecessary re-renders or repaints
 - Missing virtualization for long lists

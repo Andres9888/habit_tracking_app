@@ -11,19 +11,24 @@
       "Edit(./**)",
       "Glob(./**)",
       "Grep(./**)",
-      "Read(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Write(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Edit(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Glob(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Grep(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Read(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/.auto-claude/specs/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Write(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/.auto-claude/specs/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
-      "Edit(/Users/andres/Code/habit_tracking_app/.worktrees/005-in-the-empty-habit-page-the-left-and-right-side-of/.auto-claude/specs/005-in-the-empty-habit-page-the-left-and-right-side-of/**)",
+      "Read(/Users/andres/Code/habit_tracking_app/**)",
+      "Write(/Users/andres/Code/habit_tracking_app/**)",
+      "Edit(/Users/andres/Code/habit_tracking_app/**)",
+      "Glob(/Users/andres/Code/habit_tracking_app/**)",
+      "Grep(/Users/andres/Code/habit_tracking_app/**)",
+      "Read(/Users/andres/Code/habit_tracking_app/.auto-claude/specs/008-so-for-the-habit-card-the-chain-link-isn-t-fully-a/**)",
+      "Write(/Users/andres/Code/habit_tracking_app/.auto-claude/specs/008-so-for-the-habit-card-the-chain-link-isn-t-fully-a/**)",
+      "Edit(/Users/andres/Code/habit_tracking_app/.auto-claude/specs/008-so-for-the-habit-card-the-chain-link-isn-t-fully-a/**)",
       "Bash(*)",
       "WebFetch(*)",
       "WebSearch(*)",
       "mcp__context7__resolve-library-id(*)",
-      "mcp__context7__get-library-docs(*)"
+      "mcp__context7__get-library-docs(*)",
+      "mcp__graphiti-memory__search_nodes(*)",
+      "mcp__graphiti-memory__search_facts(*)",
+      "mcp__graphiti-memory__add_episode(*)",
+      "mcp__graphiti-memory__get_episodes(*)",
+      "mcp__graphiti-memory__get_entity_edge(*)"
     ]
   }
 }

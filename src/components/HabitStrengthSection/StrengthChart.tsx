@@ -93,27 +93,55 @@ function catmullRomToBezier(
 }
 
 /**
- * Generate X-axis labels based on time range.
+ * Generate X-axis labels based on actual data range.
+ * Labels are derived from the data's start/end dates, not the time range selection,
+ * to avoid showing labels that extend beyond the actual data.
  */
-function getXAxisLabels(timeRange: TimeRange): string[] {
-  const now = new Date();
-
-  switch (timeRange) {
-    case '1m':
-      return [
-        format(subDays(now, 30), 'MMM d'),
-        format(subDays(now, 15), 'MMM d'),
-        'Now',
-      ];
-    case '1y':
-      return [
-        format(subMonths(now, 12), "MMM ''yy"),
-        format(subMonths(now, 6), "MMM ''yy"),
-        'Now',
-      ];
-    case 'all':
-      return ['Start', 'Now'];
+function getXAxisLabelsFromData(data: Array<{ date: Date }>): string[] {
+  if (data.length < 2) {
+    return ['Start', 'Now'];
   }
+
+  const startDate = data[0].date;
+  const endDate = data[data.length - 1].date;
+  const daySpan = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  // For very short spans (< 14 days), just show start and end
+  if (daySpan < 14) {
+    return [format(startDate, 'MMM d'), 'Now'];
+  }
+
+  // For medium spans (14-60 days), show 3 labels
+  if (daySpan < 60) {
+    const midDate = new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) / 2);
+    return [
+      format(startDate, 'MMM d'),
+      format(midDate, 'MMM d'),
+      'Now',
+    ];
+  }
+
+  // For longer spans (60-365 days), show 4 labels
+  if (daySpan < 365) {
+    const oneThird = new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) / 3);
+    const twoThirds = new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) * 2 / 3);
+    return [
+      format(startDate, 'MMM d'),
+      format(oneThird, 'MMM d'),
+      format(twoThirds, 'MMM d'),
+      'Now',
+    ];
+  }
+
+  // For very long spans (> 1 year), include year in labels
+  const oneThird = new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) / 3);
+  const twoThirds = new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) * 2 / 3);
+  return [
+    format(startDate, "MMM ''yy"),
+    format(oneThird, "MMM ''yy"),
+    format(twoThirds, "MMM ''yy"),
+    'Now',
+  ];
 }
 
 /**
@@ -130,7 +158,7 @@ function getStrengthLabel(strength: number): 'weak' | 'developing' | 'strong' {
  */
 export const StrengthChart = React.memo(function StrengthChart({
   data,
-  timeRange,
+  timeRange: _timeRange, // Kept for future use; labels now derived from data
   currentStrength,
   color,
 }: StrengthChartProps) {
@@ -254,8 +282,8 @@ export const StrengthChart = React.memo(function StrengthChart({
     opacity: Math.round(dotOpacity.value * 100) / 100,
   }));
 
-  // Get X-axis labels
-  const xAxisLabels = getXAxisLabels(timeRange);
+  // Get X-axis labels based on actual data range (not time range selection)
+  const xAxisLabels = useMemo(() => getXAxisLabelsFromData(data), [data]);
 
   // Generate accessibility description
   const accessibilityLabel = useMemo(() => {

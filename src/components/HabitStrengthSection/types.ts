@@ -12,10 +12,10 @@ import type { StrengthLabel, StrengthSnapshot } from '../HabitStrengthHistory/ty
 /**
  * Time range options for filtering strength history.
  * - 1m: Last 30 days
- * - 1y: Last 365 days (default)
- * - all: Entire history since habit creation
+ * - 3m: Last 90 days (quarterly view)
+ * - 1y: Last 365 days
  */
-export type TimeRange = '1m' | '1y' | 'all';
+export type TimeRange = '1m' | '3m' | '1y';
 
 /**
  * Props for the main HabitStrengthSection component.

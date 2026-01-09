@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Detail - Design Consistency Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #f5f5f4; }
+
+    .phone-frame {
+      width: 375px;
+      background: linear-gradient(180deg, #fafaf9 0%, #fef3c7 10%, #fafaf9 30%);
+      border-radius: 40px;
+      padding: 20px 16px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .card-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1c1917;
+      margin-bottom: 16px;
+    }
+
+    /* Consistent spacing between cards */
+    .card + .card {
+      margin-top: 12px;
+    }
+
+    .toggle-container {
+      display: inline-flex;
+      background: #f5f5f4;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .toggle-option {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #78716c;
+      cursor: pointer;
+    }
+
+    .toggle-option.active {
+      background: white;
+      color: #1c1917;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .day-cell {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1c1917;
+      position: relative;
+    }
+
+    .day-cell.completed {
+      background: rgba(234, 88, 12, 0.15);
+    }
+
+    .day-cell.today {
+      border: 2px solid #ea580c;
+      font-weight: 700;
+    }
+
+    .day-cell.muted {
+      color: #d6d3d1;
+    }
+
+    .day-cell .dot {
+      position: absolute;
+      bottom: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: #ea580c;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid #e7e5e4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #78716c;
+    }
+
+    .month-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid #e7e5e4;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1c1917;
+    }
+
+    .issue-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .issue-badge.problem { background: #fef2f2; color: #ef4444; }
+    .issue-badge.fixed { background: #ecfdf5; color: #10b981; }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex gap-8 justify-center">
+
+  <!-- BEFORE: Current Design -->
+  <div>
+    <h2 class="text-lg font-bold text-stone-700 mb-4 text-center">BEFORE (Current)</h2>
+    <div class="phone-frame">
+      <!-- Hero -->
+      <div class="text-center mb-4">
+        <div class="w-20 h-20 bg-orange-100 rounded-2xl mx-auto mb-3 flex items-center justify-center text-4xl shadow-lg">🧘</div>
+        <div class="text-xl font-bold text-stone-900">Stretch for 5 minutes</div>
+        <div class="mt-2 inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-semibold">⚡ 10 day streak!</div>
+      </div>
+
+      <!-- Habit Strength Card - 16px radius, 20px padding, shadow -->
+      <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.03);">
+        <div class="flex justify-between items-center mb-4">
+          <span class="font-bold text-stone-800">Habit Strength</span>
+          <span class="issue-badge problem">16px radius</span>
+        </div>
+        <div class="h-16 bg-stone-100 rounded flex items-center justify-center text-stone-400 text-sm">
+          Chart placeholder
+        </div>
+      </div>
+
+      <!-- Calendar Card - 12px radius, 16px padding, NO shadow -->
+      <div style="background: white; border-radius: 12px; padding: 16px; margin-top: 12px;">
+        <div class="flex justify-between items-center mb-3">
+          <span class="issue-badge problem">12px radius</span>
+          <span class="issue-badge problem">No shadow</span>
+        </div>
+        <div class="grid grid-cols-7 gap-1 text-center text-xs text-stone-500 mb-2">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+        <div class="grid grid-cols-7 gap-1 place-items-center">
+          <div class="day-cell muted">25</div>
+          <div class="day-cell muted">26</div>
+          <div class="day-cell muted">27</div>
+          <div class="day-cell muted">28</div>
+          <div class="day-cell muted">29</div>
+          <div class="day-cell muted">30</div>
+          <div class="day-cell">1</div>
+          <div class="day-cell">2</div>
+          <div class="day-cell">3</div>
+          <div class="day-cell">4</div>
+          <div class="day-cell">5</div>
+          <div class="day-cell">6</div>
+          <div class="day-cell">7</div>
+          <div class="day-cell">8</div>
+        </div>
+        <div class="flex justify-between items-center mt-4 pt-4 border-t border-stone-100">
+          <div class="month-pill">
+            <span>📅</span>
+            <span>Jan 2025</span>
+          </div>
+          <div class="flex gap-2">
+            <div class="nav-btn">←</div>
+            <div class="nav-btn">→</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 bg-amber-50 rounded-lg text-xs text-amber-700">
+        <strong>Issues:</strong>
+        <ul class="mt-1 space-y-1">
+          <li>• Different border radius (16px vs 12px)</li>
+          <li>• Different padding (20px vs 16px)</li>
+          <li>• Calendar has no shadow</li>
+          <li>• Calendar feels disconnected</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- AFTER: Improved Design -->
+  <div>
+    <h2 class="text-lg font-bold text-stone-700 mb-4 text-center">AFTER (Improved)</h2>
+    <div class="phone-frame">
+      <!-- Hero -->
+      <div class="text-center mb-4">
+        <div class="w-20 h-20 bg-orange-100 rounded-2xl mx-auto mb-3 flex items-center justify-center text-4xl shadow-lg">🧘</div>
+        <div class="text-xl font-bold text-stone-900">Stretch for 5 minutes</div>
+        <div class="mt-2 inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-semibold">⚡ 10 day streak!</div>
+      </div>
+
+      <!-- Habit Strength Card - Consistent styling -->
+      <div class="card">
+        <div class="flex justify-between items-center mb-4">
+          <span class="font-bold text-stone-800">Habit Strength</span>
+          <div class="toggle-container">
+            <div class="toggle-option">1M</div>
+            <div class="toggle-option active">3M</div>
+            <div class="toggle-option">1Y</div>
+          </div>
+        </div>
+        <div class="h-16 bg-stone-50 rounded flex items-center justify-center text-stone-400 text-sm">
+          Chart placeholder
+        </div>
+      </div>
+
+      <!-- Calendar Card - NOW CONSISTENT -->
+      <div class="card">
+        <div class="flex justify-between items-center mb-4">
+          <span class="font-bold text-stone-800">Calendar</span>
+          <span class="issue-badge fixed">Consistent!</span>
+        </div>
+        <div class="grid grid-cols-7 gap-1 text-center text-xs text-stone-500 mb-2">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+        <div class="grid grid-cols-7 gap-1 place-items-center">
+          <div class="day-cell muted">25</div>
+          <div class="day-cell muted">26</div>
+          <div class="day-cell muted">27</div>
+          <div class="day-cell muted">28</div>
+          <div class="day-cell muted">29</div>
+          <div class="day-cell muted">30</div>
+          <div class="day-cell">1</div>
+          <div class="day-cell completed"><span>22</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>23</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>24</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>25</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>26</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>27</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>28</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>29</span><span class="dot"></span></div>
+          <div class="day-cell completed"><span>30</span><span class="dot"></span></div>
+          <div class="day-cell completed today"><span>31</span><span class="dot"></span></div>
+          <div class="day-cell muted">1</div>
+          <div class="day-cell muted">2</div>
+          <div class="day-cell muted">3</div>
+          <div class="day-cell muted">4</div>
+        </div>
+        <div class="flex justify-between items-center mt-4 pt-4 border-t border-stone-100">
+          <div class="month-pill">
+            <span>📅</span>
+            <span>Dec 2025</span>
+          </div>
+          <div class="flex gap-2">
+            <div class="nav-btn">←</div>
+            <div class="nav-btn">→</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 bg-emerald-50 rounded-lg text-xs text-emerald-700">
+        <strong>Improvements:</strong>
+        <ul class="mt-1 space-y-1">
+          <li>✓ Same border radius (16px / rounded-2xl)</li>
+          <li>✓ Same padding (20px / p-5)</li>
+          <li>✓ Both have matching shadows</li>
+          <li>✓ Added "Calendar" header for consistency</li>
+          <li>✓ 12px gap between cards</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Design Tokens -->
+  <div class="max-w-xs">
+    <h2 class="text-lg font-bold text-stone-700 mb-4">Design Tokens</h2>
+
+    <div class="bg-white rounded-xl p-4 shadow-sm mb-4">
+      <h3 class="font-semibold text-stone-800 mb-3">Card Styling</h3>
+      <table class="text-xs w-full">
+        <tr class="border-b border-stone-100">
+          <td class="py-2 text-stone-500">Border Radius</td>
+          <td class="py-2 font-mono text-stone-800">16px (rounded-2xl)</td>
+        </tr>
+        <tr class="border-b border-stone-100">
+          <td class="py-2 text-stone-500">Padding</td>
+          <td class="py-2 font-mono text-stone-800">20px (p-5)</td>
+        </tr>
+        <tr class="border-b border-stone-100">
+          <td class="py-2 text-stone-500">Background</td>
+          <td class="py-2 font-mono text-stone-800">#ffffff</td>
+        </tr>
+        <tr class="border-b border-stone-100">
+          <td class="py-2 text-stone-500">Shadow</td>
+          <td class="py-2 font-mono text-stone-800 text-[10px]">0 2px 8px rgba(0,0,0,0.05)</td>
+        </tr>
+        <tr>
+          <td class="py-2 text-stone-500">Gap Between</td>
+          <td class="py-2 font-mono text-stone-800">12px</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="bg-white rounded-xl p-4 shadow-sm mb-4">
+      <h3 class="font-semibold text-stone-800 mb-3">Typography</h3>
+      <table class="text-xs w-full">
+        <tr class="border-b border-stone-100">
+          <td class="py-2 text-stone-500">Card Header</td>
+          <td class="py-2 font-mono text-stone-800">16px / 700</td>
+        </tr>
+        <tr class="border-b border-stone-100">
+          <td class="py-2 text-stone-500">Day Labels</td>
+          <td class="py-2 font-mono text-stone-800">13px / 500</td>
+        </tr>
+        <tr>
+          <td class="py-2 text-stone-500">Day Numbers</td>
+          <td class="py-2 font-mono text-stone-800">15px / 500</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <h3 class="font-semibold text-stone-800 mb-3">Optional: Add Calendar Header</h3>
+      <p class="text-xs text-stone-500">
+        Adding a "Calendar" header with optional view toggle (Week/Month) would match the Habit Strength card pattern.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

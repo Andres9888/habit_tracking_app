@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reminder Improvements - Comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .iphone-frame {
+      width: 390px;
+      height: 844px;
+      background: #f5f5f4;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 3px #1c1917,
+        0 0 0 6px #78716c,
+        0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 37px;
+      background: #1c1917;
+      border-radius: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: flex-end;
+      z-index: 50;
+    }
+
+    .modal-container {
+      width: 100%;
+      background: white;
+      border-radius: 24px 24px 0 0;
+      max-height: 90%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toggle-track {
+      width: 51px;
+      height: 31px;
+      background: #d6d3d1;
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .toggle-track.active {
+      background: #10B981;
+    }
+
+    .toggle-thumb {
+      width: 27px;
+      height: 27px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .toggle-track.active .toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    .time-chip {
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 2px solid transparent;
+    }
+
+    .time-chip.selected {
+      background: #ECFDF5;
+      border-color: #10B981;
+      color: #059669;
+    }
+
+    .time-chip:not(.selected) {
+      background: #f5f5f4;
+      color: #57534e;
+    }
+
+    .time-chip:hover:not(.selected) {
+      background: #e7e5e4;
+    }
+
+    .custom-time-btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      background: white;
+      border: 2px solid #e7e5e4;
+      color: #1c1917;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .custom-time-btn:hover {
+      border-color: #a8a29e;
+    }
+
+    .custom-time-btn.has-custom {
+      border-color: #10B981;
+      background: #ECFDF5;
+    }
+
+    .day-chip {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .day-chip.selected {
+      background: #10B981;
+      color: white;
+    }
+
+    .day-chip:not(.selected) {
+      background: #f5f5f4;
+      color: #57534e;
+    }
+
+    .day-chip:hover:not(.selected) {
+      background: #e7e5e4;
+    }
+
+    .next-reminder-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #FEF3C7;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #92400E;
+    }
+
+    .time-picker-wheel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+      background: #f5f5f4;
+      border-radius: 16px;
+    }
+
+    .wheel-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .wheel-item {
+      padding: 8px 16px;
+      font-size: 20px;
+      font-weight: 500;
+      color: #a8a29e;
+      transition: all 0.15s ease;
+    }
+
+    .wheel-item.active {
+      font-size: 24px;
+      color: #1c1917;
+      font-weight: 600;
+    }
+
+    .wheel-separator {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1c1917;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-stone-200 p-8">
+
+  <h1 class="text-2xl font-bold text-stone-800 text-center mb-8">Reminder Improvements</h1>
+
+  <div class="flex flex-wrap gap-8 justify-center">
+
+    <!-- CURRENT: Basic Toggle -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-sm font-semibold text-stone-600 mb-4">Current: Basic Toggle</h3>
+      <div class="iphone-frame" style="height: 500px;">
+        <div class="screen">
+          <div class="p-6 pt-16">
+            <h2 class="text-lg font-bold text-stone-900 mb-6">Reminder Settings</h2>
+
+            <!-- Current minimal toggle -->
+            <div class="rounded-xl border border-stone-200 bg-white px-3.5 py-3.5 flex items-center justify-between mb-4" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+              <div class="flex items-center gap-3 flex-1">
+                <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                  <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-stone-900">Remind me</p>
+                  <p class="text-xs font-medium text-emerald-500">12:00 PM</p>
+                </div>
+              </div>
+              <div class="toggle-track active">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+
+            <!-- Limitations callout -->
+            <div class="mt-8 p-4 bg-red-50 rounded-xl border border-red-200">
+              <p class="text-sm font-semibold text-red-800 mb-2">Limitations:</p>
+              <ul class="text-xs text-red-700 space-y-1">
+                <li>• Only 3 preset times (7AM, 12PM, 8PM)</li>
+                <li>• No custom time selection</li>
+                <li>• Daily reminders only</li>
+                <li>• No day-of-week selection</li>
+                <li>• No "next reminder" preview</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPROVED: Custom Time + Quick Presets -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-sm font-semibold text-stone-600 mb-4">Improved: Quick Presets + Custom</h3>
+      <div class="iphone-frame" style="height: 500px;">
+        <div class="screen">
+          <div class="p-6 pt-16">
+            <h2 class="text-lg font-bold text-stone-900 mb-6">Reminder Settings</h2>
+
+            <!-- Toggle row -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                  <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+              </div>
+              <div class="toggle-track active">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+
+            <!-- Quick presets -->
+            <div class="flex gap-2 mb-4">
+              <div class="time-chip">
+                <span>🌅</span> 7 AM
+              </div>
+              <div class="time-chip selected">
+                <span>☀️</span> 12 PM
+              </div>
+              <div class="time-chip">
+                <span>🌙</span> 8 PM
+              </div>
+            </div>
+
+            <!-- Custom time button -->
+            <button class="custom-time-btn w-full mb-4">
+              <span class="flex items-center gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-stone-400"></i>
+                Custom time...
+              </span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+            </button>
+
+            <!-- Next reminder preview -->
+            <div class="flex justify-center">
+              <div class="next-reminder-badge">
+                <i data-lucide="clock" class="w-3 h-3"></i>
+                Next: Today at 12:00 PM (in 3 hours)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPROVED: With Custom Time Selected -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-sm font-semibold text-stone-600 mb-4">Custom Time Selected</h3>
+      <div class="iphone-frame" style="height: 500px;">
+        <div class="screen">
+          <div class="p-6 pt-16">
+            <h2 class="text-lg font-bold text-stone-900 mb-6">Reminder Settings</h2>
+
+            <!-- Toggle row -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                  <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+              </div>
+              <div class="toggle-track active">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+
+            <!-- Quick presets - none selected -->
+            <div class="flex gap-2 mb-4">
+              <div class="time-chip">
+                <span>🌅</span> 7 AM
+              </div>
+              <div class="time-chip">
+                <span>☀️</span> 12 PM
+              </div>
+              <div class="time-chip">
+                <span>🌙</span> 8 PM
+              </div>
+            </div>
+
+            <!-- Custom time - has value -->
+            <button class="custom-time-btn has-custom w-full mb-4">
+              <span class="flex items-center gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
+                <span class="text-emerald-700 font-semibold">6:30 AM</span>
+              </span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-600"></i>
+            </button>
+
+            <!-- Next reminder preview -->
+            <div class="flex justify-center">
+              <div class="next-reminder-badge">
+                <i data-lucide="clock" class="w-3 h-3"></i>
+                Next: Tomorrow at 6:30 AM
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPROVED: Day Selection -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-sm font-semibold text-stone-600 mb-4">With Day Selection</h3>
+      <div class="iphone-frame" style="height: 500px;">
+        <div class="screen">
+          <div class="p-6 pt-16">
+            <h2 class="text-lg font-bold text-stone-900 mb-6">Reminder Settings</h2>
+
+            <!-- Toggle row -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                  <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <span class="text-sm font-medium text-stone-900">Reminder</span>
+              </div>
+              <div class="toggle-track active">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+
+            <!-- Time display -->
+            <button class="custom-time-btn has-custom w-full mb-4">
+              <span class="flex items-center gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
+                <span class="text-emerald-700 font-semibold">7:00 AM</span>
+              </span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-600"></i>
+            </button>
+
+            <!-- Day selection -->
+            <p class="text-xs font-semibold text-stone-500 mb-2" style="letter-spacing: 0.5px;">REPEAT ON</p>
+            <div class="flex justify-between mb-4">
+              <div class="day-chip">S</div>
+              <div class="day-chip selected">M</div>
+              <div class="day-chip selected">T</div>
+              <div class="day-chip selected">W</div>
+              <div class="day-chip selected">T</div>
+              <div class="day-chip selected">F</div>
+              <div class="day-chip">S</div>
+            </div>
+
+            <!-- Weekdays shortcut -->
+            <div class="flex gap-2 mb-4">
+              <button class="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">Weekdays</button>
+              <button class="text-xs font-medium text-stone-500 bg-stone-100 px-3 py-1.5 rounded-full">Weekends</button>
+              <button class="text-xs font-medium text-stone-500 bg-stone-100 px-3 py-1.5 rounded-full">Every day</button>
+            </div>
+
+            <!-- Next reminder preview -->
+            <div class="flex justify-center">
+              <div class="next-reminder-badge">
+                <i data-lucide="clock" class="w-3 h-3"></i>
+                Next: Monday at 7:00 AM
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Time Picker Modal Mock -->
+  <div class="mt-12">
+    <h2 class="text-xl font-bold text-stone-800 text-center mb-6">Time Picker Modal</h2>
+    <div class="flex justify-center gap-8">
+
+      <!-- iOS-style time picker -->
+      <div class="flex flex-col items-center">
+        <h3 class="text-sm font-semibold text-stone-600 mb-4">iOS Native Picker</h3>
+        <div class="bg-white rounded-2xl p-6 shadow-xl" style="width: 320px;">
+          <div class="text-center mb-4">
+            <p class="text-lg font-semibold text-stone-900">Set Reminder Time</p>
+          </div>
+
+          <div class="time-picker-wheel">
+            <div class="wheel-column">
+              <span class="wheel-item">5</span>
+              <span class="wheel-item active">6</span>
+              <span class="wheel-item">7</span>
+            </div>
+            <span class="wheel-separator">:</span>
+            <div class="wheel-column">
+              <span class="wheel-item">15</span>
+              <span class="wheel-item active">30</span>
+              <span class="wheel-item">45</span>
+            </div>
+            <div class="wheel-column">
+              <span class="wheel-item">PM</span>
+              <span class="wheel-item active">AM</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3 mt-6">
+            <button class="flex-1 py-3 rounded-xl bg-stone-100 text-stone-600 font-semibold">Cancel</button>
+            <button class="flex-1 py-3 rounded-xl bg-emerald-500 text-white font-semibold">Set Time</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Benefits callout -->
+  <div class="mt-12 max-w-2xl mx-auto">
+    <div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-200">
+      <h3 class="text-lg font-bold text-emerald-900 mb-4">Improvement Benefits</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm font-semibold text-emerald-800 mb-1">Custom Time Picker</p>
+          <p class="text-xs text-emerald-700">Any time, not just 3 presets. Early risers can set 5:30 AM, night owls can set 11 PM.</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-emerald-800 mb-1">Day Selection</p>
+          <p class="text-xs text-emerald-700">Weekdays only, specific days, or every day. Schema already supports daysOfWeek.</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-emerald-800 mb-1">Next Reminder Preview</p>
+          <p class="text-xs text-emerald-700">Users see exactly when the next notification will arrive. Builds trust and confidence.</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-emerald-800 mb-1">Quick Presets Preserved</p>
+          <p class="text-xs text-emerald-700">Keep the fast 1-tap presets for common times, but allow custom for power users.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

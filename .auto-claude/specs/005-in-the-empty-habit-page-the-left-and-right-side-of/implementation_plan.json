@@ -1,0 +1,74 @@
+{
+  "feature": "fix-empty-habit-button-cutoff",
+  "description": "in the empty habit page the left and right side of the screen are cutting of the buttons",
+  "created_at": "2026-01-06T02:45:01.348Z",
+  "updated_at": "2026-01-06T03:55:27.690Z",
+  "status": "human_review",
+  "planStatus": "review",
+  "workflow_type": "simple",
+  "total_phases": 1,
+  "recommended_workers": 1,
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Implementation",
+      "description": "Add horizontal padding to empty habit page container",
+      "depends_on": [],
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add paddingHorizontal: 24 to the main Animated.View container style in HabitsEmptyStateMinimal.tsx to prevent buttons from being cut off at screen edges",
+          "service": "frontend",
+          "status": "completed",
+          "files_to_create": [],
+          "files_to_modify": [
+            "src/features/habits/components/HabitsEmptyStateMinimal/HabitsEmptyStateMinimal.tsx"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "run": "Run app on iOS simulator and verify buttons are not cut off on empty habit screen"
+          },
+          "notes": "Changed px-4 (16px) to px-6 (24px) in the main View container className in HabitsEmptyState.tsx to provide proper horizontal padding and prevent buttons/content from being cut off at screen edges.",
+          "updated_at": "2026-01-06T02:50:30.006308+00:00"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-01-06T02:45:01.348Z",
+    "complexity": "simple",
+    "estimated_sessions": 1
+  },
+  "last_updated": "2026-01-06T02:53:14.062542+00:00",
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 0,
+    "issues_found": [
+      {
+        "description": "None"
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-01-06T02:53:14.062535+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-06T02:53:21.301883+00:00",
+      "issues": [],
+      "duration_seconds": 161.37
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  },
+  "recoveryNote": "Task recovered from stuck state at 2026-01-06T02:53:30.416Z",
+  "stagedAt": "2026-01-06T03:35:43.033Z",
+  "stagedInMainProject": true
+}

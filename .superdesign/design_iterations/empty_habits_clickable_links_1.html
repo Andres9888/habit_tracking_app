@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empty Habits - Clickable Link Options</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background: #f5f5f4; }
+    .phone-frame {
+      width: 390px;
+      height: 680px;
+      background: white;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      position: relative;
+    }
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: black;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: white;
+      border: 1px solid #e7e5e4;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #44403c;
+    }
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    .cta-button {
+      width: 100%;
+      padding: 18px 24px;
+      background: #d6d3d1;
+      border-radius: 16px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .link { color: #047857; font-weight: 600; cursor: pointer; }
+    .link:hover { opacity: 0.8; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-8 gap-6">
+
+  <h1 class="text-2xl font-bold text-stone-700">Making Links Look Clickable</h1>
+
+  <div class="flex gap-6 flex-wrap justify-center">
+
+    <!-- Current with emojis -->
+    <div class="text-center">
+      <h3 class="text-stone-400 text-xs font-medium mb-3 uppercase tracking-wide">Current (emojis only)</h3>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="flex flex-col items-center justify-center h-full px-6">
+          <div class="hero-icon mb-6">🌱</div>
+          <h1 class="text-2xl font-bold text-stone-800 text-center mb-6 leading-tight">
+            What's one small thing<br>you want to do daily?
+          </h1>
+          <div class="w-full mb-5">
+            <input type="text" placeholder="Type your habit..." class="w-full px-4 py-4 border border-stone-200 rounded-2xl text-base">
+          </div>
+          <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="chip">☕ Coffee</span>
+            <span class="chip">🏃 Run</span>
+            <span class="chip">🧘 Meditate</span>
+            <span class="chip">📝 Journal</span>
+            <span class="chip">💧 Water</span>
+            <span class="chip">📚 Read</span>
+          </div>
+          <button class="cta-button mb-4">Start my journey →</button>
+          <p class="text-stone-500 text-sm">
+            or explore <span class="link">📋 templates</span> and <span class="link">✨ custom habit</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 1: Underline -->
+    <div class="text-center">
+      <h3 class="text-emerald-600 text-xs font-medium mb-3 uppercase tracking-wide">1: Underline ✓</h3>
+      <div class="phone-frame" style="box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.2);">
+        <div class="notch"></div>
+        <div class="flex flex-col items-center justify-center h-full px-6">
+          <div class="hero-icon mb-6">🌱</div>
+          <h1 class="text-2xl font-bold text-stone-800 text-center mb-6 leading-tight">
+            What's one small thing<br>you want to do daily?
+          </h1>
+          <div class="w-full mb-5">
+            <input type="text" placeholder="Type your habit..." class="w-full px-4 py-4 border border-stone-200 rounded-2xl text-base">
+          </div>
+          <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="chip">☕ Coffee</span>
+            <span class="chip">🏃 Run</span>
+            <span class="chip">🧘 Meditate</span>
+            <span class="chip">📝 Journal</span>
+            <span class="chip">💧 Water</span>
+            <span class="chip">📚 Read</span>
+          </div>
+          <button class="cta-button mb-4">Start my journey →</button>
+          <p class="text-stone-500 text-sm">
+            or explore <span class="link" style="text-decoration: underline; text-underline-offset: 3px;">📋 templates</span> and <span class="link" style="text-decoration: underline; text-underline-offset: 3px;">✨ custom habit</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 2: Chevron -->
+    <div class="text-center">
+      <h3 class="text-stone-400 text-xs font-medium mb-3 uppercase tracking-wide">2: Chevrons</h3>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="flex flex-col items-center justify-center h-full px-6">
+          <div class="hero-icon mb-6">🌱</div>
+          <h1 class="text-2xl font-bold text-stone-800 text-center mb-6 leading-tight">
+            What's one small thing<br>you want to do daily?
+          </h1>
+          <div class="w-full mb-5">
+            <input type="text" placeholder="Type your habit..." class="w-full px-4 py-4 border border-stone-200 rounded-2xl text-base">
+          </div>
+          <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="chip">☕ Coffee</span>
+            <span class="chip">🏃 Run</span>
+            <span class="chip">🧘 Meditate</span>
+            <span class="chip">📝 Journal</span>
+            <span class="chip">💧 Water</span>
+            <span class="chip">📚 Read</span>
+          </div>
+          <button class="cta-button mb-4">Start my journey →</button>
+          <p class="text-stone-500 text-sm">
+            or explore <span class="link">📋 templates ›</span> and <span class="link">✨ custom habit ›</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 3: Mini pill buttons -->
+    <div class="text-center">
+      <h3 class="text-stone-400 text-xs font-medium mb-3 uppercase tracking-wide">3: Mini Pills</h3>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="flex flex-col items-center justify-center h-full px-6">
+          <div class="hero-icon mb-6">🌱</div>
+          <h1 class="text-2xl font-bold text-stone-800 text-center mb-6 leading-tight">
+            What's one small thing<br>you want to do daily?
+          </h1>
+          <div class="w-full mb-5">
+            <input type="text" placeholder="Type your habit..." class="w-full px-4 py-4 border border-stone-200 rounded-2xl text-base">
+          </div>
+          <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="chip">☕ Coffee</span>
+            <span class="chip">🏃 Run</span>
+            <span class="chip">🧘 Meditate</span>
+            <span class="chip">📝 Journal</span>
+            <span class="chip">💧 Water</span>
+            <span class="chip">📚 Read</span>
+          </div>
+          <button class="cta-button mb-4">Start my journey →</button>
+          <p class="text-stone-500 text-sm flex items-center justify-center gap-1 flex-wrap">
+            or explore
+            <span class="link px-2 py-1 bg-emerald-50 rounded-full text-xs" style="font-size: 13px;">📋 templates</span>
+            and
+            <span class="link px-2 py-1 bg-emerald-50 rounded-full text-xs" style="font-size: 13px;">✨ custom habit</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 4: Press state demo -->
+    <div class="text-center">
+      <h3 class="text-stone-400 text-xs font-medium mb-3 uppercase tracking-wide">4: Better Press State</h3>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="flex flex-col items-center justify-center h-full px-6">
+          <div class="hero-icon mb-6">🌱</div>
+          <h1 class="text-2xl font-bold text-stone-800 text-center mb-6 leading-tight">
+            What's one small thing<br>you want to do daily?
+          </h1>
+          <div class="w-full mb-5">
+            <input type="text" placeholder="Type your habit..." class="w-full px-4 py-4 border border-stone-200 rounded-2xl text-base">
+          </div>
+          <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="chip">☕ Coffee</span>
+            <span class="chip">🏃 Run</span>
+            <span class="chip">🧘 Meditate</span>
+            <span class="chip">📝 Journal</span>
+            <span class="chip">💧 Water</span>
+            <span class="chip">📚 Read</span>
+          </div>
+          <button class="cta-button mb-4">Start my journey →</button>
+          <p class="text-stone-500 text-sm">
+            or explore
+            <span class="link px-1 rounded hover:bg-emerald-50 transition-colors" style="text-decoration: underline; text-underline-offset: 3px;">📋 templates</span>
+            and
+            <span class="link px-1 rounded hover:bg-emerald-50 transition-colors" style="text-decoration: underline; text-underline-offset: 3px;">✨ custom habit</span>
+          </p>
+          <p class="text-stone-300 text-xs mt-2">(hover to see press state)</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Legend -->
+  <div class="bg-white px-6 py-3 rounded-full shadow-lg border border-stone-200 mt-2">
+    <p class="text-stone-600 text-sm">
+      <span class="font-semibold text-emerald-600">Recommended:</span> Option 1 (Underline) or Option 4 (Underline + press background)
+    </p>
+  </div>
+
+</body>
+</html>
