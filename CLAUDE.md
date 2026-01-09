@@ -389,3 +389,73 @@ IMPORTANT RULES:
 - **generateTheme**: Generate a theme for the design
 
 When calling tools, you MUST use the actual tool call, do NOT just output text like 'Called tool: write with arguments: ...' or <tool-call>...</tool-call>, this won't actually call the tool. (This is very important to my life, please follow)
+
+---
+
+## Code Readability Initiative (Active)
+
+**Goal:** All production files must be ≤100 lines (excluding blank lines and comments).
+
+### When Writing or Modifying Code
+
+1. **Check file length** - If a file exceeds 100 lines, apply decomposition patterns
+2. **Reference patterns** - See `docs/DECOMPOSITION_PATTERNS.md` for canonical examples
+3. **ESLint enforcement** - `max-lines` rule is active (currently warns, will become error)
+
+### Decomposition Quick Reference
+
+**Components (>100 lines):**
+```
+ComponentName/
+├── index.ts              # Barrel export
+├── ComponentName.tsx     # Main orchestration (≤100 lines)
+├── ComponentName.hooks.ts # Business logic
+├── ComponentName.types.ts # TypeScript types
+└── components/           # Sub-components
+```
+
+**Hooks (>100 lines):**
+```
+useFeature/
+├── index.ts              # Re-exports
+├── useFeature.ts         # Main hook (orchestrates)
+├── useFeatureState.ts    # State management
+├── useFeatureHandlers.ts # Event handlers
+└── types.ts              # Types
+```
+
+**Utilities (>100 lines):**
+```
+utilityName/
+├── index.ts              # Re-exports
+├── core.ts               # Core logic
+├── helpers.ts            # Helper functions
+└── types.ts              # Types
+```
+
+### Naming Conventions
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Component | `PascalCase.tsx` | `HabitCard.tsx` |
+| Hook | `camelCase.ts` | `useHabitCard.ts` |
+| Types | `*.types.ts` | `HabitCard.types.ts` |
+| Hooks (component) | `*.hooks.ts` | `HabitCard.hooks.ts` |
+
+### Lint Commands
+
+```bash
+npm run lint:max-lines        # Check violations
+npm run lint:max-lines-report # Generate JSON report
+```
+
+### Critical Files Requiring Decomposition
+
+These 7 files are 1000+ lines and high priority:
+1. `TemplateScienceModal.tsx` (1,375 lines)
+2. `LettersSection.tsx` (1,320 lines)
+3. `AffirmationsSection.tsx` (1,133 lines)
+4. `HabitsEmptyState.tsx` (1,094 lines)
+5. `FullsizeTemplatePreview.tsx` (1,047 lines)
+6. `TemplatesScreen.tsx` (1,039 lines)
+7. `TodaysFocusCard.tsx` (991 lines)

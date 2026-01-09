@@ -273,6 +273,41 @@ None. All work is internal code organization.
 
 ---
 
+## Implementation Checklist
+
+### Phase 1: Foundation (Establish Patterns)
+
+- [x] Create decomposition templates and examples (`docs/DECOMPOSITION_PATTERNS.md`)
+- [x] Set up ESLint rule for max-lines-per-function and max-lines (already exists, enhanced with comments)
+- [x] Document patterns in CLAUDE.md for AI assistants
+- [ ] Decompose 3 exemplar files as references
+
+### Phase 2: Critical Path (1000+ line files)
+
+- [ ] Decompose `TemplateScienceModal.tsx` (1,375 lines)
+- [ ] Decompose `LettersSection.tsx` (1,320 lines)
+- [ ] Decompose `AffirmationsSection.tsx` (1,133 lines)
+- [ ] Decompose `HabitsEmptyState.tsx` (1,094 lines)
+- [ ] Decompose `FullsizeTemplatePreview.tsx` (1,047 lines)
+- [ ] Decompose `TemplatesScreen.tsx` (1,039 lines)
+- [ ] Decompose `TodaysFocusCard.tsx` (991 lines)
+
+### Phase 3: Large Files (501-1000 lines)
+
+- [ ] Decompose 33 large files (see Appendix for full list)
+
+### Phase 4: Medium Files (301-500 lines)
+
+- [ ] Decompose 67 medium files
+
+### Phase 5: Final Cleanup (101-300 lines)
+
+- [ ] Address 168 small overages
+- [ ] Convert ESLint `max-lines` from "warn" to "error"
+- [ ] Final lint enforcement
+
+---
+
 ## Test Strategy Summary
 
 ### Validation Approach

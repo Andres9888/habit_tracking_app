@@ -97,10 +97,18 @@ export default tseslint.config(
       // Console warnings for production code
       'no-console': ['warn', { allow: ['warn', 'error'] }],
 
-      // File size limit - encourage modular components
+      // === Code Readability Initiative ===
+      // File size limit - 100 lines max for PR-readable code
+      // See: docs/DECOMPOSITION_PATTERNS.md for refactoring guidance
+      // Current status: "warn" during migration, will become "error" after Phase 5
       'max-lines': [
         'warn',
         { max: 100, skipBlankLines: true, skipComments: true },
+      ],
+      // Function size limit - keep functions focused and testable
+      'max-lines-per-function': [
+        'warn',
+        { max: 50, skipBlankLines: true, skipComments: true, IIFEs: true },
       ],
 
       // Import organization (manual guidelines)
