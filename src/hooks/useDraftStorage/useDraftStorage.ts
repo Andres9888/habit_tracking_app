@@ -1,12 +1,13 @@
 /**
  * useDraftStorage Hook - Auto-saves drafts for long-form content
  */
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { DEFAULT_DEBOUNCE_MS, DEFAULT_MAX_AGE_MS } from './constants';
-import { clearDraft, saveDraft } from './storage';
+import { clearDraft } from './storage';
 import type { UseDraftStorageOptions, UseDraftStorageReturn } from './types';
 import { useDraftRecovery } from './useDraftRecovery';
+import { useDraftSaveOperations } from './useDraftSaveOperations';
 
 export function useDraftStorage({
   habitId,
@@ -31,43 +32,19 @@ export function useDraftStorage({
     onDraftRecovered,
   });
 
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingDraftRef = useRef<string | null>(null);
   const draftRef = useRef(draft);
   draftRef.current = draft;
 
-  useEffect(
-    () => () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-    },
-    []
-  );
-
-  const performSave = useCallback(
-    async (content: string) => {
-      if (!enabled || !habitId) return;
-      try {
-        await saveDraft(habitId, contentType, content);
-      } catch (error) {
-        onSaveError?.(error as Error);
-      } finally {
-        pendingDraftRef.current = null;
-      }
-    },
-    [enabled, habitId, contentType, onSaveError]
-  );
-
-  const debouncedSave = useCallback(
-    (content: string) => {
-      pendingDraftRef.current = content;
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = setTimeout(
-        () => void performSave(content),
-        debounceMs
-      );
-    },
-    [debounceMs, performSave]
-  );
+  const { debouncedSave, saveNow, cancelPending, isSaving } =
+    useDraftSaveOperations({
+      contentType,
+      debounceMs,
+      enabled,
+      getDraftValue: () => draftRef.current,
+      habitId,
+      isInitialized,
+      onSaveError,
+    });
 
   const setDraft = useCallback(
     (value: string) => {
@@ -85,31 +62,19 @@ export function useDraftStorage({
     ]
   );
 
-  const saveNow = useCallback(async () => {
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = null;
-    }
-    await performSave(draftRef.current);
-  }, [performSave]);
-
   const handleClearDraft = useCallback(async () => {
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = null;
-    }
+    cancelPending();
     await clearDraft(habitId, contentType);
     setDraftState('');
     setWasRecovered(false);
-    pendingDraftRef.current = null;
-  }, [habitId, contentType, setDraftState, setWasRecovered]);
+  }, [habitId, contentType, setDraftState, setWasRecovered, cancelPending]);
 
   return {
     clearDraft: handleClearDraft,
     discardRecoveredDraft: handleClearDraft,
     draft,
     hasDraft: draft.trim().length > 0,
-    isSaving: pendingDraftRef.current !== null,
+    isSaving,
     saveNow,
     setDraft,
     wasRecovered,

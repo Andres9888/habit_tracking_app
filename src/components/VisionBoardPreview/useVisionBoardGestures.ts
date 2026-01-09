@@ -19,17 +19,9 @@ import {
   SWIPE_VELOCITY_THRESHOLD,
   HORIZONTAL_SWIPE_THRESHOLD,
 } from './VisionBoardPreview.constants';
+import type { UseVisionBoardGesturesParams } from './useVisionBoardGestures.types';
+import { SPRING_CONFIG } from './useVisionBoardGestures.types';
 
-interface UseVisionBoardGesturesParams {
-  reduceMotion: boolean;
-  hasNext: boolean;
-  hasPrev: boolean;
-  goToNext: () => void;
-  goToPrev: () => void;
-  handleClose: () => void;
-}
-
-const SPRING_CONFIG = { damping: 20, stiffness: 200 };
 const springValue = (reduceMotion: boolean, val: number) =>
   reduceMotion ? val : withSpring(val, SPRING_CONFIG);
 
@@ -78,7 +70,6 @@ export function useVisionBoardGestures({
       const velocityY = Math.round(event.velocityY);
       const velocityX = Math.round(event.velocityX);
 
-      // Dismiss
       if (
         Math.abs(event.translationY) > DISMISS_THRESHOLD ||
         Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD
@@ -91,7 +82,6 @@ export function useVisionBoardGestures({
         return;
       }
 
-      // Navigate left/right
       if (
         event.translationX < -HORIZONTAL_SWIPE_THRESHOLD ||
         velocityX < -SWIPE_VELOCITY_THRESHOLD
@@ -101,8 +91,9 @@ export function useVisionBoardGestures({
         (event.translationX > HORIZONTAL_SWIPE_THRESHOLD ||
           velocityX > SWIPE_VELOCITY_THRESHOLD) &&
         hasPrev
-      )
+      ) {
         runOnJS(goToPrev)();
+      }
       resetAnimations();
     });
 

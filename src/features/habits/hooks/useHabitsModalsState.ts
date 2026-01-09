@@ -4,13 +4,17 @@ import type { Habit } from '../types';
 import { useHabitMutations } from './useHabitMutations';
 import { useHabitMilestones } from './useHabitMilestones';
 import { useHabitsTracking } from './useHabitsTracking';
-import { useHabitStateSync } from './useHabitStateSync';
 import { useHabitsModalsHandlers } from './useHabitsModalsHandlers';
 import { useModalVisibilityState } from './useModalVisibilityState';
 import { useHabitSelectionState } from './useHabitSelectionState';
 import { useHabitsSettings } from './useHabitsSettings';
 import { buildModalsStateReturnValue } from './buildModalsStateReturnValue';
 import { buildModalsSettersArg } from './buildModalsSettersArg';
+import {
+  generateDateStrings,
+  getTodayMidnight,
+  useSyncAllHabitStates,
+} from './modalsStateHelpers';
 import type { HabitsModalsState } from './types';
 
 interface UseHabitsModalsStateProps {
@@ -69,10 +73,10 @@ export function useHabitsModalsState({
 
   return buildModalsStateReturnValue(visibility, selection, handlers, {
     celebrationsEnabled,
-    habits,
     clearMilestone,
-    handleArchive,
     getStreak,
+    habits,
+    handleArchive,
     handleToggleHabit,
     milestone,
     onChangeCelebrationsEnabled,
@@ -81,38 +85,4 @@ export function useHabitsModalsState({
     showHabitStrengthPercentage,
     tracking,
   });
-}
-
-function generateDateStrings(days: number): string[] {
-  return Array.from({ length: days }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    return date.toISOString().split('T')[0];
-  });
-}
-
-function getTodayMidnight(): Date {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return today;
-}
-
-function useSyncAllHabitStates(
-  habits: Habit[],
-  sel: ReturnType<typeof useHabitSelectionState>
-): void {
-  useHabitStateSync(
-    habits,
-    sel.selectedHabit,
-    sel.setSelectedHabit,
-    'selectedHabit'
-  );
-  useHabitStateSync(habits, sel.habitToEdit, sel.setHabitToEdit);
-  useHabitStateSync(habits, sel.habitToPause, sel.setHabitToPause);
-  useHabitStateSync(habits, sel.quickActionsHabit, sel.setQuickActionsHabit);
-  useHabitStateSync(
-    habits,
-    sel.activationModalHabit,
-    sel.setActivationModalHabit
-  );
 }

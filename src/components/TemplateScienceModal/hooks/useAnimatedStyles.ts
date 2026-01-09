@@ -8,6 +8,7 @@ import {
   Extrapolation,
 } from 'react-native-reanimated';
 import type { AnimationValues } from './animatedStyles.types';
+import { useButtonAnimatedStyles } from './buttonAnimatedStyles';
 
 export const useAnimatedStyles = (values: AnimationValues) => {
   const hero = useAnimatedStyle(() => ({
@@ -84,28 +85,13 @@ export const useAnimatedStyles = (values: AnimationValues) => {
     ],
   }));
 
-  const backButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.backButtonScale.value }],
-  }));
-  const closeButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.closeButtonScale.value }],
-  }));
-  const linkButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.linkButtonScale.value }],
-  }));
-  const shareButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.shareButtonScale.value }],
-  }));
-  const youtubeButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.youtubeButtonScale.value }],
-  }));
+  const buttonStyles = useButtonAnimatedStyles(values);
 
   return {
-    backButton,
+    ...buttonStyles,
     card1,
     card2,
     card3,
-    closeButton,
     container,
     dismissIndicator,
     footer,
@@ -113,8 +99,5 @@ export const useAnimatedStyles = (values: AnimationValues) => {
     headerTitle,
     hero,
     iconGlow,
-    linkButton,
-    shareButton,
-    youtubeButton,
   };
 };
