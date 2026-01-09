@@ -2,49 +2,24 @@
  * HabitsEmptyStateMinimal - Main Component
  *
  * Ultra-minimal empty state design focused on a single question flow.
- * Ask what habit the user wants, let them type or tap a suggestion,
- * and create it immediately.
- *
- * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
-import { useCallback, useRef, useState } from 'react';
-import { Keyboard, TextInput, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useReducedMotion,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
+import { useRef } from 'react';
+import { TextInput } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useKeyboardVisible } from '../../../../hooks/useKeyboardVisible';
-import { useTimeBasedChipAnalytics } from './analytics';
-import { AnimatedEntrance } from './AnimatedEntrance';
-import { ENTRANCE_DELAYS, KEYBOARD_LAYOUT } from './animations';
-import { COLORS, COPY } from './constants';
-import { CtaButton } from './CtaButton';
-import { ErrorMessage } from './ErrorMessage';
-import { HabitInput } from './HabitInput';
-import { HeroIcon } from './HeroIcon';
-import { InlineHint } from './InlineHint';
+import { ActionSection } from './ActionSection';
+import { ChipsSection } from './ChipsSection';
+import { HeroSection } from './HeroSection';
+import { InputSection } from './InputSection';
 import { LoadingSkeleton } from './LoadingSkeleton';
 import { SuccessState } from './SuccessState';
-import { SuggestionChips } from './SuggestionChips';
-import type { HabitsEmptyStateMinimalProps, SuggestionChip } from './types';
-import { getTimeBasedChips } from './utils';
+import type { HabitsEmptyStateMinimalProps } from './types';
+import { useHabitCreationFlow } from './useHabitCreationFlow';
+import { useKeyboardLayoutAnimations } from './useKeyboardLayoutAnimations';
 
-/**
- * Minimal empty state for habits screen
- *
- * Provides a streamlined flow for creating the first habit:
- * 1. Hero icon with breathing animation
- * 2. Question headline
- * 3. Text input or suggestion chips
- * 4. Primary CTA button
- * 5. Success celebration on creation
- */
 export function HabitsEmptyStateMinimal({
   isLoading = false,
   onQuickCreateHabit,
@@ -53,217 +28,31 @@ export function HabitsEmptyStateMinimal({
   onSuccessTransitionComplete,
 }: HabitsEmptyStateMinimalProps) {
   const inputRef = useRef<TextInput>(null);
-  const { triggerSuccess } = useHapticFeedback();
   const { isKeyboardVisible } = useKeyboardVisible();
-  const shouldReduceMotion = useReducedMotion();
   const insets = useSafeAreaInsets();
 
-  // Extract bottom inset for use in worklet (capture at mount)
-  const bottomInset = insets.bottom;
+  const animations = useKeyboardLayoutAnimations({
+    bottomInset: insets.bottom,
+    isKeyboardVisible,
+  });
 
-  // Timing config for keyboard-aware transitions
-  const timingConfig = {
-    duration: shouldReduceMotion ? 0 : KEYBOARD_LAYOUT.transitionDuration,
-    easing: Easing.out(Easing.ease),
-  };
+  const flow = useHabitCreationFlow({ inputRef, onQuickCreateHabit });
 
-  // Animated styles for keyboard-aware compact mode
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    justifyContent: isKeyboardVisible ? 'flex-start' : 'center',
-    paddingBottom: withTiming(
-      isKeyboardVisible ? 0 : bottomInset + 20, // +20 for breathing room above safe area
-      timingConfig
-    ),
-    paddingTop: withTiming(
-      isKeyboardVisible ? KEYBOARD_LAYOUT.topPadding : 0,
-      timingConfig
-    ),
-  }));
-
-  const heroAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: withTiming(
-          isKeyboardVisible ? KEYBOARD_LAYOUT.compactHeroSize / 80 : 1,
-          timingConfig
-        ),
-      },
-    ],
-  }));
-
-  const headlineAnimatedStyle = useAnimatedStyle(() => ({
-    fontSize: withTiming(
-      isKeyboardVisible ? KEYBOARD_LAYOUT.compactHeadlineFontSize : 24,
-      timingConfig
-    ),
-    marginBottom: withTiming(isKeyboardVisible ? 16 : 32, timingConfig),
-    marginTop: withTiming(isKeyboardVisible ? 16 : 32, timingConfig),
-  }));
-
-  const chipsAnimatedStyle = useAnimatedStyle(() => ({
-    marginBottom: withTiming(isKeyboardVisible ? 0 : 32, timingConfig),
-    maxHeight: withTiming(isKeyboardVisible ? 0 : 200, timingConfig),
-    opacity: withTiming(isKeyboardVisible ? 0 : 1, timingConfig),
-    overflow: 'hidden' as const,
-  }));
-
-  const secondaryLinksAnimatedStyle = useAnimatedStyle(() => ({
-    maxHeight: withTiming(isKeyboardVisible ? 0 : 100, timingConfig),
-    opacity: withTiming(isKeyboardVisible ? 0 : 1, timingConfig),
-    overflow: 'hidden' as const,
-  }));
-
-  // Component state
-  const [inputValue, setInputValue] = useState('');
-  const [selectedChipIndex, setSelectedChipIndex] = useState<number | null>(
-    null
-  );
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
-  const [successHabitName, setSuccessHabitName] = useState<string | null>(null);
-  const [successEmoji, setSuccessEmoji] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // Analytics tracking
-  const analytics = useTimeBasedChipAnalytics();
-  const displayTimestampRef = useRef<number>(Date.now());
-  const selectedChipDataRef = useRef<SuggestionChip | null>(null);
-
-  // Handle chip selection - populates input with full habit name
-  // Tapping a selected chip deselects it and clears input
-  const handleChipSelect = useCallback(
-    (index: number, chip: SuggestionChip) => {
-      if (selectedChipIndex === index) {
-        // Deselect if tapping the same chip
-        setSelectedChipIndex(null);
-        setSelectedEmoji(null);
-        setInputValue('');
-        selectedChipDataRef.current = null;
-      } else {
-        setSelectedChipIndex(index);
-        setSelectedEmoji(chip.emoji);
-        setInputValue(chip.fullName);
-        selectedChipDataRef.current = chip;
-      }
-    },
-    [selectedChipIndex]
-  );
-
-  // Handle text input changes - deselects chips when typing
-  const handleInputChange = useCallback(
-    (text: string) => {
-      setInputValue(text);
-      // Deselect chips when user types manually
-      if (selectedChipIndex !== null) {
-        setSelectedChipIndex(null);
-        setSelectedEmoji(null);
-        selectedChipDataRef.current = null;
-
-        // Track manual input after viewing chips
-        if (text.trim().length > 0) {
-          const chips = getTimeBasedChips();
-          analytics.trackManualInputAfterChipView(text, chips);
-        }
-      }
-    },
-    [selectedChipIndex, analytics]
-  );
-
-  // Handle CTA button press - creates the habit
-  const handleCreateHabit = useCallback(async () => {
-    if (!inputValue.trim() || isCreating) return;
-
-    Keyboard.dismiss();
-    setIsCreating(true);
-    setErrorMessage(null);
-
-    try {
-      await onQuickCreateHabit(inputValue.trim());
-      triggerSuccess();
-      setSuccessHabitName(inputValue.trim());
-      setSuccessEmoji(selectedEmoji); // Save emoji for success state
-
-      // Track chip-to-habit conversion if a chip was selected
-      if (selectedChipDataRef.current && selectedChipIndex !== null) {
-        analytics.trackChipConvertedToHabit(
-          selectedChipDataRef.current,
-          selectedChipIndex,
-          displayTimestampRef.current
-        );
-      }
-    } catch (error) {
-      setIsCreating(false);
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : 'Failed to create habit. Please try again.'
-      );
-    }
-  }, [
-    inputValue,
-    isCreating,
-    onQuickCreateHabit,
-    triggerSuccess,
-    selectedEmoji,
-    selectedChipIndex,
-    analytics,
-  ]);
-
-  // Handle keyboard submit (Done button)
-  const handleSubmitEditing = useCallback(() => {
-    if (inputValue.trim() && !isCreating) {
-      handleCreateHabit();
-    }
-  }, [inputValue, isCreating, handleCreateHabit]);
-
-  // Handle clear input button
-  const handleClearInput = useCallback(() => {
-    setInputValue('');
-    setSelectedChipIndex(null);
-    setSelectedEmoji(null);
-    inputRef.current?.focus();
-  }, []);
-
-  // Handle "Add another habit" from success state
-  const handleAddAnother = useCallback(() => {
-    setSuccessHabitName(null);
-    setSuccessEmoji(null);
-    setInputValue('');
-    setSelectedChipIndex(null);
-    setSelectedEmoji(null);
-    setIsCreating(false);
-    // Focus input for next habit entry
-    setTimeout(() => inputRef.current?.focus(), 100);
-  }, []);
-
-  // Handle error dismiss
-  const handleDismissError = useCallback(() => {
-    setErrorMessage(null);
-  }, []);
-
-  // Show success state if habit was created
-  if (successHabitName) {
-    // If we have a transition callback, auto-transition after celebration
-    // Otherwise, show "Add another" button
-    const shouldAutoTransition = !!onSuccessTransitionComplete;
-
+  if (flow.successHabitName) {
     return (
       <SuccessState
-        autoTransition={shouldAutoTransition}
-        habitEmoji={successEmoji}
-        habitName={successHabitName}
-        onAddAnother={handleAddAnother}
+        autoTransition={!!onSuccessTransitionComplete}
+        habitEmoji={flow.successEmoji}
+        habitName={flow.successHabitName}
+        onAddAnother={flow.handleAddAnother}
         onTransitionComplete={onSuccessTransitionComplete}
       />
     );
   }
 
-  // Show loading skeleton during initial load
   if (isLoading) {
     return <LoadingSkeleton />;
   }
-
-  const isCtaDisabled = !inputValue.trim();
 
   return (
     <Animated.View
@@ -275,92 +64,41 @@ export function HabitsEmptyStateMinimal({
           paddingHorizontal: 16,
           width: '100%',
         },
-        containerAnimatedStyle,
+        animations.containerAnimatedStyle,
       ]}
     >
-      {/* Hero Icon - animates to compact size when keyboard visible */}
-      <Animated.View style={heroAnimatedStyle}>
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.heroIcon}>
-          <HeroIcon animate={!isLoading} />
-        </AnimatedEntrance>
-      </Animated.View>
+      <HeroSection
+        headlineAnimatedStyle={animations.headlineAnimatedStyle}
+        heroAnimatedStyle={animations.heroAnimatedStyle}
+        isLoading={isLoading}
+      />
 
-      {/* Question Headline - animates to smaller font when keyboard visible */}
-      <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
-        <Animated.Text
-          style={[
-            {
-              color: COLORS.stone800,
-              fontWeight: '700',
-              lineHeight: 32,
-              textAlign: 'center',
-            },
-            headlineAnimatedStyle,
-          ]}
-        >
-          {COPY.headline}
-        </Animated.Text>
-      </AnimatedEntrance>
+      <InputSection
+        ref={inputRef}
+        inputValue={flow.inputValue}
+        onChangeText={flow.handleInputChange}
+        onClear={flow.handleClearInput}
+        onSubmitEditing={flow.handleSubmitEditing}
+      />
 
-      {/* Text Input - full width */}
-      <View style={{ marginBottom: 24, maxWidth: 343, width: '100%' }}>
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
-          <HabitInput
-            ref={inputRef}
-            value={inputValue}
-            onChangeText={handleInputChange}
-            onClear={handleClearInput}
-            onSubmitEditing={handleSubmitEditing}
-          />
-        </AnimatedEntrance>
-      </View>
+      <ChipsSection
+        chipsAnimatedStyle={animations.chipsAnimatedStyle}
+        isKeyboardVisible={isKeyboardVisible}
+        selectedIndex={flow.selectedChipIndex}
+        onSelect={flow.handleChipSelect}
+      />
 
-      {/* Suggestion Chips - fades out when keyboard visible */}
-      {/* Note: Each chip has its own staggered entrance animation, no wrapper needed */}
-      <Animated.View
-        accessibilityElementsHidden={isKeyboardVisible}
-        importantForAccessibility={
-          isKeyboardVisible ? 'no-hide-descendants' : 'auto'
-        }
-        style={[{ maxWidth: 343, width: '100%' }, chipsAnimatedStyle]}
-      >
-        <SuggestionChips
-          selectedIndex={selectedChipIndex}
-          onSelect={handleChipSelect}
-        />
-      </Animated.View>
-
-      {/* Primary CTA Button - full width */}
-      <View style={{ maxWidth: 343, width: '100%' }}>
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
-          <CtaButton
-            disabled={isCtaDisabled}
-            isLoading={isCreating}
-            onPress={handleCreateHabit}
-          />
-        </AnimatedEntrance>
-      </View>
-
-      {/* Error Message */}
-      {errorMessage && (
-        <ErrorMessage message={errorMessage} onDismiss={handleDismissError} />
-      )}
-
-      {/* Inline Hint - fades out when keyboard visible */}
-      <Animated.View
-        accessibilityElementsHidden={isKeyboardVisible}
-        importantForAccessibility={
-          isKeyboardVisible ? 'no-hide-descendants' : 'auto'
-        }
-        style={secondaryLinksAnimatedStyle}
-      >
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
-          <InlineHint
-            onBrowseTemplates={openTemplatesScreen}
-            onCreateCustom={openCreateHabitScreen}
-          />
-        </AnimatedEntrance>
-      </Animated.View>
+      <ActionSection
+        errorMessage={flow.errorMessage}
+        inputValue={flow.inputValue}
+        isCreating={flow.isCreating}
+        isKeyboardVisible={isKeyboardVisible}
+        secondaryLinksAnimatedStyle={animations.secondaryLinksAnimatedStyle}
+        onBrowseTemplates={openTemplatesScreen}
+        onCreateCustom={openCreateHabitScreen}
+        onCreateHabit={flow.handleCreateHabit}
+        onDismissError={flow.handleDismissError}
+      />
     </Animated.View>
   );
 }
