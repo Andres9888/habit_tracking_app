@@ -645,22 +645,79 @@ None. All work is internal code organization.
     - Logic: index.ts (8), search.ts (22), suggestions.ts (50)
     - Data files: keywords.ts (96 - emoji keyword mappings), habitNameMap.ts (146 - habit name to emoji mappings, marked as data exception)
 - [ ] Convert ESLint `max-lines` from "warn" to "error"
-  - **BLOCKED**: 130 production files still violate max-lines rule (verified 2026-01-09, after all exemptions applied).
-  - ESLint config updated to exempt: data files (emoji categories, templates seed), example/debug files, theme configs.
-  - **Current violations breakdown**: 16 critical (200+ lines), 38 high (150-199), 24 medium (125-149), 52 low (101-124).
-  - **Top 10 violators**:
-    1. `convex/schema.ts` (270 lines) - may warrant data-definition exemption
-    2. `CalendarTimelineWithPulse.tsx` (234 lines)
-    3. `StrengthDistributionChart.tsx` (231 lines)
-    4. `DailyMomentumMeter.tsx` (228 lines)
-    5. `OfflineQueueProcessor.tsx` (223 lines)
-    6. `HeaderCompleteToggle.tsx` (220 lines)
-    7. `CreateHabitModal/ReminderSelector.tsx` (220 lines)
-    8. `ProgressSection/utils.ts` (217 lines)
-    9. `PreviousStreakVoiceNotes.tsx` (217 lines)
-    10. `InlineEmojiInput.tsx` (215 lines)
-  - **Key hotspots**: `CreateHabitModal` (13 files), `ProgressSection` (12+ files), `MotivationSystem` (8+ files).
-  - **Path forward**: Decompose remaining 130 files before enabling error-level enforcement. Consider starting with critical (200+ lines) files for maximum impact.
+  - **BLOCKED**: 104 production files still violate max-lines rule (verified 2026-01-09 via lint check).
+  - **Note (2026-01-09)**: Previous estimate of ~25 files was inaccurate. Full lint audit shows 104 file-level violations.
+  - **Top violators**: suggestions.data.ts (195), MicrophonePermissionDenied.tsx (177), QuickStatsStrip.tsx (176), TipQuickActionsSheetTypes.ts (175)
+  - **Progress (2026-01-09)**:
+    - Decomposed `convex/settings.ts` (193 lines → 4 files, all ≤100 lines)
+      - Barrel: settings.ts (5), Core: settings/settings.ts (61)
+      - Types: settings/types.ts (33), settings/validators.ts (68), settings/normalizers.ts (38)
+    - Decomposed `CreateHabitModal/components/ModalHeader.tsx` (167 lines → 7 files, all ≤100 lines)
+      - Main: ModalHeader.tsx (65), index.ts (2)
+      - Hooks: useShakeAnimation.ts (40), useButtonScale.ts (23)
+      - Components: DoneButton.tsx (22), SaveButton.tsx (45), types.ts (9)
+    - Decomposed `CreateHabitModal/components/HabitPreview.tsx` (164 lines → 7 files, all ≤100 lines)
+      - Main: HabitPreview.tsx (60), index.ts (2)
+      - Hooks: usePreviewAnimations.ts (78)
+      - Helpers: helpers.ts (25), types.ts (7)
+      - Components: EmptyPreview.tsx (12), PreviewContent.tsx (72)
+    - Added ESLint exemptions for dev/diagnostic components: `HapticTest.tsx`, `NativeWindTest.tsx`
+    - Decomposed `StrengthDistributionChart.tsx` (231 lines → 6 files, all ≤100 lines)
+    - Decomposed `DailyMomentumMeter.tsx` (228 lines → 7 files, all ≤100 lines)
+    - Decomposed `OfflineQueueProcessor.tsx` (223 lines → 6 files, all ≤100 lines)
+    - Decomposed `IdentitySection.tsx` (212 lines → 3 files, reuses shared SectionCard/AnimatedSection)
+    - Decomposed `SwipeableActionButton.tsx` (209 lines → 5 files, all ≤100 lines)
+    - Decomposed `TrendLineChart.tsx` (205 lines → 7 files, all ≤100 lines)
+    - Decomposed `exportData.ts` (203 lines → 5 files, all ≤100 lines)
+    - Decomposed `YourWhySection.tsx` (200 lines → 3 files, reuses shared SectionCard/AnimatedSection)
+    - Decomposed `QuickPicksRow.tsx` (200 lines → 5 files, all ≤100 lines)
+      - Main: QuickPicksRow.tsx (85), QuickPickCard.tsx (75)
+      - Types/Constants: types.ts (21), constants.ts (39), index.ts (4)
+    - Decomposed `SmartSuggestions.tsx` (194 lines → 6 files, all ≤100 lines)
+      - Main: SmartSuggestions.tsx (77), SuggestionChip.tsx (70), EmptyState.tsx (17)
+      - Types/Data: types.ts (19), suggestions.data.ts (49), index.ts (5)
+    - Decomposed `ForgotPasswordModal.tsx` (194 lines → 6 files, all ≤100 lines)
+      - Main: ForgotPasswordModal.tsx (80), PasswordResetForm.tsx (99), PasswordResetSuccess.tsx (30)
+      - Hooks/Types: useForgotPassword.ts (91), types.ts (19), index.ts (5)
+    - Decomposed `EmptyState.tsx` (190 lines → 6 files, all ≤100 lines)
+      - Main: EmptyState.tsx (96), index.ts (6)
+      - Types/Constants/Styles: types.ts (45), constants.ts (36), styles.ts (27)
+      - Hooks: useEmptyStateAnimations.ts (60)
+    - Decomposed `ThisMonthCard.tsx` (189 lines → 6 files, all ≤100 lines)
+      - Main: ThisMonthCard.tsx (99), index.ts (6)
+      - Constants/Hooks: constants.ts (13), useDayStats.ts (32)
+      - Components: DayBar.tsx (91), SummaryRow.tsx (57)
+    - Decomposed `StickyCreateBar.tsx` (187 lines → 7 files, all ≤100 lines)
+      - Main: StickyCreateBar.tsx (82), index.ts (6)
+      - Types/Utils: types.ts (9), colorUtils.ts (44)
+      - Hooks: useStickyBarAnimations.ts (96)
+      - Components: CreateButton.tsx (65), MotivationText.tsx (26)
+    - Decomposed `HabitStrengthHistorySkeleton.tsx` (183 lines → 6 files, all ≤100 lines)
+      - Main: HabitStrengthHistorySkeleton.tsx (55), index.ts (6)
+      - Components: GradientShimmerSkeleton.tsx (96), ComparisonCardSkeleton.tsx (46), InsightCardSkeleton.tsx (47)
+      - Constants: constants.ts (16)
+    - Decomposed `SimpleReminderSection.tsx` (182 lines → 5 files, all ≤100 lines)
+      - Main: SimpleReminderSection.tsx (99), index.ts (8)
+      - Components: QuickTimeButton.tsx (68)
+      - Types/Utils: types.ts (23), utils.ts (46)
+    - Decomposed `NoteEditor.tsx` (179 lines → 6 files, all ≤100 lines)
+      - Main: NoteEditor.tsx (94), index.ts (9)
+      - Components: HabitSelector.tsx (55), NoteEditorActions.tsx (47)
+      - Hooks: useNoteEditor.ts (79)
+      - Types: types.ts (26)
+  - **ESLint config improvements (2026-01-09)**:
+    - Added exemptions for: `convex/schema.ts` (database schema), `src/utils/emojiData/keywords.ts`
+    - Fixed lint scripts to respect config exemptions (removed `--rule` override)
+    - Added exemptions for duplicate/backup files pending cleanup
+  - **Current violations breakdown** (verified 2026-01-09): **104 files** exceed 100-line limit.
+  - **Major areas requiring decomposition** (by file count):
+    - `ProgressSectionConsolidated/` - 10+ files
+    - `CreateHabitModal/` - 8+ files
+    - `HabitsEmptyStateMinimal/` - 5+ files
+    - `MotivationSystem/` - 5+ files
+    - `convex/` backend - 4+ files
+    - Misc components - 70+ files
+  - **Path forward**: Systematic decomposition of remaining 104 files required before converting warn→error.
 - [ ] Final lint enforcement
 
 ---
