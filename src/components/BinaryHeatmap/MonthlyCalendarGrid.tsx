@@ -211,36 +211,43 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   );
 });
 
+// Compact styles for above-fold layout
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.CARD_BG,
-    borderRadius: 12,
+    borderRadius: 16, // Match HabitStrengthSection (rounded-2xl)
     marginTop: 12,
-    padding: 16,
+    padding: 16, // Compact padding (was 20)
+    // Shadow matching HabitStrengthSection
+    shadowColor: '#1c1917',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   dayCell: {
     alignItems: 'center',
-    borderRadius: 10,
-    height: 40,
+    borderRadius: 8, // Slightly smaller radius
+    height: 36, // Compact height (was 40)
     justifyContent: 'center',
-    width: 40,
+    width: 36, // Compact width (was 40)
   },
   dayText: {
-    fontSize: 15,
+    fontSize: 14, // Slightly smaller (was 15)
     fontWeight: '500',
   },
   dayWrapper: {
     alignItems: 'center',
     flex: 1,
-    height: 44,
+    height: 38, // Compact height (was 44)
     justifyContent: 'center',
   },
   dot: {
-    borderRadius: 3,
-    bottom: 4,
-    height: 6,
+    borderRadius: 2.5,
+    bottom: 3,
+    height: 5, // Slightly smaller (was 6)
     position: 'absolute',
-    width: 6,
+    width: 5,
   },
   headerCell: {
     alignItems: 'center',
@@ -248,32 +255,32 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: COLORS.TEXT_SECONDARY,
-    fontSize: 13,
+    fontSize: 11, // Compact (was 13)
     fontWeight: '500',
   },
   monthButton: {
     alignItems: 'center',
     borderColor: COLORS.BORDER,
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    gap: 6,
+    paddingHorizontal: 12, // Compact (was 16)
+    paddingVertical: 6, // Compact (was 8)
   },
   monthText: {
     color: COLORS.TEXT_PRIMARY,
-    fontSize: 14,
+    fontSize: 13, // Compact (was 14)
     fontWeight: '600',
   },
   navButton: {
     alignItems: 'center',
     borderColor: COLORS.BORDER,
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
-    height: 40,
+    height: 36, // Compact (was 40)
     justifyContent: 'center',
-    width: 40,
+    width: 36,
   },
   navButtons: {
     flexDirection: 'row',
@@ -285,12 +292,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
-    paddingTop: 16,
+    marginTop: 12, // Compact (was 16)
+    paddingTop: 12, // Compact (was 16)
   },
   row: {
     flexDirection: 'row',
-    marginBottom: 2,
+    marginBottom: 1, // Tighter rows (was 2)
   },
   todayText: {
     fontWeight: '700',

@@ -40,7 +40,7 @@ describe('InlineHint', () => {
 
       // Button labels
       expect(getByText('📋 templates')).toBeDefined();
-      expect(getByText('✨ custom')).toBeDefined();
+      expect(getByText('✨ custom habit')).toBeDefined();
     });
 
     it('should render "templates" button with correct styling', () => {
@@ -56,10 +56,10 @@ describe('InlineHint', () => {
       });
     });
 
-    it('should render "custom" button with correct styling', () => {
+    it('should render "custom habit" button with correct styling', () => {
       const { getByText } = render(<InlineHint {...defaultProps} />);
 
-      const customButton = getByText('✨ custom');
+      const customButton = getByText('✨ custom habit');
       expect(customButton).toBeDefined();
       expect(customButton.props.style).toMatchObject({
         color: COLORS.emerald700,

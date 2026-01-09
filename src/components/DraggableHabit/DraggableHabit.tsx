@@ -668,13 +668,14 @@ export default function DraggableHabit({
           }}
         >
           {/* Color accent left border - animated for entrance effect */}
+          {/* Width is controlled by entranceAccentStyle for the expansion animation */}
           <ReAnimated.View
             style={[
               {
+                alignSelf: 'stretch',
                 backgroundColor: borderAccentColor,
                 borderBottomLeftRadius: 24,
                 borderTopLeftRadius: 24,
-                width: 4,
               },
               entranceAccentStyle,
             ]}

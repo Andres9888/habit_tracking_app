@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Card Redesign - Design Consistency Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+        body { background: #1c1917 !important; }
+
+        /* Design System Tokens from Codebase */
+        :root {
+            /* Colors - extracted from theme.ts */
+            --stone-50: #fafaf9;
+            --stone-100: #f5f5f4;
+            --stone-200: #e7e5e4;
+            --stone-300: #d6d3d1;
+            --stone-400: #a8a29e;
+            --stone-500: #78716c;
+            --stone-600: #57534e;
+            --stone-700: #44403c;
+            --stone-800: #292524;
+            --stone-900: #1c1917;
+
+            /* Accent Colors */
+            --violet-500: #8b5cf6;
+            --emerald-500: #10b981;
+            --amber-500: #f59e0b;
+            --rose-500: #f43f5e;
+            --sky-500: #0ea5e9;
+
+            /* Card Tokens */
+            --card-radius: 24px;
+            --accent-width: 4px;
+            --shadow-opacity: 0.06;
+
+            /* Typography */
+            --title-size: 17px;
+            --title-weight: 700;
+            --title-tracking: -0.3px;
+            --body-size: 14px;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: var(--stone-900);
+            border-radius: 44px;
+            border: 8px solid var(--stone-800);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .notch {
+            width: 150px;
+            height: 30px;
+            background: var(--stone-800);
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .habit-card {
+            background: var(--stone-800);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, var(--shadow-opacity));
+            position: relative;
+            display: flex;
+        }
+
+        .accent-border {
+            width: var(--accent-width);
+            border-radius: var(--card-radius) 0 0 var(--card-radius);
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            flex: 1;
+            padding: 16px;
+        }
+
+        .habit-title {
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            letter-spacing: var(--title-tracking);
+            color: var(--stone-50);
+        }
+
+        .habit-meta {
+            font-size: 13px;
+            color: var(--stone-400);
+            margin-top: 4px;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .phase-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .strength-bar {
+            height: 3px;
+            border-radius: 2px;
+            background: var(--stone-700);
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .chain-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        /* State Variations */
+        .card-perfect-week {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), transparent);
+        }
+
+        .card-at-risk {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent);
+        }
+
+        .card-personal-best {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), transparent);
+        }
+
+        /* Section headers */
+        .section-title {
+            color: var(--stone-400);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .token-box {
+            background: var(--stone-800);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .token-label {
+            font-size: 13px;
+            color: var(--stone-300);
+        }
+
+        .token-value {
+            font-size: 11px;
+            color: var(--stone-500);
+            font-family: 'SF Mono', monospace !important;
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .shimmer {
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1); }
+        }
+
+        .pulse-warning {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-3xl font-bold text-stone-100 mb-2">Habit Card Redesign</h1>
+            <p class="text-stone-400">Design consistency guide & component states</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Design Tokens -->
+            <div class="space-y-8">
+                <div>
+                    <h2 class="section-title">Color Palette</h2>
+                    <div class="space-y-3">
+                        <div class="token-box">
+                            <div class="color-swatch" style="background: var(--violet-500);"></div>
+                            <div>
+                                <div class="token-label">Violet (Primary)</div>
+                                <div class="token-value">#8b5cf6</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div class="color-swatch" style="background: var(--emerald-500);"></div>
+                            <div>
+                                <div class="token-label">Emerald (Success)</div>
+                                <div class="token-value">#10b981</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div class="color-swatch" style="background: var(--amber-500);"></div>
+                            <div>
+                                <div class="token-label">Amber (Warning)</div>
+                                <div class="token-value">#f59e0b</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div class="color-swatch" style="background: var(--rose-500);"></div>
+                            <div>
+                                <div class="token-label">Rose (Danger)</div>
+                                <div class="token-value">#f43f5e</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div class="color-swatch" style="background: var(--sky-500);"></div>
+                            <div>
+                                <div class="token-label">Sky (Info)</div>
+                                <div class="token-value">#0ea5e9</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">Card Tokens</h2>
+                    <div class="space-y-3">
+                        <div class="token-box">
+                            <div class="w-8 h-8 rounded-2xl bg-stone-700 flex-shrink-0"></div>
+                            <div>
+                                <div class="token-label">Border Radius</div>
+                                <div class="token-value">24px (rounded-3xl)</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div class="w-8 h-8 flex items-center justify-center flex-shrink-0">
+                                <div class="w-1 h-6 rounded bg-violet-500"></div>
+                            </div>
+                            <div>
+                                <div class="token-label">Accent Border Width</div>
+                                <div class="token-value">4px</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div class="w-8 h-8 bg-stone-700 rounded shadow-lg flex-shrink-0"></div>
+                            <div>
+                                <div class="token-label">Shadow Opacity</div>
+                                <div class="token-value">0.06 (stone-500)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">Typography</h2>
+                    <div class="space-y-3">
+                        <div class="token-box">
+                            <div>
+                                <div class="habit-title">Title Style</div>
+                                <div class="token-value">17px / 700 / -0.3px tracking</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div>
+                                <div class="text-sm text-stone-300">Body Style</div>
+                                <div class="token-value">14px / 400 / normal tracking</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div>
+                                <div class="text-xs text-stone-400 uppercase tracking-wide">Meta Style</div>
+                                <div class="token-value">11-13px / 500 / 0.5px tracking</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">Animation Tokens</h2>
+                    <div class="space-y-3">
+                        <div class="token-box">
+                            <div>
+                                <div class="token-label">Entrance Spring</div>
+                                <div class="token-value">damping: 15, stiffness: 300</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div>
+                                <div class="token-label">Scale Press</div>
+                                <div class="token-value">0.98 → 1.0 (100ms)</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <div>
+                                <div class="token-label">Stagger Delay</div>
+                                <div class="token-value">50ms per card</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column: Phone Mockup -->
+            <div class="flex justify-center">
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="p-4 pt-12 space-y-4 overflow-y-auto h-full pb-24">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h2 class="text-xl font-bold text-stone-100">Your Habits</h2>
+                                <p class="text-xs text-stone-500">Monday, January 6</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-stone-400">2 of 3</span>
+                                <button class="w-9 h-9 bg-violet-500/20 rounded-xl flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-5 h-5 text-violet-400"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card 1: Normal State -->
+                        <div class="habit-card">
+                            <div class="accent-border" style="background: var(--violet-500);"></div>
+                            <div class="card-content">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="text-lg">🧘</span>
+                                            <h3 class="habit-title">Morning Meditation</h3>
+                                        </div>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <span class="phase-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--amber-500);">
+                                                <i data-lucide="sunrise" class="w-3 h-3"></i>
+                                                AM
+                                            </span>
+                                            <span class="streak-badge" style="background: rgba(139, 92, 246, 0.15); color: var(--violet-500);">
+                                                <i data-lucide="flame" class="w-3 h-3"></i>
+                                                12 days
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button class="w-10 h-10 rounded-2xl border-2 border-stone-600 flex items-center justify-center">
+                                        <i data-lucide="check" class="w-5 h-5 text-stone-600"></i>
+                                    </button>
+                                </div>
+                                <!-- Chain Visualizer -->
+                                <div class="flex items-center gap-1 mt-3">
+                                    <div class="chain-dot" style="background: var(--violet-500); opacity: 0.4;"></div>
+                                    <div class="chain-dot" style="background: var(--violet-500); opacity: 0.5;"></div>
+                                    <div class="chain-dot" style="background: var(--violet-500); opacity: 0.6;"></div>
+                                    <div class="chain-dot" style="background: var(--violet-500); opacity: 0.7;"></div>
+                                    <div class="chain-dot" style="background: var(--violet-500); opacity: 0.8;"></div>
+                                    <div class="chain-dot" style="background: var(--violet-500); opacity: 0.9;"></div>
+                                    <div class="chain-dot shimmer" style="background: var(--violet-500);"></div>
+                                </div>
+                                <!-- Strength Bar -->
+                                <div class="strength-bar">
+                                    <div class="strength-fill" style="width: 57%; background: var(--violet-500);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Perfect Week State -->
+                        <div class="habit-card card-perfect-week">
+                            <div class="accent-border" style="background: var(--emerald-500);"></div>
+                            <div class="card-content">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="text-lg">📚</span>
+                                            <h3 class="habit-title">Read 30 Minutes</h3>
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(16, 185, 129, 0.2); color: var(--emerald-500);">
+                                                ✨ Perfect Week
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <span class="phase-tag" style="background: rgba(139, 92, 246, 0.15); color: var(--violet-500);">
+                                                <i data-lucide="moon" class="w-3 h-3"></i>
+                                                PM
+                                            </span>
+                                            <span class="streak-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald-500);">
+                                                <i data-lucide="flame" class="w-3 h-3"></i>
+                                                21 days
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button class="w-10 h-10 rounded-2xl bg-emerald-500 flex items-center justify-center">
+                                        <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-1 mt-3">
+                                    <div class="chain-dot" style="background: var(--emerald-500); opacity: 0.5;"></div>
+                                    <div class="chain-dot" style="background: var(--emerald-500); opacity: 0.6;"></div>
+                                    <div class="chain-dot" style="background: var(--emerald-500); opacity: 0.7;"></div>
+                                    <div class="chain-dot" style="background: var(--emerald-500); opacity: 0.8;"></div>
+                                    <div class="chain-dot" style="background: var(--emerald-500); opacity: 0.9;"></div>
+                                    <div class="chain-dot" style="background: var(--emerald-500);"></div>
+                                    <div class="chain-dot shimmer" style="background: var(--emerald-500);"></div>
+                                </div>
+                                <div class="strength-bar">
+                                    <div class="strength-fill" style="width: 100%; background: var(--emerald-500);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Streak at Risk State -->
+                        <div class="habit-card card-at-risk pulse-warning">
+                            <div class="accent-border" style="background: var(--amber-500);"></div>
+                            <div class="card-content">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="text-lg">💪</span>
+                                            <h3 class="habit-title">Workout</h3>
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(245, 158, 11, 0.2); color: var(--amber-500);">
+                                                ⚠️ At Risk
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-amber-500/80 mt-1">Complete in 2h to save your streak!</p>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <span class="phase-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--amber-500);">
+                                                <i data-lucide="sun" class="w-3 h-3"></i>
+                                                NOON
+                                            </span>
+                                            <span class="streak-badge" style="background: rgba(245, 158, 11, 0.15); color: var(--amber-500);">
+                                                <i data-lucide="flame" class="w-3 h-3"></i>
+                                                7 days
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button class="w-10 h-10 rounded-2xl border-2 border-amber-500 flex items-center justify-center">
+                                        <i data-lucide="check" class="w-5 h-5 text-amber-500"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-1 mt-3">
+                                    <div class="chain-dot" style="background: var(--amber-500); opacity: 0.5;"></div>
+                                    <div class="chain-dot" style="background: var(--amber-500); opacity: 0.6;"></div>
+                                    <div class="chain-dot" style="background: var(--amber-500); opacity: 0.7;"></div>
+                                    <div class="chain-dot" style="background: var(--amber-500); opacity: 0.8;"></div>
+                                    <div class="chain-dot" style="background: var(--amber-500); opacity: 0.9;"></div>
+                                    <div class="chain-dot shimmer" style="background: var(--amber-500);"></div>
+                                    <div class="chain-dot" style="background: var(--stone-600);"></div>
+                                </div>
+                                <div class="strength-bar">
+                                    <div class="strength-fill" style="width: 33%; background: var(--amber-500);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ghost Card: Upsell -->
+                        <div class="habit-card" style="background: transparent; border: 2px dashed var(--stone-700);">
+                            <div class="card-content flex flex-col items-center justify-center py-6">
+                                <div class="w-12 h-12 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-3">
+                                    <i data-lucide="plus" class="w-6 h-6 text-violet-400"></i>
+                                </div>
+                                <p class="text-sm font-medium text-stone-400 mb-1">Add more habits</p>
+                                <p class="text-xs text-stone-500 text-center">Upgrade to track unlimited habits</p>
+                                <button class="mt-3 px-4 py-2 rounded-xl text-xs font-semibold" style="background: var(--violet-500); color: white;">
+                                    Upgrade to Pro
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Tab Bar -->
+                    <div class="absolute bottom-0 left-0 right-0 h-20 bg-stone-800 border-t border-stone-700 flex items-center justify-around px-8">
+                        <button class="flex flex-col items-center gap-1">
+                            <i data-lucide="home" class="w-5 h-5 text-violet-400"></i>
+                            <span class="text-xs text-violet-400">Home</span>
+                        </button>
+                        <button class="flex flex-col items-center gap-1">
+                            <i data-lucide="bar-chart-2" class="w-5 h-5 text-stone-500"></i>
+                            <span class="text-xs text-stone-500">Stats</span>
+                        </button>
+                        <button class="flex flex-col items-center gap-1">
+                            <i data-lucide="settings" class="w-5 h-5 text-stone-500"></i>
+                            <span class="text-xs text-stone-500">Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: State Documentation -->
+            <div class="space-y-8">
+                <div>
+                    <h2 class="section-title">Card States</h2>
+                    <div class="space-y-4">
+                        <!-- Normal State -->
+                        <div class="bg-stone-800 rounded-2xl p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-3 h-3 rounded-full bg-violet-500"></div>
+                                <h3 class="font-semibold text-stone-200">Normal</h3>
+                            </div>
+                            <p class="text-sm text-stone-400 mb-3">Default habit card state with user's chosen accent color.</p>
+                            <ul class="text-xs text-stone-500 space-y-1">
+                                <li>• 4px left accent border</li>
+                                <li>• Stone-800 background</li>
+                                <li>• Unchecked circular checkbox</li>
+                                <li>• Streak badge (violet bg)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Perfect Week -->
+                        <div class="bg-stone-800 rounded-2xl p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                <h3 class="font-semibold text-stone-200">Perfect Week</h3>
+                            </div>
+                            <p class="text-sm text-stone-400 mb-3">7+ consecutive days with all completions.</p>
+                            <ul class="text-xs text-stone-500 space-y-1">
+                                <li>• Emerald accent color override</li>
+                                <li>• Subtle emerald gradient tint</li>
+                                <li>• "Perfect Week" badge</li>
+                                <li>• 100% strength bar</li>
+                            </ul>
+                        </div>
+
+                        <!-- At Risk -->
+                        <div class="bg-stone-800 rounded-2xl p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                                <h3 class="font-semibold text-stone-200">Streak at Risk</h3>
+                            </div>
+                            <p class="text-sm text-stone-400 mb-3">Incomplete & time running out (phase window ending).</p>
+                            <ul class="text-xs text-stone-500 space-y-1">
+                                <li>• Amber accent color override</li>
+                                <li>• Pulsing amber glow</li>
+                                <li>• "At Risk" warning badge</li>
+                                <li>• Countdown text message</li>
+                            </ul>
+                        </div>
+
+                        <!-- Personal Best -->
+                        <div class="bg-stone-800 rounded-2xl p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-3 h-3 rounded-full bg-violet-500"></div>
+                                <h3 class="font-semibold text-stone-200">Personal Best</h3>
+                            </div>
+                            <p class="text-sm text-stone-400 mb-3">User just hit their longest streak ever.</p>
+                            <ul class="text-xs text-stone-500 space-y-1">
+                                <li>• Trophy icon celebration</li>
+                                <li>• Violet gradient background</li>
+                                <li>• Confetti animation (brief)</li>
+                                <li>• "New Record!" badge</li>
+                            </ul>
+                        </div>
+
+                        <!-- Completed Today -->
+                        <div class="bg-stone-800 rounded-2xl p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-3 h-3 rounded-full bg-stone-500"></div>
+                                <h3 class="font-semibold text-stone-200">Completed Today</h3>
+                            </div>
+                            <p class="text-sm text-stone-400 mb-3">Habit marked complete for current day.</p>
+                            <ul class="text-xs text-stone-500 space-y-1">
+                                <li>• Filled checkbox with accent color</li>
+                                <li>• Slight opacity reduction (0.85)</li>
+                                <li>• Today's dot in chain is solid</li>
+                                <li>• Satisfying check animation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">Interaction States</h2>
+                    <div class="space-y-3">
+                        <div class="token-box">
+                            <i data-lucide="pointer" class="w-5 h-5 text-stone-400"></i>
+                            <div>
+                                <div class="token-label">Press</div>
+                                <div class="token-value">scale(0.98), 100ms</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <i data-lucide="hand" class="w-5 h-5 text-stone-400"></i>
+                            <div>
+                                <div class="token-label">Long Press (Reorder)</div>
+                                <div class="token-value">scale(1.02), shadow↑, 200ms</div>
+                            </div>
+                        </div>
+                        <div class="token-box">
+                            <i data-lucide="arrow-right" class="w-5 h-5 text-stone-400"></i>
+                            <div>
+                                <div class="token-label">Swipe Right</div>
+                                <div class="token-value">Quick complete action</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">Monetization Triggers</h2>
+                    <div class="space-y-3">
+                        <div class="bg-gradient-to-r from-violet-500/10 to-transparent rounded-xl p-4 border border-violet-500/20">
+                            <h4 class="text-sm font-semibold text-violet-400 mb-2">Ghost Habit Card</h4>
+                            <p class="text-xs text-stone-400">Shows after 3rd habit for free users. Dashed border, CTA button.</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-amber-500/10 to-transparent rounded-xl p-4 border border-amber-500/20">
+                            <h4 class="text-sm font-semibold text-amber-400 mb-2">Streak Insurance</h4>
+                            <p class="text-xs text-stone-400">Upsell on "at risk" state - offer protection for paying users.</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-emerald-500/10 to-transparent rounded-xl p-4 border border-emerald-500/20">
+                            <h4 class="text-sm font-semibold text-emerald-400 mb-2">Advanced Stats</h4>
+                            <p class="text-xs text-stone-400">Tease detailed analytics behind paywall in card footer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Checklist -->
+        <div class="mt-12 bg-stone-800 rounded-3xl p-8">
+            <h2 class="text-xl font-bold text-stone-100 mb-6">Implementation Checklist</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <h3 class="text-sm font-semibold text-violet-400 mb-3">Phase 1: Visual Polish</h3>
+                    <ul class="space-y-2 text-sm text-stone-300">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                            Color accent left border
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Streak at risk pulsing state
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Perfect week emerald tint
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Personal best celebration
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-amber-400 mb-3">Phase 2: Monetization</h3>
+                    <ul class="space-y-2 text-sm text-stone-300">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Ghost habit upsell card
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Habit limit counter (2/3)
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Streak insurance upsell
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Stats teaser in card
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-emerald-400 mb-3">Phase 3: Polish</h3>
+                    <ul class="space-y-2 text-sm text-stone-300">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Entrance animations (stagger)
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Haptic feedback integration
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Accessibility review
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="circle" class="w-4 h-4 text-stone-600"></i>
+                            Dark/light mode consistency
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

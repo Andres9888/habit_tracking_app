@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Animation Improvements - Design Exploration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: auto;
+      background: #fafaf9;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-notch {
+      width: 150px;
+      height: 30px;
+      background: #1a1a2e;
+      border-radius: 0 0 20px 20px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ===== VARIATION 1: Staggered Entrance ===== */
+    @keyframes staggerPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(20px);
+      }
+      60% {
+        transform: scale(1.15) translateY(-5px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .v1-emoji {
+      animation: staggerPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+
+    .v1-emoji:nth-child(1) { animation-delay: 0ms; }
+    .v1-emoji:nth-child(2) { animation-delay: 50ms; }
+    .v1-emoji:nth-child(3) { animation-delay: 100ms; }
+    .v1-emoji:nth-child(4) { animation-delay: 150ms; }
+    .v1-emoji:nth-child(5) { animation-delay: 200ms; }
+
+    .v1-row2 .v1-emoji:nth-child(1) { animation-delay: 250ms; }
+    .v1-row2 .v1-emoji:nth-child(2) { animation-delay: 300ms; }
+    .v1-row2 .v1-emoji:nth-child(3) { animation-delay: 350ms; }
+    .v1-row2 .v1-emoji:nth-child(4) { animation-delay: 400ms; }
+
+    /* ===== VARIATION 2: Bounce + Wiggle Selection ===== */
+    @keyframes selectBounceWiggle {
+      0% { transform: scale(1) rotate(0deg); }
+      20% { transform: scale(1.2) rotate(-8deg); }
+      40% { transform: scale(1.15) rotate(8deg); }
+      60% { transform: scale(1.1) rotate(-4deg); }
+      80% { transform: scale(1.05) rotate(2deg); }
+      100% { transform: scale(1.08) rotate(0deg); }
+    }
+
+    .v2-selected {
+      animation: selectBounceWiggle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* ===== VARIATION 3: Glow Pulse Selection ===== */
+    @keyframes glowPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4),
+                    0 4px 12px rgba(5, 150, 105, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(5, 150, 105, 0),
+                    0 4px 12px rgba(5, 150, 105, 0.5);
+      }
+    }
+
+    .v3-selected {
+      animation: glowPulse 1.5s ease-in-out infinite;
+    }
+
+    /* ===== VARIATION 4: Confetti Burst ===== */
+    @keyframes confettiBurst {
+      0% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+      30% {
+        transform: scale(1.3);
+        filter: brightness(1.2);
+      }
+      100% {
+        transform: scale(1.08);
+        filter: brightness(1);
+      }
+    }
+
+    @keyframes particle {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+      }
+    }
+
+    .v4-selected {
+      animation: confettiBurst 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: particle 0.6s ease-out forwards;
+      pointer-events: none;
+    }
+
+    /* ===== VARIATION 5: Morphing Ring ===== */
+    @keyframes morphRing {
+      0% {
+        transform: scale(0.8);
+        border-width: 0px;
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.3);
+        border-width: 3px;
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        border-width: 2px;
+        opacity: 1;
+      }
+    }
+
+    .v5-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 18px;
+      border: 2px solid #059669;
+      animation: morphRing 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* ===== VARIATION 6: Spring Scale + Shadow Lift ===== */
+    @keyframes springLift {
+      0% {
+        transform: scale(1) translateY(0);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      40% {
+        transform: scale(1.15) translateY(-8px);
+        box-shadow: 0 12px 24px rgba(5, 150, 105, 0.3);
+      }
+      70% {
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 6px 12px rgba(5, 150, 105, 0.25);
+      }
+      100% {
+        transform: scale(1.08) translateY(-4px);
+        box-shadow: 0 8px 16px rgba(5, 150, 105, 0.2);
+      }
+    }
+
+    .v6-selected {
+      animation: springLift 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* ===== CURRENT: Subtle Scale ===== */
+    @keyframes currentScale {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1.08); }
+    }
+
+    .current-selected {
+      animation: currentScale 0.2s ease-out forwards;
+    }
+
+    /* Hover effects */
+    .emoji-chip:hover:not(.selected) {
+      transform: scale(1.05);
+      background: #e7e5e4;
+    }
+
+    .emoji-chip {
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    /* Shared chip styles */
+    .emoji-chip {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      font-size: 28px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .emoji-chip.default {
+      background: #f5f5f4;
+      border: 1px solid #e7e5e4;
+    }
+
+    .emoji-chip.selected {
+      background: #D1FAE5;
+      border: 2px solid #059669;
+    }
+
+    /* Container for fixed sizing */
+    .emoji-container {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Replay button */
+    .replay-btn {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .replay-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    }
+
+    .replay-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Labels */
+    .variation-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #78716c;
+      margin-bottom: 12px;
+    }
+
+    .variation-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 4px;
+    }
+
+    .variation-desc {
+      font-size: 12px;
+      color: #78716c;
+      margin-bottom: 16px;
+    }
+
+    /* Recommendation badge */
+    .recommended {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body class="p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-3xl font-bold text-white mb-3">Emoji Animation Improvements</h1>
+      <p class="text-stone-400 text-lg">Exploring delightful selection animations for the habit creation flow</p>
+    </div>
+
+    <!-- Grid of variations -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- CURRENT IMPLEMENTATION -->
+      <div class="phone-frame p-6">
+        <div class="variation-label">Current Implementation</div>
+        <div class="variation-title">Subtle Scale</div>
+        <div class="variation-desc">Simple 1.08x scale on selection</div>
+
+        <div class="flex flex-col items-center" id="current-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectCurrent(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+        </div>
+      </div>
+
+      <!-- VARIATION 1: Staggered Entrance -->
+      <div class="phone-frame p-6">
+        <div class="variation-label">Variation 1</div>
+        <div class="variation-title">Staggered Entrance</div>
+        <div class="variation-desc">Emojis pop in one by one with bounce</div>
+
+        <div class="flex flex-col items-center" id="v1-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center v1-row2">
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectV1(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4 flex items-center justify-center gap-3">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+          <button class="replay-btn" onclick="replayV1()">Replay</button>
+        </div>
+      </div>
+
+      <!-- VARIATION 2: Bounce + Wiggle -->
+      <div class="phone-frame p-6">
+        <div class="variation-label">Variation 2</div>
+        <div class="variation-title">Bounce + Wiggle</div>
+        <div class="variation-desc">Playful rotation with scale bounce</div>
+
+        <div class="flex flex-col items-center" id="v2-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV2(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+        </div>
+      </div>
+
+      <!-- VARIATION 3: Glow Pulse -->
+      <div class="phone-frame p-6">
+        <div class="variation-label">Variation 3</div>
+        <div class="variation-title">Glow Pulse</div>
+        <div class="variation-desc">Continuous soft glow animation</div>
+
+        <div class="flex flex-col items-center" id="v3-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV3(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+        </div>
+      </div>
+
+      <!-- VARIATION 4: Confetti Burst -->
+      <div class="phone-frame p-6">
+        <div class="variation-label">Variation 4</div>
+        <div class="variation-title">Confetti Burst</div>
+        <div class="variation-desc">Particle explosion on selection</div>
+
+        <div class="flex flex-col items-center" id="v4-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV4(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+        </div>
+      </div>
+
+      <!-- VARIATION 5: Morphing Ring -->
+      <div class="phone-frame p-6">
+        <div class="variation-label">Variation 5</div>
+        <div class="variation-title">Morphing Ring</div>
+        <div class="variation-desc">Border animates from center outward</div>
+
+        <div class="flex flex-col items-center" id="v5-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV5(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+        </div>
+      </div>
+
+      <!-- VARIATION 6: Spring Lift (RECOMMENDED) -->
+      <div class="phone-frame p-6 ring-2 ring-emerald-500 ring-offset-4 ring-offset-[#1a1a2e]">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="variation-label mb-0">Variation 6</div>
+          <span class="recommended">Recommended</span>
+        </div>
+        <div class="variation-title">Spring Lift</div>
+        <div class="variation-desc">Scale + shadow + Y lift for depth</div>
+
+        <div class="flex flex-col items-center" id="v6-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default" onclick="selectV6(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+        </div>
+      </div>
+
+      <!-- COMBINATION: Stagger + Spring Lift -->
+      <div class="phone-frame p-6">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="variation-label mb-0">Combination</div>
+          <span class="recommended" style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);">Best UX</span>
+        </div>
+        <div class="variation-title">Stagger + Spring Lift</div>
+        <div class="variation-desc">Entrance animation + lift selection</div>
+
+        <div class="flex flex-col items-center" id="combo-container">
+          <div class="flex justify-center">
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">🎯</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">✨</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">💪</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">📖</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">🧘</div></div>
+          </div>
+          <div class="flex justify-center v1-row2">
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">💧</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">🏃</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">🍎</div></div>
+            <div class="emoji-container"><div class="emoji-chip default v1-emoji" onclick="selectCombo(this)">😴</div></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4 flex items-center justify-center gap-3">
+          <span class="text-sm text-emerald-600 font-medium">Browse more emojis →</span>
+          <button class="replay-btn" onclick="replayCombo()">Replay</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Analysis Section -->
+    <div class="mt-12 bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+      <h2 class="text-xl font-bold text-white mb-6">Animation Analysis & Recommendations</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white/5 rounded-xl p-5">
+          <h3 class="font-semibold text-emerald-400 mb-3">Entrance Animation (Variation 1)</h3>
+          <ul class="text-stone-300 text-sm space-y-2">
+            <li>• <strong>50ms stagger delay</strong> between each emoji creates flow</li>
+            <li>• <strong>Overshoot (1.15x)</strong> then settle adds playfulness</li>
+            <li>• <strong>Y translation</strong> gives sense of items "popping up"</li>
+            <li>• Total duration: ~450ms (fast enough to not delay interaction)</li>
+          </ul>
+        </div>
+
+        <div class="bg-white/5 rounded-xl p-5">
+          <h3 class="font-semibold text-emerald-400 mb-3">Selection Animation (Variation 6)</h3>
+          <ul class="text-stone-300 text-sm space-y-2">
+            <li>• <strong>Scale 1.15x peak</strong> → settle to 1.08x creates bounce</li>
+            <li>• <strong>Y-lift (-8px → -4px)</strong> creates depth/floating effect</li>
+            <li>• <strong>Shadow expansion</strong> reinforces lift perception</li>
+            <li>• Emerald shadow color maintains brand consistency</li>
+          </ul>
+        </div>
+
+        <div class="bg-white/5 rounded-xl p-5">
+          <h3 class="font-semibold text-amber-400 mb-3">Avoid These Patterns</h3>
+          <ul class="text-stone-300 text-sm space-y-2">
+            <li>• <strong>Glow Pulse (V3)</strong> - continuous animation is distracting</li>
+            <li>• <strong>Wiggle (V2)</strong> - rotation feels too playful/juvenile</li>
+            <li>• <strong>Confetti (V4)</strong> - particles add complexity, minimal payoff</li>
+          </ul>
+        </div>
+
+        <div class="bg-white/5 rounded-xl p-5">
+          <h3 class="font-semibold text-violet-400 mb-3">Implementation Notes</h3>
+          <ul class="text-stone-300 text-sm space-y-2">
+            <li>• Use <code class="bg-white/10 px-1.5 py-0.5 rounded">FadeIn.delay(index * 50)</code> for stagger</li>
+            <li>• Use <code class="bg-white/10 px-1.5 py-0.5 rounded">withSpring</code> with damping: 8-12 for bouncy feel</li>
+            <li>• Add <code class="bg-white/10 px-1.5 py-0.5 rounded">translateY</code> to scale animation for lift</li>
+            <li>• Respect <code class="bg-white/10 px-1.5 py-0.5 rounded">reduceMotion</code> by skipping entrance stagger</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Current implementation
+    function selectCurrent(el) {
+      const container = document.getElementById('current-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected', 'current-selected');
+        chip.classList.add('default');
+      });
+      el.classList.remove('default');
+      el.classList.add('selected', 'current-selected');
+    }
+
+    // V1: Staggered entrance (replay)
+    function replayV1() {
+      const container = document.getElementById('v1-container');
+      const chips = container.querySelectorAll('.v1-emoji');
+      chips.forEach(chip => {
+        chip.style.animation = 'none';
+        chip.offsetHeight; // Trigger reflow
+        chip.style.animation = '';
+      });
+    }
+
+    function selectV1(el) {
+      const container = document.getElementById('v1-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected');
+        chip.classList.add('default');
+      });
+      el.classList.remove('default');
+      el.classList.add('selected');
+    }
+
+    // V2: Bounce + Wiggle
+    function selectV2(el) {
+      const container = document.getElementById('v2-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected', 'v2-selected');
+        chip.classList.add('default');
+      });
+      el.classList.remove('default');
+      el.classList.add('selected', 'v2-selected');
+    }
+
+    // V3: Glow Pulse
+    function selectV3(el) {
+      const container = document.getElementById('v3-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected', 'v3-selected');
+        chip.classList.add('default');
+      });
+      el.classList.remove('default');
+      el.classList.add('selected', 'v3-selected');
+    }
+
+    // V4: Confetti Burst
+    function selectV4(el) {
+      const container = document.getElementById('v4-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected', 'v4-selected');
+        chip.classList.add('default');
+      });
+      el.classList.remove('default');
+      el.classList.add('selected', 'v4-selected');
+
+      // Create particles
+      const colors = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        const angle = (i / 8) * Math.PI * 2;
+        const distance = 40 + Math.random() * 20;
+        particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 600);
+      }
+    }
+
+    // V5: Morphing Ring
+    function selectV5(el) {
+      const container = document.getElementById('v5-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected');
+        chip.classList.add('default');
+        const ring = chip.querySelector('.v5-ring');
+        if (ring) ring.remove();
+      });
+      el.classList.remove('default');
+      el.classList.add('selected');
+
+      const ring = document.createElement('div');
+      ring.className = 'v5-ring';
+      el.appendChild(ring);
+    }
+
+    // V6: Spring Lift
+    function selectV6(el) {
+      const container = document.getElementById('v6-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected', 'v6-selected');
+        chip.classList.add('default');
+        chip.style.transform = '';
+        chip.style.boxShadow = '';
+      });
+      el.classList.remove('default');
+      el.classList.add('selected', 'v6-selected');
+    }
+
+    // Combo: Stagger + Spring Lift
+    function replayCombo() {
+      const container = document.getElementById('combo-container');
+      const chips = container.querySelectorAll('.v1-emoji');
+      chips.forEach(chip => {
+        chip.classList.remove('selected', 'v6-selected');
+        chip.classList.add('default');
+        chip.style.animation = 'none';
+        chip.offsetHeight;
+        chip.style.animation = '';
+      });
+    }
+
+    function selectCombo(el) {
+      const container = document.getElementById('combo-container');
+      container.querySelectorAll('.emoji-chip').forEach(chip => {
+        chip.classList.remove('selected', 'v6-selected');
+        chip.classList.add('default');
+      });
+      el.classList.remove('default');
+      el.classList.add('selected', 'v6-selected');
+    }
+  </script>
+</body>
+</html>

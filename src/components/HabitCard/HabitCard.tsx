@@ -732,8 +732,13 @@ export function HabitCard({
 
 const styles = StyleSheet.create({
   accentBar: {
+    // Height stretches to fill parent (uses absolute positioning)
     // Width is controlled by entrance animation (accentWidth shared value)
-    // Default is 6px, animated from 0 for widthExpansion variant
+    // Default is 4px, animated from 0 for widthExpansion variant
+    bottom: 0,
+    position: 'absolute',
+    left: 0,
+    top: 0,
   },
   // Strength fill - absolute positioned background that fills based on strength %
   strengthFill: {

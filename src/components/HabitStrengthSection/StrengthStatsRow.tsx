@@ -33,7 +33,7 @@ function formatDelta(value: number): string {
 }
 
 /**
- * Single stat column component.
+ * Single stat column component (compact version for above-fold layout).
  */
 function StatColumn({
   label,
@@ -46,9 +46,10 @@ function StatColumn({
 }) {
   return (
     <View className="flex-1 items-center">
-      <Text className="mb-0.5 text-xs text-stone-500">{label}</Text>
+      {/* Smaller label text for compact layout */}
+      <Text className="text-[10px] text-stone-400">{label}</Text>
       <Text
-        className="text-base font-semibold"
+        className="text-sm font-semibold"
         style={{
           color: isPositive ? COLORS.positive : COLORS.textPrimary,
         }}
@@ -60,19 +61,19 @@ function StatColumn({
 }
 
 /**
- * Vertical divider between stat columns.
+ * Vertical divider between stat columns (compact height).
  */
 function Divider() {
   return (
     <View
-      className="h-8 w-px"
+      className="h-6 w-px"
       style={{ backgroundColor: COLORS.border }}
     />
   );
 }
 
 /**
- * StrengthStatsRow displays three comparison metrics in a row.
+ * StrengthStatsRow displays three comparison metrics in a row (compact version).
  */
 export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   sinceStart,
@@ -81,7 +82,7 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
 }: StrengthStatsRowProps) {
   return (
     <View
-      className="flex-row items-center justify-between rounded-xl bg-stone-50 px-2 py-3"
+      className="flex-row items-center justify-between rounded-lg bg-stone-50 px-3 py-2"
       accessibilityLabel={`Statistics: ${sinceStart}% since start, ${formatDelta(lastMonth)} last month, ${formatDelta(lastWeek)} last week`}
     >
       <StatColumn

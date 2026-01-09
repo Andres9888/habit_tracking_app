@@ -25,7 +25,7 @@ export function filterHistoryByTimeRange(
   history: StrengthSnapshot[],
   timeRange: TimeRange
 ): StrengthSnapshot[] {
-  if (timeRange === 'all' || history.length === 0) {
+  if (history.length === 0) {
     return history;
   }
 
@@ -67,12 +67,43 @@ export function calculateWeekDelta(
 }
 
 /**
+ * Calculate month-over-month delta.
+ *
+ * @param completedDates - Set of completed dates
+ * @param habitCreatedAt - Habit creation date
+ * @param currentStrength - Current strength value
+ * @returns Month-over-month change
+ */
+export function calculateMonthDelta(
+  completedDates: Set<string>,
+  habitCreatedAt: Date,
+  currentStrength: number
+): number {
+  const today = startOfDay(new Date());
+  const thirtyDaysAgo = subDays(today, 30);
+
+  // If habit is less than 30 days old, return current strength as delta
+  if (thirtyDaysAgo < startOfDay(habitCreatedAt)) {
+    return currentStrength;
+  }
+
+  const monthAgoStrength = calculateStrengthAtDate(
+    completedDates,
+    habitCreatedAt,
+    thirtyDaysAgo
+  );
+
+  // Round to integer to match displayed values
+  return Math.round(currentStrength - monthAgoStrength);
+}
+
+/**
  * Calculate extended metrics for the HabitStrengthSection.
  *
  * @param completedDates - Set of completed dates
  * @param habitCreatedAt - Habit creation timestamp (ms)
- * @param currentStrength - Current strength value
- * @param deltaVsMonth - Month-over-month delta
+ * @param currentStrength - Current strength value (from database or calculated)
+ * @param _deltaVsMonth - Deprecated: Month-over-month delta (now calculated internally)
  * @param strengthHistory - Full strength history
  * @param timeRange - Selected time range
  * @returns Extended metrics object
@@ -81,14 +112,22 @@ export function calculateExtendedMetrics(
   completedDates: Set<string>,
   habitCreatedAt: number,
   currentStrength: number,
-  deltaVsMonth: number,
+  _deltaVsMonth: number, // Ignored - we calculate this ourselves now
   strengthHistory: StrengthSnapshot[],
   timeRange: TimeRange
 ): ExtendedStrengthMetrics {
   const createdAtDate = new Date(habitCreatedAt);
 
-  // Calculate week delta
+  // Calculate week delta using current strength (from database)
   const deltaVsWeek = calculateWeekDelta(
+    completedDates,
+    createdAtDate,
+    currentStrength
+  );
+
+  // Calculate month delta using current strength (from database)
+  // This ensures consistency when habitStrength is passed from the database
+  const deltaVsMonth = calculateMonthDelta(
     completedDates,
     createdAtDate,
     currentStrength
@@ -103,7 +142,7 @@ export function calculateExtendedMetrics(
   return {
     current: Math.round(currentStrength),
     label,
-    deltaVsMonth: Math.round(deltaVsMonth),
+    deltaVsMonth,
     deltaVsWeek,
     sinceStart: Math.round(currentStrength), // Since start = current (started at 0)
     strengthHistory: filteredHistory,
@@ -167,9 +206,7 @@ export function generateChartDataFromCompletions(
 
   // Apply time range filter to start date
   const days = TIME_RANGE_DAYS[timeRange];
-  const timeRangeStart = days === Infinity
-    ? earliestDate
-    : startOfDay(subDays(today, days));
+  const timeRangeStart = startOfDay(subDays(today, days));
 
   // Use the later of earliest completion or time range start
   const chartStartDate = timeRangeStart > earliestDate ? timeRangeStart : earliestDate;

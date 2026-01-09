@@ -106,7 +106,7 @@ export function InlineHint({
               lineHeight: 18,
             }}
           >
-            ✨ custom
+            ✨ custom habit
           </Text>
         </Pressable>
       </View>

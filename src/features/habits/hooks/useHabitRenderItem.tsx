@@ -30,7 +30,8 @@ interface UseHabitRenderItemArgs {
   entranceVariant?: HabitCardEntranceVariant;
   /**
    * Base stagger delay per card (multiplied by index).
-   * @default 100
+   * 50ms creates a quick cascade effect without feeling rushed.
+   * @default 50
    */
   entranceStaggerDelay?: number;
   /**
@@ -66,7 +67,7 @@ export function useHabitRenderItem({
   toggleHabit,
   weekDateStrings,
   entranceVariant = 'widthExpansion',
-  entranceStaggerDelay = 100,
+  entranceStaggerDelay = 50,
   shouldTriggerEntrance = false,
   seenHabitIds,
   onHabitEntranceComplete,
