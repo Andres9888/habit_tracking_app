@@ -6396,55 +6396,44 @@
       {
         "ruleId": "max-lines-per-function",
         "severity": 1,
-        "message": "Function 'CreateHabitModal' has too many lines (193). Maximum allowed is 50.",
-        "line": 34,
+        "message": "Function 'CreateHabitModal' has too many lines (69). Maximum allowed is 50.",
+        "line": 15,
         "column": 16,
         "nodeType": "FunctionDeclaration",
         "messageId": "exceed",
-        "endLine": 248,
+        "endLine": 85,
         "endColumn": 2
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (220). Maximum allowed is 100.",
-        "line": 128,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 249,
-        "endColumn": 1
       },
       {
         "ruleId": "@typescript-eslint/no-misused-promises",
         "severity": 1,
         "message": "Promise-returning function provided to attribute where a void return was expected.",
-        "line": 157,
+        "line": 40,
         "column": 22,
         "nodeType": "JSXExpressionContainer",
         "messageId": "voidReturnAttribute",
-        "endLine": 157,
+        "endLine": 40,
         "endColumn": 36
       },
       {
         "ruleId": "@typescript-eslint/no-misused-promises",
         "severity": 1,
         "message": "Promise-returning function provided to attribute where a void return was expected.",
-        "line": 229,
+        "line": 66,
         "column": 23,
         "nodeType": "JSXExpressionContainer",
         "messageId": "voidReturnAttribute",
-        "endLine": 229,
+        "endLine": 66,
         "endColumn": 37
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
     "warningCount": 3,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import { useCallback } from 'react';\nimport { Modal, ScrollView, View } from 'react-native';\nimport { Gesture, GestureDetector } from 'react-native-gesture-handler';\nimport Animated, {\n  FadeInUp,\n  runOnJS,\n  useAnimatedStyle,\n  useSharedValue,\n  withSpring,\n} from 'react-native-reanimated';\nimport { ColorPickerSheet } from './ColorPickerSheet';\nimport TemplateScienceModal from '../TemplateScienceModal';\nimport { HABIT_COLORS } from './constants';\nimport type { CreateHabitModalProps } from './types';\nimport { useCreateHabitModal } from './hooks/useCreateHabitModal';\nimport { ModalHeader } from './components/ModalHeader';\nimport { TemplateReminderPrompt } from './components/TemplateReminderPrompt';\nimport { HabitNameField } from './components/HabitNameField';\nimport { LivePreview } from './components/LivePreview';\nimport { EmojiPicker } from './components/EmojiPicker';\nimport { ColorPickerSection } from './components/ColorPickerSection';\nimport { StickyCreateBar } from './components/StickyCreateBar';\nimport { EnhancedReminderSelector } from './components/EnhancedReminderSelector';\n// V9: TemplatesLinkSection removed from modal for focused flow (component retained for potential future use)\n\n// Stagger delay between section animations (ms)\nconst ANIMATION_STAGGER_DELAY = 50;\n// Base animation duration (ms)\nconst ANIMATION_DURATION = 300;\n// V11: Swipe dismissal constants\nconst SWIPE_DISMISS_THRESHOLD = 100; // pixels\nconst SWIPE_VELOCITY_THRESHOLD = 500; // pixels per second\n\nexport default function CreateHabitModal(props: CreateHabitModalProps) {\n  const { visible, onClose } = props;\n  const { isEditMode, form, template, science, handleCreate } =\n    useCreateHabitModal(props);\n\n  // V11: Swipe dismissal gesture state\n  const translateY = useSharedValue(0);\n  const context = useSharedValue({ startY: 0 });\n\n  // V11: Pan gesture for swipe-to-dismiss\n  const panGesture = Gesture.Pan()\n    .onStart(() => {\n      context.value = { startY: translateY.value };\n    })\n    .onUpdate((event) => {\n      // Only allow downward swipes\n      const newTranslateY = context.value.startY + event.translationY;\n      if (newTranslateY >= 0) {\n        translateY.value = newTranslateY;\n      }\n    })\n    .onEnd((event) => {\n      const shouldDismiss =\n        translateY.value > SWIPE_DISMISS_THRESHOLD ||\n        event.velocityY > SWIPE_VELOCITY_THRESHOLD;\n\n      if (shouldDismiss) {\n        // Dismiss modal\n        runOnJS(onClose)();\n        // Reset position for next open\n        translateY.value = 0;\n      } else {\n        // Spring back to original position\n        translateY.value = withSpring(0, {\n          damping: 20,\n          stiffness: 300,\n        });\n      }\n    });\n\n  // V11: Animated style for swipe translation\n  const animatedStyle = useAnimatedStyle(() => ({\n    transform: [{ translateY: translateY.value }],\n  }));\n\n  const handleNameChange = useCallback(\n    (value: string) => {\n      form.setHabitName(value);\n    },\n    [form]\n  );\n\n  const handleEmojiSelect = useCallback(\n    (emoji: string | null) => {\n      form.setSelectedEmoji(emoji);\n    },\n    [form]\n  );\n\n  const handleColorSelect = useCallback(\n    (color: string) => {\n      form.setSelectedColor(color);\n    },\n    [form]\n  );\n\n  const handleReminderToggle = useCallback(\n    (enabled: boolean) => {\n      // Toggle by setting 'none' or using smart default\n      if (enabled) {\n        // When enabling, use the existing reminderTime's hour to pick a phase\n        // or default to morning\n        const hour = form.reminderTime.getHours();\n        if (hour >= 5 && hour < 10) {\n          form.setReminderOption('morning');\n        } else if (hour >= 10 && hour < 16) {\n          form.setReminderOption('midday');\n        } else {\n          form.setReminderOption('evening');\n        }\n      } else {\n        form.setReminderOption('none');\n      }\n    },\n    [form]\n  );\n\n  const handleReminderTimeChange = useCallback(\n    (time: Date) => {\n      form.setReminderTime(time);\n      // Also enable reminders if not already enabled\n      if (form.reminderOption === 'none') {\n        // Pick phase based on the new time\n        const hour = time.getHours();\n        if (hour >= 5 && hour < 10) {\n          form.setReminderOption('morning');\n        } else if (hour >= 10 && hour < 16) {\n          form.setReminderOption('midday');\n        } else {\n          form.setReminderOption('evening');\n        }\n      }\n    },\n    [form]\n  );\n\n  return (\n    <Modal\n      transparent\n      animationType='slide'\n      visible={visible}\n      onRequestClose={onClose}\n    >\n      <View className='flex-1 bg-black/50'>\n        <GestureDetector gesture={panGesture}>\n          <Animated.View\n            className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'\n            style={animatedStyle}\n          >\n            <ModalHeader\n              habitName={form.habitName}\n              isEditMode={isEditMode}\n              onClose={onClose}\n              onSave={handleCreate}\n            />\n            <ScrollView\n              className='flex-1 px-4'\n              contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}\n              keyboardShouldPersistTaps='handled'\n              scrollEventThrottle={16}\n              showsVerticalScrollIndicator={false}\n              onScroll={template.handleMainScroll}\n            >\n              {/* V11: Progressive spacing - Input (mb-3), Emojis (mb-4), Colors (mb-5), Reminders (mb-6) */}\n              <Animated.View\n                entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}\n              >\n                <View className='mt-4' />\n                <HabitNameField\n                  autoFocus={visible && !isEditMode}\n                  value={form.habitName}\n                  onChange={handleNameChange}\n                />\n                {/* V11: Live Preview positioned between input and emoji picker */}\n                <LivePreview\n                  color={form.selectedColor}\n                  emoji={form.selectedEmoji}\n                  habitName={form.habitName}\n                />\n              </Animated.View>\n              <Animated.View\n                entering={FadeInUp.duration(ANIMATION_DURATION).delay(\n                  ANIMATION_STAGGER_DELAY\n                )}\n              >\n                <EmojiPicker\n                  habitName={form.habitName}\n                  selectedEmoji={form.selectedEmoji}\n                  onSelect={handleEmojiSelect}\n                />\n              </Animated.View>\n              <Animated.View\n                entering={FadeInUp.duration(ANIMATION_DURATION).delay(\n                  ANIMATION_STAGGER_DELAY * 2\n                )}\n              >\n                <ColorPickerSection\n                  colors={HABIT_COLORS}\n                  selectedColor={form.selectedColor}\n                  onCustomPress={form.openColorPicker}\n                  onSelectColor={handleColorSelect}\n                />\n              </Animated.View>\n              <Animated.View\n                entering={FadeInUp.duration(ANIMATION_DURATION).delay(\n                  ANIMATION_STAGGER_DELAY * 3\n                )}\n              >\n                <EnhancedReminderSelector\n                  enabled={form.reminderOption !== 'none'}\n                  reminderTime={form.reminderTime}\n                  onTimeChange={handleReminderTimeChange}\n                  onToggle={handleReminderToggle}\n                />\n              </Animated.View>\n              {/* V9: Templates Link Section removed for focused flow */}\n            </ScrollView>\n            <TemplateReminderPrompt\n              bottomOffset={template.reminderBottomOffset}\n              visible={template.shouldShowTemplateReminder}\n              onPress={template.handleReminderPress}\n            />\n            <StickyCreateBar\n              disabled={form.habitName.trim().length < 2}\n              selectedColor={form.selectedColor}\n              onPress={handleCreate}\n            />\n          </Animated.View>\n        </GestureDetector>\n      </View>\n      <ColorPickerSheet\n        value={form.selectedColor}\n        visible={form.isColorPickerVisible}\n        onClose={form.closeColorPicker}\n        onSelect={form.setSelectedColor}\n      />\n      <TemplateScienceModal\n        template={science.template}\n        visible={science.isVisible}\n        onClose={science.close}\n        onUseTemplate={science.useTemplate}\n      />\n    </Modal>\n  );\n}\n",
+    "source": "import { Modal, View } from 'react-native';\nimport { GestureDetector } from 'react-native-gesture-handler';\nimport Animated from 'react-native-reanimated';\nimport { ColorPickerSheet } from './ColorPickerSheet';\nimport TemplateScienceModal from '../TemplateScienceModal';\nimport type { CreateHabitModalProps } from './types';\nimport { useCreateHabitModal } from './hooks/useCreateHabitModal';\nimport { useSwipeDismiss } from './hooks/useSwipeDismiss';\nimport { useFormHandlers } from './hooks/useFormHandlers';\nimport { ModalHeader } from './components/ModalHeader';\nimport { ModalContent } from './components/ModalContent';\nimport { TemplateReminderPrompt } from './components/TemplateReminderPrompt';\nimport { StickyCreateBar } from './components/StickyCreateBar';\n\nexport default function CreateHabitModal(props: CreateHabitModalProps) {\n  const { visible, onClose } = props;\n  const { isEditMode, form, template, science, handleCreate } =\n    useCreateHabitModal(props);\n\n  const { panGesture, animatedStyle } = useSwipeDismiss({ onClose });\n  const handlers = useFormHandlers(form);\n\n  return (\n    <Modal\n      transparent\n      animationType='slide'\n      visible={visible}\n      onRequestClose={onClose}\n    >\n      <View className='flex-1 bg-black/50'>\n        <GestureDetector gesture={panGesture}>\n          <Animated.View\n            className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'\n            style={animatedStyle}\n          >\n            <ModalHeader\n              habitName={form.habitName}\n              isEditMode={isEditMode}\n              onClose={onClose}\n              onSave={handleCreate}\n            />\n            <ModalContent\n              habitName={form.habitName}\n              isEditMode={isEditMode}\n              reminderOption={form.reminderOption}\n              reminderTime={form.reminderTime}\n              selectedColor={form.selectedColor}\n              selectedEmoji={form.selectedEmoji}\n              visible={visible}\n              onColorSelect={handlers.handleColorSelect}\n              onCustomColorPress={form.openColorPicker}\n              onEmojiSelect={handlers.handleEmojiSelect}\n              onNameChange={handlers.handleNameChange}\n              onReminderTimeChange={handlers.handleReminderTimeChange}\n              onReminderToggle={handlers.handleReminderToggle}\n              onScroll={template.handleMainScroll}\n            />\n            <TemplateReminderPrompt\n              bottomOffset={template.reminderBottomOffset}\n              visible={template.shouldShowTemplateReminder}\n              onPress={template.handleReminderPress}\n            />\n            <StickyCreateBar\n              disabled={form.habitName.trim().length < 2}\n              selectedColor={form.selectedColor}\n              onPress={handleCreate}\n            />\n          </Animated.View>\n        </GestureDetector>\n      </View>\n      <ColorPickerSheet\n        value={form.selectedColor}\n        visible={form.isColorPickerVisible}\n        onClose={form.closeColorPicker}\n        onSelect={form.setSelectedColor}\n      />\n      <TemplateScienceModal\n        template={science.template}\n        visible={science.isVisible}\n        onClose={science.close}\n        onUseTemplate={science.useTemplate}\n      />\n    </Modal>\n  );\n}\n",
     "usedDeprecatedRules": []
   },
   {
@@ -6668,52 +6657,79 @@
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/components/AISuggestionChips.tsx",
     "messages": [
       {
-        "ruleId": "sort-keys-fix/sort-keys-fix",
+        "ruleId": "react-refresh/only-export-components",
         "severity": 1,
-        "message": "Expected object keys to be in natural insensitive ascending order. 'damping' should be before 'toValue'.",
-        "line": 63,
-        "column": 7,
-        "nodeType": "Property",
-        "endLine": 63,
-        "endColumn": 14,
-        "fix": {
-          "range": [2833, 2862],
-          "text": "damping: 12,\n      toValue: 1"
-        }
+        "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.",
+        "line": 5,
+        "column": 29,
+        "nodeType": "Identifier",
+        "messageId": "namedExport",
+        "endLine": 5,
+        "endColumn": 36
       },
       {
-        "ruleId": "sort-keys-fix/sort-keys-fix",
+        "ruleId": "react-refresh/only-export-components",
         "severity": 1,
-        "message": "Expected object keys to be in natural insensitive ascending order. 'borderColor' should be before 'borderWidth'.",
-        "line": 83,
-        "column": 11,
-        "nodeType": "Property",
-        "endLine": 83,
-        "endColumn": 22,
-        "fix": {
-          "range": [3381, 3462],
-          "text": "\n          borderColor: '#C4B5FD',\n          // Light purple/violet\nborderWidth: 1"
-        }
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (101). Maximum allowed is 100.",
-        "line": 119,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 120,
-        "endColumn": 1
+        "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.",
+        "line": 7,
+        "column": 10,
+        "nodeType": "Identifier",
+        "messageId": "namedExport",
+        "endLine": 7,
+        "endColumn": 26
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
     "warningCount": 2,
     "fixableErrorCount": 0,
-    "fixableWarningCount": 2,
-    "source": "import { useCallback, useMemo, useRef } from 'react';\nimport { Animated, Pressable, Text, View } from 'react-native';\nimport { Motion } from '../../../constants/motion';\nimport useHapticFeedback from '../../../hooks/useHapticFeedback';\n\ninterface AISuggestionChipsProps {\n  input: string;\n  onAppend: (suggestion: string) => void;\n  visible: boolean;\n}\n\n// AI-like suggestions based on input patterns\nconst getAISuggestions = (input: string): string[] => {\n  const q = input.toLowerCase().trim();\n\n  if (q.length < 3) return [];\n\n  if (q.includes('meditat')) return ['5 minutes', 'morning', 'before bed'];\n  if (q.includes('read')) return ['10 minutes', '20 pages', 'before sleep'];\n  if (q.includes('exercise') || q.includes('workout')) return ['30 minutes', 'morning', '3x week'];\n  if (q.includes('run') || q.includes('jog')) return ['20 minutes', '2 miles', 'every day'];\n  if (q.includes('water') || q.includes('drink')) return ['8 glasses', 'hourly', 'before meals'];\n  if (q.includes('walk') || q.includes('step')) return ['10,000 steps', '30 minutes', 'after lunch'];\n  if (q.includes('sleep')) return ['8 hours', 'by 10pm', 'no screens'];\n  if (q.includes('journal') || q.includes('write')) return ['10 minutes', 'morning', 'gratitude'];\n  if (q.includes('stretch') || q.includes('yoga')) return ['15 minutes', 'morning', 'evening'];\n  if (q.includes('learn') || q.includes('study')) return ['30 minutes', 'new skill', 'daily'];\n  if (q.includes('clean') || q.includes('tidy')) return ['15 minutes', 'morning', 'before bed'];\n  if (q.includes('call') || q.includes('phone')) return ['weekly', 'parents', 'friends'];\n  if (q.includes('grateful') || q.includes('gratitude')) return ['3 things', 'morning', 'evening'];\n  if (q.includes('vitamin') || q.includes('supplement')) return ['morning', 'with food', 'daily'];\n  if (q.includes('breakfast') || q.includes('meal')) return ['healthy', '7am', 'no skip'];\n  if (q.includes('practice') || q.includes('music')) return ['30 minutes', 'scales', 'daily'];\n  if (q.includes('floss') || q.includes('teeth')) return ['after meals', 'before bed', 'morning'];\n\n  // Generic time-based suggestions if nothing specific matches\n  if (q.length >= 5) return ['daily', 'morning', 'evening'];\n\n  return [];\n};\n\ninterface SuggestionButtonProps {\n  suggestion: string;\n  onPress: () => void;\n}\n\nconst SuggestionButton = ({ suggestion, onPress }: SuggestionButtonProps) => {\n  const scale = useRef(new Animated.Value(1)).current;\n  const { triggerLightImpact } = useHapticFeedback();\n\n  const handlePressIn = useCallback(() => {\n    Animated.timing(scale, {\n      duration: Motion.duration.fast,\n      easing: Motion.easing.inEase,\n      toValue: 0.95,\n      useNativeDriver: true,\n    }).start();\n  }, [scale]);\n\n  const handlePressOut = useCallback(() => {\n    Animated.spring(scale, {\n      toValue: 1,\n      damping: 12,\n      stiffness: 200,\n      useNativeDriver: true,\n    }).start();\n  }, [scale]);\n\n  const handlePress = useCallback(() => {\n    triggerLightImpact();\n    onPress();\n  }, [triggerLightImpact, onPress]);\n\n  return (\n    <Animated.View style={{ transform: [{ scale }] }}>\n      <Pressable\n        accessibilityLabel={`Add ${suggestion} to habit name`}\n        accessibilityRole=\"button\"\n        className=\"mr-2 mb-2 flex-row items-center rounded-full px-3 py-1.5\"\n        style={{\n          backgroundColor: '#EDE9FE', // Light purple/violet\n          borderWidth: 1,\n          borderColor: '#C4B5FD',\n        }}\n        onPress={handlePress}\n        onPressIn={handlePressIn}\n        onPressOut={handlePressOut}\n      >\n        <Text className=\"mr-1 text-xs text-violet-600\">+</Text>\n        <Text className=\"text-sm font-medium text-violet-700\">{suggestion}</Text>\n      </Pressable>\n    </Animated.View>\n  );\n};\n\nexport const AISuggestionChips = ({ input, onAppend, visible }: AISuggestionChipsProps) => {\n  const suggestions = useMemo(() => getAISuggestions(input), [input]);\n\n  if (!visible || suggestions.length === 0) return null;\n\n  return (\n    <View className=\"mb-3\">\n      <Text className=\"mb-2 text-xs font-medium text-violet-500\">\n        ✨ SUGGESTIONS\n      </Text>\n      <View className=\"flex-row flex-wrap\">\n        {suggestions.map((suggestion) => (\n          <SuggestionButton\n            key={suggestion}\n            suggestion={suggestion}\n            onPress={() => onAppend(suggestion)}\n          />\n        ))}\n      </View>\n    </View>\n  );\n};\n\nexport default AISuggestionChips;\n",
+    "fixableWarningCount": 0,
+    "source": "/**\n * AISuggestionChips Component\n * Re-export for backward compatibility\n */\nexport { AISuggestionChips, default } from './AISuggestionChips/index';\nexport { SuggestionButton } from './AISuggestionChips/index';\nexport { getAISuggestions } from './AISuggestionChips/index';\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/components/AISuggestionChips/AISuggestionChips.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/components/AISuggestionChips/SuggestionButton.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/components/AISuggestionChips/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/components/AISuggestionChips/suggestions.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
@@ -7777,6 +7793,41 @@
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
     "source": "import { Keyboard, Pressable, Switch, Text, View } from 'react-native';\nimport { Bell } from 'lucide-react-native';\nimport useHapticFeedback from '../../../hooks/useHapticFeedback';\n\ninterface MinimalReminderToggleProps {\n  enabled: boolean;\n  time: string;\n  onToggle: (value: boolean) => void;\n  onTimePress?: () => void;\n}\n\n/**\n * Minimal reminder toggle matching the centered modal design\n *\n * Features:\n * - Single row with bell icon, label, time, and toggle\n * - Yellow/amber accent colors matching the mock\n * - Time displayed in green when enabled\n * - Tapping time text opens time picker\n * - Clean card with subtle border and shadow\n */\nexport const MinimalReminderToggle = ({\n  enabled,\n  time,\n  onToggle,\n  onTimePress,\n}: MinimalReminderToggleProps) => {\n  const { triggerSelection } = useHapticFeedback();\n\n  return (\n    <View\n      className='flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3.5'\n      style={{\n        elevation: 1,\n        shadowColor: '#000',\n        shadowOffset: { height: 1, width: 0 },\n        shadowOpacity: 0.05,\n        shadowRadius: 2,\n      }}\n    >\n      {/* Icon + Label Section */}\n      <View className='flex-1 flex-row items-center gap-3'>\n        {/* Bell Icon in amber circle */}\n        <View className='h-9 w-9 items-center justify-center rounded-full bg-amber-100'>\n          <Bell color='#f59e0b' size={16} />\n        </View>\n\n        {/* Label and Time */}\n        <View className='flex-1'>\n          <Text className='text-sm font-medium text-stone-900'>Remind me</Text>\n          <Pressable\n            disabled={!enabled}\n            onPress={() => {\n              if (enabled && onTimePress) {\n                Keyboard.dismiss();\n                triggerSelection();\n                onTimePress();\n              }\n            }}\n          >\n            <Text\n              className={`text-xs font-medium ${\n                enabled ? 'text-emerald-500' : 'text-stone-400'\n              }`}\n            >\n              {enabled ? time : 'Off'}\n            </Text>\n          </Pressable>\n        </View>\n      </View>\n\n      {/* Toggle Switch */}\n      <Switch\n        accessibilityLabel={enabled ? 'Disable reminder' : 'Enable reminder'}\n        accessibilityRole='switch'\n        ios_backgroundColor='#d6d3d1'\n        thumbColor='#ffffff'\n        trackColor={{ false: '#d6d3d1', true: '#10B981' }}\n        value={enabled}\n        onValueChange={(val) => {\n          Keyboard.dismiss();\n          triggerSelection();\n          onToggle(val);\n        }}\n      />\n    </View>\n  );\n};\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/components/ModalContent.tsx",
+    "messages": [
+      {
+        "ruleId": "max-lines-per-function",
+        "severity": 1,
+        "message": "Function 'ModalContent' has too many lines (76). Maximum allowed is 50.",
+        "line": 33,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "exceed",
+        "endLine": 108,
+        "endColumn": 2
+      },
+      {
+        "ruleId": "max-lines",
+        "severity": 2,
+        "message": "File has too many lines (103). Maximum allowed is 100.",
+        "line": 106,
+        "column": 1,
+        "nodeType": null,
+        "messageId": "exceed",
+        "endLine": 109,
+        "endColumn": 1
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { ScrollView, View } from 'react-native';\nimport Animated, { FadeInUp } from 'react-native-reanimated';\nimport { HabitNameField } from './HabitNameField';\nimport { LivePreview } from './LivePreview';\nimport { EmojiPicker } from './EmojiPicker';\nimport { ColorPickerSection } from './ColorPickerSection';\nimport { EnhancedReminderSelector } from './EnhancedReminderSelector';\nimport { HABIT_COLORS } from '../constants';\nimport type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';\n\nconst ANIMATION_STAGGER_DELAY = 50;\nconst ANIMATION_DURATION = 300;\n\ninterface ModalContentProps {\n  isEditMode: boolean;\n  visible: boolean;\n  // Form state\n  habitName: string;\n  selectedEmoji: string | null;\n  selectedColor: string;\n  reminderOption: string;\n  reminderTime: Date;\n  // Form handlers\n  onNameChange: (value: string) => void;\n  onEmojiSelect: (emoji: string | null) => void;\n  onColorSelect: (color: string) => void;\n  onReminderToggle: (enabled: boolean) => void;\n  onReminderTimeChange: (time: Date) => void;\n  onCustomColorPress: () => void;\n  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;\n}\n\nexport function ModalContent({\n  isEditMode,\n  visible,\n  habitName,\n  selectedEmoji,\n  selectedColor,\n  reminderOption,\n  reminderTime,\n  onNameChange,\n  onEmojiSelect,\n  onColorSelect,\n  onReminderToggle,\n  onReminderTimeChange,\n  onCustomColorPress,\n  onScroll,\n}: ModalContentProps) {\n  return (\n    <ScrollView\n      className='flex-1 px-4'\n      contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}\n      keyboardShouldPersistTaps='handled'\n      scrollEventThrottle={16}\n      showsVerticalScrollIndicator={false}\n      onScroll={onScroll}\n    >\n      <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}>\n        <View className='mt-4' />\n        <HabitNameField\n          autoFocus={visible && !isEditMode}\n          value={habitName}\n          onChange={onNameChange}\n        />\n        <LivePreview\n          color={selectedColor}\n          emoji={selectedEmoji}\n          habitName={habitName}\n        />\n      </Animated.View>\n      <Animated.View\n        entering={FadeInUp.duration(ANIMATION_DURATION).delay(\n          ANIMATION_STAGGER_DELAY\n        )}\n      >\n        <EmojiPicker\n          habitName={habitName}\n          selectedEmoji={selectedEmoji}\n          onSelect={onEmojiSelect}\n        />\n      </Animated.View>\n      <Animated.View\n        entering={FadeInUp.duration(ANIMATION_DURATION).delay(\n          ANIMATION_STAGGER_DELAY * 2\n        )}\n      >\n        <ColorPickerSection\n          colors={HABIT_COLORS}\n          selectedColor={selectedColor}\n          onCustomPress={onCustomColorPress}\n          onSelectColor={onColorSelect}\n        />\n      </Animated.View>\n      <Animated.View\n        entering={FadeInUp.duration(ANIMATION_DURATION).delay(\n          ANIMATION_STAGGER_DELAY * 3\n        )}\n      >\n        <EnhancedReminderSelector\n          enabled={reminderOption !== 'none'}\n          reminderTime={reminderTime}\n          onTimeChange={onReminderTimeChange}\n          onToggle={onReminderToggle}\n        />\n      </Animated.View>\n    </ScrollView>\n  );\n}\n",
     "usedDeprecatedRules": []
   },
   {
@@ -10160,6 +10211,30 @@
     "usedDeprecatedRules": []
   },
   {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/hooks/useFormHandlers.ts",
+    "messages": [
+      {
+        "ruleId": "max-lines-per-function",
+        "severity": 1,
+        "message": "Function 'useFormHandlers' has too many lines (60). Maximum allowed is 50.",
+        "line": 17,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "exceed",
+        "endLine": 81,
+        "endColumn": 2
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { useCallback } from 'react';\n\ninterface FormState {\n  setHabitName: (name: string) => void;\n  setSelectedEmoji: (emoji: string | null) => void;\n  setSelectedColor: (color: string) => void;\n  setReminderOption: (option: string) => void;\n  setReminderTime: (time: Date) => void;\n  reminderTime: Date;\n  reminderOption: string;\n}\n\n/**\n * Hook that creates memoized handlers for form field changes.\n * Encapsulates reminder time logic and phase detection.\n */\nexport function useFormHandlers(form: FormState) {\n  const handleNameChange = useCallback(\n    (value: string) => {\n      form.setHabitName(value);\n    },\n    [form]\n  );\n\n  const handleEmojiSelect = useCallback(\n    (emoji: string | null) => {\n      form.setSelectedEmoji(emoji);\n    },\n    [form]\n  );\n\n  const handleColorSelect = useCallback(\n    (color: string) => {\n      form.setSelectedColor(color);\n    },\n    [form]\n  );\n\n  const handleReminderToggle = useCallback(\n    (enabled: boolean) => {\n      if (enabled) {\n        const hour = form.reminderTime.getHours();\n        if (hour >= 5 && hour < 10) {\n          form.setReminderOption('morning');\n        } else if (hour >= 10 && hour < 16) {\n          form.setReminderOption('midday');\n        } else {\n          form.setReminderOption('evening');\n        }\n      } else {\n        form.setReminderOption('none');\n      }\n    },\n    [form]\n  );\n\n  const handleReminderTimeChange = useCallback(\n    (time: Date) => {\n      form.setReminderTime(time);\n      if (form.reminderOption === 'none') {\n        const hour = time.getHours();\n        if (hour >= 5 && hour < 10) {\n          form.setReminderOption('morning');\n        } else if (hour >= 10 && hour < 16) {\n          form.setReminderOption('midday');\n        } else {\n          form.setReminderOption('evening');\n        }\n      }\n    },\n    [form]\n  );\n\n  return {\n    handleColorSelect,\n    handleEmojiSelect,\n    handleNameChange,\n    handleReminderTimeChange,\n    handleReminderToggle,\n  };\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/hooks/useHabitForm.ts",
     "messages": [
       {
@@ -10273,6 +10348,17 @@
     "fixableErrorCount": 0,
     "fixableWarningCount": 2,
     "source": "import { useCallback, useState } from 'react';\nimport type { HabitTemplate } from '../types';\n\ninterface UseScienceModalOptions {\n  onSelectTemplate: (template: HabitTemplate) => void;\n}\n\nexport const useScienceModal = ({ onSelectTemplate }: UseScienceModalOptions) => {\n  const [isVisible, setVisible] = useState(false);\n  const [template, setTemplate] = useState<HabitTemplate | null>(null);\n\n  const open = useCallback((next: HabitTemplate) => {\n    setTemplate(next);\n    setVisible(true);\n  }, []);\n\n  const close = useCallback(() => setVisible(false), []);\n\n  const useTemplate = useCallback(() => {\n    if (!template) return;\n    onSelectTemplate(template);\n    setVisible(false);\n  }, [template, onSelectTemplate]);\n\n  return { isVisible, template, open, close, useTemplate };\n};\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/CreateHabitModal/hooks/useSwipeDismiss.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
@@ -11463,35 +11549,59 @@
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/DraftRecoveryBanner.tsx",
     "messages": [
       {
+        "ruleId": "react-refresh/only-export-components",
+        "severity": 1,
+        "message": "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.",
+        "line": 5,
+        "column": 31,
+        "nodeType": "Identifier",
+        "messageId": "namedExport",
+        "endLine": 5,
+        "endColumn": 38
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "/**\n * DraftRecoveryBanner Component\n * Re-export for backward compatibility\n */\nexport { DraftRecoveryBanner, default } from './DraftRecoveryBanner/index';\nexport type { DraftRecoveryBannerProps } from './DraftRecoveryBanner/index';\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/DraftRecoveryBanner/DraftRecoveryBanner.tsx",
+    "messages": [
+      {
         "ruleId": "max-lines-per-function",
         "severity": 1,
         "message": "Function 'DraftRecoveryBanner' has too many lines (59). Maximum allowed is 50.",
-        "line": 62,
+        "line": 9,
         "column": 8,
         "nodeType": "FunctionDeclaration",
         "messageId": "exceed",
-        "endLine": 124,
+        "endLine": 71,
         "endColumn": 2
       },
       {
         "ruleId": "@typescript-eslint/no-floating-promises",
         "severity": 1,
         "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 74,
+        "line": 21,
         "column": 5,
         "nodeType": "ExpressionStatement",
         "messageId": "floatingVoid",
-        "endLine": 74,
+        "endLine": 21,
         "endColumn": 60,
         "suggestions": [
           {
             "messageId": "floatingFixVoid",
-            "fix": { "range": [1938, 1938], "text": "void " },
+            "fix": { "range": [621, 621], "text": "void " },
             "desc": "Add void operator to ignore."
           },
           {
             "messageId": "floatingFixAwait",
-            "fix": { "range": [1938, 1938], "text": "await " },
+            "fix": { "range": [621, 621], "text": "await " },
             "desc": "Add await operator."
           }
         ]
@@ -11500,44 +11610,66 @@
         "ruleId": "@typescript-eslint/no-floating-promises",
         "severity": 1,
         "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 79,
+        "line": 26,
         "column": 5,
         "nodeType": "ExpressionStatement",
         "messageId": "floatingVoid",
-        "endLine": 79,
+        "endLine": 26,
         "endColumn": 60,
         "suggestions": [
           {
             "messageId": "floatingFixVoid",
-            "fix": { "range": [2053, 2053], "text": "void " },
+            "fix": { "range": [736, 736], "text": "void " },
             "desc": "Add void operator to ignore."
           },
           {
             "messageId": "floatingFixAwait",
-            "fix": { "range": [2053, 2053], "text": "await " },
+            "fix": { "range": [736, 736], "text": "await " },
             "desc": "Add await operator."
           }
         ]
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (101). Maximum allowed is 100.",
-        "line": 126,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 127,
-        "endColumn": 1
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
     "warningCount": 3,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\n * DraftRecoveryBanner Component\n * Shows a banner when a draft has been recovered from local storage\n *\n * Part of Edge Case handling: T1 - Data Loss Prevention\n *\n * Features:\n * - Non-intrusive banner at top of editor\n * - Option to keep recovered draft or discard it\n * - Auto-dismisses after user interacts with the editor\n */\n\nimport React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport Animated, { FadeIn, FadeOut } from 'react-native-reanimated';\nimport { RefreshCw, X } from 'lucide-react-native';\nimport * as Haptics from 'expo-haptics';\n\ninterface DraftRecoveryBannerProps {\n  /** Whether to show the banner */\n  visible: boolean;\n  /** Callback when user wants to discard the draft */\n  onDiscard: () => void;\n  /** Callback when banner is dismissed (user keeps draft) */\n  onDismiss: () => void;\n  /** Optional custom message */\n  message?: string;\n  /** Accent color variant */\n  variant?: 'rose' | 'violet' | 'emerald';\n}\n\nconst VARIANT_STYLES = {\n  emerald: {\n    bg: 'bg-emerald-50',\n    border: 'border-emerald-200',\n    buttonBg: 'bg-emerald-100',\n    buttonText: 'text-emerald-700',\n    iconBg: 'bg-emerald-100',\n    iconColor: '#059669',\n    text: 'text-emerald-800',\n  },\n  rose: {\n    bg: 'bg-rose-50',\n    border: 'border-rose-200',\n    buttonBg: 'bg-rose-100',\n    buttonText: 'text-rose-700',\n    iconBg: 'bg-rose-100',\n    iconColor: '#e11d48',\n    text: 'text-rose-800',\n  },\n  violet: {\n    bg: 'bg-violet-50',\n    border: 'border-violet-200',\n    buttonBg: 'bg-violet-100',\n    buttonText: 'text-violet-700',\n    iconBg: 'bg-violet-100',\n    iconColor: '#7c3aed',\n    text: 'text-violet-800',\n  },\n};\n\nexport function DraftRecoveryBanner({\n  visible,\n  onDiscard,\n  onDismiss,\n  message = 'Unsaved draft recovered',\n  variant = 'rose',\n}: DraftRecoveryBannerProps) {\n  if (!visible) return null;\n\n  const styles = VARIANT_STYLES[variant];\n\n  const handleDiscard = () => {\n    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n    onDiscard();\n  };\n\n  const handleDismiss = () => {\n    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n    onDismiss();\n  };\n\n  return (\n    <Animated.View\n      className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}\n      entering={FadeIn.duration(200)}\n      exiting={FadeOut.duration(150)}\n    >\n      <View className='flex-row items-center gap-3'>\n        <View className={`rounded-lg ${styles.iconBg} p-2`}>\n          <RefreshCw color={styles.iconColor} size={16} />\n        </View>\n        <View className='flex-1'>\n          <Text className={`text-sm font-medium ${styles.text}`}>\n            {message}\n          </Text>\n          <Text className={`text-xs ${styles.text} opacity-70`}>\n            Your previous edits were saved locally\n          </Text>\n        </View>\n        <View className='flex-row items-center gap-2'>\n          <Pressable\n            accessibilityLabel='Discard recovered draft'\n            accessibilityRole='button'\n            className={`rounded-lg ${styles.buttonBg} px-3 py-1.5`}\n            onPress={handleDiscard}\n          >\n            <Text className={`text-xs font-medium ${styles.buttonText}`}>\n              Discard\n            </Text>\n          </Pressable>\n          <Pressable\n            accessibilityLabel='Keep recovered draft'\n            accessibilityRole='button'\n            className='h-7 w-7 items-center justify-center rounded-full'\n            onPress={handleDismiss}\n          >\n            <X color={styles.iconColor} size={18} />\n          </Pressable>\n        </View>\n      </View>\n    </Animated.View>\n  );\n}\n\nexport default DraftRecoveryBanner;\n",
+    "source": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport Animated, { FadeIn, FadeOut } from 'react-native-reanimated';\nimport { RefreshCw, X } from 'lucide-react-native';\nimport * as Haptics from 'expo-haptics';\nimport { VARIANT_STYLES } from './constants';\nimport type { DraftRecoveryBannerProps } from './types';\n\nexport function DraftRecoveryBanner({\n  visible,\n  onDiscard,\n  onDismiss,\n  message = 'Unsaved draft recovered',\n  variant = 'rose',\n}: DraftRecoveryBannerProps) {\n  if (!visible) return null;\n\n  const styles = VARIANT_STYLES[variant];\n\n  const handleDiscard = () => {\n    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n    onDiscard();\n  };\n\n  const handleDismiss = () => {\n    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n    onDismiss();\n  };\n\n  return (\n    <Animated.View\n      className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}\n      entering={FadeIn.duration(200)}\n      exiting={FadeOut.duration(150)}\n    >\n      <View className='flex-row items-center gap-3'>\n        <View className={`rounded-lg ${styles.iconBg} p-2`}>\n          <RefreshCw color={styles.iconColor} size={16} />\n        </View>\n        <View className='flex-1'>\n          <Text className={`text-sm font-medium ${styles.text}`}>\n            {message}\n          </Text>\n          <Text className={`text-xs ${styles.text} opacity-70`}>\n            Your previous edits were saved locally\n          </Text>\n        </View>\n        <View className='flex-row items-center gap-2'>\n          <Pressable\n            accessibilityLabel='Discard recovered draft'\n            accessibilityRole='button'\n            className={`rounded-lg ${styles.buttonBg} px-3 py-1.5`}\n            onPress={handleDiscard}\n          >\n            <Text className={`text-xs font-medium ${styles.buttonText}`}>\n              Discard\n            </Text>\n          </Pressable>\n          <Pressable\n            accessibilityLabel='Keep recovered draft'\n            accessibilityRole='button'\n            className='h-7 w-7 items-center justify-center rounded-full'\n            onPress={handleDismiss}\n          >\n            <X color={styles.iconColor} size={18} />\n          </Pressable>\n        </View>\n      </View>\n    </Animated.View>\n  );\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/DraftRecoveryBanner/constants.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/DraftRecoveryBanner/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/DraftRecoveryBanner/types.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
@@ -13273,31 +13405,42 @@
   },
   {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/ForceUpdateButton.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/ForceUpdateButton/ForceUpdateButton.tsx",
     "messages": [
       {
         "ruleId": "max-lines-per-function",
         "severity": 1,
         "message": "Function 'ForceUpdateButton' has too many lines (73). Maximum allowed is 50.",
-        "line": 44,
+        "line": 8,
         "column": 8,
         "nodeType": "FunctionDeclaration",
         "messageId": "exceed",
-        "endLine": 122,
+        "endLine": 86,
         "endColumn": 2
       },
       {
         "ruleId": "no-console",
         "severity": 1,
         "message": "Unexpected console statement. Only these console methods are allowed: warn, error.",
-        "line": 69,
+        "line": 33,
         "column": 7,
         "nodeType": "MemberExpression",
         "messageId": "limited",
-        "endLine": 69,
+        "endLine": 33,
         "endColumn": 18,
         "suggestions": [
           {
-            "fix": { "range": [1999, 2045], "text": "" },
+            "fix": { "range": [1077, 1123], "text": "" },
             "messageId": "removeConsole",
             "data": { "propertyName": "log" },
             "desc": "Remove the console.log()."
@@ -13308,32 +13451,43 @@
         "ruleId": "@typescript-eslint/no-misused-promises",
         "severity": 1,
         "message": "Promise-returning function provided to attribute where a void return was expected.",
-        "line": 87,
+        "line": 51,
         "column": 17,
         "nodeType": "JSXExpressionContainer",
         "messageId": "voidReturnAttribute",
-        "endLine": 87,
+        "endLine": 51,
         "endColumn": 30
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (106). Maximum allowed is 100.",
-        "line": 117,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 123,
-        "endColumn": 1
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
     "warningCount": 3,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\n * Manual button to force habit strength update\n * This bypasses any toggle issues and directly updates strength\n */\n\nimport React, { useState } from 'react';\nimport { Pressable, Text, View, ActivityIndicator } from 'react-native';\nimport { useMutation } from 'convex/react';\nimport { api } from '../../convex/_generated/api';\nimport type { Id } from '../../convex/_generated/dataModel';\n\ninterface ForceUpdateButtonProps {\n  habitId: Id<'habits'>;\n  habitName: string;\n  currentStrength: number;\n}\n\ntype UpdateStrengthResponse = {\n  baseline: number;\n  compliance: number;\n  daysSinceCreation: number;\n  newStrength: number;\n  predictionProbability: number;\n  previousStrength: number;\n  strengthLevel: string;\n};\n\nconst assertUpdateStrengthResponse: (\n  response: unknown\n) => asserts response is UpdateStrengthResponse = (response: unknown) => {\n  if (!response || typeof response !== 'object') {\n    throw new Error('Unexpected empty response from updateHabitStrength');\n  }\n\n  const candidate = response as Partial<UpdateStrengthResponse>;\n  if (\n    typeof candidate.previousStrength !== 'number' ||\n    typeof candidate.newStrength !== 'number'\n  ) {\n    throw new TypeError('updateHabitStrength returned unexpected payload');\n  }\n};\n\nexport function ForceUpdateButton({\n  habitId,\n  habitName: _habitName,\n  currentStrength,\n}: ForceUpdateButtonProps) {\n  const [loading, setLoading] = useState(false);\n  const [result, setResult] = useState<string | null>(null);\n  const updateStrength = useMutation(api.habitStrength.updateHabitStrength);\n\n  const handleClick = async () => {\n    setLoading(true);\n    setResult(null);\n\n    try {\n      const today = new Date().toISOString().split('T')[0];\n      const response = await updateStrength({\n        behaviorPerformed: true,\n        date: today,\n        habitId,\n      });\n\n      assertUpdateStrengthResponse(response);\n      setResult(\n        `✅ ${response.previousStrength.toFixed(3)} → ${response.newStrength.toFixed(3)}`\n      );\n      console.log('Force update result:', response);\n    } catch (error) {\n      const errorMessage =\n        error instanceof Error ? error.message : String(error);\n      setResult(`❌ Error: ${errorMessage}`);\n      console.error('Force update error:', error);\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <View className='mt-2 gap-2'>\n      <Pressable\n        className={`rounded-lg px-4 py-2 ${\n          loading ? 'bg-stone-400' : 'bg-green-600'\n        }`}\n        disabled={loading}\n        onPress={handleClick}\n      >\n        {loading ? (\n          <View className='flex-row items-center justify-center gap-2'>\n            <ActivityIndicator color='white' size='small' />\n            <Text className='font-semibold text-white'>Updating...</Text>\n          </View>\n        ) : (\n          <Text className='text-center font-semibold text-white'>\n            🚀 Force Update Strength +15%\n          </Text>\n        )}\n      </Pressable>\n\n      {result && (\n        <View\n          className={`rounded-lg p-2 ${\n            result.startsWith('✅') ? 'bg-green-100' : 'bg-red-100'\n          }`}\n        >\n          <Text\n            className={`text-xs ${\n              result.startsWith('✅') ? 'text-green-800' : 'text-red-800'\n            }`}\n          >\n            {result}\n          </Text>\n        </View>\n      )}\n\n      <Text className='text-xs text-stone-500'>\n        Current: {(currentStrength * 100).toFixed(1)}%\n      </Text>\n    </View>\n  );\n}\n",
+    "source": "import React, { useState } from 'react';\nimport { Pressable, Text, View, ActivityIndicator } from 'react-native';\nimport { useMutation } from 'convex/react';\nimport { api } from '../../../convex/_generated/api';\nimport { assertUpdateStrengthResponse } from './types';\nimport type { ForceUpdateButtonProps } from './types';\n\nexport function ForceUpdateButton({\n  habitId,\n  habitName: _habitName,\n  currentStrength,\n}: ForceUpdateButtonProps) {\n  const [loading, setLoading] = useState(false);\n  const [result, setResult] = useState<string | null>(null);\n  const updateStrength = useMutation(api.habitStrength.updateHabitStrength);\n\n  const handleClick = async () => {\n    setLoading(true);\n    setResult(null);\n\n    try {\n      const today = new Date().toISOString().split('T')[0];\n      const response = await updateStrength({\n        behaviorPerformed: true,\n        date: today,\n        habitId,\n      });\n\n      assertUpdateStrengthResponse(response);\n      setResult(\n        `✅ ${response.previousStrength.toFixed(3)} → ${response.newStrength.toFixed(3)}`\n      );\n      console.log('Force update result:', response);\n    } catch (error) {\n      const errorMessage =\n        error instanceof Error ? error.message : String(error);\n      setResult(`❌ Error: ${errorMessage}`);\n      console.error('Force update error:', error);\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <View className='mt-2 gap-2'>\n      <Pressable\n        className={`rounded-lg px-4 py-2 ${\n          loading ? 'bg-stone-400' : 'bg-green-600'\n        }`}\n        disabled={loading}\n        onPress={handleClick}\n      >\n        {loading ? (\n          <View className='flex-row items-center justify-center gap-2'>\n            <ActivityIndicator color='white' size='small' />\n            <Text className='font-semibold text-white'>Updating...</Text>\n          </View>\n        ) : (\n          <Text className='text-center font-semibold text-white'>\n            🚀 Force Update Strength +15%\n          </Text>\n        )}\n      </Pressable>\n\n      {result && (\n        <View\n          className={`rounded-lg p-2 ${\n            result.startsWith('✅') ? 'bg-green-100' : 'bg-red-100'\n          }`}\n        >\n          <Text\n            className={`text-xs ${\n              result.startsWith('✅') ? 'text-green-800' : 'text-red-800'\n            }`}\n          >\n            {result}\n          </Text>\n        </View>\n      )}\n\n      <Text className='text-xs text-stone-500'>\n        Current: {(currentStrength * 100).toFixed(1)}%\n      </Text>\n    </View>\n  );\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/ForceUpdateButton/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/ForceUpdateButton/types.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
@@ -17889,64 +18043,42 @@
   },
   {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/HabitStrengthSection/utils.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/HabitStrengthSection/utils/chartDataGeneration.ts",
     "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'StrengthLabel' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 9,
-        "column": 33,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 9,
-        "endColumn": 46
-      },
-      {
-        "ruleId": "sort-keys-fix/sort-keys-fix",
-        "severity": 1,
-        "message": "Expected object keys to be in natural insensitive ascending order. 'deltaVsMonth' should be before 'label'.",
-        "line": 145,
-        "column": 5,
-        "nodeType": "Property",
-        "endLine": 145,
-        "endColumn": 17,
-        "fix": { "range": [4200, 4223], "text": "deltaVsMonth,\n    label" }
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (138). Maximum allowed is 100.",
-        "line": 194,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 252,
-        "endColumn": 1
-      },
       {
         "ruleId": "unicorn/prefer-spread",
         "severity": 2,
         "message": "Prefer the spread operator over `Array.from(…)`.",
-        "line": 203,
+        "line": 38,
         "column": 23,
         "nodeType": "CallExpression",
         "messageId": "array-from",
-        "endLine": 203,
+        "endLine": 38,
         "endColumn": 49,
-        "fix": { "range": [5912, 5938], "text": "[...completedDates]" }
+        "fix": { "range": [1306, 1332], "text": "[...completedDates]" }
       },
       {
         "ruleId": "unicorn/prefer-math-min-max",
         "severity": 2,
         "message": "Prefer `Math.max()` to simplify ternary expressions.",
-        "line": 212,
+        "line": 47,
         "column": 26,
         "nodeType": "ConditionalExpression",
         "messageId": "prefer-math-min-max",
-        "endLine": 212,
+        "endLine": 47,
         "endColumn": 87,
         "fix": {
-          "range": [6282, 6343],
+          "range": [1676, 1737],
           "text": "Math.max(timeRangeStart, earliestDate)"
         }
       },
@@ -17954,14 +18086,14 @@
         "ruleId": "unicorn/prefer-ternary",
         "severity": 2,
         "message": "This `if` statement can be replaced by a ternary expression.",
-        "line": 228,
+        "line": 63,
         "column": 5,
         "nodeType": "IfStatement",
         "messageId": "prefer-ternary",
-        "endLine": 232,
+        "endLine": 67,
         "endColumn": 6,
         "fix": {
-          "range": [6877, 7013],
+          "range": [2271, 2407],
           "text": "strength = wasCompleted ? strength + (1 - strength) * GROWTH_RATE : strength * DECAY_RATE;"
         }
       },
@@ -17969,24 +18101,81 @@
         "ruleId": "sort-keys-fix/sort-keys-fix",
         "severity": 1,
         "message": "Expected object keys to be in natural insensitive ascending order. 'label' should be before 'strength'.",
-        "line": 243,
+        "line": 78,
         "column": 9,
         "nodeType": "Property",
-        "endLine": 243,
+        "endLine": 78,
         "endColumn": 14,
         "fix": {
-          "range": [7317, 7392],
+          "range": [2711, 2786],
           "text": "label: getStrengthLabel(strengthPercent),\n        strength: strengthPercent"
         }
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 4,
+    "errorCount": 3,
     "fatalErrorCount": 0,
-    "warningCount": 3,
+    "warningCount": 1,
     "fixableErrorCount": 3,
-    "fixableWarningCount": 2,
-    "source": "/**\n * Habit Strength Section - Utility Functions\n *\n * Data transformation helpers for the HabitStrengthSection component.\n */\n\nimport { subDays, startOfDay, addDays, differenceInDays, format } from 'date-fns';\n\nimport type { StrengthSnapshot, StrengthLabel } from '../HabitStrengthHistory/types';\nimport {\n  calculateStrengthAtDate,\n  getStrengthLabel,\n} from '../HabitStrengthHistory/strengthUtils';\nimport type { TimeRange, ExtendedStrengthMetrics } from './types';\nimport { TIME_RANGE_DAYS } from './constants';\n\n/**\n * Filter strength history based on time range selection.\n *\n * @param history - Full strength history array\n * @param timeRange - Selected time range (1m/1y/all)\n * @returns Filtered history array\n */\nexport function filterHistoryByTimeRange(\n  history: StrengthSnapshot[],\n  timeRange: TimeRange\n): StrengthSnapshot[] {\n  if (history.length === 0) {\n    return history;\n  }\n\n  const days = TIME_RANGE_DAYS[timeRange];\n  const cutoffDate = startOfDay(subDays(new Date(), days));\n\n  return history.filter((snapshot) => snapshot.date >= cutoffDate);\n}\n\n/**\n * Calculate week-over-week delta.\n *\n * @param completedDates - Set of completed dates\n * @param habitCreatedAt - Habit creation date\n * @param currentStrength - Current strength value\n * @returns Week-over-week change\n */\nexport function calculateWeekDelta(\n  completedDates: Set<string>,\n  habitCreatedAt: Date,\n  currentStrength: number\n): number {\n  const today = startOfDay(new Date());\n  const oneWeekAgo = subDays(today, 7);\n\n  // If habit is less than 7 days old, return current strength as delta\n  if (oneWeekAgo < startOfDay(habitCreatedAt)) {\n    return currentStrength;\n  }\n\n  const weekAgoStrength = calculateStrengthAtDate(\n    completedDates,\n    habitCreatedAt,\n    oneWeekAgo\n  );\n\n  // Round to integer to match displayed values\n  return Math.round(currentStrength - weekAgoStrength);\n}\n\n/**\n * Calculate month-over-month delta.\n *\n * @param completedDates - Set of completed dates\n * @param habitCreatedAt - Habit creation date\n * @param currentStrength - Current strength value\n * @returns Month-over-month change\n */\nexport function calculateMonthDelta(\n  completedDates: Set<string>,\n  habitCreatedAt: Date,\n  currentStrength: number\n): number {\n  const today = startOfDay(new Date());\n  const thirtyDaysAgo = subDays(today, 30);\n\n  // If habit is less than 30 days old, return current strength as delta\n  if (thirtyDaysAgo < startOfDay(habitCreatedAt)) {\n    return currentStrength;\n  }\n\n  const monthAgoStrength = calculateStrengthAtDate(\n    completedDates,\n    habitCreatedAt,\n    thirtyDaysAgo\n  );\n\n  // Round to integer to match displayed values\n  return Math.round(currentStrength - monthAgoStrength);\n}\n\n/**\n * Calculate extended metrics for the HabitStrengthSection.\n *\n * @param completedDates - Set of completed dates\n * @param habitCreatedAt - Habit creation timestamp (ms)\n * @param currentStrength - Current strength value (from database or calculated)\n * @param _deltaVsMonth - Deprecated: Month-over-month delta (now calculated internally)\n * @param strengthHistory - Full strength history\n * @param timeRange - Selected time range\n * @returns Extended metrics object\n */\nexport function calculateExtendedMetrics(\n  completedDates: Set<string>,\n  habitCreatedAt: number,\n  currentStrength: number,\n  _deltaVsMonth: number, // Ignored - we calculate this ourselves now\n  strengthHistory: StrengthSnapshot[],\n  timeRange: TimeRange\n): ExtendedStrengthMetrics {\n  const createdAtDate = new Date(habitCreatedAt);\n\n  // Calculate week delta using current strength (from database)\n  const deltaVsWeek = calculateWeekDelta(\n    completedDates,\n    createdAtDate,\n    currentStrength\n  );\n\n  // Calculate month delta using current strength (from database)\n  // This ensures consistency when habitStrength is passed from the database\n  const deltaVsMonth = calculateMonthDelta(\n    completedDates,\n    createdAtDate,\n    currentStrength\n  );\n\n  // Filter history by time range\n  const filteredHistory = filterHistoryByTimeRange(strengthHistory, timeRange);\n\n  // Get strength label\n  const label = getStrengthLabel(currentStrength);\n\n  return {\n    current: Math.round(currentStrength),\n    label,\n    deltaVsMonth,\n    deltaVsWeek,\n    sinceStart: Math.round(currentStrength), // Since start = current (started at 0)\n    strengthHistory: filteredHistory,\n  };\n}\n\n/**\n * Sample strength history for chart display.\n * Reduces data points while preserving shape for performance.\n *\n * @param history - Strength history array\n * @param maxPoints - Maximum number of points to return\n * @returns Sampled history array\n */\nexport function sampleHistoryForChart(\n  history: StrengthSnapshot[],\n  maxPoints: number = 50\n): StrengthSnapshot[] {\n  if (history.length <= maxPoints) {\n    return history;\n  }\n\n  const result: StrengthSnapshot[] = [];\n  const step = (history.length - 1) / (maxPoints - 1);\n\n  for (let i = 0; i < maxPoints; i++) {\n    const index = Math.round(i * step);\n    result.push(history[index]);\n  }\n\n  return result;\n}\n\n/** Exponential smoothing constants (matches Loop Habit Tracker) */\nconst GROWTH_RATE = 0.05; // +5% of remaining on completion\nconst DECAY_RATE = 0.95;  // -5% on miss\n\n/**\n * Generate strength history directly from completedDates.\n *\n * This bypasses the useHabitStrength hook which may have incorrect\n * habitCreatedAt timestamps. Instead, we find the earliest completion\n * date and simulate the exponential smoothing algorithm from there.\n *\n * @param completedDates - Set of completion dates (YYYY-MM-DD format)\n * @param timeRange - Time range filter (1m/1y/all)\n * @returns Array of StrengthSnapshot for charting\n */\nexport function generateChartDataFromCompletions(\n  completedDates: Set<string>,\n  timeRange: TimeRange\n): StrengthSnapshot[] {\n  if (completedDates.size === 0) {\n    return [];\n  }\n\n  // Find the earliest completion date\n  const sortedDates = Array.from(completedDates).sort();\n  const earliestDate = startOfDay(new Date(sortedDates[0]));\n  const today = startOfDay(new Date());\n\n  // Apply time range filter to start date\n  const days = TIME_RANGE_DAYS[timeRange];\n  const timeRangeStart = startOfDay(subDays(today, days));\n\n  // Use the later of earliest completion or time range start\n  const chartStartDate = timeRangeStart > earliestDate ? timeRangeStart : earliestDate;\n\n  // We need to calculate strength from the very beginning to get accurate values\n  // even if we only display from chartStartDate\n  const totalDays = differenceInDays(today, earliestDate) + 1;\n\n  // Generate full history from earliest date\n  const fullHistory: StrengthSnapshot[] = [];\n  let strength = 0;\n  let currentDate = earliestDate;\n\n  for (let i = 0; i < totalDays; i++) {\n    const dateStr = format(currentDate, 'yyyy-MM-dd');\n    const wasCompleted = completedDates.has(dateStr);\n\n    // Apply exponential smoothing\n    if (wasCompleted) {\n      strength = strength + (1 - strength) * GROWTH_RATE;\n    } else {\n      strength = strength * DECAY_RATE;\n    }\n\n    // Convert to percentage (0-100)\n    const strengthPercent = Math.round(strength * 1000) / 10;\n\n    // Only include in result if on or after chart start date\n    if (currentDate >= chartStartDate) {\n      fullHistory.push({\n        date: new Date(currentDate),\n        dateString: dateStr,\n        strength: strengthPercent,\n        label: getStrengthLabel(strengthPercent),\n      });\n    }\n\n    currentDate = addDays(currentDate, 1);\n  }\n\n  return fullHistory;\n}\n",
+    "fixableWarningCount": 1,
+    "source": "/**\n * Chart Data Generation\n *\n * Generate strength history directly from completion data for charting.\n */\n\nimport { startOfDay, addDays, differenceInDays, subDays, format } from 'date-fns';\n\nimport type { StrengthSnapshot } from '../../HabitStrengthHistory/types';\nimport { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';\nimport type { TimeRange } from '../types';\nimport { TIME_RANGE_DAYS } from '../constants';\n\n/** Exponential smoothing constants (matches Loop Habit Tracker) */\nconst GROWTH_RATE = 0.05; // +5% of remaining on completion\nconst DECAY_RATE = 0.95;  // -5% on miss\n\n/**\n * Generate strength history directly from completedDates.\n *\n * This bypasses the useHabitStrength hook which may have incorrect\n * habitCreatedAt timestamps. Instead, we find the earliest completion\n * date and simulate the exponential smoothing algorithm from there.\n *\n * @param completedDates - Set of completion dates (YYYY-MM-DD format)\n * @param timeRange - Time range filter (1m/1y/all)\n * @returns Array of StrengthSnapshot for charting\n */\nexport function generateChartDataFromCompletions(\n  completedDates: Set<string>,\n  timeRange: TimeRange\n): StrengthSnapshot[] {\n  if (completedDates.size === 0) {\n    return [];\n  }\n\n  // Find the earliest completion date\n  const sortedDates = Array.from(completedDates).sort();\n  const earliestDate = startOfDay(new Date(sortedDates[0]));\n  const today = startOfDay(new Date());\n\n  // Apply time range filter to start date\n  const days = TIME_RANGE_DAYS[timeRange];\n  const timeRangeStart = startOfDay(subDays(today, days));\n\n  // Use the later of earliest completion or time range start\n  const chartStartDate = timeRangeStart > earliestDate ? timeRangeStart : earliestDate;\n\n  // We need to calculate strength from the very beginning to get accurate values\n  // even if we only display from chartStartDate\n  const totalDays = differenceInDays(today, earliestDate) + 1;\n\n  // Generate full history from earliest date\n  const fullHistory: StrengthSnapshot[] = [];\n  let strength = 0;\n  let currentDate = earliestDate;\n\n  for (let i = 0; i < totalDays; i++) {\n    const dateStr = format(currentDate, 'yyyy-MM-dd');\n    const wasCompleted = completedDates.has(dateStr);\n\n    // Apply exponential smoothing\n    if (wasCompleted) {\n      strength = strength + (1 - strength) * GROWTH_RATE;\n    } else {\n      strength = strength * DECAY_RATE;\n    }\n\n    // Convert to percentage (0-100)\n    const strengthPercent = Math.round(strength * 1000) / 10;\n\n    // Only include in result if on or after chart start date\n    if (currentDate >= chartStartDate) {\n      fullHistory.push({\n        date: new Date(currentDate),\n        dateString: dateStr,\n        strength: strengthPercent,\n        label: getStrengthLabel(strengthPercent),\n      });\n    }\n\n    currentDate = addDays(currentDate, 1);\n  }\n\n  return fullHistory;\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/HabitStrengthSection/utils/deltaCalculations.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/HabitStrengthSection/utils/historyFilters.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/HabitStrengthSection/utils/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/HabitStrengthSection/utils/metricsCalculation.ts",
+    "messages": [
+      {
+        "ruleId": "sort-keys-fix/sort-keys-fix",
+        "severity": 1,
+        "message": "Expected object keys to be in natural insensitive ascending order. 'deltaVsMonth' should be before 'label'.",
+        "line": 58,
+        "column": 5,
+        "nodeType": "Property",
+        "endLine": 58,
+        "endColumn": 17,
+        "fix": { "range": [1964, 1987], "text": "deltaVsMonth,\n    label" }
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 1,
+    "source": "/**\n * Extended Metrics Calculation\n *\n * Calculate comprehensive strength metrics for the HabitStrengthSection.\n */\n\nimport type { StrengthSnapshot } from '../../HabitStrengthHistory/types';\nimport { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';\nimport type { TimeRange, ExtendedStrengthMetrics } from '../types';\nimport { filterHistoryByTimeRange } from './historyFilters';\nimport { calculateWeekDelta, calculateMonthDelta } from './deltaCalculations';\n\n/**\n * Calculate extended metrics for the HabitStrengthSection.\n *\n * @param completedDates - Set of completed dates\n * @param habitCreatedAt - Habit creation timestamp (ms)\n * @param currentStrength - Current strength value (from database or calculated)\n * @param _deltaVsMonth - Deprecated: Month-over-month delta (now calculated internally)\n * @param strengthHistory - Full strength history\n * @param timeRange - Selected time range\n * @returns Extended metrics object\n */\nexport function calculateExtendedMetrics(\n  completedDates: Set<string>,\n  habitCreatedAt: number,\n  currentStrength: number,\n  _deltaVsMonth: number, // Ignored - we calculate this ourselves now\n  strengthHistory: StrengthSnapshot[],\n  timeRange: TimeRange\n): ExtendedStrengthMetrics {\n  const createdAtDate = new Date(habitCreatedAt);\n\n  // Calculate week delta using current strength (from database)\n  const deltaVsWeek = calculateWeekDelta(\n    completedDates,\n    createdAtDate,\n    currentStrength\n  );\n\n  // Calculate month delta using current strength (from database)\n  // This ensures consistency when habitStrength is passed from the database\n  const deltaVsMonth = calculateMonthDelta(\n    completedDates,\n    createdAtDate,\n    currentStrength\n  );\n\n  // Filter history by time range\n  const filteredHistory = filterHistoryByTimeRange(strengthHistory, timeRange);\n\n  // Get strength label\n  const label = getStrengthLabel(currentStrength);\n\n  return {\n    current: Math.round(currentStrength),\n    label,\n    deltaVsMonth,\n    deltaVsWeek,\n    sinceStart: Math.round(currentStrength), // Since start = current (started at 0)\n    strengthHistory: filteredHistory,\n  };\n}\n",
     "usedDeprecatedRules": []
   },
   {
@@ -31646,6 +31835,52 @@
     "usedDeprecatedRules": []
   },
   {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/SettingsModal/SettingsContent.tsx",
+    "messages": [
+      {
+        "ruleId": "max-lines-per-function",
+        "severity": 1,
+        "message": "Function 'SettingsContent' has too many lines (84). Maximum allowed is 50.",
+        "line": 23,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "exceed",
+        "endLine": 108,
+        "endColumn": 2
+      },
+      {
+        "ruleId": "max-lines",
+        "severity": 2,
+        "message": "File has too many lines (102). Maximum allowed is 100.",
+        "line": 107,
+        "column": 1,
+        "nodeType": null,
+        "messageId": "exceed",
+        "endLine": 109,
+        "endColumn": 1
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { Activity, BookOpen, Check, Circle } from 'lucide-react-native';\nimport { ScrollView, Text, View } from 'react-native';\nimport { SettingsRow } from './SettingsRow';\nimport { SettingsSection } from './SettingsSection';\nimport type { SettingsColors } from './types';\n\ninterface SettingsContentProps {\n  colors: SettingsColors;\n  isHighContrastActive: boolean;\n  // Visual preferences\n  showWeekCompletionBar: boolean;\n  habitCompletionIcon: 'chain' | 'checkbox';\n  dayShape: 'circle' | 'square';\n  onChangeShowWeekCompletionBar: (value: boolean) => void | Promise<void>;\n  onChangeHabitCompletionIcon: (\n    value: 'chain' | 'checkbox'\n  ) => void | Promise<void>;\n  onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;\n  // Navigation\n  onOpenArchivedHabits: () => void;\n}\n\nexport function SettingsContent({\n  colors,\n  isHighContrastActive,\n  showWeekCompletionBar,\n  habitCompletionIcon,\n  dayShape,\n  onChangeShowWeekCompletionBar,\n  onChangeHabitCompletionIcon,\n  onChangeDayShape,\n  onOpenArchivedHabits,\n}: SettingsContentProps) {\n  return (\n    <ScrollView\n      className='flex-1 px-4'\n      showsVerticalScrollIndicator={false}\n      style={{ backgroundColor: colors.background }}\n    >\n      <View className='gap-6 pb-8'>\n        {/* Visual Preferences */}\n        <SettingsSection\n          highContrastMode={isHighContrastActive}\n          title='Visual Preferences'\n        >\n          <SettingsRow\n            highContrastMode={isHighContrastActive}\n            icon={<Activity color='#16a34a' size={16} />}\n            iconBackgroundColor='#bbf7d0'\n            label='Daily progress bar'\n            type='toggle'\n            value={showWeekCompletionBar}\n            onToggle={(value) => void onChangeShowWeekCompletionBar(value)}\n          />\n          <SettingsRow\n            highContrastMode={isHighContrastActive}\n            icon={<Check color='#0284c7' size={16} />}\n            iconBackgroundColor='#bae6fd'\n            label='Use checkbox completion icon'\n            type='toggle'\n            value={habitCompletionIcon === 'checkbox'}\n            onToggle={(value) =>\n              void onChangeHabitCompletionIcon(value ? 'checkbox' : 'chain')\n            }\n          />\n          <SettingsRow\n            highContrastMode={isHighContrastActive}\n            icon={<Circle color='#8b5cf6' size={16} />}\n            iconBackgroundColor='#ddd6fe'\n            label='Use circles for habit days'\n            showBorder={false}\n            type='toggle'\n            value={dayShape === 'circle'}\n            onToggle={(value) =>\n              void onChangeDayShape(value ? 'circle' : 'square')\n            }\n          />\n        </SettingsSection>\n\n        {/* Habit Management */}\n        <SettingsSection\n          highContrastMode={isHighContrastActive}\n          title='Habit Management'\n        >\n          <SettingsRow\n            highContrastMode={isHighContrastActive}\n            icon={<BookOpen color='#78716c' size={16} />}\n            iconBackgroundColor='#e7e5e4'\n            label='Archived Habits'\n            showBorder={false}\n            type='navigation'\n            onPress={onOpenArchivedHabits}\n          />\n        </SettingsSection>\n      </View>\n\n      {/* Footer */}\n      <View className='items-center pb-8 pt-4'>\n        <Text\n          className='text-center text-[13px] leading-[18px]'\n          style={{ color: colors.versionText }}\n        >\n          Habit Tracker v1.0.0\n        </Text>\n      </View>\n    </ScrollView>\n  );\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/SettingsModal/SettingsHeader.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/SettingsModal/SettingsModal.hooks.ts",
     "messages": [
       {
@@ -31686,154 +31921,22 @@
       {
         "ruleId": "max-lines-per-function",
         "severity": 1,
-        "message": "Function 'SettingsModal' has too many lines (168). Maximum allowed is 50.",
-        "line": 43,
+        "message": "Function 'SettingsModal' has too many lines (58). Maximum allowed is 50.",
+        "line": 11,
         "column": 16,
         "nodeType": "FunctionDeclaration",
         "messageId": "exceed",
-        "endLine": 217,
+        "endLine": 71,
         "endColumn": 2
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'celebrationsEnabled' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 44,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 44,
-        "endColumn": 22
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'isCompact' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 47,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 47,
-        "endColumn": 12
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'onChangeCompact' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 49,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 49,
-        "endColumn": 18
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'onChangeCelebrationsEnabled' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 50,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 50,
-        "endColumn": 30
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'onChangeShowCharacterScreen' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 53,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 53,
-        "endColumn": 30
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'showHabitStrengthPercentage' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 54,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 54,
-        "endColumn": 30
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'onChangeShowHabitStrengthPercentage' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 55,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 55,
-        "endColumn": 38
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'showNotesStats' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 57,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 57,
-        "endColumn": 17
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'onChangeShowNotesStats' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 58,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 58,
-        "endColumn": 25
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'onOpenHapticTest' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 60,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 60,
-        "endColumn": 19
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'showCharacterScreen' is assigned a value but never used. Allowed unused args must match /^_/u.",
-        "line": 61,
-        "column": 3,
-        "nodeType": null,
-        "messageId": "unusedVar",
-        "endLine": 61,
-        "endColumn": 22
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (208). Maximum allowed is 100.",
-        "line": 106,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 218,
-        "endColumn": 1
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 12,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import {\n  Activity,\n  BookOpen,\n  Check,\n  ChevronLeft,\n  Circle,\n} from 'lucide-react-native';\nimport React from 'react';\nimport { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport ArchivedHabitsModal from '../ArchivedHabitsModal';\nimport { SettingsRow } from './SettingsRow';\nimport { SettingsSection } from './SettingsSection';\nimport { useSettingsModalLogic } from './SettingsModal.hooks';\n\ninterface SettingsModalProps {\n  celebrationsEnabled?: boolean;\n  dayShape?: 'circle' | 'square';\n  habitCompletionIcon?: 'chain' | 'checkbox';\n  onChangeDayShape?: (value: 'circle' | 'square') => void | Promise<void>;\n  onChangeShowCharacterScreen?: (value: boolean) => void | Promise<void>;\n  onChangeHabitCompletionIcon?: (\n    value: 'chain' | 'checkbox'\n  ) => void | Promise<void>;\n  onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;\n  onChangeCompact?: (value: boolean) => void | Promise<void>;\n  showHabitStrengthPercentage?: boolean;\n  onChangeShowHabitStrengthPercentage?: (\n    value: boolean\n  ) => void | Promise<void>;\n  showWeekCompletionBar?: boolean;\n  onChangeShowWeekCompletionBar?: (value: boolean) => void | Promise<void>;\n  showNotesStats?: boolean;\n  onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;\n  isHighContrastActive?: boolean;\n  isCompact?: boolean;\n  onOpenHapticTest?: () => void;\n  onClose: () => void;\n  showCharacterScreen?: boolean;\n  visible: boolean;\n}\n\nexport default function SettingsModal({\n  celebrationsEnabled = true,\n  dayShape = 'square',\n  habitCompletionIcon = 'chain',\n  isCompact = false,\n  isHighContrastActive = false,\n  onChangeCompact = () => {},\n  onChangeCelebrationsEnabled,\n  onChangeDayShape = () => {},\n  onChangeHabitCompletionIcon = () => {},\n  onChangeShowCharacterScreen = () => {},\n  showHabitStrengthPercentage = true,\n  onChangeShowHabitStrengthPercentage = () => {},\n  onChangeShowWeekCompletionBar = () => {},\n  showNotesStats = true,\n  onChangeShowNotesStats = () => {},\n  onClose,\n  onOpenHapticTest,\n  showCharacterScreen = true,\n  showWeekCompletionBar = true,\n  visible,\n}: SettingsModalProps) {\n  const {\n    view,\n    setView,\n    handleClose,\n  } = useSettingsModalLogic({ onClose, visible });\n  const insets = useSafeAreaInsets();\n\n  const colors = isHighContrastActive\n    ? {\n        accent: '#facc15',\n        background: '#000000',\n        card: '#111111',\n        cardBorder: '#2f2f2f',\n        headerText: '#ffffff',\n        icon: '#facc15',\n        mutedText: '#facc15',\n        versionText: '#facc15',\n      }\n    : {\n        accent: '#1c1917', // stone-800\n        background: '#faf9f7',\n        card: '#ffffff',\n        cardBorder: '#f5f5f4',\n        headerText: '#1c1917', // stone-800\n        icon: '#1c1917', // stone-800\n        mutedText: '#78716c', // stone-500\n        versionText: '#78716c', // stone-500\n      };\n\n  if (!visible) return null;\n\n  if (view === 'archived') {\n    return (\n      <Modal\n        animationType='slide'\n        visible={visible}\n        onRequestClose={handleClose}\n      >\n        <ArchivedHabitsModal\n          onBack={() => setView('settings')}\n          onClose={handleClose}\n        />\n      </Modal>\n    );\n  }\n\n  return (\n    <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>\n      <View\n        className='flex-1 bg-background'\n        style={{ backgroundColor: colors.background }}\n      >\n        {/* Header */}\n        <View\n          className='bg-background px-4 pb-4'\n          style={{ backgroundColor: colors.background, paddingTop: insets.top + 8 }}\n        >\n          {/* Settings Title */}\n          <View className='flex-row items-center justify-between'>\n            <TouchableOpacity\n              accessibilityLabel='Back'\n              accessibilityRole='button'\n              className='size-10 items-center justify-center rounded-full'\n              onPress={handleClose}\n            >\n              <ChevronLeft color={colors.icon} size={28} />\n            </TouchableOpacity>\n            <Text\n              className='text-[24px] font-bold leading-[32px] tracking-tight text-foreground'\n              style={{ color: colors.headerText }}\n            >\n              Settings\n            </Text>\n            <View className='size-10' />\n          </View>\n        </View>\n\n        <ScrollView\n          className='flex-1 px-4'\n          showsVerticalScrollIndicator={false}\n          style={{ backgroundColor: colors.background }}\n        >\n          <View className='gap-6 pb-8'>\n            {/* Visual Preferences */}\n            <SettingsSection\n              highContrastMode={isHighContrastActive}\n              title='Visual Preferences'\n            >\n              <SettingsRow\n                highContrastMode={isHighContrastActive}\n                icon={<Activity color='#16a34a' size={16} />}\n                iconBackgroundColor='#bbf7d0'\n                label='Daily progress bar'\n                type='toggle'\n                value={showWeekCompletionBar}\n                onToggle={(value) => void onChangeShowWeekCompletionBar(value)}\n              />\n              <SettingsRow\n                highContrastMode={isHighContrastActive}\n                icon={<Check color='#0284c7' size={16} />}\n                iconBackgroundColor='#bae6fd'\n                label='Use checkbox completion icon'\n                type='toggle'\n                value={habitCompletionIcon === 'checkbox'}\n                onToggle={(value) =>\n                  void onChangeHabitCompletionIcon(value ? 'checkbox' : 'chain')\n                }\n              />\n              <SettingsRow\n                highContrastMode={isHighContrastActive}\n                icon={<Circle color='#8b5cf6' size={16} />}\n                iconBackgroundColor='#ddd6fe'\n                label='Use circles for habit days'\n                showBorder={false}\n                type='toggle'\n                value={dayShape === 'circle'}\n                onToggle={(value) =>\n                  void onChangeDayShape(value ? 'circle' : 'square')\n                }\n              />\n            </SettingsSection>\n\n            {/* Habit Management */}\n            <SettingsSection\n              highContrastMode={isHighContrastActive}\n              title='Habit Management'\n            >\n              <SettingsRow\n                highContrastMode={isHighContrastActive}\n                icon={<BookOpen color='#78716c' size={16} />}\n                iconBackgroundColor='#e7e5e4'\n                label='Archived Habits'\n                showBorder={false}\n                type='navigation'\n                onPress={() => setView('archived')}\n              />\n            </SettingsSection>\n          </View>\n\n          {/* Footer */}\n          <View className='items-center pb-8 pt-4'>\n            <Text\n              className='text-center text-[13px] leading-[18px]'\n              style={{ color: colors.versionText }}\n            >\n              Habit Tracker v1.0.0\n            </Text>\n          </View>\n        </ScrollView>\n      </View>\n    </Modal>\n  );\n}\n",
+    "source": "import React from 'react';\nimport { Modal, View } from 'react-native';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport ArchivedHabitsModal from '../ArchivedHabitsModal';\nimport { useSettingsModalLogic } from './SettingsModal.hooks';\nimport { getSettingsColors } from './colors';\nimport { SettingsHeader } from './SettingsHeader';\nimport { SettingsContent } from './SettingsContent';\nimport type { SettingsModalProps } from './types';\n\nexport default function SettingsModal({\n  dayShape = 'square',\n  habitCompletionIcon = 'chain',\n  isHighContrastActive = false,\n  onChangeDayShape = () => {},\n  onChangeHabitCompletionIcon = () => {},\n  onChangeShowWeekCompletionBar = () => {},\n  onClose,\n  showWeekCompletionBar = true,\n  visible,\n}: SettingsModalProps) {\n  const { view, setView, handleClose } = useSettingsModalLogic({\n    onClose,\n    visible,\n  });\n  const insets = useSafeAreaInsets();\n  const colors = getSettingsColors(isHighContrastActive);\n\n  if (!visible) return null;\n\n  if (view === 'archived') {\n    return (\n      <Modal\n        animationType='slide'\n        visible={visible}\n        onRequestClose={handleClose}\n      >\n        <ArchivedHabitsModal\n          onBack={() => setView('settings')}\n          onClose={handleClose}\n        />\n      </Modal>\n    );\n  }\n\n  return (\n    <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>\n      <View\n        className='flex-1 bg-background'\n        style={{ backgroundColor: colors.background }}\n      >\n        <SettingsHeader\n          colors={colors}\n          paddingTop={insets.top + 8}\n          onClose={handleClose}\n        />\n        <SettingsContent\n          colors={colors}\n          dayShape={dayShape}\n          habitCompletionIcon={habitCompletionIcon}\n          isHighContrastActive={isHighContrastActive}\n          showWeekCompletionBar={showWeekCompletionBar}\n          onChangeDayShape={onChangeDayShape}\n          onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}\n          onChangeShowWeekCompletionBar={onChangeShowWeekCompletionBar}\n          onOpenArchivedHabits={() => setView('archived')}\n        />\n      </View>\n    </Modal>\n  );\n}\n",
     "usedDeprecatedRules": []
   },
   {
@@ -31883,7 +31986,29 @@
     "usedDeprecatedRules": []
   },
   {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/SettingsModal/colors.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/SettingsModal/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/components/SettingsModal/types.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -40196,26 +40321,90 @@
   },
   {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations.ts",
-    "messages": [
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (143). Maximum allowed is 100.",
-        "line": 197,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 270,
-        "endColumn": 1
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
     "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\n * HabitsEmptyStateMinimal - Animation Configurations\n *\n * Shared spring configs and animation parameters for the minimal empty state.\n * Uses react-native-reanimated patterns consistent with app design system.\n *\n * Spring values per app patterns: damping 15-32, stiffness 180-300\n */\n\nimport {\n  WithSpringConfig,\n  WithTimingConfig,\n  Easing,\n} from 'react-native-reanimated';\n\n/**\n * Hero icon breathing animation\n * Gentle scale: 1.0 → 1.08 → 1.0 (3s ease-in-out, infinite)\n */\nexport const BREATHING_ANIMATION = {\n  duration: 3000,\n  maxScale: 1.08,\n  minScale: 1,\n} as const;\n\n/**\n * Success state pop animation\n * Scale: 0.8 → 1.1 → 1.0 with bounce (0.4s)\n */\nexport const POP_ANIMATION = {\n  duration: 400,\n  finalScale: 1,\n  initialScale: 0.8,\n  overshootScale: 1.1,\n} as const;\n\n/**\n * Spring configs for interactive elements\n */\nexport const SPRING_CONFIGS = {\n  // Chip hover lift\n  chipHover: {\n    damping: 18,\n    stiffness: 240,\n  } satisfies WithSpringConfig,\n\n  // Chip press feedback - snappy\n  chipPress: {\n    damping: 15,\n    stiffness: 300,\n  } satisfies WithSpringConfig,\n\n  // CTA button press\n  ctaPress: {\n    damping: 20,\n    stiffness: 280,\n  } satisfies WithSpringConfig,\n\n  // Entrance animation spring\n  entrance: {\n    damping: 18,\n    stiffness: 200,\n  } satisfies WithSpringConfig,\n\n  // Default smooth spring\n  smooth: {\n    damping: 25,\n    stiffness: 180,\n  } satisfies WithSpringConfig,\n\n  // Success pop animation\n  successPop: {\n    damping: 10,\n    stiffness: 200,\n  } satisfies WithSpringConfig,\n} as const;\n\n/**\n * Timing configs for non-spring animations\n */\nexport const TIMING_CONFIGS = {\n  // Fade transitions\n  fade: {\n    duration: 150,\n    easing: Easing.ease,\n  } satisfies WithTimingConfig,\n\n  // Input focus border transition\n  inputFocus: {\n    duration: 200,\n    easing: Easing.out(Easing.ease),\n  } satisfies WithTimingConfig,\n} as const;\n\n/**\n * Entrance animation delays (staggered fade-in-up)\n * Each element delayed by 100ms\n */\nexport const ENTRANCE_DELAYS = {\n  chips: 300,\n  cta: 400,\n  headline: 100,\n  heroIcon: 0,\n  input: 200,\n  secondaryLinks: 500,\n} as const;\n\n/**\n * Chip interaction transforms\n */\nexport const CHIP_TRANSFORMS = {\n  hoverScale: 1.05,\n  // Hover: translateY -2px, scale 1.05\n  hoverTranslateY: -2,\n\n  // Press: scale 0.95\n  pressScale: 0.95,\n\n  // Selected state\n  selectedScale: 1,\n} as const;\n\n/**\n * CTA button transforms\n */\nexport const CTA_TRANSFORMS = {\n  // Hover: translateY -1px\n  hoverTranslateY: -1,\n\n  // Press: scale 0.98\n  pressScale: 0.98,\n} as const;\n\n/**\n * Confetti animation config for success state\n */\nexport const CONFETTI_CONFIG = {\n  colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#FCD34D', '#F59E0B'],\n  duration: 1500,\n  particleCount: 20,\n} as const;\n\n/**\n * Exit transition animation config for success → list transition\n * Shared element style: icon morphs up while content fades\n */\nexport const EXIT_TRANSITION = {\n  // Content fade out (faster than icon)\n  content: {\n    delay: 0,\n    duration: 250,\n  },\n\n  // Total duration of exit animation\n  duration: 500,\n\n  // Icon morph animation\n  icon: {\n    // Shrink\n    duration: 400,\n\n    // Move upward\n    scale: 0.4,\n    translateY: -150,\n  },\n\n  // Delay before triggering list transition\n  onCompleteDelay: 300,\n} as const;\n\n/**\n * Spring config for exit transition\n */\nexport const EXIT_SPRING_CONFIG = {\n  damping: 20,\n  stiffness: 200,\n} satisfies WithSpringConfig;\n\n/**\n * Progress ring animation config for success state\n * SVG circular progress indicator around the success icon\n */\nexport const PROGRESS_RING = {\n  circumference: 339.292,\n  duration: 1800,\n  // matches auto-transition delay\n  size: 120,\n  strokeWidth: 4, // 2 * PI * 54 (radius)\n} as const;\n\n/**\n * Particle burst animation config for success state\n * 8 circular particles in radial pattern that burst outward\n */\nexport const PARTICLE_BURST = {\n  colors: ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6'],\n  count: 8,\n  distance: 60,\n  duration: 800,\n  staggerDelay: 25,\n} as const;\n\n/**\n * Tap hint pulse animation config\n * Draws attention to the \"Tap anywhere to continue\" text\n */\nexport const TAP_HINT_PULSE = {\n  duration: 2000,\n  maxOpacity: 1,\n  maxScale: 1.02,\n  minOpacity: 0.6,\n  minScale: 1,\n} as const;\n\n/**\n * Chip stagger entrance animation\n * Each chip fades in and slides up with a 50ms delay between each\n */\nexport const CHIP_STAGGER = {\n  delay: 50, // ms between each chip\n  duration: 400,\n  translateY: 10,\n} as const;\n\n/**\n * Hero glow pulse animation (synced with breathing)\n * Shadow opacity and radius pulse with the 3s breathing cycle\n */\nexport const HERO_GLOW = {\n  maxShadowOpacity: 0.35,\n  maxShadowRadius: 32,\n  minShadowOpacity: 0.15,\n  minShadowRadius: 24,\n  outerGlowOpacity: 0.15,\n  outerGlowRadius: 60,\n} as const;\n\n/**\n * CTA shimmer animation on enable transition\n * Gradient sweeps left-to-right when button becomes enabled\n */\nexport const CTA_SHIMMER = {\n  duration: 600,\n  gradientOpacity: 0.3,\n} as const;\n\n/**\n * Keyboard-aware layout configuration\n * Compact mode activates when keyboard is visible to optimize screen real estate\n */\nexport const KEYBOARD_LAYOUT = {\n  compactHeadlineFontSize: 20,\n  compactHeroFontSize: 28,\n  compactHeroSize: 60,\n  topPadding: 100,\n  transitionDuration: 300,\n} as const;\n\n/**\n * Error message animation configuration\n * Includes entrance animation with shake effect for emphasis\n */\nexport const ERROR_ANIMATION = {\n  autoDismissDelay: 5000,\n  entranceDuration: 300,\n  shakeDistance: 8,\n  shakeDuration: 500,\n  shakeOscillations: 3,\n} as const;\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/heroAnimations.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/interactionAnimations.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/layoutAnimations.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/springConfigs.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/successAnimations.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsEmptyStateMinimal/animations/timingConfigs.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
@@ -40541,61 +40730,141 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader.tsx",
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/AddHabitButton.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/HabitsHeader.tsx",
     "messages": [
       {
         "ruleId": "max-lines-per-function",
         "severity": 1,
-        "message": "Function 'HabitsHeader' has too many lines (191). Maximum allowed is 50.",
-        "line": 30,
+        "message": "Function 'HabitsHeader' has too many lines (73). Maximum allowed is 50.",
+        "line": 11,
         "column": 8,
         "nodeType": "FunctionDeclaration",
         "messageId": "exceed",
-        "endLine": 256,
+        "endLine": 90,
         "endColumn": 2
       },
       {
-        "ruleId": "@typescript-eslint/no-floating-promises",
+        "ruleId": "@typescript-eslint/no-misused-promises",
         "severity": 1,
-        "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 117,
+        "message": "Promise-returning function provided to property where a void return was expected.",
+        "line": 28,
         "column": 5,
-        "nodeType": "ExpressionStatement",
-        "messageId": "floatingVoid",
-        "endLine": 117,
-        "endColumn": 20,
-        "suggestions": [
-          {
-            "messageId": "floatingFixVoid",
-            "fix": { "range": [3431, 3431], "text": "void " },
-            "desc": "Add void operator to ignore."
-          },
-          {
-            "messageId": "floatingFixAwait",
-            "fix": { "range": [3431, 3431], "text": "await " },
-            "desc": "Add await operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (217). Maximum allowed is 100.",
-        "line": 122,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 257,
-        "endColumn": 1
+        "nodeType": "Identifier",
+        "messageId": "voidReturnProperty",
+        "endLine": 28,
+        "endColumn": 17
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
     "warningCount": 2,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import { ArrowUpDown, BookOpen, Plus, Settings } from 'lucide-react-native';\nimport { Pressable, Text, View } from 'react-native';\nimport Animated, {\n  useSharedValue,\n  useAnimatedStyle,\n  withSpring,\n  withTiming,\n} from 'react-native-reanimated';\nimport { LinearGradient } from 'expo-linear-gradient';\nimport { useHapticFeedback } from '../../../hooks/useHapticFeedback';\nimport { TemplateTooltip } from '../../../components/TemplateTooltip';\nimport { NotificationBadge } from '../../../components/NotificationBadge';\nimport { useTemplateTooltip } from '../hooks/useTemplateTooltip';\nimport { useTemplateBadge } from '../hooks/useTemplateBadge';\nimport { DailyMomentumMeter } from '../../../components/DailyMomentumMeter';\n\ninterface HabitsHeaderProps {\n  completedToday?: number;\n  /** Force show header even when totalHabits is 0 (used during empty->list transition) */\n  forceShow?: boolean;\n  openCreateHabitScreen: () => void;\n  openSettings: () => void;\n  openSortSheet: () => void;\n  openTemplatesScreen: () => void;\n  reduceMotion?: boolean;\n  showCompletionSummary?: boolean;\n  totalHabits?: number;\n}\n\nexport function HabitsHeader({\n  completedToday = 0,\n  forceShow = false,\n  openCreateHabitScreen,\n  openSettings,\n  openSortSheet,\n  openTemplatesScreen,\n  reduceMotion = false,\n  showCompletionSummary = true,\n  totalHabits = 0,\n}: HabitsHeaderProps) {\n  const { triggerLightImpact, triggerSelection } = useHapticFeedback({});\n  const { dismissTooltip, showTooltip } = useTemplateTooltip();\n  const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });\n\n  // Animated values for the main \"Add Habit\" button\n  const addButtonScale = useSharedValue(1);\n\n  // Animated values for icon buttons\n  const sortButtonScale = useSharedValue(1);\n  const templatesButtonScale = useSharedValue(1);\n  const settingsButtonScale = useSharedValue(1);\n\n  const addButtonAnimatedStyle = useAnimatedStyle(() => ({\n    transform: [{ scale: addButtonScale.value }],\n  }));\n\n  const sortButtonAnimatedStyle = useAnimatedStyle(() => ({\n    transform: [{ scale: sortButtonScale.value }],\n  }));\n\n  const templatesButtonAnimatedStyle = useAnimatedStyle(() => ({\n    transform: [{ scale: templatesButtonScale.value }],\n  }));\n\n  const settingsButtonAnimatedStyle = useAnimatedStyle(() => ({\n    transform: [{ scale: settingsButtonScale.value }],\n  }));\n\n  const handleAddHabitPressIn = () => {\n    triggerLightImpact();\n    addButtonScale.value = withTiming(0.95, { duration: 50 });\n  };\n\n  const handleAddHabitPressOut = () => {\n    addButtonScale.value = withSpring(1, {\n      damping: 15,\n      stiffness: 300,\n    });\n  };\n\n  const handleAddHabitPress = () => {\n    triggerSelection();\n    openCreateHabitScreen();\n  };\n\n  const handleSortPressIn = () => {\n    triggerLightImpact();\n    sortButtonScale.value = withTiming(0.9, { duration: 50 });\n  };\n\n  const handleSortPressOut = () => {\n    sortButtonScale.value = withSpring(1, {\n      damping: 15,\n      stiffness: 300,\n    });\n  };\n\n  const handleSortPress = () => {\n    triggerSelection();\n    openSortSheet();\n  };\n\n  const handleTemplatesPressIn = () => {\n    triggerLightImpact();\n    templatesButtonScale.value = withTiming(0.9, { duration: 50 });\n  };\n\n  const handleTemplatesPressOut = () => {\n    templatesButtonScale.value = withSpring(1, {\n      damping: 15,\n      stiffness: 300,\n    });\n  };\n\n  const handleTemplatesPress = () => {\n    triggerSelection();\n    dismissBadge(); // Dismiss badge when user clicks templates\n    openTemplatesScreen();\n  };\n\n  const handleSettingsPressIn = () => {\n    triggerLightImpact();\n    settingsButtonScale.value = withTiming(0.9, { duration: 50 });\n  };\n\n  const handleSettingsPressOut = () => {\n    settingsButtonScale.value = withSpring(1, {\n      damping: 15,\n      stiffness: 300,\n    });\n  };\n\n  const handleSettingsPress = () => {\n    triggerSelection();\n    openSettings();\n  };\n\n  // Calculate completion percentage for accessibility\n  const percentage =\n    totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;\n\n  // Smart Empty State - hide header completely when user has no habits\n  // Let HabitsEmptyState component handle the full onboarding experience\n  // Exception: forceShow is true during transition from empty state to list\n  if (totalHabits === 0 && !forceShow) {\n    return null;\n  }\n\n  // Regular header when user has habits\n  return (\n    <View className='gap-2'>\n      <View className='flex-row items-center justify-between'>\n        <Animated.View style={addButtonAnimatedStyle}>\n          <Pressable\n            accessibilityHint='Open create habit modal'\n            accessibilityLabel='Add habit'\n            accessibilityRole='button'\n            onPress={handleAddHabitPress}\n            onPressIn={handleAddHabitPressIn}\n            onPressOut={handleAddHabitPressOut}\n          >\n            <LinearGradient\n              className='h-12 flex-row items-center gap-2 rounded-full px-5'\n              colors={['#101828', '#1a2332']}\n              end={{ x: 1, y: 1 }}\n              start={{ x: 0, y: 0 }}\n              style={{\n                elevation: 4,\n                shadowColor: '#000',\n                shadowOffset: { height: 2, width: 0 },\n                shadowOpacity: 0.15,\n                shadowRadius: 6,\n              }}\n            >\n              <Plus color='#ffffff' size={18} strokeWidth={2.25} />\n              <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>\n                Add Habit\n              </Text>\n            </LinearGradient>\n          </Pressable>\n        </Animated.View>\n\n        {/* Compact icon group in pill container */}\n        <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'>\n          <Animated.View style={templatesButtonAnimatedStyle}>\n            <View style={{ position: 'relative' }}>\n              <Pressable\n                accessibilityHint='Browse habit templates to add'\n                accessibilityLabel='Browse habit templates'\n                accessibilityRole='button'\n                className='h-11 w-11 items-center justify-center rounded-full'\n                onPress={handleTemplatesPress}\n                onPressIn={handleTemplatesPressIn}\n                onPressOut={handleTemplatesPressOut}\n              >\n                <BookOpen color='#7c3aed' size={18} strokeWidth={2.25} />\n              </Pressable>\n\n              {/* Smart notification badge */}\n              <NotificationBadge count={1} visible={showBadge} />\n            </View>\n\n            {/* First-time user tooltip */}\n            <TemplateTooltip visible={showTooltip} onDismiss={dismissTooltip} />\n          </Animated.View>\n\n          <View className='mx-0.5 h-4 w-px bg-stone-200' />\n\n          <Animated.View style={sortButtonAnimatedStyle}>\n            <Pressable\n              accessibilityHint='Change habit sort order'\n              accessibilityLabel='Sort habits'\n              accessibilityRole='button'\n              className='h-11 w-11 items-center justify-center rounded-full'\n              onPress={handleSortPress}\n              onPressIn={handleSortPressIn}\n              onPressOut={handleSortPressOut}\n            >\n              <ArrowUpDown color='#44403c' size={18} strokeWidth={2.25} />\n            </Pressable>\n          </Animated.View>\n\n          <View className='mx-0.5 h-4 w-px bg-stone-200' />\n\n          <Animated.View style={settingsButtonAnimatedStyle}>\n            <Pressable\n              accessibilityLabel='Open settings'\n              accessibilityRole='button'\n              className='h-11 w-11 items-center justify-center rounded-full'\n              onPress={handleSettingsPress}\n              onPressIn={handleSettingsPressIn}\n              onPressOut={handleSettingsPressOut}\n            >\n              <Settings color='#44403c' size={18} strokeWidth={2.25} />\n            </Pressable>\n          </Animated.View>\n        </View>\n      </View>\n\n      {/* Daily Momentum Meter */}\n      {showCompletionSummary && (\n        <View\n          accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}\n          accessibilityRole='text'\n        >\n          <DailyMomentumMeter\n            completedToday={completedToday}\n            reduceMotion={reduceMotion}\n            size='standard'\n            totalHabits={totalHabits}\n          />\n        </View>\n      )}\n    </View>\n  );\n}\n",
+    "source": "import { View } from 'react-native';\nimport { DailyMomentumMeter } from '../../../../components/DailyMomentumMeter';\nimport { useTemplateTooltip } from '../../hooks/useTemplateTooltip';\nimport { useTemplateBadge } from '../../hooks/useTemplateBadge';\nimport type { HabitsHeaderProps } from './types';\nimport { useHeaderAnimations } from './useHeaderAnimations';\nimport { useHeaderHandlers } from './useHeaderHandlers';\nimport { AddHabitButton } from './AddHabitButton';\nimport { IconButtonGroup } from './IconButtonGroup';\n\nexport function HabitsHeader({\n  completedToday = 0,\n  forceShow = false,\n  openCreateHabitScreen,\n  openSettings,\n  openSortSheet,\n  openTemplatesScreen,\n  reduceMotion = false,\n  showCompletionSummary = true,\n  totalHabits = 0,\n}: HabitsHeaderProps) {\n  const { dismissTooltip, showTooltip } = useTemplateTooltip();\n  const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });\n\n  const animations = useHeaderAnimations();\n  const handlers = useHeaderHandlers({\n    addButtonScale: animations.addButtonScale,\n    dismissBadge,\n    openCreateHabitScreen,\n    openSettings,\n    openSortSheet,\n    openTemplatesScreen,\n    settingsButtonScale: animations.settingsButtonScale,\n    sortButtonScale: animations.sortButtonScale,\n    templatesButtonScale: animations.templatesButtonScale,\n  });\n\n  // Calculate completion percentage for accessibility\n  const percentage =\n    totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;\n\n  // Smart Empty State - hide header completely when user has no habits\n  if (totalHabits === 0 && !forceShow) {\n    return null;\n  }\n\n  return (\n    <View className='gap-2'>\n      <View className='flex-row items-center justify-between'>\n        <AddHabitButton\n          animatedStyle={animations.addButtonAnimatedStyle}\n          onPress={handlers.handleAddHabitPress}\n          onPressIn={handlers.handleAddHabitPressIn}\n          onPressOut={handlers.handleAddHabitPressOut}\n        />\n        <IconButtonGroup\n          settingsAnimatedStyle={animations.settingsButtonAnimatedStyle}\n          showBadge={showBadge}\n          showTooltip={showTooltip}\n          sortAnimatedStyle={animations.sortButtonAnimatedStyle}\n          templatesAnimatedStyle={animations.templatesButtonAnimatedStyle}\n          onDismissTooltip={dismissTooltip}\n          onSettingsPress={handlers.handleSettingsPress}\n          onSettingsPressIn={handlers.handleSettingsPressIn}\n          onSettingsPressOut={handlers.handleSettingsPressOut}\n          onSortPress={handlers.handleSortPress}\n          onSortPressIn={handlers.handleSortPressIn}\n          onSortPressOut={handlers.handleSortPressOut}\n          onTemplatesPress={handlers.handleTemplatesPress}\n          onTemplatesPressIn={handlers.handleTemplatesPressIn}\n          onTemplatesPressOut={handlers.handleTemplatesPressOut}\n        />\n      </View>\n\n      {showCompletionSummary && (\n        <View\n          accessibilityLabel={`Today ${completedToday} of ${totalHabits} complete, ${percentage} percent`}\n          accessibilityRole='text'\n        >\n          <DailyMomentumMeter\n            completedToday={completedToday}\n            reduceMotion={reduceMotion}\n            size='standard'\n            totalHabits={totalHabits}\n          />\n        </View>\n      )}\n    </View>\n  );\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/IconButtonGroup.tsx",
+    "messages": [
+      {
+        "ruleId": "max-lines-per-function",
+        "severity": 1,
+        "message": "Function 'IconButtonGroup' has too many lines (69). Maximum allowed is 50.",
+        "line": 32,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "exceed",
+        "endLine": 104,
+        "endColumn": 2
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';\nimport { Pressable, View } from 'react-native';\nimport Animated from 'react-native-reanimated';\nimport { TemplateTooltip } from '../../../../components/TemplateTooltip';\nimport { NotificationBadge } from '../../../../components/NotificationBadge';\nimport type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';\n\ninterface IconButtonGroupProps {\n  // Templates button\n  templatesAnimatedStyle: AnimatedStyleProp<ViewStyle>;\n  showBadge: boolean;\n  showTooltip: boolean;\n  onTemplatesPress: () => void;\n  onTemplatesPressIn: () => void;\n  onTemplatesPressOut: () => void;\n  onDismissTooltip: () => void;\n  // Sort button\n  sortAnimatedStyle: AnimatedStyleProp<ViewStyle>;\n  onSortPress: () => void;\n  onSortPressIn: () => void;\n  onSortPressOut: () => void;\n  // Settings button\n  settingsAnimatedStyle: AnimatedStyleProp<ViewStyle>;\n  onSettingsPress: () => void;\n  onSettingsPressIn: () => void;\n  onSettingsPressOut: () => void;\n}\n\n/**\n * Compact icon button group containing Templates, Sort, and Settings buttons.\n */\nexport function IconButtonGroup({\n  templatesAnimatedStyle,\n  showBadge,\n  showTooltip,\n  onTemplatesPress,\n  onTemplatesPressIn,\n  onTemplatesPressOut,\n  onDismissTooltip,\n  sortAnimatedStyle,\n  onSortPress,\n  onSortPressIn,\n  onSortPressOut,\n  settingsAnimatedStyle,\n  onSettingsPress,\n  onSettingsPressIn,\n  onSettingsPressOut,\n}: IconButtonGroupProps) {\n  return (\n    <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'>\n      {/* Templates Button */}\n      <Animated.View style={templatesAnimatedStyle}>\n        <View style={{ position: 'relative' }}>\n          <Pressable\n            accessibilityHint='Browse habit templates to add'\n            accessibilityLabel='Browse habit templates'\n            accessibilityRole='button'\n            className='h-11 w-11 items-center justify-center rounded-full'\n            onPress={onTemplatesPress}\n            onPressIn={onTemplatesPressIn}\n            onPressOut={onTemplatesPressOut}\n          >\n            <BookOpen color='#7c3aed' size={18} strokeWidth={2.25} />\n          </Pressable>\n          <NotificationBadge count={1} visible={showBadge} />\n        </View>\n        <TemplateTooltip visible={showTooltip} onDismiss={onDismissTooltip} />\n      </Animated.View>\n\n      <View className='mx-0.5 h-4 w-px bg-stone-200' />\n\n      {/* Sort Button */}\n      <Animated.View style={sortAnimatedStyle}>\n        <Pressable\n          accessibilityHint='Change habit sort order'\n          accessibilityLabel='Sort habits'\n          accessibilityRole='button'\n          className='h-11 w-11 items-center justify-center rounded-full'\n          onPress={onSortPress}\n          onPressIn={onSortPressIn}\n          onPressOut={onSortPressOut}\n        >\n          <ArrowUpDown color='#44403c' size={18} strokeWidth={2.25} />\n        </Pressable>\n      </Animated.View>\n\n      <View className='mx-0.5 h-4 w-px bg-stone-200' />\n\n      {/* Settings Button */}\n      <Animated.View style={settingsAnimatedStyle}>\n        <Pressable\n          accessibilityLabel='Open settings'\n          accessibilityRole='button'\n          className='h-11 w-11 items-center justify-center rounded-full'\n          onPress={onSettingsPress}\n          onPressIn={onSettingsPressIn}\n          onPressOut={onSettingsPressOut}\n        >\n          <Settings color='#44403c' size={18} strokeWidth={2.25} />\n        </Pressable>\n      </Animated.View>\n    </View>\n  );\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/types.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/useButtonHandler.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/useHeaderAnimations.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/features/habits/components/HabitsHeader/useHeaderHandlers.ts",
+    "messages": [
+      {
+        "ruleId": "max-lines-per-function",
+        "severity": 1,
+        "message": "Function 'useHeaderHandlers' has too many lines (57). Maximum allowed is 50.",
+        "line": 21,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "exceed",
+        "endLine": 79,
+        "endColumn": 2
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import type { SharedValue } from 'react-native-reanimated';\nimport { useHapticFeedback } from '../../../../hooks/useHapticFeedback';\nimport { createButtonHandlers } from './useButtonHandler';\n\ninterface UseHeaderHandlersProps {\n  addButtonScale: SharedValue<number>;\n  sortButtonScale: SharedValue<number>;\n  templatesButtonScale: SharedValue<number>;\n  settingsButtonScale: SharedValue<number>;\n  openCreateHabitScreen: () => void;\n  openSortSheet: () => void;\n  openTemplatesScreen: () => void;\n  openSettings: () => void;\n  dismissBadge: () => void;\n}\n\n/**\n * Hook that creates press handlers for all header buttons.\n * Uses the reusable createButtonHandlers factory.\n */\nexport function useHeaderHandlers({\n  addButtonScale,\n  sortButtonScale,\n  templatesButtonScale,\n  settingsButtonScale,\n  openCreateHabitScreen,\n  openSortSheet,\n  openTemplatesScreen,\n  openSettings,\n  dismissBadge,\n}: UseHeaderHandlersProps) {\n  const { triggerLightImpact, triggerSelection } = useHapticFeedback({});\n\n  const add = createButtonHandlers(\n    {\n      onPress: openCreateHabitScreen,\n      pressInScale: 0.95,\n      scale: addButtonScale,\n    },\n    triggerLightImpact,\n    triggerSelection\n  );\n  const sort = createButtonHandlers(\n    { onPress: openSortSheet, scale: sortButtonScale },\n    triggerLightImpact,\n    triggerSelection\n  );\n  const templates = createButtonHandlers(\n    {\n      onPress: () => {\n        dismissBadge();\n        openTemplatesScreen();\n      },\n      scale: templatesButtonScale,\n    },\n    triggerLightImpact,\n    triggerSelection\n  );\n  const settings = createButtonHandlers(\n    { onPress: openSettings, scale: settingsButtonScale },\n    triggerLightImpact,\n    triggerSelection\n  );\n\n  return {\n    handleAddHabitPress: add.handlePress,\n    handleAddHabitPressIn: add.handlePressIn,\n    handleAddHabitPressOut: add.handlePressOut,\n    handleSettingsPress: settings.handlePress,\n    handleSettingsPressIn: settings.handlePressIn,\n    handleSettingsPressOut: settings.handlePressOut,\n    handleSortPress: sort.handlePress,\n    handleSortPressIn: sort.handlePressIn,\n    handleSortPressOut: sort.handlePressOut,\n    handleTemplatesPress: templates.handlePress,\n    handleTemplatesPressIn: templates.handlePressIn,\n    handleTemplatesPressOut: templates.handlePressOut,\n  };\n}\n",
     "usedDeprecatedRules": []
   },
   {
@@ -44602,129 +44871,127 @@
   },
   {
     "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/constants.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/helpers.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/index.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/types.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/useBackHandler.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/useConfirmDiscard.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/useConfirmDiscardAsync.ts",
     "messages": [
       {
         "ruleId": "max-lines-per-function",
         "severity": 1,
-        "message": "Function 'useUnsavedChangesGuard' has too many lines (140). Maximum allowed is 50.",
-        "line": 103,
+        "message": "Function 'useConfirmDiscardAsync' has too many lines (52). Maximum allowed is 50.",
+        "line": 25,
         "column": 8,
         "nodeType": "FunctionDeclaration",
         "messageId": "exceed",
-        "endLine": 276,
+        "endLine": 79,
         "endColumn": 2
-      },
-      {
-        "ruleId": "@typescript-eslint/no-floating-promises",
-        "severity": 1,
-        "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 140,
-        "column": 7,
-        "nodeType": "ExpressionStatement",
-        "messageId": "floatingVoid",
-        "endLine": 140,
-        "endColumn": 63,
-        "suggestions": [
-          {
-            "messageId": "floatingFixVoid",
-            "fix": { "range": [4467, 4467], "text": "void " },
-            "desc": "Add void operator to ignore."
-          },
-          {
-            "messageId": "floatingFixAwait",
-            "fix": { "range": [4467, 4467], "text": "await " },
-            "desc": "Add await operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-floating-promises",
-        "severity": 1,
-        "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 155,
-        "column": 13,
-        "nodeType": "ExpressionStatement",
-        "messageId": "floatingVoid",
-        "endLine": 155,
-        "endColumn": 68,
-        "suggestions": [
-          {
-            "messageId": "floatingFixVoid",
-            "fix": { "range": [4870, 4870], "text": "void " },
-            "desc": "Add void operator to ignore."
-          },
-          {
-            "messageId": "floatingFixAwait",
-            "fix": { "range": [4870, 4870], "text": "await " },
-            "desc": "Add await operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-floating-promises",
-        "severity": 1,
-        "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 185,
-        "column": 7,
-        "nodeType": "ExpressionStatement",
-        "messageId": "floatingVoid",
-        "endLine": 185,
-        "endColumn": 63,
-        "suggestions": [
-          {
-            "messageId": "floatingFixVoid",
-            "fix": { "range": [5608, 5608], "text": "void " },
-            "desc": "Add void operator to ignore."
-          },
-          {
-            "messageId": "floatingFixAwait",
-            "fix": { "range": [5608, 5608], "text": "await " },
-            "desc": "Add await operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "max-lines",
-        "severity": 2,
-        "message": "File has too many lines (174). Maximum allowed is 100.",
-        "line": 191,
-        "column": 1,
-        "nodeType": null,
-        "messageId": "exceed",
-        "endLine": 279,
-        "endColumn": 1
-      },
-      {
-        "ruleId": "@typescript-eslint/no-floating-promises",
-        "severity": 1,
-        "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.",
-        "line": 203,
-        "column": 13,
-        "nodeType": "ExpressionStatement",
-        "messageId": "floatingVoid",
-        "endLine": 203,
-        "endColumn": 68,
-        "suggestions": [
-          {
-            "messageId": "floatingFixVoid",
-            "fix": { "range": [6127, 6127], "text": "void " },
-            "desc": "Add void operator to ignore."
-          },
-          {
-            "messageId": "floatingFixAwait",
-            "fix": { "range": [6127, 6127], "text": "await " },
-            "desc": "Add await operator."
-          }
-        ]
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 1,
+    "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 5,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\n * useUnsavedChangesGuard Hook\n * Confirms before discarding unsaved changes in form editors\n *\n * Part of Edge Case handling: Data Loss Prevention\n * - Tracks whether current value differs from original\n * - Shows Alert.alert confirmation before discarding\n * - Integrates with useDraftStorage for auto-saved drafts\n *\n * @example\n * ```tsx\n * const { hasUnsavedChanges, confirmDiscard, setOriginalValue } = useUnsavedChangesGuard({\n *   currentValue: whyDraft,\n *   originalValue: habit.why ?? '',\n * });\n *\n * // When closing modal:\n * const handleClose = () => {\n *   if (hasUnsavedChanges) {\n *     confirmDiscard(() => {\n *       onClose();\n *     });\n *   } else {\n *     onClose();\n *   }\n * };\n * ```\n */\n\nimport { useCallback, useEffect, useRef, useState } from 'react';\nimport { Alert, type AlertButton, BackHandler, Platform } from 'react-native';\nimport * as Haptics from 'expo-haptics';\n\n/**\n * Configuration options for the hook\n */\nexport interface UseUnsavedChangesGuardOptions {\n  /** Current value of the form field */\n  currentValue: string;\n  /** Original value (from database/props) */\n  originalValue: string;\n  /** Title for the confirmation dialog */\n  alertTitle?: string;\n  /** Message for the confirmation dialog */\n  alertMessage?: string;\n  /** Label for the discard button */\n  discardButtonLabel?: string;\n  /** Label for the keep editing button */\n  keepEditingButtonLabel?: string;\n  /** Whether to show the guard (can disable for save-in-progress) */\n  enabled?: boolean;\n  /** Callback when user confirms discard */\n  onDiscard?: () => void;\n  /** Whether to intercept Android back button (default: false) */\n  interceptBackButton?: boolean;\n}\n\n/**\n * Return value from the hook\n */\nexport interface UseUnsavedChangesGuardReturn {\n  /** Whether there are unsaved changes */\n  hasUnsavedChanges: boolean;\n  /** Show confirmation dialog and execute callback if user confirms discard */\n  confirmDiscard: (onConfirm: () => void) => void;\n  /** Show confirmation dialog and return Promise<boolean> */\n  confirmDiscardAsync: () => Promise<boolean>;\n  /** Update the original value (e.g., after successful save) */\n  setOriginalValue: (value: string) => void;\n  /** Whether the confirmation dialog is currently showing */\n  isConfirmationVisible: boolean;\n  /** Directly perform discard action (bypasses confirmation) */\n  forceDiscard: () => void;\n}\n\n// Default strings\nconst DEFAULT_ALERT_TITLE = 'Discard Changes?';\nconst DEFAULT_ALERT_MESSAGE =\n  'You have unsaved changes. Are you sure you want to discard them?';\nconst DEFAULT_DISCARD_BUTTON = 'Discard';\nconst DEFAULT_KEEP_EDITING_BUTTON = 'Keep Editing';\n\n/**\n * Normalize values for comparison (trim whitespace, handle nullish)\n */\nfunction normalizeValue(value: string | null | undefined): string {\n  return (value ?? '').trim();\n}\n\n/**\n * Check if two values are meaningfully different\n */\nfunction hasChanges(current: string, original: string): boolean {\n  return normalizeValue(current) !== normalizeValue(original);\n}\n\n/**\n * useUnsavedChangesGuard Hook\n *\n * Provides confirmation dialog before discarding unsaved changes.\n * Works with any form field that has a current and original value.\n */\nexport function useUnsavedChangesGuard({\n  currentValue,\n  originalValue,\n  alertTitle = DEFAULT_ALERT_TITLE,\n  alertMessage = DEFAULT_ALERT_MESSAGE,\n  discardButtonLabel = DEFAULT_DISCARD_BUTTON,\n  keepEditingButtonLabel = DEFAULT_KEEP_EDITING_BUTTON,\n  enabled = true,\n  onDiscard,\n  interceptBackButton = false,\n}: UseUnsavedChangesGuardOptions): UseUnsavedChangesGuardReturn {\n  // Track original value internally (can be updated after save)\n  const [internalOriginal, setInternalOriginal] = useState(originalValue);\n  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);\n\n  // Refs for async confirmation\n  const resolveRef = useRef<((value: boolean) => void) | null>(null);\n\n  // Update internal original when prop changes (e.g., on mount or save)\n  useEffect(() => {\n    setInternalOriginal(originalValue);\n  }, [originalValue]);\n\n  // Calculate if there are unsaved changes\n  const hasUnsavedChanges =\n    enabled && hasChanges(currentValue, internalOriginal);\n\n  // Show confirmation dialog with callback\n  const confirmDiscard = useCallback(\n    (onConfirm: () => void) => {\n      if (!hasUnsavedChanges) {\n        // No changes, just proceed\n        onConfirm();\n        return;\n      }\n\n      // Haptic feedback for important action\n      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);\n\n      setIsConfirmationVisible(true);\n\n      const buttons: AlertButton[] = [\n        {\n          onPress: () => {\n            setIsConfirmationVisible(false);\n          },\n          style: 'cancel',\n          text: keepEditingButtonLabel,\n        },\n        {\n          onPress: () => {\n            setIsConfirmationVisible(false);\n            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n            onDiscard?.();\n            onConfirm();\n          },\n          style: 'destructive',\n          text: discardButtonLabel,\n        },\n      ];\n\n      Alert.alert(alertTitle, alertMessage, buttons, { cancelable: true });\n    },\n    [\n      hasUnsavedChanges,\n      alertTitle,\n      alertMessage,\n      discardButtonLabel,\n      keepEditingButtonLabel,\n      onDiscard,\n    ]\n  );\n\n  // Async version for more control flow flexibility\n  const confirmDiscardAsync = useCallback((): Promise<boolean> => {\n    return new Promise((resolve) => {\n      if (!hasUnsavedChanges) {\n        resolve(true);\n        return;\n      }\n\n      // Haptic feedback for important action\n      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);\n\n      setIsConfirmationVisible(true);\n      resolveRef.current = resolve;\n\n      const buttons: AlertButton[] = [\n        {\n          onPress: () => {\n            setIsConfirmationVisible(false);\n            resolveRef.current?.(false);\n            resolveRef.current = null;\n          },\n          style: 'cancel',\n          text: keepEditingButtonLabel,\n        },\n        {\n          onPress: () => {\n            setIsConfirmationVisible(false);\n            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n            onDiscard?.();\n            resolveRef.current?.(true);\n            resolveRef.current = null;\n          },\n          style: 'destructive',\n          text: discardButtonLabel,\n        },\n      ];\n\n      Alert.alert(alertTitle, alertMessage, buttons, {\n        cancelable: true,\n        onDismiss: () => {\n          // User dismissed by tapping outside on Android\n          setIsConfirmationVisible(false);\n          resolveRef.current?.(false);\n          resolveRef.current = null;\n        },\n      });\n    });\n  }, [\n    hasUnsavedChanges,\n    alertTitle,\n    alertMessage,\n    discardButtonLabel,\n    keepEditingButtonLabel,\n    onDiscard,\n  ]);\n\n  // Force discard without confirmation\n  const forceDiscard = useCallback(() => {\n    onDiscard?.();\n  }, [onDiscard]);\n\n  // Update original value (call after successful save)\n  const setOriginalValue = useCallback((value: string) => {\n    setInternalOriginal(value);\n  }, []);\n\n  // Intercept Android back button if enabled\n  useEffect(() => {\n    if (!interceptBackButton || Platform.OS !== 'android') {\n      return;\n    }\n\n    const handleBackPress = () => {\n      if (hasUnsavedChanges) {\n        confirmDiscard(() => {\n          // Navigation will be handled by the callback\n        });\n        return true; // Prevent default back behavior\n      }\n      return false; // Allow default back behavior\n    };\n\n    const subscription = BackHandler.addEventListener(\n      'hardwareBackPress',\n      handleBackPress\n    );\n\n    return () => {\n      subscription.remove();\n    };\n  }, [hasUnsavedChanges, confirmDiscard, interceptBackButton]);\n\n  return {\n    confirmDiscard,\n    confirmDiscardAsync,\n    forceDiscard,\n    hasUnsavedChanges,\n    isConfirmationVisible,\n    setOriginalValue,\n  };\n}\n\nexport default useUnsavedChangesGuard;\n",
+    "source": "/**\n * Async Confirmation Dialog Hook\n *\n * Promise-based confirmation dialog for more flexible control flow.\n */\n\nimport { useCallback, type MutableRefObject } from 'react';\nimport { Alert, type AlertButton } from 'react-native';\nimport * as Haptics from 'expo-haptics';\n\ninterface UseConfirmDiscardAsyncOptions {\n  hasUnsavedChanges: boolean;\n  alertTitle: string;\n  alertMessage: string;\n  discardButtonLabel: string;\n  keepEditingButtonLabel: string;\n  onDiscard?: () => void;\n  setIsConfirmationVisible: (visible: boolean) => void;\n  resolveRef: MutableRefObject<((value: boolean) => void) | null>;\n}\n\n/**\n * Create async confirmation dialog handler\n */\nexport function useConfirmDiscardAsync({\n  hasUnsavedChanges,\n  alertTitle,\n  alertMessage,\n  discardButtonLabel,\n  keepEditingButtonLabel,\n  onDiscard,\n  setIsConfirmationVisible,\n  resolveRef,\n}: UseConfirmDiscardAsyncOptions) {\n  return useCallback((): Promise<boolean> => {\n    return new Promise((resolve) => {\n      if (!hasUnsavedChanges) {\n        resolve(true);\n        return;\n      }\n\n      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);\n      setIsConfirmationVisible(true);\n      resolveRef.current = resolve;\n\n      const buttons: AlertButton[] = [\n        {\n          onPress: () => {\n            setIsConfirmationVisible(false);\n            resolveRef.current?.(false);\n            resolveRef.current = null;\n          },\n          style: 'cancel',\n          text: keepEditingButtonLabel,\n        },\n        {\n          onPress: () => {\n            setIsConfirmationVisible(false);\n            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);\n            onDiscard?.();\n            resolveRef.current?.(true);\n            resolveRef.current = null;\n          },\n          style: 'destructive',\n          text: discardButtonLabel,\n        },\n      ];\n\n      Alert.alert(alertTitle, alertMessage, buttons, {\n        cancelable: true,\n        onDismiss: () => {\n          setIsConfirmationVisible(false);\n          resolveRef.current?.(false);\n          resolveRef.current = null;\n        },\n      });\n    });\n  }, [hasUnsavedChanges, alertTitle, alertMessage, discardButtonLabel, keepEditingButtonLabel, onDiscard, setIsConfirmationVisible, resolveRef]);\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/andres/Code/habit_tracking_app.worktrees/TECH_SPEC_code-readability-initiative/src/hooks/useUnsavedChangesGuard/useUnsavedChangesGuard.ts",
+    "messages": [
+      {
+        "ruleId": "max-lines-per-function",
+        "severity": 1,
+        "message": "Function 'useUnsavedChangesGuard' has too many lines (53). Maximum allowed is 50.",
+        "line": 30,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "exceed",
+        "endLine": 90,
+        "endColumn": 2
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "/**\n * useUnsavedChangesGuard Hook\n *\n * Confirms before discarding unsaved changes in form editors.\n */\n\nimport { useCallback, useEffect, useRef, useState } from 'react';\n\nimport type {\n  UseUnsavedChangesGuardOptions,\n  UseUnsavedChangesGuardReturn,\n} from './types';\nimport {\n  DEFAULT_ALERT_TITLE,\n  DEFAULT_ALERT_MESSAGE,\n  DEFAULT_DISCARD_BUTTON,\n  DEFAULT_KEEP_EDITING_BUTTON,\n} from './constants';\nimport { hasChanges } from './helpers';\nimport { useConfirmDiscard } from './useConfirmDiscard';\nimport { useConfirmDiscardAsync } from './useConfirmDiscardAsync';\nimport { useBackHandler } from './useBackHandler';\n\n/**\n * useUnsavedChangesGuard Hook\n *\n * Provides confirmation dialog before discarding unsaved changes.\n * Works with any form field that has a current and original value.\n */\nexport function useUnsavedChangesGuard({\n  currentValue,\n  originalValue,\n  alertTitle = DEFAULT_ALERT_TITLE,\n  alertMessage = DEFAULT_ALERT_MESSAGE,\n  discardButtonLabel = DEFAULT_DISCARD_BUTTON,\n  keepEditingButtonLabel = DEFAULT_KEEP_EDITING_BUTTON,\n  enabled = true,\n  onDiscard,\n  interceptBackButton = false,\n}: UseUnsavedChangesGuardOptions): UseUnsavedChangesGuardReturn {\n  const [internalOriginal, setInternalOriginal] = useState(originalValue);\n  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);\n  const resolveRef = useRef<((value: boolean) => void) | null>(null);\n\n  useEffect(() => {\n    setInternalOriginal(originalValue);\n  }, [originalValue]);\n\n  const hasUnsavedChanges = enabled && hasChanges(currentValue, internalOriginal);\n\n  const confirmDiscard = useConfirmDiscard({\n    alertMessage,\n    alertTitle,\n    discardButtonLabel,\n    hasUnsavedChanges,\n    keepEditingButtonLabel,\n    onDiscard,\n    setIsConfirmationVisible,\n  });\n\n  const confirmDiscardAsync = useConfirmDiscardAsync({\n    alertMessage,\n    alertTitle,\n    discardButtonLabel,\n    hasUnsavedChanges,\n    keepEditingButtonLabel,\n    onDiscard,\n    resolveRef,\n    setIsConfirmationVisible,\n  });\n\n  const forceDiscard = useCallback(() => {\n    onDiscard?.();\n  }, [onDiscard]);\n\n  const setOriginalValue = useCallback((value: string) => {\n    setInternalOriginal(value);\n  }, []);\n\n  useBackHandler({ confirmDiscard, hasUnsavedChanges, interceptBackButton });\n\n  return {\n    confirmDiscard,\n    confirmDiscardAsync,\n    forceDiscard,\n    hasUnsavedChanges,\n    isConfirmationVisible,\n    setOriginalValue,\n  };\n}\n\nexport default useUnsavedChangesGuard;\n",
     "usedDeprecatedRules": []
   },
   {
