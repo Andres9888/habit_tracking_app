@@ -1,0 +1,41 @@
+/**
+ * Templates Screen Types
+ */
+
+export type SortOption = 'az' | 'newest' | 'popular';
+
+export interface SortOptionConfig {
+  description: string;
+  label: string;
+  value: SortOption;
+}
+
+export type Category =
+  | 'all'
+  | 'andrew_huberman'
+  | 'breathing'
+  | 'creativity'
+  | 'financial'
+  | 'health_fitness'
+  | 'learning'
+  | 'longevity'
+  | 'mental_health'
+  | 'mindfulness'
+  | 'morning_routine'
+  | 'productivity'
+  | 'recovery'
+  | 'sleep'
+  | 'social';
+
+export interface CategoryFilter {
+  icon: string;
+  id: Category;
+  label: string;
+}
+
+export type CategoryColorTokens = {
+  bg: string;
+  bgSelected: string;
+  border: string;
+  text: string;
+};

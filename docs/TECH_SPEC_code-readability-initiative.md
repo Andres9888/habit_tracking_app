@@ -312,9 +312,23 @@ None. All work is internal code organization.
 
 ### Phase 5: Final Cleanup (101-300 lines)
 
-- [ ] Address 168 small overages
+- [x] `FailureViz.tsx` (216 lines → 6 files, all ≤100 lines)
+- [x] `useDraggableHabitAnimations.ts` (134 lines → 5 files, all ≤100 lines)
+- [x] `animationSequences.ts` (117 lines → 3 files, all ≤100 lines)
+- [x] `HabitsListRenders.tsx` (118 lines → 5 files, all ≤100 lines)
+- [x] `TodaysFocusCardTypes.ts` (113 lines → 3 files, all ≤100 lines)
+- [x] `modalAnimationEffects.ts` (115 lines → 5 files, all ≤100 lines)
+- [x] `PremiumAnalyticsPaywall.tsx` (101 lines → styles extracted)
+- [x] `WeeklySummaryStripStyles.ts` (112 lines → 4 files, all ≤100 lines)
+- [x] `WeeklySummaryStripTypes.ts` (107 lines → 4 files, all ≤100 lines)
+- [x] `HabitsEmptyState.constants.ts` (130 lines → 3 files, all ≤100 lines)
+- [x] `habits/hooks/types.ts` (108 lines → 3 files, all ≤100 lines)
+- [x] `templates/constants.ts` (111 lines → 4 files, all ≤100 lines)
+- [ ] Address remaining small overages
 - [ ] Convert ESLint `max-lines` from "warn" to "error"
 - [ ] Final lint enforcement
+
+**Status Update (2026-01-09):** After decomposition work, only `categories.ts` (1433 lines) remains violating in `/src/` - this is a data seed file marked as an exception (similar to `templatesDataSeed.ts`).
 
 ---
 

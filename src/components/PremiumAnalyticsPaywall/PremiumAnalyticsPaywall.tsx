@@ -4,24 +4,20 @@
  */
 
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import type { PremiumAnalyticsPaywallProps } from './PremiumAnalyticsPaywall.types';
-import {
-  PREMIUM_FEATURES,
-  screenWidth,
-  screenHeight,
-} from './PremiumAnalyticsPaywall.constants';
+import { PREMIUM_FEATURES } from './PremiumAnalyticsPaywall.constants';
 import {
   FeatureListItem,
   PricingCard,
   PaywallFooter,
   PaywallHeader,
 } from './components';
+import { styles } from './PremiumAnalyticsPaywall.styles';
 
 export default function PremiumAnalyticsPaywall({
   onStartTrial,
@@ -80,36 +76,3 @@ export default function PremiumAnalyticsPaywall({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  blurView: {
-    height: screenHeight,
-    width: screenWidth,
-  },
-  closeButton: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-  },
-  content: {
-    paddingBottom: spacing.xxl,
-    paddingHorizontal: spacing.lg,
-  },
-  featuresList: {
-    marginBottom: spacing.xl,
-  },
-  header: {
-    alignItems: 'flex-end',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-  },
-});
