@@ -3,7 +3,11 @@
  */
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
 import { VoiceNotePlaybackUI } from '../../VoiceNotePlaybackUI';
@@ -17,7 +21,12 @@ interface VoiceNoteItemProps {
   onPlayFinish?: () => void;
 }
 
-export function VoiceNoteItem({ note, reduceMotion = false, onPlayStart, onPlayFinish }: VoiceNoteItemProps) {
+export function VoiceNoteItem({
+  note,
+  reduceMotion = false,
+  onPlayStart,
+  onPlayFinish,
+}: VoiceNoteItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const expandedHeight = useSharedValue(0);
   const rotateIcon = useSharedValue(0);
@@ -37,16 +46,38 @@ export function VoiceNoteItem({ note, reduceMotion = false, onPlayStart, onPlayF
     }
   }, [note.audioUrl, isExpanded, reduceMotion, expandedHeight, rotateIcon]);
 
-  const expandedStyle = useAnimatedStyle(() => ({ height: expandedHeight.value === 0 ? 0 : 'auto', opacity: expandedHeight.value, overflow: 'hidden' as const }));
-  const iconStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${Math.round(rotateIcon.value * 180)}deg` }] }));
+  const expandedStyle = useAnimatedStyle(() => ({
+    height: expandedHeight.value === 0 ? 0 : 'auto',
+    opacity: expandedHeight.value,
+    overflow: 'hidden' as const,
+  }));
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${Math.round(rotateIcon.value * 180)}deg` }],
+  }));
 
   return (
     <View className='rounded-lg bg-stone-50'>
-      <VoiceNoteItemHeader hasPlayback={hasPlayback} iconStyle={iconStyle} isExpanded={isExpanded} note={note} onPress={handleToggleExpand} />
-      {hasPlayback && isExpanded && (
+      <VoiceNoteItemHeader
+        hasPlayback={hasPlayback}
+        iconStyle={iconStyle}
+        isExpanded={isExpanded}
+        note={note}
+        onPress={handleToggleExpand}
+      />
+      {note.audioUrl && isExpanded && (
         <Animated.View style={expandedStyle}>
           <View className='border-t border-stone-100 p-3'>
-            <VoiceNotePlaybackUI compact audioUri={note.audioUrl} initialDuration={note.duration} isDay1={note.isDay1} label={note.label} reduceMotion={reduceMotion} showSpeedControl={false} onPlayFinish={onPlayFinish} onPlayStart={onPlayStart} />
+            <VoiceNotePlaybackUI
+              compact
+              audioUri={note.audioUrl}
+              initialDuration={note.duration}
+              isDay1={note.isDay1}
+              label={note.label}
+              reduceMotion={reduceMotion}
+              showSpeedControl={false}
+              onPlayFinish={onPlayFinish}
+              onPlayStart={onPlayStart}
+            />
           </View>
         </Animated.View>
       )}

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Mic, Sparkles } from 'lucide-react-native';
 
-import { VoiceNotePlaybackUI } from '../../Workshop/VoiceNotePlaybackUI';
+import { VoiceNotePlaybackUI } from '../../../Workshop/VoiceNotePlaybackUI';
 import type { Day1VoiceNoteData } from '../RescueMode.types';
 
 interface FeaturedVoiceNoteProps {
