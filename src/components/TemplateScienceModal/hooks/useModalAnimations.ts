@@ -13,11 +13,32 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import {
+  HERO_ANIMATION,
+  CARD_ANIMATION,
+  GLOW_ANIMATION,
+} from './animationConstants';
 
 interface UseModalAnimationsProps {
   visible: boolean;
   template: Doc<'templates'> | null;
 }
+
+const createGlowAnimation = (min: number, max: number) =>
+  withRepeat(
+    withSequence(
+      withTiming(max, {
+        duration: GLOW_ANIMATION.duration,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      withTiming(min, {
+        duration: GLOW_ANIMATION.duration,
+        easing: Easing.inOut(Easing.ease),
+      })
+    ),
+    -1,
+    false
+  );
 
 export const useModalAnimations = ({
   visible,
@@ -34,6 +55,7 @@ export const useModalAnimations = ({
 
   useEffect(() => {
     if (visible && template) {
+      // Reset values
       heroOpacity.value = 0;
       heroScale.value = 0.9;
       card1Progress.value = 0;
@@ -41,49 +63,28 @@ export const useModalAnimations = ({
       card3Progress.value = 0;
       footerProgress.value = 0;
 
+      // Hero animations
       heroOpacity.value = withTiming(1, {
-        duration: 400,
+        duration: HERO_ANIMATION.opacity.duration,
         easing: Easing.out(Easing.cubic),
       });
-      heroScale.value = withSpring(1, { damping: 18, stiffness: 100 });
-      card1Progress.value = withDelay(
-        150,
-        withSpring(1, { damping: 20, stiffness: 90 })
-      );
-      card2Progress.value = withDelay(
-        250,
-        withSpring(1, { damping: 20, stiffness: 90 })
-      );
-      card3Progress.value = withDelay(
-        350,
-        withSpring(1, { damping: 20, stiffness: 90 })
-      );
-      footerProgress.value = withDelay(
-        450,
-        withSpring(1, { damping: 20, stiffness: 90 })
-      );
+      heroScale.value = withSpring(1, HERO_ANIMATION.scale);
 
-      iconGlowScale.value = withRepeat(
-        withSequence(
-          withTiming(1.15, {
-            duration: 1500,
-            easing: Easing.inOut(Easing.ease),
-          }),
-          withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        false
+      // Card stagger animations
+      const { spring, delays } = CARD_ANIMATION;
+      card1Progress.value = withDelay(delays.card1, withSpring(1, spring));
+      card2Progress.value = withDelay(delays.card2, withSpring(1, spring));
+      card3Progress.value = withDelay(delays.card3, withSpring(1, spring));
+      footerProgress.value = withDelay(delays.footer, withSpring(1, spring));
+
+      // Glow pulse animations
+      iconGlowScale.value = createGlowAnimation(
+        GLOW_ANIMATION.scale.min,
+        GLOW_ANIMATION.scale.max
       );
-      iconGlowOpacity.value = withRepeat(
-        withSequence(
-          withTiming(0.35, {
-            duration: 1500,
-            easing: Easing.inOut(Easing.ease),
-          }),
-          withTiming(0.2, { duration: 1500, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        false
+      iconGlowOpacity.value = createGlowAnimation(
+        GLOW_ANIMATION.opacity.min,
+        GLOW_ANIMATION.opacity.max
       );
     }
   }, [

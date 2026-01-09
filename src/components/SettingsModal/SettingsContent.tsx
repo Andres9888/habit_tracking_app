@@ -2,23 +2,7 @@ import { Activity, BookOpen, Check, Circle } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
-import type { SettingsColors } from './types';
-
-interface SettingsContentProps {
-  colors: SettingsColors;
-  isHighContrastActive: boolean;
-  // Visual preferences
-  showWeekCompletionBar: boolean;
-  habitCompletionIcon: 'chain' | 'checkbox';
-  dayShape: 'circle' | 'square';
-  onChangeShowWeekCompletionBar: (value: boolean) => void | Promise<void>;
-  onChangeHabitCompletionIcon: (
-    value: 'chain' | 'checkbox'
-  ) => void | Promise<void>;
-  onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
-  // Navigation
-  onOpenArchivedHabits: () => void;
-}
+import type { SettingsContentProps } from './types';
 
 export function SettingsContent({
   colors,

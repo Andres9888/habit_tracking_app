@@ -117,10 +117,3 @@ export const WeeklySummaryStrip = React.memo(function WeeklySummaryStrip({
 });
 
 export default WeeklySummaryStrip;
-
-export type {
-  WeeklySummaryStripProps,
-  WeekDayData,
-  DayVisualState,
-  TrendDirection,
-} from '../WeeklySummaryStripTypes';

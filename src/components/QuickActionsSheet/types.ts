@@ -48,3 +48,14 @@ export interface ActionItemProps {
   subtitle?: string;
   badge?: string;
 }
+
+export interface ActionsListProps {
+  completed: boolean;
+  onComplete: () => void;
+  onMentalBoost: () => void;
+  onViewCalendar: () => void;
+  onViewDetails?: () => void;
+  onEdit: () => void;
+  onPause: () => void;
+  onDelete: () => void;
+}

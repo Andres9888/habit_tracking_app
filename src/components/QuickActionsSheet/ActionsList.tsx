@@ -10,17 +10,7 @@ import {
   Trash2,
 } from 'lucide-react-native';
 import { ActionItem } from './ActionItem';
-
-interface ActionsListProps {
-  completed: boolean;
-  onComplete: () => void;
-  onMentalBoost: () => void;
-  onViewCalendar: () => void;
-  onViewDetails?: () => void;
-  onEdit: () => void;
-  onPause: () => void;
-  onDelete: () => void;
-}
+import type { ActionsListProps } from './types';
 
 export const ActionsList = ({
   completed,

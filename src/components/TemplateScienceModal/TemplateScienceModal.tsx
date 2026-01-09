@@ -4,7 +4,6 @@
  */
 
 import React, { useMemo } from 'react';
-import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Modal from '../Modal';
 import {
@@ -12,6 +11,7 @@ import {
   ModalContent,
   FooterSection,
   ConfettiOverlay,
+  DismissIndicator,
   SkeletonLoading,
 } from './components';
 import {
@@ -66,14 +66,7 @@ export default function TemplateScienceModal({
       onClose={onClose}
     >
       <Animated.View style={[layoutStyles.container, animatedStyles.container]}>
-        <Animated.View
-          style={[
-            layoutStyles.dismissIndicator,
-            animatedStyles.dismissIndicator,
-          ]}
-        >
-          <View style={layoutStyles.dismissPill} />
-        </Animated.View>
+        <DismissIndicator animatedStyle={animatedStyles.dismissIndicator} />
         <ModalHeader
           closeButtonAnimatedStyle={animatedStyles.closeButton}
           headerAnimatedStyle={animatedStyles.header}

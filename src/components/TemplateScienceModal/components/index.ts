@@ -5,6 +5,7 @@
 export { AboutSection } from './AboutSection';
 export { AnimatedBorderBox } from './AnimatedBorderBox';
 export { ConfettiOverlay } from './ConfettiOverlay';
+export { DismissIndicator } from './DismissIndicator';
 export { ConfettiParticle } from './ConfettiParticle';
 export { FooterSection } from './FooterSection';
 export { HeroSection } from './HeroSection';

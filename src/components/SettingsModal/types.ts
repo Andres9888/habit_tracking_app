@@ -35,3 +35,17 @@ export interface SettingsColors {
   mutedText: string;
   versionText: string;
 }
+
+export interface SettingsContentProps {
+  colors: SettingsColors;
+  isHighContrastActive: boolean;
+  showWeekCompletionBar: boolean;
+  habitCompletionIcon: 'chain' | 'checkbox';
+  dayShape: 'circle' | 'square';
+  onChangeShowWeekCompletionBar: (value: boolean) => void | Promise<void>;
+  onChangeHabitCompletionIcon: (
+    value: 'chain' | 'checkbox'
+  ) => void | Promise<void>;
+  onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
+  onOpenArchivedHabits: () => void;
+}
