@@ -3,8 +3,8 @@
 ## Summary
 
 - **Total Candidates:** 20 (18 original + 1 from Tactic 2 + 1 from Tactic 3)
-- **IMPLEMENTED:** 6
-- **PENDING (auto-implement):** 1
+- **IMPLEMENTED:** 7
+- **PENDING (auto-implement):** 0
 - **PENDING - MANUAL REVIEW:** 7 (includes #19 from Tactic 2)
 - **WON'T DO:** 6
 
@@ -594,7 +594,7 @@ The following candidates were identified through the Inline Style Object Audit (
 | #   | Candidate                                | Risk   | Benefit | Status                  |
 | --- | ---------------------------------------- | ------ | ------- | ----------------------- |
 | 19  | DraggableHabit Inline Style Optimization | MEDIUM | HIGH    | PENDING - MANUAL REVIEW |
-| 20  | DraggableHabit Legacy Animated Migration | LOW    | HIGH    | PENDING                 |
+| 20  | DraggableHabit Legacy Animated Migration | LOW    | HIGH    | IMPLEMENTED             |
 
 ---
 
@@ -746,4 +746,96 @@ highlightGlow.value = withSequence(
 
 5. **Migration Path:** Option A (native driver fix) can be done immediately. Option B (full Reanimated migration) can be done later as part of the larger DraggableHabit refactoring effort.
 
-### Status: PENDING
+### Status: IMPLEMENTED
+
+**Implemented:** 2026-01-08 by refactor-performance-security-testing agent
+
+**Changes Made:**
+
+1. Switched 6 `useNativeDriver: false` to `useNativeDriver: true` for `highlightGlow` (4 calls) and `archiveFlash` (2 calls)
+2. Removed dead `streakBadgeGlow` animated value and its infinite loop useEffect
+3. Removed unused `hasSignificantStreak` variable
+
+**Files Modified:** `src/components/DraggableHabit/DraggableHabit.tsx`
+
+**Verification:** Code compiles without errors, changes match proposed fix exactly
+
+---
+
+# Security Remediation Plan - Loop 00001
+
+## Security Summary
+
+- **Total Findings:** 16
+- **Auto-Remediate (PENDING):** 1
+- **Manual Review:** 0
+- **Won't Do / False Positive:** 0
+- **Not Yet Evaluated:** 15
+
+## Security Risk Summary
+
+| Severity | Count | Auto-Fix | Manual | Won't Do | Pending Eval |
+| -------- | ----- | -------- | ------ | -------- | ------------ |
+| CRITICAL | 2     | 1        | 0      | 0        | 1            |
+| HIGH     | 6     | 0        | 0      | 0        | 6            |
+| MEDIUM   | 6     | 0        | 0      | 0        | 6            |
+| LOW/INFO | 2     | 0        | 0      | 0        | 2            |
+
+---
+
+## PENDING - Ready for Auto-Remediation
+
+### SEC-001: Hardcoded Figma Access Token in Version Control
+
+- **Status:** `PENDING`
+- **Vuln ID:** VULN-001
+- **Severity:** CRITICAL
+- **Remediability:** EASY
+- **File:** `.env.mcp`
+- **Line:** 1
+- **Issue:** Figma access token (`figd_YODDpEJ3FG6Znes3MhFwp3ok5-BRop5YX_fCUn1J`) is hardcoded in a file tracked by git, exposing the credential to anyone with repository access.
+- **Fix Strategy:**
+  1. **Immediately revoke the exposed Figma token** via Figma account settings (cannot be done by agent - requires human action)
+  2. Add `.env.mcp` to `.gitignore` to prevent future commits
+  3. Remove `.env.mcp` from git tracking with `git rm --cached .env.mcp`
+  4. Create `.env.mcp.example` with placeholder value for documentation
+  5. Generate a new Figma token and store it outside version control (environment variable or secrets manager)
+- **Verification:**
+  - Confirm token is revoked via Figma API call (should fail with 401)
+  - Verify `.env.mcp` is in `.gitignore`
+  - Verify `git status` shows `.env.mcp` as untracked
+  - Verify new token works in development
+- **Implementation Notes:**
+  - **CRITICAL:** The token must be revoked by a human with Figma account access BEFORE any automated fix
+  - History removal (`git filter-branch` or BFG) is optional but recommended for production repos
+  - This token may have been exposed to anyone who cloned/forked the repo
+
+**Evaluated:** 2026-01-08 by refactor-performance-security-testing agent
+
+---
+
+## PENDING - MANUAL REVIEW
+
+_No findings requiring manual review at this time._
+
+---
+
+## WON'T DO / FALSE POSITIVE
+
+_No findings marked as won't do or false positive at this time._
+
+---
+
+## Remediation Order (Security)
+
+Recommended sequence based on severity and dependencies:
+
+1. **SEC-001** - Hardcoded Figma Token (CRITICAL - must revoke token first)
+
+_Additional findings will be added as they are evaluated._
+
+---
+
+## Dependencies (Security)
+
+_None identified yet. Will be updated as more findings are evaluated._

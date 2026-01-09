@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -21,14 +21,8 @@ Evaluate each security finding from the discovery phase and assign severity and 
 
 ## Evaluation Checklist
 
-- [x] **Evaluate findings**: Read LOOP*00001_VULNERABILITIES.md, rate each finding by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD). Mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP*00001_PLAN.md`.
-
-**Completed 2025-12-29:** Evaluated all 16 security findings. Created prioritized remediation plan at `SECURITY_REMEDIATION_PLAN.md`:
-
-- **12 findings** marked PENDING for auto-remediation (2 CRITICAL, 6 HIGH, 4 MEDIUM)
-- **1 finding** (AI prompt injection) marked for MANUAL REVIEW due to complex sanitization requirements
-- **3 findings** marked WON'T DO (1 design choice, 2 low-risk accepted)
-- Plan includes fix strategies, verification steps, and recommended execution order grouped by code locality
+- [x] **Evaluate one finding (or skip if empty)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md. If it contains no findings OR all findings have already been evaluated in LOOP_00001_PLAN.md, mark this task complete without changes. Otherwise, pick one unevaluated finding, rate by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD), mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix, and append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`.
+  - **Completed 2026-01-08:** Evaluated VULN-001 (Hardcoded Figma Access Token) as CRITICAL severity, EASY remediability. Status: PENDING for auto-fix. Added to Security Remediation Plan section in LOOP_00001_PLAN.md as SEC-001.
 
 ## Rating Criteria
 
@@ -166,8 +160,28 @@ Fixes that should be done together:
 
 ## Guidelines
 
+- **One finding per run**: Only evaluate ONE finding, then stop. This allows incremental progress.
 - **Fix CRITICAL first**: These are actively dangerous
 - **Verify before closing**: Re-test after each fix
 - **Document accepted risks**: If skipping, explain why
 - **Group related fixes**: Some vulnerabilities share root causes
 - **Consider dependencies**: Some fixes enable or require others
+
+## How to Know You're Done
+
+This task is complete when ONE of the following is true:
+
+**Option A - Evaluated a finding:**
+
+1. You've evaluated exactly ONE finding from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
+2. You've appended a complete evaluation to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
+3. The evaluation includes both severity and remediability ratings
+4. The status is set according to the auto-remediation criteria above
+
+**Option B - No findings to evaluate:**
+
+1. `LOOP_00001_VULNERABILITIES.md` contains no findings, OR
+2. All findings have already been evaluated in `LOOP_00001_PLAN.md`
+3. Mark this task complete without making changes
+
+This graceful handling of empty states prevents the pipeline from stalling when a tactic yields no vulnerabilities.
