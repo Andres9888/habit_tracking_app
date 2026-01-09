@@ -16,8 +16,8 @@ interface BrowseAllTabProps {
   filteredTemplates: Doc<'templates'>[];
   handleSelectSortOption: (option: SortOption) => void;
   handleTemplateImport: (
-    templateId: Id<'templates'>,
-    customizations?: TemplateCustomizations
+    id: Id<'templates'>,
+    c?: TemplateCustomizations
   ) => Promise<void>;
   handleTemplatePreview: (template: Doc<'templates'>) => void;
   importingTemplateId: Id<'templates'> | null;
@@ -29,71 +29,60 @@ interface BrowseAllTabProps {
   sortOption: SortOption;
 }
 
-export function BrowseAllTab({
-  contentAnimatedStyle,
-  filteredTemplates,
-  handleSelectSortOption,
-  handleTemplateImport,
-  handleTemplatePreview,
-  importingTemplateId,
-  onCloseSortOptions,
-  researchOnly,
-  setResearchOnly,
-  setShowSortOptions,
-  showSortOptions,
-  sortOption,
-}: BrowseAllTabProps) {
+export function BrowseAllTab(p: BrowseAllTabProps) {
+  const toggle = () => p.setResearchOnly((prev) => !prev);
+
   return (
-    <Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
+    <Animated.View style={[{ flex: 1 }, p.contentAnimatedStyle]}>
       <View style={styles.filterControlsRow}>
         <FilterControls
-          researchOnly={researchOnly}
-          showSortOptions={showSortOptions}
-          sortOption={sortOption}
-          onResearchToggle={() => setResearchOnly((prev) => !prev)}
-          onSelectSort={handleSelectSortOption}
-          onToggleSortOptions={() => setShowSortOptions((prev) => !prev)}
+          researchOnly={p.researchOnly}
+          showSortOptions={p.showSortOptions}
+          sortOption={p.sortOption}
+          onResearchToggle={toggle}
+          onSelectSort={p.handleSelectSortOption}
+          onToggleSortOptions={() => p.setShowSortOptions((prev) => !prev)}
         />
         <ResearchFilterButton
           label='Science-Backed'
-          researchOnly={researchOnly}
-          onToggle={() => setResearchOnly((prev) => !prev)}
+          researchOnly={p.researchOnly}
+          onToggle={toggle}
         />
       </View>
       <FlatList
         contentContainerStyle={styles.allTemplatesList}
-        data={filteredTemplates}
+        data={p.filteredTemplates}
         initialNumToRender={5}
         keyExtractor={(item) => item._id}
         maxToRenderPerBatch={5}
-        renderItem={({ item: template }) => (
+        renderItem={({ item: t }) => (
           <TemplateCard
-            key={template._id}
+            key={t._id}
             enableScrollReveal
             animationIndex={0}
-            category={template.category}
-            description={template.description}
-            frequency={template.frequency}
-            icon={template.icon}
-            iconColor={template.iconColor}
-            id={template._id}
-            isImporting={importingTemplateId === template._id}
-            name={template.name}
-            popularityScore={template.popularityScore}
-            scientificLink={template.scientificLink}
-            scientificReference={template.scientificReference}
-            youtubeLink={template.youtubeLink}
-            onImport={() => handleTemplateImport(template._id)}
-            onPreview={() => handleTemplatePreview(template)}
+            category={t.category}
+            description={t.description}
+            frequency={t.frequency}
+            icon={t.icon}
+            iconColor={t.iconColor}
+            id={t._id}
+            isImporting={p.importingTemplateId === t._id}
+            name={t.name}
+            popularityScore={t.popularityScore}
+            scientificLink={t.scientificLink}
+            scientificReference={t.scientificReference}
+            youtubeLink={t.youtubeLink}
+            onImport={() => p.handleTemplateImport(t._id)}
+            onPreview={() => p.handleTemplatePreview(t)}
           />
         )}
         showsVerticalScrollIndicator={false}
         windowSize={5}
       />
-      {showSortOptions && (
+      {p.showSortOptions && (
         <Pressable
           style={styles.dropdownBackdrop}
-          onPress={onCloseSortOptions}
+          onPress={p.onCloseSortOptions}
         />
       )}
     </Animated.View>

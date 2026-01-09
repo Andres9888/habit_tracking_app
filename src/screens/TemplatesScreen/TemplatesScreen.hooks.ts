@@ -44,12 +44,12 @@ export function useTemplatesScreenState({
 
   useEffect(() => {
     if (categories && !hasInitializedExpanded) {
-      const nonAllCategories = categories.filter((cat) => cat.id !== 'all');
-      const initialExpanded = new Set<string>();
-      for (const [index, cat] of nonAllCategories.entries()) {
-        if ((index + 1) % 3 === 0) initialExpanded.add(cat.id);
+      const nonAll = categories.filter((c) => c.id !== 'all');
+      const init = new Set<string>();
+      for (const [i, c] of nonAll.entries()) {
+        if ((i + 1) % 3 === 0) init.add(c.id);
       }
-      setExpandedCategories(initialExpanded);
+      setExpandedCategories(init);
       setHasInitializedExpanded(true);
     }
   }, [categories, hasInitializedExpanded]);

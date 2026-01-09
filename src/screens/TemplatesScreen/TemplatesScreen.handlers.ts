@@ -1,198 +1,71 @@
 /**
  * Event handlers for TemplatesScreen
+ * Re-exports aggregated handlers from focused hook modules
  */
 
-import { useCallback } from 'react';
-import * as Haptics from 'expo-haptics';
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import type { SortOption } from '../templates/constants';
-import type { TemplateCustomizations } from './TemplatesScreen.types';
+import { useNavigationHandlers } from './hooks/useNavigationHandlers';
+import { useSeedHandlers } from './hooks/useSeedHandlers';
+import { useSortHandlers } from './hooks/useSortHandlers';
+import { useTemplateImportHandlers } from './hooks/useTemplateImportHandlers';
 import type { UseTemplateHandlersOptions } from './TemplatesScreen.handlers.types';
 
 export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
-  const {
-    flatListRef,
-    importTemplate,
-    seedAdditionalTemplates,
-    seedNewScienceTemplates,
-    seedTemplates,
-    setImportedTemplateIds,
-    setImportingTemplateId,
-    setIsSeeding,
-    setPreviewTemplate,
-    setResearchOnly,
-    setSearchQuery,
-    setSelectedCategory,
-    setShowCustomizeModal,
-    setShowFullsizePreview,
-    setShowSortOptions,
-    setShowToast,
-    setSortOption,
-    setToastMessage,
-    setViewMode,
-    setExpandedCategories,
-  } = opts;
+  const navigation = useNavigationHandlers({
+    flatListRef: opts.flatListRef,
+    setExpandedCategories: opts.setExpandedCategories,
+    setResearchOnly: opts.setResearchOnly,
+    setSearchQuery: opts.setSearchQuery,
+    setSelectedCategory: opts.setSelectedCategory,
+    setSortOption: opts.setSortOption,
+    setViewMode: opts.setViewMode,
+  });
 
-  const handleToggleCategory = useCallback(
-    (categoryId: string) => {
-      setExpandedCategories((prev) => {
-        const n = new Set(prev);
-        if (n.has(categoryId)) {
-          n.delete(categoryId);
-        } else {
-          n.add(categoryId);
-        }
-        return n;
-      });
-    },
-    [setExpandedCategories]
-  );
+  const imports = useTemplateImportHandlers({
+    importTemplate: opts.importTemplate,
+    setImportedTemplateIds: opts.setImportedTemplateIds,
+    setImportingTemplateId: opts.setImportingTemplateId,
+    setPreviewTemplate: opts.setPreviewTemplate,
+    setShowCustomizeModal: opts.setShowCustomizeModal,
+    setShowFullsizePreview: opts.setShowFullsizePreview,
+    setShowToast: opts.setShowToast,
+    setToastMessage: opts.setToastMessage,
+  });
 
-  const handleBackToBrowse = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setSelectedCategory('all');
-    setViewMode('browse');
-    flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-  }, [flatListRef, setSelectedCategory, setViewMode]);
+  const sort = useSortHandlers({
+    flatListRef: opts.flatListRef,
+    setShowSortOptions: opts.setShowSortOptions,
+    setSortOption: opts.setSortOption,
+  });
 
-  const handleTemplatePreview = useCallback(
-    (t: Doc<'templates'>) => {
-      setPreviewTemplate(t);
-      setShowFullsizePreview(true);
-    },
-    [setPreviewTemplate, setShowFullsizePreview]
-  );
-  const handleCustomizeFromPreview = useCallback(
-    (t: Doc<'templates'>) => {
-      setPreviewTemplate(t);
-      setShowCustomizeModal(true);
-      setShowFullsizePreview(false);
-    },
-    [setPreviewTemplate, setShowCustomizeModal, setShowFullsizePreview]
-  );
-
-  const handleDirectImport = useCallback(
-    async (templateId: Id<'templates'>) => {
-      try {
-        setImportingTemplateId(templateId);
-        const result = await importTemplate({
-          customizations: undefined,
-          templateId,
-        });
-        if (result.success) {
-          setImportedTemplateIds((p) => new Set(p).add(templateId));
-          setShowToast(true);
-          setToastMessage('Imported habit successfully');
-          setTimeout(() => setShowFullsizePreview(false), 1000);
-        }
-      } catch (error) {
-        console.error('Failed to import:', error);
-        setShowToast(true);
-        setToastMessage('Failed to import template. Please try again.');
-      } finally {
-        setImportingTemplateId(null);
-      }
-    },
-    [
-      importTemplate,
-      setImportedTemplateIds,
-      setImportingTemplateId,
-      setShowFullsizePreview,
-      setShowToast,
-      setToastMessage,
-    ]
-  );
-
-  const handleTemplateImport = useCallback(
-    async (
-      templateId: Id<'templates'>,
-      customizations?: TemplateCustomizations
-    ) => {
-      try {
-        setImportingTemplateId(templateId);
-        const result = await importTemplate({ customizations, templateId });
-        if (result.success) {
-          setImportedTemplateIds((p) => new Set(p).add(templateId));
-          setShowToast(true);
-          setToastMessage('Imported habit successfully');
-          setShowCustomizeModal(false);
-        }
-      } catch (error) {
-        console.error('Failed to import:', error);
-        setShowToast(true);
-        setToastMessage('Failed to import template. Please try again.');
-      } finally {
-        setImportingTemplateId(null);
-      }
-    },
-    [
-      importTemplate,
-      setImportedTemplateIds,
-      setImportingTemplateId,
-      setShowCustomizeModal,
-      setShowToast,
-      setToastMessage,
-    ]
-  );
-
-  const handleSelectSortOption = useCallback(
-    (option: SortOption) => {
-      setSortOption(option);
-      setShowSortOptions(false);
-      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-    },
-    [flatListRef, setShowSortOptions, setSortOption]
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setSelectedCategory('all');
-    setSearchQuery('');
-    setResearchOnly(false);
-    setSortOption('popular');
-    setViewMode('browse');
-    flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-  }, [
-    flatListRef,
-    setResearchOnly,
-    setSearchQuery,
-    setSelectedCategory,
-    setSortOption,
-    setViewMode,
-  ]);
-
-  const handleSeedTemplates = useCallback(async () => {
-    setIsSeeding(true);
-    try {
-      await seedTemplates({});
-      await seedAdditionalTemplates({});
-      await seedNewScienceTemplates({});
-      setToastMessage('Templates loaded successfully!');
-      setShowToast(true);
-    } catch (error) {
-      console.error('Error seeding:', error);
-      setToastMessage('Failed to load templates.');
-      setShowToast(true);
-    } finally {
-      setIsSeeding(false);
-    }
-  }, [
-    seedAdditionalTemplates,
-    seedNewScienceTemplates,
-    seedTemplates,
-    setIsSeeding,
-    setShowToast,
-    setToastMessage,
-  ]);
+  const seed = useSeedHandlers({
+    seedAdditionalTemplates: opts.seedAdditionalTemplates,
+    seedNewScienceTemplates: opts.seedNewScienceTemplates,
+    seedTemplates: opts.seedTemplates,
+    setIsSeeding: opts.setIsSeeding,
+    setShowToast: opts.setShowToast,
+    setToastMessage: opts.setToastMessage,
+  });
 
   return {
-    handleBackToBrowse,
-    handleCustomizeFromPreview,
-    handleDirectImport,
-    handleResetFilters,
-    handleSeedTemplates,
-    handleSelectSortOption,
-    handleTemplateImport,
-    handleTemplatePreview,
-    handleToggleCategory,
+    handleBackToBrowse: navigation.handleBackToBrowse,
+    // Also expose individual sort controls
+    handleCloseSortOptions: sort.handleCloseSortOptions,
+
+    handleCustomizeFromPreview: imports.handleCustomizeFromPreview,
+
+    handleDirectImport: imports.handleDirectImport,
+
+    handleOpenSortOptions: sort.handleOpenSortOptions,
+
+    handleResetFilters: navigation.handleResetFilters,
+
+    handleSeedTemplates: seed.handleSeedTemplates,
+
+    handleSelectSortOption: sort.handleSelectSortOption,
+
+    handleTemplateImport: imports.handleTemplateImport,
+
+    handleTemplatePreview: imports.handleTemplatePreview,
+    handleToggleCategory: navigation.handleToggleCategory,
   };
 }

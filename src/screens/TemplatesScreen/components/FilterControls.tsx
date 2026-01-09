@@ -27,6 +27,8 @@ export function FilterControls({
   showSortOptions,
   sortOption,
 }: FilterControlsProps) {
+  const iconColor = showSortOptions ? '#fff' : '#1c1917';
+
   return (
     <View style={styles.sortButtonWrapper}>
       <Pressable
@@ -38,10 +40,7 @@ export function FilterControls({
         ]}
         onPress={onToggleSortOptions}
       >
-        <SlidersHorizontal
-          color={showSortOptions ? '#fff' : '#1c1917'}
-          size={16}
-        />
+        <SlidersHorizontal color={iconColor} size={16} />
         <Text
           style={[
             styles.controlButtonText,
@@ -51,7 +50,7 @@ export function FilterControls({
           {SORT_LABELS[sortOption]}
         </Text>
         <ChevronDown
-          color={showSortOptions ? '#fff' : '#1c1917'}
+          color={iconColor}
           size={14}
           style={{
             transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }],
@@ -63,30 +62,30 @@ export function FilterControls({
           entering={FadeIn.duration(150)}
           style={styles.sortDropdown}
         >
-          {SORT_OPTIONS.map((option) => {
-            const isSelected = sortOption === option.value;
+          {SORT_OPTIONS.map((opt) => {
+            const selected = sortOption === opt.value;
             return (
               <Pressable
-                key={option.value}
+                key={opt.value}
                 accessible
-                accessibilityLabel={`Sort by ${option.label}`}
+                accessibilityLabel={`Sort by ${opt.label}`}
                 accessibilityRole='button'
-                accessibilityState={{ selected: isSelected }}
+                accessibilityState={{ selected }}
                 style={[
                   styles.sortDropdownOption,
-                  isSelected && styles.sortDropdownOptionSelected,
+                  selected && styles.sortDropdownOptionSelected,
                 ]}
-                onPress={() => onSelectSort(option.value)}
+                onPress={() => onSelectSort(opt.value)}
               >
                 <Text
                   style={[
                     styles.sortDropdownOptionText,
-                    isSelected && styles.sortDropdownOptionTextSelected,
+                    selected && styles.sortDropdownOptionTextSelected,
                   ]}
                 >
-                  {option.label}
+                  {opt.label}
                 </Text>
-                {isSelected && (
+                {selected && (
                   <Check color='#10B981' size={16} strokeWidth={2.5} />
                 )}
               </Pressable>
@@ -97,5 +96,3 @@ export function FilterControls({
     </View>
   );
 }
-
-export { ResearchFilterButton } from './ResearchFilterButton';

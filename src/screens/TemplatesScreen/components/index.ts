@@ -4,7 +4,8 @@
 
 export { BrowseHeader } from './BrowseHeader';
 export { CategoryHeader } from './CategoryHeader';
-export { FilterControls, ResearchFilterButton } from './FilterControls';
+export { FilterControls } from './FilterControls';
+export { ResearchFilterButton } from './ResearchFilterButton';
 export { ScrollShadows } from './ScrollShadows';
 export { SearchBar } from './SearchBar';
 export { TabBar } from './TabBar';

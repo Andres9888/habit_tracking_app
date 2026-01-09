@@ -2,159 +2,88 @@
  * Category/Search view mode - shows filtered template list
  */
 
-import { useCallback, useRef } from 'react';
-import { FlatList, Pressable, View } from 'react-native';
-import type { Doc } from '../../../../convex/_generated/dataModel';
-import TemplateCard from '../../../components/TemplateCard';
+import { Pressable, View } from 'react-native';
 import Toast from '../../../components/Toast';
 import { styles } from '../../templates/templatesScreenStyles';
 import {
   CategoryHeader,
   FilterControls,
   ResearchFilterButton,
-  ScrollShadows,
   SearchBar,
   TemplateModals,
-  TemplatesListEmpty,
 } from '../components';
-import { useScrollShadows } from '../useScrollShadows';
 import type { CategorySearchViewProps } from './CategorySearchView.types';
+import { TemplatesList } from './TemplatesList';
 
-export function CategorySearchView(props: CategorySearchViewProps) {
-  const {
-    categories,
-    effectiveViewMode,
-    filteredTemplates,
-    getCategoryLabel,
-    handlers,
-    hasActiveFilters,
-    importedTemplateIds,
-    importingTemplateId,
-    previewTemplate,
-    researchOnly,
-    searchQuery,
-    selectedCategory,
-    setResearchOnly,
-    setSearchQuery,
-    setShowCustomizeModal,
-    setShowFullsizePreview,
-    setShowSortOptions,
-    setShowToast,
-    showCustomizeModal,
-    showFullsizePreview,
-    showSortOptions,
-    showToast,
-    sortOption,
-    toastMessage,
-  } = props;
-
-  const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
-  const scrollShadows = useScrollShadows({
-    resetDeps: [selectedCategory, filteredTemplates.length, effectiveViewMode],
-  });
-
-  const renderTemplateCard = useCallback(
-    ({ item }: { item: Doc<'templates'> }) => (
-      <TemplateCard
-        category={item.category}
-        description={item.description}
-        frequency={item.frequency}
-        icon={item.icon}
-        iconColor={item.iconColor}
-        id={item._id}
-        isImporting={importingTemplateId === item._id}
-        isPremium={item.category === 'andrew_huberman'}
-        name={item.name}
-        popularityScore={item.popularityScore}
-        scientificLink={item.scientificLink}
-        scientificReference={item.scientificReference}
-        youtubeLink={item.youtubeLink}
-        onImport={() => handlers.handleTemplateImport(item._id)}
-        onPreview={() => handlers.handleTemplatePreview(item)}
-      />
-    ),
-    [handlers, importingTemplateId]
-  );
+export function CategorySearchView(p: CategorySearchViewProps) {
+  const { handlers: h, filteredTemplates: templates } = p;
+  const toggle = () => p.setResearchOnly((v) => !v);
 
   return (
     <View style={styles.container}>
       <CategoryHeader
-        categories={categories}
-        filteredCount={filteredTemplates.length}
-        getCategoryLabel={getCategoryLabel}
-        selectedCategory={selectedCategory}
-        viewMode={effectiveViewMode}
-        onBackPress={handlers.handleBackToBrowse}
+        categories={p.categories}
+        filteredCount={templates.length}
+        getCategoryLabel={p.getCategoryLabel}
+        selectedCategory={p.selectedCategory}
+        viewMode={p.effectiveViewMode}
+        onBackPress={h.handleBackToBrowse}
       />
       <View style={styles.searchSection}>
         <SearchBar
           placeholder='Search habits or science keywords'
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onClear={() => setSearchQuery('')}
+          value={p.searchQuery}
+          onChangeText={p.setSearchQuery}
+          onClear={() => p.setSearchQuery('')}
         />
         <View style={styles.controlRow}>
           <FilterControls
-            researchOnly={researchOnly}
-            showSortOptions={showSortOptions}
-            sortOption={sortOption}
-            onResearchToggle={() => setResearchOnly((p) => !p)}
-            onSelectSort={handlers.handleSelectSortOption}
-            onToggleSortOptions={() => setShowSortOptions((p) => !p)}
+            researchOnly={p.researchOnly}
+            showSortOptions={p.showSortOptions}
+            sortOption={p.sortOption}
+            onResearchToggle={toggle}
+            onSelectSort={h.handleSelectSortOption}
+            onToggleSortOptions={() => p.setShowSortOptions((v) => !v)}
           />
           <ResearchFilterButton
-            researchOnly={researchOnly}
-            onToggle={() => setResearchOnly((p) => !p)}
+            researchOnly={p.researchOnly}
+            onToggle={toggle}
           />
         </View>
       </View>
-      <View style={styles.listWrapper}>
-        <FlatList
-          ref={flatListRef}
-          contentContainerStyle={styles.listContent}
-          data={filteredTemplates}
-          keyExtractor={(item) => item._id}
-          ListEmptyComponent={
-            <TemplatesListEmpty
-              hasActiveFilters={hasActiveFilters}
-              onResetFilters={handlers.handleResetFilters}
-            />
-          }
-          renderItem={renderTemplateCard}
-          scrollEventThrottle={16}
-          showsVerticalScrollIndicator={false}
-          onContentSizeChange={scrollShadows.handleContentSizeChange}
-          onLayout={scrollShadows.handleLayout}
-          onScroll={scrollShadows.handleScroll}
-        />
-        <ScrollShadows
-          showBottomShadow={scrollShadows.showBottomShadow}
-          showTopShadow={scrollShadows.showTopShadow}
-        />
-      </View>
+      <TemplatesList
+        effectiveViewMode={p.effectiveViewMode}
+        filteredTemplates={templates}
+        hasActiveFilters={p.hasActiveFilters}
+        importingTemplateId={p.importingTemplateId}
+        selectedCategory={p.selectedCategory}
+        onImport={h.handleTemplateImport}
+        onPreview={h.handleTemplatePreview}
+        onResetFilters={h.handleResetFilters}
+      />
       <TemplateModals
-        importedTemplateIds={importedTemplateIds}
-        importingTemplateId={importingTemplateId}
-        previewTemplate={previewTemplate}
-        showCustomizeModal={showCustomizeModal}
-        showFullsizePreview={showFullsizePreview}
-        onCloseCustomize={() => setShowCustomizeModal(false)}
-        onCloseFullsize={() => setShowFullsizePreview(false)}
-        onCustomize={handlers.handleCustomizeFromPreview}
-        onDirectImport={handlers.handleDirectImport}
-        onImport={handlers.handleTemplateImport}
+        importedTemplateIds={p.importedTemplateIds}
+        importingTemplateId={p.importingTemplateId}
+        previewTemplate={p.previewTemplate}
+        showCustomizeModal={p.showCustomizeModal}
+        showFullsizePreview={p.showFullsizePreview}
+        onCloseCustomize={() => p.setShowCustomizeModal(false)}
+        onCloseFullsize={() => p.setShowFullsizePreview(false)}
+        onCustomize={h.handleCustomizeFromPreview}
+        onDirectImport={h.handleDirectImport}
+        onImport={h.handleTemplateImport}
       />
       <Toast
         duration={3000}
-        message={toastMessage}
-        variant={toastMessage.includes('Failed') ? 'error' : 'success'}
-        visible={showToast}
-        onDismiss={() => setShowToast(false)}
+        message={p.toastMessage}
+        variant={p.toastMessage.includes('Failed') ? 'error' : 'success'}
+        visible={p.showToast}
+        onDismiss={() => p.setShowToast(false)}
       />
-      {showSortOptions && (
+      {p.showSortOptions && (
         <Pressable
           style={styles.dropdownBackdrop}
-          onPress={() => setShowSortOptions(false)}
+          onPress={() => p.setShowSortOptions(false)}
         />
       )}
     </View>
