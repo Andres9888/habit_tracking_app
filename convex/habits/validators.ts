@@ -1,0 +1,67 @@
+/**
+ * Habit Validators
+ * Return type validators for queries
+ */
+import { v } from 'convex/values';
+
+/** Full habit object validator - used in query returns */
+export const fullHabitValidator = v.object({
+  _creationTime: v.number(),
+  _id: v.id('habits'),
+  accessibility: v.optional(v.number()),
+  accessibilityAtPause: v.optional(v.number()),
+  accessibilityDecayParam: v.optional(v.number()),
+  accessibilityGainBehavior: v.optional(v.number()),
+  accessibilityGainReminder: v.optional(v.number()),
+  accessibilityUpdatedAt: v.optional(v.number()),
+  archived: v.optional(v.boolean()),
+  archivedAt: v.optional(v.number()),
+  bestStreak: v.optional(v.number()),
+  consecutiveDays: v.optional(v.number()),
+  createdAt: v.number(),
+  cueAfterBehavior: v.optional(v.string()),
+  cueLocation: v.optional(v.string()),
+  cueTime: v.optional(v.string()),
+  currentStreak: v.optional(v.number()),
+  daysOfWeek: v.optional(v.array(v.number())),
+  frequency: v.optional(v.string()),
+  goalDuration: v.optional(v.number()),
+  goalUnit: v.optional(v.string()),
+  habitDecayParam: v.optional(v.number()),
+  habitGainParam: v.optional(v.number()),
+  icon: v.optional(v.string()),
+  iconColor: v.optional(v.string()),
+  identity: v.optional(v.string()),
+  lastCompletedDate: v.optional(v.string()),
+  lastPredictionAt: v.optional(v.number()),
+  name: v.string(),
+  notes: v.optional(v.string()),
+  order: v.optional(v.number()),
+  paused: v.optional(v.boolean()),
+  pausedAt: v.optional(v.number()),
+  predictedCompletionProb: v.optional(v.number()),
+  preferredTime: v.optional(v.string()),
+  remindersEnabled: v.optional(v.boolean()),
+  reminderSound: v.optional(v.string()),
+  reminderTime: v.optional(v.string()),
+  resumedAt: v.optional(v.number()),
+  strength: v.optional(v.number()),
+  strengthAtPause: v.optional(v.number()),
+  strengthLevel: v.optional(v.string()),
+  strengthUpdatedAt: v.optional(v.number()),
+  tags: v.optional(v.array(v.string())),
+  totalCompletions: v.optional(v.number()),
+  totalMisses: v.optional(v.number()),
+  userId: v.optional(v.string()),
+  why: v.optional(v.string()),
+});
+
+/** Tracking record validator */
+export const trackingRecordValidator = v.object({
+  _creationTime: v.number(),
+  _id: v.id('tracking'),
+  completed: v.boolean(),
+  date: v.string(),
+  habitId: v.id('habits'),
+  userId: v.optional(v.string()),
+});
