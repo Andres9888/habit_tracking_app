@@ -173,6 +173,10 @@ export default tseslint.config(
       'src/components/NativeWindTest.tsx',
       // Deprecated components (scheduled for removal)
       '**/ProgressSection/PersonalBestsCard.tsx',
+      // CalendarTimeline variant implementations (A/B testing experiments)
+      '**/CalendarTimeline/CalendarTimelineWithPulse.tsx',
+      '**/CalendarTimeline/CalendarTimelineWithEdgeFade.tsx',
+      '**/CalendarTimeline/CalendarTimelineComparison.tsx',
       // Theme files - large style configurations
       '**/theme/index.ts',
       // Test setup files - configuration, not production code
