@@ -14,14 +14,7 @@ import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
 } from '../FullsizeTemplatePreview.constants';
-import type { Doc } from '../../../../convex/_generated/dataModel';
-
-interface HeroSectionProps {
-  template: Doc<'templates'>;
-  iconColor: string;
-  iconAnimatedStyle: object;
-  iconGlowStyle: object;
-}
+import type { HeroSectionProps } from './HeroSection.types';
 
 export function HeroSection({
   template,

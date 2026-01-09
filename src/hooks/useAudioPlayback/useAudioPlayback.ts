@@ -7,7 +7,6 @@
 
 import { useEffect } from 'react';
 import type { UseAudioPlaybackOptions, UseAudioPlaybackReturn } from './types';
-import { formatDuration } from './formatUtils';
 import { usePlaybackState } from './usePlaybackState';
 import { useAudioMode } from './useAudioMode';
 import { usePlaybackStatusHandler } from './usePlaybackStatusHandler';
@@ -17,6 +16,7 @@ import { useResumeFromInterruption } from './useResumeFromInterruption';
 import { useSeekControls } from './useSeekControls';
 import { useSpeedAndMute } from './useSpeedAndMute';
 import { useAppStatePlayback } from './useAppStatePlayback';
+import { buildPlaybackReturnValue } from './buildPlaybackReturnValue';
 
 export function useAudioPlayback(
   options?: UseAudioPlaybackOptions
@@ -106,19 +106,7 @@ export function useAudioPlayback(
     };
   }, [state.soundRef]);
 
-  const remainingSeconds =
-    state.status.durationSeconds - state.status.positionSeconds;
-
-  return {
-    formattedDuration: formatDuration(state.status.durationSeconds),
-    formattedPosition: formatDuration(state.status.positionSeconds),
-    formattedRemaining: `-${formatDuration(Math.max(0, remainingSeconds))}`,
-    isInterrupted: state.status.state === 'interrupted',
-    isLoading: state.status.state === 'loading',
-    isPlaying: state.status.state === 'playing',
-    isReady: ['ready', 'playing', 'paused', 'finished'].includes(
-      state.status.state
-    ),
+  return buildPlaybackReturnValue({
     loadAudio,
     pause,
     play,
@@ -133,7 +121,7 @@ export function useAudioPlayback(
     toggleMute,
     togglePlayPause,
     unloadAudio,
-  };
+  });
 }
 
 export default useAudioPlayback;

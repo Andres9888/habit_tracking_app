@@ -9,9 +9,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Modal } from '../../components/Modal';
 import { MonthlyCalendarGrid } from '../../components/BinaryHeatmap';
 import { HabitStrengthSection } from '../../components/HabitStrengthSection';
-import { DeleteUndoToast } from '../../components/DeleteUndoToast';
-import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
-import { DetailHeader, NotesListModal, NotesEditorModal } from './components';
+import {
+  DetailHeader,
+  NotesListModal,
+  NotesEditorModal,
+  UndoToasts,
+} from './components';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
@@ -116,20 +119,15 @@ export default function HabitDetailScreen({
         onClose={notesHandlers.handleCloseNotesEditor}
       />
 
-      <DeleteUndoToast
-        duration={5000}
-        itemName={habit.name}
-        visible={state.pendingDelete}
-        onConfirm={calendarHandlers.handleConfirmDelete}
-        onDismiss={() => state.setPendingDelete(false)}
-        onUndo={calendarHandlers.handleUndoDelete}
-      />
-      <ArchiveUndoToast
-        duration={5000}
+      <UndoToasts
         habitName={habit.name}
-        visible={state.pendingArchive}
-        onDismiss={calendarHandlers.handleConfirmArchive}
-        onUndo={calendarHandlers.handleUndoArchive}
+        pendingArchive={state.pendingArchive}
+        pendingDelete={state.pendingDelete}
+        onConfirmArchive={calendarHandlers.handleConfirmArchive}
+        onConfirmDelete={calendarHandlers.handleConfirmDelete}
+        onDismissDelete={() => state.setPendingDelete(false)}
+        onUndoArchive={calendarHandlers.handleUndoArchive}
+        onUndoDelete={calendarHandlers.handleUndoDelete}
       />
     </Modal>
   );

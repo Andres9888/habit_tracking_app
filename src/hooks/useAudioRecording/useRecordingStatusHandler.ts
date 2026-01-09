@@ -6,17 +6,11 @@
 
 import { useCallback, useRef } from 'react';
 import { Audio } from 'expo-av';
-import type { RecordingStatus, RecordingState } from './types';
-
-type SetStatus = React.Dispatch<React.SetStateAction<RecordingStatus>>;
-
-interface UseRecordingStatusHandlerOptions {
-  maxDurationSeconds: number;
-  warningThresholdSeconds: number;
-  onMaxDurationReached?: () => void;
-  onWarningThresholdReached?: (secondsRemaining: number) => void;
-  onInterrupted?: (reason: 'phone-call' | 'other-app' | 'system') => void;
-}
+import type { RecordingState } from './types';
+import type {
+  SetStatus,
+  UseRecordingStatusHandlerOptions,
+} from './useRecordingStatusHandler.types';
 
 export function useRecordingStatusHandler(
   setStatus: SetStatus,

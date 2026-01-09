@@ -6,24 +6,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { styles } from './StrengthProgressBar.styles';
-import {
-  DIVIDER_POSITIONS,
-  type SizeConfig,
-} from './StrengthProgressBar.constants';
-import type { ViewStyle } from 'react-native';
-
-interface ProgressBarRowProps {
-  config: SizeConfig;
-  currentLevel: { emoji: string; color: string };
-  emojiAnimatedStyle: ViewStyle;
-  nextLevel?: { emoji: string } | null;
-  progressAnimatedStyle: ViewStyle;
-  showDividers: boolean;
-  showEmoji: boolean;
-  showNextLevel: boolean;
-  showPercentage: boolean;
-  strengthLabel: string;
-}
+import { DIVIDER_POSITIONS } from './StrengthProgressBar.constants';
+import type { ProgressBarRowProps } from './ProgressBarRow.types';
 
 export function ProgressBarRow({
   config,

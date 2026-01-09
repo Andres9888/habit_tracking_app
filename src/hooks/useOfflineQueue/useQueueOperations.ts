@@ -2,7 +2,7 @@
  * Queue operations (enqueue, dequeue, markFailed)
  */
 
-import { useCallback, MutableRefObject } from 'react';
+import { useCallback } from 'react';
 import {
   loadQueueIndex,
   saveQueueIndex,
@@ -12,21 +12,8 @@ import {
   loadAllQueueItems,
 } from './storage';
 import { generateSubmissionId, calculateQueueStats } from './utils';
-import type {
-  OfflineSubmissionType,
-  QueuedSubmission,
-  QueueStats,
-} from './types';
-
-interface UseQueueOperationsProps {
-  maxQueueSize: number;
-  maxRetries: number;
-  isMountedRef: MutableRefObject<boolean>;
-  setQueueCount: (count: number) => void;
-  onItemProcessed?: (item: QueuedSubmission) => void;
-  onItemFailed?: (item: QueuedSubmission, error: Error) => void;
-  onQueueChange?: (stats: QueueStats) => void;
-}
+import type { OfflineSubmissionType, QueuedSubmission } from './types';
+import type { UseQueueOperationsProps } from './useQueueOperations.types';
 
 export function useQueueOperations({
   maxQueueSize,

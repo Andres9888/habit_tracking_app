@@ -5,36 +5,15 @@ import {
   withRepeat,
   withSequence,
   Easing,
-  type SharedValue,
 } from 'react-native-reanimated';
 import { Springs } from '../../../constants/motion';
-import {
-  MILESTONES,
-  type MilestoneDisplayState,
-} from '../MilestoneProgressTypes';
+import { MILESTONES } from '../MilestoneProgressTypes';
 import {
   ENTRANCE_DURATION,
   PROGRESS_BAR_DURATION,
   PULSE_DURATION,
 } from './animation.constants';
-
-interface AnimationValues {
-  containerScale: SharedValue<number>;
-  containerOpacity: SharedValue<number>;
-  progressWidth: SharedValue<number>;
-  badgePulse: SharedValue<number>;
-  celebrationScale: SharedValue<number>;
-}
-
-interface UseAnimationEffectsParams {
-  animationValues: AnimationValues;
-  reduceMotion: boolean;
-  progressPercentage: number;
-  daysRemaining: number;
-  displayState: MilestoneDisplayState;
-  currentStreak: number;
-  onMilestoneHit?: (milestone: number) => void;
-}
+import type { UseAnimationEffectsParams } from './useAnimationEffects.types';
 
 export const useAnimationEffects = ({
   animationValues,

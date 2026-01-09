@@ -9,31 +9,9 @@ import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
 import { footerStyles } from '../styles';
-import type { SharedValue } from 'react-native-reanimated';
-import type { PressHandlers } from '../FullsizeTemplatePreview.types';
+import type { FooterSectionProps } from './FooterSection.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-interface FooterSectionProps {
-  templateName: string;
-  iconColor: string;
-  isImporting: boolean;
-  isImported: boolean;
-  bottomInset: number;
-  importButtonStyle: object;
-  customizeButtonStyle: object;
-  checkmarkAnimatedStyle: object;
-  successButtonGlowStyle: object;
-  successIconBounceStyle: object;
-  createPressHandlers: (
-    scale: SharedValue<number>,
-    scaleValue?: number
-  ) => PressHandlers;
-  importButtonScale: SharedValue<number>;
-  customizeButtonScale: SharedValue<number>;
-  onImport: () => void;
-  onCustomize: () => void;
-}
 
 export function FooterSection({
   templateName,

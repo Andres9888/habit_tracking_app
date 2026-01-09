@@ -7,19 +7,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import {
+  MAX_LENGTH,
+  MAX_CHARS,
+  WARNING_THRESHOLD,
+  SHOW_THRESHOLD,
+  type HabitNameFieldProps,
+} from './HabitNameField.constants';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-
-interface HabitNameFieldProps {
-  value: string;
-  onChange: (text: string) => void;
-  autoFocus: boolean;
-}
-
-const MAX_LENGTH = 50;
-const MAX_CHARS = 40; // V11: Soft limit for character counter
-const WARNING_THRESHOLD = 30;
-const SHOW_THRESHOLD = 20;
 
 const HabitNameFieldComponent = ({
   value,

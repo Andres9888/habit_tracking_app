@@ -7,3 +7,4 @@ export { DetailHeader } from './DetailHeader';
 export { HeroSection } from './HeroSection';
 export { NotesEditorModal } from './NotesEditorModal';
 export { NotesListModal } from './NotesListModal';
+export { UndoToasts } from './UndoToasts';

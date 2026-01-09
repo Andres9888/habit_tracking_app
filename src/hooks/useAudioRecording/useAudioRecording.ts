@@ -10,7 +10,7 @@
  * Story T10.2: Audio recording integration (expo-av)
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Audio } from 'expo-av';
 import type {
   UseAudioRecordingOptions,
@@ -21,10 +21,6 @@ import {
   DEFAULT_WARNING_THRESHOLD_SECONDS,
   INITIAL_RECORDING_STATUS,
 } from './constants';
-import {
-  openMicrophoneSettings,
-  showMicrophonePermissionAlert,
-} from './permissionUtils';
 import { useRecordingPermission } from './useRecordingPermission';
 import { useAudioMode } from './useAudioMode';
 import { useRecordingStatusHandler } from './useRecordingStatusHandler';
@@ -32,6 +28,7 @@ import { useStartRecording } from './useStartRecording';
 import { useStopRecording } from './useStopRecording';
 import { useRecordingControl } from './useRecordingControl';
 import { useAppStateInterruption } from './useAppStateInterruption';
+import { useRecordingSettingsHelpers } from './useRecordingSettingsHelpers';
 import { buildReturnValue } from './buildReturnValue';
 
 export function useAudioRecording(
@@ -111,22 +108,12 @@ export function useAudioRecording(
     };
   }, []);
 
-  const reset = useCallback(() => {
-    setStatus((p) => ({
-      ...INITIAL_RECORDING_STATUS,
-      canAskAgain: p.canAskAgain,
-      hasPermission: p.hasPermission,
-    }));
-    resetRefs();
-  }, [resetRefs]);
-
-  const openSettings = useCallback(() => {
-    openMicrophoneSettings();
-    opts.onOpenSettings?.();
-  }, [opts.onOpenSettings]);
-  const showPermissionAlert = useCallback(() => {
-    showMicrophonePermissionAlert({ onOpenSettings: opts.onOpenSettings });
-  }, [opts.onOpenSettings]);
+  const { reset, openSettings, showPermissionAlert } =
+    useRecordingSettingsHelpers({
+      onOpenSettings: opts.onOpenSettings,
+      resetRefs,
+      setStatus,
+    });
 
   return buildReturnValue({
     cancelRecording,

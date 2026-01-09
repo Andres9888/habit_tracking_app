@@ -1,48 +1,10 @@
-import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit } from '../types';
 import type { HabitsModalsState } from './types';
 import type { ModalVisibilityState } from './useModalVisibilityState';
 import type { HabitSelectionState } from './useHabitSelectionState';
-
-interface HandlersReturn {
-  closeCreateHabit: () => void;
-  closeEditScreen: () => void;
-  closeShareCard: () => void;
-  closeQuickActions: () => void;
-  confirmPause: () => Promise<void>;
-  closeVisualizationExercise: () => void;
-  onSettingsChange: (u: unknown) => Promise<void>;
-  onDeleteHabit: (id: Id<'habits'>) => Promise<void>;
-  openEditHabit: (h: Habit | null) => void;
-  closeActivationModal: () => void;
-  openHabitCalendar: (h: Habit) => void;
-  onShareMilestone: (d: unknown) => void;
-  openHabitDetail: (h: Habit, t?: 'progress' | 'motivation' | 'manage') => void;
-  openActivationModal: (h: Habit) => void;
-  openPauseModal: (id: Id<'habits'>) => void;
-  openActivationModalById: (id: string) => void;
-  openCreateHabitScreen: () => void;
-  openQuickActions: (h: Habit) => void;
-  openVisualizationExercise: (h: Habit) => void;
-}
-
-interface ExtraState {
-  celebrationsEnabled: boolean;
-  habits: Habit[];
-  settings: unknown;
-  milestone: unknown;
-  showHabitStrengthPercentage: boolean;
-  tracking: unknown;
-  reduceMotionPreference: boolean;
-  handleArchive: (id: Id<'habits'>) => Promise<void>;
-  onChangeCelebrationsEnabled: (value: boolean) => Promise<void>;
-  handleToggleHabit: (args: {
-    habitId: Id<'habits'>;
-    date: string;
-  }) => Promise<void>;
-  clearMilestone: () => void;
-  getStreak: unknown;
-}
+import type {
+  HandlersReturn,
+  ExtraState,
+} from './buildModalsStateReturnValue.types';
 
 export function buildModalsStateReturnValue(
   v: ModalVisibilityState,
@@ -60,93 +22,113 @@ export function buildModalsStateReturnValue(
     habitToPause: s.habitToPause,
     milestone: extra.milestone,
     quickActionsHabit: s.quickActionsHabit,
-    settings: extra.settings,
-    showActivationModal: v.showActivationModal,
-    showCreateHabit: v.isCreateHabitOpen,
-    showEditScreen: v.showEditScreen,
-    selectedHabit: s.selectedHabit,
-    showHabitCalendar: v.isHabitCalendarOpen,
-    shareCardData: s.shareCardData,
-    showHabitDetail: v.isHabitDetailOpen,
-    reduceMotionPreference: extra.reduceMotionPreference,
-    showHapticTest: v.showHapticTest,
     // Handlers from extracted hook
     closeCreateHabit: h.closeCreateHabit,
 
-    showPauseModal: v.showPauseModal,
+    reduceMotionPreference: extra.reduceMotionPreference,
 
     closeEditScreen: h.closeEditScreen,
 
-    showQuickActions: v.showQuickActions,
+    selectedHabit: s.selectedHabit,
 
     closeQuickActions: h.closeQuickActions,
 
-    showSettings: v.isSettingsOpen,
+    settings: extra.settings,
 
     closeShareCard: h.closeShareCard,
 
+    shareCardData: s.shareCardData,
+
     closeActivationModal: h.closeActivationModal,
 
-    showShareCard: v.showShareCard,
+    showActivationModal: v.showActivationModal,
+
     closeVisualizationExercise: h.closeVisualizationExercise,
-    showTemplatesScreen: v.showTemplatesScreen,
+
+    showCreateHabit: v.isCreateHabitOpen,
+
     confirmPause: h.confirmPause,
-    showVisualizationExercise: v.showVisualizationExercise,
+
+    showEditScreen: v.showEditScreen,
+
     onDeleteHabit: h.onDeleteHabit,
-    showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
+
+    showHabitCalendar: v.isHabitCalendarOpen,
+
     onSettingsChange: h.onSettingsChange,
-    tracking: extra.tracking,
+
+    showHabitDetail: v.isHabitDetailOpen,
+
     // Extra handlers
     onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
 
-    onShareMilestone: h.onShareMilestone,
+    showHapticTest: v.showHapticTest,
 
     handleArchive: extra.handleArchive,
 
-    openActivationModal: h.openActivationModal,
+    showPauseModal: v.showPauseModal,
 
     clearMilestone: extra.clearMilestone,
 
-    openActivationModalById: h.openActivationModalById,
+    showQuickActions: v.showQuickActions,
 
     getStreak: extra.getStreak,
 
-    openCreateHabitScreen: h.openCreateHabitScreen,
+    showSettings: v.isSettingsOpen,
 
     // Inline close handlers
     closeSettings: () => v.setIsSettingsOpen(false),
 
-    openEditHabit: h.openEditHabit,
-
     closeHabitCalendar: () => v.setIsHabitCalendarOpen(false),
 
-    openHabitCalendar: h.openHabitCalendar,
+    showShareCard: v.showShareCard,
 
     closeHabitDetail: () => v.setIsHabitDetailOpen(false),
 
-    openHabitDetail: h.openHabitDetail,
+    showTemplatesScreen: v.showTemplatesScreen,
 
     closeHapticTest: () => v.setShowHapticTest(false),
 
-    openPauseModal: h.openPauseModal,
+    showVisualizationExercise: v.showVisualizationExercise,
 
     closePauseModal: () => {
       v.setShowPauseModal(false);
       s.setHabitToPause(null);
     },
-    openQuickActions: h.openQuickActions,
+
+    showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
+
     closeTemplatesScreen: () => v.setShowTemplatesScreen(false),
-    openVisualizationExercise: h.openVisualizationExercise,
+
+    tracking: extra.tracking,
+
+    onShareMilestone: h.onShareMilestone,
+
+    openActivationModal: h.openActivationModal,
+
+    openActivationModalById: h.openActivationModalById,
+
+    openCreateHabitScreen: h.openCreateHabitScreen,
+
+    openEditHabit: h.openEditHabit,
+
+    openHabitCalendar: h.openHabitCalendar,
+
+    openHabitDetail: h.openHabitDetail,
     openHapticTest: () => {
       v.setIsSettingsOpen(false);
       v.setShowHapticTest(true);
     },
+    openPauseModal: h.openPauseModal,
+    openQuickActions: h.openQuickActions,
     // Inline open handlers
     openSettings: () => v.setIsSettingsOpen(true),
 
-    toggleHabit: extra.handleToggleHabit,
-
     openTemplatesScreen: () => v.setShowTemplatesScreen(true),
+
+    openVisualizationExercise: h.openVisualizationExercise,
+
     setShowHabitStrengthPercentage: () => {},
+    toggleHabit: extra.handleToggleHabit,
   } as HabitsModalsState;
 }
