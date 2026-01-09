@@ -4,19 +4,18 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { View } from 'react-native';
 import type { StrengthProgressBarProps } from './StrengthProgressBar.types';
 import {
   getCurrentLevel,
   getNextLevel,
   formatStrengthPercentage,
   SIZE_CONFIG,
-  DIVIDER_POSITIONS,
 } from './StrengthProgressBar.constants';
 import { useStrengthAnimation } from './useStrengthAnimation';
 import { styles } from './StrengthProgressBar.styles';
 import { ProgressBarBottomRow } from './ProgressBarBottomRow';
+import { ProgressBarRow } from './ProgressBarRow';
 
 export const StrengthProgressBar = ({
   showDividers = true,
@@ -48,84 +47,18 @@ export const StrengthProgressBar = ({
       accessibilityRole='progressbar'
       style={styles.container}
     >
-      <View style={[styles.topRow, { gap: config.gap }]}>
-        {showEmoji && (
-          <View
-            style={[
-              styles.emojiContainer,
-              {
-                height: config.emojiContainerSize,
-                width: config.emojiContainerSize,
-              },
-            ]}
-          >
-            <Animated.Text
-              style={[
-                styles.emoji,
-                { fontSize: config.emojiSize },
-                emojiAnimatedStyle,
-              ]}
-            >
-              {currentLevel.emoji}
-            </Animated.Text>
-          </View>
-        )}
-
-        <View
-          style={[
-            styles.barContainer,
-            {
-              backgroundColor: '#e5e7eb',
-              borderRadius: config.barHeight / 2,
-              height: config.barHeight,
-            },
-          ]}
-        >
-          <Animated.View
-            style={[
-              styles.barFill,
-              {
-                backgroundColor: currentLevel.color,
-                borderRadius: config.barHeight / 2,
-              },
-              progressAnimatedStyle,
-            ]}
-          />
-          {showDividers &&
-            DIVIDER_POSITIONS.map((pos) => (
-              <View
-                key={pos}
-                style={[
-                  styles.divider,
-                  { height: config.barHeight, left: `${pos}%` },
-                ]}
-              />
-            ))}
-        </View>
-
-        {showPercentage && (
-          <Text
-            style={[
-              styles.percentage,
-              { color: currentLevel.color, fontSize: config.fontSize },
-            ]}
-          >
-            {strengthLabel}
-          </Text>
-        )}
-
-        {showNextLevel && nextLevel && (
-          <View style={styles.nextLevelContainer}>
-            <Text style={[styles.arrow, { fontSize: config.fontSize }]}>→</Text>
-            <Text
-              style={[styles.nextEmoji, { fontSize: config.emojiSize * 0.85 }]}
-            >
-              {nextLevel.emoji}
-            </Text>
-          </View>
-        )}
-      </View>
-
+      <ProgressBarRow
+        config={config}
+        currentLevel={currentLevel}
+        emojiAnimatedStyle={emojiAnimatedStyle}
+        nextLevel={nextLevel}
+        progressAnimatedStyle={progressAnimatedStyle}
+        showDividers={showDividers}
+        showEmoji={showEmoji}
+        showNextLevel={showNextLevel}
+        showPercentage={showPercentage}
+        strengthLabel={strengthLabel}
+      />
       <ProgressBarBottomRow
         config={config}
         currentLevel={currentLevel}

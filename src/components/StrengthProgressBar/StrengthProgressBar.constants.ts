@@ -90,3 +90,5 @@ export function getNextLevel(strength: number): LevelConfig | null {
 export function formatStrengthPercentage(strength: number): string {
   return `${Math.round(strength)}%`;
 }
+
+export { type SizeConfig } from './StrengthProgressBar.types';

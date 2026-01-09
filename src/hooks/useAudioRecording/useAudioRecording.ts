@@ -25,7 +25,6 @@ import {
   openMicrophoneSettings,
   showMicrophonePermissionAlert,
 } from './permissionUtils';
-import { formatDuration } from './formatUtils';
 import { useRecordingPermission } from './useRecordingPermission';
 import { useAudioMode } from './useAudioMode';
 import { useRecordingStatusHandler } from './useRecordingStatusHandler';
@@ -33,6 +32,7 @@ import { useStartRecording } from './useStartRecording';
 import { useStopRecording } from './useStopRecording';
 import { useRecordingControl } from './useRecordingControl';
 import { useAppStateInterruption } from './useAppStateInterruption';
+import { buildReturnValue } from './buildReturnValue';
 
 export function useAudioRecording(
   options?: UseAudioRecordingOptions
@@ -128,27 +128,20 @@ export function useAudioRecording(
     showMicrophonePermissionAlert({ onOpenSettings: opts.onOpenSettings });
   }, [opts.onOpenSettings]);
 
-  return {
+  return buildReturnValue({
     cancelRecording,
-    canStartRecording: status.state === 'idle' || status.state === 'stopped',
-    formattedDuration: formatDuration(status.durationSeconds),
-    isApproachingMaxDuration: status.isApproachingMaxDuration,
-    isInterrupted: status.state === 'interrupted',
-    isMaxDurationReached: status.durationSeconds >= maxDuration,
-    isPaused: status.state === 'paused',
-    isRecording: status.state === 'recording',
+    maxDuration,
     openSettings,
     pauseRecording,
     requestPermission,
     reset,
     resumeFromInterruption,
     resumeRecording,
-    secondsUntilMaxDuration: status.secondsUntilMaxDuration,
     showPermissionAlert,
     startRecording,
     status,
     stopRecording,
-  };
+  });
 }
 
 export default useAudioRecording;

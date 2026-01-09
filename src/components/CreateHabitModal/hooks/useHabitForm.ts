@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+/**
+ * useHabitForm - Main habit form hook
+ */
+
+import { useCallback, useEffect, useMemo } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
-import { buildHabitName, parseHabitName, parseReminderTime } from '../utils';
-import {
-  type HubermanPhase,
-  getPhaseFromPreferredTime,
-} from '../../../constants/hubermanPhases';
+import { buildHabitName, parseReminderTime } from '../utils';
+import { getPhaseFromPreferredTime } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { getSmartReminderDefault } from '../../../utils/reminderDefaults';
 import { getReminderOptionFromTime } from './reminderUtils';
 import { useReminderOptionSync } from './useReminderOptionSync';
+import { useHabitFormState } from './useHabitFormState';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -18,47 +20,37 @@ interface UseHabitFormOptions {
 }
 
 export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
-  const parsed = useMemo(
-    () => parseHabitName(habitToEdit?.name ?? ''),
-    [habitToEdit?.name]
-  );
-
-  const [habitName, setHabitName] = useState(parsed.name);
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
-    parsed.emoji
-  );
-  const [selectedColor, setSelectedColor] = useState(
-    habitToEdit?.iconColor ?? DEFAULT_COLOR
-  );
-  const [isColorPickerVisible, setColorPickerVisible] = useState(false);
-  const [remindersEnabled, setRemindersEnabled] = useState(
-    habitToEdit?.remindersEnabled ?? false
-  );
-  const [reminderTime, setReminderTime] = useState(() =>
-    parseReminderTime(habitToEdit?.reminderTime)
-  );
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [reminderSound, setReminderSound] = useState(
-    habitToEdit?.reminderSound ?? DEFAULT_SOUND
-  );
-  const [frequency, setFrequency] = useState<string>(
-    habitToEdit?.frequency ?? ''
-  );
-  const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
-    getPhaseFromPreferredTime(habitToEdit?.preferredTime)
-  );
-  const [reminderOption, setReminderOptionState] = useState<ReminderOption>(
-    getReminderOptionFromTime(
-      habitToEdit?.remindersEnabled,
-      habitToEdit?.reminderTime
-    )
-  );
+  const state = useHabitFormState({ habitToEdit });
+  const {
+    dayPhase,
+    frequency,
+    habitName,
+    isColorPickerVisible,
+    parsed,
+    reminderOption,
+    remindersEnabled,
+    reminderSound,
+    reminderTime,
+    selectedColor,
+    selectedEmoji,
+    setColorPickerVisible,
+    setDayPhase,
+    setFrequency,
+    setHabitName,
+    setReminderOptionState,
+    setRemindersEnabled,
+    setReminderSound,
+    setReminderTime,
+    setSelectedColor,
+    setSelectedEmoji,
+    setShowTimePicker,
+    showTimePicker,
+  } = state;
 
   const fullHabitName = useMemo(
     () => buildHabitName(selectedEmoji, habitName),
     [selectedEmoji, habitName]
   );
-
   const syncReminderOption = useReminderOptionSync({
     setDayPhase,
     setRemindersEnabled,
@@ -70,12 +62,11 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
       setReminderOptionState(option);
       syncReminderOption(option);
     },
-    [syncReminderOption]
+    [setReminderOptionState, syncReminderOption]
   );
 
   useEffect(() => {
     if (!habitToEdit) return;
-
     setHabitName(parsed.name);
     setSelectedEmoji(parsed.emoji);
     setSelectedColor(habitToEdit.iconColor ?? DEFAULT_COLOR);
@@ -90,7 +81,19 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
         habitToEdit.reminderTime
       )
     );
-  }, [habitToEdit, parsed]);
+  }, [
+    habitToEdit,
+    parsed,
+    setHabitName,
+    setSelectedEmoji,
+    setSelectedColor,
+    setRemindersEnabled,
+    setReminderTime,
+    setReminderSound,
+    setFrequency,
+    setDayPhase,
+    setReminderOptionState,
+  ]);
 
   const resetForm = useCallback(() => {
     const smartDefault = getSmartReminderDefault();
@@ -105,7 +108,19 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setFrequency('');
     setDayPhase(null);
     setReminderOptionState(smartDefault);
-  }, []);
+  }, [
+    setColorPickerVisible,
+    setDayPhase,
+    setFrequency,
+    setHabitName,
+    setRemindersEnabled,
+    setReminderOptionState,
+    setReminderSound,
+    setReminderTime,
+    setSelectedColor,
+    setSelectedEmoji,
+    setShowTimePicker,
+  ]);
 
   return {
     closeColorPicker: () => setColorPickerVisible(false),

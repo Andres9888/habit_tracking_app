@@ -1,0 +1,113 @@
+/**
+ * PreviewContent - Main content area of the preview modal
+ */
+
+import React from 'react';
+import Animated from 'react-native-reanimated';
+import { layoutStyles } from '../styles';
+import { SuccessGlowOverlay } from './SuccessGlowOverlay';
+import { ModalHeader } from './ModalHeader';
+import { ScrollableContent } from './ScrollableContent';
+import { FooterSection } from './FooterSection';
+import { ConfettiOverlay } from './ConfettiOverlay';
+import type { Template } from '../../../types/template';
+import type { ViewStyle } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
+import type { GestureResponderHandlers } from 'react-native';
+
+interface PreviewContentProps {
+  animatedStyles: {
+    contentStyle: ViewStyle;
+    successGlowStyle: ViewStyle;
+    closeButtonAnimatedOpacityStyle: ViewStyle;
+    closeButtonStyle: ViewStyle;
+    iconAnimatedStyle: ViewStyle;
+    iconGlowStyle: ViewStyle;
+    checkmarkAnimatedStyle: ViewStyle;
+    customizeButtonStyle: ViewStyle;
+    importButtonStyle: ViewStyle;
+    successButtonGlowStyle: ViewStyle;
+    successIconBounceStyle: ViewStyle;
+  };
+  closeButtonScale: SharedValue<number>;
+  confettiRef: React.RefObject<any>;
+  createPressHandlers: (
+    scale: SharedValue<number>,
+    minScale: number
+  ) => GestureResponderHandlers;
+  customizeButtonScale: SharedValue<number>;
+  handlers: {
+    handleClose: () => void;
+    handleCustomize: () => void;
+    handleImport: () => void;
+    handleResearchPress: () => void;
+  };
+  iconColor: string;
+  importButtonScale: SharedValue<number>;
+  insets: { top: number; bottom: number };
+  isImported: boolean;
+  isImporting: boolean;
+  reducedMotion: boolean;
+  template: Template;
+}
+
+export function PreviewContent({
+  animatedStyles,
+  closeButtonScale,
+  confettiRef,
+  createPressHandlers,
+  customizeButtonScale,
+  handlers,
+  iconColor,
+  importButtonScale,
+  insets,
+  isImported,
+  isImporting,
+  reducedMotion,
+  template,
+}: PreviewContentProps) {
+  return (
+    <Animated.View
+      style={[layoutStyles.container, animatedStyles.contentStyle]}
+    >
+      <SuccessGlowOverlay animatedStyle={animatedStyles.successGlowStyle} />
+      <ModalHeader
+        closeButtonAnimatedOpacityStyle={
+          animatedStyles.closeButtonAnimatedOpacityStyle
+        }
+        closeButtonPressHandlers={createPressHandlers(closeButtonScale, 0.9)}
+        closeButtonStyle={animatedStyles.closeButtonStyle}
+        topInset={insets.top}
+        onClose={handlers.handleClose}
+      />
+      <ScrollableContent
+        iconAnimatedStyle={animatedStyles.iconAnimatedStyle}
+        iconColor={iconColor}
+        iconGlowStyle={animatedStyles.iconGlowStyle}
+        template={template}
+        onResearchPress={handlers.handleResearchPress}
+      />
+      <FooterSection
+        bottomInset={insets.bottom}
+        checkmarkAnimatedStyle={animatedStyles.checkmarkAnimatedStyle}
+        createPressHandlers={createPressHandlers}
+        customizeButtonScale={customizeButtonScale}
+        customizeButtonStyle={animatedStyles.customizeButtonStyle}
+        iconColor={iconColor}
+        importButtonScale={importButtonScale}
+        importButtonStyle={animatedStyles.importButtonStyle}
+        isImported={isImported}
+        isImporting={isImporting}
+        successButtonGlowStyle={animatedStyles.successButtonGlowStyle}
+        successIconBounceStyle={animatedStyles.successIconBounceStyle}
+        templateName={template.name}
+        onCustomize={handlers.handleCustomize}
+        onImport={handlers.handleImport}
+      />
+      <ConfettiOverlay
+        ref={confettiRef}
+        visible={isImported && !reducedMotion}
+      />
+    </Animated.View>
+  );
+}
