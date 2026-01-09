@@ -844,3 +844,431 @@ _Additional findings will be added as they are evaluated._
 ## Dependencies (Security)
 
 _None identified yet. Will be updated as more findings are evaluated._
+
+---
+
+# Test Implementation Plan - Loop 00001
+
+## Test Summary
+
+- **Total Test Candidates:** 24
+- **Auto-Implement (PENDING):** 10 - Est. coverage gain: +18.5%
+- **Manual Review:** 5
+- **Won't Do:** 9
+
+## Current Coverage: 39.72%
+
+## Target Coverage: 80%
+
+## Estimated Post-Loop Coverage: 58.2% (Phase 1 & 2 only)
+
+---
+
+## PENDING - Ready for Auto-Implementation
+
+### TEST-001: calculateNewStrength (v2.0 Momentum Formula)
+
+- **Status:** `PENDING`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-004
+- **Importance:** CRITICAL
+- **Testability:** EASY
+- **Est. Coverage Gain:** +2.0%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test growth on completion (3% of remaining gap to 100)
+  - Test decay on miss with varying streak shield levels (0-7 completions)
+  - Test boundary conditions (0% strength, 100% strength, edge of caps)
+  - Verify `GROWTH_RATE`, `BASE_DECAY`, `SHIELD_EFFECTIVENESS` constants are applied correctly
+- **Mocks Needed:** None - pure function
+- **Note:** Tests exist in `convex/habitStrength.test.ts` but coverage report shows 0%. May need to verify test runner includes Convex files.
+
+### TEST-002: calculateMomentumStrengthSnapshot
+
+- **Status:** `PENDING`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-005
+- **Importance:** CRITICAL
+- **Testability:** EASY
+- **Est. Coverage Gain:** +3.0%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test with empty tracking history (returns baseline only)
+  - Test with all completions (strength grows smoothly)
+  - Test with all misses (strength decays with shield protection)
+  - Test with mixed patterns (realistic user behavior)
+  - Test with backfilled dates (out-of-order tracking)
+- **Mocks Needed:** None - pure function, takes tracking data as parameter
+
+### TEST-003: parseDateKeyToLocalDate Validation
+
+- **Status:** `PENDING`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-006
+- **Importance:** MEDIUM
+- **Testability:** EASY
+- **Est. Coverage Gain:** +0.5%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test valid date keys: "2025-01-15", "2024-12-31"
+  - Test invalid month: "2025-13-15" (month 13)
+  - Test invalid day: "2025-01-32" (day 32)
+  - Test malformed strings: "2025/01/15", "01-15-2025", "invalid"
+- **Mocks Needed:** None - pure function
+
+### TEST-004: logisticBaseline Edge Cases
+
+- **Status:** `PENDING`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-016
+- **Importance:** MEDIUM
+- **Testability:** EASY
+- **Est. Coverage Gain:** +0.5%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test day 0 (habit creation day)
+  - Test day 7 (calibration point - should be ~18.3%)
+  - Test day 90 (target - should be LOGISTIC_TARGET_VALUE)
+  - Test day 365 (long-term - should be close to but not exceed target)
+  - Test `LOGISTIC_TARGET_VALUE === 0` edge case
+- **Mocks Needed:** None - pure function
+
+### TEST-005: computeCompliance Zero Days
+
+- **Status:** `PENDING`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-017
+- **Importance:** MEDIUM
+- **Testability:** EASY
+- **Est. Coverage Gain:** +0.5%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test with empty tracking map (daysConsidered = 0, should return 0%)
+  - Test with evaluation date before habit creation
+  - Test with single day of tracking data
+  - Test with full week of data (7 days)
+- **Mocks Needed:** None - pure function
+
+### TEST-006: getStreaksForHabit Helper
+
+- **Status:** `PENDING`
+- **File:** `convex/analytics.ts`
+- **Gap ID:** GAP-010
+- **Importance:** HIGH
+- **Testability:** EASY
+- **Est. Coverage Gain:** +2.0%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test consecutive days streak (5 days in a row)
+  - Test broken streak with gap (3 days, miss, 2 days)
+  - Test current streak detection (completed today vs not)
+  - Test longest streak separate from current streak
+  - Test empty tracking history
+- **Mocks Needed:** None - pure function (takes tracking data as parameter)
+
+### TEST-007: calculateStreakFromHistory
+
+- **Status:** `PENDING`
+- **File:** `convex/streakUtils.ts`
+- **Gap ID:** GAP-024
+- **Importance:** HIGH
+- **Testability:** EASY
+- **Est. Coverage Gain:** +2.0%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test consecutive completions (7 day streak)
+  - Test gaps in streak (3 completed, 1 miss, 2 completed = 2 streak)
+  - Test backfill scenarios (dates added out of order)
+  - Test timezone edge cases (midnight boundary)
+  - Test empty history (0 streak)
+- **Mocks Needed:** None - pure function
+
+### TEST-008: EmptyState Component
+
+- **Status:** `PENDING`
+- **File:** `src/components/EmptyState.tsx`
+- **Gap ID:** GAP-013
+- **Importance:** MEDIUM
+- **Testability:** EASY
+- **Est. Coverage Gain:** +0.5%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test renders without crashing
+  - Test CTA button is visible
+  - Test onPress callback is called when button pressed
+  - Test with different props (title, message, buttonText)
+- **Mocks Needed:** None - simple presentational component
+
+### TEST-009: ChainLinkIcon Render Branches
+
+- **Status:** `PENDING`
+- **File:** `src/components/ChainLinkIcon.tsx`
+- **Gap ID:** GAP-023
+- **Importance:** LOW
+- **Testability:** EASY
+- **Est. Coverage Gain:** +0.5%
+- **Test Type:** Unit
+- **Test Strategy:**
+  - Test with isLinked=true (renders connected chain)
+  - Test with isLinked=false (renders broken chain)
+  - Test with different sizes (small, medium, large)
+  - Test with different colors
+- **Mocks Needed:** None - presentational component
+- **Note:** Already has 83% branch coverage, just need to cover remaining 17%
+
+### TEST-010: toggleHabit Future Date Validation
+
+- **Status:** `PENDING`
+- **File:** `convex/habits.ts`
+- **Gap ID:** GAP-002
+- **Importance:** HIGH
+- **Testability:** MEDIUM
+- **Est. Coverage Gain:** +1.0%
+- **Test Type:** Edge Case
+- **Test Strategy:**
+  - Test with valid date format (YYYY-MM-DD) returns success
+  - Test with invalid date format throws validation error
+  - Test with future date (tomorrow) throws "Cannot track future dates" error
+  - Test with today's date succeeds
+  - Test with yesterday's date succeeds (backfill allowed)
+- **Mocks Needed:** Mock Convex context (ctx.db, ctx.auth) - basic mock pattern needed
+
+---
+
+## PENDING - MANUAL REVIEW
+
+### TEST-011: habits.ts - All CRUD Operations
+
+- **Status:** `PENDING - MANUAL REVIEW`
+- **File:** `convex/habits.ts`
+- **Gap ID:** GAP-001
+- **Importance:** CRITICAL
+- **Testability:** HARD
+- **Reason for Review:** Requires Convex context mocking infrastructure that doesn't exist yet. 217 LOC file with 15+ mutations/queries. Testing all of them needs a reusable mock pattern.
+- **Recommended Approach:**
+  1. Create `convex/__tests__/helpers/mockConvexContext.ts` with factory for mock ctx
+  2. Start with simplest mutation (`get`) to establish pattern
+  3. Build up to complex mutations (`create`, `update`, `toggleHabit`)
+  4. Share mock patterns across all Convex tests
+
+### TEST-012: Toast Component
+
+- **Status:** `PENDING - MANUAL REVIEW`
+- **File:** `src/components/Toast.tsx`
+- **Gap ID:** GAP-011
+- **Importance:** HIGH
+- **Testability:** HARD
+- **Reason for Review:** Requires mocking Reanimated and Gesture Handler. 328 LOC with complex animation and gesture logic. Jest setup changes needed.
+- **Recommended Approach:**
+  1. Add Reanimated mock to jest.setup.js (`jest/setup.js` from reanimated package)
+  2. Mock GestureDetector and Gesture.Pan()
+  3. Test variant rendering first (success, error, info, undo)
+  4. Test onDismiss callback
+  5. Skip animation timing tests (flaky)
+
+### TEST-013: SettingsModal
+
+- **Status:** `PENDING - MANUAL REVIEW`
+- **File:** `src/components/SettingsModal/SettingsModal.tsx`
+- **Gap ID:** GAP-012
+- **Importance:** HIGH
+- **Testability:** HARD
+- **Reason for Review:** Known blocker - requires SafeAreaProvider wrapper in test utils. Also needs lucide-react-native mocks.
+- **Recommended Approach:**
+  1. Update test-utils.tsx to include SafeAreaProvider wrapper
+  2. Mock lucide-react-native icons as simple View components
+  3. Test toggle handlers fire correctly
+  4. Test navigation to ArchivedHabitsModal view
+
+### TEST-014: App.tsx Entry Point
+
+- **Status:** `PENDING - MANUAL REVIEW`
+- **File:** `App.tsx`
+- **Gap ID:** GAP-014
+- **Importance:** CRITICAL
+- **Testability:** VERY HARD
+- **Reason for Review:** Needs extensive mocking of ConvexProvider, ClerkProvider, navigation, and all app-level providers. Integration test that may be better suited for E2E testing.
+- **Recommended Approach:**
+  1. Consider if unit testing is even the right approach here
+  2. If unit testing: mock all providers, just verify app renders
+  3. If E2E: use Detox or Maestro for full integration
+  4. May be better as a Storybook integration test
+
+### TEST-015: analytics.ts - All Queries
+
+- **Status:** `PENDING - MANUAL REVIEW`
+- **File:** `convex/analytics.ts`
+- **Gap ID:** GAP-009
+- **Importance:** HIGH
+- **Testability:** MEDIUM
+- **Reason for Review:** 6 analytics queries need Convex context mocking. Could be tested as pure functions if data is passed as parameters, but need to verify query handlers extract data correctly.
+- **Recommended Approach:**
+  1. Reuse Convex mock pattern from TEST-011
+  2. Test aggregation logic with known fixture data
+  3. Verify correct calculations for `getOverviewStats`, `get30DayTrend`, etc.
+
+---
+
+## WON'T DO
+
+### TEST-016: habits.ts Error Handlers (Habit Not Found)
+
+- **Status:** `WON'T DO`
+- **File:** `convex/habits.ts`
+- **Gap ID:** GAP-003
+- **Importance:** MEDIUM
+- **Testability:** HARD
+- **Reason:** Error paths in Convex mutations require full mutation execution with mock context. Low value relative to effort since error handling is straightforward ("throw new Error()"). Should be covered implicitly when testing happy paths with proper edge cases.
+
+### TEST-017: updateHabitStrength Mutation
+
+- **Status:** `WON'T DO`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-007
+- **Importance:** HIGH
+- **Testability:** HARD
+- **Reason:** Convex mutation requiring full ctx mock. The core logic (`calculateNewStrength`) is tested separately. This mutation is mostly glue code (date validation + DB upsert) that's better verified through integration tests.
+
+### TEST-018: recalculateHabitStrength Mutation
+
+- **Status:** `WON'T DO`
+- **File:** `convex/habitStrength.ts`
+- **Gap ID:** GAP-008
+- **Importance:** MEDIUM
+- **Testability:** HARD
+- **Reason:** Rarely used (migrations/data recovery only). Core calculation logic is tested via `calculateMomentumStrengthSnapshot`. Mutation is mostly DB operations.
+
+### TEST-019: templates.ts
+
+- **Status:** `WON'T DO`
+- **File:** `convex/templates.ts`
+- **Gap ID:** GAP-015
+- **Importance:** LOW
+- **Testability:** MEDIUM
+- **Reason:** 465 LOC of mostly static template definitions. CRUD operations are straightforward. Risk of bugs is low. Testing effort not justified by value.
+
+### TEST-020: reorderHabits Empty Array
+
+- **Status:** `WON'T DO`
+- **File:** `convex/habits.ts`
+- **Gap ID:** GAP-018
+- **Importance:** MEDIUM
+- **Testability:** HARD
+- **Reason:** Single edge case (empty array early return) in a Convex mutation. Requires full mutation mocking for one trivial branch. Not worth the setup cost.
+
+### TEST-021: list Query Authentication
+
+- **Status:** `WON'T DO`
+- **File:** `convex/habits.ts`
+- **Gap ID:** GAP-019
+- **Importance:** HIGH
+- **Testability:** HARD
+- **Reason:** Auth branch testing requires mocking `ctx.auth.getUserIdentity()`. This is better tested as part of integration/E2E tests that verify auth works across the full stack.
+
+### TEST-022: BinaryHeatmap StatsRow Branches
+
+- **Status:** `WON'T DO`
+- **File:** `src/components/BinaryHeatmap/StatsRow.tsx`
+- **Gap ID:** GAP-020
+- **Importance:** MEDIUM
+- **Testability:** MEDIUM
+- **Reason:** Already has 85% line coverage. The untested 15% are likely edge case branches that rarely execute. Diminishing returns for testing effort.
+
+### TEST-023: BinaryHeatmap BinaryCell Branches
+
+- **Status:** `WON'T DO`
+- **File:** `src/components/BinaryHeatmap/BinaryCell.tsx`
+- **Gap ID:** GAP-021
+- **Importance:** MEDIUM
+- **Testability:** MEDIUM
+- **Reason:** Has 79% line coverage. The 50% function coverage gap is likely event handlers. These are better tested via integration tests. Existing tests are sufficient.
+
+### TEST-024: RewardCelebrationToast
+
+- **Status:** `WON'T DO`
+- **File:** `src/components/RewardCelebrationToast.tsx`
+- **Gap ID:** GAP-022
+- **Importance:** MEDIUM
+- **Testability:** HARD
+- **Reason:** Animation-heavy component with 55% coverage already. Reanimated mocking required. Animation timing tests are inherently flaky. Current coverage is acceptable for a celebration UI component.
+
+---
+
+## Implementation Order
+
+Recommended sequence based on coverage impact and dependencies:
+
+### Phase 1: Pure Functions (No Mocks Needed) - Target +10% coverage
+
+1. **TEST-001** - calculateNewStrength (+2.0%)
+2. **TEST-002** - calculateMomentumStrengthSnapshot (+3.0%)
+3. **TEST-006** - getStreaksForHabit (+2.0%)
+4. **TEST-007** - calculateStreakFromHistory (+2.0%)
+5. **TEST-003** - parseDateKeyToLocalDate (+0.5%)
+6. **TEST-004** - logisticBaseline edge cases (+0.5%)
+7. **TEST-005** - computeCompliance zero days (+0.5%)
+
+### Phase 2: Simple UI Components (No Complex Mocks) - Target +1.5% coverage
+
+8. **TEST-008** - EmptyState (+0.5%)
+9. **TEST-009** - ChainLinkIcon (+0.5%)
+
+### Phase 3: Moderate Complexity (Basic Mocks) - Target +1% coverage
+
+10. **TEST-010** - toggleHabit date validation (+1.0%)
+
+### Phase 4: Manual Review (Infrastructure Needed)
+
+_Requires manual developer setup:_
+
+- TEST-011 through TEST-015 need Convex mock infrastructure
+- TEST-012 and TEST-013 need animation/gesture mocking
+- TEST-014 needs decision on unit vs E2E approach
+
+---
+
+## Dependencies
+
+Tests that share setup or mocking infrastructure:
+
+- **Group A (Pure Convex Functions):** TEST-001, TEST-002, TEST-003, TEST-004, TEST-005
+  - All test pure functions from `convex/habitStrength.ts`
+  - Can be implemented in a single test file
+  - No mocking required
+
+- **Group B (Analytics):** TEST-006 (from analytics.ts), TEST-007 (from streakUtils.ts)
+  - Both deal with streak/analytics calculations
+  - Both are pure functions with similar input patterns (tracking history)
+
+- **Group C (Convex Mutations):** TEST-010, TEST-011, TEST-015, TEST-017, TEST-018
+  - All need Convex context mocking
+  - Once mock infrastructure exists, all become testable
+
+- **Group D (UI with Animation):** TEST-012, TEST-013, TEST-024
+  - All need Reanimated/Gesture Handler mocking
+  - All need SafeAreaProvider wrapper
+
+---
+
+## Blockers & Recommendations
+
+### Before Starting Auto-Implementation
+
+1. **Verify Test Runner Includes Convex Files**
+   - Coverage report shows 0% for `convex/habitStrength.ts` but tests exist
+   - Check Jest config includes `convex/**/*.ts` in coverage collection
+
+2. **Update Test Utils with SafeAreaProvider**
+   - Create enhanced render function in `__tests__/utils/test-utils.tsx`
+   - Wrap with SafeAreaProvider, ThemeProvider, and other required providers
+
+3. **Create Convex Mock Factory (for Phase 4)**
+   - `convex/__tests__/helpers/mockConvexContext.ts`
+   - Factory pattern for creating mock `ctx` with configurable db state
+   - Include mock auth identity generator
+
+---
+
+_Evaluated: 2026-01-08_
+_Agent: refactor-performance-security-testing_
+_Loop: 00001_
