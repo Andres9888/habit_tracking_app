@@ -22,9 +22,7 @@ Using the coverage report from the analysis phase, identify specific untested fu
 
 ## Gap Finding Checklist
 
-- [x] **Find untested code (or skip if not needed)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_COVERAGE_REPORT.md`. If the report shows overall line coverage of 80% or higher, OR there are no files with coverage below 80%, mark this task complete without creating a gaps file—the coverage target has been met. Otherwise, examine low-coverage files, identify specific functions and branches without test coverage. List each gap with file path, function name, and why it matters. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAPS.md`.
-  - **Completed:** 2026-01-08 by refactor-performance-security-testing agent
-  - **Result:** Coverage at 39.72% (below 80% target). Created comprehensive gaps document with 24 identified gaps across critical files including convex/habits.ts, convex/habitStrength.ts, convex/analytics.ts, Toast.tsx, and SettingsModal.tsx. Notably discovered that the v2.0 momentum-based strength formula (calculateNewStrength, calculateMomentumStrengthSnapshot) is NOT tested despite being the production formula - existing tests only cover the legacy Klein model.
+- [ ] **Find untested code (or skip if not needed)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_COVERAGE_REPORT.md`. If the report shows overall line coverage of 80% or higher, OR there are no files with coverage below 80%, mark this task complete without creating a gaps file—the coverage target has been met. Otherwise, examine low-coverage files, identify specific functions and branches without test coverage. List each gap with file path, function name, and why it matters. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAPS.md`.
 
 ## What to Look For
 
