@@ -1,0 +1,73 @@
+/**
+ * Convex validators for settings queries and mutations
+ */
+import { v } from 'convex/values';
+
+export const settingsReturnValidator = v.object({
+  appIcon: v.string(),
+  catTheme: v.boolean(),
+  darkMode: v.union(v.literal('system'), v.literal('light'), v.literal('dark')),
+  dayShape: v.union(v.literal('circle'), v.literal('square')),
+  habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
+  habitSortMode: v.union(
+    v.literal('manual'),
+    v.literal('name_asc'),
+    v.literal('name_desc'),
+    v.literal('strength_asc'),
+    v.literal('strength_desc'),
+    v.literal('streak_asc'),
+    v.literal('streak_desc'),
+    v.literal('day_phase')
+  ),
+  hasPremium: v.boolean(),
+  highContrastMode: v.boolean(),
+  reduceMotion: v.boolean(),
+  showCalendarView: v.boolean(),
+  showCharacterScreen: v.boolean(),
+  showConsistency: v.boolean(),
+  showEmojis: v.boolean(),
+  showMotivationalMessages: v.boolean(),
+  showNotesStats: v.boolean(),
+  showStreaks: v.boolean(),
+  showWeekCompletionBar: v.boolean(),
+  useDyslexicFont: v.boolean(),
+});
+
+export const updateArgsValidator = {
+  appIcon: v.optional(v.string()),
+  catTheme: v.boolean(),
+  darkMode: v.union(
+    v.literal('system'),
+    v.literal('light'),
+    v.literal('dark'),
+    v.boolean()
+  ),
+  dayShape: v.optional(v.union(v.literal('circle'), v.literal('square'))),
+  habitCompletionIcon: v.optional(
+    v.union(v.literal('chain'), v.literal('checkbox'))
+  ),
+  habitSortMode: v.optional(
+    v.union(
+      v.literal('manual'),
+      v.literal('name_asc'),
+      v.literal('name_desc'),
+      v.literal('strength_asc'),
+      v.literal('strength_desc'),
+      v.literal('streak_asc'),
+      v.literal('streak_desc'),
+      v.literal('day_phase')
+    )
+  ),
+  hasPremium: v.optional(v.boolean()),
+  highContrastMode: v.optional(v.boolean()),
+  reduceMotion: v.optional(v.boolean()),
+  showCalendarView: v.boolean(),
+  showCharacterScreen: v.optional(v.boolean()),
+  showConsistency: v.boolean(),
+  showEmojis: v.boolean(),
+  showMotivationalMessages: v.boolean(),
+  showNotesStats: v.optional(v.boolean()),
+  showStreaks: v.boolean(),
+  showWeekCompletionBar: v.optional(v.boolean()),
+  useDyslexicFont: v.optional(v.boolean()),
+};
