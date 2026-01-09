@@ -21,8 +21,7 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 
 ## Analysis Checklist
 
-- [x] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
-  > **Completed (2026-01-08):** Attack surface map already exists with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Skipped regeneration per instructions.
+- [ ] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
 
 ## What to Identify
 

@@ -21,8 +21,7 @@ Evaluate each security finding from the discovery phase and assign severity and 
 
 ## Evaluation Checklist
 
-- [x] **Evaluate one finding (or skip if empty)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md. If it contains no findings OR all findings have already been evaluated in LOOP_00001_PLAN.md, mark this task complete without changes. Otherwise, pick one unevaluated finding, rate by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD), mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix, and append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`.
-  - **Completed 2026-01-08:** Evaluated VULN-001 (Hardcoded Figma Access Token) as CRITICAL severity, EASY remediability. Status: PENDING for auto-fix. Added to Security Remediation Plan section in LOOP_00001_PLAN.md as SEC-001.
+- [ ] **Evaluate one finding (or skip if empty)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md. If it contains no findings OR all findings have already been evaluated in LOOP_00001_PLAN.md, mark this task complete without changes. Otherwise, pick one unevaluated finding, rate by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD), mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix, and append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`.
 
 ## Rating Criteria
 

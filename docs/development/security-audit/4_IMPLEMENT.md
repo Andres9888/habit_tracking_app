@@ -23,9 +23,7 @@ Implement fixes for `PENDING` security vulnerabilities from the evaluation phase
 
 ## Task
 
-- [x] **Fix one vulnerability (or skip if none)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md. If the file doesn't exist OR contains no items with status exactly `PENDING` that have CRITICAL/HIGH severity AND EASY/MEDIUM remediability, mark this task complete without changes. Otherwise, find ONE such item, implement the fix following secure coding practices, verify the fix, log to /Users/andres/Code/habit_tracking_app/docs/SECURITY_LOG_refactor-performance-security-testing_2026-01-09.md, and update status to `IMPLEMENTED` in the plan file.
-
-  **Completed 2026-01-09:** SEC-001 (Hardcoded Figma Token) was found with status `PENDING`. Investigation revealed the fix was already implemented in commit `dfd74d6` (2025-12-29). Updated plan file to `IMPLEMENTED` status, verified the fix is in place (`.env.mcp` in `.gitignore`, not tracked, `.env.mcp.example` exists), and logged findings to security log. No remaining `PENDING` items with CRITICAL/HIGH severity and EASY/MEDIUM remediability.
+- [ ] **Fix one vulnerability (or skip if none)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md. If the file doesn't exist OR contains no items with status exactly `PENDING` that have CRITICAL/HIGH severity AND EASY/MEDIUM remediability, mark this task complete without changes. Otherwise, find ONE such item, implement the fix following secure coding practices, verify the fix, log to /Users/andres/Code/habit_tracking_app/docs/SECURITY_LOG_refactor-performance-security-testing_2026-01-09.md, and update status to `IMPLEMENTED` in the plan file.
 
 ## Implementation Checklist
 
