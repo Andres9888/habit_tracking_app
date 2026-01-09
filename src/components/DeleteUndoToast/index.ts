@@ -1,2 +1,3 @@
-export { DeleteUndoToast, type DeleteUndoToastProps } from './DeleteUndoToast';
+export { DeleteUndoToast } from './DeleteUndoToast';
 export { default } from './DeleteUndoToast';
+export type { DeleteUndoToastProps } from './types';
