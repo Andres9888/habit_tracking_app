@@ -55,6 +55,12 @@ export interface CelebrationScreenProps {
   reduceMotion?: boolean;
 }
 
+export interface CelebrationScreenContentProps {
+  habit: CelebrationHabitData;
+  visible: boolean;
+  reduceMotion: boolean;
+}
+
 // Re-export internal component types for convenience
 export type {
   AnimatedContentProps,

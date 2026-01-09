@@ -7,21 +7,11 @@
  */
 
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { Modal } from '../../../Modal';
-import { QuickReflection } from '../QuickReflection';
-import {
-  AnimatedContent,
-  CelebrationHeader,
-  StreakDisplay,
-  StatsRow,
-  ModalHeader,
-  ScienceTip,
-  CaptureSection,
-  DoneButton,
-} from './components';
+import { AnimatedContent, ModalHeader, DoneButton } from './components';
+import { CelebrationScreenContent } from './CelebrationScreenContent';
 import { useCelebrationScreen } from './useCelebrationScreen';
 import type { CelebrationScreenProps } from './types';
 
@@ -38,8 +28,6 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
 
   if (!habit) return null;
 
-  let idx = 0;
-
   return (
     <Modal
       respectReduceMotion={!reduceMotion}
@@ -52,96 +40,26 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
         style={{ paddingTop: insets.top }}
       >
         <ModalHeader onClose={onClose} />
-        <ScrollView
-          className='flex-1 px-4'
-          contentContainerStyle={{ paddingBottom: 24 }}
-          showsVerticalScrollIndicator={false}
-        >
-          <AnimatedContent
-            index={idx++}
-            reduceMotion={reduceMotion}
-            visible={visible}
-          >
-            <CelebrationHeader
-              habitName={habit.name}
-              isStreakMilestone={habit.isStreakMilestone}
-              milestoneNumber={habit.milestoneNumber}
-              reduceMotion={reduceMotion}
-            />
-          </AnimatedContent>
-          {state.hasStreak && (
-            <AnimatedContent
-              index={idx++}
-              reduceMotion={reduceMotion}
-              visible={visible}
-            >
-              <View className='mt-4'>
-                <StreakDisplay
-                  reduceMotion={reduceMotion}
-                  streak={habit.currentStreak!}
-                />
-              </View>
-            </AnimatedContent>
-          )}
-          {state.hasStats && (
-            <AnimatedContent
-              index={idx++}
-              reduceMotion={reduceMotion}
-              visible={visible}
-            >
-              <View className='mt-4'>
-                <StatsRow
-                  bestStreak={habit.bestStreak}
-                  completionRate={habit.completionRate}
-                  totalCompletions={habit.totalCompletions}
-                />
-              </View>
-            </AnimatedContent>
-          )}
-          <AnimatedContent
-            index={idx++}
-            reduceMotion={reduceMotion}
-            visible={visible}
-          >
-            <View className='mt-4'>
-              <QuickReflection
-                showNoteInput
-                compact={false}
-                note={state.localNote}
-                reduceMotion={reduceMotion}
-                sectionIndex={idx}
-                selectedEmoji={state.localEmoji}
-                shouldAnimate={false}
-                onEmojiSelect={state.handleEmojiSelect}
-                onNoteChange={state.handleNoteChange}
-                onSubmit={onReflectionSubmit}
-              />
-            </View>
-          </AnimatedContent>
-          <AnimatedContent
-            index={idx++}
-            reduceMotion={reduceMotion}
-            visible={visible}
-          >
-            <CaptureSection
-              onRecordVoice={state.handleRecordVoice}
-              onWriteLetter={state.handleWriteLetter}
-            />
-          </AnimatedContent>
-          <AnimatedContent
-            index={idx++}
-            reduceMotion={reduceMotion}
-            visible={visible}
-          >
-            <ScienceTip />
-          </AnimatedContent>
-        </ScrollView>
+        <CelebrationScreenContent
+          habit={habit}
+          handleEmojiSelect={state.handleEmojiSelect}
+          handleNoteChange={state.handleNoteChange}
+          handleRecordVoice={state.handleRecordVoice}
+          handleWriteLetter={state.handleWriteLetter}
+          hasStats={state.hasStats}
+          hasStreak={state.hasStreak}
+          localEmoji={state.localEmoji}
+          localNote={state.localNote}
+          reduceMotion={reduceMotion}
+          visible={visible}
+          onReflectionSubmit={onReflectionSubmit}
+        />
         <View
           className='border-t border-emerald-100 bg-white px-4 pt-4'
           style={{ paddingBottom: Math.max(insets.bottom, 16) }}
         >
           <AnimatedContent
-            index={idx++}
+            index={7}
             reduceMotion={reduceMotion}
             visible={visible}
           >
