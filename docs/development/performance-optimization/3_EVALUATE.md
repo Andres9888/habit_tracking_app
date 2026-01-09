@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Performance
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -26,16 +26,8 @@ Evaluate candidates from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_
 
 ## Task
 
-- [x] **Evaluate one candidate**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md, pick an unevaluated finding, investigate the fix, assess complexity/gain, and append to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md.
-
-**Completion Note (2025-12-29):** All 18 candidates have already been evaluated in the LOOP_00001_PLAN.md file. Added an "Evaluation Status" summary section to the plan file confirming:
-
-- 3 candidates IMPLEMENTED (#2, #3, #9)
-- 5 candidates PENDING for auto-implementation (#4, #5, #6, #10, #11)
-- 4 candidates PENDING - MANUAL REVIEW (#1, #7, #8, #15)
-- 6 candidates marked WON'T DO (#12, #13, #14, #16, #17, #18)
-
-No unevaluated candidates remain. Ready for implementation phase.
+- [x] **Evaluate one candidate (or skip if empty)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md. If it contains no findings OR all findings have already been evaluated in LOOP_00001_PLAN.md, mark this task complete without changes. Otherwise, pick one unevaluated finding, investigate the fix, assess complexity/gain, and append to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md.
+  - **Completed 2026-01-08**: Evaluated Candidate #20 (DraggableHabit Legacy Animated API Migration) from Tactic 3 findings. Discovered critical dead code (`streakBadgeGlow` runs infinite JS-thread animations but is never used in render) and unnecessary `useNativeDriver: false` on pure opacity animations. Rated LOW complexity, HIGH benefit. Status: PENDING for auto-implementation.
 
 ## Rating Criteria
 
@@ -121,11 +113,18 @@ After evaluation, set the status based on the ratings:
 
 ## How to Know You're Done
 
-This task is complete when:
+This task is complete when ONE of the following is true:
+
+**Option A - Evaluated a candidate:**
 1. You've evaluated exactly ONE candidate from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
 2. You've appended a complete evaluation to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
 3. The evaluation includes both complexity and gain ratings
 4. The status is set according to the table above
 
-If all candidates have already been evaluated, add a note to the plan file indicating all candidates have been processed.
+**Option B - No candidates to evaluate:**
+1. `LOOP_00001_CANDIDATES.md` contains no findings, OR
+2. All findings have already been evaluated in `LOOP_00001_PLAN.md`
+3. Mark this task complete without making changes
+
+This graceful handling of empty states prevents the pipeline from stalling when a tactic yields no candidates.
 ```

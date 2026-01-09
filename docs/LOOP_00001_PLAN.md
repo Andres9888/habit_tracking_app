@@ -2,9 +2,9 @@
 
 ## Summary
 
-- **Total Candidates:** 19 (18 original + 1 from Tactic 2)
+- **Total Candidates:** 20 (18 original + 1 from Tactic 2 + 1 from Tactic 3)
 - **IMPLEMENTED:** 6
-- **PENDING (auto-implement):** 0
+- **PENDING (auto-implement):** 1
 - **PENDING - MANUAL REVIEW:** 7 (includes #19 from Tactic 2)
 - **WON'T DO:** 6
 
@@ -594,3 +594,156 @@ The following candidates were identified through the Inline Style Object Audit (
 | #   | Candidate                                | Risk   | Benefit | Status                  |
 | --- | ---------------------------------------- | ------ | ------- | ----------------------- |
 | 19  | DraggableHabit Inline Style Optimization | MEDIUM | HIGH    | PENDING - MANUAL REVIEW |
+| 20  | DraggableHabit Legacy Animated Migration | LOW    | HIGH    | PENDING                 |
+
+---
+
+## 20. DraggableHabit Legacy Animated API Migration - Evaluated 2026-01-08 15:30
+
+**Source:** Tactic 3: Legacy Animated API Migration - Finding 1
+**File:** `src/components/DraggableHabit/DraggableHabit.tsx`
+**Line(s):** 136-144, 215-238, 275-292, 432-444, 686-704
+
+### Current Code
+
+```typescript
+// Lines 136-144: 9 Animated.Value refs
+const fade = useRef(new Animated.Value(0)).current;
+const translateY = useRef(new Animated.Value(12)).current;
+const archiveFlash = useRef(new Animated.Value(0)).current;
+const cardScale = useRef(new Animated.Value(1)).current;
+const iconPulse = useRef(new Animated.Value(1)).current;
+const highlightGlow = useRef(new Animated.Value(0)).current;
+const streakBadgeGlow = useRef(new Animated.Value(0)).current;  // DEAD CODE!
+const newRecordScale = useRef(new Animated.Value(0)).current;
+const newRecordOpacity = useRef(new Animated.Value(0)).current;
+
+// Lines 215-238: highlightGlow animations with useNativeDriver: false
+Animated.sequence([
+  Animated.timing(highlightGlow, {
+    duration: 300,
+    easing: Easing.out(Easing.ease),
+    toValue: 1,
+    useNativeDriver: false,  // UNNECESSARY - only animates opacity!
+  }),
+  // ... 3 more timing calls with useNativeDriver: false
+]).start();
+
+// Lines 275-292: streakBadgeGlow loop with useNativeDriver: false
+Animated.loop(
+  Animated.sequence([
+    Animated.timing(streakBadgeGlow, {
+      duration: 1500,
+      toValue: 1,
+      useNativeDriver: false,  // DEAD CODE - never used in render!
+    }),
+    Animated.timing(streakBadgeGlow, {
+      duration: 1500,
+      toValue: 0.3,
+      useNativeDriver: false,
+    }),
+  ])
+).start();
+
+// Lines 432-444: archiveFlash with useNativeDriver: false
+Animated.sequence([
+  Animated.timing(archiveFlash, {
+    duration: 120,
+    toValue: 1,
+    useNativeDriver: false,  // UNNECESSARY - only animates opacity!
+  }),
+  Animated.timing(archiveFlash, {
+    duration: 220,
+    toValue: 0,
+    useNativeDriver: false,
+  }),
+]).start();
+
+// Lines 686-704: Usage of these values (only opacity)
+<Animated.View style={{ opacity: archiveFlash, ... }} />
+<Animated.View style={{ opacity: highlightGlow, ... }} />
+// streakBadgeGlow is NEVER used in render!
+```
+
+### Proposed Fix
+
+```typescript
+// OPTION A: Quick Fix - Switch to useNativeDriver: true (lowest risk)
+// Since highlightGlow and archiveFlash only animate opacity (natively supported):
+
+// Lines 215-238: Change all 4 to useNativeDriver: true
+Animated.timing(highlightGlow, {
+  duration: 300,
+  easing: Easing.out(Easing.ease),
+  toValue: 1,
+  useNativeDriver: true,  // Fixed!
+}),
+
+// Lines 432-444: Change both to useNativeDriver: true
+Animated.timing(archiveFlash, {
+  duration: 120,
+  toValue: 1,
+  useNativeDriver: true,  // Fixed!
+}),
+
+// Lines 270-292: REMOVE streakBadgeGlow entirely (dead code)
+// DELETE: const streakBadgeGlow = useRef(new Animated.Value(0)).current;
+// DELETE: entire useEffect block for streakBadgeGlow (lines 270-292)
+
+// OPTION B: Full Reanimated Migration (better long-term)
+// Replace with Reanimated for consistency with existing entranceCardStyle usage:
+
+import { useSharedValue, useAnimatedStyle, withTiming, withSequence } from 'react-native-reanimated';
+
+// Replace refs with shared values
+const highlightGlow = useSharedValue(0);
+const archiveFlash = useSharedValue(0);
+
+// Animated styles run on UI thread
+const highlightGlowStyle = useAnimatedStyle(() => ({
+  opacity: highlightGlow.value,
+}));
+
+const archiveFlashStyle = useAnimatedStyle(() => ({
+  opacity: archiveFlash.value,
+}));
+
+// Animation triggers
+highlightGlow.value = withSequence(
+  withTiming(1, { duration: 300 }),
+  withTiming(0.5, { duration: 400 }),
+  withTiming(1, { duration: 300 }),
+  withTiming(0, { duration: 500 })
+);
+
+// Usage with Reanimated.View (component already imports ReAnimated)
+<ReAnimated.View style={[{ /* static styles */ }, archiveFlashStyle]} />
+<ReAnimated.View style={[{ /* static styles */ }, highlightGlowStyle]} />
+```
+
+### Assessment
+
+- **Complexity:** LOW - The simplest fix (Option A) is a 6-line change: flip 6 `useNativeDriver: false` to `true` and delete ~25 lines of dead code. The full migration (Option B) is more work but the component already uses Reanimated for entrance animations.
+- **Gain:** HIGH - This component renders for EVERY habit in the list. The `streakBadgeGlow` dead code runs an infinite JS-thread loop for every habit with 7+ day streaks, competing for JS thread time during scrolling. The `highlightGlow` 4-stage animation runs on every newly created habit. Both cause unnecessary GC pressure and frame drops.
+- **Dependencies:** None - changes are self-contained within this component
+
+### Implementation Notes
+
+1. **Dead Code Discovery:** The `streakBadgeGlow` animated value is defined on line 142, animated in an infinite loop (lines 270-292), but NEVER used anywhere in the render. This is pure performance drain with zero visual effect. Removing it provides immediate benefit with zero risk.
+
+2. **Safe Native Driver Switch:** Both `highlightGlow` and `archiveFlash` only animate the `opacity` property (lines 691, 702). Opacity is fully supported by the native driver. The `useNativeDriver: false` was likely a mistake or copy-paste from somewhere else.
+
+3. **Verification Steps:**
+   - Search for `streakBadgeGlow` usage in render: None found - safe to delete
+   - Check `highlightGlow` interpolation: None - only used directly as opacity value
+   - Check `archiveFlash` interpolation: None - only used directly as opacity value
+
+4. **Testing:**
+   - Create a new habit (triggers highlightGlow animation) - verify glow effect still works
+   - Swipe to archive a habit (triggers archiveFlash) - verify flash effect still works
+   - Navigate to a habit with 7+ day streak - should see NO change (dead code removed)
+   - Performance: Profile with 20+ habits during scroll - should see reduced JS thread activity
+
+5. **Migration Path:** Option A (native driver fix) can be done immediately. Option B (full Reanimated migration) can be done later as part of the larger DraggableHabit refactoring effort.
+
+### Status: PENDING
