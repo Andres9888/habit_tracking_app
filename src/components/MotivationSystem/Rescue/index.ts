@@ -6,7 +6,11 @@
  */
 
 export { RescueMode } from './RescueMode';
-export type { RescueModeProps, RescueHabitData } from './RescueMode';
+export type {
+  RescueModeProps,
+  RescueHabitData,
+  Day1VoiceNoteData,
+} from './RescueMode';
 
 export { FailureViz } from './FailureViz';
 export type { FailureVizProps, FailureVisualizationData } from './FailureViz';
