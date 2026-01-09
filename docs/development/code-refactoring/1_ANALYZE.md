@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Refactor
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-tests
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-tests
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -25,8 +25,7 @@ Analyze the codebase to identify **categories of refactoring opportunities** and
 
 ## Analysis Checklist
 
-- [x] **Survey codebase**: Examine project structure, find largest files, identify patterns. Note file size distribution and any obvious organizational issues.
-  - **Completed:** Surveyed ~565+ source files (~154,500 LOC total). Identified 14 files over 1,000 LOC with `HabitDetailScreen.tsx` (3,503 LOC) as the primary refactoring target. Created 10 investigation tactics covering monster file decomposition, pattern extraction, dead code detection, and architecture improvements. Game plan output to `/docs/LOOP_00001_GAME_PLAN.md`.
+- [ ] **Survey codebase (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md` already exists with at least one tactic defined. If it does, skip the survey and mark this task complete—the game plan is already in place. If it doesn't exist, examine project structure, find largest files, identify patterns. Note file size distribution and any obvious organizational issues.
 
 ## Output Format
 
