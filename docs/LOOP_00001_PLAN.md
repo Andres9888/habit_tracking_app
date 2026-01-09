@@ -2,10 +2,10 @@
 
 ## Summary
 
-- **Total Candidates:** 18
+- **Total Candidates:** 19 (18 original + 1 from Tactic 2)
 - **IMPLEMENTED:** 6
 - **PENDING (auto-implement):** 0
-- **PENDING - MANUAL REVIEW:** 6
+- **PENDING - MANUAL REVIEW:** 7 (includes #19 from Tactic 2)
 - **WON'T DO:** 6
 
 ## Status Matrix
@@ -517,3 +517,80 @@ Priority: **Low - Requires Developer Review**
 | WON'T DO                | 6     | #12, #13, #14, #16, #17, #18 |
 
 **Loop 00001 Complete (2025-12-29):** All LOW risk items have been auto-implemented. Remaining MEDIUM/HIGH risk items require manual review and implementation.
+
+---
+
+## Tactic 2 Findings - Additional Candidates
+
+The following candidates were identified through the Inline Style Object Audit (Tactic 2) and require evaluation:
+
+### 19. DraggableHabit Inline Style Optimization
+
+- **Location:** `src/components/DraggableHabit/DraggableHabit.tsx:386-928`
+- **Category:** Performance / Organization
+- **Risk:** MEDIUM
+- **Benefit:** HIGH
+- **Status:** PENDING - MANUAL REVIEW
+- **Risk Rationale:**
+  - 993 LOC component with 25+ inline style objects
+  - Used by 8 files (including `useHabitRenderItem.tsx` which is the primary FlatList renderer)
+  - Tests exist in two locations (`DraggableHabit.test.tsx` in both `__tests__` and `tests/` directories)
+  - Dynamic styles depend on multiple props: `isWeekComplete`, `highContrastMode`, `accentColor`, `streak`
+  - Animation values (`cardScale`, `archiveFlash`, `iconPulse`, etc.) are woven into style objects
+  - Some styles use `StyleSheet.absoluteFillObject` spread which complicates extraction
+  - Risk of subtle visual regressions if conditional logic isn't preserved exactly
+- **Benefit Rationale:**
+  - **CRITICAL performance impact**: This component renders for EVERY habit in the list
+  - Each scroll or state update recreates 25+ style objects, defeating memoization
+  - Fixing this would significantly reduce GC pressure and improve list scroll performance
+  - Static properties (borderRadius, shadowOffset dimensions) could move to StyleSheet
+  - Dynamic styles could use `useMemo` with proper dependency arrays
+  - Would serve as a reference pattern for other list item components
+  - Enables React.memo to work effectively on the component
+- **Inline Style Count Analysis:**
+  - Lines 386-399: Archive button container (8 properties)
+  - Lines 401-407: Animated icon container (4 properties)
+  - Lines 410-417: Archive text (5 properties)
+  - Lines 646-668: Main card container (12 properties) - MOST CRITICAL
+  - Lines 672-680: Color accent border (4 properties)
+  - Lines 688-693: Archive flash overlay (4 properties)
+  - Lines 698-704: Highlight glow (5 properties)
+  - Lines 714-716: Icon pulse wrapper (1 property)
+  - Lines 720-730: Icon container (8 properties)
+  - Lines 744-754: Title overlay positioning (7 properties)
+  - Lines 761-763: Title text (2 properties)
+  - Lines 797-802: New record badge (5 properties)
+  - Lines 847-854: Progress bar overlay (6 properties)
+  - Lines 857-865: Progress bar track (8 properties)
+  - Lines 869-874: Progress fill (4 properties)
+  - Lines 877-916: 4x divider styles (6 properties each = 24 total)
+  - Lines 957-959: Perfect week indicator (1 property)
+- **Refactoring Approach:**
+  1. Create `StyleSheet.create()` block at module level with all static styles
+  2. Group styles by logical section: `archiveButton`, `card`, `iconContainer`, `progressBar`
+  3. Create separate `selectedStyles` and `unselectedStyles` for conditional state
+  4. Use `useMemo` for dynamic styles that compute from props:
+     ```typescript
+     const cardStyles = useMemo(
+       () => ({
+         backgroundColor:
+           isWeekComplete && !highContrastMode
+             ? 'rgba(220, 252, 231, 0.3)'
+             : colors.cardBackground,
+         borderColor:
+           isWeekComplete && !highContrastMode ? '#86efac' : colors.border,
+         shadowColor: isWeekComplete ? '#10b981' : '#78716c',
+         shadowOpacity: isWeekComplete ? 0.12 : 0.06,
+       }),
+       [isWeekComplete, highContrastMode, colors.cardBackground, colors.border]
+     );
+     ```
+  5. Extract repeated divider styles into a single constant (4 identical dividers)
+  6. Run existing tests to verify no visual regressions
+  7. Profile with React DevTools to verify reduced re-renders
+
+---
+
+| #   | Candidate                                | Risk   | Benefit | Status                  |
+| --- | ---------------------------------------- | ------ | ------- | ----------------------- |
+| 19  | DraggableHabit Inline Style Optimization | MEDIUM | HIGH    | PENDING - MANUAL REVIEW |

@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Refactor
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -15,19 +15,16 @@ Evaluate each refactoring candidate with **risk and benefit ratings** to determi
 ## Instructions
 
 1. **Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`** to get the list of candidates
-2. **Evaluate each candidate** for risk and benefit
-3. **Assign a status** based on the evaluation matrix
-4. **Output evaluated plan** to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
+2. **Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`** (if it exists) to see which candidates have already been evaluated
+3. **Select ONE unevaluated candidate** (one that doesn't appear in the plan yet)
+4. **Evaluate it** for risk and benefit
+5. **Assign a status** based on the evaluation matrix
+6. **Append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`**
 
 ## Evaluation Checklist
 
-- [x] **Evaluate candidates**: Assess each candidate for risk (how likely to break things) and benefit (how much it improves the code). Assign appropriate statuses.
-  - **Completed:** 2025-12-29
-  - **Output:** `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
-  - **Summary:**
-    - 7 PENDING (auto-implement): Dead code removal + Workshop duplication + Templates + Notifications
-    - 4 PENDING - MANUAL REVIEW: HabitDetailScreen, Audio hooks, MotivationSystem feature module
-    - 7 WON'T DO: Low benefit or artificial splitting that would hurt readability
+- [x] **Evaluate one candidate (or skip if empty)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md. If it contains no findings OR all findings have already been evaluated in LOOP_00001_PLAN.md, mark this task complete without changes. Otherwise, pick one unevaluated candidate, assess risk/benefit, and append to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md.
+  - **Completed 2026-01-08:** Evaluated Candidate #19 (DraggableHabit Inline Style Optimization) from Tactic 2 findings. This is a CRITICAL performance candidate - the component renders for every habit in the FlatList with 25+ inline style objects that are recreated on each render. Assessed as MEDIUM risk (due to animation integration complexity and multiple conditional styles) with HIGH benefit (significant list performance improvement). Status: PENDING - MANUAL REVIEW. Full evaluation appended to LOOP_00001_PLAN.md.
 
 ## Risk Assessment Criteria
 
@@ -72,7 +69,7 @@ Evaluate each refactoring candidate with **risk and benefit ratings** to determi
 
 ## Output Format
 
-Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md` with the following structure:
+Append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md` using this structure (create file with header if it doesn't exist):
 
 ```markdown
 # Refactoring Plan - Loop 00001
@@ -121,8 +118,28 @@ Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md` wi
 
 ## Guidelines
 
+- **One candidate per run**: Only evaluate ONE candidate, then stop. This allows incremental progress.
 - **Be conservative with risk**: When in doubt, rate risk higher
 - **Consider dependencies**: Check what imports/uses the code
 - **Think about tests**: Untested code = higher risk
 - **Document rationale**: Future you will thank present you
 - **Include approach**: Describe HOW to do the refactor, not just WHAT
+
+## How to Know You're Done
+
+This task is complete when ONE of the following is true:
+
+**Option A - Evaluated a candidate:**
+
+1. You've evaluated exactly ONE candidate from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
+2. You've appended a complete evaluation to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`
+3. The evaluation includes both risk and benefit ratings
+4. The status is set according to the matrix above
+
+**Option B - No candidates to evaluate:**
+
+1. `LOOP_00001_CANDIDATES.md` contains no findings, OR
+2. All findings have already been evaluated in `LOOP_00001_PLAN.md`
+3. Mark this task complete without making changes
+
+This graceful handling of empty states prevents the pipeline from stalling when a tactic yields no candidates.
