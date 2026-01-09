@@ -1,24 +1,13 @@
 /**
- * HabitCard Component - Main orchestration
- * Purpose: Display individual habit with tracking info, gestures, and animations
+ * HabitCard Component - Display individual habit with tracking and animations
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  useSharedValue,
-  withSpring,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
-import { useAppTheme } from '../../theme';
+import Animated from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
-import { useHabitCardEntrance } from './useHabitCardEntrance';
-import { useHabitCardAnimations } from './useHabitCardAnimations';
-import { useHabitCardGestures } from './useHabitCardGestures';
-import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
+import { useHabitCard } from './useHabitCard';
 import { styles } from './HabitCard.styles';
 import type { HabitCardProps } from './HabitCard.types';
 import {
@@ -31,150 +20,81 @@ export type { HabitCardProps } from './HabitCard.types';
 
 export function HabitCard(props: HabitCardProps) {
   const {
-    id,
     name,
     icon = '📝',
-    color,
     strength,
     currentStreak = 0,
     bestStreak = 0,
-    completed: completedProp = false,
     atRisk = false,
     disabled = false,
-    onPress,
-    onLongPress,
     onEdit,
     onDelete,
     style,
-    entranceVariant = 'widthExpansion',
-    entranceDelay = 0,
-    triggerEntrance: shouldTriggerEntrance = true,
-    onEntranceComplete,
   } = props;
 
-  const theme = useAppTheme();
-  const translateX = useSharedValue(0);
-  const cardScale = useSharedValue(1);
-  const strengthFillWidth = useSharedValue(strength);
-  const [showFloatingXP, setShowFloatingXP] = React.useState(false);
-  const [xpPosition, setXPPosition] = React.useState({ x: 0, y: 0 });
-  const [isToggling, setIsToggling] = React.useState(false);
-
-  const today = new Date().toISOString().split('T')[0];
-  const completedQuery = useQuery(api.tracking.getCompletionStatus, {
-    date: today,
-    habitId: id,
-  });
-  const completed = completedQuery ?? completedProp;
-  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
-
-  const entrance = useHabitCardEntrance({
-    autoTrigger: shouldTriggerEntrance,
-    delay: entranceDelay,
-    onAnimationComplete: onEntranceComplete,
-    variant: entranceVariant,
-  });
-
-  const animations = useHabitCardAnimations({
-    cardScale,
-    setShowFloatingXP,
-    setXPPosition,
-    translateX,
-  });
-  const { composedGesture } = useHabitCardGestures({
-    cardScale,
-    completed,
-    disabled,
-    id,
-    isToggling,
-    name,
-    onLongPress,
-    onPress,
-    setIsToggling,
-    today,
-    toggleCompletionMutation,
-    translateX,
-    triggerCompletionCelebration: animations.triggerCompletionCelebration,
-    triggerUncheckAnimation: animations.triggerUncheckAnimation,
-  });
-
-  useEffect(() => {
-    strengthFillWidth.value = withSpring(strength, {
-      damping: 15,
-      stiffness: 100,
-    });
-  }, [strength]);
-  useEffect(() => {
-    animations.checkmarkScale.value = completed ? 1 : 0;
-    animations.checkmarkRotate.value = completed ? 360 : 0;
-  }, [completed]);
-
-  const strengthFillStyle = useAnimatedStyle(() => ({
-    width: `${strengthFillWidth.value}%`,
-  }));
-  const accentColor = color || theme.custom.colors.primary[500];
+  const habit = useHabitCard(props);
 
   return (
     <View style={[styles.container, style]}>
       <SwipeActions
-        actionsAnimatedStyle={animations.actionsAnimatedStyle}
+        actionsAnimatedStyle={habit.animations.actionsAnimatedStyle}
         name={name}
-        translateX={translateX}
+        translateX={habit.translateX}
         onDelete={onDelete}
         onEdit={onEdit}
       />
-      <GestureDetector gesture={composedGesture}>
+      <GestureDetector gesture={habit.composedGesture}>
         <Animated.View
           accessible
           accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength`}
           accessibilityRole='button'
-          accessibilityState={{ checked: completed, disabled }}
+          accessibilityState={{ checked: habit.completed, disabled }}
           style={[
             styles.card,
             {
-              backgroundColor: getBackgroundColor(completed, atRisk, theme),
-              borderRadius: theme.custom.borderRadius.large,
+              backgroundColor: habit.backgroundColor,
+              borderRadius: habit.borderRadius,
             },
             disabled && styles.disabled,
-            entrance.cardStyle,
-            animations.cardAnimatedStyle,
+            habit.entrance.cardStyle,
+            habit.animations.cardAnimatedStyle,
           ]}
         >
           <StrengthFillBackground
-            borderRadius={theme.custom.borderRadius.large}
-            strengthColor={getStrengthColor(strength, theme)}
-            strengthFillStyle={strengthFillStyle}
+            borderRadius={habit.borderRadius}
+            strengthColor={habit.strengthColor}
+            strengthFillStyle={habit.strengthFillStyle}
           />
           <Animated.View
             style={[
               styles.accentBar,
               {
-                backgroundColor: accentColor,
-                borderRadius: theme.custom.borderRadius.large,
+                backgroundColor: habit.accentColor,
+                borderRadius: habit.borderRadius,
               },
-              entrance.accentStyle,
+              habit.entrance.accentStyle,
             ]}
           />
           <HabitCardContent
             atRisk={atRisk}
             bestStreak={bestStreak}
-            checkmarkAnimatedStyle={animations.checkmarkAnimatedStyle}
-            completed={completed}
+            checkmarkAnimatedStyle={habit.animations.checkmarkAnimatedStyle}
+            completed={habit.completed}
             currentStreak={currentStreak}
-            entranceContentStyle={entrance.contentStyle}
+            entranceContentStyle={habit.entrance.contentStyle}
             icon={icon}
             name={name}
-            rippleAnimatedStyle={animations.rippleAnimatedStyle}
+            rippleAnimatedStyle={habit.animations.rippleAnimatedStyle}
             strength={strength}
-            theme={theme}
+            theme={habit.theme}
           />
         </Animated.View>
       </GestureDetector>
-      {showFloatingXP && (
+      {habit.showFloatingXP && (
         <FloatingXPText
-          startPosition={xpPosition}
+          startPosition={habit.xpPosition}
           value={10}
-          onComplete={() => setShowFloatingXP(false)}
+          onComplete={() => habit.setShowFloatingXP(false)}
         />
       )}
     </View>
