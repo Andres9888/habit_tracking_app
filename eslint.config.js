@@ -171,6 +171,8 @@ export default tseslint.config(
       // Diagnostic/test components (not unit tests - those are in __tests__)
       'src/components/HapticTest.tsx',
       'src/components/NativeWindTest.tsx',
+      // Deprecated components (scheduled for removal)
+      '**/ProgressSection/PersonalBestsCard.tsx',
       // Theme files - large style configurations
       '**/theme/index.ts',
       // Test setup files - configuration, not production code
