@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Performance
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -22,9 +22,11 @@ Execute ONE tactic from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_G
 
 ## Task
 
-- [x] **Execute one tactic**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md, pick an unexecuted tactic, search the codebase for matching issues, and append findings to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md. Mark the tactic as executed.
-  - **Executed:** Tactic 1: Mega-Component Decomposition (2025-12-29)
-  - **Findings:** 8 mega-components identified totaling ~12,600 LOC with critical anti-patterns (HabitDetailScreen being the most critical at 3,334 LOC with 31 useState calls)
+- [x] **Execute one tactic (or mark exhausted)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md and check for unexecuted tactics. If ALL tactics are already marked `[EXECUTED]`, append a section `## ALL_TACTICS_EXHAUSTED` to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md and mark this task complete. Otherwise, pick one unexecuted tactic, search the codebase for matching issues, append findings to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md, and mark the tactic as `[EXECUTED]` in the game plan.
+  - **Executed:** Tactic 3 (Legacy Animated API Migration) - 2026-01-08
+  - **Findings:** 10 patterns identified, 29 files affected, 99+ Animated.Value refs found
+  - **Critical issues:** 10 instances of `useNativeDriver: false` in 3 files (DraggableHabit, HabitsList, DailyMomentumMeter)
+  - **Key insight:** DraggableHabit (list item) has 8 JS-thread animations causing scroll jank
 
 ## Output Format
 
@@ -61,10 +63,17 @@ Append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md` 
 
 ## How to Know You're Done
 
-This task is complete when:
+This task is complete when ONE of the following is true:
+
+**Option A - Executed a tactic:**
 
 1. You've executed exactly ONE tactic from the game plan
 2. You've appended all findings to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
-3. You've marked the tactic as executed in `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md`
+3. You've marked the tactic as `[EXECUTED]` in `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md`
 
-If all tactics in the game plan are already marked as `[EXECUTED]`, create a summary note in the candidates file indicating all tactics have been exhausted.
+**Option B - All tactics exhausted:**
+
+1. All tactics in the game plan are already marked as `[EXECUTED]`
+2. You've appended `## ALL_TACTICS_EXHAUSTED` to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
+
+The `ALL_TACTICS_EXHAUSTED` marker signals to downstream documents that discovery is complete.

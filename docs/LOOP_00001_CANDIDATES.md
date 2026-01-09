@@ -620,3 +620,180 @@
   ```
 
 - **Status:** EXECUTED
+
+---
+
+## Tactic 3: Legacy Animated API Migration - Executed 2026-01-08 14:30
+
+### Finding 1: DraggableHabit - Critical List Item with 9 Animated.Value Refs and JS-Thread Animations
+
+- **File:** `src/components/DraggableHabit/DraggableHabit.tsx`
+- **Line(s):** 136-144, 215-237, 275-285, 432-442
+- **Pattern Found:** 9 `new Animated.Value` refs with 8 instances of `useNativeDriver: false` forcing animations to run on JS thread
+- **Context:** This is the primary list item component rendered for every habit. Contains:
+  - Lines 136-144: 9 Animated.Value refs (fade, translateY, archiveFlash, cardScale, iconPulse, highlightGlow, streakBadgeGlow, newRecordScale, newRecordOpacity)
+  - Lines 215-237: `highlightGlow` animations use `useNativeDriver: false` (4 timing calls) for the "just created" glow effect
+  - Lines 275-285: `streakBadgeGlow` loop animations use `useNativeDriver: false` (2 timing calls) for significant streak badge
+  - Lines 432-442: `archiveFlash` animations use `useNativeDriver: false` (2 timing calls) for swipe-to-archive feedback
+- **Performance Impact:** CRITICAL - Every habit card's glow/flash effects run on the JS thread. During list scrolling, this competes with other JS work causing frame drops. The `highlightGlow` is particularly problematic as it runs a 4-stage sequence animation.
+- **Why useNativeDriver: false:** These animations likely affect non-transform/non-opacity properties (like backgroundColor via interpolation), which the native driver doesn't support. Reanimated worklets can handle these on the UI thread.
+
+---
+
+### Finding 2: HabitsList - MonetizationHero Progress Animation with JS-Thread Width Animation
+
+- **File:** `src/features/habits/components/HabitsList.tsx`
+- **Line(s):** 63-65, 80-90, 513-518, 576-587
+- **Pattern Found:** 9 `new Animated.Value` refs with 1 critical `useNativeDriver: false` for progress bar width animation
+- **Context:** The HabitsList contains:
+  - Lines 63-65: MonetizationHero uses 3 Animated.Values (progress, ctaPulse, shimmer)
+  - Line 80-84: The `progress` animation for the usage bar uses `useNativeDriver: false` because it animates width
+  - Lines 282-283: EmptyHabitCard uses 2 Animated.Values (scale, opacity)
+  - Lines 513-518: Main list uses 6 Animated.Values for staggered header/calendar/habit row animations
+  - Lines 576-587: Parallel timing animations for staggered entrance (all using useNativeDriver: true)
+- **Performance Impact:** MEDIUM - The MonetizationHero progress bar width animation runs on JS thread. While it only fires on usage change (not during scroll), it still blocks the JS thread during animation. The staggered entrance animations correctly use native driver.
+
+---
+
+### Finding 3: DailyMomentumMeter - Progress Animation on JS Thread
+
+- **File:** `src/components/DailyMomentumMeter/DailyMomentumMeter.tsx`
+- **Line(s):** 34-37, 48-53
+- **Pattern Found:** 4 `new Animated.Value` refs with 1 `useNativeDriver: false` for percentage-based progress
+- **Context:** The daily momentum meter animates completion percentage:
+  - Lines 34-37: 4 Animated.Values (progressAnim, celebrationScale, glowOpacity, flameScale)
+  - Lines 48-53: `progressAnim` uses spring animation with `useNativeDriver: false` because it interpolates to a width/position value
+  - Lines 62-108: Celebration animations (scale, glow, flame) correctly use `useNativeDriver: true`
+- **Performance Impact:** LOW-MEDIUM - Single instance per screen, but the progress animation runs on JS thread when habits are completed.
+
+---
+
+### Finding 4: CreateHabitModal Components - Heavy Legacy Animated Usage
+
+- **Files:**
+  - `src/components/CreateHabitModal/components/SuccessAnimation.tsx` (10 Animated.Values)
+  - `src/components/CreateHabitModal/components/ColorPickerSection.tsx` (5 Animated.Values per button)
+  - `src/components/CreateHabitModal/components/HeroNameInput.tsx` (3 Animated.Values)
+  - `src/components/CreateHabitModal/components/InlineEmojiInput.tsx` (4 Animated.Values)
+  - `src/components/CreateHabitModal/components/ModalHeader.tsx` (3 Animated.Values)
+  - `src/components/CreateHabitModal/hooks/useTemplateAnimation.ts` (1 Animated.Value)
+- **Line(s):** Various (see individual file line numbers in search results)
+- **Pattern Found:** 26+ Animated.Value refs across CreateHabitModal components, all using `useNativeDriver: true`
+- **Context:** The habit creation modal uses legacy Animated API extensively but correctly uses native driver for transforms and opacity. The main concern is the proliferation of refs and the verbosity compared to Reanimated's worklet approach.
+- **Performance Impact:** LOW - These all use `useNativeDriver: true`, so they run on the native thread. However, the codebase inconsistency (mixing Animated and Reanimated) increases maintenance burden and cognitive load.
+
+---
+
+### Finding 5: HabitChainVisualizer - Mixed Animation Patterns
+
+- **File:** `src/components/HabitChainVisualizer/HabitChainVisualizer.tsx`
+- **Line(s):** 81-82, 88-112, 204-206, 227-234, 253-265
+- **Pattern Found:** 6 `new Animated.Value` refs across 2 internal components
+- **Context:** Chain visualization with shimmer and completion animations:
+  - Lines 81-82: LinkVisual uses opacity and shimmerPosition Animated.Values
+  - Lines 88-112: Complex shimmer loop animation with native driver
+  - Lines 204-206: HabitLink uses completion, buttonScale, and breathingPulse Animated.Values
+  - Lines 227-234: Completion toggle animations with native driver
+  - Lines 253-265: Breathing pulse loop animation with native driver
+- **Performance Impact:** LOW - All animations use native driver. The shimmer pattern could benefit from Reanimated's more declarative syntax.
+
+---
+
+### Finding 6: WeeklySummaryCard - Celebration Animations
+
+- **File:** `src/components/WeeklySummaryCard/WeeklySummaryCard.tsx`
+- **Line(s):** 60-63, 145-185
+- **Pattern Found:** 4 `new Animated.Value` refs with all using `useNativeDriver: true`
+- **Context:** Weekly summary card with entrance and celebration animations:
+  - Lines 60-63: fadeAnim, slideAnim, celebrationScale, starRotation
+  - Lines 145-185: Entrance fade, celebration pulse, and star rotation animations
+- **Performance Impact:** LOW - All animations correctly use native driver.
+
+---
+
+### Finding 7: RewardCelebrationToast - Toast Animation
+
+- **File:** `src/components/RewardCelebrationToast.tsx`
+- **Line(s):** 24-25, 31-54
+- **Pattern Found:** 2 `new Animated.Value` refs with all using `useNativeDriver: true`
+- **Context:** Toast notification that slides in/out for rewards
+- **Performance Impact:** LOW - Uses native driver correctly, but could be simplified with Reanimated's `Layout` animations.
+
+---
+
+### Finding 8: EmojiPicker - Item Press Animation
+
+- **File:** `src/components/EmojiPicker/EmojiPicker.tsx`
+- **Line(s):** 47, 120
+- **Pattern Found:** Each EmojiItem creates its own `Animated.Value` ref for scale animation
+- **Context:** The EmojiItem memoized component creates a `scaleAnim` ref on line 47 and 120. While this uses native driver, creating an Animated.Value per list item (100+ emojis) creates memory overhead.
+- **Performance Impact:** MEDIUM - Memory overhead from 100+ Animated.Value refs. Reanimated's `useSharedValue` would be more memory-efficient as a shared value pattern.
+
+---
+
+### Finding 9: CalendarTimeline - Day Cell Animations
+
+- **File:** `src/components/CalendarTimeline/CalendarTimeline.tsx`
+- **Line(s):** 50-51, 72-78
+- **Pattern Found:** 2 `new Animated.Value` refs per DayCell with `useNativeDriver: true`
+- **Context:** Day cells in the calendar timeline have scale and pulse animations
+- **Performance Impact:** LOW - Uses native driver, but similar to EmojiPicker, creates refs per cell.
+
+---
+
+### Finding 10: SkeletonLoader - Shimmer Animation
+
+- **File:** `src/components/SkeletonLoader/SkeletonLoader.tsx`
+- **Line(s):** 26, 36-42
+- **Pattern Found:** 1 `new Animated.Value` ref with `useNativeDriver: true` for shimmer opacity
+- **Context:** Generic skeleton loading component with looping shimmer animation
+- **Performance Impact:** LOW - Correctly uses native driver. The codebase has two SkeletonLoader implementations (also one in CreateHabitModal/components/).
+
+---
+
+### Tactic Summary
+
+- **Issues Found:** 10 significant legacy Animated API usage patterns
+- **Files Affected:** 29 files importing `Animated` from `react-native`, 99+ Animated.Value refs total
+- **Critical `useNativeDriver: false` Instances:** 10 instances across 3 files:
+  1. `DraggableHabit.tsx` - 8 instances (highlightGlow, streakBadgeGlow, archiveFlash)
+  2. `HabitsList.tsx` - 1 instance (MonetizationHero progress)
+  3. `DailyMomentumMeter.tsx` - 1 instance (progressAnim)
+- **Key Anti-Patterns:**
+  1. **useNativeDriver: false** in list item components (DraggableHabit) - Most severe, causes frame drops during scroll
+  2. **Multiple Animated.Value refs per list item** (EmojiPicker, CalendarTimeline) - Memory overhead
+  3. **Mixed API usage** - 29 files use legacy Animated, 50+ files use modern Reanimated - Inconsistency increases maintenance
+  4. **Verbose animation setup** - 120+ Animated.timing calls vs declarative Reanimated worklets
+- **Codebase Statistics:**
+  - Legacy Animated API: 720 uses of Animated.View/Text/Image across 154 files
+  - Modern Reanimated: 708+ uses of hooks (useAnimatedStyle, useSharedValue, etc.) across 50+ files
+- **Highest Priority Migrations:**
+  1. **DraggableHabit** - List item with 8 `useNativeDriver: false` animations - CRITICAL
+  2. **HabitsList MonetizationHero** - Progress bar width animation - MEDIUM
+  3. **DailyMomentumMeter** - Progress percentage animation - MEDIUM
+  4. **EmojiPicker** - Per-item Animated.Value refs for 100+ items - MEDIUM
+- **Recommended Migration Pattern:**
+
+  ```typescript
+  // Before (legacy Animated with JS thread):
+  const highlightGlow = useRef(new Animated.Value(0)).current;
+  Animated.timing(highlightGlow, {
+    toValue: 1,
+    duration: 300,
+    useNativeDriver: false, // JS thread blocking!
+  }).start();
+
+  // After (Reanimated worklet on UI thread):
+  const highlightGlow = useSharedValue(0);
+  highlightGlow.value = withTiming(1, { duration: 300 });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      highlightGlow.value,
+      [0, 1],
+      ['transparent', accentColor]
+    ),
+  }));
+  ```
+
+- **Status:** EXECUTED
