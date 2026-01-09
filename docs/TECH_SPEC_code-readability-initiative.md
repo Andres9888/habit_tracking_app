@@ -285,11 +285,11 @@ None. All work is internal code organization.
 ### Phase 2: Critical Path (1000+ line files)
 
 - [x] Decompose `TemplateScienceModal.tsx` (1,375 lines)
-- [ ] Decompose `LettersSection.tsx` (1,320 lines)
-- [ ] Decompose `AffirmationsSection.tsx` (1,133 lines)
-- [ ] Decompose `HabitsEmptyState.tsx` (1,094 lines)
-- [ ] Decompose `FullsizeTemplatePreview.tsx` (1,047 lines)
-- [ ] Decompose `TemplatesScreen.tsx` (1,039 lines)
+- [x] Decompose `LettersSection.tsx` (1,320 lines)
+- [x] Decompose `AffirmationsSection.tsx` (1,133 lines)
+- [x] Decompose `HabitsEmptyState.tsx` (1,094 lines)
+- [x] Decompose `FullsizeTemplatePreview.tsx` (1,047 lines)
+- [x] Decompose `TemplatesScreen.tsx` (1,039 lines)
 - [ ] Decompose `TodaysFocusCard.tsx` (991 lines)
 
 ### Phase 3: Large Files (501-1000 lines)
