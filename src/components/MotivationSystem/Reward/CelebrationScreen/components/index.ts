@@ -4,6 +4,7 @@
 
 // Animation components
 export { AnimatedContent, ConfettiBurst } from './animations';
+export { AnimatedSection } from './AnimatedSection';
 
 // Display components
 export { CelebrationHeader } from './CelebrationHeader';

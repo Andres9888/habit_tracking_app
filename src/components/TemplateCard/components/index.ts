@@ -5,6 +5,7 @@
  */
 
 export { ActionButtons } from './ActionButtons';
+export { CardContainer } from './CardContainer';
 export { CategoryBadge } from './CategoryBadge';
 export { MetadataPills } from './MetadataPills';
 export { ScienceBox } from './ScienceBox';

@@ -160,6 +160,8 @@ export default tseslint.config(
       '**/templatesDataSeed.ts',
       '**/SmartSuggestions/suggestions.data.ts', // Curated habit suggestions array
       '**/TipQuickActionsSheet/quickActionsByType.ts', // Quick action configurations
+      '**/constants/habitEmojis.data.ts', // Static emoji category data arrays
+      '**/constants/habitEmojis.ts', // Emoji category exports (mostly re-exports)
       // Schema files - database schema definitions (data contracts)
       '**/convex/schema.ts',
       // Example and debug files - development utilities

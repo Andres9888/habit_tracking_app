@@ -27,12 +27,17 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useHabitStrength } from '../../hooks/useHabitStrength';
 import { getStrengthLabel } from '../HabitStrengthHistory/strengthUtils';
+import { EmptyState, LoadingState } from './components';
 import { COLORS } from './constants';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
 import { TimeRangeToggle } from './TimeRangeToggle';
 import type { HabitStrengthSectionProps, TimeRange } from './types';
-import { calculateExtendedMetrics, generateChartDataFromCompletions, sampleHistoryForChart } from './utils';
+import {
+  calculateExtendedMetrics,
+  generateChartDataFromCompletions,
+  sampleHistoryForChart,
+} from './utils';
 
 /**
  * Main HabitStrengthSection component.
@@ -51,13 +56,19 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   const [timeRange, setTimeRange] = useState<TimeRange>('1y');
 
   // Get strength data from existing hook (for history and metrics)
-  const { currentStrength: calculatedStrength, strengthHistory, metrics, isCalculating } =
-    useHabitStrength(completedDates, habitCreatedAt);
+  const {
+    currentStrength: calculatedStrength,
+    strengthHistory,
+    metrics,
+    isCalculating,
+  } = useHabitStrength(completedDates, habitCreatedAt);
 
   // Use database strength if provided (converted from 0-1 to 0-100), otherwise use calculated
   // This ensures consistency with HabitCard which uses habit.strength
   const currentStrength =
-    habitStrength !== undefined ? Math.round(habitStrength * 100) : calculatedStrength;
+    habitStrength === undefined
+      ? calculatedStrength
+      : Math.round(habitStrength * 100);
 
   // Calculate extended metrics with time range filtering
   const extendedMetrics = useMemo(() => {
@@ -80,7 +91,10 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   // Generate chart data directly from completedDates (bypasses broken strengthHistory)
   const chartData = useMemo(() => {
-    const rawChartData = generateChartDataFromCompletions(completedDates, timeRange);
+    const rawChartData = generateChartDataFromCompletions(
+      completedDates,
+      timeRange
+    );
     return sampleHistoryForChart(rawChartData, 50);
   }, [completedDates, timeRange]);
 
@@ -89,75 +103,56 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   // Handle loading state
   if (isCalculating) {
-    return (
-      <View className="rounded-2xl bg-white p-5 shadow-sm">
-        <View className="h-48 items-center justify-center">
-          <Text className="text-stone-400">Calculating strength...</Text>
-        </View>
-      </View>
-    );
+    return <LoadingState />;
   }
 
   // Handle empty state (no completions)
   if (completedDates.size === 0) {
-    return (
-      <View className="rounded-2xl bg-white p-5 shadow-sm">
-        <Text className="mb-2 text-lg font-bold text-stone-800">
-          Habit Strength
-        </Text>
-        <View className="items-center justify-center py-8">
-          <Text className="mb-2 text-4xl">🌱</Text>
-          <Text className="text-center text-stone-500">
-            Complete your first day to start building strength!
-          </Text>
-        </View>
-      </View>
-    );
+    return <EmptyState />;
   }
 
   return (
     <Animated.View
-      className="overflow-hidden rounded-2xl bg-white shadow-sm"
+      className='overflow-hidden rounded-2xl bg-white shadow-sm'
       entering={FadeInDown.delay(100).springify()}
       style={{
+        elevation: 2,
         shadowColor: COLORS.textPrimary,
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.05,
         shadowRadius: 8,
-        elevation: 2,
       }}
     >
       {/* Compact padding (p-4 instead of p-5) for above-fold layout */}
-      <View className="p-4">
+      <View className='p-4'>
         {/* Header with Time Range Switcher */}
-        <View className="mb-3 flex-row items-center justify-between">
-          <Text className="text-base font-bold text-stone-800">
+        <View className='mb-3 flex-row items-center justify-between'>
+          <Text className='text-base font-bold text-stone-800'>
             Habit Strength
           </Text>
           <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
         </View>
 
         {/* Hero Section - Ring + Status */}
-        <View className="mb-3">
+        <View className='mb-3'>
           <StrengthHero
-            strength={currentStrength}
-            label={strengthLabel}
-            delta={extendedMetrics.deltaVsMonth}
-            deltaLabel="vs last month"
             color={habitColor}
+            delta={extendedMetrics.deltaVsMonth}
+            deltaLabel='vs last month'
+            label={strengthLabel}
+            strength={currentStrength}
           />
         </View>
 
         {/* Full-Width Chart - compact margins */}
-        <View className="mb-3 -mx-4">
+        <View className='-mx-4 mb-3'>
           <StrengthChart
+            color={habitColor}
+            currentStrength={currentStrength}
             data={chartData}
             timeRange={timeRange}
-            currentStrength={currentStrength}
-            color={habitColor}
           />
         </View>
-
       </View>
     </Animated.View>
   );

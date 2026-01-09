@@ -4,22 +4,19 @@
  * Enhanced design with accent bar, color tint, and icon glow
  * Displays habit template with rich visual personality
  */
-
 import React from 'react';
-import { View, Pressable } from 'react-native';
-import Animated, { FadeInUp, FadeIn } from 'react-native-reanimated';
+
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { CardContainer, TemplateCardContent } from './components';
 import {
   useTemplateCardAnimations,
   useTemplateCardCallbacks,
   useTemplateCardHandlers,
 } from './hooks';
-import { DEFAULT_ICON_COLOR, SUCCESS_COLOR } from './TemplateCard.constants';
-import { styles } from './TemplateCard.styles';
-import { TemplateCardContent } from './components/TemplateCardContent';
+import { DEFAULT_ICON_COLOR } from './TemplateCard.constants';
 import type { TemplateCardProps } from './TemplateCard.types';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function TemplateCard({
   animationIndex = 0,
@@ -72,36 +69,20 @@ export function TemplateCard({
     : FadeInUp.duration(350).springify().damping(18).stiffness(120);
 
   const cardContent = (
-    <AnimatedPressable
-      accessible
-      accessibilityHint='Tap to preview, or tap Import Habit to add to your habits'
-      accessibilityLabel={`${name} template. ${description}`}
-      accessibilityRole='button'
-      style={[
-        styles.card,
-        { backgroundColor: '#fff', opacity: isLocked ? 0.75 : 1 },
-        containerStyle,
-        shadowStyle,
-        style,
-      ]}
+    <CardContainer
+      containerStyle={containerStyle}
+      description={description}
+      glowStyle={glowStyle}
+      iconColor={iconColor}
+      isImported={isImported}
+      isLocked={isLocked}
+      name={name}
+      shadowStyle={shadowStyle}
+      style={style}
       onPress={handleCardPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Animated.View
-        pointerEvents='none'
-        style={[
-          styles.glowOverlay,
-          { backgroundColor: SUCCESS_COLOR },
-          glowStyle,
-        ]}
-      />
-      <View
-        style={[
-          styles.accentBar,
-          { backgroundColor: isImported ? SUCCESS_COLOR : iconColor },
-        ]}
-      />
       <TemplateCardContent
         category={category}
         checkmarkStyle={checkmarkStyle}
@@ -122,7 +103,7 @@ export function TemplateCard({
         onImportPress={handleImportPress}
         onPreview={onPreview}
       />
-    </AnimatedPressable>
+    </CardContainer>
   );
 
   if (enableScrollReveal) {

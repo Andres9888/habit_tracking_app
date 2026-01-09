@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
+
 import { QuickReflection } from '../QuickReflection';
 import {
   AnimatedContent,
-  CelebrationHeader,
-  StreakDisplay,
-  StatsRow,
-  ScienceTip,
+  AnimatedSection,
   CaptureSection,
+  CelebrationHeader,
+  ScienceTip,
+  StatsRow,
+  StreakDisplay,
 } from './components';
 import type { CelebrationScreenContentProps } from './types';
 
@@ -57,56 +59,54 @@ export function CelebrationScreenContent({
           reduceMotion={reduceMotion}
         />
       </AnimatedContent>
+
       {hasStreak && (
-        <AnimatedContent
+        <AnimatedSection
           index={idx++}
           reduceMotion={reduceMotion}
           visible={visible}
         >
-          <View className='mt-4'>
-            <StreakDisplay
-              reduceMotion={reduceMotion}
-              streak={habit.currentStreak!}
-            />
-          </View>
-        </AnimatedContent>
+          <StreakDisplay
+            reduceMotion={reduceMotion}
+            streak={habit.currentStreak!}
+          />
+        </AnimatedSection>
       )}
+
       {hasStats && (
-        <AnimatedContent
+        <AnimatedSection
           index={idx++}
           reduceMotion={reduceMotion}
           visible={visible}
         >
-          <View className='mt-4'>
-            <StatsRow
-              bestStreak={habit.bestStreak}
-              completionRate={habit.completionRate}
-              totalCompletions={habit.totalCompletions}
-            />
-          </View>
-        </AnimatedContent>
+          <StatsRow
+            bestStreak={habit.bestStreak}
+            completionRate={habit.completionRate}
+            totalCompletions={habit.totalCompletions}
+          />
+        </AnimatedSection>
       )}
-      <AnimatedContent
+
+      <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
         visible={visible}
       >
-        <View className='mt-4'>
-          <QuickReflection
-            showNoteInput
-            compact={false}
-            note={localNote}
-            reduceMotion={reduceMotion}
-            sectionIndex={idx}
-            selectedEmoji={localEmoji}
-            shouldAnimate={false}
-            onEmojiSelect={handleEmojiSelect}
-            onNoteChange={handleNoteChange}
-            onSubmit={onReflectionSubmit}
-          />
-        </View>
-      </AnimatedContent>
-      <AnimatedContent
+        <QuickReflection
+          showNoteInput
+          compact={false}
+          note={localNote}
+          reduceMotion={reduceMotion}
+          sectionIndex={idx}
+          selectedEmoji={localEmoji}
+          shouldAnimate={false}
+          onEmojiSelect={handleEmojiSelect}
+          onNoteChange={handleNoteChange}
+          onSubmit={onReflectionSubmit}
+        />
+      </AnimatedSection>
+
+      <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
         visible={visible}
@@ -115,14 +115,15 @@ export function CelebrationScreenContent({
           onRecordVoice={handleRecordVoice}
           onWriteLetter={handleWriteLetter}
         />
-      </AnimatedContent>
-      <AnimatedContent
+      </AnimatedSection>
+
+      <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
         visible={visible}
       >
         <ScienceTip />
-      </AnimatedContent>
+      </AnimatedSection>
     </ScrollView>
   );
 }

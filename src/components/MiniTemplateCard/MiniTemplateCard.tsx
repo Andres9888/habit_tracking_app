@@ -2,43 +2,38 @@
  * MiniTemplateCard Component
  * Compact template card for horizontal scrolling previews within category sections
  */
-
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { DEFAULT_ICON_COLOR } from './constants';
+import { MiniCardContainer } from './MiniCardContainer';
 import type { MiniTemplateCardProps } from './MiniTemplateCard.types';
-import { styles } from './MiniTemplateCard.styles';
-import { DEFAULT_ICON_COLOR, SUCCESS_COLOR } from './constants';
 import {
-  useMiniTemplateCardAnimations,
-  useAnimatedCardStyle,
-} from './useMiniTemplateCardAnimations';
-import {
-  useImportButtonStyle,
   useCheckmarkStyle,
-  useGlowStyle,
   useChevronStyle,
+  useGlowStyle,
+  useImportButtonStyle,
   useScienceBadgeStyle,
 } from './useAnimatedStyles';
-import { createPressHandlers, createImportHandler } from './usePressHandlers';
-import { CardHeader } from './CardHeader';
-import { ImportButton } from './ImportButton';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import {
+  useAnimatedCardStyle,
+  useMiniTemplateCardAnimations,
+} from './useMiniTemplateCardAnimations';
+import { createImportHandler, createPressHandlers } from './usePressHandlers';
 
 export function MiniTemplateCard(props: MiniTemplateCardProps) {
   const {
-    icon,
-    iconColor: iconColorProp,
-    name,
     description,
     hasResearch,
-    onPress,
-    onImport,
-    isImporting,
+    icon,
+    iconColor: iconColorProp,
     isImported,
+    isImporting,
+    name,
+    onImport,
+    onPress,
   } = props;
+
   const reducedMotion = useReduceMotion();
   const iconColor =
     iconColorProp && iconColorProp.trim() !== ''
@@ -72,60 +67,25 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
   const handleImport = createImportHandler(isImporting, isImported, onImport);
 
   return (
-    <AnimatedPressable
-      accessible
-      accessibilityLabel={`${name} template`}
-      accessibilityRole='button'
-      style={[
-        styles.card,
-        { backgroundColor: `${iconColor}08` },
-        animatedCardStyle,
-      ]}
+    <MiniCardContainer
+      animatedCardStyle={animatedCardStyle}
+      checkmarkStyle={checkmarkStyle}
+      chevronStyle={chevronStyle}
+      description={description}
+      glowStyle={glowStyle}
+      hasResearch={hasResearch}
+      icon={icon}
+      iconColor={iconColor}
+      importButtonStyle={importButtonStyle}
+      isImported={isImported}
+      isImporting={isImporting}
+      name={name}
+      scienceBadgeStyle={scienceBadgeStyle}
+      onImport={onImport ? handleImport : undefined}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-    >
-      <Animated.View
-        pointerEvents='none'
-        style={[
-          styles.glowOverlay,
-          { backgroundColor: SUCCESS_COLOR },
-          glowStyle,
-        ]}
-      />
-      <View
-        style={[
-          styles.accent,
-          { backgroundColor: isImported ? SUCCESS_COLOR : iconColor },
-        ]}
-      />
-      <CardHeader
-        chevronStyle={chevronStyle}
-        hasResearch={hasResearch}
-        icon={icon}
-        iconColor={iconColor}
-        scienceBadgeStyle={scienceBadgeStyle}
-      />
-      <Text numberOfLines={1} style={styles.name}>
-        {name}
-      </Text>
-      {description && (
-        <Text numberOfLines={2} style={styles.description}>
-          {description}
-        </Text>
-      )}
-      {onImport && (
-        <ImportButton
-          checkmarkStyle={checkmarkStyle}
-          iconColor={iconColor}
-          importButtonStyle={importButtonStyle}
-          isImported={isImported}
-          isImporting={isImporting}
-          name={name}
-          onImport={handleImport}
-        />
-      )}
-    </AnimatedPressable>
+    />
   );
 }
 
