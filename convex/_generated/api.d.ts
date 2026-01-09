@@ -13,7 +13,15 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as affirmations_aiParser from "../affirmations/aiParser.js";
+import type * as affirmations_aiPrompt from "../affirmations/aiPrompt.js";
+import type * as affirmations_index from "../affirmations/index.js";
+import type * as affirmations_returnTypes from "../affirmations/returnTypes.js";
+import type * as affirmations_types from "../affirmations/types.js";
+import type * as affirmations_validators from "../affirmations/validators.js";
 import type * as affirmations from "../affirmations.js";
+import type * as affirmationsAI from "../affirmationsAI.js";
+import type * as affirmationsSchedule from "../affirmationsSchedule.js";
 import type * as analytics from "../analytics.js";
 import type * as articles from "../articles.js";
 import type * as auth from "../auth.js";
@@ -54,7 +62,15 @@ import type * as voiceNotes from "../voiceNotes.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "affirmations/aiParser": typeof affirmations_aiParser;
+  "affirmations/aiPrompt": typeof affirmations_aiPrompt;
+  "affirmations/index": typeof affirmations_index;
+  "affirmations/returnTypes": typeof affirmations_returnTypes;
+  "affirmations/types": typeof affirmations_types;
+  "affirmations/validators": typeof affirmations_validators;
   affirmations: typeof affirmations;
+  affirmationsAI: typeof affirmationsAI;
+  affirmationsSchedule: typeof affirmationsSchedule;
   analytics: typeof analytics;
   articles: typeof articles;
   auth: typeof auth;
