@@ -1,13 +1,13 @@
 /**
- * HabitsList Handlers Hook
- * Event handlers and callbacks for HabitsList component
+ * HabitsList Handlers Hook - Event handlers and callbacks
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useHabitsListEffects } from './useHabitsListEffects';
 import type { HabitsListProps } from './HabitsList.types';
 
 export interface UseHabitsListHandlersOptions {
@@ -39,6 +39,15 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
   const { triggerSelection } = useHapticFeedback({
     isEnabled: celebrationsEnabled,
     preference: reduceMotionPreference,
+  });
+
+  useHabitsListEffects({
+    habitsLength: habits.length,
+    isInSuccessCelebration: state.isInSuccessCelebration,
+    justCreatedHabitId: state.justCreatedHabitId,
+    setJustCreatedHabitId: state.setJustCreatedHabitId,
+    setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
+    shouldTriggerHabitEntrance: state.shouldTriggerHabitEntrance,
   });
 
   const handleChangeHabitSortMode = useCallback(
@@ -89,28 +98,6 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
       habit._id ?? `habit-${index}`,
     []
   );
-
-  useEffect(() => {
-    if (!state.justCreatedHabitId) return;
-    const t = setTimeout(() => state.setJustCreatedHabitId(null), 3000);
-    return () => clearTimeout(t);
-  }, [state.justCreatedHabitId, state]);
-
-  useEffect(() => {
-    if (
-      state.shouldTriggerHabitEntrance ||
-      state.isInSuccessCelebration ||
-      habits.length === 0
-    )
-      return;
-    const t = setTimeout(() => state.setShouldTriggerHabitEntrance(true), 50);
-    return () => clearTimeout(t);
-  }, [
-    habits.length,
-    state.isInSuccessCelebration,
-    state.shouldTriggerHabitEntrance,
-    state,
-  ]);
 
   return {
     handleAddHabitPress,

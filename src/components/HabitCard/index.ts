@@ -16,6 +16,7 @@ export type {
 
 // Internal exports (for advanced usage)
 export { useHabitCard } from './useHabitCard';
+export { useHabitCardEffects } from './useHabitCardEffects';
 export { useHabitCardAnimations } from './useHabitCardAnimations';
 export { useHabitCardGestures } from './useHabitCardGestures';
 export {

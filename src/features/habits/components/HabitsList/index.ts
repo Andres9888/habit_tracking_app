@@ -18,3 +18,4 @@ export { UpgradePrompt } from './UpgradePrompt';
 export { useHabitsListState } from './useHabitsListState';
 export { useHabitsListAnimations } from './useHabitsListAnimations';
 export { useHabitsListHandlers } from './useHabitsListHandlers';
+export { useHabitsListEffects } from './useHabitsListEffects';

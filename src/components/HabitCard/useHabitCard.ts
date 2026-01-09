@@ -1,20 +1,16 @@
 /**
  * useHabitCard Hook - Core orchestration logic
- * Purpose: Combine state, animations, gestures, and data fetching for HabitCard
  */
 
-import { useEffect, useState } from 'react';
-import {
-  useSharedValue,
-  withSpring,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import { useState } from 'react';
+import { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useAppTheme } from '../../theme';
 import { useHabitCardEntrance } from './useHabitCardEntrance';
 import { useHabitCardAnimations } from './useHabitCardAnimations';
 import { useHabitCardGestures } from './useHabitCardGestures';
+import { useHabitCardEffects } from './useHabitCardEffects';
 import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
 import type { HabitCardProps } from './HabitCard.types';
 
@@ -82,17 +78,13 @@ export function useHabitCard(props: HabitCardProps) {
     triggerUncheckAnimation: animations.triggerUncheckAnimation,
   });
 
-  useEffect(() => {
-    strengthFillWidth.value = withSpring(strength, {
-      damping: 15,
-      stiffness: 100,
-    });
-  }, [strength, strengthFillWidth]);
-
-  useEffect(() => {
-    animations.checkmarkScale.value = completed ? 1 : 0;
-    animations.checkmarkRotate.value = completed ? 360 : 0;
-  }, [completed, animations.checkmarkScale, animations.checkmarkRotate]);
+  useHabitCardEffects({
+    checkmarkRotate: animations.checkmarkRotate,
+    checkmarkScale: animations.checkmarkScale,
+    completed,
+    strength,
+    strengthFillWidth,
+  });
 
   const strengthFillStyle = useAnimatedStyle(() => ({
     width: `${strengthFillWidth.value}%`,
@@ -109,8 +101,8 @@ export function useHabitCard(props: HabitCardProps) {
     setShowFloatingXP,
     showFloatingXP,
     strengthColor: getStrengthColor(strength, theme),
-    theme,
     strengthFillStyle,
+    theme,
     translateX,
     xpPosition,
   };
