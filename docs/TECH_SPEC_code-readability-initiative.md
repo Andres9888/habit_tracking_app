@@ -306,6 +306,9 @@ None. All work is internal code organization.
 ### Phase 4: Medium Files (301-500 lines)
 
 - [ ] Decompose 67 medium files
+  - [x] `convex/affirmations.ts` (541 lines → 12 files, all ≤100 lines)
+  - [x] `convex/voiceNotes.ts` (302 lines → 8 files, all ≤100 lines)
+  - [x] `convex/letters.ts` (301 lines → 8 files, all ≤100 lines)
 
 ### Phase 5: Final Cleanup (101-300 lines)
 
