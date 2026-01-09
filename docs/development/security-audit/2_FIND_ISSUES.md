@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -21,15 +21,8 @@ Using the attack surface map, systematically search for specific security vulner
 
 ## Discovery Checklist
 
-- [x] **Find vulnerabilities**: Using the attack surface map and tactics, search for injection flaws, hardcoded secrets, auth issues, XSS, and insecure dependencies. Document each finding with file path, line number, vulnerability type, and evidence. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`.
-  - **Completed 2025-12-29**: Found 16 vulnerabilities (2 Critical, 6 High, 6 Medium, 2 Low). Key findings include:
-    - CRITICAL: Hardcoded Figma token in `.env.mcp` tracked in git
-    - CRITICAL: Unauthenticated file upload in `convex/storage.ts`
-    - HIGH: Multiple IDOR vulnerabilities in habits, visionBoardImages, voiceNotes (missing ownership validation)
-    - HIGH: Cross-user data exposure in `listRecent` queries
-    - MEDIUM: AI prompt injection risk in affirmations
-    - MEDIUM: Weak randomness (Math.random) for ID generation
-    - Full report: `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
+- [x] **Execute one vulnerability search (or mark exhausted)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` and `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md` (if it exists) to see which vulnerability categories have been searched. If ALL categories below are already marked `[SEARCHED]`, append `## ALL_TACTICS_EXHAUSTED` to the vulnerabilities file and mark this task complete. Otherwise, pick ONE unsearched category from: Injection Flaws, Hardcoded Secrets, Authentication Issues, XSS, Insecure Cryptography, Access Control Issues, or Dependency Vulnerabilities. Search the codebase for that category, append findings to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`, and mark the category as `[SEARCHED]` in the vulnerabilities file.
+  - **Completed 2026-01-08:** Searched XSS (Cross-Site Scripting) category. No vulnerabilities found - React Native architecture provides inherent XSS protection. Updated vulnerabilities file with [SEARCHED] marker and documented analysis. Six of seven categories now searched; only Dependency Vulnerabilities remains (requires npm audit in Node environment).
 
 ## Vulnerability Search Patterns
 
@@ -166,8 +159,27 @@ Findings that may not be actual vulnerabilities:
 
 ## Guidelines
 
+- **One category per run**: Only execute ONE vulnerability category search, then stop. This allows the pipeline to iterate.
 - **Search systematically**: Use the patterns above as starting points
 - **Verify findings**: Confirm vulnerabilities are actually exploitable
 - **Note context**: Some patterns are safe in certain contexts
 - **Check dependencies**: Don't forget third-party vulnerabilities
 - **Document evidence**: Include actual code snippets
+- **Mark as searched**: Update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md` to show which categories have been searched (add `[SEARCHED]` suffix to category header)
+
+## How to Know You're Done
+
+This task is complete when ONE of the following is true:
+
+**Option A - Executed a search:**
+
+1. You've searched exactly ONE vulnerability category from the list
+2. You've appended all findings to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
+3. You've marked the category as `[SEARCHED]` in the vulnerabilities file
+
+**Option B - All tactics exhausted:**
+
+1. All vulnerability categories are already marked as `[SEARCHED]`
+2. You've appended `## ALL_TACTICS_EXHAUSTED` to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md`
+
+The `ALL_TACTICS_EXHAUSTED` marker signals to downstream documents that discovery is complete.
