@@ -1,0 +1,73 @@
+/**
+ * VisualizationModal Component
+ * Modal wrapper for the visualization guide
+ */
+
+import React from 'react';
+import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Eye, X } from 'lucide-react-native';
+import { VisualizationGuide } from '../../../NotesSection/VisualizationGuide';
+
+interface VisualizationModalProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+export const VisualizationModal: React.FC<VisualizationModalProps> = ({
+  visible,
+  onClose,
+}) => {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <Modal
+      transparent
+      animationType='slide'
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View className='flex-1 bg-gradient-to-b from-violet-50 via-white to-stone-50'>
+        <Animated.View
+          className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
+          entering={FadeIn.delay(100)}
+          style={{ paddingTop: insets.top + 8 }}
+        >
+          <View className='flex-row items-center gap-3'>
+            <View className='h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600'>
+              <Eye color='#ffffff' size={20} />
+            </View>
+            <View>
+              <Text className='text-lg font-bold text-stone-900'>
+                Visualization Guide
+              </Text>
+              <Text className='text-xs text-stone-500'>
+                Science-backed goal techniques
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            accessibilityLabel='Close visualization guide'
+            accessibilityRole='button'
+            className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            onPress={onClose}
+          >
+            <X color='#57534e' size={22} />
+          </TouchableOpacity>
+        </Animated.View>
+
+        <ScrollView
+          className='flex-1'
+          contentContainerStyle={{
+            padding: 20,
+            paddingBottom: insets.bottom + 20,
+          }}
+          showsVerticalScrollIndicator={false}
+        >
+          <VisualizationGuide onClose={onClose} />
+        </ScrollView>
+      </View>
+    </Modal>
+  );
+};
