@@ -767,50 +767,55 @@ highlightGlow.value = withSequence(
 ## Security Summary
 
 - **Total Findings:** 16
-- **Auto-Remediate (PENDING):** 1
+- **IMPLEMENTED:** 1
+- **Auto-Remediate (PENDING):** 0
 - **Manual Review:** 0
 - **Won't Do / False Positive:** 0
 - **Not Yet Evaluated:** 15
 
 ## Security Risk Summary
 
-| Severity | Count | Auto-Fix | Manual | Won't Do | Pending Eval |
-| -------- | ----- | -------- | ------ | -------- | ------------ |
-| CRITICAL | 2     | 1        | 0      | 0        | 1            |
-| HIGH     | 6     | 0        | 0      | 0        | 6            |
-| MEDIUM   | 6     | 0        | 0      | 0        | 6            |
-| LOW/INFO | 2     | 0        | 0      | 0        | 2            |
+| Severity | Count | Implemented | Auto-Fix | Manual | Won't Do | Pending Eval |
+| -------- | ----- | ----------- | -------- | ------ | -------- | ------------ |
+| CRITICAL | 2     | 1           | 0        | 0      | 0        | 1            |
+| HIGH     | 6     | 0           | 0        | 0      | 0        | 6            |
+| MEDIUM   | 6     | 0           | 0        | 0      | 0        | 6            |
+| LOW/INFO | 2     | 0           | 0        | 0      | 0        | 2            |
 
 ---
 
-## PENDING - Ready for Auto-Remediation
+## IMPLEMENTED - Security Fixes
 
 ### SEC-001: Hardcoded Figma Access Token in Version Control
 
-- **Status:** `PENDING`
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Removed `.env.mcp` from git tracking, added to `.gitignore`, created `.env.mcp.example` template
+- **Files Modified:** `.gitignore`, `.env.mcp.example` (created)
+- **Verified:**
+  - [x] `.env.mcp` is in `.gitignore` (line 17)
+  - [x] `.env.mcp` is not tracked by git (`git ls-files` shows only `.env.mcp.example`)
+  - [x] `.env.mcp.example` exists with placeholder value
+  - [ ] Token rotation required by repository owner (manual action)
 - **Vuln ID:** VULN-001
 - **Severity:** CRITICAL
 - **Remediability:** EASY
 - **File:** `.env.mcp`
 - **Line:** 1
-- **Issue:** Figma access token (`figd_YODDpEJ3FG6Znes3MhFwp3ok5-BRop5YX_fCUn1J`) is hardcoded in a file tracked by git, exposing the credential to anyone with repository access.
-- **Fix Strategy:**
+- **Issue:** Figma access token (`figd_YODDpEJ3FG6Znes3MhFwp3ok5-BRop5YX_fCUn1J`) was hardcoded in a file tracked by git, exposing the credential to anyone with repository access.
+- **Original Fix Strategy:**
   1. **Immediately revoke the exposed Figma token** via Figma account settings (cannot be done by agent - requires human action)
   2. Add `.env.mcp` to `.gitignore` to prevent future commits
   3. Remove `.env.mcp` from git tracking with `git rm --cached .env.mcp`
   4. Create `.env.mcp.example` with placeholder value for documentation
   5. Generate a new Figma token and store it outside version control (environment variable or secrets manager)
-- **Verification:**
-  - Confirm token is revoked via Figma API call (should fail with 401)
-  - Verify `.env.mcp` is in `.gitignore`
-  - Verify `git status` shows `.env.mcp` as untracked
-  - Verify new token works in development
 - **Implementation Notes:**
-  - **CRITICAL:** The token must be revoked by a human with Figma account access BEFORE any automated fix
-  - History removal (`git filter-branch` or BFG) is optional but recommended for production repos
-  - This token may have been exposed to anyone who cloned/forked the repo
+  - Fix was applied in commit `dfd74d6` (2025-12-29)
+  - **REMINDER:** Token rotation by repository owner still required
+  - History contains the exposed token - consider using BFG or `git filter-branch` for production repos
 
 **Evaluated:** 2026-01-08 by refactor-performance-security-testing agent
+**Implemented:** 2025-12-29 via commit dfd74d6
 
 ---
 
