@@ -41,6 +41,15 @@ jest.mock('expo-av', () => ({
         mockCreateAsync(source, status, callback),
     },
   },
+  InterruptionModeIOS: {
+    DoNotMix: 1,
+    DuckOthers: 2,
+    MixWithOthers: 0,
+  },
+  InterruptionModeAndroid: {
+    DoNotMix: 1,
+    DuckOthers: 2,
+  },
 }));
 
 import { useAudioPlayback, PLAYBACK_SPEEDS } from '../useAudioPlayback';
