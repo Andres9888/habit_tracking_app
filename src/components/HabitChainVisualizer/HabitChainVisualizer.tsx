@@ -408,6 +408,7 @@ interface HabitChainVisualizerProps {
   currentStreak?: number;
   habitId: Id<'habits'>;
   highContrastMode?: boolean;
+  isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   onWeekComplete?: (args: { completedDate: string }) => void;
@@ -425,6 +426,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   currentStreak = 0,
   habitId,
   highContrastMode = false,
+  isConnectedToNextWeek = false,
   isConnectedToPreviousWeek = false,
   onToggle,
   onWeekComplete,
@@ -513,13 +515,21 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
 
   return (
     <View className='flex-row items-center justify-between'>
-      {/* Visual link to previous week if streak continues */}
+      {/* Visual link to previous week - extends from card edge to first button */}
+      {/* This creates continuity showing the streak continues from the previous week */}
       {showConnectors && isConnectedToPreviousWeek && isCompleted(0) && (
         <View
+          pointerEvents='none'
           style={{
-            left: -10,
-            marginTop: -1,
+            // Match the exact positioning pattern of inter-day connectors
+            // height: 3 for the connector line thickness
+            // top: '50%' with marginTop: -1.5 centers it vertically
+            height: 3,
+            left: -12, // Go past the px-3 padding to reach card content edge
+            marginRight: 20, // 18px (button radius) + 2px gap from button edge
+            marginTop: -1.5, // Center the 3px height line
             position: 'absolute',
+            right: '90%', // End at 10% from left (first button center)
             top: '50%',
             zIndex: -1,
           }}
@@ -529,6 +539,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
             accentColor={accentColor}
             baseColor={connectorColor}
             currentStreak={currentStreak}
+            style={{ flex: 1 }}
           />
         </View>
       )}
@@ -612,6 +623,37 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
           </View>
         );
       })}
+
+      {/* Visual link to next week - extends from last button to card edge */}
+      {/* Shows the streak continues into the next week */}
+      {showConnectors &&
+        isConnectedToNextWeek &&
+        isCompleted(weekDateStrings.length - 1) && (
+          <View
+            pointerEvents='none'
+            style={{
+              // Match the exact positioning pattern of inter-day connectors
+              // height: 3 for the connector line thickness
+              // top: '50%' with marginTop: -1.5 centers it vertically
+              height: 3,
+              left: '90%', // Start at 90% from left (last button center)
+              marginLeft: 20, // 18px (button radius) + 2px gap
+              marginTop: -1.5, // Center the 3px height line
+              position: 'absolute',
+              right: -12, // Go past the px-3 padding to reach card content edge
+              top: '50%',
+              zIndex: -1,
+            }}
+          >
+            <DayConnector
+              visible
+              accentColor={accentColor}
+              baseColor={connectorColor}
+              currentStreak={currentStreak}
+              style={{ flex: 1 }}
+            />
+          </View>
+        )}
     </View>
   );
 };

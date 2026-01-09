@@ -1,7 +1,10 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import { addDays, format, parse } from 'date-fns';
-import { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
+import {
+  ScaleDecorator,
+  type RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitStatus } from '../types';
@@ -21,7 +24,10 @@ interface UseHabitRenderItemArgs {
   reduceMotionPreference: boolean;
   showConnectors?: boolean;
   showHabitStrengthPercentage: boolean;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
+  toggleHabit: (args: {
+    habitId: Id<'habits'>;
+    date: string;
+  }) => Promise<unknown> | void;
   weekDateStrings: string[];
   /**
    * Animation variant for habit card entrance.
@@ -86,7 +92,9 @@ export function useHabitRenderItem({
 
       // Debug logging for animation trigger
       if (__DEV__) {
-        console.log(`[RenderItem] ${item.name}: shouldTrigger=${shouldTriggerEntrance}, hasBeenSeen=${hasBeenSeen}, triggerEntrance=${triggerEntrance}`);
+        console.log(
+          `[RenderItem] ${item.name}: shouldTrigger=${shouldTriggerEntrance}, hasBeenSeen=${hasBeenSeen}, triggerEntrance=${triggerEntrance}`
+        );
       }
 
       const weekStatus = weekDateStrings.map((dateString) =>
@@ -94,7 +102,7 @@ export function useHabitRenderItem({
       );
       const streak = getStreak(item._id);
 
-      // Check if previous day was completed to show connecting chain
+      // Check if previous day was completed to show connecting chain from left
       const firstDateString = weekDateStrings[0];
       let isConnectedToPreviousWeek = false;
 
@@ -103,9 +111,26 @@ export function useHabitRenderItem({
           const firstDate = parse(firstDateString, 'yyyy-MM-dd', new Date());
           const previousDate = addDays(firstDate, -1);
           const previousDateString = format(previousDate, 'yyyy-MM-dd');
-          isConnectedToPreviousWeek = getHabitStatus(item._id, previousDateString) === 'done';
-        } catch (e) {
-          console.warn('Error calculating previous date status', e);
+          isConnectedToPreviousWeek =
+            getHabitStatus(item._id, previousDateString) === 'done';
+        } catch (error) {
+          console.warn('Error calculating previous date status', error);
+        }
+      }
+
+      // Check if next day is completed to show connecting chain to right
+      const lastDateString = weekDateStrings.at(-1);
+      let isConnectedToNextWeek = false;
+
+      if (lastDateString) {
+        try {
+          const lastDate = parse(lastDateString, 'yyyy-MM-dd', new Date());
+          const nextDate = addDays(lastDate, 1);
+          const nextDateString = format(nextDate, 'yyyy-MM-dd');
+          isConnectedToNextWeek =
+            getHabitStatus(item._id, nextDateString) === 'done';
+        } catch (error) {
+          console.warn('Error calculating next date status', error);
         }
       }
 
@@ -124,15 +149,9 @@ export function useHabitRenderItem({
               entranceDelay={entranceDelay}
               entranceVariant={entranceVariant}
               habit={item}
+              isConnectedToNextWeek={isConnectedToNextWeek}
               isConnectedToPreviousWeek={isConnectedToPreviousWeek}
               isJustCreated={highlightHabitId === item._id}
-              onArchive={handleArchive}
-              onEntranceComplete={() => onHabitEntranceComplete?.(item._id)}
-              onLongPress={isReorderingEnabled ? drag : undefined}
-              onPress={handleHabitPress}
-              onWeekComplete={({ completedDate }) =>
-                notifyWeekCompletion({ completedDate, habit: item })
-              }
               reduceMotionPreference={reduceMotionPreference}
               showConnectors={showConnectors}
               showHabitStrengthPercentage={showHabitStrengthPercentage}
@@ -141,6 +160,13 @@ export function useHabitRenderItem({
               triggerEntrance={triggerEntrance}
               weekDateStrings={weekDateStrings}
               weekStatus={weekStatus}
+              onArchive={handleArchive}
+              onEntranceComplete={() => onHabitEntranceComplete?.(item._id)}
+              onLongPress={isReorderingEnabled ? drag : undefined}
+              onPress={handleHabitPress}
+              onWeekComplete={({ completedDate }) =>
+                notifyWeekCompletion({ completedDate, habit: item })
+              }
             />
           </View>
         </ScaleDecorator>

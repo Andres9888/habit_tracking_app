@@ -68,6 +68,7 @@ interface DraggableHabitProps {
   habit: Habit;
   highContrastMode?: boolean;
   isCompactMode?: boolean;
+  isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;
   isJustCreated?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
@@ -102,6 +103,7 @@ export default function DraggableHabit({
   habit,
   highContrastMode = false,
   isCompactMode: _isCompactMode = false,
+  isConnectedToNextWeek = false,
   isConnectedToPreviousWeek = false,
   isJustCreated = false,
   onArchive,
@@ -915,6 +917,7 @@ export default function DraggableHabit({
                 currentStreak={streak}
                 habitId={habit._id}
                 highContrastMode={highContrastMode}
+                isConnectedToNextWeek={isConnectedToNextWeek}
                 isConnectedToPreviousWeek={isConnectedToPreviousWeek}
                 reduceMotionPreference={reduceMotionPreference}
                 shape={dayShape}
