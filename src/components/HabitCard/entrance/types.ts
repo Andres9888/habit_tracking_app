@@ -43,3 +43,17 @@ export interface EntranceAnimationValues {
   contentTranslateX: SharedValue<number>;
   isAnimating: SharedValue<boolean>;
 }
+
+export interface UseEntranceHandlersOptions {
+  delay: number;
+  onAnimationComplete?: () => void;
+  reduceMotion: boolean;
+  values: EntranceAnimationValues;
+  variant: HabitCardEntranceVariant;
+}
+
+export interface UseEntranceHandlersReturn {
+  resetAnimation: () => void;
+  setInstantVisible: () => void;
+  triggerEntrance: () => void;
+}
