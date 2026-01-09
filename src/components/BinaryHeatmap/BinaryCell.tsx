@@ -12,38 +12,12 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 
-import type { BinaryCellProps, BinaryCellState } from './types';
+import type { BinaryCellProps } from './types';
 import { getCellState, getBinaryCellAccessibilityLabel } from './utils';
 import { ANIMATION, COLORS } from './constants';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { styles } from './BinaryCell.styles';
-
-function getBackgroundColor(
-  cellState: BinaryCellState,
-  day: NonNullable<BinaryCellProps['day']>,
-  habitColor: string
-): string {
-  switch (cellState) {
-    case 'done': {
-      return habitColor;
-    }
-    case 'today': {
-      return day.completed ? habitColor : 'transparent';
-    }
-    case 'missed': {
-      return COLORS.CELL_EMPTY;
-    }
-    case 'future': {
-      return COLORS.CELL_FUTURE;
-    }
-    case 'beforeCreation': {
-      return COLORS.CELL_BEFORE_CREATION;
-    }
-    default: {
-      return COLORS.CELL_EMPTY;
-    }
-  }
-}
+import { getBackgroundColor } from './BinaryCell.helpers';
 
 export const BinaryCell = memo(function BinaryCell({
   day,

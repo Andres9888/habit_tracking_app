@@ -12,20 +12,16 @@ import Animated, {
   withSpring,
   useReducedMotion,
 } from 'react-native-reanimated';
-import { Settings, Flame } from 'lucide-react-native';
+import { Settings } from 'lucide-react-native';
 
 import type { StatsRowProps } from './types';
 import { COLORS } from './constants';
 import { styles } from './StatsRow.styles';
-import { getHabitColor50, formatStreakText } from './StatsRow.helpers';
+import { StreakBadge } from './StreakBadge';
 
-const STATS_CONFIG = {
-  FLAME_ICON_SIZE: 14,
-  PRESS_SCALE: 0.95,
-  SETTINGS_ICON_SIZE: 18,
-  SPRING_CONFIG: { damping: 15, stiffness: 400 },
-} as const;
-
+const PRESS_SCALE = 0.95;
+const SETTINGS_ICON_SIZE = 18;
+const SPRING_CONFIG = { damping: 15, stiffness: 400 };
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const StatsRow = memo(function StatsRow({
@@ -39,25 +35,19 @@ export const StatsRow = memo(function StatsRow({
 
   const handleSettingsPressIn = useCallback(() => {
     if (!shouldReduceMotion) {
-      settingsScale.value = withSpring(
-        STATS_CONFIG.PRESS_SCALE,
-        STATS_CONFIG.SPRING_CONFIG
-      );
+      settingsScale.value = withSpring(PRESS_SCALE, SPRING_CONFIG);
     }
   }, [settingsScale, shouldReduceMotion]);
 
   const handleSettingsPressOut = useCallback(() => {
     if (!shouldReduceMotion) {
-      settingsScale.value = withSpring(1, STATS_CONFIG.SPRING_CONFIG);
+      settingsScale.value = withSpring(1, SPRING_CONFIG);
     }
   }, [settingsScale, shouldReduceMotion]);
 
   const settingsAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: settingsScale.value }],
   }));
-
-  const streakBadgeBackground = getHabitColor50(habitColor);
-  const streakText = formatStreakText(currentStreak);
 
   return (
     <View
@@ -76,25 +66,7 @@ export const StatsRow = memo(function StatsRow({
           <Text style={styles.frequencyText}>{frequency}</Text>
         </View>
         {currentStreak > 0 && (
-          <View
-            accessible
-            accessibilityLabel={`Current streak: ${streakText}`}
-            accessibilityRole='text'
-            style={[
-              styles.streakBadge,
-              { backgroundColor: streakBadgeBackground },
-            ]}
-          >
-            <Flame
-              color={habitColor}
-              size={STATS_CONFIG.FLAME_ICON_SIZE}
-              strokeWidth={2.5}
-              testID='streak-flame-icon'
-            />
-            <Text style={[styles.streakText, { color: habitColor }]}>
-              {streakText}
-            </Text>
-          </View>
+          <StreakBadge currentStreak={currentStreak} habitColor={habitColor} />
         )}
       </View>
       {onSettingsPress && (
@@ -116,7 +88,7 @@ export const StatsRow = memo(function StatsRow({
         >
           <Settings
             color={COLORS.TEXT_SECONDARY}
-            size={STATS_CONFIG.SETTINGS_ICON_SIZE}
+            size={SETTINGS_ICON_SIZE}
             strokeWidth={2}
             testID='settings-icon'
           />

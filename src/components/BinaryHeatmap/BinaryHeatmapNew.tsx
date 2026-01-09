@@ -2,26 +2,21 @@
  * BinaryHeatmap Component
  *
  * Main container component for the GitHub-style binary heatmap.
- * Grid rendering is inline to avoid Metro caching issues with child components.
+ * Grid rendering is delegated to InlineHeatmapGrid to maintain file size.
  */
 
 import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 
 import type { BinaryHeatmapProps, TimeRange, BinaryDay } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
+import { InlineHeatmapGrid } from './InlineHeatmapGrid';
 import { generateBinaryGrid } from './utils';
-import { CELL_SIZE, CELL_GAP, GRID } from './constants';
 import { styles } from './BinaryHeatmapNew.styles';
-import {
-  getCellBackgroundColor,
-  transformWeeksToRows,
-  createDayLookupMap,
-} from './cellHelpers';
+import { createDayLookupMap } from './cellHelpers';
 
 const FIXED_TIME_RANGE: TimeRange = '6m';
-const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export const BinaryHeatmap = memo(function BinaryHeatmap({
   habitId: _habitId,
@@ -38,11 +33,6 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   const gridData = useMemo(
     () => generateBinaryGrid(FIXED_TIME_RANGE, completedDates, habitCreatedAt),
     [completedDates, habitCreatedAt]
-  );
-
-  const rows = useMemo(
-    () => transformWeeksToRows(gridData.weeks, GRID.ROWS),
-    [gridData.weeks]
   );
 
   const dayLookupMap = useMemo(
@@ -70,68 +60,17 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
     setTooltipDay(null);
   }, []);
 
-  const gridContentWidth = gridData.weeks.length * (CELL_SIZE + CELL_GAP);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Activity</Text>
       </View>
       <View style={styles.gridWrapper}>
-        <View style={styles.gridContainer}>
-          <View style={styles.dayLabelsColumn}>
-            <View style={styles.monthLabelSpacer} />
-            {DAY_LABELS.map((label, index) => (
-              <View key={`label-${index}`} style={styles.dayLabelCell}>
-                <Text style={styles.dayLabelText}>{label}</Text>
-              </View>
-            ))}
-          </View>
-          <ScrollView
-            horizontal
-            contentContainerStyle={{ width: gridContentWidth }}
-            showsHorizontalScrollIndicator={false}
-          >
-            <View>
-              <View style={styles.monthLabelsRow}>
-                {gridData.monthLabels.map((ml, i) => (
-                  <Text
-                    key={`month-${i}`}
-                    style={[
-                      styles.monthLabel,
-                      { left: ml.weekIndex * (CELL_SIZE + CELL_GAP) },
-                    ]}
-                  >
-                    {ml.label}
-                  </Text>
-                ))}
-              </View>
-              {rows.map((row, dayIndex) => (
-                <View key={`row-${dayIndex}`} style={styles.gridRow}>
-                  {row.map((day, weekIndex) => (
-                    <View
-                      key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
-                      style={[
-                        styles.cell,
-                        {
-                          backgroundColor: getCellBackgroundColor(
-                            day,
-                            habitColor
-                          ),
-                          borderColor: day?.isToday
-                            ? habitColor
-                            : 'transparent',
-                          borderWidth: day?.isToday ? 2 : 0,
-                          opacity: day?.isFuture ? 0.4 : 1,
-                        },
-                      ]}
-                    />
-                  ))}
-                </View>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
+        <InlineHeatmapGrid
+          habitColor={habitColor}
+          monthLabels={gridData.monthLabels}
+          weeks={gridData.weeks}
+        />
       </View>
       <HeatmapLegend
         completionRate={gridData.stats.completionRate}

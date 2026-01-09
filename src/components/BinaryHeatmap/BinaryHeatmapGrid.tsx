@@ -7,51 +7,18 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
-import type { BinaryHeatmapGridProps, BinaryDay } from './types';
+import type { BinaryHeatmapGridProps } from './types';
 import { MonthLabelsRow } from './MonthLabelsRow';
+import { GridRow } from './GridRow';
 import {
   CELL_SIZE,
   CELL_GAP,
   DAY_LABELS,
-  COLORS,
   GRID,
   DAY_NAMES_FULL,
 } from './constants';
 import { styles } from './BinaryHeatmapGrid.styles';
-import { getCellBackgroundColor, transformWeeksToRows } from './cellHelpers';
-
-interface GridRowProps {
-  dayIndex: number;
-  row: (BinaryDay | null)[];
-  habitColor: string;
-}
-
-const GridRow = memo(function GridRow({
-  dayIndex,
-  row,
-  habitColor,
-}: GridRowProps) {
-  return (
-    <View accessibilityRole='row' style={styles.gridRow}>
-      {row.map((day, weekIndex) => (
-        <View
-          key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
-          style={[
-            styles.cellWrapper,
-            {
-              backgroundColor: getCellBackgroundColor(day, habitColor),
-              borderRadius: 2,
-              height: CELL_SIZE,
-              opacity: day?.isFuture ? 0.4 : 1,
-              width: CELL_SIZE,
-            },
-            day?.isToday && { borderColor: habitColor, borderWidth: 2 },
-          ]}
-        />
-      ))}
-    </View>
-  );
-});
+import { transformWeeksToRows } from './cellHelpers';
 
 export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
   gridData,
