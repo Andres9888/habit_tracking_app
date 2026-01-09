@@ -435,3 +435,188 @@
   3. Extract Date computations to useMemo with stable dependencies
   4. Migrate remaining Animated API to Reanimated worklets
 - **Status:** EXECUTED
+
+---
+
+## Tactic 2: Inline Style Object Audit - Executed 2026-01-08 13:45
+
+### Finding 1: DraggableHabit - Critical List Item with 25+ Inline Styles
+
+- **Category:** Organization / Performance
+- **Location:** `src/components/DraggableHabit/DraggableHabit.tsx:386-928`
+- **Current State:** This is the primary list item component rendered via FlatList for every habit. Contains 25+ inline style objects that are recreated on every render, breaking React.memo effectiveness. Key violations:
+  - Lines 386-399: `renderRightActions` archive button styling
+  - Lines 401-407: Animated icon container
+  - Lines 410-417: Text styling in render callback
+  - Lines 646-668: Card container with 12+ style properties
+  - Lines 720-730: Icon container with shadow styles
+  - Lines 744-754: Title overlay positioning
+  - Lines 857-916: Progress bar and dividers (9 inline style objects)
+- **Proposed Change:**
+  1. Extract static styles to `StyleSheet.create()` at module level
+  2. Use `useMemo` for dynamic styles that depend on props (e.g., `accentColor`, `isWeekComplete`)
+  3. Create style factory functions for commonly reused patterns
+- **Code Context:**
+  ```typescript
+  // Example of problematic inline styles (line 646-668):
+  style={{
+    backgroundColor:
+      isWeekComplete && !highContrastMode
+        ? 'rgba(220, 252, 231, 0.3)'
+        : colors.cardBackground,
+    borderColor: isWeekComplete && !highContrastMode
+      ? '#86efac'
+      : colors.border,
+    // ... 10 more properties
+  }}
+  ```
+- **Impact:** HIGH - This component renders for EVERY habit in the list. Each scroll or state update recreates 25+ objects.
+
+---
+
+### Finding 2: WeeklySummaryCard - Celebratory Card with Animated Inline Styles
+
+- **Category:** Organization / Performance
+- **Location:** `src/components/WeeklySummaryCard/WeeklySummaryCard.tsx:218-378`
+- **Current State:** 21 inline style objects for a card component that shows weekly stats. While less frequent than list items, the component uses inline styles even for static properties.
+- **Proposed Change:**
+  1. Extract static styles (shadow, border radius) to StyleSheet
+  2. Use useMemo for color-based dynamic styles computed from `getColors()`
+- **Code Context:**
+  ```typescript
+  // Line 232-239: Static shadow properties mixed with dynamic color
+  style={{
+    backgroundColor: colors.bg,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 8 },  // Static - should be in StyleSheet
+    shadowOpacity: 0.15,                     // Static - should be in StyleSheet
+    shadowRadius: 16,                        // Static - should be in StyleSheet
+    elevation: 4,                            // Static - should be in StyleSheet
+  }}
+  ```
+- **Impact:** MEDIUM - Single instance per screen but sets bad pattern.
+
+---
+
+### Finding 3: ColorPickerSection - List Item Rendering with Conditional Styles
+
+- **Category:** Organization / Performance
+- **Location:** `src/components/CreateHabitModal/components/ColorPickerSection.tsx:160-298`
+- **Current State:** ColorButton component rendered in a list has 11+ inline style objects. Each swatch is wrapped in multiple Views with inline positioning and sizing styles.
+- **Proposed Change:**
+  1. Convert static sizing (`width: 52, height: 52`) to StyleSheet constants
+  2. Create selected/unselected style variants as StyleSheet entries
+  3. Use `StyleSheet.compose()` for conditional styling
+- **Code Context:**
+  ```typescript
+  // Lines 187-193: Static container sizing repeated
+  style={{
+    alignItems: 'center',
+    height: 52,
+    justifyContent: 'center',
+    width: 52,
+  }}
+  // Repeated at lines 291-297 for CustomColorButton
+  ```
+- **Impact:** MEDIUM - Rendered per color swatch (typically 8-12 items).
+
+---
+
+### Finding 4: EmojiPicker EmojiItem - Grid Item with Style Recreation
+
+- **Category:** Organization / Performance
+- **Location:** `src/components/EmojiPicker/EmojiPicker.tsx:67-100`
+- **Current State:** EmojiItem is memoized with `React.memo` but contains inline styles that defeat the memoization. The style object on lines 81-92 is recreated on every render even though most properties are static.
+- **Proposed Change:**
+  1. Extract the base style object to StyleSheet
+  2. Create separate `selectedStyle` and `unselectedStyle` constants
+  3. Use `StyleSheet.flatten()` only when `isSelected` changes
+- **Code Context:**
+  ```typescript
+  // Lines 81-92: Mixed static and conditional properties
+  style={[
+    {
+      alignItems: 'center',           // Static
+      backgroundColor: isSelected ? '#f5f5f4' : '#fafaf9',  // Conditional
+      borderColor: isSelected ? '#10b981' : 'transparent',  // Conditional
+      borderRadius: 12,               // Static
+      borderWidth: isSelected ? 2 : 0,  // Conditional
+      // ... more properties
+    },
+    { transform: [{ scale: scaleAnim }] },
+  ]}
+  ```
+- **Impact:** HIGH - Rendered for 100+ emoji items in a FlatList.
+
+---
+
+### Finding 5: DailyMomentumMeter - Animated Container Styles
+
+- **Category:** Organization / Performance
+- **Location:** `src/components/DailyMomentumMeter/DailyMomentumMeter.tsx:175-200`
+- **Current State:** 12 inline style objects including static shadow properties that could be extracted. The component creates style objects on every render for properties that don't change.
+- **Proposed Change:** Extract static shadow configuration to StyleSheet, use useMemo for percentage-based dynamic styles.
+- **Impact:** LOW - Single instance component but contributes to overall style object churn.
+
+---
+
+### Finding 6: HabitsList Header Rendering - Inline Styles in renderHeader
+
+- **Category:** Organization / Performance
+- **Location:** `src/features/habits/components/HabitsList.tsx:711-735`
+- **Current State:** The `renderHeader` function contains inline style objects that are recreated on every list re-render. Since headers re-render with list updates, this adds GC pressure.
+- **Proposed Change:** Extract header animation styles to useMemo with animation value dependencies.
+- **Code Context:**
+  ```typescript
+  // Lines 713-716: Animation styles in render callback
+  style={{
+    opacity: headerOpacity,
+    transform: [{ translateY: headerTranslateY }],
+  }}
+  ```
+- **Impact:** MEDIUM - Re-renders with list scroll and state changes.
+
+---
+
+### Finding 7: StreakRecordsAccordion - Good Pattern Reference
+
+- **Category:** N/A (Positive Example)
+- **Location:** `src/components/ProgressSectionConsolidated/StreakRecordsAccordion.tsx`
+- **Current State:** This component properly uses `useAnimatedStyle` from Reanimated for animation styles and React.memo for the component wrapper. It serves as a good reference pattern for how other components should handle dynamic styles.
+- **Proposed Change:** N/A - Use as reference pattern for other refactoring efforts.
+
+---
+
+### Tactic Summary
+
+- **Issues Found:** 6 significant inline style problem areas + 1 positive reference pattern
+- **Files Affected:** 7 files
+- **Total Inline Style Occurrences:** 455 across 140 files (per grep search)
+- **Key Anti-Patterns Identified:**
+  1. Static properties (shadow, border radius, dimensions) in inline style objects
+  2. Conditional styles recreated on every render instead of using StyleSheet variants
+  3. Animation styles in render callbacks instead of useAnimatedStyle/useMemo
+  4. Repeated identical style objects across components (e.g., 52x52 container sizing)
+- **Highest Priority Fixes:**
+  1. **DraggableHabit** (25+ inline styles, renders per habit - CRITICAL)
+  2. **EmojiPicker EmojiItem** (defeats memo, renders 100+ items - HIGH)
+  3. **ColorPickerSection** (repeated patterns, list rendering - MEDIUM)
+- **Recommended Refactoring Pattern:**
+
+  ```typescript
+  // Before (anti-pattern):
+  <View style={{ width: 52, height: 52, alignItems: 'center' }}>
+
+  // After (correct):
+  const styles = StyleSheet.create({
+    container: { width: 52, height: 52, alignItems: 'center' },
+  });
+  <View style={styles.container}>
+
+  // For conditional styles:
+  const dynamicStyles = useMemo(() => ({
+    backgroundColor: isSelected ? '#f5f5f4' : '#fafaf9',
+  }), [isSelected]);
+  ```
+
+- **Status:** EXECUTED

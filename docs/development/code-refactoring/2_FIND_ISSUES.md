@@ -3,54 +3,39 @@
 ## Context
 
 - **Playbook:** Refactor
-- **Agent:** code-refactor
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-refactor
+- **Agent:** refactor-performance-security-testing
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
 ## Objective
 
-Execute the tactics from the game plan to find **specific, actionable refactoring candidates**. Each candidate should be a concrete piece of code that can be improved.
+Execute ONE tactic from `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md` to find specific refactoring candidates. Output findings to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`.
 
 ## Instructions
 
-1. **Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md`** to get the investigation tactics
-2. **Execute each tactic** using grep, glob, file reading, and code analysis
-3. **Document specific findings** with file paths and line numbers
-4. **Output candidates** to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
+1. **Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md`** to see available investigation tactics
+2. **Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`** (if it exists) to see which tactics have already been executed
+3. **Select ONE unexecuted tactic** from the game plan
+4. **Execute the tactic**: Search the codebase using the specified patterns
+5. **Document findings** in `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
 
-## Discovery Checklist
+## Task
 
-- [x] **Execute tactics**: Run through each tactic from the game plan, searching for specific issues. Document each finding with enough detail to understand the refactoring opportunity.
-  - **Completed:** Executed all 10 tactics from the game plan
-  - **Output:** Created `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md` with 18 refactoring candidates
-  - **Key Findings:**
-    - 5 File Size issues (HabitDetailScreen at 3,503 LOC is the primary target)
-    - 3 Duplication issues (Workshop components share identical PulsingIcon, CompletionCheckmark, and animation constants)
-    - 2 Complexity issues (large hooks approaching complexity threshold)
-    - 3 Dead Code issues (duplicate auth directory, duplicate config files)
-    - 5 Organization issues (templates externalization, notification modularization, feature module opportunities)
+- [x] **Execute one tactic (or mark exhausted)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md and check for unexecuted tactics. If ALL tactics are already marked `[EXECUTED]`, append a section `## ALL_TACTICS_EXHAUSTED` to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md and mark this task complete. Otherwise, pick one unexecuted tactic, search the codebase for matching issues, append findings to /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md, and mark the tactic as `[EXECUTED]` in the game plan.
+
+  **Completed 2026-01-08**: Executed Tactic 2 (Inline Style Object Audit). Found 455 inline style occurrences across 140 files, with 6 significant problem areas documented. Critical findings: DraggableHabit (25+ inline styles in list item), EmojiPicker EmojiItem (defeats memo, 100+ items), and ColorPickerSection (repeated patterns). All findings appended to LOOP_00001_CANDIDATES.md with recommended refactoring patterns.
 
 ## Output Format
 
-Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md` with the following structure:
+Append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md` using this format:
 
 ```markdown
-# Refactoring Candidates - Loop 00001
+---
 
-## Summary
+## [Tactic Name] - Executed [YYYY-MM-DD HH:MM]
 
-- **Total Candidates Found:** [Number]
-- **By Category:**
-  - File Size: [Count]
-  - Duplication: [Count]
-  - Complexity: [Count]
-  - Dead Code: [Count]
-  - Organization: [Count]
-
-## Candidates
-
-### Candidate 1: [Brief Description]
+### Finding 1: [Brief Description]
 
 - **Category:** [File Size / Duplication / Complexity / Dead Code / Organization]
 - **Location:** `path/to/file:LINE-LINE`
@@ -63,8 +48,13 @@ Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.
 
 ```
 
-### Candidate 2: [Brief Description]
+### Finding 2: [Brief Description]
 ...
+
+### Tactic Summary
+- **Issues Found:** [count]
+- **Files Affected:** [count]
+- **Status:** EXECUTED
 ```
 
 ## What to Look For
@@ -103,8 +93,28 @@ Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.
 
 ## Guidelines
 
+- **One tactic per run**: Only execute ONE tactic, then stop. This allows the pipeline to iterate.
+- **Be thorough within the tactic**: Search comprehensively for the pattern specified
 - **Be specific**: Include exact file paths and line numbers
 - **Show context**: Include code snippets that illustrate the issue
 - **One issue per candidate**: Don't bundle unrelated issues
 - **Skip trivials**: Focus on issues worth the refactoring effort
 - **Note dependencies**: If a change might affect other files, note it
+- **Mark as executed**: Update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md` to show which tactics have been run (add `[EXECUTED]` prefix)
+
+## How to Know You're Done
+
+This task is complete when ONE of the following is true:
+
+**Option A - Executed a tactic:**
+
+1. You've executed exactly ONE tactic from the game plan
+2. You've appended all findings to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
+3. You've marked the tactic as `[EXECUTED]` in `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAME_PLAN.md`
+
+**Option B - All tactics exhausted:**
+
+1. All tactics in the game plan are already marked as `[EXECUTED]`
+2. You've appended `## ALL_TACTICS_EXHAUSTED` to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_CANDIDATES.md`
+
+The `ALL_TACTICS_EXHAUSTED` marker signals to downstream documents that discovery is complete.
