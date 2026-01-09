@@ -1,0 +1,79 @@
+/**
+ * useCelebrationEffects Hook
+ *
+ * Handles celebration state animations and confetti effects.
+ */
+
+import { useEffect, useState, useCallback } from 'react';
+import {
+  withSpring,
+  withTiming,
+  withSequence,
+  withDelay,
+  SharedValue,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+
+import type { FocusState } from '../../TodaysFocusCardTypes';
+import { CONFETTI_DURATION } from '../TodaysFocusCard.constants';
+
+export interface UseCelebrationEffectsResult {
+  showConfetti: boolean;
+  handleCelebrationAcknowledge: () => void;
+  handleSharePress: () => void;
+}
+
+export function useCelebrationEffects(
+  focusState: FocusState,
+  reduceMotion: boolean,
+  badgeScale: SharedValue<number>,
+  shareButtonOpacity: SharedValue<number>,
+  currentStreak: number,
+  onMilestoneCelebrated?: (milestone: number) => void,
+  onShare?: () => void
+): UseCelebrationEffectsResult {
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    if (focusState === 'celebrating' && !reduceMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), CONFETTI_DURATION);
+
+      badgeScale.value = withSequence(
+        withSpring(1.4, { damping: 8, stiffness: 200 }),
+        withSpring(1, { damping: 12, stiffness: 150 })
+      );
+      shareButtonOpacity.value = withDelay(
+        400,
+        withTiming(1, { duration: 300 })
+      );
+
+      return () => clearTimeout(timer);
+    } else if (focusState === 'celebrating' && reduceMotion) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      badgeScale.value = 1;
+      shareButtonOpacity.value = 1;
+    }
+  }, [focusState, reduceMotion, badgeScale, shareButtonOpacity]);
+
+  const handleCelebrationAcknowledge = useCallback(() => {
+    if (focusState === 'celebrating' && onMilestoneCelebrated) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      onMilestoneCelebrated(currentStreak);
+    }
+  }, [focusState, currentStreak, onMilestoneCelebrated]);
+
+  const handleSharePress = useCallback(() => {
+    if (onShare) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      onShare();
+    }
+  }, [onShare]);
+
+  return {
+    handleCelebrationAcknowledge,
+    handleSharePress,
+    showConfetti,
+  };
+}
