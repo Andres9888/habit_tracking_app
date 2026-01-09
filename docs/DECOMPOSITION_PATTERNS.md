@@ -77,7 +77,9 @@ interface UseComponentNameLogicProps {
   onSubmit: () => void;
 }
 
-export const useComponentNameLogic = ({ onSubmit }: UseComponentNameLogicProps) => {
+export const useComponentNameLogic = ({
+  onSubmit,
+}: UseComponentNameLogicProps) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const items = useQuery(api.items.list);
   const updateItem = useMutation(api.items.update);
@@ -175,7 +177,7 @@ export const useFeatureState = (options: UseFeatureOptions) => {
 
   const filteredData = useMemo(() => {
     if (!data) return [];
-    return data.filter(item => item.status === 'active');
+    return data.filter((item) => item.status === 'active');
   }, [data]);
 
   return {
@@ -202,20 +204,26 @@ import { api } from '../../convex/_generated/api';
 export const useFeatureHandlers = (state: FeatureState) => {
   const updateFeature = useMutation(api.feature.update);
 
-  const handleSelect = useCallback((id: string) => {
-    state.setSelectedId(id);
-  }, [state.setSelectedId]);
+  const handleSelect = useCallback(
+    (id: string) => {
+      state.setSelectedId(id);
+    },
+    [state.setSelectedId]
+  );
 
-  const handleSubmit = useCallback(async (data: FeatureData) => {
-    state.setIsLoading(true);
-    try {
-      await updateFeature(data);
-    } catch (e) {
-      state.setError('Failed to update');
-    } finally {
-      state.setIsLoading(false);
-    }
-  }, [updateFeature, state]);
+  const handleSubmit = useCallback(
+    async (data: FeatureData) => {
+      state.setIsLoading(true);
+      try {
+        await updateFeature(data);
+      } catch (e) {
+        state.setError('Failed to update');
+      } finally {
+        state.setIsLoading(false);
+      }
+    },
+    [updateFeature, state]
+  );
 
   return { handleSelect, handleSubmit };
 };
@@ -305,14 +313,14 @@ Is file > 100 lines?
 
 ### File Naming
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Component | `PascalCase.tsx` | `HabitCard.tsx` |
-| Hook | `camelCase.ts` | `useHabitCard.ts` |
-| Types | `*.types.ts` | `HabitCard.types.ts` |
-| Styles | `*.styles.ts` | `HabitCard.styles.ts` |
-| Constants | `*.constants.ts` | `HabitCard.constants.ts` |
-| Hooks (component) | `*.hooks.ts` | `HabitCard.hooks.ts` |
+| Type              | Pattern          | Example                  |
+| ----------------- | ---------------- | ------------------------ |
+| Component         | `PascalCase.tsx` | `HabitCard.tsx`          |
+| Hook              | `camelCase.ts`   | `useHabitCard.ts`        |
+| Types             | `*.types.ts`     | `HabitCard.types.ts`     |
+| Styles            | `*.styles.ts`    | `HabitCard.styles.ts`    |
+| Constants         | `*.constants.ts` | `HabitCard.constants.ts` |
+| Hooks (component) | `*.hooks.ts`     | `HabitCard.hooks.ts`     |
 
 ### Export Conventions
 
@@ -320,6 +328,56 @@ Is file > 100 lines?
 - **Named exports** for hooks: `export const useFeature = ...`
 - **Named exports** for utilities: `export function helperFunction`
 - **Type exports** separate from value exports when needed
+
+---
+
+## Exemplar Decompositions
+
+These files were decomposed as reference implementations for the three main patterns.
+
+### trendCalculations (Utility Pattern)
+
+**Before:** 275 lines in a single file
+**After:** 5 files, all ≤100 lines
+
+```
+src/utils/trendCalculations/
+├── index.ts              # 19 lines - re-exports
+├── types.ts              # 52 lines - types
+├── dateHelpers.ts        # 35 lines - date utilities
+├── weeklyTrend.ts        # 93 lines - weekly calculations
+└── monthlyTrend.ts       # 116 lines - monthly calculations (64 code lines)
+```
+
+### useMilestoneDetection (Hook Pattern)
+
+**Before:** 226 lines with 2 hooks bundled together
+**After:** 5 files, all ≤80 lines
+
+```
+src/hooks/useMilestoneDetection/
+├── index.ts                    # 22 lines - re-exports
+├── types.ts                    # 28 lines - types
+├── utils.ts                    # 27 lines - helper functions
+├── useMilestoneDetection.ts    # 75 lines - single habit hook
+└── useMultiMilestoneDetection.ts # 69 lines - multi habit hook
+```
+
+### HabitDetailTabs (Component Pattern)
+
+**Before:** 167 lines with embedded sub-component
+**After:** 6 files, all ≤90 lines
+
+```
+src/components/HabitDetailTabs/
+├── index.ts                    # 12 lines - barrel export
+├── HabitDetailTabs.tsx         # 77 lines - main component
+├── HabitDetailTabs.types.ts    # 39 lines - types
+├── HabitDetailTabs.constants.ts # 24 lines - constants
+├── TabContent.tsx              # 90 lines - tab content manager
+└── components/
+    └── TabButton.tsx           # 54 lines - tab button
+```
 
 ---
 
