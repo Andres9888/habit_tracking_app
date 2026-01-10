@@ -1,6 +1,7 @@
 import { useSSO } from '@clerk/clerk-expo';
 import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useEffect, useState } from 'react';
+import { mapOAuthError, MappedError } from '../utils';
 
 // Warm up browser for better UX on Android
 WebBrowser.maybeCompleteAuthSession();
@@ -10,6 +11,7 @@ export type OAuthStrategy = 'oauth_google' | 'oauth_apple';
 export interface OAuthResult {
   success: boolean;
   error?: string;
+  errorDetails?: MappedError;
   missingFields?: string[];
 }
 
@@ -62,27 +64,24 @@ export function useOAuthSignIn() {
 
         return { success: true };
       } catch (err: unknown) {
-        // Check if user cancelled the OAuth flow
-        const errorObj = err as {
-          errors?: Array<{ code?: string; message?: string }>;
-          message?: string;
-        };
-        const clerkError = errorObj.errors?.[0];
+        const mappedError = mapOAuthError(err);
 
-        if (
-          clerkError?.code === 'oauth_access_denied' ||
-          clerkError?.code === 'user_cancelled'
-        ) {
-          // User cancelled - don't show error
+        // User cancelled - don't show error
+        if (mappedError.isCancellation) {
           return { success: false };
         }
 
-        const errorMessage =
-          clerkError?.message ||
-          errorObj.message ||
-          'Failed to sign in. Please try again.';
-        setError(errorMessage);
-        return { error: errorMessage, success: false };
+        // User already signed in - could trigger redirect
+        if (mappedError.shouldRedirect) {
+          return { errorDetails: mappedError, success: false };
+        }
+
+        setError(mappedError.message);
+        return {
+          error: mappedError.message,
+          errorDetails: mappedError,
+          success: false,
+        };
       } finally {
         setIsLoading(null);
       }
