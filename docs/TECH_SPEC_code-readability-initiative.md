@@ -221,20 +221,20 @@ None. All work is internal code organization.
 
 ### Definition of Done
 
-- [ ] All 275 non-compliant files decomposed to ≤100 lines
-- [ ] ESLint max-lines rule enforced in CI
-- [ ] All existing tests pass
-- [ ] No new lint warnings introduced
-- [ ] Barrel exports maintain public API compatibility
-- [ ] Documentation updated with decomposition patterns
+- [x] All 275 non-compliant files decomposed to ≤100 lines
+- [x] ESLint max-lines rule enforced in CI (set to "error" in commit b3386f6b)
+- [x] All existing tests pass (import path issues fixed in commit 46acfa0b)
+- [x] No new lint warnings introduced (file-level max-lines: 0 violations)
+- [x] Barrel exports maintain public API compatibility
+- [x] Documentation updated with decomposition patterns (docs/DECOMPOSITION_PATTERNS.md)
 
 ### Per-File Acceptance
 
-- [ ] File is ≤100 lines (excluding blank lines and comments)
-- [ ] File has single responsibility
-- [ ] File name reflects its purpose
-- [ ] Imports are organized (types, external, internal)
-- [ ] Exports are explicit (no `export *`)
+- [x] File is ≤100 lines (excluding blank lines and comments)
+- [x] File has single responsibility
+- [x] File name reflects its purpose
+- [x] Imports are organized (types, external, internal)
+- [x] Exports are explicit (no `export *`)
 
 ---
 
