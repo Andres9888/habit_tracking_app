@@ -16,7 +16,8 @@
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.andres9888.daily-habits"
+      "bundleIdentifier": "com.andres9888.daily-habits",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
