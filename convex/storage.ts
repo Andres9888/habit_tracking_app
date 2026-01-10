@@ -20,10 +20,15 @@ import { mutation, query } from './_generated/server';
 /**
  * Generate a signed upload URL for file storage
  * The URL expires in 1 hour
+ * Requires authentication to prevent storage abuse
  */
 export const generateUploadUrl = mutation({
   args: {},
   handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to upload files');
+    }
     return await ctx.storage.generateUploadUrl();
   },
   returns: v.string(),
@@ -45,12 +50,17 @@ export const getUrl = query({
 
 /**
  * Delete a file from storage
+ * Requires authentication to prevent unauthorized deletion
  */
 export const deleteFile = mutation({
   args: {
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete files');
+    }
     await ctx.storage.delete(args.storageId);
     return null;
   },
