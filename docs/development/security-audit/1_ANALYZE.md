@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** refactor-performance-security-testing
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
+- **Agent:** secruity
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/secruity
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -21,7 +21,8 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 
 ## Analysis Checklist
 
-- [ ] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
+- [x] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
+  - **Status:** Skipped (existing map found) — The attack surface map at `LOOP_00001_ATTACK_SURFACE.md` already exists with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Generated 2025-12-29 by code-refactor agent. Comprehensive analysis covers all entry points, security-sensitive code locations, and high-risk areas.
 
 ## What to Identify
 
