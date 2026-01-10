@@ -1,0 +1,95 @@
+/**
+ * IOSTimePicker Component
+ *
+ * iOS-specific modal wrapper with spinner picker.
+ */
+
+import { Modal, Pressable, Text, View } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+
+interface IOSTimePickerProps {
+  visible: boolean;
+  selectedTime: Date;
+  title: string;
+  onTimeChange: (event: DateTimePickerEvent, date?: Date) => void;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export function IOSTimePicker({
+  visible,
+  selectedTime,
+  title,
+  onTimeChange,
+  onConfirm,
+  onCancel,
+}: IOSTimePickerProps) {
+  return (
+    <Modal
+      transparent
+      animationType='fade'
+      testID='time-picker-modal'
+      visible={visible}
+      onRequestClose={onCancel}
+    >
+      <Pressable
+        accessibilityLabel='Dismiss time picker'
+        accessibilityRole='button'
+        className='flex-1 items-center justify-center bg-black/50'
+        onPress={onCancel}
+      >
+        <Pressable
+          className='mx-6 w-full max-w-sm rounded-2xl bg-white p-5'
+          onPress={(e) => e.stopPropagation()}
+        >
+          <Text
+            accessibilityRole='header'
+            className='mb-4 text-center text-lg font-semibold text-stone-900'
+          >
+            {title}
+          </Text>
+
+          <View
+            accessibilityLabel='Time picker wheel'
+            className='mb-5 items-center'
+          >
+            <DateTimePicker
+              display='spinner'
+              is24Hour={false}
+              mode='time'
+              testID='time-picker-ios'
+              textColor='#1c1917'
+              value={selectedTime}
+              onChange={onTimeChange}
+            />
+          </View>
+
+          <View className='flex-row gap-3'>
+            <Pressable
+              accessibilityLabel='Cancel'
+              accessibilityRole='button'
+              className='h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200'
+              onPress={onCancel}
+            >
+              <Text className='text-base font-semibold text-stone-700'>
+                Cancel
+              </Text>
+            </Pressable>
+
+            <Pressable
+              accessibilityLabel={`Set time to ${selectedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`}
+              accessibilityRole='button'
+              className='h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600'
+              onPress={onConfirm}
+            >
+              <Text className='text-base font-semibold text-white'>
+                Set Time
+              </Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+}

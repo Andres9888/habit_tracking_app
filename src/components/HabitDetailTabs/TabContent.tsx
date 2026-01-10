@@ -3,30 +3,21 @@
  * Manages tab content with scroll position preservation and animations
  */
 
-import React, { useRef, useCallback } from 'react';
-import { View, ScrollView, Dimensions } from 'react-native';
+import React, { useRef } from 'react';
+import { View, ScrollView } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import type { TabType } from './HabitDetailTabs';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-export interface TabContentProps {
-  activeTab: TabType;
-  children: React.ReactNode;
-  contentContainerStyle?: object;
-  onScroll?: (event: any) => void;
-}
-
-interface TabPaneProps {
-  children: React.ReactNode;
-  isActive: boolean;
-  tabId: TabType;
-}
+import type {
+  TabType,
+  TabContentProps,
+  TabSectionProps,
+  TabPaneProps,
+} from './HabitDetailTabs.types';
 
 const AnimatedView = Animated.View;
 
@@ -39,8 +30,14 @@ function TabPane({ children, isActive, tabId }: TabPaneProps) {
 
   React.useEffect(() => {
     if (isActive) {
-      opacity.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.cubic) });
-      translateY.value = withTiming(0, { duration: 200, easing: Easing.out(Easing.cubic) });
+      opacity.value = withTiming(1, {
+        duration: 200,
+        easing: Easing.out(Easing.cubic),
+      });
+      translateY.value = withTiming(0, {
+        duration: 200,
+        easing: Easing.out(Easing.cubic),
+      });
     } else {
       opacity.value = 0;
       translateY.value = 10;
@@ -60,7 +57,7 @@ function TabPane({ children, isActive, tabId }: TabPaneProps) {
     <AnimatedView
       accessible
       accessibilityLabel={`${tabId} tab content`}
-      className="flex-1"
+      className='flex-1'
       style={animatedStyle}
     >
       {children}
@@ -68,18 +65,12 @@ function TabPane({ children, isActive, tabId }: TabPaneProps) {
   );
 }
 
-export function TabContent({
-  activeTab,
-  children,
-  contentContainerStyle,
-  onScroll,
-}: TabContentProps) {
-  // Extract child elements by tab type
+export function TabContent({ activeTab, children }: TabContentProps) {
   const childArray = React.Children.toArray(children);
 
   return (
-    <View className="flex-1">
-      {childArray.map((child, index) => {
+    <View className='flex-1'>
+      {childArray.map((child) => {
         if (!React.isValidElement<TabSectionProps>(child)) return null;
 
         const tabId = child.props.tabId;
@@ -95,13 +86,7 @@ export function TabContent({
   );
 }
 
-// Helper component to mark tab content sections
-export interface TabSectionProps {
-  children: React.ReactNode;
-  tabId: TabType;
-}
-
-export function TabSection({ children, tabId }: TabSectionProps) {
+export function TabSection({ children }: TabSectionProps) {
   return <>{children}</>;
 }
 

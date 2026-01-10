@@ -97,10 +97,18 @@ export default tseslint.config(
       // Console warnings for production code
       'no-console': ['warn', { allow: ['warn', 'error'] }],
 
-      // File size limit - encourage modular components
+      // === Code Readability Initiative ===
+      // File size limit - 100 lines max for PR-readable code
+      // See: docs/DECOMPOSITION_PATTERNS.md for refactoring guidance
+      // Status: "error" - all production files now comply with 100-line limit
       'max-lines': [
-        'warn',
+        'error',
         { max: 100, skipBlankLines: true, skipComments: true },
+      ],
+      // Function size limit - keep functions focused and testable
+      'max-lines-per-function': [
+        'warn',
+        { max: 50, skipBlankLines: true, skipComments: true, IIFEs: true },
       ],
 
       // Import organization (manual guidelines)
@@ -135,6 +143,56 @@ export default tseslint.config(
       'unicorn/prefer-top-level-await': 'off', // Not always supported
       'unicorn/no-array-sort': 'off', // toSorted() not supported in React Native (ES2023)
       'unicorn/no-array-reverse': 'off', // toReversed() not supported in React Native (ES2023)
+    },
+  },
+  // === max-lines Rule Exemptions ===
+  // Data files: Static data arrays/objects that are inherently large
+  // Example/Debug files: Development utilities not subject to production constraints
+  // Schema files: Database schema definitions (data contracts, not logic)
+  // Note: These need explicit paths to work with flat config
+  {
+    files: [
+      // Data files - static emoji, template, and configuration data
+      '**/emojiData/categories.ts',
+      '**/emojiData/keywords.ts',
+      '**/emojiKeywords/habitNameMap.ts',
+      '**/emojiKeywords/keywords.ts',
+      '**/templatesDataSeed.ts',
+      '**/SmartSuggestions/suggestions.data.ts', // Curated habit suggestions array
+      '**/TipQuickActionsSheet/quickActionsByType.ts', // Quick action configurations
+      '**/constants/habitEmojis.data.ts', // Static emoji category data arrays
+      '**/constants/habitEmojis.ts', // Emoji category exports (mostly re-exports)
+      // Schema files - database schema definitions (data contracts)
+      '**/convex/schema.ts',
+      // Example and debug files - development utilities
+      '**/*Example.tsx',
+      '**/*Example.ts',
+      '**/*Debug.tsx',
+      '**/*Debug.ts',
+      '**/examples/**/*.{ts,tsx}',
+      // Diagnostic/test components (not unit tests - those are in __tests__)
+      'src/components/HapticTest.tsx',
+      'src/components/NativeWindTest.tsx',
+      // Deprecated components (scheduled for removal)
+      '**/ProgressSection/PersonalBestsCard.tsx',
+      // CalendarTimeline variant implementations (A/B testing experiments)
+      '**/CalendarTimeline/CalendarTimelineWithPulse.tsx',
+      '**/CalendarTimeline/CalendarTimelineWithEdgeFade.tsx',
+      '**/CalendarTimeline/CalendarTimelineComparison.tsx',
+      // Theme files - large style configurations
+      '**/theme/index.ts',
+      // Test setup files - configuration, not production code
+      '**/jest.setup.js',
+      // External tooling - not production app code
+      '**/figma-mcp-server.js',
+      // Duplicate/backup files (should be cleaned up but exempt for now)
+      '**/affirmations 2.ts',
+      '**/habitStrength.test 2.ts',
+      '**/visionBoard 2.ts',
+    ],
+    rules: {
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
     },
   }
 );

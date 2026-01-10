@@ -13,7 +13,7 @@ import {
   determineTipTypeFromText,
   type QuickAction,
   type TipType,
-} from '../TipQuickActionsSheetTypes';
+} from '../TipQuickActionsSheet';
 
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

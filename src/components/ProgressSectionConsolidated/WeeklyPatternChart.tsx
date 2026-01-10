@@ -13,41 +13,12 @@ import { ChevronRight } from 'lucide-react-native';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { DayBar } from './DayBar';
+import { findBestDay, findWorstDay } from './WeeklyPatternChart.helpers';
 
 import type { WeeklyPatternChartProps } from './types';
 
 /** Chart container height (px) */
 const CHART_HEIGHT = 56;
-
-/**
- * Find the best performing day from stats with data
- */
-function findBestDay(
-  withData: Array<{ dayIndex: number; rate: number }>
-): { dayIndex: number; rate: number } | undefined {
-  let best: { dayIndex: number; rate: number } | undefined;
-  for (const day of withData) {
-    if (!best || day.rate > best.rate) {
-      best = day;
-    }
-  }
-  return best;
-}
-
-/**
- * Find the worst performing day from stats with data
- */
-function findWorstDay(
-  withData: Array<{ dayIndex: number; rate: number }>
-): { dayIndex: number; rate: number } | undefined {
-  let worst: { dayIndex: number; rate: number } | undefined;
-  for (const day of withData) {
-    if (!worst || day.rate < worst.rate) {
-      worst = day;
-    }
-  }
-  return worst;
-}
 
 /**
  * WeeklyPatternChart Component

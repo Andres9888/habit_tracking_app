@@ -1,23 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Keyboard, Modal, Pressable, ScrollView } from 'react-native';
-import type { ScrollView as ScrollViewType } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import { HABIT_COLORS } from './constants';
-import type { CreateHabitModalProps } from './types';
-import { useCreateHabitModal } from './hooks/useCreateHabitModal';
-import { ModalHeader } from './components/ModalHeader';
-import { CreateHabitFormCentered } from './components/CreateHabitFormCentered';
-
-// V11: Swipe dismissal constants
-const SWIPE_DISMISS_THRESHOLD = 100; // pixels
-const SWIPE_VELOCITY_THRESHOLD = 500; // pixels per second
-
 /**
  * CreateHabitModalCentered - Centered layout version of the habit creation modal
  *
@@ -25,15 +5,26 @@ const SWIPE_VELOCITY_THRESHOLD = 500; // pixels per second
  * - Centered name input with prominent heading "What habit do you want to build?"
  * - "CUSTOMIZE (OPTIONAL)" section with emoji, color, reminder
  * - Smart defaults reduce cognitive load
- * - 2-tap creation flow (name → create)
+ * - 2-tap creation flow (name -> create)
  * - Swipe-to-dismiss gesture support
  * - Modal resets on open
- *
- * Layout:
- * 1. Header with title and close button
- * 2. Centered form component with progressive disclosure
- * 3. Submit button in footer (part of form component)
  */
+
+import { useEffect, useRef, useState } from 'react';
+import { Keyboard, Modal, Pressable, ScrollView } from 'react-native';
+import type { ScrollView as ScrollViewType } from 'react-native';
+
+import { GestureDetector } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
+
+import { CreateHabitFormCentered } from './components/CreateHabitFormCentered';
+import { ModalHeader } from './components/ModalHeader';
+import { HABIT_COLORS } from './constants';
+import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
+import { useCreateHabitModal } from './hooks/useCreateHabitModal';
+import { useSwipeDismiss } from './hooks/useSwipeDismiss';
+import type { CreateHabitModalProps } from './types';
+
 export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
@@ -44,45 +35,25 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   // Validation error state
   const [showNameError, setShowNameError] = useState(false);
 
-  // Swipe dismissal gesture state
-  const translateY = useSharedValue(0);
-  const context = useSharedValue({ startY: 0 });
+  // Swipe dismissal gesture
+  const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
 
-  // Pan gesture for swipe-to-dismiss
-  const panGesture = Gesture.Pan()
-    .onStart(() => {
-      context.value = { startY: translateY.value };
-    })
-    .onUpdate((event) => {
-      // Only allow downward swipes
-      const newTranslateY = context.value.startY + event.translationY;
-      if (newTranslateY >= 0) {
-        translateY.value = newTranslateY;
-      }
-    })
-    .onEnd((event) => {
-      const shouldDismiss =
-        translateY.value > SWIPE_DISMISS_THRESHOLD ||
-        event.velocityY > SWIPE_VELOCITY_THRESHOLD;
-
-      if (shouldDismiss) {
-        // Dismiss modal
-        runOnJS(onClose)();
-        // Reset position for next open
-        translateY.value = 0;
-      } else {
-        // Spring back to original position
-        translateY.value = withSpring(0, {
-          damping: 20,
-          stiffness: 300,
-        });
-      }
-    });
-
-  // Animated style for swipe translation
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }));
+  // Form callbacks
+  const {
+    handleColorSelect,
+    handleEmojiSelect,
+    handleNameChange,
+    handleReminderTimeChange,
+    handleReminderToggle,
+    handleSave,
+    handleSubmit,
+    handleValidationError,
+  } = useCenteredFormCallbacks({
+    form,
+    handleCreate,
+    scrollViewRef,
+    setShowNameError,
+  });
 
   // Reset form when modal opens (and not in edit mode)
   useEffect(() => {
@@ -92,69 +63,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, isEditMode]);
-
-  const handleEmojiSelect = useCallback(
-    (emoji: string | null) => {
-      form.setSelectedEmoji(emoji);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const handleColorSelect = useCallback(
-    (color: string) => {
-      form.setSelectedColor(color);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const handleNameChange = useCallback(
-    (value: string) => {
-      form.setHabitName(value);
-      // Clear error when user starts typing
-      if (value.trim().length > 0) {
-        setShowNameError(false);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const handleValidationError = useCallback(() => {
-    setShowNameError(true);
-  }, []);
-
-  const handleReminderToggle = useCallback(
-    (enabled: boolean) => {
-      form.setRemindersEnabled(enabled);
-      // Auto-scroll to show reminder options when enabled
-      if (enabled) {
-        setTimeout(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        }, 100); // Small delay to allow UI to expand
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const handleReminderTimeChange = useCallback(
-    (time: Date) => {
-      form.setReminderTime(time);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  // Wrap async handleCreate to satisfy void return type requirement
-  const handleSubmit = useCallback(() => {
-    void handleCreate();
-  }, [handleCreate]);
-
-  const handleSave = useCallback(() => {
-    void handleCreate();
-  }, [handleCreate]);
 
   return (
     <Modal

@@ -1,9 +1,5 @@
 /**
- * DayBar Component
- *
- * Individual animated bar for the WeeklyPatternChart.
- * Shows a single day's completion rate with staggered animation.
- *
+ * DayBar Component - Individual animated bar for WeeklyPatternChart
  * @see docs/specs/habit-details-screen/progress-consolidated-redesign.md
  */
 
@@ -17,27 +13,14 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-
-/** Single character day labels */
-const DAY_LABELS_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
-/** Delay between each bar's animation start (ms) */
-const BAR_STAGGER_DELAY = 50;
-
-/** Bar dimensions per spec */
-const BAR_WIDTH = 20;
-const BAR_MAX_HEIGHT = 40;
-
-/**
- * Get bar color based on performance rate and best/worst status
- */
-function getBarColor(rate: number, isBest: boolean, isWorst: boolean): string {
-  if (isBest) return '#10b981'; // emerald-500
-  if (isWorst) return '#fbbf24'; // amber-400
-  if (rate >= 70) return '#a8a29e'; // stone-400
-  if (rate >= 50) return '#d6d3d1'; // stone-300
-  return '#e7e5e4'; // stone-200
-}
+import {
+  DAY_LABELS_SHORT,
+  BAR_STAGGER_DELAY,
+  BAR_WIDTH,
+  BAR_MAX_HEIGHT,
+  getBarColor,
+  getDayLabelClass,
+} from './DayBar.constants';
 
 export interface DayBarProps {
   dayIndex: number;
@@ -104,25 +87,15 @@ export const DayBar = React.memo(function DayBar({
     transform: [{ scaleY: scaleY.value }],
   }));
 
-  const barColor = getBarColor(rate, isBest, isWorst);
-
-  // Day label styling
-  const labelColor = isBest
-    ? 'text-emerald-600 font-bold'
-    : isWorst
-      ? 'text-amber-600 font-bold'
-      : 'text-stone-500';
-
-  const accessibilityLabel = `${DAY_LABELS_SHORT[dayIndex]}: ${rate}% completion${isBest ? ', best day' : ''}${isWorst ? ', focus day' : ''}`;
+  const label = `${DAY_LABELS_SHORT[dayIndex]}: ${rate}%${isBest ? ', best day' : ''}${isWorst ? ', focus day' : ''}`;
 
   return (
     <View
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={label}
       accessibilityRole='text'
       className='items-center'
       style={{ width: BAR_WIDTH }}
     >
-      {/* Bar container - aligned to bottom */}
       <View
         className='items-center justify-end'
         style={{ height: BAR_MAX_HEIGHT }}
@@ -131,7 +104,7 @@ export const DayBar = React.memo(function DayBar({
           className='rounded-t-sm'
           style={[
             {
-              backgroundColor: barColor,
+              backgroundColor: getBarColor(rate, isBest, isWorst),
               transformOrigin: 'bottom',
               width: BAR_WIDTH - 4,
             },
@@ -139,8 +112,7 @@ export const DayBar = React.memo(function DayBar({
           ]}
         />
       </View>
-      {/* Day label */}
-      <Text className={`mt-1 text-[10px] ${labelColor}`}>
+      <Text className={`mt-1 text-[10px] ${getDayLabelClass(isBest, isWorst)}`}>
         {DAY_LABELS_SHORT[dayIndex]}
       </Text>
     </View>

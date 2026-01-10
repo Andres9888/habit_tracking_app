@@ -1,6 +1,5 @@
 import { parse, startOfDay } from 'date-fns';
-
-type HabitStatus = 'done' | 'missed' | 'planned';
+import type { HabitStatus } from './types';
 
 export const useHabitChainVisualizerLogic = (
   weekDateStrings: string[],

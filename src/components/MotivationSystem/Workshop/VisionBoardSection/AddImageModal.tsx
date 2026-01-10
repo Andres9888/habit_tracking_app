@@ -1,0 +1,83 @@
+/**
+ * AddImageModal Component - Modal for adding new image via camera or photo library
+ */
+
+import React from 'react';
+import { View, Text, Pressable, Modal } from 'react-native';
+import { Image as ImageIcon, ImagePlus, Camera } from 'lucide-react-native';
+import { ImageSourceOption } from './ImageSourceOption';
+
+interface AddImageModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onPickFromCamera: () => void;
+  onPickFromLibrary: () => void;
+}
+
+export function AddImageModal({
+  visible,
+  onClose,
+  onPickFromCamera,
+  onPickFromLibrary,
+}: AddImageModalProps) {
+  return (
+    <Modal
+      transparent
+      animationType='fade'
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <Pressable
+        className='flex-1 items-center justify-center bg-black/50'
+        onPress={onClose}
+      >
+        <Pressable
+          className='mx-6 w-full max-w-sm rounded-2xl bg-white p-6'
+          onPress={(e) => e.stopPropagation()}
+        >
+          <View className='mb-4 flex-row items-center gap-3'>
+            <View className='h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-100'>
+              <ImagePlus className='text-fuchsia-600' size={20} />
+            </View>
+            <View>
+              <Text className='text-lg font-bold text-stone-800'>
+                Add to Vision Board
+              </Text>
+              <Text className='text-xs text-stone-500'>
+                Choose how to add your image
+              </Text>
+            </View>
+          </View>
+
+          <View className='gap-2'>
+            <ImageSourceOption
+              accessibilityLabel='Take a photo'
+              description='Use your camera to capture an image'
+              icon={Camera}
+              title='Take Photo'
+              onClose={onClose}
+              onPress={onPickFromCamera}
+            />
+            <ImageSourceOption
+              accessibilityLabel='Choose from library'
+              description='Select an existing photo'
+              icon={ImageIcon}
+              title='Choose from Library'
+              onClose={onClose}
+              onPress={onPickFromLibrary}
+            />
+          </View>
+
+          <Pressable
+            accessibilityLabel='Cancel'
+            accessibilityRole='button'
+            className='mt-4 items-center py-2'
+            onPress={onClose}
+          >
+            <Text className='font-medium text-stone-500'>Cancel</Text>
+          </Pressable>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+}

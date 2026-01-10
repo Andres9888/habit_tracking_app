@@ -3,7 +3,7 @@
  * Contract tests for streak updates within the toggleHabit mutation flow
  */
 
-import { updateStreak } from '../streakUtils';
+import { updateStreak } from '../../../convex/streakUtils';
 
 describe('Habit Streak Integration', () => {
   describe('habit creation contract', () => {

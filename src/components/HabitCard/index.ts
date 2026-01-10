@@ -1,5 +1,10 @@
+/**
+ * HabitCard Barrel Export
+ * Re-exports all public APIs from the HabitCard module
+ */
+
 export { HabitCard, default } from './HabitCard';
-export type { HabitCardProps } from './HabitCard';
+export type { HabitCardProps } from './HabitCard.types';
 
 export { useHabitCardEntrance } from './useHabitCardEntrance';
 export type {
@@ -8,3 +13,14 @@ export type {
   UseHabitCardEntranceReturn,
   HabitCardEntranceStyles,
 } from './useHabitCardEntrance';
+
+// Internal exports (for advanced usage)
+export { useHabitCard } from './useHabitCard';
+export { useHabitCardEffects } from './useHabitCardEffects';
+export { useHabitCardAnimations } from './useHabitCardAnimations';
+export { useHabitCardGestures } from './useHabitCardGestures';
+export {
+  getStrengthColor,
+  getStrengthEmoji,
+  getBackgroundColor,
+} from './HabitCard.utils';

@@ -1,0 +1,87 @@
+import { useCallback, useState } from 'react';
+import { Keyboard, TextInput } from 'react-native';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useChipSelection } from './useChipSelection';
+
+interface UseHabitCreationFlowParams {
+  onQuickCreateHabit: (habitName: string) => Promise<void>;
+  inputRef: React.RefObject<TextInput>;
+}
+
+export function useHabitCreationFlow({
+  onQuickCreateHabit,
+  inputRef,
+}: UseHabitCreationFlowParams) {
+  const { triggerSuccess } = useHapticFeedback();
+  const chipSelection = useChipSelection();
+
+  const [isCreating, setIsCreating] = useState(false);
+  const [successHabitName, setSuccessHabitName] = useState<string | null>(null);
+  const [successEmoji, setSuccessEmoji] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleCreateHabit = useCallback(async () => {
+    if (!chipSelection.inputValue.trim() || isCreating) return;
+
+    Keyboard.dismiss();
+    setIsCreating(true);
+    setErrorMessage(null);
+
+    try {
+      await onQuickCreateHabit(chipSelection.inputValue.trim());
+      triggerSuccess();
+      setSuccessHabitName(chipSelection.inputValue.trim());
+      setSuccessEmoji(chipSelection.selectedEmoji);
+
+      if (chipSelection.selectedChipIndex !== null) {
+        chipSelection.trackChipConversion(chipSelection.selectedChipIndex);
+      }
+    } catch (error) {
+      setIsCreating(false);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : 'Failed to create habit. Please try again.'
+      );
+    }
+  }, [chipSelection, isCreating, onQuickCreateHabit, triggerSuccess]);
+
+  const handleSubmitEditing = useCallback(() => {
+    if (chipSelection.inputValue.trim() && !isCreating) {
+      handleCreateHabit();
+    }
+  }, [chipSelection.inputValue, isCreating, handleCreateHabit]);
+
+  const handleClearInput = useCallback(() => {
+    chipSelection.resetSelection();
+    inputRef.current?.focus();
+  }, [chipSelection, inputRef]);
+
+  const handleAddAnother = useCallback(() => {
+    setSuccessHabitName(null);
+    setSuccessEmoji(null);
+    setIsCreating(false);
+    chipSelection.resetSelection();
+    setTimeout(() => inputRef.current?.focus(), 100);
+  }, [chipSelection, inputRef]);
+
+  const handleDismissError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
+
+  return {
+    errorMessage,
+    handleChipSelect: chipSelection.handleChipSelect,
+    handleAddAnother,
+    handleClearInput,
+    handleCreateHabit,
+    inputValue: chipSelection.inputValue,
+    handleDismissError,
+    isCreating,
+    handleInputChange: chipSelection.handleInputChange,
+    selectedChipIndex: chipSelection.selectedChipIndex,
+    handleSubmitEditing,
+    successEmoji,
+    successHabitName,
+  };
+}

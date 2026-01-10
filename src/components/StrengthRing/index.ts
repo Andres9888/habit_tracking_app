@@ -1,2 +1,2 @@
 export { StrengthRing } from './StrengthRing';
-export type { StrengthRingProps } from './StrengthRing';
+export type { StrengthRingProps, LevelInfo } from './StrengthRing.types';

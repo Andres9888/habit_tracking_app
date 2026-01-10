@@ -1,0 +1,64 @@
+import type { Habit } from '../types';
+import { getPreviousWeekConnection } from './getPreviousWeekConnection';
+import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
+
+export function getHabitRenderData(
+  item: Habit,
+  index: number,
+  args: UseHabitRenderItemArgs
+) {
+  const {
+    entranceStaggerDelay,
+    getHabitStatus,
+    getStreak,
+    seenHabitIds,
+    shouldTriggerEntrance,
+    weekDateStrings,
+  } = args;
+
+  const entranceDelay = index * entranceStaggerDelay;
+  const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
+  const triggerEntrance = shouldTriggerEntrance && !hasBeenSeen;
+  const weekStatus = weekDateStrings.map((dateString) =>
+    getHabitStatus(item._id, dateString)
+  );
+  const streak = getStreak(item._id);
+  const isConnectedToPreviousWeek = getPreviousWeekConnection(
+    weekDateStrings[0],
+    item._id,
+    getHabitStatus
+  );
+
+  return {
+    entranceDelay,
+    isConnectedToPreviousWeek,
+    streak,
+    triggerEntrance,
+    weekStatus,
+  };
+}
+
+export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
+  return [
+    args.celebrationsEnabled,
+    args.completionIcon,
+    args.dayShape,
+    args.entranceStaggerDelay,
+    args.entranceVariant,
+    args.getHabitStatus,
+    args.getStreak,
+    args.handleArchive,
+    args.handleHabitPress,
+    args.highlightHabitId,
+    args.isReorderingEnabled,
+    args.notifyWeekCompletion,
+    args.onHabitEntranceComplete,
+    args.reduceMotionPreference,
+    args.seenHabitIds,
+    args.shouldTriggerEntrance,
+    args.showConnectors,
+    args.showHabitStrengthPercentage,
+    args.toggleHabit,
+    args.weekDateStrings,
+  ];
+}

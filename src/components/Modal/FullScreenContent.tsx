@@ -1,0 +1,49 @@
+/**
+ * FullScreenContent Component
+ * Renders the full screen variant of the Modal with Apple-like animations
+ */
+
+import React from 'react';
+import type { ViewStyle } from 'react-native';
+import {
+  GestureDetector,
+  type GestureType,
+} from 'react-native-gesture-handler';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { useAppTheme } from '../../theme';
+import { styles } from './Modal.styles';
+
+interface FullScreenContentProps {
+  children: React.ReactNode;
+  gesture: GestureType;
+  animatedStyle: AnimatedStyle<ViewStyle>;
+  customStyle?: ViewStyle;
+}
+
+export function FullScreenContent({
+  children,
+  gesture,
+  animatedStyle,
+  customStyle,
+}: FullScreenContentProps) {
+  const theme = useAppTheme();
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <Animated.View
+        style={[
+          styles.fullScreen,
+          {
+            backgroundColor: theme.custom.colors.light.background,
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+          },
+          animatedStyle,
+          customStyle,
+        ]}
+      >
+        {children}
+      </Animated.View>
+    </GestureDetector>
+  );
+}
