@@ -768,16 +768,16 @@ highlightGlow.value = withSequence(
 
 - **Total Findings:** 16
 - **IMPLEMENTED:** 1
-- **Auto-Remediate (PENDING):** 0
+- **Auto-Remediate (PENDING):** 1
 - **Manual Review:** 0
 - **Won't Do / False Positive:** 0
-- **Not Yet Evaluated:** 15
+- **Not Yet Evaluated:** 14
 
 ## Security Risk Summary
 
 | Severity | Count | Implemented | Auto-Fix | Manual | Won't Do | Pending Eval |
 | -------- | ----- | ----------- | -------- | ------ | -------- | ------------ |
-| CRITICAL | 2     | 1           | 0        | 0      | 0        | 1            |
+| CRITICAL | 2     | 1           | 1        | 0      | 0        | 0            |
 | HIGH     | 6     | 0           | 0        | 0      | 0        | 6            |
 | MEDIUM   | 6     | 0           | 0        | 0      | 0        | 6            |
 | LOW/INFO | 2     | 0           | 0        | 0      | 0        | 2            |
@@ -819,6 +819,59 @@ highlightGlow.value = withSequence(
 
 ---
 
+## PENDING - Ready for Auto-Remediation
+
+### SEC-002: Unauthenticated File Storage Upload
+
+- **Status:** `PENDING`
+- **Vuln ID:** VULN-002
+- **Severity:** CRITICAL
+- **Remediability:** EASY
+- **File:** `convex/storage.ts`
+- **Line:** 24-30
+- **Issue:** The `generateUploadUrl` mutation has no authentication check. Any client (authenticated or not) can request an upload URL and upload files to the storage bucket. This enables:
+  - **Storage abuse:** Attackers can upload unlimited files, consuming cloud storage and incurring costs
+  - **Malicious content hosting:** The storage could be used to host malware, phishing pages, or illegal content
+  - **DoS via storage exhaustion:** Rapid uploads could exhaust storage quotas
+- **Current Code:**
+  ```typescript
+  export const generateUploadUrl = mutation({
+    args: {},
+    handler: async (ctx) => {
+      return await ctx.storage.generateUploadUrl();
+    },
+    returns: v.string(),
+  });
+  ```
+- **Fix Strategy:**
+  1. Add authentication check at the start of the handler using `ctx.auth.getUserIdentity()`
+  2. Throw an error if the user is not authenticated
+  3. Return the upload URL only for authenticated users
+- **Proposed Fix:**
+  ```typescript
+  export const generateUploadUrl = mutation({
+    args: {},
+    handler: async (ctx) => {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) {
+        throw new Error('Unauthenticated: Must be logged in to upload files');
+      }
+      return await ctx.storage.generateUploadUrl();
+    },
+    returns: v.string(),
+  });
+  ```
+- **Verification:**
+  1. Attempt to upload a file without authentication - should receive error
+  2. Attempt to upload a file with valid authentication - should succeed
+  3. Verify existing Vision Board and Voice Note features still work after fix
+- **Breaking Change Risk:** LOW - All legitimate uploads come from authenticated users (Vision Board images, Voice Notes). No public upload functionality exists in the app.
+
+**Evaluated:** 2026-01-10 by secruity agent
+**Loop:** 00001
+
+---
+
 ## PENDING - MANUAL REVIEW
 
 _No findings requiring manual review at this time._
@@ -835,7 +888,8 @@ _No findings marked as won't do or false positive at this time._
 
 Recommended sequence based on severity and dependencies:
 
-1. **SEC-001** - Hardcoded Figma Token (CRITICAL - must revoke token first)
+1. **SEC-001** - Hardcoded Figma Token (CRITICAL - IMPLEMENTED, token revocation pending)
+2. **SEC-002** - Unauthenticated File Storage Upload (CRITICAL, EASY - PENDING auto-fix)
 
 _Additional findings will be added as they are evaluated._
 
