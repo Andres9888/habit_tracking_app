@@ -1,15 +1,15 @@
 import React from 'react';
-import { View } from 'react-native';
 
-import { PreviousStreakVoiceNotes } from '../../PreviousStreakVoiceNotes';
-import { AnimatedContent } from './AnimatedContent';
-import { StreakAtRiskHeader } from './StreakAtRiskHeader';
-import { FeaturedWhy } from './FeaturedWhy';
-import { FeaturedVoiceNote } from './FeaturedVoiceNote';
 import { FailureVizSection } from './FailureVizSection';
 import { ScienceTipSection } from './ScienceTipSection';
-import { getAnimationIndex } from './useAnimationIndex';
 import type { RescueModeContentProps } from './RescueModeContent.types';
+import { getContentFlags } from './RescueModeContent.helpers';
+import {
+  StreakSection,
+  WhySection,
+  VoiceNoteSection,
+  PreviousStreakSection,
+} from './sections';
 
 export function RescueModeContent({
   habit,
@@ -22,66 +22,55 @@ export function RescueModeContent({
   onVoiceNotePlayStart,
   onVoiceNotePlayFinish,
 }: RescueModeContentProps) {
-  const flags = { hasPreviousStreakNotes, hasStreak, hasVoiceNote, hasWhy };
+  const flags = getContentFlags({
+    habit,
+    hasPreviousStreakNotes,
+    hasStreak,
+    hasVoiceNote,
+    hasWhy,
+    onVoiceNotePlayFinish,
+    onVoiceNotePlayStart,
+    reduceMotion,
+    visible,
+  });
 
   return (
     <>
       {hasStreak && (
-        <AnimatedContent
-          index={0}
+        <StreakSection
+          habit={habit}
           reduceMotion={reduceMotion}
           visible={visible}
-        >
-          <StreakAtRiskHeader
-            hoursRemaining={habit.hoursRemaining}
-            reduceMotion={reduceMotion}
-            streak={habit.currentStreak!}
-          />
-        </AnimatedContent>
+        />
       )}
       {hasWhy && (
-        <AnimatedContent
-          index={getAnimationIndex(flags, ['streak'])}
+        <WhySection
+          flags={flags}
           reduceMotion={reduceMotion}
           visible={visible}
-        >
-          <View className='mt-4'>
-            <FeaturedWhy why={habit.why!} />
-          </View>
-        </AnimatedContent>
+          why={habit.why!}
+        />
       )}
       {hasVoiceNote && (
-        <AnimatedContent
-          index={getAnimationIndex(flags, ['streak', 'why'])}
+        <VoiceNoteSection
+          flags={flags}
           reduceMotion={reduceMotion}
           visible={visible}
-        >
-          <View className='mt-4'>
-            <FeaturedVoiceNote
-              reduceMotion={reduceMotion}
-              voiceNote={habit.day1VoiceNote!}
-              onPlayFinish={onVoiceNotePlayFinish}
-              onPlayStart={onVoiceNotePlayStart}
-            />
-          </View>
-        </AnimatedContent>
+          voiceNote={habit.day1VoiceNote!}
+          onVoiceNotePlayFinish={onVoiceNotePlayFinish}
+          onVoiceNotePlayStart={onVoiceNotePlayStart}
+        />
       )}
       {hasPreviousStreakNotes && (
-        <AnimatedContent
-          index={getAnimationIndex(flags, ['streak', 'why', 'voiceNote'])}
+        <PreviousStreakSection
+          bestStreak={habit.bestStreak!}
+          flags={flags}
           reduceMotion={reduceMotion}
           visible={visible}
-        >
-          <View className='mt-4'>
-            <PreviousStreakVoiceNotes
-              bestStreak={habit.bestStreak!}
-              reduceMotion={reduceMotion}
-              voiceNotes={habit.previousStreakVoiceNotes!}
-              onPlayFinish={onVoiceNotePlayFinish}
-              onPlayStart={onVoiceNotePlayStart}
-            />
-          </View>
-        </AnimatedContent>
+          voiceNotes={habit.previousStreakVoiceNotes!}
+          onVoiceNotePlayFinish={onVoiceNotePlayFinish}
+          onVoiceNotePlayStart={onVoiceNotePlayStart}
+        />
       )}
       <FailureVizSection
         habit={habit}

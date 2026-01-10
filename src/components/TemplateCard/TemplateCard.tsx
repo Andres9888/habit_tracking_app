@@ -1,50 +1,25 @@
-/**
- * TemplateCard Component
- *
- * Enhanced design with accent bar, color tint, and icon glow
- * Displays habit template with rich visual personality
- */
 import React from 'react';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import {
-  CardContainer,
-  ScrollRevealWrapper,
-  TemplateCardContent,
-} from './components';
 import {
   useTemplateCardAnimations,
   useTemplateCardCallbacks,
   useTemplateCardHandlers,
 } from './hooks';
-import { DEFAULT_ICON_COLOR } from './TemplateCard.constants';
 import type { TemplateCardProps } from './TemplateCard.types';
+import { getTemplateCardState } from './TemplateCard.helpers';
+import { TemplateCardRender } from './TemplateCardRender';
 
-export function TemplateCard({
-  animationIndex = 0,
-  category,
-  description,
-  enableScrollReveal = false,
-  frequency,
-  hasAccess = true,
-  icon,
-  iconColor: iconColorProp,
-  isImported = false,
-  isImporting = false,
-  isPremium = false,
-  name,
-  onImport,
-  onPreview,
-  onUpgrade,
-  popularityScore,
-  scientificLink,
-  scientificReference,
-  showPreviewCTA = true,
-  style,
-  youtubeLink,
-}: TemplateCardProps) {
+export function TemplateCard(props: TemplateCardProps) {
+  const {
+    animationIndex = 0,
+    isImported = false,
+    onImport,
+    onPreview,
+    onUpgrade,
+  } = props;
+
   const reducedMotion = useReduceMotion();
-  const isLocked = isPremium && !hasAccess;
-  const iconColor = iconColorProp?.trim() || DEFAULT_ICON_COLOR;
+  const { isLocked, iconColor } = getTemplateCardState(props);
 
   const {
     checkmarkStyle,
@@ -66,47 +41,19 @@ export function TemplateCard({
   });
 
   return (
-    <ScrollRevealWrapper
-      enabled={enableScrollReveal}
+    <TemplateCardRender
+      {...props}
+      checkmarkStyle={checkmarkStyle}
+      containerStyle={containerStyle}
+      glowStyle={glowStyle}
+      handleCardPress={handleCardPress}
+      handleImportPress={handleImportPress}
+      handlePressIn={handlePressIn}
+      handlePressOut={handlePressOut}
+      iconColor={iconColor}
+      isLocked={isLocked}
       reducedMotion={reducedMotion}
-    >
-      <CardContainer
-        containerStyle={containerStyle}
-        description={description}
-        glowStyle={glowStyle}
-        iconColor={iconColor}
-        isImported={isImported}
-        isLocked={isLocked}
-        name={name}
-        shadowStyle={shadowStyle}
-        style={style}
-        onPress={handleCardPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      >
-        <TemplateCardContent
-          category={category}
-          checkmarkStyle={checkmarkStyle}
-          description={description}
-          frequency={frequency}
-          icon={icon}
-          iconColor={iconColor}
-          isImported={isImported}
-          isImporting={isImporting}
-          isLocked={isLocked}
-          isPremium={isPremium}
-          name={name}
-          popularityScore={popularityScore}
-          scientificLink={scientificLink}
-          scientificReference={scientificReference}
-          showPreviewCTA={showPreviewCTA}
-          youtubeLink={youtubeLink}
-          onImportPress={handleImportPress}
-          onPreview={onPreview}
-        />
-      </CardContainer>
-    </ScrollRevealWrapper>
+      shadowStyle={shadowStyle}
+    />
   );
 }
-
-export default TemplateCard;

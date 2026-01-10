@@ -73,3 +73,36 @@ export interface TemplateCardProps {
   /** Optional YouTube video link */
   youtubeLink?: string;
 }
+
+/** Props for the TemplateCardRender component */
+export type TemplateCardRenderProps = Pick<
+  TemplateCardProps,
+  | 'category'
+  | 'description'
+  | 'enableScrollReveal'
+  | 'frequency'
+  | 'icon'
+  | 'isImported'
+  | 'isImporting'
+  | 'isPremium'
+  | 'name'
+  | 'onPreview'
+  | 'popularityScore'
+  | 'scientificLink'
+  | 'scientificReference'
+  | 'showPreviewCTA'
+  | 'style'
+  | 'youtubeLink'
+> & {
+  reducedMotion: boolean;
+  isLocked: boolean;
+  iconColor: string;
+  containerStyle: any;
+  glowStyle: any;
+  shadowStyle: any;
+  checkmarkStyle: any;
+  handleCardPress: () => void;
+  handleImportPress: () => void;
+  handlePressIn: () => void;
+  handlePressOut: () => void;
+};

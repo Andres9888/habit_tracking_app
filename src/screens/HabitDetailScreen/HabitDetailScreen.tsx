@@ -7,9 +7,7 @@ import { Modal } from '../../components/Modal';
 import {
   DetailHeader,
   HabitDetailContent,
-  NotesListModal,
-  NotesEditorModal,
-  UndoToasts,
+  HabitDetailModals,
 } from './components';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
@@ -26,8 +24,6 @@ export default function HabitDetailScreen({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
-  const safeTop = insets.top || 44;
-
   const state = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -35,7 +31,6 @@ export default function HabitDetailScreen({
     tracking,
     visible,
   });
-
   const calendarHandlers = useCalendarHandlers({
     habit,
     isTogglingCalendar: state.isTogglingCalendar,
@@ -46,7 +41,6 @@ export default function HabitDetailScreen({
     setPendingArchive: state.setPendingArchive,
     setPendingDelete: state.setPendingDelete,
   });
-
   const notesHandlers = useNotesHandlers({
     habit,
     onEdit,
@@ -67,7 +61,7 @@ export default function HabitDetailScreen({
     >
       <View
         className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100'
-        style={{ paddingTop: safeTop }}
+        style={{ paddingTop: insets.top || 44 }}
       >
         <DetailHeader
           habit={habit}
@@ -81,28 +75,22 @@ export default function HabitDetailScreen({
           onDayPress={calendarHandlers.handleCalendarDayPress}
         />
       </View>
-      <NotesListModal
-        habitId={habit._id}
-        insets={insets}
-        isOpen={state.isNotesListOpen}
-        onClose={() => state.setIsNotesListOpen(false)}
-      />
-      <NotesEditorModal
+      <HabitDetailModals
         editingNote={state.editingNote}
         habitId={habit._id}
-        insets={insets}
-        isOpen={state.isNotesEditorOpen}
-        onClose={notesHandlers.handleCloseNotesEditor}
-      />
-      <UndoToasts
         habitName={habit.name}
+        handleCloseNotesEditor={notesHandlers.handleCloseNotesEditor}
+        handleConfirmArchive={calendarHandlers.handleConfirmArchive}
+        handleConfirmDelete={calendarHandlers.handleConfirmDelete}
+        handleUndoArchive={calendarHandlers.handleUndoArchive}
+        handleUndoDelete={calendarHandlers.handleUndoDelete}
+        insets={insets}
+        isNotesEditorOpen={state.isNotesEditorOpen}
+        isNotesListOpen={state.isNotesListOpen}
         pendingArchive={state.pendingArchive}
         pendingDelete={state.pendingDelete}
-        onConfirmArchive={calendarHandlers.handleConfirmArchive}
-        onConfirmDelete={calendarHandlers.handleConfirmDelete}
-        onDismissDelete={() => state.setPendingDelete(false)}
-        onUndoArchive={calendarHandlers.handleUndoArchive}
-        onUndoDelete={calendarHandlers.handleUndoDelete}
+        setIsNotesListOpen={state.setIsNotesListOpen}
+        setPendingDelete={state.setPendingDelete}
       />
     </Modal>
   );

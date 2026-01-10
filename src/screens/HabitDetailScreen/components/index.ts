@@ -9,3 +9,4 @@ export { NotesEditorModal } from './NotesEditorModal';
 export { NotesListModal } from './NotesListModal';
 export { UndoToasts } from './UndoToasts';
 export { HabitDetailContent } from './HabitDetailContent';
+export { HabitDetailModals } from './HabitDetailModals';

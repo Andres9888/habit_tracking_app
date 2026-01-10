@@ -1,16 +1,14 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { QuickReflection } from '../QuickReflection';
 import {
-  AnimatedContent,
   AnimatedSection,
   CaptureSection,
-  CelebrationHeader,
   ScienceTip,
   StatsRow,
   StreakDisplay,
 } from './components';
 import type { CelebrationScreenContentPropsExtended } from './CelebrationScreenContent.types';
+import { HeaderSection, ReflectionSection } from './sections';
 
 export function CelebrationScreenContent({
   habit,
@@ -34,18 +32,14 @@ export function CelebrationScreenContent({
       contentContainerStyle={{ paddingBottom: 24 }}
       showsVerticalScrollIndicator={false}
     >
-      <AnimatedContent
+      <HeaderSection
+        habitName={habit.name}
         index={idx++}
+        isStreakMilestone={habit.isStreakMilestone}
+        milestoneNumber={habit.milestoneNumber}
         reduceMotion={reduceMotion}
         visible={visible}
-      >
-        <CelebrationHeader
-          habitName={habit.name}
-          isStreakMilestone={habit.isStreakMilestone}
-          milestoneNumber={habit.milestoneNumber}
-          reduceMotion={reduceMotion}
-        />
-      </AnimatedContent>
+      />
       {hasStreak && (
         <AnimatedSection
           index={idx++}
@@ -71,24 +65,16 @@ export function CelebrationScreenContent({
           />
         </AnimatedSection>
       )}
-      <AnimatedSection
+      <ReflectionSection
+        handleEmojiSelect={handleEmojiSelect}
+        handleNoteChange={handleNoteChange}
         index={idx++}
+        localEmoji={localEmoji}
+        localNote={localNote}
         reduceMotion={reduceMotion}
         visible={visible}
-      >
-        <QuickReflection
-          showNoteInput
-          compact={false}
-          note={localNote}
-          reduceMotion={reduceMotion}
-          sectionIndex={idx}
-          selectedEmoji={localEmoji}
-          shouldAnimate={false}
-          onEmojiSelect={handleEmojiSelect}
-          onNoteChange={handleNoteChange}
-          onSubmit={onReflectionSubmit}
-        />
-      </AnimatedSection>
+        onReflectionSubmit={onReflectionSubmit}
+      />
       <AnimatedSection
         index={idx++}
         reduceMotion={reduceMotion}
