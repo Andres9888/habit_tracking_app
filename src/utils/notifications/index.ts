@@ -21,8 +21,13 @@ export {
   createDateFromTimeString,
   formatReminderTime,
   getDefaultReminderTime,
-  getNextReminderRelativeTime,
 } from './timeUtils';
+
+// Re-export relative time utilities (separate to avoid circular deps)
+export {
+  formatRelativeTime,
+  getNextReminderRelativeTime,
+} from './relativeTimeFormatter';
 
 // Re-export letter unlock notifications
 export {

@@ -24,8 +24,8 @@ export function AuthGate() {
   // Show loading while Clerk initializes
   if (!isLoaded) {
     return (
-      <View className="flex-1 items-center justify-center bg-white dark:bg-stone-900">
-        <ActivityIndicator size="large" />
+      <View className='flex-1 items-center justify-center bg-white dark:bg-stone-900'>
+        <ActivityIndicator size='large' />
       </View>
     );
   }
@@ -40,5 +40,9 @@ export function AuthGate() {
   }
 
   // Show main app - let HabitsApp handle its own loading states
-  return <HabitsApp />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <HabitsApp />
+    </GestureHandlerRootView>
+  );
 }

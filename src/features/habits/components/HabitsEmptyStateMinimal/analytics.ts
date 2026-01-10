@@ -20,4 +20,4 @@ export {
   getChipLabels,
   // Hook
   useTimeBasedChipAnalytics,
-} from './analytics';
+} from './analytics/index';

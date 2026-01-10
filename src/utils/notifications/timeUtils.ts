@@ -83,8 +83,5 @@ export function parseTimeString(time: string): {
   return { hours, minutes };
 }
 
-// Re-export from separate module for backwards compatibility
-export {
-  formatRelativeTime,
-  getNextReminderRelativeTime,
-} from './relativeTimeFormatter';
+// Note: formatRelativeTime and getNextReminderRelativeTime are in ./relativeTimeFormatter.ts
+// Import them directly from there to avoid circular dependencies

@@ -3,5 +3,5 @@
  * @deprecated Import from './NotesList' folder instead
  */
 
-export { default } from './NotesList';
-export type { NotesListProps } from './NotesList';
+export { default } from './NotesList/index';
+export type { NotesListProps } from './NotesList/index';

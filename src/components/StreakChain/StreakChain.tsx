@@ -2,14 +2,10 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useStreakChainLogic } from './StreakChain.hooks';
+import type { DayStatus, StreakChainProps } from './StreakChain.types';
 
-export type DayStatus = 'done' | 'missed' | 'planned';
-
-export interface StreakChainProps {
-  label: string;
-  statuses: DayStatus[];
-  size?: number;
-}
+// Re-export types for backwards compatibility
+export type { DayStatus, StreakChainProps } from './StreakChain.types';
 
 /**
  * StreakChain renders a compact chain visualization similar to the provided design.

@@ -87,9 +87,9 @@ export interface TodaysFocusCardProps {
 
 /**
  * Type for milestone values
+ * Note: These values must match MILESTONE_THRESHOLDS in TodaysFocusCard.milestones.ts
  */
-export type MilestoneValue =
-  (typeof import('./TodaysFocusCard.milestones').MILESTONE_THRESHOLDS)[number];
+export type MilestoneValue = 3 | 7 | 14 | 21 | 30 | 60 | 90 | 100 | 365;
 
 /**
  * Milestone configuration for celebrations
