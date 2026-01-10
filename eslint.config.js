@@ -100,9 +100,9 @@ export default tseslint.config(
       // === Code Readability Initiative ===
       // File size limit - 100 lines max for PR-readable code
       // See: docs/DECOMPOSITION_PATTERNS.md for refactoring guidance
-      // Current status: "warn" during migration, will become "error" after Phase 5
+      // Status: "error" - all production files now comply with 100-line limit
       'max-lines': [
-        'warn',
+        'error',
         { max: 100, skipBlankLines: true, skipComments: true },
       ],
       // Function size limit - keep functions focused and testable
