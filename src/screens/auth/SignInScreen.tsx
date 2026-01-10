@@ -1,44 +1,35 @@
-import { useSignIn } from '@clerk/clerk-expo';
-import { useState } from 'react';
-import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  AuthDivider,
+  AuthError,
+  FormInput,
+  SocialSignInButton,
+  SubmitButton,
+} from './components';
+import { useOAuthSignIn } from './hooks/useOAuthSignIn';
+import { useSignInFlow } from './hooks/useSignInFlow';
 
 export default function SignInScreen() {
-  const { signIn, setActive, isLoaded } = useSignIn();
   const insets = useSafeAreaInsets();
+  const {
+    emailAddress,
+    setEmailAddress,
+    password,
+    setPassword,
+    isLoading,
+    handleSignIn,
+    canSubmit,
+  } = useSignInFlow();
+  const {
+    signInWithGoogle,
+    signInWithApple,
+    isLoading: oauthLoading,
+    error: oauthError,
+    clearError,
+  } = useOAuthSignIn();
 
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onSignInPress = async () => {
-    if (!isLoaded) {
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const signInAttempt = await signIn.create({
-        identifier: emailAddress,
-        password,
-      });
-
-      if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId });
-      } else {
-        // Handle additional verification steps if needed
-        Alert.alert(
-          'Error',
-          'Sign in incomplete. Please check your credentials.'
-        );
-      }
-    } catch (error: any) {
-      console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', error.errors?.[0]?.message || 'Failed to sign in');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const isAnyLoading = isLoading || !!oauthLoading;
 
   return (
     <View className='flex-1 bg-white'>
@@ -50,49 +41,56 @@ export default function SignInScreen() {
           Sign in to continue tracking your habits
         </Text>
 
+        {oauthError && (
+          <AuthError message={oauthError} onDismiss={clearError} />
+        )}
+
+        <View className='gap-3'>
+          <SocialSignInButton
+            disabled={isAnyLoading}
+            isLoading={oauthLoading === 'oauth_apple'}
+            provider='apple'
+            onPress={signInWithApple}
+          />
+          <SocialSignInButton
+            disabled={isAnyLoading}
+            isLoading={oauthLoading === 'oauth_google'}
+            provider='google'
+            onPress={signInWithGoogle}
+          />
+        </View>
+
+        <AuthDivider />
+
         <View className='gap-6'>
-          <View className='gap-2'>
-            <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
-              EMAIL
-            </Text>
-            <TextInput
-              autoCapitalize='none'
-              autoComplete='email'
-              className='rounded-3xl border border-stone-200 bg-white px-5 py-3.5 text-base font-medium text-stone-800'
-              keyboardType='email-address'
-              placeholder='Enter your email'
-              placeholderTextColor='#78716c'
-              value={emailAddress}
-              onChangeText={setEmailAddress}
-            />
-          </View>
+          <FormInput
+            autoCapitalize='none'
+            autoComplete='email'
+            editable={!isAnyLoading}
+            keyboardType='email-address'
+            label='EMAIL'
+            placeholder='Enter your email'
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+          />
 
-          <View className='gap-2'>
-            <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
-              PASSWORD
-            </Text>
-            <TextInput
-              secureTextEntry
-              autoComplete='password'
-              className='rounded-3xl border border-stone-200 bg-white px-5 py-3.5 text-base font-medium text-stone-800'
-              placeholder='Enter your password'
-              placeholderTextColor='#78716c'
-              value={password}
-              onChangeText={setPassword}
-            />
-          </View>
+          <FormInput
+            secureTextEntry
+            autoComplete='password'
+            editable={!isAnyLoading}
+            label='PASSWORD'
+            placeholder='Enter your password'
+            value={password}
+            onChangeText={setPassword}
+          />
 
-          <TouchableOpacity
-            className={`mt-4 items-center rounded-3xl border border-stone-800 bg-stone-800 py-4 ${
-              isLoading || !emailAddress || !password ? 'opacity-40' : ''
-            }`}
-            disabled={isLoading || !emailAddress || !password}
-            onPress={onSignInPress}
-          >
-            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
-              {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
-            </Text>
-          </TouchableOpacity>
+          <SubmitButton
+            disabled={!canSubmit || isAnyLoading}
+            isLoading={isLoading}
+            label='SIGN IN'
+            loadingLabel='SIGNING IN...'
+            onPress={handleSignIn}
+          />
         </View>
       </View>
     </View>
