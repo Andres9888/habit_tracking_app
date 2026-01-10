@@ -3,7 +3,7 @@
  * Tests for streak calculation logic and edge cases
  */
 
-import { updateStreak, differenceInDays } from '../streakUtils';
+import { updateStreak, differenceInDays } from '../../../convex/streakUtils';
 
 describe('Streak Tracking System', () => {
   describe('differenceInDays', () => {

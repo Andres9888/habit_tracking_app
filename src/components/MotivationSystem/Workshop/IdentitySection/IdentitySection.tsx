@@ -14,7 +14,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus, Pencil } from 'lucide-react-native';
-import { CompletionCheckmark } from '../../animations';
+import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from '../CueTriggerSection/SectionCard';
 import { AnimatedSection } from '../CueTriggerSection/AnimatedSection';
 import type { IdentitySectionProps } from './types';

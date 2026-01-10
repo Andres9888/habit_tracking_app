@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnimatedContent } from '../components/AnimatedContent';
+import { AnimatedContent } from '../components/animations/AnimatedContent';
 import { CelebrationHeader } from '../components/CelebrationHeader';
 
 type HeaderSectionProps = {

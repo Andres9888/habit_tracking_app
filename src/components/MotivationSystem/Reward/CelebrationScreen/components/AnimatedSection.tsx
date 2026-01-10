@@ -5,7 +5,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { AnimatedContent } from './AnimatedContent';
+import { AnimatedContent } from './animations/AnimatedContent';
 
 interface AnimatedSectionProps {
   index: number;
