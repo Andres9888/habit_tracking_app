@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { AuthDivider, SocialSignInButton } from './components';
+import { AuthDivider, AuthError, SocialSignInButton } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
@@ -9,7 +9,8 @@ type AuthMode = 'welcome' | 'signin' | 'signup';
 
 export default function WelcomeScreen() {
   const [mode, setMode] = useState<AuthMode>('welcome');
-  const { signInWithGoogle, signInWithApple, isLoading } = useOAuthSignIn();
+  const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
+    useOAuthSignIn();
 
   if (mode === 'signin') {
     return (
@@ -53,6 +54,8 @@ export default function WelcomeScreen() {
         </View>
 
         <View className="gap-3">
+          {error && <AuthError message={error} onDismiss={clearError} />}
+
           <SocialSignInButton
             disabled={!!isLoading}
             isLoading={isLoading === 'oauth_apple'}

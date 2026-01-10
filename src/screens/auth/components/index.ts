@@ -1,5 +1,6 @@
 export { AnimatedLogo } from './AnimatedLogo';
 export { AuthDivider } from './AuthDivider';
+export { AuthError } from './AuthError';
 export { ForgotPasswordModal } from './ForgotPasswordModal';
 export { FormInput } from './FormInput';
 export { PasswordInput } from './PasswordInput';
