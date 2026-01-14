@@ -10,11 +10,11 @@ export function LegalFooter() {
   return (
     <View className='flex-row items-center justify-center'>
       <TouchableOpacity onPress={openTerms}>
-        <Text className='text-xs text-stone-400'>Terms</Text>
+        <Text className='text-xs text-stone-500'>Terms</Text>
       </TouchableOpacity>
-      <Text className='mx-2 text-xs text-stone-400'>·</Text>
+      <Text className='mx-2 text-xs text-stone-500'>·</Text>
       <TouchableOpacity onPress={openPrivacy}>
-        <Text className='text-xs text-stone-400'>Privacy</Text>
+        <Text className='text-xs text-stone-500'>Privacy</Text>
       </TouchableOpacity>
     </View>
   );
