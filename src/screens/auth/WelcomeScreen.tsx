@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { AuthDivider, AuthError, SocialSignInButton } from './components';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  AnimatedLogo,
+  AuthDivider,
+  AuthError,
+  SocialProofBadge,
+  SocialSignInButton,
+} from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
@@ -41,32 +48,38 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <View className='flex-1 bg-white'>
+    <LinearGradient
+      colors={['#fafaf9', '#ffffff']}
+      end={{ x: 0, y: 1 }}
+      start={{ x: 0, y: 0 }}
+      style={{ flex: 1 }}
+    >
       <View className='flex-1 justify-between px-6 pb-[60px] pt-[100px]'>
         <View className='items-center gap-4'>
-          <Text className='mb-4 text-[80px]'>✓</Text>
+          <AnimatedLogo size={80} />
           <Text className='text-center text-[40px] font-extrabold tracking-tight text-stone-800'>
-            Habit Tracker
+            Daily Habits
           </Text>
           <Text className='text-center text-lg leading-7 text-stone-500'>
-            Build better habits, one day at a time
+            Build lasting habits with science-backed techniques
           </Text>
+          <SocialProofBadge />
         </View>
 
-        <View className="gap-3">
+        <View className='gap-3'>
           {error && <AuthError message={error} onDismiss={clearError} />}
 
           <SocialSignInButton
             disabled={!!isLoading}
             isLoading={isLoading === 'oauth_apple'}
+            provider='apple'
             onPress={signInWithApple}
-            provider="apple"
           />
           <SocialSignInButton
             disabled={!!isLoading}
             isLoading={isLoading === 'oauth_google'}
+            provider='google'
             onPress={signInWithGoogle}
-            provider="google"
           />
 
           <AuthDivider />
@@ -76,7 +89,7 @@ export default function WelcomeScreen() {
             disabled={!!isLoading}
             onPress={() => setMode('signup')}
           >
-            <Text className="text-[15px] font-semibold tracking-[3px] text-white">
+            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
               GET STARTED
             </Text>
           </TouchableOpacity>
@@ -86,12 +99,12 @@ export default function WelcomeScreen() {
             disabled={!!isLoading}
             onPress={() => setMode('signin')}
           >
-            <Text className="text-[15px] font-semibold tracking-[3px] text-stone-800">
+            <Text className='text-[15px] font-semibold tracking-[3px] text-stone-800'>
               SIGN IN
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 }

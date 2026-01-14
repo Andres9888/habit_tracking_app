@@ -1,0 +1,1 @@
+export { SocialProofBadge } from './SocialProofBadge';
