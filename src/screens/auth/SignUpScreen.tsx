@@ -1,17 +1,25 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AuthDivider,
   AuthError,
   FormInput,
+  SignInLink,
   SocialSignInButton,
   SubmitButton,
   VerificationView,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
+import { SignUpHeader } from './components/SignUpHeader';
 
-export default function SignUpScreen() {
+interface SignUpScreenProps {
+  onNavigateToSignIn?: () => void;
+}
+
+export default function SignUpScreen({
+  onNavigateToSignIn,
+}: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
   const {
     emailAddress,
@@ -46,12 +54,7 @@ export default function SignUpScreen() {
   return (
     <View className='flex-1 bg-white'>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-800'>
-          Create Account
-        </Text>
-        <Text className='mb-10 text-base text-stone-500'>
-          Start tracking your habits today
-        </Text>
+        <SignUpHeader />
 
         {oauthError && (
           <AuthError message={oauthError} onDismiss={clearError} />
@@ -80,22 +83,20 @@ export default function SignUpScreen() {
             autoComplete='email'
             editable={!isAnyLoading}
             keyboardType='email-address'
-            label='EMAIL'
+            label='Email'
             placeholder='Enter your email'
             value={emailAddress}
             onChangeText={setEmailAddress}
           />
-
           <FormInput
             secureTextEntry
             autoComplete='password-new'
             editable={!isAnyLoading}
-            label='PASSWORD'
+            label='Password'
             placeholder='Create a password'
             value={password}
             onChangeText={setPassword}
           />
-
           <SubmitButton
             disabled={!emailAddress || !password || isAnyLoading}
             isLoading={isLoading}
@@ -104,6 +105,14 @@ export default function SignUpScreen() {
             onPress={handleSignUp}
           />
         </View>
+
+        {onNavigateToSignIn && (
+          <SignInLink
+            className='mt-6'
+            disabled={isAnyLoading}
+            onPress={onNavigateToSignIn}
+          />
+        )}
       </View>
     </View>
   );

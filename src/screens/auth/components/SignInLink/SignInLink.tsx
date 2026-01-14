@@ -3,11 +3,16 @@ import { Text, TouchableOpacity, View } from 'react-native';
 interface SignInLinkProps {
   disabled?: boolean;
   onPress: () => void;
+  className?: string;
 }
 
-export function SignInLink({ disabled, onPress }: SignInLinkProps) {
+export function SignInLink({
+  disabled,
+  onPress,
+  className = 'mt-2',
+}: SignInLinkProps) {
   return (
-    <View className='mt-2 flex-row items-center justify-center'>
+    <View className={`flex-row items-center justify-center ${className}`}>
       <Text className='text-sm text-stone-500'>Already have an account? </Text>
       <TouchableOpacity disabled={disabled} onPress={onPress}>
         <Text className='text-sm font-semibold text-emerald-600'>Sign in</Text>

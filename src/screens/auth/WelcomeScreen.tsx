@@ -25,7 +25,7 @@ export default function WelcomeScreen() {
   if (mode === 'signin') {
     return (
       <View className='flex-1 bg-white'>
-        <SignInScreen />
+        <SignInScreen onNavigateToSignUp={() => setMode('signup')} />
         <BackButton onPress={() => setMode('welcome')} />
       </View>
     );
@@ -34,7 +34,7 @@ export default function WelcomeScreen() {
   if (mode === 'signup') {
     return (
       <View className='flex-1 bg-white'>
-        <SignUpScreen />
+        <SignUpScreen onNavigateToSignIn={() => setMode('signin')} />
         <BackButton onPress={() => setMode('welcome')} />
       </View>
     );

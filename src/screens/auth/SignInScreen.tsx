@@ -1,17 +1,27 @@
-import { Text, View } from 'react-native';
+import { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AuthDivider,
   AuthError,
+  ForgotPasswordModal,
   FormInput,
+  SignUpLink,
   SocialSignInButton,
   SubmitButton,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
 
-export default function SignInScreen() {
+interface SignInScreenProps {
+  onNavigateToSignUp?: () => void;
+}
+
+export default function SignInScreen({
+  onNavigateToSignUp,
+}: SignInScreenProps) {
   const insets = useSafeAreaInsets();
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const {
     emailAddress,
     setEmailAddress,
@@ -35,10 +45,10 @@ export default function SignInScreen() {
     <View className='flex-1 bg-white'>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
         <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-800'>
-          Welcome Back
+          Welcome back
         </Text>
         <Text className='mb-10 text-base text-stone-500'>
-          Sign in to continue tracking your habits
+          Sign in to continue your streak
         </Text>
 
         {oauthError && (
@@ -68,22 +78,30 @@ export default function SignInScreen() {
             autoComplete='email'
             editable={!isAnyLoading}
             keyboardType='email-address'
-            label='EMAIL'
+            label='Email'
             placeholder='Enter your email'
             value={emailAddress}
             onChangeText={setEmailAddress}
           />
-
           <FormInput
             secureTextEntry
             autoComplete='password'
             editable={!isAnyLoading}
-            label='PASSWORD'
+            label='Password'
+            labelRight={
+              <TouchableOpacity
+                accessibilityLabel='Forgot password?'
+                onPress={() => setShowForgotPassword(true)}
+              >
+                <Text className='text-xs font-medium text-emerald-600'>
+                  Forgot?
+                </Text>
+              </TouchableOpacity>
+            }
             placeholder='Enter your password'
             value={password}
             onChangeText={setPassword}
           />
-
           <SubmitButton
             disabled={!canSubmit || isAnyLoading}
             isLoading={isLoading}
@@ -92,7 +110,16 @@ export default function SignInScreen() {
             onPress={handleSignIn}
           />
         </View>
+
+        {onNavigateToSignUp && (
+          <SignUpLink disabled={isAnyLoading} onPress={onNavigateToSignUp} />
+        )}
       </View>
+
+      <ForgotPasswordModal
+        visible={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+      />
     </View>
   );
 }
