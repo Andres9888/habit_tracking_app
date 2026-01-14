@@ -9,11 +9,19 @@ const openPrivacy = () => void Linking.openURL(PRIVACY_URL);
 export function LegalFooter() {
   return (
     <View className='flex-row items-center justify-center'>
-      <TouchableOpacity onPress={openTerms}>
+      <TouchableOpacity
+        accessibilityLabel='Terms of Service'
+        accessibilityRole='link'
+        onPress={openTerms}
+      >
         <Text className='text-xs text-stone-500'>Terms</Text>
       </TouchableOpacity>
       <Text className='mx-2 text-xs text-stone-500'>·</Text>
-      <TouchableOpacity onPress={openPrivacy}>
+      <TouchableOpacity
+        accessibilityLabel='Privacy Policy'
+        accessibilityRole='link'
+        onPress={openPrivacy}
+      >
         <Text className='text-xs text-stone-500'>Privacy</Text>
       </TouchableOpacity>
     </View>
