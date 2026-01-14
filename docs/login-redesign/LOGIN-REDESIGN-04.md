@@ -40,6 +40,30 @@ Final phase of the login UI/UX redesign. This phase focuses on accessibility com
   - ✅ Added device-tier detection fallback code if issues are found during manual testing
   - 📋 **Manual testing required**: Human tester should follow guide on physical/simulated devices
 
-- [ ] **4.5 Add snapshot tests for auth screens** - Create visual regression tests in `src/screens/auth/__tests__/` for WelcomeScreen, SignInScreen, and SignUpScreen. Use @testing-library/react-native snapshot testing to catch unintended UI changes.
+- [x] **4.5 Add snapshot tests for auth screens** - Create visual regression tests in `src/screens/auth/__tests__/` for WelcomeScreen, SignInScreen, and SignUpScreen. Use @testing-library/react-native snapshot testing to catch unintended UI changes.
+  - ✅ Created `src/screens/auth/__tests__/AuthScreens.snapshot.test.tsx` with 5 snapshot tests:
+    - WelcomeScreen: snapshot in welcome mode
+    - SignInScreen: snapshot with empty form, snapshot with navigation callback
+    - SignUpScreen: snapshot with empty form, snapshot with navigation callback
+  - ✅ All 5 tests pass with generated snapshots in `__snapshots__/AuthScreens.snapshot.test.tsx.snap`
+  - ✅ Mocked external dependencies (expo-linear-gradient, Clerk hooks, auth hooks, ForgotPasswordModal)
 
-- [ ] **4.6 Final visual QA** - Compare implemented screens against mockup at `.superdesign/design_iterations/login_redesign_1.html`. Verify: logo colors/animation, social proof badge, button hierarchy, form styling, footer links. Document any intentional deviations.
+- [x] **4.6 Final visual QA** - Compare implemented screens against mockup at `.superdesign/design_iterations/login_redesign_1.html`. Verify: logo colors/animation, social proof badge, button hierarchy, form styling, footer links. Document any intentional deviations.
+  - ✅ Created comprehensive QA report: `docs/Working/login-visual-qa-report.md`
+  - ✅ Reviewed mockups: `login_mock_1.html` and `social_login_welcome_1.html`
+  - ✅ Verified all major UI elements against implementation:
+    - Logo: PASS (emerald gradient deviation documented - brand consistency)
+    - Social proof badge: PASS (enhancement over mockup)
+    - Social login buttons: PASS (minor styling refinements)
+    - Button hierarchy: PASS (follows Option A layout)
+    - Form styling: PASS (emerald focus states for brand consistency)
+    - Submit button: PASS (emerald-700 for primary action)
+    - Footer links: PASS (legal footer added for compliance)
+    - Typography: PASS (stone palette for warmer aesthetic)
+    - Animations: PASS (breathing, float, press feedback all implemented)
+  - ✅ All intentional deviations documented with rationale:
+    - Emerald color palette for brand consistency
+    - Stone palette instead of slate for warmer feel
+    - Social proof badge added for conversion optimization
+    - Legal footer added for app store compliance
+    - Button text changed to sentence case for accessibility
