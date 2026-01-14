@@ -93,7 +93,7 @@ export default function SignInScreen({
                 accessibilityLabel='Forgot password?'
                 onPress={() => setShowForgotPassword(true)}
               >
-                <Text className='text-xs font-medium text-emerald-600'>
+                <Text className='text-xs font-medium text-emerald-700'>
                   Forgot?
                 </Text>
               </TouchableOpacity>
