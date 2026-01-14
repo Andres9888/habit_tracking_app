@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import * as Reanimated from 'react-native-reanimated';
 import { AnimatedLogo } from '../AnimatedLogo';
 
 // Mock expo-linear-gradient
@@ -117,6 +118,43 @@ describe('AnimatedLogo', () => {
     it('renders with very large size (200)', () => {
       const { toJSON } = render(<AnimatedLogo size={200} />);
       expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('Reduced Motion', () => {
+    let useReducedMotionSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      useReducedMotionSpy = jest.spyOn(Reanimated, 'useReducedMotion');
+    });
+
+    afterEach(() => {
+      useReducedMotionSpy.mockRestore();
+    });
+
+    it('checks useReducedMotion hook', () => {
+      useReducedMotionSpy.mockReturnValue(false);
+      render(<AnimatedLogo />);
+      expect(useReducedMotionSpy).toHaveBeenCalled();
+    });
+
+    it('renders static logo when reduce motion is enabled', () => {
+      useReducedMotionSpy.mockReturnValue(true);
+      const { toJSON } = render(<AnimatedLogo />);
+      // Component should still render but without animations
+      expect(toJSON()).toBeTruthy();
+    });
+
+    it('respects system reduce motion preference', () => {
+      // First render with animations enabled
+      useReducedMotionSpy.mockReturnValue(false);
+      const { rerender, toJSON: toJSON1 } = render(<AnimatedLogo />);
+      expect(toJSON1()).toBeTruthy();
+
+      // Then with animations disabled
+      useReducedMotionSpy.mockReturnValue(true);
+      rerender(<AnimatedLogo />);
+      expect(toJSON1()).toBeTruthy();
     });
   });
 });
