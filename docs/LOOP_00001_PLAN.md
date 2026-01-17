@@ -767,18 +767,18 @@ highlightGlow.value = withSequence(
 ## Security Summary
 
 - **Total Findings:** 16
-- **IMPLEMENTED:** 1
+- **IMPLEMENTED:** 2
 - **Auto-Remediate (PENDING):** 1
 - **Manual Review:** 0
 - **Won't Do / False Positive:** 0
-- **Not Yet Evaluated:** 14
+- **Not Yet Evaluated:** 13
 
 ## Security Risk Summary
 
 | Severity | Count | Implemented | Auto-Fix | Manual | Won't Do | Pending Eval |
 | -------- | ----- | ----------- | -------- | ------ | -------- | ------------ |
-| CRITICAL | 2     | 1           | 1        | 0      | 0        | 0            |
-| HIGH     | 6     | 0           | 0        | 0      | 0        | 6            |
+| CRITICAL | 2     | 2           | 0        | 0      | 0        | 0            |
+| HIGH     | 6     | 0           | 1        | 0      | 0        | 5            |
 | MEDIUM   | 6     | 0           | 0        | 0      | 0        | 6            |
 | LOW/INFO | 2     | 0           | 0        | 0      | 0        | 2            |
 
@@ -823,31 +823,23 @@ highlightGlow.value = withSequence(
 
 ### SEC-002: Unauthenticated File Storage Upload
 
-- **Status:** `PENDING`
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Added authentication checks to `generateUploadUrl` and `deleteFile` mutations using `ctx.auth.getUserIdentity()`
+- **Files Modified:** `convex/storage.ts`
+- **Verified:**
+  - [x] Code review passed - authentication check at start of handler
+  - [x] Functionality preserved - authenticated users can still upload/delete
+  - [x] Vulnerability fixed - unauthenticated requests now throw error
+  - [x] No breaking changes - all app uploads come from authenticated users
 - **Vuln ID:** VULN-002
 - **Severity:** CRITICAL
 - **Remediability:** EASY
 - **File:** `convex/storage.ts`
-- **Line:** 24-30
-- **Issue:** The `generateUploadUrl` mutation has no authentication check. Any client (authenticated or not) can request an upload URL and upload files to the storage bucket. This enables:
-  - **Storage abuse:** Attackers can upload unlimited files, consuming cloud storage and incurring costs
-  - **Malicious content hosting:** The storage could be used to host malware, phishing pages, or illegal content
-  - **DoS via storage exhaustion:** Rapid uploads could exhaust storage quotas
-- **Current Code:**
-  ```typescript
-  export const generateUploadUrl = mutation({
-    args: {},
-    handler: async (ctx) => {
-      return await ctx.storage.generateUploadUrl();
-    },
-    returns: v.string(),
-  });
-  ```
-- **Fix Strategy:**
-  1. Add authentication check at the start of the handler using `ctx.auth.getUserIdentity()`
-  2. Throw an error if the user is not authenticated
-  3. Return the upload URL only for authenticated users
-- **Proposed Fix:**
+- **Line:** 24-35 (generateUploadUrl), 55-68 (deleteFile)
+- **Issue:** The `generateUploadUrl` mutation had no authentication check. Any client (authenticated or not) could request an upload URL and upload files to the storage bucket. Additionally, `deleteFile` had the same vulnerability.
+- **Fix Applied:**
+
   ```typescript
   export const generateUploadUrl = mutation({
     args: {},
@@ -860,14 +852,94 @@ highlightGlow.value = withSequence(
     },
     returns: v.string(),
   });
+
+  export const deleteFile = mutation({
+    args: {
+      storageId: v.id('_storage'),
+    },
+    handler: async (ctx, args) => {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) {
+        throw new Error('Unauthenticated: Must be logged in to delete files');
+      }
+      await ctx.storage.delete(args.storageId);
+      return null;
+    },
+    returns: v.null(),
+  });
   ```
-- **Verification:**
-  1. Attempt to upload a file without authentication - should receive error
-  2. Attempt to upload a file with valid authentication - should succeed
-  3. Verify existing Vision Board and Voice Note features still work after fix
-- **Breaking Change Risk:** LOW - All legitimate uploads come from authenticated users (Vision Board images, Voice Notes). No public upload functionality exists in the app.
+
+- **Breaking Change Risk:** LOW - All legitimate uploads/deletions come from authenticated users (Vision Board images, Voice Notes). No public upload/delete functionality exists in the app.
 
 **Evaluated:** 2026-01-10 by secruity agent
+**Implemented:** 2026-01-10 by secruity agent
+**Loop:** 00001
+
+---
+
+### SEC-003: Missing Ownership Validation in habits:update
+
+- **Status:** `PENDING`
+- **Vuln ID:** VULN-003
+- **Severity:** HIGH
+- **Remediability:** EASY
+- **File:** `convex/habits/update.ts`
+- **Line:** 9-23 (update), 25-37 (updateNotes)
+- **Issue:** The `update` and `updateNotes` mutations accept a `habitId` argument and directly patch the habit record without verifying that the authenticated user owns the habit. Any authenticated user can modify any habit by simply providing its ID.
+- **Attack Scenario:** An attacker who is an authenticated user can:
+  1. Enumerate habit IDs (Convex IDs are sequential or discoverable)
+  2. Call `habits.update` with another user's habitId
+  3. Modify that user's habit name, notes, or settings
+  4. Corrupt other users' habit tracking data
+- **Fix Strategy:**
+  1. Add authentication check at the start of handler: `const identity = await ctx.auth.getUserIdentity()`
+  2. Throw error if not authenticated: `if (!identity) throw new Error('Unauthenticated')`
+  3. Fetch the habit record: `const habit = await ctx.db.get(habitId)`
+  4. Throw error if habit not found: `if (!habit) throw new Error('Habit not found')`
+  5. Verify ownership: `if (habit.userId !== identity.subject) throw new Error('Not authorized to modify this habit')`
+  6. Apply same pattern to `updateNotes` mutation
+- **Proposed Fix:**
+
+  ```typescript
+  export const update = mutation({
+    args: updateHabitArgs,
+    handler: async (ctx, args) => {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) {
+        throw new Error('Unauthenticated: Must be logged in to update habits');
+      }
+
+      const { habitId, ...updates } = args;
+
+      // Verify ownership
+      const habit = await ctx.db.get(habitId);
+      if (!habit) {
+        throw new Error('Habit not found');
+      }
+      if (habit.userId !== identity.subject) {
+        throw new Error('Not authorized to modify this habit');
+      }
+
+      // Remove undefined fields
+      const cleanedUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([_, value]) => value !== undefined)
+      );
+
+      await ctx.db.patch(habitId, cleanedUpdates);
+      return null;
+    },
+    returns: v.null(),
+  });
+  ```
+
+- **Verification:**
+  1. Test that authenticated users can still update their own habits
+  2. Test that authenticated users cannot update other users' habits (expect "Not authorized" error)
+  3. Test that unauthenticated requests fail with "Unauthenticated" error
+- **Breaking Change Risk:** LOW - The app always passes the current user's habits to the update function. No legitimate cross-user updates exist.
+- **Dependencies:** None - this fix is self-contained
+
+**Evaluated:** 2026-01-17 by security agent
 **Loop:** 00001
 
 ---
@@ -889,7 +961,8 @@ _No findings marked as won't do or false positive at this time._
 Recommended sequence based on severity and dependencies:
 
 1. **SEC-001** - Hardcoded Figma Token (CRITICAL - IMPLEMENTED, token revocation pending)
-2. **SEC-002** - Unauthenticated File Storage Upload (CRITICAL, EASY - PENDING auto-fix)
+2. **SEC-002** - Unauthenticated File Storage Upload (CRITICAL, EASY - IMPLEMENTED)
+3. **SEC-003** - Missing Ownership Validation in habits:update (HIGH, EASY - PENDING)
 
 _Additional findings will be added as they are evaluated._
 
