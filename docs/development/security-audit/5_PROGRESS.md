@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** secruity
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/secruity
+- **Agent:** security
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/security
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -22,24 +22,23 @@ This document is the **security gate** for the audit pipeline. It checks whether
 ## Security Gate Check
 
 - [x] **Check for remaining vulnerabilities**: Read LOOP_00001_PLAN.md and LOOP_00001_VULNERABILITIES.md. The loop should CONTINUE (reset docs 1-4) if EITHER: (1) there are items with status `PENDING` that have CRITICAL or HIGH severity AND EASY or MEDIUM remediability, OR (2) VULNERABILITIES.md does NOT contain `## ALL_TACTICS_EXHAUSTED`. The loop should EXIT (do NOT reset) only when BOTH conditions are false: no PENDING CRITICAL/HIGH items with EASY/MEDIUM remediability AND all tactics are exhausted.
-  - **Checked:** 2026-01-10 by secruity agent
-  - **Decision:** EXIT - No more automatable security fixes needed
-  - **Rationale:**
-    - `ALL_TACTICS_EXHAUSTED` IS present in VULNERABILITIES.md ✓
-    - CRITICAL items: 2 IMPLEMENTED (SEC-001 Figma token, SEC-002 Storage auth)
-    - HIGH items: 6 exist but are in "Pending Eval" status (not yet evaluated for remediability)
-    - No items with status exactly `PENDING` that have CRITICAL/HIGH + EASY/MEDIUM remediability
-    - The 6 HIGH items (VULN-003 through VULN-008) need MANUAL REVIEW to assess remediability
-  - **Recommendation:** The pipeline should EXIT. Remaining HIGH items are access control/IDOR issues that require careful manual evaluation before implementation.
+  - **Checked:** 2026-01-17 - **Decision: CONTINUE**
+  - ALL_TACTICS_EXHAUSTED is present in VULNERABILITIES.md (all 7 categories searched)
+  - However, 4 HIGH severity items with EASY remediability remain unevaluated/unimplemented:
+    - VULN-004: habits:remove ownership validation (HIGH, EASY)
+    - VULN-006: visionBoardImages listRecent cross-user exposure (HIGH, EASY)
+    - VULN-007: voiceNotes listRecent cross-user exposure (HIGH, EASY)
+    - VULN-008: visionBoardImages remove ownership validation (HIGH, EASY)
+  - Loop must continue to evaluate and implement these remaining findings
 
 ## Reset Tasks (Only if work remains)
 
 If the security gate check above determines we need to continue (PENDING CRITICAL/HIGH items with EASY/MEDIUM remediability OR tactics remaining), reset all tasks in the following documents:
 
-- [ ] **Reset 1_ANALYZE.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/1_ANALYZE.md`
-- [ ] **Reset 2_FIND_ISSUES.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/2_FIND_ISSUES.md`
-- [ ] **Reset 3_EVALUATE.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/3_EVALUATE.md`
-- [ ] **Reset 4_IMPLEMENT.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/4_IMPLEMENT.md`
+- [x] **Reset 1_ANALYZE.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/security-audit/1_ANALYZE.md`
+- [x] **Reset 2_FIND_ISSUES.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/security-audit/2_FIND_ISSUES.md`
+- [x] **Reset 3_EVALUATE.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/security-audit/3_EVALUATE.md`
+- [x] **Reset 4_IMPLEMENT.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/security-audit/4_IMPLEMENT.md`
 
 **IMPORTANT**: Only reset documents 1-4 if there is work remaining (PENDING CRITICAL/HIGH items with EASY/MEDIUM remediability OR unexplored tactics). If all tactics are exhausted AND all such items are IMPLEMENTED, WON'T DO, or PENDING - MANUAL REVIEW, leave these reset tasks unchecked to allow the pipeline to exit.
 
@@ -91,24 +90,29 @@ Continue if EITHER is true:
 
 Before making a decision, check the plan and vulnerabilities files:
 
-| Category                             | Count |
-| ------------------------------------ | ----- |
-| **CRITICAL - PENDING (EASY/MEDIUM)** | 0     |
-| **CRITICAL - IMPLEMENTED**           | 2     |
-| **HIGH - PENDING (EASY/MEDIUM)**     | 0     |
-| **HIGH - IMPLEMENTED**               | 0     |
-| **HIGH - NOT YET EVALUATED**         | 6     |
-| **MANUAL REVIEW (HARD)**             | 0     |
-| **WON'T DO / FALSE POSITIVE**        | 0     |
-| **Tactics Exhausted?**               | YES   |
+| Category                             | Count                       |
+| ------------------------------------ | --------------------------- |
+| **CRITICAL - PENDING (EASY/MEDIUM)** | 0                           |
+| **CRITICAL - IMPLEMENTED**           | 2 (SEC-001, SEC-002)        |
+| **HIGH - PENDING (EASY/MEDIUM)**     | 4 (VULN-004, 006, 007, 008) |
+| **HIGH - IMPLEMENTED**               | 1 (SEC-003)                 |
+| **MANUAL REVIEW (HARD)**             | 0                           |
+| **WON'T DO / FALSE POSITIVE**        | 0                           |
+| **Tactics Exhausted?**               | YES                         |
+
+_Updated: 2026-01-17_
 
 ## Security Posture History
 
 Track progress across loops:
 
-| Loop | Critical (Start) | Critical (End) | High (Start) | High (End)      | Decision |
-| ---- | ---------------- | -------------- | ------------ | --------------- | -------- |
-| 1    | 2                | 0              | 6            | 6 (unevaluated) | EXIT     |
+| Loop | Critical (Start) | Critical (End) | High (Start) | High (End) | Decision          |
+| ---- | ---------------- | -------------- | ------------ | ---------- | ----------------- |
+| 1    | 2                | 0              | 6            | 4          | CONTINUE          |
+| 2    | \_\_\_           | \_\_\_         | \_\_\_       | \_\_\_     | [CONTINUE / EXIT] |
+| ...  | ...              | ...            | ...          | ...        | ...               |
+
+_Loop 1 note: 2 CRITICAL issues resolved (SEC-001 Figma token, SEC-002 storage auth). 1 HIGH issue resolved (SEC-003 habits:update). 4 HIGH issues remain pending evaluation/implementation._
 
 ## Manual Override
 
@@ -133,34 +137,35 @@ Track progress across loops:
 
 Items that still need attention after this loop:
 
-### Needs Manual Review (6 HIGH Severity Items)
+### Pending HIGH Severity (EASY Remediability) - Next Loop Target
 
-These access control vulnerabilities require careful evaluation before remediation:
+- [ ] **VULN-004**: Missing ownership validation in `habits:remove` - Any user can delete any habit by ID
+  - **File:** `convex/habits/remove.ts:9-59`
+  - **Fix:** Add `ctx.auth.getUserIdentity()` check and verify `habit.userId === identity.subject`
 
-- [ ] VULN-003: Missing Ownership Validation in habits:update (IDOR) - Need to assess breaking change risk for multi-user scenarios
-- [ ] VULN-004: Missing Ownership Validation in habits:remove (IDOR) - Same as VULN-003
-- [ ] VULN-005: Unauthenticated File Deletion - Requires auth + ownership validation pattern decision
-- [ ] VULN-006: Cross-User Data Exposure in listRecent Queries - Need to evaluate query patterns across app
-- [ ] VULN-007: Cross-User Voice Notes Exposure - Same pattern as VULN-006
-- [ ] VULN-008: Missing Ownership Validation in visionBoardImages:remove (IDOR) - Need ownership model review
+- [ ] **VULN-006**: Cross-user data exposure in `visionBoardImages:listRecent` - Returns all users' images
+  - **File:** `convex/visionBoardImagesQueries.ts:86-98`
+  - **Fix:** Require authentication and filter by current user's ID
 
-### Implemented (2 CRITICAL Items)
+- [ ] **VULN-007**: Cross-user data exposure in `voiceNotes:listRecent` - Returns all users' voice notes when userId not provided
+  - **File:** `convex/voiceNotesQueries.ts:77-91`
+  - **Fix:** Require authentication and always filter by authenticated user's ID
 
-- [x] SEC-001: Hardcoded Figma Access Token - Token removed from git, added to .gitignore
-  - **Note:** Token rotation still required by repository owner
-- [x] SEC-002: Unauthenticated File Storage Upload - Auth checks added to generateUploadUrl and deleteFile
+- [ ] **VULN-008**: Missing ownership validation in `visionBoardImages:remove` - Any user can delete any image
+  - **File:** `convex/visionBoardImagesDelete.ts:13-54`
+  - **Fix:** Add authentication check and verify `image.userId === identity.subject`
 
-### Not Yet Evaluated (6 MEDIUM Severity Items)
+### Needs Manual Review
 
-- [ ] VULN-009 through VULN-016: Various MEDIUM/LOW severity issues
+_No items currently require manual review_
 
 ### Accepted Risks
 
-- [ ] None documented yet
+_No accepted risks at this time_
 
 ### Blocked / Waiting
 
-- [ ] SEC-001 Token Rotation: Waiting for repository owner to rotate Figma token
+_No blocked items at this time_
 
 ## Notes
 
