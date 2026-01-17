@@ -82,13 +82,25 @@ export const listByUser = query({
 
 /**
  * Get recent images across all habits with resolved URLs
+ * SEC-005: Added authentication and user filtering to prevent cross-user data exposure
  */
 export const listRecent = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    // SEC-005: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to view recent images'
+      );
+    }
+
     const limit = args.limit ?? 10;
+
+    // SEC-005: Filter by authenticated user's ID to prevent cross-user data exposure
     const images = await ctx.db
       .query('visionBoardImages')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .order('desc')
       .take(limit);
 
