@@ -767,19 +767,19 @@ highlightGlow.value = withSequence(
 ## Security Summary
 
 - **Total Findings:** 16
-- **IMPLEMENTED:** 2
+- **IMPLEMENTED:** 7
 - **Auto-Remediate (PENDING):** 1
 - **Manual Review:** 0
 - **Won't Do / False Positive:** 0
-- **Not Yet Evaluated:** 13
+- **Not Yet Evaluated:** 8
 
 ## Security Risk Summary
 
 | Severity | Count | Implemented | Auto-Fix | Manual | Won't Do | Pending Eval |
 | -------- | ----- | ----------- | -------- | ------ | -------- | ------------ |
 | CRITICAL | 2     | 2           | 0        | 0      | 0        | 0            |
-| HIGH     | 6     | 0           | 1        | 0      | 0        | 5            |
-| MEDIUM   | 6     | 0           | 0        | 0      | 0        | 6            |
+| HIGH     | 6     | 5           | 0        | 0      | 0        | 1            |
+| MEDIUM   | 6     | 0           | 1        | 0      | 0        | 5            |
 | LOW/INFO | 2     | 0           | 0        | 0      | 0        | 2            |
 
 ---
@@ -879,64 +879,340 @@ highlightGlow.value = withSequence(
 
 ### SEC-003: Missing Ownership Validation in habits:update
 
-- **Status:** `PENDING`
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Added authentication and ownership verification to both `update` and `updateNotes` mutations
+- **Files Modified:** `convex/habits/update.ts`
+- **Verified:**
+  - [x] Code review passed - authentication and ownership checks at start of each handler
+  - [x] Functionality preserved - authenticated users can still update their own habits
+  - [x] Vulnerability fixed - unauthenticated requests throw "Unauthenticated" error
+  - [x] Vulnerability fixed - attempts to modify other users' habits throw "Not authorized" error
+  - [x] No breaking changes - all legitimate app updates come from users modifying their own habits
 - **Vuln ID:** VULN-003
 - **Severity:** HIGH
 - **Remediability:** EASY
 - **File:** `convex/habits/update.ts`
-- **Line:** 9-23 (update), 25-37 (updateNotes)
-- **Issue:** The `update` and `updateNotes` mutations accept a `habitId` argument and directly patch the habit record without verifying that the authenticated user owns the habit. Any authenticated user can modify any habit by simply providing its ID.
-- **Attack Scenario:** An attacker who is an authenticated user can:
+- **Line:** 9-38 (update), 40-67 (updateNotes)
+- **Issue:** The `update` and `updateNotes` mutations accepted a `habitId` argument and directly patched the habit record without verifying that the authenticated user owns the habit. Any authenticated user could modify any habit by simply providing its ID.
+- **Attack Scenario (now mitigated):** An attacker who is an authenticated user could:
   1. Enumerate habit IDs (Convex IDs are sequential or discoverable)
   2. Call `habits.update` with another user's habitId
   3. Modify that user's habit name, notes, or settings
   4. Corrupt other users' habit tracking data
-- **Fix Strategy:**
-  1. Add authentication check at the start of handler: `const identity = await ctx.auth.getUserIdentity()`
-  2. Throw error if not authenticated: `if (!identity) throw new Error('Unauthenticated')`
-  3. Fetch the habit record: `const habit = await ctx.db.get(habitId)`
-  4. Throw error if habit not found: `if (!habit) throw new Error('Habit not found')`
-  5. Verify ownership: `if (habit.userId !== identity.subject) throw new Error('Not authorized to modify this habit')`
-  6. Apply same pattern to `updateNotes` mutation
-- **Proposed Fix:**
+- **Fix Applied:**
 
   ```typescript
-  export const update = mutation({
-    args: updateHabitArgs,
+  // Both update and updateNotes now include:
+  // SEC-003: Authentication check
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error('Unauthenticated: Must be logged in to update habits');
+  }
+
+  // SEC-003: Ownership verification
+  const habit = await ctx.db.get(habitId);
+  if (!habit) {
+    throw new Error('Habit not found');
+  }
+  if (habit.userId !== identity.subject) {
+    throw new Error('Not authorized to modify this habit');
+  }
+  ```
+
+- **Breaking Change Risk:** LOW - The app always passes the current user's habits to the update function. No legitimate cross-user updates exist.
+- **Dependencies:** None - this fix is self-contained
+
+**Evaluated:** 2026-01-17 by security agent
+**Implemented:** 2026-01-17 by security agent
+**Loop:** 00001
+
+---
+
+### SEC-004: Missing Ownership Validation in habits:remove
+
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Added authentication and ownership verification to both `remove` and `restore` mutations
+- **Files Modified:** `convex/habits/remove.ts`
+- **Verified:**
+  - [x] Code review passed - authentication and ownership checks at start of handler
+  - [x] Functionality preserved - authenticated users can still delete their own habits
+  - [x] Vulnerability fixed - unauthenticated requests throw "Unauthenticated" error
+  - [x] Vulnerability fixed - attempts to delete other users' habits throw "Not authorized" error
+  - [x] Restore mutation now properly associates restored habit with authenticated user
+  - [x] No breaking changes - all legitimate app deletions come from users deleting their own habits
+- **Vuln ID:** VULN-004
+- **Severity:** HIGH
+- **Remediability:** EASY
+- **File:** `convex/habits/remove.ts`
+- **Line:** 9-70 (remove), 72-119 (restore)
+- **Issue:** The `remove` mutation accepted a `habitId` argument and directly deleted the habit record without verifying that the authenticated user owns the habit. Any authenticated user could delete any habit by simply providing its ID. The `restore` mutation also lacked authentication.
+- **Attack Scenario (now mitigated):** An attacker who is an authenticated user could:
+  1. Enumerate habit IDs (Convex IDs are sequential or discoverable)
+  2. Call `habits.remove` with another user's habitId
+  3. Permanently delete that user's habit and all its tracking data
+  4. Cause data loss for other users
+- **Fix Applied:**
+
+  ```typescript
+  // remove mutation now includes:
+  // SEC-004: Authentication check
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error('Unauthenticated: Must be logged in to delete habits');
+  }
+
+  const habit = await ctx.db.get(args.habitId);
+  if (!habit) {
+    throw new Error('Habit not found');
+  }
+
+  // SEC-004: Ownership verification
+  if (habit.userId !== identity.subject) {
+    throw new Error('Not authorized to delete this habit');
+  }
+
+  // restore mutation now includes:
+  // SEC-004: Authentication check - restored habit will belong to authenticated user
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error('Unauthenticated: Must be logged in to restore habits');
+  }
+  // ... and inserts habit with userId: identity.subject
+  ```
+
+- **Breaking Change Risk:** LOW - The app always passes the current user's habits to the remove function. No legitimate cross-user deletions exist.
+- **Dependencies:** None - this fix is self-contained
+
+**Evaluated:** 2026-01-17 by security agent
+**Implemented:** 2026-01-17 by security agent
+**Loop:** 00001
+
+---
+
+### SEC-005: Cross-User Data Exposure in visionBoardImages:listRecent
+
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Added authentication check and user filtering using `by_user` index
+- **Files Modified:** `convex/visionBoardImagesQueries.ts`
+- **Verified:**
+  - [x] Code review passed - authentication check at start of handler
+  - [x] User filtering applied - queries only return authenticated user's images
+  - [x] Uses existing `by_user` index for efficient filtering
+  - [x] Vulnerability fixed - unauthenticated requests throw "Unauthenticated" error
+  - [x] No breaking changes - all app queries come from authenticated users
+- **Vuln ID:** VULN-006
+- **Severity:** HIGH
+- **Remediability:** EASY
+- **File:** `convex/visionBoardImagesQueries.ts`
+- **Line:** 86-98
+- **Issue:** The `listRecent` query returned all users' vision board images without any authentication or user filtering. Any client (authenticated or not) could call this query and see all users' private images.
+- **Attack Scenario (now mitigated):** An attacker could:
+  1. Call `visionBoardImages.listRecent` without authentication
+  2. View all users' private vision board images
+  3. Potentially access sensitive personal motivational content
+- **Fix Applied:**
+
+  ```typescript
+  export const listRecent = query({
+    args: { limit: v.optional(v.number()) },
     handler: async (ctx, args) => {
+      // SEC-005: Authentication check
       const identity = await ctx.auth.getUserIdentity();
       if (!identity) {
-        throw new Error('Unauthenticated: Must be logged in to update habits');
+        throw new Error(
+          'Unauthenticated: Must be logged in to view recent images'
+        );
       }
 
-      const { habitId, ...updates } = args;
+      const limit = args.limit ?? 10;
 
-      // Verify ownership
-      const habit = await ctx.db.get(habitId);
-      if (!habit) {
-        throw new Error('Habit not found');
-      }
-      if (habit.userId !== identity.subject) {
-        throw new Error('Not authorized to modify this habit');
-      }
+      // SEC-005: Filter by authenticated user's ID to prevent cross-user data exposure
+      const images = await ctx.db
+        .query('visionBoardImages')
+        .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+        .order('desc')
+        .take(limit);
 
-      // Remove undefined fields
-      const cleanedUpdates = Object.fromEntries(
-        Object.entries(updates).filter(([_, value]) => value !== undefined)
-      );
-
-      await ctx.db.patch(habitId, cleanedUpdates);
-      return null;
+      return resolveImageUrls(ctx, images);
     },
-    returns: v.null(),
+    returns: v.array(visionBoardImageObjectValidator),
   });
   ```
 
+- **Breaking Change Risk:** LOW - The app always uses this query for the current authenticated user's dashboard. No legitimate cross-user access exists.
+- **Dependencies:** None - this fix is self-contained
+
+**Evaluated:** 2026-01-17 by security agent
+**Implemented:** 2026-01-17 by security agent
+**Loop:** 00001
+
+---
+
+### SEC-006: Cross-User Data Exposure in voiceNotes:listRecent
+
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Added authentication check and removed optional userId parameter; now always filters by authenticated user
+- **Files Modified:** `convex/voiceNotesQueries.ts`
+- **Verified:**
+  - [x] Code review passed - authentication check at start of handler
+  - [x] User filtering applied - queries only return authenticated user's voice notes
+  - [x] Uses existing `by_user` index for efficient filtering
+  - [x] Vulnerability fixed - unauthenticated requests throw "Unauthenticated" error
+  - [x] Removed bypass path - optional userId parameter removed
+  - [x] No breaking changes - all app queries come from authenticated users
+- **Vuln ID:** VULN-007
+- **Severity:** HIGH
+- **Remediability:** EASY
+- **File:** `convex/voiceNotesQueries.ts`
+- **Line:** 77-99
+- **Issue:** The `listRecent` query had an optional `userId` parameter. When not provided, it returned ALL users' voice notes without any authentication or filtering.
+- **Attack Scenario (now mitigated):** An attacker could:
+  1. Call `voiceNotes.listRecent` without providing a userId
+  2. View all users' private voice recordings
+  3. Potentially access sensitive audio content
+- **Fix Applied:**
+
+  ```typescript
+  export const listRecent = query({
+    args: { limit: v.optional(v.number()) },
+    handler: async (ctx, args) => {
+      // SEC-006: Authentication check
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) {
+        throw new Error(
+          'Unauthenticated: Must be logged in to view recent voice notes'
+        );
+      }
+
+      const limit = args.limit ?? 10;
+
+      // SEC-006: Always filter by authenticated user's ID
+      return await ctx.db
+        .query('voiceNotes')
+        .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+        .order('desc')
+        .take(limit);
+    },
+    returns: v.array(voiceNoteObjectValidator),
+  });
+  ```
+
+- **Breaking Change Risk:** LOW - The app always uses this query for the current authenticated user's dashboard. No legitimate cross-user access exists.
+- **Dependencies:** None - this fix is self-contained
+
+**Evaluated:** 2026-01-17 by security agent
+**Implemented:** 2026-01-17 by security agent
+**Loop:** 00001
+
+---
+
+### SEC-007: Missing Ownership Validation in visionBoardImages:remove
+
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Fix Applied:** Added authentication and ownership verification before allowing image deletion
+- **Files Modified:** `convex/visionBoardImagesDelete.ts`
+- **Verified:**
+  - [x] Code review passed - authentication and ownership checks at start of handler
+  - [x] Functionality preserved - authenticated users can still delete their own images
+  - [x] Vulnerability fixed - unauthenticated requests throw "Unauthenticated" error
+  - [x] Vulnerability fixed - attempts to delete other users' images throw "Not authorized" error
+  - [x] No breaking changes - all legitimate app deletions come from users deleting their own images
+- **Vuln ID:** VULN-008
+- **Severity:** HIGH
+- **Remediability:** EASY
+- **File:** `convex/visionBoardImagesDelete.ts`
+- **Line:** 13-66
+- **Issue:** The `remove` mutation accepted an `imageId` argument and directly deleted the image and storage file without verifying that the authenticated user owns the image. Any authenticated user could delete any image by simply providing its ID.
+- **Attack Scenario (now mitigated):** An attacker who is an authenticated user could:
+  1. Enumerate visionBoardImages IDs (Convex IDs are sequential or discoverable)
+  2. Call `visionBoardImages.remove` with another user's imageId
+  3. Permanently delete that user's vision board image
+  4. Cause data loss for other users
+- **Fix Applied:**
+
+  ```typescript
+  // remove mutation now includes:
+  // SEC-007: Authentication check
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error('Unauthenticated: Must be logged in to delete images');
+  }
+
+  const image = await ctx.db.get(args.imageId);
+  if (!image) {
+    throw new Error('Image not found');
+  }
+
+  // SEC-007: Ownership validation
+  if (image.userId !== identity.subject) {
+    throw new Error('Not authorized to delete this image');
+  }
+  ```
+
+- **Breaking Change Risk:** LOW - The app always passes the current user's images to the remove function. No legitimate cross-user deletions exist.
+- **Dependencies:** None - this fix is self-contained
+
+**Evaluated:** 2026-01-17 by security agent
+**Implemented:** 2026-01-17 by security agent
+**Loop:** 00001
+
+---
+
+## PENDING - Ready for Auto-Remediation
+
+### SEC-008: Missing Ownership Validation in voiceNotes Mutations
+
+- **Status:** `PENDING`
+- **Vuln ID:** VULN-009
+- **Severity:** MEDIUM
+- **Remediability:** EASY
+- **File:** `convex/voiceNotesMutations.ts`
+- **Line:** 62-99 (update), 104-113 (remove)
+- **Issue:** The `update` and `remove` mutations for voice notes accept a `voiceNoteId` argument and directly modify/delete the record without verifying authentication or that the caller owns the voice note. Any user (authenticated or not) can modify or delete any voice note.
+- **Attack Scenario:** An attacker could:
+  1. Enumerate voiceNote IDs (Convex IDs are sequential or discoverable)
+  2. Call `voiceNotes.update` to modify labels or Day 1 flags on other users' recordings
+  3. Call `voiceNotes.remove` to delete other users' private voice recordings
+  4. Corrupt or destroy users' motivational audio content
+- **Fix Strategy:**
+  1. Add authentication check at the start of both handlers using `ctx.auth.getUserIdentity()`
+  2. Throw "Unauthenticated" error if no identity
+  3. Retrieve the voice note and verify it exists
+  4. Verify ownership by checking `voiceNote.userId === identity.subject`
+  5. Throw "Not authorized" error if ownership check fails
+  6. Proceed with the update/delete only after both checks pass
+- **Proposed Fix:**
+
+  ```typescript
+  // For both update and remove mutations:
+  // SEC-008: Authentication check
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error('Unauthenticated: Must be logged in to modify voice notes');
+  }
+
+  const voiceNote = await ctx.db.get(args.voiceNoteId);
+  if (!voiceNote) {
+    throw new Error('Voice note not found');
+  }
+
+  // SEC-008: Ownership validation
+  if (voiceNote.userId !== identity.subject) {
+    throw new Error('Not authorized to modify this voice note');
+  }
+  ```
+
 - **Verification:**
-  1. Test that authenticated users can still update their own habits
-  2. Test that authenticated users cannot update other users' habits (expect "Not authorized" error)
-  3. Test that unauthenticated requests fail with "Unauthenticated" error
-- **Breaking Change Risk:** LOW - The app always passes the current user's habits to the update function. No legitimate cross-user updates exist.
+  1. Unit test: Call update/remove without authentication → expect "Unauthenticated" error
+  2. Unit test: Call update/remove as user A on user B's voice note → expect "Not authorized" error
+  3. Unit test: Call update/remove as user A on user A's voice note → expect success
+  4. Manual test: Verify voice notes can still be edited/deleted normally in the app
+- **Breaking Change Risk:** LOW - The app always passes the current user's voice notes to these mutations. No legitimate cross-user modifications exist.
 - **Dependencies:** None - this fix is self-contained
 
 **Evaluated:** 2026-01-17 by security agent
@@ -962,9 +1238,14 @@ Recommended sequence based on severity and dependencies:
 
 1. **SEC-001** - Hardcoded Figma Token (CRITICAL - IMPLEMENTED, token revocation pending)
 2. **SEC-002** - Unauthenticated File Storage Upload (CRITICAL, EASY - IMPLEMENTED)
-3. **SEC-003** - Missing Ownership Validation in habits:update (HIGH, EASY - PENDING)
+3. **SEC-003** - Missing Ownership Validation in habits:update (HIGH, EASY - IMPLEMENTED)
+4. **SEC-004** - Missing Ownership Validation in habits:remove (HIGH, EASY - IMPLEMENTED)
+5. **SEC-005** - Cross-User Data Exposure in visionBoardImages:listRecent (HIGH, EASY - IMPLEMENTED)
+6. **SEC-006** - Cross-User Data Exposure in voiceNotes:listRecent (HIGH, EASY - IMPLEMENTED)
+7. **SEC-007** - Missing Ownership Validation in visionBoardImages:remove (HIGH, EASY - IMPLEMENTED)
+8. **SEC-008** - Missing Ownership Validation in voiceNotes Mutations (MEDIUM, EASY - PENDING)
 
-_Additional findings will be added as they are evaluated._
+_All CRITICAL and HIGH severity items with EASY/MEDIUM remediability have been implemented. MEDIUM severity items are now being addressed._
 
 ---
 

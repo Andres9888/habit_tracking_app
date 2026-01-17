@@ -22,7 +22,11 @@ Evaluate each security finding from the discovery phase and assign severity and 
 ## Evaluation Checklist
 
 - [x] **Evaluate one finding (or skip if empty)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_VULNERABILITIES.md. If it contains no findings OR all findings have already been evaluated in LOOP_00001_PLAN.md, mark this task complete without changes. Otherwise, pick one unevaluated finding, rate by SEVERITY (CRITICAL/HIGH/MEDIUM/LOW) and REMEDIABILITY (EASY/MEDIUM/HARD), mark CRITICAL or HIGH severity with EASY/MEDIUM remediation as PENDING for auto-fix, and append to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`.
-  - **Completed:** 2026-01-17 - Evaluated VULN-003 (Missing Ownership Validation in habits:update) as SEC-003 with HIGH severity, EASY remediability, status PENDING for auto-remediation.
+  - **Evaluated:** VULN-009 (Missing Ownership Validation in voiceNotes Mutations) → SEC-008 in plan
+  - **Severity:** MEDIUM (access control issue for voice notes)
+  - **Remediability:** EASY (add auth check + ownership validation to 2 mutations)
+  - **Status:** PENDING for auto-fix
+  - **Loop:** 00002 (2026-01-17)
 
 ## Rating Criteria
 
