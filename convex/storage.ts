@@ -24,6 +24,12 @@ import { mutation, query } from './_generated/server';
 export const generateUploadUrl = mutation({
   args: {},
   handler: async (ctx) => {
+    // SEC-002: Authentication check - prevent anonymous file uploads
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to upload files');
+    }
+
     return await ctx.storage.generateUploadUrl();
   },
   returns: v.string(),
@@ -51,6 +57,12 @@ export const deleteFile = mutation({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
+    // SEC-002: Authentication check - prevent anonymous file deletion
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete files');
+    }
+
     await ctx.storage.delete(args.storageId);
     return null;
   },
