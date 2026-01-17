@@ -11,9 +11,20 @@ export const remove = mutation({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete habits');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
+    }
+
+    // SEC-004: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this habit');
     }
 
     // Get all tracking data before deleting
@@ -73,12 +84,20 @@ export const restore = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check - restored habit will belong to authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to restore habits');
+    }
+
     const allHabits = await ctx.db.query('habits').collect();
     const maxOrder = findMaxOrder(allHabits);
 
     // Recreate the habit with proper order and initialize strength
+    // SEC-004: Associate restored habit with authenticated user
     const habitId = await ctx.db.insert('habits', {
       ...args.habitData,
+      userId: identity.subject,
       order: maxOrder + 1,
       strength: 0,
       strengthLevel: 'starting',
