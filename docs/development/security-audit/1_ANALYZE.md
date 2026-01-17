@@ -1,10 +1,9 @@
 # Security Analysis - Attack Surface Mapping
 
 ## Context
-
 - **Playbook:** Security
-- **Agent:** secruity
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/secruity
+- **Agent:** security
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/security
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -22,12 +21,11 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 ## Analysis Checklist
 
 - [x] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
-  - **Status:** Skipped (existing map found) — The attack surface map at `LOOP_00001_ATTACK_SURFACE.md` already exists with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Generated 2025-12-29 by code-refactor agent. Comprehensive analysis covers all entry points, security-sensitive code locations, and high-risk areas.
+  - **Completed:** 2026-01-17 - Attack surface map already exists with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Map identifies 6 high-risk areas including missing authorization checks (CRITICAL), unauthenticated file upload (HIGH), and IDOR vulnerabilities (HIGH). No additional mapping required.
 
 ## What to Identify
 
 ### Entry Points (External Input)
-
 - API endpoints (REST, GraphQL, WebSocket)
 - Form inputs and file uploads
 - URL parameters and headers
@@ -35,7 +33,6 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 - Message queues and webhooks
 
 ### Security-Sensitive Operations
-
 - Authentication and session management
 - Authorization and access control
 - Cryptographic operations
@@ -46,14 +43,12 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 - Serialization/deserialization
 
 ### Trust Boundaries
-
 - Client ↔ Server boundary
 - Service ↔ Service boundary
 - User ↔ Admin boundary
 - Internal ↔ External network
 
 ### Data Classifications
-
 - Credentials (passwords, API keys, tokens)
 - PII (names, emails, addresses, SSN)
 - Financial data (credit cards, bank accounts)
@@ -70,7 +65,6 @@ Look for security tools already configured in the project:
 4. **Check Makefile/scripts** - May have security scan targets
 
 ### Common Scan Types
-
 - **Dependency audit** - Check for known CVEs in dependencies
 - **Secret scanning** - Find hardcoded credentials in code
 - **Static analysis** - Find vulnerable code patterns
@@ -85,64 +79,54 @@ Create/update `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURF
 
 ## Scan Results Summary
 
-| Scan Type       | Tool Used   | Critical | High | Medium | Low |
-| --------------- | ----------- | -------- | ---- | ------ | --- |
-| Dependencies    | [tool name] | X        | X    | X      | X   |
-| Secrets         | [tool name] | X        | X    | X      | X   |
-| Static Analysis | [tool name] | X        | X    | X      | X   |
+| Scan Type | Tool Used | Critical | High | Medium | Low |
+|-----------|-----------|----------|------|--------|-----|
+| Dependencies | [tool name] | X | X | X | X |
+| Secrets | [tool name] | X | X | X | X |
+| Static Analysis | [tool name] | X | X | X | X |
 
 ## Entry Points
 
 ### API Endpoints
-
-| Endpoint     | Method   | Auth Required | Input Sources |
-| ------------ | -------- | ------------- | ------------- |
-| `/api/users` | GET/POST | Yes           | Body, Query   |
-| `/api/login` | POST     | No            | Body          |
-| ...          | ...      | ...           | ...           |
+| Endpoint | Method | Auth Required | Input Sources |
+|----------|--------|---------------|---------------|
+| `/api/users` | GET/POST | Yes | Body, Query |
+| `/api/login` | POST | No | Body |
+| ... | ... | ... | ... |
 
 ### File Upload Points
-
 - [List any file upload functionality]
 
 ### External Integrations
-
 - [List external APIs, services, databases]
 
 ## Security-Sensitive Code Locations
 
 ### Authentication
-
 - `[path/to/auth]` - Login, logout, session management
 - `[path/to/middleware]` - Auth middleware
 
 ### Authorization
-
 - `[path/to/permissions]` - Role checks, access control
 
 ### Cryptography
-
 - `[path/to/crypto]` - Encryption, hashing, signing
 
 ### Database Access
-
 - `[path/to/db]` - Query builders, ORM usage
 
 ### File Operations
-
 - `[path/to/files]` - File read/write, path handling
 
 ### Command Execution
-
 - `[path/to/exec]` - Shell commands, child processes
 
 ## Trust Boundaries
+
 ```
-
 [User Browser] --HTTPS--> [API Server] --Internal--> [Database]
-|
-+--> [External APIs]
-
+                              |
+                              +--> [External APIs]
 ```
 
 ## Data Flow Diagram
