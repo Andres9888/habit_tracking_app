@@ -9,15 +9,27 @@ import { mutation } from './_generated/server';
 
 /**
  * Delete an image from the vision board and storage
+ * SEC-007: Added authentication and ownership validation to prevent unauthorized deletion
  */
 export const remove = mutation({
   args: {
     imageId: v.id('visionBoardImages'),
   },
   handler: async (ctx, args) => {
+    // SEC-007: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete images');
+    }
+
     const image = await ctx.db.get(args.imageId);
     if (!image) {
       throw new Error('Image not found');
+    }
+
+    // SEC-007: Ownership validation - verify caller owns this image
+    if (image.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this image');
     }
 
     // Delete the file from storage

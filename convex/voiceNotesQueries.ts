@@ -73,19 +73,27 @@ export const countByHabit = query({
 
 /**
  * Get recent voice notes across all habits
+ * SEC-006: Added authentication and user filtering to prevent cross-user data exposure
  */
 export const listRecent = query({
-  args: { limit: v.optional(v.number()), userId: v.optional(v.string()) },
+  args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    const limit = args.limit ?? 10;
-    if (args.userId) {
-      return await ctx.db
-        .query('voiceNotes')
-        .withIndex('by_user', (q) => q.eq('userId', args.userId))
-        .order('desc')
-        .take(limit);
+    // SEC-006: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to view recent voice notes'
+      );
     }
-    return await ctx.db.query('voiceNotes').order('desc').take(limit);
+
+    const limit = args.limit ?? 10;
+
+    // SEC-006: Always filter by authenticated user's ID to prevent cross-user data exposure
+    return await ctx.db
+      .query('voiceNotes')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .take(limit);
   },
   returns: v.array(voiceNoteObjectValidator),
 });
