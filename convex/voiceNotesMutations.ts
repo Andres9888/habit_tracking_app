@@ -66,8 +66,19 @@ export const update = mutation({
     voiceNoteId: v.id('voiceNotes'),
   },
   handler: async (ctx, args) => {
+    // SEC-008: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update voice notes');
+    }
+
     const voiceNote = await ctx.db.get(args.voiceNoteId);
     if (!voiceNote) throw new Error('Voice note not found');
+
+    // SEC-008: Ownership validation
+    if (voiceNote.userId !== identity.subject) {
+      throw new Error('Not authorized to update this voice note');
+    }
 
     if (args.label && args.label.length > 100)
       throw new Error('Label cannot exceed 100 characters');
@@ -104,8 +115,20 @@ export const update = mutation({
 export const remove = mutation({
   args: { voiceNoteId: v.id('voiceNotes') },
   handler: async (ctx, args) => {
+    // SEC-008: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete voice notes');
+    }
+
     const voiceNote = await ctx.db.get(args.voiceNoteId);
     if (!voiceNote) throw new Error('Voice note not found');
+
+    // SEC-008: Ownership validation
+    if (voiceNote.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this voice note');
+    }
+
     await ctx.db.delete(args.voiceNoteId);
     return null;
   },
