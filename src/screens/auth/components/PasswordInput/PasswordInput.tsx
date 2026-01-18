@@ -4,6 +4,7 @@
 import { forwardRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Eye, EyeOff, Lock } from 'lucide-react-native';
 import { usePasswordInputAnimations } from './usePasswordInputAnimations';
 import type { PasswordInputProps } from './types';
 
@@ -32,7 +33,12 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
           style={[animatedStyle, errorStyle]}
         >
           <View className='pl-5'>
-            <Text className='text-lg'>🔒</Text>
+            <Lock
+              color='#78716c'
+              size={20}
+              strokeWidth={2}
+              testID='password-lock-icon'
+            />
           </View>
 
           <TextInput
@@ -59,9 +65,24 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             accessibilityRole='button'
             className='min-h-[44px] min-w-[44px] items-center justify-center pr-2'
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+            testID='password-visibility-toggle'
             onPress={() => setIsSecure((prev) => !prev)}
           >
-            <Text className='text-lg'>{isSecure ? '👁' : '🙈'}</Text>
+            {isSecure ? (
+              <Eye
+                color='#78716c'
+                size={20}
+                strokeWidth={2}
+                testID='eye-icon'
+              />
+            ) : (
+              <EyeOff
+                color='#78716c'
+                size={20}
+                strokeWidth={2}
+                testID='eye-off-icon'
+              />
+            )}
           </TouchableOpacity>
         </Animated.View>
 

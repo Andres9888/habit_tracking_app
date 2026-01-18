@@ -24,29 +24,30 @@ describe('PasswordInput', () => {
   });
 
   it('displays the lock icon', () => {
-    const { getByText } = render(
+    const { getByTestId } = render(
       <PasswordInput value='' onChangeText={() => {}} />
     );
 
-    expect(getByText('🔒')).toBeTruthy();
+    expect(getByTestId('password-lock-icon')).toBeTruthy();
   });
 
   it('toggles secure text entry when eye icon is pressed', () => {
-    const { getByText, getByPlaceholderText } = render(
+    const { getByTestId, getByPlaceholderText } = render(
       <PasswordInput value='' onChangeText={() => {}} />
     );
 
     const input = getByPlaceholderText('Enter your password');
-    const toggleButton = getByText('👁');
+    const toggleButton = getByTestId('password-visibility-toggle');
 
-    // Initially should be secure
+    // Initially should be secure (Eye icon shown)
     expect(input.props.secureTextEntry).toBe(true);
+    expect(getByTestId('eye-icon')).toBeTruthy();
 
     // Press toggle button
     fireEvent.press(toggleButton);
 
-    // Icon should change to 🙈
-    expect(getByText('🙈')).toBeTruthy();
+    // Icon should change to EyeOff
+    expect(getByTestId('eye-off-icon')).toBeTruthy();
   });
 
   it('calls onChangeText when text is entered', () => {
@@ -85,7 +86,7 @@ describe('PasswordInput', () => {
   });
 
   it('updates toggle button accessibility label when toggled', () => {
-    const { getByText, getByLabelText } = render(
+    const { getByTestId, getByLabelText } = render(
       <PasswordInput value='' onChangeText={() => {}} />
     );
 
@@ -93,7 +94,7 @@ describe('PasswordInput', () => {
     expect(getByLabelText('Show password')).toBeTruthy();
 
     // Toggle
-    const toggleButton = getByText('👁');
+    const toggleButton = getByTestId('password-visibility-toggle');
     fireEvent.press(toggleButton);
 
     // Should now say "Hide password"
