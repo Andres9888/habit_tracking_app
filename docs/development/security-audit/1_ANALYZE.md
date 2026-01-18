@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** security
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/security
+- **Agent:** Security
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/Security
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -22,8 +22,7 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 ## Analysis Checklist
 
 - [x] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md`.
-
-  **Status (2026-01-17):** SKIPPED - Attack surface map already exists at `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_ATTACK_SURFACE.md` with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Previous analysis identified 6 high-risk areas including missing authorization checks, unauthenticated file upload, and IDOR vulnerabilities.
+  - **Status:** SKIPPED - Attack surface map already exists with 4 investigation tactics defined (Authorization Audit, Input Validation Audit, File Upload Security, Data Exposure Audit). Document was generated 2025-12-29 and identifies critical auth gaps, IDOR vulnerabilities, and file upload security issues.
 
 ## What to Identify
 
