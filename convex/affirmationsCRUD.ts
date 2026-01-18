@@ -22,6 +22,14 @@ export const create = mutation({
     type: v.optional(affirmationTypeValidator),
   },
   handler: async (ctx, args) => {
+    // SEC-009: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to create affirmations'
+      );
+    }
+
     const text = args.text.trim();
     if (!text) throw new Error('Affirmation text is required');
     if (text.length > MAX_TEXT_LENGTH) {
@@ -32,6 +40,11 @@ export const create = mutation({
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
+
+    // SEC-009: Ownership validation - only create affirmations for own habits
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to create affirmations for this habit');
+    }
 
     const existing = await ctx.db
       .query('affirmations')
@@ -66,8 +79,22 @@ export const update = mutation({
     type: v.optional(affirmationTypeValidator),
   },
   handler: async (ctx, args) => {
+    // SEC-009: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to update affirmations'
+      );
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    // SEC-009: Ownership validation via linked habit
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (!habit || habit.userId !== identity.subject) {
+      throw new Error('Not authorized to update this affirmation');
+    }
 
     const updates: {
       text?: string;
@@ -100,8 +127,23 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id('affirmations') },
   handler: async (ctx, args) => {
+    // SEC-009: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to delete affirmations'
+      );
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    // SEC-009: Ownership validation via linked habit
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (!habit || habit.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this affirmation');
+    }
+
     await ctx.db.delete(args.id);
     return null;
   },
