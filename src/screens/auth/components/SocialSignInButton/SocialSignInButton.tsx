@@ -1,20 +1,21 @@
-import { useEffect } from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 import Animated, {
-  Easing,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
-  withRepeat,
-  withTiming,
-  cancelAnimation,
+  withSpring,
 } from 'react-native-reanimated';
+import { AppleLogo } from '@/components/auth/logos/AppleLogo';
+import { GoogleLogo } from '@/components/auth/logos/GoogleLogo';
+import { LoadingSpinner } from './LoadingSpinner';
 import { SocialSignInButtonProps } from './types';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const PROVIDER_CONFIG = {
   apple: {
     bgColor: 'bg-black',
     borderColor: 'border-black',
-    icon: '',
     label: 'Continue with Apple',
     spinnerColor: '#FFFFFF',
     textColor: 'text-white',
@@ -22,45 +23,11 @@ const PROVIDER_CONFIG = {
   google: {
     bgColor: 'bg-white',
     borderColor: 'border-stone-200',
-    icon: '🔵',
     label: 'Continue with Google',
     spinnerColor: '#44403c',
     textColor: 'text-stone-800',
   },
 } as const;
-
-function LoadingSpinner({ color }: { color: string }) {
-  const rotation = useSharedValue(0);
-
-  useEffect(() => {
-    rotation.value = withRepeat(
-      withTiming(360, { duration: 1000, easing: Easing.linear }),
-      -1,
-      false
-    );
-    return () => cancelAnimation(rotation);
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotation.value}deg` }],
-  }));
-
-  return (
-    <Animated.View
-      style={[
-        animatedStyle,
-        {
-          borderColor: color,
-          borderRadius: 10,
-          borderTopColor: 'transparent',
-          borderWidth: 2,
-          height: 20,
-          width: 20,
-        },
-      ]}
-    />
-  );
-}
 
 export function SocialSignInButton({
   disabled,
@@ -69,6 +36,24 @@ export function SocialSignInButton({
   provider,
 }: SocialSignInButtonProps) {
   const config = PROVIDER_CONFIG[provider];
+  const reduceMotion = useReducedMotion();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (!reduceMotion) {
+      scale.value = withSpring(0.97, { damping: 15 });
+    }
+  };
+
+  const handlePressOut = () => {
+    if (!reduceMotion) {
+      scale.value = withSpring(1, { damping: 15 });
+    }
+  };
 
   // Hide Apple button on Android
   if (provider === 'apple' && Platform.OS === 'android') {
@@ -78,7 +63,7 @@ export function SocialSignInButton({
   const isDisabled = isLoading || disabled;
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityHint={`Sign in using your ${provider === 'apple' ? 'Apple' : 'Google'} account`}
       accessibilityLabel={config.label}
       accessibilityRole='button'
@@ -87,18 +72,26 @@ export function SocialSignInButton({
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}
+      style={animatedStyle}
       onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
-      <View className='mr-2 h-5 w-5 items-center justify-center'>
+      <View
+        className='mr-2 h-5 w-5 items-center justify-center'
+        testID={isLoading ? 'social-button-spinner' : `${provider}-logo`}
+      >
         {isLoading ? (
           <LoadingSpinner color={config.spinnerColor} />
+        ) : provider === 'google' ? (
+          <GoogleLogo size={20} />
         ) : (
-          <Text className='text-lg'>{config.icon}</Text>
+          <AppleLogo color='#FFFFFF' size={20} />
         )}
       </View>
       <Text className={`text-[15px] font-semibold ${config.textColor}`}>
         {isLoading ? 'Signing in...' : config.label}
       </Text>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }

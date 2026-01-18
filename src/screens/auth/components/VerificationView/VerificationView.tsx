@@ -19,17 +19,17 @@ export function VerificationView({
   return (
     <View className='flex-1 bg-white'>
       <View className='pt-15 flex-1 px-6'>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-slate-900'>
+        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-900'>
           Verify Email
         </Text>
-        <Text className='mb-10 text-base text-slate-500'>
+        <Text className='mb-10 text-base text-stone-500'>
           We've sent a verification code to {emailAddress}
         </Text>
 
         <View className='gap-6'>
           <FormInput
             keyboardType='number-pad'
-            label='VERIFICATION CODE'
+            label='Verification code'
             maxLength={6}
             placeholder='Enter 6-digit code'
             value={code}
@@ -39,8 +39,8 @@ export function VerificationView({
           <SubmitButton
             disabled={code.length !== 6}
             isLoading={isLoading}
-            label='VERIFY EMAIL'
-            loadingLabel='VERIFYING...'
+            label='Verify email'
+            loadingLabel='Verifying...'
             onPress={() => onVerify(code)}
           />
         </View>

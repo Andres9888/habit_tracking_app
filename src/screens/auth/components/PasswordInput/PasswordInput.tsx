@@ -4,6 +4,7 @@
 import { forwardRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Eye, EyeOff, Lock } from 'lucide-react-native';
 import { usePasswordInputAnimations } from './usePasswordInputAnimations';
 import type { PasswordInputProps } from './types';
 
@@ -26,15 +27,18 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
 
     return (
       <View className='gap-2'>
-        <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
-          PASSWORD
-        </Text>
+        <Text className='text-sm font-medium text-stone-500'>Password</Text>
         <Animated.View
-          className='relative flex-row items-center rounded-3xl border border-stone-200 bg-white'
+          className='relative flex-row items-center rounded-3xl border'
           style={[animatedStyle, errorStyle]}
         >
           <View className='pl-5'>
-            <Text className='text-lg'>🔒</Text>
+            <Lock
+              color='#78716c'
+              size={20}
+              strokeWidth={2}
+              testID='password-lock-icon'
+            />
           </View>
 
           <TextInput
@@ -61,9 +65,24 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             accessibilityRole='button'
             className='min-h-[44px] min-w-[44px] items-center justify-center pr-2'
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+            testID='password-visibility-toggle'
             onPress={() => setIsSecure((prev) => !prev)}
           >
-            <Text className='text-lg'>{isSecure ? '👁' : '🙈'}</Text>
+            {isSecure ? (
+              <Eye
+                color='#78716c'
+                size={20}
+                strokeWidth={2}
+                testID='eye-icon'
+              />
+            ) : (
+              <EyeOff
+                color='#78716c'
+                size={20}
+                strokeWidth={2}
+                testID='eye-off-icon'
+              />
+            )}
           </TouchableOpacity>
         </Animated.View>
 

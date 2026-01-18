@@ -5,7 +5,7 @@ import { PasswordInput } from '../PasswordInput';
 describe('PasswordInput', () => {
   it('renders correctly with default props', () => {
     const { getByPlaceholderText } = render(
-      <PasswordInput value="" onChangeText={() => {}} />
+      <PasswordInput value='' onChangeText={() => {}} />
     );
 
     expect(getByPlaceholderText('Enter your password')).toBeTruthy();
@@ -14,9 +14,9 @@ describe('PasswordInput', () => {
   it('renders with custom placeholder', () => {
     const { getByPlaceholderText } = render(
       <PasswordInput
-        value=""
+        value=''
         onChangeText={() => {}}
-        placeholder="Custom password placeholder"
+        placeholder='Custom password placeholder'
       />
     );
 
@@ -24,35 +24,36 @@ describe('PasswordInput', () => {
   });
 
   it('displays the lock icon', () => {
-    const { getByText } = render(
-      <PasswordInput value="" onChangeText={() => {}} />
+    const { getByTestId } = render(
+      <PasswordInput value='' onChangeText={() => {}} />
     );
 
-    expect(getByText('🔒')).toBeTruthy();
+    expect(getByTestId('password-lock-icon')).toBeTruthy();
   });
 
   it('toggles secure text entry when eye icon is pressed', () => {
-    const { getByText, getByPlaceholderText } = render(
-      <PasswordInput value="" onChangeText={() => {}} />
+    const { getByTestId, getByPlaceholderText } = render(
+      <PasswordInput value='' onChangeText={() => {}} />
     );
 
     const input = getByPlaceholderText('Enter your password');
-    const toggleButton = getByText('👁');
+    const toggleButton = getByTestId('password-visibility-toggle');
 
-    // Initially should be secure
+    // Initially should be secure (Eye icon shown)
     expect(input.props.secureTextEntry).toBe(true);
+    expect(getByTestId('eye-icon')).toBeTruthy();
 
     // Press toggle button
     fireEvent.press(toggleButton);
 
-    // Icon should change to 🙈
-    expect(getByText('🙈')).toBeTruthy();
+    // Icon should change to EyeOff
+    expect(getByTestId('eye-off-icon')).toBeTruthy();
   });
 
   it('calls onChangeText when text is entered', () => {
     const mockOnChangeText = jest.fn();
     const { getByPlaceholderText } = render(
-      <PasswordInput value="" onChangeText={mockOnChangeText} />
+      <PasswordInput value='' onChangeText={mockOnChangeText} />
     );
 
     const input = getByPlaceholderText('Enter your password');
@@ -64,7 +65,7 @@ describe('PasswordInput', () => {
   it('displays error message when error prop is provided', () => {
     const errorMessage = 'Password is required';
     const { getByText } = render(
-      <PasswordInput value="" onChangeText={() => {}} error={errorMessage} />
+      <PasswordInput value='' onChangeText={() => {}} error={errorMessage} />
     );
 
     expect(getByText(errorMessage)).toBeTruthy();
@@ -72,7 +73,7 @@ describe('PasswordInput', () => {
 
   it('has proper accessibility labels', () => {
     const { getByLabelText } = render(
-      <PasswordInput value="" onChangeText={() => {}} />
+      <PasswordInput value='' onChangeText={() => {}} />
     );
 
     // Check input accessibility
@@ -85,26 +86,26 @@ describe('PasswordInput', () => {
   });
 
   it('updates toggle button accessibility label when toggled', () => {
-    const { getByText, getByLabelText } = render(
-      <PasswordInput value="" onChangeText={() => {}} />
+    const { getByTestId, getByLabelText } = render(
+      <PasswordInput value='' onChangeText={() => {}} />
     );
 
     // Initially should say "Show password"
     expect(getByLabelText('Show password')).toBeTruthy();
 
     // Toggle
-    const toggleButton = getByText('👁');
+    const toggleButton = getByTestId('password-visibility-toggle');
     fireEvent.press(toggleButton);
 
     // Should now say "Hide password"
     expect(getByLabelText('Hide password')).toBeTruthy();
   });
 
-  it('renders the PASSWORD label', () => {
+  it('renders the Password label', () => {
     const { getByText } = render(
-      <PasswordInput value="" onChangeText={() => {}} />
+      <PasswordInput value='' onChangeText={() => {}} />
     );
 
-    expect(getByText('PASSWORD')).toBeTruthy();
+    expect(getByText('Password')).toBeTruthy();
   });
 });

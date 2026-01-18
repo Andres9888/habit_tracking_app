@@ -30,15 +30,15 @@ describe('SocialSignInButton', () => {
     });
 
     it('renders Google icon when not loading', () => {
-      const { getByText } = render(<SocialSignInButton {...defaultProps} />);
-      expect(getByText('🔵')).toBeTruthy();
+      const { getByTestId } = render(<SocialSignInButton {...defaultProps} />);
+      expect(getByTestId('google-logo')).toBeTruthy();
     });
 
     it('renders Apple icon when not loading', () => {
-      const { getByText } = render(
+      const { getByTestId } = render(
         <SocialSignInButton {...defaultProps} provider='apple' />
       );
-      expect(getByText('')).toBeTruthy();
+      expect(getByTestId('apple-logo')).toBeTruthy();
     });
   });
 
@@ -76,10 +76,10 @@ describe('SocialSignInButton', () => {
     });
 
     it('hides icon when loading', () => {
-      const { queryByText } = render(
+      const { queryByTestId } = render(
         <SocialSignInButton {...defaultProps} isLoading={true} />
       );
-      expect(queryByText('🔵')).toBeNull();
+      expect(queryByTestId('google-logo')).toBeNull();
     });
 
     it('renders loading spinner when loading', () => {
@@ -200,6 +200,38 @@ describe('SocialSignInButton', () => {
       rerender(<SocialSignInButton {...defaultProps} isLoading={false} />);
       expect(getByText('Continue with Google')).toBeTruthy();
       expect(queryByText('Signing in...')).toBeNull();
+    });
+  });
+
+  describe('Press Animation (UX-009)', () => {
+    it('handles press events for scale animation', () => {
+      const { getByRole } = render(<SocialSignInButton {...defaultProps} />);
+      const button = getByRole('button');
+
+      // Button should respond to press events without errors
+      fireEvent(button, 'pressIn');
+      fireEvent(button, 'pressOut');
+
+      // Button should still be functional after press animation
+      fireEvent.press(button);
+      expect(mockOnPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('has press handlers defined on both Google and Apple buttons', () => {
+      const { getByRole, rerender } = render(
+        <SocialSignInButton {...defaultProps} />
+      );
+
+      // Google button
+      const googleButton = getByRole('button');
+      expect(googleButton.props.onPressIn).toBeDefined();
+      expect(googleButton.props.onPressOut).toBeDefined();
+
+      // Apple button
+      rerender(<SocialSignInButton {...defaultProps} provider='apple' />);
+      const appleButton = getByRole('button');
+      expect(appleButton.props.onPressIn).toBeDefined();
+      expect(appleButton.props.onPressOut).toBeDefined();
     });
   });
 });

@@ -84,9 +84,7 @@ jest.mock('../components', () => {
           accessibilityLabel={props.accessibilityLabel}
           blurOnSubmit={props.blurOnSubmit}
         />
-        {props.error && (
-          <Text testID='email-error-message'>{props.error}</Text>
-        )}
+        {props.error && <Text testID='email-error-message'>{props.error}</Text>}
       </View>
     )),
     PasswordInput: React.forwardRef((props: any, ref: any) => (
@@ -137,7 +135,8 @@ describe('SignInScreen Edge Cases', () => {
     it('handles very long email address (50+ characters)', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
-      const longEmail = 'verylongemailaddressthatexceeds50characters@example.com';
+      const longEmail =
+        'verylongemailaddressthatexceeds50characters@example.com';
       expect(longEmail.length).toBeGreaterThan(50);
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -178,7 +177,8 @@ describe('SignInScreen Edge Cases', () => {
         createdSessionId: 'session-123',
       });
 
-      const longEmail = 'verylongemailaddress123456789@verylongdomain123456.com';
+      const longEmail =
+        'verylongemailaddress123456789@verylongdomain123456.com';
       const longPassword = 'VeryL0ngP@ssword!' + 'x'.repeat(50);
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -231,14 +231,14 @@ describe('SignInScreen Edge Cases', () => {
       'Pass[word]test',
       'Pass{word}test',
       'Pass|word\\test',
-      "Pass'word\"test",
+      'Pass\'word"test',
       'Pass;word:test',
       'Pass<word>test',
       'Pass,word.test',
       'Pass?word/test',
       'Pass`word~test',
       'Пароль123', // Cyrillic
-      '密码123',   // Chinese
+      '密码123', // Chinese
       'パスワード123', // Japanese
       'كلمةالسر123', // Arabic
       '🔐password🔑', // Emojis
@@ -306,12 +306,17 @@ describe('SignInScreen Edge Cases', () => {
 
   describe('Rapid Button Pressing', () => {
     it('button becomes disabled during loading to prevent multiple submissions', async () => {
-      const { getByPlaceholderText, getByTestId, getByText } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, getByText } = render(
+        <SignInScreen />
+      );
 
       // Create a pending promise to simulate long-running request
       let resolvePromise: (value: any) => void;
       mockSignInCreate.mockImplementation(
-        () => new Promise((resolve) => { resolvePromise = resolve; })
+        () =>
+          new Promise((resolve) => {
+            resolvePromise = resolve;
+          })
       );
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -321,8 +326,8 @@ describe('SignInScreen Edge Cases', () => {
       fireEvent.changeText(emailInput, 'test@example.com');
       fireEvent.changeText(passwordInput, 'password123');
 
-      // Before press, button shows SIGN IN
-      expect(getByText('SIGN IN')).toBeTruthy();
+      // Before press, button shows Sign in
+      expect(getByText('Sign in')).toBeTruthy();
 
       // First press - should start loading
       await act(async () => {
@@ -331,21 +336,29 @@ describe('SignInScreen Edge Cases', () => {
 
       // During loading, button shows loading text
       await waitFor(() => {
-        expect(getByText('SIGNING IN...')).toBeTruthy();
+        expect(getByText('Signing in...')).toBeTruthy();
       });
 
       // Cleanup - resolve the promise
       await act(async () => {
-        resolvePromise!({ status: 'complete', createdSessionId: 'session-123' });
+        resolvePromise!({
+          status: 'complete',
+          createdSessionId: 'session-123',
+        });
       });
     });
 
     it('button is disabled during loading state', async () => {
-      const { getByPlaceholderText, getByTestId, getByText } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, getByText } = render(
+        <SignInScreen />
+      );
 
       let resolvePromise: (value: any) => void;
       mockSignInCreate.mockImplementationOnce(
-        () => new Promise((resolve) => { resolvePromise = resolve; })
+        () =>
+          new Promise((resolve) => {
+            resolvePromise = resolve;
+          })
       );
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -355,14 +368,14 @@ describe('SignInScreen Edge Cases', () => {
       fireEvent.changeText(emailInput, 'test@example.com');
       fireEvent.changeText(passwordInput, 'password123');
 
-      // Initially button shows SIGN IN
-      expect(getByText('SIGN IN')).toBeTruthy();
+      // Initially button shows Sign in
+      expect(getByText('Sign in')).toBeTruthy();
 
       fireEvent.press(submitButton);
 
       // During loading, shows loading label
       await waitFor(() => {
-        expect(getByText('SIGNING IN...')).toBeTruthy();
+        expect(getByText('Signing in...')).toBeTruthy();
       });
 
       // Cleanup
@@ -370,9 +383,8 @@ describe('SignInScreen Edge Cases', () => {
     });
 
     it('re-enables button after successful submission', async () => {
-      const { getByPlaceholderText, getByTestId, getByText, queryByTestId } = render(
-        <SignInScreen />
-      );
+      const { getByPlaceholderText, getByTestId, getByText, queryByTestId } =
+        render(<SignInScreen />);
 
       mockSignInCreate.mockResolvedValueOnce({
         status: 'complete',
@@ -394,10 +406,14 @@ describe('SignInScreen Edge Cases', () => {
     });
 
     it('re-enables button after error', async () => {
-      const { getByPlaceholderText, getByTestId, getByText } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, getByText } = render(
+        <SignInScreen />
+      );
 
       mockSignInCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_password_incorrect', message: 'Wrong password' }],
+        errors: [
+          { code: 'form_password_incorrect', message: 'Wrong password' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -410,8 +426,8 @@ describe('SignInScreen Edge Cases', () => {
 
       // Wait for error handling
       await waitFor(() => {
-        // Button should show SIGN IN again (not loading)
-        expect(getByText('SIGN IN')).toBeTruthy();
+        // Button should show Sign in again (not loading)
+        expect(getByText('Sign in')).toBeTruthy();
       });
 
       // Should be able to press again
@@ -433,7 +449,9 @@ describe('SignInScreen Edge Cases', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
       mockSignInCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_identifier_not_found', message: 'User not found' }],
+        errors: [
+          { code: 'form_identifier_not_found', message: 'User not found' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -453,7 +471,9 @@ describe('SignInScreen Edge Cases', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
       mockSignInCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_password_incorrect', message: 'Incorrect password' }],
+        errors: [
+          { code: 'form_password_incorrect', message: 'Incorrect password' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -473,7 +493,9 @@ describe('SignInScreen Edge Cases', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
       mockSignInCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_param_format_invalid', message: 'Invalid email' }],
+        errors: [
+          { code: 'form_param_format_invalid', message: 'Invalid email' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -505,7 +527,10 @@ describe('SignInScreen Edge Cases', () => {
       fireEvent.press(submitButton);
 
       await waitFor(() => {
-        expect(Alert.alert).toHaveBeenCalledWith('Sign In Error', 'Something went wrong');
+        expect(Alert.alert).toHaveBeenCalledWith(
+          'Sign In Error',
+          'Something went wrong'
+        );
       });
     });
 
@@ -525,7 +550,10 @@ describe('SignInScreen Edge Cases', () => {
       fireEvent.press(submitButton);
 
       await waitFor(() => {
-        expect(Alert.alert).toHaveBeenCalledWith('Sign In Error', 'Network timeout');
+        expect(Alert.alert).toHaveBeenCalledWith(
+          'Sign In Error',
+          'Network timeout'
+        );
       });
     });
 
@@ -545,7 +573,10 @@ describe('SignInScreen Edge Cases', () => {
       fireEvent.press(submitButton);
 
       await waitFor(() => {
-        expect(Alert.alert).toHaveBeenCalledWith('Sign In Error', 'Failed to sign in');
+        expect(Alert.alert).toHaveBeenCalledWith(
+          'Sign In Error',
+          'Failed to sign in'
+        );
       });
     });
 
@@ -573,10 +604,14 @@ describe('SignInScreen Edge Cases', () => {
     });
 
     it('clears email error when user types', async () => {
-      const { getByPlaceholderText, getByTestId, queryByTestId } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, queryByTestId } = render(
+        <SignInScreen />
+      );
 
       mockSignInCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_identifier_not_found', message: 'User not found' }],
+        errors: [
+          { code: 'form_identifier_not_found', message: 'User not found' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -601,10 +636,14 @@ describe('SignInScreen Edge Cases', () => {
     });
 
     it('clears password error when user types', async () => {
-      const { getByPlaceholderText, getByTestId, queryByTestId } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, queryByTestId } = render(
+        <SignInScreen />
+      );
 
       mockSignInCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_password_incorrect', message: 'Wrong password' }],
+        errors: [
+          { code: 'form_password_incorrect', message: 'Wrong password' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -726,7 +765,9 @@ describe('SignInScreen Edge Cases', () => {
 
   describe('Success Flow', () => {
     it('shows success overlay on successful sign in', async () => {
-      const { getByPlaceholderText, getByTestId, queryByTestId } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, queryByTestId } = render(
+        <SignInScreen />
+      );
 
       mockSignInCreate.mockResolvedValueOnce({
         status: 'complete',
@@ -747,7 +788,9 @@ describe('SignInScreen Edge Cases', () => {
     });
 
     it('displays success overlay after successful sign in', async () => {
-      const { getByPlaceholderText, getByTestId, queryByTestId } = render(<SignInScreen />);
+      const { getByPlaceholderText, getByTestId, queryByTestId } = render(
+        <SignInScreen />
+      );
 
       mockSignInCreate.mockResolvedValueOnce({
         status: 'complete',

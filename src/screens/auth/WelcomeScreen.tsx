@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  AnimatedLogo,
   AuthDivider,
   AuthError,
   BackButton,
-  LegalFooter,
-  SignInLink,
-  SocialProofBadge,
   SocialSignInButton,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
@@ -19,14 +15,17 @@ type AuthMode = 'welcome' | 'signin' | 'signup';
 
 export default function WelcomeScreen() {
   const [mode, setMode] = useState<AuthMode>('welcome');
+  const insets = useSafeAreaInsets();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
     useOAuthSignIn();
 
   if (mode === 'signin') {
     return (
       <View className='flex-1 bg-white'>
-        <SignInScreen onNavigateToSignUp={() => setMode('signup')} />
-        <BackButton onPress={() => setMode('welcome')} />
+        <SignInScreen />
+        <View className='absolute left-4 z-10' style={{ top: insets.top + 8 }}>
+          <BackButton onPress={() => setMode('welcome')} />
+        </View>
       </View>
     );
   }
@@ -34,33 +33,30 @@ export default function WelcomeScreen() {
   if (mode === 'signup') {
     return (
       <View className='flex-1 bg-white'>
-        <SignUpScreen onNavigateToSignIn={() => setMode('signin')} />
-        <BackButton onPress={() => setMode('welcome')} />
+        <SignUpScreen />
+        <View className='absolute left-4 z-10' style={{ top: insets.top + 8 }}>
+          <BackButton onPress={() => setMode('welcome')} />
+        </View>
       </View>
     );
   }
 
   return (
-    <LinearGradient
-      colors={['#fafaf9', '#ffffff']}
-      end={{ x: 0, y: 1 }}
-      start={{ x: 0, y: 0 }}
-      style={{ flex: 1 }}
-    >
+    <View className='flex-1 bg-white'>
       <View className='flex-1 justify-between px-6 pb-[60px] pt-[100px]'>
         <View className='items-center gap-4'>
-          <AnimatedLogo size={80} />
+          <Text className='mb-4 text-[80px]'>✓</Text>
           <Text className='text-center text-[40px] font-extrabold tracking-tight text-stone-800'>
-            Daily Habits
+            Habit Tracker
           </Text>
           <Text className='text-center text-lg leading-7 text-stone-500'>
-            Build lasting habits with science-backed techniques
+            Build better habits, one day at a time
           </Text>
-          <SocialProofBadge />
         </View>
 
         <View className='gap-3'>
           {error && <AuthError message={error} onDismiss={clearError} />}
+
           <SocialSignInButton
             disabled={!!isLoading}
             isLoading={isLoading === 'oauth_apple'}
@@ -73,25 +69,30 @@ export default function WelcomeScreen() {
             provider='google'
             onPress={signInWithGoogle}
           />
+
           <AuthDivider />
+
           <TouchableOpacity
-            className={`items-center rounded-2xl bg-stone-800 py-[18px] ${isLoading ? 'opacity-40' : ''}`}
+            className={`items-center rounded-3xl bg-stone-800 py-[18px] ${isLoading ? 'opacity-40' : ''}`}
             disabled={!!isLoading}
             onPress={() => setMode('signup')}
           >
-            <Text className='text-[15px] font-semibold text-white'>
-              Continue with Email
+            <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
+              GET STARTED
             </Text>
           </TouchableOpacity>
-          <SignInLink
+
+          <TouchableOpacity
+            className={`items-center rounded-3xl border border-stone-200 py-[18px] ${isLoading ? 'opacity-40' : ''}`}
             disabled={!!isLoading}
             onPress={() => setMode('signin')}
-          />
-          <View className='mt-4'>
-            <LegalFooter />
-          </View>
+          >
+            <Text className='text-[15px] font-semibold tracking-[3px] text-stone-800'>
+              SIGN IN
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 }

@@ -100,8 +100,8 @@ export default function SignUpScreen({
           <SubmitButton
             disabled={!emailAddress || !password || isAnyLoading}
             isLoading={isLoading}
-            label='CREATE ACCOUNT'
-            loadingLabel='CREATING ACCOUNT...'
+            label='Create account'
+            loadingLabel='Creating account...'
             onPress={handleSignUp}
           />
         </View>

@@ -1,25 +1,19 @@
 import { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AuthDivider,
   AuthError,
+  ForgotPasswordLink,
   ForgotPasswordModal,
   FormInput,
-  SignUpLink,
   SocialSignInButton,
   SubmitButton,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
 
-interface SignInScreenProps {
-  onNavigateToSignUp?: () => void;
-}
-
-export default function SignInScreen({
-  onNavigateToSignUp,
-}: SignInScreenProps) {
+export default function SignInScreen() {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const {
@@ -45,10 +39,10 @@ export default function SignInScreen({
     <View className='flex-1 bg-white'>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
         <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-800'>
-          Welcome back
+          Welcome Back
         </Text>
         <Text className='mb-10 text-base text-stone-500'>
-          Sign in to continue your streak
+          Sign in to continue tracking your habits
         </Text>
 
         {oauthError && (
@@ -83,37 +77,28 @@ export default function SignInScreen({
             value={emailAddress}
             onChangeText={setEmailAddress}
           />
+
           <FormInput
             secureTextEntry
             autoComplete='password'
             editable={!isAnyLoading}
             label='Password'
             labelRight={
-              <TouchableOpacity
-                accessibilityLabel='Forgot password?'
-                onPress={() => setShowForgotPassword(true)}
-              >
-                <Text className='text-xs font-medium text-emerald-700'>
-                  Forgot?
-                </Text>
-              </TouchableOpacity>
+              <ForgotPasswordLink onPress={() => setShowForgotPassword(true)} />
             }
             placeholder='Enter your password'
             value={password}
             onChangeText={setPassword}
           />
+
           <SubmitButton
             disabled={!canSubmit || isAnyLoading}
             isLoading={isLoading}
-            label='SIGN IN'
-            loadingLabel='SIGNING IN...'
+            label='Sign in'
+            loadingLabel='Signing in...'
             onPress={handleSignIn}
           />
         </View>
-
-        {onNavigateToSignUp && (
-          <SignUpLink disabled={isAnyLoading} onPress={onNavigateToSignUp} />
-        )}
       </View>
 
       <ForgotPasswordModal
