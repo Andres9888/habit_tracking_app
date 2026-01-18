@@ -1,0 +1,35 @@
+/**
+ * HabitsListFooter Component
+ * Renders the footer with locked habit card for free tier limit
+ */
+
+import { View } from 'react-native';
+import { LockedHabitCard } from './LockedHabitCard';
+
+interface HabitsListFooterProps {
+  isPremiumUser: boolean;
+  hasReachedHabitLimit: boolean;
+  reduceMotionPreference: boolean;
+  onUpgradeIntent: () => void;
+}
+
+export function HabitsListFooter({
+  isPremiumUser,
+  hasReachedHabitLimit,
+  reduceMotionPreference,
+  onUpgradeIntent,
+}: HabitsListFooterProps) {
+  const showLockedCard = !isPremiumUser && hasReachedHabitLimit;
+  if (!showLockedCard) return null;
+
+  return (
+    <View className='gap-4'>
+      <View className='mt-2'>
+        <LockedHabitCard
+          reduceMotion={reduceMotionPreference}
+          onUpgradePress={onUpgradeIntent}
+        />
+      </View>
+    </View>
+  );
+}

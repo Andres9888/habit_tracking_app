@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Page - Post Calendar Redesign</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+    body {
+      background: #1c1917 !important;
+      min-height: 100vh;
+    }
+
+    /* Gradient backgrounds */
+    .card-gradient-teal {
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(16, 185, 129, 0.06) 100%);
+    }
+    .card-gradient-amber {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(245, 158, 11, 0.06) 100%);
+    }
+    .card-gradient-violet {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(124, 58, 237, 0.06) 100%);
+    }
+
+    /* Ring animation */
+    @keyframes ring-fill {
+      from { stroke-dashoffset: 251.2; }
+      to { stroke-dashoffset: 80.4; }
+    }
+    .ring-progress {
+      animation: ring-fill 1.2s ease-out forwards;
+    }
+
+    /* Bar chart animation */
+    @keyframes bar-grow {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+    .bar-animate {
+      animation: bar-grow 0.6s ease-out forwards;
+      transform-origin: bottom;
+    }
+
+    /* Pulse animation for current streak */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0); }
+    }
+    .pulse-current {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    /* Tip highlight */
+    @keyframes tip-attention {
+      0%, 100% { transform: translateX(0); }
+      10%, 30% { transform: translateX(-2px); }
+      20%, 40% { transform: translateX(2px); }
+    }
+    .tip-shake:hover {
+      animation: tip-attention 0.5s ease-in-out;
+    }
+
+    /* Card hover effect */
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body class="p-4">
+  <!-- Phone Frame -->
+  <div class="mx-auto max-w-[390px] rounded-[40px] bg-stone-900 p-3 shadow-2xl ring-1 ring-stone-700">
+    <div class="overflow-hidden rounded-[32px] bg-stone-950">
+
+      <!-- Status Bar -->
+      <div class="flex items-center justify-between px-6 py-2 text-white">
+        <span class="text-sm font-medium">9:41</span>
+        <div class="flex items-center gap-1">
+          <i data-lucide="signal" class="h-4 w-4"></i>
+          <i data-lucide="wifi" class="h-4 w-4"></i>
+          <i data-lucide="battery-full" class="h-4 w-4"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-stone-800">
+        <div class="flex items-center gap-3">
+          <div class="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+            <span class="text-sm">🏃</span>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-white">Morning Run</h1>
+            <p class="text-xs text-stone-400">Progress Tab</p>
+          </div>
+        </div>
+        <button class="p-2 rounded-full hover:bg-stone-800">
+          <i data-lucide="more-horizontal" class="h-5 w-5 text-stone-400"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="h-[680px] overflow-y-auto px-4 py-4 space-y-4">
+
+        <!-- Calendar Placeholder -->
+        <div class="rounded-2xl bg-stone-800/50 p-4 border border-stone-700/50">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="calendar" class="h-4 w-4 text-stone-500"></i>
+            <span class="text-xs font-medium text-stone-500 uppercase tracking-wider">Calendar Heatmap</span>
+          </div>
+          <div class="grid grid-cols-7 gap-1">
+            <!-- Simplified calendar representation -->
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/60"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-stone-700"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/40"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/60"></div>
+            <div class="h-6 w-6 rounded bg-stone-700"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/60"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/40"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-stone-700"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/60"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/60"></div>
+            <div class="h-6 w-6 rounded bg-stone-700"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/40"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/80"></div>
+            <div class="h-6 w-6 rounded bg-emerald-500/60"></div>
+            <div class="h-6 w-6 rounded ring-2 ring-emerald-400 bg-emerald-500"></div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 1: YOUR PROGRESS (Consolidated Strength + Journey) -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="rounded-2xl card-gradient-teal border border-teal-500/20 p-4 card-hover">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <div class="h-8 w-8 rounded-lg bg-teal-500/20 flex items-center justify-center">
+                <i data-lucide="zap" class="h-4 w-4 text-teal-400"></i>
+              </div>
+              <span class="text-base font-bold text-white">Your Progress</span>
+            </div>
+            <button class="h-7 w-7 rounded-full bg-stone-800 flex items-center justify-center hover:bg-stone-700">
+              <i data-lucide="info" class="h-4 w-4 text-stone-400"></i>
+            </button>
+          </div>
+
+          <!-- Main Content: Ring + Level Info -->
+          <div class="flex items-center gap-4 mb-4">
+            <!-- Progress Ring -->
+            <div class="relative">
+              <svg width="88" height="88" viewBox="0 0 88 88">
+                <!-- Background track -->
+                <circle cx="44" cy="44" r="36" fill="none" stroke="#292524" stroke-width="8"/>
+                <!-- Progress arc -->
+                <circle
+                  cx="44" cy="44" r="36"
+                  fill="none"
+                  stroke="#14b8a6"
+                  stroke-width="8"
+                  stroke-linecap="round"
+                  stroke-dasharray="226.2"
+                  stroke-dashoffset="72.4"
+                  transform="rotate(-90 44 44)"
+                  class="ring-progress"
+                />
+              </svg>
+              <!-- Center Content -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-xl">💪</span>
+                <span class="text-lg font-bold text-white">68%</span>
+              </div>
+            </div>
+
+            <!-- Level Info -->
+            <div class="flex-1">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/20 mb-2">
+                <span class="text-xs font-semibold text-cyan-400">Strong</span>
+                <span class="text-xs text-cyan-500/70">•</span>
+                <span class="flex items-center gap-0.5 text-xs text-emerald-400">
+                  <i data-lucide="trending-up" class="h-3 w-3"></i>
+                  +3%
+                </span>
+              </div>
+
+              <!-- Progress to next level -->
+              <div class="mb-2">
+                <div class="flex items-center justify-between text-xs mb-1">
+                  <span class="text-stone-400">Next: ⚡ Automatic</span>
+                  <span class="font-medium text-teal-400">12% to go</span>
+                </div>
+                <div class="h-2 rounded-full bg-stone-800 overflow-hidden">
+                  <div class="h-full w-[68%] rounded-full bg-gradient-to-r from-teal-500 to-emerald-400"></div>
+                </div>
+              </div>
+
+              <!-- Level icons -->
+              <div class="flex justify-between px-1">
+                <span class="text-[10px] opacity-40">🌱</span>
+                <span class="text-[10px] opacity-40">🌿</span>
+                <span class="text-[10px] opacity-40">🌳</span>
+                <span class="text-[10px]">💪</span>
+                <span class="text-[10px] opacity-40">⚡</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actionable Tip -->
+          <div class="rounded-xl bg-teal-500/10 border border-teal-500/20 p-3 tip-shake cursor-pointer">
+            <div class="flex items-start gap-2">
+              <span class="text-base">💡</span>
+              <div class="flex-1">
+                <p class="text-sm text-teal-300">Complete <span class="font-semibold">Wed & Thu</span> this week to level up!</p>
+                <p class="text-xs text-stone-500 mt-0.5">Based on your patterns</p>
+              </div>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-teal-500/50 mt-0.5"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 2: PERSONAL BESTS (Streaks + Best/Worst Days)      -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="rounded-2xl card-gradient-amber border border-amber-500/20 p-4 card-hover">
+          <!-- Header -->
+          <div class="flex items-center gap-2 mb-4">
+            <div class="h-8 w-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+              <i data-lucide="trophy" class="h-4 w-4 text-amber-400"></i>
+            </div>
+            <span class="text-base font-bold text-white">Personal Bests</span>
+          </div>
+
+          <!-- Top 3 Streaks - Compact Medals -->
+          <div class="flex gap-2 mb-4">
+            <!-- Gold -->
+            <div class="flex-1 rounded-xl bg-amber-500/10 border border-amber-500/30 p-3 text-center">
+              <span class="text-lg">🥇</span>
+              <p class="text-xl font-bold text-amber-300">21</p>
+              <p class="text-[10px] text-amber-500/70">days</p>
+              <p class="text-[9px] text-stone-500 mt-1">Oct '24</p>
+            </div>
+            <!-- Silver -->
+            <div class="flex-1 rounded-xl bg-stone-500/10 border border-stone-500/30 p-3 text-center">
+              <span class="text-lg">🥈</span>
+              <p class="text-xl font-bold text-stone-300">14</p>
+              <p class="text-[10px] text-stone-400">days</p>
+              <p class="text-[9px] text-stone-500 mt-1">Aug '24</p>
+            </div>
+            <!-- Bronze / Current -->
+            <div class="flex-1 rounded-xl bg-orange-500/10 border border-orange-500/30 p-3 text-center relative pulse-current">
+              <span class="text-lg">🥉</span>
+              <p class="text-xl font-bold text-orange-300">8</p>
+              <p class="text-[10px] text-orange-400">days</p>
+              <div class="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-orange-500/30">
+                <span class="text-[8px] font-bold text-orange-300">NOW 🔥</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Best & Worst Days -->
+          <div class="flex gap-2">
+            <div class="flex-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3">
+              <div class="flex items-center gap-1.5 mb-1">
+                <i data-lucide="trophy" class="h-3.5 w-3.5 text-emerald-400"></i>
+                <span class="text-xs font-medium text-emerald-400">Best Day</span>
+              </div>
+              <p class="text-lg font-bold text-emerald-300">Saturday</p>
+              <p class="text-xs text-emerald-500/70">94% success</p>
+            </div>
+            <div class="flex-1 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 cursor-pointer hover:bg-amber-500/15 transition-colors">
+              <div class="flex items-center gap-1.5 mb-1">
+                <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-amber-400"></i>
+                <span class="text-xs font-medium text-amber-400">Focus On</span>
+              </div>
+              <p class="text-lg font-bold text-amber-300">Wednesday</p>
+              <div class="flex items-center justify-between">
+                <p class="text-xs text-amber-500/70">52% success</p>
+                <span class="text-[10px] text-amber-400/60">tap for tips →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SECTION 3: THIS MONTH (Bar Chart + Trend)                  -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="rounded-2xl card-gradient-violet border border-violet-500/20 p-4 card-hover">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <div class="h-8 w-8 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                <i data-lucide="bar-chart-3" class="h-4 w-4 text-violet-400"></i>
+              </div>
+              <span class="text-base font-bold text-white">This Month</span>
+            </div>
+            <button class="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300">
+              <span>See All</span>
+              <i data-lucide="chevron-right" class="h-3 w-3"></i>
+            </button>
+          </div>
+
+          <!-- Bar Chart -->
+          <div class="flex items-end justify-between h-24 mb-3 px-2">
+            <!-- Sunday -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-emerald-500/80 bar-animate" style="height: 88%; animation-delay: 0ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-emerald-400">S</span>
+              <span class="text-[9px] text-stone-500">88%</span>
+            </div>
+            <!-- Monday -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-blue-500/70 bar-animate" style="height: 76%; animation-delay: 50ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-stone-400">M</span>
+              <span class="text-[9px] text-stone-500">76%</span>
+            </div>
+            <!-- Tuesday -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-emerald-500/70 bar-animate" style="height: 82%; animation-delay: 100ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-stone-400">T</span>
+              <span class="text-[9px] text-stone-500">82%</span>
+            </div>
+            <!-- Wednesday - Worst -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-amber-500/70 bar-animate" style="height: 52%; animation-delay: 150ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-amber-400">W</span>
+              <span class="text-[9px] text-amber-500">52%</span>
+            </div>
+            <!-- Thursday -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-blue-500/60 bar-animate" style="height: 71%; animation-delay: 200ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-stone-400">T</span>
+              <span class="text-[9px] text-stone-500">71%</span>
+            </div>
+            <!-- Friday -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-emerald-500/70 bar-animate" style="height: 85%; animation-delay: 250ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-stone-400">F</span>
+              <span class="text-[9px] text-stone-500">85%</span>
+            </div>
+            <!-- Saturday - Best -->
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full max-w-[28px] h-20 flex items-end justify-center">
+                <div class="w-full rounded-t-md bg-emerald-500 bar-animate" style="height: 94%; animation-delay: 300ms;"></div>
+              </div>
+              <span class="text-[10px] font-medium text-emerald-400">S</span>
+              <span class="text-[9px] text-emerald-500 font-medium">94%</span>
+            </div>
+          </div>
+
+          <!-- Month Summary -->
+          <div class="flex items-center justify-center gap-3 rounded-xl bg-violet-500/10 border border-violet-500/20 py-2.5 px-3">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="trending-up" class="h-4 w-4 text-emerald-400"></i>
+              <span class="text-sm font-semibold text-emerald-400">+12%</span>
+              <span class="text-xs text-stone-500">vs last month</span>
+            </div>
+            <div class="w-px h-4 bg-stone-700"></div>
+            <div class="flex items-center gap-1">
+              <i data-lucide="check-circle-2" class="h-3.5 w-3.5 text-violet-400"></i>
+              <span class="text-sm text-stone-300"><span class="font-semibold text-violet-300">18</span>/22 days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Spacing -->
+        <div class="h-4"></div>
+
+      </div>
+
+      <!-- Home Indicator -->
+      <div class="flex justify-center py-2">
+        <div class="h-1 w-32 rounded-full bg-stone-600"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

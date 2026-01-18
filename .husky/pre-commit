@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+# Ensure node/npm are in PATH
+export PATH="/Users/andres/node-v20.10.0-darwin-arm64/bin:$PATH"
+
+echo "Running pre-commit checks..."
+
+# Check for numbered duplicate files
+DUPLICATES=$(git diff --cached --name-only | grep -E " [0-9]\.(tsx?|jsx?)$" || true)
+
+if [ -n "$DUPLICATES" ]; then
+  echo ""
+  echo "❌ ERROR: Attempting to commit numbered duplicate files:"
+  echo "$DUPLICATES"
+  echo ""
+  echo "Duplicate files are not allowed. Please:"
+  echo "1. Use 'git mv old.tsx new.tsx' instead of Finder duplication"
+  echo "2. Delete numbered duplicates before committing"
+  echo "3. Ensure clean file naming convention"
+  exit 1
+fi
+
+# Run existing lint-staged if present
+npx lint-staged

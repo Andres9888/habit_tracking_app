@@ -1,0 +1,54 @@
+import { StyleSheet } from 'react-native';
+
+export const sortStyles = StyleSheet.create({
+  dropdownBackdrop: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 99,
+  },
+  sortButtonWrapper: {
+    position: 'relative',
+    zIndex: 100,
+  },
+  sortDropdown: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e7e5e4',
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 8,
+    left: 0,
+    marginTop: 4,
+    minWidth: 140,
+    overflow: 'hidden',
+    position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    top: '100%',
+    zIndex: 101,
+  },
+  sortDropdownOption: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  sortDropdownOptionSelected: {
+    backgroundColor: '#f0fdf4',
+  },
+  sortDropdownOptionText: {
+    color: '#374151',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  sortDropdownOptionTextSelected: {
+    color: '#059669',
+    fontWeight: '600',
+  },
+});

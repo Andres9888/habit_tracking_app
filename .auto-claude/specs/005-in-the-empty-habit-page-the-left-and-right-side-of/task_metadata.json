@@ -1,0 +1,20 @@
+{
+  "sourceType": "manual",
+  "model": "opus",
+  "thinkingLevel": "ultrathink",
+  "category": "bug_fix",
+  "priority": "medium",
+  "complexity": "trivial",
+  "impact": "medium",
+  "isAutoProfile": false,
+  "attachedImages": [
+    {
+      "id": "img-1767669412281-yo49890",
+      "filename": "Screenshot 2026-01-04 at 4.06.18 PM.png",
+      "mimeType": "image/png",
+      "size": 449785,
+      "path": "attachments/Screenshot 2026-01-04 at 4.06.18 PM.png"
+    }
+  ],
+  "requireReviewBeforeCoding": false
+}

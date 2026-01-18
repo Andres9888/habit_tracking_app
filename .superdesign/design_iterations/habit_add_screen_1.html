@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Add Screen - Improved</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* iOS-like modal background */
+    .modal-bg {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    /* Warm paper background */
+    .paper-bg {
+      background: #faf9f7;
+    }
+
+    /* Color swatch selected state */
+    .color-swatch.selected {
+      box-shadow: 0 0 0 2px #1a1a1a;
+    }
+
+    /* Subtle press animation */
+    .pressable:active {
+      transform: scale(0.97);
+      transition: transform 0.1s ease-out;
+    }
+
+    /* Input focus state */
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-end justify-center p-4">
+
+  <!-- Phone Frame -->
+  <div class="w-full max-w-[390px] h-[844px] bg-black rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
+
+    <!-- Screen -->
+    <div class="w-full h-full rounded-[40px] overflow-hidden relative modal-bg">
+
+      <!-- Modal Sheet -->
+      <div class="absolute bottom-0 left-0 right-0 h-[92%] paper-bg rounded-t-3xl flex flex-col shadow-2xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-4 border-b border-stone-200/50">
+          <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-200/50 pressable">
+            <i data-lucide="x" class="w-5 h-5 text-stone-500"></i>
+          </button>
+          <h1 class="text-lg font-semibold text-stone-900">New Habit</h1>
+          <div class="w-8"></div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto px-5 py-6">
+
+          <!-- Habit Name Input -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-stone-900 mb-2">Habit Name</label>
+            <input
+              type="text"
+              placeholder="e.g. Meditate for 10 minutes"
+              class="w-full h-14 px-4 rounded-xl bg-white text-base text-stone-900 placeholder-stone-400 border border-stone-200"
+            />
+            <p class="text-xs text-stone-500 mt-1.5">Start with a verb: Read, Exercise, Practice...</p>
+          </div>
+
+          <!-- Color Picker -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-stone-900 mb-3">Color</label>
+            <div class="flex flex-wrap gap-3">
+              <!-- Row 1 -->
+              <button class="w-10 h-10 rounded-full pressable" style="background: #EF4444;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #F97316;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #EAB308;"></button>
+              <button class="w-10 h-10 rounded-full pressable color-swatch selected" style="background: #22C55E;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #3B82F6;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #8B5CF6;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #EC4899;"></button>
+              <!-- Row 2 -->
+              <button class="w-10 h-10 rounded-full pressable" style="background: #06B6D4;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #14B8A6;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #84CC16;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #A78BFA;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #F472B6;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #78716C;"></button>
+              <button class="w-10 h-10 rounded-full pressable" style="background: #1E293B;"></button>
+            </div>
+            <!-- Custom Color Button -->
+            <button class="mt-4 w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white border border-stone-200 pressable">
+              <i data-lucide="palette" class="w-4 h-4 text-stone-600"></i>
+              <span class="flex-1 text-left text-sm font-medium text-stone-700">Custom color</span>
+              <div class="w-5 h-5 rounded-full border border-stone-300" style="background: #22C55E;"></div>
+            </button>
+          </div>
+
+          <!-- Icon Picker -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-stone-900 mb-3">Icon</label>
+            <button class="w-full flex items-center gap-4 p-4 rounded-xl bg-white border border-stone-200 pressable">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: #22C55E;">
+                <span class="text-2xl">🧘</span>
+              </div>
+              <div class="flex-1 text-left">
+                <p class="text-base font-medium text-stone-900">Change icon</p>
+                <p class="text-xs text-stone-500">Tap to browse emojis</p>
+              </div>
+              <i data-lucide="chevron-right" class="w-5 h-5 text-stone-400"></i>
+            </button>
+          </div>
+
+          <!-- Reminder Section -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-stone-900 mb-3">Reminder</label>
+            <div class="bg-white rounded-xl border border-stone-200 overflow-hidden">
+              <!-- Toggle Row -->
+              <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="bell" class="w-5 h-5 text-stone-500"></i>
+                  <span class="text-sm font-medium text-stone-700">Daily reminder</span>
+                </div>
+                <!-- Toggle Switch -->
+                <button class="w-12 h-7 rounded-full bg-green-500 p-0.5 pressable">
+                  <div class="w-6 h-6 rounded-full bg-white shadow-sm transform translate-x-5"></div>
+                </button>
+              </div>
+              <!-- Time Row -->
+              <div class="flex items-center justify-between px-4 py-3 border-t border-stone-100">
+                <span class="text-sm text-stone-600">Time</span>
+                <button class="px-3 py-1.5 rounded-lg bg-stone-100 pressable">
+                  <span class="text-sm font-medium text-stone-900">9:00 AM</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Spacing -->
+          <div class="h-24"></div>
+        </div>
+
+        <!-- Sticky Create Button -->
+        <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#faf9f7] via-[#faf9f7] to-transparent pt-8">
+          <button class="w-full h-14 rounded-2xl bg-stone-900 flex items-center justify-center pressable shadow-lg">
+            <span class="text-base font-semibold text-white">Create Habit</span>
+          </button>
+          <!-- Home Indicator -->
+          <div class="flex justify-center mt-3">
+            <div class="w-32 h-1 rounded-full bg-stone-300"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

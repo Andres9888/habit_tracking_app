@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stats Section - High Fidelity Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f172a; }
+
+    .phone-frame {
+      width: 375px;
+      min-height: 820px;
+      background: linear-gradient(180deg, #fafaf9 0%, #f5f5f4 100%);
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 0 8px #1c1917;
+      position: relative;
+    }
+
+    .notch {
+      width: 140px;
+      height: 28px;
+      background: #1c1917;
+      border-radius: 0 0 18px 18px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    /* Section gradient backgrounds */
+    .streak-section-bg {
+      background: linear-gradient(135deg, rgba(255,247,237,0.6) 0%, rgba(255,255,255,0.95) 50%, rgba(254,243,199,0.5) 100%);
+    }
+
+    .strength-section-bg {
+      background: linear-gradient(135deg, rgba(240,253,250,0.6) 0%, rgba(255,255,255,0.95) 50%, rgba(209,250,229,0.5) 100%);
+    }
+
+    .insights-section-bg {
+      background: linear-gradient(135deg, rgba(245,243,255,0.6) 0%, rgba(255,255,255,0.95) 50%, rgba(219,234,254,0.5) 100%);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.8; }
+    }
+
+    @keyframes ringFill {
+      from { stroke-dashoffset: 251.327; }
+      to { stroke-dashoffset: 87.965; }
+    }
+
+    @keyframes barGrow {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+
+    .animate-fadeInUp { animation: fadeInUp 0.5s ease-out forwards; }
+    .animate-popIn { animation: popIn 0.4s ease-out forwards; }
+    .animate-pulse-slow { animation: pulse 2s ease-in-out infinite; }
+
+    .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+    .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+    .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+
+    .ring-progress {
+      stroke-dasharray: 251.327;
+      stroke-dashoffset: 251.327;
+      animation: ringFill 1.2s ease-out 0.5s forwards;
+    }
+
+    .bar-animate {
+      transform-origin: bottom;
+      animation: barGrow 0.5s ease-out forwards;
+    }
+
+    .bar-1 { animation-delay: 0.1s; transform: scaleY(0); }
+    .bar-2 { animation-delay: 0.15s; transform: scaleY(0); }
+    .bar-3 { animation-delay: 0.2s; transform: scaleY(0); }
+    .bar-4 { animation-delay: 0.25s; transform: scaleY(0); }
+    .bar-5 { animation-delay: 0.3s; transform: scaleY(0); }
+    .bar-6 { animation-delay: 0.35s; transform: scaleY(0); }
+    .bar-7 { animation-delay: 0.4s; transform: scaleY(0); }
+
+    /* Problem indicators */
+    .problem-badge {
+      background: #ef4444;
+      color: white;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      position: absolute;
+      top: -6px;
+      right: -4px;
+      z-index: 10;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+
+    .dup-highlight {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px dashed #ef4444;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-8">
+
+  <div class="text-center mb-4">
+    <h1 class="text-3xl font-bold text-white mb-2">Stats Section Redesign</h1>
+    <p class="text-gray-400 text-sm">High-Fidelity Before & After Comparison</p>
+  </div>
+
+  <!-- ROI Summary Cards -->
+  <div class="flex gap-4 mb-6">
+    <div class="bg-red-500/10 border border-red-500/30 rounded-xl px-5 py-3 text-center">
+      <div class="text-red-400 text-3xl font-bold">4</div>
+      <div class="text-red-300 text-xs">Cards</div>
+    </div>
+    <div class="text-gray-600 flex items-center text-2xl">&#8594;</div>
+    <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-5 py-3 text-center">
+      <div class="text-emerald-400 text-3xl font-bold">3</div>
+      <div class="text-emerald-300 text-xs">Sections</div>
+    </div>
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl px-5 py-3 text-center">
+      <div class="text-amber-400 text-3xl font-bold">0</div>
+      <div class="text-amber-300 text-xs">Duplicates</div>
+    </div>
+  </div>
+
+  <div class="flex gap-16 flex-wrap justify-center">
+
+    <!-- ============================================ -->
+    <!-- BEFORE: Current Fragmented Implementation   -->
+    <!-- ============================================ -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="label text-red-400">BEFORE (Current)</div>
+
+      <div class="phone-frame">
+        <div class="notch"></div>
+
+        <div class="pt-14 px-5 pb-6 space-y-4 overflow-y-auto" style="max-height: 780px;">
+
+          <!-- Stats Grid Card -->
+          <div class="relative bg-white rounded-2xl p-4 shadow-sm">
+            <div class="problem-badge">DUPLICATES DATA</div>
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <i data-lucide="bar-chart-3" class="w-[18px] h-[18px] text-stone-500"></i>
+              <span class="text-lg font-semibold text-stone-800">Statistics</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-emerald-50 rounded-xl p-3">
+                <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mb-2">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600"></i>
+                </div>
+                <div class="text-3xl font-bold text-emerald-700">42</div>
+                <div class="text-xs font-medium text-stone-500 mt-1">Completed</div>
+              </div>
+              <div class="bg-blue-50 rounded-xl p-3 dup-highlight relative">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                  <i data-lucide="trending-up" class="w-5 h-5 text-blue-600"></i>
+                </div>
+                <div class="text-3xl font-bold text-blue-700">78<span class="text-xl">%</span></div>
+                <div class="text-xs font-medium text-red-500 mt-1">Success Rate</div>
+              </div>
+              <div class="bg-amber-50 rounded-xl p-3 dup-highlight relative">
+                <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mb-2">
+                  <i data-lucide="flame" class="w-5 h-5 text-amber-600"></i>
+                </div>
+                <div class="text-3xl font-bold text-amber-700">12</div>
+                <div class="text-xs font-medium text-red-500 mt-1">Current Streak</div>
+              </div>
+              <div class="bg-violet-50 rounded-xl p-3 dup-highlight relative">
+                <div class="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center mb-2">
+                  <i data-lucide="calendar" class="w-5 h-5 text-violet-600"></i>
+                </div>
+                <div class="text-3xl font-bold text-violet-700">54</div>
+                <div class="text-xs font-medium text-red-500 mt-1">Days Tracking</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Streak Chain Card -->
+          <div class="relative bg-white rounded-2xl p-5 shadow-sm">
+            <div class="problem-badge">STREAK AGAIN</div>
+            <div class="flex items-center justify-center gap-2 mb-3">
+              <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+              <span class="text-lg font-semibold text-stone-800">Streak</span>
+              <span class="text-lg">&#128293;</span>
+            </div>
+
+            <div class="text-center mb-3">
+              <div class="text-6xl font-extrabold text-orange-600 tracking-tight">12</div>
+              <div class="text-sm text-stone-500">days</div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="mb-4 px-2">
+              <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-500 rounded-full" style="width: 86%"></div>
+              </div>
+            </div>
+
+            <!-- 7-day chain -->
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">S</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">M</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">T</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">W</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">T</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-stone-100 mb-1"></div>
+                <span class="text-[10px] font-medium text-stone-400">F</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-amber-50 border-2 border-amber-400 flex items-center justify-center mb-1 animate-pulse-slow">
+                  <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
+                </div>
+                <span class="text-[10px] font-bold text-amber-600">Now</span>
+              </div>
+            </div>
+
+            <!-- Best Streak -->
+            <div class="flex items-center justify-center gap-2 bg-stone-50 border border-stone-100 rounded-xl py-2.5">
+              <i data-lucide="trophy" class="w-4 h-4 text-stone-400"></i>
+              <span class="text-sm text-stone-500">Best: <span class="font-bold text-stone-700">21</span></span>
+            </div>
+          </div>
+
+          <!-- Habit Strength Card (with duplicates) -->
+          <div class="relative bg-white rounded-2xl p-5 shadow-sm">
+            <div class="problem-badge">3 DUPLICATES!</div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="flex items-center gap-2">
+                <i data-lucide="zap" class="w-[22px] h-[22px] text-amber-500"></i>
+                <span class="text-lg font-semibold text-stone-800">Habit Strength</span>
+              </div>
+              <button class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                <i data-lucide="info" class="w-[18px] h-[18px] text-stone-500"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-5 mb-5">
+              <!-- Ring -->
+              <div class="relative w-[120px] h-[120px] flex-shrink-0">
+                <svg class="w-[120px] h-[120px] -rotate-90">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-width="10"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#0d9488" stroke-width="10"
+                          stroke-dasharray="314.159" stroke-dashoffset="109.956" stroke-linecap="round"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span class="text-3xl">&#127795;</span>
+                  <span class="text-2xl font-bold text-stone-900">65%</span>
+                </div>
+              </div>
+
+              <div class="flex-1">
+                <div class="inline-block bg-teal-100 text-teal-700 text-sm font-semibold px-3 py-1 rounded-full mb-2">
+                  Developing
+                </div>
+                <div class="text-sm text-stone-600 mb-3">Getting stronger every day</div>
+                <div class="flex items-center gap-1.5 bg-emerald-100 px-2.5 py-1 rounded-full w-fit">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <span class="text-xs font-semibold text-emerald-700">+5%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-px bg-stone-100 mb-4"></div>
+
+            <div class="text-sm font-semibold text-stone-700 mb-3">What builds strength:</div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between bg-stone-50 rounded-xl px-4 py-3 dup-highlight">
+                <div class="flex items-center gap-3">
+                  <span class="text-base">&#128293;</span>
+                  <span class="text-sm font-medium text-stone-600">Current Streak</span>
+                </div>
+                <span class="text-sm font-bold text-red-500">12 days</span>
+              </div>
+              <div class="flex items-center justify-between bg-stone-50 rounded-xl px-4 py-3 dup-highlight">
+                <div class="flex items-center gap-3">
+                  <span class="text-base">&#128200;</span>
+                  <span class="text-sm font-medium text-stone-600">Success Rate</span>
+                </div>
+                <span class="text-sm font-bold text-red-500">78%</span>
+              </div>
+              <div class="flex items-center justify-between bg-stone-50 rounded-xl px-4 py-3 dup-highlight">
+                <div class="flex items-center gap-3">
+                  <span class="text-base">&#128197;</span>
+                  <span class="text-sm font-medium text-stone-600">Days Tracking</span>
+                </div>
+                <span class="text-sm font-bold text-red-500">54 days</span>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-start gap-2 bg-teal-50 rounded-xl p-3">
+              <span class="text-base">&#128161;</span>
+              <span class="text-sm text-teal-700">You're halfway there! Consistency is key.</span>
+            </div>
+          </div>
+
+          <!-- Insights (truncated for space) -->
+          <div class="relative bg-white rounded-2xl p-5 shadow-sm">
+            <div class="problem-badge">OVERLAP</div>
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <i data-lucide="calendar" class="w-[18px] h-[18px] text-stone-500"></i>
+              <span class="text-lg font-semibold text-stone-800">Your Best Days</span>
+            </div>
+
+            <div class="flex items-end justify-between h-16 px-1 mb-3">
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-stone-200 rounded-t" style="height: 55%"></div>
+                <span class="text-[10px] text-stone-400 mt-1.5">S</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-emerald-500 rounded-t" style="height: 95%"></div>
+                <span class="text-[10px] font-bold text-emerald-600 mt-1.5">M</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-blue-400 rounded-t" style="height: 78%"></div>
+                <span class="text-[10px] text-stone-500 mt-1.5">T</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-blue-400 rounded-t" style="height: 82%"></div>
+                <span class="text-[10px] text-stone-500 mt-1.5">W</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-stone-300 rounded-t" style="height: 68%"></div>
+                <span class="text-[10px] text-stone-500 mt-1.5">T</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-amber-400 rounded-t" style="height: 45%"></div>
+                <span class="text-[10px] font-medium text-amber-600 mt-1.5">F</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-6 bg-stone-200 rounded-t" style="height: 52%"></div>
+                <span class="text-[10px] text-stone-400 mt-1.5">S</span>
+              </div>
+            </div>
+
+            <div class="text-center text-xs text-stone-400 italic">
+              (Streak records also shown here - more duplication)
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-center max-w-xs mt-2">
+        <p class="text-red-400 text-sm font-semibold mb-2">Problems</p>
+        <ul class="text-gray-400 text-xs text-left list-disc pl-4 space-y-1">
+          <li><span class="text-red-400 font-medium">Current streak</span> shown in 3 places</li>
+          <li><span class="text-red-400 font-medium">Success rate</span> shown in 2 places</li>
+          <li><span class="text-red-400 font-medium">Days tracking</span> shown in 2 places</li>
+          <li>4 separate cards = visual clutter</li>
+          <li>No clear visual hierarchy</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- AFTER: Unified Redesign                     -->
+    <!-- ============================================ -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="label text-emerald-400">AFTER (Redesign)</div>
+
+      <div class="phone-frame">
+        <div class="notch"></div>
+
+        <div class="pt-14 px-5 pb-6 space-y-4 overflow-y-auto" style="max-height: 780px;">
+
+          <!-- Section 1: Streak & Momentum -->
+          <div class="streak-section-bg rounded-2xl p-5 shadow-sm animate-fadeInUp">
+            <!-- Header -->
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
+                <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+              </div>
+              <span class="text-lg font-bold text-stone-800">Streak</span>
+              <span class="text-lg">&#128293;</span>
+            </div>
+
+            <!-- Primary Metric -->
+            <div class="text-center mb-4 animate-popIn" style="animation-delay: 0.2s;">
+              <div class="text-6xl font-extrabold text-orange-600 tracking-tight">12</div>
+              <div class="text-sm text-stone-500">day streak</div>
+            </div>
+
+            <!-- 7-Day Chain -->
+            <div class="flex justify-between items-start px-1 mb-4">
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">M</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">T</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">W</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">T</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[10px] font-medium text-emerald-600">F</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-stone-100 mb-1"></div>
+                <span class="text-[10px] font-medium text-stone-400">S</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center">
+                <div class="w-9 h-9 rounded-full bg-amber-100 border-2 border-amber-400 flex items-center justify-center mb-1 animate-pulse-slow">
+                  <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <span class="text-[10px] font-bold text-amber-600">Now</span>
+              </div>
+            </div>
+
+            <!-- Tier Progression -->
+            <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-3 mb-3">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-stone-600">Progress to &#11088; Day 14</span>
+                <span class="text-xs font-bold text-orange-600">2 days</span>
+              </div>
+              <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-orange-400 to-amber-400 rounded-full" style="width: 86%"></div>
+              </div>
+            </div>
+
+            <!-- Best Streak Badge -->
+            <div class="flex items-center justify-center gap-2 bg-amber-50 border border-amber-200 rounded-xl py-2.5">
+              <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
+              <span class="text-sm text-stone-600">Best: <span class="font-bold text-amber-700">21 days</span></span>
+              <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">9 to beat!</span>
+            </div>
+          </div>
+
+          <!-- Section 2: Habit Strength (Simplified) -->
+          <div class="strength-section-bg rounded-2xl p-5 shadow-sm animate-fadeInUp stagger-1">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                  <i data-lucide="zap" class="w-4 h-4 text-teal-500"></i>
+                </div>
+                <span class="text-lg font-bold text-stone-800">Strength</span>
+              </div>
+              <button class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
+                <i data-lucide="info" class="w-4 h-4 text-stone-500"></i>
+              </button>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex items-center gap-5 mb-4">
+              <!-- Progress Ring -->
+              <div class="relative w-24 h-24 flex-shrink-0">
+                <svg class="w-24 h-24 -rotate-90">
+                  <circle cx="48" cy="48" r="40" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                  <circle cx="48" cy="48" r="40" fill="none" stroke="#0d9488" stroke-width="8"
+                          class="ring-progress" stroke-linecap="round"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span class="text-2xl animate-popIn" style="animation-delay: 0.8s;">&#127795;</span>
+                  <span class="text-xl font-bold text-stone-900">65%</span>
+                </div>
+              </div>
+
+              <!-- Level Info -->
+              <div class="flex-1">
+                <div class="inline-block bg-teal-100 text-teal-700 text-sm font-semibold px-3 py-1 rounded-full mb-2">
+                  Developing
+                </div>
+                <div class="text-sm text-stone-600 mb-3">Getting stronger every day</div>
+                <div class="flex items-center gap-1.5 bg-emerald-100 px-2.5 py-1 rounded-full w-fit">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <span class="text-xs font-semibold text-emerald-700">+5% this week</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress to Next Level -->
+            <div class="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-xl p-3">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-stone-600">Progress to &#128170; Strong</span>
+                <span class="text-xs font-bold text-teal-600">15% to go</span>
+              </div>
+              <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-teal-400 to-emerald-400 rounded-full transition-all duration-1000" style="width: 65%"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-[9px] text-stone-400">
+                <span>&#127793;</span>
+                <span>&#127807;</span>
+                <span class="text-teal-600 font-medium">&#127795;</span>
+                <span>&#128170;</span>
+                <span>&#9889;</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Insights & Patterns -->
+          <div class="insights-section-bg rounded-2xl p-5 shadow-sm animate-fadeInUp stagger-2">
+            <!-- Header -->
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-violet-500"></i>
+              </div>
+              <span class="text-lg font-bold text-stone-800">Insights</span>
+            </div>
+
+            <!-- Journey Stats (from StatsGrid) -->
+            <div class="flex gap-3 mb-5">
+              <div class="flex-1 bg-white/60 border border-emerald-100 rounded-xl p-3 text-center">
+                <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                </div>
+                <div class="text-2xl font-bold text-emerald-700">42</div>
+                <div class="text-[10px] text-stone-500">completed</div>
+              </div>
+              <div class="flex-1 bg-white/60 border border-blue-100 rounded-xl p-3 text-center">
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <i data-lucide="percent" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <div class="text-2xl font-bold text-blue-700">78%</div>
+                <div class="text-[10px] text-stone-500">success rate</div>
+              </div>
+            </div>
+
+            <!-- Best Days Bar Chart -->
+            <div class="mb-5">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-violet-500 mb-3">Best Days</div>
+              <div class="flex items-end justify-between h-14 px-1">
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-stone-200 rounded-t bar-animate bar-1" style="height: 55%"></div>
+                  <span class="text-[10px] text-stone-400 mt-1.5">S</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-emerald-500 rounded-t bar-animate bar-2" style="height: 95%"></div>
+                  <span class="text-[10px] font-bold text-emerald-600 mt-1.5">M</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-blue-400 rounded-t bar-animate bar-3" style="height: 78%"></div>
+                  <span class="text-[10px] text-stone-500 mt-1.5">T</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-blue-400 rounded-t bar-animate bar-4" style="height: 82%"></div>
+                  <span class="text-[10px] text-stone-500 mt-1.5">W</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-stone-300 rounded-t bar-animate bar-5" style="height: 68%"></div>
+                  <span class="text-[10px] text-stone-500 mt-1.5">T</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-amber-400 rounded-t bar-animate bar-6" style="height: 45%"></div>
+                  <span class="text-[10px] font-medium text-amber-600 mt-1.5">F</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full max-w-6 bg-stone-200 rounded-t bar-animate bar-7" style="height: 52%"></div>
+                  <span class="text-[10px] text-stone-400 mt-1.5">S</span>
+                </div>
+              </div>
+
+              <!-- Best/Focus Cards -->
+              <div class="flex gap-2 mt-3">
+                <div class="flex-1 bg-emerald-50 border border-emerald-100 rounded-xl p-2.5">
+                  <div class="flex items-center gap-1 mb-1">
+                    <i data-lucide="trophy" class="w-3 h-3 text-emerald-500"></i>
+                    <span class="text-[10px] font-medium text-emerald-600">Best</span>
+                  </div>
+                  <div class="text-sm font-bold text-emerald-700">Monday</div>
+                </div>
+                <div class="flex-1 bg-amber-50 border border-amber-100 rounded-xl p-2.5">
+                  <div class="flex items-center gap-1 mb-1">
+                    <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-500"></i>
+                    <span class="text-[10px] font-medium text-amber-600">Focus</span>
+                  </div>
+                  <div class="text-sm font-bold text-amber-700">Friday</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monthly Trend -->
+            <div class="mb-4">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-violet-500 mb-3">Monthly Trend</div>
+              <div class="flex gap-3 mb-2">
+                <div class="flex-1 bg-white/60 border border-stone-100 rounded-xl p-3 text-center">
+                  <div class="text-[10px] text-stone-400 mb-1">This Month</div>
+                  <div class="text-2xl font-bold text-stone-800">75%</div>
+                </div>
+                <div class="flex-1 bg-white/60 border border-stone-100 rounded-xl p-3 text-center">
+                  <div class="text-[10px] text-stone-400 mb-1">Last Month</div>
+                  <div class="text-2xl font-bold text-stone-500">68%</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-center gap-1.5 bg-emerald-50 rounded-xl py-2">
+                <i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i>
+                <span class="text-sm font-semibold text-emerald-600">+7% improvement</span>
+              </div>
+            </div>
+
+            <!-- Top Streak Records -->
+            <div>
+              <div class="text-[10px] font-bold uppercase tracking-widest text-violet-500 mb-3">Top Streaks</div>
+              <div class="flex gap-2">
+                <div class="flex-1 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-center">
+                  <div class="text-base mb-0.5">&#129351;</div>
+                  <div class="text-lg font-bold text-amber-700">21</div>
+                  <div class="text-[9px] text-stone-500">days</div>
+                </div>
+                <div class="flex-1 bg-stone-50 border border-stone-200 rounded-xl p-2.5 text-center">
+                  <div class="text-base mb-0.5">&#129352;</div>
+                  <div class="text-lg font-bold text-stone-600">14</div>
+                  <div class="text-[9px] text-stone-500">days</div>
+                </div>
+                <div class="flex-1 bg-orange-50 border border-orange-200 rounded-xl p-2.5 text-center">
+                  <div class="text-base mb-0.5">&#129353;</div>
+                  <div class="text-lg font-bold text-orange-700">7</div>
+                  <div class="text-[9px] text-stone-500">days</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-center max-w-xs mt-2">
+        <p class="text-emerald-400 text-sm font-semibold mb-2">Improvements</p>
+        <ul class="text-gray-400 text-xs text-left list-disc pl-4 space-y-1">
+          <li><span class="text-emerald-400 font-medium">Zero duplication</span> - each metric once</li>
+          <li><span class="text-emerald-400 font-medium">3 themed sections</span> - clear hierarchy</li>
+          <li><span class="text-emerald-400 font-medium">Gradient backgrounds</span> - cohesive design</li>
+          <li><span class="text-emerald-400 font-medium">Tier progression</span> - gamification</li>
+          <li><span class="text-emerald-400 font-medium">Simplified Strength</span> - no breakdown</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Design System Reference -->
+  <div class="mt-8 bg-slate-800/50 rounded-2xl p-6 max-w-4xl w-full">
+    <h2 class="text-white text-lg font-semibold mb-4 text-center">Design System</h2>
+    <div class="grid grid-cols-3 gap-6">
+      <div>
+        <div class="text-orange-400 text-sm font-semibold mb-2">Streak & Momentum</div>
+        <div class="space-y-1 text-xs text-gray-400">
+          <div>Gradient: orange-50 &#8594; amber-50</div>
+          <div>Icon: bg-orange-100, text-orange-500</div>
+          <div>Primary: text-orange-600</div>
+        </div>
+      </div>
+      <div>
+        <div class="text-teal-400 text-sm font-semibold mb-2">Habit Strength</div>
+        <div class="space-y-1 text-xs text-gray-400">
+          <div>Gradient: teal-50 &#8594; emerald-50</div>
+          <div>Icon: bg-teal-100, text-teal-500</div>
+          <div>Primary: text-teal-600</div>
+        </div>
+      </div>
+      <div>
+        <div class="text-violet-400 text-sm font-semibold mb-2">Insights & Patterns</div>
+        <div class="space-y-1 text-xs text-gray-400">
+          <div>Gradient: violet-50 &#8594; blue-50</div>
+          <div>Icon: bg-violet-100, text-violet-500</div>
+          <div>Primary: text-violet-600</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-700">
+      <div class="text-white text-sm font-medium mb-3 text-center">Shared Patterns</div>
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+        <div>Container: rounded-2xl shadow-sm</div>
+        <div>Icon container: h-8 w-8 rounded-lg</div>
+        <div>Labels: text-[10px] uppercase tracking-widest</div>
+        <div>Font: Inter</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

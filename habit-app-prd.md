@@ -1,0 +1,3 @@
+Missing/valuable flows: Onboarding & first-run (guided setup + sample habit), Auth & account (signup, SSO, profile), Habit create/edit/detail (templates, notes, reminders, delete), Calendar & long-term stats (streaks, trends, exports), Reminders & push/local notifications, Sharing & collaboration (invite, public templates), Import/export & backups (CSV, sync), Offline support & conflict resolution, Settings (timezone, week-start, cadence), Empty/error states, Help/tutorial, Admin/analytics & moderation.
+
+Prioritize: Onboarding → Habit create/edit → Reminders → Offline & sync; implement small MVP stories, add accessibility, e2e tests, instrumentation, and optimistic UI with retry/error handling.

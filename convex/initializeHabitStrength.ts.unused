@@ -1,0 +1,201 @@
+/**
+ * One-time initialization script to calculate habit strength for all existing habits
+ * Run this after deploying the new schema and habit strength system
+ */
+
+import { internalMutation } from "./_generated/server";
+import { calculateHabitStrength, getStrengthLevel } from "./habitStrength";
+
+const DEFAULT_HABIT_DECAY_PARAM = 0.175;
+const DEFAULT_HABIT_GAIN_PARAM = 0.15;
+
+/**
+ * Initialize habit strength for all habits based on their historical tracking data
+ */
+export const initializeAllHabitStrengths = internalMutation({
+  handler: async (ctx) => {
+    console.log("Starting habit strength initialization...");
+
+    // Get all habits (including archived)
+    const allHabits = await ctx.db.query("habits").collect();
+    console.log(`Found ${allHabits.length} habits to process`);
+
+    let processedCount = 0;
+    let updatedCount = 0;
+
+    for (const habit of allHabits) {
+      try {
+        // Get all tracking data for this habit, sorted by date
+        const tracking = await ctx.db
+          .query("tracking")
+          .withIndex("by_habit_and_date", (q) => q.eq("habitId", habit._id))
+          .collect();
+
+        if (tracking.length === 0) {
+          console.log(`  Habit "${habit.name}" has no tracking data, setting strength to 0`);
+          await ctx.db.patch(habit._id, {
+            strength: 0,
+            strengthLevel: "starting",
+            strengthUpdatedAt: Date.now(),
+          });
+          processedCount++;
+          continue;
+        }
+
+        // Sort by date ascending
+        const sortedTracking = tracking
+          .map(t => ({ ...t, dateObj: new Date(t.date) }))
+          .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+
+        // Get parameters
+        const HDP = habit.habitDecayParam ?? DEFAULT_HABIT_DECAY_PARAM;
+        const HGP = habit.habitGainParam ?? DEFAULT_HABIT_GAIN_PARAM;
+
+        // Calculate day-by-day strength
+        let currentStrength = 0;
+        const habitCreationDate = new Date(habit.createdAt);
+        habitCreationDate.setHours(0, 0, 0, 0);
+
+        const lastTrackingDate = sortedTracking[sortedTracking.length - 1].dateObj;
+        const currentDate = new Date(habitCreationDate);
+
+        // Create a map of dates to completion status
+        const trackingMap = new Map(
+          sortedTracking.map(t => [t.date, t.completed])
+        );
+
+        let daysProcessed = 0;
+
+        // Iterate through each day from creation to last tracking
+        while (currentDate <= lastTrackingDate) {
+          const dateStr = currentDate.toISOString().split('T')[0];
+          const behaviorPerformed = trackingMap.get(dateStr) ?? false;
+
+          // Update strength
+          currentStrength = calculateHabitStrength(
+            currentStrength,
+            behaviorPerformed,
+            HDP,
+            HGP
+          );
+
+          daysProcessed++;
+
+          // Move to next day
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        const strengthLevel = getStrengthLevel(currentStrength);
+
+        // Update habit with calculated strength
+        await ctx.db.patch(habit._id, {
+          strength: currentStrength,
+          strengthLevel,
+          strengthUpdatedAt: Date.now(),
+        });
+
+        console.log(
+          `  ✓ "${habit.name}": strength=${currentStrength.toFixed(3)}, level=${strengthLevel}, days=${daysProcessed}`
+        );
+
+        processedCount++;
+        updatedCount++;
+
+      } catch (error) {
+        console.error(`  ✗ Error processing habit "${habit.name}":`, error);
+      }
+    }
+
+    console.log("\n=== Initialization Complete ===");
+    console.log(`Total habits: ${allHabits.length}`);
+    console.log(`Processed: ${processedCount}`);
+    console.log(`Updated: ${updatedCount}`);
+    console.log(`Failed: ${allHabits.length - processedCount}`);
+
+    return {
+      total: allHabits.length,
+      processed: processedCount,
+      updated: updatedCount,
+      failed: allHabits.length - processedCount,
+    };
+  },
+});
+
+/**
+ * Initialize habit strength for a single habit by ID
+ * Useful for testing or fixing individual habits
+ */
+export const initializeSingleHabitStrength = internalMutation({
+  handler: async (ctx, args: { habitId: string }) => {
+    const habit = await ctx.db.get(args.habitId as any);
+    if (!habit) {
+      throw new Error(`Habit with ID ${args.habitId} not found`);
+    }
+
+    // Get all tracking data for this habit
+    const tracking = await ctx.db
+      .query("tracking")
+      .withIndex("by_habit_and_date", (q) => q.eq("habitId", habit._id))
+      .collect();
+
+    if (tracking.length === 0) {
+      await ctx.db.patch(habit._id, {
+        strength: 0,
+        strengthLevel: "starting",
+        strengthUpdatedAt: Date.now(),
+      });
+      return { strength: 0, strengthLevel: "starting", daysProcessed: 0 };
+    }
+
+    // Sort by date ascending
+    const sortedTracking = tracking
+      .map(t => ({ ...t, dateObj: new Date(t.date) }))
+      .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+
+    const HDP = habit.habitDecayParam ?? DEFAULT_HABIT_DECAY_PARAM;
+    const HGP = habit.habitGainParam ?? DEFAULT_HABIT_GAIN_PARAM;
+
+    let currentStrength = 0;
+    const habitCreationDate = new Date(habit.createdAt);
+    habitCreationDate.setHours(0, 0, 0, 0);
+
+    const lastTrackingDate = sortedTracking[sortedTracking.length - 1].dateObj;
+    const currentDate = new Date(habitCreationDate);
+
+    const trackingMap = new Map(
+      sortedTracking.map(t => [t.date, t.completed])
+    );
+
+    let daysProcessed = 0;
+
+    while (currentDate <= lastTrackingDate) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const behaviorPerformed = trackingMap.get(dateStr) ?? false;
+
+      currentStrength = calculateHabitStrength(
+        currentStrength,
+        behaviorPerformed,
+        HDP,
+        HGP
+      );
+
+      daysProcessed++;
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    const strengthLevel = getStrengthLevel(currentStrength);
+
+    await ctx.db.patch(habit._id, {
+      strength: currentStrength,
+      strengthLevel,
+      strengthUpdatedAt: Date.now(),
+    });
+
+    return {
+      habitName: habit.name,
+      strength: currentStrength,
+      strengthLevel,
+      daysProcessed,
+    };
+  },
+});

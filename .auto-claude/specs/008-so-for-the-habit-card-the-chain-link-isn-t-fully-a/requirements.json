@@ -1,0 +1,11 @@
+{
+  "task_description": "... So, for the habit card, the chain link isn't fully aligned horizontally to the chain icon, and then there's some overlap as well. So there's two tasks here. aligning the chain link to the chain icon, and then fixing the overlap, the extra overlap from the chain link onto the habit box or habit circle. \n\n...see the screenshot for, for reference?",
+  "workflow_type": "feature",
+  "attached_images": [
+    {
+      "filename": "Screenshot 2026-01-05 at 10.33.21 PM.png",
+      "path": "attachments/Screenshot 2026-01-05 at 10.33.21 PM.png",
+      "description": ""
+    }
+  ]
+}

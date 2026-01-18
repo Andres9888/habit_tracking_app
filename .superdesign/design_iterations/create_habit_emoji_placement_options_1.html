@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Habit - Emoji Placement Options</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f172a; }
+
+    .phone-frame {
+      width: 340px;
+      height: 720px;
+      background: #f8fafc;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 0 10px #1a1a2e;
+      position: relative;
+    }
+
+    .dynamic-island {
+      width: 110px;
+      height: 32px;
+      background: #000;
+      border-radius: 18px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+
+    .swipe-indicator {
+      width: 32px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 2px;
+    }
+
+    .keyboard {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 260px;
+      background: #d1d5db;
+      border-radius: 10px 10px 0 0;
+      z-index: 40;
+      padding-top: 8px;
+    }
+
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      padding: 6px 3px;
+    }
+
+    .key {
+      background: white;
+      border-radius: 5px;
+      min-width: 28px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .key.space { min-width: 140px; }
+    .key.gray { background: #adb5bd; font-size: 12px; }
+
+    .option-label {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .emoji-tap {
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .emoji-tap:hover {
+      transform: scale(1.1);
+    }
+    .emoji-tap:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 flex flex-col items-center gap-6">
+
+  <h1 class="text-2xl font-bold text-white mb-1">Emoji Placement Options</h1>
+  <p class="text-gray-400 mb-4 text-sm">5 ways to handle the emoji icon - tap any to "open picker"</p>
+
+  <div class="flex gap-5 flex-wrap justify-center items-start">
+
+    <!-- OPTION 1: Remove Entirely -->
+    <div class="flex flex-col items-center gap-2 relative pt-8">
+      <div class="option-label text-xs font-semibold text-slate-400 uppercase tracking-wider">Option 1: None</div>
+
+      <div class="phone-frame scale-[0.85] origin-top">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-10">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <div class="flex justify-center pt-2.5 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <div class="px-4 py-2 flex items-center justify-between">
+              <button class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
+              </button>
+              <span class="text-sm font-bold text-slate-800">New Habit</span>
+              <span class="text-sm font-semibold text-blue-600">Done</span>
+            </div>
+
+            <div class="flex-1 px-4 pt-3 pb-[280px]">
+              <!-- Just input, no emoji -->
+              <div class="mb-4">
+                <input
+                  type="text"
+                  class="w-full h-14 rounded-2xl bg-white px-4 text-base font-medium text-slate-800 border-2 border-blue-500 outline-none shadow-sm"
+                  value="Meditate 5 min"
+                >
+                <div class="mt-1.5 flex items-center gap-1 px-1">
+                  <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-500"></i>
+                  <span class="text-[11px] text-emerald-600 font-medium">Good habit name</span>
+                </div>
+              </div>
+
+              <!-- Style section -->
+              <div class="bg-white rounded-2xl p-3 shadow-sm">
+                <div class="text-sm font-bold text-slate-800 mb-2">Style</div>
+                <div class="flex items-center justify-between bg-slate-50 rounded-xl p-2.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background: rgba(34,197,94,0.2);">
+                      <span class="text-lg">🧘</span>
+                    </div>
+                    <span class="text-sm text-slate-700">Choose icon</span>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="keyboard">
+              <div class="keyboard-row">
+                <div class="key">q</div><div class="key">w</div><div class="key">e</div><div class="key">r</div><div class="key">t</div><div class="key">y</div><div class="key">u</div><div class="key">i</div><div class="key">o</div><div class="key">p</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key">a</div><div class="key">s</div><div class="key">d</div><div class="key">f</div><div class="key">g</div><div class="key">h</div><div class="key">j</div><div class="key">k</div><div class="key">l</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">⇧</div><div class="key">z</div><div class="key">x</div><div class="key">c</div><div class="key">v</div><div class="key">b</div><div class="key">n</div><div class="key">m</div><div class="key gray">⌫</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">123</div><div class="key">🌐</div><div class="key space"></div><div class="key gray">return</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-800 rounded-lg p-2 max-w-[280px] text-[10px] text-center">
+        <span class="text-slate-400">Cleanest. Emoji chosen in Style section below.</span>
+      </div>
+    </div>
+
+    <!-- OPTION 2: Keyboard Toolbar -->
+    <div class="flex flex-col items-center gap-2 relative pt-8">
+      <div class="option-label text-xs font-semibold text-blue-400 uppercase tracking-wider">Option 2: Toolbar</div>
+
+      <div class="phone-frame scale-[0.85] origin-top">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-10">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <div class="flex justify-center pt-2.5 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <div class="px-4 py-2 flex items-center justify-between">
+              <button class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
+              </button>
+              <span class="text-sm font-bold text-slate-800">New Habit</span>
+              <span class="text-sm font-semibold text-blue-600">Done</span>
+            </div>
+
+            <div class="flex-1 px-4 pt-3 pb-[310px]">
+              <div class="mb-4">
+                <input
+                  type="text"
+                  class="w-full h-14 rounded-2xl bg-white px-4 text-base font-medium text-slate-800 border-2 border-blue-500 outline-none shadow-sm"
+                  value="Meditate 5 min"
+                >
+              </div>
+
+              <div class="bg-white rounded-2xl p-3 shadow-sm opacity-60">
+                <div class="text-sm font-bold text-slate-800 mb-2">Style</div>
+                <div class="h-10 bg-slate-100 rounded-xl"></div>
+              </div>
+            </div>
+
+            <!-- Keyboard with toolbar -->
+            <div class="absolute bottom-[260px] left-0 right-0 h-11 bg-slate-200 border-t border-slate-300 flex items-center justify-between px-3 z-30">
+              <div class="emoji-tap w-9 h-9 rounded-lg bg-white shadow-sm flex items-center justify-center">
+                <span class="text-xl">🧘</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-slate-300 flex items-center justify-center">
+                  <i data-lucide="palette" class="w-4 h-4 text-slate-600"></i>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-slate-300 flex items-center justify-center">
+                  <i data-lucide="clock" class="w-4 h-4 text-slate-600"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="keyboard">
+              <div class="keyboard-row">
+                <div class="key">q</div><div class="key">w</div><div class="key">e</div><div class="key">r</div><div class="key">t</div><div class="key">y</div><div class="key">u</div><div class="key">i</div><div class="key">o</div><div class="key">p</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key">a</div><div class="key">s</div><div class="key">d</div><div class="key">f</div><div class="key">g</div><div class="key">h</div><div class="key">j</div><div class="key">k</div><div class="key">l</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">⇧</div><div class="key">z</div><div class="key">x</div><div class="key">c</div><div class="key">v</div><div class="key">b</div><div class="key">n</div><div class="key">m</div><div class="key gray">⌫</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">123</div><div class="key">🌐</div><div class="key space"></div><div class="key gray">return</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-900/30 rounded-lg p-2 max-w-[280px] text-[10px] text-center">
+        <span class="text-blue-300">Emoji in toolbar above keyboard. Tap to change.</span>
+      </div>
+    </div>
+
+    <!-- OPTION 3: Floating Badge -->
+    <div class="flex flex-col items-center gap-2 relative pt-8">
+      <div class="option-label text-xs font-semibold text-purple-400 uppercase tracking-wider">Option 3: Badge</div>
+
+      <div class="phone-frame scale-[0.85] origin-top">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-10">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <div class="flex justify-center pt-2.5 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <div class="px-4 py-2 flex items-center justify-between">
+              <button class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
+              </button>
+              <span class="text-sm font-bold text-slate-800">New Habit</span>
+              <span class="text-sm font-semibold text-blue-600">Done</span>
+            </div>
+
+            <!-- Floating badge top-right -->
+            <div class="emoji-tap absolute top-24 right-6 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center z-20" style="background: #22C55E;">
+              <span class="text-2xl">🧘</span>
+            </div>
+
+            <div class="flex-1 px-4 pt-3 pb-[280px]">
+              <div class="mb-4">
+                <input
+                  type="text"
+                  class="w-full h-14 rounded-2xl bg-white px-4 pr-16 text-base font-medium text-slate-800 border-2 border-blue-500 outline-none shadow-sm"
+                  value="Meditate 5 min"
+                >
+              </div>
+
+              <div class="bg-white rounded-2xl p-3 shadow-sm">
+                <div class="text-sm font-bold text-slate-800 mb-2">Style</div>
+                <div class="flex gap-2">
+                  <div class="w-8 h-8 rounded-full" style="background: #EF4444;"></div>
+                  <div class="w-8 h-8 rounded-full" style="background: #F97316;"></div>
+                  <div class="w-8 h-8 rounded-full ring-2 ring-slate-800 ring-offset-1" style="background: #22C55E;"></div>
+                  <div class="w-8 h-8 rounded-full" style="background: #3B82F6;"></div>
+                  <div class="w-8 h-8 rounded-full" style="background: #8B5CF6;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="keyboard">
+              <div class="keyboard-row">
+                <div class="key">q</div><div class="key">w</div><div class="key">e</div><div class="key">r</div><div class="key">t</div><div class="key">y</div><div class="key">u</div><div class="key">i</div><div class="key">o</div><div class="key">p</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key">a</div><div class="key">s</div><div class="key">d</div><div class="key">f</div><div class="key">g</div><div class="key">h</div><div class="key">j</div><div class="key">k</div><div class="key">l</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">⇧</div><div class="key">z</div><div class="key">x</div><div class="key">c</div><div class="key">v</div><div class="key">b</div><div class="key">n</div><div class="key">m</div><div class="key gray">⌫</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">123</div><div class="key">🌐</div><div class="key space"></div><div class="key gray">return</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-purple-900/30 rounded-lg p-2 max-w-[280px] text-[10px] text-center">
+        <span class="text-purple-300">Floating badge in corner. Always visible, tappable.</span>
+      </div>
+    </div>
+
+    <!-- OPTION 4: Inside Input (Prefix) -->
+    <div class="flex flex-col items-center gap-2 relative pt-8">
+      <div class="option-label text-xs font-semibold text-emerald-400 uppercase tracking-wider">Option 4: Prefix</div>
+
+      <div class="phone-frame scale-[0.85] origin-top">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-10">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <div class="flex justify-center pt-2.5 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <div class="px-4 py-2 flex items-center justify-between">
+              <button class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
+              </button>
+              <span class="text-sm font-bold text-slate-800">New Habit</span>
+              <span class="text-sm font-semibold text-blue-600">Done</span>
+            </div>
+
+            <div class="flex-1 px-4 pt-3 pb-[280px]">
+              <!-- Input with emoji prefix inside -->
+              <div class="mb-4">
+                <div class="relative">
+                  <div class="emoji-tap absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(34,197,94,0.2);">
+                    <span class="text-xl">🧘</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="w-full h-14 rounded-2xl bg-white pl-16 pr-4 text-base font-medium text-slate-800 border-2 border-emerald-500 outline-none shadow-sm"
+                    value="Meditate 5 min"
+                  >
+                </div>
+                <div class="mt-1.5 flex items-center gap-1 px-1">
+                  <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-500"></i>
+                  <span class="text-[11px] text-emerald-600 font-medium">Good habit name</span>
+                </div>
+              </div>
+
+              <!-- Style section (just colors, icon already above) -->
+              <div class="bg-white rounded-2xl p-3 shadow-sm">
+                <div class="text-sm font-bold text-slate-800 mb-2">Color</div>
+                <div class="flex gap-2">
+                  <div class="w-9 h-9 rounded-full" style="background: #EF4444;"></div>
+                  <div class="w-9 h-9 rounded-full" style="background: #F97316;"></div>
+                  <div class="w-9 h-9 rounded-full ring-2 ring-slate-800 ring-offset-1 flex items-center justify-center" style="background: #22C55E;">
+                    <i data-lucide="check" class="w-4 h-4 text-white stroke-[3]"></i>
+                  </div>
+                  <div class="w-9 h-9 rounded-full" style="background: #3B82F6;"></div>
+                  <div class="w-9 h-9 rounded-full" style="background: #8B5CF6;"></div>
+                  <div class="w-9 h-9 rounded-full" style="background: #EC4899;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="keyboard">
+              <div class="keyboard-row">
+                <div class="key">q</div><div class="key">w</div><div class="key">e</div><div class="key">r</div><div class="key">t</div><div class="key">y</div><div class="key">u</div><div class="key">i</div><div class="key">o</div><div class="key">p</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key">a</div><div class="key">s</div><div class="key">d</div><div class="key">f</div><div class="key">g</div><div class="key">h</div><div class="key">j</div><div class="key">k</div><div class="key">l</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">⇧</div><div class="key">z</div><div class="key">x</div><div class="key">c</div><div class="key">v</div><div class="key">b</div><div class="key">n</div><div class="key">m</div><div class="key gray">⌫</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">123</div><div class="key">🌐</div><div class="key space"></div><div class="key gray">return</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-emerald-900/30 rounded-lg p-2 max-w-[280px] text-[10px] text-center">
+        <span class="text-emerald-300">Emoji inside input. Compact, natural tap target.</span>
+      </div>
+    </div>
+
+    <!-- OPTION 5: Post-Creation Only -->
+    <div class="flex flex-col items-center gap-2 relative pt-8">
+      <div class="option-label text-xs font-semibold text-amber-400 uppercase tracking-wider">Option 5: After</div>
+
+      <div class="phone-frame scale-[0.85] origin-top">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-10">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <div class="flex justify-center pt-2.5 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <div class="px-4 py-2 flex items-center justify-between">
+              <button class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
+              </button>
+              <span class="text-sm font-bold text-slate-800">New Habit</span>
+              <span class="text-sm font-semibold text-blue-600">Done</span>
+            </div>
+
+            <div class="flex-1 px-4 pt-3 pb-[280px]">
+              <!-- Simple input only -->
+              <div class="mb-4">
+                <input
+                  type="text"
+                  class="w-full h-14 rounded-2xl bg-white px-4 text-base font-medium text-slate-800 border-2 border-blue-500 outline-none shadow-sm"
+                  value="Meditate 5 min"
+                >
+                <div class="mt-1.5 text-[11px] text-slate-500 px-1">
+                  Icon & color assigned automatically
+                </div>
+              </div>
+
+              <!-- Auto-assigned preview -->
+              <div class="bg-slate-100 border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center">
+                <div class="text-slate-400 text-sm mb-2">Preview after creation:</div>
+                <div class="inline-flex items-center gap-2 bg-white rounded-xl px-4 py-2 shadow-sm">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #22C55E;">
+                    <span class="text-lg">🧘</span>
+                  </div>
+                  <span class="text-sm font-semibold text-slate-800">Meditate 5 min</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-2">Auto-assigned based on name</div>
+              </div>
+            </div>
+
+            <div class="keyboard">
+              <div class="keyboard-row">
+                <div class="key">q</div><div class="key">w</div><div class="key">e</div><div class="key">r</div><div class="key">t</div><div class="key">y</div><div class="key">u</div><div class="key">i</div><div class="key">o</div><div class="key">p</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key">a</div><div class="key">s</div><div class="key">d</div><div class="key">f</div><div class="key">g</div><div class="key">h</div><div class="key">j</div><div class="key">k</div><div class="key">l</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">⇧</div><div class="key">z</div><div class="key">x</div><div class="key">c</div><div class="key">v</div><div class="key">b</div><div class="key">n</div><div class="key">m</div><div class="key gray">⌫</div>
+              </div>
+              <div class="keyboard-row">
+                <div class="key gray">123</div><div class="key">🌐</div><div class="key space"></div><div class="key gray">return</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-amber-900/30 rounded-lg p-2 max-w-[280px] text-[10px] text-center">
+        <span class="text-amber-300">No emoji during creation. Auto-assigned after.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="mt-6 max-w-4xl w-full">
+    <div class="bg-slate-800 rounded-xl p-4 overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-slate-400 text-xs uppercase">
+            <th class="text-left py-2 px-3">Option</th>
+            <th class="text-left py-2 px-3">Visual Feedback</th>
+            <th class="text-left py-2 px-3">Space Used</th>
+            <th class="text-left py-2 px-3">Tap Target</th>
+            <th class="text-left py-2 px-3">Complexity</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-300">
+          <tr class="border-t border-slate-700">
+            <td class="py-2 px-3 font-medium">1. None</td>
+            <td class="py-2 px-3">❌ None until Style</td>
+            <td class="py-2 px-3 text-emerald-400">Minimal</td>
+            <td class="py-2 px-3">In Style section</td>
+            <td class="py-2 px-3 text-emerald-400">Low</td>
+          </tr>
+          <tr class="border-t border-slate-700">
+            <td class="py-2 px-3 font-medium">2. Toolbar</td>
+            <td class="py-2 px-3">✓ Above keyboard</td>
+            <td class="py-2 px-3 text-amber-400">+44px toolbar</td>
+            <td class="py-2 px-3">In toolbar</td>
+            <td class="py-2 px-3 text-amber-400">Medium</td>
+          </tr>
+          <tr class="border-t border-slate-700">
+            <td class="py-2 px-3 font-medium">3. Badge</td>
+            <td class="py-2 px-3">✓ Always visible</td>
+            <td class="py-2 px-3 text-amber-400">Floating</td>
+            <td class="py-2 px-3">Corner badge</td>
+            <td class="py-2 px-3 text-amber-400">Medium</td>
+          </tr>
+          <tr class="border-t border-slate-700 bg-emerald-900/20">
+            <td class="py-2 px-3 font-medium text-emerald-400">4. Prefix ⭐</td>
+            <td class="py-2 px-3">✓ In input</td>
+            <td class="py-2 px-3 text-emerald-400">Inside input</td>
+            <td class="py-2 px-3 text-emerald-400">Natural</td>
+            <td class="py-2 px-3 text-emerald-400">Low</td>
+          </tr>
+          <tr class="border-t border-slate-700">
+            <td class="py-2 px-3 font-medium">5. After</td>
+            <td class="py-2 px-3">❌ Post-creation</td>
+            <td class="py-2 px-3 text-emerald-400">None</td>
+            <td class="py-2 px-3">N/A</td>
+            <td class="py-2 px-3 text-emerald-400">Lowest</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

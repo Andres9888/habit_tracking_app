@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Habit V2 - Improvements Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f172a; }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #f8fafc;
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 0 12px #1a1a2e;
+      position: relative;
+    }
+
+    .notch {
+      width: 160px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 24px 24px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+
+    .dynamic-island {
+      width: 126px;
+      height: 36px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+
+    .color-btn {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .color-btn:hover {
+      transform: scale(1.15);
+    }
+    .color-btn:active {
+      transform: scale(0.95);
+    }
+    .color-btn.selected {
+      box-shadow: 0 0 0 3px #1e293b;
+    }
+
+    .template-card {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .template-card:hover {
+      transform: scale(1.05);
+    }
+    .template-card:active {
+      transform: scale(0.95);
+    }
+
+    .quick-time-btn {
+      transition: all 0.15s ease;
+    }
+    .quick-time-btn:hover {
+      transform: scale(1.02);
+    }
+
+    .badge {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .success-overlay {
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .checkmark-animation {
+      animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    .confetti {
+      position: absolute;
+      animation: confettiFall 1s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-8">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Create Habit V2 - All Improvements</h1>
+  <p class="text-gray-400 mb-4">4 stories: Color Picker, Quick Templates, Success Animation, Habit Limit Badge</p>
+
+  <div class="flex gap-8 flex-wrap justify-center">
+
+    <!-- MAIN MOCKUP - Full Create Habit Flow -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="text-sm font-semibold text-emerald-400 uppercase tracking-wider">Complete V2 with Improvements</div>
+
+      <div class="phone-frame">
+        <div class="dynamic-island"></div>
+
+        <!-- Modal Background -->
+        <div class="absolute inset-0 bg-black/50 pt-12">
+
+          <!-- Modal Content -->
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <!-- Header with Habit Limit Badge -->
+            <div class="px-5 py-4 flex items-center justify-between border-b border-slate-100">
+              <button class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+              </button>
+              <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-800">Create Habit</span>
+                <!-- CH-004: Habit Limit Badge -->
+                <div class="badge bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <span>2/3</span>
+                  <span class="text-amber-500">free</span>
+                </div>
+              </div>
+              <div class="w-10"></div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto px-4 pt-4 pb-32">
+
+              <!-- Hero Name Input -->
+              <div class="mb-4">
+                <h2 class="text-xl font-bold text-slate-800 mb-3">What habit do you want to build?</h2>
+                <div class="relative">
+                  <input
+                    type="text"
+                    placeholder="e.g., Read for 10 minutes"
+                    class="w-full h-14 rounded-2xl bg-white px-5 pr-16 text-lg font-medium text-slate-800 border-2 border-blue-500 outline-none"
+                    value="Meditate 5 min"
+                  >
+                  <div class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                    14/50
+                  </div>
+                </div>
+                <div class="mt-2 text-sm font-medium text-emerald-600">
+                  ✓ Great habit! Specific & achievable 👏
+                </div>
+              </div>
+
+              <!-- CH-002: Quick Templates Row -->
+              <div class="mb-5 -mx-4 px-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-sm font-semibold text-slate-500">🚀 Quick Start</span>
+                  <button class="text-xs font-medium text-blue-500">Browse all →</button>
+                </div>
+                <div class="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4">
+                  <div class="template-card flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1" style="background: rgba(59, 130, 246, 0.1);">
+                    <span class="text-2xl">💧</span>
+                    <span class="text-xs font-semibold text-slate-700">Water</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1" style="background: rgba(139, 92, 246, 0.1);">
+                    <span class="text-2xl">📖</span>
+                    <span class="text-xs font-semibold text-slate-700">Read</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1 ring-2 ring-emerald-500 ring-offset-2" style="background: rgba(34, 197, 94, 0.15);">
+                    <span class="text-2xl">🧘</span>
+                    <span class="text-xs font-semibold text-slate-700">Meditate</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1" style="background: rgba(249, 115, 22, 0.1);">
+                    <span class="text-2xl">🚶</span>
+                    <span class="text-xs font-semibold text-slate-700">Walk</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1 bg-slate-100">
+                    <span class="text-2xl">🏃</span>
+                    <span class="text-xs font-semibold text-slate-700">Run</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Preview -->
+              <div class="mb-5">
+                <div class="text-sm font-semibold text-slate-500 mb-3">✨ PREVIEW</div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm">
+                  <div class="flex items-center">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mr-4" style="background: #22C55E;">
+                      <span class="text-3xl">🧘</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-lg font-bold text-slate-800">Meditate 5 min</div>
+                      <div class="flex items-center gap-2 mt-1">
+                        <span class="text-sm text-slate-500">Daily</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-sm text-blue-500">⏰ 8:00 AM</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Week Preview -->
+                  <div class="mt-4 bg-slate-50 rounded-xl p-3">
+                    <div class="text-xs font-medium text-slate-500 mb-2">This week</div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">S</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">M</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">T</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">W</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">T</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">F</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-xs text-slate-400 mb-1">S</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                          <div class="w-2 h-2 rounded-full" style="background: #22C55E;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Style Section -->
+              <div class="bg-white rounded-2xl p-4 mb-5">
+                <h3 class="text-base font-bold text-slate-800 mb-4">🎨 Style it</h3>
+
+                <!-- Icon Picker Row -->
+                <div class="mb-5">
+                  <div class="flex items-center justify-between bg-slate-50 rounded-xl p-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(34, 197, 94, 0.2);">
+                        <span class="text-2xl">🧘</span>
+                      </div>
+                      <div>
+                        <div class="text-base font-medium text-slate-800">Icon</div>
+                        <div class="text-xs text-slate-500">Tap to change</div>
+                      </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400"></i>
+                  </div>
+                </div>
+
+                <!-- CH-001: 24 Color Picker (3 rows) -->
+                <div>
+                  <div class="text-sm font-semibold text-slate-600 mb-3">Color</div>
+
+                  <!-- Row 1: Core vibrant -->
+                  <div class="flex gap-2.5 mb-2.5 justify-between">
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #EF4444;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #F97316;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #EAB308;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full selected flex items-center justify-center" style="background: #22C55E;">
+                      <span class="text-white text-xs font-bold">✓</span>
+                    </div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #3B82F6;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #8B5CF6;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #EC4899;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #1E293B;"></div>
+                  </div>
+
+                  <!-- Row 2: Alternative vibrant -->
+                  <div class="flex gap-2.5 mb-2.5 justify-between">
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #06B6D4;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #FB923C;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #4ADE80;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #A78BFA;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #F472B6;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #78716C;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #0F172A;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #0EA5E9;"></div>
+                  </div>
+
+                  <!-- Row 3: Soft/Pastel -->
+                  <div class="flex gap-2.5 justify-between">
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #FCA5A5;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #FDBA74;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #86EFAC;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #7DD3FC;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #C4B5FD;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #A8A29E;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full border border-slate-200" style="background: #FFFFFF;"></div>
+                    <div class="color-btn w-9 h-9 rounded-full" style="background: #FBBF24;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reminder Section -->
+              <div class="bg-white rounded-2xl p-4 mb-5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                      <i data-lucide="bell" class="w-5 h-5 text-blue-500"></i>
+                    </div>
+                    <div>
+                      <div class="text-base font-semibold text-slate-800">Remind me</div>
+                      <div class="text-xs text-slate-500">8:00 AM</div>
+                    </div>
+                  </div>
+                  <div class="w-12 h-7 bg-blue-500 rounded-full relative">
+                    <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+                  </div>
+                </div>
+
+                <!-- Quick time buttons -->
+                <div class="mt-4 flex gap-2">
+                  <button class="quick-time-btn flex-1 bg-blue-500 text-white py-2.5 rounded-xl text-center">
+                    <div class="text-xs font-semibold">Morning</div>
+                    <div class="text-[10px] text-blue-100">8:00 AM</div>
+                  </button>
+                  <button class="quick-time-btn flex-1 bg-slate-100 py-2.5 rounded-xl text-center">
+                    <div class="text-xs font-semibold text-slate-600">Afternoon</div>
+                    <div class="text-[10px] text-slate-400">1:00 PM</div>
+                  </button>
+                  <button class="quick-time-btn flex-1 bg-slate-100 py-2.5 rounded-xl text-center">
+                    <div class="text-xs font-semibold text-slate-600">Evening</div>
+                    <div class="text-[10px] text-slate-400">8:30 PM</div>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Sticky Create Bar -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 pb-8">
+              <div class="bg-white/95 rounded-2xl p-2 shadow-lg">
+                <button class="w-full bg-stone-800 text-white py-3.5 rounded-xl text-[15px] font-semibold">
+                  Create Habit
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS ANIMATION STATE -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="text-sm font-semibold text-blue-400 uppercase tracking-wider">CH-003: Success Animation</div>
+
+      <div class="phone-frame">
+        <div class="dynamic-island"></div>
+
+        <!-- Modal with Success Overlay -->
+        <div class="absolute inset-0 bg-black/50 pt-12">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden relative">
+
+            <!-- Dimmed content behind -->
+            <div class="opacity-20 px-4 pt-16">
+              <div class="bg-white rounded-2xl p-4 mb-4">
+                <div class="h-4 w-48 bg-slate-200 rounded mb-3"></div>
+                <div class="h-14 bg-slate-100 rounded-2xl"></div>
+              </div>
+            </div>
+
+            <!-- CH-003: Success Overlay -->
+            <div class="success-overlay absolute inset-0 bg-white/95 flex flex-col items-center justify-center">
+
+              <!-- Confetti particles -->
+              <div class="confetti text-2xl" style="top: 30%; left: 20%; animation-delay: 0s;">🎉</div>
+              <div class="confetti text-2xl" style="top: 25%; left: 70%; animation-delay: 0.1s;">✨</div>
+              <div class="confetti text-2xl" style="top: 35%; left: 40%; animation-delay: 0.2s;">🎊</div>
+              <div class="confetti text-xl" style="top: 28%; left: 55%; animation-delay: 0.15s;">⭐</div>
+              <div class="confetti text-xl" style="top: 32%; left: 30%; animation-delay: 0.25s;">💫</div>
+
+              <!-- Success checkmark -->
+              <div class="checkmark-animation w-24 h-24 rounded-full bg-emerald-500 flex items-center justify-center mb-6 shadow-lg shadow-emerald-200">
+                <i data-lucide="check" class="w-12 h-12 text-white stroke-[3]"></i>
+              </div>
+
+              <h2 class="text-2xl font-bold text-slate-800 mb-2">Habit Created!</h2>
+              <p class="text-slate-500 text-center px-8">
+                <span class="font-semibold text-emerald-600">Meditate 5 min</span> has been added to your daily habits
+              </p>
+
+              <!-- Habit preview card -->
+              <div class="mt-8 bg-white rounded-2xl p-4 shadow-sm mx-8 w-72">
+                <div class="flex items-center">
+                  <div class="w-14 h-14 rounded-xl flex items-center justify-center mr-3" style="background: #22C55E;">
+                    <span class="text-2xl">🧘</span>
+                  </div>
+                  <div>
+                    <div class="text-base font-bold text-slate-800">Meditate 5 min</div>
+                    <div class="text-sm text-slate-500">Daily • 8:00 AM</div>
+                  </div>
+                </div>
+              </div>
+
+              <p class="mt-8 text-xs text-slate-400">Tap anywhere to continue</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Feature Legend -->
+  <div class="mt-8 grid grid-cols-2 gap-4 max-w-2xl">
+    <div class="bg-slate-800 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-bold">1</div>
+        <span class="text-white font-semibold">CH-001: Color Picker</span>
+      </div>
+      <p class="text-slate-400 text-sm">24 colors in 3 rows, no custom picker, white has border</p>
+    </div>
+    <div class="bg-slate-800 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-white text-xs font-bold">2</div>
+        <span class="text-white font-semibold">CH-002: Quick Templates</span>
+      </div>
+      <p class="text-slate-400 text-sm">Horizontal scroll row with 4 popular templates + browse all</p>
+    </div>
+    <div class="bg-slate-800 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-6 h-6 rounded bg-emerald-500 flex items-center justify-center text-white text-xs font-bold">3</div>
+        <span class="text-white font-semibold">CH-003: Success Animation</span>
+      </div>
+      <p class="text-slate-400 text-sm">Checkmark + confetti overlay after habit creation</p>
+    </div>
+    <div class="bg-slate-800 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-6 h-6 rounded bg-amber-500 flex items-center justify-center text-white text-xs font-bold">4</div>
+        <span class="text-white font-semibold">CH-004: Habit Limit Badge</span>
+      </div>
+      <p class="text-slate-400 text-sm">"2/3 free" badge in header for monetization transparency</p>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

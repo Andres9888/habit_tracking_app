@@ -1,0 +1,14 @@
+{
+  "task_description": "Fix bug where multiple habit chips can be selected simultaneously on the empty habit screen. Only one habit should be selectable at a time - when one habit is selected, any previously selected habit should be deselected.",
+  "scoped_services": [],
+  "files_to_modify": [
+    "src/features/habits/components/HabitsEmptyStateMinimal/SuggestionChips.tsx"
+  ],
+  "files_to_reference": [],
+  "patterns": {
+    "animation": "React Native Reanimated with withSpring and SPRING_CONFIGS",
+    "state_management": "useState for single selection tracking"
+  },
+  "service_contexts": {},
+  "created_at": "2025-01-05T00:00:00.000Z"
+}

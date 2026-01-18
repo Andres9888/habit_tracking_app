@@ -1,0 +1,211 @@
+{
+  "project_root": "/Users/andres/Code/habit_tracking_app",
+  "project_type": "single",
+  "services": {
+    "main": {
+      "name": "main",
+      "path": "/Users/andres/Code/habit_tracking_app",
+      "language": "TypeScript",
+      "framework": "React",
+      "type": "frontend",
+      "package_manager": "npm",
+      "default_port": 3000,
+      "build_tool": "Vite",
+      "styling": "Tailwind CSS",
+      "dev_command": "npm run dev",
+      "key_directories": {
+        "src": {
+          "path": "src",
+          "purpose": "Source code"
+        },
+        "tests": {
+          "path": "tests",
+          "purpose": "Tests"
+        },
+        "__tests__": {
+          "path": "__tests__",
+          "purpose": "Tests"
+        }
+      },
+      "entry_point": "index.ts",
+      "dependencies": [
+        "@auth/core",
+        "@clerk/clerk-expo",
+        "@convex-dev/auth",
+        "@expo/vector-icons",
+        "@notifee/react-native",
+        "@react-native-async-storage/async-storage",
+        "@react-native-community/datetimepicker",
+        "@react-navigation/bottom-tabs",
+        "@react-navigation/native",
+        "@shopify/react-native-skia",
+        "bmad-method",
+        "clsx",
+        "convex",
+        "openai",
+        "date-fns",
+        "expo",
+        "expo-auth-session",
+        "expo-av",
+        "expo-blur",
+        "expo-font"
+      ],
+      "dev_dependencies": [
+        "@eslint/js",
+        "@expo/cli",
+        "@testing-library/jest-native",
+        "@testing-library/react-native",
+        "@types/jest",
+        "@types/node",
+        "@types/react",
+        "@types/react-dom",
+        "@vitejs/plugin-react",
+        "autoprefixer"
+      ],
+      "testing": "Jest",
+      "test_directory": "tests",
+      "environment": {
+        "variables": {
+          "EXPO_PUBLIC_CONVEX_URL": {
+            "value": "https://wandering-wolf-192.convex.cloud",
+            "source": "../.env",
+            "type": "url",
+            "sensitive": false,
+            "required": false
+          },
+          "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": {
+            "value": "<REDACTED>",
+            "source": ".env.local",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "ANTHROPIC_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "PERPLEXITY_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "OPENAI_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "GOOGLE_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "MISTRAL_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "XAI_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "GROQ_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "OPENROUTER_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "AZURE_OPENAI_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "path",
+            "sensitive": true,
+            "required": true
+          },
+          "OLLAMA_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "GITHUB_API_KEY": {
+            "value": "<REDACTED>",
+            "source": "../.env",
+            "type": "path",
+            "sensitive": true,
+            "required": true
+          },
+          "CONVEX_DEPLOYMENT": {
+            "value": "dev:valuable-guineapig-979 # team: agutierrez-q-centrix-com, project: my-project-chef-f4754",
+            "source": ".env.local",
+            "type": "string",
+            "sensitive": false,
+            "required": false
+          },
+          "SETUP_SCRIPT_RAN": {
+            "value": "1",
+            "source": ".env.local",
+            "type": "boolean",
+            "sensitive": false,
+            "required": false
+          }
+        },
+        "required_count": 12,
+        "optional_count": 0,
+        "detected_count": 15
+      },
+      "services": {
+        "auth_providers": [
+          {
+            "type": "oauth",
+            "client": "@auth/core"
+          }
+        ]
+      },
+      "auth": {
+        "strategies": [
+          "oauth"
+        ],
+        "libraries": [
+          "@auth/core"
+        ],
+        "user_model": null,
+        "middleware": []
+      }
+    }
+  },
+  "infrastructure": {
+    "ci": "GitHub Actions",
+    "ci_workflows": [
+      "ci.yml"
+    ]
+  },
+  "conventions": {
+    "js_linting": "ESLint",
+    "formatting": "Prettier",
+    "typescript": true,
+    "git_hooks": "Husky"
+  }
+}

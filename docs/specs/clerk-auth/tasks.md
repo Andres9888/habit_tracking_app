@@ -1,0 +1,602 @@
+# Clerk Authentication Integration - Tasks
+
+**Spec:** [tech-spec.md](./tech-spec.md)
+**Total Points:** 19
+**Estimated Duration:** 3-5 days
+
+---
+
+## Epic: Clerk Authentication Integration
+
+### Phase 1: Setup
+
+#### Task 1: Set up Clerk Dashboard
+**Priority:** High | **Points:** 2 | **Dependencies:** None
+
+**Description:**
+Set up Clerk Dashboard with OAuth providers and email/password authentication.
+
+**Acceptance Criteria:**
+- [ ] Create Clerk application at dashboard.clerk.com
+- [ ] Enable Email/Password authentication with email verification
+- [ ] Configure Google OAuth with Google Cloud credentials
+- [ ] Configure Apple OAuth with Apple Developer credentials
+- [ ] Create JWT template named `convex` with audience `convex`
+- [ ] Add allowed redirect URLs:
+  - `exp://` (Expo Go development)
+  - `habit-tracker://` (production deep link)
+- [ ] Copy Publishable Key and Secret Key
+
+**BLOCKED - Manual Setup Required:**
+This task requires manual configuration in the Clerk Dashboard (dashboard.clerk.com) and cannot be automated. A human must complete the following:
+1. Create Clerk account and application
+2. Configure OAuth providers with external credentials (Google Cloud, Apple Developer)
+3. Set up JWT templates
+4. Copy API keys to local environment
+
+---
+
+#### Task 2: Install dependencies and configure environment
+**Priority:** High | **Points:** 1 | **Dependencies:** Task 1
+**Status:** Partially Complete (2025-12-20)
+
+**Description:**
+Install Clerk Expo SDK and configure environment variables.
+
+**Acceptance Criteria:**
+- [x] Install `@clerk/clerk-expo@^2.5.0` *(v2.15.4 already installed)*
+- [x] Install `expo-auth-session@~6.2.1` *(v7.0.9 already installed)*
+- [x] Install `expo-web-browser@~15.0.1` *(v15.0.9 already installed)*
+- [ ] Add `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` to `.env.local` *(BLOCKED: requires Task 1)*
+- [x] Add `scheme: "habit-tracker"` to `app.json`
+- [x] Verify `expo-secure-store` already installed *(v15.0.7 installed)*
+
+**Implementation Notes:**
+- All npm dependencies are already installed with compatible versions
+- Deep link scheme added to app.json
+- Environment variable placeholder exists in .env.example
+- BLOCKED: Cannot add Clerk publishable key until Task 1 (Clerk Dashboard setup) is complete
+
+---
+
+#### Task 3: Add users table to Convex schema
+**Priority:** High | **Points:** 1 | **Dependencies:** None
+**Status:** ✅ COMPLETED (2025-12-20)
+
+**Description:**
+Add users table to Convex schema for storing user data synced from Clerk.
+
+**Acceptance Criteria:**
+- [x] Add `users` table to `convex/schema.ts` with fields:
+  - `clerkId: v.string()`
+  - `email: v.string()`
+  - `name: v.optional(v.string())`
+  - `imageUrl: v.optional(v.string())`
+  - `createdAt: v.number()`
+  - `lastLoginAt: v.number()`
+- [x] Add index `by_clerk_id` on `clerkId`
+- [x] Add index `by_email` on `email`
+- [x] Run `npx convex dev` to apply schema
+
+**Implementation Notes:**
+- Fields made optional for backwards compatibility with existing anonymous users (isAnonymous: true)
+- Added `isAnonymous` field to schema for legacy support
+- Schema deployed successfully to development environment
+
+---
+
+#### Task 4: Configure Convex JWT validation for Clerk
+**Priority:** High | **Points:** 2 | **Dependencies:** Task 1, Task 3
+
+**Description:**
+Configure Convex to validate Clerk JWTs for authentication.
+
+**Acceptance Criteria:**
+- [ ] Update `convex/auth.config.ts` with Clerk domain and applicationID
+- [ ] Set `CLERK_SECRET_KEY` in Convex environment (`npx convex env set`)
+- [ ] Verify `ctx.auth.getUserIdentity()` returns user info in a test query
+- [ ] Deploy to Convex
+
+---
+
+### Phase 2: Core Auth
+
+#### Task 5: Update App.tsx with auth providers
+**Priority:** High | **Points:** 2 | **Dependencies:** Task 2, Task 4
+
+**Description:**
+Wrap app with ClerkProvider and ConvexProviderWithClerk for authentication.
+
+**Acceptance Criteria:**
+- [ ] Import `ClerkProvider`, `ClerkLoaded` from `@clerk/clerk-expo`
+- [ ] Import `ConvexProviderWithClerk` from `convex/react-clerk`
+- [ ] Create `tokenCache` object using `expo-secure-store`
+- [ ] Wrap app with `ClerkProvider` → `ClerkLoaded` → `ConvexProviderWithClerk`
+- [ ] Remove old Convex provider setup
+- [ ] Verify app loads without errors
+
+---
+
+#### Task 6: Create AuthGate with user sync
+**Priority:** High | **Points:** 2 | **Dependencies:** Task 5
+
+**Description:**
+Create AuthGate component that protects routes and syncs user to Convex on sign-in.
+
+**Acceptance Criteria:**
+- [ ] Create `src/components/auth/AuthGate.tsx`
+- [ ] Use `useAuth()` from Clerk to check authentication state
+- [ ] Create `convex/users.ts` with `getOrCreateUser` mutation
+- [ ] Call `getOrCreateUser` on sign-in to sync user to Convex
+- [ ] Show `AuthLoadingScreen` while loading
+- [ ] Show `WelcomeScreen` when not signed in
+- [ ] Show `HabitsApp` when signed in
+- [ ] Create `currentUser` query to fetch current user data
+
+---
+
+### Phase 3: Auth Screens
+
+#### Task 7: Add social login to SignInScreen
+**Priority:** Medium | **Points:** 2 | **Dependencies:** Task 5
+
+**Description:**
+Add Google and Apple sign-in buttons to the existing SignInScreen.
+
+**Acceptance Criteria:**
+- [ ] Create `src/components/auth/SocialLoginButtons.tsx`
+- [ ] Implement `useOAuth` hook for Google OAuth flow
+- [ ] Implement `useOAuth` hook for Apple OAuth flow
+- [ ] Add `WebBrowser.maybeCompleteAuthSession()` for OAuth completion
+- [ ] Add social login buttons to `SignInScreen`
+- [ ] Handle OAuth errors with user-friendly messages
+- [ ] Test Google sign-in flow
+- [ ] Test Apple sign-in flow
+
+---
+
+#### Task 8: Add social login to SignUpScreen
+**Priority:** Medium | **Points:** 2 | **Dependencies:** Task 7
+
+**Description:**
+Add Google and Apple sign-up buttons to the existing SignUpScreen.
+
+**Acceptance Criteria:**
+- [ ] Reuse `SocialLoginButtons` component from Task 7
+- [ ] Add social login buttons to `SignUpScreen`
+- [ ] Ensure OAuth creates new user if not exists
+- [ ] Test sign-up with Google
+- [ ] Test sign-up with Apple
+
+---
+
+#### Task 9: Create ForgotPasswordScreen
+**Priority:** Medium | **Points:** 2 | **Dependencies:** Task 5
+
+**Description:**
+Create password reset flow for email/password users.
+
+**Acceptance Criteria:**
+- [ ] Create `src/screens/auth/ForgotPasswordScreen.tsx`
+- [ ] Use `useSignIn().signIn.create()` with `strategy: "reset_password_email_code"`
+- [ ] Implement email input → send code → verify code → set new password
+- [ ] Add navigation from SignInScreen to ForgotPasswordScreen
+- [ ] Handle errors (invalid email, expired code, etc.)
+- [ ] Test password reset flow end-to-end
+
+---
+
+### Phase 4: Polish
+
+#### Task 10: End-to-end testing and polish
+**Priority:** Medium | **Points:** 3 | **Dependencies:** Task 6, Task 7, Task 8, Task 9
+
+**Description:**
+Test all auth flows, handle edge cases, and polish the experience.
+
+**Acceptance Criteria:**
+- [ ] Test: Sign up with email → verify → lands in app
+- [ ] Test: Sign in with email/password → lands in app
+- [ ] Test: Sign in with Google → lands in app
+- [ ] Test: Sign in with Apple → lands in app
+- [ ] Test: Kill app → reopen → still authenticated
+- [ ] Test: Sign out → returns to welcome screen
+- [ ] Test: User appears in Convex users table after sign-in
+- [ ] Test: Existing habits load for authenticated user
+- [ ] Handle session expiry gracefully
+- [ ] Handle network errors with retry/offline messaging
+- [ ] Add loading states to all auth buttons
+- [ ] Verify deep links work on physical devices
+
+---
+
+## Summary
+
+| Phase | Tasks | Points |
+|-------|-------|--------|
+| Phase 1: Setup | 1, 2, 3, 4 | 6 |
+| Phase 2: Core Auth | 5, 6 | 4 |
+| Phase 3: Auth Screens | 7, 8, 9 | 6 |
+| Phase 4: Polish | 10 | 3 |
+| **Total** | **10 tasks** | **19 points** |
+
+---
+
+## Dependency Graph
+
+```
+Task 1 (Clerk Dashboard)
+    └── Task 2 (Install deps)
+    │       └── Task 5 (App.tsx)
+    │               └── Task 6 (AuthGate)
+    │               └── Task 7 (SignIn social)
+    │               │       └── Task 8 (SignUp social)
+    │               └── Task 9 (Forgot password)
+    └── Task 4 (Convex JWT)
+            └── Task 5 (App.tsx)
+
+Task 3 (Users table)
+    └── Task 4 (Convex JWT)
+
+Task 6, 7, 8, 9 → Task 10 (E2E testing)
+```
+
+---
+
+## Blocking Status (2025-12-20)
+
+**All remaining tasks are BLOCKED** pending Task 1 (Clerk Dashboard setup).
+
+Task 1 requires manual human intervention at dashboard.clerk.com to:
+1. Create Clerk account and application
+2. Configure OAuth providers (Google Cloud, Apple Developer credentials)
+3. Set up JWT template named `convex` with audience `convex`
+4. Copy Publishable Key to `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` in `.env.local`
+5. Copy Secret Key for Convex environment setup
+
+Once Task 1 is complete, the following can proceed:
+- Task 2 (remaining item: add env variable)
+- Task 4 (configure Convex JWT validation)
+- Then Task 5+ in sequence
+
+---
+
+## Agent Run Log
+
+### 2025-12-20 - Maestro Agent Check
+**Status:** No actionable tasks available
+
+All remaining unchecked items are BLOCKED pending Task 1 (Clerk Dashboard manual setup):
+- Task 1: Requires human to create Clerk account at dashboard.clerk.com
+- Task 2 (remaining item): Needs `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` from Task 1
+- Tasks 4-10: All depend on Task 1 completion
+
+**Next Steps Required (Human Action):**
+1. Visit dashboard.clerk.com and create Clerk application
+2. Configure OAuth providers (Google, Apple)
+3. Create JWT template named `convex` with audience `convex`
+4. Copy Publishable Key to `.env.local` as `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+5. Copy Secret Key for Convex environment setup
+
+Once Task 1 is complete, run Maestro agent again to continue with Task 4.
+
+### 2025-12-20 - Maestro Agent Run (Second Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `convex/schema.ts`: Users table correctly implemented with `clerkId`, `email`, `name`, `imageUrl`, `createdAt`, `lastLoginAt` fields and proper indexes (Task 3 complete)
+- `convex/auth.config.ts`: Exists but needs Clerk domain update (requires Task 1 to be complete first)
+- `app.json`: Already has `"scheme": "habit-tracker"` configured (Task 2 partial complete)
+- Dependencies: All Clerk-related packages already installed
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete. This is a manual task requiring human action at dashboard.clerk.com. No automated tasks can proceed until:
+1. Clerk application is created
+2. OAuth providers configured
+3. JWT template created
+4. API keys obtained
+
+**Action Taken:** None - all remaining tasks are blocked on manual human intervention.
+
+### 2025-12-20 - Maestro Agent Run (Third Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - confirms Task 1 not complete
+- `convex/auth.config.ts`: Still has placeholder `domain: process.env.CONVEX_SITE_URL` (needs actual Clerk domain)
+- All other infrastructure (dependencies, schema, deep link scheme) remains in place
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete. This manual task requires human action:
+1. Create Clerk application at dashboard.clerk.com
+2. Enable Email/Password authentication with verification
+3. Configure Google OAuth (requires Google Cloud Console credentials)
+4. Configure Apple OAuth (requires Apple Developer credentials)
+5. Create JWT template named `convex` with audience `convex`
+6. Add redirect URLs: `exp://` and `habit-tracker://`
+7. Copy Publishable Key → `.env.local` as `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+8. Copy Secret Key for Convex environment
+
+**Action Taken:** None - exiting. All remaining tasks require human completion of Task 1.
+
+### 2025-12-20 - Maestro Agent Run (Fourth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Still missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` (only contains Convex deployment vars)
+- `convex/auth.config.ts`: Still has placeholder `domain: process.env.CONVEX_SITE_URL` instead of actual Clerk domain
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete. All 10 tasks in this spec depend on manual human completion of Task 1:
+- Tasks 1 checklist items: Require dashboard.clerk.com access and external OAuth provider credentials
+- Task 2 remaining item: Requires Publishable Key from completed Task 1
+- Tasks 4-10: All have upstream dependencies on Task 1/2
+
+**Action Taken:** None - no automatable tasks available. Exiting.
+
+### 2025-12-20 - Maestro Agent Run (Fifth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirms missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - only contains Convex deployment vars (`CONVEX_DEPLOYMENT`, `EXPO_PUBLIC_CONVEX_URL`)
+- `convex/auth.config.ts`: Still uses placeholder `domain: process.env.CONVEX_SITE_URL` (needs actual Clerk issuer domain like `https://<clerk-instance>.clerk.accounts.dev`)
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete. This is a manual task requiring human action at dashboard.clerk.com:
+
+| Requirement | Status |
+|-------------|--------|
+| Clerk application created | ❌ Pending |
+| Email/Password auth enabled | ❌ Pending |
+| Google OAuth configured | ❌ Pending |
+| Apple OAuth configured | ❌ Pending |
+| JWT template `convex` created | ❌ Pending |
+| Redirect URLs added | ❌ Pending |
+| Publishable Key copied to `.env.local` | ❌ Pending |
+
+**Action Taken:** None - all remaining tasks require human completion of Task 1. Exiting.
+
+### 2025-12-20 - Maestro Agent Run (Sixth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Still missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - only contains `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 6 agent checks. This task cannot be automated and requires human action:
+
+1. Visit https://dashboard.clerk.com
+2. Create a new Clerk application
+3. Enable Email/Password authentication with email verification
+4. Configure Google OAuth (requires Google Cloud Console credentials)
+5. Configure Apple OAuth (requires Apple Developer credentials)
+6. Create JWT template named `convex` with audience `convex`
+7. Add allowed redirect URLs: `exp://` and `habit-tracker://`
+8. Copy Publishable Key to `.env.local` as `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+9. Copy Secret Key for later use with Convex environment
+
+**Action Taken:** None - no automatable tasks available. Exiting.
+
+### 2025-12-20 - Maestro Agent Run (Seventh Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed still missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - only contains `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 7 agent checks. All remaining tasks in this spec (Tasks 1-10) are blocked on manual human completion of the Clerk Dashboard setup.
+
+**Required Human Actions:**
+1. Create Clerk account at https://dashboard.clerk.com
+2. Create new Clerk application for this project
+3. Enable Email/Password authentication with email verification
+4. Configure Google OAuth (requires Google Cloud Console project and credentials)
+5. Configure Apple OAuth (requires Apple Developer Program membership and credentials)
+6. Create JWT template named `convex` with audience `convex`
+7. Add redirect URLs: `exp://` (development) and `habit-tracker://` (production)
+8. Copy Publishable Key to `.env.local` as `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+9. Save Secret Key for Convex environment setup in Task 4
+
+**Action Taken:** None - all tasks require human intervention. Exiting.
+
+### 2025-12-20 - Maestro Agent Run (Eighth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Still missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - only contains `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 8 consecutive agent checks. This task cannot be automated as it requires:
+
+1. **External Account Creation:** Clerk account at dashboard.clerk.com
+2. **External Credential Setup:** Google Cloud Console credentials for Google OAuth
+3. **External Credential Setup:** Apple Developer Program credentials for Apple OAuth
+4. **Manual Configuration:** JWT template, redirect URLs, auth settings
+5. **Secret Extraction:** API keys must be manually copied to local environment
+
+All 10 tasks in this spec depend on Task 1 completion. No automated progress is possible until a human completes the Clerk Dashboard setup.
+
+**Recommendation:** Consider pausing Maestro runs on this spec until Task 1 is manually completed. The agent will continue to detect the same blocking state on each run.
+
+**Action Taken:** None - exiting. All tasks require human intervention.
+
+### 2025-12-20 - Maestro Agent Run (Ninth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - only contains `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 9 consecutive agent checks spanning multiple hours. This task is fundamentally non-automatable:
+
+| Blocker Type | Description |
+|--------------|-------------|
+| External Service | Requires creating account at dashboard.clerk.com |
+| Third-Party Credentials | Google OAuth requires Google Cloud Console project |
+| Third-Party Credentials | Apple OAuth requires Apple Developer Program membership |
+| Manual Configuration | JWT template, redirect URLs, auth settings |
+| Secret Extraction | API keys must be manually copied to environment |
+
+**Suggestion:** Remove this spec from Maestro auto-run until human completes Task 1. Continued agent checks yield identical results with no progress possible.
+
+**Action Taken:** None - no automatable tasks available. Exiting.
+
+### 2025-12-20 - Maestro Agent Run (Tenth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - only contains `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 10 consecutive agent checks. This is the 10th verification with identical results.
+
+**Summary of Blocking State:**
+- All 7 checklist items in Task 1 require human action at external services
+- Task 2's remaining item depends on Task 1 output (Publishable Key)
+- Tasks 4-10 form a dependency chain starting from Task 1
+
+**Strong Recommendation:** This spec should be removed from Maestro auto-run rotation until a human completes the Clerk Dashboard setup. Each agent check consumes resources while producing no progress. The blocking condition is structural (requires external human action) rather than technical.
+
+**Action Taken:** None - exiting. No automatable tasks available.
+
+### 2025-12-20 - Maestro Agent Run (Eleventh Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 11 consecutive agent checks. The blocking condition is structural and unchanging:
+
+| Task | Status | Blocker |
+|------|--------|---------|
+| Task 1 (7 items) | BLOCKED | Requires human at dashboard.clerk.com + external OAuth credentials |
+| Task 2 (1 item) | BLOCKED | Depends on Publishable Key from Task 1 |
+| Tasks 4-10 | BLOCKED | Dependency chain from Task 1 |
+
+**Recommendation:** Remove this spec from Maestro auto-run immediately. Eleven identical checks confirm the blocking condition is permanent until human intervention occurs. Each run consumes resources with zero possible progress.
+
+**Action Taken:** None - all tasks require human completion of Clerk Dashboard setup. Exiting.
+
+### 2025-12-20 - Maestro Agent Run (Twelfth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 12 consecutive agent checks. This task is fundamentally non-automatable and requires human action at three external services:
+
+| External Service | Requirement |
+|------------------|-------------|
+| dashboard.clerk.com | Create Clerk account and application |
+| Google Cloud Console | OAuth credentials for Google Sign-In |
+| Apple Developer Program | OAuth credentials for Apple Sign-In |
+
+**Critical:** This spec should be removed from Maestro auto-run. Twelve identical checks confirm the blocking state is permanent until human completes Task 1.
+
+**Action Taken:** None - exiting. All tasks require human intervention.
+
+### 2025-12-20 - Maestro Agent Run (Thirteenth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 13 consecutive agent checks. This is a structural blocker requiring human action at external services:
+
+| Requirement | Blocked By |
+|-------------|------------|
+| Create Clerk account/app | Human must visit dashboard.clerk.com |
+| Google OAuth credentials | Human must configure Google Cloud Console |
+| Apple OAuth credentials | Human must have Apple Developer membership |
+| JWT template configuration | Human must configure in Clerk Dashboard |
+| API keys extraction | Human must copy from Clerk Dashboard |
+
+**STRONG RECOMMENDATION:** This spec MUST be removed from Maestro auto-run rotation. Thirteen identical checks confirm the blocking condition is permanent and structural—no automated progress is possible until a human completes the Clerk Dashboard setup. Each agent check consumes resources with zero possible progress.
+
+**Action Taken:** None - exiting. All tasks require human completion of Task 1.
+
+### 2025-12-20 - Maestro Agent Run (Fourteenth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 14 consecutive agent checks. This task requires human action at external services (dashboard.clerk.com, Google Cloud Console, Apple Developer Program) and cannot be automated.
+
+**All 10 Tasks Status:**
+| Task | Status |
+|------|--------|
+| Task 1 | BLOCKED - Manual human action required |
+| Task 2 | Partial - 1 item blocked on Task 1 |
+| Task 3 | ✅ COMPLETED |
+| Tasks 4-10 | BLOCKED - Dependency chain from Task 1 |
+
+**URGENT:** This spec should be removed from Maestro auto-run. Fourteen identical checks confirm no automated progress is possible.
+
+**Action Taken:** None - exiting. All remaining tasks require human completion of Clerk Dashboard setup.
+
+### 2025-12-20 - Maestro Agent Run (Fifteenth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 15 consecutive agent checks. This is a structural blocker that cannot be resolved by automation:
+
+| External Service | Action Required |
+|------------------|-----------------|
+| dashboard.clerk.com | Create account, configure application, create JWT template, copy API keys |
+| Google Cloud Console | Configure OAuth credentials for Google Sign-In |
+| Apple Developer Program | Configure OAuth credentials for Apple Sign-In |
+
+**All Unchecked Items Summary:**
+- Task 1: 7 items - all require human action at external services
+- Task 2: 1 item - requires Publishable Key from Task 1
+- Tasks 4-10: 16+ items - all blocked by dependency chain from Task 1
+
+**CRITICAL:** This spec MUST be removed from Maestro auto-run rotation. Fifteen identical verification checks confirm that no automated progress is possible until a human completes Task 1.
+
+**Action Taken:** None - exiting. All remaining tasks require human completion of Clerk Dashboard setup.
+
+### 2025-12-20 - Maestro Agent Run (Sixteenth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 16 consecutive agent checks. This is a permanent structural blocker:
+
+| Task | Status | Blocker |
+|------|--------|---------|
+| Task 1 (7 items) | BLOCKED | Human must visit dashboard.clerk.com, Google Cloud Console, Apple Developer |
+| Task 2 (1 item) | BLOCKED | Requires Publishable Key from Task 1 |
+| Task 3 | ✅ COMPLETED | — |
+| Tasks 4-10 | BLOCKED | Dependency chain from Task 1 |
+
+**CRITICAL RECOMMENDATION:** This spec file should be **removed from Maestro auto-run** immediately. Sixteen consecutive identical checks confirm that:
+1. No automated progress is possible
+2. The blocker is structural (requires external human action)
+3. Each agent run consumes resources with zero possible progress
+
+**Action Taken:** None - exiting. All remaining tasks require human completion of Clerk Dashboard setup at external services.
+
+### 2025-12-20 - Maestro Agent Run (Seventeenth Check)
+**Status:** Still BLOCKED - No actionable tasks
+
+Verified project state:
+- `.env.local`: Confirmed missing `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` - file contains only `CONVEX_DEPLOYMENT` and `EXPO_PUBLIC_CONVEX_URL`
+
+**Blocking Issue:** Task 1 (Clerk Dashboard setup) remains incomplete after 17 consecutive agent checks. This task requires manual human action at external services:
+
+| External Service | Requirement |
+|------------------|-------------|
+| dashboard.clerk.com | Create Clerk account/application, configure JWT template, copy API keys |
+| Google Cloud Console | Configure OAuth credentials for Google Sign-In |
+| Apple Developer Program | Configure OAuth credentials for Apple Sign-In |
+
+**Task Summary:**
+| Task | Status | Blocker |
+|------|--------|---------|
+| Task 1 (7 items) | BLOCKED | Human must complete external service setup |
+| Task 2 (1 item) | BLOCKED | Requires Publishable Key from Task 1 |
+| Task 3 | ✅ COMPLETED | — |
+| Tasks 4-10 | BLOCKED | Dependency chain from Task 1 |
+
+**CRITICAL:** This spec should be **removed from Maestro auto-run rotation**. Seventeen consecutive identical checks confirm no automated progress is possible until a human completes Task 1 at external services.
+
+**Action Taken:** None - exiting. All remaining tasks require human completion of Clerk Dashboard setup.
+
+---
+
+_Generated from tech-spec.md | Ready for implementation_

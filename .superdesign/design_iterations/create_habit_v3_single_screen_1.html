@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Habit V3 - Single Screen Refined</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f172a; }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #f8fafc;
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 0 12px #1a1a2e;
+      position: relative;
+    }
+
+    .dynamic-island {
+      width: 126px;
+      height: 36px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+
+    .swipe-indicator {
+      width: 36px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    .completion-dot {
+      transition: all 0.3s ease;
+    }
+    .completion-dot.filled {
+      background: #22c55e !important;
+    }
+
+    .suggestion-chip {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .suggestion-chip:hover {
+      transform: scale(1.02);
+    }
+    .suggestion-chip:active {
+      transform: scale(0.97);
+    }
+
+    .template-card {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .template-card:hover {
+      transform: scale(1.05);
+    }
+    .template-card:active {
+      transform: scale(0.95);
+    }
+    .template-card.selected {
+      ring: 2px;
+    }
+
+    .color-btn {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .color-btn:hover {
+      transform: scale(1.15);
+    }
+    .color-btn:active {
+      transform: scale(0.95);
+    }
+
+    .quick-time-btn {
+      transition: all 0.15s ease;
+    }
+    .quick-time-btn:hover {
+      transform: scale(1.02);
+    }
+
+    .gradient-btn {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(8px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .slide-up {
+      animation: slideUp 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+
+    .section-card {
+      transition: all 0.2s ease;
+    }
+    .section-card:focus-within {
+      box-shadow: 0 0 0 2px #3b82f6;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 flex flex-col items-center gap-6">
+
+  <h1 class="text-2xl font-bold text-white mb-1">Create Habit V3 - Single Screen</h1>
+  <p class="text-gray-400 mb-2 text-sm">All improvements consolidated into one scrollable modal</p>
+
+  <div class="flex gap-8 flex-wrap justify-center items-start">
+
+    <!-- MAIN MOCKUP -->
+    <div class="flex flex-col items-center gap-3">
+      <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Complete Flow - Filled State</div>
+
+      <div class="phone-frame">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-12">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <!-- Swipe Indicator -->
+            <div class="flex justify-center pt-3 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-5 py-2 flex items-center justify-between">
+              <button class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+              </button>
+              <div class="flex items-center gap-3">
+                <span class="text-base font-bold text-slate-800">Create Habit</span>
+                <!-- Completion Indicator -->
+                <div class="flex gap-1">
+                  <div class="completion-dot w-2 h-2 rounded-full filled"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full filled"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full filled"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                </div>
+              </div>
+              <!-- Habit Limit Badge -->
+              <div class="bg-slate-100 text-slate-600 text-[10px] font-semibold px-2 py-1 rounded-full">
+                2/3
+              </div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto px-4 pt-2 pb-32">
+
+              <!-- Hero Name Input -->
+              <div class="mb-1">
+                <div class="relative">
+                  <input
+                    type="text"
+                    placeholder="What habit do you want to build?"
+                    class="w-full h-14 rounded-2xl bg-white px-4 pr-14 text-base font-medium text-slate-800 border-2 border-emerald-500 outline-none shadow-sm"
+                    value="Meditate 5 minutes"
+                  >
+                  <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center mt-1.5 px-1">
+                  <span class="text-xs text-emerald-600 font-medium">✓ Specific & measurable</span>
+                  <span class="text-[10px] text-slate-400">18/50</span>
+                </div>
+              </div>
+
+              <!-- Quick Templates (collapsed when input has value) -->
+              <!-- Shown when empty, hidden here since we have input -->
+
+              <!-- Live Preview Card -->
+              <div class="my-4 bg-white rounded-2xl p-4 shadow-sm section-card">
+                <div class="flex items-center">
+                  <div class="w-16 h-16 rounded-2xl flex items-center justify-center mr-4 shadow-sm" style="background: #22C55E;">
+                    <span class="text-3xl">🧘</span>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-lg font-bold text-slate-800">Meditate 5 minutes</div>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-sm text-slate-500">Daily</span>
+                      <span class="text-slate-300">•</span>
+                      <span class="text-sm text-blue-500">⏰ 7:00 AM</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Week Preview -->
+                <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span class="text-[10px] font-medium text-slate-400 uppercase">This week</span>
+                  <div class="flex gap-1.5">
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">S</div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">M</div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">T</div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">W</div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">T</div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">F</div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium" style="background: rgba(34,197,94,0.15); color: #22C55E;">S</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Style Section (Icon + Color combined) -->
+              <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm section-card">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="text-sm font-bold text-slate-800">Style</span>
+                  <span class="text-xs text-slate-400">Icon & Color</span>
+                </div>
+
+                <!-- Icon Row -->
+                <div class="flex items-center justify-between bg-slate-50 rounded-xl p-2.5 mb-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(34,197,94,0.2);">
+                      <span class="text-2xl">🧘</span>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-slate-800">Icon</div>
+                      <div class="text-[10px] text-slate-500">Tap to change</div>
+                    </div>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                </div>
+
+                <!-- 24 Colors - 3 Rows -->
+                <div class="space-y-2">
+                  <!-- Row 1 -->
+                  <div class="flex justify-between">
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #EF4444;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #F97316;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #EAB308;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full ring-2 ring-slate-800 ring-offset-2 flex items-center justify-center" style="background: #22C55E;">
+                      <i data-lucide="check" class="w-4 h-4 text-white stroke-[3]"></i>
+                    </button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #3B82F6;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #8B5CF6;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #EC4899;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #1E293B;"></button>
+                  </div>
+                  <!-- Row 2 -->
+                  <div class="flex justify-between">
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #06B6D4;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #FB923C;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #4ADE80;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #A78BFA;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #F472B6;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #78716C;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #0F172A;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #0EA5E9;"></button>
+                  </div>
+                  <!-- Row 3 - Pastels -->
+                  <div class="flex justify-between">
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #FCA5A5;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #FDBA74;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #86EFAC;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #7DD3FC;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #C4B5FD;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #A8A29E;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full border border-slate-200" style="background: #FFFFFF;"></button>
+                    <button class="color-btn w-9 h-9 rounded-full" style="background: #FBBF24;"></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reminder Section -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm section-card">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                      <i data-lucide="bell" class="w-5 h-5 text-blue-500"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-semibold text-slate-800">Remind me</div>
+                      <div class="text-xs text-blue-500 font-medium">7:00 AM</div>
+                    </div>
+                  </div>
+                  <div class="w-11 h-6 bg-blue-500 rounded-full relative">
+                    <div class="absolute right-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow"></div>
+                  </div>
+                </div>
+
+                <!-- Quick Times -->
+                <div class="mt-3 flex gap-2">
+                  <button class="quick-time-btn flex-1 bg-blue-500 text-white py-2 rounded-xl text-center">
+                    <div class="text-xs font-semibold">Morning</div>
+                    <div class="text-[10px] opacity-80">7:00 AM</div>
+                  </button>
+                  <button class="quick-time-btn flex-1 bg-slate-100 py-2 rounded-xl text-center">
+                    <div class="text-xs font-semibold text-slate-600">Afternoon</div>
+                    <div class="text-[10px] text-slate-400">1:00 PM</div>
+                  </button>
+                  <button class="quick-time-btn flex-1 bg-slate-100 py-2 rounded-xl text-center">
+                    <div class="text-xs font-semibold text-slate-600">Evening</div>
+                    <div class="text-[10px] text-slate-400">8:00 PM</div>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Sticky Create Bar -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pt-8">
+              <button class="w-full gradient-btn text-white py-4 rounded-2xl text-base font-semibold shadow-lg flex items-center justify-center gap-2">
+                <span>Create Habit</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE with AI Suggestions -->
+    <div class="flex flex-col items-center gap-3">
+      <div class="text-xs font-semibold text-purple-400 uppercase tracking-wider">Empty State + AI Suggestions</div>
+
+      <div class="phone-frame">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-12">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <!-- Swipe Indicator -->
+            <div class="flex justify-center pt-3 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-5 py-2 flex items-center justify-between">
+              <button class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+              </button>
+              <div class="flex items-center gap-3">
+                <span class="text-base font-bold text-slate-800">Create Habit</span>
+                <!-- Empty completion -->
+                <div class="flex gap-1">
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                </div>
+              </div>
+              <div class="bg-slate-100 text-slate-600 text-[10px] font-semibold px-2 py-1 rounded-full">
+                2/3
+              </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-4 pt-2 pb-32">
+
+              <!-- Empty Input -->
+              <div class="mb-4">
+                <div class="relative">
+                  <input
+                    type="text"
+                    placeholder="What habit do you want to build?"
+                    class="w-full h-14 rounded-2xl bg-white px-4 pr-14 text-base font-medium text-slate-800 border border-slate-200 outline-none shadow-sm focus:border-blue-500 focus:border-2"
+                    value=""
+                  >
+                </div>
+                <div class="flex justify-end mt-1.5 px-1">
+                  <span class="text-[10px] text-slate-400">0/50</span>
+                </div>
+              </div>
+
+              <!-- Quick Templates -->
+              <div class="mb-5">
+                <div class="flex items-center justify-between mb-2.5">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+                    <span class="text-xs font-semibold text-slate-600">Quick Start</span>
+                  </div>
+                  <button class="text-[10px] font-medium text-blue-500">See all →</button>
+                </div>
+                <div class="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
+                  <div class="template-card flex-shrink-0 w-[72px] h-[72px] bg-white rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm border border-slate-100">
+                    <span class="text-xl">💧</span>
+                    <span class="text-[10px] font-medium text-slate-700">Water</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-[72px] h-[72px] bg-white rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm border border-slate-100">
+                    <span class="text-xl">📖</span>
+                    <span class="text-[10px] font-medium text-slate-700">Read</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-[72px] h-[72px] bg-white rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm border border-slate-100">
+                    <span class="text-xl">🧘</span>
+                    <span class="text-[10px] font-medium text-slate-700">Meditate</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-[72px] h-[72px] bg-white rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm border border-slate-100">
+                    <span class="text-xl">🏃</span>
+                    <span class="text-[10px] font-medium text-slate-700">Run</span>
+                  </div>
+                  <div class="template-card flex-shrink-0 w-[72px] h-[72px] bg-white rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm border border-slate-100">
+                    <span class="text-xl">🚶</span>
+                    <span class="text-[10px] font-medium text-slate-700">Walk</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty Preview -->
+              <div class="bg-white rounded-2xl p-6 shadow-sm border border-dashed border-slate-200 mb-4">
+                <div class="flex flex-col items-center justify-center text-center">
+                  <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-3">
+                    <span class="text-2xl opacity-40">✨</span>
+                  </div>
+                  <span class="text-sm font-medium text-slate-400">Your habit preview</span>
+                  <span class="text-xs text-slate-300 mt-0.5">Start typing or pick a template</span>
+                </div>
+              </div>
+
+              <!-- Style Section (muted) -->
+              <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm opacity-50">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-sm font-bold text-slate-800">Style</span>
+                  <span class="text-xs text-slate-400">Choose after naming</span>
+                </div>
+                <div class="h-12 bg-slate-50 rounded-xl"></div>
+              </div>
+
+              <!-- Reminder Section (muted) -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm opacity-50">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                      <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-semibold text-slate-400">Remind me</div>
+                      <div class="text-xs text-slate-300">Set after naming</div>
+                    </div>
+                  </div>
+                  <div class="w-11 h-6 bg-slate-200 rounded-full"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Disabled CTA -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pt-8">
+              <button class="w-full bg-slate-300 text-slate-500 py-4 rounded-2xl text-base font-semibold" disabled>
+                Create Habit
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPING STATE with AI Suggestions -->
+    <div class="flex flex-col items-center gap-3">
+      <div class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Typing + AI Suggestions</div>
+
+      <div class="phone-frame">
+        <div class="dynamic-island"></div>
+
+        <div class="absolute inset-0 bg-black/50 pt-12">
+          <div class="bg-slate-50 rounded-t-3xl h-full overflow-hidden flex flex-col">
+
+            <!-- Swipe Indicator -->
+            <div class="flex justify-center pt-3 pb-1">
+              <div class="swipe-indicator"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-5 py-2 flex items-center justify-between">
+              <button class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+              </button>
+              <div class="flex items-center gap-3">
+                <span class="text-base font-bold text-slate-800">Create Habit</span>
+                <div class="flex gap-1">
+                  <div class="completion-dot w-2 h-2 rounded-full bg-amber-400"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                  <div class="completion-dot w-2 h-2 rounded-full bg-slate-300"></div>
+                </div>
+              </div>
+              <div class="bg-slate-100 text-slate-600 text-[10px] font-semibold px-2 py-1 rounded-full">
+                2/3
+              </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-4 pt-2 pb-32">
+
+              <!-- Typing Input -->
+              <div class="mb-3">
+                <div class="relative">
+                  <input
+                    type="text"
+                    class="w-full h-14 rounded-2xl bg-white px-4 pr-14 text-base font-medium text-slate-800 border-2 border-blue-500 outline-none shadow-sm"
+                    value="med"
+                  >
+                  <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div class="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center mt-1.5 px-1">
+                  <span class="text-xs text-blue-500 font-medium">Finding suggestions...</span>
+                  <span class="text-[10px] text-slate-400">3/50</span>
+                </div>
+              </div>
+
+              <!-- AI Suggestions -->
+              <div class="mb-4 slide-up">
+                <div class="flex items-center gap-1.5 mb-2">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-500"></i>
+                  <span class="text-xs font-semibold text-purple-600">Suggestions</span>
+                </div>
+                <div class="space-y-2">
+                  <div class="suggestion-chip bg-white rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm border border-purple-100">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(34,197,94,0.15);">
+                      <span class="text-xl">🧘</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium text-slate-800">Meditate 5 minutes</div>
+                      <div class="text-[10px] text-slate-400">Most popular • Morning routine</div>
+                    </div>
+                    <i data-lucide="plus" class="w-4 h-4 text-purple-500"></i>
+                  </div>
+                  <div class="suggestion-chip bg-white rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm border border-slate-100">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(59,130,246,0.15);">
+                      <span class="text-xl">💊</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium text-slate-800">Take medication</div>
+                      <div class="text-[10px] text-slate-400">Health • Daily essential</div>
+                    </div>
+                    <i data-lucide="plus" class="w-4 h-4 text-slate-400"></i>
+                  </div>
+                  <div class="suggestion-chip bg-white rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm border border-slate-100">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(139,92,246,0.15);">
+                      <span class="text-xl">🧘‍♀️</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium text-slate-800">Meditate before bed</div>
+                      <div class="text-[10px] text-slate-400">Sleep • Evening wind-down</div>
+                    </div>
+                    <i data-lucide="plus" class="w-4 h-4 text-slate-400"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preview (updating) -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
+                <div class="flex items-center">
+                  <div class="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center mr-3">
+                    <span class="text-2xl">🎯</span>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-base font-bold text-slate-800">med<span class="text-slate-300">|</span></div>
+                    <div class="text-sm text-slate-400">Daily</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Disabled CTA -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pt-8">
+              <button class="w-full bg-slate-300 text-slate-500 py-4 rounded-2xl text-base font-semibold" disabled>
+                Create Habit
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Features Legend -->
+  <div class="mt-4 grid grid-cols-2 lg:grid-cols-5 gap-2 max-w-5xl text-center">
+    <div class="bg-slate-800 rounded-lg p-2">
+      <div class="text-emerald-400 text-xs font-semibold">Completion Dots</div>
+      <div class="text-slate-500 text-[10px]">●●●○ fills as you go</div>
+    </div>
+    <div class="bg-slate-800 rounded-lg p-2">
+      <div class="text-purple-400 text-xs font-semibold">AI Suggestions</div>
+      <div class="text-slate-500 text-[10px]">Smart autocomplete</div>
+    </div>
+    <div class="bg-slate-800 rounded-lg p-2">
+      <div class="text-amber-400 text-xs font-semibold">Quick Templates</div>
+      <div class="text-slate-500 text-[10px]">One-tap start</div>
+    </div>
+    <div class="bg-slate-800 rounded-lg p-2">
+      <div class="text-blue-400 text-xs font-semibold">24 Colors</div>
+      <div class="text-slate-500 text-[10px]">3 rows, no modal</div>
+    </div>
+    <div class="bg-slate-800 rounded-lg p-2">
+      <div class="text-slate-400 text-xs font-semibold">Swipe Dismiss</div>
+      <div class="text-slate-500 text-[10px]">iOS standard</div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

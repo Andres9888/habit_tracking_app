@@ -1,0 +1,56 @@
+# Post-MVP Enhancements
+
+## Features to Add After Apple Store Launch
+
+### 1. Advanced Authentication
+- Social sign-on (Google, Apple)
+- Profile picture upload
+- Enhanced profile management
+- Account data export
+
+### 2. Push Notifications
+- Local reminder notifications
+- Customizable notification times
+- Push notification system
+- Notification scheduling per habit
+
+### 3. Advanced Analytics
+- Calendar view for habit tracking
+- Monthly/yearly statistics
+- Trend analysis
+- Completion rate graphs
+- Data export (CSV/JSON)
+- Streak history
+
+### 4. Offline Enhancements
+- Advanced offline support
+- Conflict resolution
+- Robust sync mechanism
+- Offline queue management
+
+### 5. Social & Sharing Features
+- Share habits with friends/family
+- Public habit templates
+- Collaborative habit tracking
+- Shared habit groups
+- Social encouragement features
+
+### 6. Advanced Personalization
+- Theme customization
+- Custom color schemes
+- Timezone support
+- Week start day preferences
+- Advanced accessibility options
+
+### 7. Advanced Habit Features
+- Habit templates library
+- Habit reordering (drag-drop)
+- Advanced reminder settings
+- Habit goals and milestones
+- Habit difficulty levels
+
+### 8. Community Features
+- Public template sharing
+- Community challenges
+- Leaderboards
+- Friend connections

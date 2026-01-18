@@ -1,0 +1,72 @@
+/**
+ * Styles for StatsRow Component
+ */
+
+import {
+  StyleSheet,
+  Platform,
+  type ViewStyle,
+  type TextStyle,
+} from 'react-native';
+
+import { COLORS, FOCUS } from './constants';
+
+const STATS_CONFIG = {
+  BADGE_BORDER_RADIUS: 8,
+  BADGE_PADDING_X: 12,
+  BADGE_PADDING_Y: 6,
+  SETTINGS_BUTTON_SIZE: 36,
+} as const;
+
+export const styles = StyleSheet.create({
+  badgesContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  } as ViewStyle,
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+    paddingVertical: 4,
+  } as ViewStyle,
+  frequencyBadge: {
+    backgroundColor: '#f5f5f4',
+    borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
+    paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
+    paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
+  } as ViewStyle,
+  frequencyText: {
+    color: COLORS.TEXT_PRIMARY,
+    fontSize: 12,
+    fontWeight: '600',
+  } as TextStyle,
+  settingsButton: {
+    alignItems: 'center',
+    backgroundColor: '#f5f5f4',
+    borderRadius: STATS_CONFIG.SETTINGS_BUTTON_SIZE / 2,
+    height: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
+    justifyContent: 'center',
+    width: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
+    ...(Platform.OS === 'web' ? { cursor: 'pointer' } : {}),
+  } as ViewStyle,
+  streakBadge: {
+    alignItems: 'center',
+    borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
+    paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
+  } as ViewStyle,
+  streakText: {
+    fontSize: 12,
+    fontWeight: '600',
+  } as TextStyle,
+  webFocus: {
+    outlineColor: FOCUS.RING_COLOR,
+    outlineOffset: FOCUS.RING_OFFSET,
+    outlineStyle: 'solid',
+    outlineWidth: FOCUS.RING_WIDTH,
+  } as ViewStyle,
+});

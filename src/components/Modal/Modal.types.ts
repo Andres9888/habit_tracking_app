@@ -1,0 +1,58 @@
+/**
+ * Modal Component Types
+ * Type definitions for the Modal component and its variants
+ */
+
+import type { ViewStyle } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
+
+export type ModalVariant = 'bottomSheet' | 'fullScreen' | 'centerAlert';
+
+export interface ModalProps {
+  /** Modal visibility */
+  visible: boolean;
+
+  /** On close callback */
+  onClose: () => void;
+
+  /** Modal variant */
+  variant?: ModalVariant;
+
+  /** Modal content */
+  children: React.ReactNode;
+
+  /** Disable backdrop tap to close */
+  disableBackdropClose?: boolean;
+
+  /** Disable gesture to close */
+  disableGestureClose?: boolean;
+
+  /** Custom backdrop opacity (0-1) */
+  backdropOpacity?: number;
+
+  /** Custom style */
+  style?: ViewStyle;
+
+  /** Respect system reduce motion preference (default: true) */
+  respectReduceMotion?: boolean;
+}
+
+export interface ModalAnimationValues {
+  /** Bottom sheet translateY */
+  translateY: SharedValue<number>;
+  /** Full screen progress (0-1) */
+  fullScreenProgress: SharedValue<number>;
+  /** Full screen gesture Y offset */
+  fullScreenGestureY: SharedValue<number>;
+  /** Center alert scale */
+  scale: SharedValue<number>;
+  /** Center alert opacity */
+  alertOpacity: SharedValue<number>;
+  /** Backdrop opacity */
+  backdropOpacityValue: SharedValue<number>;
+}
+
+export interface ModalGestureConfig {
+  dismissThreshold: number;
+  velocityThreshold: number;
+}

@@ -1,0 +1,67 @@
+import type { CardColors } from './types';
+
+const DEFAULT_ACCENT_COLOR = '#8b5cf6';
+
+export function getCardColors(highContrastMode: boolean): CardColors {
+  if (highContrastMode) {
+    return {
+      border: '#facc15',
+      cardBackground: '#111111',
+      iconContainer: '#facc15',
+      primaryText: '#ffffff',
+      streakText: '#facc15',
+      strengthBackground: '#10b981',
+    };
+  }
+
+  return {
+    border: '#f5f5f4', // stone-100 - subtle border
+    cardBackground: '#ffffff', // Pure white for better contrast against beige bg
+    iconContainer: undefined,
+    primaryText: '#1c1917', // stone-900
+    streakText: '#c2410c', // orange-700 for richer streak
+    strengthBackground: '#10b981',
+  };
+}
+
+export function getIconBackground(
+  accentColor: string,
+  highContrastMode: boolean,
+  iconContainer: string | undefined
+): string {
+  if (highContrastMode) return iconContainer ?? '#facc15';
+
+  const colorMap: Record<string, string> = {
+    '#0891b2': 'rgba(207, 250, 254, 0.85)', // cyan-100
+    '#059669': 'rgba(209, 250, 229, 0.85)', // emerald-100
+    '#7c3aed': 'rgba(237, 233, 254, 0.85)', // violet-100
+    '#2563eb': 'rgba(219, 234, 254, 0.85)', // blue-100
+    '#db2777': 'rgba(252, 231, 243, 0.85)', // pink-100
+    '#ea580c': 'rgba(255, 237, 213, 0.85)', // orange-100
+  };
+  return colorMap[accentColor] || 'rgba(254, 249, 195, 0.85)'; // yellow-100 default
+}
+
+export function getStreakBadgeColors(streak: number): {
+  bg: string;
+  glow: string;
+} {
+  if (streak >= 30) return { bg: '#7c3aed', glow: '#8b5cf6' }; // Purple for 30+
+  if (streak >= 14) return { bg: '#ea580c', glow: '#f97316' }; // Orange for 14+
+  if (streak >= 7) return { bg: '#dc2626', glow: '#ef4444' }; // Red for 7+
+  return { bg: '#c2410c', glow: '#c2410c' }; // Default orange-700
+}
+
+export function getEffectiveAccentColor(
+  accentColor: string | undefined
+): string {
+  return accentColor || DEFAULT_ACCENT_COLOR;
+}
+
+export function getBorderAccentColor(
+  highContrastMode: boolean,
+  accentColor: string | undefined
+): string {
+  if (highContrastMode) return '#facc15';
+  return getEffectiveAccentColor(accentColor);
+}

@@ -1,0 +1,107 @@
+/**
+ * SectionCard Component
+ * Consistent card styling with press animation
+ * Matches mockup: app-card with border, 16px radius, subtle shadow
+ */
+
+import React, { useCallback } from 'react';
+import { View, Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  interpolate,
+} from 'react-native-reanimated';
+import { clsx } from 'clsx';
+import * as Haptics from 'expo-haptics';
+import { SPRING_BUTTON } from '../../../../animations';
+
+interface SectionCardProps {
+  children: React.ReactNode;
+  className?: string;
+  onPress?: () => void;
+  accessibilityLabel?: string;
+  disabled?: boolean;
+}
+
+export function SectionCard({
+  children,
+  className,
+  onPress,
+  accessibilityLabel,
+  disabled,
+}: SectionCardProps) {
+  const scale = useSharedValue(1);
+  const shadowOpacity = useSharedValue(0.05);
+  const elevation = useSharedValue(2);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    elevation: elevation.value,
+    shadowOffset: {
+      height: interpolate(elevation.value, [1, 2], [1, 2]),
+      width: 0,
+    },
+    shadowOpacity: shadowOpacity.value,
+    shadowRadius: interpolate(elevation.value, [1, 2], [4, 8]),
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    'worklet';
+    scale.value = withSpring(0.98, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.02, SPRING_BUTTON);
+    elevation.value = withSpring(1, SPRING_BUTTON);
+  }, [scale, shadowOpacity, elevation]);
+
+  const handlePressOut = useCallback(() => {
+    'worklet';
+    scale.value = withSpring(1, SPRING_BUTTON);
+    shadowOpacity.value = withSpring(0.05, SPRING_BUTTON);
+    elevation.value = withSpring(2, SPRING_BUTTON);
+  }, [scale, shadowOpacity, elevation]);
+
+  const handlePress = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPress?.();
+  }, [onPress]);
+
+  if (onPress) {
+    return (
+      <Animated.View style={[animatedStyle, { shadowColor: '#000' }]}>
+        <Pressable
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole='button'
+          accessibilityState={{ disabled }}
+          className={clsx(
+            'rounded-xl border border-stone-200 bg-white p-3',
+            className
+          )}
+          disabled={disabled}
+          onPress={handlePress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+        >
+          {children}
+        </Pressable>
+      </Animated.View>
+    );
+  }
+
+  return (
+    <View
+      className={clsx(
+        'rounded-xl border border-stone-200 bg-white p-3',
+        className
+      )}
+      style={{
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { height: 2, width: 0 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+      }}
+    >
+      {children}
+    </View>
+  );
+}

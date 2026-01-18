@@ -1,0 +1,58 @@
+/**
+ * Tips box styles for FullsizeTemplatePreview
+ */
+
+import { StyleSheet } from 'react-native';
+
+export const tipsStyles = StyleSheet.create({
+  tipIconContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
+  },
+  tipItem: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  tipNumber: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  tipsBox: {
+    backgroundColor: '#fefce8',
+    borderColor: '#fef08a',
+    borderRadius: 16,
+    borderWidth: 2,
+    marginHorizontal: 20,
+    marginTop: 16,
+    padding: 20,
+  },
+  tipsDivider: {
+    backgroundColor: '#fef08a',
+    height: 1,
+    marginBottom: 12,
+  },
+  tipsHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  tipsLabel: {
+    color: '#854d0e',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  tipText: {
+    color: '#713f12',
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+});
