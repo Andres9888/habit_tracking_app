@@ -1,4 +1,10 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 interface SubmitButtonProps {
   label: string;
@@ -8,6 +14,8 @@ interface SubmitButtonProps {
   onPress: () => void;
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export function SubmitButton({
   label,
   loadingLabel,
@@ -16,18 +24,49 @@ export function SubmitButton({
   onPress,
 }: SubmitButtonProps) {
   const isDisabled = isLoading || disabled;
+  const reduceMotion = useReducedMotion();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (!reduceMotion) {
+      scale.value = withSpring(0.97, { damping: 15 });
+    }
+  };
+
+  const handlePressOut = () => {
+    if (!reduceMotion) {
+      scale.value = withSpring(1, { damping: 15 });
+    }
+  };
 
   return (
-    <TouchableOpacity
-      className={`mt-4 items-center rounded-2xl border border-stone-800 bg-stone-800 py-4 ${
+    <AnimatedPressable
+      accessibilityLabel={isLoading ? loadingLabel : label}
+      accessibilityRole='button'
+      accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+      className={`mt-4 flex-row items-center justify-center rounded-2xl border border-stone-800 bg-stone-800 py-4 ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}
+      style={animatedStyle}
       onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
       <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
         {isLoading ? loadingLabel : label}
       </Text>
-    </TouchableOpacity>
+      <View className='ml-2 w-5 items-center justify-center'>
+        {isLoading ? (
+          <ActivityIndicator color='#FFFFFF' size='small' />
+        ) : (
+          <Text className='text-white'>→</Text>
+        )}
+      </View>
+    </AnimatedPressable>
   );
 }
