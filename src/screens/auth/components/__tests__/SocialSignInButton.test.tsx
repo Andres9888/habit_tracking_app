@@ -202,4 +202,36 @@ describe('SocialSignInButton', () => {
       expect(queryByText('Signing in...')).toBeNull();
     });
   });
+
+  describe('Press Animation (UX-009)', () => {
+    it('handles press events for scale animation', () => {
+      const { getByRole } = render(<SocialSignInButton {...defaultProps} />);
+      const button = getByRole('button');
+
+      // Button should respond to press events without errors
+      fireEvent(button, 'pressIn');
+      fireEvent(button, 'pressOut');
+
+      // Button should still be functional after press animation
+      fireEvent.press(button);
+      expect(mockOnPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('has press handlers defined on both Google and Apple buttons', () => {
+      const { getByRole, rerender } = render(
+        <SocialSignInButton {...defaultProps} />
+      );
+
+      // Google button
+      const googleButton = getByRole('button');
+      expect(googleButton.props.onPressIn).toBeDefined();
+      expect(googleButton.props.onPressOut).toBeDefined();
+
+      // Apple button
+      rerender(<SocialSignInButton {...defaultProps} provider='apple' />);
+      const appleButton = getByRole('button');
+      expect(appleButton.props.onPressIn).toBeDefined();
+      expect(appleButton.props.onPressOut).toBeDefined();
+    });
+  });
 });
