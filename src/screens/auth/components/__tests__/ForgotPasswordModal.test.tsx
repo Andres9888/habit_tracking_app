@@ -22,7 +22,8 @@ jest.mock('../../../../components/Modal', () => {
   const { View } = require('react-native');
   return {
     __esModule: true,
-    default: ({ children, visible }: any) => (visible ? <View>{children}</View> : null),
+    default: ({ children, visible }: any) =>
+      visible ? <View>{children}</View> : null,
   };
 });
 
@@ -41,8 +42,8 @@ describe('ForgotPasswordModal', () => {
 
       expect(getByText('Reset Password')).toBeTruthy();
       expect(getByPlaceholderText('Enter your email address')).toBeTruthy();
-      expect(getByText('SEND RESET EMAIL')).toBeTruthy();
-      expect(getByText('CANCEL')).toBeTruthy();
+      expect(getByText('Send reset email')).toBeTruthy();
+      expect(getByText('Cancel')).toBeTruthy();
     });
 
     it('does not render when not visible', () => {
@@ -59,7 +60,9 @@ describe('ForgotPasswordModal', () => {
       );
 
       expect(
-        getByText("Enter your email address and we'll send you a link to reset your password")
+        getByText(
+          "Enter your email address and we'll send you a link to reset your password"
+        )
       ).toBeTruthy();
     });
   });
@@ -92,9 +95,8 @@ describe('ForgotPasswordModal', () => {
     });
 
     it('clears error when user types', async () => {
-      const { getByPlaceholderText, getByLabelText, queryByText, getByText } = render(
-        <ForgotPasswordModal visible={true} onClose={mockOnClose} />
-      );
+      const { getByPlaceholderText, getByLabelText, queryByText, getByText } =
+        render(<ForgotPasswordModal visible={true} onClose={mockOnClose} />);
 
       // First, enter an invalid email to trigger format validation error
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -186,7 +188,9 @@ describe('ForgotPasswordModal', () => {
       );
 
       mockCreate.mockRejectedValueOnce({
-        errors: [{ code: 'form_identifier_not_found', message: 'User not found' }],
+        errors: [
+          { code: 'form_identifier_not_found', message: 'User not found' },
+        ],
       });
 
       const emailInput = getByPlaceholderText('Enter your email address');
@@ -196,7 +200,9 @@ describe('ForgotPasswordModal', () => {
       fireEvent.press(submitButton);
 
       await waitFor(() => {
-        expect(getByText('No account found with this email address')).toBeTruthy();
+        expect(
+          getByText('No account found with this email address')
+        ).toBeTruthy();
       });
     });
 
@@ -236,7 +242,9 @@ describe('ForgotPasswordModal', () => {
       fireEvent.press(submitButton);
 
       await waitFor(() => {
-        expect(getByText('Failed to send reset email. Please try again.')).toBeTruthy();
+        expect(
+          getByText('Failed to send reset email. Please try again.')
+        ).toBeTruthy();
       });
     });
   });

@@ -8,52 +8,52 @@ describe('FormInput', () => {
     it('renders correctly with required props', () => {
       const { getByPlaceholderText, getByText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
-      expect(getByText('EMAIL')).toBeTruthy();
+      expect(getByText('Email')).toBeTruthy();
       expect(getByPlaceholderText('Enter your email')).toBeTruthy();
     });
 
     it('renders with icon when provided', () => {
       const { getByLabelText } = render(
         <FormInput
-          label="EMAIL"
-          icon="📧"
-          value=""
+          label='Email'
+          icon='📧'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
-      expect(getByLabelText('EMAIL icon')).toBeTruthy();
+      expect(getByLabelText('Email icon')).toBeTruthy();
     });
 
     it('renders without icon when not provided', () => {
       const { queryByLabelText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
-      expect(queryByLabelText('EMAIL icon')).toBeNull();
+      expect(queryByLabelText('Email icon')).toBeNull();
     });
 
     it('displays error message when error prop is provided', () => {
       const errorMessage = 'Invalid email address';
       const { getByText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
           error={errorMessage}
         />
       );
@@ -64,10 +64,10 @@ describe('FormInput', () => {
     it('does not display error message when error prop is not provided', () => {
       const { queryByText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
@@ -82,10 +82,10 @@ describe('FormInput', () => {
       const mockOnChangeText = jest.fn();
       const { getByPlaceholderText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={mockOnChangeText}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
@@ -98,10 +98,10 @@ describe('FormInput', () => {
     it('displays the current value', () => {
       const { getByDisplayValue } = render(
         <FormInput
-          label="EMAIL"
-          value="test@example.com"
+          label='Email'
+          value='test@example.com'
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
@@ -111,12 +111,12 @@ describe('FormInput', () => {
     it('passes through TextInput props', () => {
       const { getByPlaceholderText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
-          autoCapitalize="none"
-          keyboardType="email-address"
+          placeholder='Enter your email'
+          autoCapitalize='none'
+          keyboardType='email-address'
         />
       );
 
@@ -132,10 +132,10 @@ describe('FormInput', () => {
       const mockOnFocus = jest.fn();
       const { getByPlaceholderText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
           onFocus={mockOnFocus}
         />
       );
@@ -150,10 +150,10 @@ describe('FormInput', () => {
       const mockOnBlur = jest.fn();
       const { getByPlaceholderText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
           onBlur={mockOnBlur}
         />
       );
@@ -170,27 +170,27 @@ describe('FormInput', () => {
     it('has proper accessibility labels', () => {
       const { getByLabelText } = render(
         <FormInput
-          label="EMAIL"
-          icon="📧"
-          value=""
+          label='Email'
+          icon='📧'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
-          accessibilityLabel="Email input"
+          placeholder='Enter your email'
+          accessibilityLabel='Email input'
         />
       );
 
       expect(getByLabelText('Email input')).toBeTruthy();
-      expect(getByLabelText('EMAIL icon')).toBeTruthy();
+      expect(getByLabelText('Email icon')).toBeTruthy();
     });
 
     it('error message has accessibility live region', () => {
       const { getByText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
-          error="Invalid email"
+          placeholder='Enter your email'
+          error='Invalid email'
         />
       );
 
@@ -204,10 +204,10 @@ describe('FormInput', () => {
     it('handles empty label gracefully', () => {
       const { getByPlaceholderText } = render(
         <FormInput
-          label=""
-          value=""
+          label=''
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
         />
       );
 
@@ -219,10 +219,10 @@ describe('FormInput', () => {
         'This is a very long error message that should still be displayed correctly without breaking the layout or causing any issues';
       const { getByText } = render(
         <FormInput
-          label="EMAIL"
-          value=""
+          label='Email'
+          value=''
           onChangeText={() => {}}
-          placeholder="Enter your email"
+          placeholder='Enter your email'
           error={longError}
         />
       );
@@ -233,11 +233,11 @@ describe('FormInput', () => {
     it('handles emoji icons correctly', () => {
       const { getByLabelText } = render(
         <FormInput
-          label="TEST"
-          icon="🔍"
-          value=""
+          label='TEST'
+          icon='🔍'
+          value=''
           onChangeText={() => {}}
-          placeholder="Search"
+          placeholder='Search'
         />
       );
 

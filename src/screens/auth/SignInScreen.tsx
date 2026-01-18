@@ -68,7 +68,7 @@ export default function SignInScreen() {
             autoComplete='email'
             editable={!isAnyLoading}
             keyboardType='email-address'
-            label='EMAIL'
+            label='Email'
             placeholder='Enter your email'
             value={emailAddress}
             onChangeText={setEmailAddress}
@@ -78,7 +78,7 @@ export default function SignInScreen() {
             secureTextEntry
             autoComplete='password'
             editable={!isAnyLoading}
-            label='PASSWORD'
+            label='Password'
             placeholder='Enter your password'
             value={password}
             onChangeText={setPassword}
@@ -87,8 +87,8 @@ export default function SignInScreen() {
           <SubmitButton
             disabled={!canSubmit || isAnyLoading}
             isLoading={isLoading}
-            label='SIGN IN'
-            loadingLabel='SIGNING IN...'
+            label='Sign in'
+            loadingLabel='Signing in...'
             onPress={handleSignIn}
           />
         </View>

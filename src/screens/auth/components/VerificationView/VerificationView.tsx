@@ -29,7 +29,7 @@ export function VerificationView({
         <View className='gap-6'>
           <FormInput
             keyboardType='number-pad'
-            label='VERIFICATION CODE'
+            label='Verification code'
             maxLength={6}
             placeholder='Enter 6-digit code'
             value={code}
@@ -39,8 +39,8 @@ export function VerificationView({
           <SubmitButton
             disabled={code.length !== 6}
             isLoading={isLoading}
-            label='VERIFY EMAIL'
-            loadingLabel='VERIFYING...'
+            label='Verify email'
+            loadingLabel='Verifying...'
             onPress={() => onVerify(code)}
           />
         </View>

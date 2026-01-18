@@ -80,7 +80,7 @@ export default function SignUpScreen() {
             autoComplete='email'
             editable={!isAnyLoading}
             keyboardType='email-address'
-            label='EMAIL'
+            label='Email'
             placeholder='Enter your email'
             value={emailAddress}
             onChangeText={setEmailAddress}
@@ -90,7 +90,7 @@ export default function SignUpScreen() {
             secureTextEntry
             autoComplete='password-new'
             editable={!isAnyLoading}
-            label='PASSWORD'
+            label='Password'
             placeholder='Create a password'
             value={password}
             onChangeText={setPassword}
@@ -99,8 +99,8 @@ export default function SignUpScreen() {
           <SubmitButton
             disabled={!emailAddress || !password || isAnyLoading}
             isLoading={isLoading}
-            label='CREATE ACCOUNT'
-            loadingLabel='CREATING ACCOUNT...'
+            label='Create account'
+            loadingLabel='Creating account...'
             onPress={handleSignUp}
           />
         </View>

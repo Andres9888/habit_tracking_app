@@ -13,8 +13,8 @@ export function PasswordResetForm({
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-[10px] font-medium tracking-[3px] text-stone-500'>
-          EMAIL ADDRESS
+        <Text className='text-sm font-medium text-stone-500'>
+          Email address
         </Text>
         <View className='relative'>
           <TextInput

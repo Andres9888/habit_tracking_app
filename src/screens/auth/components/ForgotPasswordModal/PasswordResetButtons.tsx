@@ -33,8 +33,8 @@ export function PasswordResetButtons({
         {isLoading ? (
           <ActivityIndicator color='#ffffff' size='small' />
         ) : (
-          <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
-            SEND RESET EMAIL
+          <Text className='text-[15px] font-semibold text-white'>
+            Send reset email
           </Text>
         )}
       </TouchableOpacity>
@@ -46,9 +46,7 @@ export function PasswordResetButtons({
         disabled={isLoading}
         onPress={onCancel}
       >
-        <Text className='text-[15px] font-semibold tracking-[3px] text-stone-900'>
-          CANCEL
-        </Text>
+        <Text className='text-[15px] font-semibold text-stone-900'>Cancel</Text>
       </TouchableOpacity>
     </View>
   );
