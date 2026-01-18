@@ -30,15 +30,15 @@ describe('SocialSignInButton', () => {
     });
 
     it('renders Google icon when not loading', () => {
-      const { getByText } = render(<SocialSignInButton {...defaultProps} />);
-      expect(getByText('🔵')).toBeTruthy();
+      const { getByTestId } = render(<SocialSignInButton {...defaultProps} />);
+      expect(getByTestId('google-logo')).toBeTruthy();
     });
 
     it('renders Apple icon when not loading', () => {
-      const { getByText } = render(
+      const { getByTestId } = render(
         <SocialSignInButton {...defaultProps} provider='apple' />
       );
-      expect(getByText('')).toBeTruthy();
+      expect(getByTestId('apple-logo')).toBeTruthy();
     });
   });
 
@@ -76,10 +76,10 @@ describe('SocialSignInButton', () => {
     });
 
     it('hides icon when loading', () => {
-      const { queryByText } = render(
+      const { queryByTestId } = render(
         <SocialSignInButton {...defaultProps} isLoading={true} />
       );
-      expect(queryByText('🔵')).toBeNull();
+      expect(queryByTestId('google-logo')).toBeNull();
     });
 
     it('renders loading spinner when loading', () => {

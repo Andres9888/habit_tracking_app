@@ -8,13 +8,14 @@ import Animated, {
   withTiming,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { AppleLogo } from '@/components/auth/logos/AppleLogo';
+import { GoogleLogo } from '@/components/auth/logos/GoogleLogo';
 import { SocialSignInButtonProps } from './types';
 
 const PROVIDER_CONFIG = {
   apple: {
     bgColor: 'bg-black',
     borderColor: 'border-black',
-    icon: '',
     label: 'Continue with Apple',
     spinnerColor: '#FFFFFF',
     textColor: 'text-white',
@@ -22,7 +23,6 @@ const PROVIDER_CONFIG = {
   google: {
     bgColor: 'bg-white',
     borderColor: 'border-stone-200',
-    icon: '🔵',
     label: 'Continue with Google',
     spinnerColor: '#44403c',
     textColor: 'text-stone-800',
@@ -89,11 +89,16 @@ export function SocialSignInButton({
       disabled={isDisabled}
       onPress={onPress}
     >
-      <View className='mr-2 h-5 w-5 items-center justify-center'>
+      <View
+        className='mr-2 h-5 w-5 items-center justify-center'
+        testID={isLoading ? 'social-button-spinner' : `${provider}-logo`}
+      >
         {isLoading ? (
           <LoadingSpinner color={config.spinnerColor} />
+        ) : provider === 'google' ? (
+          <GoogleLogo size={20} />
         ) : (
-          <Text className='text-lg'>{config.icon}</Text>
+          <AppleLogo size={20} color='#FFFFFF' />
         )}
       </View>
       <Text className={`text-[15px] font-semibold ${config.textColor}`}>
