@@ -83,7 +83,7 @@ export function SocialSignInButton({
       accessibilityLabel={config.label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-      className={`flex-row items-center justify-center rounded-3xl border py-4 ${config.borderColor} ${config.bgColor} ${
+      className={`flex-row items-center justify-center rounded-2xl border py-4 ${config.borderColor} ${config.bgColor} ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}
@@ -98,7 +98,7 @@ export function SocialSignInButton({
         ) : provider === 'google' ? (
           <GoogleLogo size={20} />
         ) : (
-          <AppleLogo size={20} color='#FFFFFF' />
+          <AppleLogo color='#FFFFFF' size={20} />
         )}
       </View>
       <Text className={`text-[15px] font-semibold ${config.textColor}`}>
