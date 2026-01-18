@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { FormInput } from '../FormInput';
 
@@ -196,6 +197,52 @@ describe('FormInput', () => {
 
       const errorText = getByText('Invalid email');
       expect(errorText.props.accessibilityLiveRegion).toBe('polite');
+    });
+  });
+
+  // Label Right Prop Tests
+  describe('Label Right Prop', () => {
+    it('renders labelRight element when provided', () => {
+      const { getByText } = render(
+        <FormInput
+          label='Password'
+          value=''
+          onChangeText={() => {}}
+          placeholder='Enter password'
+          labelRight={<Text>Forgot?</Text>}
+        />
+      );
+
+      expect(getByText('Forgot?')).toBeTruthy();
+    });
+
+    it('does not render labelRight when not provided', () => {
+      const { queryByText } = render(
+        <FormInput
+          label='Email'
+          value=''
+          onChangeText={() => {}}
+          placeholder='Enter your email'
+        />
+      );
+
+      expect(queryByText('Forgot?')).toBeNull();
+    });
+
+    it('label and labelRight are in the same row', () => {
+      const { getByText } = render(
+        <FormInput
+          label='Password'
+          value=''
+          onChangeText={() => {}}
+          placeholder='Enter password'
+          labelRight={<Text testID='forgot-link'>Forgot?</Text>}
+        />
+      );
+
+      // Both elements should be rendered
+      expect(getByText('Password')).toBeTruthy();
+      expect(getByText('Forgot?')).toBeTruthy();
     });
   });
 

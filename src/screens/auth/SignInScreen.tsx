@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AuthDivider,
   AuthError,
+  ForgotPasswordLink,
+  ForgotPasswordModal,
   FormInput,
   SocialSignInButton,
   SubmitButton,
@@ -12,6 +15,7 @@ import { useSignInFlow } from './hooks/useSignInFlow';
 
 export default function SignInScreen() {
   const insets = useSafeAreaInsets();
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const {
     emailAddress,
     setEmailAddress,
@@ -79,6 +83,9 @@ export default function SignInScreen() {
             autoComplete='password'
             editable={!isAnyLoading}
             label='Password'
+            labelRight={
+              <ForgotPasswordLink onPress={() => setShowForgotPassword(true)} />
+            }
             placeholder='Enter your password'
             value={password}
             onChangeText={setPassword}
@@ -93,6 +100,11 @@ export default function SignInScreen() {
           />
         </View>
       </View>
+
+      <ForgotPasswordModal
+        visible={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+      />
     </View>
   );
 }
