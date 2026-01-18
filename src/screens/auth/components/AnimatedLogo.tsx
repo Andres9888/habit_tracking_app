@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
   withTiming,
   Easing,
+  useReducedMotion,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Check } from 'lucide-react-native';
 
 /**
  * Props for the AnimatedLogo component
@@ -17,22 +20,30 @@ interface AnimatedLogoProps {
 }
 
 /**
- * AnimatedLogo - Breathing logo animation for auth screens
+ * AnimatedLogo - Breathing and floating logo animation for auth screens
  *
  * Features:
  * - Breathing animation (scale 1.0 → 1.05 → 1.0)
+ * - Floating animation (translateY 0 → -6 → 0)
  * - 3-second infinite animation loop with ease-in-out timing
- * - Slate-700 background with shadow
- * - Checkmark icon centered
- * - Full accessibility support
+ * - Emerald gradient background (#059669 → #10b981 → #34d399)
+ * - SVG checkmark icon centered
+ * - Full accessibility support with reduceMotion
  *
  * @example
  * <AnimatedLogo size={80} />
  */
 export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
   const scale = useSharedValue(1);
+  const translateY = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    // Skip animations if user prefers reduced motion
+    if (reduceMotion) {
+      return;
+    }
+
     // Start the breathing animation (3s duration, infinite loop)
     scale.value = withRepeat(
       withTiming(1.05, {
@@ -42,39 +53,62 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
       -1, // Infinite repeats
       true // Reverse animation (yoyo effect)
     );
-  }, []);
+
+    // Start the floating animation (slightly offset from breathing)
+    translateY.value = withRepeat(
+      withTiming(-6, {
+        duration: 2000,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1, // Infinite repeats
+      true // Reverse animation (yoyo effect)
+    );
+  }, [reduceMotion, scale, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: scale.value }],
+      transform: [{ scale: scale.value }, { translateY: translateY.value }],
     };
   });
 
+  const iconSize = size * 0.5;
+
   return (
     <View
-      className="mb-4"
-      accessible={true}
-      accessibilityLabel="Habit Tracker Logo"
-      accessibilityRole="image"
+      accessible
+      accessibilityLabel='Daily Habits Logo'
+      accessibilityRole='image'
+      className='mb-4'
     >
       <Animated.View
-        className="items-center justify-center rounded-3xl shadow-lg"
         style={[
           animatedStyle,
           {
-            width: size,
-            height: size,
             borderRadius: 24,
-            backgroundColor: '#44403c', // stone-700
+            elevation: 8,
+            height: size,
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
+            shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.3,
             shadowRadius: 8,
-            elevation: 8,
+            width: size,
           },
         ]}
       >
-        <Text className="text-5xl">✓</Text>
+        <LinearGradient
+          colors={['#059669', '#10b981', '#34d399']}
+          end={{ x: 1, y: 1 }}
+          start={{ x: 0, y: 0 }}
+          style={{
+            alignItems: 'center',
+            borderRadius: 24,
+            height: size,
+            justifyContent: 'center',
+            width: size,
+          }}
+        >
+          <Check color='white' size={iconSize} strokeWidth={3} />
+        </LinearGradient>
       </Animated.View>
     </View>
   );

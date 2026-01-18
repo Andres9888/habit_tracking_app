@@ -1,21 +1,25 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import * as Reanimated from 'react-native-reanimated';
 import { AnimatedLogo } from '../AnimatedLogo';
+
+// Mock expo-linear-gradient
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+// Mock lucide-react-native
+jest.mock('lucide-react-native', () => ({
+  Check: () => null,
+}));
 
 describe('AnimatedLogo', () => {
   describe('Rendering', () => {
     it('renders correctly with default props', () => {
-      const { getByText, getByLabelText } = render(<AnimatedLogo />);
+      const { getByLabelText } = render(<AnimatedLogo />);
 
-      // Should render the checkmark icon
-      expect(getByText('✓')).toBeTruthy();
       // Should have accessibility label
-      expect(getByLabelText('Habit Tracker Logo')).toBeTruthy();
-    });
-
-    it('renders the checkmark icon', () => {
-      const { getByText } = render(<AnimatedLogo />);
-      expect(getByText('✓')).toBeTruthy();
+      expect(getByLabelText('Daily Habits Logo')).toBeTruthy();
     });
 
     it('renders with custom size', () => {
@@ -36,7 +40,7 @@ describe('AnimatedLogo', () => {
   describe('Accessibility', () => {
     it('has correct accessibility label', () => {
       const { getByLabelText } = render(<AnimatedLogo />);
-      expect(getByLabelText('Habit Tracker Logo')).toBeTruthy();
+      expect(getByLabelText('Daily Habits Logo')).toBeTruthy();
     });
 
     it('has accessibility role of image', () => {
@@ -52,10 +56,10 @@ describe('AnimatedLogo', () => {
   });
 
   describe('Styling', () => {
-    it('has stone-700 background color', () => {
+    it('renders with emerald gradient background', () => {
       const { toJSON } = render(<AnimatedLogo />);
       const tree = toJSON();
-      // The component should render with stone-700 background (#44403c)
+      // The component should render with emerald gradient (#059669 → #10b981 → #34d399)
       expect(tree).toBeTruthy();
     });
 
@@ -92,8 +96,8 @@ describe('AnimatedLogo', () => {
       unmount();
     });
 
-    it('applies animated style', () => {
-      // The animated style with transform scale should be applied
+    it('applies animated style with breathing and floating', () => {
+      // The animated style with transform scale and translateY should be applied
       // In mocked environment, this verifies the hook setup is correct
       const { toJSON } = render(<AnimatedLogo />);
       expect(toJSON()).toBeTruthy();
@@ -114,6 +118,43 @@ describe('AnimatedLogo', () => {
     it('renders with very large size (200)', () => {
       const { toJSON } = render(<AnimatedLogo size={200} />);
       expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('Reduced Motion', () => {
+    let useReducedMotionSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      useReducedMotionSpy = jest.spyOn(Reanimated, 'useReducedMotion');
+    });
+
+    afterEach(() => {
+      useReducedMotionSpy.mockRestore();
+    });
+
+    it('checks useReducedMotion hook', () => {
+      useReducedMotionSpy.mockReturnValue(false);
+      render(<AnimatedLogo />);
+      expect(useReducedMotionSpy).toHaveBeenCalled();
+    });
+
+    it('renders static logo when reduce motion is enabled', () => {
+      useReducedMotionSpy.mockReturnValue(true);
+      const { toJSON } = render(<AnimatedLogo />);
+      // Component should still render but without animations
+      expect(toJSON()).toBeTruthy();
+    });
+
+    it('respects system reduce motion preference', () => {
+      // First render with animations enabled
+      useReducedMotionSpy.mockReturnValue(false);
+      const { rerender, toJSON: toJSON1 } = render(<AnimatedLogo />);
+      expect(toJSON1()).toBeTruthy();
+
+      // Then with animations disabled
+      useReducedMotionSpy.mockReturnValue(true);
+      rerender(<AnimatedLogo />);
+      expect(toJSON1()).toBeTruthy();
     });
   });
 });

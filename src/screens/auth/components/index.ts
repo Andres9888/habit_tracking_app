@@ -1,9 +1,14 @@
 export { AnimatedLogo } from './AnimatedLogo';
 export { AuthDivider } from './AuthDivider';
 export { AuthError } from './AuthError';
+export { BackButton } from './BackButton';
 export { ForgotPasswordModal } from './ForgotPasswordModal';
 export { FormInput } from './FormInput';
+export { LegalFooter } from './LegalFooter';
 export { PasswordInput } from './PasswordInput';
+export { SignInLink } from './SignInLink';
+export { SignUpLink } from './SignUpLink';
+export { SocialProofBadge } from './SocialProofBadge';
 export { SocialSignInButton } from './SocialSignInButton';
 export { SubmitButton } from './SubmitButton';
 export { SuccessOverlay } from './SuccessOverlay';
