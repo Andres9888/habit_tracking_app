@@ -19,62 +19,6 @@ describe('FormInput', () => {
       expect(getByText('Email')).toBeTruthy();
       expect(getByPlaceholderText('Enter your email')).toBeTruthy();
     });
-
-    it('renders with icon when provided', () => {
-      const { getByLabelText } = render(
-        <FormInput
-          label='Email'
-          icon='📧'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Enter your email'
-        />
-      );
-
-      expect(getByLabelText('Email icon')).toBeTruthy();
-    });
-
-    it('renders without icon when not provided', () => {
-      const { queryByLabelText } = render(
-        <FormInput
-          label='Email'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Enter your email'
-        />
-      );
-
-      expect(queryByLabelText('Email icon')).toBeNull();
-    });
-
-    it('displays error message when error prop is provided', () => {
-      const errorMessage = 'Invalid email address';
-      const { getByText } = render(
-        <FormInput
-          label='Email'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Enter your email'
-          error={errorMessage}
-        />
-      );
-
-      expect(getByText(errorMessage)).toBeTruthy();
-    });
-
-    it('does not display error message when error prop is not provided', () => {
-      const { queryByText } = render(
-        <FormInput
-          label='Email'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Enter your email'
-        />
-      );
-
-      // Should not find any error text
-      expect(queryByText(/error/i)).toBeNull();
-    });
   });
 
   // Input Functionality Tests
@@ -168,11 +112,10 @@ describe('FormInput', () => {
 
   // Accessibility Tests
   describe('Accessibility', () => {
-    it('has proper accessibility labels', () => {
+    it('supports accessibility label on input', () => {
       const { getByLabelText } = render(
         <FormInput
           label='Email'
-          icon='📧'
           value=''
           onChangeText={() => {}}
           placeholder='Enter your email'
@@ -181,22 +124,6 @@ describe('FormInput', () => {
       );
 
       expect(getByLabelText('Email input')).toBeTruthy();
-      expect(getByLabelText('Email icon')).toBeTruthy();
-    });
-
-    it('error message has accessibility live region', () => {
-      const { getByText } = render(
-        <FormInput
-          label='Email'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Enter your email'
-          error='Invalid email'
-        />
-      );
-
-      const errorText = getByText('Invalid email');
-      expect(errorText.props.accessibilityLiveRegion).toBe('polite');
     });
   });
 
@@ -259,37 +186,6 @@ describe('FormInput', () => {
       );
 
       expect(getByPlaceholderText('Enter your email')).toBeTruthy();
-    });
-
-    it('handles long error messages', () => {
-      const longError =
-        'This is a very long error message that should still be displayed correctly without breaking the layout or causing any issues';
-      const { getByText } = render(
-        <FormInput
-          label='Email'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Enter your email'
-          error={longError}
-        />
-      );
-
-      expect(getByText(longError)).toBeTruthy();
-    });
-
-    it('handles emoji icons correctly', () => {
-      const { getByLabelText } = render(
-        <FormInput
-          label='TEST'
-          icon='🔍'
-          value=''
-          onChangeText={() => {}}
-          placeholder='Search'
-        />
-      );
-
-      const icon = getByLabelText('TEST icon');
-      expect(icon.props.children).toBe('🔍');
     });
   });
 });

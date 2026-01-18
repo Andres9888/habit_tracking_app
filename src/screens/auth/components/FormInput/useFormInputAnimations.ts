@@ -16,7 +16,7 @@ const STONE_50_BG = 'rgba(250, 250, 249, 0.5)';
 // White for focused background
 const WHITE_BG = '#ffffff';
 
-export function usePasswordInputAnimations() {
+export function useFormInputAnimations() {
   const [isFocused, setIsFocused] = useState(false);
   const focusProgress = useSharedValue(0);
 
@@ -49,7 +49,7 @@ export function usePasswordInputAnimations() {
     ),
 
     elevation: focusProgress.value * 2,
-    // Subtle emerald shadow on focus
+    // Subtle shadow on focus
     shadowColor: EMERALD_500,
     shadowOffset: { height: 2, width: 0 },
     shadowOpacity: focusProgress.value * 0.15,

@@ -28,7 +28,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
       <View className='gap-2'>
         <Text className='text-sm font-medium text-stone-500'>Password</Text>
         <Animated.View
-          className='relative flex-row items-center rounded-3xl border border-stone-200 bg-white'
+          className='relative flex-row items-center rounded-3xl border'
           style={[animatedStyle, errorStyle]}
         >
           <View className='pl-5'>
