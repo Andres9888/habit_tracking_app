@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Performance
-- **Agent:** refactor-performance-security-testing
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
+- **Agent:** Performance
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/Performance
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 

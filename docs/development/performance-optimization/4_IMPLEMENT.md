@@ -26,9 +26,7 @@ Implement ONE performance fix from `/Users/andres/Code/habit_tracking_app/docs/L
 
 ## Task
 
-- [x] **Implement one PENDING fix (or skip if none)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md. If the file doesn't exist OR contains no items with status exactly `PENDING`, mark this task complete without changes. Otherwise, find an item with status exactly `PENDING`, implement the fix, log to /Users/andres/Code/habit_tracking_app/docs/PERF_LOG_Performance_2026-01-20.md, and mark as IMPLEMENTED in /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md.
-
-  **Completed 2026-01-20:** The only item with status exactly `PENDING` was SEC-008 (voiceNotes Mutations ownership validation). Upon inspection of `convex/voiceNotesMutations.ts`, the fix was already implemented in the codebase (authentication and ownership checks present at lines 69-81 and 118-130). Updated SEC-008 status to `IMPLEMENTED` in the plan file. Created performance log file documenting Loop 00001 completion status: 7 performance items IMPLEMENTED, 7 WON'T DO, 7 PENDING - MANUAL REVIEW; 8 security items IMPLEMENTED (including SEC-008 correction).
+- [ ] **Implement one PENDING fix (or skip if none)**: Read /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md. If the file doesn't exist OR contains no items with status exactly `PENDING`, mark this task complete without changes. Otherwise, find an item with status exactly `PENDING`, implement the fix, log to /Users/andres/Code/habit_tracking_app/docs/PERF_LOG_Performance_2026-01-20.md, and mark as IMPLEMENTED in /Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md.
 
 ## Implementation Checklist
 
