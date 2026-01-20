@@ -2,11 +2,11 @@
 
 ## Summary
 
-- **Total Candidates:** 20 (18 original + 1 from Tactic 2 + 1 from Tactic 3)
+- **Total Candidates:** 21 (18 original + 2 from Tactic 2 + 1 from Tactic 3)
 - **IMPLEMENTED:** 7
 - **PENDING (auto-implement):** 0
 - **PENDING - MANUAL REVIEW:** 7 (includes #19 from Tactic 2)
-- **WON'T DO:** 6
+- **WON'T DO:** 7
 
 ## Status Matrix
 
@@ -30,6 +30,9 @@
 | 16  | Context Provider Expansion                  | HIGH   | LOW       | WON'T DO                |
 | 17  | Large Hook - useRescueTrigger               | MEDIUM | LOW       | WON'T DO                |
 | 18  | Large Hook - useDraftStorage                | MEDIUM | LOW       | WON'T DO                |
+| 19  | DraggableHabit Inline Style Optimization    | MEDIUM | HIGH      | PENDING - MANUAL REVIEW |
+| 20  | DraggableHabit Legacy Animated Migration    | LOW    | HIGH      | IMPLEMENTED             |
+| 21  | EmojiPicker EmojiItem Inline Style Opt.     | LOW    | LOW       | WON'T DO - Low impact   |
 
 ---
 
@@ -1693,6 +1696,143 @@ Tests that share setup or mocking infrastructure:
 
 ---
 
-_Evaluated: 2026-01-08_
-_Agent: refactor-performance-security-testing_
+## 21. EmojiPicker EmojiItem Inline Style Optimization - Evaluated 2026-01-20 10:00
+
+**Source:** Tactic 2: Inline Style Object Audit - Finding 4
+**File:** `src/components/EmojiPicker/components/EmojiItem.tsx`
+**Line(s):** 32-57
+
+### Current Code
+
+```typescript
+// Lines 32-57: Inline styles in Pressable and Animated.View
+<Pressable
+  style={{
+    aspectRatio: 1,
+    padding: 2,
+    width: `${100 / EMOJIS_PER_ROW}%`,
+  }}
+  onPress={onPress}
+  onPressIn={handlePressIn}
+  onPressOut={handlePressOut}
+>
+  <Animated.View
+    style={[
+      {
+        alignItems: 'center',
+        backgroundColor: isSelected ? '#f5f5f4' : '#fafaf9',
+        borderColor: isSelected ? '#10b981' : 'transparent',
+        borderRadius: 12,
+        borderWidth: isSelected ? 2 : 0,
+        flex: 1,
+        justifyContent: 'center',
+        minHeight: 44,
+        minWidth: 44,
+      },
+      {
+        transform: [{ scale: scaleAnim }],
+      },
+    ]}
+  >
+    <Text style={{ fontSize: 28 }}>{emoji}</Text>
+  </Animated.View>
+</Pressable>
+```
+
+### Proposed Fix
+
+```typescript
+import { StyleSheet, useMemo } from 'react';
+
+// Module-level static styles
+const styles = StyleSheet.create({
+  pressable: {
+    aspectRatio: 1,
+    padding: 2,
+    width: `${100 / EMOJIS_PER_ROW}%`,
+  },
+  emojiContainer: {
+    alignItems: 'center',
+    borderRadius: 12,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 44,
+    minWidth: 44,
+  },
+  emojiContainerSelected: {
+    backgroundColor: '#f5f5f4',
+    borderColor: '#10b981',
+    borderWidth: 2,
+  },
+  emojiContainerUnselected: {
+    backgroundColor: '#fafaf9',
+    borderColor: 'transparent',
+    borderWidth: 0,
+  },
+  emojiText: {
+    fontSize: 28,
+  },
+});
+
+// Inside component:
+const containerStyle = useMemo(
+  () => [
+    styles.emojiContainer,
+    isSelected ? styles.emojiContainerSelected : styles.emojiContainerUnselected,
+    { transform: [{ scale: scaleAnim }] },
+  ],
+  [isSelected, scaleAnim]
+);
+
+// JSX:
+<Pressable
+  style={styles.pressable}
+  // ... props
+>
+  <Animated.View style={containerStyle}>
+    <Text style={styles.emojiText}>{emoji}</Text>
+  </Animated.View>
+</Pressable>
+```
+
+### Assessment
+
+- **Complexity:** LOW - This is a mechanical refactoring that moves inline styles to StyleSheet.create() and uses useMemo for conditional styles. The component is self-contained (67 LOC) and the change has no external dependencies.
+- **Gain:** LOW - While the finding correctly identifies that inline styles defeat memoization, the actual impact is mitigated by several factors:
+  1. **React.memo works on props comparison**, not style object reference - The `EmojiItem` component already uses `memo()` and correctly memoizes its callbacks with `useCallback`. Style object recreation happens _inside_ the component, not as a prop, so memo() still prevents unnecessary re-renders when parent props haven't changed.
+  2. **FlatList virtualization** - `EmojiGrid` uses FlatList with `windowSize={5}`, `initialNumToRender={10}`, and `maxToRenderPerBatch={10}`, so only ~20-30 items are rendered at a time, not 100+.
+  3. **Row-based rendering** - Items are rendered in rows (EMOJIS_PER_ROW), further reducing the number of component instances.
+  4. **useNativeDriver: true** - Animations already run on native thread.
+
+- **Dependencies:** None - change is self-contained
+
+### Implementation Notes
+
+1. **Original Finding Accuracy:** The Tactic 2 finding referenced `src/components/EmojiPicker/EmojiPicker.tsx:67-100` which no longer exists in its original form. The component has been refactored into a modular structure with separate files. The `EmojiItem` is now in `components/EmojiItem.tsx`.
+
+2. **Verification:** After reviewing the actual code:
+   - The component is only 67 lines
+   - It's properly memoized with `React.memo`
+   - Callbacks are properly memoized with `useCallback`
+   - The inline styles are a minor code smell but don't cause the "100+ Animated.Value refs" issue mentioned in the original finding - each item does have its own ref, but this is intentional for per-item scale animation
+
+3. **Risk/Reward Assessment:**
+   - The fix is simple and low-risk
+   - However, the expected performance gain is minimal since React.memo already prevents re-renders when props don't change
+   - The main benefit would be code consistency and marginally reduced GC pressure
+
+### Status: WON'T DO - Low impact
+
+The EmojiPicker component has already been well-refactored with proper modular structure, React.memo, useCallback, and FlatList virtualization. The inline style objects are a minor code smell but don't cause significant performance issues given the existing optimizations. The effort to fix this is better spent on higher-impact items like the DraggableHabit inline styles (#19) which is used in the main habit list.
+
+---
+
+| #   | Candidate                                       | Risk | Benefit | Status                |
+| --- | ----------------------------------------------- | ---- | ------- | --------------------- |
+| 21  | EmojiPicker EmojiItem Inline Style Optimization | LOW  | LOW     | WON'T DO - Low impact |
+
+---
+
+_Evaluated: 2026-01-20_
+_Agent: Performance_
 _Loop: 00001_
