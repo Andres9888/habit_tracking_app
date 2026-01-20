@@ -797,3 +797,220 @@
   ```
 
 - **Status:** EXECUTED
+
+---
+
+## Tactic 4: Convex Query Subscription Optimization - Executed 2026-01-20 15:45
+
+### Finding 1: Duplicate api.habits.list Subscriptions Across Components
+
+- **Category:** Query Duplication
+- **Files Affected:** 12 files subscribing to same `api.habits.list` endpoint
+- **Pattern Found:** Multiple components independently subscribing to the same query, creating redundant real-time WebSocket connections
+- **Locations:**
+  - `src/features/habits/hooks/useHabitsListState.ts:22` - Main habits list
+  - `src/features/habits/hooks/useHabitData.ts:6` - Habit data hook (DUPLICATE)
+  - `src/components/StatsNotesModal/HabitStats/useHabitStats.ts:13` - Stats modal
+  - `src/components/StatsNotesModal/useStatsOverviewData.ts:7` - Stats overview
+  - `src/components/StatsNotesModal/NotesList/useNotesList.ts:30` - Notes list
+  - `src/components/StatsNotesModal/NoteEditor/useNoteEditor.ts:41` - Note editor
+  - `src/components/DebugHabitStrength.tsx:12` - Debug component
+  - `src/components/InitializeHabitStrength/InitializeHabitStrength.tsx:24` - Initialization
+  - Plus 4 more components
+- **Context:** Convex queries are real-time subscriptions. Each `useQuery(api.habits.list)` call creates a separate subscription that receives updates independently. When the habits list changes, all 12 subscriptions receive the same data, triggering 12 separate re-render cascades.
+- **Performance Impact:** MEDIUM - Network overhead from duplicate subscriptions, and 12x re-render propagation on any habits change.
+- **Proposed Fix:** Create a single `HabitsProvider` context that subscribes once to `api.habits.list` and provides the data to all consumers, or use React Query/TanStack Query for automatic deduplication.
+
+---
+
+### Finding 2: Duplicate api.settings.get Subscriptions
+
+- **Category:** Query Duplication
+- **Files Affected:** 5 files subscribing to `api.settings.get`
+- **Pattern Found:** Settings query duplicated across multiple hooks
+- **Locations:**
+  - `src/features/habits/hooks/useHabitsListState.ts:26`
+  - `src/features/habits/hooks/useHabitsSettings.ts:17`
+  - `src/features/habits/hooks/useHabitData.ts:9`
+  - `src/components/SettingsDialog/SettingsDialog.hooks.ts:8`
+  - `src/components/SettingsModal/SettingsModal.hooks.ts:37`
+- **Context:** Settings are fetched in 5 separate subscriptions. Changes to any setting trigger updates to all 5 subscriptions independently.
+- **Performance Impact:** LOW-MEDIUM - Settings change less frequently than habits, but still creates unnecessary subscription overhead.
+- **Proposed Fix:** Create a `SettingsProvider` context with a single subscription, or consolidate into the existing habits feature hooks.
+
+---
+
+### Finding 3: Overlapping getTracking Queries with Different Date Ranges
+
+- **Category:** Query Overlap
+- **File:** `src/components/StatsNotesModal/useStatsOverviewData.ts:19-21`
+- **Pattern Found:** Two separate tracking queries with overlapping date ranges
+- **Code Context:**
+  ```typescript
+  // Line 19: Fetches 7 days of tracking
+  const tracking = useQuery(api.habits.getTracking, { dates: last7Days }) ?? [];
+  // Line 21: Fetches today AGAIN (already included in last7Days)
+  const todayTracking = useQuery(api.habits.getTracking, { dates: [todayString] }) ?? [];
+  ```
+- **Context:** The `todayString` is already included in `last7Days` array, making the second query redundant. Both queries create separate subscriptions for overlapping data.
+- **Performance Impact:** LOW - Only affects the stats modal, but the pattern indicates architectural confusion.
+- **Proposed Fix:** Filter `todayTracking` from the existing `tracking` array instead of making a separate query:
+  ```typescript
+  const todayTracking = useMemo(() =>
+    tracking.filter(t => t.date === todayString),
+    [tracking, todayString]
+  );
+  ```
+
+---
+
+### Finding 4: Duplicate Tracking Queries with Different Date Ranges in HabitStats
+
+- **Category:** Query Overlap
+- **File:** `src/components/StatsNotesModal/HabitStats/useHabitStats.ts:36-39`
+- **Pattern Found:** Two tracking queries - 30 days and 7 days - with the 7-day data being a subset of 30-day
+- **Code Context:**
+  ```typescript
+  const tracking30 = useQuery(api.habits.getTracking, { dates: last30Days }) ?? [];
+  const tracking7 = useQuery(api.habits.getTracking, { dates: last7Days }) ?? [];
+  ```
+- **Context:** The `last7Days` data is already present in `last30Days`. Two separate subscriptions are maintained for overlapping data.
+- **Performance Impact:** LOW - Only in stats component, but inefficient.
+- **Proposed Fix:** Fetch only `last30Days` and derive `last7Days` tracking client-side.
+
+---
+
+### Finding 5: N+1 Pattern in getWeeklyInsights - Loop-Based Tracking Fetch
+
+- **Category:** N+1 Query
+- **File:** `convex/analyticsWeekly.ts:31-38`
+- **Pattern Found:** Fetches tracking data in a loop - one query per habit
+- **Code Context:**
+  ```typescript
+  const trackings: any[] = [];
+  for (const habit of activeHabits) {
+    const habitTrackings = await ctx.db
+      .query('tracking')
+      .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
+      .collect();
+    trackings.push(...habitTrackings);
+  }
+  ```
+- **Context:** For each active habit, a separate database query is executed. With 10 habits, this becomes 10 sequential database queries. The `Promise.all` pattern is then used on top of this for streak calculations, compounding the issue.
+- **Performance Impact:** MEDIUM-HIGH - Query time scales linearly with number of habits. Each query adds database round-trip latency.
+- **Proposed Fix:** Use a single bulk query with `.filter()` on the tracking table, or create a composite index that allows fetching all tracking records for multiple habits in one query.
+
+---
+
+### Finding 6: N+1 Pattern in getStreaksForHabit - Called Once Per Habit
+
+- **Category:** N+1 Query
+- **File:** `convex/analytics/streakHelpers.ts:20-23`
+- **Pattern Found:** `getStreaksForHabit` makes a database query per habit, called in loops via `Promise.all`
+- **Calling Locations:**
+  - `convex/analyticsOverview.ts:30-44` - Called via `Promise.all` for all active habits
+  - `convex/analyticsWeekly.ts:41-52` - Called via `Promise.all` for all active habits
+- **Code Context:**
+  ```typescript
+  // In analyticsOverview.ts
+  const habitsWithStrength = await Promise.all(
+    activeHabits.map(async (habit) => {
+      const streaks = await getStreaksForHabit(ctx, habit._id, 'anonymous');
+      // ...
+    })
+  );
+  ```
+- **Context:** Each `getStreaksForHabit` call executes its own `ctx.db.query('tracking')`. For N habits, this results in N concurrent database queries.
+- **Performance Impact:** MEDIUM - `Promise.all` parallelizes but still creates N database operations.
+- **Proposed Fix:** Prefetch all tracking data in bulk and pass to a synchronous streak calculation function.
+
+---
+
+### Finding 7: AnalyticsScreen - 5 Concurrent Subscriptions
+
+- **Category:** Query Proliferation
+- **File:** `src/screens/AnalyticsScreen/AnalyticsScreen.hooks.ts:23-27`
+- **Pattern Found:** Five separate useQuery calls creating 5 real-time subscriptions
+- **Code Context:**
+  ```typescript
+  const overviewStats = useQuery(api.analytics.getOverviewStats);
+  const strengthDistribution = useQuery(api.analytics.getStrengthDistribution);
+  const trendData = useQuery(api.analytics.get30DayTrend);
+  const complianceData = useQuery(api.analytics.getComplianceData);
+  const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
+  ```
+- **Context:** The analytics screen creates 5 independent real-time subscriptions. Each subscription maintains its own WebSocket connection and triggers independent re-renders when data changes.
+- **Performance Impact:** MEDIUM - Network overhead from 5 concurrent WebSocket subscriptions. All 5 queries likely depend on the same underlying data (habits + tracking).
+- **Proposed Fix:**
+  1. Consider a single `api.analytics.getDashboardData` query that returns all analytics in one subscription
+  2. Use `skip` parameter to only subscribe when the screen is visible
+  3. Consider whether all 5 need to be real-time - batch analytics could be cached with staleness tolerance
+
+---
+
+### Finding 8: Per-Habit-Card Completion Status Queries
+
+- **Category:** Query Per Item
+- **File:** `src/components/HabitCard/useHabitCard.ts:42-46`
+- **Pattern Found:** Each HabitCard independently queries its completion status
+- **Code Context:**
+  ```typescript
+  const today = new Date().toISOString().split('T')[0];
+  const completedQuery = useQuery(api.tracking.getCompletionStatus, {
+    date: today,
+    habitId: id,
+  });
+  ```
+- **Context:** If there are 10 habit cards rendered, this creates 10 separate subscriptions for completion status. Each card asks "is habit X completed today?" independently.
+- **Performance Impact:** MEDIUM - Scales with number of habits. Each habit card creates its own subscription.
+- **Proposed Fix:** The parent component (HabitsList) already fetches tracking data via `useHabitsTracking`. Pass completion status down as props rather than having each card query independently.
+
+---
+
+### Finding 9: Habits Reorder Mutation - Sequential N+1 Updates
+
+- **Category:** N+1 Mutation
+- **File:** `convex/habits/reorder.ts:22-34`
+- **Pattern Found:** Sequential get+patch operations in a loop
+- **Code Context:**
+  ```typescript
+  for (let i = 0; i < args.habitIds.length; i++) {
+    const habitId = args.habitIds[i];
+    const habit = await ctx.db.get(habitId);  // N reads
+    if (habit) {
+      await ctx.db.patch(habitId, { order: i });  // N writes
+    }
+  }
+  ```
+- **Context:** Reordering habits executes 2N database operations sequentially (N reads + N writes). For 10 habits, this is 20 sequential database operations.
+- **Performance Impact:** LOW-MEDIUM - Reordering is infrequent, but causes noticeable delay when dragging habits.
+- **Proposed Fix:** Remove the unnecessary `get` call (validation can be done differently), or batch the updates. The `get` appears unnecessary since we already have the habitId and patch will fail gracefully if the habit doesn't exist.
+
+---
+
+### Tactic Summary
+
+- **Issues Found:** 9 significant Convex query optimization opportunities
+- **Files Affected:** 20+ files across frontend and backend
+- **Query Duplication Issues:**
+  - `api.habits.list` - 12 duplicate subscriptions
+  - `api.settings.get` - 5 duplicate subscriptions
+  - `api.habits.getTracking` - Overlapping date range queries
+- **N+1 Query Patterns:**
+  - `convex/analyticsWeekly.ts` - Loop-based tracking fetch
+  - `convex/analytics/streakHelpers.ts` - Per-habit streak calculation
+  - `convex/habits/reorder.ts` - Sequential mutation pattern
+- **Query Proliferation:**
+  - Analytics screen - 5 concurrent subscriptions
+  - HabitCard - Per-card completion queries
+- **Architectural Recommendations:**
+  1. **Create Context Providers** for frequently-accessed queries (habits, settings, tracking)
+  2. **Consolidate Backend Queries** - Combine related data into single endpoints
+  3. **Batch Operations** - Replace loops with bulk operations
+  4. **Prefetch and Pass** - Parent components should fetch and pass data down
+  5. **Consider Caching** - Analytics data may not need real-time updates
+- **Highest Priority Fixes:**
+  1. **api.habits.list duplication** (12 subscriptions) - Create HabitsProvider
+  2. **N+1 in analyticsWeekly** - Bulk fetch tracking data
+  3. **Per-HabitCard queries** - Pass completion status as props
+- **Status:** EXECUTED
