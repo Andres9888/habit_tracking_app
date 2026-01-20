@@ -25,6 +25,7 @@ export function renderHabitsListHeader({
     canNavigateForward,
     onNextWeek,
     onPreviousWeek,
+    onUpgradeIntent,
   } = props;
   return (
     <HabitsListHeader
@@ -35,6 +36,7 @@ export function renderHabitsListHeader({
       habits={list.habits}
       headerOpacity={state.headerOpacity}
       headerTranslateY={state.headerTranslateY}
+      isPremiumUser={list.isPremiumUser}
       justCreatedHabitId={state.justCreatedHabitId}
       openSettings={modals.openSettings}
       openTemplatesScreen={modals.openTemplatesScreen}
@@ -47,6 +49,7 @@ export function renderHabitsListHeader({
       onNextWeek={onNextWeek}
       onOpenSortSheet={state.handleOpenSortSheet}
       onPreviousWeek={onPreviousWeek}
+      onUpgradePress={onUpgradeIntent}
     />
   );
 }

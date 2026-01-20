@@ -20,17 +20,20 @@ interface PurchasesProviderProps {
 export function PurchasesProvider({ children }: PurchasesProviderProps) {
   const { isSignedIn, user } = useUser();
 
+  // Initialize RevenueCat on mount (works for anonymous users too)
+  useEffect(() => {
+    initializePurchases().catch((error) => {
+      console.warn('[PurchasesProvider] Failed to initialize:', error);
+    });
+  }, []);
+
+  // Identify user when they sign in
   useEffect(() => {
     if (isSignedIn && user?.id) {
-      // Initialize with Clerk user ID for cross-device sync
-      initializePurchases(user.id)
-        .then(() => identifyUser(user.id))
-        .catch((error) => {
-          // Log but don't crash - purchases are optional
-          console.warn('[PurchasesProvider] Failed to initialize:', error);
-        });
+      identifyUser(user.id).catch((error) => {
+        console.warn('[PurchasesProvider] Failed to identify user:', error);
+      });
     } else if (!isSignedIn) {
-      // Clear user on logout
       logoutPurchases().catch((error) => {
         console.warn('[PurchasesProvider] Failed to logout:', error);
       });

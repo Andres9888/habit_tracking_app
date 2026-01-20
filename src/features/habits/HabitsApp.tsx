@@ -7,6 +7,7 @@ import { HabitsModals } from './components/HabitsModals';
 import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
+import { RevenueCatPaywall } from '../../components/RevenueCatPaywall';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useNotificationResponse } from '../../hooks/useNotificationResponse';
@@ -14,11 +15,7 @@ import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
-  const {
-    openCreateHabitScreen,
-    openTemplatesScreen,
-    openActivationModalById,
-  } = modals;
+  const { openCreateHabitScreen, openActivationModalById } = modals;
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
@@ -37,16 +34,18 @@ export function HabitsApp() {
   useNotificationResponse(notificationHandlers);
 
   const {
-    upgradePromptVisible,
-    handleUpgradeIntent,
-    handleUpgradeDismiss,
-    handleUpgradeConfirm,
     handleCreateHabitRequest,
+    handlePaywallClose,
+    handlePaywallSuccess,
+    handleUpgradeConfirm,
+    handleUpgradeDismiss,
+    handleUpgradeIntent,
+    paywallVisible,
+    upgradePromptVisible,
   } = useHabitsAppHandlers({
     hasReachedHabitLimit: list.hasReachedHabitLimit,
     isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen,
-    openTemplatesScreen,
     triggerSelection,
     triggerWarning,
   });
@@ -90,6 +89,14 @@ export function HabitsApp() {
           visible={list.archiveUndoVisible}
           onDismiss={list.dismissArchiveUndo}
           onUndo={list.handleArchiveUndo}
+        />
+
+        {/* RevenueCat Paywall */}
+        <RevenueCatPaywall
+          visible={paywallVisible}
+          onClose={handlePaywallClose}
+          onPurchaseSuccess={handlePaywallSuccess}
+          onRestoreSuccess={handlePaywallSuccess}
         />
       </View>
     </GestureHandlerRootView>

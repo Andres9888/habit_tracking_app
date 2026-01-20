@@ -9,6 +9,7 @@ export interface HabitsListHeaderProps {
   weekDateStrings: string[];
   weekDates: Date[];
   canNavigateForward: boolean;
+  isPremiumUser: boolean;
   justCreatedHabitId: string | null;
   reduceMotionPreference: boolean;
   showWeekCompletionBar: boolean;
@@ -22,6 +23,7 @@ export interface HabitsListHeaderProps {
   onNextWeek: () => void;
   onPreviousWeek: () => void;
   onOpenSortSheet: () => void;
+  onUpgradePress: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;
 }

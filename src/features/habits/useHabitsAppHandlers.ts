@@ -4,7 +4,6 @@ import { logInteraction } from '../../lib/analytics/interactions';
 
 interface UseHabitsAppHandlersParams {
   openCreateHabitScreen: () => void;
-  openTemplatesScreen: () => void;
   isPremiumUser: boolean;
   hasReachedHabitLimit: boolean;
   triggerSelection: () => void;
@@ -13,13 +12,13 @@ interface UseHabitsAppHandlersParams {
 
 export function useHabitsAppHandlers({
   openCreateHabitScreen,
-  openTemplatesScreen,
   isPremiumUser,
   hasReachedHabitLimit,
   triggerSelection,
   triggerWarning,
 }: UseHabitsAppHandlersParams) {
   const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
+  const [paywallVisible, setPaywallVisible] = useState(false);
 
   const handleUpgradeIntent = useCallback(() => {
     logInteraction('premium_home_cta_view', { source: 'home_hero' });
@@ -35,8 +34,17 @@ export function useHabitsAppHandlers({
     logInteraction('premium_upgrade_cta', { source: 'home_prompt' });
     triggerSelection();
     setUpgradePromptVisible(false);
-    openTemplatesScreen();
-  }, [openTemplatesScreen, triggerSelection]);
+    setPaywallVisible(true);
+  }, [triggerSelection]);
+
+  const handlePaywallClose = useCallback(() => {
+    setPaywallVisible(false);
+  }, []);
+
+  const handlePaywallSuccess = useCallback(() => {
+    logInteraction('premium_purchase_success', { source: 'home_prompt' });
+    setPaywallVisible(false);
+  }, []);
 
   const handleCreateHabitRequest = useCallback(() => {
     if (!isPremiumUser && hasReachedHabitLimit) {
@@ -47,7 +55,7 @@ export function useHabitsAppHandlers({
         [
           { style: 'cancel', text: 'Keep 3 Free' },
           {
-            onPress: () => console.log('Navigate to RevenueCat paywall'),
+            onPress: () => setPaywallVisible(true),
             text: 'Unlock Unlimited',
           },
         ]
@@ -64,9 +72,12 @@ export function useHabitsAppHandlers({
 
   return {
     handleCreateHabitRequest,
+    handlePaywallClose,
+    handlePaywallSuccess,
     handleUpgradeConfirm,
     handleUpgradeDismiss,
     handleUpgradeIntent,
+    paywallVisible,
     upgradePromptVisible,
   };
 }

@@ -7,14 +7,17 @@ import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
 import { AddHabitButton } from './AddHabitButton';
 import { IconButtonGroup } from './IconButtonGroup';
+import { ProBadge } from './ProBadge';
 
 export function HabitsHeader({
   completedToday = 0,
   forceShow = false,
+  isPremiumUser = false,
   openCreateHabitScreen,
   openSettings,
   openSortSheet,
   openTemplatesScreen,
+  onUpgradePress,
   reduceMotion = false,
   showCompletionSummary = true,
   totalHabits = 0,
@@ -47,12 +50,17 @@ export function HabitsHeader({
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <AddHabitButton
-          animatedStyle={animations.addButtonAnimatedStyle}
-          onPress={handlers.handleAddHabitPress}
-          onPressIn={handlers.handleAddHabitPressIn}
-          onPressOut={handlers.handleAddHabitPressOut}
-        />
+        <View className='flex-row items-center gap-3'>
+          <AddHabitButton
+            animatedStyle={animations.addButtonAnimatedStyle}
+            onPress={handlers.handleAddHabitPress}
+            onPressIn={handlers.handleAddHabitPressIn}
+            onPressOut={handlers.handleAddHabitPressOut}
+          />
+          {!isPremiumUser && onUpgradePress && (
+            <ProBadge onPress={onUpgradePress} />
+          )}
+        </View>
         <IconButtonGroup
           settingsAnimatedStyle={animations.settingsButtonAnimatedStyle}
           showBadge={showBadge}

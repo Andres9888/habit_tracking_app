@@ -25,7 +25,24 @@ let isInitialized = false;
  * Check if running in Expo Go (where native stores are unavailable)
  */
 function isExpoGo(): boolean {
-  return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+  // In dev builds, executionEnvironment may not be set correctly
+  // Check for the presence of the native module instead
+  const hasNativeModule = !!Purchases;
+  const envCheck = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+  console.log('[Purchases] Environment check:', {
+    executionEnvironment: Constants.executionEnvironment,
+    storeClient: ExecutionEnvironment.StoreClient,
+    envCheck,
+    hasNativeModule,
+  });
+
+  // If we have the native module, we're NOT in Expo Go
+  if (hasNativeModule) {
+    return false;
+  }
+
+  return envCheck;
 }
 
 /**
@@ -46,12 +63,8 @@ export async function initializePurchases(userId?: string): Promise<void> {
     return;
   }
 
-  // Skip in Expo Go - native stores not available
-  if (isExpoGo()) {
-    console.log('[Purchases] Expo Go detected - native stores unavailable, skipping');
-    console.log('[Purchases] Use a development build to test purchases');
-    return;
-  }
+  // Log environment for debugging
+  console.log('[Purchases] Environment:', Constants.executionEnvironment);
 
   const apiKey = Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.android;
 

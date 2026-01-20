@@ -29,11 +29,13 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
     getHabitStatus,
   } = props;
   const {
+    isPremiumUser,
     onAddHabitPress,
     onDayPress,
     onNextWeek,
     onPreviousWeek,
     onOpenSortSheet,
+    onUpgradePress,
     openSettings,
     openTemplatesScreen,
   } = props;
@@ -67,6 +69,7 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
         <HabitsHeader
           completedToday={completedToday}
           forceShow={justCreatedHabitId !== null}
+          isPremiumUser={isPremiumUser}
           openCreateHabitScreen={onAddHabitPress}
           openSettings={openSettings}
           openSortSheet={onOpenSortSheet}
@@ -74,6 +77,7 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
           reduceMotion={reduceMotionPreference}
           showCompletionSummary={showWeekCompletionBar}
           totalHabits={totalHabits}
+          onUpgradePress={onUpgradePress}
         />
       </Animated.View>
       {shouldShowTimeline && (
