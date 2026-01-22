@@ -74,6 +74,12 @@ export interface SuggestionChipsProps {
   selectedIndex: number | null;
   /** Callback when a chip is selected */
   onSelect: (index: number, chip: SuggestionChip) => void;
+  /**
+   * Whether user is idle (triggers breathing animation)
+   * Animation creates gentle "alive" feeling when user is reading/thinking
+   * @default false
+   */
+  isIdle?: boolean;
 }
 
 /**
