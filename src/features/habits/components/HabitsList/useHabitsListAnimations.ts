@@ -3,7 +3,7 @@
  * Handles staggered entrance animations for header, calendar, and habit rows
  */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 interface UseHabitsListAnimationsOptions {
@@ -31,6 +31,23 @@ export function useHabitsListAnimations(
     setShouldTriggerHabitEntrance,
   } = options;
 
+  const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+      if (animationRef.current) {
+        animationRef.current.stop();
+      }
+    };
+  }, []);
+
   const handleSuccessTransitionComplete = useCallback(() => {
     setIsInSuccessCelebration(false);
     const config = {
@@ -46,7 +63,12 @@ export function useHabitsListAnimations(
     habitRowOpacity.setValue(0);
     habitRowTranslateY.setValue(20);
 
-    Animated.stagger(100, [
+    // Clear any existing timeout
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
+
+    animationRef.current = Animated.stagger(100, [
       Animated.parallel([
         Animated.timing(headerOpacity, { ...config, toValue: 1 }),
         Animated.timing(headerTranslateY, { ...config, toValue: 0 }),
@@ -59,8 +81,13 @@ export function useHabitsListAnimations(
         Animated.timing(habitRowOpacity, { ...config, toValue: 1 }),
         Animated.timing(habitRowTranslateY, { ...config, toValue: 0 }),
       ]),
-    ]).start(() => {
-      setTimeout(() => setShouldTriggerHabitEntrance(true), 200);
+    ]);
+
+    animationRef.current.start(() => {
+      animationTimeoutRef.current = setTimeout(
+        () => setShouldTriggerHabitEntrance(true),
+        200
+      );
     });
   }, [
     headerOpacity,

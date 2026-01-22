@@ -3,7 +3,7 @@
  * Processes queued submissions when network is restored.
  */
 
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo, useRef } from 'react';
 import { useOnlineCallback } from '../../contexts/NetworkStatusContext';
 import { useQueueProcessor } from './useQueueProcessor';
 import {
@@ -21,6 +21,8 @@ export function OfflineQueueProcessor({
   onStateChange,
   children,
 }: OfflineQueueProcessorProps) {
+  const onlineTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const callbacks = useMemo(
     () => ({
       onItemFailed,
@@ -49,9 +51,22 @@ export function OfflineQueueProcessor({
   // Auto-process when coming back online
   useOnlineCallback(() => {
     if (autoProcess && hasQueuedItems) {
-      setTimeout(() => void processQueue(), 1000);
+      // Clear any existing timeout to prevent duplicates
+      if (onlineTimeoutRef.current) {
+        clearTimeout(onlineTimeoutRef.current);
+      }
+      onlineTimeoutRef.current = setTimeout(() => void processQueue(), 1000);
     }
   });
+
+  // Cleanup online timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (onlineTimeoutRef.current) {
+        clearTimeout(onlineTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Periodic check for items ready to retry
   useEffect(() => {
