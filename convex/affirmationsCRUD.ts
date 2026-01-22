@@ -11,6 +11,10 @@ import {
   MAX_TEXT_LENGTH,
   affirmationTypeValidator,
 } from './affirmations/index';
+import {
+  validateShortText,
+  requireValid,
+} from './lib/inputValidation';
 
 /**
  * Create a new affirmation for a habit
@@ -28,13 +32,11 @@ export const create = mutation({
       throw new Error('Unauthenticated: Must be logged in to create affirmations');
     }
 
-    const text = args.text.trim();
+    // SEC-003: Input validation - text
+    const textResult = validateShortText(args.text, MAX_TEXT_LENGTH, 'Affirmation');
+    const validatedText = requireValid(textResult, args.text);
+    const text = validatedText?.trim();
     if (!text) throw new Error('Affirmation text is required');
-    if (text.length > MAX_TEXT_LENGTH) {
-      throw new Error(
-        `Affirmation cannot exceed ${MAX_TEXT_LENGTH} characters`
-      );
-    }
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
@@ -102,14 +104,12 @@ export const update = mutation({
       updatedAt: number;
     } = { updatedAt: Date.now() };
 
+    // SEC-003: Input validation - text
     if (args.text !== undefined) {
-      const text = args.text.trim();
+      const textResult = validateShortText(args.text, MAX_TEXT_LENGTH, 'Affirmation');
+      const validatedText = requireValid(textResult, args.text);
+      const text = validatedText?.trim();
       if (!text) throw new Error('Affirmation text is required');
-      if (text.length > MAX_TEXT_LENGTH) {
-        throw new Error(
-          `Affirmation cannot exceed ${MAX_TEXT_LENGTH} characters`
-        );
-      }
       updates.text = text;
     }
 

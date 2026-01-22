@@ -1,6 +1,11 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { DATE_FORMAT_REGEX, MAX_NOTE_BODY_LENGTH } from './notes';
+import {
+  validateLongText,
+  requireValid,
+  containsDangerousPatterns,
+} from './lib/inputValidation';
 
 /**
  * Notes mutations - create, update, remove
@@ -30,11 +35,11 @@ export const create = mutation({
       }
     }
 
-    // Validate body length (max 1000 chars as per AC4)
-    if (args.body.length > MAX_NOTE_BODY_LENGTH) {
-      throw new Error(
-        `Note body cannot exceed ${MAX_NOTE_BODY_LENGTH} characters`
-      );
+    // SEC-003: Input validation - body
+    const bodyResult = validateLongText(args.body, MAX_NOTE_BODY_LENGTH, 'Note body');
+    const body = requireValid(bodyResult, args.body);
+    if (!body || body.trim() === '') {
+      throw new Error('Note body cannot be empty');
     }
 
     // Validate date format as YYYY-MM-DD
@@ -45,7 +50,7 @@ export const create = mutation({
 
     const now = Date.now();
     return await ctx.db.insert('notes', {
-      body: args.body,
+      body: body.trim(),
       createdAt: now,
       date: args.date,
       habitId: args.habitId,
@@ -68,11 +73,11 @@ export const update = mutation({
       throw new Error('Unauthenticated: Must be logged in to update notes');
     }
 
-    // Validate body length (max 1000 chars as per AC4)
-    if (args.body.length > MAX_NOTE_BODY_LENGTH) {
-      throw new Error(
-        `Note body cannot exceed ${MAX_NOTE_BODY_LENGTH} characters`
-      );
+    // SEC-003: Input validation - body
+    const bodyResult = validateLongText(args.body, MAX_NOTE_BODY_LENGTH, 'Note body');
+    const body = requireValid(bodyResult, args.body);
+    if (!body || body.trim() === '') {
+      throw new Error('Note body cannot be empty');
     }
 
     const note = await ctx.db.get(args.noteId);
@@ -92,7 +97,7 @@ export const update = mutation({
     }
 
     await ctx.db.patch(args.noteId, {
-      body: args.body,
+      body: body.trim(),
       updatedAt: Date.now(),
     });
 

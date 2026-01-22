@@ -5,6 +5,13 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { voiceNoteObjectValidator } from './voiceNotes/index';
+import {
+  validateUrl,
+  validateShortText,
+  requireValid,
+  ALLOWED_STORAGE_DOMAINS,
+  MAX_LABEL_LENGTH,
+} from './lib/inputValidation';
 
 /**
  * Create a new voice note
@@ -18,16 +25,38 @@ export const create = mutation({
     label: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create voice notes');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to add voice notes to this habit');
+    }
 
     if (args.duration <= 0) throw new Error('Duration must be positive');
     if (args.duration > 300)
       throw new Error('Voice note cannot exceed 5 minutes');
-    if (args.label && args.label.length > 100)
-      throw new Error('Label cannot exceed 100 characters');
-    if (!args.audioUrl || args.audioUrl.trim() === '')
+
+    // SEC-003: Input validation - label
+    const labelResult = validateShortText(args.label, MAX_LABEL_LENGTH, 'Label');
+    const label = requireValid(labelResult, args.label);
+
+    // SEC-003: Input validation - audioUrl (critical security check)
+    const urlResult = validateUrl(args.audioUrl, {
+      requireHttps: true,
+      allowedDomains: ALLOWED_STORAGE_DOMAINS,
+      fieldName: 'Audio URL',
+    });
+    const audioUrl = requireValid(urlResult, args.audioUrl);
+    if (!audioUrl) {
       throw new Error('Audio URL is required');
+    }
 
     const now = Date.now();
 
@@ -45,12 +74,13 @@ export const create = mutation({
     }
 
     return await ctx.db.insert('voiceNotes', {
-      audioUrl: args.audioUrl,
+      audioUrl,
       createdAt: now,
       duration: args.duration,
       habitId: args.habitId,
       isDay1: args.isDay1 ?? false,
-      label: args.label,
+      label,
+      userId: identity.subject,
     });
   },
   returns: v.id('voiceNotes'),
@@ -66,7 +96,7 @@ export const update = mutation({
     voiceNoteId: v.id('voiceNotes'),
   },
   handler: async (ctx, args) => {
-    // SEC-008: Authentication check
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to update voice notes');
@@ -75,13 +105,17 @@ export const update = mutation({
     const voiceNote = await ctx.db.get(args.voiceNoteId);
     if (!voiceNote) throw new Error('Voice note not found');
 
-    // SEC-008: Ownership validation
+    // SEC-001: Ownership validation
     if (voiceNote.userId !== identity.subject) {
       throw new Error('Not authorized to update this voice note');
     }
 
-    if (args.label && args.label.length > 100)
-      throw new Error('Label cannot exceed 100 characters');
+    // SEC-003: Input validation - label
+    let label: string | undefined;
+    if (args.label !== undefined) {
+      const labelResult = validateShortText(args.label, MAX_LABEL_LENGTH, 'Label');
+      label = requireValid(labelResult, args.label);
+    }
 
     const now = Date.now();
 
@@ -99,7 +133,7 @@ export const update = mutation({
     }
 
     await ctx.db.patch(args.voiceNoteId, {
-      ...(args.label !== undefined && { label: args.label }),
+      ...(args.label !== undefined && { label }),
       ...(args.isDay1 !== undefined && { isDay1: args.isDay1 }),
       updatedAt: now,
     });
@@ -115,7 +149,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { voiceNoteId: v.id('voiceNotes') },
   handler: async (ctx, args) => {
-    // SEC-008: Authentication check
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to delete voice notes');
@@ -124,7 +158,7 @@ export const remove = mutation({
     const voiceNote = await ctx.db.get(args.voiceNoteId);
     if (!voiceNote) throw new Error('Voice note not found');
 
-    // SEC-008: Ownership validation
+    // SEC-001: Ownership validation
     if (voiceNote.userId !== identity.subject) {
       throw new Error('Not authorized to delete this voice note');
     }

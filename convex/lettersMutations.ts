@@ -5,6 +5,11 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { MAX_CONTENT_LENGTH, MAX_TITLE_LENGTH } from './letters/index';
+import {
+  validateLongText,
+  validateShortText,
+  requireValid,
+} from './lib/inputValidation';
 
 /**
  * Create a new letter to self
@@ -31,14 +36,17 @@ export const create = mutation({
       throw new Error('Not authorized to add letters to this habit');
     }
 
-    if (!args.content || args.content.trim() === '')
+    // SEC-003: Input validation - content
+    const contentResult = validateLongText(args.content, MAX_CONTENT_LENGTH, 'Letter content');
+    const content = requireValid(contentResult, args.content);
+    if (!content || content.trim() === '') {
       throw new Error('Letter content is required');
-    if (args.content.length > MAX_CONTENT_LENGTH)
-      throw new Error(
-        `Letter content cannot exceed ${MAX_CONTENT_LENGTH} characters`
-      );
-    if (args.title && args.title.length > MAX_TITLE_LENGTH)
-      throw new Error(`Title cannot exceed ${MAX_TITLE_LENGTH} characters`);
+    }
+
+    // SEC-003: Input validation - title
+    const titleResult = validateShortText(args.title, MAX_TITLE_LENGTH, 'Title');
+    const title = requireValid(titleResult, args.title);
+
     if (args.unlockDays <= 0) throw new Error('Unlock days must be positive');
     if (args.unlockDays > 365)
       throw new Error('Unlock duration cannot exceed 1 year');
@@ -47,11 +55,11 @@ export const create = mutation({
     const unlockAt = now + args.unlockDays * 24 * 60 * 60 * 1000;
 
     return await ctx.db.insert('letters', {
-      content: args.content.trim(),
+      content: content.trim(),
       createdAt: now,
       habitId: args.habitId,
       isRead: false,
-      title: args.title?.trim(),
+      title: title?.trim(),
       unlockAt,
       userId: identity.subject,
     });
@@ -125,25 +133,24 @@ export const update = mutation({
     if (letter.unlockAt <= now)
       throw new Error('Cannot edit an unlocked letter');
 
+    const updates: Record<string, unknown> = { updatedAt: now };
+
+    // SEC-003: Input validation - content
     if (args.content !== undefined) {
-      if (!args.content || args.content.trim() === '')
+      const contentResult = validateLongText(args.content, MAX_CONTENT_LENGTH, 'Letter content');
+      const content = requireValid(contentResult, args.content);
+      if (!content || content.trim() === '') {
         throw new Error('Letter content is required');
-      if (args.content.length > MAX_CONTENT_LENGTH)
-        throw new Error(
-          `Letter content cannot exceed ${MAX_CONTENT_LENGTH} characters`
-        );
+      }
+      updates.content = content.trim();
     }
 
-    if (
-      args.title !== undefined &&
-      args.title &&
-      args.title.length > MAX_TITLE_LENGTH
-    )
-      throw new Error(`Title cannot exceed ${MAX_TITLE_LENGTH} characters`);
-
-    const updates: Record<string, unknown> = { updatedAt: now };
-    if (args.content !== undefined) updates.content = args.content.trim();
-    if (args.title !== undefined) updates.title = args.title?.trim();
+    // SEC-003: Input validation - title
+    if (args.title !== undefined) {
+      const titleResult = validateShortText(args.title, MAX_TITLE_LENGTH, 'Title');
+      const title = requireValid(titleResult, args.title);
+      updates.title = title?.trim();
+    }
 
     await ctx.db.patch(args.letterId, updates);
     return args.letterId;

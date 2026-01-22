@@ -5,6 +5,11 @@ import {
   emojiValidator,
   MAX_REFLECTION_NOTE_LENGTH,
 } from './reflections';
+import {
+  validateLongText,
+  validateEmoji,
+  requireValid,
+} from './lib/inputValidation';
 
 /**
  * Reflections mutations
@@ -30,12 +35,13 @@ export const upsert = mutation({
       throw new Error('Invalid date format; expected YYYY-MM-DD');
     }
 
-    // Validate note length
-    if (args.note && args.note.length > MAX_REFLECTION_NOTE_LENGTH) {
-      throw new Error(
-        `Reflection note cannot exceed ${MAX_REFLECTION_NOTE_LENGTH} characters`
-      );
-    }
+    // SEC-003: Input validation - emoji
+    const emojiResult = validateEmoji(args.emoji, 'Emoji');
+    const emoji = requireValid(emojiResult, args.emoji);
+
+    // SEC-003: Input validation - note
+    const noteResult = validateLongText(args.note, MAX_REFLECTION_NOTE_LENGTH, 'Reflection note');
+    const note = requireValid(noteResult, args.note);
 
     // Check if habit exists
     const habit = await ctx.db.get(args.habitId);
@@ -60,8 +66,8 @@ export const upsert = mutation({
 
     if (existingReflection) {
       await ctx.db.patch(existingReflection._id, {
-        emoji: args.emoji,
-        note: args.note,
+        emoji,
+        note,
         updatedAt: now,
       });
       return existingReflection._id;
@@ -70,9 +76,9 @@ export const upsert = mutation({
     return await ctx.db.insert('reflections', {
       createdAt: now,
       date: args.date,
-      emoji: args.emoji,
+      emoji,
       habitId: args.habitId,
-      note: args.note,
+      note,
       updatedAt: now,
       userId: identity.subject,
     });

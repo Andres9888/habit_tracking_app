@@ -10,6 +10,10 @@ import {
   MAX_IMAGES_PER_HABIT,
   MAX_CAPTION_LENGTH,
 } from './visionBoardImages/index';
+import {
+  validateShortText,
+  requireValid,
+} from './lib/inputValidation';
 
 /**
  * Create a new vision board image from storage ID
@@ -22,9 +26,20 @@ export const create = mutation({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create vision board images');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
+    }
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to add images to this habit');
     }
 
     const fileMetadata = await ctx.db.system.get(args.storageId);
@@ -32,9 +47,9 @@ export const create = mutation({
       throw new Error('Storage file not found');
     }
 
-    if (args.caption && args.caption.length > MAX_CAPTION_LENGTH) {
-      throw new Error(`Caption cannot exceed ${MAX_CAPTION_LENGTH} characters`);
-    }
+    // SEC-003: Input validation - caption
+    const captionResult = validateShortText(args.caption, MAX_CAPTION_LENGTH, 'Caption');
+    const caption = requireValid(captionResult, args.caption);
 
     const existingImages = await ctx.db
       .query('visionBoardImages')
@@ -65,11 +80,12 @@ export const create = mutation({
     }
 
     return ctx.db.insert('visionBoardImages', {
-      caption: args.caption?.trim(),
+      caption: caption?.trim(),
       createdAt: Date.now(),
       habitId: args.habitId,
       order,
       storageId: args.storageId,
+      userId: identity.subject,
     });
   },
   returns: v.id('visionBoardImages'),
