@@ -41,6 +41,10 @@ import { getCompactMode, setCompactMode } from './src/lib/settingsStorage';
 import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
 import { HapticTest } from './src/components/HapticTest';
+import { initSentry, SentryErrorBoundary } from './src/lib/sentry';
+
+// Initialize Sentry as early as possible
+initSentry();
 
 type HabitStatus = 'done' | 'missed' | 'planned';
 
@@ -274,7 +278,7 @@ function HabitsApp() {
         contentContainerStyle={{
           backgroundColor: theme.background,
           alignItems: 'center',
-          minHeight: '100%'
+          minHeight: '100%',
         }}
       >
         <View className='mx-auto w-full max-w-[375px] px-4 pb-24 pt-4'>
@@ -506,29 +510,36 @@ export default function App() {
       console.log('ℹ️ Running in development mode without authentication');
     }
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <Providers>
-            <HabitsApp />
-          </Providers>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
+      <SentryErrorBoundary>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <Providers>
+              <HabitsApp />
+            </Providers>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </SentryErrorBoundary>
     );
   }
 
   // GestureHandlerRootView must be outermost for gesture handling to work correctly
   // SafeAreaProvider provides safe area insets to all components including Clerk's UI
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
-          <ClerkLoaded>
-            <Providers>
-              <HabitsApp />
-            </Providers>
-          </ClerkLoaded>
-        </ClerkProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <SentryErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <ClerkProvider
+            publishableKey={clerkPublishableKey}
+            tokenCache={tokenCache}
+          >
+            <ClerkLoaded>
+              <Providers>
+                <HabitsApp />
+              </Providers>
+            </ClerkLoaded>
+          </ClerkProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </SentryErrorBoundary>
   );
 }
