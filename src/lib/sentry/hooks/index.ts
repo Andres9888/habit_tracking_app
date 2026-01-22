@@ -7,3 +7,4 @@ export { useSentryTransaction } from './useSentryTransaction';
 export { useSentryScreen } from './useSentryScreen';
 export { useSentryHabitActions } from './useSentryHabitActions';
 export { useSentryError } from './useSentryError';
+export { useSentryBreadcrumbs } from './useSentryBreadcrumbs';

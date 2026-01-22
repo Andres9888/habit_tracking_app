@@ -27,6 +27,7 @@ export {
   useSentryScreen,
   useSentryHabitActions,
   useSentryError,
+  useSentryBreadcrumbs,
 } from './hooks/index';
 
 // Performance Integration
@@ -38,6 +39,23 @@ export {
   reportPerformanceSummary,
   createSentryIssueHandler,
 } from './performanceIntegration/index';
+
+// Error Tracking (comprehensive error capture with classification)
+export {
+  trackError,
+  trackMutationError,
+  trackQueryError,
+  trackSubscriptionError,
+  configureErrorTracker,
+  createTrackedMutation,
+  useErrorTracking,
+  useTrackedMutation,
+  useQueryErrorTracking,
+  useComponentErrorHandler,
+  useAsyncErrorTracking,
+  CATEGORY_SEVERITY_MAP,
+  SILENT_ERROR_CATEGORIES,
+} from './errorTracking/index';
 
 // Types
 export type {
@@ -51,3 +69,13 @@ export type {
   SpanOperation,
   SpanData,
 } from './types';
+
+// Error Tracking Types
+export type {
+  ErrorContext,
+  ErrorSeverity,
+  ErrorTrackerConfig,
+  MutationErrorContext,
+  QueryErrorContext,
+  TrackedError,
+} from './errorTracking/types';
