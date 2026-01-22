@@ -1,5 +1,8 @@
 /**
  * Voice Notes Query API
+ *
+ * SEC-004: All queries require authentication and verify ownership
+ * to prevent unauthorized access to voice note URLs
  */
 
 import { v } from 'convex/values';
@@ -8,10 +11,26 @@ import { voiceNoteObjectValidator } from './voiceNotes/index';
 
 /**
  * Get all voice notes for a specific habit
+ * SEC-004: Requires authentication and habit ownership verification
  */
 export const listByHabit = query({
   args: { habitId: v.id('habits'), limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view voice notes');
+    }
+
+    // SEC-004: Ownership verification via habit
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view voice notes for this habit');
+    }
+
     const q = ctx.db
       .query('voiceNotes')
       .withIndex('by_habit', (query) => query.eq('habitId', args.habitId))
@@ -23,10 +42,26 @@ export const listByHabit = query({
 
 /**
  * Get the Day 1 voice note for a habit (featured in Rescue Mode)
+ * SEC-004: Requires authentication and habit ownership verification
  */
 export const getDay1Note = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view voice notes');
+    }
+
+    // SEC-004: Ownership verification via habit
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view voice notes for this habit');
+    }
+
     const notes = await ctx.db
       .query('voiceNotes')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -49,19 +84,52 @@ export const getDay1Note = query({
 
 /**
  * Get a single voice note by ID
+ * SEC-004: Requires authentication and ownership verification
  */
 export const get = query({
   args: { voiceNoteId: v.id('voiceNotes') },
-  handler: async (ctx, args) => await ctx.db.get(args.voiceNoteId),
+  handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view voice notes');
+    }
+
+    const voiceNote = await ctx.db.get(args.voiceNoteId);
+    if (!voiceNote) return null;
+
+    // SEC-004: Ownership verification
+    if (voiceNote.userId !== identity.subject) {
+      throw new Error('Not authorized to view this voice note');
+    }
+
+    return voiceNote;
+  },
   returns: v.union(v.null(), voiceNoteObjectValidator),
 });
 
 /**
  * Count voice notes for a habit (for premium gating)
+ * SEC-004: Requires authentication and habit ownership verification
  */
 export const countByHabit = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view voice notes');
+    }
+
+    // SEC-004: Ownership verification via habit
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view voice notes for this habit');
+    }
+
     const notes = await ctx.db
       .query('voiceNotes')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))

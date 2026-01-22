@@ -2,6 +2,9 @@
  * Vision Board Images queries
  *
  * Read operations for vision board images.
+ *
+ * SEC-004: All queries require authentication and verify ownership
+ * to prevent unauthorized access to image URLs
  */
 
 import { v } from 'convex/values';
@@ -14,10 +17,26 @@ import {
 
 /**
  * Get all images for a specific habit, ordered by display order
+ * SEC-004: Requires authentication and habit ownership verification
  */
 export const listByHabit = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view images');
+    }
+
+    // SEC-004: Ownership verification via habit
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view images for this habit');
+    }
+
     const images = await ctx.db
       .query('visionBoardImages')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -31,12 +50,25 @@ export const listByHabit = query({
 
 /**
  * Get a single image by ID with resolved URL
+ * SEC-004: Requires authentication and ownership verification
  */
 export const get = query({
   args: { imageId: v.id('visionBoardImages') },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view images');
+    }
+
     const image = await ctx.db.get(args.imageId);
     if (!image) return null;
+
+    // SEC-004: Ownership verification
+    if (image.userId !== identity.subject) {
+      throw new Error('Not authorized to view this image');
+    }
+
     return resolveImageUrl(ctx, image);
   },
   returns: v.union(v.null(), visionBoardImageObjectValidator),
@@ -44,10 +76,26 @@ export const get = query({
 
 /**
  * Count images for a habit (for limit checks)
+ * SEC-004: Requires authentication and habit ownership verification
  */
 export const countByHabit = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view images');
+    }
+
+    // SEC-004: Ownership verification via habit
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view images for this habit');
+    }
+
     const images = await ctx.db
       .query('visionBoardImages')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -59,16 +107,23 @@ export const countByHabit = query({
 
 /**
  * Get images by user (for user dashboard/profile) with resolved URLs
+ * SEC-004: Requires authentication and ensures user can only access their own images
  */
 export const listByUser = query({
   args: {
     limit: v.optional(v.number()),
-    userId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SEC-004: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view images');
+    }
+
+    // SEC-004: Only allow users to access their own images
     const query = ctx.db
       .query('visionBoardImages')
-      .withIndex('by_user', (q) => q.eq('userId', args.userId))
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .order('desc');
 
     const images = args.limit
