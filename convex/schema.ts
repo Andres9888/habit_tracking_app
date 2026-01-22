@@ -1,6 +1,19 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
+// Subscription status type for type safety
+const subscriptionStatus = v.union(
+  v.literal('active'),
+  v.literal('trialing'),
+  v.literal('past_due'),
+  v.literal('cancelled'),
+  v.literal('expired'),
+  v.literal('unknown')
+);
+
+// Plan type for subscription products
+const planType = v.union(v.literal('monthly'), v.literal('yearly'));
+
 const applicationTables = {
   // Affirmations - Positive self-talk cards (Steele, 1988; Hatzigeorgiadis, 2011)
   // Story T13: Affirmations with scheduled delivery (premium)
@@ -295,6 +308,40 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_habit_and_date', ['habitId', 'date'])
     .index('by_user_and_date', ['userId', 'date']),
+
+  // Subscriptions - RevenueCat webhook-driven subscription state
+  // SEC-002: Server-side premium validation
+  // This is the source of truth for subscription status, synced via webhooks
+  subscriptions: defineTable({
+    // User identification
+    clerkId: v.string(), // Primary identifier - matches Clerk user ID
+    revenueCatId: v.optional(v.string()), // RevenueCat's internal user ID
+
+    // Subscription state
+    status: subscriptionStatus,
+
+    // Product info
+    productId: v.optional(v.string()), // e.g., "premium_monthly_699"
+    planType: v.optional(planType),
+
+    // Important dates (timestamps in ms)
+    startedAt: v.number(),
+    expiresAt: v.optional(v.number()),
+    trialEndsAt: v.optional(v.number()),
+    cancelledAt: v.optional(v.number()),
+
+    // Billing status
+    hasBillingIssue: v.optional(v.boolean()),
+
+    // Audit fields
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    lastWebhookEvent: v.optional(v.string()),
+    lastWebhookAt: v.optional(v.number()),
+  })
+    .index('by_clerk_id', ['clerkId'])
+    .index('by_revenuecat_id', ['revenueCatId'])
+    .index('by_status', ['status']),
 
   // Template Library (Phase 3 Feature)
   templates: defineTable({
