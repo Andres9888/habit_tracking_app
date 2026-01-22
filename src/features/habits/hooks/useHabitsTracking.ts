@@ -1,17 +1,24 @@
-import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { useQuery } from 'convex/react';
 
 import { api } from '../../../../convex/_generated/api';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { computeCurrentStreakFromDates } from '../../../utils/streak';
-import type { HabitTrackingEntry, HabitStatus } from '../types';
+import { useOptimisticStore } from '../../../lib/optimistic';
+import type { HabitStatus } from '../types';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   const tracking =
     useQuery(api.habits.getTracking, { dates: extendedDateStrings }) ?? [];
 
+  // Get optimistic state for immediate feedback
+  const optimisticStore = useOptimisticStore();
+
+  // Merge server tracking with optimistic updates
   const completedDatesByHabit = useMemo(() => {
     const map = new Map<string, Set<string>>();
+
+    // First, process server data
     for (const entry of tracking) {
       if (!entry.completed) continue;
       if (!map.has(entry.habitId)) {
@@ -19,8 +26,22 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       }
       map.get(entry.habitId)!.add(entry.date);
     }
+
+    // Then, apply optimistic updates
+    for (const [key, toCompleted] of optimisticStore.pendingToggles) {
+      const [habitId, date] = key.split(':');
+      if (!map.has(habitId)) {
+        map.set(habitId, new Set<string>());
+      }
+      if (toCompleted) {
+        map.get(habitId)!.add(date);
+      } else {
+        map.get(habitId)!.delete(date);
+      }
+    }
+
     return map;
-  }, [tracking]);
+  }, [tracking, optimisticStore.pendingToggles]);
 
   const getStreak = useCallback(
     (habitId: string) => {
@@ -33,6 +54,14 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
+      // Check optimistic state first for immediate feedback
+      const optimisticKey = `${habitId}:${dateString}`;
+      const pendingToggle = optimisticStore.pendingToggles.get(optimisticKey);
+      if (pendingToggle !== undefined) {
+        return pendingToggle ? 'done' : 'missed';
+      }
+
+      // Fall back to server state
       const entry = tracking.find(
         (item) => item.habitId === habitId && item.date === dateString
       );
@@ -50,8 +79,23 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       }
       return 'planned';
     },
-    [today, tracking]
+    [today, tracking, optimisticStore.pendingToggles]
   );
 
-  return { tracking: tracking as HabitTrackingEntry[], getStreak, getHabitStatus };
+  /**
+   * Get whether a habit/date is currently completed (for optimistic toggle)
+   */
+  const isCompleted = useCallback(
+    (habitId: Id<'habits'>, date: string): boolean => {
+      return getHabitStatus(habitId, date) === 'done';
+    },
+    [getHabitStatus]
+  );
+
+  return {
+    getHabitStatus,
+    getStreak,
+    isCompleted,
+    tracking: tracking,
+  };
 }

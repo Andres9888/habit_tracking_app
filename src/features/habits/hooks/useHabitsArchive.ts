@@ -4,6 +4,7 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { logInteraction } from '../../../lib/analytics/interactions';
+import { optimisticStore } from '../../../lib/optimistic';
 
 interface ArchiveUndoState {
   visible: boolean;
@@ -34,26 +35,53 @@ export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
       const habit = habits.find((h) => h._id === habitId);
       const habitName = habit?.name ?? 'Habit';
 
-      await archiveHabitMutation({ habitId });
+      // Apply optimistic update immediately
+      const operationId = optimisticStore.addArchive({
+        habitId,
+        habitName,
+        toArchived: true,
+      });
 
+      // Show undo toast immediately (optimistic)
       setArchiveUndo({
         habitId,
         habitName,
         visible: true,
       });
 
-      logInteraction('habit_archived', { habitId, habitName });
+      try {
+        await archiveHabitMutation({ habitId });
+        optimisticStore.confirm(operationId);
+        logInteraction('habit_archived', { habitId, habitName });
+      } catch (error) {
+        // Rollback on failure
+        optimisticStore.fail(operationId, error as Error);
+        setArchiveUndo({ habitId: null, habitName: '', visible: false });
+        throw error;
+      }
     },
     [archiveHabitMutation, habits]
   );
 
   const handleArchiveUndo = useCallback(async () => {
     if (archiveUndo.habitId) {
-      await unarchiveHabitMutation({ habitId: archiveUndo.habitId });
-      logInteraction('habit_archive_undone', {
-        habitId: archiveUndo.habitId,
-        habitName: archiveUndo.habitName,
+      const { habitId, habitName } = archiveUndo;
+
+      // Apply optimistic unarchive immediately
+      const operationId = optimisticStore.addArchive({
+        habitId,
+        habitName,
+        toArchived: false,
       });
+
+      try {
+        await unarchiveHabitMutation({ habitId });
+        optimisticStore.confirm(operationId);
+        logInteraction('habit_archive_undone', { habitId, habitName });
+      } catch (error) {
+        optimisticStore.fail(operationId, error as Error);
+        throw error;
+      }
     }
     setArchiveUndo({ habitId: null, habitName: '', visible: false });
   }, [archiveUndo.habitId, archiveUndo.habitName, unarchiveHabitMutation]);

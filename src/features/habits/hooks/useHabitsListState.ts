@@ -1,21 +1,20 @@
 import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
 import { useHabitsSorting } from './useHabitsSorting';
 import { useHabitsArchive } from './useHabitsArchive';
 import { useRewardToast } from './useRewardToast';
+import { useOptimisticToggleMutation } from '../../../lib/optimistic';
+import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;
 
 export function useHabitsListState(): HabitsListState {
-  const [showHabitStrengthPercentage, setShowHabitStrengthPercentage] =
-    useState(true);
-
+  const [showHabitStrengthPercentage] = useState(true);
   const toggleHabitMutation = useMutation(api.habits.toggleHabit);
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
@@ -35,7 +34,7 @@ export function useHabitsListState(): HabitsListState {
 
   const weekDatesState = useHabitsWeekDates();
   const { today, extendedDateStrings } = weekDatesState;
-  const { getStreak, getHabitStatus } = useHabitsTracking(
+  const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
     extendedDateStrings,
     today
   );
@@ -59,36 +58,28 @@ export function useHabitsListState(): HabitsListState {
     // Handled by parent component
   }, []);
 
-  const handleDragEnd = useCallback(
-    async ({ data }: { data: Habit[] }) => {
-      if (habitSortMode !== 'manual') return;
-      try {
-        const habitIds = data.map((h) => h._id);
-        await reorderHabits({ habitIds });
-      } catch (error) {
-        console.error('Failed to reorder habits:', error);
-      }
-    },
-    [habitSortMode, reorderHabits]
+  const handleDragEnd = useOptimisticDragEnd(
+    habitSortMode,
+    habits,
+    reorderHabits
   );
 
   const handleHabitPress = useCallback((_habit: Habit) => {
     // Handled by parent component
   }, []);
 
-  const toggleHabit = useCallback(
-    async (args: { habitId: Id<'habits'>; date: string }) => {
-      await toggleHabitMutation(args);
-    },
-    [toggleHabitMutation]
+  // Wrap toggle mutation with optimistic update for immediate feedback
+  const toggleHabit = useOptimisticToggleMutation(
+    toggleHabitMutation,
+    isCompleted
   );
 
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
+    contentPadding: { paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 },
     dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,
-    contentPadding: { paddingHorizontal: 24, paddingBottom: 96, paddingTop: 0 },
     habitCompletionIcon,
     habits,
     habitSortMode,
