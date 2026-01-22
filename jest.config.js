@@ -13,6 +13,7 @@ export default {
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^~/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
     '**/*.{ts,tsx}',

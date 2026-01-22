@@ -603,7 +603,24 @@ And no memory leaks should be detected
     - Animation Cleanup: Reanimated `cancelAnimation()`, RN Animated `.stop()`
     - Subscriptions: RevenueCat listener removal, Performance frame data unsubscribe
   - **No Memory Leaks Detected** - All subscriptions have proper cleanup
-- [ ] **PERF-003**: Decompose 7 critical large files
+- [x] **PERF-003**: Decompose 7 critical large files
+  - **Completed:** 2026-01-22 by security-performance agent
+  - **Summary:** All 7 files (1,000+ lines each) decomposed into modular folder structures following established patterns from `docs/DECOMPOSITION_PATTERNS.md`
+  - **Decomposition Results:**
+    | Original File | Original Lines | Files After | Total Lines |
+    |--------------|----------------|-------------|-------------|
+    | TemplateScienceModal.tsx | 1,375 | 39 | 2,244 |
+    | LettersSection.tsx | 1,320 | 34 | 1,930 |
+    | AffirmationsSection.tsx | 1,133 | 28 | 1,764 |
+    | HabitsEmptyState.tsx | 1,094 | 24 | 1,308 |
+    | FullsizeTemplatePreview.tsx | 1,047 | 31 | 1,696 |
+    | TemplatesScreen.tsx | 1,039 | 40 | 2,326 |
+    | TodaysFocusCard.tsx | 991 | 20 | 1,303 |
+  - **ESLint Compliance:** All 216 decomposed files pass `max-lines` rule (100 lines, excluding blanks and comments)
+  - **Patterns Applied:**
+    - Component Pattern: Main component + hooks, types, styles, constants, and components/ folders
+    - Hook Pattern: Main hook orchestrating sub-hooks (state, effects, handlers)
+    - Barrel exports (index.ts) maintain public API compatibility
 - [ ] **PERF-004**: Implement performance test suite
 - [ ] **PERF-005**: Add performance monitoring (consider Sentry Performance)
 
