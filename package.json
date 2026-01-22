@@ -30,6 +30,8 @@
     "test:coverage": "jest --coverage",
     "test:security": "jest --testPathPattern=security --coverage",
     "test:performance": "jest --testPathPattern=performance --coverage",
+    "perf:budget": "npm run test:performance && npm run lint:max-lines",
+    "perf:bundle-check": "echo 'Run: find src app -name \"*.ts\" -o -name \"*.tsx\" | xargs wc -c | tail -1'",
     "postinstall": "patch-package",
     "prepare": "husky"
   },
