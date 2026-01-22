@@ -10,7 +10,21 @@ import { settingsReturnValidator, updateArgsValidator } from './validators';
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    const settings = await ctx.db.query('userSettings').first();
+    // SEC-001: Get user identity for user-scoped settings
+    const identity = await ctx.auth.getUserIdentity();
+
+    // Find settings for this user, or fall back to first (for backwards compatibility)
+    let settings;
+    if (identity) {
+      settings = await ctx.db
+        .query('userSettings')
+        .filter((q) => q.eq(q.field('userId'), identity.subject))
+        .first();
+    }
+    // Fallback for anonymous users or if no user-specific settings exist
+    if (!settings) {
+      settings = await ctx.db.query('userSettings').first();
+    }
 
     return {
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
@@ -53,12 +67,23 @@ export const get = query({
 export const update = mutation({
   args: updateArgsValidator,
   handler: async (ctx, args) => {
-    const existing = await ctx.db.query('userSettings').first();
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update settings');
+    }
+
+    // SEC-001: Find existing settings for this user
+    const existing = await ctx.db
+      .query('userSettings')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .first();
 
     const normalizedArgs = {
       ...args,
       darkMode: normalizeDarkMode(args.darkMode),
-    } satisfies typeof args;
+      userId: identity.subject,
+    };
 
     await (existing
       ? ctx.db.patch(existing._id, normalizedArgs)

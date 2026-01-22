@@ -10,35 +10,35 @@ export const reorderHabits = mutation({
     habitIds: v.array(v.id('habits')),
   },
   handler: async (ctx, args) => {
-    console.log('reorderHabits called with:', args.habitIds.length, 'habits');
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to reorder habits');
+    }
 
     // Validate input
     if (!args.habitIds || args.habitIds.length === 0) {
-      console.error('No habit IDs provided');
       return null;
     }
 
-    try {
-      // Update each habit with its new order index
-      for (let i = 0; i < args.habitIds.length; i++) {
-        const habitId = args.habitIds[i];
-        const habit = await ctx.db.get(habitId);
-
-        if (habit) {
-          await ctx.db.patch(habitId, {
-            order: i,
-          });
-        } else {
-          console.warn(`Habit ${habitId} not found`);
-        }
+    // SEC-001: Verify ownership of ALL habits before making any changes
+    const habits = await Promise.all(args.habitIds.map((id) => ctx.db.get(id)));
+    for (let i = 0; i < habits.length; i++) {
+      const habit = habits[i];
+      if (!habit) {
+        throw new Error(`Habit ${args.habitIds[i]} not found`);
       }
-
-      console.log('Successfully reordered', args.habitIds.length, 'habits');
-      return null;
-    } catch (error) {
-      console.error('Error in reorderHabits:', error);
-      throw error;
+      if (habit.userId !== identity.subject) {
+        throw new Error('Not authorized to reorder this habit');
+      }
     }
+
+    // Update each habit with its new order index
+    for (let i = 0; i < args.habitIds.length; i++) {
+      await ctx.db.patch(args.habitIds[i], { order: i });
+    }
+
+    return null;
   },
   returns: v.null(),
 });

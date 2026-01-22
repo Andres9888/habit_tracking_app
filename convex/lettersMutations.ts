@@ -17,8 +17,19 @@ export const create = mutation({
     unlockDays: v.number(),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create letters');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
+
+    // SEC-001: Ownership verification - verify user owns the habit
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to add letters to this habit');
+    }
 
     if (!args.content || args.content.trim() === '')
       throw new Error('Letter content is required');
@@ -42,6 +53,7 @@ export const create = mutation({
       isRead: false,
       title: args.title?.trim(),
       unlockAt,
+      userId: identity.subject,
     });
   },
   returns: v.id('letters'),
@@ -53,8 +65,23 @@ export const create = mutation({
 export const markAsRead = mutation({
   args: { letterId: v.id('letters') },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to mark letters as read');
+    }
+
     const letter = await ctx.db.get(args.letterId);
     if (!letter) throw new Error('Letter not found');
+
+    // SEC-001: Ownership verification
+    if (letter.userId && letter.userId !== identity.subject) {
+      throw new Error('Not authorized to access this letter');
+    }
+    const habit = await ctx.db.get(letter.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to access this letter');
+    }
 
     const now = Date.now();
     if (letter.unlockAt > now) throw new Error('Letter is still locked');
@@ -76,8 +103,23 @@ export const update = mutation({
     title: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update letters');
+    }
+
     const letter = await ctx.db.get(args.letterId);
     if (!letter) throw new Error('Letter not found');
+
+    // SEC-001: Ownership verification
+    if (letter.userId && letter.userId !== identity.subject) {
+      throw new Error('Not authorized to update this letter');
+    }
+    const habit = await ctx.db.get(letter.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to update this letter');
+    }
 
     const now = Date.now();
     if (letter.unlockAt <= now)
@@ -115,8 +157,23 @@ export const update = mutation({
 export const remove = mutation({
   args: { letterId: v.id('letters') },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete letters');
+    }
+
     const letter = await ctx.db.get(args.letterId);
     if (!letter) throw new Error('Letter not found');
+
+    // SEC-001: Ownership verification
+    if (letter.userId && letter.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this letter');
+    }
+    const habit = await ctx.db.get(letter.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this letter');
+    }
 
     const now = Date.now();
     if (letter.unlockAt <= now)

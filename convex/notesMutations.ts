@@ -13,6 +13,23 @@ export const create = mutation({
     habitId: v.optional(v.id('habits')),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create notes');
+    }
+
+    // SEC-001: If habitId provided, verify ownership of the habit
+    if (args.habitId) {
+      const habit = await ctx.db.get(args.habitId);
+      if (!habit) {
+        throw new Error('Habit not found');
+      }
+      if (habit.userId !== identity.subject) {
+        throw new Error('Not authorized to add notes to this habit');
+      }
+    }
+
     // Validate body length (max 1000 chars as per AC4)
     if (args.body.length > MAX_NOTE_BODY_LENGTH) {
       throw new Error(
@@ -33,6 +50,7 @@ export const create = mutation({
       date: args.date,
       habitId: args.habitId,
       updatedAt: now,
+      userId: identity.subject,
     });
   },
   returns: v.id('notes'),
@@ -44,6 +62,12 @@ export const update = mutation({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update notes');
+    }
+
     // Validate body length (max 1000 chars as per AC4)
     if (args.body.length > MAX_NOTE_BODY_LENGTH) {
       throw new Error(
@@ -54,6 +78,17 @@ export const update = mutation({
     const note = await ctx.db.get(args.noteId);
     if (!note) {
       throw new Error('Note not found');
+    }
+
+    // SEC-001: Ownership verification via note's userId or parent habit
+    if (note.userId && note.userId !== identity.subject) {
+      throw new Error('Not authorized to update this note');
+    }
+    if (note.habitId) {
+      const habit = await ctx.db.get(note.habitId);
+      if (habit && habit.userId !== identity.subject) {
+        throw new Error('Not authorized to update this note');
+      }
     }
 
     await ctx.db.patch(args.noteId, {
@@ -71,9 +106,26 @@ export const remove = mutation({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete notes');
+    }
+
     const note = await ctx.db.get(args.noteId);
     if (!note) {
       throw new Error('Note not found');
+    }
+
+    // SEC-001: Ownership verification via note's userId or parent habit
+    if (note.userId && note.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this note');
+    }
+    if (note.habitId) {
+      const habit = await ctx.db.get(note.habitId);
+      if (habit && habit.userId !== identity.subject) {
+        throw new Error('Not authorized to delete this note');
+      }
     }
 
     await ctx.db.delete(args.noteId);

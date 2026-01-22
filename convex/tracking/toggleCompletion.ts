@@ -12,6 +12,12 @@ export const toggleCompletion = mutation({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to toggle completion');
+    }
+
     if (!DATE_FORMAT_REGEX.test(args.date)) {
       throw new Error('Invalid date format. Expected YYYY-MM-DD');
     }
@@ -19,6 +25,11 @@ export const toggleCompletion = mutation({
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
+    }
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to toggle completion for this habit');
     }
 
     const existingRecord = await ctx.db

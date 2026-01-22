@@ -16,11 +16,26 @@ import {
 export const toggleHabit = mutation({
   args: { date: v.string(), habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to toggle habits');
+    }
+
     if (!isValidDateFormat(args.date)) {
       throw new Error('Invalid date format; expected YYYY-MM-DD');
     }
     if (isFutureDate(args.date)) {
       throw new Error('Cannot track habits for future dates');
+    }
+
+    // SEC-001: Ownership verification - verify habit belongs to user before toggle
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to toggle this habit');
     }
 
     const existing = await ctx.db
@@ -41,9 +56,8 @@ export const toggleHabit = mutation({
         }));
 
     // Update habit strength and streak based on full tracking history
-    const habit = await ctx.db.get(args.habitId);
-    if (habit) {
-      const allTracking = await ctx.db
+    // (habit already fetched for ownership check above)
+    const allTracking = await ctx.db
         .query('tracking')
         .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
         .collect();
@@ -71,15 +85,14 @@ export const toggleHabit = mutation({
         evaluationDateKey
       );
 
-      await ctx.db.patch(args.habitId, {
-        bestStreak: streakData.bestStreak,
-        currentStreak: streakData.currentStreak,
-        lastCompletedDate: streakData.lastCompletedDate,
-        strength: snapshot.strength,
-        strengthLevel: snapshot.strengthLevel,
-        strengthUpdatedAt: Date.now(),
-      });
-    }
+    await ctx.db.patch(args.habitId, {
+      bestStreak: streakData.bestStreak,
+      currentStreak: streakData.currentStreak,
+      lastCompletedDate: streakData.lastCompletedDate,
+      strength: snapshot.strength,
+      strengthLevel: snapshot.strengthLevel,
+      strengthUpdatedAt: Date.now(),
+    });
 
     return null;
   },

@@ -12,9 +12,20 @@ export const archive = mutation({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to archive habits');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
+    }
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to archive this habit');
     }
 
     await ctx.db.patch(args.habitId, {
@@ -32,12 +43,23 @@ export const unarchive = mutation({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to unarchive habits');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
     }
 
-    // Get all non-archived habits to determine next order value
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to unarchive this habit');
+    }
+
+    // Get all non-archived habits for this user to determine next order value
     const activeHabits = await ctx.db
       .query('habits')
       .filter((q) => q.neq(q.field('archived'), true))
@@ -58,8 +80,16 @@ export const unarchive = mutation({
 export const listArchived = query({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view archived habits');
+    }
+
+    // SEC-001: Return only the user's archived habits
     return await ctx.db
       .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
   },
@@ -69,8 +99,16 @@ export const listArchived = query({
 export const deleteAllArchived = mutation({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete archived habits');
+    }
+
+    // SEC-001: Only delete the user's archived habits
     const archivedHabits = await ctx.db
       .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
 

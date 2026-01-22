@@ -19,6 +19,12 @@ export const upsert = mutation({
     note: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create reflections');
+    }
+
     // Validate date format as YYYY-MM-DD
     if (!DATE_FORMAT_REGEX.test(args.date)) {
       throw new Error('Invalid date format; expected YYYY-MM-DD');
@@ -35,6 +41,11 @@ export const upsert = mutation({
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
+    }
+
+    // SEC-001: Ownership verification - verify user owns the habit
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to add reflections to this habit');
     }
 
     const now = Date.now();
@@ -63,6 +74,7 @@ export const upsert = mutation({
       habitId: args.habitId,
       note: args.note,
       updatedAt: now,
+      userId: identity.subject,
     });
   },
   returns: v.id('reflections'),
@@ -74,9 +86,24 @@ export const remove = mutation({
     reflectionId: v.id('reflections'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete reflections');
+    }
+
     const reflection = await ctx.db.get(args.reflectionId);
     if (!reflection) {
       throw new Error('Reflection not found');
+    }
+
+    // SEC-001: Ownership verification via reflection's userId or parent habit
+    if (reflection.userId && reflection.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this reflection');
+    }
+    const habit = await ctx.db.get(reflection.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this reflection');
     }
 
     await ctx.db.delete(args.reflectionId);
