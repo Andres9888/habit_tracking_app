@@ -31,7 +31,12 @@ export function useModalV2Handlers({
       triggerSelection();
       Keyboard.dismiss();
     },
-    [form, triggerSelection]
+    [
+      form.setHabitName,
+      form.setSelectedEmoji,
+      form.setSelectedColor,
+      triggerSelection,
+    ]
   );
 
   const handleAIAppend = useCallback(
@@ -40,7 +45,7 @@ export function useModalV2Handlers({
       const separator = currentName.endsWith(' ') ? '' : ' ';
       form.setHabitName(`${currentName}${separator}${suggestion}`);
     },
-    [form]
+    [form.habitName, form.setHabitName]
   );
 
   const handleEmojiPress = useCallback(() => {
@@ -52,7 +57,7 @@ export function useModalV2Handlers({
       form.setSelectedEmoji(emoji);
       setShowEmojiPicker(false);
     },
-    [form, setShowEmojiPicker]
+    [form.setSelectedEmoji, setShowEmojiPicker]
   );
 
   const handleInputFocus = useCallback(() => {

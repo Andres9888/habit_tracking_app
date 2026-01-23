@@ -19,21 +19,21 @@ export function useFormHandlers(form: FormState) {
     (value: string) => {
       form.setHabitName(value);
     },
-    [form]
+    [form.setHabitName]
   );
 
   const handleEmojiSelect = useCallback(
     (emoji: string | null) => {
       form.setSelectedEmoji(emoji);
     },
-    [form]
+    [form.setSelectedEmoji]
   );
 
   const handleColorSelect = useCallback(
     (color: string) => {
       form.setSelectedColor(color);
     },
-    [form]
+    [form.setSelectedColor]
   );
 
   const handleReminderToggle = useCallback(
@@ -51,7 +51,7 @@ export function useFormHandlers(form: FormState) {
         form.setReminderOption('none');
       }
     },
-    [form]
+    [form.reminderTime, form.setReminderOption]
   );
 
   const handleReminderTimeChange = useCallback(
@@ -68,7 +68,7 @@ export function useFormHandlers(form: FormState) {
         }
       }
     },
-    [form]
+    [form.reminderOption, form.setReminderTime, form.setReminderOption]
   );
 
   return {

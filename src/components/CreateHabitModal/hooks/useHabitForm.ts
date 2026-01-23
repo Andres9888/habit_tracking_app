@@ -10,7 +10,6 @@ import { useReminderOptionSync } from './useReminderOptionSync';
 import { useHabitFormState } from './useHabitFormState';
 import { useHabitFormInit } from './useHabitFormInit';
 import { useHabitFormReset } from './useHabitFormReset';
-import { buildHabitFormReturn } from './useHabitFormReturn';
 
 interface UseHabitFormOptions {
   habitToEdit?: HabitDoc | null;
@@ -35,7 +34,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
       state.setReminderOptionState(option);
       syncReminderOption(option);
     },
-    [state, syncReminderOption]
+    [state.setReminderOptionState, syncReminderOption]
   );
 
   useHabitFormInit({
@@ -68,10 +67,41 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setShowTimePicker: state.setShowTimePicker,
   });
 
-  return buildHabitFormReturn({
+  const closeColorPicker = useCallback(
+    () => state.setColorPickerVisible(false),
+    [state.setColorPickerVisible]
+  );
+
+  const openColorPicker = useCallback(
+    () => state.setColorPickerVisible(true),
+    [state.setColorPickerVisible]
+  );
+
+  return {
+    closeColorPicker,
+    dayPhase: state.dayPhase,
+    frequency: state.frequency,
     fullHabitName,
+    habitName: state.habitName,
+    isColorPickerVisible: state.isColorPickerVisible,
+    openColorPicker,
+    reminderOption: state.reminderOption,
+    remindersEnabled: state.remindersEnabled,
+    reminderSound: state.reminderSound,
+    reminderTime: state.reminderTime,
     resetForm,
+    selectedColor: state.selectedColor,
+    selectedEmoji: state.selectedEmoji,
+    setDayPhase: state.setDayPhase,
+    setFrequency: state.setFrequency,
+    setHabitName: state.setHabitName,
     setReminderOption,
-    state,
-  });
+    setRemindersEnabled: state.setRemindersEnabled,
+    setReminderSound: state.setReminderSound,
+    setReminderTime: state.setReminderTime,
+    setSelectedColor: state.setSelectedColor,
+    setSelectedEmoji: state.setSelectedEmoji,
+    setShowTimePicker: state.setShowTimePicker,
+    showTimePicker: state.showTimePicker,
+  };
 };

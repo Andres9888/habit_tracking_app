@@ -28,7 +28,12 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       if (template.iconColor) form.setSelectedColor(template.iconColor);
       if (template.frequency) form.setFrequency(template.frequency);
     },
-    [form]
+    [
+      form.setSelectedEmoji,
+      form.setHabitName,
+      form.setSelectedColor,
+      form.setFrequency,
+    ]
   );
 
   const template = useTemplateBrowser({
@@ -77,7 +82,9 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       : createNewHabit(data));
     cleanup();
   }, [
-    form,
+    form.habitName,
+    form.fullHabitName,
+    form.remindersEnabled,
     habitData,
     isEditMode,
     habitToEdit,

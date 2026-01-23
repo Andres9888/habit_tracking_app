@@ -46,6 +46,9 @@ export const useHabitFormInit = ({
     setSelectedEmoji,
   } = setters;
 
+  // Initialize form only when habitToEdit changes (edit mode)
+  // Setters from useState are stable and don't need to be in deps
+
   useEffect(() => {
     if (!habitToEdit) return;
     setHabitName(parsed.name);
@@ -62,17 +65,5 @@ export const useHabitFormInit = ({
         habitToEdit.reminderTime
       )
     );
-  }, [
-    habitToEdit,
-    parsed,
-    setHabitName,
-    setSelectedEmoji,
-    setSelectedColor,
-    setRemindersEnabled,
-    setReminderTime,
-    setReminderSound,
-    setFrequency,
-    setDayPhase,
-    setReminderOptionState,
-  ]);
+  }, [habitToEdit?._id]);
 };

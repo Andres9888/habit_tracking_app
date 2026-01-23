@@ -27,7 +27,14 @@ export function useVisibilityReset({
     template.reset();
     template.closeTemplateBrowser();
     science.close();
-  }, [visible, isEditMode, resetForm, template, science]);
+  }, [
+    visible,
+    isEditMode,
+    resetForm,
+    template.reset,
+    template.closeTemplateBrowser,
+    science.close,
+  ]);
 }
 
 interface HabitDataParams {
@@ -92,8 +99,9 @@ export function useModalCleanup({
     resetForm,
     closeColorPicker,
     setShowTimePicker,
-    template,
-    science,
+    template.reset,
+    template.closeTemplateBrowser,
+    science.close,
     triggerSuccess,
     onClose,
   ]);

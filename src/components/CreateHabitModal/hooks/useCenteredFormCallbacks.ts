@@ -35,14 +35,14 @@ export function useCenteredFormCallbacks({
     (emoji: string | null) => {
       form.setSelectedEmoji(emoji);
     },
-    [form]
+    [form.setSelectedEmoji]
   );
 
   const handleColorSelect = useCallback(
     (color: string) => {
       form.setSelectedColor(color);
     },
-    [form]
+    [form.setSelectedColor]
   );
 
   const handleNameChange = useCallback(
@@ -53,7 +53,7 @@ export function useCenteredFormCallbacks({
         setShowNameError(false);
       }
     },
-    [form, setShowNameError]
+    [form.setHabitName, setShowNameError]
   );
 
   const handleValidationError = useCallback(() => {
@@ -70,14 +70,14 @@ export function useCenteredFormCallbacks({
         }, 100);
       }
     },
-    [form, scrollViewRef]
+    [form.setRemindersEnabled, scrollViewRef]
   );
 
   const handleReminderTimeChange = useCallback(
     (time: Date) => {
       form.setReminderTime(time);
     },
-    [form]
+    [form.setReminderTime]
   );
 
   const handleSubmit = useCallback(() => {
